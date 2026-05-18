@@ -1,26 +1,71 @@
-import {useCallback, useRef, useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import { atoms as a } from '#/alf';
-import {Button} from '#/components/Button'
-import {useThrottledValue} from '#/components/hooks/useThrottledValue'
+import {atoms as a, useTheme} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {ImageBackground} from '#/shims/image'
-import {GifPresentationControls} from './GifPresentationControls'
-import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {
+  HLSUnsupportedError,
+  VideoEmbedInnerWeb,
+  VideoNotFoundError,
+} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
+import {IS_WEB_FIREFOX} from '#/env'
+import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-interface Props {
-  embed: AppBskyEmbedVideo.View
-}
+const noop = () => {}
 
-export function VideoEmbed({embed}: Props) {
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+  const t = useTheme()
+  const ref = useRef<HTMLDivElement>(null)
+  const {
+    active: activeFromContext,
+    setActive,
+    sendPosition,
+    currentActiveView,
+  } = useActiveVideoWeb()
+  const [onScreen, setOnScreen] = useState(false)
+  const [isFullscreen] = useFullscreen()
+  const lastKnownTime = useRef<number | undefined>(undefined)
+
+  const isGif = embed.presentation === 'gif'
+  // GIFs don't participate in the "one video at a time" system
+  const active = isGif || activeFromContext
+
+  useEffect(() => {
+    if (!ref.current) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        setOnScreen(entry.isIntersecting)
+        // GIFs don't send position - they don't compete to be the active video
+        if (!isGif) {
+          sendPosition(
+            entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
+          )
+        }
+      },
+      {threshold: 0.5},
+    )
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [sendPosition, isFullscreen, isGif])
+
   const [key, setKey] = useState(0)
-
   const renderError = useCallback(
     (error: unknown) => (
       <VideoError error={error} retry={() => setKey(key + 1)} />
@@ -44,108 +89,157 @@ export function VideoEmbed({embed}: Props) {
   }
 
   const contents = (
-    <ErrorBoundary renderError={renderError} key={key}>
-      <InnerWrapper embed={embed} />
-    </ErrorBoundary>
+    <div
+      ref={ref}
+      style={{
+        display: 'flex',
+        flex: 1,
+        cursor: 'default',
+        backgroundColor: t.palette.black,
+        backgroundImage: `url(${embed.thumbnail})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+      onClick={evt => evt.stopPropagation()}>
+      <ErrorBoundary renderError={renderError} key={key}>
+        <OnlyNearScreen>
+          <VideoEmbedInnerWeb
+            embed={embed}
+            active={active}
+            setActive={setActive}
+            onScreen={onScreen}
+            lastKnownTime={lastKnownTime}
+          />
+        </OnlyNearScreen>
+      </ErrorBoundary>
+    </div>
   )
 
   return (
     <View style={[a.pt_xs]}>
-      <ConstrainedImage
-        aspectRatio={constrained || 1}
-        // slightly smaller max height than images
-        // images use 16 / 9, for reference
-        minMobileAspectRatio={14 / 9}>
-        {contents}
-      </ConstrainedImage>
+      <ViewportObserver
+        sendPosition={isGif ? noop : sendPosition}
+        isAnyViewActive={currentActiveView !== null}>
+        <ConstrainedImage
+          fullBleed
+          aspectRatio={constrained || 1}
+          // slightly smaller max height than images
+          // images use 16 / 9, for reference
+          minMobileAspectRatio={14 / 9}>
+          {contents}
+          <MediaInsetBorder />
+        </ConstrainedImage>
+      </ViewportObserver>
     </View>
   )
 }
 
-function InnerWrapper({embed}: Props) {
-  const {t: l} = useLingui()
-  const ref = useRef<{togglePlayback: () => void}>(null)
+const NearScreenContext = createContext(false)
+NearScreenContext.displayName = 'VideoNearScreenContext'
 
-  const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
-    'pending',
+/**
+ * Renders a 100vh tall div and watches it with an IntersectionObserver to
+ * send the position of the div when it's near the screen.
+ *
+ * IMPORTANT: ViewportObserver _must_ not be within a `overflow: hidden` container.
+ */
+function ViewportObserver({
+  children,
+  sendPosition,
+  isAnyViewActive,
+}: {
+  children: React.ReactNode
+  sendPosition: (position: number) => void
+  isAnyViewActive: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [nearScreen, setNearScreen] = useState(false)
+  const [isFullscreen] = useFullscreen()
+  const isWithinMessage = useIsWithinMessage()
+
+  // Send position when scrolling. This is done with an IntersectionObserver
+  // observing a div of 100vh height
+  useEffect(() => {
+    if (!ref.current) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        const position =
+          entry.boundingClientRect.y + entry.boundingClientRect.height / 2
+        sendPosition(position)
+        setNearScreen(entry.isIntersecting)
+      },
+      {threshold: Array.from({length: 101}, (_, i) => i / 100)},
+    )
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [sendPosition, isFullscreen])
+
+  // In case scrolling hasn't started yet, send up the position
+  useEffect(() => {
+    if (ref.current && !isAnyViewActive) {
+      const rect = ref.current.getBoundingClientRect()
+      const position = rect.y + rect.height / 2
+      sendPosition(position)
+    }
+  }, [isAnyViewActive, sendPosition])
+
+  return (
+    <View style={[a.flex_1, a.flex_row]}>
+      <NearScreenContext.Provider value={nearScreen}>
+        {children}
+      </NearScreenContext.Provider>
+      <div
+        ref={ref}
+        style={{
+          // Don't escape bounds when in a message
+          ...(isWithinMessage
+            ? {top: 0, height: '100%'}
+            : {top: 'calc(50% - 50vh)', height: '100vh'}),
+          position: 'absolute',
+          left: '50%',
+          width: 1,
+          pointerEvents: 'none',
+        }}
+      />
+    </View>
   )
-  const [isLoading, setIsLoading] = useState(false)
-  const [isActive, setIsActive] = useState(false)
-  const showSpinner = useThrottledValue(isActive && isLoading, 100)
+}
 
-  const showOverlay =
-    !isActive ||
-    isLoading ||
-    (status === 'paused' && !isActive) ||
-    status === 'pending'
+/**
+ * Awkward data flow here, but we need to hide the video when it's not near the screen.
+ * But also, ViewportObserver _must_ not be within a `overflow: hidden` container.
+ * So we put it at the top level of the component tree here, then hide the children of
+ * the auto-resizing container.
+ */
+export const OnlyNearScreen = ({children}: {children: React.ReactNode}) => {
+  const nearScreen = useContext(NearScreenContext)
 
-  if (!isActive && status !== 'pending') {
-    setStatus('pending')
+  return nearScreen ? children : null
+}
+
+function VideoError({error, retry}: {error: unknown; retry: () => void}) {
+  const {t: l} = useLingui()
+
+  let showRetryButton = true
+  let text = null
+
+  if (error instanceof VideoNotFoundError) {
+    text = l`Video not found.`
+  } else if (error instanceof HLSUnsupportedError) {
+    showRetryButton = false
+    text = l`Your browser does not support the video format. Please try a different browser.`
+  } else {
+    text = l`An error occurred while loading the video. Please try again.`
   }
 
   return (
-    <>
-      <VideoEmbedInnerNative
-        embed={embed}
-        setStatus={setStatus}
-        setIsLoading={setIsLoading}
-        setIsActive={setIsActive}
-        ref={ref}
-      />
-      <ImageBackground
-        source={{uri: embed.thumbnail}}
-        accessibilityIgnoresInvertColors
-        style={[
-          a.absolute,
-          a.inset_0,
-          {
-            backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
-            // the play button won't show up on the first render on android 🥴😮‍💨
-          },
-          undefined,
-        ]}
-        cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
-      >
-        {showOverlay &&
-          (embed.presentation === 'gif' ? (
-            <GifPresentationControls
-              isPlaying={false}
-              isLoading={showSpinner}
-              onPress={() => {
-                ref.current?.togglePlayback()
-              }}
-              altText={embed.alt}
-            />
-          ) : (
-            <Button
-              style={[a.flex_1, a.align_center, a.justify_center]}
-              onPress={() => {
-                ref.current?.togglePlayback()
-              }}
-              label={l`Play video`}>
-              {showSpinner ? (
-                <View style={[a.align_center, a.justify_center]}>
-                  <ActivityIndicator size="large" color="white" />
-                </View>
-              ) : (
-                <PlayButtonIcon />
-              )}
-            </Button>
-          ))}
-      </ImageBackground>
-    </>
-  );
-}
-
-function VideoError({retry}: {error: unknown; retry: () => void}) {
-  return (
     <VideoFallback.Container>
-      <VideoFallback.Text>
-        <Trans>
-          An error occurred while loading the video. Please try again later.
-        </Trans>
-      </VideoFallback.Text>
-      <VideoFallback.RetryButton onPress={retry} />
+      <VideoFallback.Text>{text}</VideoFallback.Text>
+      {showRetryButton && <VideoFallback.RetryButton onPress={retry} />}
     </VideoFallback.Container>
   )
 }

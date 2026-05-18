@@ -13,7 +13,6 @@ import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
-import {type TriggerProps} from '#/components/ContextMenu/types'
 import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
@@ -35,7 +34,7 @@ export let MessageContextMenu = ({
 }: {
   message: ChatBskyConvoDefs.MessageView
   senderProfile?: bsky.profile.AnyProfileView
-  children: TriggerProps['children']
+  children: (props: any) => React.ReactNode
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
   const {currentAccount} = useSession()

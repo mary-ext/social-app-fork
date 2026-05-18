@@ -85,12 +85,3 @@ export const BLUESKY_PROXY_DID: Did =
 export const CHAT_PROXY_DID: Did =
   (process.env.EXPO_PUBLIC_CHAT_PROXY_DID ||
     'did:web:api.bsky.chat') as Did
-
-/**
- * GCP project ID which is required for native device attestation. On web, this
- * should be unset and evaluate to 0.
- */
-export const GCP_PROJECT_ID: number =
-  process.env.EXPO_PUBLIC_GCP_PROJECT_ID === undefined
-    ? 0
-    : Number(process.env.EXPO_PUBLIC_GCP_PROJECT_ID)

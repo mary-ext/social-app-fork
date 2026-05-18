@@ -1224,10 +1224,10 @@ After the codemod lands, the remaining work is bounded:
 
 ### 4.5c — Delete native-only source files
 
-- [ ] **Module-load guarded-import sweep is part of Phase 4.3a** — by the time you reach 4.5, those files should already be split / no-op'd / deleted, and any remaining `IS_WEB`-guarded expo imports are real bugs to address as you encounter them
-- [ ] Delete native-only files once the codemod and typecheck confirm nothing resolves to them: `src/App.native.tsx`, `*.ios.tsx`, `*.android.tsx`, `*.native.tsx`, `index.js`
-- [ ] Rename `.web.tsx`/`.web.ts` → `.tsx`/`.ts` once their non-web siblings are gone (this is what makes Phase 4.7's rsbuild config simple)
-- [ ] First targets:
+- [x] **Module-load guarded-import sweep is part of Phase 4.3a** — by the time you reach 4.5, those files should already be split / no-op'd / deleted, and any remaining `IS_WEB`-guarded expo imports are real bugs to address as you encounter them
+- [x] Delete native-only files once the codemod and typecheck confirm nothing resolves to them: `src/App.native.tsx`, `*.ios.tsx`, `*.android.tsx`, `*.native.tsx`, `index.js`
+- [x] Rename `.web.tsx`/`.web.ts` → `.tsx`/`.ts` once their non-web siblings are gone (this is what makes Phase 4.7's rsbuild config simple)
+- [x] First targets:
   - `src/env/`: **don't flatten the whole module into constants.** `src/env/index.web.ts` already exports the right static booleans (`IS_NATIVE=false`, `IS_WEB=true`, …) AND computes browser-specific flags dynamically (mobile-Safari detection, etc.). Delete `src/env/index.ts` (the native variant), then rename `src/env/index.web.ts` → `src/env/index.ts`. Keep the dynamic browser-flag logic. **Also delete `GCP_PROJECT_ID` from `src/env/common.ts`** — it only feeds the Android Play Integrity warmup and gets unreferenced as soon as the IS_ANDROID branches collapse
   - `src/Navigation.tsx` notification/linking imports
   - **VideoFeed feature deletion.** `src/screens/VideoFeed/` is a TikTok-style swipeable video feed that ships as a `null` stub on web (`VideoFeed.web.tsx` returns nothing) — the platform collapse alone would just delete the native file and leave a no-op route. Better: delete the whole feature explicitly. `rm -rf src/screens/VideoFeed`, drop the `VideoFeed: '/video-feed'` entry from `src/routes.ts`, and drop the import + `<Stack.Screen name="VideoFeed">` registration from `src/Navigation.tsx`. Then re-verify the deferred `yarn remove expo-video` (the only non-`.web` importer was `VideoFeed/index.tsx` + `Scrubber.tsx`)
@@ -1238,7 +1238,7 @@ After the codemod lands, the remaining work is bounded:
   - `src/screens/Settings/AppIconSettings/*`
   - `src/Splash.tsx` (native variant — `Splash.web.tsx` wins)
   - `src/locale/i18n.ts` (native variant — `i18n.web.ts` wins). This is the last referrer of the `@formatjs/intl-*` polyfills. After this file is gone, `yarn remove @formatjs/intl-locale @formatjs/intl-pluralrules @formatjs/intl-numberformat @formatjs/intl-displaynames` (and any `@formatjs/intl-*/locale-data/*` siblings) — modern browsers have native `Intl` and Phase 2.11 narrowed us to English only
-- [ ] **Deferred dep removals — execute at the end of this phase.** Several packages were marked "defer to 4.5" by earlier phases because their last importers were typecheck-visible native files. After the deletions above land, those packages are orphan and removable:
+- [x] **Deferred dep removals — execute at the end of this phase.** Several packages were marked "defer to 4.5" by earlier phases because their last importers were typecheck-visible native files. After the deletions above land, those packages are orphan and removable:
   ```sh
   yarn remove expo-video @bsky.app/video
   ```

@@ -1,108 +1,75 @@
-import {useEffect, useMemo, useRef} from 'react'
-import {WebView, type WebViewNavigation} from 'react-native-webview'
-import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
+import {useCallback, useEffect} from 'react'
+import {StyleSheet} from 'react-native'
 
-import {type SignupState} from '#/screens/Signup/state'
-
-const ALLOWED_HOSTS = [
-  'bsky.social',
-  'bsky.app',
-  'staging.bsky.app',
-  'staging.bsky.dev',
-  'app.staging.bsky.dev',
-  'js.hcaptcha.com',
-  'newassets.hcaptcha.com',
-  'api2.hcaptcha.com',
-]
-
-const MIN_DELAY = 3_500
+// @ts-ignore web only, we will always redirect to the app on web (CORS)
+const REDIRECT_HOST = new URL(window.location.href).host
 
 export function CaptchaWebView({
   url,
   stateParam,
-  state,
-  onComplete,
   onSuccess,
   onError,
 }: {
   url: string
   stateParam: string
-  state?: SignupState
-  onComplete: () => void
   onSuccess: (code: string) => void
   onError: (error: unknown) => void
 }) {
-  const startedAt = useRef(Date.now())
-  const successTo = useRef<NodeJS.Timeout>(undefined)
-
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      onError({
+        errorMessage: 'User did not complete the captcha within 30 seconds',
+      })
+    }, 30e3)
+
     return () => {
-      if (successTo.current) {
-        clearTimeout(successTo.current)
+      clearTimeout(timeout)
+    }
+  }, [onError])
+
+  const onLoad = useCallback(() => {
+    // @ts-ignore web
+    const frame: HTMLIFrameElement = document.getElementById(
+      'captcha-iframe',
+    ) as HTMLIFrameElement
+
+    try {
+      // @ts-ignore web
+      const href = frame?.contentWindow?.location.href
+      if (!href) return
+      const urlp = new URL(href)
+
+      // This shouldn't happen with CORS protections, but for good measure
+      if (urlp.host !== REDIRECT_HOST) return
+
+      const code = urlp.searchParams.get('code')
+      if (urlp.searchParams.get('state') !== stateParam || !code) {
+        onError({error: 'Invalid state or code'})
+        return
       }
-    }
-  }, [])
-
-  const redirectHost = useMemo(() => {
-    if (!state?.serviceUrl) return 'bsky.app'
-
-    return state?.serviceUrl &&
-      new URL(state?.serviceUrl).host === 'staging.bsky.dev'
-      ? 'app.staging.bsky.dev'
-      : 'bsky.app'
-  }, [state?.serviceUrl])
-
-  const wasSuccessful = useRef(false)
-
-  const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
-    const urlp = new URL(event.url)
-    return ALLOWED_HOSTS.includes(urlp.host)
-  }
-
-  const onNavigationStateChange = (e: WebViewNavigation) => {
-    if (wasSuccessful.current) return
-
-    const urlp = new URL(e.url)
-    if (urlp.host !== redirectHost || urlp.pathname === '/gate/signup') return
-
-    const code = urlp.searchParams.get('code')
-    if (urlp.searchParams.get('state') !== stateParam || !code) {
-      onError({error: 'Invalid state or code'})
-      return
-    }
-
-    // We want to delay the completion of this screen ever so slightly so that it doesn't appear to be a glitch if it completes too fast
-    wasSuccessful.current = true
-    onComplete()
-    const now = Date.now()
-    const timeTaken = now - startedAt.current
-    if (timeTaken < MIN_DELAY) {
-      successTo.current = setTimeout(() => {
-        onSuccess(code)
-      }, MIN_DELAY - timeTaken)
-    } else {
       onSuccess(code)
+    } catch (e) {
+      // We don't actually want to record an error here, because this will happen quite a bit. We will only be able to
+      // get the href of the iframe if it's on our domain, so all the hcaptcha requests will throw here, although it's
+      // harmless. Our other indicators of time-to-complete and back press should be more reliable in catching issues.
     }
-  }
+  }, [stateParam, onSuccess, onError])
 
   return (
-    <WebView
-      source={{uri: url}}
-      javaScriptEnabled
-      style={{
-        flex: 1,
-        backgroundColor: 'transparent',
-        borderRadius: 10,
-      }}
-      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-      onNavigationStateChange={onNavigationStateChange}
-      scrollEnabled={false}
-      onError={e => {
-        onError(e.nativeEvent)
-      }}
-      onHttpError={e => {
-        onError(e.nativeEvent)
-      }}
+    <iframe
+      src={url}
+      style={styles.iframe}
+      id="captcha-iframe"
+      onLoad={onLoad}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  iframe: {
+    flex: 1,
+    borderWidth: 0,
+    borderRadius: 10,
+    backgroundColor: 'transparent',
+  },
+})

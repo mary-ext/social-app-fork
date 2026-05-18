@@ -1,6 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {
+  AtUri,
   type AppBskyActorDefs,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
@@ -9,10 +10,10 @@ import {
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
+import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useTheme} from '#/alf'
 import {BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'
@@ -38,12 +39,10 @@ function getBlackColor(t: ReturnType<typeof useTheme>) {
 
 export function VideoPostCard({
   post,
-  sourceContext,
   moderation,
   onInteract,
 }: {
   post: AppBskyFeedDefs.PostView
-  sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
    * Callback for metrics etc
@@ -119,13 +118,7 @@ export function VideoPostCard({
     <Link
       accessibilityHint={l`Views video in immersive mode`}
       label={l`Video from ${author.handle}: ${text}`}
-      to={{
-        screen: 'VideoFeed',
-        params: {
-          ...sourceContext,
-          initialPostUri: post.uri,
-        },
-      }}
+      to={makeProfileLink(author, 'post', new AtUri(post.uri).rkey)}
       onPress={() => {
         onInteract?.()
       }}
@@ -351,12 +344,10 @@ export function VideoPostCardTextPlaceholder({
 
 export function CompactVideoPostCard({
   post,
-  sourceContext,
   moderation,
   onInteract,
 }: {
   post: AppBskyFeedDefs.PostView
-  sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
    * Callback for metrics etc
@@ -396,13 +387,7 @@ export function CompactVideoPostCard({
   return (
     <Link
       label={l`View video`}
-      to={{
-        screen: 'VideoFeed',
-        params: {
-          ...sourceContext,
-          initialPostUri: post.uri,
-        },
-      }}
+      to={makeProfileLink(post.author, 'post', new AtUri(post.uri).rkey)}
       onPress={() => {
         onInteract?.()
       }}

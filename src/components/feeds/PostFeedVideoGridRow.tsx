@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 
 import {type FeedPostSliceItem} from '#/state/queries/post-feed'
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useGutters} from '#/alf'
 import * as Grid from '#/components/Grid'
 import {
@@ -12,10 +11,8 @@ import {
 
 export function PostFeedVideoGridRow({
   items: slices,
-  sourceContext,
 }: {
   items: FeedPostSliceItem[]
-  sourceContext: VideoFeedSourceContext
 }) {
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
@@ -39,7 +36,6 @@ export function PostFeedVideoGridRow({
             <Grid.Col key={post.post.uri} width={1 / 2}>
               <VideoPostCard
                 post={post.post}
-                sourceContext={sourceContext}
                 moderation={post.moderation}
                 onInteract={() => {}}
               />

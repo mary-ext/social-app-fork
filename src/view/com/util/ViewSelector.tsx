@@ -69,7 +69,7 @@ export const ViewSelector = forwardRef<
 ) {
   const pal = usePalette('default')
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  const flatListRef = useRef<FlatList_INTERNAL>(null)
+  const flatListRef = useRef<any>(null)
 
   // events
   // =
@@ -86,7 +86,7 @@ export const ViewSelector = forwardRef<
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {
-      flatListRef.current?.scrollToOffset({offset: 0})
+      flatListRef.current?.scrollToOffset({animated: false, offset: 0})
     },
   }))
 

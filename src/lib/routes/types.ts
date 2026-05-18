@@ -1,8 +1,6 @@
 import {type NavigationState, type PartialState} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
@@ -66,7 +64,6 @@ export type CommonNavigatorParams = {
   MiscellaneousNotificationSettings: undefined
   InterestsSettings: undefined
   AboutSettings: undefined
-  AppIconSettings: undefined
   Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
   Hashtag: {tag: string; author?: string}
   Topic: {topic: string}
@@ -86,7 +83,6 @@ export type CommonNavigatorParams = {
     onSuccess?: () => void
   }
   StarterPackEdit: {rkey?: string}
-  VideoFeed: VideoFeedSourceContext
   Bookmarks: undefined
 }
 

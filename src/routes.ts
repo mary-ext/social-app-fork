@@ -53,7 +53,6 @@ export const router = new Router<AllNavigatableRoutes>({
   ContentAndMediaSettings: '/settings/content-and-media',
   InterestsSettings: '/settings/interests',
   AboutSettings: '/settings/about',
-  AppIconSettings: '/settings/app-icon',
   NotificationSettings: '/settings/notifications',
   ReplyNotificationSettings: '/settings/notifications/replies',
   MentionNotificationSettings: '/settings/notifications/mentions',
@@ -88,6 +87,5 @@ export const router = new Router<AllNavigatableRoutes>({
   StarterPack: '/starter-pack/:name/:rkey',
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
-  VideoFeed: '/video-feed',
   Bookmarks: '/saved',
 })

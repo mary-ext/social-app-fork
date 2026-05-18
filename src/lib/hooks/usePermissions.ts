@@ -1,57 +1,24 @@
-import {Linking} from 'react-native'
-
-import {Alert} from '#/view/com/util/Alert'
-import {useCameraPermissions as useExpoCameraPermissions} from '#/shims/camera'
-import * as MediaLibrary from '#/shims/media-library'
-
-const openPermissionAlert = (perm: string) => {
-  Alert.alert(
-    'Permission needed',
-    `Bluesky does not have permission to access your ${perm}.`,
-    [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {text: 'Open Settings', onPress: () => Linking.openSettings()},
-    ],
-  )
-}
-
 export function usePhotoLibraryPermission() {
-  const [res, requestPermission] = MediaLibrary.usePermissions({
-    granularPermissions: ['photo'],
-  })
   const requestPhotoAccessIfNeeded = async () => {
+    // On the, we use <input type="file"> to produce a filepicker
+    // This does not need any permission granting.
     return true
   }
   return {requestPhotoAccessIfNeeded}
 }
 
-export function useVideoLibraryPermission() {
-  const [res, requestPermission] = MediaLibrary.usePermissions({
-    granularPermissions: ['video'],
-  })
-  const requestVideoAccessIfNeeded = async () => {
-    return true
-  }
-  return {requestVideoAccessIfNeeded}
-}
-
 export function useCameraPermission() {
-  const [res, requestPermission] = useExpoCameraPermissions()
-
   const requestCameraAccessIfNeeded = async () => {
-    if (res?.granted) {
-      return true
-    } else if (!res || res?.status === 'undetermined' || res?.canAskAgain) {
-      const updatedRes = await requestPermission()
-      return updatedRes?.granted
-    } else {
-      openPermissionAlert('camera')
-      return false
-    }
+    return false
   }
 
   return {requestCameraAccessIfNeeded}
+}
+
+export function useVideoLibraryPermission() {
+  const requestVideoAccessIfNeeded = async () => {
+    return true
+  }
+
+  return {requestVideoAccessIfNeeded}
 }

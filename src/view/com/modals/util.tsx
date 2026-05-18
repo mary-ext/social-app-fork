@@ -1,4 +1,1 @@
-export {
-  BottomSheetScrollView as ScrollView,
-  BottomSheetTextInput as TextInput,
-} from '#/shims/native-bottom-sheet'
+export {ScrollView, TextInput} from 'react-native'

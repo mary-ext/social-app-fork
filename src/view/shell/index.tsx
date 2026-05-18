@@ -1,67 +1,46 @@
-import {useCallback, useEffect, useState} from 'react'
-import {BackHandler, useWindowDimensions, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
-import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
-import {useNotificationsRegistration} from '#/lib/notifications/notifications'
-import {isStateAtTabRoot} from '#/lib/routes/helpers'
-import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
-import {
-  useIsDrawerOpen,
-  useIsDrawerSwipeDisabled,
-  useSetDrawerOpen,
-} from '#/state/shell'
-import {useCloseAnyActiveElement} from '#/state/util'
+import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
+import {useCloseAllActiveElements} from '#/state/util'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
-import {atoms as a, select, useTheme} from '#/alf'
-import {setSystemUITheme} from '#/alf/util/systemUI'
+import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
-import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
 import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {RoutesContainer, TabsNavigator} from '#/Navigation'
-import {updateActiveViewAsync} from '#/shims/bluesky-swiss-army'
-import {BottomSheetOutlet} from '#/shims/bottom-sheet'
-import {Drawer} from '#/shims/native-drawer-layout'
-import {Gesture} from '#/shims/native-gesture-handler'
+import {WelcomeModal} from '#/components/WelcomeModal'
+import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
-  const winDim = useWindowDimensions()
-  const insets = useSafeAreaInsets()
+  const navigator = useNavigation<NavigationProp>()
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const welcomeModalControl = useWelcomeModal()
 
-  const closeAnyActiveElement = useCloseAnyActiveElement()
+  useIntentHandler()
 
-  useNotificationsRegistration()
-  useNotificationsHandler()
-
-  useEffect(() => {}, [closeAnyActiveElement])
-
-  // HACK
-  // video adapter doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually
-  // unregister that player to let the new screen register it. This is only a problem on Android, so we only need to
-  // apply it there.
-  // The `state` event should only fire whenever we push or pop to a screen, and should not fire consecutively quickly.
-  // To be certain though, we will also dedupe these calls.
-  const navigation = useNavigation()
-  const dedupe = useDedupe(1000)
   useEffect(() => {
-    return
-  }, [dedupe, navigation])
+    const unsubscribe = navigator.addListener('state', () => {
+      closeAllActiveElements()
+    })
+    return unsubscribe
+  }, [navigator, closeAllActiveElements])
 
   const drawerLayout = useCallback(
     ({children}: {children: React.ReactNode}) => (
@@ -69,28 +48,26 @@ function ShellInner() {
     ),
     [],
   )
-
   return (
     <>
-      <View style={[a.h_full]}>
-        <ErrorBoundary
-          style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <TabsNavigator layout={drawerLayout} />
-        </ErrorBoundary>
-      </View>
-
-      <Composer winHeight={winDim.height} />
+      <ErrorBoundary>
+        <FlatNavigator layout={drawerLayout} />
+      </ErrorBoundary>
+      <Composer winHeight={0} />
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
-      <InAppBrowserConsentDialog />
       <LinkWarningDialog />
       <Lightbox />
       <NuxDialogs />
       <GlobalReportDialog />
+
+      {welcomeModalControl.isOpen && (
+        <WelcomeModal control={welcomeModalControl} />
+      )}
+
       <PortalOutlet />
-      <BottomSheetOutlet />
     </>
   )
 }
@@ -98,97 +75,74 @@ function ShellInner() {
 function DrawerLayout({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const isDrawerOpen = useIsDrawerOpen()
-  const setIsDrawerOpen = useSetDrawerOpen()
-  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
-  const winDim = useWindowDimensions()
+  const setDrawerOpen = useSetDrawerOpen()
+  const {gtTablet} = useBreakpoints()
+  const {t: l} = useLingui()
+  const showDrawer = !gtTablet && isDrawerOpen
+  const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
 
-  const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
-  const {hasSession} = useSession()
-
-  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
-  const [trendingScrollGesture] = useState(() => Gesture.Native())
-
-  const renderDrawerContent = useCallback(() => <DrawerContent />, [])
-  const onOpenDrawer = useCallback(
-    () => setIsDrawerOpen(true),
-    [setIsDrawerOpen],
-  )
-  const onCloseDrawer = useCallback(
-    () => setIsDrawerOpen(false),
-    [setIsDrawerOpen],
-  )
+  useLayoutEffect(() => {
+    if (showDrawer !== showDrawerDelayedExit) {
+      if (showDrawer) {
+        setShowDrawerDelayedExit(true)
+      } else {
+        const timeout = setTimeout(() => {
+          setShowDrawerDelayedExit(false)
+        }, 160)
+        return () => clearTimeout(timeout)
+      }
+    }
+  }, [showDrawer, showDrawerDelayedExit])
 
   return (
-    <Drawer
-      renderDrawerContent={renderDrawerContent}
-      drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
-      configureGestureHandler={handler => {
-        handler = handler.requireExternalGestureToFail(
-          trendingScrollGesture as never,
-        )
-
-        if (swipeEnabled) {
-          if (isDrawerOpen) {
-            return handler.activeOffsetX([-1, 1])
-          } else {
-            return (
-              handler
-                // Any movement to the left is a pager swipe
-                // so fail the drawer gesture immediately.
-                .failOffsetX(-1)
-                // Don't rush declaring that a movement to the right
-                // is a drawer swipe. It could be a vertical scroll.
-                .activeOffsetX(5)
-            )
-          }
-        } else {
-          // Fail the gesture immediately.
-          // This seems more reliable than the `swipeEnabled` prop.
-          // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
-          return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
-        }
-      }}
-      open={isDrawerOpen}
-      onOpen={onOpenDrawer}
-      onClose={onCloseDrawer}
-      swipeEdgeWidth={winDim.width}
-      swipeMinVelocity={100}
-      swipeMinDistance={10}
-      drawerType={'front'}
-      overlayStyle={{
-        backgroundColor: select(t.name, {
-          light: 'rgba(0, 57, 117, 0.1)',
-          dark: 'rgba(1, 82, 168, 0.1)',
-          dim: 'rgba(10, 13, 16, 0.8)',
-        }),
-      }}>
+    <>
       {children}
-    </Drawer>
-  );
+      {showDrawerDelayedExit && (
+        <>
+          <RemoveScrollBar />
+          <TouchableWithoutFeedback
+            onPress={ev => {
+              // Only close if press happens outside of the drawer
+              if (ev.target === ev.currentTarget) {
+                setDrawerOpen(false)
+              }
+            }}
+            accessibilityLabel={l`Close drawer menu`}
+            accessibilityHint="">
+            <View
+              style={[
+                styles.drawerMask,
+                {
+                  backgroundColor: showDrawer
+                    ? select(t.name, {
+                        light: 'rgba(0, 57, 117, 0.1)',
+                        dark: 'rgba(1, 82, 168, 0.1)',
+                        dim: 'rgba(10, 13, 16, 0.8)',
+                      })
+                    : 'transparent',
+                },
+                a.transition_color,
+              ]}>
+              <View
+                style={[
+                  styles.drawerContainer,
+                  showDrawer ? a.slide_in_left : a.slide_out_left,
+                ]}>
+                <DrawerContent />
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </>
+      )}
+    </>
+  )
 }
 
 export function Shell() {
   const t = useTheme()
   const {currentAccount} = useSession()
-  const fullyExpandedCount = useDialogFullyExpandedCountContext()
-
-  useIntentHandler()
-
-  useEffect(() => {
-    setSystemUITheme('theme', t)
-  }, [t])
-
   return (
-    <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
-      <SystemBars
-        style={{
-          statusBar:
-            t.name !== 'light'
-              ? 'light'
-              : 'dark',
-          navigationBar: t.name !== 'light' ? 'light' : 'dark',
-        }}
-      />
+    <View style={[a.util_screen_outer, t.atoms.bg]}>
       {currentAccount?.status === 'takendown' ? (
         <Takendown />
       ) : currentAccount?.status === 'deactivated' ? (
@@ -199,5 +153,24 @@ export function Shell() {
         </RoutesContainer>
       )}
     </View>
-  );
+  )
 }
+
+const styles = StyleSheet.create({
+  drawerMask: {
+    ...a.fixed,
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+  },
+  drawerContainer: {
+    display: 'flex',
+    ...a.fixed,
+    top: 0,
+    left: 0,
+    height: '100%',
+    width: 330,
+    maxWidth: '80%',
+  },
+})

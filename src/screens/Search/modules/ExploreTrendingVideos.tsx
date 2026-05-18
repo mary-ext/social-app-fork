@@ -170,11 +170,6 @@ function VideoCards({
           <CompactVideoPostCard
             post={item.post}
             moderation={item.moderation}
-            sourceContext={{
-              type: 'feedgen',
-              uri: VIDEO_FEED_URI,
-              sourceInterstitial: 'explore',
-            }}
             onInteract={() => {}}
           />
         </View>

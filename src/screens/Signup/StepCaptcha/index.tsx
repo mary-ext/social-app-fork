@@ -1,6 +1,5 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import { ActivityIndicator, View } from 'react-native';
-import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -10,7 +9,6 @@ import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
-import { GCP_PROJECT_ID } from '#/env';
 import {BackNextButtons} from '../BackNextButtons'
 
 const CAPTCHA_PATH =
@@ -20,42 +18,7 @@ export function StepCaptcha() {
   return <StepCaptchaInner />
 }
 
-export function StepCaptchaNative() {
-  const [token, setToken] = useState<string>()
-  const [payload, setPayload] = useState<string>()
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    void (async () => {
-      logger.debug('trying to generate attestation token...')
-      try {
-        const {token, payload} =
-          await ReactNativeDeviceAttest.getIntegrityToken('signup')
-        setToken(token)
-        setPayload(base64UrlEncode(payload))
-      } catch (err) {
-        const e = err as Error
-        logger.error(e)
-      } finally {
-        setReady(true)
-      }
-    })()
-  }, [])
-
-  if (!ready) {
-    return <View />
-  }
-
-  return <StepCaptchaInner token={token} payload={payload} />
-}
-
-function StepCaptchaInner({
-  token,
-  payload,
-}: {
-  token?: string
-  payload?: string
-}) {
+function StepCaptchaInner() {
   const {t: l} = useLingui()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
@@ -80,8 +43,6 @@ function StepCaptchaInner({
     state.userDomain,
     stateParam,
     theme.name,
-    token,
-    payload,
   ])
 
   const onSuccess = useCallback(
@@ -133,8 +94,6 @@ function StepCaptchaInner({
             <CaptchaWebView
               url={url}
               stateParam={stateParam}
-              state={state}
-              onComplete={() => setCompleted(true)}
               onSuccess={onSuccess}
               onError={onError}
             />
@@ -151,14 +110,4 @@ function StepCaptchaInner({
       />
     </>
   )
-}
-
-function base64UrlEncode(data: string): string {
-  const encoder = new TextEncoder()
-  const bytes = encoder.encode(data)
-
-  const binaryString = String.fromCharCode(...bytes)
-  const base64 = btoa(binaryString)
-
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/[=]/g, '');
 }

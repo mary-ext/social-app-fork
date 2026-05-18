@@ -1,53 +1,51 @@
-import { BUNDLE_IDENTIFIER, RELEASE_VERSION } from '#/env/common';
-import {nativeBuildVersion} from '#/shims/application'
+import {BUNDLE_IDENTIFIER, RELEASE_VERSION} from '#/env/common'
 
 export * from '#/env/common'
-
-// for some reason Platform.OS === 'ios' AND Platform.Version is undefined in our CI unit tests -sfn
-const iOSMajorVersion =
-  0
-const androidPlatformVersion =
-  0
 
 /**
  * The semver version of the app, specified in our `package.json`.file. On
  * iOs/Android, the native build version is appended to the semver version, so
  * that it can be used to identify a specific build.
  */
-export const APP_VERSION = `${RELEASE_VERSION}.${nativeBuildVersion}`
+export const APP_VERSION = RELEASE_VERSION
 
 /**
  * The short commit hash and environment of the current bundle.
  */
-export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${
-  __DEV__ ? 'dev' : 'prod'
-})`
+export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${__DEV__ ? 'dev' : 'prod'})`
 
 /**
  * Platform detection
  */
 export const IS_IOS: boolean = false
 export const IS_ANDROID: boolean = false
-export const IS_NATIVE: boolean = true
-export const IS_WEB: boolean = false
+export const IS_NATIVE: boolean = false
+export const IS_WEB: boolean = true
 
 /**
  * Web-specific platform detection
  */
-export const IS_WEB_TOUCH_DEVICE: boolean = true
-export const IS_WEB_MOBILE: boolean = false
-export const IS_WEB_MOBILE_IOS: boolean = false
-export const IS_WEB_MOBILE_ANDROID: boolean = false
-export const IS_WEB_SAFARI: boolean = false
-export const IS_WEB_FIREFOX: boolean = false
+export const IS_WEB_TOUCH_DEVICE =
+  window.matchMedia('(pointer: coarse)').matches
+export const IS_WEB_MOBILE: boolean = window.matchMedia(
+  'only screen and (max-width: 1300px)',
+)?.matches
+export const IS_WEB_MOBILE_IOS: boolean = /iPhone/.test(navigator.userAgent)
+export const IS_WEB_MOBILE_ANDROID: boolean =
+  /android/i.test(navigator.userAgent) && IS_WEB_TOUCH_DEVICE
+export const IS_WEB_SAFARI: boolean = /^((?!chrome|android).)*safari/i.test(
+  // https://stackoverflow.com/questions/7944460/detect-safari-browser
+  navigator.userAgent,
+)
+export const IS_WEB_FIREFOX: boolean = /firefox|fxios/i.test(
+  navigator.userAgent,
+)
 
 /**
  * Misc
  */
-export const IS_HIGH_DPI: boolean = true
-// ideally we'd use isLiquidGlassAvailable() from native glass effect but checking iOS version is good enough for now
-export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26
-// So we can avoid attempting on-device translation when we know it's unsupported.
-export const IS_TRANSLATION_SUPPORTED: boolean =
-  (IS_IOS && iOSMajorVersion >= 18) ||
-  (IS_ANDROID && androidPlatformVersion > 22)
+export const IS_HIGH_DPI: boolean = window.matchMedia(
+  '(min-resolution: 2dppx)',
+).matches
+export const IS_LIQUID_GLASS: boolean = false
+export const IS_TRANSLATION_SUPPORTED: boolean = false

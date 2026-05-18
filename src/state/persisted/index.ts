@@ -8,7 +8,6 @@ import {
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {device} from '#/storage'
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
@@ -16,18 +15,18 @@ export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
 const BSKY_STORAGE = 'BSKY_STORAGE'
-const UPDATE_EVENT = 'BSKY_UPDATE'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
+const UPDATE_EVENT = 'BSKY_UPDATE'
 
 let _state: Schema = defaults
 const _emitter = new EventEmitter()
 
-// async, to match the public persisted storage API
+// async, to match native implementation
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function init() {
   broadcast.onmessage = onBroadcastMessage
-  globalThis.addEventListener?.('storage', onStorage)
+  window.onstorage = onStorage
   const stored = readFromStorage()
   if (stored) {
     _state = stored
@@ -47,15 +46,20 @@ export async function write<K extends keyof Schema>(
 ): Promise<void> {
   const next = readFromStorage()
   if (next) {
-    // Apply this write on top of the latest valid localStorage state.
+    // The storage could have been updated by a different tab before this tab is notified.
+    // Make sure this write is applied on top of the latest data in the storage as long as it's valid.
     _state = next
+    // Don't fire the update listeners yet to avoid a loop.
+    // If there was a change, we'll receive the broadcast event soon enough which will do that.
   }
   try {
     if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
+      // Fast path for updates that are guaranteed to be noops.
+      // This is good mostly because it avoids useless broadcasts to other tabs.
       return
     }
-  } catch {
-    // Ignore and go through the normal write path.
+  } catch (e) {
+    // Ignore and go through the normal path.
   }
   _state = normalizeData({
     ..._state,
@@ -64,8 +68,6 @@ export async function write<K extends keyof Schema>(
   writeToStorage(_state)
   broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
   broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
-  _emitter.emit('update:' + String(key))
-  _emitter.emit('update')
 }
 write satisfies PersistedApi['write']
 
@@ -75,10 +77,10 @@ export function onUpdate<K extends keyof Schema>(
 ): () => void {
   const listener = () => cb(get(key))
   _emitter.addListener('update', listener) // Backcompat while upgrading
-  _emitter.addListener('update:' + String(key), listener)
+  _emitter.addListener('update:' + key, listener)
   return () => {
     _emitter.removeListener('update', listener) // Backcompat while upgrading
-    _emitter.removeListener('update:' + String(key), listener)
+    _emitter.removeListener('update:' + key, listener)
   }
 }
 onUpdate satisfies PersistedApi['onUpdate']
@@ -87,46 +89,47 @@ onUpdate satisfies PersistedApi['onUpdate']
 export async function clearStorage() {
   try {
     localStorage.removeItem(BSKY_STORAGE)
-    device.removeAll()
   } catch (e: any) {
-    logger.error(`persisted store: failed to clear`, {message: e.toString()})
+    // Expected on the web in private mode.
   }
 }
 clearStorage satisfies PersistedApi['clearStorage']
 
-function onStorage(event: StorageEvent) {
-  if (event.storageArea !== localStorage || event.key !== BSKY_STORAGE) {
-    return
-  }
-  applyStoredState()
-}
-
-// eslint-disable-next-line @typescript-eslint/require-await
-async function onBroadcastMessage({data}: MessageEvent) {
-  if (
-    typeof data === 'object' &&
-    (data.event === UPDATE_EVENT || data.event?.type === UPDATE_EVENT)
-  ) {
-    applyStoredState(
-      typeof data.event.key === 'string' ? data.event.key : undefined,
-    )
-  }
-}
-
-function applyStoredState(key?: string) {
+function onStorage() {
   const next = readFromStorage()
   if (next === _state) {
     return
   }
   if (next) {
     _state = next
-    if (key) {
-      _emitter.emit('update:' + key)
-    } else {
-      _emitter.emit('update')
+    _emitter.emit('update')
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/require-await
+async function onBroadcastMessage({data}: MessageEvent) {
+  if (
+    typeof data === 'object' &&
+    (data.event === UPDATE_EVENT || // Backcompat while upgrading
+      data.event?.type === UPDATE_EVENT)
+  ) {
+    // read next state, possibly updated by another tab
+    const next = readFromStorage()
+    if (next === _state) {
+      return
     }
-  } else {
-    logger.error(`persisted state: handled update but found no data`)
+    if (next) {
+      _state = next
+      if (typeof data.event.key === 'string') {
+        _emitter.emit('update:' + data.event.key)
+      } else {
+        _emitter.emit('update') // Backcompat while upgrading
+      }
+    } else {
+      logger.error(
+        `persisted state: handled update update from broadcast channel, but found no data`,
+      )
+    }
   }
 }
 
@@ -135,8 +138,8 @@ function writeToStorage(value: Schema) {
   if (rawData) {
     try {
       localStorage.setItem(BSKY_STORAGE, rawData)
-    } catch {
-      // Expected in restricted/private modes or quota exhaustion.
+    } catch (e) {
+      // Expected on the web in private mode.
     }
   }
 }
@@ -147,8 +150,8 @@ function readFromStorage(): Schema | undefined {
   let rawData: string | null = null
   try {
     rawData = localStorage.getItem(BSKY_STORAGE)
-  } catch {
-    // Expected in restricted/private modes.
+  } catch (e) {
+    // Expected on the web in private mode.
   }
   if (rawData) {
     if (rawData === lastRawData) {

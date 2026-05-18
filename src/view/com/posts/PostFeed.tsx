@@ -44,7 +44,6 @@ import {useProgressGuide} from '#/state/shell/progress-guide'
 import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
@@ -755,27 +754,7 @@ let PostFeed = ({
           </View>
         )
       } else if (row.type === 'videoGridRow') {
-        let sourceContext: VideoFeedSourceContext
-        if (feedType === 'author') {
-          sourceContext = {
-            type: 'author',
-            did: feedUriOrActorDid,
-            filter: feedTab as AuthorFilter,
-          }
-        } else {
-          sourceContext = {
-            type: 'feedgen',
-            uri: row.sourceFeedUri,
-            sourceInterstitial: feedCacheKey ?? 'none',
-          }
-        }
-
-        return (
-          <PostFeedVideoGridRow
-            items={row.items}
-            sourceContext={sourceContext}
-          />
-        )
+        return <PostFeedVideoGridRow items={row.items} />
       } else if (row.type === 'showLessFollowup') {
         return <ShowLessFollowup />
       } else {

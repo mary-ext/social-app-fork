@@ -216,7 +216,7 @@ export function PostThread({uri}: {uri: string}) {
        * back _up_ to the top of the screen.
        */
       const offset = anchorOffsetTop - headerHeight
-      list.scrollToOffset({offset})
+      list.scrollToOffset({animated: false, offset})
 
       /*
        * After we manage to do a positive adjustment, we need to ensure this

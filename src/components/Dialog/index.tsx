@@ -1,149 +1,97 @@
 import {
   forwardRef,
   useCallback,
+  useContext,
   useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from 'react'
 import {
-  Keyboard,
-  type KeyboardEventListener,
+  FlatList,
+  type FlatListProps,
+  type GestureResponderEvent,
   type LayoutChangeEvent,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
   Pressable,
-  ScrollView,
   type StyleProp,
-  TextInput,
   View,
   type ViewStyle,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
+import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import Animated, {
-  runOnJS,
-  type ScrollEvent,
-  useAnimatedStyle,
-} from '#/lib/animations/reanimatedCompat'
-import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import { atoms as a, tokens, useTheme } from '#/alf';
-import {useThemeName} from '#/alf/util/useColorModeTheme'
-import {Context, useDialogContext} from '#/components/Dialog/context'
+import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
+import {Button, ButtonIcon} from '#/components/Button'
+import {Context} from '#/components/Dialog/context'
 import {
   type DialogControlProps,
   type DialogInnerProps,
   type DialogOuterProps,
 } from '#/components/Dialog/types'
-import {createInput} from '#/components/forms/TextField'
-import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
-import {BottomSheet, BottomSheetSnapPoint} from '#/shims/bottom-sheet'
-import {
-type BottomSheetNativeComponent,
-  type BottomSheetSnapPointChangeEvent,
-  type BottomSheetStateChangeEvent} from '#/shims/bottom-sheet'
-import {useReanimatedKeyboardAnimation} from '#/shims/native-keyboard-controller'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
 export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
+export {Input} from '#/components/forms/TextField'
 
-export const Input = createInput(TextInput)
+// 100 minus 10vh of paddingVertical
+export const WEB_DIALOG_HEIGHT = '80vh'
+
+const stopPropagation = (e: any) => e.stopPropagation()
+const preventDefault = (e: any) => e.preventDefault()
 
 export function Outer({
   children,
   control,
   onClose,
-  nativeOptions,
-  testID,
+  webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const themeName = useThemeName()
-  const t = useTheme(themeName)
-  const ref = useRef<BottomSheetNativeComponent>(null)
-  const closeCallbacks = useRef<(() => void)[]>([])
-  const {setDialogIsOpen, setFullyExpandedCount} =
-    useDialogStateControlContext()
+  const {t: l} = useLingui()
+  const {gtMobile} = useBreakpoints()
+  const [isOpen, setIsOpen] = useState(false)
+  const {setDialogIsOpen} = useDialogStateControlContext()
 
-  const prevSnapPoint = useRef<BottomSheetSnapPoint>(
-    BottomSheetSnapPoint.Hidden,
-  )
-
-  const [disableDrag, setDisableDrag] = useState(false)
-  const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
-    BottomSheetSnapPoint.Partial,
-  )
-
-  const callQueuedCallbacks = useCallback(() => {
-    for (const cb of closeCallbacks.current) {
-      try {
-        cb()
-      } catch (e: any) {
-        logger.error(e || 'Error running close callback')
-      }
-    }
-
-    closeCallbacks.current = []
-  }, [])
-
-  const open = useCallback<DialogControlProps['open']>(() => {
-    // Run any leftover callbacks that might have been queued up before calling `.open()`
-    callQueuedCallbacks()
+  const open = useCallback(() => {
     setDialogIsOpen(control.id, true)
-    ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+    setIsOpen(true)
+  }, [setIsOpen, setDialogIsOpen, control.id])
 
-  // This is the function that we call when we want to dismiss the dialog.
-  const close = useCallback<DialogControlProps['close']>(cb => {
-    if (typeof cb === 'function') {
-      closeCallbacks.current.push(cb)
-    }
-    ref.current?.dismiss()
-  }, [])
+  const close = useCallback<DialogControlProps['close']>(
+    cb => {
+      setDialogIsOpen(control.id, false)
+      setIsOpen(false)
 
-  // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
-  // happen before we run this. It is passed to the `BottomSheet` component.
-  const onCloseAnimationComplete = useCallback(() => {
-    // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
-    // tells us that we need to toggle the accessibility overlay setting
-    setDialogIsOpen(control.id, false)
-    callQueuedCallbacks()
-    onClose?.()
-  }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
-
-  const onSnapPointChange = (e: BottomSheetSnapPointChangeEvent) => {
-    const {snapPoint} = e.nativeEvent
-    setSnapPoint(snapPoint)
-
-    if (
-      snapPoint === BottomSheetSnapPoint.Full &&
-      prevSnapPoint.current !== BottomSheetSnapPoint.Full
-    ) {
-      setFullyExpandedCount(c => c + 1)
-    } else if (
-      snapPoint !== BottomSheetSnapPoint.Full &&
-      prevSnapPoint.current === BottomSheetSnapPoint.Full
-    ) {
-      setFullyExpandedCount(c => c - 1)
-    }
-    prevSnapPoint.current = snapPoint
-  }
-
-  const onStateChange = (e: BottomSheetStateChangeEvent) => {
-    if (e.nativeEvent.state === 'closed') {
-      onCloseAnimationComplete()
-
-      if (prevSnapPoint.current === BottomSheetSnapPoint.Full) {
-        setFullyExpandedCount(c => c - 1)
+      try {
+        if (cb && typeof cb === 'function') {
+          // This timeout ensures that the callback runs at the same time as it would on native. I.e.
+          // console.log('Step 1') -> close(() => console.log('Step 3')) -> console.log('Step 2')
+          // This should always output 'Step 1', 'Step 2', 'Step 3', but without the timeout it would output
+          // 'Step 1', 'Step 3', 'Step 2'.
+          setTimeout(cb)
+        }
+      } catch (e: any) {
+        logger.error(`Dialog closeCallback failed`, {
+          message: e.message,
+        })
       }
-      prevSnapPoint.current = BottomSheetSnapPoint.Hidden
-    }
-  }
+
+      onClose?.()
+    },
+    [control.id, onClose, setDialogIsOpen],
+  )
+
+  const handleBackgroundPress = useCallback(
+    async (e: GestureResponderEvent) => {
+      webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
+    },
+    [webOptions, close],
+  )
 
   useImperativeHandle(
     control.ref,
@@ -151,171 +99,168 @@ export function Outer({
       open,
       close,
     }),
-    [open, close],
+    [close, open],
   )
-
-  const isHeightConstrained = nativeOptions?.maxHeight != null
 
   const context = useMemo(
     () => ({
       close,
-      isNativeDialog: true,
-      nativeSnapPoint: snapPoint,
-      disableDrag,
-      setDisableDrag,
+      isNativeDialog: false,
+      nativeSnapPoint: 0,
+      disableDrag: false,
+      setDisableDrag: () => {},
       isWithinDialog: true,
-      isHeightConstrained,
+      isHeightConstrained: false,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
+    [close],
   )
 
   return (
-    <BottomSheet
-      ref={ref}
-      // device-bezel radius when undefined
-      cornerRadius={20}
-      backgroundColor={t.atoms.bg.backgroundColor}
-      {...nativeOptions}
-      onSnapPointChange={onSnapPointChange}
-      onStateChange={onStateChange}
-      disableDrag={disableDrag}>
-      <Context.Provider value={context}>
-        <View
-          testID={testID}
-          style={[a.relative, isHeightConstrained && a.flex_1]}>
-          {children}
-        </View>
-      </Context.Provider>
-    </BottomSheet>
-  );
-}
-
-/**
- * @deprecated use `Dialog.ScrollableInner` instead
- */
-export function Inner({children, style, header}: DialogInnerProps) {
-  const insets = useSafeAreaInsets()
-  return (
     <>
-      {header}
-      <View
-        style={[
-          a.pt_2xl,
-          a.px_xl,
-          {paddingBottom: insets.bottom + insets.top},
-          style,
-        ]}>
-        {children}
-      </View>
+      {isOpen && (
+        <Portal>
+          <Context.Provider value={context}>
+            <RemoveScrollBar />
+            <Pressable
+              accessibilityHint={undefined}
+              accessibilityLabel={l`Close active dialog`}
+              onPress={handleBackgroundPress}>
+              <View
+                style={[
+                  a.fixed,
+                  a.inset_0,
+                  a.z_10,
+                  a.px_xl,
+                  webOptions?.alignCenter ? a.justify_center : undefined,
+                  a.align_center,
+                  {
+                    overflowY: 'auto',
+                    paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
+                  } as any,
+                ]}>
+                <Backdrop />
+                {/**
+                 * This is needed to prevent centered dialogs from overflowing
+                 * above the screen, and provides a "natural" centering so that
+                 * stacked dialogs appear relatively aligned.
+                 */}
+                <View
+                  style={[
+                    a.w_full,
+                    a.z_20,
+                    a.align_center,
+                    {minHeight: '60vh', position: 'static'} as any,
+                  ]}>
+                  {children}
+                </View>
+              </View>
+            </Pressable>
+          </Context.Provider>
+        </Portal>
+      )}
     </>
   );
 }
 
-export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
-  function ScrollableInner(
-    {children, contentContainerStyle, header, style, ...props},
-    ref,
-  ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
-      useDialogContext()
-    const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
-    const insets = useSafeAreaInsets()
-    const [keyboardHeight, setKeyboardHeight] = useState(() =>
-      0,
-    )
-
-    const keyboardEventHandler = useCallback<KeyboardEventListener>(e => {
-      setKeyboardHeight(e.endCoordinates.height)
-    }, [])
-    useOnKeyboard('keyboardDidShow', keyboardEventHandler)
-    useOnKeyboard('keyboardDidHide', keyboardEventHandler)
-
-    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      return
-    }
-
-    return (
-      <ScrollView
-        style={[isHeightConstrained && a.flex_1, style]}
-        contentContainerStyle={[
-          a.pt_2xl,
-          a.px_xl,
-          undefined,
-          contentContainerStyle,
-        ]}
+export function Inner({
+  ref,
+  children,
+  style,
+  label,
+  accessibilityLabelledBy,
+  accessibilityDescribedBy,
+  header,
+  contentContainerStyle,
+}: DialogInnerProps) {
+  const t = useTheme()
+  const {close} = useContext(Context)
+  const {gtMobile} = useBreakpoints()
+  const {reduceMotionEnabled} = useA11y()
+  FocusGuards.useFocusGuards()
+  return (
+    <FocusScope.FocusScope loop asChild trapped>
+      <View
         ref={ref}
-        showsVerticalScrollIndicator={undefined}
-        contentInsetAdjustmentBehavior={
-          isAtMaxSnapPoint ? 'automatic' : 'never'
-        }
-        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
-        {...props}
-        bounces={isAtMaxSnapPoint}
-        scrollEventThrottle={50}
-        // set drag state based on scroll on android.
-        // we want to detect if it's at the top or not, so watch
-        // scrollEndDrag and momentumScrollEnd as well
-        onScroll={undefined as any}
-        onScrollEndDrag={undefined as any}
-        onMomentumScrollEnd={undefined as any}
-        keyboardShouldPersistTaps="handled"
-        // TODO: figure out why this positions the header absolutely (rather than stickily)
-        // on Android. fine to disable for now, because we don't have any
-        // dialogs that use this that actually scroll -sfn
-        stickyHeaderIndices={undefined as any}>
-        {header}
-        {children}
-      </ScrollView>
-    );
-  },
-)
+        role="dialog"
+        aria-role="dialog"
+        aria-label={label}
+        aria-labelledby={accessibilityLabelledBy}
+        aria-describedby={accessibilityDescribedBy}
+        // @ts-expect-error web only -prf
+        onClick={stopPropagation}
+        onStartShouldSetResponder={_ => true}
+        onTouchEnd={stopPropagation}
+        // note: flatten is required for some reason -sfn
+        style={flatten([
+          a.relative,
+          a.rounded_md,
+          a.w_full,
+          a.border,
+          t.atoms.bg,
+          {
+            cursor: 'default', // The overlay applies `cursor: 'pointer'` to all children.
+            maxWidth: 600,
+            borderColor: t.palette.contrast_200,
+            shadowColor: t.palette.black,
+            shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
+            shadowRadius: 30,
+          },
+          !reduceMotionEnabled && a.zoom_fade_in,
+          style,
+        ])}>
+        <DismissableLayer.DismissableLayer
+          onInteractOutside={preventDefault}
+          onFocusOutside={preventDefault}
+          onDismiss={close}
+          style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+          {header}
+          <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
+            {children}
+          </View>
+        </DismissableLayer.DismissableLayer>
+      </View>
+    </FocusScope.FocusScope>
+  )
+}
+
+export const ScrollableInner = Inner
 
 export const InnerFlatList = forwardRef<
-  ListMethods,
-  ListProps<any> & {
+  any,
+  FlatListProps<any> & {label?: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
     footer?: React.ReactNode
   }
 >(function InnerFlatList(
-  {headerOffset, footer, style, contentContainerStyle, ...props},
+  {
+    label,
+    style,
+    webInnerStyle,
+    webInnerContentContainerStyle,
+    footer,
+    ...props
+  },
   ref,
 ) {
-  const insets = useSafeAreaInsets()
-  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
-
-  const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
-
-  const onScroll = (e: ScrollEvent) => {
-    'worklet';
-    return
-  }
-
+  const {gtMobile} = useBreakpoints()
   return (
-    <ScrollProvider
-      onScroll={onScroll}
-      onEndDrag={onScroll}
-      onMomentumEnd={onScroll}>
-      <List
-        keyboardShouldPersistTaps="handled"
-        contentInsetAdjustmentBehavior={
-          isAtMaxSnapPoint ? 'automatic' : 'never'
-        }
-        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
-        scrollIndicatorInsets={{top: headerOffset}}
-        bounces={isAtMaxSnapPoint}
+    <Inner
+      label={label ?? ''}
+      style={[
+        a.overflow_hidden,
+        a.px_0,
+        {maxHeight: WEB_DIALOG_HEIGHT} as any,
+        webInnerStyle,
+      ]}
+      contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
+      <FlatList
         ref={ref}
-        showsVerticalScrollIndicator={undefined}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, style]}
         {...props}
-        style={[a.h_full, style]}
-        contentContainerStyle={[
-          {paddingTop: headerOffset},
-          undefined as any,
-          contentContainerStyle,
-        ]}
       />
       {footer}
-    </ScrollProvider>
+    </Inner>
   );
 })
 
@@ -327,85 +272,69 @@ export function FlatListFooter({
   onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const t = useTheme()
-  const {bottom} = useSafeAreaInsets()
-  const {height} = useReanimatedKeyboardAnimation()
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {}
-  })
 
   return (
-    <Animated.View
+    <View
       onLayout={onLayout}
       style={[
         a.absolute,
         a.bottom_0,
         a.w_full,
         a.z_10,
-        a.border_t,
         t.atoms.bg,
+        a.border_t,
         t.atoms.border_contrast_low,
         a.px_lg,
-        a.pt_md,
-        {paddingBottom: bottom + tokens.space.md},
-        undefined as any,
+        a.py_md,
       ]}>
       {children}
-    </Animated.View>
-  );
-}
-
-export function Handle({
-  difference = false,
-  fill,
-}: {
-  difference?: boolean
-  fill?: string
-}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {screenReaderEnabled} = useA11y()
-  const {close} = useDialogContext()
-
-  return (
-    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 20}]}>
-      <Pressable
-        accessible={screenReaderEnabled}
-        onPress={() => close()}
-        accessibilityLabel={l`Dismiss`}
-        accessibilityHint={l`Double tap to close the dialog`}>
-        <View
-          style={[
-            a.rounded_sm,
-            {
-              top: tokens.space._2xl / 2 - 2.5,
-              width: 35,
-              height: 5,
-              alignSelf: 'center',
-            },
-            difference
-              ? {
-                  // TODO: mixBlendMode is only available on the new architecture -sfn
-                  // backgroundColor: t.palette.white,
-                  // mixBlendMode: 'difference',
-                  backgroundColor: t.palette.white,
-                  opacity: 0.75,
-                }
-              : {
-                  backgroundColor: fill || t.palette.contrast_975,
-                  opacity: 0.5,
-                },
-          ]}
-        />
-      </Pressable>
     </View>
   )
 }
 
 export function Close() {
+  const {t: l} = useLingui()
+  const {close} = useContext(Context)
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.z_10,
+        {
+          top: a.pt_md.paddingTop,
+          right: a.pr_md.paddingRight,
+        },
+      ]}>
+      <Button
+        size="small"
+        variant="ghost"
+        color="secondary"
+        shape="round"
+        onPress={() => close()}
+        label={l`Close active dialog`}>
+        <ButtonIcon icon={X} size="md" />
+      </Button>
+    </View>
+  )
+}
+
+export function Handle(_props: {fill?: string; difference?: boolean} = {}) {
   return null
 }
 
 export function Backdrop() {
-  return null
+  const t = useTheme()
+  const {reduceMotionEnabled} = useA11y()
+  return (
+    <View style={{opacity: 0.8}}>
+      <View
+        style={[
+          a.fixed,
+          a.inset_0,
+          {backgroundColor: t.palette.black},
+          !reduceMotionEnabled && a.fade_in,
+        ]}
+      />
+    </View>
+  )
 }

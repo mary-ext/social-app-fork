@@ -35,7 +35,7 @@ export function ExportCarDialog({
       const downloadRes = await agent.com.atproto.sync.getRepo({did})
       const saveRes = await saveBytesToDisk(
         'repo.car',
-        downloadRes.data,
+        downloadRes.data as Uint8Array<ArrayBuffer>,
         downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
       )
 

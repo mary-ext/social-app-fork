@@ -25,7 +25,6 @@ import * as FileSystem from '#/shims/file-system/legacy'
 import {Image} from '#/shims/image'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
-import {OTAInfo} from './components/OTAInfo'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
@@ -129,12 +128,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeText>{env.APP_METADATA}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
-          {devModeEnabled && (
-            <>
-              <OTAInfo />
-              {false}
-            </>
-          )}
+          {false}
         </SettingsList.Container>
       </Layout.Content>
       <SendErrorReportDialog control={sendErrorReportControl} />

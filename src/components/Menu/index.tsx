@@ -1,4 +1,4 @@
-import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
 import {
   Pressable,
   type StyleProp,
@@ -6,12 +6,12 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
-import flattenReactChildren from 'react-keyed-flatten-children'
+import {useLingui} from '@lingui/react/macro'
+import {DropdownMenu} from 'radix-ui'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
+import {useA11y} from '#/state/a11y'
+import { atoms as a, flatten, useTheme } from '#/alf';
+import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   Context,
@@ -25,16 +25,34 @@ import {
   type ItemIconProps,
   type ItemProps,
   type ItemTextProps,
+  type RadixPassThroughTriggerProps,
   type TriggerProps,
 } from '#/components/Menu/types'
+import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
-export {
-  type DialogControlProps as MenuControlProps,
-  useDialogControl as useMenuControl,
-} from '#/components/Dialog'
-
 export {useMenuContext}
+export type MenuControlProps = Dialog.DialogControlProps
+
+export function useMenuControl(): Dialog.DialogControlProps {
+  const id = useId()
+  const [isOpen, setIsOpen] = useState(false)
+
+  return useMemo(
+    () => ({
+      id,
+      ref: {current: null},
+      isOpen,
+      open() {
+        setIsOpen(true)
+      },
+      close() {
+        setIsOpen(false)
+      },
+    }),
+    [id, isOpen, setIsOpen],
+  )
+}
 
 export function Root({
   children,
@@ -42,16 +60,62 @@ export function Root({
 }: React.PropsWithChildren<{
   control?: Dialog.DialogControlProps
 }>) {
-  const defaultControl = Dialog.useDialogControl()
+  const {t: l} = useLingui()
+  const defaultControl = useMenuControl()
   const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
     [control, defaultControl],
   )
+  const onOpenChange = useCallback(
+    (open: boolean) => {
+      if (context.control.isOpen && !open) {
+        context.control.close()
+      } else if (!context.control.isOpen && open) {
+        context.control.open()
+      }
+    },
+    [context.control],
+  )
 
-  return <Context.Provider value={context}>{children}</Context.Provider>
+  return (
+    <Context.Provider value={context}>
+      {context.control.isOpen && (
+        <Portal>
+          <Pressable
+            style={[a.fixed, a.inset_0, a.z_50]}
+            onPress={() => context.control.close()}
+            accessibilityHint=""
+            accessibilityLabel={l`Context menu backdrop, click to close the menu.`}
+          />
+        </Portal>
+      )}
+      <DropdownMenu.Root
+        open={context.control.isOpen}
+        onOpenChange={onOpenChange}>
+        {children}
+      </DropdownMenu.Root>
+    </Context.Provider>
+  )
 }
+
+const RadixTriggerPassThrough = forwardRef(
+  (
+    props: {
+      children: (
+        props: RadixPassThroughTriggerProps & {
+          ref: React.Ref<HTMLElement>
+        },
+      ) => React.ReactNode
+    },
+    ref,
+  ) => {
+    // @ts-expect-error Radix provides no types of this stuff
+    return props.children({...props, ref})
+  },
+)
+RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
 export function Trigger({
   children,
@@ -59,116 +123,173 @@ export function Trigger({
   role = 'button',
   hint,
 }: TriggerProps) {
-  const context = useMenuContext()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {control} = useMenuContext()
   const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
   } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  return children({
-    IS_NATIVE: true,
-    control: context.control,
-    state: {
-      hovered: false,
-      focused,
-      pressed,
-    },
-    props: {
-      ref: null,
-      onPress: context.control.open,
-      onFocus,
-      onBlur,
-      onPressIn,
-      onPressOut,
-      accessibilityHint: hint,
-      accessibilityLabel: label,
-      accessibilityRole: role,
-    },
-  })
+  return (
+    <DropdownMenu.Trigger asChild>
+      <RadixTriggerPassThrough>
+        {props =>
+          children({
+            IS_NATIVE: false,
+            control,
+            state: {
+              hovered,
+              focused,
+              pressed: false,
+            },
+            props: {
+              ...props,
+              // No-op override to prevent false positive that interprets mobile scroll as a tap.
+              // This requires the custom onPress handler below to compensate.
+              // https://github.com/radix-ui/primitives/issues/1912
+              onPointerDown: undefined,
+              onPress: () => {
+                if (window.event instanceof KeyboardEvent) {
+                  // The onPointerDown hack above is not relevant to this press, so don't do anything.
+                  return
+                }
+                // Compensate for the disabled onPointerDown above by triggering it manually.
+                if (control.isOpen) {
+                  control.close()
+                } else {
+                  control.open()
+                }
+              },
+              onFocus: onFocus,
+              onBlur: onBlur,
+              onMouseEnter,
+              onMouseLeave,
+              accessibilityHint: hint,
+              accessibilityLabel: label,
+              accessibilityRole: role,
+            },
+          })
+        }
+      </RadixTriggerPassThrough>
+    </DropdownMenu.Trigger>
+  )
 }
 
 export function Outer({
   children,
-  showCancel,
+  style,
 }: React.PropsWithChildren<{
   showCancel?: boolean
+  align?: 'start' | 'center' | 'end' | string
   style?: StyleProp<ViewStyle>
 }>) {
-  const context = useMenuContext()
-  const {t: l} = useLingui()
+  const t = useTheme()
+  const {reduceMotionEnabled} = useA11y()
 
   return (
-    <Dialog.Outer
-      control={context.control}
-      nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
-      {/* Re-wrap with context since Dialogs are portal-ed to root */}
-      <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={l`Menu`}>
-          <View style={[a.gap_lg]}>
-            {children}
+    <DropdownMenu.Portal>
+      <DropdownMenu.Content
+        sideOffset={5}
+        collisionPadding={{left: 5, right: 5, bottom: 5}}
+        loop
+        aria-label="Test"
+        className="dropdown-menu-transform-origin dropdown-menu-constrain-size">
+        <View
+          style={[
+            a.rounded_sm,
+            a.p_xs,
+            a.border,
+            t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
+            t.atoms.shadow_md,
+            t.atoms.border_contrast_low,
+            a.overflow_auto,
+            !reduceMotionEnabled && a.zoom_fade_in,
+            style,
+          ]}>
+          {children}
+        </View>
 
-          </View>
-        </Dialog.ScrollableInner>
-      </Context.Provider>
-    </Dialog.Outer>
-  );
+        {/* Disabled until we can fix positioning
+        <DropdownMenu.Arrow
+          className="DropdownMenuArrow"
+          fill={
+            (t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25)
+              .backgroundColor
+          }
+        />
+          */}
+      </DropdownMenu.Content>
+    </DropdownMenu.Portal>
+  )
 }
 
 export function Item({
   children,
   label,
-  style,
   onPress,
+  style,
   destructive = false,
   ...rest
 }: ItemProps) {
   const t = useTheme()
-  const context = useMenuContext()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {control} = useMenuContext()
   const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
   } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
   return (
-    <Pressable
-      {...rest}
-      accessibilityHint=""
-      accessibilityLabel={label}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onPress={e => {}}
-      onPressIn={e => {
-        onPressIn()
-        rest.onPressIn?.(e)
-      }}
-      onPressOut={e => {
-        onPressOut()
-        rest.onPressOut?.(e)
-      }}
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.gap_sm,
-        a.px_md,
-        a.rounded_md,
-        a.overflow_hidden,
-        a.border,
-        t.atoms.bg_contrast_25,
-        t.atoms.border_contrast_low,
-        {minHeight: 44, paddingVertical: 10},
-        style,
-        (focused || pressed) && !rest.disabled && [t.atoms.bg_contrast_50],
-      ]}>
-      <ItemContext.Provider
-        value={{disabled: Boolean(rest.disabled), destructive}}>
-        {children}
-      </ItemContext.Provider>
-    </Pressable>
+    <DropdownMenu.Item asChild>
+      <Pressable
+        {...rest}
+        className="radix-dropdown-item"
+        accessibilityHint=""
+        accessibilityLabel={label}
+        onPress={e => {
+          onPress(e)
+
+          /**
+           * Ported forward from Radix
+           * @see https://www.radix-ui.com/primitives/docs/components/dropdown-menu#item
+           */
+          if (!e.defaultPrevented) {
+            control.close()
+          }
+        }}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        // need `flatten` here for Radix compat
+        style={flatten([
+          a.flex_row,
+          a.align_center,
+          a.gap_lg,
+          a.py_sm,
+          a.rounded_xs,
+          a.overflow_hidden,
+          {minHeight: 32, paddingHorizontal: 10},
+          {outline: 0} as any,
+          (hovered || focused) &&
+            !rest.disabled && [
+              {outline: '0 !important'} as any,
+              t.name === 'light'
+                ? t.atoms.bg_contrast_25
+                : t.atoms.bg_contrast_50,
+            ],
+          style,
+        ])}
+        {...{
+          onMouseEnter,
+          onMouseLeave,
+        } as any}>
+        <ItemContext.Provider
+          value={{disabled: Boolean(rest.disabled), destructive}}>
+          {children}
+        </ItemContext.Provider>
+      </Pressable>
+    </DropdownMenu.Item>
   );
 }
 
@@ -177,11 +298,8 @@ export function ItemText({children, style}: ItemTextProps) {
   const {disabled, destructive} = useMenuItemContext()
   return (
     <Text
-      numberOfLines={1}
-      ellipsizeMode="middle"
       style={[
         a.flex_1,
-        a.text_md,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
         style,
@@ -193,22 +311,33 @@ export function ItemText({children, style}: ItemTextProps) {
   )
 }
 
-export function ItemIcon({icon: Comp, fill}: ItemIconProps) {
+export function ItemIcon({icon: Comp, position = 'left', fill}: ItemIconProps) {
   const t = useTheme()
   const {disabled, destructive} = useMenuItemContext()
   return (
-    <Comp
-      size="lg"
-      fill={
-        fill
-          ? fill({disabled})
-          : disabled
-            ? t.atoms.text_contrast_low.color
-            : destructive
-              ? t.palette.negative_500
-              : t.atoms.text_contrast_medium.color
-      }
-    />
+    <View
+      style={[
+        position === 'left' && {
+          marginLeft: -2,
+        },
+        position === 'right' && {
+          marginRight: -2,
+          marginLeft: 12,
+        },
+      ]}>
+      <Comp
+        size="md"
+        fill={
+          fill
+            ? fill({disabled})
+            : disabled
+              ? t.atoms.text_contrast_low.color
+              : destructive
+                ? t.palette.negative_500
+                : t.atoms.text_contrast_medium.color
+        }
+      />
+    </View>
   )
 }
 
@@ -245,39 +374,6 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-/**
- * NATIVE ONLY - for adding non-pressable items to the menu
- *
- * @platform ios, android
- */
-export function ContainerItem({
-  children,
-  style,
-}: {
-  children: React.ReactNode
-  style?: StyleProp<ViewStyle>
-}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.gap_sm,
-        a.px_md,
-        a.rounded_lg,
-        a.curve_continuous,
-        a.border,
-        t.atoms.bg_contrast_25,
-        t.atoms.border_contrast_low,
-        {paddingVertical: 10},
-        style,
-      ]}>
-      {children}
-    </View>
-  )
-}
-
 export function LabelText({
   children,
   style,
@@ -290,8 +386,10 @@ export function LabelText({
     <Text
       style={[
         a.font_semi_bold,
-        t.atoms.text_contrast_medium,
-        {marginBottom: -8},
+        a.p_sm,
+        t.atoms.text_contrast_low,
+        a.leading_snug,
+        {paddingHorizontal: 10},
         style,
       ]}>
       {children}
@@ -299,57 +397,24 @@ export function LabelText({
   )
 }
 
-export function Group({children, style}: GroupProps) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.rounded_lg,
-        a.curve_continuous,
-        a.overflow_hidden,
-        a.border,
-        t.atoms.border_contrast_low,
-        style,
-      ]}>
-      {flattenReactChildren(children).map((child, i) => {
-        return isValidElement(child) &&
-          (child.type === Item || child.type === ContainerItem) ? (
-          <Fragment key={i}>
-            {i > 0 ? (
-              <View style={[a.border_b, t.atoms.border_contrast_low]} />
-            ) : null}
-            {cloneElement(child, {
-              // @ts-expect-error cloneElement is not aware of the types
-              style: {
-                borderRadius: 0,
-                borderWidth: 0,
-              },
-            })}
-          </Fragment>
-        ) : null
-      })}
-    </View>
-  )
-}
-
-function Cancel() {
-  const {t: l} = useLingui()
-  const context = useMenuContext()
-
-  return (
-    <Button
-      label={l`Close this dialog`}
-      size="small"
-      variant="ghost"
-      color="secondary"
-      onPress={() => context.control.close()}>
-      <ButtonText>
-        <Trans>Cancel</Trans>
-      </ButtonText>
-    </Button>
-  )
+export function Group({children}: GroupProps) {
+  return children
 }
 
 export function Divider() {
+  const t = useTheme()
+  return (
+    <DropdownMenu.Separator
+      style={flatten([
+        a.my_xs,
+        t.atoms.bg_contrast_100,
+        a.flex_shrink_0,
+        {height: 1},
+      ])}
+    />
+  )
+}
+
+export function ContainerItem() {
   return null
 }

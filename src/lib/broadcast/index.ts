@@ -1,2 +1,2 @@
 import Stub from '#/lib/broadcast/stub'
-export default Stub
+export default 'BroadcastChannel' in window ? window.BroadcastChannel : Stub

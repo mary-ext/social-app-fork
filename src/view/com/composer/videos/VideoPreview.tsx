@@ -1,29 +1,28 @@
-import {useRef} from 'react'
 import {View} from 'react-native'
-import {BlueskyVideoView} from '@bsky.app/video'
+import {useLingui} from '@lingui/react/macro'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
+import * as Toast from '#/components/Toast'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {Image} from '#/shims/image'
 import {type ImagePickerAsset} from '#/shims/image-picker'
-import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
 export function VideoPreview({
   asset,
   video,
   clear,
-  isActivePost,
 }: {
   asset: ImagePickerAsset
   video: CompressedVideo
   isActivePost: boolean
   clear: () => void
 }) {
-  const playerRef = useRef<BlueskyVideoView>(null)
+  const {t: l} = useLingui()
+  // TODO: figure out how to pause a GIF for reduced motion
+  // it's not possible using an img tag -sfn
   const autoplayDisabled = useAutoplayDisabled()
 
   let aspectRatio: number | undefined
@@ -46,38 +45,43 @@ export function VideoPreview({
         aspectRatio={constrained || 1}
         minMobileAspectRatio={14 / 9}>
         <View style={[a.flex_1, {backgroundColor: 'black'}]}>
-          <View style={[a.absolute, a.inset_0]}>
-            <VideoTranscodeBackdrop uri={asset.uri} />
-          </View>
-          {isActivePost && (
+          {video.mimeType === 'image/gif' ? (
+            <img
+              src={video.uri}
+              style={{width: '100%', height: '100%', objectFit: 'contain'}}
+              alt="GIF"
+            />
+          ) : (
             <>
-              {video.mimeType === 'image/gif' ? (
-                <Image
-                  style={[a.flex_1]}
-                  autoplay={!autoplayDisabled}
-                  source={{uri: video.uri}}
-                  accessibilityIgnoresInvertColors
-                  cachePolicy="none"
-                  contentFit="contain"
-                />
-              ) : (
-                <BlueskyVideoView
-                  url={video.uri}
-                  autoplay={!autoplayDisabled}
-                  beginMuted={true}
-                  forceTakeover={true}
-                  ref={playerRef}
-                />
+              <video
+                src={video.uri}
+                style={{width: '100%', height: '100%', objectFit: 'contain'}}
+                autoPlay={!autoplayDisabled}
+                loop
+                muted
+                playsInline
+                onError={err => {
+                  console.error('Error loading video', err)
+                  Toast.show(l`Could not process your video`, {
+                    type: 'error',
+                  })
+                  clear()
+                }}
+              />
+              {autoplayDisabled && (
+                <View
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.justify_center,
+                    a.align_center,
+                  ]}>
+                  <PlayButtonIcon />
+                </View>
               )}
             </>
           )}
           <ExternalEmbedRemoveBtn onRemove={clear} />
-          {autoplayDisabled && (
-            <View
-              style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-              <PlayButtonIcon />
-            </View>
-          )}
         </View>
       </ConstrainedImage>
     </View>

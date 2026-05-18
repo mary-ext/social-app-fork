@@ -1,49 +1,20 @@
-import {Image as RNImage} from 'react-native'
-import uuid from 'react-native-uuid'
-
-import {POST_IMG_MAX} from '#/lib/constants'
-import {logger} from '#/logger'
-import {
-  cacheDirectory,
-  copyAsync,
-  createDownloadResumable,
-  deleteAsync,
-  EncodingType,
-  getInfoAsync,
-  makeDirectoryAsync,
-  moveAsync,
-  StorageAccessFramework,
-  writeAsStringAsync,
-} from '#/shims/file-system/legacy'
-import {manipulateAsync, SaveFormat} from '#/shims/image-manipulator'
-import * as MediaLibrary from '#/shims/media-library'
-import * as Sharing from '#/shims/sharing'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
-import {convertCdnPreset} from './util'
+import {blobToDataUri, convertCdnPreset, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,
-  maxSize: number = POST_IMG_MAX.size,
+  maxSize: number = 1_000_000,
 ): Promise<PickerImage> {
   if (img.size < maxSize) {
     return img
   }
-  const resizedImage = await doResize(normalizePath(img.path), {
+  return await doResize(img.path, {
     width: img.width,
     height: img.height,
     mode: 'stretch',
     maxSize,
   })
-  const finalImageMovedPath = await moveToPermanentPath(
-    resizedImage.path,
-    '.jpg',
-  )
-  const finalImg = {
-    ...resizedImage,
-    path: finalImageMovedPath,
-  }
-  return finalImg
 }
 
 export interface DownloadAndResizeOpts {
@@ -56,42 +27,20 @@ export interface DownloadAndResizeOpts {
 }
 
 export async function downloadAndResize(opts: DownloadAndResizeOpts) {
-  try {
-    new URL(opts.uri)
-  } catch (e: any) {
-    console.error('Invalid URI', opts.uri, e)
-    return
-  }
+  const controller = new AbortController()
+  const to = setTimeout(() => controller.abort(), opts.timeout || 5e3)
+  const res = await fetch(opts.uri)
+  const resBody = await res.blob()
+  clearTimeout(to)
 
-  const path = await downloadImage(opts.uri, String(uuid.v4()), opts.timeout)
-
-  try {
-    return await doResize(path, opts)
-  } finally {
-    void safeDeleteAsync(path)
-  }
+  const dataUri = await blobToDataUri(resBody)
+  return await doResize(dataUri, opts)
 }
 
-export async function shareImageModal({uri}: {uri: string}) {
-  if (!(await Sharing.isAvailableAsync())) {
-    // TODO might need to give an error to the user in this case -prf
-    return
-  }
-
-  const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
-  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
-    format: SaveFormat.JPEG,
-    compress: 1.0,
-  })
-  void safeDeleteAsync(downloadedPath)
-  const imagePath = await moveToPermanentPath(jpegUri, '.jpg')
-  await Sharing.shareAsync(imagePath, {
-    mimeType: 'image/jpeg',
-    UTI: 'image/jpeg',
-  })
+export async function shareImageModal(_opts: {uri: string}) {
+  // TODO
+  throw new Error('TODO')
 }
-
-const ALBUM_NAME = 'Bluesky'
 
 /**
  * Saves an image to the user's device. Uses the CDN's `download` preset
@@ -101,36 +50,20 @@ const ALBUM_NAME = 'Bluesky'
  */
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   const downloadUri = convertCdnPreset(uri, 'download')
-  const downloadedPath = await downloadImage(
-    downloadUri,
-    String(uuid.v4()),
-    20e3,
-  )
-  const imagePath = await moveToPermanentPath(downloadedPath, '.jpg')
-
-  // save
-  try {
-    await MediaLibrary.saveToLibraryAsync(imagePath)
-  } catch (err) {
-    logger.error(err instanceof Error ? err : String(err), {
-      message: 'Failed to save image to media library',
-    })
-    throw err
-  } finally {
-    safeDeleteAsync(imagePath)
-  }
+  const segments = downloadUri.split('/')
+  const filename = `bluesky-${segments.at(-1)}.jpg`
+  downloadUrl(downloadUri, filename)
 }
 
-export function getImageDim(path: string): Promise<Dimensions> {
-  return new Promise((resolve, reject) => {
-    RNImage.getSize(
-      path,
-      (width, height) => {
-        resolve({width, height})
-      },
-      reject,
-    )
+export async function getImageDim(path: string): Promise<Dimensions> {
+  var img = document.createElement('img')
+  const promise = new Promise((resolve, reject) => {
+    img.onload = resolve
+    img.onerror = reject
   })
+  img.src = path
+  await promise
+  return {width: img.width, height: img.height}
 }
 
 // internal methods
@@ -144,250 +77,113 @@ interface DoResizeOpts {
 }
 
 async function doResize(
-  localUri: string,
+  dataUri: string,
   opts: DoResizeOpts,
 ): Promise<PickerImage> {
-  // We need to get the dimensions of the image before we resize it. Previously, the library we used allowed us to enter
-  // a "max size", and it would do the "best possible size" calculation for us.
-  // Now instead, we have to supply the final dimensions to the manipulation function instead.
-  // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
-  // does not work for local files...
-  const imageRes = await manipulateAsync(localUri, [], {})
-  const newDimensions = getResizedDimensions({
-    width: imageRes.width,
-    height: imageRes.height,
-  })
+  let newDataUri
 
   let minQualityPercentage = 0
-  let maxQualityPercentage = 101 // exclusive
-  let newDataUri
-  const intermediateUris = []
+  let maxQualityPercentage = 101 //exclusive
 
   while (maxQualityPercentage - minQualityPercentage > 1) {
     const qualityPercentage = Math.round(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
-    const resizeRes = await manipulateAsync(
-      localUri,
-      [{resize: newDimensions}],
-      {
-        format: SaveFormat.JPEG,
-        compress: qualityPercentage / 100,
-      },
-    )
+    const tempDataUri = await createResizedImage(dataUri, {
+      width: opts.width,
+      height: opts.height,
+      quality: qualityPercentage / 100,
+      mode: opts.mode,
+    })
 
-    intermediateUris.push(resizeRes.uri)
-
-    const fileInfo = await getInfoAsync(resizeRes.uri)
-    if (!fileInfo.exists) {
-      throw new Error(
-        'The image manipulation library failed to create a new image.',
-      )
-    }
-
-    if (fileInfo.size < opts.maxSize) {
+    if (getDataUriSize(tempDataUri) < opts.maxSize) {
       minQualityPercentage = qualityPercentage
-      newDataUri = {
-        path: normalizePath(resizeRes.uri),
-        mime: 'image/jpeg',
-        size: fileInfo.size,
-        width: resizeRes.width,
-        height: resizeRes.height,
-      }
+      newDataUri = tempDataUri
     } else {
       maxQualityPercentage = qualityPercentage
     }
   }
 
-  for (const intermediateUri of intermediateUris) {
-    if (newDataUri?.path !== normalizePath(intermediateUri)) {
-      safeDeleteAsync(intermediateUri)
-    }
+  if (!newDataUri) {
+    throw new Error('Failed to compress image')
   }
-
-  if (newDataUri) {
-    safeDeleteAsync(imageRes.uri)
-    return newDataUri
+  return {
+    path: newDataUri,
+    mime: 'image/jpeg',
+    size: getDataUriSize(newDataUri),
+    width: opts.width,
+    height: opts.height,
   }
-
-  throw new Error(
-    `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
-  )
 }
 
-async function moveToPermanentPath(path: string, ext: string): Promise<string> {
-  /*
-  Since this package stores images in a temp directory, we need to move the file to a permanent location.
-  Relevant: IOS bug when trying to open a second time:
-  https://github.com/ivpusic/react-native-image-crop-picker/issues/1199
-  */
-  const filename = uuid.v4()
+function createResizedImage(
+  dataUri: string,
+  {
+    width,
+    height,
+    quality,
+    mode,
+  }: {
+    width: number
+    height: number
+    quality: number
+    mode: 'contain' | 'cover' | 'stretch'
+  },
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = document.createElement('img')
+    img.addEventListener('load', () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        return reject(new Error('Failed to resize image'))
+      }
 
-  // cacheDirectory will not ever be null on native, but it could be on web. This function only ever gets called on
-  // native so we assert as a string.
-  const destinationPath = joinPath(cacheDirectory as string, filename + ext)
-  await copyAsync({
-    from: normalizePath(path),
-    to: normalizePath(destinationPath),
+      let scale = 1
+      if (mode === 'cover') {
+        scale = img.width < img.height ? width / img.width : height / img.height
+      } else if (mode === 'contain') {
+        scale = img.width > img.height ? width / img.width : height / img.height
+      }
+      let w = img.width * scale
+      let h = img.height * scale
+
+      canvas.width = w
+      canvas.height = h
+
+      ctx.drawImage(img, 0, 0, w, h)
+      resolve(canvas.toDataURL('image/jpeg', quality))
+    })
+    img.addEventListener('error', ev => {
+      reject(ev.error)
+    })
+    img.src = dataUri
   })
-  safeDeleteAsync(path)
-  return normalizePath(destinationPath)
-}
-
-export async function safeDeleteAsync(path: string) {
-  // Normalize is necessary for Android, otherwise it doesn't delete.
-  const normalizedPath = normalizePath(path)
-  try {
-    await deleteAsync(normalizedPath, {idempotent: true})
-  } catch (e) {
-    console.error('Failed to delete file', e)
-  }
-}
-
-function joinPath(a: string, b: string) {
-  if (a.endsWith('/')) {
-    if (b.startsWith('/')) {
-      return a.slice(0, -1) + b
-    }
-    return a + b
-  } else if (b.startsWith('/')) {
-    return a + b
-  }
-  return a + '/' + b
-}
-
-function normalizePath(str: string, allPlatforms = false): string {
-  if (allPlatforms) {
-    if (!str.startsWith('file://')) {
-      return `file://${str}`
-    }
-  }
-  return str
 }
 
 export async function saveBytesToDisk(
   filename: string,
-  bytes: Uint8Array,
+  bytes: Uint8Array<ArrayBuffer>,
   type: string,
 ) {
-  // ideally we'd use `bytes.toBase64()`, but that's only baseline newly available
-  let binary = ''
-  for (const byte of bytes) {
-    binary += String.fromCharCode(byte)
-  }
-  const encoded = btoa(binary)
-  return await saveToDevice(filename, encoded, type)
+  const blob = new Blob([bytes], {type})
+  const url = URL.createObjectURL(blob)
+  downloadUrl(url, filename)
+  // Firefox requires a small delay
+  setTimeout(() => URL.revokeObjectURL(url), 100)
+  return true
 }
 
-export async function saveToDevice(
-  filename: string,
-  encoded: string,
-  type: string,
-) {
-  try {
-    const permissions =
-      await StorageAccessFramework.requestDirectoryPermissionsAsync()
-
-    if (!permissions.granted) {
-      return false
-    }
-
-    const fileUrl = await StorageAccessFramework.createFileAsync(
-      permissions.directoryUri,
-      filename,
-      type,
-    )
-
-    await writeAsStringAsync(fileUrl, encoded, {
-      encoding: EncodingType.Base64,
-    })
-    return true
-  } catch (e) {
-    logger.error('Error occurred while saving file', {message: e})
-    return false
-  }
+function downloadUrl(href: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = href
+  a.download = filename
+  a.style.display = 'none'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 }
 
-async function withTempFile<T>(
-  filename: string,
-  encoded: string,
-  cb: (url: string) => T | Promise<T>,
-): Promise<T> {
-  // cacheDirectory will not ever be null so we assert as a string.
-  // Using a directory so that the file name is not a random string
-  const tmpDirUri = joinPath(cacheDirectory as string, String(uuid.v4()))
-  await makeDirectoryAsync(tmpDirUri, {intermediates: true})
-
-  try {
-    const tmpFileUrl = joinPath(tmpDirUri, filename)
-    await writeAsStringAsync(tmpFileUrl, encoded, {
-      encoding: EncodingType.Base64,
-    })
-
-    return await cb(tmpFileUrl)
-  } finally {
-    safeDeleteAsync(tmpDirUri)
-  }
-}
-
-export function getResizedDimensions(originalDims: {
-  width: number
-  height: number
-}) {
-  if (
-    originalDims.width <= POST_IMG_MAX.width &&
-    originalDims.height <= POST_IMG_MAX.height
-  ) {
-    return originalDims
-  }
-
-  const ratio = Math.min(
-    POST_IMG_MAX.width / originalDims.width,
-    POST_IMG_MAX.height / originalDims.height,
-  )
-
-  return {
-    width: Math.round(originalDims.width * ratio),
-    height: Math.round(originalDims.height * ratio),
-  }
-}
-
-async function downloadImage(uri: string, destName: string, timeout: number) {
-  // Download to a temp path first, then rename with the correct extension
-  // based on the response's mimeType.
-  const tempPath = `${cacheDirectory ?? ''}/${destName}.bin`
-  const dlResumable = createDownloadResumable(uri, tempPath, {cache: true})
-  let timedOut = false
-  const to1 = setTimeout(() => {
-    timedOut = true
-    void dlResumable.cancelAsync()
-  }, timeout)
-
-  const dlRes = await dlResumable.downloadAsync()
-  clearTimeout(to1)
-
-  if (!dlRes?.uri) {
-    if (timedOut) {
-      throw new Error('Failed to download image - timed out')
-    } else {
-      throw new Error('Failed to download image - dlRes is undefined')
-    }
-  }
-
-  const ext = extFromMime(dlRes.mimeType)
-  const finalPath = `${cacheDirectory ?? ''}/${destName}.${ext}`
-  await moveAsync({from: dlRes.uri, to: finalPath})
-
-  return normalizePath(finalPath)
-}
-
-const MIME_TO_EXT: Record<string, string> = {
-  'image/jpeg': 'jpg',
-  'image/webp': 'webp',
-  'image/png': 'png',
-  'image/gif': 'gif',
-}
-
-function extFromMime(mimeType?: string | null): string {
-  return (mimeType && MIME_TO_EXT[mimeType]) || 'jpg'
+export async function safeDeleteAsync() {
+  // no-op
 }

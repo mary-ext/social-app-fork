@@ -1,56 +1,55 @@
-import {getVideoMetaData, Video} from 'react-native-compressor'
-
-import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
+import {VIDEO_MAX_SIZE} from '#/lib/constants'
+import {VideoTooLargeError} from '#/lib/media/video/errors'
 import {type ImagePickerAsset} from '#/shims/image-picker'
 import {type CompressedVideo} from './types'
-import {extToMime} from './util'
 
-const MIN_SIZE_FOR_COMPRESSION = 25 // 25mb
-
+// doesn't actually compress, converts to ArrayBuffer
 export async function compressVideo(
-  file: ImagePickerAsset,
-  opts?: {
+  asset: ImagePickerAsset,
+  _opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, signal} = opts || {}
+  const {mimeType, base64} = parseDataUrl(asset.uri)
+  const blob = base64ToBlob(base64, mimeType)
+  const uri = URL.createObjectURL(blob)
 
-  const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
-    file.mimeType as SupportedMimeTypes,
-  )
-
-  if (file.mimeType === 'image/gif') {
-    // let's hope they're small enough that they don't need compression!
-    // this compression library doesn't support gifs
-    // worst case - server rejects them. I think that's fine -sfn
-    return {uri: file.uri, size: file.fileSize ?? -1, mimeType: 'image/gif'}
+  if (blob.size > VIDEO_MAX_SIZE) {
+    throw new VideoTooLargeError()
   }
 
-  const minimumFileSizeForCompress = isAcceptableFormat
-    ? MIN_SIZE_FOR_COMPRESSION
-    : 0
+  return {
+    size: blob.size,
+    uri,
+    bytes: await blob.arrayBuffer(),
+    mimeType,
+  }
+}
 
-  const compressed = await Video.compress(
-    file.uri,
-    {
-      compressionMethod: 'manual',
-      bitrate: 3_000_000, // 3mbps
-      maxSize: 1920,
-      // WARNING: this ONE SPECIFIC ARG is in MB -sfn
-      minimumFileSizeForCompress,
-      getCancellationId: id => {
-        if (signal) {
-          signal.addEventListener('abort', () => {
-            Video.cancelCompression(id)
-          })
-        }
-      },
-    },
-    onProgress,
-  )
+function parseDataUrl(dataUrl: string) {
+  const [mimeType, base64] = dataUrl.slice('data:'.length).split(';base64,')
+  if (!mimeType || !base64) {
+    throw new Error('Invalid data URL')
+  }
+  return {mimeType, base64}
+}
 
-  const info = await getVideoMetaData(compressed)
+function base64ToBlob(base64: string, mimeType: string) {
+  const byteCharacters = atob(base64)
+  const byteArrays = []
 
-  return {uri: compressed, size: info.size, mimeType: extToMime(info.extension)}
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512)
+    const byteNumbers = new Array(slice.length)
+
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i)
+    }
+
+    const byteArray = new Uint8Array(byteNumbers)
+    byteArrays.push(byteArray)
+  }
+
+  return new Blob(byteArrays, {type: mimeType})
 }

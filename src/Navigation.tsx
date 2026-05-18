@@ -16,15 +16,7 @@ import {
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
-import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {
-  getNotificationPayload,
-  type NotificationPayload,
-  notificationToURL,
-  storePayloadForAccountSwitch,
-} from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
 import {buildStateObject} from '#/lib/routes/helpers'
@@ -41,11 +33,7 @@ import {
   type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
-import {Logger} from '#/logger'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
 import {DebugModScreen} from '#/view/screens/DebugMod'
@@ -95,7 +83,6 @@ import {AccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySetti
 import {AccountSettingsScreen} from '#/screens/Settings/AccountSettings'
 import {ActivityPrivacySettingsScreen} from '#/screens/Settings/ActivityPrivacySettings'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
-import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
 import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {AutomationLabelSettingsScreen} from '#/screens/Settings/AutomationLabelSettings'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
@@ -124,12 +111,9 @@ import {
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
-import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '#/shims/bluesky-swiss-army'
-import * as Linking from '#/shims/linking'
-import * as Notifications from '#/shims/notifications'
 import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -551,14 +535,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
-        name="AppIconSettings"
-        getComponent={() => AppIconSettingsScreen}
-        options={{
-          title: title(defineMessage`App Icon`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(defineMessage`Hashtag`)}}
@@ -643,14 +619,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => Wizard}
         options={{
           title: title(defineMessage`Edit your starter pack`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="VideoFeed"
-        getComponent={() => VideoFeed}
-        options={{
-          title: title(defineMessage`Video Feed`),
           requireAuth: true,
         }}
       />
@@ -899,57 +867,12 @@ const LINKING = {
 } satisfies LinkingOptions<AllNavigatorParams>
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
-  const notyLogger = Logger.create(Logger.Context.Notifications)
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
-  const {currentAccount, accounts} = useSession()
-  const {onPressSwitchAccount} = useAccountSwitcher()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const previousScreen = useRef<string | undefined>(undefined)
-  const closeAllActiveElements = useCloseAllActiveElements()
-  const linkingUrl = Linking.useLinkingURL()
-
-  /**
-   * Handle navigation to a conversation, or prepares for account switch.
-   *
-   * Non-reactive because we need the latest data from some hooks
-   * after an async call - sfn
-   */
-  const handleChatMessage = useNonReactiveCallback(
-    (payload: Extract<NotificationPayload, {reason: 'chat-message'}>) => {
-      notyLogger.debug(`handleChatMessage`, {payload})
-
-      if (payload.recipientDid !== currentAccount?.did) {
-        // handled in useNotificationHandler after account switch finishes
-        storePayloadForAccountSwitch(payload)
-        closeAllActiveElements()
-
-        const account = accounts.find(a => a.did === payload.recipientDid)
-        if (account) {
-          onPressSwitchAccount(account, 'Notification')
-        } else {
-          setShowLoggedOut(true)
-        }
-      } else {
-        // @ts-expect-error nested navigators aren't typed -sfn
-        navigate('MessagesTab', {
-          screen: 'Messages',
-          params: {
-            pushToConversation: payload.convoId,
-          },
-        })
-      }
-    },
-  )
-
-  function handlePushNotificationEntry() {
-    return
-  }
 
   const onNavigationReady = useCallOnce(() => {
     const currentScreen = getCurrentRouteName()
     previousScreen.current = currentScreen
-
-    handlePushNotificationEntry()
 
     const referrerInfo = Referrer.getReferrerInfo()
     if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {

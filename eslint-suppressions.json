@@ -1,14 +1,4 @@
 {
-  "src/App.native.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
-  "src/Navigation.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 5
-    }
-  },
   "src/alf/atoms.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 18
@@ -41,24 +31,21 @@
   },
   "src/components/ContextMenu/index.tsx": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 5
+      "count": 1
     }
   },
   "src/components/Dialog/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 8
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 14
-    }
-  },
-  "src/components/Dialog/index.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 7
     }
   },
   "src/components/Dialog/sheet-wrapper.ts": {
     "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/Dialog/types.ts": {
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
@@ -67,11 +54,6 @@
       "count": 2
     },
     "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/components/DraggableList/index.web.tsx": {
-    "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
   },
@@ -86,11 +68,6 @@
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 2
-    }
-  },
-  "src/components/FocusScope/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/components/InterestTabs.tsx": {
@@ -135,11 +112,6 @@
     }
   },
   "src/components/Menu/index.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 4
-    }
-  },
-  "src/components/Menu/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
     }
@@ -210,7 +182,7 @@
       "count": 1
     }
   },
-  "src/components/ProfileHoverCard/index.web.tsx": {
+  "src/components/ProfileHoverCard/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
@@ -231,11 +203,6 @@
     }
   },
   "src/components/Select/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    }
-  },
-  "src/components/Select/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
     }
@@ -302,6 +269,11 @@
   "src/components/Typography.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    }
+  },
+  "src/components/VideoPostCard.tsx": {
+    "simple-import-sort/imports": {
+      "count": 1
     }
   },
   "src/components/WelcomeModal.tsx": {
@@ -456,6 +428,9 @@
     }
   },
   "src/components/dms/MessageContextMenu.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
     "@typescript-eslint/no-unused-vars": {
       "count": 2
     }
@@ -504,7 +479,7 @@
       "count": 2
     }
   },
-  "src/components/forms/DateField/index.web.tsx": {
+  "src/components/forms/DateField/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -542,11 +517,6 @@
       "count": 1
     }
   },
-  "src/components/hooks/useStarterPackEntry.native.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
   "src/components/images/AutoSizedImage.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -558,16 +528,6 @@
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
-    }
-  },
-  "src/components/images/Gallery/useKeyboardHandlers.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    }
-  },
-  "src/components/images/Gallery/usePointerHandlers.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
     }
   },
   "src/components/moderation/ContentHider.tsx": {
@@ -703,19 +663,9 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useOTAUpdates.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/lib/hooks/useOpenLink.ts": {
     "@typescript-eslint/no-unused-vars": {
       "count": 2
-    }
-  },
-  "src/lib/hooks/usePermissions.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 4
     }
   },
   "src/lib/hooks/useToggleMutationQueue.ts": {
@@ -733,22 +683,14 @@
       "count": 1
     }
   },
-  "src/lib/media/manip.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
   "src/lib/media/picker.shared.ts": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
-  "src/lib/media/save-image.ios.ts": {
+  "src/lib/media/picker.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/lib/media/save-image.ts": {
@@ -763,7 +705,7 @@
   },
   "src/lib/notifications/notifications.ts": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 10
+      "count": 9
     }
   },
   "src/lib/react-query.tsx": {
@@ -794,19 +736,9 @@
       "count": 1
     }
   },
-  "src/lib/translation/index.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 8
-    }
-  },
   "src/logger/transports/console.ts": {
     "@typescript-eslint/no-unused-vars": {
       "count": 2
-    }
-  },
-  "src/platform/polyfills.web.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/screens/Bookmarks/index.tsx": {
@@ -907,11 +839,6 @@
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 7
-    }
-  },
-  "src/screens/Messages/components/MessageInput.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 5
     }
   },
   "src/screens/Messages/components/MessagesList.tsx": {
@@ -1026,11 +953,6 @@
       "count": 1
     }
   },
-  "src/screens/Profile/Header/StatusBarShadow.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
   "src/screens/Profile/Sections/Feed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1124,22 +1046,12 @@
       "count": 3
     }
   },
-  "src/screens/Settings/AppIconSettings/AppIconImage.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/screens/Settings/AppIconSettings/index.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/screens/Settings/AppearanceSettings.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
     },
     "@typescript-eslint/no-unused-vars": {
-      "count": 5
+      "count": 3
     }
   },
   "src/screens/Settings/ContentAndMediaSettings.tsx": {
@@ -1209,11 +1121,6 @@
       "count": 1
     }
   },
-  "src/screens/Signup/StepCaptcha/index.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/screens/Signup/StepHandle/HandleSuggestions.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -1245,7 +1152,7 @@
       "count": 1
     },
     "@typescript-eslint/no-unused-vars": {
-      "count": 3
+      "count": 1
     }
   },
   "src/screens/SignupQueued.tsx": {
@@ -1269,14 +1176,6 @@
   "src/screens/Topic.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/screens/VideoFeed/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
     }
   },
   "src/state/cache/types.ts": {
@@ -1305,11 +1204,6 @@
     }
   },
   "src/state/persisted/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/state/persisted/index.web.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -1430,11 +1324,6 @@
       "count": 1
     }
   },
-  "src/view/com/composer/photos/OpenCameraBtn.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/view/com/composer/threadgate/ThreadgateBtn.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
@@ -1522,6 +1411,9 @@
   },
   "src/view/com/pager/Pager.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -1530,14 +1422,17 @@
       "count": 1
     }
   },
-  "src/view/com/pager/PagerWithHeader.web.tsx": {
+  "src/view/com/pager/PagerWithHeader.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
-  "src/view/com/pager/TabBar.web.tsx": {
+  "src/view/com/pager/TabBar.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 5
     }
   },
   "src/view/com/posts/FeedShutdownMsg.tsx": {
@@ -1547,6 +1442,9 @@
   },
   "src/view/com/posts/PostFeed.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -1584,13 +1482,8 @@
     }
   },
   "src/view/com/util/List.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
-  "src/view/com/util/List.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 3
     }
   },
   "src/view/com/util/MainScrollProvider.tsx": {
@@ -1618,7 +1511,7 @@
   },
   "src/view/com/util/ViewSelector.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 6
+      "count": 7
     }
   },
   "src/view/com/util/fab/FABInner.tsx": {
@@ -1672,11 +1565,6 @@
   "src/view/shell/desktop/RightNav.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/view/shell/index.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
     }
   }
 }

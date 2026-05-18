@@ -1,211 +1,233 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from 'react'
+import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
+import {Select as RadixSelect} from 'radix-ui'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
+import {useA11y} from '#/state/a11y'
+import { atoms as a, flatten, useTheme } from '#/alf';
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon} from '#/components/icons/Chevron'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
+} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
-import {BaseRadio} from '../forms/Toggle'
 import {
   type ContentProps,
   type IconProps,
   type ItemIndicatorProps,
   type ItemProps,
   type ItemTextProps,
+  type RadixPassThroughTriggerProps,
   type RootProps,
   type TriggerProps,
   type ValueProps,
 } from './types'
 
-type ContextType = {
-  control: Dialog.DialogControlProps
-} & Pick<RootProps, 'value' | 'onValueChange' | 'disabled'>
+const SelectedValueContext = createContext<string | undefined | null>(null)
+SelectedValueContext.displayName = 'SelectSelectedValueContext'
 
-const Context = createContext<ContextType | null>(null)
-Context.displayName = 'SelectContext'
-
-const ValueTextContext = createContext<
-  [any, React.Dispatch<React.SetStateAction<any>>]
->([undefined, () => {}])
-ValueTextContext.displayName = 'ValueTextContext'
-
-function useSelectContext() {
-  const ctx = useContext(Context)
-  if (!ctx) {
-    throw new Error('Select components must must be used within a Select.Root')
-  }
-  return ctx
-}
-
-export function Root({children, value, onValueChange, disabled}: RootProps) {
-  const control = Dialog.useDialogControl()
-  const valueTextCtx = useState<any>()
-
-  const ctx = useMemo(
-    () => ({
-      control,
-      value,
-      onValueChange,
-      disabled,
-    }),
-    [control, value, onValueChange, disabled],
-  )
+export function Root(props: RootProps) {
   return (
-    <Context.Provider value={ctx}>
-      <ValueTextContext.Provider value={valueTextCtx}>
-        {children}
-      </ValueTextContext.Provider>
-    </Context.Provider>
+    <SelectedValueContext.Provider value={props.value}>
+      <RadixSelect.Root {...props} />
+    </SelectedValueContext.Provider>
   )
 }
 
-export function Trigger({children, hitSlop, label}: TriggerProps) {
-  const {control} = useSelectContext()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+const RadixTriggerPassThrough = forwardRef(
+  (
+    props: {
+      children: (
+        props: RadixPassThroughTriggerProps & {
+          ref: React.Ref<any>
+        },
+      ) => React.ReactNode
+    },
+    ref,
+  ) => {
+    // @ts-expect-error Radix provides no types of this stuff
+
+    return props.children?.({...props, ref})
+  },
+)
+RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
+
+export function Trigger({children, label}: TriggerProps) {
+  const t = useTheme()
   const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
   } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
   if (typeof children === 'function') {
-    return children({
-      IS_NATIVE: true,
-      control,
-      state: {
-        hovered: false,
-        focused,
-        pressed,
-      },
-      props: {
-        onPress: control.open,
-        onFocus,
-        onBlur,
-        onPressIn,
-        onPressOut,
-        accessibilityLabel: label,
-      },
-    })
+    return (
+      <RadixSelect.Trigger asChild>
+        <RadixTriggerPassThrough>
+          {props =>
+            children({
+              IS_NATIVE: false,
+              state: {
+                hovered,
+                focused,
+                pressed: false,
+              },
+              props: {
+                ...props,
+                onPress: props.onClick,
+                onFocus: onFocus,
+                onBlur: onBlur,
+                onMouseEnter,
+                onMouseLeave,
+                accessibilityLabel: label,
+              },
+            })
+          }
+        </RadixTriggerPassThrough>
+      </RadixSelect.Trigger>
+    )
   } else {
     return (
-      <Button
-        hitSlop={hitSlop}
-        label={label}
-        onPress={control.open}
-        style={[a.flex_1, a.justify_between, a.pl_lg, a.pr_md]}
-        color="secondary"
-        size="large"
-        shape="rectangular">
-        <>{children}</>
-      </Button>
+      <RadixSelect.Trigger
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        style={flatten([
+          a.flex,
+          a.relative,
+          t.atoms.bg_contrast_50,
+          a.align_center,
+          a.gap_sm,
+          a.justify_between,
+          a.py_sm,
+          a.px_md,
+          a.pointer,
+          {
+            borderRadius: 10,
+            maxWidth: 400,
+            outline: 0,
+            borderWidth: 1,
+            borderStyle: 'solid',
+            borderColor: focused
+              ? t.palette.primary_500
+              : t.palette.contrast_50,
+          },
+        ])}>
+        {children}
+      </RadixSelect.Trigger>
     )
   }
 }
 
 export function ValueText({
-  placeholder,
-  children = value => value.label,
+  children,
+  webOverrideValue,
   style,
+  ...props
 }: ValueProps) {
-  const [value] = useContext(ValueTextContext)
-  const t = useTheme()
+  let content
 
-  let text = value && children(value)
-  if (!text) text = placeholder
+  if (webOverrideValue && children) {
+    content = children(webOverrideValue)
+  }
 
   return (
-    <ButtonText style={[t.atoms.text, a.font_normal, style]} emoji>
-      {text}
-    </ButtonText>
+    <Text style={style}>
+      <RadixSelect.Value {...props}>{content}</RadixSelect.Value>
+    </Text>
   )
 }
 
-export function Icon({}: IconProps) {
-  return <ButtonIcon icon={ChevronUpDownIcon} />
+export function Icon({style}: IconProps) {
+  const t = useTheme()
+  return (
+    <RadixSelect.Icon>
+      <ChevronDownIcon style={[t.atoms.text, style]} size="xs" />
+    </RadixSelect.Icon>
+  )
 }
 
 export function Content<T>({
   items,
-  valueExtractor = defaultItemValueExtractor,
-  ...props
-}: ContentProps<T>) {
-  const {control, ...context} = useSelectContext()
-  const [, setValue] = useContext(ValueTextContext)
-
-  useLayoutEffect(() => {
-    const item = items.find(item => valueExtractor(item) === context.value)
-    if (item) {
-      setValue(item)
-    }
-  }, [items, context.value, valueExtractor, setValue])
-
-  return (
-    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
-      <ContentInner
-        control={control}
-        items={items}
-        valueExtractor={valueExtractor}
-        {...props}
-        {...context}
-      />
-    </Dialog.Outer>
-  )
-}
-
-function ContentInner<T>({
-  label,
-  items,
   renderItem,
-  valueExtractor,
-  ...context
-}: ContentProps<T> & ContextType) {
-  const {t: l} = useLingui()
-  const [headerHeight, setHeaderHeight] = useState(61)
+  valueExtractor = defaultItemValueExtractor,
+}: ContentProps<T>) {
+  const t = useTheme()
+  const selectedValue = useContext(SelectedValueContext)
+  const {reduceMotionEnabled} = useA11y()
 
-  const render = useCallback(
-    ({item, index}: {item: T; index: number}) => {
-      return renderItem(item, index, context.value)
+  const scrollBtnStyles: React.CSSProperties[] = [
+    a.absolute,
+    a.flex,
+    a.align_center,
+    a.justify_center,
+    a.rounded_sm,
+    a.z_10,
+  ]
+  const up: React.CSSProperties[] = [
+    ...scrollBtnStyles,
+    a.pt_sm,
+    a.pb_lg,
+    {
+      top: 0,
+      left: 0,
+      right: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      background: `linear-gradient(to bottom, ${t.atoms.bg.backgroundColor} 0%, transparent 100%)`,
     },
-    [renderItem, context.value],
-  )
+  ]
+  const down: React.CSSProperties[] = [
+    ...scrollBtnStyles,
+    a.pt_lg,
+    a.pb_sm,
+    {
+      bottom: 0,
+      left: 0,
+      right: 0,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      background: `linear-gradient(to top, ${t.atoms.bg.backgroundColor} 0%, transparent 100%)`,
+    },
+  ]
 
   return (
-    <Context.Provider value={context}>
-      <Dialog.Header
-        onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
-        style={[
-          a.absolute,
-          a.top_0,
-          a.left_0,
-          a.right_0,
-          a.z_10,
-          a.pt_3xl,
-          a.pb_sm,
-          a.border_b_0,
-        ]}>
-        <Dialog.HeaderText
-          style={[a.flex_1, a.px_xl, a.text_left, a.font_bold, a.text_2xl]}>
-          {label ?? l`Select an option`}
-        </Dialog.HeaderText>
-      </Dialog.Header>
-      <Dialog.Handle />
-      <Dialog.InnerFlatList
-        headerOffset={headerHeight}
-        data={items}
-        renderItem={render}
-        keyExtractor={valueExtractor}
-      />
-    </Context.Provider>
+    <RadixSelect.Portal>
+      <RadixSelect.Content
+        style={flatten([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
+        position="popper"
+        align="center"
+        sideOffset={5}
+        className="radix-select-content"
+        // prevent the keyboard shortcut for opening the composer
+        onKeyDown={evt => evt.stopPropagation()}>
+        <View
+          style={[
+            a.flex_1,
+            a.border,
+            t.atoms.border_contrast_low,
+            a.rounded_sm,
+            a.overflow_hidden,
+            !reduceMotionEnabled && a.zoom_fade_in,
+          ]}>
+          <RadixSelect.ScrollUpButton style={flatten(up)}>
+            <ChevronUpIcon style={[t.atoms.text]} size="xs" />
+          </RadixSelect.ScrollUpButton>
+          <RadixSelect.Viewport style={flatten([a.p_xs])}>
+            {items.map((item, index) => (
+              <Fragment key={valueExtractor(item)}>
+                {renderItem(item, index, selectedValue)}
+              </Fragment>
+            ))}
+          </RadixSelect.Viewport>
+          <RadixSelect.ScrollDownButton style={flatten(down)}>
+            <ChevronDownIcon style={[t.atoms.text]} size="xs" />
+          </RadixSelect.ScrollDownButton>
+        </View>
+      </RadixSelect.Content>
+    </RadixSelect.Portal>
   )
 }
 
@@ -214,15 +236,15 @@ function defaultItemValueExtractor(item: any) {
 }
 
 const ItemContext = createContext<{
-  selected: boolean
   hovered: boolean
   focused: boolean
   pressed: boolean
+  selected: boolean
 }>({
-  selected: false,
   hovered: false,
   focused: false,
   pressed: false,
+  selected: false,
 })
 ItemContext.displayName = 'SelectItemContext'
 
@@ -230,70 +252,70 @@ export function useItemContext() {
   return useContext(ItemContext)
 }
 
-export function Item({children, value, label, style}: ItemProps) {
+export function Item({ref, value, style, children}: ItemProps) {
   const t = useTheme()
-  const control = Dialog.useDialogContext()
-  const {value: selected, onValueChange} = useSelectContext()
-
+  const {
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
+  } = useInteractionState()
+  const selected = useContext(SelectedValueContext) === value
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const ctx = useMemo(
+    () => ({hovered, focused, pressed: false, selected}),
+    [hovered, focused, selected],
+  )
   return (
-    <Button
-      role="listitem"
-      label={label}
-      style={[a.flex_1]}
-      onPress={() => {
-        control.close(() => {
-          onValueChange?.(value)
-        })
-      }}>
-      {({hovered, focused, pressed}) => (
-        <ItemContext.Provider
-          value={{selected: value === selected, hovered, focused, pressed}}>
-          <View
-            style={[
-              a.flex_1,
-              a.px_xl,
-              (focused || pressed) && t.atoms.bg_contrast_25,
-              a.flex_row,
-              a.align_center,
-              a.gap_sm,
-              a.py_md,
-              style,
-            ]}>
-            {children}
-          </View>
-        </ItemContext.Provider>
-      )}
-    </Button>
+    <RadixSelect.Item
+      ref={ref}
+      value={value}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      style={flatten([
+        t.atoms.text,
+        a.relative,
+        a.flex,
+        {minHeight: 25, paddingLeft: 30, paddingRight: 8},
+        a.user_select_none,
+        a.align_center,
+        a.rounded_xs,
+        a.py_2xs,
+        a.text_sm,
+        {outline: 0},
+        (hovered || focused) && {backgroundColor: t.palette.primary_50},
+        selected && [a.font_semi_bold],
+        a.transition_color,
+        style,
+      ])}>
+      <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
+    </RadixSelect.Item>
   )
 }
 
-export function ItemText({children, style, emoji}: ItemTextProps) {
-  const {selected} = useItemContext()
-
+export const ItemText = function ItemText({children, style}: ItemTextProps) {
   return (
-    <Text
-      style={[a.text_md, selected && a.font_semi_bold, style]}
-      emoji={emoji}>
-      {children}
-    </Text>
-  )
+    <RadixSelect.ItemText asChild>
+      <Text style={flatten([style, {pointerEvents: 'inherit'} as any])}>
+        {children}
+      </Text>
+    </RadixSelect.ItemText>
+  );
 }
 
-export function ItemIndicator({icon: Icon}: ItemIndicatorProps) {
-  const {selected, focused, hovered} = useItemContext()
-
-  if (Icon) {
-    return <View style={{width: 24}}>{selected && <Icon size="md" />}</View>
-  }
-
+export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
   return (
-    <BaseRadio
-      selected={selected}
-      focused={focused}
-      hovered={hovered}
-      isInvalid={false}
-      disabled={false}
-    />
+    <RadixSelect.ItemIndicator
+      style={flatten([
+        a.absolute,
+        {left: 0, width: 30},
+        a.flex,
+        a.align_center,
+        a.justify_center,
+      ])}>
+      <Icon size="sm" />
+    </RadixSelect.ItemIndicator>
   )
 }
 
@@ -301,14 +323,15 @@ export function Separator() {
   const t = useTheme()
 
   return (
-    <View
-      style={[
-        a.flex_1,
-        a.border_b,
-        t.atoms.border_contrast_low,
-        a.mx_xl,
+    <RadixSelect.Separator
+      style={flatten([
+        {
+          height: 1,
+          backgroundColor: t.atoms.border_contrast_low.borderColor,
+        },
         a.my_xs,
-      ]}
+        a.w_full,
+      ])}
     />
   )
 }

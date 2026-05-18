@@ -38,6 +38,7 @@ export type RadixPassThroughTriggerProps = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
+  contentLabel?: string
   hint?: string
   role?: AccessibilityRole
 }

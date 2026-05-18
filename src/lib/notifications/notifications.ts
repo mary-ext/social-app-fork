@@ -11,9 +11,7 @@ import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import { IS_DEV } from '#/env';
-import BackgroundNotificationHandler from '#/shims/background-notification-handler'
 import * as Notifications from '#/shims/notifications'
-import {getBadgeCountAsync, setBadgeCountAsync} from '#/shims/notifications'
 
 /**
  * @private
@@ -214,8 +212,7 @@ export async function decrementBadgeCount(by: number) {
 }
 
 export async function resetBadgeCount() {
-  await BackgroundNotificationHandler.setBadgeCountAsync(0)
-  await setBadgeCountAsync(0)
+  return
 }
 
 export async function unregisterPushToken(agents: AtpAgent[]) {

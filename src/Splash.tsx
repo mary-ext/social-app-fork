@@ -1,244 +1,97 @@
-import {forwardRef, useCallback, useEffect, useState} from 'react'
-import {
-  AccessibilityInfo,
-  Image as RNImage,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Svg, {Path, type SvgProps} from 'react-native-svg'
+/*
+ * This is a reimplementation of what exists in our HTML template files
+ * already. Once the React tree mounts, this is what gets rendered first, until
+ * the app is ready to go.
+ */
 
-import Animated, {
-  Easing,
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from '#/lib/animations/reanimatedCompat'
-import {Logotype} from '#/view/icons/Logotype'
-import {Image} from '#/shims/image'
-import * as SplashScreen from '#/shims/splash-screen'
-// @ts-ignore
-import splashImagePointer from '../assets/splash/splash.png'
-// @ts-ignore
-import darkSplashImagePointer from '../assets/splash/splash-dark.png'
-const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
-const darkSplashImageUri = RNImage.resolveAssetSource(
-  darkSplashImagePointer,
-).uri
+import {useEffect, useRef, useState} from 'react'
+import Svg, {Path} from 'react-native-svg'
 
-export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
-  const width = 1000
-  const height = width * (67 / 64)
-  return (
-    <Svg
-      fill="none"
-      // @ts-ignore it's fiiiiine
-      ref={ref}
-      viewBox="0 0 64 66"
-      style={[{width, height}, props.style]}>
-      <Path
-        fill={props.fill || '#fff'}
-        d="M13.873 3.77C21.21 9.243 29.103 20.342 32 26.3v15.732c0-.335-.13.043-.41.858-1.512 4.414-7.418 21.642-20.923 7.87-7.111-7.252-3.819-14.503 9.125-16.692-7.405 1.252-15.73-.817-18.014-8.93C1.12 22.804 0 8.431 0 6.488 0-3.237 8.579-.18 13.873 3.77ZM50.127 3.77C42.79 9.243 34.897 20.342 32 26.3v15.732c0-.335.13.043.41.858 1.512 4.414 7.418 21.642 20.923 7.87 7.111-7.252 3.819-14.503-9.125-16.692 7.405 1.252 15.73-.817 18.014-8.93C62.88 22.804 64 8.431 64 6.488 64-3.237 55.422-.18 50.127 3.77Z"
-      />
-    </Svg>
-  )
-})
+import {atoms as a, flatten} from '#/alf'
 
-type Props = {
+const size = 100
+const ratio = 57 / 64
+
+export function Splash({
+  isReady,
+  children,
+}: React.PropsWithChildren<{
   isReady: boolean
-}
-
-export function Splash(props: React.PropsWithChildren<Props>) {
-  'use no memo'
-  const insets = useSafeAreaInsets()
-  const intro = useSharedValue(0)
-  const outroLogo = useSharedValue(0)
-  const outroApp = useSharedValue(0)
-  const outroAppOpacity = useSharedValue(0)
+}>) {
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
-  const [isImageLoaded, setIsImageLoaded] = useState(false)
-  const [isLayoutReady, setIsLayoutReady] = useState(false)
-  const [reduceMotion, setReduceMotion] = useState<boolean | undefined>(false)
-  const isReady =
-    props.isReady &&
-    isImageLoaded &&
-    isLayoutReady &&
-    reduceMotion !== undefined
+  const splashRef = useRef<HTMLDivElement>(null)
 
-  const colorScheme = useColorScheme()
-  const isDarkMode = colorScheme === 'dark'
-
-  const logoAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: interpolate(intro.get(), [0, 1], [0.8, 1], 'clamp'),
-        },
-        {
-          scale: interpolate(
-            outroLogo.get(),
-            [0, 0.08, 1],
-            [1, 0.8, 500],
-            'clamp',
-          ),
-        },
-      ],
-      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
-    }
-  })
-  const bottomLogoAnimation = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
-    }
-  })
-  const reducedLogoAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: interpolate(intro.get(), [0, 1], [0.8, 1], 'clamp'),
-        },
-      ],
-      opacity: interpolate(intro.get(), [0, 1], [0, 1], 'clamp'),
-    }
-  })
-
-  const logoWrapperAnimation = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(
-        outroAppOpacity.get(),
-        [0, 0.1, 0.2, 1],
-        [1, 1, 0, 0],
-        'clamp',
-      ),
-    }
-  })
-
-  const appAnimation = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: interpolate(outroApp.get(), [0, 1], [1.1, 1], 'clamp'),
-        },
-      ],
-      opacity: interpolate(
-        outroAppOpacity.get(),
-        [0, 0.1, 0.2, 1],
-        [0, 0, 1, 1],
-        'clamp',
-      ),
-    }
-  })
-
-  const onFinish = useCallback(() => setIsAnimationComplete(true), [])
-  const onLayout = useCallback(() => setIsLayoutReady(true), [])
-  const onLoadEnd = useCallback(() => setIsImageLoaded(true), [])
-
+  // hide the static one that's baked into the HTML - gets replaced by our React version below
   useEffect(() => {
-    if (isReady) {
-      SplashScreen.hideAsync()
-        .then(() => {
-          intro.set(() =>
-            withTiming(
-              1,
-              {duration: 400, easing: Easing.out(Easing.cubic)},
-              () => {
-                'worklet'
-                // set these values to check animation at specific point
-                outroLogo.set(() =>
-                  withTiming(
-                    1,
-                    {duration: 1200, easing: Easing.in(Easing.cubic)},
-                    () => {
-                      runOnJS(onFinish)()
-                    },
-                  ),
-                )
-                outroApp.set(() =>
-                  withTiming(1, {
-                    duration: 1200,
-                    easing: Easing.inOut(Easing.cubic),
-                  }),
-                )
-                outroAppOpacity.set(() =>
-                  withTiming(1, {
-                    duration: 1200,
-                    easing: Easing.in(Easing.cubic),
-                  }),
-                )
-              },
-            ),
-          )
-        })
-        .catch(() => {})
-    }
-  }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
-
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then(setReduceMotion)
+    // double rAF ensures that the React version gets painted first
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const splash = document.getElementById('splash')
+        if (splash) {
+          splash.remove()
+        }
+      })
+    })
   }, [])
 
-  const logoAnimations =
-    reduceMotion === true ? reducedLogoAnimation : logoAnimation
-  // special off-spec color for dark mode
-  const logoBg = isDarkMode ? '#0F1824' : '#fff'
+  // when ready, we fade/scale out
+  useEffect(() => {
+    if (!isReady) return
+
+    const reduceMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches
+    const node = splashRef.current
+    if (!node || reduceMotion) {
+      setIsAnimationComplete(true)
+      return
+    }
+
+    const animation = node.animate(
+      [
+        {opacity: 1, transform: 'scale(1)'},
+        {opacity: 0, transform: 'scale(1.5)'},
+      ],
+      {
+        duration: 300,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        fill: 'forwards',
+      },
+    )
+    animation.onfinish = () => setIsAnimationComplete(true)
+
+    return () => {
+      animation.cancel()
+    }
+  }, [isReady])
 
   return (
-    <View style={{flex: 1}} onLayout={onLayout}>
+    <>
+      {isReady && children}
+
       {!isAnimationComplete && (
-        <View style={StyleSheet.absoluteFillObject}>
-          <Image
-            accessibilityIgnoresInvertColors
-            onLoadEnd={onLoadEnd}
-            source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
-            style={StyleSheet.absoluteFillObject}
-          />
-
-          <Animated.View
-            style={[
-              bottomLogoAnimation,
-              {
-                position: 'absolute',
-                bottom: insets.bottom + 40,
-                left: 0,
-                right: 0,
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: 0,
-              },
-            ]}>
-            <Logotype fill="#fff" width={90} />
-          </Animated.View>
-        </View>
+        <div
+          ref={splashRef}
+          style={flatten([
+            a.fixed,
+            a.inset_0,
+            a.flex,
+            a.align_center,
+            a.justify_center,
+            // to compensate for the `top: -50px` below
+            {transformOrigin: 'center calc(50% - 50px)'},
+          ])}>
+          <Svg
+            fill="none"
+            viewBox="0 0 64 57"
+            style={[a.relative, {width: size, height: size * ratio, top: -50}]}>
+            <Path
+              fill="#006AFF"
+              d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"
+            />
+          </Svg>
+        </div>
       )}
-
-      {isReady && (
-        <>
-          <Animated.View style={[{flex: 1}, appAnimation]}>
-            {props.children}
-          </Animated.View>
-
-          {!isAnimationComplete && (
-            <Animated.View
-              style={[
-                StyleSheet.absoluteFillObject,
-                logoWrapperAnimation,
-                {
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
-                },
-              ]}>
-              <Animated.View style={[logoAnimations]}>
-                <Logo fill={logoBg} />
-              </Animated.View>
-            </Animated.View>
-          )}
-        </>
-      )}
-    </View>
+    </>
   )
 }

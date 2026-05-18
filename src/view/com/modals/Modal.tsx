@@ -1,95 +1,104 @@
-import {Fragment, useEffect, useRef} from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import Animated, {FadeIn, FadeOut} from '#/lib/animations/reanimatedCompat'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
-import {FullWindowOverlay} from '#/components/FullWindowOverlay'
-import BottomSheet, {type BottomSheetMethods} from '#/shims/native-bottom-sheet'
-import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
-import * as UserAddRemoveListsModal from './UserAddRemoveLists'
-
-const DEFAULT_SNAPPOINTS = ['90%']
-const HANDLE_HEIGHT = 24
+import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
-  const {closeModal} = useModalControls()
-  const bottomSheetRef = useRef<BottomSheetMethods>(null)
-  const pal = usePalette('default')
-  const activeModal = activeModals[activeModals.length - 1]
 
-  const onBottomSheetChange = async (snapPoint: number) => {
-    if (snapPoint === -1) {
-      closeModal()
-    }
+  if (!isModalActive) {
+    return null
   }
 
-  const onClose = () => {
-    bottomSheetRef.current?.close()
+  return (
+    <>
+      <RemoveScrollBar />
+      {activeModals.map((modal, i) => (
+        <Modal key={`modal-${i}`} modal={modal} />
+      ))}
+    </>
+  )
+}
+
+function Modal({modal}: {modal: ModalIface}) {
+  const {isModalActive} = useModals()
+  const {closeModal} = useModalControls()
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+
+  if (!isModalActive) {
+    return null
+  }
+
+  const onPressMask = () => {
     closeModal()
   }
+  const onInnerPress = () => {
+    // TODO: can we use prevent default?
+    // do nothing, we just want to stop it from bubbling
+  }
 
-  useEffect(() => {
-    if (isModalActive) {
-      bottomSheetRef.current?.snapToIndex(0)
-    } else {
-      bottomSheetRef.current?.close()
-    }
-  }, [isModalActive, bottomSheetRef, activeModal?.name])
-
-  let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
-  if (activeModal?.name === 'user-add-remove-lists') {
-    snapPoints = UserAddRemoveListsModal.snapPoints
-    element = <UserAddRemoveListsModal.Component {...activeModal} />
+  if (modal.name === 'user-add-remove-lists') {
+    element = <UserAddRemoveLists.Component {...modal} />
   } else {
     return null
   }
 
-  if (snapPoints[0] === 'fullscreen') {
-    return (
-      <SafeAreaView style={[styles.fullscreenContainer, pal.view]}>
-        {element}
-      </SafeAreaView>
-    )
-  }
-
-  const Container = activeModal ? FullWindowOverlay : Fragment
-
   return (
-    <Container>
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        handleHeight={HANDLE_HEIGHT}
-        index={isModalActive ? 0 : -1}
-        enablePanDownToClose
-        android_keyboardInputMode="adjustResize"
-        keyboardBlurBehavior="restore"
-        backdropComponent={
-          isModalActive ? createCustomBackdrop(onClose) : undefined
-        }
-        handleIndicatorStyle={{backgroundColor: pal.text.color}}
-        handleStyle={[styles.handle, pal.view]}
-        backgroundStyle={pal.view}
-        onChange={onBottomSheetChange}>
-        {element}
-      </BottomSheet>
-    </Container>
-  )
+    // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
+    <TouchableWithoutFeedback onPress={onPressMask}>
+      <Animated.View
+        style={styles.mask}
+        entering={FadeIn.duration(150)}
+        exiting={FadeOut}>
+        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+        <TouchableWithoutFeedback onPress={onInnerPress}>
+          <View
+            style={[
+              styles.container,
+              isMobile && styles.containerMobile,
+              pal.view,
+              pal.border,
+            ]}>
+            {element}
+          </View>
+        </TouchableWithoutFeedback>
+      </Animated.View>
+    </TouchableWithoutFeedback>
+  );
 }
 
 const styles = StyleSheet.create({
-  handle: {
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  fullscreenContainer: {
-    position: 'absolute',
+  mask: {
+    // @ts-ignore
+    position: 'fixed',
     top: 0,
     left: 0,
-    bottom: 0,
-    right: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000c',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    width: 600,
+    // @ts-ignore web only
+    maxWidth: '100vw',
+    // @ts-ignore web only
+    maxHeight: '90vh',
+    paddingVertical: 20,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  containerMobile: {
+    borderRadius: 0,
+    paddingHorizontal: 0,
   },
 })

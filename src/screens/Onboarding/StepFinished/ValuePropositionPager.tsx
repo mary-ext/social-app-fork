@@ -1,9 +1,7 @@
-import {useRef, useState} from 'react'
 import {View} from 'react-native'
-import PagerView from 'react-native-pager-view'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Image} from '#/shims/image'
 import {PROP_1, PROP_2, PROP_3} from './images'
@@ -11,65 +9,21 @@ import {Dot, useValuePropText} from './ValuePropositionPager.shared'
 
 export function ValuePropositionPager({
   step,
-  setStep,
   avatarUri,
 }: {
   step: 0 | 1 | 2
-  setStep: (step: 0 | 1 | 2) => void
+  setStep?: (step: 0 | 1 | 2) => void
   avatarUri?: string
 }) {
   const t = useTheme()
-  const [activePage, setActivePage] = useState(step)
-  const ref = useRef<PagerView>(null)
-
-  if (step !== activePage) {
-    setActivePage(step)
-    ref.current?.setPage(step)
-  }
-
-  const images = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]]
-
-  return (
-    <View style={[a.h_full, {marginHorizontal: tokens.space.xl * -1}]}>
-      <PagerView
-        ref={ref}
-        style={[a.flex_1]}
-        initialPage={step}
-        onPageSelected={evt => {
-          const page = evt.nativeEvent.position as 0 | 1 | 2
-          if (step !== page) {
-            setActivePage(page)
-            setStep(page)
-          }
-        }}>
-        {([0, 1, 2] as const).map(page => (
-          <Page
-            key={page}
-            page={page}
-            image={images[page]}
-            avatarUri={avatarUri}
-          />
-        ))}
-      </PagerView>
-    </View>
-  )
-}
-
-function Page({
-  page,
-  image,
-  avatarUri,
-}: {
-  page: 0 | 1 | 2
-  image: string
-  avatarUri?: string
-}) {
   const {t: l} = useLingui()
-  const t = useTheme()
-  const {title, description, alt} = useValuePropText(page)
+
+  const image = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]][step]
+
+  const {title, description, alt} = useValuePropText(step)
 
   return (
-    <View key={page}>
+    <View>
       <View
         style={[
           a.relative,
@@ -79,11 +33,11 @@ function Page({
         ]}>
         <Image
           source={image}
-          style={[a.w_full, a.aspect_square]}
+          style={[a.w_full, {aspectRatio: 1}]}
           alt={alt}
           accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
         />
-        {page === 1 && (
+        {step === 1 && (
           <Image
             source={avatarUri}
             style={[
@@ -100,11 +54,11 @@ function Page({
           />
         )}
       </View>
-      <View style={[a.mt_4xl, a.gap_2xl, a.px_xl, a.align_center]}>
+      <View style={[a.mt_4xl, a.gap_2xl, a.align_center]}>
         <View style={[a.flex_row, a.gap_sm]}>
-          <Dot active={page === 0} />
-          <Dot active={page === 1} />
-          <Dot active={page === 2} />
+          <Dot active={step === 0} />
+          <Dot active={step === 1} />
+          <Dot active={step === 2} />
         </View>
 
         <View style={[a.gap_sm]}>

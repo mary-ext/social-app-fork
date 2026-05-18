@@ -1,1 +1,3 @@
-export function dismiss(_id?: string) {}
+import {toast} from 'sonner'
+
+export const dismiss = toast.dismiss

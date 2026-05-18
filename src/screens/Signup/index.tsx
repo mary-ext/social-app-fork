@@ -1,6 +1,5 @@
 import {useEffect, useReducer, useState} from 'react'
 import {AppState, type AppStateStatus, View} from 'react-native'
-import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -27,7 +26,6 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
-import { GCP_PROJECT_ID } from '#/env';
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -102,11 +100,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     )
 
     return () => subscription.remove()
-  }, [])
-
-  // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
-  useEffect(() => {
-    return
   }, [])
 
   return (

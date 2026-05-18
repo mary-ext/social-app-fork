@@ -1,5 +1,5 @@
-import Emojis, {type EmojiMartData} from '@emoji-mart/data'
+import {type EmojiMartData} from '@emoji-mart/data'
 
 export async function getEmojis(): Promise<EmojiMartData> {
-  return Emojis as EmojiMartData
+  return (await import('@emoji-mart/data')).default as EmojiMartData
 }
