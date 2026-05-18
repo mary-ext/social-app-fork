@@ -68,6 +68,24 @@ function imageStyle(
   return [style, {objectFit: contentFit}] as RNImageProps['style']
 }
 
+function resizeModeForContentFit(
+  contentFit: ExtraImageProps['contentFit'],
+): RNImageProps['resizeMode'] | undefined {
+  switch (contentFit) {
+    case 'cover':
+    case 'contain':
+      return contentFit
+    case 'fill':
+      return 'stretch'
+    case 'none':
+      return 'center'
+    case 'scale-down':
+      return 'contain'
+    default:
+      return undefined
+  }
+}
+
 type ImageComponent = ForwardRefExoticComponent<
   ImageProps & RefAttributes<ComponentRef<typeof RNImage>>
 > & {
@@ -107,6 +125,7 @@ export const Image = forwardRef<ComponentRef<typeof RNImage>, ImageProps>(
         ref={ref}
         {...props}
         source={normalizeSource(source)}
+        resizeMode={resizeModeForContentFit(contentFit) ?? props.resizeMode}
         style={imageStyle(style, contentFit)}
         onLoad={event => {
           const source = event.nativeEvent?.source ?? {}
@@ -159,6 +178,7 @@ export function ImageBackground({
     <RNImageBackground
       {...props}
       source={normalizeSource(source)}
+      resizeMode={resizeModeForContentFit(contentFit) ?? props.resizeMode}
       style={imageStyle(style as RNImageProps['style'], contentFit)}
     />
   )

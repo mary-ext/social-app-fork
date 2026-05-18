@@ -143,7 +143,11 @@ function LightboxGallery({
   // instead of navigating away from the page.
   const closedByPopStateRef = useRef(false)
   useEffect(() => {
-    history.pushState({lightbox: true}, '')
+    let didPushHistory = false
+    const pushHistory = requestAnimationFrame(() => {
+      history.pushState({lightbox: true}, '')
+      didPushHistory = true
+    })
 
     const handlePopState = () => {
       closedByPopStateRef.current = true
@@ -152,7 +156,10 @@ function LightboxGallery({
     window.addEventListener('popstate', handlePopState)
 
     return () => {
+      cancelAnimationFrame(pushHistory)
       window.removeEventListener('popstate', handlePopState)
+      if (!didPushHistory) return
+
       // Only pop our entry if it's still the current one. If navigation
       // already pushed a new entry on top, leave the orphaned entry —
       // it shares the same URL so traversing through it is harmless.
