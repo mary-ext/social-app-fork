@@ -1479,6 +1479,8 @@ Note: `rsbuild preview` requires a prior production build (`yarn build-web`).
 
 ## Phase 4.9 — Final verification
 
+Status: done for unauthenticated web verification. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, and mobile viewport. Authenticated compose/upload/login flows remain manual without credentials.
+
 **Build verification:**
 ```sh
 yarn install
@@ -1502,18 +1504,18 @@ npx @rsdoctor/cli analyze
 ```
 
 **Browser smoke checklist:**
-- [ ] App loads at `/`
-- [ ] Hard-refresh on nested routes works (`historyApiFallback`)
-- [ ] Logged-out home renders
+- [x] App loads at `/`
+- [x] Hard-refresh on nested routes works (`historyApiFallback`)
+- [x] Logged-out home renders
 - [ ] Login works
-- [ ] Timeline loads
-- [ ] Profile page loads
-- [ ] Post thread loads
-- [ ] Search works
+- [x] Timeline loads
+- [x] Profile page loads
+- [x] Post thread loads
+- [x] Search works
 - [ ] Composer opens, text post submits
 - [ ] **Media — distinct surfaces** (don't lump these — Streams 1-4 each touch a different piece):
   - [ ] Image upload (composer → post timeline thumbnail)
-  - [ ] Hosted images render (feed thumbnails, lightbox open)
+  - [x] Hosted images render (feed/thread thumbnails; lightbox open remains manual)
   - [ ] Video post inline playback (`<video>` element in `VideoEmbedInnerWeb`)
   - [ ] Video scrubber drags correctly (`web-controls/Scrubber`)
   - [ ] Video upload (composer → posted video — `src/lib/media/video/upload.web.ts`)
@@ -1521,12 +1523,12 @@ npx @rsdoctor/cli analyze
   - [ ] External GIF embed (separate code path in `ExternalEmbed/index.tsx`)
   - [ ] Link-card preview (text + thumbnail)
   - [ ] Audio / music external embeds (Spotify / Apple Music — `src/lib/strings/embed-player.ts`)
-- [ ] Notifications page degrades gracefully without push registration
-- [ ] DMs load
-- [ ] Settings/About renders without OTA/Sentry/native app info
+- [x] Notifications page degrades gracefully without push registration
+- [x] DMs route loads the signed-out gate without boot/runtime errors
+- [x] Settings/About renders without OTA/Sentry/native app info
 - [ ] Copy/share actions work with browser-clipboard / `navigator.share` fallback
 - [ ] External links open correctly
-- [ ] Mobile-viewport layout works in browser devtools
+- [x] Mobile-viewport layout works in browser devtools
 
 **"Nothing essential deleted" signals:**
 - No missing-asset 404s in the browser console

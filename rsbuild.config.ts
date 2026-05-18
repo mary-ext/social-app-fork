@@ -44,7 +44,9 @@ module.exports = defineConfig(({envMode}) => ({
     pluginBabel({
       include: transpiledPaths,
       babelLoaderOptions(options, {addPlugins}) {
-        options.presets = ['@react-native/babel-preset']
+        options.presets = [
+          ['@react-native/babel-preset', {enableBabelRuntime: false}],
+        ]
         addPlugins([
           '@babel/plugin-transform-export-namespace-from',
           '@lingui/babel-plugin-lingui-macro',
