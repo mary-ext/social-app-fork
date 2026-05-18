@@ -61,7 +61,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
-import {AnalyticsContext, setupDeviceId} from '#/analytics'
+import {AnalyticsContext} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
@@ -178,9 +178,7 @@ function App() {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    void Promise.all([initPersistedState(), setupDeviceId]).then(() =>
-      setIsReady(true),
-    )
+    void initPersistedState().then(() => setIsReady(true))
   }, [])
 
   if (!isReady) {

@@ -1,7 +1,26 @@
 import {type PersistedAccount} from '#/state/persisted'
-import {type Metrics} from '#/analytics/metrics'
 
 export type SessionAccount = PersistedAccount
+
+export type AccountCreateSuccessMetrics = {
+  signupDuration: number
+  fieldErrorsTotal: number
+  backgroundCount: number
+}
+
+export type AccountLoggedInLogContext =
+  | 'LoginForm'
+  | 'SwitchAccount'
+  | 'ChooseAccountForm'
+  | 'Settings'
+  | 'Notification'
+
+export type AccountLoggedOutLogContext =
+  | 'SwitchAccount'
+  | 'Settings'
+  | 'SignupQueued'
+  | 'Deactivated'
+  | 'Takendown'
 
 export type SessionStateContext = {
   accounts: SessionAccount[]
@@ -21,7 +40,7 @@ export type SessionApiContext = {
       verificationPhone?: string
       verificationCode?: string
     },
-    metrics: Metrics['account:create:success'],
+    metrics: AccountCreateSuccessMetrics,
   ) => Promise<void>
   login: (
     props: {
@@ -30,14 +49,10 @@ export type SessionApiContext = {
       password: string
       authFactorToken?: string | undefined
     },
-    logContext: Metrics['account:loggedIn']['logContext'],
+    logContext: AccountLoggedInLogContext,
   ) => Promise<void>
-  logoutCurrentAccount: (
-    logContext: Metrics['account:loggedOut']['logContext'],
-  ) => void
-  logoutEveryAccount: (
-    logContext: Metrics['account:loggedOut']['logContext'],
-  ) => void
+  logoutCurrentAccount: (logContext: AccountLoggedOutLogContext) => void
+  logoutEveryAccount: (logContext: AccountLoggedOutLogContext) => void
   resumeSession: (
     account: SessionAccount,
     isSwitchingAccounts?: boolean,

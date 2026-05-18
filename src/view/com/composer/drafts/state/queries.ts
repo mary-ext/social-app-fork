@@ -5,11 +5,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {getDeviceId} from '#/lib/device-id'
 import {isNetworkError} from '#/lib/strings/errors'
 import {useAgent} from '#/state/session'
 import {type ComposerState} from '#/view/com/composer/state/composer'
 import {useAnalytics} from '#/analytics'
-import {getDeviceId} from '#/analytics/identifiers'
 import {composerStateToDraft, draftViewToSummary} from './api'
 import {logger} from './logger'
 import * as storage from './storage'

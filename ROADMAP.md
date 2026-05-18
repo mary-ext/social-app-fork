@@ -491,7 +491,7 @@ returns no source hits (locale `.po` strings will be cleaned up by Phase 2.11's 
 
 Before deleting the directory, relocate the things that are still useful — and **delete** the things that only existed to support metrics:
 
-- [ ] `src/analytics/identifiers/device.ts` (`getDeviceId`) → **rewrite + relocate**. Current file has three functions (`getAndMigrateDeviceId`, `getDeviceId`, `getDeviceIdOrThrow`) wrapped in analytics scaffolding (logger context, AsyncStorage migration from the legacy `STATSIG_LOCAL_STORAGE_STABLE_ID` key, lazy init through the analytics provider). For a personal fork: no legacy data to migrate, no analytics provider to init through. Collapse to a single function in `src/lib/device-id.ts`:
+- [x] `src/analytics/identifiers/device.ts` (`getDeviceId`) → **rewrite + relocate**. Current file has three functions (`getAndMigrateDeviceId`, `getDeviceId`, `getDeviceIdOrThrow`) wrapped in analytics scaffolding (logger context, AsyncStorage migration from the legacy `STATSIG_LOCAL_STORAGE_STABLE_ID` key, lazy init through the analytics provider). For a personal fork: no legacy data to migrate, no analytics provider to init through. Collapse to a single function in `src/lib/device-id.ts`:
   ```ts
   import {device} from '#/storage'
 
@@ -505,8 +505,8 @@ Before deleting the directory, relocate the things that are still useful — and
   }
   ```
   Retarget the three callers (`AboutSettings.tsx`, `drafts/state/api.ts`, `drafts/state/queries.ts`) to `#/lib/device-id`. Drop the `?? 'N/A'` / `?? 'unknown'` fallbacks at call sites — the new signature always returns a string. Also delete `setupDeviceId` from `src/analytics/index.tsx` (no migration to bootstrap)
-- [ ] Delete with the rest of analytics: `identifiers/session.ts` (`nativeSessionId` was analytics-only), `metrics/utils.ts` (`toClout` — drop the 2 callers in `state/queries/post.ts` / `profile.ts` at the same time), `utils.ts useMeta`, `metadata.ts` navigation helpers
-- [ ] Enumerate every importer and fix:
+- [x] Delete with the rest of analytics: `identifiers/session.ts` (`nativeSessionId` was analytics-only), `metrics/utils.ts` (`toClout` — drop the 2 callers in `state/queries/post.ts` / `profile.ts` at the same time), `utils.ts useMeta`, `metadata.ts` navigation helpers
+- [x] Enumerate every importer and fix:
   ```sh
   rg -n "from '#/analytics/identifiers|from '#/analytics/metrics|from '#/analytics/metadata|from '#/analytics/utils" src --glob '!locale/**' --glob '!**/*.po'
   ```

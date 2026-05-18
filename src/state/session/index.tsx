@@ -13,7 +13,7 @@ import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
+import {AnalyticsContext, useAnalyticsBase} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
@@ -27,7 +27,11 @@ import {
 import {type Action, getInitialState, reducer, type State} from './reducer'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
-export type {SessionAccount} from '#/state/session/types'
+export type {
+  AccountLoggedInLogContext,
+  AccountLoggedOutLogContext,
+  SessionAccount,
+} from '#/state/session/types'
 
 import {clearPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {
@@ -141,9 +145,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      ax.metric('account:create:success', metrics, {
-        session: utils.accountToSessionMetadata(account),
-      })
+      ax.metric('account:create:success', metrics)
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
     [ax, store, onAgentSessionChange, cancelPendingTask],
@@ -166,11 +168,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      ax.metric(
-        'account:loggedIn',
-        {logContext, withPassword: true},
-        {session: utils.accountToSessionMetadata(account)},
-      )
+      ax.metric('account:loggedIn', {logContext, withPassword: true})
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [ax, store, onAgentSessionChange, cancelPendingTask],
@@ -186,17 +184,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       store.dispatch({
         type: 'logged-out-current-account',
       })
-      ax.metric(
-        'account:loggedOut',
-        {logContext, scope: 'current'},
-        {
-          session: utils.accountToSessionMetadata(
-            prevState.accounts.find(
-              a => a.did === prevState.currentAgentState.did,
-            ),
-          ),
-        },
-      )
+      ax.metric('account:loggedOut', {logContext, scope: 'current'})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       if (prevState.currentAgentState.did) {
         void clearPersistedQueryStorage(prevState.currentAgentState.did)
@@ -217,17 +205,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       store.dispatch({
         type: 'logged-out-every-account',
       })
-      ax.metric(
-        'account:loggedOut',
-        {logContext, scope: 'every'},
-        {
-          session: utils.accountToSessionMetadata(
-            prevState.accounts.find(
-              a => a.did === prevState.currentAgentState.did,
-            ),
-          ),
-        },
-      )
+      ax.metric('account:loggedOut', {logContext, scope: 'every'})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       for (const account of prevState.accounts) {
         void clearPersistedQueryStorage(account.did)
@@ -392,14 +370,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     <AgentContext.Provider value={agent}>
       <StateContext.Provider value={stateContext}>
         <ApiContext.Provider value={api}>
-          <AnalyticsContext
-            metadata={utils.useMeta({
-              session: utils.accountToSessionMetadata(
-                stateContext.currentAccount,
-              ),
-            })}>
-            {children}
-          </AnalyticsContext>
+          <AnalyticsContext>{children}</AnalyticsContext>
         </ApiContext.Provider>
       </StateContext.Provider>
     </AgentContext.Provider>

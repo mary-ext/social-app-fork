@@ -36,7 +36,6 @@ import {useUpdateProfileVerificationCache} from '#/state/queries/verification/us
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
-import {type Metrics, toClout} from '#/analytics/metrics'
 import type * as bsky from '#/types/bsky'
 import {
   ProgressGuideAction,
@@ -60,6 +59,25 @@ export const profilesQueryKey = (handles: string[]) => [
   profilesQueryKeyRoot,
   handles,
 ]
+
+export type ProfileFollowLogContext =
+  | 'RecommendedFollowsItem'
+  | 'PostThreadItem'
+  | 'ProfileCard'
+  | 'ProfileHeader'
+  | 'ProfileHeaderSuggestedFollows'
+  | 'ProfileMenu'
+  | 'ProfileHoverCard'
+  | 'AvatarButton'
+  | 'StarterPackProfilesList'
+  | 'FeedInterstitial'
+  | 'PostOnboardingFindFollows'
+  | 'ImmersiveVideo'
+  | 'ExploreSuggestedAccounts'
+  | 'OnboardingSuggestedAccounts'
+  | 'GroupChat'
+
+export type ProfileUnfollowLogContext = ProfileFollowLogContext | 'Chat'
 
 export function useProfileQuery({
   did,
@@ -245,7 +263,7 @@ export function useProfileUpdateMutation() {
 
 export function useProfileFollowMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
-  logContext: Metrics['profile:follow']['logContext'],
+  logContext: ProfileFollowLogContext,
   position?: number,
   contextProfileDid?: string,
 ) {
@@ -365,35 +383,26 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation(
-  logContext: Metrics['profile:follow']['logContext'],
+  logContext: ProfileFollowLogContext,
   profile: Shadow<bsky.profile.AnyProfileView>,
   position?: number,
   contextProfileDid?: string,
 ) {
   const ax = useAnalytics()
-  const {currentAccount} = useSession()
   const agent = useAgent()
-  const queryClient = useQueryClient()
   const {captureAction} = useProgressGuideControls()
 
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
-      if (currentAccount) {
-        ownProfile = findProfileQueryData(queryClient, currentAccount.did)
-      }
       captureAction(ProgressGuideAction.Follow)
       ax.metric('profile:follow', {
         logContext,
         didBecomeMutual: profile.viewer
           ? Boolean(profile.viewer.followedBy)
           : undefined,
-        followeeClout:
-          'followersCount' in profile
-            ? toClout(profile.followersCount)
-            : undefined,
+        followeeClout: undefined,
         followeeDid: did,
-        followerClout: toClout(ownProfile?.followersCount),
+        followerClout: undefined,
         position,
         contextProfileDid,
       })
@@ -402,9 +411,7 @@ function useProfileFollowMutation(
   })
 }
 
-function useProfileUnfollowMutation(
-  logContext: Metrics['profile:unfollow']['logContext'],
-) {
+function useProfileUnfollowMutation(logContext: ProfileUnfollowLogContext) {
   const ax = useAnalytics()
   const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({

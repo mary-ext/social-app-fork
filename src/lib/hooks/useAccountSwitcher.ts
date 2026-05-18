@@ -3,11 +3,14 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {type SessionAccount, useSessionApi} from '#/state/session'
+import {
+  type AccountLoggedInLogContext,
+  type SessionAccount,
+  useSessionApi,
+} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {type Metrics} from '#/analytics/metrics'
 import {IS_WEB} from '#/env'
 
 export function useAccountSwitcher() {
@@ -18,10 +21,7 @@ export function useAccountSwitcher() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
-    async (
-      account: SessionAccount,
-      logContext: Metrics['account:loggedIn']['logContext'],
-    ) => {
+    async (account: SessionAccount, logContext: AccountLoggedInLogContext) => {
       if (pendingDid) {
         // The session API isn't resilient to race conditions so let's just ignore this.
         return

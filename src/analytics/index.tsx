@@ -1,24 +1,12 @@
-import {createContext, useContext, useMemo} from 'react'
-import {Platform} from 'react-native'
+import {createContext, useContext} from 'react'
 
 import {Logger} from '#/logger'
-import {
-  getAndMigrateDeviceId,
-  getDeviceId,
-  getInitialSessionId,
-  useSessionId,
-} from '#/analytics/identifiers'
-import {
-  getMetadataForLogger,
-  type MergeableMetadata,
-  type Metadata,
-} from '#/analytics/metadata'
-import {type Metrics} from '#/analytics/metrics'
-import * as refParams from '#/analytics/misc/refParams'
-import * as env from '#/env'
+import {type Metrics} from './metrics'
 
-export {type Metrics} from '#/analytics/metrics'
-export * as utils from '#/analytics/utils'
+export {type Metrics} from './metrics'
+
+export type MergeableMetadata = Record<string, unknown>
+export type Metadata = Record<string, unknown>
 
 type LoggerType = {
   debug: Logger['debug']
@@ -48,11 +36,8 @@ export type AnalyticsContextType = {
   ) => void
 }
 
-function createLogger(
-  context: Logger['context'],
-  metadata: Partial<Metadata>,
-): LoggerType {
-  const logger = Logger.create(context, metadata)
+function createLogger(context: Logger['context']): LoggerType {
+  const logger = Logger.create(context)
   return {
     debug: logger.debug.bind(logger),
     info: logger.info.bind(logger),
@@ -60,7 +45,7 @@ function createLogger(
     warn: logger.warn.bind(logger),
     error: logger.error.bind(logger),
     useChild: (context: Exclude<Logger['context'], undefined>) => {
-      return useMemo(() => createLogger(context, metadata), [context, metadata])
+      return createLogger(context)
     },
     Context: Logger.Context,
   }
@@ -69,7 +54,7 @@ function createLogger(
 export type AnalyticsBaseContextType = AnalyticsContextType
 
 const Context = createContext<AnalyticsContextType>({
-  logger: createLogger(Logger.Context.Default, {}),
+  logger: createLogger(Logger.Context.Default),
   metric: (event, payload, metadata) => {
     if (metadata && '__meta' in metadata) {
       delete metadata.__meta
@@ -77,27 +62,9 @@ const Context = createContext<AnalyticsContextType>({
     void event
     void payload
   },
-  metadata: {
-    base: {
-      deviceId: getDeviceId() ?? 'unknown',
-      sessionId: getInitialSessionId(),
-      platform: Platform.OS,
-      appVersion: env.APP_VERSION,
-      bundleIdentifier: env.BUNDLE_IDENTIFIER,
-      bundleDate: env.BUNDLE_DATE,
-      referrerSrc: refParams.src,
-      referrerUrl: refParams.url,
-    },
-  },
+  metadata: {},
 })
 Context.displayName = 'AnalyticsContext'
-
-/**
- * Ensures that deviceId is set and migrated from legacy storage. Handled on
- * startup in `App.<platform>.tsx`. This must be awaited prior to the app
- * booting up.
- */
-export const setupDeviceId = getAndMigrateDeviceId()
 
 /**
  * Analytics context provider. Decorates the parent analytics context with
@@ -110,40 +77,9 @@ export function AnalyticsContext({
   children: React.ReactNode
   metadata?: MergeableMetadata
 }) {
-  if (metadata) {
-    if (!('__meta' in metadata)) {
-      throw new Error(
-        'Use the useMeta() helper when passing metadata to AnalyticsContext',
-      )
-    }
-  }
-  const sessionId = useSessionId()
   const parentContext = useContext(Context)
-  const childContext = useMemo(() => {
-    const combinedMetadata = {
-      ...parentContext.metadata,
-      ...metadata,
-      base: {
-        ...parentContext.metadata.base,
-        sessionId,
-      },
-    }
-    const context: AnalyticsContextType = {
-      ...parentContext,
-      logger: createLogger(
-        Logger.Context.Default,
-        getMetadataForLogger(combinedMetadata),
-      ),
-      metadata: combinedMetadata,
-      metric: (event, payload, extraMetadata) => {
-        void event
-        void payload
-        void extraMetadata
-      },
-    }
-    return context
-  }, [sessionId, parentContext, metadata])
-  return <Context.Provider value={childContext}>{children}</Context.Provider>
+  void metadata
+  return <Context.Provider value={parentContext}>{children}</Context.Provider>
 }
 
 export function useAnalyticsBase() {

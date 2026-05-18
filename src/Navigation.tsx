@@ -128,7 +128,6 @@ import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
 import {useAnalytics} from '#/analytics'
-import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -979,10 +978,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   const onNavigationReady = useCallOnce(() => {
     const currentScreen = getCurrentRouteName()
-    setNavigationMetadata({
-      previousScreen: currentScreen,
-      currentScreen,
-    })
     previousScreen.current = currentScreen
 
     handlePushNotificationEntry()
@@ -1015,11 +1010,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       theme={theme}
       onStateChange={() => {
         const currentScreen = getCurrentRouteName()
-        // do this before metric
-        setNavigationMetadata({
-          previousScreen: previousScreen.current,
-          currentScreen,
-        })
         ax.metric('router:navigate', {from: previousScreen.current})
         previousScreen.current = currentScreen
       }}

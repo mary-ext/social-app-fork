@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   type QueryClient,
   useMutation,
@@ -10,15 +10,19 @@ import {
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
-import {useAgent, useSession} from '#/state/session'
+import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useAnalytics} from '#/analytics'
-import {type Metrics, toClout} from '#/analytics/metrics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
-import {findProfileQueryData} from './profile'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
+
+export type PostActionLogContext =
+  | 'FeedItem'
+  | 'PostThreadItem'
+  | 'Post'
+  | 'ImmersiveVideo'
 
 export function usePostQuery(uri: string | undefined) {
   const agent = useAgent()
@@ -118,7 +122,7 @@ export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
-  logContext: Metrics['post:like']['logContext'],
+  logContext: PostActionLogContext,
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
@@ -178,11 +182,9 @@ export function usePostLikeMutationQueue(
 
 function usePostLikeMutation(
   feedDescriptor: string | undefined,
-  logContext: Metrics['post:like']['logContext'],
+  logContext: PostActionLogContext,
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const {currentAccount} = useSession()
-  const queryClient = useQueryClient()
   const postAuthor = post.author
   const agent = useAgent()
   const ax = useAnalytics()
@@ -192,10 +194,6 @@ function usePostLikeMutation(
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
-      if (currentAccount) {
-        ownProfile = findProfileQueryData(queryClient, currentAccount.did)
-      }
       ax.metric('post:like', {
         uri,
         authorDid: postAuthor.did,
@@ -206,13 +204,8 @@ function usePostLikeMutation(
         doesLikerFollowPoster: postAuthor.viewer
           ? Boolean(postAuthor.viewer.following)
           : undefined,
-        likerClout: toClout(ownProfile?.followersCount),
-        postClout:
-          post.likeCount != null &&
-          post.repostCount != null &&
-          post.replyCount != null
-            ? toClout(post.likeCount + post.repostCount + post.replyCount)
-            : undefined,
+        likerClout: undefined,
+        postClout: undefined,
         feedDescriptor: feedDescriptor,
       })
       return agent.like(uri, cid, via)
@@ -222,7 +215,7 @@ function usePostLikeMutation(
 
 function usePostUnlikeMutation(
   feedDescriptor: string | undefined,
-  logContext: Metrics['post:unlike']['logContext'],
+  logContext: PostActionLogContext,
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
@@ -244,7 +237,7 @@ export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
-  logContext: Metrics['post:repost']['logContext'],
+  logContext: PostActionLogContext,
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
@@ -306,7 +299,7 @@ export function usePostRepostMutationQueue(
 
 function usePostRepostMutation(
   feedDescriptor: string | undefined,
-  logContext: Metrics['post:repost']['logContext'],
+  logContext: PostActionLogContext,
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
@@ -330,7 +323,7 @@ function usePostRepostMutation(
 
 function usePostUnrepostMutation(
   feedDescriptor: string | undefined,
-  logContext: Metrics['post:unrepost']['logContext'],
+  logContext: PostActionLogContext,
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()

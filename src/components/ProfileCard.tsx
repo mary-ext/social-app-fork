@@ -20,7 +20,11 @@ import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {
+  type ProfileFollowLogContext,
+  type ProfileUnfollowLogContext,
+  useProfileFollowMutationQueue,
+} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
@@ -44,7 +48,6 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {type Metrics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 
@@ -451,8 +454,7 @@ export function DescriptionPlaceholder({
 export type FollowButtonProps = {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  logContext: Metrics['profile:follow']['logContext'] &
-    Metrics['profile:unfollow']['logContext']
+  logContext: ProfileFollowLogContext & ProfileUnfollowLogContext
   colorInverted?: boolean
   onFollow?: () => void
   withIcon?: boolean
