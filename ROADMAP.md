@@ -880,8 +880,8 @@ returns only transitively-shadowed files.
 
 ## Phase 4.0 — Build baseline checkpoint
 
-- [ ] `yarn install`
-- [ ] Capture snapshots (`@bsky.app/expo-*` packages are in-house Expo modules and must be included; `src/locale/**` is excluded because catalog comments produce thousands of noise hits):
+- [x] `yarn install`
+- [x] Capture snapshots (`@bsky.app/expo-*` packages are in-house Expo modules and must be included; `src/locale/**` is excluded because catalog comments produce thousands of noise hits):
   ```sh
   rg -n "from ['\"](@?expo|expo-|@expo/|@bsky\.app/expo)|require\(['\"](@?expo|expo-|@expo/|@bsky\.app/expo)|@sentry/react-native|from ['\"][^'\"]*modules/" \
     src index.web.js index.js -g '!src/locale/**' > .inventory-expo-imports.txt
