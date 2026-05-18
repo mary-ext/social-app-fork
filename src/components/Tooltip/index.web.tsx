@@ -1,9 +1,8 @@
 import {Children, createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
-import {utils} from '@bsky.app/alf'
 import {Popover} from 'radix-ui'
 
-import {atoms as a, flatten, select, useTheme} from '#/alf'
+import {atoms as a, flatten, select, useTheme,utils} from '#/alf'
 import {
   ARROW_SIZE,
   BUBBLE_MAX_WIDTH,

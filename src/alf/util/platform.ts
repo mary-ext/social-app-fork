@@ -1,1 +1,1 @@
-export {android, ios, native, platform, web} from '@bsky.app/alf'
+export {android, ios, native, platform, web} from '#/alf/base/platform'

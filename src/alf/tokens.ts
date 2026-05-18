@@ -1,6 +1,6 @@
-import {tokens} from '@bsky.app/alf'
+import {tokens} from '#/alf/base'
 
-export * from '@bsky.app/alf/dist/tokens'
+export * from '#/alf/base/tokens'
 
 export const color = {
   temp_purple: tokens.labelerColor.purple,

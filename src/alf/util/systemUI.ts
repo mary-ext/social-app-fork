@@ -1,6 +1,5 @@
-import {type Theme} from '@bsky.app/alf'
-
 import {logger} from '#/logger'
+import {type Theme} from '#/alf/base'
 import {IS_ANDROID} from '#/env'
 import * as SystemUI from '#/shims/system-ui'
 

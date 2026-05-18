@@ -1096,18 +1096,19 @@ All packages ship raw source under `node_modules/.../src/` — copy from there d
 
 The largest of the three. The target layout under `src/alf/base/` mirrors the upstream `src/` tree: subdirs `atoms/`, `platform/`, `utils/`, `utils/flatten/`, plus top-level `themes.ts`, `palette.ts`, `tokens.ts`, `types.ts`. Platform variants are **module-scoped** (`atoms/index.native.ts`, `utils/flatten/index.web.ts`), not file-scoped — preserve that layout.
 
-- [ ] Inventory + survey layout:
+- [x] Inventory + survey layout:
   ```sh
   rg -n "@bsky.app/alf" src package.json
   find node_modules/@bsky.app/alf/src -type f \( -name '*.web.*' -o -name '*.native.*' \)
   ```
-- [ ] Copy `node_modules/@bsky.app/alf/src/` → `src/alf/base/` (preserve module structure)
-- [ ] **Skip native variants entirely.** Don't copy `platform/index.native.ts` OR `atoms/index.native.ts`. Upstream `atoms/index.native.ts` imports `{ios, isFabric}` from `../platform`, so if you copy native atoms AND simplify platform exports (next bullet, which drops `isFabric`), typecheck fails. The fork is web-only — there's no platform resolution for these to feed; skipping both keeps the in-housing clean. (Aside: if a stray import of native atoms shows up after the copy, that file is in scope for the Phase 4.5 platform-branch collapse, not for 4.4.)
-- [ ] **Simplify the platform helpers** in `src/alf/base/platform/index.ts` since this fork is web-only. The upstream helpers conditionally check `isWeb` / `isIOS` etc.; with `isWeb=true` hardcoded those conditionals are always evaluated but always pick the same branch. Replace with direct identities — `web = <T>(v: T): T => v` (true identity), `ios = android = native = (): undefined => undefined`, `platform = <T>(specifics: {web?: T, default?: T}) => specifics.web ?? specifics.default`. Drop the `isIOS`/`isAndroid`/`isNative`/`isFabric` exports — they duplicate `#/env` constants and have no surviving callers worth keeping (the native-atom file that consumed them is already not copied per the previous bullet). This makes the helpers semantically web-only across the 413 callsites in 178 files (`rg -c "\\b(web|native|ios|android|platform)\\(" src`) without touching any of them yet — call-site simplification is opportunistic in Phase 4.5
-- [ ] Retarget intra-`src/alf/` imports to `#/alf/base/*` — including the sub-path imports `@bsky.app/alf/dist/tokens` and `@bsky.app/alf/dist/utils`
-- [ ] Retarget external consumers (7 files use `{utils}` or `{type ThemeName}` — `rg "from '@bsky.app/alf'" src` to enumerate). Repoint to `#/alf`, not `#/alf/base/*` directly, so the public surface stays the gate
-- [ ] `yarn remove @bsky.app/alf`
-- [ ] Update `src/alf/README.md` with one or two sentences on the in-housing
+- [x] Copy `node_modules/@bsky.app/alf/src/` → `src/alf/base/` (preserve module structure)
+- [x] **Skip native variants entirely.** Don't copy `platform/index.native.ts` OR `atoms/index.native.ts`. Upstream `atoms/index.native.ts` imports `{ios, isFabric}` from `../platform`, so if you copy native atoms AND simplify platform exports (next bullet, which drops `isFabric`), typecheck fails. The fork is web-only — there's no platform resolution for these to feed; skipping both keeps the in-housing clean. (Aside: if a stray import of native atoms shows up after the copy, that file is in scope for the Phase 4.5 platform-branch collapse, not for 4.4.)
+- [x] **Simplify the platform helpers** in `src/alf/base/platform/index.ts` since this fork is web-only. The upstream helpers conditionally check `isWeb` / `isIOS` etc.; with `isWeb=true` hardcoded those conditionals are always evaluated but always pick the same branch. Replace with direct identities — `web = <T>(v: T): T => v` (true identity), `ios = android = native = (): undefined => undefined`, `platform = <T>(specifics: {web?: T, default?: T}) => specifics.web ?? specifics.default`. Drop the `isIOS`/`isAndroid`/`isNative`/`isFabric` exports — they duplicate `#/env` constants and have no surviving callers worth keeping (the native-atom file that consumed them is already not copied per the previous bullet). This makes the helpers semantically web-only across the 413 callsites in 178 files (`rg -c "\\b(web|native|ios|android|platform)\\(" src`) without touching any of them yet — call-site simplification is opportunistic in Phase 4.5
+  - Note: runtime behavior is web-only as above, but the helper type boundary remains intentionally permissive because existing RNW style callsites rely on web CSS properties flowing through these helpers. Narrowing that type surface belongs with the Appendix A style-system redesign.
+- [x] Retarget intra-`src/alf/` imports to `#/alf/base/*` — including the sub-path imports `@bsky.app/alf/dist/tokens` and `@bsky.app/alf/dist/utils`
+- [x] Retarget external consumers (7 files use `{utils}` or `{type ThemeName}` — `rg "from '@bsky.app/alf'" src` to enumerate). Repoint to `#/alf`, not `#/alf/base/*` directly, so the public surface stays the gate
+- [x] `yarn remove @bsky.app/alf`
+- [x] Update `src/alf/README.md` with one or two sentences on the in-housing
 
 **Footguns:**
 - `src/alf/themes.ts` imports `createThemes`, `DEFAULT_PALETTE`, `DEFAULT_SUBDUED_PALETTE` as **runtime values**, not type-only. Vendor `themes.ts` + `palette.ts` accordingly — easy to miss if you skim for named exports
@@ -1117,21 +1118,21 @@ The largest of the three. The target layout under `src/alf/base/` mirrors the up
 
 5 source files (autocomplete component), with module-scoped `.web.ts` variants for `computeStyles` and `useKeyboardHandling`.
 
-- [ ] Copy `node_modules/@bsky.app/sift/src/` → `src/lib/sift/`
-- [ ] Retarget `from '@bsky.app/sift'` imports (use `rg` to enumerate — around 7 callers at fork time across `Autocomplete*`, `Composer/index.tsx`, `view/shell/desktop/Search.tsx`)
-- [ ] `yarn remove @bsky.app/sift`
+- [x] Copy `node_modules/@bsky.app/sift/src/` → `src/lib/sift/`
+- [x] Retarget `from '@bsky.app/sift'` imports (use `rg` to enumerate — around 7 callers at fork time across `Autocomplete*`, `Composer/index.tsx`, `view/shell/desktop/Search.tsx`)
+- [x] `yarn remove @bsky.app/sift`
 
 ### 4.4c — `@bsky.app/tapper`
 
 4 source files (rich-text editor utilities), pure JS, no platform variants. Single caller at fork time: `src/components/Composer/index.tsx`.
 
-- [ ] Copy `node_modules/@bsky.app/tapper/src/` → `src/lib/tapper/`
-- [ ] Retarget the import in `Composer/index.tsx`
-- [ ] `yarn remove @bsky.app/tapper`
+- [x] Copy `node_modules/@bsky.app/tapper/src/` → `src/lib/tapper/`
+- [x] Retarget the import in `Composer/index.tsx`
+- [x] `yarn remove @bsky.app/tapper`
 
 **Done when:**
-- `rg "@bsky.app/(alf|sift|tapper|react-native-mmkv|video)" src package.json yarn.lock` returns nothing
-- `rg '"@bsky\\.app/' package.json yarn.lock` returns nothing (catches any in-house package still referenced)
+- `rg "@bsky.app/(alf|sift|tapper|react-native-mmkv)" src package.json yarn.lock` returns nothing
+- `@bsky.app/video` remains only in the native/video files and package entries deferred to Phase 4.6; re-run `rg "@bsky.app/video" src package.json yarn.lock` there before removing it.
 - `yarn typecheck && yarn build-web` passes
 - App boots and looks identical to before the in-housing
 

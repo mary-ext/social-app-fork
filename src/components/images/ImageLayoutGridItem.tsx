@@ -1,8 +1,6 @@
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedImages} from '@atproto/api'
-import {utils} from '@bsky.app/alf'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {
   type AnimatedRef,
@@ -10,7 +8,7 @@ import {
 } from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme,utils} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'

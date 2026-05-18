@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useMemo, useState} from 'react'
-import {type Theme, type ThemeName} from '@bsky.app/alf'
 
+import {type Theme, type ThemeName} from '#/alf/base'
 import {
   computeFontScaleMultiplier,
   getFontFamily,
@@ -11,13 +11,14 @@ import {
 import {themes} from '#/alf/themes'
 import {type Device} from '#/storage'
 
+export {atoms} from '#/alf/atoms'
 export {
   type TextStyleProp,
   type Theme,
+  type ThemeName,
   utils,
   type ViewStyleProp,
-} from '@bsky.app/alf'
-export {atoms} from '#/alf/atoms'
+} from '#/alf/base'
 export * from '#/alf/breakpoints'
 export * from '#/alf/fonts'
 export * as tokens from '#/alf/tokens'

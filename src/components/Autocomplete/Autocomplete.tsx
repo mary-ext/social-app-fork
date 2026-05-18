@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {Sift, type UseSiftReturn} from '@bsky.app/sift'
 
+import {Sift, type UseSiftReturn} from '#/lib/sift'
 import {atoms as a, useTheme} from '#/alf'
 import {type AutocompleteItem} from '#/components/Autocomplete/types'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'

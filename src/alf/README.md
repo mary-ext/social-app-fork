@@ -2,6 +2,11 @@
 
 A set of UI primitives and components.
 
+The base ALF package is in-housed under `src/alf/base/` so the fork can evolve
+the style system without depending on a published package. Keep
+app imports pointed at the public `#/alf` surface unless a base-only primitive is
+being maintained.
+
 ## Usage
 
 Naming conventions follow Tailwind — delimited with a `_` instead of `-` to

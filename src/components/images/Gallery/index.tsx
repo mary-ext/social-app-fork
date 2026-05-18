@@ -10,7 +10,6 @@ import {
 } from 'react'
 import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
 import {type AppBskyEmbedImages} from '@atproto/api'
-import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
@@ -24,7 +23,7 @@ import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, utils,web} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {

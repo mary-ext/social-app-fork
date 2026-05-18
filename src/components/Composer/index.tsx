@@ -4,19 +4,19 @@ import {
   type TextInputSubmitEditingEvent,
   View,
 } from 'react-native'
-import {useSift, type UseSiftReturn} from '@bsky.app/sift'
-import {
-  facets,
-  type TapperActiveFacet,
-  type TapperFacet,
-  useTapper,
-} from '@bsky.app/tapper'
 
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from '#/lib/animations/reanimatedCompat'
 import {mergeRefs} from '#/lib/merge-refs'
+import {useSift, type UseSiftReturn} from '#/lib/sift'
+import {
+  facets,
+  type TapperActiveFacet,
+  type TapperFacet,
+  useTapper,
+} from '#/lib/tapper'
 import {
   atoms as a,
   type TextStyleProp,

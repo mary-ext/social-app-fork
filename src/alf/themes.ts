@@ -2,7 +2,7 @@ import {
   createThemes,
   DEFAULT_PALETTE,
   DEFAULT_SUBDUED_PALETTE,
-} from '@bsky.app/alf'
+} from '#/alf/base'
 
 const DEFAULT_THEMES = createThemes({
   defaultPalette: DEFAULT_PALETTE,

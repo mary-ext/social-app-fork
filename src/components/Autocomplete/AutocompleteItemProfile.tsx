@@ -1,5 +1,4 @@
-import {SiftItem} from '@bsky.app/sift'
-
+import {SiftItem} from '#/lib/sift'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'

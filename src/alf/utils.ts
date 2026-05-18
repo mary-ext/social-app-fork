@@ -1,1 +1,1 @@
-export * from '@bsky.app/alf/dist/utils'
+export * from '#/alf/base/utils'
