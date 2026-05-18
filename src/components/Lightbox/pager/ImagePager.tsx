@@ -7,10 +7,27 @@
  */
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
-import {useCallback, useEffect, useMemo, useState} from 'react'
-import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  PixelRatio,
+  ScrollView,
+  type StyleProp,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import PagerView from 'react-native-pager-view'
 
 import Animated, {
   type AnimatableValue,
@@ -49,6 +66,11 @@ import {
 import ImageItem from './ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
+type PageScrollState = 'idle' | 'dragging' | 'settling'
+type PageSelectedEvent = {nativeEvent: {position: number}}
+type PageScrollStateChangedEvent = {
+  nativeEvent: {pageScrollState: PageScrollState}
+}
 
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
@@ -72,6 +94,73 @@ function canAnimate(lightbox: Lightbox): boolean {
   }
   const img = lightbox.images[lightbox.index]
   return !!img.thumbRect && !!(img.dimensions || img.thumbDimensions)
+}
+
+function PagerView({
+  children,
+  initialPage,
+  onPageScrollStateChanged,
+  onPageSelected,
+  scrollEnabled,
+  style,
+}: {
+  children: ReactNode
+  initialPage: number
+  onPageScrollStateChanged: (event: PageScrollStateChangedEvent) => void
+  onPageSelected: (event: PageSelectedEvent) => void
+  scrollEnabled: boolean
+  style: StyleProp<ViewStyle>
+}) {
+  const ref = useRef<ScrollView>(null)
+  const {width} = useWindowDimensions()
+  const selectedPage = useRef(initialPage)
+
+  const setScrollState = useCallback(
+    (pageScrollState: PageScrollState) => {
+      onPageScrollStateChanged({nativeEvent: {pageScrollState}})
+    },
+    [onPageScrollStateChanged],
+  )
+
+  const updateSelectedPage = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      if (!width) return
+
+      const position = Math.round(event.nativeEvent.contentOffset.x / width)
+      if (position !== selectedPage.current) {
+        selectedPage.current = position
+        onPageSelected({nativeEvent: {position}})
+      }
+      setScrollState('idle')
+    },
+    [onPageSelected, setScrollState, width],
+  )
+
+  useLayoutEffect(() => {
+    if (!width) return
+    ref.current?.scrollTo({x: initialPage * width, animated: false})
+    selectedPage.current = initialPage
+  }, [initialPage, width])
+
+  return (
+    <ScrollView
+      ref={ref}
+      horizontal
+      pagingEnabled
+      scrollEnabled={scrollEnabled}
+      showsHorizontalScrollIndicator={false}
+      bounces={false}
+      overScrollMode="never"
+      onScrollBeginDrag={() => setScrollState('dragging')}
+      onMomentumScrollBegin={() => setScrollState('settling')}
+      onMomentumScrollEnd={updateSelectedPage}
+      onScrollEndDrag={updateSelectedPage}
+      scrollEventThrottle={16}
+      contentContainerStyle={styles.pagerContent}
+      style={style}>
+      {children}
+    </ScrollView>
+  )
 }
 
 export default function ImageViewRoot({
@@ -199,7 +288,7 @@ export default function ImageViewRoot({
         )}
       </Animated.View>
     </View>
-  );
+  )
 }
 
 function ImageView({
@@ -224,6 +313,7 @@ function ImageView({
   thumbRects: SharedValue<Record<number, MeasuredDimensions | null>>
 }) {
   const {images, index: initialImageIndex} = lightbox
+  const windowDims = useWindowDimensions()
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
   const [isScaled, setIsScaled] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -378,10 +468,11 @@ function ImageView({
         onPageScrollStateChanged={e => {
           setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
         }}
-        overdrag={true}
         style={styles.pager}>
         {images.map((imageSrc, i) => (
-          <View key={`${i}-${imageSrc.uri}`}>
+          <View
+            key={`${i}-${imageSrc.uri}`}
+            style={[styles.page, {width: windowDims.width}]}>
             <LightboxImage
               onTap={onTap}
               onZoom={onZoom}
@@ -635,6 +726,12 @@ const styles = StyleSheet.create({
   },
   pager: {
     flex: 1,
+  },
+  pagerContent: {
+    height: '100%',
+  },
+  page: {
+    height: '100%',
   },
 })
 

@@ -1420,6 +1420,8 @@ all pass, and `rg "webpack|@expo/webpack-config" .` returns no source/config hit
 
 ## Phase 4.8 — `package.json` cleanup
 
+Status: done. The final web-only script block is in place, top-level Expo/Jest config is absent, native/EAS script entries are gone, and the orphan native package batch was removed. `react-native-pager-view` still had one live web caller in the lightbox pager, so that caller was replaced with a local horizontal `ScrollView` pager before removing the dependency.
+
 **Suggested final `scripts` block:**
 
 ```json
@@ -1448,17 +1450,17 @@ all pass, and `rg "webpack|@expo/webpack-config" .` returns no source/config hit
 Note: `rsbuild preview` requires a prior production build (`yarn build-web`).
 
 **Also remove from `package.json`:**
-- [ ] Top-level `expo` field
-- [ ] Top-level `jest` block (if not done in Stream 1)
-- [ ] Native/EAS scripts, embed scripts, E2E/perf scripts, Sentry upload scripts, native lint scripts
-- [ ] **Native-only `react-native-*` packages now orphan after Phase 4.5.** Each importer at fork time lives either in a native-suffixed file (`.ios.tsx`, `.android.tsx`) or in a file shadowed by a `.web.*` sibling — Phase 4.5 deletes both kinds. After that, the dep tree has zero source importers and `yarn remove` is a single batch:
+- [x] Top-level `expo` field
+- [x] Top-level `jest` block (if not done in Stream 1)
+- [x] Native/EAS scripts, embed scripts, E2E/perf scripts, Sentry upload scripts, native lint scripts
+- [x] **Native-only `react-native-*` packages now orphan after Phase 4.5.** Each importer at fork time lives either in a native-suffixed file (`.ios.tsx`, `.android.tsx`) or in a file shadowed by a `.web.*` sibling — Phase 4.5 deletes both kinds. After that, the dep tree has zero source importers and `yarn remove` is a single batch:
   ```sh
   yarn remove react-native-screens react-native-pager-view react-native-drawer-layout \
               react-native-compressor react-native-date-picker react-native-device-attest
   ```
   None of these have entries in `patches/` at fork time — re-verify with `ls patches/` before running. Excluded for cause: `react-native-webview` (still aliased to `react-native-web-webview` for `ExternalPlayer.tsx`), `react-native-uitextview` (web-reachable from Typography), `react-native-edge-to-edge` + `react-native-view-shot` + `react-native-progress` + `react-native-qrcode-styled` (real web callers that need replacement, not removal — out of scope here)
-- [ ] **`react-native-uuid` closeout** (deferred in Phase 2.8). Its last fork-time importer was `src/lib/media/manip.ts` (native variant); Phase 4.5 collapses that file to the web variant, and the analytics-identifier callers died in Phase 2.7. Verify zero importers, then `yarn remove react-native-uuid`
-- [ ] **`@react-native-async-storage/async-storage` — verify only.** This already ran in Phase 2.9 (residual cleanup). At this point the package should be absent from `package.json` / `yarn.lock`; `rg "@react-native-async-storage/async-storage" .` should be empty across the tree. If it's still there, Phase 2.9 was skipped — fix that and skip this bullet
+- [x] **`react-native-uuid` closeout** (deferred in Phase 2.8). Its last fork-time importer was `src/lib/media/manip.ts` (native variant); Phase 4.5 collapses that file to the web variant, and the analytics-identifier callers died in Phase 2.7. Verify zero importers, then `yarn remove react-native-uuid`
+- [x] **`@react-native-async-storage/async-storage` — verify only.** This already ran in Phase 2.9 (residual cleanup). At this point the package should be absent from `package.json` / `yarn.lock`; `rg "@react-native-async-storage/async-storage" .` should be empty across the tree. If it's still there, Phase 2.9 was skipped — fix that and skip this bullet
 
 **Keep:**
 - React / React DOM

@@ -8368,11 +8368,6 @@ react-fast-compare@^3.2.2:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.2.tgz#929a97a532304ce9fee4bcae44234f1ce2c21d49"
   integrity sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==
 
-react-freeze@^1.0.0:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-freeze/-/react-freeze-1.0.3.tgz#5e3ca90e682fed1d73a7cb50c2c7402b3e85618d"
-  integrity sha512-ZnXwLQnGzrDpHBHiC56TXFXvmolPeMjTn1UOm610M4EXGzbEDR7oOIyS2ZiItgbs6eZc4oU/a0hpk8PrcKvv5g==
-
 react-hotkeys-hook@5.2.4:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/react-hotkeys-hook/-/react-hotkeys-hook-5.2.4.tgz#45ad54d78823b2a929963d482aff98efad0530f2"
@@ -8403,21 +8398,6 @@ react-keyed-flatten-children@^5.0.0:
   resolved "https://registry.yarnpkg.com/react-keyed-flatten-children/-/react-keyed-flatten-children-5.0.0.tgz#3024fc8819f7b60fc5039b527f133d9ac3a02a82"
   integrity sha512-XA5ah02sZAeDrbz4Lusd4acqG5q5BtVwPHWierruVhrgX6CMCldbGcTZZM14cQZ+GWq+tzRzEpsCvnTtLODvjw==
 
-react-native-compressor@^1.13.0:
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.13.0.tgz#d260621bb7625046a716d5dff56b395267c7e6b0"
-  integrity sha512-vJYbrcjz2S7kgE3Q7444F71CjEDq5Qg6sGn67N9fJ0I1K6EhB/ZxpULdDe3FxJ4h/ncJc0oxOzNWZhxtGTqcQw==
-
-react-native-date-picker@^5.0.13:
-  version "5.0.13"
-  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.13.tgz#fe05f58652aaeee9e67f73cf7436c32a623ff3a4"
-  integrity sha512-qCLUODZVsJetO5zuoXjw1D39K527XWqBG8sOfhWdHyPzf13h8RXR1/RSKd1N0fdRDi5GdyizYmB0lPAK12/hbw==
-
-react-native-device-attest@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/react-native-device-attest/-/react-native-device-attest-0.1.6.tgz#51796a92d9199b1d231d4aa62d557019753b30c3"
-  integrity sha512-oTgBu6il+czHIMLs2IVWv2+WZ6a/vUtVLQ40q6/Dgns7NuG69mwmR8lS0e2Sl/yOtpD9YZXc8cYzBDKHAyV5MA==
-
 react-native-dotenv@^3.4.11:
   version "3.4.11"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.11.tgz#2e6c4eabd55d5f1bf109b3dd9141dadf9c55cdd4"
@@ -8429,11 +8409,6 @@ react-native-edge-to-edge@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/react-native-edge-to-edge/-/react-native-edge-to-edge-1.6.0.tgz#2ba63b941704a7f713e298185c26cde4d9e4b973"
   integrity sha512-2WCNdE3Qd6Fwg9+4BpbATUxCLcouF6YRY7K+J36KJ4l3y+tWN6XCqAC4DuoGblAAbb2sLkhEDp4FOlbOIot2Og==
-
-react-native-pager-view@6.8.0:
-  version "6.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.8.0.tgz#5bac05203d911bf9bf039d47db41b1313dbd1a7a"
-  integrity sha512-/wgFV8nB4TLnQ6j9e3TvNrHbPF5TINMZHaXt86GOV0NSJNMVGkWguniJVKrYLm85LL8KVhRkgdh43Rdu7PvW1A==
 
 react-native-progress@bluesky-social/react-native-progress:
   version "5.0.0"
@@ -8454,14 +8429,6 @@ react-native-safe-area-context@~5.6.0:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.6.1.tgz#cb4d249ef1a6f7e8fd0cfdfa9764838dffda26b6"
   integrity sha512-/wJE58HLEAkATzhhX1xSr+fostLsK8Q97EfpfMDKo8jlOc1QKESSX/FQrhk7HhQH/2uSaox4Y86sNaI02kteiA==
 
-react-native-screens@^4.24.0:
-  version "4.24.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.24.0.tgz#dbe8f610b5d2e31f71425d2ea3caaff1b9a7e2de"
-  integrity sha512-SyoiGaDofiyGPFrUkn1oGsAzkRuX1JUvTD9YQQK3G1JGQ5VWkvHgYSsc1K9OrLsDQxN7NmV71O0sHCAh8cBetA==
-  dependencies:
-    react-freeze "^1.0.0"
-    warn-once "^0.1.0"
-
 react-native-svg@15.12.1:
   version "15.12.1"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-15.12.1.tgz#7ba756dd6a235f86a2c312a1e7911f9b0d18ad3a"
@@ -8475,11 +8442,6 @@ react-native-uitextview@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.4.0.tgz#d1b583cc173cec00f4fdd03744cca76c54a12fbb"
   integrity sha512-itm/frzkn/ma3+lwmKn2CkBOXPNo4bL8iVwQwjlzix5gVO59T2+axdfoj/Wi+Ra6F76KzNKxSah+7Y8dYmCHbQ==
-
-react-native-uuid@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.3.tgz#f85f8a8d68e52e3f1c18ba0f02ec7776f9d4a0da"
-  integrity sha512-f/YfIS2f5UB+gut7t/9BKGSCYbRA9/74A5R1MDp+FLYsuS+OSWoiM/D8Jko6OJB6Jcu3v6ONuddvZKHdIGpeiw==
 
 react-native-view-shot@^4.0.3:
   version "4.0.3"
@@ -9846,7 +9808,7 @@ walker@^1.0.7, walker@^1.0.8:
   dependencies:
     makeerror "1.0.12"
 
-warn-once@0.1.1, warn-once@^0.1.0, warn-once@^0.1.1:
+warn-once@0.1.1, warn-once@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/warn-once/-/warn-once-0.1.1.tgz#952088f4fb56896e73fd4e6a3767272a3fccce43"
   integrity sha512-VkQZJbO8zVImzYFteBXvBOZEl1qL175WH8VmZcxF2fZAoudNhNDvHi+doCaAEdU2l2vtcIwa2zn0QK5+I1HQ3Q==
