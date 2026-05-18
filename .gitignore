@@ -105,9 +105,6 @@ stats.json
 # Firebase (Android) Google services
 google-services.json
 
-# Performance results (Flashlight)
-.perf/
-
 # ESLint
 .eslintcache
 

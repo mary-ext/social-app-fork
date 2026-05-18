@@ -1,10 +1,7 @@
 import {Router} from '#/lib/routes/router'
 import {type FlatNavigatorParams} from './lib/routes/types'
 
-type AllNavigatableRoutes = Omit<
-  FlatNavigatorParams,
-  'NotFound' | 'SharedPreferencesTester'
->
+type AllNavigatableRoutes = Omit<FlatNavigatorParams, 'NotFound'>
 
 export const router = new Router<AllNavigatableRoutes>({
   Home: ['/', '/download'],

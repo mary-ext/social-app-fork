@@ -1,7 +1,7 @@
 // @ts-check
 import js from '@eslint/js'
 import tseslint from 'typescript-eslint'
-import { defineConfig } from 'eslint/config';
+import {defineConfig} from 'eslint/config'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 // @ts-expect-error no types
@@ -22,18 +22,14 @@ export default defineConfig(
    */
   {
     ignores: [
-      '**/__mocks__/*.ts',
       'ios/**',
       'android/**',
       'coverage/**',
       '*.lock',
-      '.husky/**',
       'patches/**',
       '*.html',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
-      '*.e2e.ts',
-      '*.e2e.tsx',
       'eslint.config.mjs',
       '.jscodeshift/**',
     ],
@@ -190,8 +186,6 @@ export default defineConfig(
       }],
       'import-x/no-extraneous-dependencies': ['error', {
         'whitelist': [
-          // test files only
-          '@jest/globals',
           // we only use a really simple util from this, and we know it will be present
           'expo-modules-core',
           // this is a dep for @atproto/api, but we absolutely need them in sync, so just
@@ -277,15 +271,4 @@ export default defineConfig(
     },
   },
 
-  /**
-   * Test files configuration
-   */
-  {
-    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
-    languageOptions: {
-      globals: {
-        ...globals.jest,
-      }
-    },
-  },
 )

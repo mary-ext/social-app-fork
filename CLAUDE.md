@@ -27,9 +27,8 @@ yarn web                # Start web version
 yarn android            # Run on Android
 yarn ios                # Run on iOS
 
-# Testing & Quality
+# Quality
 # IMPORTANT: Always use these yarn scripts, never call the underlying tools directly
-yarn test               # Run Jest tests
 yarn lint               # Run ESLint
 yarn typecheck          # Run TypeScript type checking
 
@@ -164,7 +163,7 @@ related code together and gives us a better visual cue that there are probably
 other files contained within this "macro" feature, whereas `Component.tsx` on
 its own looks more like a single component file.
 
-### Documentation and Tests Within Features
+### Documentation Within Features
 
 Comment code when necessary to explain the “why” behind something; avoid
 comments that simply describe the code. Avoid Unicode characters in comments,
@@ -177,12 +176,6 @@ itself well to this, since the `index.tsx` can be the main component file, and
 the `README.md` can provide documentation for the whole feature. This is
 optional, but can be a nice way to keep documentation close to the code it
 describes.
-
-Similarly, if there are tests that are specific to a component or feature, it
-can be helpful to include them in the same directory, either as
-`Component.test.tsx` or in a `__tests__/` subdirectory. This keeps everything
-related to the component or feature in one place and makes it easier to find and
-maintain tests.
 
 ## Styling System (ALF)
 
@@ -873,7 +866,7 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 6. **Types**: Define explicit types for props, use `NativeStackScreenProps` for screens
 
-7. **Testing**: Components should have `testID` props for E2E testing
+7. **Diagnostics**: Use `testID` props only when an existing screen or component pattern requires them
 
 ## Key Files Reference
 

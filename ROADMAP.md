@@ -88,20 +88,20 @@ Mechanical removals. Two phases. Pure deletions — the storage rewrite and code
 **Motivation:** explicit goal of the fork — no Jest, Maestro, Flashlight, or Husky.
 
 **Checklist:**
-- [ ] `rm -rf __tests__ __mocks__ __e2e__ jest .husky dev-env .perf eslint/__tests__` — easy to miss: the top-level `__mocks__/` (contains `@gorhom/bottom-sheet.tsx`, `expo-localization.js`, etc.) and the lint plugin's own `eslint/__tests__/`
-- [ ] `rm -rf src/screens/E2E` — in-source E2E test screens (`SharedPreferencesTesterScreen` at fork time). These are referenced from `src/Navigation.tsx` import + route registration — drop both. Not under `__e2e__/` because they're test harnesses living inside the route tree
-- [ ] In-source test files: enumerate and delete. Leaving these red-lights Phase 2.0's `yarn typecheck`/`yarn lint`:
+- [x] `rm -rf __tests__ __mocks__ __e2e__ jest .husky dev-env .perf eslint/__tests__` — easy to miss: the top-level `__mocks__/` (contains `@gorhom/bottom-sheet.tsx`, `expo-localization.js`, etc.) and the lint plugin's own `eslint/__tests__/`
+- [x] `rm -rf src/screens/E2E` — in-source E2E test screens (`SharedPreferencesTesterScreen` at fork time). These are referenced from `src/Navigation.tsx` import + route registration — drop both. Not under `__e2e__/` because they're test harnesses living inside the route tree
+- [x] In-source test files: enumerate and delete. Leaving these red-lights Phase 2.0's `yarn typecheck`/`yarn lint`:
   ```sh
   rg --files -g '**/__tests__/**' -g '**/__mocks__/**' -g '**/*.test.{ts,tsx,js,jsx}' src
   ```
-- [ ] **Order guard:** remove `package.json`'s `prepare` script **before** removing husky. `prepare: husky install` runs on every `yarn install`; reversing the order breaks installs
-- [ ] In `package.json`, remove: `prepare`, `test`, `test-watch`, `test-ci`, `test-coverage`, all `e2e:*` / `perf:*` scripts; top-level `jest` block; `lint-staged` block; the dev deps `husky`, `jest`, `jest-expo`, `jest-junit`, `babel-jest`, `@types/jest`, `@testing-library/react-native`, `lint-staged`
-- [ ] In `tsconfig.json`: drop `"jest"` from `compilerOptions.types`
-- [ ] `Makefile`: strip the `test` target
-- [ ] `eslint.config.mjs`: drop the `.husky/**` ignore, the `**/__mocks__/*.ts` ignore, the `@jest/globals` whitelist, and the Jest-globals override block for test files
-- [ ] Docs/gitignore leftovers (`docs/testing.md`, `.gitignore`'s `.perf/`): delete, or accept as allowed doc hits in the final grep
-- [ ] **`CLAUDE.md` is agent-facing instruction, not docs.** Edit it to remove the Jest / E2E / Husky / lint-staged guidance so future Claude sessions don't try to use those conventions. Don't just leave it as an "allowed hit" — outdated agent instructions cause executor confusion
-- [ ] Final grep — should have no active hits:
+- [x] **Order guard:** remove `package.json`'s `prepare` script **before** removing husky. `prepare: husky install` runs on every `yarn install`; reversing the order breaks installs
+- [x] In `package.json`, remove: `prepare`, `test`, `test-watch`, `test-ci`, `test-coverage`, all `e2e:*` / `perf:*` scripts; top-level `jest` block; `lint-staged` block; the dev deps `husky`, `jest`, `jest-expo`, `jest-junit`, `babel-jest`, `@types/jest`, `@testing-library/react-native`, `lint-staged`
+- [x] In `tsconfig.json`: drop `"jest"` from `compilerOptions.types`
+- [x] `Makefile`: strip the `test` target
+- [x] `eslint.config.mjs`: drop the `.husky/**` ignore, the `**/__mocks__/*.ts` ignore, the `@jest/globals` whitelist, and the Jest-globals override block for test files
+- [x] Docs/gitignore leftovers (`docs/testing.md`, `.gitignore`'s `.perf/`): delete, or accept as allowed doc hits in the final grep
+- [x] **`CLAUDE.md` is agent-facing instruction, not docs.** Edit it to remove the Jest / E2E / Husky / lint-staged guidance so future Claude sessions don't try to use those conventions. Don't just leave it as an "allowed hit" — outdated agent instructions cause executor confusion
+- [x] Final grep — should have no active hits:
   ```sh
   rg "jest|maestro|flashlight|husky|lint-staged|__tests__|__e2e__|dev-env" --glob '!locale/**' --glob '!yarn.lock'
   rg "@jest/globals|describe\\(|jest\\." src

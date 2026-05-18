@@ -1,8 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 
-import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
@@ -29,7 +27,6 @@ import {Typography} from './Typography'
 export default function Storybook() {
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = useState(false)
-  const navigation = useNavigation<NavigationProp>()
   const requestDeviceGeolocation = useRequestDeviceGeolocation()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
@@ -75,14 +72,6 @@ export default function Storybook() {
               </Button>
             </View>
 
-            <Button
-              color="primary"
-              size="small"
-              onPress={() => navigation.navigate('SharedPreferencesTester')}
-              label="two"
-              testID="sharedPrefsTestOpenBtn">
-              <ButtonText>Open Shared Prefs Tester</ButtonText>
-            </Button>
             <Button
               color="primary_subtle"
               size="large"

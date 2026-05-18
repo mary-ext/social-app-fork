@@ -13,10 +13,6 @@ build-web: ## Compile web bundle
 	yarn intl:build
 	yarn build-web
 
-.PHONY: test
-test: ## Run all tests
-	NODE_ENV=test yarn test
-
 .PHONY: lint
 lint: ## Run style checks and verify syntax
 	yarn run lint

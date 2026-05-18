@@ -71,14 +71,6 @@ After you do `yarn ios` and `yarn android` once, you can later just run `yarn we
   - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
 - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file that doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
 
-### Running E2E Tests
-
-- Start in various console tabs:
-  - `yarn e2e:mock-server`
-  - `yarn e2e:start`
-- Run once: `yarn e2e:build`
-- Each test run: `yarn e2e:run`
-
 ### Adding Sentry
 
 Adding Sentry is NOT required. You can keep `SENTRY_AUTH_TOKEN=` in `.env` which will build the app without Sentry.
@@ -110,7 +102,7 @@ This is NOT required for app development but if you also want to develop the Blu
   - `pnpm build`
   - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)
   - Launch a Postgres database on port 5432
-  - `cd packages/dev-env && pnpm start`
+  - Start the atproto local development environment
   
 Run the account with the AppView proxy DID passed in as an environment variable: `EXPO_PUBLIC_BLUESKY_PROXY_DID=did:plc:dw4kbjf5mn7nhenabiqpkyh3 yarn start`
 
@@ -154,10 +146,6 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 - Android Emulator: Either press Cmd ⌘ + m or Ctrl + m or run adb shell input keyevent 82 in your terminal
 - iOS Device: Shake the device, or touch 3 fingers to the screen
 - iOS Simulator: Press Ctrl + Cmd ⌘ + z on a Mac in the emulator to simulate the shake gesture or press Cmd ⌘ + d
-
-### Running E2E Tests
-
-See [testing.md](./testing.md).
 
 ### Polyfills
 
