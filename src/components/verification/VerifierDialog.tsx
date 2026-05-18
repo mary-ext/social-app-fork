@@ -110,7 +110,6 @@ function Inner({
             gtMobile ? [a.flex_row, a.justify_end] : [a.flex_col],
           ]}>
           <Link
-            overridePresentation
             to={urls.website.blog.initialVerificationAnnouncement}
             label={l({
               message: `Learn more about verification on Bluesky`,

@@ -26,7 +26,6 @@ export type RichTextProps = TextStyleProp &
     onLinkPress?: LinkProps['onPress']
     interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
-    shouldProxyLinks?: boolean
     /**
      * DANGEROUS: Disable facet lexicon validation
      *
@@ -53,7 +52,6 @@ export function RichText({
   emojiMultiplier = 1.85,
   onLayout,
   onTextLayout,
-  shouldProxyLinks,
   disableMentionFacetValidation,
 }: RichTextProps) {
   const richText = useMemo(() => {
@@ -128,7 +126,6 @@ export function RichText({
             style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
-            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
             {segment.text}
           </InlineLinkText>
@@ -148,7 +145,6 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
-            shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}
             emoji>
             {toShortUrl(segment.text)}

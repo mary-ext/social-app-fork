@@ -389,7 +389,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   value={richText}
                   style={[a.flex_1, a.text_lg]}
                   authorHandle={post.author.handle}
-                  shouldProxyLinks={true}
                 />
               ) : undefined}
               <TranslatedPost post={post} postTextStyle={[a.text_lg]} />

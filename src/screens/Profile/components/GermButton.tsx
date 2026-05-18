@@ -69,8 +69,6 @@ export function GermButton({
           }
         }}
         label={l`Open Germ DM`}
-        overridePresentation={false}
-        shouldProxy={false}
         style={[
           t.atoms.bg_contrast_50,
           a.rounded_full,

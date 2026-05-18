@@ -28,7 +28,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
     control.close(() => {
       setInAppBrowser(true)
       if (href) {
-        openLink(href, true)
+        openLink(href)
       }
     })
   }, [control, setInAppBrowser, href, openLink])
@@ -37,7 +37,7 @@ function InAppBrowserConsentInner({href}: {href?: string}) {
     control.close(() => {
       setInAppBrowser(false)
       if (href) {
-        openLink(href, false)
+        openLink(href)
       }
     })
   }, [control, setInAppBrowser, href, openLink])

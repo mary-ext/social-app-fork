@@ -482,7 +482,6 @@ let MessageItem = ({
                     interactiveStyle={a.underline}
                     enableTags
                     emojiMultiplier={3}
-                    shouldProxyLinks={true}
                   />
                 </Animated.View>
               )}

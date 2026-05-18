@@ -13,7 +13,6 @@ import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
-  createProxiedUrl,
   isBskyDownloadUrl,
   isExternalUrl,
   linkRequiresWarning,
@@ -72,11 +71,6 @@ type BaseLinkProps = {
    * Native-only attribute. If true, will open the share sheet on long press.
    */
   shareOnLongPress?: boolean
-
-  /**
-   * Whether the link should be opened through the redirect proxy.
-   */
-  shouldProxy?: boolean
 }
 
 export function useLink({
@@ -87,12 +81,8 @@ export function useLink({
   onPress: outerOnPress,
   onLongPress: outerOnLongPress,
   shareOnLongPress,
-  overridePresentation,
-  shouldProxy,
 }: BaseLinkProps & {
   displayText: string
-  overridePresentation?: boolean
-  shouldProxy?: boolean
 }) {
   const navigation = useNavigationDeduped()
   const href = useMemo(() => {
@@ -138,7 +128,7 @@ export function useLink({
         })
       } else {
         if (isExternal) {
-          void openLink(href, overridePresentation, shouldProxy)
+          void openLink(href)
         } else {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
@@ -182,8 +172,6 @@ export function useLink({
       closeModal,
       action,
       navigation,
-      overridePresentation,
-      shouldProxy,
       linkWarningDialogControl,
     ],
   )
@@ -231,9 +219,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled'> & {
-    overridePresentation?: boolean
-  }
+  Omit<ButtonProps, 'onPress' | 'disabled'>
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -250,8 +236,6 @@ export function Link({
   onPress: outerOnPress,
   onLongPress: outerOnLongPress,
   download,
-  shouldProxy,
-  overridePresentation,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress} = useLink({
@@ -260,8 +244,6 @@ export function Link({
     action,
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
-    shouldProxy: shouldProxy,
-    overridePresentation,
   })
 
   return (
@@ -296,7 +278,6 @@ export type InlineLinkProps = React.PropsWithChildren<
     Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
       disableUnderline?: boolean
       title?: TextProps['title']
-      overridePresentation?: boolean
     }
 >
 
@@ -313,8 +294,6 @@ export function InlineLinkText({
   label,
   shareOnLongPress,
   disableUnderline,
-  overridePresentation,
-  shouldProxy,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -327,8 +306,6 @@ export function InlineLinkText({
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
     shareOnLongPress,
-    overridePresentation,
-    shouldProxy: shouldProxy,
   })
   const {
     state: hovered,
@@ -391,7 +368,6 @@ export function SimpleInlineLinkText({
   selectable,
   label,
   disableUnderline,
-  shouldProxy,
   onPress: outerOnPress,
   ...rest
 }: Omit<
@@ -399,7 +375,6 @@ export function SimpleInlineLinkText({
   | 'to'
   | 'action'
   | 'disableMismatchWarning'
-  | 'overridePresentation'
   | 'onLongPress'
   | 'shareOnLongPress'
 > & {
@@ -415,9 +390,6 @@ export function SimpleInlineLinkText({
   const isExternal = isExternalUrl(to)
 
   let href = to
-  if (shouldProxy) {
-    href = createProxiedUrl(href)
-  }
 
   const onPress = (e: GestureResponderEvent) => {
     const exitEarlyIfFalse = outerOnPress?.(e)

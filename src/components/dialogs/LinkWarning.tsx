@@ -63,7 +63,7 @@ function LinkWarningDialogInner({
       if (link.share) {
         shareUrl(link.href)
       } else {
-        openLink(link.href, undefined, true)
+        openLink(link.href)
       }
     })
   }, [control, link, openLink])

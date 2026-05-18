@@ -145,7 +145,6 @@ export function InitialVerificationAnnouncement() {
 
           <View style={[a.w_full, a.gap_md]}>
             <Link
-              overridePresentation
               to={urls.website.blog.initialVerificationAnnouncement}
               label={l`Read blog post`}
               size="small"

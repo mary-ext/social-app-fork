@@ -7,7 +7,6 @@ import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Referrer} from '#/shims/bluesky-swiss-army'
 import * as Linking from '#/shims/linking'
-import * as WebBrowser from '#/shims/web-browser'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'apply-ota'

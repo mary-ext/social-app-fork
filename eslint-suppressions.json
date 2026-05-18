@@ -645,7 +645,7 @@
   },
   "src/lib/hooks/useIntentHandler.ts": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "src/lib/hooks/useIsKeyboardVisible.ts": {
@@ -661,11 +661,6 @@
   "src/lib/hooks/useNonReactiveCallback.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/lib/hooks/useOpenLink.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
     }
   },
   "src/lib/hooks/useToggleMutationQueue.ts": {

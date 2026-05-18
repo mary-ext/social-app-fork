@@ -324,7 +324,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}
-                    shouldProxyLinks={true}
                   />
                   {limitLines && (
                     <ShowMoreTextButton

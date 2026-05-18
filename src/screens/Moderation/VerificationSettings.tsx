@@ -41,7 +41,6 @@ export function Screen() {
                 Verifications on Bluesky work differently than on other
                 platforms.{' '}
                 <InlineLinkText
-                  overridePresentation
                   to={urls.website.blog.initialVerificationAnnouncement}
                   label={l({
                     message: `Learn more`,

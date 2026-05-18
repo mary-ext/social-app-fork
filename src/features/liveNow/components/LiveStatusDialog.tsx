@@ -183,7 +183,7 @@ export function LiveStatus({
           color="primary"
           variant="solid"
           onPress={() => {
-            openLink(embed.external.uri, false)
+            openLink(embed.external.uri)
           }}>
           <ButtonText>
             <Trans>Watch now</Trans>
