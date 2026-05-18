@@ -1278,6 +1278,8 @@ rm -rf scripts/push-notification  # simulator/APNS-only — README.md + send.sh
 
 **Motivation:** at this point the strip is done: no `expo-*` runtime packages, no Sentry, all `@bsky.app/*` packages are in-housed (Phase 4.4) or deleted (4.5), native files are gone, platform branches are collapsed to plain `.tsx`, and `react-native-reanimated`/`react-native-gesture-handler`/`react-native-keyboard-controller` were removed in Stream 3. The webpack build (currently via `@expo/webpack-config`) has gotten us here; now swap it for rsbuild in a single phase. Because everything above already happened, the rsbuild config is short — no `.web.*` extension prepending, no `node_modules` exemptions for in-house packages, no Reanimated Babel plugin, no gesture-handler stub alias.
 
+Status: done. The active build is now Rsbuild/Rspack, `webpack.config.js` / `app.config.js` / `babel.config.js` are deleted, Expo webpack deps are removed, and the web command surface points at `rsbuild dev/build/preview`. The final config also keeps explicit `.web.*` resolution and Babel transpile includes for the remaining web-reachable React Native packages that still ship uncompiled JSX/Flow/native entrypoints.
+
 ### Add / drop dependencies and the deferred build configs
 
 ```sh
@@ -1381,14 +1383,14 @@ export default defineConfig({
 
 ### Adjust `web/index.html`
 
-- [ ] **Remove** the `<title>%WEB_TITLE%</title>` tag entirely. Rsbuild's html plugin only injects `<title>` from `html.title` when the template has no `<title>` element; if you keep one, the config is silently ignored
-- [ ] Remove the hardcoded `<link rel="stylesheet" href="/static/style.css">` — `src/App.web.tsx` already imports `./style.css`
-- [ ] **Fonts.** Phase 4.3 already moved `@font-face` rules into `src/style.css` (paired with the `expo-font` removal) — verify that's still the case and that the paths use relative `url('../assets/fonts/inter/...')`. Rsbuild's default asset pipeline picks these up and emits hashed filenames automatically. If for any reason the fonts still reference Expo's `/static/media/*.woff2` paths, move them now — Rsbuild won't emit those paths.
+- [x] **Remove** the `<title>%WEB_TITLE%</title>` tag entirely. Rsbuild's html plugin only injects `<title>` from `html.title` when the template has no `<title>` element; if you keep one, the config is silently ignored
+- [x] Remove the hardcoded `<link rel="stylesheet" href="/static/style.css">` — `src/App.web.tsx` already imports `./style.css`
+- [x] **Fonts.** Phase 4.3 already moved `@font-face` rules into `src/style.css` (paired with the `expo-font` removal) — verify that's still the case and that the paths use relative `url('../assets/fonts/inter/...')`. Rsbuild's default asset pipeline picks these up and emits hashed filenames automatically. If for any reason the fonts still reference Expo's `/static/media/*.woff2` paths, move them now — Rsbuild won't emit those paths.
 
 ### Rsbuild gotchas to handle in the config
 
-- [ ] **`postMock.html` rule.** The current `webpack.config.js` has a file-loader rule for `react-native-web-webview`'s `postMock.html` (it ships an HTML file the WebView mounts). Rsbuild's default pipeline won't emit it. Either (a) add an Rspack module rule that copies `node_modules/react-native-web-webview/.../postMock.html` to the output, or (b) replace the `react-native-web-webview` dep itself (its only consumer is `ExternalEmbed/ExternalPlayer.tsx` via the `react-native-webview` alias; an inline iframe would work for the same content). Pick (b) if you don't want to keep WebView at all
-- [ ] **`__DEV__` define.** The snippet uses `JSON.stringify(process.env.NODE_ENV !== 'production')` at config-load time, which is wrong if `NODE_ENV` is unset when `rsbuild.config.ts` is evaluated. Replace with the mode callback:
+- [x] **`postMock.html` rule.** The current `webpack.config.js` has a file-loader rule for `react-native-web-webview`'s `postMock.html` (it ships an HTML file the WebView mounts). Rsbuild's default pipeline won't emit it. Either (a) add an Rspack module rule that copies `node_modules/react-native-web-webview/.../postMock.html` to the output, or (b) replace the `react-native-web-webview` dep itself (its only consumer is `ExternalEmbed/ExternalPlayer.tsx` via the `react-native-webview` alias; an inline iframe would work for the same content). Pick (b) if you don't want to keep WebView at all
+- [x] **`__DEV__` define.** The snippet uses `JSON.stringify(process.env.NODE_ENV !== 'production')` at config-load time, which is wrong if `NODE_ENV` is unset when `rsbuild.config.ts` is evaluated. Replace with the mode callback:
   ```ts
   export default defineConfig(({envMode}) => ({
     source: {
@@ -1401,8 +1403,8 @@ export default defineConfig({
   }))
   ```
   Rsbuild passes `envMode` from `--env-mode` flag or `NODE_ENV`, with sensible defaults
-- [ ] **Subpath aliases.** If any shims survive into Phase 4.7 (per the Conventions reclassification: `expo-image` / `expo-file-system` / `expo-clipboard` / `expo-linking` / `expo-localization` are long-lived adapters, not retired here), each shim's `resolve.alias` entry must cover deep imports too: `expo-file-system` AND `expo-file-system/legacy`, etc. Single-root aliases don't catch deep imports
-- [ ] **Unicode-segmenter alias.** The carried-over `'unicode-segmenter/grapheme': require.resolve(...).replace(/\.cjs$/, '.js')` kludge probably isn't needed under Rspack — the package exports include ESM. Drop the alias, run `yarn rsbuild build`, and only re-add if the build actually fails on it
+- [x] **Subpath aliases.** If any shims survive into Phase 4.7 (per the Conventions reclassification: `expo-image` / `expo-file-system` / `expo-clipboard` / `expo-linking` / `expo-localization` are long-lived adapters, not retired here), each shim's `resolve.alias` entry must cover deep imports too: `expo-file-system` AND `expo-file-system/legacy`, etc. Single-root aliases don't catch deep imports
+- [x] **Unicode-segmenter alias.** The carried-over `'unicode-segmenter/grapheme': require.resolve(...).replace(/\.cjs$/, '.js')` kludge probably isn't needed under Rspack — the package exports include ESM. Drop the alias, run `yarn rsbuild build`, and only re-add if the build actually fails on it
 
 ### Done when
 
