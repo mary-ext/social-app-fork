@@ -1,7 +1,7 @@
 /**
  * This TypeScript function merges multiple React refs into a single ref callback.
  * When developing low level UI components, it is common to have to use a local ref
- * but also support an external one using React.forwardRef.
+ * but also support an external one using a forwarded ref.
  * Natively, React does not offer a way to set two refs inside the ref property. This is the goal of this small utility.
  * Today a ref can be a function or an object, tomorrow it could be another thing, who knows.
  * This utility handles compatibility for you.

@@ -626,13 +626,13 @@ returns nothing and passes.
 
 **Checklist** (one commit per codemod sweep so the lingui-v5 diff doesn't drown the others):
 
-- [ ] **`repo/react-import.js`:**
+- [x] **`repo/react-import.js`:**
   ```sh
   rg -l "import React from 'react'" src
   # apply to each result, then verify:
   rg "import React from 'react'|React\\.(useEffect|useState|useMemo|useRef|useCallback|useContext|forwardRef|memo|Fragment)" src
   ```
-- [ ] **`repo/toast-v2.js`:**
+- [x] **`repo/toast-v2.js`:**
   ```sh
   rg -l "from '#/view/com/util/Toast'" src
   # apply to each result, then verify:
