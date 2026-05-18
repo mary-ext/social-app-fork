@@ -1250,6 +1250,8 @@ After the codemod lands, the remaining work is bounded:
 
 By this point Phase 4.5 has deleted every `.native.tsx` / `.ios.tsx` / `.android.tsx` source file — so the native *projects* and build artifacts that backed them can go too. Build configs (`app.config.js`, `babel.config.js`, `webpack.config.js`) stay until Phase 4.7 because the current `build-web` script is still `expo export:web` and reads them.
 
+Status: done. Native project/plugin/module directories, native helper scripts, native signing/config files, and native-only icon/sound/splash assets were deleted. `app.config.js` remains only as the minimal web config needed by `expo export:web` until Phase 4.7.
+
 ```sh
 rm -rf ios android modules plugins code-signing
 rm -f eas.json metro.config.js Gemfile Gemfile.lock
