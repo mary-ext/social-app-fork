@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -55,22 +54,20 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
 
   const userName = getUserDisplayName(profile)
   const label = state.profile.isViewer
     ? state.profile.isVerified
-      ? _(msg`You are verified`)
-      : _(msg`Your verifications`)
+      ? l`You are verified`
+      : l`Your verifications`
     : state.profile.isVerified
-      ? _(msg`${userName} is verified`)
-      : _(
-          msg({
-            message: `${userName}'s verifications`,
-            comment: `Possessive, meaning "the verifications of {userName}"`,
-          }),
-        )
+      ? l`${userName} is verified`
+      : l({
+          message: `${userName}'s verifications`,
+          comment: `Possessive, meaning "the verifications of {userName}"`,
+        })
 
   return (
     <Dialog.ScrollableInner
@@ -131,7 +128,7 @@ function Inner({
             : [a.flex_col],
         ]}>
         <Button
-          label={_(msg`Close dialog`)}
+          label={l`Close dialog`}
           size="small"
           variant="solid"
           color="primary"
@@ -145,12 +142,10 @@ function Inner({
         <Link
           overridePresentation
           to={urls.website.blog.initialVerificationAnnouncement}
-          label={_(
-            msg({
-              message: `Learn more about verification on Bluesky`,
-              context: `english-only-resource`,
-            }),
-          )}
+          label={l({
+            message: `Learn more about verification on Bluesky`,
+            context: `english-only-resource`,
+          })}
           size="small"
           variant="solid"
           color="secondary"
@@ -176,7 +171,7 @@ function VerifierCard({
   outerDialogControl: Dialog.DialogControlProps
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const {data: profile, error} = useProfileQuery({did: verification.issuer})
@@ -238,7 +233,7 @@ function VerifierCard({
               {canAdminister && (
                 <View>
                   <Button
-                    label={_(msg`Remove verification`)}
+                    label={l`Remove verification`}
                     size="small"
                     variant="outline"
                     color="negative"
@@ -259,7 +254,6 @@ function VerifierCard({
           )}
         </ProfileCard.Header>
       </ProfileCard.Outer>
-
       <VerificationRemovePrompt
         control={verificationRemovePromptControl}
         profile={subject}

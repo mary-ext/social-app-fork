@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
@@ -20,7 +19,7 @@ export function LanguageSelect({
   items?: {label: string; value: string}[]
   label?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const handleOnChange = useCallback(
     (value: string) => {
@@ -34,8 +33,8 @@ export function LanguageSelect({
     <Select.Root
       value={value ? sanitizeAppLanguageSetting(value) : undefined}
       onValueChange={handleOnChange}>
-      <Select.Trigger label={_(msg`Select language`)}>
-        <Select.ValueText placeholder={_(msg`Select language`)} />
+      <Select.Trigger label={l`Select language`}>
+        <Select.ValueText placeholder={l`Select language`} />
         <Select.Icon />
       </Select.Trigger>
       <Select.Content

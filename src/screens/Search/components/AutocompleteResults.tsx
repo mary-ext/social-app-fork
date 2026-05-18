@@ -6,8 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -33,7 +32,7 @@ let AutocompleteResults = ({
   onResultPress: () => void
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   return (
     <>
@@ -49,7 +48,7 @@ let AutocompleteResults = ({
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag">
           <SearchLinkCard
-            label={_(msg`Search for "${searchText}"`)}
+            label={l`Search for "${searchText}"`}
             onPress={native(onSubmit)}
             to={
               IS_NATIVE

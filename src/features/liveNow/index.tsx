@@ -9,8 +9,7 @@ import {
   moderateStatus,
 } from '@atproto/api'
 import {retry} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {isAfter, parseISO} from 'date-fns'
 
@@ -189,7 +188,7 @@ export function isStatusValidForViewers(
 
 export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const agent = useAgent()
   return useQuery({
@@ -203,9 +202,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
           liveNowConfig.currentAccountAllowedHosts,
         )
         throw new Error(
-          _(
-            msg`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
-          ),
+          l`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
         )
       }
 
@@ -223,7 +220,7 @@ export function useUpsertLiveStatusMutation(
   const agent = useAgent()
   const queryClient = useQueryClient()
   const control = useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return useMutation({
     mutationFn: async () => {
@@ -313,7 +310,7 @@ export function useUpsertLiveStatusMutation(
       } else {
       }
 
-      Toast.show(_(msg`You are now live!`))
+      Toast.show(l`You are now live!`)
       control.close(() => {
         if (!currentAccount) return
 
@@ -350,7 +347,7 @@ export function useRemoveLiveStatusMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const control = useDialogContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return useMutation({
     mutationFn: async () => {
@@ -367,7 +364,7 @@ export function useRemoveLiveStatusMutation() {
       })
     },
     onSuccess: () => {
-      Toast.show(_(msg`You are no longer live`))
+      Toast.show(l`You are no longer live`)
       control.close(() => {
         if (!currentAccount) return
 

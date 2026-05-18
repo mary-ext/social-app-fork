@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -11,7 +10,7 @@ import {Text} from '#/components/Typography'
 
 export function EmptyState() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <View
@@ -40,12 +39,10 @@ export function EmptyState() {
         <Link
           to="/"
           action="navigate"
-          label={_(
-            msg({
-              message: `Go home`,
-              context: `Button to go back to the home timeline`,
-            }),
-          )}
+          label={l({
+            message: `Go home`,
+            context: `Button to go back to the home timeline`,
+          })}
           size="small"
           color="secondary">
           <ButtonText>

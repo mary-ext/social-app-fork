@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {
@@ -50,7 +49,7 @@ function DebugInner({}: {
 }) {
   const [currentView, setCurrentView] = useState<number>(0)
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const renderItem = (item: any) => {
     return (
@@ -72,7 +71,7 @@ function DebugInner({}: {
 
   return (
     <View style={[s.hContentRegion, pal.view]}>
-      <ViewHeader title={_(msg`Debug panel`)} />
+      <ViewHeader title={l`Debug panel`} />
       <ViewSelector
         swipeEnabled
         sections={MAIN_VIEWS}
@@ -318,13 +317,13 @@ function TypographyView() {
 }
 
 function EmptyStateView() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <EmptyState
       icon={HashtagWideIcon}
       iconSize="2xl"
-      message={_(msg`This is an empty state`)}
+      message={l`This is an empty state`}
     />
   )
 }

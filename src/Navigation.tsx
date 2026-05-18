@@ -2,7 +2,7 @@ import {type JSX, useCallback, useRef} from 'react'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 import {
   type BottomTabBarProps,
   createBottomTabNavigator,
@@ -158,38 +158,47 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="NotFound"
         getComponent={() => NotFoundScreen}
-        options={{title: title(msg`Not Found`)}}
+        options={{title: title(defineMessage`Not Found`)}}
       />
       <Stack.Screen
         name="Lists"
         component={ListsScreen}
-        options={{title: title(msg`Lists`), requireAuth: true}}
+        options={{title: title(defineMessage`Lists`), requireAuth: true}}
       />
       <Stack.Screen
         name="Moderation"
         getComponent={() => ModerationScreen}
-        options={{title: title(msg`Moderation`), requireAuth: true}}
+        options={{title: title(defineMessage`Moderation`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
         getComponent={() => ModerationModlistsScreen}
-        options={{title: title(msg`Moderation Lists`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Moderation Lists`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
         getComponent={() => ModerationMutedAccounts}
-        options={{title: title(msg`Muted Accounts`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Muted Accounts`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
         getComponent={() => ModerationBlockedAccounts}
-        options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Blocked Accounts`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="ModerationInteractionSettings"
         getComponent={() => ModerationInteractionSettings}
         options={{
-          title: title(msg`Post Interaction Settings`),
+          title: title(defineMessage`Post Interaction Settings`),
           requireAuth: true,
         }}
       />
@@ -197,19 +206,22 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="ModerationVerificationSettings"
         getComponent={() => ModerationVerificationSettings}
         options={{
-          title: title(msg`Verification Settings`),
+          title: title(defineMessage`Verification Settings`),
           requireAuth: true,
         }}
       />
       <Stack.Screen
         name="Settings"
         getComponent={() => SettingsScreen}
-        options={{title: title(msg`Settings`), requireAuth: true}}
+        options={{title: title(defineMessage`Settings`), requireAuth: true}}
       />
       <Stack.Screen
         name="LanguageSettings"
         getComponent={() => LanguageSettingsScreen}
-        options={{title: title(msg`Language Settings`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Language Settings`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="Profile"
@@ -222,146 +234,160 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="ProfileFollowers"
         getComponent={() => ProfileFollowersScreen}
         options={({route}) => ({
-          title: title(msg`People following @${route.params.name}`),
+          title: title(defineMessage`People following @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileFollows"
         getComponent={() => ProfileFollowsScreen}
         options={({route}) => ({
-          title: title(msg`People followed by @${route.params.name}`),
+          title: title(defineMessage`People followed by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileKnownFollowers"
         getComponent={() => ProfileKnownFollowersScreen}
         options={({route}) => ({
-          title: title(msg`Followers of @${route.params.name} that you know`),
+          title: title(
+            defineMessage`Followers of @${route.params.name} that you know`,
+          ),
         })}
       />
       <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
-        options={{title: title(msg`List`), requireAuth: true}}
+        options={{title: title(defineMessage`List`), requireAuth: true}}
       />
       <Stack.Screen
         name="ProfileSearch"
         getComponent={() => ProfileSearchScreen}
         options={({route}) => ({
-          title: title(msg`Search @${route.params.name}'s posts`),
+          title: title(defineMessage`Search @${route.params.name}'s posts`),
         })}
       />
       <Stack.Screen
         name="PostThread"
         getComponent={() => PostThreadScreen}
         options={({route}) => ({
-          title: title(msg`Post by @${route.params.name}`),
+          title: title(defineMessage`Post by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="PostLikedBy"
         getComponent={() => PostLikedByScreen}
         options={({route}) => ({
-          title: title(msg`Post by @${route.params.name}`),
+          title: title(defineMessage`Post by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="PostRepostedBy"
         getComponent={() => PostRepostedByScreen}
         options={({route}) => ({
-          title: title(msg`Post by @${route.params.name}`),
+          title: title(defineMessage`Post by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="PostQuotes"
         getComponent={() => PostQuotesScreen}
         options={({route}) => ({
-          title: title(msg`Post by @${route.params.name}`),
+          title: title(defineMessage`Post by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title(msg`Feed`)}}
+        options={{title: title(defineMessage`Feed`)}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
         getComponent={() => ProfileFeedLikedByScreen}
-        options={{title: title(msg`Liked by`)}}
+        options={{title: title(defineMessage`Liked by`)}}
       />
       <Stack.Screen
         name="ProfileLabelerLikedBy"
         getComponent={() => ProfileLabelerLikedByScreen}
-        options={{title: title(msg`Liked by`)}}
+        options={{title: title(defineMessage`Liked by`)}}
       />
       <Stack.Screen
         name="Debug"
         getComponent={() => StorybookScreen}
-        options={{title: title(msg`Storybook`), requireAuth: true}}
+        options={{title: title(defineMessage`Storybook`), requireAuth: true}}
       />
       <Stack.Screen
         name="DebugMod"
         getComponent={() => DebugModScreen}
-        options={{title: title(msg`Moderation states`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Moderation states`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="Log"
         getComponent={() => LogScreen}
-        options={{title: title(msg`Log`), requireAuth: true}}
+        options={{title: title(defineMessage`Log`), requireAuth: true}}
       />
       <Stack.Screen
         name="Support"
         getComponent={() => SupportScreen}
-        options={{title: title(msg`Support`)}}
+        options={{title: title(defineMessage`Support`)}}
       />
       <Stack.Screen
         name="PrivacyPolicy"
         getComponent={() => PrivacyPolicyScreen}
-        options={{title: title(msg`Privacy Policy`)}}
+        options={{title: title(defineMessage`Privacy Policy`)}}
       />
       <Stack.Screen
         name="TermsOfService"
         getComponent={() => TermsOfServiceScreen}
-        options={{title: title(msg`Terms of Service`)}}
+        options={{title: title(defineMessage`Terms of Service`)}}
       />
       <Stack.Screen
         name="CommunityGuidelines"
         getComponent={() => CommunityGuidelinesScreen}
-        options={{title: title(msg`Community Guidelines`)}}
+        options={{title: title(defineMessage`Community Guidelines`)}}
       />
       <Stack.Screen
         name="CopyrightPolicy"
         getComponent={() => CopyrightPolicyScreen}
-        options={{title: title(msg`Copyright Policy`)}}
+        options={{title: title(defineMessage`Copyright Policy`)}}
       />
       <Stack.Screen
         name="AppPasswords"
         getComponent={() => AppPasswordsScreen}
-        options={{title: title(msg`App Passwords`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`App Passwords`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="SavedFeeds"
         getComponent={() => SavedFeeds}
-        options={{title: title(msg`Edit My Feeds`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Edit My Feeds`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesFollowingFeed"
         getComponent={() => FollowingFeedPreferencesScreen}
         options={{
-          title: title(msg`Following Feed Preferences`),
+          title: title(defineMessage`Following Feed Preferences`),
           requireAuth: true,
         }}
       />
       <Stack.Screen
         name="PreferencesThreads"
         getComponent={() => ThreadPreferencesScreen}
-        options={{title: title(msg`Threads Preferences`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Threads Preferences`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesExternalEmbeds"
         getComponent={() => ExternalMediaPreferencesScreen}
         options={{
-          title: title(msg`External Media Preferences`),
+          title: title(defineMessage`External Media Preferences`),
           requireAuth: true,
         }}
       />
@@ -369,7 +395,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AccessibilitySettings"
         getComponent={() => AccessibilitySettingsScreen}
         options={{
-          title: title(msg`Accessibility Settings`),
+          title: title(defineMessage`Accessibility Settings`),
           requireAuth: true,
         }}
       />
@@ -377,7 +403,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AppearanceSettings"
         getComponent={() => AppearanceSettingsScreen}
         options={{
-          title: title(msg`Appearance`),
+          title: title(defineMessage`Appearance`),
           requireAuth: true,
         }}
       />
@@ -385,7 +411,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AccountSettings"
         getComponent={() => AccountSettingsScreen}
         options={{
-          title: title(msg`Account`),
+          title: title(defineMessage`Account`),
           requireAuth: true,
         }}
       />
@@ -393,7 +419,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AutomationLabelSettings"
         getComponent={() => AutomationLabelSettingsScreen}
         options={{
-          title: title(msg`Automation Label`),
+          title: title(defineMessage`Automation Label`),
           requireAuth: true,
         }}
       />
@@ -401,7 +427,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="PrivacyAndSecuritySettings"
         getComponent={() => PrivacyAndSecuritySettingsScreen}
         options={{
-          title: title(msg`Privacy and Security`),
+          title: title(defineMessage`Privacy and Security`),
           requireAuth: true,
         }}
       />
@@ -409,20 +435,23 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="ActivityPrivacySettings"
         getComponent={() => ActivityPrivacySettingsScreen}
         options={{
-          title: title(msg`Privacy and Security`),
+          title: title(defineMessage`Privacy and Security`),
           requireAuth: true,
         }}
       />
       <Stack.Screen
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
-        options={{title: title(msg`Notification settings`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Notification settings`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="ReplyNotificationSettings"
         getComponent={() => ReplyNotificationSettingsScreen}
         options={{
-          title: title(msg`Reply notifications`),
+          title: title(defineMessage`Reply notifications`),
           requireAuth: true,
         }}
       />
@@ -430,7 +459,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="MentionNotificationSettings"
         getComponent={() => MentionNotificationSettingsScreen}
         options={{
-          title: title(msg`Mention notifications`),
+          title: title(defineMessage`Mention notifications`),
           requireAuth: true,
         }}
       />
@@ -438,7 +467,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="QuoteNotificationSettings"
         getComponent={() => QuoteNotificationSettingsScreen}
         options={{
-          title: title(msg`Quote notifications`),
+          title: title(defineMessage`Quote notifications`),
           requireAuth: true,
         }}
       />
@@ -446,7 +475,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="LikeNotificationSettings"
         getComponent={() => LikeNotificationSettingsScreen}
         options={{
-          title: title(msg`Like notifications`),
+          title: title(defineMessage`Like notifications`),
           requireAuth: true,
         }}
       />
@@ -454,7 +483,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="RepostNotificationSettings"
         getComponent={() => RepostNotificationSettingsScreen}
         options={{
-          title: title(msg`Repost notifications`),
+          title: title(defineMessage`Repost notifications`),
           requireAuth: true,
         }}
       />
@@ -462,7 +491,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NewFollowerNotificationSettings"
         getComponent={() => NewFollowerNotificationSettingsScreen}
         options={{
-          title: title(msg`New follower notifications`),
+          title: title(defineMessage`New follower notifications`),
           requireAuth: true,
         }}
       />
@@ -470,7 +499,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="LikesOnRepostsNotificationSettings"
         getComponent={() => LikesOnRepostsNotificationSettingsScreen}
         options={{
-          title: title(msg`Likes of your reposts notifications`),
+          title: title(defineMessage`Likes of your reposts notifications`),
           requireAuth: true,
         }}
       />
@@ -478,7 +507,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="RepostsOnRepostsNotificationSettings"
         getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
         options={{
-          title: title(msg`Reposts of your reposts notifications`),
+          title: title(defineMessage`Reposts of your reposts notifications`),
           requireAuth: true,
         }}
       />
@@ -486,7 +515,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="ActivityNotificationSettings"
         getComponent={() => ActivityNotificationSettingsScreen}
         options={{
-          title: title(msg`Activity notifications`),
+          title: title(defineMessage`Activity notifications`),
           requireAuth: true,
         }}
       />
@@ -494,7 +523,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="MiscellaneousNotificationSettings"
         getComponent={() => MiscellaneousNotificationSettingsScreen}
         options={{
-          title: title(msg`Miscellaneous notifications`),
+          title: title(defineMessage`Miscellaneous notifications`),
           requireAuth: true,
         }}
       />
@@ -502,7 +531,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="ContentAndMediaSettings"
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
-          title: title(msg`Content and Media`),
+          title: title(defineMessage`Content and Media`),
           requireAuth: true,
         }}
       />
@@ -510,7 +539,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="InterestsSettings"
         getComponent={() => InterestsSettingsScreen}
         options={{
-          title: title(msg`Your interests`),
+          title: title(defineMessage`Your interests`),
           requireAuth: true,
         }}
       />
@@ -518,7 +547,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AboutSettings"
         getComponent={() => AboutSettingsScreen}
         options={{
-          title: title(msg`About`),
+          title: title(defineMessage`About`),
           requireAuth: true,
         }}
       />
@@ -526,82 +555,103 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AppIconSettings"
         getComponent={() => AppIconSettingsScreen}
         options={{
-          title: title(msg`App Icon`),
+          title: title(defineMessage`App Icon`),
           requireAuth: true,
         }}
       />
       <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
-        options={{title: title(msg`Hashtag`)}}
+        options={{title: title(defineMessage`Hashtag`)}}
       />
       <Stack.Screen
         name="Topic"
         getComponent={() => TopicScreen}
-        options={{title: title(msg`Topic`)}}
+        options={{title: title(defineMessage`Topic`)}}
       />
       <Stack.Group screenLayout={renderMessagesSplitViewLayout}>
         <Stack.Screen
           name="MessagesConversation"
           getComponent={() => MessagesConversationScreen}
-          options={{title: title(msg`Chat`), requireAuth: true}}
+          options={{title: title(defineMessage`Chat`), requireAuth: true}}
         />
         <Stack.Screen
           name="MessagesConversationSettings"
           getComponent={() => MessagesConversationSettingsScreen}
-          options={{title: title(msg`Group chat settings`), requireAuth: true}}
+          options={{
+            title: title(defineMessage`Group chat settings`),
+            requireAuth: true,
+          }}
         />
         <Stack.Screen
           name="MessagesSettings"
           getComponent={() => MessagesSettingsScreen}
-          options={{title: title(msg`Chat settings`), requireAuth: true}}
+          options={{
+            title: title(defineMessage`Chat settings`),
+            requireAuth: true,
+          }}
         />
         <Stack.Screen
           name="MessagesInbox"
           getComponent={() => MessagesInboxScreen}
-          options={{title: title(msg`Chat request inbox`), requireAuth: true}}
+          options={{
+            title: title(defineMessage`Chat request inbox`),
+            requireAuth: true,
+          }}
         />
       </Stack.Group>
       <Stack.Screen
         name="NotificationsActivityList"
         getComponent={() => NotificationsActivityListScreen}
-        options={{title: title(msg`Notifications`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Notifications`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="LegacyNotificationSettings"
         getComponent={() => LegacyNotificationSettingsScreen}
-        options={{title: title(msg`Notification settings`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Notification settings`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`)}}
+        options={{title: title(defineMessage`Feeds`)}}
       />
       <Stack.Screen
         name="StarterPack"
         getComponent={() => StarterPackScreen}
-        options={{title: title(msg`Starter Pack`)}}
+        options={{title: title(defineMessage`Starter Pack`)}}
       />
       <Stack.Screen
         name="StarterPackShort"
         getComponent={() => StarterPackScreenShort}
-        options={{title: title(msg`Starter Pack`)}}
+        options={{title: title(defineMessage`Starter Pack`)}}
       />
       <Stack.Screen
         name="StarterPackWizard"
         getComponent={() => Wizard}
-        options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Create a starter pack`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="StarterPackEdit"
         getComponent={() => Wizard}
-        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Edit your starter pack`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="VideoFeed"
         getComponent={() => VideoFeed}
         options={{
-          title: title(msg`Video Feed`),
+          title: title(defineMessage`Video Feed`),
           requireAuth: true,
         }}
       />
@@ -609,7 +659,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Bookmarks"
         getComponent={() => BookmarksScreen}
         options={{
-          title: title(msg`Saved Posts`),
+          title: title(defineMessage`Saved Posts`),
           requireAuth: true,
         }}
       />
@@ -785,28 +835,31 @@ const FlatNavigator = ({
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title(msg`Home`)}}
+        options={{title: title(defineMessage`Home`)}}
       />
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
-        options={{title: title(msg`Explore`)}}
+        options={{title: title(defineMessage`Explore`)}}
       />
       <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
-        options={{title: title(msg`Notifications`), requireAuth: true}}
+        options={{
+          title: title(defineMessage`Notifications`),
+          requireAuth: true,
+        }}
       />
       <Flat.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
-        options={{title: title(msg`Messages`), requireAuth: true}}
+        options={{title: title(defineMessage`Messages`), requireAuth: true}}
         layout={renderMessagesSplitViewLayout}
       />
       <Flat.Screen
         name="Start"
         getComponent={() => HomeScreen}
-        options={{title: title(msg`Home`)}}
+        options={{title: title(defineMessage`Home`)}}
       />
       {commonScreens(Flat, numUnread)}
     </Flat.Navigator>

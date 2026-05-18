@@ -2,8 +2,7 @@ import {useCallback, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -65,7 +64,7 @@ export function VideoEmbed({embed}: Props) {
 }
 
 function InnerWrapper({embed}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ref = useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
@@ -127,7 +126,7 @@ function InnerWrapper({embed}: Props) {
               onPress={() => {
                 ref.current?.togglePlayback()
               }}
-              label={_(msg`Play video`)}>
+              label={l`Play video`}>
               {showSpinner ? (
                 <View style={[a.align_center, a.justify_center]}>
                   <ActivityIndicator size="large" color="white" />

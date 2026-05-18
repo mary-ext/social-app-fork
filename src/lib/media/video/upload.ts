@@ -1,7 +1,7 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system/legacy'
 import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
@@ -70,7 +70,7 @@ export async function uploadVideo({
 
   if (!responseBody.jobId) {
     throw new ServerError(
-      responseBody.error || i18n._(msg`Failed to upload video`),
+      responseBody.error || i18n._(defineMessage`Failed to upload video`),
     )
   }
 

@@ -2,8 +2,7 @@ import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@bsky.app/video'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAutoplayDisabled} from '#/state/preferences'
@@ -32,7 +31,7 @@ export function VideoEmbedInnerNative({
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const videoRef = useRef<BlueskyVideoView>(null)
   const autoplayDisabled = useAutoplayDisabled()
   const isWithinMessage = useIsWithinMessage()
@@ -83,9 +82,7 @@ export function VideoEmbedInnerNative({
           setError(e.nativeEvent.error)
         }}
         ref={videoRef}
-        accessibilityLabel={
-          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
-        }
+        accessibilityLabel={embed.alt ? l`Video: ${embed.alt}` : l`Video`}
         accessibilityHint=""
       />
       {isGif ? (
@@ -131,7 +128,7 @@ function VideoPresentationControls({
   timeRemaining: number
   isPlaying: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const [muted] = useVideoMuteState()
 
@@ -146,14 +143,14 @@ function VideoPresentationControls({
       <Pressable
         onPress={enterFullscreen}
         style={a.flex_1}
-        accessibilityLabel={_(msg`Video`)}
-        accessibilityHint={_(msg`Enters full screen`)}
+        accessibilityLabel={l`Video`}
+        accessibilityHint={l`Enters full screen`}
         accessibilityRole="button"
       />
       <ControlButton
         onPress={togglePlayback}
-        label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
-        accessibilityHint={_(msg`Plays or pauses the video`)}
+        label={isPlaying ? l`Pause` : l`Play`}
+        accessibilityHint={l`Plays or pauses the video`}
         style={{left: 6}}>
         {isPlaying ? (
           <PauseIcon width={13} fill={t.palette.white} />
@@ -162,15 +159,14 @@ function VideoPresentationControls({
         )}
       </ControlButton>
       {showTime && <TimeIndicator time={timeRemaining} style={{left: 33}} />}
-
       <ControlButton
         onPress={toggleMuted}
         label={
           muted
-            ? _(msg({message: `Unmute`, context: 'video'}))
-            : _(msg({message: `Mute`, context: 'video'}))
+            ? l({message: `Unmute`, context: 'video'})
+            : l({message: `Mute`, context: 'video'})
         }
-        accessibilityHint={_(msg`Toggles the sound`)}
+        accessibilityHint={l`Toggles the sound`}
         style={{right: 6}}>
         {muted ? (
           <MuteIcon width={13} fill={t.palette.white} />

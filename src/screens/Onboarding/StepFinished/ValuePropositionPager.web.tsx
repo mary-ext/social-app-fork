@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -16,7 +15,7 @@ export function ValuePropositionPager({
   avatarUri?: string
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const image = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]][step]
 
@@ -50,11 +49,10 @@ export function ValuePropositionPager({
               },
             ]}
             accessibilityIgnoresInvertColors
-            alt={_(msg`Your profile picture`)}
+            alt={l`Your profile picture`}
           />
         )}
       </View>
-
       <View style={[a.mt_4xl, a.gap_2xl, a.align_center]}>
         <View style={[a.flex_row, a.gap_sm]}>
           <Dot active={step === 0} />

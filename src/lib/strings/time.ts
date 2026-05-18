@@ -1,5 +1,5 @@
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 
 export function niceDate(
   i18n: I18n,
@@ -10,7 +10,7 @@ export function niceDate(
 
   if (dateStyle === 'dot separated') {
     return i18n._(
-      msg({
+      defineMessage({
         context: 'date and time formatted like this: [time] · [date]',
         message: `${i18n.date(d, {timeStyle: 'short'})} · ${i18n.date(d, {dateStyle: 'medium'})}`,
       }),

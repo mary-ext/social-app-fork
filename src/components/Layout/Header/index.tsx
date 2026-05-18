@@ -1,7 +1,6 @@
 import {createContext, useCallback, useContext} from 'react'
 import {type GestureResponderEvent, Keyboard, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
@@ -109,7 +108,7 @@ export function Slot({children}: {children?: React.ReactNode}) {
 }
 
 export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {isWithinRightPanel} = useIsWithinSplitView()
 
@@ -133,7 +132,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
   return (
     <Slot>
       <Button
-        label={_(msg`Go back`)}
+        label={l`Go back`}
         size="small"
         variant="ghost"
         color="secondary"
@@ -153,7 +152,7 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
 }
 
 export function MenuButton() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const {gtMobile} = useBreakpoints()
 
@@ -165,7 +164,7 @@ export function MenuButton() {
   return gtMobile ? null : (
     <Slot>
       <Button
-        label={_(msg`Open drawer menu`)}
+        label={l`Open drawer menu`}
         size="small"
         variant="ghost"
         color="secondary"

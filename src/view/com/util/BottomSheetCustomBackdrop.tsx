@@ -6,14 +6,13 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {type BottomSheetBackdropProps} from '@discord/bottom-sheet/src'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 export function createCustomBackdrop(
   onClose?: () => void,
 ): React.FC<BottomSheetBackdropProps> {
   const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
-    const {_} = useLingui()
+    const {t: l} = useLingui()
 
     // animated variables
     const opacity = useAnimatedStyle(() => ({
@@ -33,7 +32,7 @@ export function createCustomBackdrop(
     return (
       <TouchableWithoutFeedback
         onPress={onClose}
-        accessibilityLabel={_(msg`Close bottom drawer`)}
+        accessibilityLabel={l`Close bottom drawer`}
         accessibilityHint=""
         onAccessibilityEscape={() => {
           if (onClose !== undefined) {

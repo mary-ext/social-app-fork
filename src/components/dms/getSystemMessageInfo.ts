@@ -1,6 +1,6 @@
 import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {type MessageDescriptor} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -52,8 +52,8 @@ export function getSystemMessageInfo(
     return {
       Icon: JoinIcon,
       message: action
-        ? msg`${action.displayName} was added to the group`
-        : msg`Someone was added to the group`,
+        ? defineMessage`${action.displayName} was added to the group`
+        : defineMessage`Someone was added to the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
@@ -61,8 +61,8 @@ export function getSystemMessageInfo(
     return {
       Icon: LeaveIcon,
       message: action
-        ? msg`${action.displayName} was removed from the group`
-        : msg`Someone was removed from the group`,
+        ? defineMessage`${action.displayName} was removed from the group`
+        : defineMessage`Someone was removed from the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
@@ -70,8 +70,8 @@ export function getSystemMessageInfo(
     return {
       Icon: JoinIcon,
       message: action
-        ? msg`${action.displayName} joined the group`
-        : msg`Someone joined the group`,
+        ? defineMessage`${action.displayName} joined the group`
+        : defineMessage`Someone joined the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
@@ -79,45 +79,45 @@ export function getSystemMessageInfo(
     return {
       Icon: LeaveIcon,
       message: action
-        ? msg`${action.displayName} left the group`
-        : msg`Someone left the group`,
+        ? defineMessage`${action.displayName} left the group`
+        : defineMessage`Someone left the group`,
       action: action ?? undefined,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
-    return {Icon: LockIcon, message: msg`Chat locked`}
+    return {Icon: LockIcon, message: defineMessage`Chat locked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
-    return {Icon: UnlockIcon, message: msg`Chat unlocked`}
+    return {Icon: UnlockIcon, message: defineMessage`Chat unlocked`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
-    return {Icon: LockIcon, message: msg`Chat ended`}
+    return {Icon: LockIcon, message: defineMessage`Chat ended`}
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
     return {
       Icon: PencilIcon,
       message: data.newName
-        ? msg`Chat title changed to ${data.newName}`
-        : msg`Chat title changed`,
+        ? defineMessage`Chat title changed to ${data.newName}`
+        : defineMessage`Chat title changed`,
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
     return {
       Icon: ChainLinkIcon,
-      message: msg`Invite link created`,
+      message: defineMessage`Invite link created`,
       action: {kind: 'inviteLink'},
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(data)) {
     return {
       Icon: ChainLinkIcon,
-      message: msg`Invite link edited`,
+      message: defineMessage`Invite link edited`,
       action: {kind: 'inviteLink'},
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
     return {
       Icon: ChainLinkIcon,
-      message: msg`Invite link enabled`,
+      message: defineMessage`Invite link enabled`,
       action: {kind: 'inviteLink'},
     }
   } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
     return {
       Icon: ChainLinkBrokenIcon,
-      message: msg`Invite link disabled`,
+      message: defineMessage`Invite link disabled`,
       action: {kind: 'inviteLink'},
     }
   }

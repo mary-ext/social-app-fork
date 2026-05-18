@@ -1,6 +1,5 @@
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {getCurrentRoute} from '#/lib/routes/helpers'
@@ -21,7 +20,7 @@ import {Text} from '#/components/Typography'
 
 export function DesktopFeeds() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: pinnedFeedInfos, error, isLoading} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
@@ -96,7 +95,7 @@ export function DesktopFeeds() {
       })}
       <Link
         to="/feeds"
-        label={_(msg`More feeds`)}
+        label={l`More feeds`}
         style={[
           a.flex_row,
           a.align_center,
@@ -143,7 +142,7 @@ export function DesktopFeeds() {
                       : t.atoms.text_contrast_medium,
                 ]}
                 numberOfLines={1}>
-                {_(msg`More feeds`)}
+                {l`More feeds`}
               </Text>
             </>
           )
@@ -163,7 +162,7 @@ function FeedItem({
   onPress: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -175,7 +174,7 @@ function FeedItem({
     <Pressable
       accessibilityRole="link"
       accessibilityLabel={feedInfo.displayName}
-      accessibilityHint={_(msg`Opens ${feedInfo.displayName} feed`)}
+      accessibilityHint={l`Opens ${feedInfo.displayName} feed`}
       onPress={onPress}
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}

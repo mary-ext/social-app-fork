@@ -16,8 +16,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -53,7 +52,7 @@ export function Outer({
   onClose,
   webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
@@ -124,7 +123,7 @@ export function Outer({
             <RemoveScrollBar />
             <Pressable
               accessibilityHint={undefined}
-              accessibilityLabel={_(msg`Close active dialog`)}
+              accessibilityLabel={l`Close active dialog`}
               onPress={handleBackgroundPress}>
               <View
                 style={[
@@ -292,7 +291,7 @@ export function FlatListFooter({
 }
 
 export function Close() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {close} = useContext(Context)
   return (
     <View
@@ -310,7 +309,7 @@ export function Close() {
         color="secondary"
         shape="round"
         onPress={() => close()}
-        label={_(msg`Close active dialog`)}>
+        label={l`Close active dialog`}>
         <ButtonIcon icon={X} size="md" />
       </Button>
     </View>

@@ -1,7 +1,6 @@
 import {memo, useMemo} from 'react'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -25,7 +24,7 @@ let ShareMenuItems = ({
   onShare: onShareProp,
 }: ShareMenuItemsProps): React.ReactNode => {
   const {hasSession} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
@@ -68,7 +67,7 @@ let ShareMenuItems = ({
   const copyLinkItem = (
     <Menu.Item
       testID="postDropdownShareBtn"
-      label={_(msg`Copy link to post`)}
+      label={l`Copy link to post`}
       onPress={onCopyLink}>
       <Menu.ItemText>
         <Trans>Copy link to post</Trans>
@@ -85,7 +84,7 @@ let ShareMenuItems = ({
         {hasSession && (
           <Menu.Item
             testID="postDropdownSendViaDMBtn"
-            label={_(msg`Send via direct message`)}
+            label={l`Send via direct message`}
             onPress={() => {
               sendViaChatControl.open()
             }}>
@@ -111,7 +110,7 @@ let ShareMenuItems = ({
             <Menu.Divider />
             <Menu.Item
               testID="postAtUriShareBtn"
-              label={_(msg`Copy post at:// URI`)}
+              label={l`Copy post at:// URI`}
               onPress={onShareATURI}>
               <Menu.ItemText>
                 <Trans>Copy post at:// URI</Trans>
@@ -120,7 +119,7 @@ let ShareMenuItems = ({
             </Menu.Item>
             <Menu.Item
               testID="postAuthorDIDShareBtn"
-              label={_(msg`Copy author DID`)}
+              label={l`Copy author DID`}
               onPress={onShareAuthorDID}>
               <Menu.ItemText>
                 <Trans>Copy author DID</Trans>

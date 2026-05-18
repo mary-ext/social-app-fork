@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -17,7 +16,7 @@ type Props = {
 }
 
 export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
   const t = useTheme()
 
@@ -31,20 +30,16 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
       <Button
         testID="openGifBtn"
         onPress={onPressSelectGif}
-        label={_(
-          msg({
-            message: 'Select GIF',
-            comment:
-              'Accessibility label for the button in the post composer that opens the GIF picker dialog.',
-          }),
-        )}
-        accessibilityHint={_(
-          msg({
-            message: 'Opens the GIF picker dialog',
-            comment:
-              'Accessibility hint announced after the GIF picker button label, describing what activating it will do.',
-          }),
-        )}
+        label={l({
+          message: 'Select GIF',
+          comment:
+            'Accessibility label for the button in the post composer that opens the GIF picker dialog.',
+        })}
+        accessibilityHint={l({
+          message: 'Opens the GIF picker dialog',
+          comment:
+            'Accessibility hint announced after the GIF picker button label, describing what activating it will do.',
+        })}
         style={a.p_sm}
         variant="ghost"
         shape="round"
@@ -52,7 +47,6 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
         disabled={disabled}>
         <GifIcon size="lg" style={disabled && t.atoms.text_contrast_low} />
       </Button>
-
       <GifPickerDialog
         control={control}
         onClose={onClose}

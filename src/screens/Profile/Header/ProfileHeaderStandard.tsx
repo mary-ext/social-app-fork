@@ -7,8 +7,7 @@ import {
   type ModerationOpts,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
@@ -67,7 +66,7 @@ let ProfileHeaderStandard = ({
   const profile =
     useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed)
   const {currentAccount} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -85,12 +84,12 @@ let ProfileHeaderStandard = ({
   const unblockAccount = async () => {
     try {
       await queueUnblock()
-      Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
+      Toast.show(l({message: 'Account unblocked', context: 'toast'}))
     } catch (err) {
       const e = err as Error
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`), {type: 'error'})
+        Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
       }
     }
   }
@@ -196,20 +195,15 @@ let ProfileHeaderStandard = ({
 
         <Prompt.Basic
           control={unblockPromptControl}
-          title={_(msg`Unblock Account?`)}
-          description={_(
-            msg`The account will be able to interact with you after unblocking.`,
-          )}
+          title={l`Unblock Account?`}
+          description={l`The account will be able to interact with you after unblocking.`}
           onConfirm={() => {
             void unblockAccount()
           }}
-          confirmButtonCta={
-            profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
-          }
+          confirmButtonCta={profile.viewer?.blocking ? l`Unblock` : l`Block`}
           confirmButtonColor="negative"
         />
       </ProfileHeaderShell>
-
       <ProfileHeaderSuggestedFollows
         isExpanded={!hasSeenAllSuggestedFollows && showSuggestedFollows}
         actorDid={profile.did}
@@ -237,7 +231,7 @@ export function HeaderStandardButtons({
   onUnfollow?: () => void
   minimal?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const playHaptic = useHaptics()
   const requireAuth = useRequireAuth()
@@ -258,18 +252,16 @@ export function HeaderStandardButtons({
         await queueFollow()
         onFollow?.()
         Toast.show(
-          _(
-            msg`Following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
-              moderation.ui('displayName'),
-            )}`,
-          ),
+          l`Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+            moderation.ui('displayName'),
+          )}`,
         )
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+          Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
         }
@@ -284,19 +276,17 @@ export function HeaderStandardButtons({
         await queueUnfollow()
         onUnfollow?.()
         Toast.show(
-          _(
-            msg`No longer following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
-              moderation.ui('displayName'),
-            )}`,
-          ),
+          l`No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+            moderation.ui('displayName'),
+          )}`,
           {type: 'default'},
         )
       } catch (err) {
         const e = err as Error
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`), {
+          Toast.show(l`There was an issue! ${e.toString()}`, {
             type: 'error',
           })
         }
@@ -307,12 +297,12 @@ export function HeaderStandardButtons({
   const unblockAccount = async () => {
     try {
       await queueUnblock()
-      Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
+      Toast.show(l({message: 'Account unblocked', context: 'toast'}))
     } catch (err) {
       const e = err as Error
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`), {type: 'error'})
+        Toast.show(l`There was an issue! ${e.toString()}`, {type: 'error'})
       }
     }
   }
@@ -342,7 +332,7 @@ export function HeaderStandardButtons({
               playHaptic('Light')
               editProfileControl.open()
             }}
-            label={_(msg`Edit profile`)}>
+            label={l`Edit profile`}>
             <ButtonText>
               <Trans>Edit Profile</Trans>
             </ButtonText>
@@ -355,7 +345,7 @@ export function HeaderStandardButtons({
             testID="unblockBtn"
             size="small"
             color="secondary"
-            label={_(msg`Unblock`)}
+            label={l`Unblock`}
             disabled={!hasSession}
             onPress={() => unblockPromptControl.open()}>
             <ButtonText>
@@ -386,8 +376,8 @@ export function HeaderStandardButtons({
               color={profile.viewer?.following ? 'secondary' : 'primary'}
               label={
                 profile.viewer?.following
-                  ? _(msg`Unfollow ${profile.handle}`)
-                  : _(msg`Follow ${profile.handle}`)
+                  ? l`Unfollow ${profile.handle}`
+                  : l`Follow ${profile.handle}`
               }
               onPress={
                 profile.viewer?.following ? onPressUnfollow : onPressFollow
@@ -407,17 +397,14 @@ export function HeaderStandardButtons({
         </>
       ) : null}
       <ProfileMenu profile={profile} />
-
       <Prompt.Basic
         control={unblockPromptControl}
-        title={_(msg`Unblock Account?`)}
-        description={_(
-          msg`The account will be able to interact with you after unblocking.`,
-        )}
+        title={l`Unblock Account?`}
+        description={l`The account will be able to interact with you after unblocking.`}
         onConfirm={() => {
           void unblockAccount()
         }}
-        confirmButtonCta={_(msg`Unblock`)}
+        confirmButtonCta={l`Unblock`}
         confirmButtonColor="negative"
       />
     </>

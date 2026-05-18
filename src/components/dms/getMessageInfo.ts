@@ -1,6 +1,6 @@
 import {AppBskyEmbedRecord, ChatBskyConvoDefs} from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
@@ -40,14 +40,14 @@ export function getMessageInfo({
   const prefix = (message: string) => {
     if (isFromMe) {
       return i18n._(
-        msg({
+        defineMessage({
           message: `You: ${message}`,
           comment: 'When the last message in a chat was made by you.',
         }),
       )
     } else if (isGroup && name) {
       return i18n._(
-        msg({
+        defineMessage({
           message: `${name}: ${message}`,
           comment:
             'When the last message in a group chat came from someone other than you.',
@@ -63,7 +63,7 @@ export function getMessageInfo({
     message = prefix(lastMessage.text)
   } else if (lastMessage.embed) {
     const defaultEmbeddedContentMessage = i18n._(
-      msg`(contains embedded content)`,
+      defineMessage`(contains embedded content)`,
     )
 
     if (AppBskyEmbedRecord.isView(lastMessage.embed)) {

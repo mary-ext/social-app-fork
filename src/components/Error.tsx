@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
@@ -24,7 +23,7 @@ export function Error({
   hideBackButton?: boolean
   sideBorders?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const goBack = useGoBack(onGoBack)
@@ -58,7 +57,7 @@ export function Error({
           <Button
             variant="solid"
             color="primary"
-            label={_(msg`Press to retry`)}
+            label={l`Press to retry`}
             onPress={onRetry}
             size="large">
             <ButtonText>
@@ -70,7 +69,7 @@ export function Error({
           <Button
             variant="solid"
             color={onRetry ? 'secondary' : 'primary'}
-            label={_(msg`Return to previous page`)}
+            label={l`Return to previous page`}
             onPress={goBack}
             size="large">
             <ButtonText>

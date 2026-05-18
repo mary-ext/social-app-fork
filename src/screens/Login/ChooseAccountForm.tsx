@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
@@ -23,7 +22,7 @@ export const ChooseAccountForm = ({
   onPressBack: () => void
 }) => {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -41,13 +40,13 @@ export const ChooseAccountForm = ({
       }
       if (account.did === currentAccount?.did) {
         setShowLoggedOut(false)
-        Toast.show(_(msg`Already signed in as @${account.handle}`))
+        Toast.show(l`Already signed in as @${account.handle}`)
         return
       }
       try {
         setPendingDid(account.did)
         await resumeSession(account, true)
-        Toast.show(_(msg`Signed in as @${account.handle}`))
+        Toast.show(l`Signed in as @${account.handle}`)
       } catch (e: any) {
         logger.error('choose account: initSession failed', {
           message: e instanceof Error ? e.message : 'Unknown error',
@@ -64,7 +63,7 @@ export const ChooseAccountForm = ({
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,
-      _,
+      l,
     ],
   )
 
@@ -88,11 +87,11 @@ export const ChooseAccountForm = ({
       {IS_WEB && (
         <View style={[a.flex_row]}>
           <Button
-            label={_(msg`Back`)}
+            label={l`Back`}
             color="secondary"
             size="large"
             onPress={onPressBack}>
-            <ButtonText>{_(msg`Back`)}</ButtonText>
+            <ButtonText>{l`Back`}</ButtonText>
           </Button>
           <View style={[a.flex_1]} />
         </View>

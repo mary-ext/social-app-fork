@@ -8,8 +8,7 @@ import {
 } from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
 import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
@@ -90,9 +89,9 @@ export function ReportDialog(
  * developer, but nevertheless we should have a graceful fallback.
  */
 function Invalid() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
-    <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
+    <Dialog.ScrollableInner label={l`Report dialog`}>
       <Text style={[a.font_bold, a.text_xl, a.leading_snug, a.pb_xs]}>
         <Trans>Invalid report subject</Trans>
       </Text>
@@ -110,7 +109,7 @@ function Invalid() {
 function Inner(props: ReportDialogProps) {
   const logger = Logger.create(Logger.Context.ReportDialog)
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ref = useRef<ScrollView>(null)
   const {
     data: allLabelers,
@@ -226,13 +225,13 @@ function Inner(props: ReportDialogProps) {
       })
       dispatch({
         type: 'setError',
-        error: _(msg`Something went wrong. Please try again.`),
+        error: l`Something went wrong. Please try again.`,
       })
     } finally {
       setPending(false)
     }
   }, [
-    _,
+    l,
     submitReport,
     state,
     dispatch,
@@ -248,7 +247,7 @@ function Inner(props: ReportDialogProps) {
   return (
     <Dialog.ScrollableInner
       testID="report:dialog"
-      label={_(msg`Report dialog`)}
+      label={l`Report dialog`}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
       <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
@@ -279,7 +278,7 @@ function Inner(props: ReportDialogProps) {
                 </Admonition.Content>
                 <Admonition.Button
                   color="negative_subtle"
-                  label={_(msg`Retry loading report options`)}
+                  label={l`Retry loading report options`}
                   onPress={() => refetchLabelers()}>
                   <ButtonText>
                     <Trans>Retry</Trans>
@@ -297,7 +296,7 @@ function Inner(props: ReportDialogProps) {
                   </View>
                   <Button
                     testID="report:clearCategory"
-                    label={_(msg`Change report category`)}
+                    label={l`Change report category`}
                     size="tiny"
                     variant="solid"
                     color="secondary"
@@ -327,9 +326,7 @@ function Inner(props: ReportDialogProps) {
                   {['post', 'account'].includes(props.subject.type) && (
                     <Link
                       to={SUPPORT_PAGE}
-                      label={_(
-                        msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
-                      )}>
+                      label={l`Need to report a copyright violation, legal request, or regulatory compliance issue?`}>
                       {({hovered, pressed}) => (
                         <View
                           style={[
@@ -367,7 +364,7 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={2}
-            title={_(msg`Select a reason`)}
+            title={l`Select a reason`}
             activeIndex1={state.activeStepIndex1}
           />
           {state.selectedOption ? (
@@ -377,7 +374,7 @@ function Inner(props: ReportDialogProps) {
               </View>
               <Button
                 testID="report:clearReportOption"
-                label={_(msg`Change report reason`)}
+                label={l`Change report reason`}
                 size="tiny"
                 variant="solid"
                 color="secondary"
@@ -417,7 +414,7 @@ function Inner(props: ReportDialogProps) {
           <StepOuter>
             <StepTitle
               index={3}
-              title={_(msg`Select moderation service`)}
+              title={l`Select moderation service`}
               activeIndex1={state.activeStepIndex1}
             />
             {state.activeStepIndex1 >= 3 && (
@@ -432,7 +429,7 @@ function Inner(props: ReportDialogProps) {
                           <LabelerCard labeler={state.selectedLabeler} />
                         </View>
                         <Button
-                          label={_(msg`Change moderation service`)}
+                          label={l`Change moderation service`}
                           size="tiny"
                           variant="solid"
                           color="secondary"
@@ -495,7 +492,7 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={isAlwaysBskyLabeler ? 3 : 4}
-            title={_(msg`Submit report`)}
+            title={l`Submit report`}
             activeIndex1={
               isAlwaysBskyLabeler
                 ? state.activeStepIndex1 - 1
@@ -515,7 +512,7 @@ function Inner(props: ReportDialogProps) {
                   </Trans>{' '}
                   {!state.detailsOpen ? (
                     <InlineLinkText
-                      label={_(msg`Add more details (optional)`)}
+                      label={l`Add more details (optional)`}
                       {...createStaticClick(() => {
                         dispatch({type: 'showDetails'})
                       })}>
@@ -533,7 +530,7 @@ function Inner(props: ReportDialogProps) {
                       onChangeText={details => {
                         dispatch({type: 'setDetails', details})
                       }}
-                      label={_(msg`Additional details (limit 300 characters)`)}
+                      label={l`Additional details (limit 300 characters)`}
                       style={{paddingRight: 60}}
                       numberOfLines={4}
                     />
@@ -556,7 +553,7 @@ function Inner(props: ReportDialogProps) {
               </View>
               <Button
                 testID="report:submit"
-                label={_(msg`Submit report`)}
+                label={l`Submit report`}
                 size="large"
                 variant="solid"
                 color="primary"
@@ -688,7 +685,7 @@ function CategoryCard({
   onSelect?: (option: ReportCategoryConfig) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters(['compact'])
   const onPress = useCallback(() => {
     onSelect?.(option)
@@ -696,7 +693,7 @@ function CategoryCard({
   return (
     <Button
       testID={`report:category:${option.title}`}
-      label={_(msg`Create report for ${option.title}`)}
+      label={l`Create report for ${option.title}`}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -733,7 +730,7 @@ function OptionCard({
   onSelect?: (option: ReportOption) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters(['compact'])
   const onPress = useCallback(() => {
     onSelect?.(option)
@@ -741,13 +738,11 @@ function OptionCard({
   return (
     <Button
       testID={`report:option:${option.title}`}
-      label={_(
-        msg({
-          message: `Create report for ${option.title}`,
-          comment:
-            'Accessibility label for button to create a moderation report for the selected option',
-        }),
-      )}
+      label={l({
+        message: `Create report for ${option.title}`,
+        comment:
+          'Accessibility label for button to create a moderation report for the selected option',
+      })}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -796,7 +791,7 @@ function LabelerCard({
   onSelect?: (option: AppBskyLabelerDefs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const onPress = useCallback(() => {
     onSelect?.(labeler)
   }, [onSelect, labeler])
@@ -807,7 +802,7 @@ function LabelerCard({
   return (
     <Button
       testID={`report:labeler:${labeler.creator.handle}`}
-      label={_(msg`Send report to ${title}`)}
+      label={l`Send report to ${title}`}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (

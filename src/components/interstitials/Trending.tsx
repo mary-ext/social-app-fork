@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {
   useTrendingSettings,
@@ -27,7 +26,7 @@ export function TrendingInterstitial() {
 
 export function Inner() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters([0, 'base', 0, 'base'])
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
@@ -105,7 +104,7 @@ export function Inner() {
                   </TrendingTopicLink>
                 ))}
                 <Button
-                  label={_(msg`Hide trending topics`)}
+                  label={l`Hide trending topics`}
                   size="tiny"
                   variant="ghost"
                   color="secondary"
@@ -121,9 +120,9 @@ export function Inner() {
 
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending topics?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
+        title={l`Hide trending topics?`}
+        description={l`You can update this later from your settings.`}
+        confirmButtonCta={l`Hide`}
         onConfirm={onConfirmHide}
       />
     </View>

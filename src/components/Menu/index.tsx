@@ -6,8 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
@@ -100,7 +99,7 @@ export function Outer({
   style?: StyleProp<ViewStyle>
 }>) {
   const context = useMenuContext()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Dialog.Outer
@@ -109,7 +108,7 @@ export function Outer({
       <Dialog.Handle />
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
-        <Dialog.ScrollableInner label={_(msg`Menu`)}>
+        <Dialog.ScrollableInner label={l`Menu`}>
           <View style={[a.gap_lg]}>
             {children}
             {IS_NATIVE && showCancel && <Cancel />}
@@ -352,12 +351,12 @@ export function Group({children, style}: GroupProps) {
 }
 
 function Cancel() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const context = useMenuContext()
 
   return (
     <Button
-      label={_(msg`Close this dialog`)}
+      label={l`Close this dialog`}
       size="small"
       variant="ghost"
       color="secondary"

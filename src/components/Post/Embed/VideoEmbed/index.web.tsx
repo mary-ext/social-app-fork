@@ -8,8 +8,7 @@ import {
 } from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
@@ -223,20 +222,18 @@ export const OnlyNearScreen = ({children}: {children: React.ReactNode}) => {
 }
 
 function VideoError({error, retry}: {error: unknown; retry: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   let showRetryButton = true
   let text = null
 
   if (error instanceof VideoNotFoundError) {
-    text = _(msg`Video not found.`)
+    text = l`Video not found.`
   } else if (error instanceof HLSUnsupportedError) {
     showRetryButton = false
-    text = _(
-      msg`Your browser does not support the video format. Please try a different browser.`,
-    )
+    text = l`Your browser does not support the video format. Please try a different browser.`
   } else {
-    text = _(msg`An error occurred while loading the video. Please try again.`)
+    text = l`An error occurred while loading the video. Please try again.`
   }
 
   return (

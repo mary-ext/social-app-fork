@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {makeProfileLink} from '#/lib/routes/links'
@@ -169,14 +168,14 @@ type ParsedTrendingTopic =
     }
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return useMemo(() => {
     const {topic: displayName, link} = raw
 
     if (link.startsWith('/search')) {
       return {
         type: 'topic',
-        label: _(msg`Browse posts about ${displayName}`),
+        label: l`Browse posts about ${displayName}`,
         displayName,
         uri: undefined,
         url: link,
@@ -184,7 +183,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else if (link.startsWith('/hashtag')) {
       return {
         type: 'tag',
-        label: _(msg`Browse posts tagged with ${displayName}`),
+        label: l`Browse posts tagged with ${displayName}`,
         displayName,
         // displayName: displayName.replace(/^#/, ''),
         uri: undefined,
@@ -193,7 +192,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else if (link.startsWith('/starter-pack')) {
       return {
         type: 'starter-pack',
-        label: _(msg`Browse starter pack ${displayName}`),
+        label: l`Browse starter pack ${displayName}`,
         displayName,
         uri: undefined,
         url: link,
@@ -209,7 +208,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         case 'app.bsky.actor.profile': {
           return {
             type: 'profile',
-            label: _(msg`View ${displayName}'s profile`),
+            label: l`View ${displayName}'s profile`,
             displayName,
             uri: urip,
             url: makeProfileLink({did: urip.host, handle: urip.host}),
@@ -218,7 +217,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
         case 'app.bsky.feed.generator': {
           return {
             type: 'feed',
-            label: _(msg`Browse the ${displayName} feed`),
+            label: l`Browse the ${displayName} feed`,
             displayName,
             uri: urip,
             url: feedUriToHref(link),
@@ -230,10 +229,10 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 
     return {
       type: 'unknown',
-      label: _(msg`Browse topic ${displayName}`),
+      label: l`Browse topic ${displayName}`,
       displayName,
       uri: undefined,
       url: link,
     }
-  }, [_, raw])
+  }, [l, raw])
 }

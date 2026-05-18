@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {interests, useInterestsDisplayNames} from '#/lib/interests'
@@ -21,7 +20,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 
 export function StepInterests() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
 
   const {state, dispatch} = useOnboardingInternalState()
@@ -55,12 +54,11 @@ export function StepInterests() {
       <OnboardingDescriptionText>
         <Trans>We'll use this to help customize your experience.</Trans>
       </OnboardingDescriptionText>
-
       <View style={[a.w_full, a.pt_lg]}>
         <Toggle.Group
           values={selectedInterests}
           onChange={setSelectedInterests}
-          label={_(msg`Select your interests from the options below`)}>
+          label={l`Select your interests from the options below`}>
           <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
             {interests.map(interest => (
               <Toggle.Item
@@ -73,7 +71,6 @@ export function StepInterests() {
           </View>
         </Toggle.Group>
       </View>
-
       <OnboardingControls.Portal>
         <Button
           disabled={saving}
@@ -81,7 +78,7 @@ export function StepInterests() {
           variant="solid"
           color="primary"
           size="large"
-          label={_(msg`Continue to next step`)}
+          label={l`Continue to next step`}
           onPress={saveInterests}>
           <ButtonText>
             <Trans>Continue</Trans>

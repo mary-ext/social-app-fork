@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -15,7 +14,7 @@ import * as Layout from '#/components/Layout'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const canGoBack = navigation.canGoBack()
@@ -30,7 +29,7 @@ export const NotFoundScreen = () => {
 
   return (
     <Layout.Screen testID="notFoundView">
-      <ViewHeader title={_(msg`Page Not Found`)} />
+      <ViewHeader title={l`Page Not Found`} />
       <View style={styles.container}>
         <Text type="title-2xl" style={[pal.text, s.mb10]}>
           <Trans>Page not found</Trans>
@@ -42,12 +41,10 @@ export const NotFoundScreen = () => {
         </Text>
         <Button
           type="primary"
-          label={canGoBack ? _(msg`Go Back`) : _(msg`Go Home`)}
-          accessibilityLabel={canGoBack ? _(msg`Go back`) : _(msg`Go home`)}
+          label={canGoBack ? l`Go Back` : l`Go Home`}
+          accessibilityLabel={canGoBack ? l`Go back` : l`Go home`}
           accessibilityHint={
-            canGoBack
-              ? _(msg`Returns to previous page`)
-              : _(msg`Returns to home page`)
+            canGoBack ? l`Returns to previous page` : l`Returns to home page`
           }
           onPress={onPressHome}
         />

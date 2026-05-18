@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
@@ -78,7 +77,7 @@ export function Controls({
     canPlay,
   } = useVideoElement(videoRef)
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const subtitlesEnabled = useSubtitlesEnabled()
   const setSubtitlesEnabled = useSetSubtitlesEnabled()
   const {
@@ -340,11 +339,7 @@ export function Controls({
         onPointerMove={onPointerMoveEmptySpace}
         onPointerLeave={onPointerLeaveEmptySpace}
         accessibilityLabel={
-          !focused
-            ? _(msg`Unmute video`)
-            : playing
-              ? _(msg`Pause video`)
-              : _(msg`Play video`)
+          !focused ? l`Unmute video` : playing ? l`Pause video` : l`Play video`
         }
         accessibilityHint=""
         style={[
@@ -392,8 +387,8 @@ export function Controls({
           ]}>
           <ControlButton
             active={playing}
-            activeLabel={_(msg`Pause`)}
-            inactiveLabel={_(msg`Play`)}
+            activeLabel={l`Pause`}
+            inactiveLabel={l`Play`}
             activeIcon={PauseIcon}
             inactiveIcon={PlayIcon}
             onPress={onPressPlayPause}
@@ -411,8 +406,8 @@ export function Controls({
           {hasSubtitleTrack && (
             <ControlButton
               active={subtitlesEnabled}
-              activeLabel={_(msg`Disable captions`)}
-              inactiveLabel={_(msg`Enable captions`)}
+              activeLabel={l`Disable captions`}
+              inactiveLabel={l`Enable captions`}
               activeIcon={CCActiveIcon}
               inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}
@@ -429,8 +424,8 @@ export function Controls({
           {!IS_WEB_MOBILE_IOS && (
             <ControlButton
               active={isFullscreen}
-              activeLabel={_(msg`Exit fullscreen`)}
-              inactiveLabel={_(msg`Enter fullscreen`)}
+              activeLabel={l`Exit fullscreen`}
+              inactiveLabel={l`Enter fullscreen`}
               activeIcon={ArrowsInIcon}
               inactiveIcon={ArrowsOutIcon}
               onPress={onPressFullscreen}

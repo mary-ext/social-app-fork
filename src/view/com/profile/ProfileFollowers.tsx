@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -40,7 +39,7 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 }
 
 export function ProfileFollowers({name}: {name: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
@@ -149,9 +148,7 @@ export function ProfileFollowers({name}: {name: string}) {
         isError={isError}
         emptyType="results"
         emptyMessage={
-          isMe
-            ? _(msg`No followers yet`)
-            : _(msg`This user doesn't have any followers.`)
+          isMe ? l`No followers yet` : l`This user doesn't have any followers.`
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
@@ -159,8 +156,8 @@ export function ProfileFollowers({name}: {name: string}) {
         useEmptyState={true}
         emptyStateIcon={PeopleRemoveIcon}
         emptyStateButton={{
-          label: _(msg`Go back`),
-          text: _(msg`Go back`),
+          label: l`Go back`,
+          text: l`Go back`,
           color: 'secondary',
           size: 'small',
           onPress: () => navigation.goBack(),

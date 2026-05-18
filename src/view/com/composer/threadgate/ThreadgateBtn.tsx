@@ -2,8 +2,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
@@ -42,7 +41,7 @@ export function ThreadgateBtn({
 
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
   const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged()
   const [showTooltip, setShowTooltip] = useState(false)
@@ -128,8 +127,8 @@ export function ThreadgateBtn({
     !postgate.embeddingRules || postgate.embeddingRules.length === 0
   const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
   const label = anyoneCanInteract
-    ? _(msg`Anyone can interact`)
-    : _(msg`Interaction limited`)
+    ? l`Anyone can interact`
+    : l`Interaction limited`
 
   return (
     <>
@@ -144,9 +143,7 @@ export function ThreadgateBtn({
             testID="openReplyGateButton"
             onPress={onPress}
             label={label}
-            accessibilityHint={_(
-              msg`Opens a dialog to choose who can interact with this post`,
-            )}>
+            accessibilityHint={l`Opens a dialog to choose who can interact with this post`}>
             <ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
             <ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
               {label}
@@ -160,7 +157,6 @@ export function ThreadgateBtn({
           </Text>
         </Tooltip.TextBubble>
       </Tooltip.Outer>
-
       <PostInteractionSettingsControlledDialog
         control={control}
         onSave={() => {

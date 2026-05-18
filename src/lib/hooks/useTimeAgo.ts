@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {type I18n} from '@lingui/core'
-import {defineMessage, msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {defineMessage, plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
 export type DateDiffFormat = 'long' | 'short'
@@ -132,7 +132,7 @@ export function formatDateDiff({
 
   switch (diff.unit) {
     case 'now': {
-      return i18n._(msg`now`)
+      return i18n._(defineMessage`now`)
     }
     case 'second': {
       return long

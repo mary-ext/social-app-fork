@@ -15,8 +15,7 @@ import {
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
@@ -75,7 +74,7 @@ const randomColor =
   avatarColors[Math.floor(Math.random() * avatarColors.length)]
 
 export function StepProfile() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -135,14 +134,12 @@ export function StepProfile() {
         ]
       } catch {
         setError(
-          _(
-            msg`This image could not be used. Try a different format like .jpg or .png.`,
-          ),
+          l`This image could not be used. Try a different format like .jpg or .png.`,
         )
         return []
       }
     },
-    [_, setError, sheetWrapper],
+    [l, setError, sheetWrapper],
   )
 
   const onContinue = useCallback(async () => {
@@ -294,7 +291,7 @@ export function StepProfile() {
               testID="onboardingContinue"
               color="primary"
               size="large"
-              label={_(msg`Continue to next step`)}
+              label={l`Continue to next step`}
               onPress={onContinue}>
               <ButtonText>
                 <Trans>Continue</Trans>
@@ -304,7 +301,7 @@ export function StepProfile() {
               testID="onboardingAvatarCreator"
               color="primary_subtle"
               size="large"
-              label={_(msg`Open avatar creator`)}
+              label={l`Open avatar creator`}
               onPress={onSecondaryPress}>
               <ButtonText>
                 {avatar.useCreatedAvatar ? (
@@ -317,7 +314,6 @@ export function StepProfile() {
           </View>
         </OnboardingControls.Portal>
       </View>
-
       <Dialog.Outer control={creatorControl}>
         <Dialog.Inner
           label="Avatar creator"
@@ -347,7 +343,7 @@ export function StepProfile() {
             <Button
               color="primary"
               size="large"
-              label={_(msg`Done`)}
+              label={l`Done`}
               onPress={onDoneCreating}>
               <ButtonText>
                 <Trans>Done</Trans>
@@ -356,7 +352,6 @@ export function StepProfile() {
           </View>
         </Dialog.Inner>
       </Dialog.Outer>
-
       <PlaceholderCanvas ref={canvasRef} />
     </AvatarContext.Provider>
   )

@@ -1,8 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type ModerationDecision} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -30,7 +29,7 @@ export function MessagesListBlockedFooter({
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const recipient = useProfileShadow(initialRecipient)
   const [__, queueUnblock] = useProfileBlockMutationQueue(recipient)
 
@@ -69,10 +68,9 @@ export function MessagesListBlockedFooter({
           <Trans>This user has blocked you</Trans>
         )}
       </Text>
-
       <View style={[a.flex_row, a.justify_between, a.gap_lg, a.px_md]}>
         <Button
-          label={_(msg`Leave chat`)}
+          label={l`Leave chat`}
           color="secondary"
           variant="solid"
           size="small"
@@ -83,7 +81,7 @@ export function MessagesListBlockedFooter({
           </ButtonText>
         </Button>
         <Button
-          label={_(msg`Report`)}
+          label={l`Report`}
           color="secondary"
           variant="solid"
           size="small"
@@ -95,7 +93,7 @@ export function MessagesListBlockedFooter({
         </Button>
         {isBlocking && gtMobile && (
           <Button
-            label={_(msg`Unblock`)}
+            label={l`Unblock`}
             color="secondary"
             variant="solid"
             size="small"
@@ -110,7 +108,7 @@ export function MessagesListBlockedFooter({
       {isBlocking && !gtMobile && (
         <View style={[a.flex_row, a.justify_center, a.px_md]}>
           <Button
-            label={_(msg`Unblock`)}
+            label={l`Unblock`}
             color="secondary"
             variant="solid"
             size="small"
@@ -122,15 +120,12 @@ export function MessagesListBlockedFooter({
           </Button>
         </View>
       )}
-
       <LeaveConvoPrompt
         control={leaveConvoControl}
         currentScreen="conversation"
         convoId={convoId}
       />
-
       <ReportConversationPrompt control={reportControl} />
-
       <BlockedByListDialog
         control={blockedByListControl}
         listBlocks={listBlocks}

@@ -7,8 +7,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -22,7 +21,7 @@ import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {embed} = replyTo
 
   const [showFull, setShowFull] = useState(false)
@@ -84,9 +83,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       ]}
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={_(
-        msg`Expand or collapse the full post you are replying to`,
-      )}
+      accessibilityLabel={l`Expand or collapse the full post you are replying to`}
       accessibilityHint="">
       <PreviewableUserAvatar
         size={42}

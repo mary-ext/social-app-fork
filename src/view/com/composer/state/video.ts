@@ -1,7 +1,7 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {compressVideo} from '#/lib/media/video/compress'
@@ -355,7 +355,7 @@ export async function processVideo(
       logger.error('Error processing video', {safeMessage: e})
       dispatch({
         type: 'to_error',
-        error: i18n._(msg`Video failed to process`),
+        error: i18n._(defineMessage`Video failed to process`),
         signal,
       })
       return // Exit async loop
@@ -393,11 +393,11 @@ function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {
   }
   if (e instanceof VideoTooLargeError) {
     return i18n._(
-      msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+      defineMessage`The selected video is larger than 100 MB. Please try again with a smaller file.`,
     )
   }
   logger.error('Error compressing video', {safeMessage: e})
-  return i18n._(msg`An error occurred while compressing the video.`)
+  return i18n._(defineMessage`An error occurred while compressing the video.`)
 }
 
 function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
@@ -408,39 +408,41 @@ function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
     // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
     switch (e.message) {
       case 'User is not allowed to upload videos':
-        return i18n._(msg`You are not allowed to upload videos.`)
+        return i18n._(defineMessage`You are not allowed to upload videos.`)
       case 'Uploading is disabled at the moment':
         return i18n._(
-          msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
+          defineMessage`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
         )
       case "Failed to get user's upload stats":
         return i18n._(
-          msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
+          defineMessage`We were unable to determine if you are allowed to upload videos. Please try again.`,
         )
       case 'User has exceeded daily upload bytes limit':
         return i18n._(
-          msg`You've reached your daily limit for video uploads (too many bytes)`,
+          defineMessage`You've reached your daily limit for video uploads (too many bytes)`,
         )
       case 'User has exceeded daily upload videos limit':
         return i18n._(
-          msg`You've reached your daily limit for video uploads (too many videos)`,
+          defineMessage`You've reached your daily limit for video uploads (too many videos)`,
         )
       case 'Account is not old enough to upload videos':
         return i18n._(
-          msg`Your account is not yet old enough to upload videos. Please try again later.`,
+          defineMessage`Your account is not yet old enough to upload videos. Please try again later.`,
         )
       case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
         return i18n._(
-          msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+          defineMessage`The selected video is larger than 100 MB. Please try again with a smaller file.`,
         )
       case 'Confirm your email address to upload videos':
-        return i18n._(msg`Please confirm your email address to upload videos.`)
+        return i18n._(
+          defineMessage`Please confirm your email address to upload videos.`,
+        )
     }
   }
 
   if (isNetworkError(e)) {
     return i18n._(
-      msg`An error occurred while uploading the video. Please check your internet connection and try again.`,
+      defineMessage`An error occurred while uploading the video. Please check your internet connection and try again.`,
     )
   } else {
     // only log errors if they are unknown (and not network errors)
@@ -448,5 +450,7 @@ function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
   }
 
   const message = e instanceof Error ? e.message : ''
-  return i18n._(msg`An error occurred while uploading the video. ${message}`)
+  return i18n._(
+    defineMessage`An error occurred while uploading the video. ${message}`,
+  )
 }

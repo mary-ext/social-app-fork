@@ -1,6 +1,6 @@
 import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
@@ -70,11 +70,11 @@ export async function uploadVideo({
           ) as AppBskyVideoDefs.JobStatus
           resolve(uploadRes)
         } else {
-          reject(new ServerError(i18n._(msg`Failed to upload video`)))
+          reject(new ServerError(i18n._(defineMessage`Failed to upload video`)))
         }
       }
       xhr.onerror = () => {
-        reject(new ServerError(i18n._(msg`Failed to upload video`)))
+        reject(new ServerError(i18n._(defineMessage`Failed to upload video`)))
       }
       xhr.open('POST', uri)
       xhr.setRequestHeader('Content-Type', video.mimeType)
@@ -84,7 +84,9 @@ export async function uploadVideo({
   )
 
   if (!res.jobId) {
-    throw new ServerError(res.error || i18n._(msg`Failed to upload video`))
+    throw new ServerError(
+      res.error || i18n._(defineMessage`Failed to upload video`),
+    )
   }
 
   if (signal.aborted) {

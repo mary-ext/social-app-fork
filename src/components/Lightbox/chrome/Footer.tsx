@@ -7,8 +7,7 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -20,7 +19,7 @@ type Props = {
 }
 
 export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const insets = useSafeAreaInsets()
   const isMomentumScrolling = useRef(false)
 
@@ -42,7 +41,7 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
           contentContainerStyle={[a.px_md, a.py_sm]}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Expand alt text`)}
+            accessibilityLabel={l`Expand alt text`}
             accessibilityHint=""
             onPress={() => {
               if (isMomentumScrolling.current) return

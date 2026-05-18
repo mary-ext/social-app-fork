@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
@@ -19,7 +18,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 
 export function Screen() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
 
@@ -44,12 +43,10 @@ export function Screen() {
                 <InlineLinkText
                   overridePresentation
                   to={urls.website.blog.initialVerificationAnnouncement}
-                  label={_(
-                    msg({
-                      message: `Learn more`,
-                      context: `english-only-resource`,
-                    }),
-                  )}
+                  label={l({
+                    message: `Learn more`,
+                    context: `english-only-resource`,
+                  })}
                   onPress={() => {}}>
                   Learn more here.
                 </InlineLinkText>
@@ -70,7 +67,7 @@ export function Screen() {
 }
 
 function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hideBadges} = preferences.verificationPrefs
   const {mutate: setVerificationPrefs, isPending} =
     useSetVerificationPrefsMutation()
@@ -79,7 +76,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
     <Toggle.Item
       type="checkbox"
       name="hideBadges"
-      label={_(msg`Hide verification badges`)}
+      label={l`Hide verification badges`}
       value={hideBadges}
       disabled={isPending}
       onChange={value => {

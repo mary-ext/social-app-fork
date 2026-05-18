@@ -11,8 +11,7 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -147,7 +146,7 @@ const GalleryItem = ({
   onChange,
   onRemove,
 }: GalleryItemProps): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const altTextControl = Dialog.useDialogControl()
@@ -186,7 +185,7 @@ const GalleryItem = ({
       <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityLabel={l`Add alt text`}
         accessibilityHint=""
         onPress={onAltTextEdit}
         style={[styles.altTextControl, altTextControlStyle]}>
@@ -211,7 +210,7 @@ const GalleryItem = ({
         <TouchableOpacity
           testID="editPhotoButton"
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit image`)}
+          accessibilityLabel={l`Edit image`}
           accessibilityHint=""
           onPress={onImageEdit}
           style={styles.imageControl}>
@@ -220,7 +219,7 @@ const GalleryItem = ({
         <TouchableOpacity
           testID="removePhotoButton"
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Remove image`)}
+          accessibilityLabel={l`Remove image`}
           accessibilityHint=""
           onPress={onRemove}
           style={styles.imageControl}>
@@ -233,12 +232,11 @@ const GalleryItem = ({
       </View>
       <TouchableOpacity
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Add alt text`)}
+        accessibilityLabel={l`Add alt text`}
         accessibilityHint=""
         onPress={onAltTextEdit}
         style={styles.altTextHiddenRegion}
       />
-
       <Image
         testID="selectedPhotoImage"
         style={[styles.image, imageStyle]}
@@ -251,16 +249,13 @@ const GalleryItem = ({
         autoplay={false}
         contentFit="cover"
       />
-
       <MediaInsetBorder />
-
       <ImageAltTextDialog
         control={altTextControl}
         image={image}
         onChange={onChange}
         sourceViewTag={altBtnViewTag}
       />
-
       <EditImageDialog
         control={editControl}
         image={image}

@@ -8,8 +8,7 @@ import {
 } from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -62,7 +61,7 @@ export function FeedPage({
   feedInfo: FeedSourceInfo
 }) {
   const {hasSession} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
@@ -153,18 +152,17 @@ export function FeedPage({
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onPressLoadLatest}
-          label={_(msg`Load new posts`)}
+          label={l`Load new posts`}
           showIndicator={hasNew}
         />
       )}
-
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
           icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
+          accessibilityLabel={l({message: `New post`, context: 'action'})}
           accessibilityHint=""
         />
       )}

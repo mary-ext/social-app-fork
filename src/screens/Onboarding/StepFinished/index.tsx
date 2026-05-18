@@ -7,8 +7,7 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -227,7 +226,7 @@ function ValueProposition({
   state: OnboardingState
 }) {
   const [subStep, setSubStep] = useState<0 | 1 | 2>(0)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
 
   const onPress = () => {
@@ -249,7 +248,7 @@ function ValueProposition({
             variant="ghost"
             color="secondary"
             size="small"
-            label={_(msg`Skip introduction and start using your account`)}
+            label={l`Skip introduction and start using your account`}
             onPress={() => {
               finishOnboarding()
             }}
@@ -272,7 +271,7 @@ function ValueProposition({
               disabled={saving}
               color="secondary"
               size="large"
-              label={_(msg`Skip introduction and start using your account`)}
+              label={l`Skip introduction and start using your account`}
               onPress={() => finishOnboarding()}>
               <ButtonText>
                 <Trans>Skip</Trans>
@@ -287,8 +286,8 @@ function ValueProposition({
             size="large"
             label={
               subStep === 2
-                ? _(msg`Complete onboarding and start using your account`)
-                : _(msg`Next`)
+                ? l`Complete onboarding and start using your account`
+                : l`Next`
             }
             onPress={onPress}>
             <ButtonText>

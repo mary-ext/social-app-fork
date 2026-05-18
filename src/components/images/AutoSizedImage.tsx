@@ -7,8 +7,7 @@ import Animated, {
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {type Dimensions} from '#/lib/media/types'
@@ -81,7 +80,7 @@ export function AutoSizedImage({
   onPressIn?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
   const containerRef = useAnimatedRef()
   const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
@@ -204,7 +203,7 @@ export function AutoSizedImage({
         onPressIn={onPressIn}
         // alt here is what screen readers actually use
         accessibilityLabel={image.alt}
-        accessibilityHint={_(msg`Views full image`)}
+        accessibilityHint={l`Views full image`}
         accessibilityRole="button"
         android_ripple={{
           color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),
@@ -236,7 +235,7 @@ export function AutoSizedImage({
           onPressIn={onPressIn}
           // alt here is what screen readers actually use
           accessibilityLabel={image.alt}
-          accessibilityHint={_(msg`Views full image`)}
+          accessibilityHint={l`Views full image`}
           accessibilityRole="button"
           android_ripple={{
             color: utils.alpha(t.atoms.bg.backgroundColor, 0.2),

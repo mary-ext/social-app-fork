@@ -9,8 +9,7 @@ import {
   FontAwesomeIcon,
   type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from '#/lib/ThemeContext'
@@ -30,7 +29,7 @@ export function ErrorMessage({
 }) {
   const theme = useTheme()
   const pal = usePalette('error')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Layout.Center>
       <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
@@ -57,10 +56,8 @@ export function ErrorMessage({
             style={styles.btn}
             onPress={onPressTryAgain}
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Retry`)}
-            accessibilityHint={_(
-              msg`Retries the last action, which errored out`,
-            )}>
+            accessibilityLabel={l`Retry`}
+            accessibilityHint={l`Retries the last action, which errored out`}>
             <FontAwesomeIcon
               icon="arrows-rotate"
               style={{color: theme.palette.error.icon}}

@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -32,7 +31,7 @@ enum ScreenState {
 export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   useEnableMinimalShellMode()
@@ -84,7 +83,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Button
-            label={_(msg`Go back`)}
+            label={l`Go back`}
             variant="solid"
             color="secondary_inverted"
             size="small"

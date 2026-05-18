@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -33,7 +32,7 @@ function SendViaChatDialogInner({
   control: Dialog.DialogControlProps
   onSelectChat: (chatId: string) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
       onSelectChat(data.convo.id)
@@ -43,7 +42,7 @@ function SendViaChatDialogInner({
     },
     onError: error => {
       logger.error('Failed to share post to chat', {message: error})
-      Toast.show(_(msg`An issue occurred while trying to open the chat`), {
+      Toast.show(l`An issue occurred while trying to open the chat`, {
         type: 'error',
       })
     },
@@ -65,7 +64,7 @@ function SendViaChatDialogInner({
 
   return (
     <SearchablePeopleList
-      title={_(msg`Send post to...`)}
+      title={l`Send post to...`}
       onSelectChat={chat => {
         if (chat.kind === 'user') {
           onCreateChat(chat.did)

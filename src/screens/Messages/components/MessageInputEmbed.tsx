@@ -7,8 +7,7 @@ import {
   moderatePost,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -103,7 +102,7 @@ export function MessageInputEmbed({
   setEmbed: (embedUrl: string | undefined) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const {data: post, status} = usePostQuery(embedUri)
 
@@ -209,7 +208,7 @@ export function MessageInputEmbed({
     <View style={[a.flex_row, a.gap_sm]}>
       {content}
       <Button
-        label={_(msg`Remove embed`)}
+        label={l`Remove embed`}
         onPress={() => {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setEmbed(undefined)

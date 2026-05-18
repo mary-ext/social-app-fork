@@ -1,8 +1,7 @@
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -28,7 +27,7 @@ export function HomeHeaderLayoutMobile({
   tabBarAnchor: React.ReactElement | null | undefined
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {headerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
@@ -79,7 +78,7 @@ export function HomeHeaderLayoutMobile({
               testID="viewHeaderHomeFeedPrefsBtn"
               to={{screen: 'Feeds'}}
               hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
+              label={l`View your feeds and explore more`}
               size="small"
               variant="ghost"
               color="secondary"

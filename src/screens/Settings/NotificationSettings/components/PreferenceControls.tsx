@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
@@ -60,7 +59,7 @@ export function Inner({
   allowDisableInApp: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {mutate} = useNotificationSettingsUpdateMutation()
 
   const channels = useMemo(() => {
@@ -102,12 +101,12 @@ export function Inner({
     <View style={[a.px_xl, a.pt_md, a.gap_sm]}>
       <Toggle.Group
         type="checkbox"
-        label={_(msg`Select your preferred notification channels`)}
+        label={l`Select your preferred notification channels`}
         values={channels}
         onChange={onChangeChannels}>
         <View style={[a.gap_sm]}>
           <Toggle.Item
-            label={_(msg`Receive push notifications`)}
+            label={l`Receive push notifications`}
             name="push"
             style={[
               a.py_xs,
@@ -124,7 +123,7 @@ export function Inner({
           </Toggle.Item>
           {allowDisableInApp && (
             <Toggle.Item
-              label={_(msg`Receive in-app notifications`)}
+              label={l`Receive in-app notifications`}
               name="list"
               style={[
                 a.py_xs,
@@ -150,13 +149,13 @@ export function Inner({
           </Text>
           <Toggle.Group
             type="radio"
-            label={_(msg`Filter who you receive notifications from`)}
+            label={l`Filter who you receive notifications from`}
             values={[preference.include]}
             onChange={onChangeFilter}
             disabled={channels.length === 0}>
             <View style={[a.gap_sm]}>
               <Toggle.Item
-                label={_(msg`Everyone`)}
+                label={l`Everyone`}
                 name="all"
                 style={[a.flex_row, a.py_xs, a.gap_sm]}>
                 <Toggle.Radio />
@@ -170,7 +169,7 @@ export function Inner({
                 </Toggle.LabelText>
               </Toggle.Item>
               <Toggle.Item
-                label={_(msg`People I follow`)}
+                label={l`People I follow`}
                 name="follows"
                 style={[a.flex_row, a.py_xs, a.gap_sm]}>
                 <Toggle.Radio />

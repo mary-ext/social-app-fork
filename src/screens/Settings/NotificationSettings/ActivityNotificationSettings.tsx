@@ -1,8 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {type ListRenderItemInfo, Text as RNText, View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -43,7 +42,7 @@ type Props = NativeStackScreenProps<
 >
 export function ActivityNotificationSettingsScreen({}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: preferences, isError} = useNotificationSettingsQuery()
 
   const moderationOpts = useModerationOpts()
@@ -161,7 +160,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                           If you want to restrict who can receive notifications
                           for your account's activity, you can change this in{' '}
                           <InlineLinkText
-                            label={_(msg`Privacy and Security settings`)}
+                            label={l`Privacy and Security settings`}
                             to={{screen: 'ActivityPrivacySettings'}}
                             style={[a.font_semi_bold]}>
                             Settings &rarr; Privacy and Security
@@ -208,20 +207,20 @@ function ActivitySubscriptionCard({
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const control = useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const preview = useMemo(() => {
     const actSub = profile.viewer?.activitySubscription
     if (actSub?.post && actSub?.reply) {
-      return _(msg`Posts, Replies`)
+      return l`Posts, Replies`
     } else if (actSub?.post) {
-      return _(msg`Posts`)
+      return l`Posts`
     } else if (actSub?.reply) {
-      return _(msg`Replies`)
+      return l`Replies`
     }
-    return _(msg`None`)
-  }, [_, profile.viewer?.activitySubscription])
+    return l`None`
+  }, [l, profile.viewer?.activitySubscription])
 
   return (
     <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
@@ -242,11 +241,9 @@ function ActivitySubscriptionCard({
             </Text>
           </View>
           <Button
-            label={_(
-              msg`Edit notifications from ${createSanitizedDisplayName(
-                profile,
-              )}`,
-            )}
+            label={l`Edit notifications from ${createSanitizedDisplayName(
+              profile,
+            )}`}
             size="small"
             color="primary"
             variant="solid"
@@ -257,7 +254,6 @@ function ActivitySubscriptionCard({
           </Button>
         </ProfileCard.Header>
       </ProfileCard.Outer>
-
       <SubscribeProfileDialog
         control={control}
         profile={profile}

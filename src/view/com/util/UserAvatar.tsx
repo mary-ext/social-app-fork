@@ -11,8 +11,7 @@ import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {Image as ExpoImage} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -340,7 +339,7 @@ let EditableUserAvatar = ({
   onSelectNewAvatar,
 }: EditableUserAvatarProps): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
@@ -438,7 +437,7 @@ let EditableUserAvatar = ({
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Edit avatar`)}>
+        <Menu.Trigger label={l`Edit avatar`}>
           {({props}) => (
             <Pressable {...props} testID="changeAvatarBtn">
               {avatar ? (
@@ -468,7 +467,7 @@ let EditableUserAvatar = ({
             {IS_NATIVE && (
               <Menu.Item
                 testID="changeAvatarCameraBtn"
-                label={_(msg`Upload from Camera`)}
+                label={l`Upload from Camera`}
                 onPress={onOpenCamera}>
                 <Menu.ItemText>
                   <Trans>Upload from Camera</Trans>
@@ -479,7 +478,7 @@ let EditableUserAvatar = ({
 
             <Menu.Item
               testID="changeAvatarLibraryBtn"
-              label={_(msg`Upload from Library`)}
+              label={l`Upload from Library`}
               onPress={onOpenLibrary}>
               <Menu.ItemText>
                 {IS_NATIVE ? (
@@ -497,7 +496,7 @@ let EditableUserAvatar = ({
               <Menu.Group>
                 <Menu.Item
                   testID="changeAvatarRemoveBtn"
-                  label={_(msg`Remove Avatar`)}
+                  label={l`Remove Avatar`}
                   onPress={onRemoveAvatar}>
                   <Menu.ItemText>
                     <Trans>Remove Avatar</Trans>
@@ -509,7 +508,6 @@ let EditableUserAvatar = ({
           )}
         </Menu.Outer>
       </Menu.Root>
-
       <EditImageDialog
         control={editImageDialogControl}
         image={rawImage}
@@ -532,7 +530,7 @@ let PreviewableUserAvatar = ({
   live,
   ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
   const liveControl = useDialogControl()
@@ -570,12 +568,10 @@ let PreviewableUserAvatar = ({
       ) : status.isActive && (IS_NATIVE || IS_WEB_TOUCH_DEVICE) ? (
         <>
           <Button
-            label={_(
-              msg`${sanitizeDisplayName(
-                profile.displayName || sanitizeHandle(profile.handle),
-              )}'s avatar`,
-            )}
-            accessibilityHint={_(msg`Opens live status dialog`)}
+            label={l`${sanitizeDisplayName(
+              profile.displayName || sanitizeHandle(profile.handle),
+            )}'s avatar`}
+            accessibilityHint={l`Opens live status dialog`}
             onPress={onOpenLiveStatus}>
             {avatarEl}
           </Button>
@@ -588,12 +584,10 @@ let PreviewableUserAvatar = ({
         </>
       ) : (
         <Link
-          label={_(
-            msg`${sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
-            )}'s avatar`,
-          )}
-          accessibilityHint={_(msg`Opens this profile`)}
+          label={l`${sanitizeDisplayName(
+            profile.displayName || sanitizeHandle(profile.handle),
+          )}'s avatar`}
+          accessibilityHint={l`Opens this profile`}
           to={makeProfileLink({
             did: profile.did,
             handle: profile.handle,

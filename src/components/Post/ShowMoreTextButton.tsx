@@ -1,7 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {LayoutAnimation, type TextStyle} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -14,7 +13,7 @@ export function ShowMoreTextButton({
   style,
 }: TextStyleProp & {onPress: () => void}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const onPress = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -30,7 +29,7 @@ export function ShowMoreTextButton({
 
   return (
     <Button
-      label={_(msg`Expand post text`)}
+      label={l`Expand post text`}
       onPress={onPress}
       style={[
         a.self_start,

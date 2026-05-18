@@ -1,8 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -35,7 +34,7 @@ export default function TopicScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Topic'>) {
   const {topic} = route.params
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const headerTitle = useMemo(() => {
     return enforceLen(decodeURIComponent(topic), 24, true, 'middle')
@@ -56,13 +55,13 @@ export default function TopicScreen({
   const sections = useMemo(() => {
     return [
       {
-        title: _(msg`Top`),
+        title: l`Top`,
         component: (
           <TopicScreenTab topic={topic} sort="top" active={activeTab === 0} />
         ),
       },
       {
-        title: _(msg`Latest`),
+        title: l`Latest`,
         component: (
           <TopicScreenTab
             topic={topic}
@@ -72,7 +71,7 @@ export default function TopicScreen({
         ),
       },
     ]
-  }, [_, topic, activeTab])
+  }, [l, topic, activeTab])
 
   return (
     <Layout.Screen>
@@ -87,7 +86,7 @@ export default function TopicScreen({
               </Layout.Header.Content>
               <Layout.Header.Slot>
                 <Button
-                  label={_(msg`Share`)}
+                  label={l`Share`}
                   size="small"
                   variant="ghost"
                   color="primary"
@@ -120,7 +119,7 @@ function TopicScreenTab({
   sort: 'top' | 'latest'
   active: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = useState(false)
   const trackPostView = usePostViewTracking('Topic')
@@ -164,7 +163,7 @@ function TopicScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that topic.`)}
+          emptyMessage={l`We couldn't find any results for that topic.`}
         />
       ) : (
         <List

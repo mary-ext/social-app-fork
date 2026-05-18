@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -42,7 +41,7 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 }
 
 export function ProfileFollows({name}: {name: string}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
@@ -161,8 +160,8 @@ export function ProfileFollows({name}: {name: string}) {
         emptyType="results"
         emptyMessage={
           isMe
-            ? _(msg`You are not following anyone yet`)
-            : _(msg`This user isn't following anyone.`)
+            ? l`You are not following anyone yet`
+            : l`This user isn't following anyone.`
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
@@ -170,8 +169,8 @@ export function ProfileFollows({name}: {name: string}) {
         useEmptyState={true}
         emptyStateIcon={PeopleRemoveIcon}
         emptyStateButton={{
-          label: _(msg`See suggested accounts`),
-          text: _(msg`See suggested accounts`),
+          label: l`See suggested accounts`,
+          text: l`See suggested accounts`,
           onPress: onPressFindAccounts,
           size: 'tiny',
           color: 'primary',

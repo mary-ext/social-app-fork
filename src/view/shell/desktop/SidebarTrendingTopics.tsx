@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -27,7 +26,7 @@ export function SidebarTrendingTopics() {
 
 function Inner() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
@@ -51,7 +50,7 @@ function Inner() {
             size="tiny"
             color="secondary"
             shape="round"
-            label={_(msg`Trending options`)}
+            label={l`Trending options`}
             onPress={() => trendingPrompt.open()}
             style={[a.bg_transparent, {marginTop: -6, marginRight: -6}]}>
             <ButtonIcon icon={Ellipsis} size="xs" />
@@ -121,9 +120,9 @@ function Inner() {
       </View>
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending topics?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
+        title={l`Hide trending topics?`}
+        description={l`You can update this later from your settings.`}
+        confirmButtonCta={l`Hide`}
         onConfirm={onConfirmHide}
       />
     </>

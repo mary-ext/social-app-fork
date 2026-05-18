@@ -1,8 +1,7 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -89,7 +88,7 @@ export function useNotificationsHandler() {
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   // On Android, we cannot control which sound is used for a notification on Android
   // 28 or higher. Instead, we have to configure a notification channel ahead of time
@@ -103,13 +102,11 @@ export function useNotificationsHandler() {
     // if the channels already exist. no big deal imo -sfn
     const CHAT_GROUP = 'chat'
     Notifications.setNotificationChannelGroupAsync(CHAT_GROUP, {
-      name: _(msg`Chat`),
-      description: _(
-        msg`You can choose whether chat notifications have sound in the chat settings within the app`,
-      ),
+      name: l`Chat`,
+      description: l`You can choose whether chat notifications have sound in the chat settings within the app`,
     })
     Notifications.setNotificationChannelAsync('chat-messages', {
-      name: _(msg`Chat messages - sound`),
+      name: l`Chat messages - sound`,
       groupId: CHAT_GROUP,
       importance: Notifications.AndroidImportance.MAX,
       sound: 'dm.mp3',
@@ -118,7 +115,7 @@ export function useNotificationsHandler() {
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
     })
     Notifications.setNotificationChannelAsync('chat-messages-muted', {
-      name: _(msg`Chat messages - silent`),
+      name: l`Chat messages - silent`,
       groupId: CHAT_GROUP,
       importance: Notifications.AndroidImportance.MAX,
       sound: null,
@@ -130,67 +127,67 @@ export function useNotificationsHandler() {
     Notifications.setNotificationChannelAsync(
       'like' satisfies NotificationReason,
       {
-        name: _(msg`Likes`),
+        name: l`Likes`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'repost' satisfies NotificationReason,
       {
-        name: _(msg`Reposts`),
+        name: l`Reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'reply' satisfies NotificationReason,
       {
-        name: _(msg`Replies`),
+        name: l`Replies`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'mention' satisfies NotificationReason,
       {
-        name: _(msg`Mentions`),
+        name: l`Mentions`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'quote' satisfies NotificationReason,
       {
-        name: _(msg`Quotes`),
+        name: l`Quotes`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'follow' satisfies NotificationReason,
       {
-        name: _(msg`New followers`),
+        name: l`New followers`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'like-via-repost' satisfies NotificationReason,
       {
-        name: _(msg`Likes of your reposts`),
+        name: l`Likes of your reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'repost-via-repost' satisfies NotificationReason,
       {
-        name: _(msg`Reposts of your reposts`),
+        name: l`Reposts of your reposts`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
       'subscribed-post' satisfies NotificationReason,
       {
-        name: _(msg`Activity from others`),
+        name: l`Activity from others`,
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
-  }, [_])
+  }, [l])
 
   useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {

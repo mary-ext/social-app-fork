@@ -10,8 +10,7 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -74,7 +73,7 @@ export function Wizard({
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   // Use targetDid if provided (from dialog), otherwise use current account
   const profileDid = targetDid || currentAccount!.did
@@ -112,7 +111,7 @@ export function Wizard({
             isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
           }
           isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-          errorMessage={_(msg`That starter pack could not be found.`)}
+          errorMessage={l`That starter pack could not be found.`}
         />
       </Layout.Screen>
     )
@@ -122,7 +121,7 @@ export function Wizard({
         <ListMaybePlaceholder
           isLoading={false}
           isError={true}
-          errorMessage={_(msg`That starter pack could not be found.`)}
+          errorMessage={l`That starter pack could not be found.`}
         />
       </Layout.Screen>
     )
@@ -166,7 +165,7 @@ function WizardInner({
   onSuccess?: () => void
 }) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
 
@@ -184,7 +183,7 @@ function WizardInner({
 
   const getDefaultName = () => {
     const displayName = createSanitizedDisplayName(currentProfile!, true)
-    return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
+    return l`${displayName}'s Starter Pack`.slice(0, 50)
   }
 
   const wizardUiStrings: Record<
@@ -192,16 +191,16 @@ function WizardInner({
     {header: string; nextBtn: string; subtitle?: string}
   > = {
     Details: {
-      header: _(msg`Starter Pack`),
-      nextBtn: _(msg`Next`),
+      header: l`Starter Pack`,
+      nextBtn: l`Next`,
     },
     Profiles: {
-      header: _(msg`Choose People`),
-      nextBtn: _(msg`Next`),
+      header: l`Choose People`,
+      nextBtn: l`Next`,
     },
     Feeds: {
-      header: _(msg`Choose Feeds`),
-      nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
+      header: l`Choose Feeds`,
+      nextBtn: state.feeds.length === 0 ? l`Skip` : l`Finish`,
     },
   }
   const currUiStrings = wizardUiStrings[state.currentStep]
@@ -239,7 +238,7 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to create starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), {
+      Toast.show(l`Failed to create starter pack`, {
         type: 'error',
       })
     },
@@ -249,7 +248,7 @@ function WizardInner({
     onError: e => {
       logger.error('Failed to edit starter pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
-      Toast.show(_(msg`Failed to create starter pack`), {
+      Toast.show(l`Failed to create starter pack`, {
         type: 'error',
       })
     },
@@ -304,8 +303,8 @@ function WizardInner({
     <Layout.Center style={[a.flex_1]}>
       <Layout.Header.Outer>
         <Layout.Header.BackButton
-          label={_(msg`Back`)}
-          accessibilityHint={_(msg`Returns to the previous step`)}
+          label={l`Back`}
+          accessibilityHint={l`Returns to the previous step`}
           onPress={evt => {
             if (state.currentStep !== 'Details') {
               evt.preventDefault()
@@ -320,7 +319,7 @@ function WizardInner({
         </Layout.Header.Content>
         {isEditEnabled ? (
           <Button
-            label={_(msg`Edit`)}
+            label={l`Edit`}
             color="secondary"
             size="small"
             onPress={editDialogControl.open}>
@@ -332,7 +331,6 @@ function WizardInner({
           <Layout.Header.Slot />
         )}
       </Layout.Header.Outer>
-
       <Container>
         {state.currentStep === 'Details' ? (
           <StepDetails />
@@ -342,7 +340,6 @@ function WizardInner({
           <StepFeeds moderationOpts={moderationOpts} />
         ) : null}
       </Container>
-
       {state.currentStep !== 'Details' && (
         <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />
       )}
@@ -358,7 +355,7 @@ function WizardInner({
 }
 
 function Container({children}: {children: React.ReactNode}) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [state, dispatch] = useWizardState()
 
   if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
@@ -373,7 +370,7 @@ function Container({children}: {children: React.ReactNode}) {
       {state.currentStep === 'Details' && (
         <>
           <Button
-            label={_(msg`Next`)}
+            label={l`Next`}
             variant="solid"
             color="primary"
             size="large"

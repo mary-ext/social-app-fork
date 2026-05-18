@@ -4,8 +4,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
@@ -27,14 +26,14 @@ export function GifPresentationControls({
   isLoading?: boolean
   altText?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   return (
     <>
       <Button
-        label={isPlaying ? _(msg`Pause GIF`) : _(msg`Play GIF`)}
-        accessibilityHint={_(msg`Plays or pauses the GIF`)}
+        label={isPlaying ? l`Pause GIF` : l`Play GIF`}
+        accessibilityHint={l`Plays or pauses the GIF`}
         style={[
           a.absolute,
           a.align_center,
@@ -76,14 +75,14 @@ export function GifPresentationControls({
 
 function AltBadge({text}: {text: string}) {
   const control = Prompt.usePromptControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <>
       <TouchableOpacity
         testID="altTextButton"
         accessibilityRole="button"
-        accessibilityLabel={_(msg`Show alt text`)}
+        accessibilityLabel={l`Show alt text`}
         accessibilityHint=""
         hitSlop={HITSLOP_20}
         onPress={control.open}
@@ -104,7 +103,7 @@ function AltBadge({text}: {text: string}) {
         <Prompt.Actions>
           <Prompt.Action
             onPress={() => control.close()}
-            cta={_(msg`Close`)}
+            cta={l`Close`}
             color="secondary"
           />
         </Prompt.Actions>

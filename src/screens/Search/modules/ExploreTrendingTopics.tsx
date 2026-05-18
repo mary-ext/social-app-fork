@@ -1,8 +1,7 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -61,7 +60,7 @@ export function TrendRow({
   onPress?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters([0, 'base'])
 
   const category = useCategoryDisplayName(trend?.category || 'other')
@@ -76,7 +75,7 @@ export function TrendRow({
   return (
     <Link
       testID={trend.link}
-      label={_(msg`Browse topic ${trend.displayName}`)}
+      label={l`Browse topic ${trend.displayName}`}
       to={trend.link}
       onPress={onPress}
       style={[a.border_b, t.atoms.border_contrast_low]}
@@ -141,7 +140,7 @@ type TrendingIndicatorType = 'hot' | 'new' | number
 
 function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const pillStyles = [
     a.flex_row,
     a.align_center,
@@ -172,24 +171,22 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
         t.scheme === 'light' ? t.palette.negative_500 : t.palette.negative_950
       backgroundColor =
         t.scheme === 'light' ? t.palette.negative_50 : t.palette.negative_200
-      text = _(msg`Hot`)
+      text = l`Hot`
       break
     }
     case 'new': {
       Icon = TrendingIcon
-      text = _(msg`New`)
+      text = l`New`
       color = t.palette.positive_600
       backgroundColor = t.palette.positive_50
       break
     }
     default: {
-      text = _(
-        msg({
-          message: `${type}h ago`,
-          comment:
-            'trending topic time spent trending. should be as short as possible to fit in a pill',
-        }),
-      )
+      text = l({
+        message: `${type}h ago`,
+        comment:
+          'trending topic time spent trending. should be as short as possible to fit in a pill',
+      })
       color = t.atoms.text_contrast_medium.color
       backgroundColor = t.atoms.bg_contrast_25.backgroundColor
       break
@@ -207,19 +204,19 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
 function useCategoryDisplayName(
   category: AppBskyUnspeccedDefs.TrendView['category'],
 ) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   switch (category) {
     case 'sports':
-      return _(msg`Sports`)
+      return l`Sports`
     case 'politics':
-      return _(msg`Politics`)
+      return l`Politics`
     case 'video-games':
-      return _(msg`Video Games`)
+      return l`Video Games`
     case 'pop-culture':
-      return _(msg`Entertainment`)
+      return l`Entertainment`
     case 'news':
-      return _(msg`News`)
+      return l`News`
     case 'other':
     default:
       return null

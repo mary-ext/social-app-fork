@@ -6,8 +6,7 @@ import {
   interpretLabelValueDefinitions,
   type ModerationOpts,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
@@ -165,7 +164,7 @@ export function LabelerListHeader({
   isSubscribed: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   if (isLabelerLoading) {
     return (
@@ -181,7 +180,7 @@ export function LabelerListHeader({
         <ErrorState
           error={
             labelerError?.toString() ||
-            _(msg`Something went wrong, please try again.`)
+            l`Something went wrong, please try again.`
           }
         />
       </View>

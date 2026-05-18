@@ -4,8 +4,7 @@ import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
@@ -67,7 +66,7 @@ export const LoginForm = ({
   const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
   const hasFocusedOnce = useRef<boolean>(false)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -87,13 +86,13 @@ export const LoginForm = ({
     const password = passwordValueRef.current
 
     if (!identifier) {
-      setError(_(msg`Please enter your username`))
+      setError(l`Please enter your username`)
       setErrorField('identifier')
       return
     }
 
     if (!password) {
-      setError(_(msg`Please enter your password`))
+      setError(l`Please enter your password`)
       setErrorField('password')
       return
     }
@@ -150,7 +149,7 @@ export const LoginForm = ({
           logger.debug('Failed to login due to invalid 2fa token', {
             error: errMsg,
           })
-          setError(_(msg`Invalid 2FA confirmation code.`))
+          setError(l`Invalid 2FA confirmation code.`)
           setErrorField('2fa')
         } else if (
           errMsg.includes('Authentication Required') ||
@@ -159,13 +158,11 @@ export const LoginForm = ({
           logger.debug('Failed to login due to invalid credentials', {
             error: errMsg,
           })
-          setError(_(msg`Incorrect username or password`))
+          setError(l`Incorrect username or password`)
         } else if (isNetworkError(e)) {
           logger.warn('Failed to login due to network error', {error: errMsg})
           setError(
-            _(
-              msg`Unable to contact your service. Please check your Internet connection.`,
-            ),
+            l`Unable to contact your service. Please check your Internet connection.`,
           )
         } else {
           logger.warn('Failed to login', {error: errMsg})
@@ -197,7 +194,7 @@ export const LoginForm = ({
             <TextField.Input
               testID="loginUsernameInput"
               inputRef={identifierRef}
-              label={_(msg`Username or email address`)}
+              label={l`Username or email address`}
               autoCapitalize="none"
               autoFocus={!IS_IOS}
               autoCorrect={false}
@@ -214,9 +211,7 @@ export const LoginForm = ({
               }}
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               editable={!isProcessing}
-              accessibilityHint={_(
-                msg`Enter the username or email address you used when you created your account`,
-              )}
+              accessibilityHint={l`Enter the username or email address you used when you created your account`}
             />
           </TextField.Root>
 
@@ -225,7 +220,7 @@ export const LoginForm = ({
             <TextField.Input
               testID="loginPasswordInput"
               inputRef={passwordRef}
-              label={_(msg`Password`)}
+              label={l`Password`}
               autoCapitalize="none"
               autoCorrect={false}
               autoComplete="current-password"
@@ -240,7 +235,7 @@ export const LoginForm = ({
               onSubmitEditing={onPressNext}
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
-              accessibilityHint={_(msg`Enter your password`)}
+              accessibilityHint={l`Enter your password`}
               onLayout={ios(() => {
                 if (hasFocusedOnce.current) return
                 hasFocusedOnce.current = true
@@ -255,8 +250,8 @@ export const LoginForm = ({
             <Button
               testID="forgotPasswordButton"
               onPress={onPressForgotPassword}
-              label={_(msg`Forgot password?`)}
-              accessibilityHint={_(msg`Opens password reset form`)}
+              label={l`Forgot password?`}
+              accessibilityHint={l`Opens password reset form`}
               variant="solid"
               color="secondary"
               style={[
@@ -281,7 +276,7 @@ export const LoginForm = ({
             <TextField.Icon icon={Ticket} />
             <TextField.Input
               testID="loginAuthFactorTokenInput"
-              label={_(msg`Confirmation code`)}
+              label={l`Confirmation code`}
               autoCapitalize="none"
               autoFocus
               autoCorrect={false}
@@ -295,9 +290,7 @@ export const LoginForm = ({
               }}
               onSubmitEditing={onPressNext}
               editable={!isProcessing}
-              accessibilityHint={_(
-                msg`Input the code which has been emailed to you`,
-              )}
+              accessibilityHint={l`Input the code which has been emailed to you`}
               style={{
                 textTransform: authFactorToken === '' ? 'none' : 'uppercase',
               }}
@@ -314,7 +307,7 @@ export const LoginForm = ({
       <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
         {IS_WEB && (
           <Button
-            label={_(msg`Back`)}
+            label={l`Back`}
             color="secondary"
             size="large"
             onPress={onPressBack}>
@@ -326,8 +319,8 @@ export const LoginForm = ({
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
-            label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries signing in`)}
+            label={l`Retry`}
+            accessibilityHint={l`Retries signing in`}
             color="primary_subtle"
             size="large"
             onPress={onPressRetryConnect}>
@@ -337,7 +330,7 @@ export const LoginForm = ({
           </Button>
         ) : !serviceDescription ? (
           <Button
-            label={_(msg`Connecting to service...`)}
+            label={l`Connecting to service...`}
             size="large"
             color="secondary"
             disabled>
@@ -347,8 +340,8 @@ export const LoginForm = ({
         ) : (
           <Button
             testID="loginNextButton"
-            label={_(msg`Sign in`)}
-            accessibilityHint={_(msg`Navigates to the next screen`)}
+            label={l`Sign in`}
+            accessibilityHint={l`Navigates to the next screen`}
             color="primary"
             size="large"
             onPress={onPressNext}>

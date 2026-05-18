@@ -6,8 +6,7 @@ import {
   View,
 } from 'react-native'
 import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -49,7 +48,7 @@ export function Component({
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {height: screenHeight} = useWindowDimensions()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: memberships} = useDangerousListMembershipsQuery()
 
   const onPressDone = useCallback(() => {
@@ -111,10 +110,10 @@ export function Component({
           type="default"
           onPress={onPressDone}
           style={styles.footerBtn}
-          accessibilityLabel={_(msg({message: `Done`, context: 'action'}))}
+          accessibilityLabel={l({message: `Done`, context: 'action'})}
           accessibilityHint=""
           onAccessibilityEscape={onPressDone}
-          label={_(msg({message: `Done`, context: 'action'}))}
+          label={l({message: `Done`, context: 'action'})}
         />
       </View>
     </View>
@@ -139,7 +138,7 @@ function ListItem({
   onRemove?: (listUri: string) => void
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const [isProcessing, setIsProcessing] = useState(false)
   const membership = useMemo(
@@ -160,7 +159,7 @@ function ListItem({
           listUri: list.uri,
           actorDid: subject,
         })
-        Toast.show(_(msg`Added to list`))
+        Toast.show(l`Added to list`)
         onAdd?.(list.uri)
       } else {
         await listMembershipRemoveMutation.mutateAsync({
@@ -168,7 +167,7 @@ function ListItem({
           actorDid: subject,
           membershipUri: membership,
         })
-        Toast.show(_(msg`Removed from list`))
+        Toast.show(l`Removed from list`)
         onRemove?.(list.uri)
       }
     } catch (e) {
@@ -177,7 +176,7 @@ function ListItem({
       setIsProcessing(false)
     }
   }, [
-    _,
+    l,
     list,
     subject,
     membership,
@@ -233,7 +232,7 @@ function ListItem({
           <Button
             testID={`user-${handle}-addBtn`}
             type="default"
-            label={membership === false ? _(msg`Add`) : _(msg`Remove`)}
+            label={membership === false ? l`Add` : l`Remove`}
             onPress={onToggleMembership}
           />
         )}

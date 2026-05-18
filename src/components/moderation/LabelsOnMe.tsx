@@ -1,7 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
@@ -29,7 +28,7 @@ export function LabelsOnMe({
   size?: ButtonSize
   style?: StyleProp<ViewStyle>
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const control = useLabelsOnMeDialogControl()
 
@@ -48,12 +47,11 @@ export function LabelsOnMe({
   return (
     <View style={[a.flex_row, style]}>
       <LabelsOnMeDialog control={control} labels={labels} type={type} />
-
       <Button
         variant="solid"
         color="secondary"
         size={size || 'small'}
-        label={_(msg`View information about these labels`)}
+        label={l`View information about these labels`}
         onPress={() => {
           control.open()
         }}>

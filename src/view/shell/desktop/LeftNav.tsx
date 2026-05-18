@@ -1,8 +1,8 @@
 import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
@@ -93,7 +93,7 @@ function ProfileCard({minimal}: {minimal: boolean}) {
   })
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const size = 48
@@ -112,7 +112,7 @@ function ProfileCard({minimal}: {minimal: boolean}) {
     <View style={[a.my_md, !minimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
         <Menu.Root>
-          <Menu.Trigger label={_(msg`Switch accounts`)}>
+          <Menu.Trigger label={l`Switch accounts`}>
             {({props, state, control}) => {
               const active = state.hovered || state.focused || control.isOpen
               return (
@@ -211,11 +211,11 @@ function ProfileCard({minimal}: {minimal: boolean}) {
       )}
       <Prompt.Basic
         control={signOutPromptControl}
-        title={_(msg`Sign out?`)}
-        description={_(msg`You will be signed out of all your accounts.`)}
+        title={l`Sign out?`}
+        description={l`You will be signed out of all your accounts.`}
         onConfirm={() => logoutEveryAccount('Settings')}
-        confirmButtonCta={_(msg`Sign out`)}
-        cancelButtonCta={_(msg`Cancel`)}
+        confirmButtonCta={l`Sign out`}
+        cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
       />
     </View>
@@ -234,7 +234,7 @@ function SwitchMenuItems({
     | undefined
   signOutPromptControl: DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -263,15 +263,13 @@ function SwitchMenuItems({
         </>
       )}
       <SwitcherMenuProfileLink />
-      <Menu.Item
-        label={_(msg`Add another account`)}
-        onPress={onAddAnotherAccount}>
+      <Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
         <Menu.ItemIcon icon={PlusIcon} />
         <Menu.ItemText>
           <Trans>Add another account</Trans>
         </Menu.ItemText>
       </Menu.Item>
-      <Menu.Item label={_(msg`Sign out`)} onPress={signOutPromptControl.open}>
+      <Menu.Item label={l`Sign out`} onPress={signOutPromptControl.open}>
         <Menu.ItemIcon icon={LeaveIcon} />
         <Menu.ItemText>
           <Trans>Sign out</Trans>
@@ -282,7 +280,7 @@ function SwitchMenuItems({
 }
 
 function SwitcherMenuProfileLink() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const navigation = useNavigation()
   const context = Menu.useMenuContext()
@@ -325,7 +323,7 @@ function SwitcherMenuProfileLink() {
   )
   return (
     <Menu.Item
-      label={_(msg`Go to profile`)}
+      label={l`Go to profile`}
       // @ts-expect-error The function signature differs on web -inb
       onPress={onProfilePress}
       href={profileLink}>
@@ -344,7 +342,7 @@ function SwitchMenuItem({
   account: SessionAccount
   profile: AppBskyActorDefs.ProfileViewDetailed | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {isActive: live} = useActorStatus(profile)
 
@@ -353,12 +351,10 @@ function SwitchMenuItem({
       disabled={!!pendingDid}
       style={[a.gap_sm, {minWidth: 150}]}
       key={account.did}
-      label={_(
-        msg`Switch to ${sanitizeHandle(
-          profile?.handle ?? account.handle,
-          '@',
-        )}`,
-      )}
+      label={l`Switch to ${sanitizeHandle(
+        profile?.handle ?? account.handle,
+        '@',
+      )}`}
       onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
       <View>
         <UserAvatar
@@ -395,7 +391,7 @@ function NavItem({
   minimal,
 }: NavItemProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
 
   const [pathName] = useMemo(() => router.matchPath(href), [href])
@@ -467,12 +463,10 @@ function NavItem({
               {right: -20}, // more breathing room
             ]}>
             <Text
-              accessibilityLabel={_(
-                msg`${plural(count, {
-                  one: '# unread item',
-                  other: '# unread items',
-                })}`,
-              )}
+              accessibilityLabel={l`${plural(count, {
+                one: '# unread item',
+                other: '# unread items',
+              })}`}
               accessibilityHint=""
               accessible={true}
               numberOfLines={1}
@@ -528,7 +522,7 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
   const {openComposer} = useOpenComposer()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -572,7 +566,7 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
     <View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
       <Button
         disabled={isFetchingHandle}
-        label={_(msg`Compose new post`)}
+        label={l`Compose new post`}
         onPress={() => void onPressCompose()}
         size="large"
         color="primary"
@@ -590,7 +584,7 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
 
 function ChatNavItem({minimal}: {minimal: boolean}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const numUnreadMessages = useUnreadMessageCount()
 
   return (
@@ -613,14 +607,14 @@ function ChatNavItem({minimal}: {minimal: boolean}) {
           width={NAV_ICON_WIDTH}
         />
       }
-      label={_(msg`Chat`)}
+      label={l`Chat`}
     />
   )
 }
 
 export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {hasSession, currentAccount} = useSession()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
@@ -667,7 +661,6 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           <NavSignupCard />
         </View>
       ) : null}
-
       {hasSession && (
         <>
           <NavItem
@@ -687,7 +680,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 style={t.atoms.text}
               />
             }
-            label={_(msg`Home`)}
+            label={l`Home`}
           />
           <NavItem
             href="/search"
@@ -706,7 +699,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(msg`Explore`)}
+            label={l`Explore`}
           />
           <NavItem
             href="/notifications"
@@ -726,7 +719,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 style={t.atoms.text}
               />
             }
-            label={_(msg`Notifications`)}
+            label={l`Notifications`}
           />
           <ChatNavItem minimal={leftNavMinimal} />
           <NavItem
@@ -746,7 +739,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(msg`Feeds`)}
+            label={l`Feeds`}
           />
           <NavItem
             href="/lists"
@@ -765,7 +758,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(msg`Lists`)}
+            label={l`Lists`}
           />
           <NavItem
             href="/saved"
@@ -784,12 +777,10 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(
-              msg({
-                message: 'Saved',
-                context: 'link to bookmarks screen',
-              }),
-            )}
+            label={l({
+              message: 'Saved',
+              context: 'link to bookmarks screen',
+            })}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
@@ -808,7 +799,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 style={t.atoms.text}
               />
             }
-            label={_(msg`Profile`)}
+            label={l`Profile`}
           />
           <NavItem
             href="/settings"
@@ -827,7 +818,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
                 style={t.atoms.text}
               />
             }
-            label={_(msg`Settings`)}
+            label={l`Settings`}
           />
 
           <ComposeBtn minimal={leftNavMinimal} />

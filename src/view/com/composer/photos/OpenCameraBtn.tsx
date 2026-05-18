@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import * as MediaLibrary from 'expo-media-library'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
@@ -19,7 +18,7 @@ type Props = {
 }
 
 export function OpenCameraBtn({disabled, onAdd}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const [mediaPermissionRes, requestMediaPermission] =
     MediaLibrary.usePermissions({granularPermissions: ['photo']})
@@ -67,8 +66,8 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
     <Button
       testID="openCameraButton"
       onPress={onPressTakePicture}
-      label={_(msg`Camera`)}
-      accessibilityHint={_(msg`Opens camera on device`)}
+      label={l`Camera`}
+      accessibilityHint={l`Opens camera on device`}
       style={a.p_sm}
       variant="ghost"
       shape="round"

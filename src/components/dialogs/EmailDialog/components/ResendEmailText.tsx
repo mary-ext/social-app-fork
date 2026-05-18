@@ -1,6 +1,5 @@
 import {useState} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
@@ -17,7 +16,7 @@ export function ResendEmailText({
   onPress: () => Promise<any>
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [status, setStatus] = useState<'sending' | 'success' | null>(null)
 
   const handleOnPress = async () => {
@@ -38,7 +37,7 @@ export function ResendEmailText({
       <Trans>
         Don't see an email?{' '}
         <InlineLinkText
-          label={_(msg`Resend`)}
+          label={l`Resend`}
           {...createStaticClick(() => {
             handleOnPress()
           })}>

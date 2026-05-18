@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useInterestsDisplayNames} from '#/lib/interests'
@@ -17,7 +16,7 @@ import {Text} from '#/components/Typography'
 
 export function ExploreInterestsCard() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const interestsDisplayNames = useInterestsDisplayNames()
   const {mutateAsync: saveNux} = useSaveNux()
@@ -41,16 +40,12 @@ export function ExploreInterestsCard() {
     <>
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Dismiss interests`)}
-        description={_(
-          msg`You can adjust your interests at any time from "Content and media" settings.`,
-        )}
-        confirmButtonCta={_(
-          msg({
-            message: `OK`,
-            comment: `Confirm button text.`,
-          }),
-        )}
+        title={l`Dismiss interests`}
+        description={l`You can adjust your interests at any time from "Content and media" settings.`}
+        confirmButtonCta={l({
+          message: `OK`,
+          comment: `Confirm button text.`,
+        })}
         onConfirm={onConfirmClose}
       />
 
@@ -96,7 +91,7 @@ export function ExploreInterestsCard() {
           </Text>
 
           <Link
-            label={_(msg`Edit interests`)}
+            label={l`Edit interests`}
             to="/settings/interests"
             size="small"
             variant="solid"
@@ -108,7 +103,7 @@ export function ExploreInterestsCard() {
           </Link>
 
           <Button
-            label={_(msg`Hide this card`)}
+            label={l`Hide this card`}
             size="small"
             variant="ghost"
             color="secondary"

@@ -2,8 +2,7 @@ import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -46,7 +45,7 @@ export function UserBanner({
   onSelectNewBanner?: (img: PickerImage | null) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
@@ -119,7 +118,7 @@ export function UserBanner({
     <>
       <EventStopper onKeyDown={true}>
         <Menu.Root>
-          <Menu.Trigger label={_(msg`Edit avatar`)}>
+          <Menu.Trigger label={l`Edit avatar`}>
             {({props}) => (
               <Pressable {...props} testID="changeBannerBtn">
                 {banner ? (
@@ -157,7 +156,7 @@ export function UserBanner({
               {IS_NATIVE && (
                 <Menu.Item
                   testID="changeBannerCameraBtn"
-                  label={_(msg`Upload from Camera`)}
+                  label={l`Upload from Camera`}
                   onPress={onOpenCamera}>
                   <Menu.ItemText>
                     <Trans>Upload from Camera</Trans>
@@ -168,7 +167,7 @@ export function UserBanner({
 
               <Menu.Item
                 testID="changeBannerLibraryBtn"
-                label={_(msg`Upload from Library`)}
+                label={l`Upload from Library`}
                 onPress={onOpenLibrary}>
                 <Menu.ItemText>
                   {IS_NATIVE ? (
@@ -186,7 +185,7 @@ export function UserBanner({
                 <Menu.Group>
                   <Menu.Item
                     testID="changeBannerRemoveBtn"
-                    label={_(msg`Remove Banner`)}
+                    label={l`Remove Banner`}
                     onPress={onRemoveBanner}>
                     <Menu.ItemText>
                       <Trans>Remove Banner</Trans>

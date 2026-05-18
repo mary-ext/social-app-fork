@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -30,7 +29,7 @@ export function StarterPackCard({
   view: AppBskyGraphDefs.StarterPackView
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
   const agent = useAgent()
@@ -49,7 +48,7 @@ export function StarterPackCard({
       listItems = await getAllListMembers(agent, view.list.uri)
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), {
+      Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
       logger.error('Failed to get list members for starter pack', {
@@ -77,7 +76,7 @@ export function StarterPackCard({
       })
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), {
+      Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
       logger.error('Failed to follow all accounts', {safeMessage: e})
@@ -92,7 +91,7 @@ export function StarterPackCard({
         })
       }
     })
-    Toast.show(_(msg`All accounts have been followed!`), {type: 'success'})
+    Toast.show(l`All accounts have been followed!`, {type: 'success'})
   }
 
   if (
@@ -125,7 +124,6 @@ export function StarterPackCard({
         numPending={profileCount}
         total={view.list?.listItemCount}
       />
-
       <View
         style={[
           a.w_full,
@@ -152,7 +150,7 @@ export function StarterPackCard({
           </Text>
         </View>
         <Button
-          label={_(msg`Follow all`)}
+          label={l`Follow all`}
           disabled={isProcessing || isFollowingAll}
           onPress={onFollowAll}
           color="secondary"

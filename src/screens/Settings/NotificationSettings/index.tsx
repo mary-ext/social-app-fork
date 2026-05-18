@@ -2,8 +2,7 @@ import {useEffect} from 'react'
 import {Linking, View} from 'react-native'
 import * as Notification from 'expo-notifications'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -39,7 +38,7 @@ const RQKEY = ['notification-permissions']
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
 export function NotificationSettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {data: settings, isError} = useNotificationSettingsQuery()
 
@@ -100,7 +99,7 @@ export function NotificationSettingsScreen({}: Props) {
           {permissions && !permissions.granted && (
             <>
               <SettingsList.PressableItem
-                label={_(msg`Enable push notifications`)}
+                label={l`Enable push notifications`}
                 onPress={onRequestPermissions}>
                 <SettingsList.ItemIcon icon={HapticIcon} />
                 <SettingsList.ItemText>
@@ -119,7 +118,7 @@ export function NotificationSettingsScreen({}: Props) {
           )}
           <View style={[a.gap_sm]}>
             <SettingsList.LinkItem
-              label={_(msg`Settings for like notifications`)}
+              label={l`Settings for like notifications`}
               to={{screen: 'LikeNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={HeartIcon} />
@@ -130,7 +129,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for new follower notifications`)}
+              label={l`Settings for new follower notifications`}
               to={{screen: 'NewFollowerNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={PersonPlusIcon} />
@@ -141,7 +140,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for reply notifications`)}
+              label={l`Settings for reply notifications`}
               to={{screen: 'ReplyNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={BubbleIcon} />
@@ -152,7 +151,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for mention notifications`)}
+              label={l`Settings for mention notifications`}
               to={{screen: 'MentionNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={AtIcon} />
@@ -163,7 +162,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for quote notifications`)}
+              label={l`Settings for quote notifications`}
               to={{screen: 'QuoteNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={CloseQuoteIcon} />
@@ -174,7 +173,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for repost notifications`)}
+              label={l`Settings for repost notifications`}
               to={{screen: 'RepostNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={RepostIcon} />
@@ -185,7 +184,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for activity from others`)}
+              label={l`Settings for activity from others`}
               to={{screen: 'ActivityNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={BellRingingIcon} />
@@ -198,9 +197,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(
-                msg`Settings for notifications for likes of your reposts`,
-              )}
+              label={l`Settings for notifications for likes of your reposts`}
               to={{screen: 'LikesOnRepostsNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={LikeRepostIcon} />
@@ -213,9 +210,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(
-                msg`Settings for notifications for reposts of your reposts`,
-              )}
+              label={l`Settings for notifications for reposts of your reposts`}
               to={{screen: 'RepostsOnRepostsNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={RepostRepostIcon} />
@@ -228,7 +223,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for notifications for everything else`)}
+              label={l`Settings for notifications for everything else`}
               to={{screen: 'MiscellaneousNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={ShapesIcon} />
@@ -256,38 +251,38 @@ function SettingPreview({
     | AppBskyNotificationDefs.Preference
     | AppBskyNotificationDefs.FilterablePreference
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   if (!preference) {
     return null
   } else {
     if ('include' in preference) {
       if (preference.include === 'all') {
         if (preference.list && preference.push) {
-          return _(msg`In-app, Push, Everyone`)
+          return l`In-app, Push, Everyone`
         } else if (preference.list) {
-          return _(msg`In-app, Everyone`)
+          return l`In-app, Everyone`
         } else if (preference.push) {
-          return _(msg`Push, Everyone`)
+          return l`Push, Everyone`
         }
       } else if (preference.include === 'follows') {
         if (preference.list && preference.push) {
-          return _(msg`In-app, Push, People you follow`)
+          return l`In-app, Push, People you follow`
         } else if (preference.list) {
-          return _(msg`In-app, People you follow`)
+          return l`In-app, People you follow`
         } else if (preference.push) {
-          return _(msg`Push, People you follow`)
+          return l`Push, People you follow`
         }
       }
     } else {
       if (preference.list && preference.push) {
-        return _(msg`In-app, Push`)
+        return l`In-app, Push`
       } else if (preference.list) {
-        return _(msg`In-app`)
+        return l`In-app`
       } else if (preference.push) {
-        return _(msg`Push`)
+        return l`Push`
       }
     }
   }
 
-  return _(msg`Off`)
+  return l`Off`
 }

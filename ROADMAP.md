@@ -638,7 +638,7 @@ returns nothing and passes.
   # apply to each result, then verify:
   rg "from '#/view/com/util/Toast'" src
   ```
-- [ ] **`file/lingui-v5.js`:**
+- [x] **`file/lingui-v5.js`:**
   ```sh
   # Enumerate then batch:
   rg -l "from '@lingui/core/macro'|_\\(msg\`" src \
@@ -647,7 +647,7 @@ returns nothing and passes.
   rg "from '@lingui/core/macro'|_\\(msg\`" src
   ```
   This is mechanical but produces a large diff. Land as its own commit titled something like "Apply lingui v5 codemod across remaining files". After landing, smoke-test the UI — codemod failures usually show up as runtime-only translation lookups returning the raw key
-- [ ] **Per-codemod gate:** after each sweep, `yarn typecheck && yarn build-web` before moving on
+- [x] **Per-codemod gate:** after each sweep, `yarn typecheck && yarn build-web` before moving on
 - [ ] `rm -rf .jscodeshift` in a final commit
 - [ ] Cross-reference CLAUDE.md's "Refactor existing uses of `` _(msg`foo`) `` to use `` l`foo` ``" — this phase is the bulk-execution of that guidance; CLAUDE.md can stop mentioning it once 2.10 lands
 

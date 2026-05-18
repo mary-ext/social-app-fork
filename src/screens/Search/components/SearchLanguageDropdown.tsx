@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
@@ -22,7 +21,7 @@ export function SearchLanguageDropdown({
   value: string
   onChange(value: string): void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {appLanguage, contentLanguages, primaryLanguage} = useLanguagePrefs()
 
   const languages = useMemo(() => {
@@ -62,14 +61,12 @@ export function SearchLanguageDropdown({
   }, [appLanguage, contentLanguages, primaryLanguage])
 
   const currentLanguageLabel =
-    languages.find(lang => lang.value === value)?.label ?? _(msg`All languages`)
+    languages.find(lang => lang.value === value)?.label ?? l`All languages`
 
   return (
     <Menu.Root>
       <Menu.Trigger
-        label={_(
-          msg`Filter search by language (currently: ${currentLanguageLabel})`,
-        )}>
+        label={l`Filter search by language (currently: ${currentLanguageLabel})`}>
         {({props}) => (
           <Button
             {...props}
@@ -97,7 +94,7 @@ export function SearchLanguageDropdown({
         <Menu.LabelText>
           <Trans>Filter search by language</Trans>
         </Menu.LabelText>
-        <Menu.Item label={_(msg`All languages`)} onPress={() => onChange('')}>
+        <Menu.Item label={l`All languages`} onPress={() => onChange('')}>
           <Menu.ItemText>
             <Trans>All languages</Trans>
           </Menu.ItemText>

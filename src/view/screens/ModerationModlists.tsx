@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -20,7 +19,7 @@ import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const createListDialogControl = useDialogControl()
 
@@ -53,7 +52,7 @@ export function ModerationModlistsScreen({}: Props) {
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Button
-          label={_(msg`New list`)}
+          label={l`New list`}
           testID="newModListBtn"
           color="secondary"
           variant="solid"
@@ -65,9 +64,7 @@ export function ModerationModlistsScreen({}: Props) {
           </ButtonText>
         </Button>
       </Layout.Header.Outer>
-
       <MyLists filter="mod" style={a.flex_grow} />
-
       <CreateOrEditListDialog
         purpose="app.bsky.graph.defs#modlist"
         control={createListDialogControl}

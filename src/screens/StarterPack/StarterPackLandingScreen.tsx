@@ -8,8 +8,7 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {JOINED_THIS_WEEK} from '#/lib/constants'
@@ -118,7 +117,7 @@ function LandingScreenLoaded({
   moderationOpts: ModerationOpts
 }) {
   const {creator, listItemsSample, feeds} = starterPack
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -202,7 +201,7 @@ function LandingScreenLoaded({
           ) : null}
           <View style={[a.gap_sm]}>
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={l`Join Bluesky`}
               onPress={onJoinPress}
               variant="solid"
               color="primary"
@@ -304,7 +303,7 @@ function LandingScreenLoaded({
             ) : null}
           </View>
           <Button
-            label={_(msg`Create an account without using this starter pack`)}
+            label={l`Create an account without using this starter pack`}
             variant="solid"
             color="secondary"
             size="large"

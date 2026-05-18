@@ -2,8 +2,8 @@ import {type JSX, useCallback} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
@@ -58,7 +58,7 @@ type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
   const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
@@ -141,7 +141,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
-
       <Animated.View
         style={[
           styles.bottomBar,
@@ -174,7 +173,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressHome}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Home`)}
+              accessibilityLabel={l`Home`}
               accessibilityHint=""
             />
             <Btn
@@ -194,7 +193,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               }
               onPress={onPressSearch}
               accessibilityRole="search"
-              accessibilityLabel={_(msg`Search`)}
+              accessibilityLabel={l`Search`}
               accessibilityHint=""
             />
             <Btn
@@ -217,15 +216,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               hasNew={numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Chat`)}
+              accessibilityLabel={l`Chat`}
               accessibilityHint={
                 numUnreadMessages.count > 0
-                  ? _(
-                      plural(numUnreadMessages.numUnread ?? 0, {
-                        one: '# unread item',
-                        other: '# unread items',
-                      }),
-                    )
+                  ? plural(numUnreadMessages.numUnread ?? 0, {
+                      one: '# unread item',
+                      other: '# unread items',
+                    })
                   : ''
               }
             />
@@ -248,16 +245,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               notificationCount={numUnreadNotifications}
               accessible={true}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Notifications`)}
+              accessibilityLabel={l`Notifications`}
               accessibilityHint={
                 numUnreadNotifications === ''
                   ? ''
-                  : _(
-                      plural(numUnreadNotifications ?? 0, {
-                        one: '# unread item',
-                        other: '# unread items',
-                      }),
-                    )
+                  : plural(numUnreadNotifications ?? 0, {
+                      one: '# unread item',
+                      other: '# unread items',
+                    })
               }
             />
             <Btn
@@ -291,7 +286,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               onPress={onPressProfile}
               onLongPress={onLongPressProfile}
               accessibilityRole="tab"
-              accessibilityLabel={_(msg`Profile`)}
+              accessibilityLabel={l`Profile`}
               accessibilityHint=""
             />
           </>
@@ -320,7 +315,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  label={_(msg`Create account`)}
+                  label={l`Create account`}
                   size="small"
                   variant="solid"
                   color="primary">
@@ -330,7 +325,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 </Button>
                 <Button
                   onPress={showSignIn}
-                  label={_(msg`Sign in`)}
+                  label={l`Sign in`}
                   size="small"
                   variant="solid"
                   color="secondary">

@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -78,7 +77,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()
   const {gtTablet} = useBreakpoints()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const showDrawer = !gtTablet && isDrawerOpen
   const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
 
@@ -108,7 +107,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
                 setDrawerOpen(false)
               }
             }}
-            accessibilityLabel={_(msg`Close drawer menu`)}
+            accessibilityLabel={l`Close drawer menu`}
             accessibilityHint="">
             <View
               style={[

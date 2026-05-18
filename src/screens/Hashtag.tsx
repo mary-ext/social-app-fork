@@ -1,8 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -43,7 +42,7 @@ export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const decodedTag = useMemo(() => {
     return decodeURIComponent(tag)
@@ -85,7 +84,7 @@ export default function HashtagScreen({
   const sections = useMemo(() => {
     return [
       {
-        title: _(msg`Top`),
+        title: l`Top`,
         component: (
           <HashtagScreenTab
             fullTag={fullTag}
@@ -96,7 +95,7 @@ export default function HashtagScreen({
         ),
       },
       {
-        title: _(msg`Latest`),
+        title: l`Latest`,
         component: (
           <HashtagScreenTab
             fullTag={fullTag}
@@ -107,7 +106,7 @@ export default function HashtagScreen({
         ),
       },
     ]
-  }, [_, fullTag, author, activeTab])
+  }, [l, fullTag, author, activeTab])
 
   return (
     <Layout.Screen>
@@ -121,13 +120,13 @@ export default function HashtagScreen({
                 <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
                 {author && (
                   <Layout.Header.SubtitleText>
-                    {_(msg`From @${sanitizedAuthor}`)}
+                    {l`From @${sanitizedAuthor}`}
                   </Layout.Header.SubtitleText>
                 )}
               </Layout.Header.Content>
               <Layout.Header.Slot>
                 <Button
-                  label={_(msg`Share`)}
+                  label={l`Share`}
                   size="small"
                   variant="ghost"
                   color="primary"
@@ -162,7 +161,7 @@ function HashtagScreenTab({
   sort: 'top' | 'latest'
   active: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = useState(false)
   const t = useTheme()
@@ -220,19 +219,15 @@ function HashtagScreenTab({
 
   if (!hasSession) {
     return (
-      <SearchError
-        title={_(msg`Search is currently unavailable when logged out`)}>
+      <SearchError title={l`Search is currently unavailable when logged out`}>
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
           <Trans>
-            <InlineLinkText
-              label={_(msg`Sign in`)}
-              to={'#'}
-              onPress={showSignIn}>
+            <InlineLinkText label={l`Sign in`} to={'#'} onPress={showSignIn}>
               Sign in
             </InlineLinkText>
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
-              label={_(msg`Create an account`)}
+              label={l`Create an account`}
               to={'#'}
               onPress={showCreateAccount}>
               create an account
@@ -256,7 +251,7 @@ function HashtagScreenTab({
           isError={isError}
           onRetry={refetch}
           emptyType="results"
-          emptyMessage={_(msg`We couldn't find any results for that tag.`)}
+          emptyMessage={l`We couldn't find any results for that tag.`}
         />
       ) : (
         <List

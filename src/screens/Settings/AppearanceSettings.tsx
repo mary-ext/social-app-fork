@@ -5,8 +5,7 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {
@@ -29,7 +28,7 @@ import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {fonts} = useAlf()
 
   const {colorMode, darkTheme} = useThemePrefs()
@@ -78,19 +77,19 @@ export function AppearanceSettingsScreen({}: Props) {
         <Layout.Content>
           <SettingsList.Container>
             <AppearanceToggleButtonGroup
-              title={_(msg`Color mode`)}
+              title={l`Color mode`}
               icon={PhoneIcon}
               items={[
                 {
-                  label: _(msg`System`),
+                  label: l`System`,
                   name: 'system',
                 },
                 {
-                  label: _(msg`Light`),
+                  label: l`Light`,
                   name: 'light',
                 },
                 {
-                  label: _(msg`Dark`),
+                  label: l`Dark`,
                   name: 'dark',
                 },
               ]}
@@ -103,15 +102,15 @@ export function AppearanceSettingsScreen({}: Props) {
                 entering={native(FadeInUp)}
                 exiting={native(FadeOutUp)}>
                 <AppearanceToggleButtonGroup
-                  title={_(msg`Dark theme`)}
+                  title={l`Dark theme`}
                   icon={MoonIcon}
                   items={[
                     {
-                      label: _(msg`Dim`),
+                      label: l`Dim`,
                       name: 'dim',
                     },
                     {
-                      label: _(msg`Dark`),
+                      label: l`Dark`,
                       name: 'dark',
                     },
                   ]}
@@ -125,18 +124,16 @@ export function AppearanceSettingsScreen({}: Props) {
               <SettingsList.Divider />
 
               <AppearanceToggleButtonGroup
-                title={_(msg`Font`)}
-                description={_(
-                  msg`For the best experience, we recommend using the theme font.`,
-                )}
+                title={l`Font`}
+                description={l`For the best experience, we recommend using the theme font.`}
                 icon={Aa}
                 items={[
                   {
-                    label: _(msg`System`),
+                    label: l`System`,
                     name: 'system',
                   },
                   {
-                    label: _(msg`Theme`),
+                    label: l`Theme`,
                     name: 'theme',
                   },
                 ]}
@@ -145,19 +142,19 @@ export function AppearanceSettingsScreen({}: Props) {
               />
 
               <AppearanceToggleButtonGroup
-                title={_(msg`Font size`)}
+                title={l`Font size`}
                 icon={TextSize}
                 items={[
                   {
-                    label: _(msg`Smaller`),
+                    label: l`Smaller`,
                     name: '-1',
                   },
                   {
-                    label: _(msg`Default`),
+                    label: l`Default`,
                     name: '0',
                   },
                   {
-                    label: _(msg`Larger`),
+                    label: l`Larger`,
                     name: '1',
                   },
                 ]}

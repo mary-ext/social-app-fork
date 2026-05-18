@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {useAutoplayDisabled} from '#/state/preferences'
@@ -21,7 +20,7 @@ export function VideoPreview({
   isActivePost: boolean
   clear: () => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
   const autoplayDisabled = useAutoplayDisabled()
@@ -63,7 +62,7 @@ export function VideoPreview({
                 playsInline
                 onError={err => {
                   console.error('Error loading video', err)
-                  Toast.show(_(msg`Could not process your video`), {
+                  Toast.show(l`Could not process your video`, {
                     type: 'error',
                   })
                   clear()

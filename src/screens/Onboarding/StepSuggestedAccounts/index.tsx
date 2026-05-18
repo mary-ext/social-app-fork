@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
@@ -36,7 +35,7 @@ import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
 export function StepSuggestedAccounts() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
@@ -114,7 +113,7 @@ export function StepSuggestedAccounts() {
       return followableDids
     },
     onSuccess: newlyFollowed => {
-      toast.show(_(msg`Followed all accounts!`), {type: 'success'})
+      toast.show(l`Followed all accounts!`, {type: 'success'})
       setFollowedUsers(followed => [...followed, ...newlyFollowed])
     },
     onError: e => {
@@ -124,10 +123,9 @@ export function StepSuggestedAccounts() {
           safeMessage: e,
         },
       )
-      toast.show(
-        _(msg`Failed to follow all suggested accounts, please try again`),
-        {type: 'error'},
-      )
+      toast.show(l`Failed to follow all suggested accounts, please try again`, {
+        type: 'error',
+      })
     },
   })
 
@@ -160,7 +158,6 @@ export function StepSuggestedAccounts() {
           Suggested for you
         </Trans>
       </OnboardingTitleText>
-
       <View
         style={[
           a.overflow_hidden,
@@ -174,12 +171,10 @@ export function StepSuggestedAccounts() {
         <TabBar
           selectedInterest={selectedInterest}
           onSelectInterest={setSelectedInterest}
-          defaultTabLabel={_(
-            msg({
-              message: 'All',
-              comment: 'the default tab in the interests tab bar',
-            }),
-          )}
+          defaultTabLabel={l({
+            message: 'All',
+            comment: 'the default tab in the interests tab bar',
+          })}
           selectedInterests={state.interestsStepResults.selectedInterests}
         />
 
@@ -234,7 +229,6 @@ export function StepSuggestedAccounts() {
           </View>
         )}
       </View>
-
       <OnboardingControls.Portal>
         {isError ? (
           <View style={[a.gap_md, gtMobile ? a.flex_row : a.flex_col]}>
@@ -242,7 +236,7 @@ export function StepSuggestedAccounts() {
               disabled={isRefetching}
               color="secondary"
               size="large"
-              label={_(msg`Retry`)}
+              label={l`Retry`}
               onPress={() => void refetch()}>
               <ButtonText>
                 <Trans>Retry</Trans>
@@ -252,7 +246,7 @@ export function StepSuggestedAccounts() {
             <Button
               color="secondary"
               size="large"
-              label={_(msg`Skip to next step`)}
+              label={l`Skip to next step`}
               onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Skip</Trans>
@@ -265,7 +259,7 @@ export function StepSuggestedAccounts() {
               disabled={!canFollowAll}
               color="secondary"
               size="large"
-              label={_(msg`Follow all accounts`)}
+              label={l`Follow all accounts`}
               onPress={() => followAll()}>
               <ButtonText>
                 <Trans>Follow all</Trans>
@@ -276,7 +270,7 @@ export function StepSuggestedAccounts() {
               disabled={isFollowingAll}
               color="primary"
               size="large"
-              label={_(msg`Continue to next step`)}
+              label={l`Continue to next step`}
               onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Continue</Trans>
@@ -302,7 +296,7 @@ function TabBar({
   hideDefaultTab?: boolean
   defaultTabLabel?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
@@ -321,7 +315,7 @@ function TabBar({
         hideDefaultTab
           ? interestsDisplayNames
           : {
-              all: defaultTabLabel || _(msg`For You`),
+              all: defaultTabLabel || l`For You`,
               ...interestsDisplayNames,
             }
       }

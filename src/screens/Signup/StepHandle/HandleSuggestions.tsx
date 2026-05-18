@@ -1,7 +1,6 @@
 import Animated, {Easing, FadeInDown, FadeOut} from 'react-native-reanimated'
 import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {atoms as a, native, useTheme} from '#/alf'
@@ -19,7 +18,7 @@ export function HandleSuggestions({
   ) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Animated.View
@@ -39,12 +38,10 @@ export function HandleSuggestions({
       ]}>
       {suggestions.map((suggestion, index) => (
         <Button
-          label={_(
-            msg({
-              message: `Select ${suggestion.handle}`,
-              comment: `Accessibility label for a username suggestion in the account creation flow`,
-            }),
-          )}
+          label={l({
+            message: `Select ${suggestion.handle}`,
+            comment: `Accessibility label for a username suggestion in the account creation flow`,
+          })}
           key={index}
           onPress={() => onSelect(suggestion)}
           hoverStyle={[t.atoms.bg_contrast_25]}

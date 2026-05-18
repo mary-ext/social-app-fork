@@ -1,6 +1,5 @@
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -76,7 +75,7 @@ function Badge({
   width: number
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
 
@@ -87,8 +86,8 @@ function Badge({
       <Button
         label={
           state.profile.isViewer
-            ? _(msg`View your verifications`)
-            : _(msg`View this user's verifications`)
+            ? l`View your verifications`
+            : l`View this user's verifications`
         }
         hitSlop={20}
         onPress={evt => {

@@ -1,8 +1,8 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {msg, plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigationState} from '@react-navigation/native'
 
@@ -46,7 +46,7 @@ import {Text} from '#/components/Typography'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
@@ -79,7 +79,6 @@ export function BottomBarWeb() {
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
-
       <Animated.View
         role="navigation"
         style={[
@@ -218,7 +217,7 @@ export function BottomBarWeb() {
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
                   onPress={showCreateAccount}
-                  label={_(msg`Create account`)}
+                  label={l`Create account`}
                   size="small"
                   variant="solid"
                   color="primary">
@@ -228,7 +227,7 @@ export function BottomBarWeb() {
                 </Button>
                 <Button
                   onPress={showSignIn}
-                  label={_(msg`Sign in`)}
+                  label={l`Sign in`}
                   size="small"
                   variant="solid"
                   color="secondary">
@@ -254,7 +253,7 @@ const NavItem: React.FC<{
   onLongPress?: () => void
 }> = ({children, href, routeName, hasNew, notificationCount, onLongPress}) => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const currentRoute = useNavigationState(state => {
     if (!state) {
@@ -296,12 +295,10 @@ const NavItem: React.FC<{
             styles.notificationCountWeb,
             {backgroundColor: t.palette.primary_500},
           ]}
-          aria-label={_(
-            msg`${plural(notificationCount, {
-              one: '# unread item',
-              other: '# unread items',
-            })}`,
-          )}>
+          aria-label={l`${plural(notificationCount, {
+            one: '# unread item',
+            other: '# unread items',
+          })}`}>
           <Text style={styles.notificationCountLabel}>{notificationCount}</Text>
         </View>
       ) : hasNew ? (

@@ -1,8 +1,7 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
@@ -40,14 +39,12 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
   params: ReportDialogParams
   currentScreen: 'list' | 'conversation'
 }): React.ReactNode {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(
-          msg`Would you like to block this user and/or delete this conversation?`,
-        )}
+        label={l`Would you like to block this user and/or delete this conversation?`}
         style={[web({maxWidth: 400})]}>
         <DialogInner params={params} currentScreen={currentScreen} />
         <Dialog.Close />
@@ -64,7 +61,7 @@ function DialogInner({
   currentScreen: 'list' | 'conversation'
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogContext()
   const {
     data: profile,
@@ -90,7 +87,7 @@ function DialogInner({
       </View>
 
       <Button
-        label={_(msg`Close`)}
+        label={l`Close`}
         onPress={() => control.close()}
         size={platform({native: 'small', web: 'large'})}
         color="secondary">
@@ -117,7 +114,7 @@ function DoneStep({
   currentScreen: 'list' | 'conversation'
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const control = Dialog.useDialogContext()
   const {gtMobile} = useBreakpoints()
@@ -135,23 +132,23 @@ function DoneStep({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not leave chat`), {
+      Toast.show(l`Could not leave chat`, {
         type: 'error',
       })
     },
   })
 
-  let btnText = _(msg`Done`)
+  let btnText = l`Done`
   let toastMsg: string | undefined
   if (actions.includes('leave') && actions.includes('block')) {
-    btnText = _(msg`Block and Delete`)
-    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+    btnText = l`Block and Delete`
+    toastMsg = l({message: 'Conversation deleted', context: 'toast'})
   } else if (actions.includes('leave')) {
-    btnText = _(msg`Delete Conversation`)
-    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+    btnText = l`Delete Conversation`
+    toastMsg = l({message: 'Conversation deleted', context: 'toast'})
   } else if (actions.includes('block')) {
-    btnText = _(msg`Block User`)
-    toastMsg = _(msg({message: 'User blocked', context: 'toast'}))
+    btnText = l`Block User`
+    toastMsg = l({message: 'User blocked', context: 'toast'})
   }
 
   const onPressPrimaryAction = () => {
@@ -181,17 +178,17 @@ function DoneStep({
         </Text>
       </View>
       <Toggle.Group
-        label={_(msg`Block user and/or delete this conversation`)}
+        label={l`Block user and/or delete this conversation`}
         values={actions}
         onChange={setActions}>
         <View style={[a.gap_md]}>
-          <Toggle.Item name="block" label={_(msg`Block user`)}>
+          <Toggle.Item name="block" label={l`Block user`}>
             <Toggle.Checkbox />
             <Toggle.LabelText style={[a.text_md]}>
               <Trans>Block user</Trans>
             </Toggle.LabelText>
           </Toggle.Item>
-          <Toggle.Item name="leave" label={_(msg`Delete conversation`)}>
+          <Toggle.Item name="leave" label={l`Delete conversation`}>
             <Toggle.Checkbox />
             <Toggle.LabelText style={[a.text_md]}>
               <Trans>Delete conversation</Trans>
@@ -199,7 +196,6 @@ function DoneStep({
           </Toggle.Item>
         </View>
       </Toggle.Group>
-
       <View style={[a.gap_sm]}>
         <Button
           label={btnText}
@@ -209,7 +205,7 @@ function DoneStep({
           <ButtonText>{btnText}</ButtonText>
         </Button>
         <Button
-          label={_(msg`Close`)}
+          label={l`Close`}
           onPress={() => control.close()}
           size="large"
           color="secondary">

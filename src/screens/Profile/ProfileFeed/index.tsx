@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -52,7 +51,7 @@ export function ProfileFeedScreen(props: Props) {
   const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
     ? {feedCacheKey: props.route.params.feedCacheKey}
     : undefined
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const uri = useMemo(
     () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
@@ -70,7 +69,7 @@ export function ProfileFeedScreen(props: Props) {
       <Layout.Screen testID="profileFeedScreenError">
         <ErrorScreen
           showHeader
-          title={_(msg`Could not load feed`)}
+          title={l`Could not load feed`}
           message={cleanError(error)}
           onPressTryAgain={() => void refetch()}
         />
@@ -131,7 +130,7 @@ export function ProfileFeedScreenInner({
   feedInfo: FeedSourceFeedInfo
   feedParams: FeedParams | undefined
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {hasSession} = useSession()
   const {openComposer} = useOpenComposer()
   const isScreenFocused = useIsFocused()
@@ -168,10 +167,10 @@ export function ProfileFeedScreenInner({
       <EmptyState
         icon={HashtagWideIcon}
         iconSize="2xl"
-        message={_(msg`This feed is empty.`)}
+        message={l`This feed is empty.`}
       />
     )
-  }, [_])
+  }, [l])
 
   const isVideoFeed = useMemo(() => {
     const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
@@ -184,7 +183,6 @@ export function ProfileFeedScreenInner({
   return (
     <>
       <ProfileFeedHeader info={feedInfo} />
-
       <FeedFeedbackProvider value={feedFeedback}>
         <PostFeed
           enabled
@@ -199,22 +197,20 @@ export function ProfileFeedScreenInner({
           isVideoFeed={isVideoFeed}
         />
       </FeedFeedbackProvider>
-
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
           onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
+          label={l`Load new posts`}
           showIndicator={hasNew}
         />
       )}
-
       {hasSession && (
         <FAB
           testID="composeFAB"
           onPress={() => openComposer({logContext: 'Fab'})}
           icon={<EditBigIcon size="lg" fill={t.palette.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={l`New post`}
           accessibilityHint=""
         />
       )}

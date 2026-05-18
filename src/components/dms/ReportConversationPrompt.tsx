@@ -1,5 +1,4 @@
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
@@ -9,16 +8,14 @@ export function ReportConversationPrompt({
 }: {
   control: DialogControlProps
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   return (
     <Prompt.Basic
       control={control}
-      title={_(msg`Report conversation`)}
-      description={_(
-        msg`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`,
-      )}
-      confirmButtonCta={_(msg`I understand`)}
+      title={l`Report conversation`}
+      description={l`To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue.`}
+      confirmButtonCta={l`I understand`}
       onConfirm={() => {}}
       showCancel={false}
     />

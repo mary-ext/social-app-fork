@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {
@@ -14,7 +13,7 @@ import {IS_WEB} from '#/env'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {resumeSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
@@ -36,10 +35,10 @@ export function useAccountSwitcher() {
             history.pushState(null, '', '/')
           }
           await resumeSession(account, true)
-          Toast.show(_(msg`Signed in as @${account.handle}`))
+          Toast.show(l`Signed in as @${account.handle}`)
         } else {
           requestSwitchToAccount({requestedAccount: account.did})
-          Toast.show(_(msg`Please sign in as @${account.handle}`), {
+          Toast.show(l`Please sign in as @${account.handle}`, {
             type: 'warning',
           })
         }
@@ -48,14 +47,14 @@ export function useAccountSwitcher() {
           message: e.message,
         })
         requestSwitchToAccount({requestedAccount: account.did})
-        Toast.show(_(msg`Please sign in as @${account.handle}`), {
+        Toast.show(l`Please sign in as @${account.handle}`, {
           type: 'warning',
         })
       } finally {
         setPendingDid(null)
       }
     },
-    [_, resumeSession, requestSwitchToAccount, pendingDid],
+    [l, resumeSession, requestSwitchToAccount, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}

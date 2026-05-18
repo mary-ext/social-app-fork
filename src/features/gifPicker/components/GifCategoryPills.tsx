@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {type MessageDescriptor} from '@lingui/core'
-import {msg} from '@lingui/core/macro'
+import {defineMessage} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -32,7 +32,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'recents',
     icon: Clock,
-    label: msg({
+    label: defineMessage({
       message: 'Recent GIFs',
       comment:
         'Accessibility label for the icon-only pill that shows previously selected GIFs in the GIF picker.',
@@ -42,7 +42,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'trending',
     icon: Trending,
-    label: msg({
+    label: defineMessage({
       message: 'Trending GIFs',
       comment:
         'Accessibility label for the icon-only pill that shows currently trending/featured GIFs in the GIF picker.',
@@ -52,7 +52,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'love',
     icon: Heart,
-    label: msg({
+    label: defineMessage({
       message: 'Love GIFs',
       comment:
         'Accessibility label for the icon-only pill that filters the GIF picker to GIFs about love/affection.',
@@ -62,7 +62,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'happy',
     icon: EmojiSmile,
-    label: msg({
+    label: defineMessage({
       message: 'Happy GIFs',
       comment:
         'Accessibility label for the icon-only pill that filters the GIF picker to happy/joyful GIFs.',
@@ -72,7 +72,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'sad',
     icon: EmojiSad,
-    label: msg({
+    label: defineMessage({
       message: 'Sad GIFs',
       comment:
         'Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.',
@@ -82,7 +82,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'party',
     icon: Celebrate,
-    label: msg({
+    label: defineMessage({
       message: 'Party GIFs',
       comment:
         'Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.',
@@ -92,7 +92,7 @@ export const GIF_CATEGORIES: readonly GifCategory[] = [
   {
     id: 'yes',
     icon: Shaka,
-    label: msg({
+    label: defineMessage({
       message: 'Yes GIFs',
       comment:
         'Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.',
