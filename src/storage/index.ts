@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useState} from 'react'
-import {MMKV} from '@bsky.app/react-native-mmkv'
 
 import {type Account, type Device} from '#/storage/schema'
 
@@ -11,10 +10,27 @@ export * from '#/storage/schema'
  */
 export class Storage<Scopes extends unknown[], Schema> {
   protected sep = ':'
-  protected store: MMKV
+  protected id: string
+  protected listeners = new Map<string, Set<() => void>>()
 
   constructor({id}: {id: string}) {
-    this.store = new MMKV({id})
+    this.id = id
+  }
+
+  protected scopedKey(scopes: unknown[]): string {
+    return `${this.id}${this.sep}${scopes.join(this.sep)}`
+  }
+
+  protected emit(key: string) {
+    this.listeners.get(key)?.forEach(callback => callback())
+  }
+
+  protected get localStorage(): globalThis.Storage | undefined {
+    try {
+      return globalThis.localStorage
+    } catch {
+      return undefined
+    }
   }
 
   /**
@@ -28,7 +44,13 @@ export class Storage<Scopes extends unknown[], Schema> {
     data: Schema[Key],
   ): void {
     // stored as `{ data: <value> }` structure to ease stringification
-    this.store.set(scopes.join(this.sep), JSON.stringify({data}))
+    const key = this.scopedKey(scopes)
+    try {
+      this.localStorage?.setItem(key, JSON.stringify({data}))
+      this.emit(key)
+    } catch {
+      // Expected in restricted/private modes or quota exhaustion.
+    }
   }
 
   /**
@@ -40,10 +62,19 @@ export class Storage<Scopes extends unknown[], Schema> {
   get<Key extends keyof Schema>(
     scopes: [...Scopes, Key],
   ): Schema[Key] | undefined {
-    const res = this.store.getString(scopes.join(this.sep))
+    let res: string | null | undefined
+    try {
+      res = this.localStorage?.getItem(this.scopedKey(scopes))
+    } catch {
+      return undefined
+    }
     if (!res) return undefined
     // parsed from storage structure `{ data: <value> }`
-    return JSON.parse(res).data
+    try {
+      return JSON.parse(res).data
+    } catch {
+      return undefined
+    }
   }
 
   /**
@@ -53,7 +84,13 @@ export class Storage<Scopes extends unknown[], Schema> {
    *   `remove([scope, key])`
    */
   remove<Key extends keyof Schema>(scopes: [...Scopes, Key]) {
-    this.store.delete(scopes.join(this.sep))
+    const key = this.scopedKey(scopes)
+    try {
+      this.localStorage?.removeItem(key)
+      this.emit(key)
+    } catch {
+      // Expected in restricted/private modes.
+    }
   }
 
   /**
@@ -70,7 +107,24 @@ export class Storage<Scopes extends unknown[], Schema> {
    * For debugging purposes
    */
   removeAll() {
-    this.store.clearAll()
+    const storage = this.localStorage
+    if (!storage) return
+    const prefix = `${this.id}${this.sep}`
+    const keys: string[] = []
+    try {
+      for (let i = 0; i < storage.length; i++) {
+        const key = storage.key(i)
+        if (key?.startsWith(prefix)) {
+          keys.push(key)
+        }
+      }
+      for (const key of keys) {
+        storage.removeItem(key)
+        this.emit(key)
+      }
+    } catch {
+      // Expected in restricted/private modes.
+    }
   }
 
   /**
@@ -82,11 +136,30 @@ export class Storage<Scopes extends unknown[], Schema> {
     scopes: [...Scopes, Key],
     callback: () => void,
   ) {
-    return this.store.addOnValueChangedListener(key => {
-      if (key === scopes.join(this.sep)) {
+    const key = this.scopedKey(scopes)
+    let callbacks = this.listeners.get(key)
+    if (!callbacks) {
+      callbacks = new Set()
+      this.listeners.set(key, callbacks)
+    }
+    callbacks.add(callback)
+
+    const onStorage = (event: StorageEvent) => {
+      if (event.storageArea === this.localStorage && event.key === key) {
         callback()
       }
-    })
+    }
+    globalThis.addEventListener?.('storage', onStorage)
+
+    return {
+      remove: () => {
+        callbacks.delete(callback)
+        if (callbacks.size === 0) {
+          this.listeners.delete(key)
+        }
+        globalThis.removeEventListener?.('storage', onStorage)
+      },
+    }
   }
 }
 

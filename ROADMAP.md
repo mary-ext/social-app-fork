@@ -550,24 +550,24 @@ returns nothing and passes.
 
 **Checklist:**
 
-- [ ] **Audit MMKV importers before removal:**
+- [x] **Audit MMKV importers before removal:**
   ```sh
   rg -n "@bsky.app/react-native-mmkv|new MMKV\\b|\\bMMKV\\b" src package.json
   ```
   At fork time the importers were `src/storage/index.ts`, `src/storage/archive/db/index.ts`, and `src/analytics/features/index.ts`. The analytics-features importer dies in Phase 2.2 (GrowthBook removal); the archive importer is still standing. Re-run the grep at execution time; act on what you find
-- [ ] Rewrite `src/storage/index.ts`: replace the `MMKV` import with a small `localStorage`-backed implementation. Keep the public `Storage<Scopes, Schema>` API (`get`, `set`, `remove`, `removeMany`, `removeAll`, `addOnValueChangedListener`) so callers don't change. Namespace keys with the existing `id` config (e.g. `bsky_device:<key>`)
+- [x] Rewrite `src/storage/index.ts`: replace the `MMKV` import with a small `localStorage`-backed implementation. Keep the public `Storage<Scopes, Schema>` API (`get`, `set`, `remove`, `removeMany`, `removeAll`, `addOnValueChangedListener`) so callers don't change. Namespace keys with the existing `id` config (e.g. `bsky_device:<key>`). This intentionally switches to colon-prefixed keys without migrating old web MMKV keys.
   - **localStorage key compatibility:** existing web MMKV keys are `` `${id}\${key}` `` (backslash separator), **not** `` `${id}:${key}` ``. Switching to colon-separated namespacing means losing old persisted preferences. That's acceptable for a personal fork — flag the loss explicitly. If you want non-disruptive, read-old-key-once on miss and write back under the new key
   - **`removeAll()`** must iterate this storage's namespace/prefix and remove only those keys. Do **not** call `localStorage.clear()` — it wipes other storage scopes and the persisted-query data
   - **`addOnValueChangedListener()`** must return `{remove(): void}` because callers do `sub.remove()`. Use `window.addEventListener('storage', ...)` (not `window.onstorage = ...`); filter incoming events by `event.storageArea === window.localStorage` and by the fully-namespaced key. For same-tab updates, emit manually inside `set` / `remove` / `removeAll` / `removeMany`. Preserve the JSON envelope shape the existing code uses (`JSON.stringify({data})`)
   - **Restricted-mode safety:** `localStorage.setItem` can throw in private/quota-exceeded contexts. Match the existing `src/state/persisted/index.web.ts` pattern and try/catch reads + writes
   - Verify by toggling a setting in one tab and watching another tab update without a refresh
-- [ ] **Rewrite / archive `src/storage/archive/db/index.ts`** — if it's not load-bearing for any currently-shipping screen, delete it; otherwise port to `localStorage` with the same approach as the main storage rewrite
-- [ ] Rewrite `src/state/session/agent-config.ts` (tiny — `saveLabelers` / `readLabelers` over `localStorage` with the same `agent-labelers:<did>` key shape)
-- [ ] **Rewrite `src/state/persisted/index.ts`** to use `localStorage` directly. This file imports `@react-native-async-storage/async-storage` and is the old persisted-store backbone. By this point the other AsyncStorage importers (`ageAssurance/data.tsx`, `analytics/identifiers/device.ts`) are gone from Phases 2.3 and 2.7 — so rewriting this file is the last step before Phase 2.9's `yarn remove @react-native-async-storage/async-storage`
-- [ ] Audit `src/lib/react-query.tsx`: it uses `createAsyncStoragePersister` from `@tanstack/query-async-storage-persister` backed by `#/lib/persisted-query-storage`. Keep `createAsyncStoragePersister` — the `@tanstack/query-sync-storage-persister` package is deprecated, and the async persister accepts a sync `Storage` interface. Either pass `localStorage` directly (`createAsyncStoragePersister({storage: localStorage})`) or keep routing through `#/lib/persisted-query-storage` once that module is rewritten to wrap `localStorage`
-- [ ] `yarn remove @bsky.app/react-native-mmkv` (re-check `ls patches/` for a matching patch and delete in the same commit)
-- [ ] **`@react-native-async-storage/async-storage` removal lands in Phase 2.9** (next phase) — by the time this phase finishes, Stream 2's earlier deletions have retired every importer except `src/state/persisted/index.ts`, which this phase rewrites
-- [ ] **`react-native-uuid` removal is deferred to Phase 4.8.** The native variant `src/lib/media/manip.ts` is typecheck-visible until Phase 4.6 collapses it to the web variant. Don't try to remove the dep here
+- [x] **Rewrite / archive `src/storage/archive/db/index.ts`** — if it's not load-bearing for any currently-shipping screen, delete it; otherwise port to `localStorage` with the same approach as the main storage rewrite
+- [x] Rewrite `src/state/session/agent-config.ts` (tiny — `saveLabelers` / `readLabelers` over `localStorage` with the same `agent-labelers:<did>` key shape)
+- [x] **Rewrite `src/state/persisted/index.ts`** to use `localStorage` directly. This file imports `@react-native-async-storage/async-storage` and is the old persisted-store backbone. By this point the other AsyncStorage importers (`ageAssurance/data.tsx`, `analytics/identifiers/device.ts`) are gone from Phases 2.3 and 2.7 — so rewriting this file is the last step before Phase 2.9's `yarn remove @react-native-async-storage/async-storage`
+- [x] Audit `src/lib/react-query.tsx`: it uses `createAsyncStoragePersister` from `@tanstack/query-async-storage-persister` backed by `#/lib/persisted-query-storage`. Keep `createAsyncStoragePersister` — the `@tanstack/query-sync-storage-persister` package is deprecated, and the async persister accepts a sync `Storage` interface. Either pass `localStorage` directly (`createAsyncStoragePersister({storage: localStorage})`) or keep routing through `#/lib/persisted-query-storage` once that module is rewritten to wrap `localStorage`
+- [x] `yarn remove @bsky.app/react-native-mmkv` (re-check `ls patches/` for a matching patch and delete in the same commit)
+- [x] **`@react-native-async-storage/async-storage` removal lands in Phase 2.9** (next phase) — by the time this phase finishes, Stream 2's earlier deletions have retired every importer except `src/state/persisted/index.ts`, which this phase rewrites
+- [x] **`react-native-uuid` removal is deferred to Phase 4.8.** The native variant `src/lib/media/manip.ts` is typecheck-visible until Phase 4.6 collapses it to the web variant. Don't try to remove the dep here
 
 **Done when:**
 - `rg "@bsky.app/react-native-mmkv|from 'react-native-mmkv'|\\bMMKV\\b" src package.json yarn.lock` returns nothing

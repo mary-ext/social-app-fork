@@ -1,22 +1,44 @@
-import {clear, createStore, del, get, set} from 'idb-keyval'
-
 import {type DB} from '#/storage/archive/db/types'
 
 export function create({id}: {id: string}): DB {
-  const store = createStore(id, id)
+  const prefix = `${id}:`
+  const scopedKey = (key: string) => `${prefix}${key}`
 
   return {
-    get(key: string) {
-      return get(key, store)
+    async get(key: string) {
+      try {
+        return localStorage.getItem(scopedKey(key)) ?? undefined
+      } catch {
+        return undefined
+      }
     },
-    set(key: string, value: string) {
-      return set(key, value, store)
+    async set(key: string, value: string) {
+      try {
+        localStorage.setItem(scopedKey(key), value)
+      } catch {
+        // Expected in restricted/private modes or quota exhaustion.
+      }
     },
-    delete(key: string) {
-      return del(key, store)
+    async delete(key: string) {
+      try {
+        localStorage.removeItem(scopedKey(key))
+      } catch {
+        // Expected in restricted/private modes.
+      }
     },
-    clear() {
-      return clear(store)
+    async clear() {
+      try {
+        const keys: string[] = []
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i)
+          if (key?.startsWith(prefix)) {
+            keys.push(key)
+          }
+        }
+        keys.forEach(key => localStorage.removeItem(key))
+      } catch {
+        // Expected in restricted/private modes.
+      }
     },
   }
 }

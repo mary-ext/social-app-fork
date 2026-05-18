@@ -14,11 +14,9 @@ function createId(id: string) {
 }
 
 /**
- * Creates an MMKV-based storage adapter for persisting react-query cache on native platforms.
- * Each storage instance uses a separate MMKV store identified by the provided id.
- * MMKV provides synchronous access but we wrap it in Promises for API compatibility.
+ * Creates a localStorage-backed adapter for persisting react-query cache.
  *
- * @param id - Unique identifier for this storage instance (used as MMKV store id)
+ * @param id - Unique identifier for this storage instance.
  */
 export function createPersistedQueryStorage(id: string): PersistedQueryStorage {
   const store = createArchiveDB({id: createId(id)})

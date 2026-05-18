@@ -1,12 +1,22 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 const PREFIX = 'agent-labelers'
 
+function key(did: string) {
+  return `${PREFIX}:${did}`
+}
+
 export async function saveLabelers(did: string, value: string[]) {
-  await AsyncStorage.setItem(`${PREFIX}:${did}`, JSON.stringify(value))
+  try {
+    localStorage.setItem(key(did), JSON.stringify(value))
+  } catch {
+    // Expected in restricted/private modes or quota exhaustion.
+  }
 }
 
 export async function readLabelers(did: string): Promise<string[] | undefined> {
-  const rawData = await AsyncStorage.getItem(`${PREFIX}:${did}`)
-  return rawData ? JSON.parse(rawData) : undefined
+  try {
+    const rawData = localStorage.getItem(key(did))
+    return rawData ? JSON.parse(rawData) : undefined
+  } catch {
+    return undefined
+  }
 }
