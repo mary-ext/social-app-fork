@@ -34,7 +34,6 @@ import {SigninDialog} from '#/components/dialogs/Signin'
 import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
@@ -220,8 +219,6 @@ export function Shell() {
           <ShellInner />
         </RoutesContainer>
       )}
-
-      <PassiveAnalytics />
     </View>
   )
 }

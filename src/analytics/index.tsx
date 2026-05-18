@@ -10,11 +10,10 @@ import {
 } from '#/analytics/identifiers'
 import {
   getMetadataForLogger,
-  getNavigationMetadata,
   type MergeableMetadata,
   type Metadata,
 } from '#/analytics/metadata'
-import {type Metrics, metrics} from '#/analytics/metrics'
+import {type Metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
 import * as env from '#/env'
 
@@ -75,10 +74,8 @@ const Context = createContext<AnalyticsContextType>({
     if (metadata && '__meta' in metadata) {
       delete metadata.__meta
     }
-    metrics.track(event, payload, {
-      ...metadata,
-      navigation: getNavigationMetadata(),
-    })
+    void event
+    void payload
   },
   metadata: {
     base: {
@@ -139,10 +136,9 @@ export function AnalyticsContext({
       ),
       metadata: combinedMetadata,
       metric: (event, payload, extraMetadata) => {
-        parentContext.metric(event, payload, {
-          ...combinedMetadata,
-          ...extraMetadata,
-        })
+        void event
+        void payload
+        void extraMetadata
       },
     }
     return context

@@ -25,7 +25,6 @@ import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {WelcomeModal} from '#/components/WelcomeModal'
-import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -154,8 +153,6 @@ export function Shell() {
           <ShellInner />
         </RoutesContainer>
       )}
-
-      <PassiveAnalytics />
     </View>
   )
 }

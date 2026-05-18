@@ -85,21 +85,9 @@ export const CHAT_PROXY_DID: Did =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
- * Metrics API host
- */
-export const METRICS_API_HOST: string =
-  process.env.EXPO_PUBLIC_METRICS_API_HOST || 'https://events.bsky.app'
-
-/**
  * Sentry DSN for telemetry
  */
 export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
-
-/**
- * Bitdrift API key. If undefined, Bitdrift should be disabled.
- */
-export const BITDRIFT_API_KEY: string | undefined =
-  process.env.EXPO_PUBLIC_BITDRIFT_API_KEY
 
 /**
  * GCP project ID which is required for native device attestation. On web, this

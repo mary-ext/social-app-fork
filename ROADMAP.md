@@ -475,17 +475,17 @@ returns no source hits (locale `.po` strings will be cleaned up by Phase 2.11's 
 
 ### 2.7a — Quarantine as no-op
 
-- [ ] In `src/analytics/index.tsx` and `src/analytics/metrics/index.ts`: make `metric()` a no-op and remove `MetricsClient` usage
-- [ ] In `src/view/shell/index.web.tsx` and `src/view/shell/index.tsx`: remove `<PassiveAnalytics />`
-- [ ] Delete/empty `src/analytics/PassiveAnalytics.tsx`
-- [ ] Remove from `src/env/common.ts` and `.env.example`: `EXPO_PUBLIC_METRICS_API_HOST`, `METRICS_API_HOST`
-- [ ] **Bitdrift** (observability sibling — only used for metrics-style telemetry; can go now): remove all references and the package
+- [x] In `src/analytics/index.tsx` and `src/analytics/metrics/index.ts`: make `metric()` a no-op and remove `MetricsClient` usage
+- [x] In `src/view/shell/index.web.tsx` and `src/view/shell/index.tsx`: remove `<PassiveAnalytics />`
+- [x] Delete/empty `src/analytics/PassiveAnalytics.tsx`
+- [x] Remove from `src/env/common.ts` and `.env.example`: `EXPO_PUBLIC_METRICS_API_HOST`, `METRICS_API_HOST`
+- [x] **Bitdrift** (observability sibling — only used for metrics-style telemetry; can go now): remove all references and the package
   - `yarn remove @bitdrift/react-native`
   - Remove from `src/env/common.ts` + `.env.example`: `EXPO_PUBLIC_BITDRIFT_API_KEY`
   - Remove `bitdrift` plugin entry from `app.config.js` (~line 291)
   - Remove any `import ... from '@bitdrift/react-native'` from source
   - `rg "@bitdrift|bitdrift|BITDRIFT" src .env.example package.json app.config.js`
-- [ ] Verify: `rg -n "MetricsClient|events.bsky.app|METRICS_API_HOST|experiment:viewed|feature:viewed|PassiveAnalytics|@bitdrift|bitdrift" src .env.example`
+- [x] Verify: `rg -n "MetricsClient|events.bsky.app|METRICS_API_HOST|experiment:viewed|feature:viewed|PassiveAnalytics|@bitdrift|bitdrift" src .env.example`
 
 ### 2.7b — Move (or delete) retained utilities out of `src/analytics/`
 

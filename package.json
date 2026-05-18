@@ -67,7 +67,6 @@
   "dependencies": {
     "@atproto/api": "^0.19.15",
     "@atproto/syntax": "0.5.2",
-    "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.9",
     "@bsky.app/expo-guess-language": "^0.2.8",
