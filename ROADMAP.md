@@ -853,9 +853,9 @@ returns only transitively-shadowed files.
 - [x] Remove any RNGH alias from `webpack.config.js` (fork-time webpack config has one)
 - [x] Remove the `expo.install.exclude` entries for these packages in `package.json` if present
 - [x] Remove transitive native-shaped consumers that still pulled these peers into typecheck/build (`@discord/bottom-sheet`, `react-native-drawer-layout`, `sonner-native`) and replace their shadowed native callsites with local shims
-- [ ] In `src/App.web.tsx`: confirm no `GestureHandlerRootView` or `KeyboardProvider` imports remain (fork-time `App.web.tsx` imports `KeyboardProvider`; the keyboard-controller shim work above replaces it)
-- [ ] Re-run `yarn install` and `yarn build-web` to confirm the build is clean
-- [ ] Final search — covers configs and side-effect/dynamic imports the `from '...'` form would miss:
+- [x] In `src/App.web.tsx`: confirm no `GestureHandlerRootView` or `KeyboardProvider` imports remain (fork-time `App.web.tsx` imports `KeyboardProvider`; the keyboard-controller shim work above replaces it)
+- [x] Re-run `yarn install` and `yarn build-web` to confirm the build is clean
+- [x] Final search — covers configs and side-effect/dynamic imports the `from '...'` form would miss:
   ```sh
   # Primary: import-source + side-effect form, broad path set
   rg "react-native-reanimated|react-native-gesture-handler|react-native-keyboard-controller" \
@@ -865,7 +865,7 @@ returns only transitively-shadowed files.
   rg "useSharedValue|useAnimatedStyle|useAnimatedProps|useReducedMotion|useScrollViewOffset|useFrameCallback|useAnimatedRef|useDerivedValue|measure\(|cancelAnimation|withTiming|withSpring|withSequence|withDecay|withRepeat|withDelay|runOnJS|runOnUI|createAnimatedComponent|interpolateColor|Keyframe|FadeIn|FadeOut|SlideIn|SlideOut|ZoomIn|ZoomOut|LinearTransition|LayoutAnimationConfig|SharedValue|AnimatedRef|AnimatedStyle|ReanimatedScrollEvent" src \
      --glob '!locale/**' --glob '!**/*.po'
   ```
-  Both should return nothing.
+  Primary package-name search returns nothing outside this roadmap. The secondary API-surface scan now intentionally resolves to `#/lib/animations/reanimatedCompat` and native shims rather than the removed packages.
 
 **Done when:**
 - All three deps are gone from `package.json` and `yarn.lock`

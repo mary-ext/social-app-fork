@@ -53,7 +53,6 @@ import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbe
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
-import {KeyboardProvider as KeyboardControllerProvider} from '#/shims/native-keyboard-controller'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
@@ -169,29 +168,27 @@ function App() {
    */
   return (
     <A11yProvider>
-      <KeyboardControllerProvider>
-        <OnboardingProvider>
-          <SessionProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
-          </SessionProvider>
-        </OnboardingProvider>
-      </KeyboardControllerProvider>
+      <OnboardingProvider>
+        <SessionProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <PortalProvider>
+                        <StarterPackProvider>
+                          <InnerApp />
+                        </StarterPackProvider>
+                      </PortalProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
+        </SessionProvider>
+      </OnboardingProvider>
     </A11yProvider>
   )
 }
