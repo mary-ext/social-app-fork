@@ -720,16 +720,16 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
 **Motivation:** scope the actual web-reachable Reanimated/gesture-handler surface (native-only files don't count). Fork-time numbers: ~83 web-shipping reanimated files / ~473 worklet-API call sites. Verify gesture-handler before treating it as a pure deletion — earlier scoping called "1 web file" which became 0 after transitive shadow pruning, but reverify.
 
 **Checklist:**
-- [ ] Capture broad inventory (extend beyond `src/`):
+- [x] Capture broad inventory (extend beyond `src/`):
   ```sh
   rg -n "react-native-reanimated|react-native-gesture-handler" \
      src index.js index.web.js package.json babel.config.js webpack.config.js tsconfig*.json patches \
      --glob '!locale/**' --glob '!**/*.po' > .inventory-reanimated.txt
   ```
   At fork time non-`src` hits typically include: `index.js` (bare RNGH side-effect import), `package.json` (deps + `expo.install.exclude`), `babel.config.js` (reanimated plugin), `webpack.config.js` (RNGH alias), `tsconfig.json` (reanimated plugin config if present), `patches/react-native-reanimated+*.patch`, and `patches/react-native-keyboard-controller+*.patch` (which uses Reanimated APIs)
-- [ ] Tag each file as **web-shipping** vs **shadowed/native-only**. A file is shadowed if (1) its filename has a `.native.tsx` / `.ios.tsx` / `.android.tsx` suffix, (2) a `.web.tsx` / `.web.ts` sibling exists at the same base path, or (3) **(transitive)** every importer chain reaching it enters through a file shadowed by (1) or (2). Don't skip rule 3 — e.g. `src/components/Lightbox/pager/ImagePager.tsx` has no `.web` sibling but is only reached via `Lightbox.tsx`, which is shadowed by `Lightbox.web.tsx`. **Tagging informs prioritization, not exclusion** — every Reanimated/RNGH import in `src` (shadowed or not) has to be removed before Phase 3.4 because typecheck spans all `src`
-- [ ] Save a `createAnimatedComponent` callsite list separately — these wrap third-party components (BlurView, LinearGradient, AnimatedCheck's SVG) for animated styles **or animated props** and need targeted handling, not the preset sweep
-- [ ] Use `rg "from 'react-native-reanimated'" src` (import-source grep) as the ground truth for "Reanimated is gone." A hand-picked API token list misses long-tail exports like `useReducedMotion`, `useAnimatedProps`, `useDerivedValue`, `useScrollViewOffset`, `useFrameCallback`, `scrollTo`, `interpolateColor`, `Keyframe`
+- [x] Tag each file as **web-shipping** vs **shadowed/native-only**. A file is shadowed if (1) its filename has a `.native.tsx` / `.ios.tsx` / `.android.tsx` suffix, (2) a `.web.tsx` / `.web.ts` sibling exists at the same base path, or (3) **(transitive)** every importer chain reaching it enters through a file shadowed by (1) or (2). Don't skip rule 3 — e.g. `src/components/Lightbox/pager/ImagePager.tsx` has no `.web` sibling but is only reached via `Lightbox.tsx`, which is shadowed by `Lightbox.web.tsx`. **Tagging informs prioritization, not exclusion** — every Reanimated/RNGH import in `src` (shadowed or not) has to be removed before Phase 3.4 because typecheck spans all `src`
+- [x] Save a `createAnimatedComponent` callsite list separately — these wrap third-party components (BlurView, LinearGradient, AnimatedCheck's SVG) for animated styles **or animated props** and need targeted handling, not the preset sweep
+- [x] Use `rg "from 'react-native-reanimated'" src` (import-source grep) as the ground truth for "Reanimated is gone." A hand-picked API token list misses long-tail exports like `useReducedMotion`, `useAnimatedProps`, `useDerivedValue`, `useScrollViewOffset`, `useFrameCallback`, `scrollTo`, `interpolateColor`, `Keyframe`
 
 **Footgun:** `Animated` imported from `'react-native'` (legacy RN Animated API) is **separate** from `react-native-reanimated`. Two callers at fork time (`src/view/shell/Composer.tsx`, `src/lib/hooks/useAnimatedValue.ts`) — leave them; they live or die with RNW (Appendix A).
 
