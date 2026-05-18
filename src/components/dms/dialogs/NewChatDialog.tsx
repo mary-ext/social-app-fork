@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {GROUP_CHATS_ENABLED} from '#/lib/feature-flags'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
@@ -26,7 +27,7 @@ export function NewChat({
   const ax = useAnalytics()
   const requireEmailVerification = useRequireEmailVerification()
 
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {

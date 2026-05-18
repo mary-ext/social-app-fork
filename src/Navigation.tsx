@@ -1041,9 +1041,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         })
       }
     }
-
-    // temp, just testing
-    void ax.features.enabled(ax.features.AATest)
   })
 
   return (

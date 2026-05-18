@@ -70,6 +70,10 @@ import {
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
 } from '#/lib/constants'
+import {
+  IMAGE_UPLOADS_BLOB_SIZE_2MB_ENABLED,
+  IMAGE_UPLOADS_HIGH_RESOLUTION,
+} from '#/lib/feature-flags'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mimeToExt} from '#/lib/media/video/util'
@@ -887,12 +891,8 @@ export const ComposePost = ({
             langs: currentLanguages,
           },
           {
-            highResolutionImages: ax.features.enabled(
-              ax.features.ImageUploadsHighResolution,
-            ),
-            increasedBlobSizeLimit: ax.features.enabled(
-              ax.features.ImageUploadsBlobSize2mbEnabled,
-            ),
+            highResolutionImages: IMAGE_UPLOADS_HIGH_RESOLUTION,
+            increasedBlobSizeLimit: IMAGE_UPLOADS_BLOB_SIZE_2MB_ENABLED,
           },
         )
       ).uris[0]

@@ -16,6 +16,7 @@ import {isAfter, parseISO} from 'date-fns'
 
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
+import {LIVE_NOW_BETA_DISABLED} from '#/lib/feature-flags'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {useAppConfig} from '#/state/appConfig'
 import {
@@ -54,13 +55,10 @@ export type LiveNowConfig = {
 }
 
 export function useLiveNowConfig(): LiveNowConfig {
-  const ax = useAnalytics()
   const {liveNow} = useAppConfig()
   const {currentAccount} = useSession()
 
   return useMemo(() => {
-    const disabled = ax.features.enabled(ax.features.LiveNowBetaDisable)
-
     const defaultAllowedHosts = new Set(
       DEFAULT_ALLOWED_DOMAINS.concat(liveNow.allow),
     )
@@ -72,7 +70,7 @@ export function useLiveNowConfig(): LiveNowConfig {
       )
     }
 
-    if (!currentAccount?.did || disabled) {
+    if (!currentAccount?.did || LIVE_NOW_BETA_DISABLED) {
       return {
         canGoLive: false,
         currentAccountAllowedHosts: new Set(),
@@ -89,7 +87,7 @@ export function useLiveNowConfig(): LiveNowConfig {
       defaultAllowedHosts,
       allowedHostsExceptionsByDid,
     }
-  }, [ax, liveNow, currentAccount])
+  }, [liveNow, currentAccount])
 }
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {

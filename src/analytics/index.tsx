@@ -3,13 +3,6 @@ import {Platform} from 'react-native'
 
 import {Logger} from '#/logger'
 import {
-  Features,
-  features as feats,
-  init,
-  refresh,
-  setAttributes,
-} from '#/analytics/features'
-import {
   getAndMigrateDeviceId,
   getDeviceId,
   getInitialSessionId,
@@ -27,10 +20,8 @@ import * as env from '#/env'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
 import {device} from '#/storage'
 
-export * as utils from '#/analytics/utils'
-export const features = {init, refresh}
-export {Features} from '#/analytics/features'
 export {type Metrics} from '#/analytics/metrics'
+export * as utils from '#/analytics/utils'
 
 type LoggerType = {
   debug: Logger['debug']
@@ -58,11 +49,7 @@ export type AnalyticsContextType = {
     payload: Metrics[E],
     metadata?: MergeableMetadata,
   ) => void
-  features: typeof Features & {
-    enabled(feature: Features): boolean
-  }
 }
-export type AnalyticsBaseContextType = Omit<AnalyticsContextType, 'features'>
 
 function createLogger(
   context: Logger['context'],
@@ -82,7 +69,9 @@ function createLogger(
   }
 }
 
-const Context = createContext<AnalyticsBaseContextType>({
+export type AnalyticsBaseContextType = AnalyticsContextType
+
+const Context = createContext<AnalyticsContextType>({
   logger: createLogger(Logger.Context.Default, {}),
   metric: (event, payload, metadata) => {
     if (metadata && '__meta' in metadata) {
@@ -150,7 +139,7 @@ export function AnalyticsContext({
       },
       geolocation,
     }
-    const context: AnalyticsBaseContextType = {
+    const context: AnalyticsContextType = {
       ...parentContext,
       logger: createLogger(
         Logger.Context.Default,
@@ -169,70 +158,14 @@ export function AnalyticsContext({
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
-/**
- * Feature gates provider. Decorates the parent analytics context with
- * feature gate capabilities. Should be mounted within `AnalyticsContext`,
- * and below the `<Fragment key={did} />` breaker in `App.<platform>.tsx`.
- */
-export function AnalyticsFeaturesContext({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const parentContext = useContext(Context)
-
-  /**
-   * Side-effects: we need to synchronously set these during the same render
-   * cycle. These calls do not trigger re-renders, they just set properties on
-   * the singleton GrowthBook instance.
-   */
-  setAttributes(parentContext.metadata)
-  feats.setTrackingCallback((experiment, result) => {
-    parentContext.metric('experiment:viewed', {
-      experimentId: experiment.key,
-      variationId: result.key,
-    })
-  })
-  feats.setFeatureUsageCallback((feature, result) => {
-    parentContext.metric('feature:viewed', {
-      featureId: feature,
-      featureResultValue: result.value,
-      experimentId: result.experiment?.key,
-      variationId: result.experimentResult?.key,
-    })
-  })
-
-  const childContext = useMemo<AnalyticsContextType>(() => {
-    return {
-      ...parentContext,
-      features: {
-        enabled: feats.isOn.bind(feats),
-        ...Features,
-      },
-    }
-  }, [parentContext])
-
-  return <Context.Provider value={childContext}>{children}</Context.Provider>
-}
-
-/**
- * Basic analytics context without feature gates. Should really only be used
- * above the `AnalyticsFeaturesContext` provider.
- */
 export function useAnalyticsBase() {
   return useContext(Context)
 }
 
 /**
- * The main analytics context, including feature gates. Use this everywhere you
- * need metrics, features, or logging within the React tree.
+ * The main analytics context. Use this everywhere you need metrics or logging
+ * within the React tree.
  */
 export function useAnalytics() {
-  const ctx = useContext(Context)
-  if (!('features' in ctx)) {
-    throw new Error(
-      'useAnalytics must be used within an AnalyticsFeaturesContext',
-    )
-  }
-  return ctx as AnalyticsContextType
+  return useContext(Context)
 }

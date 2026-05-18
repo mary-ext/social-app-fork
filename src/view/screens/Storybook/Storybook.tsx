@@ -1,10 +1,15 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 
+import {
+  useDebugFeedContextEnabled,
+  useSetDebugFeedContextEnabled,
+} from '#/state/preferences'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
 import {
   useDeviceGeolocationApi,
   useRequestDeviceGeolocation,
@@ -27,6 +32,8 @@ import {Typography} from './Typography'
 export default function Storybook() {
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = useState(false)
+  const debugFeedContextEnabled = useDebugFeedContextEnabled()
+  const setDebugFeedContextEnabled = useSetDebugFeedContextEnabled()
   const requestDeviceGeolocation = useRequestDeviceGeolocation()
   const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
@@ -110,6 +117,14 @@ export default function Storybook() {
             <Dialogs />
             <Admonitions />
             <Settings />
+            <Toggle.Item
+              name="debug-feed-context"
+              label="Show feed context debug"
+              value={debugFeedContextEnabled}
+              onChange={setDebugFeedContextEnabled}>
+              <Toggle.Checkbox />
+              <Toggle.LabelText>Show feed context debug</Toggle.LabelText>
+            </Toggle.Item>
 
             <Button
               color="primary"

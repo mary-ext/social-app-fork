@@ -71,12 +71,7 @@ import {
   prefetchAgeAssuranceConfig,
   Provider as AgeAssuranceV2Provider,
 } from '#/ageAssurance'
-import {
-  AnalyticsContext,
-  AnalyticsFeaturesContext,
-  features,
-  setupDeviceId,
-} from '#/analytics'
+import {AnalyticsContext, setupDeviceId} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
@@ -122,8 +117,6 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
-        } else {
-          await features.init
         }
       } catch (e) {
         logger.error(`session: resume failed`, {message: e})
@@ -152,8 +145,7 @@ function InnerApp() {
               <Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
-                <AnalyticsFeaturesContext>
-                  <QueryProvider currentDid={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
                     <PolicyUpdateOverlayProvider>
                       <LiveEventsProvider>
                         <AgeAssuranceV2Provider>
@@ -204,7 +196,6 @@ function InnerApp() {
                       </LiveEventsProvider>
                     </PolicyUpdateOverlayProvider>
                   </QueryProvider>
-                </AnalyticsFeaturesContext>
               </Fragment>
             </VideoVolumeProvider>
           </Splash>

@@ -2,6 +2,7 @@ import {useMemo, useReducer} from 'react'
 import {View} from 'react-native'
 import * as bcp47Match from 'bcp-47-match'
 
+import {IMPORT_CONTACTS_ONBOARDING_DISABLED} from '#/lib/feature-flags'
 import {useLanguagePrefs} from '#/state/preferences'
 import {
   Layout,
@@ -21,7 +22,6 @@ import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/co
 import {useFindContactsFlowState} from '#/components/contacts/state'
 import {Portal} from '#/components/Portal'
 import {ScreenTransition} from '#/components/ScreenTransition'
-import {useAnalytics} from '#/analytics'
 import {ENV, IS_NATIVE} from '#/env'
 import {StepFindContacts} from './StepFindContacts'
 import {StepFindContactsIntro} from './StepFindContactsIntro'
@@ -30,7 +30,6 @@ import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
 export function Onboarding() {
   const t = useTheme()
-  const ax = useAnalytics()
 
   const {contentLanguages} = useLanguagePrefs()
   const probablySpeaksEnglish = useMemo(() => {
@@ -47,7 +46,7 @@ export function Onboarding() {
     ENV !== 'e2e' &&
     IS_NATIVE &&
     findContactsEnabled &&
-    !ax.features.enabled(ax.features.ImportContactsOnboardingDisable)
+    !IMPORT_CONTACTS_ONBOARDING_DISABLED
 
   const [state, dispatch] = useReducer(
     reducer,

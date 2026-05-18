@@ -33,7 +33,6 @@ import {
 } from '#/ageAssurance/data'
 import {getAndComputeAgeAssuranceState} from '#/ageAssurance/state'
 import {AgeAssuranceAccess} from '#/ageAssurance/types'
-import {features} from '#/analytics'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -65,9 +64,6 @@ export async function createAgentAndResume(
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
-  const gates = features.refresh({
-    strategy: 'prefer-low-latency',
-  })
   const moderation = configureModerationForAccount(agent, storedAccount)
   const prevSession: AtpSessionData = sessionAccountToSession(storedAccount)
   if (isSessionExpired(storedAccount)) {
@@ -82,7 +78,7 @@ export async function createAgentAndResume(
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [gates, moderation, aa],
+    resolvers: [moderation, aa],
     onSessionChange,
   })
 }
@@ -114,14 +110,13 @@ export async function createAgentAndLogin(
   })
 
   const account = agentToSessionAccountOrThrow(agent)
-  const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
   const aa = prefetchAgeAssuranceData({agent})
 
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [gates, moderation, aa],
+    resolvers: [moderation, aa],
     onSessionChange,
   })
 }
@@ -162,7 +157,6 @@ export async function createAgentAndCreateAccount(
     verificationCode,
   })
   const account = agentToSessionAccountOrThrow(agent)
-  const gates = features.refresh({strategy: 'prefer-fresh-gates'})
   const moderation = configureModerationForAccount(agent, account)
 
   const createdAt = new Date().toISOString()
@@ -277,7 +271,7 @@ export async function createAgentAndCreateAccount(
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [gates, moderation, aa],
+    resolvers: [moderation, aa],
     onSessionChange,
   })
 }

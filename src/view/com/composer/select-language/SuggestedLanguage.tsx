@@ -9,6 +9,7 @@ import {
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
+import {COMPOSER_LANGUAGE_DETECTION_ENABLED} from '#/lib/feature-flags'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useNonReactiveObject} from '#/lib/hooks/useNonReactiveObject'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
@@ -222,7 +223,7 @@ export function SuggestedLanguage({
       setHasInteracted(true)
     }
 
-    if (ax.features.enabled(ax.features.ComposerLanguageDetectionEnable)) {
+    if (COMPOSER_LANGUAGE_DETECTION_ENABLED) {
       const textTrimmed = sanitizeTextForDetection(text)
 
       /*

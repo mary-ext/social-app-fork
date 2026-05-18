@@ -6,6 +6,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {LIVE_NOW_BETA_DISABLED} from '#/lib/feature-flags'
 import {atoms as a, select, useTheme, utils, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -25,7 +26,7 @@ export const enabled = createIsEnabledCheck(props => {
       '2026-01-16T00:00:00.000Z',
       props.currentProfile.createdAt,
     ) &&
-    !props.features.enabled(props.features.LiveNowBetaDisable)
+    !LIVE_NOW_BETA_DISABLED
   )
 })
 

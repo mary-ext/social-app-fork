@@ -5,6 +5,7 @@ import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {GROUP_CHATS_ENABLED} from '#/lib/feature-flags'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useConvoActive} from '#/state/messages/convo'
@@ -50,7 +51,7 @@ export let MessageContextMenu = ({
   const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
   const onCopyMessage = useCallback(() => {
     const str = richTextToString(

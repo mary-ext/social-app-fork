@@ -159,16 +159,16 @@ Mechanical removals. Two phases. Pure deletions — the storage rewrite and code
 
 ### 2.1a — Add local debug preference for `DebugFeedContext`
 
-- [ ] Create `src/state/preferences/debug.tsx` following the pattern in **`src/state/preferences/trending.tsx`** (NOT `kawaii.tsx`). `trending.tsx` does `Boolean(persisted.get(key))`, which correctly coerces `undefined` from old persisted state to `false`. `persisted.tryParse()` returns the stored object as-is — schema defaults don't backfill missing keys
-- [ ] Add persisted schema key in `src/state/persisted/schema.ts`:
+- [x] Create `src/state/preferences/debug.tsx` following the pattern in **`src/state/preferences/trending.tsx`** (NOT `kawaii.tsx`). `trending.tsx` does `Boolean(persisted.get(key))`, which correctly coerces `undefined` from old persisted state to `false`. `persisted.tryParse()` returns the stored object as-is — schema defaults don't backfill missing keys
+- [x] Add persisted schema key in `src/state/persisted/schema.ts`:
   ```ts
   debugFeedContextEnabled: z.boolean().optional()
   ```
   with default `false`
-- [ ] Export hooks `useDebugFeedContextEnabled()` (non-optional boolean return) and `useSetDebugFeedContextEnabled()` from `src/state/preferences/index.tsx`
-- [ ] Wrap `Provider` with `<DebugPreferencesProvider>`
-- [ ] Add a UI toggle in the currently-reachable debug screen. At fork time `src/Navigation.tsx` routes the `Debug` route to `StorybookScreen`, not `DebugScreen`; pick whichever screen is actually wired to a navigable entry point. Don't add a toggle to dead code
-- [ ] Verify: `rg -n "DebugFeedContext|DiscoverDebug|feedContext" src/components src/view src/screens`
+- [x] Export hooks `useDebugFeedContextEnabled()` (non-optional boolean return) and `useSetDebugFeedContextEnabled()` from `src/state/preferences/index.tsx`
+- [x] Wrap `Provider` with `<DebugPreferencesProvider>`
+- [x] Add a UI toggle in the currently-reachable debug screen. At fork time `src/Navigation.tsx` routes the `Debug` route to `StorybookScreen`, not `DebugScreen`; pick whichever screen is actually wired to a navigable entry point. Don't add a toggle to dead code
+- [x] Verify: `rg -n "DebugFeedContext|DiscoverDebug|feedContext" src/components src/view src/screens`
 
 ### 2.1b — Define static constants for the remaining gates
 
@@ -224,11 +224,11 @@ rg -n "features\.enabled|features\.isOn|Features\.|AATest|DebugFeedContext" src 
 
 After the codemod runs, `ax.features` callsites collapse to pure constant reads — Phase 4.5's platform-collapse codemod can then dead-eliminate any resulting `if (true) {...}` / `if (false) {...}` branches if you want a one-pass cleanup. Run the codemod, then handle the non-obvious cases manually:
 
-- [ ] `src/Navigation.tsx` — delete the `AATest` route registration entirely (not just the gate read)
-- [ ] `src/components/images/Gallery/maybeApplyGalleryOffsetStyles.ts` — imports `#/analytics/features` directly, bypassing React context. Replace with a **static import** of the constants in `#/lib/feature-flags`. Don't introduce `useAnalytics()` or a hook here
-- [ ] `src/components/dialogs/nuxs/utils.ts` — has type-level coupling through `AnalyticsContextType['features']`. Drop the `features` param from `EnabledCheckProps` entirely
-- [ ] `src/components/dialogs/nuxs/index.tsx` — currently keeps `const ax = useAnalytics()` only to thread `features: ax.features` into the NUX `enabledCheck` (and uses it as an effect dep). Once `EnabledCheckProps.features` is gone, remove `useAnalytics` here too
-- [ ] `src/screens/Signup/state.ts` — holds extra `AnalyticsContextType` references
+- [x] `src/Navigation.tsx` — delete the `AATest` route registration entirely (not just the gate read)
+- [x] `src/components/images/Gallery/maybeApplyGalleryOffsetStyles.ts` — imports `#/analytics/features` directly, bypassing React context. Replace with a **static import** of the constants in `#/lib/feature-flags`. Don't introduce `useAnalytics()` or a hook here
+- [x] `src/components/dialogs/nuxs/utils.ts` — has type-level coupling through `AnalyticsContextType['features']`. Drop the `features` param from `EnabledCheckProps` entirely
+- [x] `src/components/dialogs/nuxs/index.tsx` — currently keeps `const ax = useAnalytics()` only to thread `features: ax.features` into the NUX `enabledCheck` (and uses it as an effect dep). Once `EnabledCheckProps.features` is gone, remove `useAnalytics` here too
+- [x] `src/screens/Signup/state.ts` — holds extra `AnalyticsContextType` references
 
 **Footgun:** feature names ending in `Disable` invert the boolean — read each conditional carefully.
 
@@ -249,13 +249,13 @@ all should be clean.
 **Motivation:** remove the remote feature-flag subsystem before the larger analytics removal.
 
 **Checklist:**
-- [ ] In `src/analytics/index.tsx`, remove: `Features`, `features as feats`, `init`, `refresh`, `setAttributes`, `AnalyticsFeaturesContext`, and the `features` field from `AnalyticsContextType`. **Also relax `useAnalytics()`**: it currently throws when no feature provider is in the tree (`src/analytics/index.tsx:230-237`). After this phase the base `<AnalyticsContext>` is the only wrapper — make `useAnalytics()` return that directly without the feature guard, and delete the stale "must be inside Features provider" comment
-- [ ] In `src/App.web.tsx` **and** `src/App.native.tsx`: remove imports of `AnalyticsFeaturesContext` and `features`; remove the `<AnalyticsFeaturesContext>` wrapper; replace `await features.init` with no-op readiness. `App.native.tsx` is **not** optional here — `yarn typecheck` still compiles native files and would fail otherwise (`App.native.tsx:74-79,126,155-207`)
-- [ ] In `src/state/session/agent.ts`: remove `import {features} from '#/analytics'`; remove the `gates = features.refresh(...)` promises from `createAgentAndResume`, `createAgentAndLogin`, `createAgentAndCreateAccount`; remove `gates` from `resolvers`
-- [ ] `rm -rf src/analytics/features`
-- [ ] `yarn remove @growthbook/growthbook @growthbook/growthbook-react`
-- [ ] Remove from `src/env/common.ts` and `.env.example`: `EXPO_PUBLIC_GROWTHBOOK_API_HOST`, `EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY`, `GROWTHBOOK_API_HOST`, `GROWTHBOOK_CLIENT_KEY`
-- [ ] `src/analytics/PassiveAnalytics.tsx` imports `#/analytics/features` — delete or stub it now
+- [x] In `src/analytics/index.tsx`, remove: `Features`, `features as feats`, `init`, `refresh`, `setAttributes`, `AnalyticsFeaturesContext`, and the `features` field from `AnalyticsContextType`. **Also relax `useAnalytics()`**: it currently throws when no feature provider is in the tree (`src/analytics/index.tsx:230-237`). After this phase the base `<AnalyticsContext>` is the only wrapper — make `useAnalytics()` return that directly without the feature guard, and delete the stale "must be inside Features provider" comment
+- [x] In `src/App.web.tsx` **and** `src/App.native.tsx`: remove imports of `AnalyticsFeaturesContext` and `features`; remove the `<AnalyticsFeaturesContext>` wrapper; replace `await features.init` with no-op readiness. `App.native.tsx` is **not** optional here — `yarn typecheck` still compiles native files and would fail otherwise (`App.native.tsx:74-79,126,155-207`)
+- [x] In `src/state/session/agent.ts`: remove `import {features} from '#/analytics'`; remove the `gates = features.refresh(...)` promises from `createAgentAndResume`, `createAgentAndLogin`, `createAgentAndCreateAccount`; remove `gates` from `resolvers`
+- [x] `rm -rf src/analytics/features`
+- [x] `yarn remove @growthbook/growthbook @growthbook/growthbook-react`
+- [x] Remove from `src/env/common.ts` and `.env.example`: `EXPO_PUBLIC_GROWTHBOOK_API_HOST`, `EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY`, `GROWTHBOOK_API_HOST`, `GROWTHBOOK_CLIENT_KEY`
+- [x] `src/analytics/PassiveAnalytics.tsx` imports `#/analytics/features` — delete or stub it now
 
 **Footguns:**
 - `AnalyticsContextType` consumers may still expect `features` to exist.

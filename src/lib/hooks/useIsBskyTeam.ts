@@ -1,11 +1,5 @@
-import {useMemo} from 'react'
-
-import {useAnalytics} from '#/analytics'
+import {IS_BSKY_TEAM} from '#/lib/feature-flags'
 
 export function useIsBskyTeam() {
-  const ax = useAnalytics()
-  return useMemo(
-    () => ax.features.enabled(ax.features.IsBskyTeam),
-    [ax.features],
-  )
+  return IS_BSKY_TEAM
 }

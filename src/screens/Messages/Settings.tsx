@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {GROUP_CHATS_ENABLED} from '#/lib/feature-flags'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -20,7 +21,6 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
@@ -44,7 +44,6 @@ export function MessagesSettingsScreen(props: Props) {
 export function MessagesSettingsScreenInner({}: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
@@ -52,7 +51,7 @@ export function MessagesSettingsScreenInner({}: Props) {
   const {preferences, setPref} = useBackgroundNotificationPreferences()
   const exportCarControl = Dialog.useDialogControl()
 
-  const isGroupChatEnabled = ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
     {

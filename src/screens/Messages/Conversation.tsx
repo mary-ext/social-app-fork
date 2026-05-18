@@ -16,6 +16,10 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {
+  GROUP_CHATS_ENABLED,
+  GROUP_CHATS_HAS_BEEN_RELEASED,
+} from '#/lib/feature-flags'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {
@@ -47,7 +51,6 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
@@ -310,12 +313,11 @@ function InnerReady({
 
 function GroupChatGate() {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
 
   const groupChatGateDialogControl = Dialog.useDialogControl()
 
-  const isGatedGroupChat = !ax.features.enabled(ax.features.GroupChatsEnable)
+  const isGatedGroupChat = !GROUP_CHATS_ENABLED
 
   useEffect(() => {
     if (isGatedGroupChat) {
@@ -323,9 +325,7 @@ function GroupChatGate() {
     }
   }, [isGatedGroupChat, groupChatGateDialogControl])
 
-  const hasBeenReleased = ax.features.enabled(
-    ax.features.GroupChatsHasBeenReleased,
-  )
+  const hasBeenReleased = GROUP_CHATS_HAS_BEEN_RELEASED
 
   const isAlreadyGoingBackRef = useRef(false)
   const onGoBack = () => {

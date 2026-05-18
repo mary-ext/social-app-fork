@@ -7,9 +7,9 @@ import {
   type ModerationUI,
 } from '@atproto/api'
 
+import {POST_GALLERY_EMBED_ENABLED} from '#/lib/feature-flags'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
-import {Features, features} from '#/analytics/features'
 import * as bsky from '#/types/bsky'
 
 export const POST_META_NO_CONTENT_OFFSET = {paddingTop: 10}
@@ -27,8 +27,7 @@ export function maybeApplyGalleryOffsetStyles(
     additionalCauses?: ModerationCause[] | AppModerationCause[]
   },
 ) {
-  // don't ever check gates like this, except this one time
-  if (!features.isOn(Features.PostGalleryEmbedEnable)) return
+  if (!POST_GALLERY_EMBED_ENABLED) return
 
   if (
     !bsky.dangerousIsType<AppBskyFeedPost.Record>(

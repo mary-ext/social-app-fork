@@ -34,6 +34,7 @@ import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
+  useDebugFeedContextEnabled,
   useHiddenPosts,
   useHiddenPostsApi,
   useLanguagePrefs,
@@ -126,6 +127,7 @@ let PostMenuItems = ({
   const {hasSession, currentAccount} = useSession()
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const debugFeedContextEnabled = useDebugFeedContextEnabled()
   const langPrefs = useLanguagePrefs()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: pinPostMutate, isPending: isPinPending} =
@@ -500,7 +502,7 @@ let PostMenuItems = ({
   const isDiscoverDebugUser =
     IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    ax.features.enabled(ax.features.DebugFeedContext)
+    debugFeedContextEnabled
 
   return (
     <>

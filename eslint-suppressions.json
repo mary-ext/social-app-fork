@@ -4,17 +4,7 @@
       "count": 1
     }
   },
-  "src/analytics/PassiveAnalytics.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/analytics/metadata.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/analytics/metrics/client.test.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -627,11 +617,6 @@
   "src/view/com/profile/ProfileMenu.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
-    }
-  },
-  "src/view/com/testing/TestCtrls.e2e.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "src/view/com/util/EmptyState.tsx": {

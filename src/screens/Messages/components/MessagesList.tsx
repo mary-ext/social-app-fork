@@ -30,6 +30,7 @@ import {
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
+import {DMS_NEW_MESSAGE_COMPOSER_ENABLED} from '#/lib/feature-flags'
 import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -59,7 +60,6 @@ import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
@@ -124,7 +124,6 @@ export function MessagesList({
   hasAcceptOverride?: boolean
   transparentHeaderHeight?: number
 }) {
-  const ax = useAnalytics()
   const convoState = useConvoActive()
   const agent = useAgent()
   const getPost = useGetPost()
@@ -546,7 +545,7 @@ export function MessagesList({
             <ConversationFooter
               convoState={convoState}
               hasAcceptOverride={hasAcceptOverride}>
-              {ax.features.enabled(ax.features.DmsNewMessageComposerEnable) ? (
+              {DMS_NEW_MESSAGE_COMPOSER_ENABLED ? (
                 <MessageComposer
                   textInputId={textInputId}
                   onSendMessage={(message: string) =>
