@@ -11,7 +11,6 @@ import {Explosion_Stroke2_Corner0_Rounded as ExplosionIcon} from '#/components/i
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon} from '#/components/icons/PaintRoller'
 import {Person_Stroke2_Corner2_Rounded as PersonIcon} from '#/components/icons/Person'
-import {Pizza_Stroke2_Corner0_Rounded as PizzaIcon} from '#/components/icons/Pizza'
 import {RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon} from '#/components/icons/RaisingHand'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
@@ -67,7 +66,7 @@ export function Settings() {
         <SettingsList.ItemText>Sign out</SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.Item style={[a.mt_xl]}>
-        <SettingsList.ItemIcon icon={PizzaIcon} />
+        <SettingsList.ItemIcon icon={AlienIcon} />
         <SettingsList.ItemText>Not pressable</SettingsList.ItemText>
       </SettingsList.Item>
       <SettingsList.PressableItem

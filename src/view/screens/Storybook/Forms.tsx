@@ -2,7 +2,6 @@ import {useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
 
 import {APP_LANGUAGES} from '#/lib/../locale/languages'
-import {type CountryCode} from '#/lib/international-telephone-codes'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {AutosizedTextarea} from '#/components/forms/AutosizedTextarea'
@@ -12,7 +11,6 @@ import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {InternationalPhoneCodeSelect} from '#/components/InternationalPhoneCodeSelect'
 import * as Select from '#/components/Select'
 import {H1, H3} from '#/components/Typography'
 
@@ -28,8 +26,6 @@ export function Forms() {
 
   const [value, setValue] = useState('')
   const [date, setDate] = useState('2001-01-01')
-  const [countryCode, setCountryCode] = useState<CountryCode>('US')
-  const [phoneNumber, setPhoneNumber] = useState('')
   const [lang, setLang] = useState('en')
 
   const inputRef = useRef<TextInput>(null)
@@ -185,23 +181,6 @@ export function Forms() {
             }}
             label="Input"
           />
-        </View>
-        <H3>InternationalPhoneCodeSelect</H3>
-
-        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-          <View>
-            <InternationalPhoneCodeSelect
-              value={countryCode}
-              onChange={value => setCountryCode(value)}
-            />
-          </View>
-          <View style={[a.flex_1]}>
-            <TextField.Input
-              label="Phone number"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-            />
-          </View>
         </View>
       </View>
 
