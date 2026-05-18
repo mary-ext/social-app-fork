@@ -67,7 +67,7 @@ export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {
 
 /**
  * Stubs, previously used to log session errors to Statsig. We may revive this
- * using Sentry or Bitdrift in the future.
+ * using another diagnostics transport in the future.
  */
 export function addSessionErrorLog(_did: string, _event: AtpSessionEvent) {}
 export function addSessionDebugLog(_log: Log) {}

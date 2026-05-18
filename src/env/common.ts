@@ -85,11 +85,6 @@ export const CHAT_PROXY_DID: Did =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
- * Sentry DSN for telemetry
- */
-export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
-
-/**
  * GCP project ID which is required for native device attestation. On web, this
  * should be unset and evaluate to 0.
  */

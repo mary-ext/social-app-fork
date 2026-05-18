@@ -1,11 +1,9 @@
-import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
-import * as Sentry from '@sentry/react-native'
 
 import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
@@ -193,4 +191,4 @@ function App() {
   )
 }
 
-export default Sentry.wrap(App)
+export default App

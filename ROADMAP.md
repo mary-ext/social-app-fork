@@ -928,12 +928,12 @@ createRoot(rootEl).render(
 
 **Motivation:** explicit decision — no error reporting in this fork, period. Don't add `@sentry/rspack-plugin` or any browser-Sentry replacement later.
 
-- [ ] In `src/App.web.tsx`: drop `import '#/logger/sentry/setup'`, drop `import * as Sentry from '@sentry/react-native'`, change `export default Sentry.wrap(App)` to `export default App`
-- [ ] `src/logger/reporting/sendErrorReport.ts` imports `#/logger/sentry/lib` and calls `Sentry.withScope`. Delete the file (and audit callers), or replace with a console no-op
-- [ ] `rm -rf src/logger/sentry/ src/logger/transports/sentry.ts`. In `src/logger/index.tsx`, drop `sentryTransport` (use `consoleTransport` in production, or `[]`)
-- [ ] `yarn remove @sentry/react-native @sentry/webpack-plugin` + `rm -f patches/@sentry+*`
-- [ ] Strip Sentry from build configs in-place (rsbuild migration in 4.7 deletes `webpack.config.js` entirely, but you're still on webpack here): `webpack.config.js` (sentryWebpackPlugin import + `SENTRY_AUTH_TOKEN` block), `metro.config.js` (Metro wiring), `app.config.js` (plugin entry — file deletes in 4.7 anyway), Dockerfiles (sourcemap upload section, if 1.1 didn't already remove them), `package.json` (`upload-native-sourcemaps` script, `SENTRY_AUTH_TOKEN` logic)
-- [ ] Verify: `rg "Sentry|@sentry|sentry|SENTRY_AUTH_TOKEN" src package.json webpack.config.js metro.config.js app.config.js Dockerfile* .env.example`
+- [x] In `src/App.web.tsx`: drop `import '#/logger/sentry/setup'`, drop `import * as Sentry from '@sentry/react-native'`, change `export default Sentry.wrap(App)` to `export default App` — mirrored in `src/App.native.tsx` so the removed package is not required by native-only code
+- [x] `src/logger/reporting/sendErrorReport.ts` imports `#/logger/sentry/lib` and calls `Sentry.withScope`. Delete the file (and audit callers), or replace with a console no-op
+- [x] `rm -rf src/logger/sentry/ src/logger/transports/sentry.ts`. In `src/logger/index.tsx`, drop `sentryTransport` (use `consoleTransport` in production, or `[]`)
+- [x] `yarn remove @sentry/react-native @sentry/webpack-plugin` + `rm -f patches/@sentry+*`
+- [x] Strip Sentry from build configs in-place (rsbuild migration in 4.7 deletes `webpack.config.js` entirely, but you're still on webpack here): `webpack.config.js` (sentryWebpackPlugin import + `SENTRY_AUTH_TOKEN` block), `metro.config.js` (Metro wiring), `app.config.js` (plugin entry — file deletes in 4.7 anyway), Dockerfiles (sourcemap upload section, if 1.1 didn't already remove them), `package.json` (`upload-native-sourcemaps` script, `SENTRY_AUTH_TOKEN` logic)
+- [x] Verify: `rg "Sentry|@sentry|sentry|SENTRY_AUTH_TOKEN" src package.json webpack.config.js metro.config.js app.config.js Dockerfile* .env.example`
 
 ## Phase 4.3 — Strip Expo, package by package, with shims
 

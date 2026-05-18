@@ -2,8 +2,6 @@ const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const {withAlias} = require('@expo/webpack-config/addons')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
-const {sentryWebpackPlugin} = require('@sentry/webpack-plugin')
-const {version} = require('./package.json')
 
 const GENERATE_STATS = process.env.EXPO_PUBLIC_GENERATE_STATS === '1'
 const OPEN_ANALYZER = process.env.EXPO_PUBLIC_OPEN_ANALYZER === '1'
@@ -30,7 +28,6 @@ module.exports = async function (env, argv) {
     'unicode-segmenter/grapheme': require
       .resolve('unicode-segmenter/grapheme')
       .replace(/\.cjs$/, '.js'),
-    '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
   config.module.rules = [
     ...(config.module.rules || []),
@@ -60,20 +57,6 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
-      }),
-    )
-  }
-  if (process.env.SENTRY_AUTH_TOKEN) {
-    config.plugins.push(
-      sentryWebpackPlugin({
-        org: 'blueskyweb',
-        project: 'app',
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        release: {
-          // fallback needed for Render.com deployments
-          name: process.env.SENTRY_RELEASE || version,
-          dist: process.env.SENTRY_DIST,
-        },
       }),
     )
   }

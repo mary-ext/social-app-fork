@@ -33,8 +33,6 @@ module.exports = function (_config) {
 
   const UPDATES_ENABLED = IS_TESTFLIGHT || IS_PRODUCTION
 
-  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
-
   const IOS_ICON_FILE =
     PLATFORM === 'web' // web build doesn't like .icon files
       ? './assets/app-icons/ios_icon_default_next.png'
@@ -243,18 +241,6 @@ module.exports = function (_config) {
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],
-        ...(USE_SENTRY
-          ? [
-              /** @type {[string, any]} */ ([
-                '@sentry/react-native/expo',
-                {
-                  organization: 'blueskyweb',
-                  project: 'app',
-                  url: 'https://sentry.io',
-                },
-              ]),
-            ]
-          : []),
         [
           'expo-build-properties',
           {

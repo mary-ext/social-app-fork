@@ -37,10 +37,6 @@ export type Transport = (
   timestamp: number,
 ) => void
 
-/**
- * A union of some of Sentry's breadcrumb properties as well as Sentry's
- * `captureException` parameter, `CaptureContext`.
- */
 export type Metadata = {
   /**
    * Reserved for appending `LogContext` in logging payloads
@@ -53,9 +49,7 @@ export type Metadata = {
   __metadata__?: Record<string, unknown>
 
   /**
-   * Applied as Sentry breadcrumb types. Defaults to `default`.
-   *
-   * @see https://develop.sentry.dev/sdk/event-payloads/breadcrumbs/#breadcrumb-types
+   * Log event category used by transports that support typed records.
    */
   type?:
     | 'default'
@@ -70,17 +64,14 @@ export type Metadata = {
     | 'user'
 
   /**
-   * Passed through to `Sentry.captureException`
-   *
-   * @see https://github.com/getsentry/sentry-javascript/blob/903addf9a1a1534a6cb2ba3143654b918a86f6dd/packages/types/src/misc.ts#L65
+   * Structured tags for transports that support filtering or grouping.
    */
   tags?: {
     [key: string]: number | string | boolean | null | undefined
   }
 
   /**
-   * Any additional data, passed through to Sentry as `extra` param on
-   * exceptions, or the `data` param on breadcrumbs.
+   * Any additional structured data for logger transports.
    */
   [key: string]: Serializable | Error | unknown
 }

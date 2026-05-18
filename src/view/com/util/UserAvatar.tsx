@@ -409,7 +409,7 @@ let EditableUserAvatar = ({
         editImageDialogControl.open()
       }
     } catch (e) {
-      // Don't log errors for cancelling selection to sentry on ios or android
+      // Don't log errors for user-cancelled selection on iOS or Android.
       if (!isCancelledError(e)) {
         logger.error('Failed to crop avatar', {error: e})
       }
