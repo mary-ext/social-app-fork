@@ -30,9 +30,6 @@ export default defineConfig(
       '.husky/**',
       'patches/**',
       '*.html',
-      'bskyweb/**',
-      'bskyembed/**',
-      'bskyogcard/**',
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       '*.e2e.ts',
@@ -277,16 +274,6 @@ export default defineConfig(
       'no-sparse-arrays': 'off',
       'no-fallthrough': 'off',
       'no-control-regex': 'off',
-    },
-  },
-
-  /**
-   * bskyogcard - server-side, Node.js imports are fine
-   */
-  {
-    files: ['bskyogcard/**/*.{js,jsx,ts,tsx}'],
-    rules: {
-      'import-x/no-nodejs-modules': 'off',
     },
   },
 

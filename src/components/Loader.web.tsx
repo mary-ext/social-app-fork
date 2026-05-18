@@ -16,7 +16,7 @@ export function Loader(props: Props) {
         a.align_center,
         {width: common.size, height: common.size},
       ]}>
-      {/* css rotation animation - /bskyweb/templates/base.html */}
+      {/* css rotation animation - src/style.css */}
       <div className="rotate-500ms">
         <Icon
           {...props}

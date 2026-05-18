@@ -61,23 +61,23 @@ Mechanical removals. Two phases. Pure deletions — the storage rewrite and code
 **Caveat:** `bskyweb` was the Go SSR/static-host daemon that injected dynamic OG meta tags for share-link previews **and** served `index.html` for unknown routes so the SPA could resolve them client-side. For personal use the OG-tag loss is acceptable — shared links will only show the static tags in `web/index.html`. The route-fallback loss is **not** automatic: when deployed statically, app routes like `/profile/...`, `/settings`, `/messages/...` will 404 on direct visit / hard-refresh unless the host rewrites all unknown routes to `/index.html`. Configure that at the static host (`historyApiFallback` already covers `yarn dev` via Phase 4.7's rsbuild config; production deploys need the host-side rule). If you later care about public link previews, add static OG tags to `web/index.html` or build a tiny edge meta-injector. Do **not** resurrect `bskyweb`.
 
 **Checklist:**
-- [ ] `rm -rf bskyembed bskylink bskyogcard bskyweb .github`
-- [ ] `rm -f Dockerfile Dockerfile.bskylink Dockerfile.bskyogcard Dockerfile.embedr`
-- [ ] `rm -f scripts/post-embed-build.js scripts/post-web-build.js`
-- [ ] In `package.json`: delete `build-embed` script. Edit `build-web` to drop the `&& node ./scripts/post-web-build.js` suffix **and** prepend `yarn typecheck && ` so the build script gates on types (tsgo is fast enough that this doesn't hurt iteration). End state for now: `"build-web": "yarn typecheck && expo export:web"` — the second half gets swapped to `rsbuild build` in Phase 4.7
-- [ ] In `tsconfig.json`: remove `bskyweb`, `bskyembed` from `exclude` if present
-- [ ] In `web/index.html`: update/remove the comment referencing `bskyweb/templates/base.html`
-- [ ] Makefile / lint config still reference the deleted projects:
+- [x] `rm -rf bskyembed bskylink bskyogcard bskyweb .github`
+- [x] `rm -f Dockerfile Dockerfile.bskylink Dockerfile.bskyogcard Dockerfile.embedr`
+- [x] `rm -f scripts/post-embed-build.js scripts/post-web-build.js`
+- [x] In `package.json`: delete `build-embed` script. Edit `build-web` to drop the `&& node ./scripts/post-web-build.js` suffix **and** prepend `yarn typecheck && ` so the build script gates on types (tsgo is fast enough that this doesn't hurt iteration). End state for now: `"build-web": "yarn typecheck && expo export:web"` — the second half gets swapped to `rsbuild build` in Phase 4.7
+- [x] In `tsconfig.json`: remove `bskyweb`, `bskyembed` from `exclude` if present
+- [x] In `web/index.html`: update/remove the comment referencing `bskyweb/templates/base.html`
+- [x] Makefile / lint config still reference the deleted projects:
   ```sh
   rg -l "bskyweb|bskyembed|bskylink|bskyogcard" Makefile eslint.config.mjs
   ```
   - `Makefile`: strip `bskyweb` / `bskyembed` targets (the `deps`, `build-web`, and `build-embed` targets all reach in)
   - `eslint.config.mjs`: remove the ignore entries **and** the active `bskyogcard` Node-module override. The override has rule config attached — it's not a plain ignore
-- [ ] Delete the "Embed post" dialog and its share-menu entry — keeping it alive means tracking the hosted `embed.bsky.app` script and the upstream `bskyembed` project, which is out of scope for a personal fork. Concretely:
+- [x] Delete the "Embed post" dialog and its share-menu entry — keeping it alive means tracking the hosted `embed.bsky.app` script and the upstream `bskyembed` project, which is out of scope for a personal fork. Concretely:
   - `rm src/components/dialogs/Embed.tsx`
   - In `src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx`: drop the `EmbedDialog` import, the `embedPostControl` dialog control, the `canEmbed` flag, the `postDropdownEmbedBtn` `Menu.Item`, and the `<EmbedDialog ... />` render block. The `gtMobile` / `useBreakpoints` import becomes unused once `canEmbed` is gone — drop it too
   - In `src/lib/constants.ts`: remove `EMBED_SERVICE` and `EMBED_SCRIPT` (no other importers once the dialog is gone — re-grep to confirm)
-- [ ] Source-comment leftovers (not build-breaking but break the "only docs" rule of the final grep): `src/style.css`, `src/components/Loader.web.tsx`, `README.md`, `.gitignore`
+- [x] Source-comment leftovers (not build-breaking but break the "only docs" rule of the final grep): `src/style.css`, `src/components/Loader.web.tsx`, `README.md`, `.gitignore`
 
 **Done when:**
 - `rg "bskyweb|bskyembed|bskylink|bskyogcard" --glob '!yarn.lock'` returns only documentation/comment hits, if any

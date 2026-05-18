@@ -11,39 +11,30 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
-import {useBreakpoints} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
-import {EmbedDialog} from '#/components/dialogs/Embed'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {IS_WEB} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
 let ShareMenuItems = ({
   post,
-  record,
-  timestamp,
   onShare: onShareProp,
 }: ShareMenuItemsProps): React.ReactNode => {
   const ax = useAnalytics()
   const {hasSession} = useSession()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
   const aa = useAgeAssurance()
 
   const postUri = post.uri
-  const postCid = post.cid
   const postAuthor = useProfileShadow(post.author)
 
   const href = useMemo(() => {
@@ -71,8 +62,6 @@ let ShareMenuItems = ({
       embed: postUri,
     })
   }
-
-  const canEmbed = IS_WEB && gtMobile && !hideInPWI
 
   const onShareATURI = () => {
     shareText(postUri)
@@ -114,19 +103,6 @@ let ShareMenuItems = ({
           </Menu.Item>
         )}
 
-        {canEmbed && (
-          <Menu.Item
-            testID="postDropdownEmbedBtn"
-            label={_(msg`Embed post`)}
-            onPress={() => {
-              ax.metric('share:press:embed', {})
-              embedPostControl.open()
-            }}>
-            <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
-            <Menu.ItemIcon icon={CodeBracketsIcon} position="right" />
-          </Menu.Item>
-        )}
-
         {hideInPWI && (
           <>
             {hasSession && <Menu.Divider />}
@@ -161,17 +137,6 @@ let ShareMenuItems = ({
           </>
         )}
       </Menu.Outer>
-
-      {canEmbed && (
-        <EmbedDialog
-          control={embedPostControl}
-          postCid={postCid}
-          postUri={postUri}
-          record={record}
-          postAuthor={postAuthor}
-          timestamp={timestamp}
-        />
-      )}
 
       <SendViaChatDialog
         control={sendViaChatControl}
