@@ -310,7 +310,6 @@ let MessageItem = ({
             style={[
               a.flex_row,
               a.gap_2xs,
-              a.px_xs,
               isFromSelf ? a.justify_end : a.justify_start,
               a.flex_wrap,
               a.rounded_lg,
@@ -323,6 +322,8 @@ let MessageItem = ({
               {
                 paddingTop: 3,
                 paddingBottom: 3,
+                paddingLeft: 6,
+                paddingRight: 6,
                 transform: [{translateY: -8}],
               },
             ]}
@@ -341,7 +342,7 @@ let MessageItem = ({
                 <Text
                   emoji
                   style={[
-                    a.text_xs,
+                    a.text_md,
                     {textAlignVertical: 'center', includeFontPadding: false},
                   ]}>
                   {group.value}
@@ -353,7 +354,7 @@ let MessageItem = ({
               <View style={[a.p_2xs, a.pl_0, a.justify_center]}>
                 <Text
                   style={[
-                    a.text_xs,
+                    a.text_sm,
                     a.font_medium,
                     hasSelfReacted
                       ? {color: t.palette.primary_900}
