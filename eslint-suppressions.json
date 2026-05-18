@@ -6,7 +6,7 @@
   },
   "src/alf/typography.tsx": {
     "@typescript-eslint/no-unused-vars": {
-      "count": 4
+      "count": 3
     }
   },
   "src/alf/util/flatten.ts": {

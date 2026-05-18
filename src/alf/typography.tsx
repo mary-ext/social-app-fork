@@ -4,7 +4,6 @@ import {
   type TextProps as RNTextProps,
   type TextStyle,
 } from 'react-native'
-import {UITextView} from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
 import {type Alf, applyFonts, atoms, flatten} from '#/alf'
@@ -50,8 +49,7 @@ export type TextProps = RNTextProps & {
    */
   selectable?: boolean
   /**
-   * Provides `data-*` attributes to the underlying `UITextView` component on
-   * web only.
+   * Provides `data-*` attributes to the underlying text element on web only.
    */
   dataSet?: Record<string, string | number | undefined>
   /**

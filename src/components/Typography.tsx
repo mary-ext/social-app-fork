@@ -1,4 +1,4 @@
-import {UITextView} from 'react-native-uitextview'
+import {Text as RNText} from 'react-native'
 
 import {logger} from '#/logger'
 import { atoms as a, type TextStyleProp, useAlf, useTheme } from '#/alf';
@@ -51,7 +51,6 @@ export function Text({
   }
 
   const shared = {
-    uiTextView: true,
     selectable,
     numberOfLines,
     style: s,
@@ -60,9 +59,9 @@ export function Text({
   }
 
   return (
-    <UITextView {...shared}>
+    <RNText {...shared}>
       {renderChildrenWithEmoji(children, shared, emoji ?? false)}
-    </UITextView>
+    </RNText>
   )
 }
 

@@ -85,20 +85,7 @@ module.exports = defineConfig(({envMode}) => ({
     ],
     alias: {
       '#': path.resolve(root, 'src'),
-      crypto: path.resolve(root, 'src/platform/crypto.ts'),
-      'multiformats/cid': path.resolve(
-        root,
-        'node_modules/multiformats/esm/src/cid.js',
-      ),
-      'multiformats/hashes/hasher': path.resolve(
-        root,
-        'node_modules/multiformats/esm/src/hashes/hasher.js',
-      ),
       'react-native$': 'react-native-web',
-      'react-native-uitextview': path.resolve(
-        root,
-        'node_modules/react-native-uitextview/lib/commonjs/index.js',
-      ),
       'react-native-webview': 'react-native-web-webview',
     },
   },

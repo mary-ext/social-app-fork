@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
-import {StyleSheet, type TextProps} from 'react-native'
-import {UITextView} from 'react-native-uitextview'
+import {StyleSheet, Text as RNText, type TextProps} from 'react-native'
 
 import {lh, s} from '#/lib/styles'
 import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'
@@ -80,7 +79,6 @@ function Text_DEPRECATED({
     }
 
     return {
-      uiTextView: false,
       selectable,
       style: flattened,
       dataSet: Object.assign({tooltip: title}, dataSet || {}),
@@ -100,8 +98,8 @@ function Text_DEPRECATED({
   ])
 
   return (
-    <UITextView {...textProps}>
+    <RNText {...textProps}>
       {renderChildrenWithEmoji(children, textProps, emoji ?? false)}
-    </UITextView>
+    </RNText>
   )
 }

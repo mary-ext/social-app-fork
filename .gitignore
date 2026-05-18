@@ -118,6 +118,3 @@ src/locale/locales/**/messages.ts
 *.apk
 *.aab
 *.ipa
-
-# superpowers plugin plans/specs — local-only workspace
-docs/superpowers/

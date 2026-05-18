@@ -31,7 +31,6 @@ export default defineConfig(
       'src/locale/locales/_build/**',
       'src/locale/locales/**/*.js',
       'eslint.config.mjs',
-      '.jscodeshift/**',
     ],
   },
 
