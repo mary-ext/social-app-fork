@@ -56,7 +56,6 @@ import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
-import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 
@@ -175,7 +174,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postSource?: PostSource
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
@@ -273,12 +271,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   })
 
   const onOpenAuthor = () => {
-    ax.metric('post:clickthroughAuthor', {
-      uri: post.uri,
-      authorDid: post.author.did,
-      logContext: 'PostThreadItem',
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
@@ -290,12 +282,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   }
 
   const onOpenEmbed = () => {
-    ax.metric('post:clickthroughEmbed', {
-      uri: post.uri,
-      authorDid: post.author.did,
-      logContext: 'PostThreadItem',
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,

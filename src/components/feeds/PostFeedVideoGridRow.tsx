@@ -9,7 +9,6 @@ import {
   VideoPostCard,
   VideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
-import {useAnalytics} from '#/analytics'
 
 export function PostFeedVideoGridRow({
   items: slices,
@@ -18,7 +17,6 @@ export function PostFeedVideoGridRow({
   items: FeedPostSliceItem[]
   sourceContext: VideoFeedSourceContext
 }) {
-  const ax = useAnalytics()
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
     .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
@@ -43,9 +41,7 @@ export function PostFeedVideoGridRow({
                 post={post.post}
                 sourceContext={sourceContext}
                 moderation={post.moderation}
-                onInteract={() => {
-                  ax.metric('videoCard:click', {context: 'feed'})
-                }}
+                onInteract={() => {}}
               />
             </Grid.Col>
           ))}

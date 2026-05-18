@@ -20,7 +20,6 @@ import {native} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
-import {useAnalytics} from '#/analytics'
 import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
 import {ShareMenuItems} from './ShareMenuItems'
 
@@ -47,7 +46,6 @@ let ShareMenuButton = ({
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {feedDescriptor} = useFeedFeedbackContext()
 
@@ -61,18 +59,9 @@ let ShareMenuButton = ({
         // HACK. We need the state update to be flushed by the time
         // menuControl.open() fires but RN doesn't expose flushSync.
         setTimeout(menuControl.open)
-
-        ax.metric('post:share', {
-          uri: post.uri,
-          authorDid: post.author.did,
-          logContext,
-          feedDescriptor,
-          postContext: big ? 'thread' : 'feed',
-        })
       },
     }),
     [
-      ax,
       menuControl,
       setHasBeenOpen,
       big,
@@ -84,7 +73,6 @@ let ShareMenuButton = ({
   )
 
   const onNativeLongPress = () => {
-    ax.metric('share:press:nativeShare', {})
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)

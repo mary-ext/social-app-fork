@@ -12,7 +12,6 @@ import {AccountList} from '#/components/AccountList'
 import {Button, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
@@ -25,7 +24,6 @@ export const ChooseAccountForm = ({
 }) => {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -49,10 +47,6 @@ export const ChooseAccountForm = ({
       try {
         setPendingDid(account.did)
         await resumeSession(account, true)
-        ax.metric('account:loggedIn', {
-          logContext: 'ChooseAccountForm',
-          withPassword: false,
-        })
         Toast.show(_(msg`Signed in as @${account.handle}`))
       } catch (e: any) {
         logger.error('choose account: initSession failed', {
@@ -71,7 +65,6 @@ export const ChooseAccountForm = ({
       onSelectAccount,
       setShowLoggedOut,
       _,
-      ax,
     ],
   )
 

@@ -19,7 +19,6 @@ import {
   type PostDraft,
 } from '#/view/com/composer/state/composer'
 import {type VideoState} from '#/view/com/composer/state/video'
-import {type AnalyticsContextType} from '#/analytics'
 import {type Gif} from '#/features/gifPicker/types'
 import {logger} from './logger'
 import {type DraftPostDisplay, type DraftSummary} from './schema'
@@ -275,10 +274,8 @@ function serializeGif(gifMedia: {
  */
 export function draftViewToSummary({
   view,
-  analytics,
 }: {
   view: AppBskyDraftDefs.DraftView
-  analytics: AnalyticsContextType
 }): DraftSummary {
   const meta = {
     isOriginatingDevice: view.draft.deviceId === getDeviceId(),
@@ -358,7 +355,7 @@ export function draftViewToSummary({
   })
 
   if (meta.isOriginatingDevice && meta.hasMissingMedia) {
-    analytics.logger.warn(`Draft is missing media on originating device`, {})
+    logger.warn(`Draft is missing media on originating device`, {})
   }
 
   return {

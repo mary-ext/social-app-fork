@@ -14,13 +14,12 @@ import {useTheme} from '#/alf'
 import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
   post,
   big,
-  logContext,
+  logContext: _logContext,
   hitSlop,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -29,12 +28,11 @@ export const BookmarkButton = memo(function BookmarkButton({
   hitSlop?: Insets
 }): React.ReactNode {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
   const requireAuth = useRequireAuth()
-  const {feedDescriptor} = useFeedFeedbackContext()
+  const {feedDescriptor: _feedDescriptor} = useFeedFeedbackContext()
 
   const {viewer} = post
   const isBookmarked = !!viewer?.bookmarked
@@ -51,13 +49,6 @@ export const BookmarkButton = memo(function BookmarkButton({
       await bookmark({
         action: 'create',
         post,
-      })
-
-      ax.metric('post:bookmark', {
-        uri: post.uri,
-        authorDid: post.author.did,
-        logContext,
-        feedDescriptor,
       })
 
       toast.show(
@@ -91,13 +82,6 @@ export const BookmarkButton = memo(function BookmarkButton({
       await bookmark({
         action: 'delete',
         uri: post.uri,
-      })
-
-      ax.metric('post:unbookmark', {
-        uri: post.uri,
-        authorDid: post.author.did,
-        logContext,
-        feedDescriptor,
       })
 
       toast.show(

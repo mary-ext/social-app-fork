@@ -29,7 +29,6 @@ import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -73,7 +72,6 @@ let PostControls = ({
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const t = useTheme()
   const {t: l} = useLingui()
   const {openComposer} = useOpenComposer()
@@ -178,12 +176,6 @@ let PostControls = ({
       feedContext,
       reqId,
     })
-    ax.metric('post:clickQuotePost', {
-      uri: post.uri,
-      authorDid: post.author.did,
-      logContext,
-      feedDescriptor,
-    })
     openComposer({
       quote: post,
       onPost: onPostReply,
@@ -230,12 +222,6 @@ let PostControls = ({
               !replyDisabled
                 ? () =>
                     requireAuth(() => {
-                      ax.metric('post:clickReply', {
-                        uri: post.uri,
-                        authorDid: post.author.did,
-                        logContext,
-                        feedDescriptor,
-                      })
                       onPressReply()
                     })
                 : undefined

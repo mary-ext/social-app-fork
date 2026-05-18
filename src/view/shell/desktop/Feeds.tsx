@@ -18,12 +18,10 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 export function DesktopFeeds() {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {data: pinnedFeedInfos, error, isLoading} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
@@ -87,10 +85,6 @@ export function DesktopFeeds() {
             feedInfo={feedInfo}
             current={current}
             onPress={() => {
-              ax.metric('desktopFeeds:feed:click', {
-                feedUri: feedInfo.uri,
-                feedDescriptor: feed,
-              })
               setSelectedFeed(feed)
               navigation.navigate('Home')
               if (route.name === 'Home' && feed === selectedFeed) {
@@ -100,7 +94,6 @@ export function DesktopFeeds() {
           />
         )
       })}
-
       <Link
         to="/feeds"
         label={_(msg`More feeds`)}

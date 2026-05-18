@@ -7,7 +7,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
-import {useAnalytics} from '#/analytics'
 import {GifPickerDialog} from '#/features/gifPicker/GifPickerDialog'
 import {type Gif} from '#/features/gifPicker/types'
 
@@ -18,16 +17,14 @@ type Props = {
 }
 
 export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
-  const ax = useAnalytics()
   const {_} = useLingui()
   const control = Dialog.useDialogControl()
   const t = useTheme()
 
   const onPressSelectGif = useCallback(() => {
-    ax.metric('composer:gif:open', {})
     Keyboard.dismiss()
     control.open()
-  }, [ax, control])
+  }, [control])
 
   return (
     <>

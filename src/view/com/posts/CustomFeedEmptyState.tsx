@@ -14,13 +14,11 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
-  const ax = useAnalytics()
   const feedFeedback = useFeedFeedbackContext()
   const {currentAccount} = useSession()
   const hasLoggedDiscoverEmptyErrorRef = useRef(false)
@@ -34,9 +32,6 @@ export function CustomFeedEmptyState() {
         !hasLoggedDiscoverEmptyErrorRef.current
       ) {
         hasLoggedDiscoverEmptyErrorRef.current = true
-        ax.metric('feed:discover:emptyError', {
-          userDid: currentAccount.did,
-        })
       }
     }
   }, [feedFeedback.feedSourceInfo, currentAccount?.did])

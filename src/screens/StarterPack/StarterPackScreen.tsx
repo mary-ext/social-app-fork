@@ -75,7 +75,6 @@ import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -189,7 +188,6 @@ function StarterPackScreenLoaded({
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
   const {_} = useLingui()
-  const ax = useAnalytics()
 
   const tabs = [
     ...(showPeopleTab ? [_(msg`People`)] : []),
@@ -204,11 +202,7 @@ function StarterPackScreenLoaded({
   const [link, setLink] = useState<string>()
   const [imageLoaded, setImageLoaded] = useState(false)
 
-  useEffect(() => {
-    ax.metric('starterPack:opened', {
-      starterPack: starterPack.uri,
-    })
-  }, [ax, starterPack.uri])
+  useEffect(() => {}, [starterPack.uri])
 
   const onOpenShareDialog = useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
@@ -321,7 +315,6 @@ function Header({
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
   const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0
-  const ax = useAnalytics()
 
   const navigation = useNavigation<NavigationProp>()
 
@@ -399,11 +392,6 @@ function Header({
     })
     Toast.show(_(msg`All accounts have been followed!`))
     captureAction(ProgressGuideAction.Follow, dids.length)
-    ax.metric('starterPack:followAll', {
-      logContext: 'StarterPackProfilesList',
-      starterPack: starterPack.uri,
-      count: dids.length,
-    })
   }
 
   if (
@@ -530,7 +518,6 @@ function OverflowMenu({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const reportDialogControl = useReportDialogControl()
@@ -544,7 +531,6 @@ function OverflowMenu({
     error: deleteError,
   } = useDeleteStarterPackMutation({
     onSuccess: () => {
-      ax.metric('starterPack:delete', {})
       deleteDialogControl.close(() => {
         if (navigation.canGoBack()) {
           navigation.popToTop()
@@ -570,7 +556,6 @@ function OverflowMenu({
       rkey: routeParams.rkey,
       listUri: starterPack.list.uri,
     })
-    ax.metric('starterPack:delete', {})
   }
 
   return (

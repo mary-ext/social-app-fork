@@ -18,6 +18,7 @@ import {
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
@@ -35,7 +36,6 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
@@ -71,7 +71,6 @@ function DialogInner({
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
-  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
@@ -134,7 +133,6 @@ function DialogInner({
         })
 
         if (!activitySubscription.post && !activitySubscription.reply) {
-          ax.metric('activitySubscription:disable', {})
           Toast.show(
             _(
               msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
@@ -163,9 +161,6 @@ function DialogInner({
             },
           )
         } else {
-          ax.metric('activitySubscription:enable', {
-            setting: activitySubscription.reply ? 'posts_and_replies' : 'posts',
-          })
           if (!initialState.post && !initialState.reply) {
             Toast.show(
               _(
@@ -184,7 +179,7 @@ function DialogInner({
       })
     },
     onError: err => {
-      ax.logger.error('Could not save activity subscription', {message: err})
+      logger.error('Could not save activity subscription', {message: err})
     },
   })
 

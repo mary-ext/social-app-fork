@@ -36,7 +36,6 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -120,7 +119,6 @@ function LandingScreenLoaded({
 }) {
   const {creator, listItemsSample, feeds} = starterPack
   const {_, i18n} = useLingui()
-  const ax = useAnalytics()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -147,9 +145,6 @@ function LandingScreenLoaded({
     } else {
       onContinue()
     }
-    ax.metric('starterPack:ctaPress', {
-      starterPack: starterPack.uri,
-    })
   }
 
   const onJoinWithoutPress = () => {

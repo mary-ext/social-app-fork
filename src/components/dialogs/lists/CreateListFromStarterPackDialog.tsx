@@ -28,7 +28,6 @@ import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {CreateOrEditListDialog} from './CreateOrEditListDialog'
 
 export function CreateListFromStarterPackDialog({
@@ -41,7 +40,6 @@ export function CreateListFromStarterPackDialog({
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
@@ -70,7 +68,7 @@ export function CreateListFromStarterPackDialog({
 
     try {
       // Fetch all members and add them, with minimum 3s duration for UX
-      const listItems = await wait(
+      const _listItems = await wait(
         3000,
         (async () => {
           const items = await getAllListMembers(agent, starterPack.list!.uri)
@@ -117,11 +115,6 @@ export function CreateListFromStarterPackDialog({
       )
 
       queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
-
-      ax.metric('starterPack:convertToList', {
-        starterPack: starterPack.uri,
-        memberCount: listItems.length,
-      })
     } catch (e) {
       logger.error('Failed to add members to list', {safeMessage: e})
       Toast.show(_(msg`List created, but failed to add some members`), {

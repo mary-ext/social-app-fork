@@ -4,12 +4,12 @@ import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
 import {useCallOnce} from '#/lib/once'
+import {logger} from '#/logger'
 import {
   usePreferencesQuery,
   useSetThreadViewPreferencesMutation,
 } from '#/state/queries/preferences'
 import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
-import {useAnalytics} from '#/analytics'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<
@@ -29,7 +29,6 @@ export type ThreadPreferences = {
 export function useThreadPreferences({
   save,
 }: {save?: boolean} = {}): ThreadPreferences {
-  const ax = useAnalytics()
   const {data: preferences} = usePreferencesQuery()
   const serverPrefs = preferences?.threadViewPrefs
   const once = useCallOnce()
@@ -62,24 +61,14 @@ export function useThreadPreferences({
       }),
     )
 
-    once(() => {
-      ax.metric('thread:preferences:load', {
-        sort: serverPrefs.sort,
-        view: serverPrefs.lab_treeViewEnabled ? 'tree' : 'linear',
-      })
-    })
+    once(() => {})
   }
 
   const userUpdatedPrefs = useRef(false)
   const {mutate, isPending: isSaving} = useSetThreadViewPreferencesMutation({
-    onSuccess: (_data, prefs) => {
-      ax.metric('thread:preferences:update', {
-        sort: prefs.sort,
-        view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
-      })
-    },
+    onSuccess: (_data, _prefs) => {},
     onError: err => {
-      ax.logger.error('useThreadPreferences failed to save', {
+      logger.error('useThreadPreferences failed to save', {
         safeMessage: err,
       })
     },

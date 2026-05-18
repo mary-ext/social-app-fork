@@ -527,10 +527,10 @@ rg -n "useAnalytics|useAnalyticsBase|AnalyticsContext|AnalyticsContextType|ax\.m
 - Delete `import {useAnalytics} from '#/analytics'` when the import becomes unused
 
 **Manual pass — contextual judgment required:**
-- [ ] `ax.logger.X(...)` → `logger.X(...)` from `#/logger`. **Don't codemod this blindly** — analytics-logger callsites were often context-bound children (`Logger.create(Logger.Context.Notifications)`, `FeedFeedback`, `ReportDialog`). Use the equivalent `Logger.create(Logger.Context.X)` at the rewrite site so log filtering still works. Bare `logger.error(...)` drops the context — only fine where context wasn't meaningful to begin with
-- [ ] `AnalyticsContextType` function-param types → narrow to local types or remove the plumbing (each occurrence is one-off; not codemod-able)
-- [ ] `type Metrics[...]` used only for payload typing → replace with local literal-union/object types (one-off)
-- [ ] `rm -rf src/analytics` once `rg "from '#/analytics" src` is empty
+- [x] `ax.logger.X(...)` → `logger.X(...)` from `#/logger`. **Don't codemod this blindly** — analytics-logger callsites were often context-bound children (`Logger.create(Logger.Context.Notifications)`, `FeedFeedback`, `ReportDialog`). Use the equivalent `Logger.create(Logger.Context.X)` at the rewrite site so log filtering still works. Bare `logger.error(...)` drops the context — only fine where context wasn't meaningful to begin with
+- [x] `AnalyticsContextType` function-param types → narrow to local types or remove the plumbing (each occurrence is one-off; not codemod-able)
+- [x] `type Metrics[...]` used only for payload typing → replace with local literal-union/object types (one-off)
+- [x] `rm -rf src/analytics` once `rg "from '#/analytics" src` is empty
 
 **Footgun:** some files only import `type Metrics` for payload typing, not for actual tracking — the codemod won't see them since they're type-only imports. The done-grep below catches them.
 

@@ -3,7 +3,6 @@ import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {useAnalytics} from '#/analytics'
 import {type Gif} from '#/features/gifPicker/types'
 import {gifPreviewUrl} from '#/features/gifPicker/utils'
 
@@ -14,7 +13,6 @@ export function GifPickerItem({
   gif: Gif
   onSelectGif: (gif: Gif) => void
 }) {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
 
@@ -22,7 +20,6 @@ export function GifPickerItem({
   const aspectRatio = width > 0 && height > 0 ? width / height : 1
 
   const onPress = () => {
-    ax.metric('composer:gif:select', {})
     onSelectGif(gif)
   }
 

@@ -14,13 +14,11 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
@@ -34,7 +32,6 @@ export function InitialVerificationAnnouncement() {
   return (
     <Dialog.Outer control={control} onClose={onClose}>
       <Dialog.Handle />
-
       <Dialog.ScrollableInner
         label={_(msg`Announcing verification on Bluesky`)}
         style={[
@@ -162,11 +159,7 @@ export function InitialVerificationAnnouncement() {
               variant="solid"
               color="primary"
               style={[a.justify_center, a.w_full]}
-              onPress={() => {
-                ax.metric('verification:learn-more', {
-                  location: 'initialAnnouncementeNux',
-                })
-              }}>
+              onPress={() => {}}>
               <ButtonText>
                 <Trans>Read blog post</Trans>
               </ButtonText>

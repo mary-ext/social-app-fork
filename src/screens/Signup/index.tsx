@@ -28,27 +28,15 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    analytics: ax,
-  })
+  const [state, dispatch] = useReducer(reducer, initialState)
   const {gtMobile} = useBreakpoints()
   const submit = useSubmitSignup()
-
-  useEffect(() => {
-    dispatch({
-      type: 'setAnalytics',
-      value: ax,
-    })
-  }, [ax])
 
   const activeStarterPack = useActiveStarterPack()
   const {

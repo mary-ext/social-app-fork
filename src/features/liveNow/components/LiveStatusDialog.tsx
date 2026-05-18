@@ -28,7 +28,6 @@ import * as Hider from '#/components/moderation/Hider'
 import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import type * as bsky from '#/types/bsky'
 
@@ -108,7 +107,6 @@ export function LiveStatus({
   padding?: 'lg' | 'xl'
   onPressOpenProfile: () => void
 }) {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const t = useTheme()
   const queryClient = useQueryClient()
@@ -191,7 +189,6 @@ export function LiveStatus({
           color="primary"
           variant="solid"
           onPress={() => {
-            ax.metric('live:card:watch', {subject: profile.did})
             openLink(embed.external.uri, false)
           }}>
           <ButtonText>
@@ -220,7 +217,6 @@ export function LiveStatus({
               color="secondary"
               variant="solid"
               onPress={() => {
-                ax.metric('live:card:openProfile', {subject: profile.did})
                 unstableCacheProfileView(queryClient, profile)
                 onPressOpenProfile()
               }}>

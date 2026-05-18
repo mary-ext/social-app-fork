@@ -25,7 +25,6 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
@@ -50,7 +49,6 @@ let ProfileHeaderShell = ({
   isPlaceholderProfile,
 }: React.PropsWithChildren<Props>): React.ReactNode => {
   const t = useTheme()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {t: l} = useLingui()
   const {openLightbox} = useLightboxControls()
@@ -114,14 +112,12 @@ let ProfileHeaderShell = ({
 
   useEffect(() => {
     if (live.isActive) {
-      ax.metric('live:view:profile', {subject: profile.did})
     }
-  }, [ax, live.isActive, profile.did])
+  }, [live.isActive, profile.did])
 
   const onPressAvi = useCallback(() => {
     if (live.isActive) {
       playHaptic('Light')
-      ax.metric('live:card:open', {subject: profile.did, from: 'profile'})
       liveStatusControl.open()
     } else {
       const modui = moderation.ui('avatar')
@@ -132,7 +128,6 @@ let ProfileHeaderShell = ({
       }
     }
   }, [
-    ax,
     profile,
     moderation,
     _openLightbox,

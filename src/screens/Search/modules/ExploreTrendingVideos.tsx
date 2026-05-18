@@ -20,7 +20,6 @@ import {
   CompactVideoPostCard,
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
-import {useAnalytics} from '#/analytics'
 
 const CARD_WIDTH = 100
 
@@ -152,7 +151,6 @@ function VideoCards({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const items = useMemo(() => {
     return data.pages
       .flatMap(page => page.slices)
@@ -178,13 +176,10 @@ function VideoCards({
               uri: VIDEO_FEED_URI,
               sourceInterstitial: 'explore',
             }}
-            onInteract={() => {
-              ax.metric('videoCard:click', {context: 'interstitial:explore'})
-            }}
+            onInteract={() => {}}
           />
         </View>
       ))}
-
       <View style={[{width: CARD_WIDTH * 2}]}>
         <Link
           to={href}

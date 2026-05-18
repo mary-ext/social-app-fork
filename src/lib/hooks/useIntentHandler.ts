@@ -7,7 +7,6 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
@@ -21,7 +20,6 @@ let previousIntentUrl = ''
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
-  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
@@ -35,11 +33,6 @@ export function useIntentHandler() {
 
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        ax.metric('deepLink:referrerReceived', {
-          to: url,
-          referrer: referrerInfo?.referrer,
-          hostname: referrerInfo?.hostname,
-        })
       }
       const urlp = parseLinkingUrl(url)
       const [, intent, intentType] = urlp.pathname.split('/')
@@ -82,7 +75,7 @@ export function useIntentHandler() {
       handleIncomingURL(incomingUrl)
       previousIntentUrl = incomingUrl
     }
-  }, [incomingUrl, ax, composeIntent, currentAccount, tryApplyUpdate])
+  }, [incomingUrl, composeIntent, currentAccount, tryApplyUpdate])
 }
 
 export function useComposeIntent() {

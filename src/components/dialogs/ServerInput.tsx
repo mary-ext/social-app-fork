@@ -16,7 +16,6 @@ import * as TextField from '#/components/forms/TextField'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom'
 
@@ -27,7 +26,6 @@ export function ServerInputDialog({
   control: Dialog.DialogOuterProps['control']
   onSelect: (url: string) => void
 }) {
-  const ax = useAnalytics()
   const formRef = useRef<DialogInnerRef>(null)
 
   // persist these options between dialog open/close
@@ -43,10 +41,7 @@ export function ServerInputDialog({
         setPreviousCustomAddress(result)
       }
     }
-    ax.metric('signin:hostingProviderPressed', {
-      hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
-    })
-  }, [ax, onSelect, fixedOption])
+  }, [onSelect, fixedOption])
 
   return (
     <Dialog.Outer

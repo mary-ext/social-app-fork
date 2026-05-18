@@ -12,7 +12,6 @@ import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import {MessagePlus_Stroke2_Corner0_Rounded as NewChatIcon} from '#/components/icons/Message'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 
 export function NewChat({
   control,
@@ -23,7 +22,6 @@ export function NewChat({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const ax = useAnalytics()
 
   const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
@@ -32,9 +30,7 @@ export function NewChat({
       onNewChat(data.convo.id)
 
       if (!data.convo.lastMessage) {
-        ax.metric('chat:create', {logContext: 'NewChatDialog'})
       }
-      ax.metric('chat:open', {logContext: 'NewChatDialog'})
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
@@ -47,7 +43,6 @@ export function NewChat({
   const {mutate: createGroupChat} = useCreateGroupChat({
     onSuccess: data => {
       onNewChat(data.convo.id)
-      ax.metric('groupchat:create', {logContext: 'NewChatDialog'})
     },
     onError: error => {
       logger.error('Failed to create groupchat', {safeMessage: error})

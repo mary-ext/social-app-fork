@@ -16,7 +16,6 @@ import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
 import {atoms as a, native} from '#/alf'
 import {ScreenTransition} from '#/components/ScreenTransition'
-import {useAnalytics} from '#/analytics'
 import {ChooseAccountForm} from './ChooseAccountForm'
 import * as AuthLayout from './components/AuthLayout'
 import {AuthLayoutNavigationContext} from './components/AuthLayout/context'
@@ -40,7 +39,7 @@ const OrderedForms = [
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {_} = useLingui()
   const failedAttemptCountRef = useRef(0)
-  const startTimeRef = useRef(Date.now())
+  const _startTimeRef = useRef(Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
@@ -66,7 +65,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     'Forward' | 'Backward'
   >('Forward')
 
-  const ax = useAnalytics()
   const {
     data: serviceDescription,
     error: serviceError,
@@ -99,7 +97,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
         error: String(serviceError),
       })
-      ax.metric('signin:hostingProviderFailedResolution', {})
     } else {
       setError('')
     }
@@ -107,24 +104,14 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   const onPressForgotPassword = () => {
     gotoForm(Forms.ForgotPassword)
-    ax.metric('signin:forgotPasswordPressed', {})
   }
 
   const handlePressBack = () => {
     onPressBack()
     setScreenTransitionDirection('Backward')
-    ax.metric('signin:backPressed', {
-      failedAttemptsCount: failedAttemptCountRef.current,
-    })
   }
 
-  const onAttemptSuccess = () => {
-    ax.metric('signin:success', {
-      isUsingCustomProvider: serviceUrl !== DEFAULT_SERVICE,
-      timeTakenSeconds: Math.round((Date.now() - startTimeRef.current) / 1000),
-      failedAttemptsCount: failedAttemptCountRef.current,
-    })
-  }
+  const onAttemptSuccess = () => {}
 
   const onAttemptFailed = () => {
     failedAttemptCountRef.current += 1

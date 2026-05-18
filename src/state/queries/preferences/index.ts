@@ -21,7 +21,6 @@ import {
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
-import {useAnalytics} from '#/analytics'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -102,7 +101,6 @@ export function useClearPreferencesMutation() {
 }
 
 export function usePreferencesSetContentLabelMutation() {
-  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
 
@@ -113,7 +111,6 @@ export function usePreferencesSetContentLabelMutation() {
   >({
     mutationFn: async ({label, visibility, labelerDid}) => {
       await agent.setContentLabelPref(label, visibility, labelerDid)
-      ax.metric('moderation:changeLabelPreference', {preference: visibility})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -414,7 +411,6 @@ export function useSetActiveProgressGuideMutation() {
 }
 
 export function useSetVerificationPrefsMutation() {
-  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -422,9 +418,7 @@ export function useSetVerificationPrefsMutation() {
     mutationFn: async prefs => {
       await agent.setVerificationPrefs(prefs)
       if (prefs.hideBadges) {
-        ax.metric('verification:settings:hideBadges', {})
       } else {
-        ax.metric('verification:settings:unHideBadges', {})
       }
       // triggers a refetch
       await queryClient.invalidateQueries({

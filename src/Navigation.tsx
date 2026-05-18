@@ -43,6 +43,7 @@ import {
   type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
+import {Logger} from '#/logger'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -127,7 +128,6 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
-import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
@@ -880,8 +880,7 @@ const LINKING = {
 } satisfies LinkingOptions<AllNavigatorParams>
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
-  const ax = useAnalytics()
-  const notyLogger = ax.logger.useChild(ax.logger.Context.Notifications)
+  const notyLogger = Logger.create(Logger.Context.Notifications)
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount} = useAccountSwitcher()
@@ -949,11 +948,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       const payload = getNotificationPayload(notificationResponse.notification)
 
       if (payload) {
-        ax.metric('notifications:openApp', {
-          reason: payload.reason,
-          causedBoot: true,
-        })
-
         if (payload.reason === 'chat-message') {
           handleChatMessage(payload)
         } else {
@@ -982,23 +976,9 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     handlePushNotificationEntry()
 
-    ax.metric('router:navigate', {})
-
-    ax.metric('init', {
-      initMs: Math.round(
-        // @ts-ignore Emitted by Metro in the bundle prelude
-        performance.now() - global.__BUNDLE_START_TIME__,
-      ),
-    })
-
     if (IS_WEB) {
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        ax.metric('deepLink:referrerReceived', {
-          to: window.location.href,
-          referrer: referrerInfo?.referrer,
-          hostname: referrerInfo?.hostname,
-        })
       }
     }
   })
@@ -1010,7 +990,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       theme={theme}
       onStateChange={() => {
         const currentScreen = getCurrentRouteName()
-        ax.metric('router:navigate', {from: previousScreen.current})
         previousScreen.current = currentScreen
       }}
       onReady={onNavigationReady}

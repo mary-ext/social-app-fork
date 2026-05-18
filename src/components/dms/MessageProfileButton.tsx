@@ -13,7 +13,6 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {canBeMessaged} from '#/components/dms/util'
 import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 
 export function MessageProfileButton({
   profile,
@@ -22,13 +21,11 @@ export function MessageProfileButton({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
 
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
   const {mutate: initiateConvo} = useGetConvoForMembers({
     onSuccess: ({convo}) => {
-      ax.metric('chat:open', {logContext: 'ProfileHeader'})
       navigation.navigate('MessagesConversation', {conversation: convo.id})
     },
     onError: () => {
@@ -42,15 +39,13 @@ export function MessageProfileButton({
     }
 
     if (convoAvailability.convo) {
-      ax.metric('chat:open', {logContext: 'ProfileHeader'})
       navigation.navigate('MessagesConversation', {
         conversation: convoAvailability.convo.id,
       })
     } else {
-      ax.metric('chat:create', {logContext: 'ProfileHeader'})
       initiateConvo([profile.did])
     }
-  }, [ax, navigation, profile.did, initiateConvo, convoAvailability])
+  }, [navigation, profile.did, initiateConvo, convoAvailability])
 
   const wrappedOnPress = onPress
 

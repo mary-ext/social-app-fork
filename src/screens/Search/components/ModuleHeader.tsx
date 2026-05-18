@@ -12,7 +12,6 @@ import {sizes as iconSizes} from '#/components/icons/common'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {Link} from '#/components/Link'
 import {Text, type TextProps} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 export function Container({
   style,
@@ -119,14 +118,13 @@ export function SubtitleText({style, ...props}: TextProps) {
 
 export function SearchButton({
   label,
-  metricsTag,
+  metricsTag: _metricsTag,
   onPress,
 }: {
   label: string
   metricsTag: 'suggestedAccounts' | 'suggestedFeeds'
   onPress?: () => void
 }) {
-  const ax = useAnalytics()
   return (
     <Button
       label={label}
@@ -136,7 +134,6 @@ export function SearchButton({
       shape="round"
       PressableComponent={native(PressableScale)}
       onPress={() => {
-        ax.metric('explore:module:searchButtonPress', {module: metricsTag})
         onPress?.()
       }}
       style={[

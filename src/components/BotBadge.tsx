@@ -7,7 +7,6 @@ import {BotAccountAlert} from '#/components/BotAccountAlert'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function isBotAccount(profile: {
@@ -49,7 +48,6 @@ export function BotBadgeButton({
   width: number
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const control = useDialogControl()
 
@@ -64,7 +62,6 @@ export function BotBadgeButton({
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()
-          ax.metric('bot:badge:click', {})
           control.open()
         }}>
         {({hovered}) => (

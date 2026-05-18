@@ -96,7 +96,6 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_ANDROID} from '#/env'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
@@ -482,7 +481,6 @@ let VideoItem = ({
   feedContext: string | undefined
   reqId: string | undefined
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
   const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
@@ -500,16 +498,9 @@ let VideoItem = ({
       // Track post:view event
       if (!hasTrackedView.current) {
         hasTrackedView.current = true
-        ax.metric('post:view', {
-          uri: post.uri,
-          authorDid: post.author.did,
-          logContext: 'ImmersiveVideo',
-          feedDescriptor,
-        })
       }
     }
   }, [
-    ax,
     active,
     post.uri,
     post.author.did,

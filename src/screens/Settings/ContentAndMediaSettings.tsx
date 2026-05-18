@@ -25,7 +25,6 @@ import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<
@@ -34,7 +33,6 @@ type Props = NativeStackScreenProps<
 >
 export function ContentAndMediaSettingsScreen({}: Props) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const autoplayDisabledPref = useAutoplayDisabled()
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
   const inAppBrowserPref = useInAppBrowser()
@@ -136,9 +134,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                 onChange={value => {
                   const hide = Boolean(!value)
                   if (hide) {
-                    ax.metric('trendingTopics:hide', {context: 'settings'})
                   } else {
-                    ax.metric('trendingTopics:show', {context: 'settings'})
                   }
                   setTrendingDisabled(hide)
                 }}>
@@ -157,9 +153,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
                 onChange={value => {
                   const hide = Boolean(!value)
                   if (hide) {
-                    ax.metric('trendingVideos:hide', {context: 'settings'})
                   } else {
-                    ax.metric('trendingVideos:show', {context: 'settings'})
                   }
                   setTrendingVideoDisabled(hide)
                 }}>

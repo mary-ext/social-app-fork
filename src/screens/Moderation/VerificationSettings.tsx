@@ -17,11 +17,9 @@ import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/i
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
 
 export function Screen() {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
 
@@ -52,11 +50,7 @@ export function Screen() {
                       context: `english-only-resource`,
                     }),
                   )}
-                  onPress={() => {
-                    ax.metric('verification:learn-more', {
-                      location: 'verificationSettings',
-                    })
-                  }}>
+                  onPress={() => {}}>
                   Learn more here.
                 </InlineLinkText>
               </Trans>

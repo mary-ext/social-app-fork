@@ -8,18 +8,15 @@ import {
   isBskyAppUrl,
   isBskyRSSUrl,
   isRelativeUrl,
-  toNiceDomain,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 export function useOpenLink() {
-  const ax = useAnalytics()
   const enabled = useInAppBrowser()
   const t = useTheme()
   const dialogContext = useDialogContext()
@@ -32,11 +29,6 @@ export function useOpenLink() {
       }
 
       if (!isBskyAppUrl(url)) {
-        ax.metric('link:clicked', {
-          domain: toNiceDomain(url),
-          url,
-        })
-
         if (shouldProxy) {
           url = createProxiedUrl(url)
         }
@@ -73,7 +65,7 @@ export function useOpenLink() {
       }
       Linking.openURL(url)
     },
-    [ax, enabled, inAppBrowserConsentControl, t, dialogContext],
+    [enabled, inAppBrowserConsentControl, t, dialogContext],
   )
 
   return openLink

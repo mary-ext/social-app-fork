@@ -95,7 +95,6 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_INTERNAL} from '#/env'
 
 let PostMenuItems = ({
@@ -106,7 +105,7 @@ let PostMenuItems = ({
   richText,
   threadgateRecord,
   onShowLess,
-  logContext,
+  logContext: _logContext,
   forceGoogleTranslate,
 }: {
   testID: string
@@ -126,7 +125,6 @@ let PostMenuItems = ({
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const debugFeedContextEnabled = useDebugFeedContextEnabled()
   const langPrefs = useLanguagePrefs()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
@@ -229,21 +227,9 @@ let PostMenuItems = ({
     try {
       if (isThreadMuted) {
         void unmuteThread()
-        ax.metric('post:unmute', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
-        })
         Toast.show(l`You will now receive notifications for this thread`)
       } else {
         void muteThread()
-        ax.metric('post:mute', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
-        })
         Toast.show(l`You will no longer receive notifications for this thread`)
       }
     } catch (err) {
@@ -258,12 +244,6 @@ let PostMenuItems = ({
   }
 
   const onToggleWordsAndTagsMute = () => {
-    ax.metric('postMenu:openMuteWordsDialog', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
     mutedWordsDialogControl.open()
   }
 
@@ -286,7 +266,6 @@ let PostMenuItems = ({
 
   const onHidePost = () => {
     hidePost({uri: postUri})
-    ax.metric('thread:click:hideReplyForMe', {})
   }
 
   const hideInPWI = !!postAuthor.labels?.find(
@@ -300,12 +279,6 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
-    ax.metric('post:showMore', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
-    })
     Toast.show(l({message: 'Feedback sent to feed operator', context: 'toast'}))
   }
 
@@ -315,12 +288,6 @@ let PostMenuItems = ({
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
-    })
-    ax.metric('post:showLess', {
-      uri: postUri,
-      authorDid: postAuthor.did,
-      logContext,
-      feedDescriptor: feedFeedback.feedDescriptor,
     })
     if (onShowLess) {
       onShowLess({
@@ -381,7 +348,6 @@ let PostMenuItems = ({
 
       // Log metric only when hiding (not when showing)
       if (isHide) {
-        ax.metric('thread:click:hideReplyForEveryone', {})
       }
 
       Toast.show(
@@ -414,7 +380,6 @@ let PostMenuItems = ({
   }
 
   const onPressPin = () => {
-    ax.metric(isPinned ? 'post:unpin' : 'post:pin', {})
     void pinPostMutate({
       postUri,
       postCid,
@@ -435,12 +400,6 @@ let PostMenuItems = ({
         })
       }
     } finally {
-      ax.metric('postMenu:blockAccount', {
-        uri: postUri,
-        authorDid: postAuthor.did,
-        logContext,
-        feedDescriptor: feedFeedback.feedDescriptor,
-      })
     }
   }
 
@@ -458,12 +417,6 @@ let PostMenuItems = ({
           })
         }
       } finally {
-        ax.metric('postMenu:unmuteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
-        })
       }
     } else {
       try {
@@ -478,12 +431,6 @@ let PostMenuItems = ({
           })
         }
       } finally {
-        ax.metric('postMenu:muteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
-        })
       }
     }
   }
@@ -818,14 +765,7 @@ let PostMenuItems = ({
           ...post,
           $type: 'app.bsky.feed.defs#postView',
         }}
-        onAfterSubmit={() => {
-          ax.metric('postMenu:reportPost', {
-            uri: postUri,
-            authorDid: postAuthor.did,
-            logContext,
-            feedDescriptor: feedFeedback.feedDescriptor,
-          })
-        }}
+        onAfterSubmit={() => {}}
       />
       <PostInteractionSettingsDialog
         control={postInteractionSettingsDialogControl}

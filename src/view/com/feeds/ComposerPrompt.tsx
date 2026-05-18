@@ -11,6 +11,7 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
+import {logger} from '#/logger'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -21,12 +22,10 @@ import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/C
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 export function ComposerPrompt() {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
@@ -37,13 +36,10 @@ export function ComposerPrompt() {
   const sheetWrapper = useSheetWrapper()
 
   const onPress = useCallback(() => {
-    ax.metric('composerPrompt:press', {})
     openComposer({logContext: 'Fab'})
-  }, [ax, openComposer])
+  }, [openComposer])
 
   const onPressImage = useCallback(async () => {
-    ax.metric('composerPrompt:gallery:press', {})
-
     // On web, open the composer with the gallery picker auto-opening
     if (!IS_NATIVE) {
       openComposer({openGallery: true, logContext: 'Fab'})
@@ -89,11 +85,10 @@ export function ComposerPrompt() {
       }
     } catch (err: any) {
       if (!String(err).toLowerCase().includes('cancel')) {
-        ax.logger.error('Error opening image picker', {error: err})
+        logger.error('Error opening image picker', {error: err})
       }
     }
   }, [
-    ax,
     openComposer,
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
@@ -101,8 +96,6 @@ export function ComposerPrompt() {
   ])
 
   const onPressCamera = useCallback(async () => {
-    ax.metric('composerPrompt:camera:press', {})
-
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
@@ -130,10 +123,10 @@ export function ComposerPrompt() {
       })
     } catch (err: any) {
       if (!String(err).toLowerCase().includes('cancel')) {
-        ax.logger.error('Error opening camera', {error: err})
+        logger.error('Error opening camera', {error: err})
       }
     }
-  }, [ax, openComposer, requestCameraAccessIfNeeded])
+  }, [openComposer, requestCameraAccessIfNeeded])
 
   if (!profile) {
     return null

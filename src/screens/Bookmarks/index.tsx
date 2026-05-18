@@ -36,19 +36,12 @@ import {ListFooter} from '#/components/Lists'
 import * as Skele from '#/components/Skeleton'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 
 export function BookmarksScreen({}: Props) {
-  const ax = useAnalytics()
-
-  useFocusEffect(
-    useCallback(() => {
-      ax.metric('bookmarks:view', {})
-    }, [ax]),
-  )
+  useFocusEffect(useCallback(() => {}, []))
 
   return (
     <Layout.Screen testID="bookmarksScreen">
@@ -276,14 +269,11 @@ function BookmarkItem({
   item: Extract<ListItem, {type: 'bookmark'}>
   hideTopBorder: boolean
 }) {
-  const ax = useAnalytics()
   return (
     <Post
       post={item.bookmark.item}
       hideTopBorder={hideTopBorder}
-      onBeforePress={() => {
-        ax.metric('bookmarks:post-clicked', {})
-      }}
+      onBeforePress={() => {}}
     />
   )
 }

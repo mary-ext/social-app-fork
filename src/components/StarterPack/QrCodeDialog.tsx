@@ -20,7 +20,6 @@ import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -34,7 +33,6 @@ export function QrCodeDialog({
   control: DialogControlProps
 }) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const [isSaveProcessing, setIsSaveProcessing] = useState(false)
   const [isCopyProcessing, setIsCopyProcessing] = useState(false)
@@ -107,11 +105,6 @@ export function QrCodeDialog({
         link.click()
       }
 
-      ax.metric('starterPack:share', {
-        starterPack: starterPack.uri,
-        shareType: 'qrcode',
-        qrShareType: 'save',
-      })
       setIsSaveProcessing(false)
       Toast.show(
         IS_WEB
@@ -132,11 +125,6 @@ export function QrCodeDialog({
         navigator.clipboard.write([item])
       })
 
-      ax.metric('starterPack:share', {
-        starterPack: starterPack.uri,
-        shareType: 'qrcode',
-        qrShareType: 'copy',
-      })
       Toast.show(_(msg`QR code copied to your clipboard!`))
       setIsCopyProcessing(false)
       control.close()
@@ -147,13 +135,7 @@ export function QrCodeDialog({
     ref.current?.capture?.().then(async (uri: string) => {
       control.close(() => {
         Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
-          () => {
-            ax.metric('starterPack:share', {
-              starterPack: starterPack.uri,
-              shareType: 'qrcode',
-              qrShareType: 'share',
-            })
-          },
+          () => {},
         )
       })
     })

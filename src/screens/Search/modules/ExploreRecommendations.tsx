@@ -15,7 +15,6 @@ import {
   TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 // Note: This module is not currently used and may be removed in the future.
@@ -27,7 +26,6 @@ export function ExploreRecommendations() {
 
 function Inner() {
   const t = useTheme()
-  const ax = useAnalytics()
   const gutters = useGutters([0, 'compact'])
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noRecs = !isLoading && !error && !trending?.suggested?.length
@@ -88,9 +86,7 @@ function Inner() {
                 <TrendingTopicLink
                   key={topic.link}
                   topic={topic}
-                  onPress={() => {
-                    ax.metric('recommendedTopic:click', {context: 'explore'})
-                  }}>
+                  onPress={() => {}}>
                   {({hovered}) => (
                     <TrendingTopic
                       topic={topic}

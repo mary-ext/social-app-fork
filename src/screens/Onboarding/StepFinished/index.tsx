@@ -4,7 +4,6 @@ import {
   type AppBskyActorDefs,
   type AppBskyActorProfile,
   type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
@@ -46,14 +45,11 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
-import * as bsky from '#/types/bsky'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
 export function StepFinished() {
   const {state, dispatch} = useOnboardingInternalState()
-  const ax = useAnalytics()
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = useState(false)
   const queryClient = useQueryClient()
@@ -169,14 +165,6 @@ export function StepFinished() {
             }
             return next
           })
-
-          ax.metric('onboarding:finished:avatarResult', {
-            avatarResult: profileStepResults.isCreatedAvatar
-              ? 'created'
-              : profileStepResults.image
-                ? 'uploaded'
-                : 'default',
-          })
         })(),
         requestNotificationsPermission('AfterOnboarding'),
       ])
@@ -205,30 +193,9 @@ export function StepFinished() {
     startProgressGuide('follow-10')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
-    ax.metric('onboarding:finished:nextPressed', {
-      usedStarterPack: Boolean(starterPack),
-      starterPackName:
-        starterPack &&
-        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-          starterPack.record,
-          AppBskyGraphStarterpack.isRecord,
-        )
-          ? starterPack.record.name
-          : undefined,
-      starterPackCreator: starterPack?.creator.did,
-      starterPackUri: starterPack?.uri,
-      profilesFollowed: listItems?.length ?? 0,
-      feedsPinned: starterPack?.feeds?.length ?? 0,
-    })
     if (starterPack && listItems?.length) {
-      ax.metric('starterPack:followAll', {
-        logContext: 'Onboarding',
-        starterPack: starterPack.uri,
-        count: listItems?.length,
-      })
     }
   }, [
-    ax,
     queryClient,
     agent,
     dispatch,
@@ -261,7 +228,6 @@ function ValueProposition({
 }) {
   const [subStep, setSubStep] = useState<0 | 1 | 2>(0)
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
 
   const onPress = () => {
@@ -269,10 +235,8 @@ function ValueProposition({
       finishOnboarding() // has its own metrics
     } else if (subStep === 1) {
       setSubStep(2)
-      ax.metric('onboarding:valueProp:stepTwo:nextPressed', {})
     } else if (subStep === 0) {
       setSubStep(1)
-      ax.metric('onboarding:valueProp:stepOne:nextPressed', {})
     }
   }
 
@@ -287,7 +251,6 @@ function ValueProposition({
             size="small"
             label={_(msg`Skip introduction and start using your account`)}
             onPress={() => {
-              ax.metric('onboarding:valueProp:skipPressed', {})
               finishOnboarding()
             }}
             style={[a.bg_transparent]}>
@@ -297,13 +260,11 @@ function ValueProposition({
           </Button>
         </OnboardingHeaderSlot.Portal>
       )}
-
       <ValuePropositionPager
         step={subStep}
         setStep={ss => setSubStep(ss)}
         avatarUri={state.profileStepResults.imageUri}
       />
-
       <OnboardingControls.Portal>
         <View style={gtMobile && [a.gap_md, a.flex_row]}>
           {gtMobile && (IS_WEB ? subStep !== 2 : true) && (

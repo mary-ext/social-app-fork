@@ -53,7 +53,6 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {
   isStatusStillActive,
@@ -214,7 +213,6 @@ let PostFeed = ({
   isVideoFeed?: boolean
   lastFetchDate?: () => number
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -640,11 +638,6 @@ let PostFeed = ({
   const onRefresh = useCallback(async () => {
     if (!enabled) return
 
-    ax.metric('feed:refresh', {
-      feedType: feedType,
-      feedUrl: feed,
-      reason: 'pull-to-refresh',
-    })
     setIsPTRing(true)
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
@@ -653,32 +646,17 @@ let PostFeed = ({
       logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
-  }, [
-    ax,
-    queryClient,
-    setIsPTRing,
-    onHasNew,
-    feed,
-    feedParams,
-    feedType,
-    enabled,
-  ])
+  }, [queryClient, setIsPTRing, onHasNew, feed, feedParams, feedType, enabled])
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    ax.metric('feed:endReached', {
-      feedType: feedType,
-      feedUrl: feed,
-      itemCount: feedItems.length,
-    })
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more posts', {message: err})
     }
   }, [
-    ax,
     isFetching,
     hasNextPage,
     isError,
@@ -890,15 +868,7 @@ let PostFeed = ({
         if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
           seenPostUrisRef.current.add(post.uri)
 
-          const position = getPostPosition('sliceItem', item.key)
-
-          ax.metric('post:view', {
-            uri: post.uri,
-            authorDid: post.author.did,
-            logContext: 'FeedItem',
-            feedDescriptor: feedFeedback.feedDescriptor || feed,
-            position,
-          })
+          const _position = getPostPosition('sliceItem', item.key)
         }
 
         // Live status tracking (existing code)
@@ -910,10 +880,6 @@ let PostFeed = ({
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
             seenActorWithStatusRef.current.add(actor.did)
-            ax.metric('live:view:post', {
-              subject: actor.did,
-              feed,
-            })
           }
         }
       } else if (item.type === 'videoGridRow') {
@@ -925,20 +891,12 @@ let PostFeed = ({
           if (!seenPostUrisRef.current.has(post.uri)) {
             seenPostUrisRef.current.add(post.uri)
 
-            const position = getPostPosition('videoGridRow', item.key)
-
-            ax.metric('post:view', {
-              uri: post.uri,
-              authorDid: post.author.did,
-              logContext: 'FeedItem',
-              feedDescriptor: feedFeedback.feedDescriptor || feed,
-              position,
-            })
+            const _position = getPostPosition('videoGridRow', item.key)
           }
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
+    [feedFeedback, feed, liveNowConfig, getPostPosition],
   )
 
   return (

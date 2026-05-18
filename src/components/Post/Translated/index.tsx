@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {Platform, type StyleProp, type TextStyle, View} from 'react-native'
+import {type StyleProp, type TextStyle, View} from 'react-native'
 import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -26,7 +26,6 @@ import {createStaticClick, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -373,7 +372,6 @@ function TranslationLanguageSelect({
   initialTranslationParams: TranslationFunctionParams
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const langPrefs = useLanguagePrefs()
 
@@ -402,13 +400,6 @@ function TranslationLanguageSelect({
   )
 
   const handleChangeTranslationLanguage = (sourceLangCode: string) => {
-    ax.metric('translate:override', {
-      os: Platform.OS,
-      possibleSourceLanguages: initialTranslationParams.possibleSourceLanguages,
-      expectedSourceLanguage: sourceLangCode,
-      expectedTargetLanguage: initialTranslationParams.expectedTargetLanguage,
-      resultSourceLanguage,
-    })
     void translate({
       text: initialTranslationParams.text,
       expectedTargetLanguage: initialTranslationParams.expectedTargetLanguage,

@@ -10,7 +10,6 @@ import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {Divider} from '../../components/SettingsList'
 
 export function PreferenceControls({
@@ -62,7 +61,6 @@ export function Inner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {mutate} = useNotificationSettingsUpdateMutation()
 
   const channels = useMemo(() => {
@@ -79,12 +77,6 @@ export function Inner({
       push: change.includes('push'),
     } satisfies typeof preference
 
-    ax.metric('activityPreference:changeChannels', {
-      name,
-      push: newPreference.push,
-      list: newPreference.list,
-    })
-
     mutate({
       [name]: newPreference,
       ...Object.fromEntries(syncOthers.map(key => [key, newPreference])),
@@ -99,8 +91,6 @@ export function Inner({
       ...preference,
       include: change,
     } satisfies typeof preference
-
-    ax.metric('activityPreference:changeFilter', {name, value: change})
 
     mutate({
       [name]: newPreference,

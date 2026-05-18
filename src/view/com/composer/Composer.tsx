@@ -92,7 +92,6 @@ import {
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
-  fromPostLanguages,
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
@@ -136,7 +135,6 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
@@ -193,14 +191,13 @@ export const ComposePost = ({
   imageUris: initImageUris,
   videoUri: initVideoUri,
   openGallery,
-  logContext,
+  logContext: _logContext,
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
 }) => {
   const {currentAccount} = useSession()
   const t = useTheme()
-  const ax = useAnalytics()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const currentDid = currentAccount!.did
@@ -364,14 +361,7 @@ export const ComposePost = ({
   }, [onInitVideo])
 
   // Fire composer:open metric on mount
-  useCallOnce(() => {
-    ax.metric('composer:open', {
-      logContext: logContext ?? 'Other',
-      isReply: !!replyTo,
-      hasQuote: !!initQuote,
-      hasDraft: false,
-    })
-  })()
+  useCallOnce(() => {})()
 
   const clearVideo = useCallback(
     (postId: string) => {
@@ -545,16 +535,9 @@ export const ComposePost = ({
       setLoadedDraftCreatedAt(draftSummary.createdAt)
 
       // Fire draft:load metric
-      const draftPosts = draftSummary.posts
-      const draftAgeMs = Date.now() - new Date(draftSummary.createdAt).getTime()
-      ax.metric('draft:load', {
-        draftAgeMs,
-        hasText: draftPosts.some(p => p.text.trim().length > 0),
-        hasImages: draftPosts.some(p => p.images && p.images.length > 0),
-        hasVideo: draftPosts.some(p => !!p.video),
-        hasGif: draftPosts.some(p => !!p.gif),
-        postCount: draftPosts.length,
-      })
+      const _draftPosts = draftSummary.posts
+      const _draftAgeMs =
+        Date.now() - new Date(draftSummary.createdAt).getTime()
 
       // Initiate video processing for any restored videos
       // This is async but we don't await - videos process in the background
@@ -563,7 +546,7 @@ export const ComposePost = ({
         restoreVideo(postId, videoInfo)
       }
     },
-    [composerDispatch, restoreVideo, ax],
+    [composerDispatch, restoreVideo],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -602,7 +585,7 @@ export const ComposePost = ({
     if (!validateDraftTextOrError()) {
       return
     }
-    const isNewDraft = !composerState.draftId
+    const _isNewDraft = !composerState.draftId
     try {
       const result = await saveDraft({
         composerState,
@@ -611,18 +594,7 @@ export const ComposePost = ({
       composerDispatch({type: 'mark_saved', draftId: result.draftId})
 
       // Fire draft:save metric
-      const posts = composerState.thread.posts
-      ax.metric('draft:save', {
-        isNewDraft,
-        hasText: posts.some(p => p.richtext.text.trim().length > 0),
-        hasImages: posts.some(p => p.embed.media?.type === 'images'),
-        hasVideo: posts.some(p => p.embed.media?.type === 'video'),
-        hasGif: posts.some(p => p.embed.media?.type === 'gif'),
-        hasQuote: posts.some(p => !!p.embed.quote),
-        hasLink: posts.some(p => !!p.embed.link),
-        postCount: posts.length,
-        textLength: posts[0].richtext.text.length,
-      })
+      const _posts = composerState.thread.posts
 
       onClose()
     } catch (e) {
@@ -634,7 +606,6 @@ export const ComposePost = ({
     composerState,
     composerDispatch,
     onClose,
-    ax,
     validateDraftTextOrError,
     getDraftSaveError,
   ])
@@ -669,19 +640,14 @@ export const ComposePost = ({
   // Handle discard action - fires metric and closes composer
   const handleDiscard = useCallback(() => {
     const posts = thread.posts
-    const hasContent = posts.some(
+    const _hasContent = posts.some(
       post =>
         post.richtext.text.trim().length > 0 ||
         post.embed.media ||
         post.embed.link,
     )
-    ax.metric('draft:discard', {
-      logContext: 'ComposerClose',
-      hadContent: hasContent,
-      textLength: posts[0].richtext.text.length,
-    })
     onClose()
-  }, [thread.posts, ax, onClose])
+  }, [thread.posts, onClose])
 
   // Check if composer is empty (no content to save)
   const isComposerEmpty = useMemo(() => {
@@ -959,31 +925,6 @@ export const ComposePost = ({
       setError(err)
       setIsPublishing(false)
       return
-    } finally {
-      if (postUri) {
-        let index = 0
-        for (let post of filteredThread.posts) {
-          ax.metric('post:create', {
-            imageCount:
-              post.embed.media?.type === 'images'
-                ? post.embed.media.images.length
-                : 0,
-            isReply: index > 0 || !!replyTo,
-            isPartOfThread: filteredThread.posts.length > 1,
-            hasLink: !!post.embed.link,
-            hasQuote: !!post.embed.quote,
-            langs: fromPostLanguages(currentLanguages),
-            logContext: 'Composer',
-          })
-          index++
-        }
-      }
-      if (filteredThread.posts.length > 1) {
-        ax.metric('thread:create', {
-          postCount: filteredThread.posts.length,
-          isReply: !!replyTo,
-        })
-      }
     }
     if (postUri && !replyTo) {
       emitPostCreated()
@@ -992,11 +933,8 @@ export const ComposePost = ({
     if (composerState.draftId && composerState.originalLocalRefs) {
       // Fire draft:post metric
       if (loadedDraftCreatedAt) {
-        const draftAgeMs = Date.now() - new Date(loadedDraftCreatedAt).getTime()
-        ax.metric('draft:post', {
-          draftAgeMs,
-          wasEdited: composerState.isDirty,
-        })
+        const _draftAgeMs =
+          Date.now() - new Date(loadedDraftCreatedAt).getTime()
       }
 
       logger.debug('post published, cleaning up draft', {
@@ -1057,7 +995,6 @@ export const ComposePost = ({
     }, 500)
   }, [
     l,
-    ax,
     agent,
     thread,
     canPost,

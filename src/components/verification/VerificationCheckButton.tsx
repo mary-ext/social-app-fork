@@ -11,7 +11,6 @@ import {type FullVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
 import {VerifierDialog} from '#/components/verification/VerifierDialog'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function shouldShowVerificationCheckButton(
@@ -77,7 +76,6 @@ function Badge({
   width: number
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const verificationsDialogControl = useDialogControl()
   const verifierDialogControl = useDialogControl()
@@ -95,7 +93,6 @@ function Badge({
         hitSlop={20}
         onPress={evt => {
           evt.preventDefault()
-          ax.metric('verification:badge:click', {})
           if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {
@@ -132,13 +129,11 @@ function Badge({
           </View>
         )}
       </Button>
-
       <VerificationsDialog
         control={verificationsDialogControl}
         profile={profile}
         verificationState={state}
       />
-
       <VerifierDialog
         control={verifierDialogControl}
         profile={profile}

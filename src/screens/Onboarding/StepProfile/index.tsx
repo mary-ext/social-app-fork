@@ -46,7 +46,6 @@ import * as Dialog from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
@@ -76,7 +75,6 @@ const randomColor =
   avatarColors[Math.floor(Math.random() * avatarColors.length)]
 
 export function StepProfile() {
-  const ax = useAnalytics()
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -172,8 +170,7 @@ export function StepProfile() {
     }
 
     dispatch({type: 'next'})
-    ax.metric('onboarding:profile:nextPressed', {})
-  }, [ax, avatar, dispatch])
+  }, [avatar, dispatch])
 
   const onDoneCreating = useCallback(() => {
     setAvatar(prev => ({

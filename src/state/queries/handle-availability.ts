@@ -8,7 +8,6 @@ import {
 } from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {createFullHandle} from '#/lib/strings/handles'
-import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
 import {Agent} from '../session/agent'
 
@@ -36,7 +35,6 @@ export function useHandleAvailabilityQuery(
   },
   debounceDelayMs = 500,
 ) {
-  const ax = useAnalytics()
   const name = username.trim()
   const debouncedHandle = useDebouncedValue(name, debounceDelayMs)
 
@@ -57,9 +55,7 @@ export function useHandleAvailabilityQuery(
           birthDate,
         })
         if (res.available) {
-          ax.metric('signup:handleAvailable', {typeahead: true})
         } else {
-          ax.metric('signup:handleTaken', {typeahead: true})
         }
         return res
       },

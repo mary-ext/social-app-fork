@@ -12,6 +12,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {useGetPost} from '#/state/queries/post'
@@ -51,7 +52,6 @@ import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icon
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
 export type PostInteractionSettingsFormProps = {
@@ -81,18 +81,7 @@ export function PostInteractionSettingsControlledDialog({
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
-  const ax = useAnalytics()
-  const onClose = useNonReactiveCallback(() => {
-    ax.metric('composer:threadgate:save', {
-      hasChanged: !!rest.isDirty,
-      persist: !!rest.persist,
-      replyOptions:
-        rest.threadgateAllowUISettings?.map(gate => gate.type)?.join(',') ?? '',
-      quotesEnabled: !rest.postgate?.embeddingRules?.find(
-        v => v.$type === embeddingRules.disableRule.$type,
-      ),
-    })
-  })
+  const onClose = useNonReactiveCallback(() => {})
 
   return (
     <Dialog.Outer
@@ -163,7 +152,6 @@ export function PostInteractionSettingsDialog(
 export function PostInteractionSettingsDialogControlledInner(
   props: PostInteractionSettingsDialogProps,
 ) {
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isSaving, setIsSaving] = useState(false)
@@ -232,7 +220,7 @@ export function PostInteractionSettingsDialogControlledInner(
 
       props.control.close()
     } catch (e: any) {
-      ax.logger.error(`Failed to save post interaction settings`, {
+      logger.error(`Failed to save post interaction settings`, {
         source: 'PostInteractionSettingsDialogControlledInner',
         safeMessage: e.message,
       })
@@ -249,7 +237,6 @@ export function PostInteractionSettingsDialogControlledInner(
     }
   }, [
     _,
-    ax,
     props.postUri,
     props.rootPostUri,
     props.control,
@@ -695,7 +682,6 @@ export function usePrefetchPostInteractionSettings({
   postUri: string
   rootPostUri: string
 }) {
-  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const agent = useAgent()
   const getPost = useGetPost()
@@ -719,9 +705,9 @@ export function usePrefetchPostInteractionSettings({
         }),
       ])
     } catch (e: any) {
-      ax.logger.error(`Failed to prefetch post interaction settings`, {
+      logger.error(`Failed to prefetch post interaction settings`, {
         safeMessage: e.message,
       })
     }
-  }, [ax, queryClient, agent, postUri, rootPostUri, getPost])
+  }, [queryClient, agent, postUri, rootPostUri, getPost])
 }

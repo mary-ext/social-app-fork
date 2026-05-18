@@ -1,5 +1,5 @@
 import {memo, useCallback} from 'react'
-import {LayoutAnimation, Platform} from 'react-native'
+import {LayoutAnimation} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
@@ -24,7 +24,6 @@ import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
@@ -40,7 +39,6 @@ export let MessageContextMenu = ({
   children: TriggerProps['children']
 }): React.ReactNode => {
   const {t: l, i18n} = useLingui()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const convo = useConvoActive()
@@ -70,15 +68,7 @@ export let MessageContextMenu = ({
 
   const onPressTranslateMessage = useCallback(() => {
     void translate(message.text, langPrefs.primaryLanguage)
-
-    ax.metric('translate', {
-      os: Platform.OS,
-      possibleSourceLanguages: [], // N/A for chats
-      expectedTargetLanguage: langPrefs.primaryLanguage,
-      textLength: message.text.length,
-      googleTranslate: true,
-    })
-  }, [ax, langPrefs.primaryLanguage, message.text, translate])
+  }, [langPrefs.primaryLanguage, message.text, translate])
 
   const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

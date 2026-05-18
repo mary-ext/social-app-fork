@@ -36,7 +36,6 @@ import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 const POLL_FREQ = 60e3 // 60sec
@@ -62,7 +61,6 @@ export function FeedPage({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
   feedInfo: FeedSourceInfo
 }) {
-  const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
@@ -104,13 +102,8 @@ export function FeedPage({
       scrollToTop()
       truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
       setHasNew(false)
-      ax.metric('feed:refresh', {
-        feedType: feed.split('|')[0],
-        feedUrl: feed,
-        reason: 'soft-reset',
-      })
     }
-  }, [ax, navigation, isPageFocused, scrollToTop, queryClient, feed])
+  }, [navigation, isPageFocused, scrollToTop, queryClient, feed])
 
   // fires when page within screen is activated/deactivated
   useEffect(() => {
@@ -128,12 +121,7 @@ export function FeedPage({
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)
-    ax.metric('feed:refresh', {
-      feedType: feed.split('|')[0],
-      feedUrl: feed,
-      reason: 'load-latest',
-    })
-  }, [ax, scrollToTop, feed, queryClient])
+  }, [scrollToTop, feed, queryClient])
 
   const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI

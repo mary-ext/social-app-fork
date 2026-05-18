@@ -20,7 +20,6 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -56,7 +55,6 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
 
@@ -98,7 +96,6 @@ function Inner({
           )}
         </Text>
       </View>
-
       {profile.verification ? (
         <View style={[a.pb_xl, a.gap_md]}>
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
@@ -124,7 +121,6 @@ function Inner({
             )}
         </View>
       ) : null}
-
       <View
         style={[
           a.w_full,
@@ -159,17 +155,12 @@ function Inner({
           variant="solid"
           color="secondary"
           style={[a.justify_center]}
-          onPress={() => {
-            ax.metric('verification:learn-more', {
-              location: 'verificationsDialog',
-            })
-          }}>
+          onPress={() => {}}>
           <ButtonText>
             <Trans context="english-only-resource">Learn more</Trans>
           </ButtonText>
         </Link>
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

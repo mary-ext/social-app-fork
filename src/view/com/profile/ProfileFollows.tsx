@@ -13,7 +13,6 @@ import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -44,7 +43,6 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 
 export function ProfileFollows({name}: {name: string}) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
@@ -101,14 +99,9 @@ export function ProfileFollows({name}: {name: string}) {
       currentPageCount >= 3 &&
       currentPageCount > paginationTrackingRef.current.page
     ) {
-      ax.metric('profile:following:paginate', {
-        contextProfileDid: resolvedDid,
-        itemCount: follows.length,
-        page: currentPageCount,
-      })
     }
     paginationTrackingRef.current.page = currentPageCount
-  }, [ax, data?.pages?.length, resolvedDid, follows.length])
+  }, [data?.pages?.length, resolvedDid, follows.length])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -138,12 +131,8 @@ export function ProfileFollows({name}: {name: string}) {
   // track pageview
   useEffect(() => {
     if (resolvedDid) {
-      ax.metric('profile:following:view', {
-        contextProfileDid: resolvedDid,
-        isOwnProfile: isMe,
-      })
     }
-  }, [ax, resolvedDid, isMe])
+  }, [resolvedDid, isMe])
 
   // track seen items
   const seenItemsRef = useRef<Set<string>>(new Set())
@@ -160,13 +149,8 @@ export function ProfileFollows({name}: {name: string}) {
       if (position === 0) {
         return
       }
-      ax.metric('profileCard:seen', {
-        profileDid: item.did,
-        position,
-        ...(resolvedDid !== undefined && {contextProfileDid: resolvedDid}),
-      })
     },
-    [ax, follows, resolvedDid],
+    [follows, resolvedDid],
   )
 
   if (follows.length < 1) {

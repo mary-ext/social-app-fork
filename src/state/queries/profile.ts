@@ -35,7 +35,6 @@ import {
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 import {
   ProgressGuideAction,
@@ -383,40 +382,26 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation(
-  logContext: ProfileFollowLogContext,
-  profile: Shadow<bsky.profile.AnyProfileView>,
-  position?: number,
-  contextProfileDid?: string,
+  _logContext: ProfileFollowLogContext,
+  _profile: Shadow<bsky.profile.AnyProfileView>,
+  _position?: number,
+  _contextProfileDid?: string,
 ) {
-  const ax = useAnalytics()
   const agent = useAgent()
   const {captureAction} = useProgressGuideControls()
 
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       captureAction(ProgressGuideAction.Follow)
-      ax.metric('profile:follow', {
-        logContext,
-        didBecomeMutual: profile.viewer
-          ? Boolean(profile.viewer.followedBy)
-          : undefined,
-        followeeClout: undefined,
-        followeeDid: did,
-        followerClout: undefined,
-        position,
-        contextProfileDid,
-      })
       return await agent.follow(did)
     },
   })
 }
 
-function useProfileUnfollowMutation(logContext: ProfileUnfollowLogContext) {
-  const ax = useAnalytics()
+function useProfileUnfollowMutation(_logContext: ProfileUnfollowLogContext) {
   const agent = useAgent()
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
-      ax.metric('profile:unfollow', {logContext})
       return await agent.deleteFollow(followUri)
     },
   })
@@ -425,7 +410,6 @@ function useProfileUnfollowMutation(logContext: ProfileUnfollowLogContext) {
 export function useProfileMuteMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
-  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialMuted = profile.viewer?.muted
@@ -439,13 +423,11 @@ export function useProfileMuteMutationQueue(
         await muteMutation.mutateAsync({
           did,
         })
-        ax.metric('profile:mute', {})
         return true
       } else {
         await unmuteMutation.mutateAsync({
           did,
         })
-        ax.metric('profile:unmute', {})
         return false
       }
     },
@@ -503,7 +485,6 @@ function useProfileUnmuteMutation() {
 export function useProfileBlockMutationQueue(
   profile: Shadow<bsky.profile.AnyProfileView>,
 ) {
-  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialBlockingUri = profile.viewer?.blocking
@@ -517,7 +498,6 @@ export function useProfileBlockMutationQueue(
         const {uri} = await blockMutation.mutateAsync({
           did,
         })
-        ax.metric('profile:block', {})
         return uri
       } else {
         if (prevBlockUri) {
@@ -525,7 +505,6 @@ export function useProfileBlockMutationQueue(
             did,
             blockUri: prevBlockUri,
           })
-          ax.metric('profile:unblock', {})
         }
         return undefined
       }

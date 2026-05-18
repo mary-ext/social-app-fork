@@ -31,14 +31,12 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
@@ -96,21 +94,8 @@ export function StepSuggestedAccounts() {
 
   const {mutate: followAll, isPending: isFollowingAll} = useMutation({
     onMutate: () => {
-      ax.metric('onboarding:suggestedAccounts:followAllPressed', {
-        tab: selectedInterest ?? 'all',
-        numAccounts: followableDids.length,
-      })
       for (let i = 0; i < followableDids.length; i++) {
-        const did = followableDids[i]
-        ax.metric('suggestedUser:follow', {
-          logContext: 'Onboarding',
-          location: 'FollowAll',
-          recSource: !useFullExperience ? 'Search' : undefined,
-          recId: suggestedUsers?.recId,
-          position: i,
-          suggestedDid: did,
-          category: selectedInterest,
-        })
+        const _did = followableDids[i]
       }
     },
     mutationFn: async () => {
@@ -151,20 +136,12 @@ export function StepSuggestedAccounts() {
   // Track seen profiles - shared ref across all cards
   const seenProfilesRef = useRef<Set<string>>(new Set())
   const onProfileSeen = useCallback(
-    (did: string, position: number) => {
+    (did: string, _position: number) => {
       if (!seenProfilesRef.current.has(did)) {
         seenProfilesRef.current.add(did)
-        ax.metric('suggestedUser:seen', {
-          logContext: 'Onboarding',
-          recSource: !useFullExperience ? 'Search' : undefined,
-          recId: suggestedUsers?.recId,
-          position,
-          suggestedDid: did,
-          category: selectedInterest,
-        })
       }
     },
-    [ax, selectedInterest, suggestedUsers?.recId, useFullExperience],
+    [selectedInterest, suggestedUsers?.recId, useFullExperience],
   )
 
   useEffect(() => {
@@ -326,7 +303,6 @@ function TabBar({
   defaultTabLabel?: string
 }) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const interestsDisplayNames = useInterestsDisplayNames()
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
@@ -339,7 +315,6 @@ function TabBar({
         selectedInterest || (hideDefaultTab ? interests[0] : 'all')
       }
       onSelectTab={tab => {
-        ax.metric('onboarding:suggestedAccounts:tabPressed', {tab: tab})
         onSelectInterest(tab === 'all' ? null : tab)
       }}
       interestsDisplayNames={
@@ -359,10 +334,10 @@ function SuggestedProfileCard({
   profile,
   moderationOpts,
   position,
-  category,
+  category: _category,
   onSeen,
-  recSource,
-  recId,
+  recSource: _recSource,
+  recId: _recId,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -373,7 +348,6 @@ function SuggestedProfileCard({
   recId?: number | string
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const cardRef = useRef<View>(null)
   const hasTrackedRef = useRef(false)
 
@@ -433,17 +407,7 @@ function SuggestedProfileCard({
             moderationOpts={moderationOpts}
             withIcon={false}
             logContext="OnboardingSuggestedAccounts"
-            onFollow={() => {
-              ax.metric('suggestedUser:follow', {
-                logContext: 'Onboarding',
-                location: 'Card',
-                recSource,
-                recId,
-                position,
-                suggestedDid: profile.did,
-                category,
-              })
-            }}
+            onFollow={() => {}}
           />
         </ProfileCard.Header>
         <ProfileCard.Description profile={profile} numberOfLines={3} />

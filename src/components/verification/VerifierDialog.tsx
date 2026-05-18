@@ -14,7 +14,6 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -50,7 +49,6 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -126,11 +124,7 @@ function Inner({
             size="small"
             color="primary"
             style={[a.justify_center]}
-            onPress={() => {
-              ax.metric('verification:learn-more', {
-                location: 'verifierDialog',
-              })
-            }}>
+            onPress={() => {}}>
             <ButtonText>
               <Trans context="english-only-resource">Learn more</Trans>
             </ButtonText>

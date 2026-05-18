@@ -6,7 +6,6 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
-import {useAnalytics} from '#/analytics'
 import {DraftsListDialog} from './DraftsListDialog'
 import {useSaveDraftMutation} from './state/queries'
 import {type DraftSummary} from './state/schema'
@@ -19,7 +18,7 @@ export function DraftsButton({
   isDirty,
   isEditingDraft,
   canSaveDraft,
-  textLength,
+  textLength: _textLength,
 }: {
   onSelectDraft: (draft: DraftSummary) => void
   onSaveDraft: () => Promise<{success: boolean}>
@@ -31,7 +30,6 @@ export function DraftsButton({
   textLength: number
 }) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const draftsDialogControl = Dialog.useDialogControl()
   const savePromptControl = Prompt.usePromptControl()
   const {isPending: isSaving} = useSaveDraftMutation()
@@ -54,12 +52,6 @@ export function DraftsButton({
   }
 
   const handleDiscardAndOpen = () => {
-    // Fire draft:discard metric before discarding
-    ax.metric('draft:discard', {
-      logContext: 'BeforeDraftsList',
-      hadContent: !isEmpty,
-      textLength,
-    })
     onDiscard()
     draftsDialogControl.open()
   }

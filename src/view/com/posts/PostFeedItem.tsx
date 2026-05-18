@@ -51,7 +51,6 @@ import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
-import {useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
@@ -163,7 +162,6 @@ let FeedItemInner = ({
   rootPost: AppBskyFeedDefs.PostView
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
@@ -176,7 +174,7 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
   }, [post.uri, post.author])
-  const {sendInteraction, feedSourceInfo, feedDescriptor} =
+  const {sendInteraction, feedSourceInfo, feedDescriptor: _feedDescriptor} =
     useFeedFeedbackContext()
 
   const onPressReply = () => {
@@ -207,12 +205,6 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
-    ax.metric('post:clickthroughAuthor', {
-      uri: post.uri,
-      authorDid: post.author.did,
-      logContext: 'FeedItem',
-      feedDescriptor,
-    })
   }
 
   const onOpenReposter = () => {
@@ -231,12 +223,6 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
-    ax.metric('post:clickthroughEmbed', {
-      uri: post.uri,
-      authorDid: post.author.did,
-      logContext: 'FeedItem',
-      feedDescriptor,
-    })
   }
 
   const onBeforePress = () => {
@@ -245,12 +231,6 @@ let FeedItemInner = ({
       event: 'app.bsky.feed.defs#clickthroughItem',
       feedContext,
       reqId,
-    })
-    ax.metric('post:clickthroughItem', {
-      uri: post.uri,
-      authorDid: post.author.did,
-      logContext: 'FeedItem',
-      feedDescriptor,
     })
     unstableCacheProfileView(queryClient, post.author)
     setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {

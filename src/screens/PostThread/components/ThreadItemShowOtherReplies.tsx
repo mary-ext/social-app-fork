@@ -6,11 +6,9 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 export function ThreadItemShowOtherReplies({onPress}: {onPress: () => void}) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const label = _(msg`Show more replies`)
 
@@ -18,7 +16,6 @@ export function ThreadItemShowOtherReplies({onPress}: {onPress: () => void}) {
     <Button
       onPress={() => {
         onPress()
-        ax.metric('thread:click:showOtherReplies', {})
       }}
       label={label}>
       {({hovered, pressed}) => (

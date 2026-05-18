@@ -24,7 +24,6 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/i
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
@@ -34,7 +33,6 @@ let ShareMenuItems = ({
   post,
   onShare: onShareProp,
 }: ShareMenuItemsProps): React.ReactNode => {
-  const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -57,14 +55,12 @@ let ShareMenuItems = ({
   }, [postAuthor])
 
   const onSharePost = () => {
-    ax.metric('share:press:nativeShare', {})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
   }
 
   const onCopyLink = async () => {
-    ax.metric('share:press:copyLink', {})
     const url = toShareUrl(href)
     if (IS_IOS) {
       // iOS only
@@ -113,7 +109,6 @@ let ShareMenuItems = ({
               testID="postDropdownSendViaDMBtn"
               label={_(msg`Send via direct message`)}
               onPress={() => {
-                ax.metric('share:press:openDmSearch', {})
                 sendViaChatControl.open()
               }}>
               <Menu.ItemText>
@@ -181,7 +176,6 @@ let ShareMenuItems = ({
           </Menu.Group>
         )}
       </Menu.Outer>
-
       <SendViaChatDialog
         control={sendViaChatControl}
         onSelectChat={onSelectChatToShareTo}

@@ -30,7 +30,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
@@ -251,7 +250,6 @@ function StarterPackItem({
   subject?: bsky.profile.AnyProfileView
 }) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const isSelf = subject?.did === currentAccount?.did
@@ -292,14 +290,13 @@ function StarterPackItem({
     if (!starterPack.list?.uri || isPending) return
 
     const listUri = starterPack.list.uri
-    const starterPackUri = starterPack.uri
+    const _starterPackUri = starterPack.uri
 
     if (!isInPack) {
       addMembership({
         listUri: listUri,
         actorDid: targetDid,
       })
-      ax.metric('starterPack:addUser', {starterPack: starterPackUri})
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
@@ -310,7 +307,6 @@ function StarterPackItem({
         actorDid: targetDid,
         membershipUri: starterPackWithMembership.listItem.uri,
       })
-      ax.metric('starterPack:removeUser', {starterPack: starterPackUri})
     }
   }
 

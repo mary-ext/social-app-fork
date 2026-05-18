@@ -51,14 +51,12 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
-  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -93,15 +91,8 @@ export function PostThread({uri}: {uri: string}) {
     ) {
       const post = anchor.value.post
       seenPostUriRef.current = post.uri
-
-      ax.metric('post:view', {
-        uri: post.uri,
-        authorDid: post.author.did,
-        logContext: 'Post',
-        feedDescriptor: feedFeedback.feedDescriptor,
-      })
     }
-  }, [ax, anchor, feedFeedback.feedDescriptor])
+  }, [anchor, feedFeedback.feedDescriptor])
 
   // Track post:view events for parent posts and replies (non-anchor posts)
   const trackThreadItemView = usePostViewTracking('PostThreadItem')

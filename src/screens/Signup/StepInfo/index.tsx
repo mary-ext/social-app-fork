@@ -20,7 +20,6 @@ import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/E
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
 import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
@@ -45,7 +44,6 @@ export function StepInfo({
   isLoadingStarterPack: boolean
 }) {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const {state, dispatch} = useSignupContext()
 
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
@@ -140,9 +138,6 @@ export function StepInfo({
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
-    ax.metric('signup:nextPressed', {
-      activeStep: state.activeStep,
-    })
   }
 
   return (

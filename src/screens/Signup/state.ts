@@ -11,9 +11,9 @@ import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
+import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
-import {type AnalyticsContextType, useAnalytics} from '#/analytics'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -40,8 +40,6 @@ type ErrorField =
   | 'date-of-birth'
 
 export type SignupState = {
-  analytics?: AnalyticsContextType
-
   hasPrev: boolean
   activeStep: SignupStep
   screenTransitionDirection: 'Forward' | 'Backward'
@@ -68,7 +66,6 @@ export type SignupState = {
 }
 
 export type SignupAction =
-  | {type: 'setAnalytics'; value: AnalyticsContextType}
   | {type: 'prev'}
   | {type: 'next'}
   | {type: 'finish'}
@@ -87,8 +84,6 @@ export type SignupAction =
   | {type: 'incrementBackgroundCount'}
 
 export const initialState: SignupState = {
-  analytics: undefined,
-
   hasPrev: false,
   activeStep: SignupStep.INFO,
   screenTransitionDirection: 'Forward',
@@ -132,10 +127,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
   let next = {...s}
 
   switch (a.type) {
-    case 'setAnalytics': {
-      next.analytics = a.value
-      break
-    }
     case 'prev': {
       if (s.activeStep !== SignupStep.INFO) {
         next.screenTransitionDirection = 'Backward'
@@ -202,14 +193,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       // Track field errors
       if (a.field) {
         next.fieldErrors[a.field] = (next.fieldErrors[a.field] || 0) + 1
-
-        // Log the field error
-        s.analytics?.metric('signup:fieldError', {
-          field: a.field,
-          errorCount: next.fieldErrors[a.field],
-          errorMessage: a.value,
-          activeStep: next.activeStep,
-        })
       }
       break
     }
@@ -225,21 +208,16 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     case 'incrementBackgroundCount': {
       next.backgroundCount = s.backgroundCount + 1
 
-      // Log background/foreground event during signup
-      s.analytics?.metric('signup:backgrounded', {
-        activeStep: next.activeStep,
-        backgroundCount: next.backgroundCount,
-      })
       break
     }
   }
 
   next.hasPrev = next.activeStep !== SignupStep.INFO
 
-  s.analytics?.logger.debug('signup', next)
+  logger.debug('signup', next)
 
   if (s.activeStep !== next.activeStep) {
-    s.analytics?.logger.debug('signup: step changed', {
+    logger.debug('signup: step changed', {
       activeStep: next.activeStep,
     })
   }
@@ -256,7 +234,6 @@ SignupContext.displayName = 'SignupContext'
 export const useSignupContext = () => useContext(SignupContext)
 
 export function useSubmitSignup() {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
@@ -300,7 +277,7 @@ export function useSubmitSignup() {
         !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
-        ax.logger.error('Signup Flow Error', {
+        logger.error('Signup Flow Error', {
           errorMessage: 'Verification captcha code was not set.',
           registrationHandle: state.handle,
         })
@@ -362,7 +339,7 @@ export function useSubmitSignup() {
         })
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
 
-        ax.logger.error('Signup Flow Error', {
+        logger.error('Signup Flow Error', {
           errorMessage: error,
           registrationHandle: state.handle,
         })
@@ -370,6 +347,6 @@ export function useSubmitSignup() {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [l, ax.logger, createAccount, onboardingDispatch],
+    [l, createAccount, onboardingDispatch],
   )
 }

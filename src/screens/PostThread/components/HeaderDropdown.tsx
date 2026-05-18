@@ -7,7 +7,6 @@ import {type ThreadPreferences} from '#/state/queries/preferences/useThreadPrefe
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import * as Menu from '#/components/Menu'
-import {useAnalytics} from '#/analytics'
 
 export function HeaderDropdown({
   sort,
@@ -18,7 +17,6 @@ export function HeaderDropdown({
   ThreadPreferences,
   'sort' | 'setSort' | 'view' | 'setView'
 >): React.ReactNode {
-  const ax = useAnalytics()
   const {_} = useLingui()
   return (
     <Menu.Root>
@@ -32,7 +30,6 @@ export function HeaderDropdown({
             shape="round"
             hitSlop={HITSLOP_10}
             onPress={() => {
-              ax.metric('thread:click:headerMenuOpen', {})
               onPress()
             }}
             {...props}>

@@ -18,6 +18,7 @@ import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {LIVE_NOW_BETA_DISABLED} from '#/lib/feature-flags'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
+import {logger} from '#/logger'
 import {
   updateProfileShadow,
   useMaybeProfileShadow,
@@ -27,7 +28,6 @@ import {useAgent, useSession} from '#/state/session'
 import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
 import type * as bsky from '#/types/bsky'
 
@@ -219,7 +219,6 @@ export function useUpsertLiveStatusMutation(
   linkMeta: LinkMeta | null | undefined,
   createdAt?: string,
 ) {
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -247,7 +246,7 @@ export function useUpsertLiveStatusMutation(
               thumb = blob.data.blob
             }
           } catch (e: any) {
-            ax.logger.error(`Failed to upload thumbnail for live status`, {
+            logger.error(`Failed to upload thumbnail for live status`, {
               url: linkMeta.url,
               image: linkMeta.image,
               safeMessage: e,
@@ -303,7 +302,7 @@ export function useUpsertLiveStatusMutation(
       }
     },
     onError: (e: any) => {
-      ax.logger.error(`Failed to upsert live status`, {
+      logger.error(`Failed to upsert live status`, {
         url: linkMeta?.url,
         image: linkMeta?.image,
         safeMessage: e,
@@ -311,9 +310,7 @@ export function useUpsertLiveStatusMutation(
     },
     onSuccess: ({record, image}) => {
       if (createdAt) {
-        ax.metric('live:edit', {duration: record.durationMinutes})
       } else {
-        ax.metric('live:create', {duration: record.durationMinutes})
       }
 
       Toast.show(_(msg`You are now live!`))
@@ -349,7 +346,6 @@ export function useUpsertLiveStatusMutation(
 }
 
 export function useRemoveLiveStatusMutation() {
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -366,12 +362,11 @@ export function useRemoveLiveStatusMutation() {
       })
     },
     onError: (e: any) => {
-      ax.logger.error(`Failed to remove live status`, {
+      logger.error(`Failed to remove live status`, {
         safeMessage: e,
       })
     },
     onSuccess: () => {
-      ax.metric('live:remove', {})
       Toast.show(_(msg`You are no longer live`))
       control.close(() => {
         if (!currentAccount) return

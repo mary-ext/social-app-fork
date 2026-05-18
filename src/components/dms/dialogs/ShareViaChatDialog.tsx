@@ -7,7 +7,6 @@ import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-memb
 import * as Dialog from '#/components/Dialog'
 import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 
 export function SendViaChatDialog({
   control,
@@ -35,15 +34,12 @@ function SendViaChatDialogInner({
   onSelectChat: (chatId: string) => void
 }) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
       onSelectChat(data.convo.id)
 
       if (!data.convo.lastMessage) {
-        ax.metric('chat:create', {logContext: 'SendViaChatDialog'})
       }
-      ax.metric('chat:open', {logContext: 'SendViaChatDialog'})
     },
     onError: error => {
       logger.error('Failed to share post to chat', {message: error})

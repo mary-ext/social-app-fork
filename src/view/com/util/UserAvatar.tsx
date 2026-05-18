@@ -51,7 +51,6 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
@@ -533,7 +532,6 @@ let PreviewableUserAvatar = ({
   live,
   ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
-  const ax = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
@@ -547,7 +545,6 @@ let PreviewableUserAvatar = ({
 
   const onOpenLiveStatus = useCallback(() => {
     playHaptic('Light')
-    ax.metric('live:card:open', {subject: profile.did, from: 'post'})
     liveControl.open()
   }, [liveControl, playHaptic, profile.did])
 

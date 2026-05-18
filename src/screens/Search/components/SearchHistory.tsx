@@ -16,7 +16,6 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 
 export function SearchHistory({
@@ -34,7 +33,6 @@ export function SearchHistory({
   onRemoveItemClick: (item: string) => void
   onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
 }) {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
 
@@ -65,16 +63,12 @@ export function SearchHistory({
                   a.gap_xl,
                 ]}>
                 {moderationOpts &&
-                  selectedProfiles.map((profile, index) => (
+                  selectedProfiles.map((profile, _index) => (
                     <RecentProfileItem
                       key={profile.did}
                       profile={profile}
                       moderationOpts={moderationOpts}
                       onPress={() => {
-                        ax.metric('search:recent:press', {
-                          profileDid: profile.did,
-                          position: index,
-                        })
                         onProfileClick(profile)
                       }}
                       onRemove={() => onRemoveProfileClick(profile)}
@@ -92,9 +86,6 @@ export function SearchHistory({
                 <Pressable
                   accessibilityRole="button"
                   onPress={() => {
-                    ax.metric('search:query', {
-                      source: 'history',
-                    })
                     onItemClick(historyItem)
                   }}
                   hitSlop={HITSLOP_10}

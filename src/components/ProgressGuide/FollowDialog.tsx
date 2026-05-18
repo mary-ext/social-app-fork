@@ -29,7 +29,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
@@ -61,7 +60,6 @@ export function FollowDialog({
   guide: Follow10ProgressGuide
   showArrow?: boolean
 }) {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
   const {gtPhone} = useBreakpoints()
@@ -72,7 +70,6 @@ export function FollowDialog({
         label={l`Find people to follow`}
         onPress={() => {
           control.open()
-          ax.metric('progressGuide:followDialog:open', {})
         }}
         size={gtPhone ? 'small' : 'large'}
         color="primary">
@@ -113,7 +110,6 @@ const FOR_YOU_TAB = 'all'
 
 function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const rawInterestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
@@ -282,20 +278,9 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
         if (item.type === 'profile') {
           if (!seenProfilesRef.current.has(item.profile.did)) {
             seenProfilesRef.current.add(item.profile.did)
-            const position = itemsRef.current.findIndex(
+            const _position = itemsRef.current.findIndex(
               i => i.type === 'profile' && i.profile.did === item.profile.did,
             )
-            ax.metric('suggestedUser:seen', {
-              logContext: isGuide ? 'ProgressGuide' : 'SeeMoreSuggestedUsers',
-              recSource: hasSearchText ? 'Search' : undefined,
-              recId: recIdForLogging,
-              position: position !== -1 ? position : 0,
-              suggestedDid: item.profile.did,
-              category:
-                selectedInterestRef.current === FOR_YOU_TAB
-                  ? null
-                  : selectedInterestRef.current,
-            })
           }
         }
       }
@@ -581,10 +566,10 @@ function FollowProfileCardInner({
   moderationOpts,
   onFollow,
   noBorder,
-  position,
-  recSource,
-  recId,
-  isGuide,
+  position: _position,
+  recSource: _recSource,
+  recId: _recId,
+  isGuide: _isGuide,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -597,7 +582,6 @@ function FollowProfileCardInner({
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
-  const ax = useAnalytics()
   return (
     <ProfileCard.Link
       profile={profile}
@@ -627,17 +611,6 @@ function FollowProfileCardInner({
                 logContext="PostOnboardingFindFollows"
                 shape="round"
                 onPress={() => {
-                  ax.metric('suggestedUser:follow', {
-                    logContext: isGuide
-                      ? 'ProgressGuide'
-                      : 'SeeMoreSuggestedUsers',
-                    location: 'Card',
-                    recSource,
-                    recId,
-                    position,
-                    suggestedDid: profile.did,
-                    category: null,
-                  })
                   onFollow?.()
                 }}
                 colorInverted

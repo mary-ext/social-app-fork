@@ -21,7 +21,6 @@ import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {useAnalytics} from '#/analytics'
 import * as bsky from '#/types/bsky'
 
 type Props = NativeStackScreenProps<
@@ -30,7 +29,6 @@ type Props = NativeStackScreenProps<
 >
 export function AutomationLabelSettingsScreen({}: Props) {
   const t = useTheme()
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
@@ -48,7 +46,6 @@ export function AutomationLabelSettingsScreen({}: Props) {
       return
     }
     let wasAdded = false
-    ax.metric('bot:label:toggle', {state: isBotLabeled ? 'remove' : 'add'})
     updateProfile.mutate(
       {
         profile,

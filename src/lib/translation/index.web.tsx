@@ -1,7 +1,6 @@
 import {useCallback, useContext, useMemo} from 'react'
 
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
-import {useAnalytics} from '#/analytics'
 import {Context} from './context'
 import {
   type ContextType,
@@ -60,7 +59,6 @@ export function useTranslate({key}: TranslationOptions) {
 }
 
 export function Provider({children}: React.PropsWithChildren<unknown>) {
-  const ax = useAnalytics()
   const googleTranslate = useGoogleTranslate()
 
   const translate = useCallback<ContextType['translate']>(
@@ -68,22 +66,15 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       text,
       expectedTargetLanguage,
       expectedSourceLanguage,
-      possibleSourceLanguages,
+      possibleSourceLanguages: _possibleSourceLanguages,
     }) => {
-      ax.metric('translate', {
-        os: 'web',
-        possibleSourceLanguages,
-        expectedTargetLanguage,
-        textLength: text.length,
-        googleTranslate: true,
-      })
       await googleTranslate(
         text,
         expectedTargetLanguage,
         expectedSourceLanguage,
       )
     },
-    [ax, googleTranslate],
+    [googleTranslate],
   )
 
   const ctx = useMemo(

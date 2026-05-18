@@ -37,7 +37,6 @@ import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
@@ -79,7 +78,6 @@ export function SearchScreenShell({
   inputPlaceholder?: string
   isExplore?: boolean
 }) {
-  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
@@ -239,10 +237,7 @@ export function SearchScreenShell({
     route.name,
   ])
 
-  const onSubmit = (source: 'typed' | 'autocomplete') => () => {
-    ax.metric('search:query', {
-      source,
-    })
+  const onSubmit = (_source: 'typed' | 'autocomplete') => () => {
     navigateToItem(searchTextRef.current)
   }
 

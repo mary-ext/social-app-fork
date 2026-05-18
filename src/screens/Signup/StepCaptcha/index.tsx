@@ -11,7 +11,6 @@ import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
-import {useAnalytics} from '#/analytics'
 import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 
@@ -72,7 +71,6 @@ function StepCaptchaInner({
   payload?: string
 }) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
 
@@ -111,13 +109,12 @@ function StepCaptchaInner({
   const onSuccess = useCallback(
     (code: string) => {
       setCompleted(true)
-      ax.metric('signup:captchaSuccess', {})
       dispatch({
         type: 'submit',
         task: {verificationCode: code, mutableProcessed: false},
       })
     },
-    [ax, dispatch],
+    [dispatch],
   )
 
   const onError = useCallback(
@@ -126,13 +123,12 @@ function StepCaptchaInner({
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
-      ax.metric('signup:captchaFailure', {})
       logger.error('Signup Flow Error', {
         registrationHandle: state.handle,
         error,
       })
     },
-    [_, ax, dispatch, state.handle],
+    [_, dispatch, state.handle],
   )
 
   const onBackPress = useCallback(() => {

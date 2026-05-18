@@ -48,7 +48,6 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {createPortalGroup} from '#/components/Portal'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {useIsWithinSplitView} from './splitView/context'
@@ -250,7 +249,6 @@ function BaseChatItem({
   postAlerts?: React.ReactNode
   children?: React.ReactNode
 }) {
-  const ax = useAnalytics()
   const t = useTheme()
   const {t: l, i18n} = useLingui()
   const {currentAccount} = useSession()
@@ -390,10 +388,9 @@ function BaseChatItem({
         menuControl.open()
         return false
       } else {
-        ax.metric('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [ax, isDeletedAccount, menuControl, queryClient, convo],
+    [isDeletedAccount, menuControl, queryClient, convo],
   )
 
   const onLongPress = useCallback(() => {

@@ -26,8 +26,9 @@ import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
-import {type Metrics, useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
+
+type SearchResultPressTab = 'top' | 'latest' | 'people' | 'feeds' | undefined
 
 let SearchResults = ({
   query,
@@ -221,7 +222,6 @@ let SearchScreenPostResults = ({
   sort?: 'top' | 'latest'
   active: boolean
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
@@ -287,11 +287,6 @@ let SearchScreenPostResults = ({
 
   const fireTracking = useCallOnce(() => {
     if (sort) {
-      // ts only
-      ax.metric('search:results:loaded', {
-        tab: sort,
-        initialCount: items.length,
-      })
     }
   })
   if (isFetched && sort) {
@@ -397,20 +392,11 @@ function SearchPost({
   position,
   post,
 }: {
-  from: Metrics['search:result:press']['tab']
-  position: Metrics['search:result:press']['position']
+  from: SearchResultPressTab
+  position: number
   post: AppBskyFeedDefs.PostView
 }) {
-  const ax = useAnalytics()
-
-  const onBeforePress = useCallback(() => {
-    ax.metric('search:result:press', {
-      tab: from,
-      resultType: 'post',
-      position,
-      uri: post.uri,
-    })
-  }, [ax, from, position, post])
+  const onBeforePress = useCallback(() => {}, [from, position, post])
 
   return <Post post={post} onBeforePress={onBeforePress} />
 }
@@ -422,7 +408,6 @@ let SearchScreenUserResults = ({
   query: string
   active: boolean
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   const {hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
@@ -456,12 +441,7 @@ let SearchScreenUserResults = ({
     return results?.pages.flatMap(page => page.actors) || []
   }, [results])
 
-  const fireTracking = useCallOnce(() => {
-    ax.metric('search:results:loaded', {
-      tab: 'people',
-      initialCount: profiles.length,
-    })
-  })
+  const fireTracking = useCallOnce(() => {})
   if (isFetched) {
     fireTracking()
   }
@@ -510,22 +490,13 @@ let SearchScreenUserResults = ({
 SearchScreenUserResults = memo(SearchScreenUserResults)
 
 function SearchScreenProfileButton({
-  position,
+  position: _position,
   profile,
 }: {
   position: number
   profile: bsky.profile.AnyProfileView
 }) {
-  const ax = useAnalytics()
-
-  const handlePress = () => {
-    ax.metric('search:result:press', {
-      tab: 'people',
-      resultType: 'profile',
-      position,
-      uri: profile.did,
-    })
-  }
+  const handlePress = () => {}
   return <ProfileCardWithFollowBtn profile={profile} onPress={handlePress} />
 }
 
@@ -536,7 +507,6 @@ let SearchScreenFeedsResults = ({
   query: string
   active: boolean
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const t = useTheme()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
@@ -544,12 +514,7 @@ let SearchScreenFeedsResults = ({
     enabled: active,
   })
 
-  const fireTracking = useCallOnce(() => {
-    ax.metric('search:results:loaded', {
-      tab: 'feeds',
-      initialCount: results?.length ?? 0,
-    })
-  })
+  const fireTracking = useCallOnce(() => {})
   if (isFetched) {
     fireTracking()
   }
@@ -591,22 +556,13 @@ let SearchScreenFeedsResults = ({
 SearchScreenFeedsResults = memo(SearchScreenFeedsResults)
 
 function SearchFeedCard({
-  position,
+  position: _position,
   view,
 }: {
   position: number
   view: AppBskyFeedDefs.GeneratorView
 }) {
-  const ax = useAnalytics()
-
-  const handleOnPress = () => {
-    ax.metric('search:result:press', {
-      tab: 'feeds',
-      resultType: 'feed',
-      position,
-      uri: view.uri,
-    })
-  }
+  const handleOnPress = () => {}
 
   return <FeedCard.Default view={view} onPress={handleOnPress} />
 }

@@ -56,7 +56,6 @@ import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
@@ -167,7 +166,6 @@ function WizardInner({
   onSuccess?: () => void
 }) {
   const navigation = useNavigation<NavigationProp>()
-  const ax = useAnalytics()
   const {_} = useLingui()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
@@ -210,12 +208,6 @@ function WizardInner({
 
   const onSuccessCreate = (data: {uri: string; cid: string}) => {
     const rkey = new AtUri(data.uri).rkey
-    ax.metric('starterPack:create', {
-      setName: state.name != null,
-      setDescription: state.description != null,
-      profilesCount: state.profiles.length,
-      feedsCount: state.feeds.length,
-    })
     Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
     dispatch({type: 'SetProcessing', processing: false})
 

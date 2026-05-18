@@ -17,7 +17,6 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
-import {useAnalytics} from '#/analytics'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
@@ -25,7 +24,6 @@ let ShareMenuItems = ({
   post,
   onShare: onShareProp,
 }: ShareMenuItemsProps): React.ReactNode => {
-  const ax = useAnalytics()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -47,14 +45,12 @@ let ShareMenuItems = ({
   }, [postAuthor])
 
   const onCopyLink = () => {
-    ax.metric('share:press:copyLink', {})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
-    ax.metric('share:press:dmSelected', {})
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
@@ -91,7 +87,6 @@ let ShareMenuItems = ({
             testID="postDropdownSendViaDMBtn"
             label={_(msg`Send via direct message`)}
             onPress={() => {
-              ax.metric('share:press:openDmSearch', {})
               sendViaChatControl.open()
             }}>
             <Menu.ItemText>
@@ -135,7 +130,6 @@ let ShareMenuItems = ({
           </>
         )}
       </Menu.Outer>
-
       <SendViaChatDialog
         control={sendViaChatControl}
         onSelectChat={onSelectChatToShareTo}

@@ -24,7 +24,6 @@ import {useDialogContext} from '#/components/Dialog'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 export function RecentChats({
   postUri,
@@ -33,7 +32,6 @@ export function RecentChats({
   postUri: string
   onBeforePress?: () => void
 }) {
-  const ax = useAnalytics()
   const control = useDialogContext()
   const {currentAccount} = useSession()
   const {data} = useListConvosQuery({status: 'accepted'})
@@ -44,7 +42,6 @@ export function RecentChats({
   const onSelectChat = (convoId: string) => {
     onBeforePress?.()
     control.close(() => {
-      ax.metric('share:press:recentDm', {})
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,

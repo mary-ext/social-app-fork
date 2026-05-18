@@ -12,7 +12,6 @@ import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useAgent} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {useAnalytics} from '#/analytics'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 
 const RQKEY_ROOT = 'post'
@@ -185,49 +184,27 @@ function usePostLikeMutation(
   logContext: PostActionLogContext,
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const postAuthor = post.author
+  const _postAuthor = post.author
   const agent = useAgent()
-  const ax = useAnalytics()
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      ax.metric('post:like', {
-        uri,
-        authorDid: postAuthor.did,
-        logContext,
-        doesPosterFollowLiker: postAuthor.viewer
-          ? Boolean(postAuthor.viewer.followedBy)
-          : undefined,
-        doesLikerFollowPoster: postAuthor.viewer
-          ? Boolean(postAuthor.viewer.following)
-          : undefined,
-        likerClout: undefined,
-        postClout: undefined,
-        feedDescriptor: feedDescriptor,
-      })
       return agent.like(uri, cid, via)
     },
   })
 }
 
 function usePostUnlikeMutation(
-  feedDescriptor: string | undefined,
-  logContext: PostActionLogContext,
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  _feedDescriptor: string | undefined,
+  _logContext: PostActionLogContext,
+  _post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
-  const ax = useAnalytics()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
-    mutationFn: ({postUri, likeUri}) => {
-      ax.metric('post:unlike', {
-        uri: postUri,
-        authorDid: post.author.did,
-        logContext,
-        feedDescriptor,
-      })
+    mutationFn: ({postUri: _postUri, likeUri}) => {
       return agent.deleteLike(likeUri)
     },
   })
@@ -298,44 +275,30 @@ export function usePostRepostMutationQueue(
 }
 
 function usePostRepostMutation(
-  feedDescriptor: string | undefined,
-  logContext: PostActionLogContext,
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  _feedDescriptor: string | undefined,
+  _logContext: PostActionLogContext,
+  _post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
-  const ax = useAnalytics()
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      ax.metric('post:repost', {
-        uri,
-        authorDid: post.author.did,
-        logContext,
-        feedDescriptor,
-      })
       return agent.repost(uri, cid, via)
     },
   })
 }
 
 function usePostUnrepostMutation(
-  feedDescriptor: string | undefined,
-  logContext: PostActionLogContext,
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  _feedDescriptor: string | undefined,
+  _logContext: PostActionLogContext,
+  _post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const agent = useAgent()
-  const ax = useAnalytics()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
-    mutationFn: ({postUri, repostUri}) => {
-      ax.metric('post:unrepost', {
-        uri: postUri,
-        authorDid: post.author.did,
-        logContext,
-        feedDescriptor,
-      })
+    mutationFn: ({postUri: _postUri, repostUri}) => {
       return agent.deleteRepost(repostUri)
     },
   })

@@ -34,7 +34,6 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 export function MoreOptionsMenu({
@@ -45,7 +44,6 @@ export function MoreOptionsMenu({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const editListDialogControl = useDialogControl()
   const deleteListPromptControl = useDialogControl()
@@ -114,7 +112,6 @@ export function MoreOptionsMenu({
     try {
       await muteList({uri: list.uri, mute: false})
       Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
-      ax.metric('moderation:unsubscribedFromList', {listType: 'mute'})
     } catch {
       Toast.show(
         _(
@@ -128,7 +125,6 @@ export function MoreOptionsMenu({
     try {
       await blockList({uri: list.uri, block: false})
       Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
-      ax.metric('moderation:unsubscribedFromList', {listType: 'block'})
     } catch {
       Toast.show(
         _(

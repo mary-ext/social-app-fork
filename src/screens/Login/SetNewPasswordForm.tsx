@@ -16,7 +16,6 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
@@ -34,7 +33,6 @@ export const SetNewPasswordForm = ({
   onPasswordSet: () => void
 }) => {
   const {_} = useLingui()
-  const ax = useAnalytics()
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
@@ -51,7 +49,6 @@ export const SetNewPasswordForm = ({
           msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
         ),
       )
-      ax.metric('signin:passwordResetFailure', {})
       return
     }
 
@@ -71,11 +68,9 @@ export const SetNewPasswordForm = ({
         password,
       })
       onPasswordSet()
-      ax.metric('signin:passwordResetSuccess', {})
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to set new password', {error: e})
-      ax.metric('signin:passwordResetFailure', {})
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(

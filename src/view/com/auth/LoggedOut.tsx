@@ -21,7 +21,6 @@ import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
-import {useAnalytics} from '#/analytics'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -34,7 +33,6 @@ export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   useEnableMinimalShellMode()
@@ -111,11 +109,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           <SplashScreen
             onPressSignin={() => {
               setScreenState(ScreenState.S_Login)
-              ax.metric('splash:signInPressed', {})
             }}
             onPressCreateAccount={() => {
               setScreenState(ScreenState.S_CreateAccount)
-              ax.metric('splash:createAccountPressed', {})
             }}
           />
         ) : undefined}

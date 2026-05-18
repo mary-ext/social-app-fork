@@ -23,7 +23,6 @@ import {
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 import {BlockMemberPrompt} from './prompts'
 import {StatusBadge} from './StatusBadge'
@@ -44,7 +43,6 @@ export function MemberMenu({
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const {t: l} = useLingui()
-  const ax = useAnalytics()
 
   const blockMemberPrompt = Prompt.usePromptControl()
 
@@ -54,7 +52,6 @@ export function MemberMenu({
   })
   const {mutate: initiateConvo} = useGetConvoForMembers({
     onSuccess: ({convo}) => {
-      ax.metric('chat:open', {logContext: 'ConvoSettings'})
       navigation.navigate('MessagesConversation', {conversation: convo.id})
     },
     onError: () => {
@@ -76,12 +73,10 @@ export function MemberMenu({
     }
 
     if (convoAvailability.convo) {
-      ax.metric('chat:open', {logContext: 'ConvoSettings'})
       navigation.navigate('MessagesConversation', {
         conversation: convoAvailability.convo.id,
       })
     } else {
-      ax.metric('chat:create', {logContext: 'ConvoSettings'})
       initiateConvo([profile.did])
     }
   }

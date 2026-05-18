@@ -16,7 +16,6 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import * as Prompt from '#/components/Prompt'
 import {TrendingTopicLink} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 const TRENDING_LIMIT = 5
 
@@ -29,14 +28,12 @@ export function SidebarTrendingTopics() {
 function Inner() {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const trendingPrompt = Prompt.usePromptControl()
   const {setTrendingDisabled} = useTrendingSettingsApi()
   const {data: trending, error, isLoading} = useTrendingTopics()
   const noTopics = !isLoading && !error && !trending?.topics?.length
 
   const onConfirmHide = () => {
-    ax.metric('trendingTopics:hide', {context: 'sidebar'})
     setTrendingDisabled(true)
   }
 
@@ -91,9 +88,7 @@ function Inner() {
                   key={topic.link}
                   topic={topic}
                   style={[a.self_start]}
-                  onPress={() => {
-                    ax.metric('trendingTopic:click', {context: 'sidebar'})
-                  }}>
+                  onPress={() => {}}>
                   {({hovered}) => (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Text

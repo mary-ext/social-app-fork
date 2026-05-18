@@ -13,7 +13,6 @@ import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/ico
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
@@ -29,7 +28,6 @@ export function DraftsListDialog({
   const {_} = useLingui()
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
-  const ax = useAnalytics()
   const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
     useDraftsQuery()
   const {mutate: deleteDraft} = useDeleteDraftMutation()
@@ -45,13 +43,9 @@ export function DraftsListDialog({
   const onDraftListOpen = useCallOnce()
   useEffect(() => {
     if (isDataReady) {
-      onDraftListOpen(() => {
-        ax.metric('draft:listOpen', {
-          draftCount,
-        })
-      })
+      onDraftListOpen(() => {})
     }
-  }, [onDraftListOpen, isDataReady, draftCount, ax])
+  }, [onDraftListOpen, isDataReady, draftCount])
 
   const handleSelectDraft = useCallback(
     (summary: DraftSummary) => {
@@ -71,14 +65,11 @@ export function DraftsListDialog({
   const handleDeleteDraft = useCallback(
     (draftSummary: DraftSummary) => {
       // Fire draft:delete metric
-      const draftAgeMs = Date.now() - new Date(draftSummary.createdAt).getTime()
-      ax.metric('draft:delete', {
-        logContext: 'DraftsList',
-        draftAgeMs,
-      })
+      const _draftAgeMs =
+        Date.now() - new Date(draftSummary.createdAt).getTime()
       deleteDraft({draftId: draftSummary.id, draft: draftSummary.draft})
     },
-    [deleteDraft, ax],
+    [deleteDraft],
   )
 
   const backButton = useCallback(

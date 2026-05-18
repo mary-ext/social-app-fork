@@ -11,6 +11,7 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
+import {Logger} from '#/logger'
 import {
   type FeedSourceFeedInfo,
   type FeedSourceInfo,
@@ -21,7 +22,6 @@ import {
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
-import {useAnalytics} from '#/analytics'
 import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
@@ -63,8 +63,7 @@ export function useFeedFeedback(
   feedSourceInfo: FeedSourceInfo | undefined,
   hasSession: boolean,
 ) {
-  const ax = useAnalytics()
-  const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
+  const logger = Logger.create(Logger.Context.FeedFeedback)
   const agent = useAgent()
 
   const feed =
@@ -86,36 +85,24 @@ export function useFeedFeedback(
   >(new WeakSet())
 
   const flushEvents = useCallback(
-    (stats: AggregatedStats | null, feedDescriptor: string) => {
+    (stats: AggregatedStats | null, _feedDescriptor: string) => {
       if (stats === null) {
         return
       }
 
       if (stats.clickthroughCount > 0) {
-        ax.metric('feed:clickthrough', {
-          count: stats.clickthroughCount,
-          feed: feedDescriptor,
-        })
         stats.clickthroughCount = 0
       }
 
       if (stats.engagedCount > 0) {
-        ax.metric('feed:engaged', {
-          count: stats.engagedCount,
-          feed: feedDescriptor,
-        })
         stats.engagedCount = 0
       }
 
       if (stats.seenCount > 0) {
-        ax.metric('feed:seen', {
-          count: stats.seenCount,
-          feed: feedDescriptor,
-        })
         stats.seenCount = 0
       }
     },
-    [ax],
+    [],
   )
 
   const aggregatedStats = useRef<AggregatedStats | null>(null)

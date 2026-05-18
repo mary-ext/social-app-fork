@@ -38,7 +38,6 @@ import {getAspectRatio} from '#/components/images/Gallery/utils'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 export * from './const'
@@ -98,7 +97,6 @@ export function Gallery({
   viewContext,
 }: GalleryProps) {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const {screenReaderEnabled} = useA11y()
   const largeAltBadge = useLargeAltBadgeEnabled()
   const bps = useBreakpoints()
@@ -157,15 +155,8 @@ export function Gallery({
   const currentIndexRef = useRef(0)
 
   const emitSwipeMetric = useMemo(
-    () =>
-      debounce((fromIndex: number, toIndex: number) => {
-        ax.metric('post:gallery:swipe', {
-          fromImage: fromIndex + 1, // convert to 1-based index for easier analysis
-          toImage: toIndex + 1, // convert to 1-based index for easier analysis
-          totalImages: images.length,
-        })
-      }, 200),
-    [ax, images.length],
+    () => debounce((_fromIndex: number, _toIndex: number) => {}, 200),
+    [images.length],
   )
 
   const setCurrentIndex = (index: number) => {
@@ -291,10 +282,6 @@ export function Gallery({
                 onPress={
                   onPress
                     ? () => {
-                        ax.metric('post:gallery:openLightbox', {
-                          fromImage: index + 1, // convert to 1-based index for easier analysis
-                          totalImages: images.length,
-                        })
                         const refs: AnimatedRef<any>[] = []
                         const dims: (Dimensions | null)[] = []
                         for (let i = 0; i < images.length; i++) {

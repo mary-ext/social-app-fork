@@ -13,7 +13,6 @@ import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {AnalyticsContext, useAnalyticsBase} from '#/analytics'
 import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
@@ -103,7 +102,6 @@ class SessionStore {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
   // eslint-disable-next-line react/hook-use-state
   const [store] = useState(() => new SessionStore())
@@ -128,10 +126,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const createAccount = useCallback<SessionApiContext['createAccount']>(
-    async (params, metrics) => {
+    async (params, _metrics) => {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
-      ax.metric('account:create:begin', {})
       const {agent, account} = await createAgentAndCreateAccount(
         params,
         onAgentSessionChange,
@@ -145,14 +142,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      ax.metric('account:create:success', metrics)
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [ax, store, onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const login = useCallback<SessionApiContext['login']>(
-    async (params, logContext) => {
+    async (params, _logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'login'})
       const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndLogin(
@@ -168,23 +164,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
-      ax.metric('account:loggedIn', {logContext, withPassword: true})
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [ax, store, onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const logoutCurrentAccount = useCallback<
     SessionApiContext['logoutCurrentAccount']
   >(
-    logContext => {
+    _logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       const prevState = store.getState()
       store.dispatch({
         type: 'logged-out-current-account',
       })
-      ax.metric('account:loggedOut', {logContext, scope: 'current'})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       if (prevState.currentAgentState.did) {
         void clearPersistedQueryStorage(prevState.currentAgentState.did)
@@ -192,20 +186,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // reset onboarding flow on logout
       onboardingDispatch({type: 'skip'})
     },
-    [ax, store, cancelPendingTask, onboardingDispatch],
+    [store, cancelPendingTask, onboardingDispatch],
   )
 
   const logoutEveryAccount = useCallback<
     SessionApiContext['logoutEveryAccount']
   >(
-    logContext => {
+    _logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       const prevState = store.getState()
       store.dispatch({
         type: 'logged-out-every-account',
       })
-      ax.metric('account:loggedOut', {logContext, scope: 'every'})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
       for (const account of prevState.accounts) {
         void clearPersistedQueryStorage(account.did)
@@ -213,7 +206,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // reset onboarding flow on logout
       onboardingDispatch({type: 'skip'})
     },
-    [store, cancelPendingTask, onboardingDispatch, ax],
+    [store, cancelPendingTask, onboardingDispatch],
   )
 
   const resumeSession = useCallback<SessionApiContext['resumeSession']>(
@@ -369,9 +362,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <AgentContext.Provider value={agent}>
       <StateContext.Provider value={stateContext}>
-        <ApiContext.Provider value={api}>
-          <AnalyticsContext>{children}</AnalyticsContext>
-        </ApiContext.Provider>
+        <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
       </StateContext.Provider>
     </AgentContext.Provider>
   )

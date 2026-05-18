@@ -36,7 +36,6 @@ import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
-import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
@@ -106,7 +105,6 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
-  const ax = useAnalytics()
   const allFeeds = useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
@@ -154,12 +152,6 @@ function HomeScreenReady({
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (maybeSelectedFeed) {
-        ax.metric('home:feedDisplayed', {
-          index: selectedIndex,
-          feedType: maybeSelectedFeed.split('|')[0],
-          feedUrl: maybeSelectedFeed,
-          reason: 'focus',
-        })
       }
     }),
   )
@@ -175,14 +167,9 @@ function HomeScreenReady({
       setSelectedFeed(maybeFeed)
 
       if (maybeFeed) {
-        ax.metric('home:feedDisplayed', {
-          index,
-          feedType: maybeFeed.split('|')[0],
-          feedUrl: maybeFeed,
-        })
       }
     },
-    [ax, setSelectedFeed, showHeader, allFeeds],
+    [setSelectedFeed, showHeader, allFeeds],
   )
 
   const onPressSelected = useCallback(() => {

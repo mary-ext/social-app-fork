@@ -14,7 +14,6 @@ import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
-import {useAnalytics} from '#/analytics'
 import {IS_DEV, IS_NATIVE} from '#/env'
 
 /**
@@ -222,7 +221,6 @@ export function useNotificationsRegistration() {
 }
 
 export function useRequestNotificationsPermission() {
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
@@ -246,11 +244,6 @@ export function useRequestNotificationsPermission() {
     }
 
     const res = await Notifications.requestPermissionsAsync()
-
-    ax.metric(`notifications:request`, {
-      context: context,
-      status: res.status,
-    })
 
     if (res.granted) {
       if (currentAccount) {

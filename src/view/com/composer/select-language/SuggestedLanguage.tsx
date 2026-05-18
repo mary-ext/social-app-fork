@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {Platform, Text as RNText, View} from 'react-native'
+import {Text as RNText, View} from 'react-native'
 import {RichText} from '@atproto/api'
 import {parseLanguageString} from '@atproto/syntax'
 import {
@@ -14,6 +14,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useNonReactiveObject} from '#/lib/hooks/useNonReactiveObject'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {codeToLanguageName} from '#/locale/helpers'
+import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -21,7 +22,6 @@ import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Che
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
 
 type LanguageDetectionPerLanguageConfig = {
@@ -130,7 +130,6 @@ export function SuggestedLanguage({
    */
   onNudge?: () => void
 }) {
-  const ax = useAnalytics()
   const [hasInteracted, setHasInteracted] = useState(false)
   const [suggLang, setSuggLang] = useState<string | undefined>(undefined)
   const declinedSuggLangsRef = useRef<string[]>([])
@@ -201,18 +200,12 @@ export function SuggestedLanguage({
             !declinedSuggLangsRef.current.includes(nextBestCandidate)
           ) {
             handleOnNudge()
-            ax.metric('composer:language:nudgeUser', {
-              os: Platform.OS,
-              suggestedLanguage: nextBestCandidate,
-              currentTargetLanguages: currLangs,
-              textLength: text.length,
-            })
           }
 
           setSuggLang(undefined)
         }
       } catch (e) {
-        ax.logger.error('Error detecting language', {safeMessage: e})
+        logger.error('Error detecting language', {safeMessage: e})
       }
     }, 500)
   }, [])
@@ -247,7 +240,7 @@ export function SuggestedLanguage({
     return () => {
       detectLanguage.cancel()
     }
-  }, [text, hasInteracted, detectLanguage, ax])
+  }, [text, hasInteracted, detectLanguage])
 
   /*
    * This is intentionally computed based on a ref. Since we set and clear
@@ -285,7 +278,6 @@ export function SuggestedLanguage({
     return (
       <GuessedLanguage
         language={suggLang}
-        metadata={{currentTargetLanguages: currentLanguages, rawText: text}}
         onAccept={onAccept}
         onDecline={onDecline}
       />
@@ -294,7 +286,6 @@ export function SuggestedLanguage({
     return (
       <ReplyLanguageNudge
         language={replyToLanguages[0]}
-        metadata={{currentTargetLanguages: currentLanguages}}
         onAccept={onAccept}
         onDecline={onDecline}
       />
@@ -306,52 +297,24 @@ export function SuggestedLanguage({
 
 function GuessedLanguage({
   language,
-  metadata,
   onAccept: onAcceptOuter,
   onDecline: onDeclineOuter,
 }: {
   language: string
-  metadata: {
-    currentTargetLanguages: string[]
-    rawText: string
-  }
   onAccept: (language: string) => void
   onDecline: () => void
 }) {
-  const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const suggestedLanguageName = codeToLanguageName(
     language,
     langPrefs.appLanguage,
   )
   const onAccept = () => {
-    ax.metric('composer:language:acceptSuggestion', {
-      os: Platform.OS,
-      suggestedLanguage: language,
-      currentTargetLanguages: metadata.currentTargetLanguages,
-      textLength: sanitizeTextForDetection(metadata.rawText).length,
-    })
     onAcceptOuter(language)
   }
   const onDecline = () => {
-    ax.metric('composer:language:declineSuggestion', {
-      os: Platform.OS,
-      suggestedLanguage: language,
-      currentTargetLanguages: metadata.currentTargetLanguages,
-      textLength: sanitizeTextForDetection(metadata.rawText).length,
-    })
     onDeclineOuter()
   }
-
-  const metaRef = useNonReactiveObject(metadata)
-  useEffect(() => {
-    ax.metric('composer:language:suggestLanguage', {
-      os: Platform.OS,
-      suggestedLanguage: language,
-      currentTargetLanguages: metaRef.current.currentTargetLanguages,
-      textLength: sanitizeTextForDetection(metadata.rawText).length,
-    })
-  }, [ax, language])
 
   return (
     <LanguageSuggestionButton
@@ -372,35 +335,22 @@ function GuessedLanguage({
 
 function ReplyLanguageNudge({
   language,
-  metadata,
   onAccept: onAcceptOuter,
   onDecline: onDeclineOuter,
 }: {
   language: string
-  metadata: {
-    currentTargetLanguages: string[]
-  }
   onAccept: (language: string) => void
   onDecline: () => void
 }) {
-  const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const suggestedLanguageName = codeToLanguageName(
     language,
     langPrefs.appLanguage,
   )
   const onAccept = () => {
-    ax.metric('composer:language:replyNudgeAccept', {
-      replyToLanguage: language,
-      currentTargetLanguages: metadata.currentTargetLanguages,
-    })
     onAcceptOuter(language)
   }
   const onDecline = () => {
-    ax.metric('composer:language:replyNudgeDecline', {
-      replyToLanguage: language,
-      currentTargetLanguages: metadata.currentTargetLanguages,
-    })
     onDeclineOuter()
   }
 

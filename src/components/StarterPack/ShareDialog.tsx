@@ -17,7 +17,6 @@ import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/ico
 import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 interface Props {
@@ -47,7 +46,6 @@ function ShareDialogInner({
   control,
 }: Props) {
   const {_} = useLingui()
-  const ax = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
@@ -56,10 +54,6 @@ function ShareDialogInner({
   const onShareLink = async () => {
     if (!link) return
     shareUrl(link)
-    ax.metric('starterPack:share', {
-      starterPack: starterPack.uri,
-      shareType: 'link',
-    })
     control.close()
   }
 

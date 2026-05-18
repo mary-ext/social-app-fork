@@ -22,7 +22,6 @@ import {
   CompactVideoPostCard,
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
-import {useAnalytics} from '#/analytics'
 
 const CARD_WIDTH = 108
 
@@ -36,7 +35,6 @@ const FEED_PARAMS: {
 export function TrendingVideos() {
   const t = useTheme()
   const {_} = useLingui()
-  const ax = useAnalytics()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
 
@@ -58,8 +56,7 @@ export function TrendingVideos() {
 
   const onConfirmHide = useCallback(() => {
     setTrendingVideoDisabled(true)
-    ax.metric('trendingVideos:hide', {context: 'interstitial:discover'})
-  }, [ax, setTrendingVideoDisabled])
+  }, [setTrendingVideoDisabled])
 
   if (error) {
     return null
@@ -148,7 +145,6 @@ function VideoCards({
 }: {
   data: Exclude<ReturnType<typeof usePostFeedQuery>['data'], undefined>
 }) {
-  const ax = useAnalytics()
   const items = useMemo(() => {
     return data.pages
       .flatMap(page => page.slices)
@@ -170,15 +166,10 @@ function VideoCards({
               uri: VIDEO_FEED_URI,
               sourceInterstitial: 'discover',
             }}
-            onInteract={() => {
-              ax.metric('videoCard:click', {
-                context: 'interstitial:discover',
-              })
-            }}
+            onInteract={() => {}}
           />
         </View>
       ))}
-
       <ViewMoreCard />
     </>
   )
