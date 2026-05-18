@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
@@ -11,6 +10,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
+import Animated, {FadeIn, FadeOut} from '#/lib/animations/reanimatedCompat'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'

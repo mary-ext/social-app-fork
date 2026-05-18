@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
+import * as Clipboard from 'expo-clipboard'
+import {Trans} from '@lingui/react/macro'
+
 import Animated, {
   FadeOutUp,
   useReducedMotion,
   ZoomIn,
-} from 'react-native-reanimated'
-import * as Clipboard from 'expo-clipboard'
-import {Trans} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
 import {Text} from '#/components/Typography'

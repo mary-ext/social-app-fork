@@ -1,10 +1,10 @@
 import {useEffect, useReducer, useState} from 'react'
 import {AppState, type AppStateStatus, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
-import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import Animated, {FadeIn, LayoutAnimationConfig} from '#/lib/animations/reanimatedCompat'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'

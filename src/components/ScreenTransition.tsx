@@ -1,12 +1,12 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
+
 import Animated, {
   Easing,
   FadeIn,
   FadeOut,
   SlideInLeft,
   SlideInRight,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {IS_WEB} from '#/env'
 
 export function ScreenTransition({

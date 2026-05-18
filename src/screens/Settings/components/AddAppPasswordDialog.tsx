@@ -1,5 +1,10 @@
 import {useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
+import {useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
+import {useMutation} from '@tanstack/react-query'
+
 import Animated, {
   FadeIn,
   FadeOut,
@@ -7,12 +12,7 @@ import Animated, {
   LinearTransition,
   SlideInRight,
   SlideOutLeft,
-} from 'react-native-reanimated'
-import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
-import {useMutation} from '@tanstack/react-query'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'

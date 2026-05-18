@@ -1,8 +1,8 @@
 import {useEffect, useRef, useState} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
-import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 
+import Animated, {FadeIn, LayoutAnimationConfig} from '#/lib/animations/reanimatedCompat'
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'

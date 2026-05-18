@@ -1,5 +1,10 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
+
 import Animated, {
   FadeIn,
   FadeOut,
@@ -9,12 +14,7 @@ import Animated, {
   SlideInRight,
   SlideOutLeft,
   SlideOutRight,
-} from 'react-native-reanimated'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
-
+} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {

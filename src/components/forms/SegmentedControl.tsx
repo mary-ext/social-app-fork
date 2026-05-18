@@ -7,8 +7,8 @@ import {
   useState,
 } from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
+import Animated, {Easing, LinearTransition} from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a, native, platform, useTheme} from '#/alf'

@@ -1,13 +1,13 @@
 import {useCallback} from 'react'
+import {useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
+
 import Animated, {
   FadeInUp,
   FadeOutUp,
   LayoutAnimationConfig,
   LinearTransition,
-} from 'react-native-reanimated'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,

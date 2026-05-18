@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import {StyleSheet, View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 import {Document} from '@tiptap/extension-document'
@@ -22,6 +21,7 @@ import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
+import Animated, {FadeIn, FadeOut} from '#/lib/animations/reanimatedCompat'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'

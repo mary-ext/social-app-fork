@@ -1,8 +1,8 @@
 import {View} from 'react-native'
-import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
+import Animated, {FadeInDown, FadeOut} from '#/lib/animations/reanimatedCompat'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'

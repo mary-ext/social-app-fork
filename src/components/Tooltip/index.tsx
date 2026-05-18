@@ -9,9 +9,9 @@ import {
   useState,
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import Animated, {Easing, ZoomIn} from '#/lib/animations/reanimatedCompat'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {atoms as a, select, useTheme} from '#/alf'

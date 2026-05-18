@@ -1,14 +1,14 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
+import {Plural, Trans} from '@lingui/react/macro'
+
 import Animated, {
   FadeIn,
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-} from 'react-native-reanimated'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {
   createFullHandle,
   MAX_SERVICE_HANDLE_LENGTH,

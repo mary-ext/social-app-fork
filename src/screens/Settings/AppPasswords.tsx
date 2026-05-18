@@ -1,16 +1,16 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LayoutAnimationConfig,
-  LinearTransition,
-} from 'react-native-reanimated'
 import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LayoutAnimationConfig,
+  LinearTransition,
+} from '#/lib/animations/reanimatedCompat'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {

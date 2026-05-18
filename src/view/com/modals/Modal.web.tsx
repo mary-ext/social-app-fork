@@ -1,7 +1,7 @@
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
+import Animated, {FadeIn, FadeOut} from '#/lib/animations/reanimatedCompat'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Modal as ModalIface} from '#/state/modals'

@@ -6,8 +6,8 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
+import Animated, {Easing, LinearTransition} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {

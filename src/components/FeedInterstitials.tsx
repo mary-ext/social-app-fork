@@ -1,16 +1,16 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
+import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
+
 import Animated, {
   Easing,
   FadeIn,
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
-} from 'react-native-reanimated'
-import {type AppBskyFeedDefs} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
-
+} from '#/lib/animations/reanimatedCompat'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
