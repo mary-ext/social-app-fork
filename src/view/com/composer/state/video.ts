@@ -3,6 +3,7 @@ import {type I18n} from '@lingui/core'
 import {defineMessage} from '@lingui/core/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
+import {LOCAL_DEV_SERVICE} from '#/lib/constants'
 import {compressVideo} from '#/lib/media/video/compress'
 import {
   ServerError,
@@ -228,7 +229,7 @@ export function videoReducer(
       }
     }
   } else if (action.type === 'to_done') {
-    if (state.status === 'processing') {
+    if (state.status === 'uploading' || state.status === 'processing') {
       return {
         status: 'done',
         progress: 100,
@@ -292,6 +293,16 @@ export async function processVideo(
 
   let uploadResponse: AppBskyVideoDefs.JobStatus | undefined
   try {
+    if (agent.serviceUrl.toString().startsWith(LOCAL_DEV_SERVICE)) {
+      const blobRef = await uploadVideoBlobDirectly(agent, video, signal)
+      dispatch({
+        type: 'to_done',
+        blobRef,
+        signal,
+      })
+      return
+    }
+
     uploadResponse = await uploadVideo({
       video,
       agent,
@@ -385,6 +396,39 @@ export async function processVideo(
 
     return // Exit async loop
   }
+}
+
+async function uploadVideoBlobDirectly(
+  agent: BskyAgent,
+  video: CompressedVideo,
+  signal: AbortSignal,
+): Promise<BlobRef> {
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+
+  const bytes = await readVideoBytes(video)
+
+  if (signal.aborted) {
+    throw new AbortError()
+  }
+
+  const {data} = await agent.uploadBlob(
+    new Blob([bytes], {type: video.mimeType}),
+    {
+      encoding: video.mimeType,
+    },
+  )
+
+  return data.blob
+}
+
+async function readVideoBytes(video: CompressedVideo): Promise<ArrayBuffer> {
+  if (video.bytes != null) {
+    return video.bytes
+  }
+
+  return fetch(video.uri).then(res => res.arrayBuffer())
 }
 
 function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {

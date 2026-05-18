@@ -1479,7 +1479,7 @@ Note: `rsbuild preview` requires a prior production build (`yarn build-web`).
 
 ## Phase 4.9 — Final verification
 
-Status: done for unauthenticated web verification plus local-PDS authenticated smoke. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, external GIF playback, and Apple Music external-player consent/iframe load. A throwaway `@atproto/dev-env` PDS account verified custom-service login, text posting, and image upload through the composer. Video picker selection works, but video upload remains manual against a real Bluesky account because the app routes video through the external Bluesky video service.
+Status: done for unauthenticated web verification plus local-PDS authenticated smoke. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, external GIF playback, and Apple Music external-player consent/iframe load. A throwaway `@atproto/dev-env` PDS account verified custom-service login, text posting, image upload, and MP4 video upload through the composer; the video smoke verified a posted `app.bsky.embed.video` record on the local PDS.
 
 **Build verification:**
 ```sh
@@ -1513,12 +1513,12 @@ npx @rsdoctor/cli analyze
 - [x] Post thread loads
 - [x] Search works
 - [x] Composer opens, text post submits
-- [ ] **Media — distinct surfaces** (don't lump these — Streams 1-4 each touch a different piece):
+- [x] **Media — distinct surfaces** (don't lump these — Streams 1-4 each touch a different piece):
   - [x] Image upload (composer → post timeline thumbnail)
   - [x] Hosted images render (feed/thread thumbnails; lightbox open remains manual)
   - [x] Video post inline playback (`<video>` element in `VideoEmbedInnerWeb`)
   - [x] Video scrubber drags correctly (`web-controls/Scrubber`)
-  - [ ] Video upload (composer → posted video — `src/lib/media/video/upload.web.ts`)
+  - [x] Video upload (composer → posted video — `src/lib/media/video/upload.web.ts`)
   - [x] GIF post playback (`src/components/Post/Embed/ExternalEmbed/Gif.tsx` — `playAsync`/`pauseAsync` controlled `<video>`)
   - [x] External GIF embed (separate code path in `ExternalEmbed/index.tsx`)
   - [x] Link-card preview (text + thumbnail)
