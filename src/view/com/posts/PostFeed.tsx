@@ -55,7 +55,6 @@ import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
-import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
   isStatusStillActive,
   isStatusValidForViewers,
@@ -140,10 +139,6 @@ type FeedRow =
     }
   | {
       type: 'composerPrompt'
-      key: string
-    }
-  | {
-      type: 'liveEventFeedsAndTrendingBanner'
       key: string
     }
 
@@ -488,10 +483,6 @@ let PostFeed = ({
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                    arr.push({
-                      type: 'liveEventFeedsAndTrendingBanner',
-                      key: 'liveEventFeedsAndTrendingBanner-' + sliceIndex,
-                    })
                     // Show composer prompt for Discover and Following feeds
                     if (
                       hasSession &&
@@ -739,8 +730,6 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
-      } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
-        return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {
         return <ComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {

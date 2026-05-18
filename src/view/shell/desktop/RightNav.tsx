@@ -23,7 +23,6 @@ import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
-import {SidebarLiveEventFeedsBanner} from '#/features/liveEvents/components/SidebarLiveEventFeedsBanner'
 
 function useWebQueryParams() {
   const navigation = useNavigation()
@@ -94,7 +93,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </>
       )}
 
-      {showExploreScreenDuplicatedContent && <SidebarLiveEventFeedsBanner />}
       {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>

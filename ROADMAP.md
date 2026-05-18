@@ -344,17 +344,17 @@ has no source hits.
 
 **Checklist:**
 
-- [ ] **live-events:**
-  - [ ] `rm -rf src/features/liveEvents`
-  - [ ] `src/App.web.tsx` + `src/App.native.tsx`: remove the `liveEvents/context` provider mount
-  - [ ] `src/components/FeedCard.tsx`: drop `useActiveLiveEventFeedUris` and the live-indicator block (~lines 37, 133, 146)
-  - [ ] `src/analytics/metrics/types.ts`: delete the `liveEvents:*` metric definitions (the surrounding `src/analytics/` directory dies entirely in Phase 2.7 — this edit just retires the live-events-specific entries early so the analytics sweep is cleaner)
-  - [ ] `src/env/common.ts` + `.env.example`: remove `LIVE_EVENTS_DEV_URL`, `LIVE_EVENTS_PROD_URL`, `LIVE_EVENTS_URL`
-- [ ] **app-config:**
-  - [ ] `rm src/state/appConfig.tsx`
-  - [ ] `src/App.web.tsx` + `src/App.native.tsx`: remove the `appConfig` provider mount + `prefetchAppConfig` calls
-  - [ ] `src/features/liveNow/index.tsx`: replace `const {liveNow} = useAppConfig()` with a static `{allow: [], exceptions: []}`. With `LIVE_NOW_BETA_DISABLED = false` from Phase 2.1, the feature IS reachable — the empty `allow` array means no additions to `DEFAULT_ALLOWED_DOMAINS` (twitch / stream.place / bluecast), and empty `exceptions` means no per-DID overrides. Edit `DEFAULT_ALLOWED_DOMAINS` directly if you want to support more streaming services
-  - [ ] `src/env/common.ts` + `.env.example`: remove `APP_CONFIG_DEV_URL`, `APP_CONFIG_PROD_URL`, `APP_CONFIG_URL`
+- [x] **live-events:**
+  - [x] `rm -rf src/features/liveEvents`
+  - [x] `src/App.web.tsx` + `src/App.native.tsx`: remove the `liveEvents/context` provider mount
+  - [x] `src/components/FeedCard.tsx`: drop `useActiveLiveEventFeedUris` and the live-indicator block (~lines 37, 133, 146)
+  - [x] `src/analytics/metrics/types.ts`: delete the `liveEvents:*` metric definitions (the surrounding `src/analytics/` directory dies entirely in Phase 2.7 — this edit just retires the live-events-specific entries early so the analytics sweep is cleaner)
+  - [x] `src/env/common.ts` + `.env.example`: remove `LIVE_EVENTS_DEV_URL`, `LIVE_EVENTS_PROD_URL`, `LIVE_EVENTS_URL`
+- [x] **app-config:**
+  - [x] `rm src/state/appConfig.tsx`
+  - [x] `src/App.web.tsx` + `src/App.native.tsx`: remove the `appConfig` provider mount + `prefetchAppConfig` calls
+  - [x] `src/features/liveNow/index.tsx`: replace `const {liveNow} = useAppConfig()` with a static `{allow: [], exceptions: []}`. With `LIVE_NOW_BETA_DISABLED = false` from Phase 2.1, the feature IS reachable — the empty `allow` array means no additions to `DEFAULT_ALLOWED_DOMAINS` (twitch / stream.place / bluecast), and empty `exceptions` means no per-DID overrides. Edit `DEFAULT_ALLOWED_DOMAINS` directly if you want to support more streaming services
+  - [x] `src/env/common.ts` + `.env.example`: remove `APP_CONFIG_DEV_URL`, `APP_CONFIG_PROD_URL`, `APP_CONFIG_URL`
 **Done when:**
 ```sh
 rg -n "liveEvents|LiveEvent|LIVE_EVENTS|appConfig|AppConfig|useAppConfig|APP_CONFIG|app-config" \

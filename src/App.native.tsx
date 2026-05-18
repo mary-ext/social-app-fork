@@ -21,10 +21,6 @@ import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
-import {
-  prefetchAppConfig,
-  Provider as AppConfigProvider,
-} from '#/state/appConfig'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
@@ -69,10 +65,6 @@ import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
 import {AnalyticsContext, setupDeviceId} from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
-import {
-  prefetchLiveEvents,
-  Provider as LiveEventsProvider,
-} from '#/features/liveEvents/context'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -89,9 +81,6 @@ if (IS_ANDROID) {
     logger.debug('Could not lock orientation', {safeMessage: error}),
   )
 }
-
-void prefetchLiveEvents()
-void prefetchAppConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)
@@ -137,51 +126,49 @@ function InnerApp() {
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
                   <PolicyUpdateOverlayProvider>
-                    <LiveEventsProvider>
-                      <ComposerProvider>
-                        <MessagesProvider>
-                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                          <LabelDefsProvider>
-                            <ModerationOptsProvider>
-                              <LoggedOutViewProvider>
-                                <SelectedFeedProvider>
-                                  <HiddenRepliesProvider>
-                                    <HomeBadgeProvider>
-                                      <UnreadNotifsProvider>
-                                        <BackgroundNotificationPreferencesProvider>
-                                          <MutedThreadsProvider>
-                                            <ProgressGuideProvider>
-                                              <ServiceAccountManager>
-                                                <EmailVerificationProvider>
-                                                  <HideBottomBarBorderProvider>
-                                                    <GestureHandlerRootView
-                                                      style={a.h_full}>
-                                                      <GlobalGestureEventsProvider>
-                                                        <IntentDialogProvider>
-                                                          <TranslateOnDeviceProvider>
-                                                            <TestCtrls />
-                                                            <Shell />
-                                                            <ToastOutlet />
-                                                          </TranslateOnDeviceProvider>
-                                                        </IntentDialogProvider>
-                                                      </GlobalGestureEventsProvider>
-                                                    </GestureHandlerRootView>
-                                                  </HideBottomBarBorderProvider>
-                                                </EmailVerificationProvider>
-                                              </ServiceAccountManager>
-                                            </ProgressGuideProvider>
-                                          </MutedThreadsProvider>
-                                        </BackgroundNotificationPreferencesProvider>
-                                      </UnreadNotifsProvider>
-                                    </HomeBadgeProvider>
-                                  </HiddenRepliesProvider>
-                                </SelectedFeedProvider>
-                              </LoggedOutViewProvider>
-                            </ModerationOptsProvider>
-                          </LabelDefsProvider>
-                        </MessagesProvider>
-                      </ComposerProvider>
-                    </LiveEventsProvider>
+                    <ComposerProvider>
+                      <MessagesProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <HiddenRepliesProvider>
+                                  <HomeBadgeProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <ProgressGuideProvider>
+                                            <ServiceAccountManager>
+                                              <EmailVerificationProvider>
+                                                <HideBottomBarBorderProvider>
+                                                  <GestureHandlerRootView
+                                                    style={a.h_full}>
+                                                    <GlobalGestureEventsProvider>
+                                                      <IntentDialogProvider>
+                                                        <TranslateOnDeviceProvider>
+                                                          <TestCtrls />
+                                                          <Shell />
+                                                          <ToastOutlet />
+                                                        </TranslateOnDeviceProvider>
+                                                      </IntentDialogProvider>
+                                                    </GlobalGestureEventsProvider>
+                                                  </GestureHandlerRootView>
+                                                </HideBottomBarBorderProvider>
+                                              </EmailVerificationProvider>
+                                            </ServiceAccountManager>
+                                          </ProgressGuideProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HomeBadgeProvider>
+                                </HiddenRepliesProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </MessagesProvider>
+                    </ComposerProvider>
                   </PolicyUpdateOverlayProvider>
                 </QueryProvider>
               </Fragment>
@@ -211,40 +198,38 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <AppConfigProvider>
-      <A11yProvider>
-        <KeyboardControllerProvider preload={false}>
-          <OnboardingProvider>
-            <AnalyticsContext>
-              <SessionProvider>
-                <PrefsStateProvider>
-                  <I18nProvider>
-                    <ShellStateProvider>
-                      <ModalStateProvider>
-                        <DialogStateProvider>
-                          <LightboxStateProvider>
-                            <PortalProvider>
-                              <BottomSheetProvider>
-                                <StarterPackProvider>
-                                  <SafeAreaProvider
-                                    initialMetrics={initialWindowMetrics}>
-                                    <InnerApp />
-                                  </SafeAreaProvider>
-                                </StarterPackProvider>
-                              </BottomSheetProvider>
-                            </PortalProvider>
-                          </LightboxStateProvider>
-                        </DialogStateProvider>
-                      </ModalStateProvider>
-                    </ShellStateProvider>
-                  </I18nProvider>
-                </PrefsStateProvider>
-              </SessionProvider>
-            </AnalyticsContext>
-          </OnboardingProvider>
-        </KeyboardControllerProvider>
-      </A11yProvider>
-    </AppConfigProvider>
+    <A11yProvider>
+      <KeyboardControllerProvider preload={false}>
+        <OnboardingProvider>
+          <AnalyticsContext>
+            <SessionProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <BottomSheetProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <InnerApp />
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </BottomSheetProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </SessionProvider>
+          </AnalyticsContext>
+        </OnboardingProvider>
+      </KeyboardControllerProvider>
+    </A11yProvider>
   )
 }
 

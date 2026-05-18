@@ -18,7 +18,6 @@ import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
 import {LIVE_NOW_BETA_DISABLED} from '#/lib/feature-flags'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {useAppConfig} from '#/state/appConfig'
 import {
   updateProfileShadow,
   useMaybeProfileShadow,
@@ -47,6 +46,17 @@ const DEFAULT_STATE = {
   record: {},
 } satisfies AppBskyActorDefs.StatusView
 
+const LIVE_NOW_WORKER_CONFIG: {
+  allow: string[]
+  exceptions: {
+    did: string
+    allow: string[]
+  }[]
+} = {
+  allow: [],
+  exceptions: [],
+}
+
 export type LiveNowConfig = {
   canGoLive: boolean
   currentAccountAllowedHosts: Set<string>
@@ -55,15 +65,14 @@ export type LiveNowConfig = {
 }
 
 export function useLiveNowConfig(): LiveNowConfig {
-  const {liveNow} = useAppConfig()
   const {currentAccount} = useSession()
 
   return useMemo(() => {
     const defaultAllowedHosts = new Set(
-      DEFAULT_ALLOWED_DOMAINS.concat(liveNow.allow),
+      DEFAULT_ALLOWED_DOMAINS.concat(LIVE_NOW_WORKER_CONFIG.allow),
     )
     const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
-    for (const ex of liveNow.exceptions) {
+    for (const ex of LIVE_NOW_WORKER_CONFIG.exceptions) {
       allowedHostsExceptionsByDid.set(
         ex.did,
         new Set(DEFAULT_ALLOWED_DOMAINS.concat(ex.allow)),
@@ -87,7 +96,7 @@ export function useLiveNowConfig(): LiveNowConfig {
       defaultAllowedHosts,
       allowedHostsExceptionsByDid,
     }
-  }, [liveNow, currentAccount])
+  }, [currentAccount])
 }
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {

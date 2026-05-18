@@ -6,7 +6,6 @@ import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
   // App events
@@ -994,29 +993,6 @@ export type Events = {
   'activityPreference:changeFilter': {
     name: string
     value: string
-  }
-
-  'liveEvents:feedBanner:seen': {
-    feed: string
-    context: LiveEventFeedMetricContext
-  }
-  'liveEvents:feedBanner:click': {
-    feed: string
-    context: LiveEventFeedMetricContext
-  }
-  'liveEvents:feedBanner:hide': {
-    feed: string
-    context: LiveEventFeedMetricContext
-  }
-  'liveEvents:feedBanner:unhide': {
-    feed: string
-    context: LiveEventFeedMetricContext
-  }
-  'liveEvents:hideAllFeedBanners': {
-    context: LiveEventFeedMetricContext
-  }
-  'liveEvents:unhideAllFeedBanners': {
-    context: LiveEventFeedMetricContext
   }
 
   'profile:associated:germ:click-to-chat': {}

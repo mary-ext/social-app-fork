@@ -24,7 +24,6 @@ export function FeedEmbed({
           <FeedCard.TitleAndByline
             title={embed.view.displayName}
             creator={embed.view.creator}
-            uri={embed.view.uri}
           />
         </FeedCard.Header>
       </FeedCard.Outer>

@@ -109,27 +109,3 @@ export const GCP_PROJECT_ID: number =
   process.env.EXPO_PUBLIC_GCP_PROJECT_ID === undefined
     ? 0
     : Number(process.env.EXPO_PUBLIC_GCP_PROJECT_ID)
-
-/**
- * URLs for the app config web worker. Can be a
- * locally running server, see `env.example` for more.
- */
-/**
- * URLs for the live-event config web worker. Can be a
- * locally running server, see `env.example` for more.
- */
-export const LIVE_EVENTS_DEV_URL = process.env.LIVE_EVENTS_DEV_URL
-export const LIVE_EVENTS_PROD_URL = `https://live-events.workers.bsky.app`
-export const LIVE_EVENTS_URL = IS_DEV
-  ? (LIVE_EVENTS_DEV_URL ?? LIVE_EVENTS_PROD_URL)
-  : LIVE_EVENTS_PROD_URL
-
-/**
- * URLs for the app-config web worker. Can be a
- * locally running server, see `env.example` for more.
- */
-export const APP_CONFIG_DEV_URL = process.env.APP_CONFIG_DEV_URL
-export const APP_CONFIG_PROD_URL = `https://app-config.workers.bsky.app`
-export const APP_CONFIG_URL = IS_DEV
-  ? (APP_CONFIG_DEV_URL ?? APP_CONFIG_PROD_URL)
-  : APP_CONFIG_PROD_URL

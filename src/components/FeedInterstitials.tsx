@@ -599,7 +599,6 @@ export function SuggestedFeeds() {
                   <FeedCard.TitleAndByline
                     title={feed.displayName}
                     creator={feed.creator}
-                    uri={feed.uri}
                   />
                 </FeedCard.Header>
                 <FeedCard.Description
