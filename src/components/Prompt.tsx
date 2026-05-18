@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, type TextStyleProp, useTheme, web} from '#/alf'
+import { atoms as a, type TextStyleProp, useTheme } from '#/alf';
 import {
   Button,
   type ButtonColor,
@@ -70,12 +70,12 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={web([{maxWidth: 320, borderRadius: 36}])}>
+          style={[{maxWidth: 320, borderRadius: 36}] as any}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
     </Dialog.Outer>
-  )
+  );
 }
 
 export function TitleText({

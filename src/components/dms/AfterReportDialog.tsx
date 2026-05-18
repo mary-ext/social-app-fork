@@ -1,8 +1,7 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -12,14 +11,13 @@ import {
   useProfileBlockMutationQueue,
   useProfileQuery,
 } from '#/state/queries/profile'
-import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 type ReportDialogParams = {
   convoId: string
@@ -45,12 +43,12 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Would you like to block this user and/or delete this conversation?`}
-        style={[web({maxWidth: 400})]}>
+        style={[{maxWidth: 400} as any]}>
         <DialogInner params={params} currentScreen={currentScreen} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 })
 
 function DialogInner({
@@ -89,7 +87,7 @@ function DialogInner({
       <Button
         label={l`Close`}
         onPress={() => control.close()}
-        size={platform({native: 'small', web: 'large'})}
+        size={'large'}
         color="secondary">
         <ButtonText>
           <Trans>Close</Trans>
@@ -102,7 +100,7 @@ function DialogInner({
       currentScreen={currentScreen}
       profile={profile}
     />
-  )
+  );
 }
 
 function DoneStep({
@@ -127,7 +125,7 @@ function DoneStep({
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
-          StackActions.replace('Messages', IS_NATIVE ? {animation: 'pop'} : {}),
+          StackActions.replace('Messages', {}),
         )
       }
     },

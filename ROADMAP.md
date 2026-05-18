@@ -1144,6 +1144,8 @@ The largest of the three. The target layout under `src/alf/base/` mirrors the up
 
 Write a single jscodeshift transform under `.jscodeshift/repo/collapse-platform.js` that does the inline-and-fold. Land as **one commit**: large diff but mechanically reviewable.
 
+Status: done in the Phase 4.5a/4.5b checkpoint. The transform preserves the old loose `web()` / `platform()` style typing with `as any` casts where needed, so the mechanical branch collapse stays typecheck-clean before the later style-system redesign.
+
 **Constants to fold to literals** (re-verify exports in `src/env/index.web.ts`, `src/env/common.ts`, and `src/alf/base/platform/index.ts` before running — the list may have drifted):
 
 | Symbol | Folds to | Source |
@@ -1200,19 +1202,19 @@ Write a single jscodeshift transform under `.jscodeshift/repo/collapse-platform.
 ### 4.5b — Manual touch-up pass (small)
 
 After the codemod lands, the remaining work is bounded:
-- [ ] `yarn typecheck` — fix anything the codemod couldn't reach. Most common cause: function whose body collapsed to a no-op now has a return-type mismatch, or a parameter became unused. Quick to fix
-- [ ] `yarn build-web` — sanity check
-- [ ] **Refactoring opportunities the codemod creates but doesn't take.** Examples:
+- [x] `yarn typecheck` — fix anything the codemod couldn't reach. Most common cause: function whose body collapsed to a no-op now has a return-type mismatch, or a parameter became unused. Quick to fix
+- [x] `yarn build-web` — sanity check
+- [x] **Refactoring opportunities the codemod creates but doesn't take.** Examples:
   - A function whose body is now a single expression — inline at callers if the function is in scope
   - A `useMemo` whose only purpose was a platform conditional, now memoizing a constant — drop the hook
   - A component file that became a thin wrapper after the conditional disappeared — consider deleting and pointing callers at the wrapped component directly
 
   These are judgment calls. **Skip per the "stay in scope" convention** unless the file in question is already in another phase's scope
-- [ ] **Prose comments referencing the platform conditional** — codemod can't update English text accurately. Grep for stale comments referencing iOS / Android / native / `IS_NATIVE` and fix or delete:
+- [x] **Prose comments referencing the platform conditional** — codemod can't update English text accurately. Grep for stale comments referencing iOS / Android / native / `IS_NATIVE` and fix or delete:
   ```sh
   rg "// .*(IS_NATIVE|iOS only|Android only|native only|web only)" src
   ```
-- [ ] Verify no callsites of the folded helpers remain:
+- [x] Verify no callsites of the folded helpers remain:
   ```sh
   rg "IS_NATIVE|IS_IOS|IS_ANDROID|IS_LIQUID_GLASS|IS_TRANSLATION_SUPPORTED|IS_TESTFLIGHT|Platform\.OS|\\b(web|ios|android|native|platform)\(" src --glob '!locale/**'
   ```

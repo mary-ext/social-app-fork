@@ -13,7 +13,7 @@ import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
 import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
-import {atoms as a, native} from '#/alf'
+import { atoms as a } from '#/alf';
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {ChooseAccountForm} from './ChooseAccountForm'
 import * as AuthLayout from './components/AuthLayout'
@@ -195,7 +195,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   return (
     <AuthLayoutNavigationContext value={navigation}>
-      <Animated.View style={a.flex_1} entering={native(FadeIn.duration(90))}>
+      <Animated.View style={a.flex_1} entering={undefined as any}>
         <KeyboardAvoidingView
           testID="signIn"
           behavior="padding"
@@ -221,5 +221,5 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         </KeyboardAvoidingView>
       </Animated.View>
     </AuthLayoutNavigationContext>
-  )
+  );
 }

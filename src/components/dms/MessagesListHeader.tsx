@@ -25,17 +25,16 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {type ConvoWithDetails} from './util'
 
-const PFP_SIZE = IS_WEB ? 40 : Layout.HEADER_SLOT_SIZE
+const PFP_SIZE = 40
 
 export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
 
   return (
-    <Layout.Header.Outer noBottomBorder={IS_LIQUID_GLASS}>
+    <Layout.Header.Outer noBottomBorder={false}>
       <View style={[a.w_full, a.flex_row, a.gap_xs, a.align_start]}>
         <View style={[{minHeight: PFP_SIZE}, a.justify_center]}>
           <Layout.Header.BackButton />
@@ -73,7 +72,7 @@ export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
         )}
       </View>
     </Layout.Header.Outer>
-  )
+  );
 }
 
 function ProfileHeaderReady({

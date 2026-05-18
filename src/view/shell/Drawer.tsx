@@ -2,8 +2,7 @@ import {type ComponentProps, type JSX, memo, useCallback} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
@@ -22,7 +21,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -55,7 +54,6 @@ import {
 import {InlineLinkText} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 
 const iconWidth = 26
@@ -156,38 +154,12 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
       const state = navigation.getState()
       setDrawerOpen(false)
-      if (IS_WEB) {
-        // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
-        if (tab === 'MyProfile') {
-          navigation.navigate('Profile', {name: currentAccount!.handle})
-        } else {
-          // @ts-expect-error struggles with string unions, apparently
-          navigation.navigate(tab)
-        }
+      // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
+      if (tab === 'MyProfile') {
+        navigation.navigate('Profile', {name: currentAccount!.handle})
       } else {
-        const tabState = getTabState(state, tab)
-        if (tabState === TabState.InsideAtRoot) {
-          emitSoftReset()
-        } else if (tabState === TabState.Inside) {
-          // find the correct navigator in which to pop-to-top
-          const target = state.routes.find(route => route.name === `${tab}Tab`)
-            ?.state?.key
-          if (target) {
-            // if we found it, trigger pop-to-top
-            navigation.dispatch({
-              ...StackActions.popToTop(),
-              target,
-            })
-          } else {
-            // fallback: reset navigation
-            navigation.reset({
-              index: 0,
-              routes: [{name: `${tab}Tab`}],
-            })
-          }
-        } else {
-          navigation.navigate(`${tab}Tab`)
-        }
+        // @ts-expect-error struggles with string unions, apparently
+        navigation.navigate(tab)
       }
     },
     [navigation, setDrawerOpen, currentAccount],
@@ -660,7 +632,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
               a.flex_1,
               a.text_2xl,
               bold && a.font_bold,
-              web(a.leading_snug),
+              a.leading_snug,
             ]}
             numberOfLines={1}>
             {label}
@@ -668,7 +640,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
         </View>
       )}
     </Button>
-  )
+  );
 }
 
 function ExtraLinks() {

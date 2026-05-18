@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
@@ -30,7 +30,7 @@ export function BotAccountAlert({
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.ScrollableInner
         label={l`Automated account`}
-        style={[web({maxWidth: 320})]}>
+        style={[{maxWidth: 320} as any]}>
         <View style={[a.align_center, a.pb_md, a.shadow_sm]}>
           <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
         </View>
@@ -75,5 +75,5 @@ export function BotAccountAlert({
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

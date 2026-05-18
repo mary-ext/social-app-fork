@@ -1,6 +1,5 @@
 import {type StyleProp, StyleSheet, type TextStyle} from 'react-native'
 
-import {IS_WEB} from '#/env'
 import {type Theme, type TypographyVariant} from './ThemeContext'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
@@ -106,7 +105,7 @@ export const s = StyleSheet.create({
   px5: {paddingHorizontal: 5},
 
   // dimensions
-  hContentRegion: IS_WEB ? {minHeight: '100%'} : {height: '100%'},
+  hContentRegion: {minHeight: '100%'},
 
   // text align
   textCenter: {textAlign: 'center'},

@@ -3,7 +3,6 @@ import {type TextInput} from 'react-native'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {type ListMethods} from '#/view/com/util/List'
-import {ios} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {
@@ -37,9 +36,6 @@ export function GifPickerDialog({
       control={control}
       onClose={onClose}
       nativeOptions={{
-        bottomInset: 0,
-        // use system corner radius on iOS
-        ...ios({cornerRadius: undefined}),
         fullHeight: true,
       }}>
       <Dialog.Handle />
@@ -50,7 +46,7 @@ export function GifPickerDialog({
         <GifPickerBody control={control} onSelectGif={onSelectGif} />
       </ErrorBoundary>
     </Dialog.Outer>
-  )
+  );
 }
 
 function GifPickerBody({

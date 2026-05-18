@@ -6,8 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -19,7 +18,7 @@ import {getDefinition, getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useLabelDefinitions} from '#/state/preferences'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -197,9 +196,9 @@ function ContentHiderActive({
                 a.leading_snug,
                 gtMobile && [a.font_semi_bold],
                 t.atoms.text_contrast_medium,
-                web({
+                {
                   marginBottom: 1,
-                }),
+                } as any,
               ]}
               numberOfLines={2}>
               {labelName}
@@ -211,9 +210,9 @@ function ContentHiderActive({
                   a.leading_snug,
                   gtMobile && [a.font_semi_bold],
                   t.atoms.text_contrast_high,
-                  web({
+                  {
                     marginBottom: 1,
-                  }),
+                  } as any,
                 ]}>
                 {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
               </Text>
@@ -249,7 +248,7 @@ function ContentHiderActive({
                 style={[
                   {color: t.palette.primary_500},
                   a.text_sm,
-                  state.hovered && [web({textDecoration: 'underline'})],
+                  state.hovered && [{textDecoration: 'underline'} as any],
                 ]}>
                 <Trans>Learn more.</Trans>
               </Text>
@@ -259,5 +258,5 @@ function ContentHiderActive({
       )}
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>
-  )
+  );
 }

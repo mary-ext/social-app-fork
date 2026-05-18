@@ -25,7 +25,7 @@ import Animated, {
   useSharedValue,
 } from '#/lib/animations/reanimatedCompat'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
-import {atoms as a, native} from '#/alf'
+import { atoms as a } from '#/alf';
 import {DrawerGestureContext} from '#/shims/native-drawer-layout'
 import {Gesture, GestureDetector} from '#/shims/native-gesture-handler'
 
@@ -144,7 +144,7 @@ export function Pager({
   )
 
   return (
-    <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
+    <View testID={testID} style={[a.flex_1, undefined as any]}>
       {renderTabBar({
         selectedPage,
         onSelect: onTabBarSelect,
@@ -161,7 +161,7 @@ export function Pager({
         </MemoizedAnimatedPagerView>
       </DrawerGestureRequireFail>
     </View>
-  )
+  );
 }
 
 function DrawerGestureRequireFail({children}: {children: React.ReactNode}) {

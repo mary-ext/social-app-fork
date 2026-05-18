@@ -54,7 +54,6 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
-import {IS_ANDROID, IS_IOS} from '#/env'
 import {BackgroundNotificationPreferencesProvider} from '#/shims/background-notification-handler'
 import {BottomSheetProvider} from '#/shims/bottom-sheet'
 import {GestureHandlerRootView} from '#/shims/native-gesture-handler'
@@ -65,17 +64,6 @@ import * as SystemUI from '#/shims/system-ui'
 import {Splash} from '#/Splash'
 
 void SplashScreen.preventAutoHideAsync()
-if (IS_IOS) {
-  void SystemUI.setBackgroundColorAsync('black')
-}
-if (IS_ANDROID) {
-  // iOS is handled by the config plugin -sfn
-  ScreenOrientation.lockAsync(
-    ScreenOrientation.OrientationLock.PORTRAIT_UP,
-  ).catch(error =>
-    logger.debug('Could not lock orientation', {safeMessage: error}),
-  )
-}
 
 function InnerApp() {
   const [isReady, setIsReady] = useState(false)

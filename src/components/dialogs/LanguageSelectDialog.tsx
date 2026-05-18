@@ -1,21 +1,19 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, tokens, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 type FlatListItem =
   | {
@@ -182,7 +180,7 @@ export function DialogInner({
 
   const listHeader = (
     <View
-      style={[a.pb_xs, t.atoms.bg, IS_NATIVE && a.pt_2xl]}
+      style={[a.pb_xs, t.atoms.bg]}
       onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}>
       <View style={[a.flex_row, a.w_full, a.justify_between]}>
         <View>
@@ -211,17 +209,15 @@ export function DialogInner({
           )}
         </View>
 
-        {IS_WEB && (
-          <Button
-            variant="ghost"
-            size="small"
-            color="secondary"
-            shape="round"
-            label={l`Close dialog`}
-            onPress={handleClose}>
-            <ButtonIcon icon={XIcon} />
-          </Button>
-        )}
+        {(<Button
+          variant="ghost"
+          size="small"
+          color="secondary"
+          shape="round"
+          label={l`Close dialog`}
+          onPress={handleClose}>
+          <ButtonIcon icon={XIcon} />
+        </Button>)}
       </View>
 
       <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs, a.pb_0]}>
@@ -264,16 +260,16 @@ export function DialogInner({
       type="checkbox"
       maxSelections={maxLanguages}
       label={l`Select languages`}
-      style={web([a.contents])}>
+      style={[a.contents] as any}>
       <Dialog.InnerFlatList
         data={flatListData}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
         contentContainerStyle={[
           a.gap_0,
-          IS_NATIVE && {paddingBottom: footerHeight + tokens.space.xl},
+          false,
         ]}
-        style={[IS_NATIVE && a.px_lg, IS_WEB && {paddingBottom: 120}]}
+        style={[false, {paddingBottom: 120}]}
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         renderItem={({item, index}: {item: FlatListItem; index: number}) => {
           if (item.type === 'header') {
@@ -330,7 +326,7 @@ export function DialogInner({
         }
       />
     </Toggle.Group>
-  )
+  );
 }
 
 function DialogError({details}: {details?: string}) {

@@ -1,11 +1,10 @@
 import {useMemo} from 'react'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, platform, tokens} from '#/alf'
+import { atoms as a, tokens } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -72,20 +71,13 @@ export function SearchLanguageDropdown({
             {...props}
             label={props.accessibilityLabel}
             size="small"
-            color={platform({native: 'primary', default: 'secondary'})}
-            variant={platform({native: 'ghost', default: 'solid'})}
-            style={native([
-              a.py_sm,
-              a.px_sm,
-              {marginRight: tokens.space.sm * -1},
-            ])}>
+            color={'secondary'}
+            variant={'solid'}
+            style={undefined as any}>
             <ButtonIcon icon={EarthIcon} />
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon
-              icon={platform({
-                native: ChevronUpDownIcon,
-                default: ChevronDownIcon,
-              })}
+              icon={ChevronDownIcon}
             />
           </Button>
         )}
@@ -114,5 +106,5 @@ export function SearchLanguageDropdown({
         </Menu.Group>
       </Menu.Outer>
     </Menu.Root>
-  )
+  );
 }

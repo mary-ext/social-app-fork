@@ -18,14 +18,13 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a, platform, useTheme,utils} from '#/alf'
+import { atoms as a, useTheme, utils } from '#/alf';
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
-import {IS_IOS} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
@@ -146,9 +145,9 @@ let ProfileHeaderShell = ({
   }, [profile.banner, moderation, _openLightbox, bannerRef])
 
   return (
-    <View style={t.atoms.bg} pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+    <View style={t.atoms.bg} pointerEvents={'box-none'}>
       <View
-        pointerEvents={IS_IOS ? 'auto' : 'box-none'}
+        pointerEvents={'box-none'}
         style={[a.relative, {height: 150}]}>
         <StatusBarShadow />
         <GrowableBanner
@@ -171,14 +170,8 @@ let ProfileHeaderShell = ({
                   a.absolute,
                   a.pointer,
                   {
-                    top: platform({
-                      web: 10,
-                      default: topInset,
-                    }),
-                    left: platform({
-                      web: 18,
-                      default: 12,
-                    }),
+                    top: 10,
+                    left: 18,
                   },
                 ]}>
                 {({hovered}) => (
@@ -217,9 +210,7 @@ let ProfileHeaderShell = ({
           )}
         </GrowableBanner>
       </View>
-
       {children}
-
       {!isPlaceholderProfile &&
         (isMe ? (
           <LabelsOnMe
@@ -229,7 +220,7 @@ let ProfileHeaderShell = ({
               a.px_lg,
               a.pt_xs,
               a.pb_sm,
-              IS_IOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+              {pointerEvents: 'box-none'},
             ]}
           />
         ) : (
@@ -239,11 +230,10 @@ let ProfileHeaderShell = ({
               a.px_lg,
               a.pt_xs,
               a.pb_sm,
-              IS_IOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+              {pointerEvents: 'box-none'},
             ]}
           />
         ))}
-
       <GrowableAvatar style={[a.absolute, {top: 104, left: 10}]}>
         <Pressable
           testID="profileHeaderAviButton"
@@ -278,7 +268,6 @@ let ProfileHeaderShell = ({
           </View>
         </Pressable>
       </GrowableAvatar>
-
       {live.isActive &&
         (isMe ? (
           <EditLiveDialog
@@ -295,7 +284,7 @@ let ProfileHeaderShell = ({
           />
         ))}
     </View>
-  )
+  );
 }
 
 ProfileHeaderShell = memo(ProfileHeaderShell)

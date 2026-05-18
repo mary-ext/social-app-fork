@@ -255,8 +255,8 @@ export function agentToSessionAccount(
     did: agent.session.did,
     handle: agent.session.handle,
     email: agent.session.email,
-    emailConfirmed: agent.session.emailConfirmed || false,
-    emailAuthFactor: agent.session.emailAuthFactor || false,
+    emailConfirmed: agent.session.emailConfirmed,
+    emailAuthFactor: agent.session.emailAuthFactor,
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
     signupQueued: isSignupQueued(agent.session.accessJwt),
@@ -264,7 +264,7 @@ export function agentToSessionAccount(
     status: agent.session.status,
     pdsUrl: agent.pdsUrl?.toString(),
     isSelfHosted: !agent.serviceUrl.toString().startsWith(BSKY_SERVICE),
-  }
+  };
 }
 
 export function sessionAccountToSession(

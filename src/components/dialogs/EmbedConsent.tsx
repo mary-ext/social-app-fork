@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {
   type EmbedPlayerSource,
@@ -9,7 +8,7 @@ import {
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {useSetExternalEmbedPref} from '#/state/preferences'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -51,7 +50,7 @@ export function EmbedConsentDialog({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`External Media`}
-        style={web({maxWidth: 400})}>
+        style={{maxWidth: 400} as any}>
         <View style={a.gap_sm}>
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>External Media</Trans>
@@ -110,5 +109,5 @@ export function EmbedConsentDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

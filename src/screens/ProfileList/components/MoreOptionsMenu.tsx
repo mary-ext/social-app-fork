@@ -1,6 +1,5 @@
 import {type AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -33,7 +32,6 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {IS_WEB} from '#/env'
 
 export function MoreOptionsMenu({
   list,
@@ -148,18 +146,14 @@ export function MoreOptionsMenu({
         <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
-              label={IS_WEB ? l`Copy link to list` : l`Share via...`}
+              label={l`Copy link to list`}
               onPress={onPressShare}>
               <Menu.ItemText>
-                {IS_WEB ? (
-                  <Trans>Copy link to list</Trans>
-                ) : (
-                  <Trans>Share via...</Trans>
-                )}
+                {(<Trans>Copy link to list</Trans>)}
               </Menu.ItemText>
               <Menu.ItemIcon
                 position="right"
-                icon={IS_WEB ? ChainLink : ShareIcon}
+                icon={ChainLink}
               />
             </Menu.Item>
             {savedFeedConfig && (
@@ -268,5 +262,5 @@ export function MoreOptionsMenu({
         }}
       />
     </>
-  )
+  );
 }

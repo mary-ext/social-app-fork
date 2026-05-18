@@ -15,7 +15,7 @@ import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from '#/state/preferences'
-import {atoms as a, native} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -53,7 +53,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
               <Trans>Enable media players for</Trans>
             </SettingsList.ItemText>
             <View style={[a.mt_sm, a.w_full]}>
-              {native(<SettingsList.Divider style={[a.my_0]} />)}
+              {undefined as any}
               {Object.entries(externalEmbedLabels)
                 .filter(
                   ([key]) =>
@@ -66,7 +66,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
                       label={label}
                       key={key}
                     />
-                    {native(<SettingsList.Divider style={[a.my_0]} />)}
+                    {undefined as any}
                   </Fragment>
                 ))}
             </View>
@@ -74,7 +74,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  )
+  );
 }
 
 function PrefSelector({
@@ -102,10 +102,10 @@ function PrefSelector({
       style={[
         a.flex_1,
         a.py_md,
-        native([a.justify_between, a.flex_row_reverse]),
+        undefined as any,
       ]}>
       <Toggle.Platform />
       <Toggle.LabelText style={[a.text_md]}>{label}</Toggle.LabelText>
     </Toggle.Item>
-  )
+  );
 }

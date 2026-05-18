@@ -44,7 +44,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {atoms as a, flatten, platform, tokens, useTheme} from '#/alf'
+import { atoms as a, flatten, tokens, useTheme } from '#/alf';
 import {
   Context,
   ItemContext,
@@ -65,7 +65,6 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS} from '#/env'
 import {Image, type ImageErrorEventData} from '#/shims/image'
 import {
   Gesture,
@@ -92,7 +91,7 @@ const SPRING_IN: WithSpringConfig = {
 }
 
 const SPRING_OUT: WithSpringConfig = {
-  mass: IS_IOS ? 1.25 : 0.75,
+  mass: 0.75,
   damping: 150,
   stiffness: 1000,
   restDisplacementThreshold: 0.01,
@@ -220,16 +219,7 @@ export function Root({children}: {children: React.ReactNode}) {
     ],
   )
 
-  useEffect(() => {
-    if (IS_ANDROID && context.isOpen) {
-      const listener = BackHandler.addEventListener('hardwareBackPress', () => {
-        context.close()
-        return true
-      })
-
-      return () => listener.remove()
-    }
-  }, [context])
+  useEffect(() => {}, [context])
 
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
@@ -638,11 +628,7 @@ export function Outer({
       const bottomPosition = topPosition + height
       const safeAreaBottomLimit =
         frame.height -
-        platform({
-          ios: BOTTOM_INSET_IOS,
-          android: BOTTOM_INSET_ANDROID,
-          default: 0,
-        })
+        0
       const diff = bottomPosition - safeAreaBottomLimit
       if (diff > 0) {
         translation = -diff
@@ -673,7 +659,7 @@ export function Outer({
           {context.mode === 'full' && (
             /* containing element - stays the same size, so we measure it
            to determine if a translation is necessary. also has the positioning */
-            <Animated.View
+            (<Animated.View
               onLayout={onLayout}
               style={[
                 a.absolute,
@@ -745,12 +731,12 @@ export function Outer({
                   {label ? <View style={[a.pb_md]} /> : null}
                 </View>
               </Animated.View>
-            </Animated.View>
+            </Animated.View>)
           )}
         </MenuContext.Provider>
       </Context.Provider>
     </Portal>
-  )
+  );
 }
 
 export function Item({
@@ -968,21 +954,18 @@ function measureView(view: View | null, insets: EdgeInsets) {
         x,
         y:
           y +
-          platform({
-            default: 0,
-            android: insets.top, // not included in measurement
-          }),
+          0,
         width,
         height,
       }),
     )
-  })
+  });
 }
 
 function getHoveredHoverable(
   evt:
     | GestureStateChangeEvent<PanGestureHandlerEventPayload>
-    | GestureUpdateEvent<PanGestureHandlerEventPayload>,
+     ,
   hoverables: SharedValue<Record<string, {id: string; rect: Measurement}>>,
   translation: SharedValue<number>,
 ) {

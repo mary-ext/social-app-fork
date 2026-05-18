@@ -8,7 +8,7 @@ import {
   type PagerRef,
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import * as Layout from '#/components/Layout'
 import {type ListMethods} from '../util/List'
 import {TabBar} from './TabBar'
@@ -141,13 +141,13 @@ let PagerTabBar = ({
       <Layout.Center
         style={[
           a.z_10,
-          web([
+          [
             a.sticky,
             {
               top: 0,
               display: isHeaderReady ? undefined : 'none',
             },
-          ]),
+          ] as any,
         ]}>
         <TabBar
           testID={testID}
@@ -160,7 +160,7 @@ let PagerTabBar = ({
         />
       </Layout.Center>
     </>
-  )
+  );
 }
 PagerTabBar = memo(PagerTabBar)
 

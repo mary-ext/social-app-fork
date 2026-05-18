@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {findNodeHandle, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -17,10 +16,9 @@ import {
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {atoms as a, ios, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_NATIVE} from '#/env'
 import {type SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -53,13 +51,13 @@ export function ProfileFeedSection({
   const [hasNew, setHasNew] = useState(false)
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
-  const isVideoFeed = IS_NATIVE && feed.endsWith('posts_with_video')
+  const isVideoFeed = false
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: -headerHeight,
     })
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
@@ -84,12 +82,7 @@ export function ProfileFeedSection({
     )
   }, [l, emptyStateButton, emptyStateIcon, emptyStateMessage])
 
-  useEffect(() => {
-    if (IS_IOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [isFocused, scrollElRef, setScrollViewTag])
+  useEffect(() => {}, [isFocused, scrollElRef, setScrollViewTag])
 
   return (
     <View>
@@ -102,7 +95,7 @@ export function ProfileFeedSection({
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
-        progressViewOffset={ios(0)}
+        progressViewOffset={undefined as any}
         renderEndOfFeed={isVideoFeed ? undefined : ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
         initialNumToRender={
@@ -118,7 +111,7 @@ export function ProfileFeedSection({
         />
       )}
     </View>
-  )
+  );
 }
 
 function ProfileEndOfFeed() {

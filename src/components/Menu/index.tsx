@@ -6,8 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -29,7 +28,6 @@ import {
   type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 
 export {
   type DialogControlProps as MenuControlProps,
@@ -111,12 +109,12 @@ export function Outer({
         <Dialog.ScrollableInner label={l`Menu`}>
           <View style={[a.gap_lg]}>
             {children}
-            {IS_NATIVE && showCancel && <Cancel />}
+
           </View>
         </Dialog.ScrollableInner>
       </Context.Provider>
     </Dialog.Outer>
-  )
+  );
 }
 
 export function Item({
@@ -143,23 +141,7 @@ export function Item({
       accessibilityLabel={label}
       onFocus={onFocus}
       onBlur={onBlur}
-      onPress={e => {
-        if (IS_ANDROID) {
-          /**
-           * Below fix for iOS doesn't work for Android, this does.
-           */
-          onPress?.(e)
-          context.control.close()
-        } else if (IS_IOS) {
-          /**
-           * Fixes a subtle bug on iOS
-           * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
-           */
-          context.control.close(() => {
-            onPress?.(e)
-          })
-        }
-      }}
+      onPress={e => {}}
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
@@ -187,7 +169,7 @@ export function Item({
         {children}
       </ItemContext.Provider>
     </Pressable>
-  )
+  );
 }
 
 export function ItemText({children, style}: ItemTextProps) {

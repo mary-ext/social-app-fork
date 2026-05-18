@@ -16,9 +16,8 @@ import Animated, {
   withTiming,
 } from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
-import {IS_IOS} from '#/env'
 import {Gesture, GestureDetector} from '#/shims/native-gesture-handler'
 
 /**
@@ -269,24 +268,20 @@ function SortableItem<T>({
       runOnJS(playHaptic)()
     })
     .onChange(e => {
-      'worklet'
-      const startSlot = state.get().dragStartSlot
-      const minY = -startSlot * itemHeight
-      const maxY = (itemCount - 1 - startSlot) * itemHeight
-      // Include scroll compensation so the item tracks with auto-scroll.
-      const effectiveY = e.translationY + scrollCompensation.get()
-      const clampedY = Math.max(minY, Math.min(effectiveY, maxY))
-      dragY.set(clampedY)
+    'worklet';
+    const startSlot = state.get().dragStartSlot
+    const minY = -startSlot * itemHeight
+    const maxY = (itemCount - 1 - startSlot) * itemHeight
+    // Include scroll compensation so the item tracks with auto-scroll.
+    const effectiveY = e.translationY + scrollCompensation.get()
+    const clampedY = Math.max(minY, Math.min(effectiveY, maxY))
+    dragY.set(clampedY)
 
-      const currentSlot = Math.round(
-        (startSlot * itemHeight + clampedY) / itemHeight,
-      )
-      const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
-      if (IS_IOS && clampedSlot !== lastHapticSlot.get()) {
-        lastHapticSlot.set(clampedSlot)
-        runOnJS(playHaptic)('Light')
-      }
-    })
+    const currentSlot = Math.round(
+      (startSlot * itemHeight + clampedY) / itemHeight,
+    )
+    const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
+  })
     .onEnd(() => {
       'worklet'
       // Stop auto-scroll BEFORE the snap animation.
@@ -373,28 +368,16 @@ function SortableItem<T>({
           {scale: withSpring(1.03)},
         ],
         zIndex: 999,
-        ...(IS_IOS
-          ? {
-              shadowColor: '#000',
-              shadowOffset: {width: 0, height: 1},
-              shadowOpacity: withSpring(0.08),
-              shadowRadius: withSpring(4),
-            }
-          : {
+        ...({
               elevation: withSpring(3),
             }),
-      }
+      };
     }
 
     // Reset for non-active states. Without this, shadow props
     // set during dragging linger on the native view.
     const inactive = {
-      ...(IS_IOS
-        ? {
-            shadowOpacity: withSpring(0),
-            shadowRadius: withSpring(0),
-          }
-        : {
+      ...({
             elevation: withSpring(0),
           }),
     }
@@ -460,13 +443,13 @@ function SortableItem<T>({
           a.align_center,
           a.px_sm,
           a.py_md,
-          web({cursor: 'grab'}),
+          {cursor: 'grab'} as any,
         ]}
         hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}>
         <GripIcon
           size="lg"
           fill={t.atoms.text_contrast_medium.color}
-          style={web({pointerEvents: 'none'})}
+          style={{pointerEvents: 'none'} as any}
         />
       </Animated.View>
     </GestureDetector>

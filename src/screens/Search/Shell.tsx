@@ -32,12 +32,11 @@ import {
   type Params,
   parseSearchQuery,
 } from '#/screens/Search/utils'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 import {AutocompleteResults} from './components/AutocompleteResults'
@@ -163,18 +162,14 @@ export function SearchScreenShell({
   const [headerHeight, setHeaderHeight] = useState(0)
   const headerRef = useRef(null)
   useLayoutEffect(() => {
-    if (IS_WEB) {
-      if (!headerRef.current) return
-      const measurement = (headerRef.current as Element).getBoundingClientRect()
-      setHeaderHeight(measurement.height)
-    }
+    if (!headerRef.current) return
+    const measurement = (headerRef.current as Element).getBoundingClientRect()
+    setHeaderHeight(measurement.height)
   }, [])
 
   useFocusEffect(
     useNonReactiveCallback(() => {
-      if (IS_WEB) {
-        updateSearchText(queryParam)
-      }
+      updateSearchText(queryParam)
     }),
   )
 
@@ -198,13 +193,8 @@ export function SearchScreenShell({
       setShowAutocomplete(false)
       updateSearchHistory(item)
 
-      if (IS_WEB) {
-        // @ts-expect-error route is not typesafe
-        navigation.push(route.name, {...route.params, q: item})
-      } else {
-        textInput.current?.blur()
-        navigation.setParams({q: item})
-      }
+      // @ts-expect-error route is not typesafe
+      navigation.push(route.name, {...route.params, q: item})
     },
     [updateSearchHistory, navigation, route],
   )
@@ -213,22 +203,17 @@ export function SearchScreenShell({
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
-    if (IS_WEB) {
-      // Empty params resets the URL to be /search rather than /search?q=
-      // Also clear the tab parameter
-      const {
-        q: _q,
-        tab: _tab,
-        ...parameters
-      } = (route.params ?? {}) as {
-        [key: string]: string
-      }
-      // @ts-expect-error route is not typesafe
-      navigation.replace(route.name, parameters)
-    } else {
-      updateSearchText('')
-      navigation.setParams({q: '', tab: undefined})
+    // Empty params resets the URL to be /search rather than /search?q=
+    // Also clear the tab parameter
+    const {
+      q: _q,
+      tab: _tab,
+      ...parameters
+    } = (route.params ?? {}) as {
+      [key: string]: string
     }
+    // @ts-expect-error route is not typesafe
+    navigation.replace(route.name, parameters)
   }, [
     setShowAutocomplete,
     updateSearchText,
@@ -242,11 +227,7 @@ export function SearchScreenShell({
   }
 
   const onAutocompleteResultPress = useCallback(() => {
-    if (IS_WEB) {
-      setShowAutocomplete(false)
-    } else {
-      textInput.current?.blur()
-    }
+    setShowAutocomplete(false)
   }, [])
 
   const handleHistoryItemClick = useCallback(
@@ -269,23 +250,17 @@ export function SearchScreenShell({
   )
 
   const onSoftReset = useCallback(() => {
-    if (IS_WEB) {
-      // Empty params resets the URL to be /search rather than /search?q=
-      // Also clear the tab parameter when soft resetting
-      const {
-        q: _q,
-        tab: _tab,
-        ...parameters
-      } = (route.params ?? {}) as {
-        [key: string]: string
-      }
-      // @ts-expect-error route is not typesafe
-      navigation.replace(route.name, parameters)
-    } else {
-      updateSearchText('')
-      navigation.setParams({q: '', tab: undefined})
-      textInput.current?.focus()
+    // Empty params resets the URL to be /search rather than /search?q=
+    // Also clear the tab parameter when soft resetting
+    const {
+      q: _q,
+      tab: _tab,
+      ...parameters
+    } = (route.params ?? {}) as {
+      [key: string]: string
     }
+    // @ts-expect-error route is not typesafe
+    navigation.replace(route.name, parameters)
   }, [navigation, route.name, route.params, updateSearchText])
 
   useFocusEffect(
@@ -295,15 +270,11 @@ export function SearchScreenShell({
   )
 
   const onSearchInputFocus = useCallback(() => {
-    if (IS_WEB) {
-      // Prevent a jump on iPad by ensuring that
-      // the initial focused render has no result list.
-      requestAnimationFrame(() => {
-        setShowAutocomplete(true)
-      })
-    } else {
+    // Prevent a jump on iPad by ensuring that
+    // the initial focused render has no result list.
+    requestAnimationFrame(() => {
       setShowAutocomplete(true)
-    }
+    })
   }, [setShowAutocomplete])
 
   const focusSearchInput = useCallback(
@@ -312,11 +283,7 @@ export function SearchScreenShell({
 
       // If a tab is specified, set the tab parameter
       if (tab) {
-        if (IS_WEB) {
-          navigation.setParams({...route.params, tab})
-        } else {
-          navigation.setParams({tab})
-        }
+        navigation.setParams({...route.params, tab})
       }
     },
     [navigation, route],
@@ -329,15 +296,15 @@ export function SearchScreenShell({
       <View
         ref={headerRef}
         onLayout={evt => {
-          if (IS_WEB) setHeaderHeight(evt.nativeEvent.layout.height)
+          setHeaderHeight(evt.nativeEvent.layout.height)
         }}
         style={[
           a.relative,
           a.z_10,
-          web({
+          {
             position: 'sticky',
             top: 0,
-          }),
+          } as any,
         ]}>
         <Layout.Center style={t.atoms.bg}>
           {showHeader && (
@@ -421,7 +388,6 @@ export function SearchScreenShell({
           </View>
         </Layout.Center>
       </View>
-
       <View
         style={{
           display: showAutocomplete && !fixedParams ? 'flex' : 'none',
@@ -467,7 +433,7 @@ export function SearchScreenShell({
         />
       </View>
     </Layout.Screen>
-  )
+  );
 }
 
 let SearchScreenInner = ({
@@ -587,7 +553,5 @@ function useQueryManager({
 }
 
 function scrollToTopWeb() {
-  if (IS_WEB) {
-    window.scrollTo(0, 0)
-  }
+  window.scrollTo(0, 0)
 }

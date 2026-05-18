@@ -8,7 +8,6 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
-import {IS_NATIVE} from '#/env'
 
 interface ProfilesListProps {
   listUri: string
@@ -23,7 +22,7 @@ export const PostsList = forwardRef<SectionRef, ProfilesListProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
-        animated: IS_NATIVE,
+        animated: false,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])

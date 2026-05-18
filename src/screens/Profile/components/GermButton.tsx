@@ -1,11 +1,10 @@
-import {Platform, View} from 'react-native'
+import { View } from 'react-native';
 import {
   type AppBskyActorDefs,
   type AppBskyActorGetProfile,
   type AtpAgent,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
@@ -13,7 +12,7 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {RQKEY} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CustomLinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -216,7 +215,7 @@ function GermSelfButton({did}: {did: string}) {
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Germ DM Link`}
-          style={web([{maxWidth: 400, borderRadius: 36}])}>
+          style={[{maxWidth: 400, borderRadius: 36}] as any}>
           <View style={[a.flex_row, a.align_center, {gap: 6}]}>
             <GermLogo size="large" />
             <Text style={[a.text_2xl, a.font_bold]}>
@@ -257,7 +256,7 @@ function GermSelfButton({did}: {did: string}) {
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
-  )
+  );
 }
 
 function constructGermUrl(
@@ -296,14 +295,7 @@ function isCustomGermDomain(url: string) {
 }
 
 function platform() {
-  switch (Platform.OS) {
-    case 'ios':
-      return 'iOS'
-    case 'android':
-      return 'android'
-    default:
-      return 'web'
-  }
+  return 'web'
 }
 
 async function whenAppViewReady(

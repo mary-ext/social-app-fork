@@ -14,7 +14,6 @@ import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useTheme} from '#/alf'
 import {useLightbox} from '#/components/Lightbox/state'
-import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -97,10 +96,6 @@ let List = forwardRef<ListMethods, ListProps>(
           if (onScrolledDownChange != null) {
             runOnJS(handleScrolledDownChange)(didScrollDown)
           }
-        }
-
-        if (IS_IOS) {
-          runOnJS(dedupe)(updateActiveVideoViewAsync)
         }
       },
       // Note: adding onMomentumBegin here makes simulator scroll
@@ -188,7 +183,7 @@ export {List}
 
 // We only want to use this context value on iOS because the `scrollsToTop` prop is iOS-only
 // removing it saves us a re-render on Android
-const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
+const useAllowScrollToTop = () => undefined
 function useAllowScrollToTopIOS() {
   const {activeLightbox} = useLightbox()
   return useDeferredValue(!activeLightbox)

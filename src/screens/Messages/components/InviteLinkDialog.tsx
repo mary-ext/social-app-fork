@@ -10,7 +10,7 @@ import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
 import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
 import {useEnableJoinLink} from '#/state/queries/messages/enable-join-link'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {
   Button,
   ButtonIcon,
@@ -30,7 +30,6 @@ import {EditBig_Stroke2_Corner2_Rounded as EditIcon} from '#/components/icons/Ed
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
 
@@ -502,7 +501,7 @@ export function InviteLinkDialog({
       <Dialog.ScrollableInner
         header={
           <View>
-            <View style={[IS_WEB ? [a.px_2xl, a.pt_xl] : {paddingTop: 10}]}>
+            <View style={[[a.px_2xl, a.pt_xl]]}>
               <Text style={[a.font_bold, a.text_2xl, a.mb_sm, t.atoms.text]}>
                 {header}
               </Text>
@@ -511,9 +510,9 @@ export function InviteLinkDialog({
           </View>
         }
         label={l`Group chat invite link dialog`}
-        style={web({maxWidth: 400})}>
+        style={{maxWidth: 400} as any}>
         {content}
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

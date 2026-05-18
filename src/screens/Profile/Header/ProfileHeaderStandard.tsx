@@ -7,8 +7,7 @@ import {
   type ModerationOpts,
   type RichText as RichTextAPI,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -21,7 +20,7 @@ import {
 } from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
-import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
@@ -37,7 +36,6 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {GermButton} from '../components/GermButton'
 import {EditProfileDialog} from './EditProfileDialog'
@@ -112,7 +110,7 @@ let ProfileHeaderStandard = ({
         isPlaceholderProfile={isPlaceholderProfile}>
         <View
           style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
-          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+          pointerEvents={'box-none'}>
           <View
             style={[
               {paddingLeft: 90},
@@ -123,7 +121,7 @@ let ProfileHeaderStandard = ({
               a.pb_sm,
               a.flex_wrap,
             ]}
-            pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+            pointerEvents={'box-none'}>
             <HeaderStandardButtons
               profile={profile}
               moderation={moderation}
@@ -149,7 +147,7 @@ let ProfileHeaderStandard = ({
                   profile.displayName || sanitizeHandle(profile.handle),
                   moderation.ui('displayName'),
                 )}
-                <View style={[a.pl_xs, {marginTop: platform({ios: 2})}]}>
+                <View style={[a.pl_xs, {marginTop: undefined}]}>
                   <ProfileBadges profile={profile} size="lg" interactive />
                 </View>
               </Text>
@@ -210,7 +208,7 @@ let ProfileHeaderStandard = ({
         onRequestHide={onRequestHide}
       />
     </>
-  )
+  );
 }
 
 ProfileHeaderStandard = memo(ProfileHeaderStandard)

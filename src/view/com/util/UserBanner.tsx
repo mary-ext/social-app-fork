@@ -1,8 +1,7 @@
 import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {
   useCameraPermission,
@@ -30,7 +29,6 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 
 export function UserBanner({
@@ -75,19 +73,8 @@ export function UserBanner({
     }
 
     try {
-      if (IS_NATIVE) {
-        onSelectNewBanner?.(
-          await compressIfNeeded(
-            await openCropper({
-              imageUri: items[0].path,
-              aspectRatio: 3 / 1,
-            }),
-          ),
-        )
-      } else {
-        setRawImage(await createComposerImage(items[0]))
-        editImageDialogControl.open()
-      }
+      setRawImage(await createComposerImage(items[0]))
+      editImageDialogControl.open()
     } catch (e) {
       // Don't log errors for user-cancelled selection on iOS or Android.
       if (!isCancelledError(e)) {
@@ -153,28 +140,13 @@ export function UserBanner({
           </Menu.Trigger>
           <Menu.Outer showCancel>
             <Menu.Group>
-              {IS_NATIVE && (
-                <Menu.Item
-                  testID="changeBannerCameraBtn"
-                  label={l`Upload from Camera`}
-                  onPress={onOpenCamera}>
-                  <Menu.ItemText>
-                    <Trans>Upload from Camera</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={CameraIcon} />
-                </Menu.Item>
-              )}
 
               <Menu.Item
                 testID="changeBannerLibraryBtn"
                 label={l`Upload from Library`}
                 onPress={onOpenLibrary}>
                 <Menu.ItemText>
-                  {IS_NATIVE ? (
-                    <Trans>Upload from Library</Trans>
-                  ) : (
-                    <Trans>Upload from Files</Trans>
-                  )}
+                  {(<Trans>Upload from Files</Trans>)}
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={LibraryIcon} />
               </Menu.Item>
@@ -206,8 +178,7 @@ export function UserBanner({
         aspectRatio={3}
       />
     </>
-  ) : banner &&
-    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
+  ) : banner ? (
     <Image
       style={[styles.bannerImage, t.atoms.bg_contrast_25]}
       contentFit="cover"
@@ -223,7 +194,7 @@ export function UserBanner({
         type === 'labeler' ? styles.labelerBanner : t.atoms.bg_contrast_25,
       ]}
     />
-  )
+  );
 }
 
 const styles = StyleSheet.create({

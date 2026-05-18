@@ -27,13 +27,7 @@ import {
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  atoms as a,
-  platform,
-  type TextStyleProp,
-  useTheme,
-  type ViewStyleProp,
-} from '#/alf'
+import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
 import {
   Button,
   ButtonIcon,
@@ -270,7 +264,7 @@ function InlineNameAndHandle({
         style={[
           a.pl_2xs,
           a.self_center,
-          {marginTop: platform({default: 0, android: -1})},
+          {marginTop: 0},
         ]}
       />
       <Text
@@ -284,7 +278,7 @@ function InlineNameAndHandle({
         {NON_BREAKING_SPACE + handle}
       </Text>
     </View>
-  )
+  );
 }
 
 export function Name({

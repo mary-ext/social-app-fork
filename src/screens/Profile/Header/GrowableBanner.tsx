@@ -20,7 +20,6 @@ import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
-import {IS_IOS} from '#/env'
 import {BlurView} from '#/shims/blur'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
@@ -42,36 +41,19 @@ export function GrowableBanner({
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // plain non-growable mode for Android/Web
-  if (!pagerContext || !IS_IOS) {
-    return (
-      <Pressable
-        testID={testID}
-        onPress={onPress}
-        accessibilityRole="image"
-        accessibilityLabel={label}
-        accessibilityHint=""
-        style={[a.w_full, a.h_full]}>
-        <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
-          {children}
-        </Animated.View>
-        {backButton}
-      </Pressable>
-    )
-  }
-
-  const {scrollY} = pagerContext
-
   return (
-    <GrowableBannerInner
-      scrollY={scrollY}
-      backButton={backButton}
-      onPress={onPress}
-      bannerRef={bannerRef}
+    <Pressable
       testID={testID}
-      label={label}>
-      {children}
-    </GrowableBannerInner>
+      onPress={onPress}
+      accessibilityRole="image"
+      accessibilityLabel={label}
+      accessibilityHint=""
+      style={[a.w_full, a.h_full]}>
+      <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
+        {children}
+      </Animated.View>
+      {backButton}
+    </Pressable>
   )
 }
 
@@ -180,7 +162,7 @@ function GrowableBannerInner({
         style={[
           a.absolute,
           a.inset_0,
-          {top: topInset - (IS_IOS ? 15 : 0)},
+          {top: topInset - (0)},
           a.justify_center,
           a.align_center,
         ]}>
@@ -198,7 +180,7 @@ function GrowableBannerInner({
         {backButton}
       </Animated.View>
     </>
-  )
+  );
 }
 
 function useIsProfileFetching() {

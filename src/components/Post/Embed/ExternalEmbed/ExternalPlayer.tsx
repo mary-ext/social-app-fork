@@ -31,7 +31,6 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 
 interface ShouldStartLoadRequest {
@@ -150,11 +149,7 @@ export function ExternalPlayer({
     const {height: winHeight, width: winWidth} = windowDims
 
     // Get the proper screen height depending on what is going on
-    const realWinHeight = IS_NATIVE // If it is native, we always want the larger number
-      ? winHeight > winWidth
-        ? winHeight
-        : winWidth
-      : winHeight // On web, we always want the actual screen height
+    const realWinHeight = winHeight // On web, we always want the actual screen height
 
     const top = measurement.pageY
     const bot = measurement.pageY + measurement.height

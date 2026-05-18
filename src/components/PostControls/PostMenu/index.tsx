@@ -80,7 +80,7 @@ let PostMenuButton = ({
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          <PostMenuItems
+          (<PostMenuItems
             testID={testID}
             post={post}
             postFeedContext={postFeedContext}
@@ -92,11 +92,11 @@ let PostMenuButton = ({
             onShowLess={onShowLess}
             logContext={logContext}
             forceGoogleTranslate={forceGoogleTranslate}
-          />
+          />)
         )}
       </Menu.Root>
     </EventStopper>
-  )
+  );
 }
 
 PostMenuButton = memo(PostMenuButton)

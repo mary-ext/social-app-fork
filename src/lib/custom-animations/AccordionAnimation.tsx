@@ -13,7 +13,6 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from '#/lib/animations/reanimatedCompat'
-import {IS_IOS, IS_WEB} from '#/env'
 
 type AccordionAnimationProps = React.PropsWithChildren<{
   isExpanded: boolean
@@ -66,12 +65,12 @@ function MobileAccordion({
       style={style}
       entering={FadeInUp.duration(duration)}
       exiting={FadeOutUp.duration(duration / 2)}
-      pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+      pointerEvents={'box-none'}>
       {children}
     </Animated.View>
-  )
+  );
 }
 
 export function AccordionAnimation(props: AccordionAnimationProps) {
-  return IS_WEB ? <WebAccordion {...props} /> : <MobileAccordion {...props} />
+  return <WebAccordion {...props} />;
 }

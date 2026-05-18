@@ -2,8 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {XRPCError} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
@@ -19,7 +18,6 @@ import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID} from '#/env'
 import {Admonition} from '../Admonition'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
@@ -337,7 +335,7 @@ function AppealForm({
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
-      {IS_ANDROID && <View style={{height: 300}} />}
+      {false}
     </>
-  )
+  );
 }

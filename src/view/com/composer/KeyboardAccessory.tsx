@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme} from '#/alf'
-import {IS_WEB} from '#/env'
 import {KeyboardStickyView} from '#/shims/native-keyboard-controller'
 
 export function KeyboardAccessory({children}: {children: React.ReactNode}) {
@@ -20,14 +19,5 @@ export function KeyboardAccessory({children}: {children: React.ReactNode}) {
     t.atoms.bg,
   ]
 
-  // todo: when iPad support is added, it should also not use the KeyboardStickyView
-  if (IS_WEB) {
-    return <View style={style}>{children}</View>
-  }
-
-  return (
-    <KeyboardStickyView offset={{closed: -bottom}} style={style}>
-      {children}
-    </KeyboardStickyView>
-  )
+  return <View style={style}>{children}</View>
 }

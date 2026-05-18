@@ -7,7 +7,6 @@ import {
 } from 'react'
 
 import * as persisted from '#/state/persisted'
-import {IS_WEB} from '#/env'
 
 type StateContext = persisted.Schema['kawaii']
 
@@ -32,18 +31,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [setStateWrapped])
 
   useEffect(() => {
-    // dumb and stupid but it's web only so just refresh the page if you want to change it
-
-    if (IS_WEB) {
-      const kawaii = new URLSearchParams(window.location.search).get('kawaii')
-      switch (kawaii) {
-        case 'true':
-          setStateWrapped(true)
-          break
-        case 'false':
-          setStateWrapped(false)
-          break
-      }
+    const kawaii = new URLSearchParams(window.location.search).get('kawaii')
+    switch (kawaii) {
+      case 'true':
+        setStateWrapped(true)
+        break
+      case 'false':
+        setStateWrapped(false)
+        break
     }
   }, [setStateWrapped])
 

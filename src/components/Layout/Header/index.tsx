@@ -9,14 +9,12 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
 import {
   atoms as a,
-  platform,
   type TextStyleProp,
   useBreakpoints,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
-  web,
-} from '#/alf'
+} from '#/alf';
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -28,7 +26,6 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 
 export function Outer({
   children,
@@ -57,25 +54,22 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
+        sticky && [a.sticky, {top: 0}, a.z_10, t.atoms.bg] as any,
         gutters,
-        platform({
-          native: [a.pb_xs, {minHeight: 48}],
-          web: [a.py_xs, {minHeight: 52}],
-        }),
+        [a.py_xs, {minHeight: 52}],
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
         !isWithinOffsetView &&
           !isWithinSplitView && {
             transform: [
               {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
-              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+              {translateX: SCROLLBAR_OFFSET ?? 0},
             ],
           },
       ]}>
       {children}
     </View>
-  )
+  );
 }
 
 const AlignmentContext = createContext<'platform' | 'left'>('platform')
@@ -90,17 +84,12 @@ export function Content({
 }) {
   return (
     <View
-      style={[
-        a.flex_1,
-        a.justify_center,
-        IS_IOS && align === 'platform' && a.align_center,
-        {minHeight: HEADER_SLOT_SIZE},
-      ]}>
+      style={[a.flex_1, a.justify_center, {minHeight: HEADER_SLOT_SIZE}]}>
       <AlignmentContext.Provider value={align}>
         {children}
       </AlignmentContext.Provider>
     </View>
-  )
+  );
 }
 
 export function Slot({children}: {children?: React.ReactNode}) {
@@ -189,20 +178,13 @@ export function TitleText({
   const align = useContext(AlignmentContext)
   return (
     <Text
-      style={[
-        a.text_lg,
-        a.font_semi_bold,
-        a.leading_tight,
-        IS_IOS && align === 'platform' && a.text_center,
-        gtMobile && a.text_xl,
-        style,
-      ]}
+      style={[a.text_lg, a.font_semi_bold, a.leading_tight, gtMobile && a.text_xl, style]}
       numberOfLines={2}
       emoji
       maxFontSizeMultiplier={2}>
       {children}
     </Text>
-  )
+  );
 }
 
 export function SubtitleText({children}: {children: React.ReactNode}) {
@@ -210,14 +192,9 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
   const align = useContext(AlignmentContext)
   return (
     <Text
-      style={[
-        a.text_sm,
-        a.leading_snug,
-        IS_IOS && align === 'platform' && a.text_center,
-        t.atoms.text_contrast_medium,
-      ]}
+      style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
       numberOfLines={2}>
       {children}
     </Text>
-  )
+  );
 }

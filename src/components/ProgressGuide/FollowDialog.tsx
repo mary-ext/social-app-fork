@@ -12,14 +12,7 @@ import {useGetSuggestedUsersForSeeMoreQuery} from '#/state/queries/trending/useG
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {type ListMethods} from '#/view/com/util/List'
-import {
-  atoms as a,
-  native,
-  useBreakpoints,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -29,7 +22,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
 
@@ -331,8 +323,8 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
       keyExtractor={(item: Item) => item.key}
       style={[
         a.px_0,
-        web([a.py_0, {height: '100vh', maxHeight: 600}]),
-        native({height: '100%'}),
+        [a.py_0, {height: '100vh', maxHeight: 600}] as any,
+        undefined as any,
       ]}
       webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
@@ -343,7 +335,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
       onViewableItemsChanged={onViewableItemsChanged}
       viewabilityConfig={viewabilityConfig}
     />
-  )
+  );
 }
 
 let Header = ({
@@ -376,16 +368,15 @@ let Header = ({
       onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
       style={[
         a.relative,
-        web(a.pt_lg),
-        native(a.pt_4xl),
+        a.pt_lg,
+        undefined as any,
         a.pb_xs,
         a.border_b,
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}>
       <HeaderTop guide={guide} />
-
-      <View style={[web(a.pt_xs), a.pb_xs]}>
+      <View style={[a.pt_xs, a.pb_xs]}>
         <SearchInput
           inputRef={inputRef}
           defaultValue={searchText}
@@ -405,7 +396,7 @@ let Header = ({
         />
       </View>
     </View>
-  )
+  );
 }
 Header = memo(Header)
 
@@ -433,7 +424,7 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
         <Trans>Find people to follow</Trans>
       </Text>
       {guide && (
-        <View style={IS_WEB && {paddingRight: 36}}>
+        <View style={{paddingRight: 36}}>
           <ProgressGuideTask
             current={guide.numFollows + 1}
             total={10 + 1}
@@ -442,26 +433,24 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
           />
         </View>
       )}
-      {IS_WEB ? (
-        <Button
-          label={l`Close`}
-          size="small"
-          shape="round"
-          variant={IS_WEB ? 'ghost' : 'solid'}
-          color="secondary"
-          style={[
-            a.absolute,
-            a.z_20,
-            web({right: 8}),
-            native({right: 0}),
-            native({height: 32, width: 32, borderRadius: 16}),
-          ]}
-          onPress={() => control.close()}>
-          <ButtonIcon icon={X} size="md" />
-        </Button>
-      ) : null}
+      {(<Button
+        label={l`Close`}
+        size="small"
+        shape="round"
+        variant={'ghost'}
+        color="secondary"
+        style={[
+          a.absolute,
+          a.z_20,
+          {right: 8} as any,
+          undefined as any,
+          undefined as any,
+        ]}
+        onPress={() => control.close()}>
+        <ButtonIcon icon={X} size="md" />
+      </Button>)}
     </View>
-  )
+  );
 }
 
 let Tab = ({
@@ -597,7 +586,7 @@ function FollowProfileCardInner({
           <ProfileCard.Outer>
             <ProfileCard.Header>
               <ProfileCard.Avatar
-                disabledPreview={!IS_WEB}
+                disabledPreview={false}
                 profile={profile}
                 moderationOpts={moderationOpts}
               />
@@ -621,7 +610,7 @@ function FollowProfileCardInner({
         </CardOuter>
       )}
     </ProfileCard.Link>
-  )
+  );
 }
 
 function CardOuter({
@@ -667,10 +656,10 @@ function SearchInput({
 
   return (
     <View
-      {...web({
+      {...{
         onMouseEnter,
         onMouseLeave,
-      })}
+      } as any}
       style={[a.flex_row, a.align_center, a.gap_sm, a.px_lg, a.py_xs]}>
       <SearchIcon
         size="md"
@@ -701,7 +690,7 @@ function SearchInput({
         accessibilityHint={l`Searches for profiles`}
       />
     </View>
-  )
+  );
 }
 
 function ProfileCardSkeleton() {

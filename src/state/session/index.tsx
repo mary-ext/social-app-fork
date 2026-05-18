@@ -13,7 +13,6 @@ import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {IS_WEB} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
@@ -343,7 +342,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   // @ts-expect-error window type is not declared, debug only
   // eslint-disable-next-line react-hooks/immutability
-  if (__DEV__ && IS_WEB) window.agent = state.currentAgentState.agent
+  if (__DEV__) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAppAgent
   const currentAgentRef = useRef(agent)

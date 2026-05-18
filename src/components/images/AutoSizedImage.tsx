@@ -10,11 +10,10 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme, utils,web} from '#/alf'
+import { atoms as a, useTheme, utils } from '#/alf';
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 
 export function ConstrainedImage({
@@ -34,9 +33,7 @@ export function ConstrainedImage({
    * the height of the image.
    */
   const outerAspectRatio = useMemo<DimensionValue>(() => {
-    const ratio = IS_NATIVE
-      ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
-      : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
+    const ratio = Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
   }, [aspectRatio, minMobileAspectRatio])
 
@@ -214,15 +211,15 @@ export function AutoSizedImage({
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           {aspectRatio: max ?? 1},
-          web([
+          [
             a.transition_transform,
             {transitionDuration: '200ms'},
             pressed && {transform: [{scale: 0.99}]},
-          ]),
+          ] as any,
         ]}>
         {contents}
       </Pressable>
-    )
+    );
   } else {
     return (
       <ConstrainedImage
@@ -244,15 +241,15 @@ export function AutoSizedImage({
             a.h_full,
             a.rounded_md,
             a.overflow_hidden,
-            web([
+            [
               a.transition_transform,
               {transitionDuration: '200ms'},
               pressed && {transform: [{scale: 0.99}]},
-            ]),
+            ] as any,
           ]}>
           {contents}
         </Pressable>
       </ConstrainedImage>
-    )
+    );
   }
 }

@@ -29,7 +29,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as Dialog from '#/components/Dialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
@@ -39,7 +39,7 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
+import { IS_INTERNAL } from '#/env';
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
@@ -75,15 +75,15 @@ export function MessagesConversationScreenInner({route}: Props) {
     <Layout.Screen
       minimalShell
       testID="convoScreen"
-      noInsetTop={IS_LIQUID_GLASS}
-      style={web([{minHeight: 0}, a.flex_1])}>
+      noInsetTop={false}
+      style={[{minHeight: 0}, a.flex_1] as any}>
       <ScrollEdgeEffectProvider>
         <ConvoProvider key={convoId} convoId={convoId}>
           <Inner convoId={convoId} />
         </ConvoProvider>
       </ScrollEdgeEffectProvider>
     </Layout.Screen>
-  )
+  );
 }
 
 function Inner({convoId}: {convoId: string}) {
@@ -125,7 +125,7 @@ function Inner({convoId}: {convoId: string}) {
     return (
       <>
         <Layout.Center
-          style={[a.w_full, IS_LIQUID_GLASS && {paddingTop: topInset}]}>
+          style={[a.w_full, false]}>
           <MessagesListHeader convo={convo} />
         </Layout.Center>
         <Error
@@ -135,13 +135,13 @@ function Inner({convoId}: {convoId: string}) {
           sideBorders={false}
         />
       </>
-    )
+    );
   }
 
   return (
     <Layout.Center style={[a.flex_1]}>
       {!readyToShow && (
-        <View style={IS_LIQUID_GLASS && {paddingTop: topInset}}>
+        <View style={false}>
           <MessagesListHeader convo={convo} />
         </View>
       )}
@@ -172,7 +172,7 @@ function Inner({convoId}: {convoId: string}) {
         )}
       </View>
     </Layout.Center>
-  )
+  );
 }
 
 function InnerReady({
@@ -228,29 +228,19 @@ function InnerReady({
 
   return (
     <>
-      {IS_LIQUID_GLASS ? (
-        <ScrollEdgeEffect
-          edge="top"
-          style={[a.absolute, a.w_full, a.z_10, {paddingTop: topInset}]}
-          onLayout={onHeaderLayout}>
-          {header}
-        </ScrollEdgeEffect>
-      ) : (
-        header
-      )}
+      {header}
       {isActive && (
         <MessagesList
           hasScrolled={hasScrolled}
           setHasScrolled={setHasScrolled}
           hasAcceptOverride={!!params.accept}
-          transparentHeaderHeight={IS_LIQUID_GLASS ? headerHeight : 0}
+          transparentHeaderHeight={0}
           footer={footer}
         />
       )}
-
       {!IS_INTERNAL && convo?.kind === 'group' && <GroupChatGate />}
     </>
-  )
+  );
 }
 
 function GroupChatGate() {

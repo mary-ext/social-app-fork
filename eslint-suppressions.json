@@ -1,22 +1,73 @@
 {
+  "src/App.native.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/Navigation.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/alf/atoms.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 18
+    }
+  },
+  "src/alf/typography.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
+    }
+  },
   "src/alf/util/flatten.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/alf/util/systemUI.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
+    }
+  },
+  "src/components/BotAccountAlert.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
   "src/components/Composer/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 4
+    }
+  },
+  "src/components/ContextMenu/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
     }
   },
   "src/components/Dialog/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 8
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 14
     }
   },
   "src/components/Dialog/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 4
+      "count": 7
+    }
+  },
+  "src/components/Dialog/sheet-wrapper.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/DraggableList/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/components/DraggableList/index.web.tsx": {
@@ -29,14 +80,38 @@
       "count": 1
     }
   },
+  "src/components/FeedInterstitials.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
   "src/components/FocusScope/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
+  "src/components/InterestTabs.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
   "src/components/InternationalPhoneCodeSelect.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/Layout/Header/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
     }
   },
   "src/components/Layout/const.ts": {
@@ -44,13 +119,41 @@
       "count": 2
     }
   },
+  "src/components/Layout/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/Link.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 5
+    }
+  },
   "src/components/Lists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
+  "src/components/Menu/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
+    }
+  },
+  "src/components/Menu/index.web.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
   "src/components/Menu/types.ts": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/NewskieDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -59,9 +162,39 @@
       "count": 1
     }
   },
+  "src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/ExternalEmbed/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/ControlButton.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    }
+  },
+  "src/components/Post/Translated/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 7
     }
   },
   "src/components/PostControls/BookmarkButton.tsx": {
@@ -69,8 +202,31 @@
       "count": 2
     }
   },
+  "src/components/PostControls/ShareMenu/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
   "src/components/ProfileHoverCard/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/ProgressGuide/FollowDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 7
+    }
+  },
+  "src/components/Prompt.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/ScreenTransition.tsx": {
+    "@typescript-eslint/no-unused-vars": {
       "count": 2
     }
   },
@@ -81,7 +237,7 @@
   },
   "src/components/Select/index.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 3
     }
   },
   "src/components/Select/types.ts": {
@@ -89,12 +245,84 @@
       "count": 3
     }
   },
-  "src/components/StarterPack/ProfileStarterPacks.tsx": {
+  "src/components/SendErrorReportDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
+  "src/components/StarterPack/Main/FeedsList.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/Main/ProfilesList.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/ProfileStarterPacks.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/StarterPack/QrCodeDialog.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/components/StarterPack/ShareDialog.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
   "src/components/StarterPack/Wizard/WizardEditListDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "src/components/SubtleHover.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/TrendingTopics.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/Typography.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/components/WelcomeModal.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/WhoCanReply.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/activity-notifications/SubscribeProfileDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/BirthDateSettings.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -104,22 +332,174 @@
       "count": 1
     }
   },
+  "src/components/dialogs/EmailDialog/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/EmbedConsent.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/InAppBrowserConsent.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
   "src/components/dialogs/LanguageSelectDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/LinkWarning.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
   "src/components/dialogs/MutedWords.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 3
     }
   },
   "src/components/dialogs/PostInteractionSettingsDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/SearchablePeopleList.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 10
+    }
+  },
+  "src/components/dialogs/ServerInput.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/StarterPackDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
   },
   "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/components/dialogs/nuxs/ActivitySubscriptions.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/dialogs/nuxs/BookmarksAnnouncement.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/dialogs/nuxs/DraftsAnnouncement.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/dialogs/nuxs/LiveNowBetaDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/dms/AddMembersFlow.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    }
+  },
+  "src/components/dms/AfterReportDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/dms/ChatEmptyPill.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/dms/InitiateChatFlow.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 7
+    }
+  },
+  "src/components/dms/MessageContextMenu.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/dms/MessageItem.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 6
+    }
+  },
+  "src/components/dms/MessageItemEmbed.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/dms/NewMessagesPill.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/dms/ReactionsDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/components/dms/components/UserSearchInput.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/components/forms/AutosizedTextarea.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/forms/DateField/index.shared.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
@@ -131,12 +511,25 @@
   },
   "src/components/forms/SegmentedControl.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/forms/TextField.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "src/components/forms/Toggle/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
   "src/components/forms/ToggleButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/components/hooks/useFollowMethods.ts": {
@@ -144,8 +537,26 @@
       "count": 2
     }
   },
+  "src/components/hooks/useHeaderOffset.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/components/hooks/useStarterPackEntry.native.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/components/images/AutoSizedImage.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
   "src/components/images/Gallery/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -159,9 +570,57 @@
       "count": 6
     }
   },
+  "src/components/moderation/ContentHider.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/components/moderation/ModerationDetailsDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
   "src/components/moderation/ReportDialog/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    }
+  },
+  "src/components/moderation/ScreenHider.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/features/gifPicker/components/GifPickerGrid.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/features/gifPicker/components/GifPickerHeader.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/features/liveNow/components/EditLiveDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/features/liveNow/components/GoLiveDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/features/liveNow/components/GoLiveDisabledDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/features/liveNow/components/LiveStatusDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
     }
   },
   "src/features/liveNow/index.tsx": {
@@ -194,6 +653,11 @@
       "count": 1
     }
   },
+  "src/lib/custom-animations/AccordionAnimation.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
   "src/lib/functions.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
@@ -204,9 +668,34 @@
       "count": 1
     }
   },
+  "src/lib/haptics.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
+    }
+  },
   "src/lib/hooks/useAccountSwitcher.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    }
+  },
+  "src/lib/hooks/useGoogleTranslate.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useIntentHandler.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/lib/hooks/useIsKeyboardVisible.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/lib/hooks/useMinimalShellTransform.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
     }
   },
   "src/lib/hooks/useNonReactiveCallback.ts": {
@@ -217,6 +706,16 @@
   "src/lib/hooks/useOTAUpdates.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    }
+  },
+  "src/lib/hooks/useOpenLink.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/lib/hooks/usePermissions.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
     }
   },
   "src/lib/hooks/useToggleMutationQueue.ts": {
@@ -237,6 +736,14 @@
   "src/lib/media/manip.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/lib/media/picker.shared.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/lib/media/save-image.ios.ts": {
@@ -254,8 +761,16 @@
       "count": 1
     }
   },
+  "src/lib/notifications/notifications.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 10
+    }
+  },
   "src/lib/react-query.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -269,9 +784,24 @@
       "count": 1
     }
   },
+  "src/lib/sharing.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
   "src/lib/strings/errors.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    }
+  },
+  "src/lib/translation/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 8
+    }
+  },
+  "src/logger/transports/console.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
     }
   },
   "src/platform/polyfills.web.ts": {
@@ -287,25 +817,108 @@
   "src/screens/Deactivated.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Hashtag.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
     }
   },
   "src/screens/Login/ChooseAccountForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/screens/Login/ForgotPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 2
     }
   },
   "src/screens/Login/LoginForm.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Login/PasswordUpdatedForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
   "src/screens/Login/SetNewPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/screens/Login/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Messages/ChatList.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
+  "src/screens/Messages/Conversation.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/screens/Messages/ConversationSettings/Member.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Messages/Inbox.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/screens/Messages/Settings.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/screens/Messages/components/ChatListItem.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/screens/Messages/components/InviteLinkDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Messages/components/MessageComposer.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 7
+    }
+  },
+  "src/screens/Messages/components/MessageInput.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/screens/Messages/components/MessagesList.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
@@ -319,7 +932,17 @@
       "count": 1
     }
   },
+  "src/screens/Onboarding/Layout.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    }
+  },
   "src/screens/Onboarding/StepFinished/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepInterests/InterestButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -329,14 +952,48 @@
       "count": 1
     }
   },
-  "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
+  "src/screens/Onboarding/StepProfile/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
+    }
+  },
+  "src/screens/Onboarding/StepSuggestedAccounts/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/PostThread/components/GrowthHack.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 11
+    }
+  },
+  "src/screens/PostThread/components/ThreadComposePrompt.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
   },
-  "src/screens/PostThread/index.tsx": {
+  "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/PostThread/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/screens/Profile/Header/EditProfileDialog.tsx": {
@@ -344,24 +1001,197 @@
       "count": 3
     }
   },
+  "src/screens/Profile/Header/GrowableAvatar.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/screens/Profile/Header/GrowableBanner.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/screens/Profile/Header/Handle.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
   "src/screens/Profile/Header/ProfileHeaderLabeler.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
   },
+  "src/screens/Profile/Header/Shell.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/Header/StatusBarShadow.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
   "src/screens/Profile/Sections/Feed.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Profile/Sections/Labels.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
       "count": 1
     }
   },
   "src/screens/Profile/components/GermButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/screens/Profile/components/ProfileFeedHeader.tsx": {
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
+    }
+  },
+  "src/screens/ProfileList/components/MoreOptionsMenu.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/ProfileList/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/Explore.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/SearchResults.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/Shell.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/components/AutocompleteResults.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/components/ModuleHeader.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Search/components/SearchLanguageDropdown.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/Search/components/StarterPackCard.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
+  "src/screens/Settings/AboutSettings.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 9
+    }
+  },
+  "src/screens/Settings/AccessibilitySettings.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/Settings/AppIconSettings/AppIconImage.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AppIconSettings/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/AppearanceSettings.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
+  "src/screens/Settings/ContentAndMediaSettings.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/Settings/ExternalMediaPreferences.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/screens/Settings/LanguageSettings.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Settings/NotificationSettings/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/Settings/Settings.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/screens/Settings/components/AddAppPasswordDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/Settings/components/ChangeHandleDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 8
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
     }
   },
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/screens/Settings/components/DeactivateAccountDialog.tsx": {
@@ -374,14 +1204,79 @@
       "count": 2
     }
   },
+  "src/screens/Settings/components/ExportCarDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Signup/StepCaptcha/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/Signup/StepHandle/HandleSuggestions.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/Signup/StepHandle/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
   "src/screens/Signup/StepInfo/Policies.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
-  "src/screens/SignupQueued.tsx": {
+  "src/screens/Signup/StepInfo/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    }
+  },
+  "src/screens/Signup/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/screens/SignupQueued.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/StarterPackScreen.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/screens/StarterPack/Wizard/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/Topic.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/screens/VideoFeed/index.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
     }
   },
   "src/state/cache/types.ts": {
@@ -389,9 +1284,19 @@
       "count": 1
     }
   },
+  "src/state/dialogs/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
   "src/state/feed-feedback.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    }
+  },
+  "src/state/gallery.ts": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
     }
   },
   "src/state/messages/events/agent.ts": {
@@ -464,9 +1369,65 @@
       "count": 8
     }
   },
+  "src/view/com/auth/LoggedOut.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/Composer.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 6
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 7
+    }
+  },
+  "src/view/com/composer/ComposerReplyTo.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/KeyboardAccessory.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/view/com/composer/SelectMediaButton.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/view/com/composer/drafts/DraftItem.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/view/com/composer/drafts/DraftsListDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    }
+  },
   "src/view/com/composer/drafts/state/queries.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    }
+  },
+  "src/view/com/composer/labels/LabelsBtn.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/photos/Gallery.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 4
+    }
+  },
+  "src/view/com/composer/photos/ImageAltTextDialog.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/view/com/composer/photos/OpenCameraBtn.tsx": {
@@ -474,19 +1435,61 @@
       "count": 1
     }
   },
+  "src/view/com/composer/threadgate/ThreadgateBtn.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/videos/SubtitleDialog.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/composer/videos/VideoTranscodeProgress.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 10
+    }
+  },
   "src/view/com/feeds/ComposerPrompt.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 6
+    }
+  },
+  "src/view/com/feeds/FeedPage.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/view/com/feeds/MissingFeed.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/view/com/feeds/ProfileFeedgens.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
+    }
+  },
+  "src/view/com/home/HomeHeaderLayoutMobile.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/view/com/lists/ListMembers.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/view/com/lists/MyLists.tsx": {
@@ -496,7 +1499,10 @@
   },
   "src/view/com/lists/ProfileLists.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 4
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 2
     }
   },
   "src/view/com/notifications/NotificationFeed.tsx": {
@@ -509,14 +1515,29 @@
       "count": 3
     }
   },
+  "src/view/com/pager/DraggableScrollView.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/pager/Pager.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/pager/PagerHeaderContext.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
   "src/view/com/pager/PagerWithHeader.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 3
     }
   },
   "src/view/com/pager/TabBar.web.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 1
+      "count": 3
     }
   },
   "src/view/com/posts/FeedShutdownMsg.tsx": {
@@ -537,6 +1558,9 @@
   "src/view/com/profile/ProfileMenu.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
     }
   },
   "src/view/com/util/EmptyState.tsx": {
@@ -556,17 +1580,58 @@
   },
   "src/view/com/util/Link.tsx": {
     "@typescript-eslint/no-explicit-any": {
+      "count": 3
+    }
+  },
+  "src/view/com/util/List.tsx": {
+    "@typescript-eslint/no-unused-vars": {
       "count": 2
+    }
+  },
+  "src/view/com/util/List.web.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
     }
   },
   "src/view/com/util/MainScrollProvider.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 7
+    }
+  },
+  "src/view/com/util/PostMeta.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/UserAvatar.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
+    }
+  },
+  "src/view/com/util/UserBanner.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
     }
   },
   "src/view/com/util/ViewSelector.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
+    }
+  },
+  "src/view/com/util/fab/FABInner.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 2
+    },
+    "@typescript-eslint/no-unused-vars": {
+      "count": 1
+    }
+  },
+  "src/view/com/util/load-latest/LoadLatestBtn.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 3
     }
   },
   "src/view/screens/Debug.tsx": {
@@ -579,9 +1644,39 @@
       "count": 1
     }
   },
+  "src/view/screens/Notifications.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/shell/Drawer.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 5
+    }
+  },
   "src/view/shell/createNativeStackNavigatorWithAuth.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
+    }
+  },
+  "src/view/shell/desktop/Feeds.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/shell/desktop/LeftNav.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/shell/desktop/RightNav.tsx": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/view/shell/index.tsx": {
+    "@typescript-eslint/no-unused-vars": {
+      "count": 3
     }
   }
 }

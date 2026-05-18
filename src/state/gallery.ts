@@ -6,7 +6,6 @@ import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {isCancelledError} from '#/lib/strings/errors'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import {
   cacheDirectory,
   copyAsync,
@@ -58,10 +57,6 @@ export type ComposerImage =
 let _imageCacheDirectory: string
 
 function getImageCacheDirectory(): string | null {
-  if (IS_NATIVE) {
-    return (_imageCacheDirectory ??= joinPath(cacheDirectory!, 'bsky-composer'))
-  }
-
   return null
 }
 
@@ -124,36 +119,7 @@ export async function pasteImage(
 }
 
 export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
-  if (!IS_NATIVE) {
-    return img
-  }
-
-  const source = img.source
-
-  // @todo: we're always passing the original image here, does image-cropper
-  // allows for setting initial crop dimensions? -mary
-  try {
-    const cropped = await openCropper({
-      imageUri: source.path,
-    })
-
-    return {
-      alt: img.alt,
-      source: source,
-      transformed: {
-        path: await moveIfNecessary(cropped.path),
-        width: cropped.width,
-        height: cropped.height,
-        mime: cropped.mime,
-      },
-    }
-  } catch (e) {
-    if (!isCancelledError(e)) {
-      return img
-    }
-
-    throw e
-  }
+  return img
 }
 
 export async function manipulateImage(
@@ -275,7 +241,7 @@ export async function compressImage(
 }
 
 async function moveIfNecessary(from: string) {
-  const cacheDir = IS_NATIVE && getImageCacheDirectory()
+  const cacheDir = false
 
   if (cacheDir && !from.startsWith(cacheDir)) {
     const to = joinPath(cacheDir, nanoid(36))
@@ -302,38 +268,19 @@ async function copyToCache(from: string): Promise<string> {
     return from
   }
 
-  if (IS_WEB) {
-    // Web: convert blob URLs to data URIs before they can be revoked
-    if (from.startsWith('blob:')) {
-      try {
-        const response = await fetch(from)
-        const blob = await response.blob()
-        return await blobToDataUri(blob)
-      } catch (e) {
-        // Blob URL was likely revoked, return as-is for downstream error handling
-        return from
-      }
+  // Web: convert blob URLs to data URIs before they can be revoked
+  if (from.startsWith('blob:')) {
+    try {
+      const response = await fetch(from)
+      const blob = await response.blob()
+      return await blobToDataUri(blob)
+    } catch (e) {
+      // Blob URL was likely revoked, return as-is for downstream error handling
+      return from
     }
-    // Other URLs on web don't need conversion
-    return from
   }
-
-  // Native: copy to cache directory to survive OS temp file cleanup
-  const cacheDir = getImageCacheDirectory()
-  if (!cacheDir || from.startsWith(cacheDir)) {
-    return from
-  }
-
-  const to = joinPath(cacheDir, nanoid(36))
-  await makeDirectoryAsync(cacheDir, {intermediates: true})
-
-  let normalizedFrom = from
-  if (!from.startsWith('file://') && from.startsWith('/')) {
-    normalizedFrom = `file://${from}`
-  }
-
-  await copyAsync({from: normalizedFrom, to})
-  return to
+  // Other URLs on web don't need conversion
+  return from
 }
 
 /**
@@ -356,7 +303,7 @@ function blobToDataUri(blob: Blob): Promise<string> {
 
 /** Purge files that were created to accomodate image manipulation */
 export async function purgeTemporaryImageFiles() {
-  const cacheDir = IS_NATIVE && getImageCacheDirectory()
+  const cacheDir = false
 
   if (cacheDir) {
     await deleteAsync(cacheDir, {idempotent: true})

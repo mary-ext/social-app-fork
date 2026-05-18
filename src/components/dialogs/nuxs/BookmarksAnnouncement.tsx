@@ -1,16 +1,14 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 import {LinearGradient} from '#/shims/linear-gradient'
 
@@ -34,7 +32,7 @@ export function BookmarksAnnouncement() {
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Introducing saved posts AKA bookmarks`}
-        style={[web({maxWidth: 440})]}
+        style={[{maxWidth: 440} as any]}
         contentContainerStyle={[
           {
             paddingTop: 0,
@@ -48,7 +46,7 @@ export function BookmarksAnnouncement() {
             a.overflow_hidden,
             {
               gap: 16,
-              paddingTop: IS_WEB ? 24 : 40,
+              paddingTop: 24,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -89,20 +87,9 @@ export function BookmarksAnnouncement() {
                   borderRadius: 24,
                   aspectRatio: 333 / 104,
                 },
-                IS_WEB
-                  ? [
+                [
                       {
                         boxShadow: `0px 10px 15px -3px ${transparentifyColor(t.palette.black, 0.2)}`,
-                      },
-                    ]
-                  : [
-                      t.atoms.shadow_md,
-                      {
-                        shadowOpacity: 0.2,
-                        shadowOffset: {
-                          width: 0,
-                          height: 10,
-                        },
                       },
                     ],
               ]}>
@@ -133,7 +120,7 @@ export function BookmarksAnnouncement() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: IS_WEB ? 28 : 32,
+                  fontSize: 28,
                   maxWidth: 300,
                 },
               ]}>
@@ -155,24 +142,10 @@ export function BookmarksAnnouncement() {
             </Text>
           </View>
 
-          {!IS_WEB && (
-            <Button
-              label={l`Close`}
-              size="large"
-              color="primary"
-              onPress={() => {
-                control.close()
-              }}
-              style={[a.w_full]}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
-          )}
         </View>
 
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

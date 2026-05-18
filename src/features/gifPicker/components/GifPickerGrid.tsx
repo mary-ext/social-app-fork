@@ -1,9 +1,9 @@
 import {forwardRef} from 'react'
-import {Platform, useWindowDimensions, View} from 'react-native'
+import { useWindowDimensions, View } from 'react-native';
 
 import {cleanError} from '#/lib/strings/errors'
 import {type ListMethods} from '#/view/com/util/List'
-import {atoms as a, native, useBreakpoints, web} from '#/alf'
+import { atoms as a, useBreakpoints } from '#/alf';
 import * as Dialog from '#/components/Dialog'
 import {ListFooter} from '#/components/Lists'
 import {GifPickerItem} from '#/features/gifPicker/components/GifPickerItem'
@@ -69,9 +69,9 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
           </View>
         )}
         keyExtractor={(_item, index) => `masonry-${index}`}
-        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
-        webInnerStyle={[web({minHeight: '80vh'})]}
-        webInnerContentContainerStyle={[web(a.pb_0)]}
+        contentContainerStyle={[undefined as any]}
+        webInnerStyle={[{minHeight: '80vh'} as any]}
+        webInnerContentContainerStyle={[a.pb_0]}
         ListHeaderComponent={<>{header}</>}
         stickyHeaderIndices={[0]}
         onEndReached={onEndReached}
@@ -80,7 +80,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
         // including programmatic scrolls (e.g., content shrinking when search
         // results swap in). That breaks search-while-scrolled — the blur fires
         // mid-typing and subsequent keystrokes go nowhere.
-        keyboardDismissMode={Platform.OS === 'web' ? 'none' : 'on-drag'}
+        keyboardDismissMode={'none'}
         ListFooterComponent={
           hasData ? (
             <ListFooter
@@ -92,7 +92,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
           ) : null
         }
       />
-    )
+    );
   },
 )
 

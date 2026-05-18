@@ -8,8 +8,7 @@ import {
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'
@@ -35,7 +34,6 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
@@ -110,10 +108,10 @@ let ProfileHeaderLabeler = ({
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
         style={[a.px_lg, a.pt_md, a.pb_sm]}
-        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+        pointerEvents={'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
-          pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+          pointerEvents={'box-none'}>
           <HeaderLabelerButtons profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
@@ -192,7 +190,7 @@ let ProfileHeaderLabeler = ({
         )}
       </View>
     </ProfileHeaderShell>
-  )
+  );
 }
 ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
 export {ProfileHeaderLabeler}
@@ -292,7 +290,7 @@ export function HeaderLabelerButtons({
         // hidden in the minimal header, because it's not shadowed so the two buttons
         // can get out of sync. if you want to reenable, you'll need to add shadowing
         // to the subscribed state -sfn
-        <Button
+        (<Button
           testID="toggleSubscribeBtn"
           label={
             isSubscribed
@@ -336,10 +334,10 @@ export function HeaderLabelerButtons({
               </Text>
             </View>
           )}
-        </Button>
+        </Button>)
       ) : null}
       <ProfileMenu profile={profile} />
       <CantSubscribePrompt control={cantSubscribePrompt} />
     </>
-  )
+  );
 }

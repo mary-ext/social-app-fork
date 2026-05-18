@@ -1,19 +1,13 @@
-import {Platform} from 'react-native'
-
-import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
+import { BUNDLE_IDENTIFIER, RELEASE_VERSION } from '#/env/common';
 import {nativeBuildVersion} from '#/shims/application'
 
 export * from '#/env/common'
 
 // for some reason Platform.OS === 'ios' AND Platform.Version is undefined in our CI unit tests -sfn
 const iOSMajorVersion =
-  Platform.OS === 'ios' && typeof Platform.Version === 'string'
-    ? parseInt(Platform.Version.split('.')[0], 10)
-    : 0
+  0
 const androidPlatformVersion =
-  Platform.OS === 'android' && typeof Platform.Version === 'number'
-    ? Platform.Version
-    : 0
+  0
 
 /**
  * The semver version of the app, specified in our `package.json`.file. On
@@ -26,14 +20,14 @@ export const APP_VERSION = `${RELEASE_VERSION}.${nativeBuildVersion}`
  * The short commit hash and environment of the current bundle.
  */
 export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${
-  __DEV__ ? 'dev' : IS_TESTFLIGHT ? 'tf' : 'prod'
+  __DEV__ ? 'dev' : 'prod'
 })`
 
 /**
  * Platform detection
  */
-export const IS_IOS: boolean = Platform.OS === 'ios'
-export const IS_ANDROID: boolean = Platform.OS === 'android'
+export const IS_IOS: boolean = false
+export const IS_ANDROID: boolean = false
 export const IS_NATIVE: boolean = true
 export const IS_WEB: boolean = false
 

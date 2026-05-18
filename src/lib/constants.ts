@@ -1,11 +1,11 @@
-import {type Insets, Platform} from 'react-native'
+import { type Insets } from 'react-native';
 import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
-  Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
+  'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://bsky.social'
 export const BSKY_SERVICE_DID = 'did:web:bsky.social'

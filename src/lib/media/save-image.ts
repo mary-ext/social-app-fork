@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 import {useLingui} from '@lingui/react/macro'
 
 import * as Toast from '#/components/Toast'
-import {IS_NATIVE} from '#/env'
 import * as MediaLibrary from '#/shims/media-library'
 import {saveImageToMediaLibrary} from './manip'
 
@@ -17,9 +16,7 @@ export function useSaveImageToMediaLibrary() {
     })
   return useCallback(
     async (uri: string) => {
-      if (!IS_NATIVE) {
-        throw new Error('useSaveImageToMediaLibrary is native only')
-      }
+      throw new Error('useSaveImageToMediaLibrary is native only')
 
       async function save() {
         try {
@@ -59,5 +56,5 @@ export function useSaveImageToMediaLibrary() {
       }
     },
     [permissionResponse, requestPermission, getPermission, l],
-  )
+  );
 }

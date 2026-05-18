@@ -19,7 +19,6 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {useBackgroundNotificationPreferences} from '#/shims/background-notification-handler'
 
 type AllowIncoming = 'all' | 'none' | 'following'
@@ -212,31 +211,7 @@ export function MessagesSettingsScreenInner({}: Props) {
               <Divider style={{marginVertical: 10}} />
             </>
           ) : null}
-          {IS_NATIVE && (
-            <>
-              <View style={[a.px_xl]}>
-                <Toggle.Item
-                  label={l`Notification sounds`}
-                  name="playSoundChat"
-                  value={preferences.playSoundChat}
-                  style={[a.flex_row, a.align_center, a.justify_between]}
-                  onChange={onSelectSoundSetting}>
-                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
-                  <Text
-                    style={[
-                      a.flex_1,
-                      a.text_md,
-                      a.font_semi_bold,
-                      t.atoms.text,
-                    ]}>
-                    <Trans>Notification sounds</Trans>
-                  </Text>
-                  <Toggle.Switch />
-                </Toggle.Item>
-              </View>
-              <Divider style={{marginVertical: 10}} />
-            </>
-          )}
+
           <View style={[a.px_xl]}>
             <Toggle.Item
               label={l`Export chat data`}
@@ -259,5 +234,5 @@ export function MessagesSettingsScreenInner({}: Props) {
       </Layout.Content>
       <ExportCarDialog control={exportCarControl} />
     </Layout.Screen>
-  )
+  );
 }

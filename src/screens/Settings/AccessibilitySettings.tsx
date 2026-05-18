@@ -1,5 +1,4 @@
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -19,7 +18,6 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import * as Layout from '#/components/Layout'
-import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -76,30 +74,9 @@ export function AccessibilitySettingsScreen({}: Props) {
               <Toggle.Platform />
             </Toggle.Item>
           </SettingsList.Group>
-          {IS_NATIVE && (
-            <>
-              <SettingsList.Divider />
-              <SettingsList.Group contentContainerStyle={[a.gap_sm]}>
-                <SettingsList.ItemIcon icon={HapticIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Haptics</Trans>
-                </SettingsList.ItemText>
-                <Toggle.Item
-                  name="haptics"
-                  label={l`Disable haptic feedback`}
-                  value={hapticsDisabled ?? false}
-                  onChange={value => setHapticsDisabled(value)}
-                  style={[a.w_full]}>
-                  <Toggle.LabelText style={[a.flex_1]}>
-                    <Trans>Disable haptic feedback</Trans>
-                  </Toggle.LabelText>
-                  <Toggle.Platform />
-                </Toggle.Item>
-              </SettingsList.Group>
-            </>
-          )}
+
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  )
+  );
 }

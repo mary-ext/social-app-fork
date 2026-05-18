@@ -17,11 +17,10 @@ import {useSession} from '#/state/session'
 import {type SessionAccount} from '#/state/session/types'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as Dialog from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 type Reaction = {
@@ -60,7 +59,7 @@ export function ReactionsDialog({
 
   const header = (
     <>
-      <View style={[a.px_2xl, IS_WEB ? [a.pt_xl, a.pb_md] : a.pt_3xl]}>
+      <View style={[a.px_2xl, [a.pt_xl, a.pb_md]]}>
         <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>
           <Trans>Reactions</Trans>
         </Text>
@@ -85,12 +84,12 @@ export function ReactionsDialog({
         maxHeight: screenHeight / 2,
       }}>
       <Dialog.Handle />
-      {IS_NATIVE ? header : null}
+      {null}
       <Dialog.ScrollableInner
         label={l`Reactions`}
         contentContainerStyle={[a.pt_0]}
-        header={IS_WEB ? header : null}
-        style={[web({maxWidth: 400})]}>
+        header={header}
+        style={[{maxWidth: 400} as any]}>
         {filteredReactions
           ?.sort((a, b) => {
             if (a.sender.did === currentAccount?.did) return -1
@@ -117,7 +116,7 @@ export function ReactionsDialog({
           })}
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }
 
 function ReactionRow({
@@ -188,7 +187,7 @@ function ReactionRow({
           </Text>
           <Text
             numberOfLines={1}
-            style={[a.text_xs, t.atoms.text_contrast_medium, web([a.mt_xs])]}>
+            style={[a.text_xs, t.atoms.text_contrast_medium, [a.mt_xs] as any]}>
             {isFromSelf ? l`Tap to remove` : handle}
           </Text>
         </View>

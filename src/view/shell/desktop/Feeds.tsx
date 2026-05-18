@@ -11,7 +11,7 @@ import {
 } from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -62,7 +62,7 @@ export function DesktopFeeds() {
     <View
       style={[
         a.flex_1,
-        web({
+        {
           gap: 2,
           /*
            * Small padding prevents overflow prior to actually overflowing the
@@ -70,7 +70,7 @@ export function DesktopFeeds() {
            */
           paddingTop: 2,
           overflowY: 'auto',
-        }),
+        } as any,
       ]}>
       {pinnedFeedInfos.map((feedInfo, index) => {
         const feed = feedInfo.feedDescriptor
@@ -149,7 +149,7 @@ export function DesktopFeeds() {
         }}
       </Link>
     </View>
-  )
+  );
 }
 
 function FeedItem({

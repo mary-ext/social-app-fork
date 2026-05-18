@@ -1,5 +1,4 @@
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -24,7 +23,6 @@ import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
-import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -95,21 +93,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.Divider />
-          {IS_NATIVE && (
-            <Toggle.Item
-              name="use_in_app_browser"
-              label={l`Use in-app browser to open links`}
-              value={inAppBrowserPref ?? false}
-              onChange={value => setUseInAppBrowser(value)}>
-              <SettingsList.Item>
-                <SettingsList.ItemIcon icon={WindowIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Use in-app browser to open links</Trans>
-                </SettingsList.ItemText>
-                <Toggle.Platform />
-              </SettingsList.Item>
-            </Toggle.Item>
-          )}
+
           <Toggle.Item
             name="disable_autoplay"
             label={l`Autoplay videos and GIFs`}
@@ -169,5 +153,5 @@ export function ContentAndMediaSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  )
+  );
 }

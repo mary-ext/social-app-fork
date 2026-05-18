@@ -7,8 +7,7 @@ import {
   type Un$Typed,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
@@ -44,7 +43,6 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Loader} from '#/components/Loader'
-import {IS_WEB} from '#/env'
 import {ValuePropositionPager} from './ValuePropositionPager'
 
 export function StepFinished() {
@@ -266,7 +264,7 @@ function ValueProposition({
       />
       <OnboardingControls.Portal>
         <View style={gtMobile && [a.gap_md, a.flex_row]}>
-          {gtMobile && (IS_WEB ? subStep !== 2 : true) && (
+          {gtMobile && (subStep !== 2) && (
             <Button
               disabled={saving}
               color="secondary"
@@ -306,5 +304,5 @@ function ValueProposition({
         </View>
       </OnboardingControls.Portal>
     </>
-  )
+  );
 }

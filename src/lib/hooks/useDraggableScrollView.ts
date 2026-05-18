@@ -1,6 +1,5 @@
 import {type ForwardedRef, useEffect, useMemo, useRef} from 'react'
 import {type ScrollView} from 'react-native'
-import {Platform} from 'react-native'
 
 import {mergeRefs} from '#/lib/merge-refs'
 
@@ -16,7 +15,7 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
   const ref = useRef<Scrollable>(null)
 
   useEffect(() => {
-    if (Platform.OS !== 'web' || !ref.current) {
+    if (!ref.current) {
       return
     }
     const slider = ref.current as unknown as HTMLDivElement

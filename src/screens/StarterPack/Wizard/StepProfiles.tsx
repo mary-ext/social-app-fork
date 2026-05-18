@@ -14,7 +14,6 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 import type * as bsky from '#/types/bsky'
 
@@ -89,7 +88,7 @@ export function StepProfiles({
         onEndReached={
           !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
         }
-        onEndReachedThreshold={IS_NATIVE ? 2 : 0.25}
+        onEndReachedThreshold={0.25}
         keyboardDismissMode="on-drag"
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
@@ -111,5 +110,5 @@ export function StepProfiles({
         }
       />
     </ScreenTransition>
-  )
+  );
 }

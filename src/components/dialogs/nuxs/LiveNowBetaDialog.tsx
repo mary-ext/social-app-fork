@@ -1,10 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {LIVE_NOW_BETA_DISABLED} from '#/lib/feature-flags'
-import {atoms as a, select, useTheme, utils, web} from '#/alf'
+import { atoms as a, select, useTheme, utils } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
@@ -14,7 +13,7 @@ import {
 } from '#/components/dialogs/nuxs/utils'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
-import {IS_E2E, IS_WEB} from '#/env'
+import { IS_E2E } from '#/env';
 import {Image} from '#/shims/image'
 import {LinearGradient} from '#/shims/linear-gradient'
 
@@ -57,7 +56,7 @@ export function LiveNowBetaDialog() {
       <Dialog.Handle fill={t.palette.primary_700} />
       <Dialog.ScrollableInner
         label={l`Show when you’re live`}
-        style={[web({maxWidth: 440})]}
+        style={[{maxWidth: 440} as any]}
         contentContainerStyle={[
           {
             paddingTop: 0,
@@ -71,7 +70,7 @@ export function LiveNowBetaDialog() {
             a.overflow_hidden,
             {
               gap: 16,
-              paddingTop: IS_WEB ? 24 : 40,
+              paddingTop: 24,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -115,21 +114,9 @@ export function LiveNowBetaDialog() {
                   borderRadius: 24,
                   aspectRatio: 652 / 211,
                 },
-                IS_WEB
-                  ? [
+                [
                       {
                         boxShadow: `0px 10px 15px -3px ${shadowColor}`,
-                      },
-                    ]
-                  : [
-                      t.atoms.shadow_md,
-                      {
-                        shadowColor,
-                        shadowOpacity: 0.2,
-                        shadowOffset: {
-                          width: 0,
-                          height: 10,
-                        },
                       },
                     ],
               ]}>
@@ -160,7 +147,7 @@ export function LiveNowBetaDialog() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: IS_WEB ? 28 : 32,
+                  fontSize: 28,
                   maxWidth: 360,
                 },
               ]}>
@@ -183,24 +170,10 @@ export function LiveNowBetaDialog() {
             </Text>
           </View>
 
-          {!IS_WEB && (
-            <Button
-              label={l`Close`}
-              size="large"
-              color="primary"
-              onPress={() => {
-                control.close()
-              }}
-              style={[a.w_full]}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
-          )}
         </View>
 
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

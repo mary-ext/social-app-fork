@@ -1,7 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import {AccessibilityInfo} from 'react-native'
 
-import {IS_WEB} from '#/env'
 import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 
 const Context = createContext({
@@ -58,8 +57,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        *
        * @see https://github.com/necolas/react-native-web/discussions/2072
        */
-      screenReaderEnabled: IS_WEB ? false : screenReaderEnabled,
-    }
+      screenReaderEnabled: false,
+    };
   }, [reduceMotionEnabled, screenReaderEnabled])
 
   return <Context.Provider value={ctx}>{children}</Context.Provider>

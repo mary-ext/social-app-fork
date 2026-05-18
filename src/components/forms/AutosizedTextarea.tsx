@@ -6,9 +6,8 @@ import {
 } from 'react-native'
 
 import {mergeRefs} from '#/lib/merge-refs'
-import {atoms as a, extractPadding, useAlf, web} from '#/alf'
+import { atoms as a, extractPadding, useAlf } from '#/alf';
 import {normalizeTextStyles} from '#/alf/typography'
-import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 
 export type AutosizedTextareaProps = Omit<TextInputProps, 'multiline'> & {
   ref?: React.Ref<TextInput>
@@ -58,9 +57,7 @@ export function AutosizedTextarea({
        * iOS also seems to need 1px headroom to actually expand to the correct
        * maxHeight
        */
-      const heightConstraints = IS_IOS
-        ? {minHeight: minInputHeight, maxHeight: maxInputHeight + 1}
-        : {height: minInputHeight}
+      const heightConstraints = {height: minInputHeight}
 
       return {
         style: {
@@ -96,7 +93,7 @@ export function AutosizedTextarea({
     }
   }
   const onChangeText = (text: string) => {
-    if (IS_WEB) handleResizeWeb()
+    handleResizeWeb()
     onChangeTextOuter?.(text)
   }
 
@@ -110,7 +107,7 @@ export function AutosizedTextarea({
   const onContentSizeChange = (e: TextInputContentSizeChangeEvent) => {
     const contentSize = Math.ceil(e.nativeEvent.contentSize.height)
     // ios reports the content size without padding
-    const height = IS_IOS ? contentSize + verticalContentPadding : contentSize
+    const height = contentSize
     const nextHeight = Math.min(
       Math.max(height, minInputHeight),
       maxInputHeight,
@@ -141,26 +138,26 @@ export function AutosizedTextarea({
           textAlignVertical: 'top',
           includeFontPadding: false,
         },
-        web({
+        {
           resize: 'none',
           outline: 'none',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
-        }),
+        } as any,
         style,
-        IS_ANDROID ? {height: nativeHeight} : {},
+        {},
       ]}
       {...rest}
       ref={mergeRefs([
         (node: TextInput | null) => {
           internalRef.current = node
           // bop resize on first render
-          if (IS_WEB && node) handleResizeWeb()
+          if (node) handleResizeWeb()
         },
         ref,
       ])}
       onChangeText={onChangeText}
       onContentSizeChange={onContentSizeChange}
     />
-  )
+  );
 }

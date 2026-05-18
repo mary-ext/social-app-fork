@@ -10,7 +10,6 @@ import {
 import {useHotkeysContext} from '#/lib/hotkeys'
 import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
-import {IS_WEB} from '#/env'
 import {BottomSheetNativeComponent} from '#/shims/bottom-sheet'
 
 interface IDialogContext {
@@ -71,17 +70,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const openDialogs = useRef<Set<string>>(new Set())
 
   const closeAllDialogs = useCallback(() => {
-    if (IS_WEB) {
-      openDialogs.current.forEach(id => {
-        const dialog = activeDialogs.current.get(id)
-        if (dialog) dialog.current.close()
-      })
+    openDialogs.current.forEach(id => {
+      const dialog = activeDialogs.current.get(id)
+      if (dialog) dialog.current.close()
+    })
 
-      return openDialogs.current.size > 0
-    } else {
-      void BottomSheetNativeComponent.dismissAll()
-      return false
-    }
+    return openDialogs.current.size > 0
   }, [])
 
   const setDialogIsOpen = useCallback(

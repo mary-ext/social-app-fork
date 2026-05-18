@@ -1,8 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
@@ -13,7 +12,7 @@ import {getAllListMembers} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Loader} from '#/components/Loader'
@@ -130,10 +129,10 @@ export function StarterPackCard({
           a.flex_row,
           a.align_end,
           a.gap_lg,
-          web({
+          {
             position: 'static',
             zIndex: 'unset',
-          }),
+          } as any,
         ]}>
         <View style={[a.flex_1, a.gap_2xs]}>
           <Text
@@ -167,5 +166,5 @@ export function StarterPackCard({
         </Button>
       </View>
     </View>
-  )
+  );
 }

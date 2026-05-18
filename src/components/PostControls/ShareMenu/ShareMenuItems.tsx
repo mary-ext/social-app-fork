@@ -1,7 +1,6 @@
 import {memo, useMemo} from 'react'
 import {AtUri} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -22,7 +21,6 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/i
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
-import {IS_IOS} from '#/env'
 import * as ExpoClipboard from '#/shims/clipboard'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
@@ -61,12 +59,7 @@ let ShareMenuItems = ({
 
   const onCopyLink = async () => {
     const url = toShareUrl(href)
-    if (IS_IOS) {
-      // iOS only
-      await ExpoClipboard.setUrlAsync(url)
-    } else {
-      await ExpoClipboard.setStringAsync(url)
-    }
+    await ExpoClipboard.setStringAsync(url)
     Toast.show(l`Copied to clipboard`, {
       type: 'success',
     })

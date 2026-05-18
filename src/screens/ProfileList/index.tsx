@@ -6,8 +6,7 @@ import {
   moderateUserList,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -33,14 +32,13 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {useDialogControl} from '#/components/Dialog'
 import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
-import {IS_WEB} from '#/env'
 import {AboutSection} from './AboutSection'
 import {ErrorScreen} from './components/ErrorScreen'
 import {Header} from './components/Header'
@@ -125,14 +123,11 @@ function ProfileListScreenInner(props: Props) {
       </Layout.Header.Outer>
       <Layout.Content
         centerContent
-        contentContainerStyle={platform({
-          web: [a.mx_auto],
-          native: [a.align_center],
-        })}>
+        contentContainerStyle={[a.mx_auto]}>
         <Loader size="2xl" />
       </Layout.Content>
     </>
-  )
+  );
 }
 
 function ProfileListScreenLoaded({
@@ -254,7 +249,7 @@ function ProfileListScreenLoaded({
           <Layout.Center
             onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
             style={[
-              native([a.absolute, a.z_10, t.atoms.bg]),
+              undefined as any,
 
               a.border_b,
               t.atoms.border_contrast_low,
@@ -266,7 +261,7 @@ function ProfileListScreenLoaded({
               list={list}
               scrollElRef={scrollElRef as ListRef}
               onPressAddUser={addUserDialogControl.open}
-              headerHeight={IS_WEB ? 0 : headerHeight}
+              headerHeight={0}
             />
           )}
           <FAB
@@ -285,5 +280,5 @@ function ProfileListScreenLoaded({
         />
       </Hider.Content>
     </Hider.Outer>
-  )
+  );
 }

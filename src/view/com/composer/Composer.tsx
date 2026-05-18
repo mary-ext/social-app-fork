@@ -122,7 +122,7 @@ import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
@@ -134,7 +134,6 @@ import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '#/shims/bottom-sheet'
 import * as FileSystem from '#/shims/file-system'
@@ -389,35 +388,13 @@ export const ComposePost = ({
 
         let asset: ImagePickerAsset
 
-        if (IS_WEB) {
-          // Web: Convert blob URL to a File, then get video metadata (returns data URL)
-          const response = await fetch(videoInfo.uri)
-          const blob = await response.blob()
-          const file = new File([blob], 'restored-video', {
-            type: videoInfo.mimeType,
-          })
-          asset = await getVideoMetadata(file)
-        } else {
-          let uri = videoInfo.uri
-          if (IS_ANDROID) {
-            // Android: local file system double-encodes filenames with special chars.
-            // The file exists, but react-native-compressor's MediaMetadataRetriever
-            // can't handle the double-encoded URI. Copy to a temp file with a simple name.
-            const sourceFile = new FileSystem.File(videoInfo.uri)
-            const tempFileName = `draft-video-${Date.now()}.${mimeToExt(videoInfo.mimeType)}`
-            const tempFile = new FileSystem.File(
-              FileSystem.Paths.cache,
-              tempFileName,
-            )
-            sourceFile.copy(tempFile)
-            logger.debug('restoreVideo: copied to temp file', {
-              source: videoInfo.uri,
-              temp: tempFile.uri,
-            })
-            uri = tempFile.uri
-          }
-          asset = await getVideoMetadata(uri)
-        }
+        // Web: Convert blob URL to a File, then get video metadata (returns data URL)
+        const response = await fetch(videoInfo.uri)
+        const blob = await response.blob()
+        const file = new File([blob], 'restored-video', {
+          type: videoInfo.mimeType,
+        })
+        asset = await getVideoMetadata(file)
 
         // Start video processing using existing flow
         const abortController = new AbortController()
@@ -448,7 +425,7 @@ export const ComposePost = ({
         }
 
         // Restore captions (web only - captions use File objects)
-        if (IS_WEB && videoInfo.captions.length > 0) {
+        if (videoInfo.captions.length > 0) {
           const captionTracks = videoInfo.captions.map(c => ({
             lang: c.lang,
             file: new File([c.content], `caption-${c.lang}.vtt`, {
@@ -679,16 +656,9 @@ export const ComposePost = ({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingTop: IS_ANDROID ? insets.top : 0,
+      paddingTop: 0,
       paddingBottom:
-        // iOS - when keyboard is closed, keep the bottom bar in the safe area
-        (IS_IOS && !isKeyboardVisible) ||
-        // Android - Android >=35 KeyboardAvoidingView adds double padding when
-        // keyboard is closed, so we subtract that in the offset and add it back
-        // here when the keyboard is open
-        (IS_ANDROID && isKeyboardVisible)
-          ? insets.bottom
-          : 0,
+        0,
     }),
     [insets, isKeyboardVisible],
   )
@@ -726,22 +696,7 @@ export const ComposePost = ({
 
   // On Android, pressing Back should ask confirmation.
   useEffect(() => {
-    if (!IS_ANDROID) {
-      return
-    }
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      () => {
-        if (closeAllDialogs() || closeAllModals()) {
-          return true
-        }
-        onPressCancel()
-        return true
-      },
-    )
-    return () => {
-      backHandler.remove()
-    }
+    return
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   const missingAltError = useMemo(() => {
@@ -1073,11 +1028,7 @@ export const ComposePost = ({
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
-      // On Android, this risks getting the cursor stuck behind the keyboard.
-      // Not worth it.
-      if (!IS_ANDROID) {
-        textInputRef.current?.focus()
-      }
+      textInputRef.current?.focus()
     }
   }, [composerState])
 
@@ -1133,12 +1084,12 @@ export const ComposePost = ({
     </>
   )
 
-  const IS_WEBFooterSticky = !IS_NATIVE && thread.posts.length > 1
+  const IS_WEBFooterSticky = thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
       <KeyboardAvoidingView
         testID="composePostView"
-        behavior={IS_IOS ? 'padding' : 'height'}
+        behavior={'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
         style={a.flex_1}>
         <View
@@ -1178,15 +1129,15 @@ export const ComposePost = ({
 
           <Animated.ScrollView
             ref={scrollViewRef}
-            layout={native(LinearTransition)}
+            layout={undefined as any}
             onScroll={scrollHandler}
             contentContainerStyle={a.flex_grow}
             style={[
               a.flex_1,
-              web({
+              {
                 scrollbarGutter: 'stable',
                 scrollbarColor: `${t.palette.contrast_200} transparent`,
-              }),
+              } as any,
             ]}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
@@ -1287,7 +1238,7 @@ export const ComposePost = ({
         />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
-  )
+  );
 }
 
 let ComposerPost = memo(function ComposerPost({
@@ -1327,7 +1278,7 @@ let ComposerPost = memo(function ComposerPost({
   const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
-  const forceMinHeight = IS_WEB && isTextOnly && isActive
+  const forceMinHeight = isTextOnly && isActive
   const selectTextInputPlaceholder = isReply
     ? isFirstPost
       ? l`Write your reply`
@@ -1367,9 +1318,8 @@ let ComposerPost = memo(function ComposerPost({
     async (uri: string) => {
       if (
         uri.startsWith('data:video/') ||
-        (IS_WEB && uri.startsWith('data:image/gif'))
+        (uri.startsWith('data:image/gif'))
       ) {
-        if (IS_NATIVE) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
           Toast.show(l`Unsupported video type: ${mimeType}`, {
@@ -1399,9 +1349,8 @@ let ComposerPost = memo(function ComposerPost({
         a.mb_sm,
         !isActive && isLastPost && a.mb_lg,
         !isActive && styles.inactivePost,
-        isTextOnly && isLastPost && IS_NATIVE && a.flex_grow,
       ]}>
-      <View style={[a.flex_row, IS_NATIVE && a.flex_1]}>
+      <View style={[a.flex_row, false]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
           size={42}
@@ -1441,7 +1390,6 @@ let ComposerPost = memo(function ComposerPost({
           )} in length`}
         />
       </View>
-
       {canRemovePost && isActive && (
         <>
           <Button
@@ -1483,7 +1431,6 @@ let ComposerPost = memo(function ComposerPost({
           />
         </>
       )}
-
       <ComposerEmbeds
         canRemoveQuote={canRemoveQuote}
         embed={post.embed}
@@ -1492,7 +1439,7 @@ let ComposerPost = memo(function ComposerPost({
         isActivePost={isActive}
       />
     </View>
-  )
+  );
 })
 
 function ComposerTopBar({
@@ -1540,13 +1487,13 @@ function ComposerTopBar({
   return (
     <Animated.View
       style={topBarAnimatedStyle}
-      layout={native(LinearTransition)}>
+      layout={undefined as any}>
       <View
         style={[
           a.flex_row,
           a.align_center,
           a.gap_xs,
-          IS_LIQUID_GLASS ? [a.px_lg, a.pt_lg, a.pb_md] : [a.p_sm],
+          [a.p_sm],
         ]}>
         <Button
           label={l`Cancel`}
@@ -1632,7 +1579,7 @@ function ComposerTopBar({
       </View>
       {children}
     </Animated.View>
-  )
+  );
 }
 
 function AltTextReminder({error}: {error: string}) {
@@ -1662,7 +1609,6 @@ function ComposerEmbeds({
       {embed.media?.type === 'images' && (
         <Gallery images={embed.media.images} dispatch={dispatch} />
       )}
-
       {embed.media?.type === 'gif' && (
         <View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
           <ExternalEmbedGif
@@ -1678,7 +1624,6 @@ function ComposerEmbeds({
           />
         </View>
       )}
-
       {!embed.media && embed.link && (
         <View style={[a.relative, a.mt_lg]} key={embed.link.uri}>
           <ExternalEmbedLink
@@ -1688,13 +1633,12 @@ function ComposerEmbeds({
           />
         </View>
       )}
-
       <LayoutAnimationConfig skipExiting>
         {video && (
           <Animated.View
             style={[a.w_full, a.mt_lg]}
-            entering={native(ZoomIn)}
-            exiting={native(ZoomOut)}>
+            entering={undefined as any}
+            exiting={undefined as any}>
             {video.asset &&
               (video.status === 'compressing' ? (
                 <VideoTranscodeProgress
@@ -1739,7 +1683,7 @@ function ComposerEmbeds({
       </LayoutAnimationConfig>
       {embed.quote?.uri ? (
         <View
-          style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], IS_WEB && [a.pb_md]]}>
+          style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], [a.pb_md]]}>
           <View style={[a.relative]}>
             <LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
             {canRemoveQuote && (
@@ -1752,7 +1696,7 @@ function ComposerEmbeds({
         </View>
       ) : null}
     </>
-  )
+  );
 }
 
 function ComposerPills({
@@ -1972,7 +1916,7 @@ function ComposerFooter({
                 onAdd={onImageAdd}
               />
               <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-              {IS_WEB && gtPhone ? (
+              {gtPhone ? (
                 <EmojiPicker.Root nextFocusRef={textInputRef}>
                   <EmojiPicker.Trigger label={l`Open emoji picker`}>
                     {({props}) => (
@@ -2017,7 +1961,7 @@ function ComposerFooter({
         />
       </View>
     </View>
-  )
+  );
 }
 
 export function useComposerCancelRef() {
@@ -2156,22 +2100,8 @@ function useScrollTracker({
 function useKeyboardVerticalOffset() {
   const {top, bottom} = useSafeAreaInsets()
 
-  // Android etc
-  if (!IS_IOS) {
-    // need to account for the edge-to-edge nav bar
-    return bottom * -1
-  }
-
-  // they ditched the gap behaviour on 26
-  if (IS_LIQUID_GLASS) {
-    return top
-  }
-
-  // iPhone SE
-  if (top === 20) return 40
-
-  // all other iPhones on <26
-  return top + 10
+  // need to account for the edge-to-edge nav bar
+  return bottom * -1
 }
 
 async function whenAppViewReady(
@@ -2205,13 +2135,7 @@ function isEmptyPost(post: PostDraft) {
 function useHideKeyboardOnBackground() {
   const appState = useAppState()
 
-  useEffect(() => {
-    if (IS_IOS) {
-      if (appState === 'inactive') {
-        Keyboard.dismiss()
-      }
-    }
-  }, [appState])
+  useEffect(() => {}, [appState])
 }
 
 const styles = StyleSheet.create({
@@ -2221,10 +2145,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 12,
   },
-  stickyFooterWeb: web({
+  stickyFooterWeb: {
     position: 'sticky',
     bottom: 0,
-  }),
+  } as any,
   errorLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2349,15 +2273,7 @@ function ToolbarWrapper({
   style: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  if (IS_WEB) return children
-  return (
-    <Animated.View
-      style={style}
-      entering={FadeIn.duration(400)}
-      exiting={FadeOut.duration(400)}>
-      {children}
-    </Animated.View>
-  )
+  return children
 }
 
 function VideoUploadToolbar({state}: {state: VideoState}) {

@@ -9,7 +9,7 @@ import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {useSession} from '#/state/session'
-import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
@@ -102,12 +102,12 @@ export function LoadLatestBtn({
 
 const styles = StyleSheet.create({
   loadLatestInline: {
-    left: web('calc(50vw - 282px)'),
-  },
+    left: 'calc(50vw - 282px)',
+  } as any,
   loadLatestInlineOffset: {
-    left: web(`calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`),
-  },
+    left: `calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`,
+  } as any,
   loadLatestOutOfLine: {
-    left: web('calc(50vw - 382px)'),
-  },
+    left: 'calc(50vw - 382px)',
+  } as any,
 })

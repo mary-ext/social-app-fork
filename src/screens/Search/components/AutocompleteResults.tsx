@@ -13,9 +13,8 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {Link} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import {atoms as a, native} from '#/alf'
+import { atoms as a } from '#/alf';
 import * as Layout from '#/components/Layout'
-import {IS_NATIVE} from '#/env'
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
@@ -49,11 +48,9 @@ let AutocompleteResults = ({
           keyboardDismissMode="on-drag">
           <SearchLinkCard
             label={l`Search for "${searchText}"`}
-            onPress={native(onSubmit)}
+            onPress={undefined as any}
             to={
-              IS_NATIVE
-                ? undefined
-                : `/search?q=${encodeURIComponent(searchText)}`
+              `/search?q=${encodeURIComponent(searchText)}`
             }
             style={a.border_b}
           />
@@ -72,7 +69,7 @@ let AutocompleteResults = ({
         </Layout.Content>
       )}
     </>
-  )
+  );
 }
 AutocompleteResults = memo(AutocompleteResults)
 export {AutocompleteResults}

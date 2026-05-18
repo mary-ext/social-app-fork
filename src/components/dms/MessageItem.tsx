@@ -34,7 +34,7 @@ import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {isOnlyEmoji} from '#/alf/typography'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
@@ -324,21 +324,21 @@ let MessageItem = ({
                   }
                 : t.atoms.bg_contrast_25,
               {
-                paddingTop: platform({android: 2, default: 3}),
-                paddingBottom: platform({android: 2, default: 3}),
+                paddingTop: 3,
+                paddingBottom: 3,
                 transform: [{translateY: -8}],
               },
             ]}
             onPress={isGroupChat ? reactionsControl.open : undefined}>
             {groupedReactions.map(group => (
               <Animated.View
-                entering={native(ZoomIn.springify(200).delay(400))}
+                entering={undefined as any}
                 exiting={
                   groupedReactions.length > 1
-                    ? native(ZoomOut.delay(200))
+                    ? undefined as any
                     : undefined
                 }
-                layout={native(LinearTransition.delay(300))}
+                layout={undefined as any}
                 key={group.value}
                 style={[a.py_2xs]}>
                 <Text
@@ -381,17 +381,13 @@ let MessageItem = ({
     </LayoutAnimationConfig>
   )
 
-  const messageInset = platform<ViewStyle | undefined>({
-    ios: isFromSelf ? a.mr_md : isGroupChat ? a.ml_md : a.ml_sm,
-    android: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-    web: isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined,
-  })
+  const messageInset = isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined
 
   return (
     <>
       <LayoutAnimationConfig skipExiting skipEntering>
         {hasLargeGapFromPrev && (
-          <Animated.View entering={native(FadeIn)} exiting={native(FadeOut)}>
+          <Animated.View entering={undefined as any} exiting={undefined as any}>
             <DateDivider date={message.sentAt} />
           </Animated.View>
         )}
@@ -480,10 +476,7 @@ let MessageItem = ({
                         a.leading_tight,
                         // Visually align bottom of the emoji with the avatar
                         !isFromSelf &&
-                          platform({
-                            android: {marginTop: a.mt_2xs.marginTop},
-                            default: {marginBottom: -a.mb_sm.marginBottom},
-                          }),
+                          {marginBottom: -a.mb_sm.marginBottom} as any,
                       ],
                     ]}
                     interactiveStyle={a.underline}
@@ -505,7 +498,7 @@ let MessageItem = ({
         )}
       </View>
     </>
-  )
+  );
 }
 MessageItem = memo(MessageItem)
 export {MessageItem}

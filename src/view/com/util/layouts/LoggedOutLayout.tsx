@@ -5,7 +5,6 @@ import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a} from '#/alf'
-import {IS_WEB} from '#/env'
 import {Text} from '../text/Text'
 
 export const LoggedOutLayout = ({
@@ -78,7 +77,7 @@ export const LoggedOutLayout = ({
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
-            <View style={[styles.contentWrapper, IS_WEB && a.my_auto]}>
+            <View style={[styles.contentWrapper, a.my_auto]}>
               {children}
             </View>
           </ScrollView>
@@ -89,7 +88,7 @@ export const LoggedOutLayout = ({
         </View>
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

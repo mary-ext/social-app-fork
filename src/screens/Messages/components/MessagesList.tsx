@@ -45,7 +45,7 @@ import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
@@ -54,7 +54,6 @@ import {SystemMessageGroup} from '#/components/dms/SystemMessageGroup'
 import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
 import {useScrollEdgeEffectRef} from '#/shims/bsky-scroll-edge-effect'
 import {
   KeyboardChatScrollView,
@@ -217,7 +216,7 @@ export function MessagesList({
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
-      if (IS_WEB && isAtTop.get() && hasScrolled) {
+      if (isAtTop.get() && hasScrolled) {
         flatListRef.current?.scrollToOffset({
           offset: height - prevContentHeight.current,
           animated: false,
@@ -484,8 +483,8 @@ export function MessagesList({
             disableFullWindowScroll={true}
             disableVirtualization={true}
             // The extra two items account for the header and the footer components
-            initialNumToRender={IS_NATIVE ? 32 : 62}
-            maxToRenderPerBatch={IS_WEB ? 32 : 62}
+            initialNumToRender={62}
+            maxToRenderPerBatch={32}
             keyboardDismissMode="interactive"
             keyboardShouldPersistTaps="handled"
             maintainVisibleContentPosition={{minIndexForVisible: 0}}
@@ -494,7 +493,7 @@ export function MessagesList({
             onContentSizeChange={onContentSizeChange}
             onStartReached={onStartReached}
             onScrollToIndexFailed={onScrollToIndexFailed}
-            showsVerticalScrollIndicator={!IS_ANDROID}
+            showsVerticalScrollIndicator={true}
             scrollEventThrottle={100}
             ListHeaderComponent={
               <>
@@ -508,24 +507,19 @@ export function MessagesList({
             // native only (prop is not supported on web)
             renderScrollComponent={renderScrollComponent}
             contentContainerStyle={{
-              paddingBottom: platform({
-                // ios is slightly larger as the input has no top padding
-                ios: tokens.space.lg,
-                android: tokens.space.md,
-                web: 0, // web uses ListFooterComponent instead for scroll reasons
-              }),
+              paddingBottom: 0,
             }}
             ListFooterComponent={
               <View
-                style={web({height: tokens.space.md + inputHeightJS})}
+                style={{height: tokens.space.md + inputHeightJS} as any}
                 onLayout={onFooterLayout}
               />
             }
-            style={web({
+            style={{
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
               scrollbarGutter: 'stable both-edges',
-            })}
+            } as any}
             contentInset={{top: transparentHeaderHeight}}
             scrollIndicatorInsets={{top: transparentHeaderHeight}}
           />
@@ -535,10 +529,7 @@ export function MessagesList({
           onLayout={onInputLayout}
           minimumOffset={bottomInset}
           offset={{
-            closed: platform({
-              ios: tokens.space.lg, // hide bottom padding when closed
-              default: 0,
-            }),
+            closed: 0,
             opened: 0,
           }}>
           {footer ?? (
@@ -568,10 +559,9 @@ export function MessagesList({
           )}
         </KeyboardStickyView>
       </KeyboardGestureArea>
-
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </InviteLinkDialogProvider>
-  )
+  );
 }
 
 /** Note: native only */
@@ -586,17 +576,9 @@ function ChatScrollComponent({
   const scrollEdgeRef = useScrollEdgeEffectRef()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
-  const offset = platform({
-    ios: bottomInset - tokens.space.lg,
-    android: bottomInset,
-    default: 0,
-  })
+  const offset = 0
 
-  const inputOffset = platform({
-    ios: bottomInset - tokens.space.lg,
-    android: bottomInset,
-    default: 0,
-  })
+  const inputOffset = 0
 
   const extraContentPadding = useDerivedValue(
     () => inputHeight.get() + inputOffset,

@@ -5,15 +5,14 @@ import {
   AppBskyGraphStarterpack,
   moderateProfile,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {ButtonText} from '#/components/Button'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link} from '#/components/Link'
@@ -81,10 +80,10 @@ export function StarterPackCard({
                 a.flex_row,
                 a.align_start,
                 a.gap_lg,
-                web({
+                {
                   position: 'static',
                   zIndex: 'unset',
-                }),
+                } as any,
               ]}>
               <View style={[a.flex_1]}>
                 <Text
@@ -124,7 +123,7 @@ export function StarterPackCard({
         </>
       )}
     </Link>
-  )
+  );
 }
 
 export function AvatarStack({
@@ -279,17 +278,16 @@ export function StarterPackCardSkeleton() {
         t.atoms.border_contrast_low,
       ]}>
       <AvatarStack profiles={[]} numPending={profileCount} />
-
       <View
         style={[
           a.w_full,
           a.flex_row,
           a.align_start,
           a.gap_lg,
-          web({
+          {
             position: 'static',
             zIndex: 'unset',
-          }),
+          } as any,
         ]}>
         <View style={[a.flex_1, a.gap_xs]}>
           <LoadingPlaceholder width={180} height={18} />
@@ -299,5 +297,5 @@ export function StarterPackCardSkeleton() {
         <LoadingPlaceholder width={100} height={33} />
       </View>
     </View>
-  )
+  );
 }

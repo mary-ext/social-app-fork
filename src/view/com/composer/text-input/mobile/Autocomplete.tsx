@@ -8,7 +8,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 
@@ -105,7 +105,7 @@ function AutocompleteProfileCard({
               a.flex_row,
               a.align_center,
               a.gap_xs,
-              platform({ios: a.flex_1}),
+              undefined,
             ]}>
             <Text
               style={[a.text_md, a.font_semi_bold, a.leading_snug]}
@@ -118,7 +118,7 @@ function AutocompleteProfileCard({
               size="sm"
               style={[
                 {
-                  marginTop: platform({android: -2}),
+                  marginTop: undefined,
                 },
               ]}
             />
@@ -131,5 +131,5 @@ function AutocompleteProfileCard({
         </Text>
       </PressableScale>
     </View>
-  )
+  );
 }

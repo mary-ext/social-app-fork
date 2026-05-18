@@ -23,7 +23,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -127,7 +127,7 @@ export function Outer({
               onPress={handleBackgroundPress}>
               <View
                 style={[
-                  web(a.fixed),
+                  a.fixed,
                   a.inset_0,
                   a.z_10,
                   a.px_xl,
@@ -136,7 +136,7 @@ export function Outer({
                   {
                     overflowY: 'auto',
                     paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
-                  },
+                  } as any,
                 ]}>
                 <Backdrop />
                 {/**
@@ -149,7 +149,7 @@ export function Outer({
                     a.w_full,
                     a.z_20,
                     a.align_center,
-                    web({minHeight: '60vh', position: 'static'}),
+                    {minHeight: '60vh', position: 'static'} as any,
                   ]}>
                   {children}
                 </View>
@@ -159,7 +159,7 @@ export function Outer({
         </Portal>
       )}
     </>
-  )
+  );
 }
 
 export function Inner({
@@ -248,7 +248,7 @@ export const InnerFlatList = forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        web({maxHeight: WEB_DIALOG_HEIGHT}),
+        {maxHeight: WEB_DIALOG_HEIGHT} as any,
         webInnerStyle,
       ]}
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
@@ -259,7 +259,7 @@ export const InnerFlatList = forwardRef<
       />
       {footer}
     </Inner>
-  )
+  );
 })
 
 export function FlatListFooter({

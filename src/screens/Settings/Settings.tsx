@@ -26,7 +26,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
+import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -55,7 +55,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_INTERNAL, IS_IOS, IS_NATIVE} from '#/env'
+import { IS_INTERNAL } from '#/env';
 import {useActorStatus} from '#/features/liveNow'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
@@ -308,7 +308,6 @@ function ProfilePreview({
         type={shadow.associated?.labeler ? 'labeler' : 'user'}
         live={live}
       />
-
       <View
         style={[
           a.flex_row,
@@ -335,7 +334,7 @@ function ProfilePreview({
           interactive
           style={[
             {
-              marginTop: platform({web: 8, ios: 8, android: 10}),
+              marginTop: 8,
             },
           ]}
         />
@@ -344,7 +343,7 @@ function ProfilePreview({
         {sanitizeHandle(profile.handle, '@')}
       </Text>
     </>
-  )
+  );
 }
 
 function DevOptions() {
@@ -452,26 +451,10 @@ function DevOptions() {
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
-      {IS_IOS ? (
-        <SettingsList.PressableItem
-          onPress={onPressApplyOta}
-          label={l`Apply Pull Request`}>
-          <SettingsList.ItemText>
-            <Trans>Apply Pull Request</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.PressableItem>
-      ) : null}
-      {IS_NATIVE && isCurrentlyRunningPullRequestDeployment ? (
-        <SettingsList.PressableItem
-          onPress={() => void revertToEmbedded()}
-          label={l`Unapply Pull Request`}>
-          <SettingsList.ItemText>
-            <Trans>Unapply Pull Request {currentChannel}</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.PressableItem>
-      ) : null}
+      {null}
+      {null}
     </>
-  )
+  );
 }
 
 function AddAccountRow() {

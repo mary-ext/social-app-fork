@@ -1,18 +1,16 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {Keyboard, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {atoms as a, select, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, select, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {DraftItem} from './DraftItem'
 import {useDeleteDraftMutation, useDraftsQuery} from './state/queries'
 import {type DraftSummary} from './state/schema'
@@ -159,20 +157,20 @@ export function DraftsListDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
-      {IS_NATIVE && header}
+
       <Dialog.InnerFlatList
         data={drafts}
         renderItem={renderItem}
         keyExtractor={(item: DraftSummary) => item.id}
-        ListHeaderComponent={web(header)}
-        stickyHeaderIndices={web([0])}
+        ListHeaderComponent={header}
+        stickyHeaderIndices={[0] as any}
         ListEmptyComponent={emptyComponent}
         ListFooterComponent={footerComponent}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.5}
         style={[
           a.px_0,
-          web({minHeight: 500}),
+          {minHeight: 500} as any,
           {
             backgroundColor: select(t.name, {
               light: t.palette.contrast_50,
@@ -185,5 +183,5 @@ export function DraftsListDialog({
         contentContainerStyle={[a.pb_xl]}
       />
     </Dialog.Outer>
-  )
+  );
 }

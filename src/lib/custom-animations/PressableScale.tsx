@@ -12,9 +12,9 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from '#/lib/animations/reanimatedCompat'
-import {IS_NATIVE, IS_WEB_TOUCH_DEVICE} from '#/env'
+import { IS_WEB_TOUCH_DEVICE } from '#/env';
 
-const DEFAULT_TARGET_SCALE = IS_NATIVE || IS_WEB_TOUCH_DEVICE ? 0.98 : 1
+const DEFAULT_TARGET_SCALE = IS_WEB_TOUCH_DEVICE ? 0.98 : 1
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 

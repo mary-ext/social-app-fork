@@ -48,12 +48,11 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
+import { atoms as a, useBreakpoints } from '#/alf';
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
-import {IS_NATIVE} from '#/env'
 
-const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
+const PARENT_CHUNK_SIZE = 20
 const CHILDREN_CHUNK_SIZE = 50
 
 export function PostThread({uri}: {uri: string}) {
@@ -181,7 +180,7 @@ export function PostThread({uri}: {uri: string}) {
    * The result being: any intentional change in view by the user will result
    * in the anchor being pinned as the first item.
    */
-  const onContentSizeChangeWebOnly = web(() => {
+  const onContentSizeChangeWebOnly = () => {
     const list = listRef.current
     const anchor = anchorRef.current as any as Element
     const header = headerRef.current as any as Element
@@ -234,43 +233,12 @@ export function PostThread({uri}: {uri: string}) {
        */
       if (offset > 0 || isRoot) shouldHandleScroll.current = false
     }
-  })
+  }
 
   /**
    * Ditto the above, but for native.
    */
-  const onContentSizeChangeNativeOnly = native(() => {
-    const list = listRef.current
-    const anchor = anchorRef.current
-
-    if (list && anchor && shouldHandleScroll.current) {
-      /*
-       * `prepareForParamsUpdate` is called any time the user changes thread params like
-       * `view` or `sort`, which sets `deferParents(true)` and resets the
-       * scroll to the top of the list. However, there is a split second
-       * where the top of the list is wherever the parents _just were_. So if
-       * there were parents, the anchor is not at the top of the list just
-       * prior to this handler being called.
-       *
-       * Once this handler is called, the anchor post is the first item in
-       * the list (because of `deferParents` being `true`), and so we can
-       * synchronously scroll the list back to the top of the list (which is
-       * 0 on native, no need to handle `headerHeight`).
-       */
-      list.scrollToOffset({
-        animated: false,
-        offset: 0,
-      })
-
-      /*
-       * After this first pass, `deferParents` will be `false`, and those
-       * will render in. However, the anchor post will retain its position
-       * because of `maintainVisibleContentPosition` handling on native. So we
-       * don't need to let this handler run again, like we do on web.
-       */
-      shouldHandleScroll.current = false
-    }
-  })
+  const onContentSizeChangeNativeOnly = undefined as any
 
   /**
    * Called any time the user changes thread params, such as `view` or `sort`.
@@ -454,7 +422,7 @@ export function PostThread({uri}: {uri: string}) {
                 postSource={anchorPostSource}
               />
             </View>
-          )
+          );
         } else {
           if (thread.state.view === 'tree') {
             return (
@@ -553,7 +521,6 @@ export function PostThread({uri}: {uri: string}) {
           />
         </Layout.Header.Slot>
       </Layout.Header.Outer>
-
       {thread.state.error ? (
         <ThreadError
           error={thread.state.error}
@@ -565,10 +532,7 @@ export function PostThread({uri}: {uri: string}) {
           data={deferredSlices}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          onContentSizeChange={platform({
-            web: onContentSizeChangeWebOnly,
-            default: onContentSizeChangeNativeOnly,
-          })}
+          onContentSizeChange={onContentSizeChangeWebOnly}
           onStartReached={onStartReached}
           onEndReached={onEndReached}
           onEndReachedThreshold={4}
@@ -597,12 +561,7 @@ export function PostThread({uri}: {uri: string}) {
                * that there's enough scroll remaining to get the anchor post
                * back to the top of the screen when handling scroll.
                */
-              height={platform({
-                web: defaultListFooterHeight,
-                default: deferParents
-                  ? windowHeight * 2
-                  : defaultListFooterHeight,
-              })}
+              height={defaultListFooterHeight}
               style={isTombstoneView ? {borderTopWidth: 0} : undefined}
             />
           }
@@ -623,12 +582,11 @@ export function PostThread({uri}: {uri: string}) {
           updateCellsBatchingPeriod={100}
         />
       )}
-
       {!gtMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
     </PostThreadContextProvider>
-  )
+  );
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {

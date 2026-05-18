@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {Logomark} from '#/view/icons/Logomark'
-import {atoms as a, platform, useGutters, useTheme} from '#/alf'
+import { atoms as a, useGutters, useTheme } from '#/alf';
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {
@@ -12,7 +12,6 @@ import {
   Header,
   HEADER_SLOT_SIZE,
 } from '#/components/Layout'
-import {IS_WEB} from '#/env'
 import {AuthLayoutNavigationContext} from '../context'
 
 /**
@@ -33,23 +32,20 @@ export function Outer({children}: {children: React.ReactNode}) {
         a.align_center,
         a.gap_sm,
         gutters,
-        platform({
-          native: [a.pb_xs, {minHeight: 48}],
-          web: [a.py_xs, {minHeight: 52}],
-        }),
+        [a.py_xs, {minHeight: 52}],
         t.atoms.border_contrast_low,
       ]}>
       {children}
     </View>
-  )
+  );
 }
 
 export function Content({children}: {children?: React.ReactNode}) {
   return (
     <View style={[a.flex_1, a.justify_center, {minHeight: HEADER_SLOT_SIZE}]}>
-      {IS_WEB ? children : <Logo />}
+      {children}
     </View>
-  )
+  );
 }
 
 export function Logo() {

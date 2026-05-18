@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import Animated, {
   FadeInUp,
@@ -14,7 +13,7 @@ import {
 } from '#/lib/routes/types'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
-import {type Alf, atoms as a, native, useAlf, useTheme} from '#/alf'
+import { type Alf, atoms as a, useAlf, useTheme } from '#/alf';
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
@@ -23,7 +22,7 @@ import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/T
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {IS_INTERNAL, IS_NATIVE} from '#/env'
+import { IS_INTERNAL } from '#/env';
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
@@ -99,8 +98,8 @@ export function AppearanceSettingsScreen({}: Props) {
 
             {colorMode !== 'light' && (
               <Animated.View
-                entering={native(FadeInUp)}
-                exiting={native(FadeOutUp)}>
+                entering={undefined as any}
+                exiting={undefined as any}>
                 <AppearanceToggleButtonGroup
                   title={l`Dark theme`}
                   icon={MoonIcon}
@@ -120,9 +119,8 @@ export function AppearanceSettingsScreen({}: Props) {
               </Animated.View>
             )}
 
-            <Animated.View layout={native(LinearTransition)}>
+            <Animated.View layout={undefined as any}>
               <SettingsList.Divider />
-
               <AppearanceToggleButtonGroup
                 title={l`Font`}
                 description={l`For the best experience, we recommend using the theme font.`}
@@ -140,7 +138,6 @@ export function AppearanceSettingsScreen({}: Props) {
                 value={fonts.family}
                 onChange={onChangeFontFamily}
               />
-
               <AppearanceToggleButtonGroup
                 title={l`Font size`}
                 icon={TextSize}
@@ -162,18 +159,12 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              {IS_NATIVE && IS_INTERNAL && (
-                <>
-                  <SettingsList.Divider />
-                  <AppIconSettingsListItem />
-                </>
-              )}
             </Animated.View>
           </SettingsList.Container>
         </Layout.Content>
       </Layout.Screen>
     </LayoutAnimationConfig>
-  )
+  );
 }
 
 export function AppearanceToggleButtonGroup<T extends string>({

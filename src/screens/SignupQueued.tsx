@@ -3,18 +3,16 @@ import {Modal, ScrollView, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
-import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
 
@@ -99,17 +97,15 @@ export function SignupQueued() {
     </Button>
   )
 
-  const webLayout = IS_WEB && gtMobile
+  const webLayout = gtMobile
 
   return (
     <Modal
       visible
-      animationType={native('slide')}
+      animationType={undefined as any}
       presentationStyle="formSheet"
-      style={[web(a.util_screen_outer)]}>
-      {IS_IOS && !IS_LIQUID_GLASS && (
-        <SystemBars style={{statusBar: 'light'}} />
-      )}
+      style={[a.util_screen_outer]}>
+
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
@@ -187,7 +183,6 @@ export function SignupQueued() {
           </View>
         </View>
       </ScrollView>
-
       {!webLayout && (
         <View
           style={[
@@ -203,7 +198,7 @@ export function SignupQueued() {
         </View>
       )}
     </Modal>
-  )
+  );
 }
 
 function msToString(ms: number | undefined): string | undefined {

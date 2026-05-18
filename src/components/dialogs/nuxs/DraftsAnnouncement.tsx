@@ -1,28 +1,20 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
-import {IS_E2E, IS_NATIVE, IS_WEB} from '#/env'
+import { IS_E2E } from '#/env';
 import {Image} from '#/shims/image'
 import {LinearGradient} from '#/shims/linear-gradient'
 import {createIsEnabledCheck, isExistingUserAsOf} from './utils'
 
 export const enabled = createIsEnabledCheck(props => {
-  return (
-    !IS_E2E &&
-    IS_NATIVE &&
-    isExistingUserAsOf(
-      '2026-02-05T00:00:00.000Z',
-      props.currentProfile.createdAt,
-    )
-  )
+  return false;
 })
 
 export function DraftsAnnouncement() {
@@ -45,7 +37,7 @@ export function DraftsAnnouncement() {
       <Dialog.Handle fill={t.palette.primary_400} />
       <Dialog.ScrollableInner
         label={l`Introducing drafts`}
-        style={[web({maxWidth: 440})]}
+        style={[{maxWidth: 440} as any]}
         contentContainerStyle={[
           {
             paddingTop: 0,
@@ -58,7 +50,7 @@ export function DraftsAnnouncement() {
             a.align_center,
             a.overflow_hidden,
             {
-              paddingTop: IS_WEB ? 24 : 40,
+              paddingTop: 24,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -108,7 +100,7 @@ export function DraftsAnnouncement() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: IS_WEB ? 28 : 32,
+                  fontSize: 28,
                   maxWidth: 300,
                 },
               ]}>
@@ -130,22 +122,10 @@ export function DraftsAnnouncement() {
             </Text>
           </View>
 
-          {!IS_WEB && (
-            <Button
-              label={l`Close`}
-              size="large"
-              color="primary"
-              onPress={() => control.close()}
-              style={[a.w_full]}>
-              <ButtonText>
-                <Trans>Finally!</Trans>
-              </ButtonText>
-            </Button>
-          )}
         </View>
 
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

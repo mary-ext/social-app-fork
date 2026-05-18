@@ -4,8 +4,7 @@ import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -14,7 +13,7 @@ import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a, ios, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -24,7 +23,6 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -196,7 +194,7 @@ export const LoginForm = ({
               inputRef={identifierRef}
               label={l`Username or email address`}
               autoCapitalize="none"
-              autoFocus={!IS_IOS}
+              autoFocus={true}
               autoCorrect={false}
               autoComplete="username"
               returnKeyType="next"
@@ -236,16 +234,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
               accessibilityHint={l`Enter your password`}
-              onLayout={ios(() => {
-                if (hasFocusedOnce.current) return
-                hasFocusedOnce.current = true
-                // kinda dumb, but if we use `autoFocus` to focus
-                // the username input, it happens before the password
-                // input gets rendered. this breaks the password autofill
-                // on iOS (it only does the username part). delaying
-                // it until both inputs are rendered fixes the autofill -sfn
-                identifierRef.current?.focus()
-              })}
+              onLayout={undefined as any}
             />
             <Button
               testID="forgotPasswordButton"
@@ -304,18 +293,16 @@ export const LoginForm = ({
         </View>
       )}
       <FormError error={error} />
-      <View style={[a.pt_md, web([a.justify_between, a.flex_row])]}>
-        {IS_WEB && (
-          <Button
-            label={l`Back`}
-            color="secondary"
-            size="large"
-            onPress={onPressBack}>
-            <ButtonText>
-              <Trans>Back</Trans>
-            </ButtonText>
-          </Button>
-        )}
+      <View style={[a.pt_md, [a.justify_between, a.flex_row] as any]}>
+        {(<Button
+          label={l`Back`}
+          color="secondary"
+          size="large"
+          onPress={onPressBack}>
+          <ButtonText>
+            <Trans>Back</Trans>
+          </ButtonText>
+        </Button>)}
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
@@ -353,5 +340,5 @@ export const LoginForm = ({
         )}
       </View>
     </FormContainer>
-  )
+  );
 }

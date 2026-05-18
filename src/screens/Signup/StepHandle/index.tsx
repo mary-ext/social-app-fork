@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 
 import Animated, {
   FadeIn,
@@ -20,7 +19,7 @@ import {
   useHandleAvailabilityQuery,
 } from '#/state/queries/handle-availability'
 import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a, native, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
@@ -227,7 +226,7 @@ export function StepHandle() {
           </View>
         </LayoutAnimationConfig>
       </View>
-      <Animated.View layout={native(LinearTransition)}>
+      <Animated.View layout={undefined as any}>
         <BackNextButtons
           isLoading={isNextLoading}
           isNextDisabled={isNextDisabled}
@@ -236,19 +235,19 @@ export function StepHandle() {
         />
       </Animated.View>
     </>
-  )
+  );
 }
 
 function Requirement({children}: {children: React.ReactNode}) {
   return (
     <Animated.View
       style={[a.w_full]}
-      layout={native(LinearTransition)}
-      entering={native(FadeIn)}
-      exiting={native(FadeOut)}>
+      layout={undefined as any}
+      entering={undefined as any}
+      exiting={undefined as any}>
       {children}
     </Animated.View>
-  )
+  );
 }
 
 function RequirementText({children}: {children: React.ReactNode}) {

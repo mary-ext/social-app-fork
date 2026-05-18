@@ -8,8 +8,7 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -73,7 +72,6 @@ import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 import * as bsky from '#/types/bsky'
 
@@ -619,19 +617,15 @@ function OverflowMenu({
               <Menu.Group>
                 <Menu.Item
                   label={
-                    IS_WEB ? l`Copy link to starter pack` : l`Share via...`
+                    l`Copy link to starter pack`
                   }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
                   <Menu.ItemText>
-                    {IS_WEB ? (
-                      <Trans>Copy link</Trans>
-                    ) : (
-                      <Trans>Share via...</Trans>
-                    )}
+                    {(<Trans>Copy link</Trans>)}
                   </Menu.ItemText>
                   <Menu.ItemIcon
-                    icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                    icon={ChainLinkIcon}
                     position="right"
                   />
                 </Menu.Item>
@@ -706,7 +700,7 @@ function OverflowMenu({
         starterPack={starterPack}
       />
     </>
-  )
+  );
 }
 
 function InvalidStarterPack({rkey}: {rkey: string}) {

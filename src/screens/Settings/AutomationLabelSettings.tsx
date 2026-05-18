@@ -13,7 +13,7 @@ import {
 import {postThreadQueryKeyRoot} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {BotBadge} from '#/components/BotBadge'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bot_Filled as RobotIcon} from '#/components/icons/Bot'
@@ -141,7 +141,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
                         size="sm"
                       />
                     )}
-                    <View style={{top: platform({ios: -1})}}>
+                    <View style={{top: undefined}}>
                       <BotBadge profile={profile} alwaysShow width={17} />
                     </View>
                   </View>
@@ -195,5 +195,5 @@ export function AutomationLabelSettingsScreen({}: Props) {
         </View>
       </Layout.Content>
     </Layout.Screen>
-  )
+  );
 }

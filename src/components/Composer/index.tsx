@@ -17,13 +17,7 @@ import {
   type TapperFacet,
   useTapper,
 } from '#/lib/tapper'
-import {
-  atoms as a,
-  type TextStyleProp,
-  useAlf,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+import { atoms as a, type TextStyleProp, useAlf, type ViewStyleProp } from '#/alf';
 import {normalizeTextStyles} from '#/alf/typography'
 import {
   Autocomplete as AutocompleteBase,
@@ -37,7 +31,7 @@ import {
   type AutosizedTextareaProps,
 } from '#/components/forms/AutosizedTextarea'
 import {Span, Text} from '#/components/Typography'
-import {IS_IOS, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
+import { IS_WEB_TOUCH_DEVICE } from '#/env';
 
 export type SubmitRequest =
   | {
@@ -116,7 +110,7 @@ export function Composer({
   onRequestSubmit,
   autocompletePlacement,
   defaultValue,
-  disableEmojiFacets = !IS_WEB,
+  disableEmojiFacets = false,
   ...rest
 }: ComposerProps) {
   const {theme: t, fonts} = useAlf()
@@ -137,7 +131,7 @@ export function Composer({
   const sift = useSift({
     offset: a.p_sm.padding,
     placement: autocompletePlacement,
-    dynamicWidth: IS_WEB,
+    dynamicWidth: true,
   })
 
   /*
@@ -224,18 +218,6 @@ export function Composer({
         flags: {},
       },
     )
-    /**
-     * On iOS, having a lineHeight on the Text component causes the text to be
-     * vertically misaligned with the TextInput.
-     *
-     * This only seems to be an issue on iOS, and not on Android or web. It's
-     * possible that this is a bug in React Native's Text component on iOS,
-     * but in the meantime, we'll just remove the lineHeight on iOS to ensure
-     * the text is properly aligned.
-     */
-    if (IS_IOS) {
-      delete ts.lineHeight
-    }
     return ts
   }, [contentTextStyle, fonts])
 
@@ -273,7 +255,7 @@ export function Composer({
   }
 
   const textContent = (
-    <Text style={[textStyle, web({whiteSpace: 'pre-wrap'})]}>
+    <Text style={[textStyle, {whiteSpace: 'pre-wrap'} as any]}>
       {tapper.state.nodes.map((node, i) => {
         switch (node.type) {
           case 'text':
@@ -283,7 +265,7 @@ export function Composer({
             return (
               <Span
                 key={i}
-                ref={IS_WEB ? sift.refs.setAnchor : undefined}
+                ref={sift.refs.setAnchor}
                 style={
                   node.type === 'facet' && {
                     color: t.palette.primary_500,
@@ -291,7 +273,7 @@ export function Composer({
                 }>
                 {node.raw}
               </Span>
-            )
+            );
         }
       })}
     </Text>
@@ -300,26 +282,24 @@ export function Composer({
   return (
     <>
       <View style={[a.relative, outerStyle]}>
-        {IS_WEB && (
-          <View
-            pointerEvents="none"
-            style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}
-            ref={node => {
-              if (IS_WEB && node) {
-                // @ts-ignore web only a11y
-                node.setAttribute('inert', '')
-              }
-            }}>
-            <Animated.View
-              style={[
-                contentPaddingStyle,
-                {position: 'absolute', left: 0, right: 0},
-                previewScrollStyle,
-              ]}>
-              {textContent}
-            </Animated.View>
-          </View>
-        )}
+        {(<View
+          pointerEvents="none"
+          style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}
+          ref={node => {
+            if (node) {
+              // @ts-ignore web only a11y
+              node.setAttribute('inert', '')
+            }
+          }}>
+          <Animated.View
+            style={[
+              contentPaddingStyle,
+              {position: 'absolute', left: 0, right: 0},
+              previewScrollStyle,
+            ]}>
+            {textContent}
+          </Animated.View>
+        </View>)}
         <AutosizedTextarea
           placeholderTextColor={t.palette.contrast_500}
           accessibilityLabel={label}
@@ -335,12 +315,12 @@ export function Composer({
               color: 'transparent',
               background: 'transparent',
             },
-            web({
+            {
               caretColor: textStyle.color ?? 'black',
               overscrollBehavior: 'none',
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_200} transparent`,
-            }),
+            } as any,
           ]}
           {...rest}
           {...tapper.inputProps}
@@ -350,13 +330,9 @@ export function Composer({
             rest.onBlur?.(e)
             setActiveFacet(null)
           }}
-          onKeyPress={IS_WEB ? onKeyPressWeb : undefined}
+          onKeyPress={onKeyPressWeb}
           onScroll={e => {
-            if (IS_WEB) {
-              inputScrollSharedValue.value = (e.target as any).scrollTop
-            } else {
-              inputScrollSharedValue.value = e.nativeEvent.contentOffset.y
-            }
+            inputScrollSharedValue.value = (e.target as any).scrollTop
           }}
           // @ts-ignore web only
           onCompositionStart={() => {
@@ -367,10 +343,9 @@ export function Composer({
             isComposing.current = false
           }}
           onUpdateHeight={updateAutocompletePosition}>
-          {IS_WEB ? null : textContent}
+          {null}
         </AutosizedTextarea>
       </View>
-
       {activeFacet && activeFacet.type !== 'url' && (
         <AutocompleteInner
           inverted={autocompletePlacement?.startsWith('top')}
@@ -380,7 +355,7 @@ export function Composer({
         />
       )}
     </>
-  )
+  );
 }
 
 /*

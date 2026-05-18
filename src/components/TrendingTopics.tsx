@@ -10,7 +10,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -144,11 +144,11 @@ export function TrendingTopicLink({
     <InternalLink
       label={topic.label}
       to={topic.url}
-      PressableComponent={native(PressableScale)}
+      PressableComponent={undefined as any}
       {...rest}>
       {children}
     </InternalLink>
-  )
+  );
 }
 
 type ParsedTrendingTopic =

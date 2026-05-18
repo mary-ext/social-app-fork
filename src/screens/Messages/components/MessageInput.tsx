@@ -18,11 +18,10 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import {GlassContainer} from '#/shims/glass-effect'
 import {
   useFocusedInputHandler,
@@ -82,16 +81,11 @@ export function MessageInput({
     playHaptic()
     setEmbed(undefined)
     setMessage('')
-    if (IS_IOS) {
-      setShouldEnforceClear(true)
-    }
-    if (IS_WEB) {
-      // Pressing the send button causes the text input to lose focus, so we need to
-      // re-focus it after sending
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 100)
-    }
+    // Pressing the send button causes the text input to lose focus, so we need to
+    // re-focus it after sending
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 100)
 
     requestAnimationFrame(() => {
       void onSendMessage(message)
@@ -140,11 +134,7 @@ export function MessageInput({
 
   useKeyboardHandler({
     onEnd: evt => {
-      'worklet'
-      // small hack: interactive dismiss on Android sometimes doesn't blur the input
-      if (IS_ANDROID && evt.progress === 0) {
-        runOnJS(blur)()
-      }
+      'worklet';
     },
   })
 
@@ -168,16 +158,6 @@ export function MessageInput({
             placeholderTextColor={t.palette.contrast_500}
             value={message}
             onChange={evt => {
-              // bit of a hack: iOS automatically accepts autocomplete suggestions when you tap anywhere on the screen
-              // including the button we just pressed - and this overrides clearing the input! so we watch for the
-              // next change and double make sure the input is cleared. It should *always* send an onChange event after
-              // clearing via setMessage('') that happens in onSubmit()
-              // -sfn
-              if (IS_IOS && shouldEnforceClear) {
-                setShouldEnforceClear(false)
-                setMessage('')
-                return
-              }
               const text = evt.nativeEvent.text
               setMessage(text)
             }}
@@ -189,10 +169,7 @@ export function MessageInput({
               a.text_md,
               a.px_lg,
               t.atoms.text,
-              platform({
-                android: {paddingTop: 2, paddingBottom: 3},
-                ios: {paddingTop: 10, paddingBottom: 5},
-              }),
+              undefined,
               animatedStyle,
             ]}
             verticalAlign="middle"
@@ -240,5 +217,5 @@ export function MessageInput({
         </GlassView>
       </GlassContainer>
     </ComposerContainer>
-  )
+  );
 }

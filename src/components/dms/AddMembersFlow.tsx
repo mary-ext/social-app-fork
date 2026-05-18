@@ -15,7 +15,7 @@ import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-memb
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import {android, atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged, type ConvoWithDetails} from '#/components/dms/util'
@@ -24,7 +24,6 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/i
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
 import {EmptyMemberList} from './components/EmptyMemberList'
@@ -293,11 +292,9 @@ export function AddMembersFlow({
   )
 
   useLayoutEffect(() => {
-    if (IS_WEB) {
-      setTimeout(() => {
-        inputRef?.current?.focus()
-      }, 0)
-    }
+    setTimeout(() => {
+      inputRef?.current?.focus()
+    }, 0)
   }, [])
 
   let buttonLabel = l`Continue to group name`
@@ -313,12 +310,9 @@ export function AddMembersFlow({
         <View
           style={[
             a.relative,
-            web(a.pt_lg),
-            native(a.pt_4xl),
-            android({
-              borderTopLeftRadius: a.rounded_md.borderRadius,
-              borderTopRightRadius: a.rounded_md.borderRadius,
-            }),
+            a.pt_lg,
+            undefined as any,
+            undefined as any,
             a.px_lg,
             a.border_b,
             t.atoms.border_contrast_low,
@@ -331,20 +325,9 @@ export function AddMembersFlow({
               a.relative,
               a.align_center,
               a.justify_between,
-              web(a.pb_lg),
+              a.pb_lg,
             ]}>
-            {IS_NATIVE ? (
-              <Button
-                label={l`Back`}
-                size="large"
-                shape="round"
-                variant="ghost"
-                color="secondary"
-                style={[native([a.absolute, a.z_20])]}
-                onPress={handlePressBack}>
-                <ButtonIcon icon={ArrowLeftIcon} size="lg" />
-              </Button>
-            ) : null}
+            {null}
             <Text
               style={[
                 a.flex_grow,
@@ -358,40 +341,18 @@ export function AddMembersFlow({
               ]}>
               {title}
             </Text>
-            {IS_WEB ? (
-              <Button
-                label={l`Close`}
-                size="small"
-                shape="round"
-                variant="ghost"
-                color="secondary"
-                style={[a.absolute, a.z_20, {right: -4}]}
-                onPress={() => control.close()}>
-                <ButtonIcon icon={XIcon} size="lg" />
-              </Button>
-            ) : showButton ? (
-              <Button
-                label={buttonLabel}
-                size="small"
-                color="primary"
-                style={[
-                  native([
-                    a.absolute,
-                    a.z_20,
-                    {
-                      right: 8,
-                    },
-                  ]),
-                ]}
-                disabled={isButtonDisabled}
-                onPress={handlePressAdd}>
-                <ButtonText>
-                  <Trans>Add</Trans>
-                </ButtonText>
-              </Button>
-            ) : null}
+            {(<Button
+              label={l`Close`}
+              size="small"
+              shape="round"
+              variant="ghost"
+              color="secondary"
+              style={[a.absolute, a.z_20, {right: -4}]}
+              onPress={() => control.close()}>
+              <ButtonIcon icon={XIcon} size="lg" />
+            </Button>)}
           </View>
-          <View style={[web(a.pt_xs), native(a.pt_md)]}>
+          <View style={[a.pt_xs, undefined as any]}>
             <UserSearchInput
               inputRef={inputRef}
               value={searchText}
@@ -468,7 +429,7 @@ export function AddMembersFlow({
       onChange={setGroupChatMembers}
       type="checkbox"
       label={l`Add group chat members`}
-      style={web([a.contents])}>
+      style={[a.contents] as any}>
       <Dialog.InnerFlatList
         ref={listRef}
         data={items}
@@ -484,8 +445,8 @@ export function AddMembersFlow({
         }
         keyExtractor={(item: Item) => item.key}
         style={[
-          web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-          native({height: '100%'}),
+          [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
+          undefined as any,
         ]}
         contentContainerStyle={items.length === 0 ? {flexGrow: 1} : undefined}
         webInnerContentContainerStyle={[
@@ -497,33 +458,31 @@ export function AddMembersFlow({
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         keyboardDismissMode="on-drag"
         footer={
-          IS_WEB ? (
-            <Dialog.FlatListFooter
-              onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
-              <View style={[a.flex_row, a.align_center, a.justify_between]}>
-                <Button
-                  label={l`Back`}
-                  size="small"
-                  color="secondary"
-                  onPress={handlePressBack}>
-                  <ButtonIcon icon={ArrowLeftIcon} size="md" />
-                  <ButtonText>
-                    <Trans>Back</Trans>
-                  </ButtonText>
-                </Button>
-                <Button
-                  label={buttonLabel}
-                  size="small"
-                  color="primary"
-                  disabled={isButtonDisabled}
-                  onPress={handlePressAdd}>
-                  <ButtonText>{buttonText} </ButtonText>
-                </Button>
-              </View>
-            </Dialog.FlatListFooter>
-          ) : null
+          (<Dialog.FlatListFooter
+            onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
+            <View style={[a.flex_row, a.align_center, a.justify_between]}>
+              <Button
+                label={l`Back`}
+                size="small"
+                color="secondary"
+                onPress={handlePressBack}>
+                <ButtonIcon icon={ArrowLeftIcon} size="md" />
+                <ButtonText>
+                  <Trans>Back</Trans>
+                </ButtonText>
+              </Button>
+              <Button
+                label={buttonLabel}
+                size="small"
+                color="primary"
+                disabled={isButtonDisabled}
+                onPress={handlePressAdd}>
+                <ButtonText>{buttonText} </ButtonText>
+              </Button>
+            </View>
+          </Dialog.FlatListFooter>)
         }
       />
     </Toggle.Group>
-  )
+  );
 }

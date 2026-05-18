@@ -2,8 +2,7 @@ import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
@@ -16,7 +15,6 @@ import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
 import * as Toast from '#/components/Toast'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import {requestMediaLibraryPermissionsAsync} from '#/shims/image-picker'
 import {createAssetAsync} from '#/shims/media-library'
 import * as Sharing from '#/shims/sharing'
@@ -56,57 +54,33 @@ export function QrCodeDialog({
 
   const onSavePress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
-      if (IS_NATIVE) {
-        const res = await requestMediaLibraryPermissionsAsync()
+      setIsSaveProcessing(true)
 
-        if (!res.granted) {
-          Toast.show(
-            l`You must grant access to your photo library to save a QR code`,
-          )
-          return
-        }
-
-        // Incase of a FS failure, don't crash the app
-        try {
-          await createAssetAsync(`file://${uri}`)
-        } catch (e: unknown) {
-          Toast.show(l`An error occurred while saving the QR code!`, {
-            type: 'error',
-          })
-          logger.error('Failed to save QR code', {error: e})
-          return
-        }
-      } else {
-        setIsSaveProcessing(true)
-
-        if (
-          !bsky.validate(
-            starterPack.record,
-            AppBskyGraphStarterpack.validateRecord,
-          )
-        ) {
-          return
-        }
-
-        const canvas = await getCanvas(uri)
-        const imgHref = canvas
-          .toDataURL('image/png')
-          .replace('image/png', 'image/octet-stream')
-
-        const link = document.createElement('a')
-        link.setAttribute(
-          'download',
-          `${starterPack.record.name.replaceAll(' ', '_')}_Share_Card.png`,
+      if (
+        !bsky.validate(
+          starterPack.record,
+          AppBskyGraphStarterpack.validateRecord,
         )
-        link.setAttribute('href', imgHref)
-        link.click()
+      ) {
+        return
       }
+
+      const canvas = await getCanvas(uri)
+      const imgHref = canvas
+        .toDataURL('image/png')
+        .replace('image/png', 'image/octet-stream')
+
+      const link = document.createElement('a')
+      link.setAttribute(
+        'download',
+        `${starterPack.record.name.replaceAll(' ', '_')}_Share_Card.png`,
+      )
+      link.setAttribute('href', imgHref)
+      link.click()
 
       setIsSaveProcessing(false)
       Toast.show(
-        IS_WEB
-          ? l`QR code has been downloaded!`
-          : l`QR code saved to your camera roll!`,
+        l`QR code has been downloaded!`,
       )
       control.close()
     })
@@ -159,18 +133,16 @@ export function QrCodeDialog({
                     label={l`Copy QR code`}
                     color="primary_subtle"
                     size="large"
-                    onPress={IS_WEB ? onCopyPress : onSharePress}>
+                    onPress={onCopyPress}>
                     <ButtonIcon
                       icon={
                         isCopyProcessing
                           ? Loader
-                          : IS_WEB
-                            ? ChainLinkIcon
-                            : ShareIcon
+                          : ChainLinkIcon
                       }
                     />
                     <ButtonText>
-                      {IS_WEB ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                      {<Trans>Copy</Trans>}
                     </ButtonText>
                   </Button>
                   <Button
@@ -193,7 +165,7 @@ export function QrCodeDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }
 
 function Loading() {

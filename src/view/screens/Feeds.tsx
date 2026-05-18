@@ -1,8 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -43,7 +42,6 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import * as ListCard from '#/components/ListCard'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -377,23 +375,15 @@ export function FeedsScreen(_props: Props) {
   const onChangeSearchFocus = useCallback(
     (focus: boolean) => {
       if (focus && searchBarIndex > -1) {
-        if (IS_NATIVE) {
-          // scrollToIndex scrolls the exact right amount, so use if available
-          listRef.current?.scrollToIndex({
-            index: searchBarIndex,
-            animated: true,
-          })
-        } else {
-          // web implementation only supports scrollToOffset
-          // thus, we calculate the offset based on the index
-          // pixel values are estimates, I wasn't able to get it pixel perfect :(
-          const headerHeight = isMobile ? 43 : 53
-          const feedItemHeight = isMobile ? 49 : 58
-          listRef.current?.scrollToOffset({
-            offset: searchBarIndex * feedItemHeight - headerHeight,
-            animated: true,
-          })
-        }
+        // web implementation only supports scrollToOffset
+        // thus, we calculate the offset based on the index
+        // pixel values are estimates, I wasn't able to get it pixel perfect :(
+        const headerHeight = isMobile ? 43 : 53
+        const feedItemHeight = isMobile ? 49 : 58
+        listRef.current?.scrollToOffset({
+          offset: searchBarIndex * feedItemHeight - headerHeight,
+          animated: true,
+        })
       }
     },
     [searchBarIndex, isMobile],
@@ -672,18 +662,10 @@ function FeedsSavedHeader() {
   return (
     <View
       style={
-        IS_WEB
-          ? [
+        [
               a.flex_row,
               a.px_md,
               a.py_lg,
-              a.gap_md,
-              a.border_b,
-              t.atoms.border_contrast_low,
-            ]
-          : [
-              {flexDirection: 'row-reverse'},
-              a.p_lg,
               a.gap_md,
               a.border_b,
               t.atoms.border_contrast_low,
@@ -699,7 +681,7 @@ function FeedsSavedHeader() {
         </Text>
       </View>
     </View>
-  )
+  );
 }
 
 function FeedsAboutHeader() {
@@ -708,9 +690,7 @@ function FeedsAboutHeader() {
   return (
     <View
       style={
-        IS_WEB
-          ? [a.flex_row, a.px_md, a.pt_lg, a.pb_lg, a.gap_md]
-          : [{flexDirection: 'row-reverse'}, a.p_lg, a.gap_md]
+        [a.flex_row, a.px_md, a.pt_lg, a.pb_lg, a.gap_md]
       }>
       <IconCircle
         icon={ListMagnifyingGlass_Stroke2_Corner0_Rounded}
@@ -728,7 +708,7 @@ function FeedsAboutHeader() {
         </Text>
       </View>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

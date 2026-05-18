@@ -2,8 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -21,7 +20,6 @@ import * as TextField from '#/components/forms/TextField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 
 const COL_WIDTH = 400
@@ -118,7 +116,7 @@ export function Takendown() {
     </Button>
   )
 
-  const webLayout = IS_WEB && gtMobile
+  const webLayout = gtMobile
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>

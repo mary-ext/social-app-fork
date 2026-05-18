@@ -5,8 +5,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -51,7 +50,7 @@ import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCar
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -346,18 +345,18 @@ export function Explore({
 
   const topBorder = useMemo(
     () =>
-      ({
+      (({
         type: 'topBorder',
         key: 'top-border',
-      }) as const,
+      }) as const),
     [],
   )
   const trendingTopicsModule = useMemo(
     () =>
-      ({
+      (({
         type: 'trendingTopics',
         key: 'trending-topics',
-      }) as const,
+      }) as const),
     [],
   )
   const suggestedFollowsModule = useMemo(() => {
@@ -1097,7 +1096,7 @@ export function Explore({
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      stickyHeaderIndices={native(stickyHeaderIndices)}
+      stickyHeaderIndices={undefined as any}
       viewabilityConfig={viewabilityConfig}
       onItemSeen={onItemSeen}
       onEndReached={handleOnEndReached}
@@ -1112,7 +1111,7 @@ export function Explore({
       /**
        * Default: 21
        */
-      windowSize={platform({android: 11})}
+      windowSize={undefined}
       /**
        * Default: 10
        *
@@ -1127,7 +1126,7 @@ export function Explore({
        * Trades off seeing more blank space due to it having to render more items before it can show anything.
        * -sfn
        */
-      maxToRenderPerBatch={platform({android: 10, ios: 20})}
+      maxToRenderPerBatch={undefined}
       /**
        * Default: 50
        *
@@ -1138,7 +1137,7 @@ export function Explore({
       refreshing={isPTR}
       onRefresh={handleOnRefresh}
     />
-  )
+  );
 }
 
 function keyExtractor(item: FeedPreviewItem) {

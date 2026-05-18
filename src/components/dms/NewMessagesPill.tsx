@@ -15,7 +15,6 @@ import {
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon} from '#/components/icons/Arrow'
-import {IS_WEB} from '#/env'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -31,13 +30,11 @@ export function NewMessagesPill({
   const scale = useSharedValue(1)
 
   const onPressIn = useCallback(() => {
-    if (IS_WEB) return
-    scale.set(() => withTiming(1.075, {duration: 100}))
+    return
   }, [scale])
 
   const onPressOut = useCallback(() => {
-    if (IS_WEB) return
-    scale.set(() => withTiming(1, {duration: 100}))
+    return
   }, [scale])
 
   const onPress = useCallback(() => {

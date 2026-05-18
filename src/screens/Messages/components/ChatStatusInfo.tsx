@@ -9,7 +9,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type ActiveConvoStates} from '#/state/messages/convo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {usePromptControl} from '#/components/Prompt'
@@ -139,10 +139,10 @@ function InviterHeader({
         <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
           <Trans>{displayName} added you</Trans>
         </Text>
-        <Text style={[web(a.pt_xs), a.text_sm, t.atoms.text_contrast_high]}>
+        <Text style={[a.pt_xs, a.text_sm, t.atoms.text_contrast_high]}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
       </View>
     </View>
-  )
+  );
 }

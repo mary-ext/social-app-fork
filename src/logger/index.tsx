@@ -71,7 +71,7 @@ export class Logger {
     this.debugContextRegexes = (this.contextFilter || '')
       .split(',')
       .map(filter => {
-        return new RegExp(filter.replace(/[^\w:*-]/, '').replace(/\*/g, '.*'))
+        return new RegExp(filter.replace(/[^\w:*-]/, '').replace(/\*/g, '.*'));
       })
   }
 

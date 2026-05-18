@@ -22,7 +22,6 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {colors, s} from '#/lib/styles'
-import {IS_ANDROID} from '#/env'
 import {Text} from './text/Text'
 import {FlatList_INTERNAL} from './Views'
 
@@ -125,7 +124,7 @@ export const ViewSelector = forwardRef<
       renderItem={renderItemInternal}
       ListFooterComponent={ListFooterComponent}
       // NOTE sticky header disabled on android due to major performance issues -prf
-      stickyHeaderIndices={IS_ANDROID ? undefined : STICKY_HEADER_INDICES}
+      stickyHeaderIndices={STICKY_HEADER_INDICES}
       onScroll={onScroll}
       onEndReached={onEndReached}
       refreshControl={
@@ -140,7 +139,7 @@ export const ViewSelector = forwardRef<
       removeClippedSubviews={true}
       scrollIndicatorInsets={{right: 1}} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/bluesky-social/social-app/pull/464
     />
-  )
+  );
 })
 
 export function Selector({

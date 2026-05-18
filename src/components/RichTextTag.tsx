@@ -1,7 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -21,7 +20,6 @@ import {
 } from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function RichTextTag({
   tag,
@@ -50,9 +48,7 @@ export function RichTextTag({
   const navigation = useNavigation<NavigationProp>()
   const isCashtag = tag.startsWith('$')
   const label = isCashtag ? l`Cashtag ${tag}` : l`Hashtag ${tag}`
-  const hint = IS_NATIVE
-    ? l`Long press to open tag menu for ${isCashtag ? tag : `#${tag}`}`
-    : l`Click to open tag menu for ${isCashtag ? tag : `#${tag}`}`
+  const hint = l`Click to open tag menu for ${isCashtag ? tag : `#${tag}`}`
 
   const isMuted = Boolean(
     (preferences?.moderationPrefs.mutedWords?.find(
@@ -86,24 +82,16 @@ export function RichTextTag({
             }}
             {...menuProps}
             onPress={e => {
-              if (IS_WEB) {
-                return createStaticClickIfUnmodified(() => {
-                  if (!IS_NATIVE) {
-                    menuProps.onPress()
-                  }
-                }).onPress(e)
-              }
+              return createStaticClickIfUnmodified(() => {
+                menuProps.onPress()
+              }).onPress(e);
             }}
             onLongPress={createStaticClick(menuProps.onPress).onPress}
             accessibilityHint={hint}
             label={label}
             style={textStyle}
             emoji>
-            {IS_NATIVE ? (
-              display
-            ) : (
-              <RNText ref={menuProps.ref}>{display}</RNText>
-            )}
+            {(<RNText ref={menuProps.ref}>{display}</RNText>)}
           </InlineLinkText>
         )}
       </Menu.Trigger>
@@ -172,5 +160,5 @@ export function RichTextTag({
         </Menu.Item>
       </Menu.Outer>
     </Menu.Root>
-  )
+  );
 }

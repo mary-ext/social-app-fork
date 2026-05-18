@@ -1,11 +1,10 @@
 import {useCallback, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, platform} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
@@ -103,10 +102,7 @@ function InnerWrapper({embed}: Props) {
             backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
             // the play button won't show up on the first render on android 🥴😮‍💨
           },
-          platform({
-            android: {display: showOverlay ? 'flex' : 'none'},
-            ios: {zIndex: showOverlay ? 1 : -1},
-          }),
+          undefined,
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
       >
@@ -138,7 +134,7 @@ function InnerWrapper({embed}: Props) {
           ))}
       </ImageBackground>
     </>
-  )
+  );
 }
 
 function VideoError({retry}: {error: unknown; retry: () => void}) {

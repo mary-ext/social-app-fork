@@ -7,8 +7,7 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import Animated, {FadeIn, FadeOut} from '#/lib/animations/reanimatedCompat'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
@@ -35,7 +34,7 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
+import { IS_WEB_MOBILE_ANDROID } from '#/env';
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -355,14 +354,12 @@ function LandingScreenLoaded({
           />
         </Prompt.Actions>
       </Prompt.Outer>
-      {IS_WEB && (
-        <meta
-          name="apple-itunes-app"
-          content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
-        />
-      )}
+      {(<meta
+        name="apple-itunes-app"
+        content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
+      />)}
     </View>
-  )
+  );
 }
 
 export function AppClipOverlay({

@@ -35,7 +35,6 @@ import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
-import {IS_NATIVE} from '#/env'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -76,7 +75,7 @@ export function FeedPage({
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return IS_NATIVE && _isVideoFeed
+    return false;
   }, [feedInfo])
   const t = useTheme()
 
@@ -88,7 +87,7 @@ export function FeedPage({
 
   const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: -headerOffset,
     })
   }, [headerOffset])
@@ -122,7 +121,7 @@ export function FeedPage({
     setHasNew(false)
   }, [scrollToTop, feed, queryClient])
 
-  const shouldPrefetch = IS_NATIVE && isPageAdjacent
+  const shouldPrefetch = false
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
   return (
     <View

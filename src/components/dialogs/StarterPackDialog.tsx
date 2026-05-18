@@ -4,8 +4,7 @@ import {
   type AppBskyGraphGetStarterPacksWithMembership,
   AppBskyGraphStarterpack,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -18,7 +17,7 @@ import {
 } from '#/state/queries/list-memberships'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -29,7 +28,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
@@ -82,7 +80,7 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
   const t = useTheme()
 
   return (
-    <View style={[a.gap_2xl, {paddingTop: IS_WEB ? 100 : 64}]}>
+    <View style={[a.gap_2xl, {paddingTop: 100}]}>
       <View style={[a.gap_xs, a.align_center]}>
         <StarterPack
           width={48}
@@ -107,7 +105,7 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
         </Button>
       </View>
     </View>
-  )
+  );
 }
 
 function StarterPackList({
@@ -167,7 +165,7 @@ function StarterPackList({
           a.align_center,
           a.flex_row,
           a.pb_lg,
-          native(a.pt_lg),
+          undefined as any,
         ]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
           <Trans>Add to starter packs</Trans>
@@ -230,12 +228,9 @@ function StarterPackList({
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-      style={platform({
-        web: [a.px_2xl, {minHeight: 500}],
-        native: [a.px_2xl, a.pt_lg],
-      })}
+      style={[a.px_2xl, {minHeight: 500}]}
     />
-  )
+  );
 }
 
 function StarterPackItem({

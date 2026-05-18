@@ -1,5 +1,3 @@
-import {Platform} from 'react-native'
-
 import {tokens} from '#/alf'
 import {darkPalette, dimPalette, lightPalette} from '#/alf/themes'
 import {fontWeight} from '#/alf/tokens'
@@ -264,7 +262,7 @@ export const defaultTheme: Theme = {
     },
     mono: {
       fontSize: 14,
-      fontFamily: Platform.OS === 'android' ? 'monospace' : 'Courier New',
+      fontFamily: 'Courier New',
     },
   },
 }

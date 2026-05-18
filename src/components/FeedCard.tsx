@@ -274,7 +274,7 @@ function SaveButtonInner({
             {
               type,
               value: uri,
-              pinned: pin || false,
+              pinned: !!pin,
             },
           ])
         }

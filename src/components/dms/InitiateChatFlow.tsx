@@ -17,7 +17,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import {android, atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
@@ -32,7 +32,6 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ChatProfileTabs} from './ChatProfileTabs'
 import {EmptyMemberList} from './components/EmptyMemberList'
@@ -431,11 +430,9 @@ export function InitiateChatFlow({
   )
 
   useLayoutEffect(() => {
-    if (IS_WEB) {
-      setTimeout(() => {
-        inputRef?.current?.focus()
-      }, 0)
-    }
+    setTimeout(() => {
+      inputRef?.current?.focus()
+    }, 0)
   }, [])
 
   let buttonLabel = l`Continue to group name`
@@ -463,12 +460,9 @@ export function InitiateChatFlow({
         <View
           style={[
             a.relative,
-            web(a.pt_lg),
-            native(a.pt_4xl),
-            android({
-              borderTopLeftRadius: a.rounded_md.borderRadius,
-              borderTopRightRadius: a.rounded_md.borderRadius,
-            }),
+            a.pt_lg,
+            undefined as any,
+            undefined as any,
             a.px_lg,
             chatState !== ChatState.GROUP_NAME ? a.pb_xs : a.pb_lg,
             chatState !== ChatState.GROUP_NAME && a.border_b,
@@ -482,20 +476,9 @@ export function InitiateChatFlow({
               a.relative,
               a.align_center,
               a.justify_between,
-              web(a.pb_lg),
+              a.pb_lg,
             ]}>
-            {IS_NATIVE ? (
-              <Button
-                label={l`Back`}
-                size="large"
-                shape="round"
-                variant="ghost"
-                color="secondary"
-                style={[native([a.absolute, a.z_20])]}
-                onPress={handlePressBack}>
-                <ButtonIcon icon={ArrowLeftIcon} size="lg" />
-              </Button>
-            ) : null}
+            {null}
             <Text
               style={[
                 a.flex_grow,
@@ -509,48 +492,28 @@ export function InitiateChatFlow({
               ]}>
               {screenTitle}
             </Text>
-            {IS_WEB ? (
-              <Button
-                label={l`Close`}
-                size="small"
-                shape="round"
-                variant="ghost"
-                color="secondary"
-                style={[a.absolute, a.z_20, {right: -4}]}
-                onPress={() => control.close()}>
-                <ButtonIcon icon={XIcon} size="lg" />
-              </Button>
-            ) : showButton ? (
-              <Button
-                label={buttonLabel}
-                size="small"
-                color="primary"
-                style={[
-                  native([
-                    a.absolute,
-                    a.z_20,
-                    {
-                      right: 8,
-                    },
-                  ]),
-                ]}
-                disabled={isButtonDisabled}
-                onPress={handleButtonPress}>
-                <ButtonText>{buttonText}</ButtonText>
-              </Button>
-            ) : null}
+            {(<Button
+              label={l`Close`}
+              size="small"
+              shape="round"
+              variant="ghost"
+              color="secondary"
+              style={[a.absolute, a.z_20, {right: -4}]}
+              onPress={() => control.close()}>
+              <ButtonIcon icon={XIcon} size="lg" />
+            </Button>)}
           </View>
-          <View style={[web(a.pt_xs), native(a.pt_md)]}>
+          <View style={[a.pt_xs, undefined as any]}>
             {chatState === ChatState.GROUP_NAME ? (
               <View
-                style={[a.w_full, a.relative, web(a.pt_md), native(a.pt_xl)]}>
+                style={[a.w_full, a.relative, a.pt_md, undefined as any]}>
                 <TextField.Root>
                   <TextField.Input
                     label={l`Group name`}
                     value={groupName}
                     returnKeyType="next"
                     keyboardAppearance={t.scheme}
-                    selectTextOnFocus={IS_NATIVE}
+                    selectTextOnFocus={false}
                     autoFocus={false}
                     accessibilityRole="text"
                     autoCorrect={false}
@@ -649,7 +612,7 @@ export function InitiateChatFlow({
           ? l`Select group chat members`
           : l`Start chat`
       }
-      style={web([a.contents])}>
+      style={[a.contents] as any}>
       <Dialog.InnerFlatList
         ref={listRef}
         data={items}
@@ -658,15 +621,15 @@ export function InitiateChatFlow({
         stickyHeaderIndices={[0]}
         keyExtractor={(item: Item) => item.key}
         style={[
-          web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-          native({height: '100%'}),
+          [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
+          undefined as any,
         ]}
         webInnerContentContainerStyle={[a.py_0, {paddingBottom: footerHeight}]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         keyboardDismissMode="on-drag"
         footer={
-          IS_WEB && chatState !== ChatState.NEW_CHAT ? (
+          chatState !== ChatState.NEW_CHAT ? (
             <Dialog.FlatListFooter
               onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
               <View style={[a.flex_row, a.align_center, a.justify_between]}>
@@ -698,7 +661,7 @@ export function InitiateChatFlow({
         }
       />
     </Toggle.Group>
-  )
+  );
 }
 
 function NewGroupChatButton({onPress}: {onPress: () => void}) {

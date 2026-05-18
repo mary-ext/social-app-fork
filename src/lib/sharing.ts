@@ -2,7 +2,6 @@ import {Share} from 'react-native'
 import {t} from '@lingui/core/macro'
 
 import * as Toast from '#/components/Toast'
-import {IS_ANDROID, IS_IOS} from '#/env'
 // import * as Sharing from '#/shims/sharing'
 import {setStringAsync} from '#/shims/clipboard'
 
@@ -13,18 +12,12 @@ import {setStringAsync} from '#/shims/clipboard'
  * clipboard.
  */
 export async function shareUrl(url: string) {
-  if (IS_ANDROID) {
-    await Share.share({message: url})
-  } else if (IS_IOS) {
-    await Share.share({url})
-  } else {
-    // React Native Share is not supported by web. Web Share API
-    // has increasing but not full support, so default to clipboard
-    setStringAsync(url)
-    Toast.show(t`Copied to clipboard`, {
-      type: 'success',
-    })
-  }
+  // React Native Share is not supported by web. Web Share API
+  // has increasing but not full support, so default to clipboard
+  setStringAsync(url)
+  Toast.show(t`Copied to clipboard`, {
+    type: 'success',
+  })
 }
 
 /**
@@ -35,12 +28,8 @@ export async function shareUrl(url: string) {
  * clipboard.
  */
 export async function shareText(text: string) {
-  if (IS_ANDROID || IS_IOS) {
-    await Share.share({message: text})
-  } else {
-    await setStringAsync(text)
-    Toast.show(t`Copied to clipboard`, {
-      type: 'success',
-    })
-  }
+  await setStringAsync(text)
+  Toast.show(t`Copied to clipboard`, {
+    type: 'success',
+  })
 }

@@ -1,8 +1,7 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useSession} from '#/state/session'
 import {ListMembers} from '#/view/com/lists/ListMembers'
@@ -13,7 +12,6 @@ import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {IS_NATIVE} from '#/env'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -42,7 +40,7 @@ export function AboutSection({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: -headerHeight,
     })
   }, [scrollElRef, headerHeight])

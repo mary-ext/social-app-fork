@@ -23,7 +23,7 @@ import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, useBreakpoints, useTheme, utils,web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {
@@ -37,7 +37,6 @@ import {getAspectRatio} from '#/components/images/Gallery/utils'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 
 export * from './const'
@@ -173,7 +172,6 @@ export function Gallery({
 
   const onSettle = (index: number) => {
     setCurrentIndex(index)
-    if (!IS_WEB) return
     // Update tabIndex: only the active image is tab-focusable
     itemRefsRef.current.forEach((node, i) => {
       const el = node as unknown as HTMLElement
@@ -297,21 +295,7 @@ export function Gallery({
             )
           }}
           onScroll={e => {
-            // web handles via onSettle in the web hooks
-            if (IS_WEB) return
-            const offsetX = e.nativeEvent.contentOffset.x
-            let accumulated = 0
-            for (let i = 0; i < images.length; i++) {
-              const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-              if (offsetX < accumulated + w / 2) {
-                setCurrentIndex(i)
-                break
-              }
-              accumulated += w
-              if (i === images.length - 1) {
-                setCurrentIndex(i)
-              }
-            }
+            return
           }}
           style={[
             {
@@ -328,7 +312,7 @@ export function Gallery({
         />
       </BlockDrawerGesture>
     </View>
-  )
+  );
 }
 
 function computeDims({
@@ -421,7 +405,7 @@ function GalleryImage({
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          web([
+          [
             {
               cursor: 'inherit',
               outline: 0,
@@ -430,7 +414,7 @@ function GalleryImage({
             a.transition_transform,
             {transitionDuration: '200ms'},
             pressed && {transform: [{scale: 0.99}]},
-          ]),
+          ] as any,
         ]}>
         <Image
           source={{uri: image.thumb}}
@@ -522,5 +506,5 @@ function GalleryImage({
         />
       </Pressable>
     </Animated.View>
-  )
+  );
 }

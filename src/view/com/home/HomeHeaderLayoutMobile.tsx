@@ -18,7 +18,7 @@ import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
-import {IS_DEV, IS_LIQUID_GLASS} from '#/env'
+import { IS_DEV } from '#/env';
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -37,18 +37,11 @@ export function HomeHeaderLayoutMobile({
 
   return (
     <Animated.View
-      style={[
-        a.fixed,
-        a.z_10,
-        t.atoms.bg,
-        {
-          top: 0,
-          left: 0,
-          right: 0,
-        },
-        IS_LIQUID_GLASS && {paddingTop: insets.top},
-        headerMinimalShellTransform,
-      ]}
+      style={[a.fixed, a.z_10, t.atoms.bg, {
+        top: 0,
+        left: 0,
+        right: 0,
+      }, headerMinimalShellTransform]}
       onLayout={e => {
         headerHeight.set(e.nativeEvent.layout.height)
       }}>
@@ -95,5 +88,5 @@ export function HomeHeaderLayoutMobile({
       </Layout.Header.Outer>
       {children}
     </Animated.View>
-  )
+  );
 }

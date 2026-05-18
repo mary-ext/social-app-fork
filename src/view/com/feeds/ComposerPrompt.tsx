@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
@@ -14,14 +13,13 @@ import {logger} from '#/logger'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 export function ComposerPrompt() {
   const t = useTheme()
@@ -39,54 +37,8 @@ export function ComposerPrompt() {
   }, [openComposer])
 
   const onPressImage = useCallback(async () => {
-    // On web, open the composer with the gallery picker auto-opening
-    if (!IS_NATIVE) {
-      openComposer({openGallery: true, logContext: 'Fab'})
-      return
-    }
-
-    try {
-      const [photoAccess, videoAccess] = await Promise.all([
-        requestPhotoAccessIfNeeded(),
-        requestVideoAccessIfNeeded(),
-      ])
-
-      if (!photoAccess && !videoAccess) {
-        return
-      }
-
-      if (Keyboard.isVisible()) {
-        Keyboard.dismiss()
-      }
-
-      const selectionCountRemaining = MAX_IMAGES
-      const {assets, canceled} = await sheetWrapper(
-        openUnifiedPicker({selectionCountRemaining}),
-      )
-
-      if (canceled) {
-        return
-      }
-
-      if (assets.length > 0) {
-        const imageUris = assets
-          .filter(asset => asset.mimeType?.startsWith('image/'))
-          .slice(0, MAX_IMAGES)
-          .map(asset => ({
-            uri: asset.uri,
-            width: asset.width,
-            height: asset.height,
-          }))
-
-        if (imageUris.length > 0) {
-          openComposer({imageUris, logContext: 'Fab'})
-        }
-      }
-    } catch (err: any) {
-      if (!String(err).toLowerCase().includes('cancel')) {
-        logger.error('Error opening image picker', {error: err})
-      }
-    }
+    openComposer({openGallery: true, logContext: 'Fab'})
+    return
   }, [
     openComposer,
     requestPhotoAccessIfNeeded,
@@ -98,10 +50,6 @@ export function ComposerPrompt() {
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
-      }
-
-      if (IS_NATIVE && Keyboard.isVisible()) {
-        Keyboard.dismiss()
       }
 
       const image = await openCamera({
@@ -117,7 +65,7 @@ export function ComposerPrompt() {
       ]
 
       openComposer({
-        imageUris: IS_NATIVE ? imageUris : undefined,
+        imageUris: undefined,
         logContext: 'Fab',
       })
     } catch (err: any) {
@@ -149,15 +97,12 @@ export function ComposerPrompt() {
           paddingRight: 15,
         },
         a.py_md,
-        native({
-          paddingTop: 10,
-          paddingBottom: 10,
-        }),
-        web({
+        undefined as any,
+        {
           cursor: 'pointer',
           outline: 'none',
-        }),
-        pressed && web({outline: 'none'}),
+        } as any,
+        pressed && {outline: 'none'} as any,
       ]}>
       <SubtleHover hover={hover} />
       <UserAvatar
@@ -185,29 +130,7 @@ export function ComposerPrompt() {
           <Trans>What's up?</Trans>
         </Text>
         <View style={[a.flex_row, a.gap_md]}>
-          {IS_NATIVE && (
-            <Button
-              onPress={e => {
-                e.stopPropagation()
-                onPressCamera()
-              }}
-              label={l`Open camera`}
-              accessibilityHint={l`Opens device camera`}
-              variant="ghost"
-              shape="round">
-              {({hovered, pressed, focused}) => (
-                <CameraIcon
-                  size="lg"
-                  style={{
-                    color:
-                      hovered || pressed || focused
-                        ? t.palette.primary_500
-                        : t.palette.contrast_300,
-                  }}
-                />
-              )}
-            </Button>
-          )}
+
           <Button
             onPress={e => {
               e.stopPropagation()
@@ -232,5 +155,5 @@ export function ComposerPrompt() {
         </View>
       </View>
     </Pressable>
-  )
+  );
 }

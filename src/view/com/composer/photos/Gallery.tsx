@@ -10,8 +10,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
@@ -22,7 +21,6 @@ import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
@@ -153,22 +151,10 @@ const GalleryItem = ({
   const editControl = Dialog.useDialogControl()
   const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
 
-  const altBtnRef = (node: View | null) => {
-    // for iOS 26 fluid transition
-    if (IS_IOS && node) {
-      const tag = findNodeHandle(node)
-      if (tag != null) setAltBtnViewTag(tag)
-    }
-  }
+  const altBtnRef = (node: View | null) => {}
 
   const onImageEdit = () => {
-    if (IS_NATIVE) {
-      cropImage(image).then(next => {
-        onChange(next)
-      })
-    } else {
-      editControl.open()
-    }
+    editControl.open()
   }
 
   const onAltTextEdit = () => {

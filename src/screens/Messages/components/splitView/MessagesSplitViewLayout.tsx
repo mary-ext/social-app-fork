@@ -4,12 +4,11 @@ import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type FlatNavigatorParams} from '#/lib/routes/types'
 import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
-import {atoms as a, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {SCROLLBAR_OFFSET} from '#/components/Layout'
 import {LockScroll} from '#/components/LockScroll'
-import {IS_WEB} from '#/env'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
 import {SplitViewProvider} from './context'
 
@@ -46,7 +45,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
   const t = useTheme()
   const isFocused = useIsFocused()
 
-  if (!IS_WEB || !rightNavVisible) {
+  if (!rightNavVisible) {
     return children
   }
 
@@ -91,7 +90,7 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         {
           transform: [
             {translateX: offset},
-            {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+            {translateX: SCROLLBAR_OFFSET ?? 0},
           ],
         },
       ]}>
@@ -122,5 +121,5 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
         </View>
       </SplitViewProvider>
     </View>
-  )
+  );
 }

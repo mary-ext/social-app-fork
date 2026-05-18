@@ -10,7 +10,6 @@ import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {IS_NATIVE} from '#/env'
 
 type Props = Omit<TextField.InputProps, 'label'> & {
   label?: TextField.InputProps['label']
@@ -53,7 +52,7 @@ export function SearchInput({
           placeholder={l`Search`}
           returnKeyType="search"
           keyboardAppearance={t.scheme}
-          selectTextOnFocus={IS_NATIVE}
+          selectTextOnFocus={false}
           autoFocus={false}
           accessibilityRole="search"
           autoCorrect={false}
@@ -69,7 +68,6 @@ export function SearchInput({
           {...rest}
         />
       </TextField.Root>
-
       {showClear && (
         <View
           style={[
@@ -95,5 +93,5 @@ export function SearchInput({
         </View>
       )}
     </View>
-  )
+  );
 }

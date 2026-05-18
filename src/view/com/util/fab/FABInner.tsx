@@ -13,8 +13,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
-import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
-import {IS_WEB} from '#/env'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -45,15 +44,12 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
       ]}>
       <PressableScale
         testID={testID}
-        onPressIn={ios(() => playHaptic('Light'))}
+        onPressIn={undefined as any}
         onPress={evt => {
           onPress?.(evt)
           playHaptic('Light')
         }}
-        onLongPress={ios((evt: GestureResponderEvent) => {
-          onPress?.(evt)
-          playHaptic('Heavy')
-        })}
+        onLongPress={undefined as any}
         targetScale={0.9}
         style={[
           a.rounded_full,
@@ -67,7 +63,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
         {icon}
       </PressableScale>
     </Animated.View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -83,7 +79,7 @@ const styles = StyleSheet.create({
   },
   outer: {
     // @ts-ignore web-only
-    position: IS_WEB ? 'fixed' : 'absolute',
+    position: 'fixed',
     zIndex: 1,
     cursor: 'pointer',
   },

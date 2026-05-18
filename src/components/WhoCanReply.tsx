@@ -12,8 +12,7 @@ import {
   type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
@@ -21,7 +20,7 @@ import {
   type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -35,7 +34,6 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import * as bsky from '#/types/bsky'
 
 interface WhoCanReplyProps {
@@ -85,9 +83,6 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       : l`Some people can reply`
 
   const onPressOpen = () => {
-    if (IS_NATIVE && Keyboard.isVisible()) {
-      Keyboard.dismiss()
-    }
     if (isThreadAuthor) {
       // wait on prefetch if it manages to resolve in under 200ms
       // otherwise, proceed immediately and show the spinner -sfn
@@ -124,7 +119,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               a.flex_row,
               a.align_center,
               a.gap_xs,
-              (hovered || focused || pressed) && native({opacity: 0.5}),
+              (hovered || focused || pressed) && undefined as any,
               style,
             ]}>
             <Icon
@@ -141,7 +136,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
                 isThreadAuthor
                   ? {color: t.palette.primary_500}
                   : t.atoms.text_contrast_medium,
-                (hovered || focused || pressed) && web(a.underline),
+                (hovered || focused || pressed) && a.underline,
               ]}>
               {description}
             </Text>
@@ -168,7 +163,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         />
       )}
     </>
-  )
+  );
 }
 
 function Icon({
@@ -210,7 +205,7 @@ function WhoCanReplyDialog({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Dialog: adjust who can interact with this post`}
-        style={web({maxWidth: 400})}>
+        style={{maxWidth: 400} as any}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_xl, a.pb_sm]}>
             <Trans>Who can interact with this post?</Trans>
@@ -221,23 +216,11 @@ function WhoCanReplyDialog({
             embeddingDisabled={embeddingDisabled}
           />
         </View>
-        {IS_NATIVE && (
-          <Button
-            label={l`Close`}
-            onPress={() => control.close()}
-            size="small"
-            variant="solid"
-            color="secondary"
-            style={[a.mt_5xl]}>
-            <ButtonText>
-              <Trans>Close</Trans>
-            </ButtonText>
-          </Button>
-        )}
+
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }
 
 function Rules({

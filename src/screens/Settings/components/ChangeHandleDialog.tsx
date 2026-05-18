@@ -1,8 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import Animated, {
@@ -28,7 +27,7 @@ import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -114,8 +113,8 @@ function ChangeHandleDialogInner() {
             {page === 'provided-handle' ? (
               <Animated.View
                 key={page}
-                entering={native(SlideInLeft)}
-                exiting={native(SlideOutLeft)}>
+                entering={undefined as any}
+                exiting={undefined as any}>
                 <ProvidedHandlePage
                   serviceInfo={serviceInfo}
                   goToOwnHandle={() => setPage('own-handle')}
@@ -124,8 +123,8 @@ function ChangeHandleDialogInner() {
             ) : (
               <Animated.View
                 key={page}
-                entering={native(SlideInRight)}
-                exiting={native(SlideOutRight)}>
+                entering={undefined as any}
+                exiting={undefined as any}>
                 <OwnHandlePage
                   goToServiceHandle={() => setPage('provided-handle')}
                 />
@@ -139,7 +138,7 @@ function ChangeHandleDialogInner() {
         )}
       </View>
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 function ProvidedHandlePage({
@@ -202,7 +201,7 @@ function ProvidedHandlePage({
           </Animated.View>
         )}
         <Animated.View
-          layout={native(LinearTransition)}
+          layout={undefined as any}
           style={[a.flex_1, a.gap_md]}>
           {verification.isVerified && verification.role === 'default' && (
             <Admonition type="error">
@@ -297,7 +296,7 @@ function ProvidedHandlePage({
         </Animated.View>
       </View>
     </LayoutAnimationConfig>
-  )
+  );
 }
 
 function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
@@ -370,7 +369,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View
-        layout={native(LinearTransition)}
+        layout={undefined as any}
         style={[a.flex_1, a.gap_md, a.overflow_hidden]}>
         <View>
           <TextField.LabelText>
@@ -516,11 +515,11 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         <Animated.View
           entering={FadeIn}
           exiting={FadeOut}
-          layout={native(LinearTransition)}>
+          layout={undefined as any}>
           <SuccessMessage text={l`Domain verified!`} />
         </Animated.View>
       )}
-      <Animated.View layout={native(LinearTransition)}>
+      <Animated.View layout={undefined as any}>
         {currentAccount?.handle?.endsWith('.bsky.social') && (
           <Admonition type="info" style={[a.mb_md]}>
             <Trans>
@@ -582,7 +581,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Button>
       </Animated.View>
     </View>
-  )
+  );
 }
 
 class DidMismatchError extends Error {

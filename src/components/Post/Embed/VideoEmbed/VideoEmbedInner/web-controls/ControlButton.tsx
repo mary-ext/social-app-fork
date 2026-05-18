@@ -1,7 +1,7 @@
 import {type SvgProps} from 'react-native-svg'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 
 export function ControlButton({
   active,
@@ -28,7 +28,7 @@ export function ControlButton({
       style={[
         a.p_xs,
         a.rounded_full,
-        web({transition: 'background-color 0.1s'}),
+        {transition: 'background-color 0.1s'} as any,
       ]}
       hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.2)'}}>
       {active ? (
@@ -37,5 +37,5 @@ export function ControlButton({
         <InactiveIcon fill={t.palette.white} width={20} aria-hidden />
       )}
     </PressableWithHover>
-  )
+  );
 }

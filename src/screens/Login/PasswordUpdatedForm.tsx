@@ -1,8 +1,7 @@
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useBreakpoints, web} from '#/alf'
+import { atoms as a, useBreakpoints } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
@@ -25,7 +24,7 @@ export const PasswordUpdatedForm = ({
       <Text style={[a.text_center, a.mx_auto, {maxWidth: '80%'}]}>
         <Trans>You can now sign in with your new password.</Trans>
       </Text>
-      <View style={web([a.flex_row, a.justify_center])}>
+      <View style={[a.flex_row, a.justify_center] as any}>
         <Button
           onPress={onPressNext}
           label={l`Close alert`}
@@ -38,5 +37,5 @@ export const PasswordUpdatedForm = ({
         </Button>
       </View>
     </FormContainer>
-  )
+  );
 }

@@ -42,7 +42,6 @@ import {
   type GroupConvoMember,
   parseConvoView,
 } from '#/components/dms/util'
-import {IS_NATIVE} from '#/env'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -731,10 +730,10 @@ export class Convo {
           {
             cursor: nextCursor,
             convoId: this.convoId,
-            limit: IS_NATIVE ? 30 : 60,
+            limit: 60,
           },
           {headers: DM_SERVICE_HEADERS},
-        )
+        );
       })
       const {cursor, messages, relatedProfiles} = response.data
 
@@ -750,7 +749,7 @@ export class Convo {
        * If the response contained fewer messages than the limit, we know
        * there are no more pages, regardless of whether a cursor was returned.
        */
-      if (messages.length < (IS_NATIVE ? 30 : 60)) {
+      if (messages.length < (60)) {
         this.oldestRev = null
       }
 

@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useAgent, useSession} from '#/state/session'
@@ -14,7 +13,6 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {P, Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 enum Stages {
   Email,
@@ -102,9 +100,7 @@ export function DisableEmail2FADialog({
               </Trans>
             )}
           </P>
-
           {error ? <ErrorMessage message={error} /> : undefined}
-
           {stage === Stages.Email ? (
             <View
               style={[
@@ -193,9 +189,8 @@ export function DisableEmail2FADialog({
             </View>
           ) : undefined}
 
-          {!gtMobile && IS_NATIVE && <View style={{height: 40}} />}
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

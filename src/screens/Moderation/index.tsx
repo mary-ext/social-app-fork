@@ -1,8 +1,7 @@
 import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
 import {LABELS} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
 import {
@@ -40,7 +39,6 @@ import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -192,7 +190,7 @@ export function ModerationScreenInner({
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
     (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
-  const adultContentUIDisabledOnIOS = IS_IOS && !adultContentEnabled
+  const adultContentUIDisabledOnIOS = false
   const adultContentUIDisabled = adultContentUIDisabledOnIOS
 
   const onToggleAdultContentEnabled = useCallback(

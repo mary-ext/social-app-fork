@@ -18,7 +18,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import {android, atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {
@@ -31,7 +31,6 @@ import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/ic
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {AvatarBubbles} from '../AvatarBubbles'
 import {Error} from '../Error'
@@ -298,11 +297,9 @@ export function SearchablePeopleList({
   )
 
   useLayoutEffect(() => {
-    if (IS_WEB) {
-      setTimeout(() => {
-        inputRef?.current?.focus()
-      }, 0)
-    }
+    setTimeout(() => {
+      inputRef?.current?.focus()
+    }, 0)
   }, [])
 
   const listHeader = useMemo(() => {
@@ -311,19 +308,16 @@ export function SearchablePeopleList({
         onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
         style={[
           a.relative,
-          web(a.pt_lg),
-          native(a.pt_4xl),
-          android({
-            borderTopLeftRadius: a.rounded_md.borderRadius,
-            borderTopRightRadius: a.rounded_md.borderRadius,
-          }),
+          a.pt_lg,
+          undefined as any,
+          undefined as any,
           a.pb_xs,
           a.px_lg,
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
         ]}>
-        <View style={[a.relative, native(a.align_center), a.justify_center]}>
+        <View style={[a.relative, undefined as any, a.justify_center]}>
           <Text
             style={[
               a.z_10,
@@ -334,27 +328,24 @@ export function SearchablePeopleList({
             ]}>
             {title}
           </Text>
-          {IS_WEB ? (
-            <Button
-              label={l`Close`}
-              size="small"
-              shape="round"
-              variant={IS_WEB ? 'ghost' : 'solid'}
-              color="secondary"
-              style={[
-                a.absolute,
-                a.z_20,
-                web({right: -4}),
-                native({right: 0}),
-                native({height: 32, width: 32, borderRadius: 16}),
-              ]}
-              onPress={() => control.close()}>
-              <ButtonIcon icon={X} size="md" />
-            </Button>
-          ) : null}
+          {(<Button
+            label={l`Close`}
+            size="small"
+            shape="round"
+            variant={'ghost'}
+            color="secondary"
+            style={[
+              a.absolute,
+              a.z_20,
+              {right: -4} as any,
+              undefined as any,
+              undefined as any,
+            ]}
+            onPress={() => control.close()}>
+            <ButtonIcon icon={X} size="md" />
+          </Button>)}
         </View>
-
-        <View style={web([a.pt_xs])}>
+        <View style={[a.pt_xs] as any}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}
@@ -366,7 +357,7 @@ export function SearchablePeopleList({
           />
         </View>
       </View>
-    )
+    );
   }, [
     t.atoms.border_contrast_low,
     t.atoms.bg,
@@ -386,15 +377,15 @@ export function SearchablePeopleList({
       stickyHeaderIndices={[0]}
       keyExtractor={(item: Item) => item.key}
       style={[
-        web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-        native({height: '100%'}),
+        [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
+        undefined as any,
       ]}
       webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       scrollIndicatorInsets={{top: headerHeight}}
       keyboardDismissMode="on-drag"
     />
-  )
+  );
 }
 
 function DefaultProfileCard({
@@ -651,16 +642,15 @@ function SearchInput({
 
   return (
     <View
-      {...web({
+      {...{
         onMouseEnter,
         onMouseLeave,
-      })}
+      } as any}
       style={[a.flex_row, a.align_center, a.gap_sm]}>
       <Search
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
-
       <TextInput
         // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
@@ -688,5 +678,5 @@ function SearchInput({
         accessibilityHint={l`Searches for profiles`}
       />
     </View>
-  )
+  );
 }

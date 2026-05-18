@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 
 import {useSession} from '#/state/session'
-import {IS_WEB} from '#/env'
 
 export function useWelcomeModal() {
   const {hasSession} = useSession()
@@ -16,7 +15,7 @@ export function useWelcomeModal() {
     // 2. We're on the web (this is a web-only feature)
     // 3. We're on the homepage (path is '/' or '/home')
     // 4. Modal hasn't been shown before
-    if (IS_WEB && !hasSession && typeof window !== 'undefined') {
+    if (!hasSession && typeof window !== 'undefined') {
       const currentPath = window.location.pathname
       const isHomePage = currentPath === '/'
       const hasModalBeenShown =

@@ -20,14 +20,7 @@ import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-f
 import {useGetSuggestedUsersForDiscoverQuery} from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery'
 import {useSession} from '#/state/session'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {
-  atoms as a,
-  native,
-  useBreakpoints,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
@@ -38,7 +31,6 @@ import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 
@@ -281,11 +273,11 @@ export function ProfileGrid({
             style={[
               a.flex_1,
               gtMobile &&
-                web([
+                [
                   a.flex_0,
                   a.flex_grow,
                   {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-                ]),
+                ] as any,
             ]}>
             <SuggestedFollowPlaceholder />
           </View>
@@ -295,22 +287,18 @@ export function ProfileGrid({
       : profiles.slice(0, maxLength).map((profile, _index) => (
           <Animated.View
             key={profile.actor.did}
-            layout={native(
-              LinearTransition.delay(DISMISS_ANIMATION_DURATION).easing(
-                Easing.out(Easing.exp),
-              ),
-            )}
+            layout={undefined as any}
             exiting={FadeOut.duration(DISMISS_ANIMATION_DURATION)}
             // for web, as the cards are static, not in a list
-            entering={web(FadeIn.delay(DISMISS_ANIMATION_DURATION * 2))}
+            entering={FadeIn.delay(DISMISS_ANIMATION_DURATION * 2)}
             style={[
               a.flex_1,
               gtMobile &&
-                web([
+                [
                   a.flex_0,
                   a.flex_grow,
                   {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-                ]),
+                ] as any,
             ]}>
             <ProfileCard.Link
               profile={profile.actor}
@@ -418,7 +406,7 @@ export function ProfileGrid({
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
       ]}
-      pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+      pointerEvents={'box-none'}>
       <View
         style={[
           a.px_lg,
@@ -427,7 +415,7 @@ export function ProfileGrid({
           a.align_center,
           a.justify_between,
         ]}
-        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+        pointerEvents={'box-none'}>
         <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
           <Trans>Suggested for you</Trans>
         </Text>
@@ -442,10 +430,10 @@ export function ProfileGrid({
                 a.text_sm,
                 {color: t.palette.primary_500},
                 hovered &&
-                  web({
+                  {
                     textDecorationLine: 'underline',
                     textDecorationColor: t.palette.primary_500,
-                  }),
+                  } as any,
               ]}>
               <Trans>See more</Trans>
             </Text>
@@ -480,7 +468,7 @@ export function ProfileGrid({
         )}
       </LayoutAnimationConfig>
     </View>
-  )
+  );
 }
 
 function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {

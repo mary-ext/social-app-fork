@@ -23,7 +23,6 @@ import {
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
-import {IS_IOS} from '#/env'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -273,11 +272,11 @@ let PagerTabBar = ({
   const fallbackHeaderOnlyHeight = useRef(0)
   return (
     <Animated.View
-      pointerEvents={IS_IOS ? 'auto' : 'box-none'}
+      pointerEvents={'box-none'}
       style={[styles.tabBarMobile, headerTransform, t.atoms.bg]}>
       <View
         ref={headerRef}
-        pointerEvents={IS_IOS ? 'auto' : 'box-none'}
+        pointerEvents={'box-none'}
         collapsable={false}
         onLayout={(e: LayoutChangeEvent) => {
           // Fallback measurement using onLayout directly on the header wrapper.
@@ -338,7 +337,7 @@ let PagerTabBar = ({
         />
       </View>
     </Animated.View>
-  )
+  );
 }
 PagerTabBar = memo(PagerTabBar)
 

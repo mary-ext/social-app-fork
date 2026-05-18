@@ -71,7 +71,7 @@ function Modal({modal}: {modal: ModalIface}) {
         </TouchableWithoutFeedback>
       </Animated.View>
     </TouchableWithoutFeedback>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

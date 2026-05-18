@@ -12,7 +12,7 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {QuoteEmbed} from '#/components/Post/Embed'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
@@ -79,7 +79,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         a.mx_lg,
         a.border_b,
         t.atoms.border_contrast_medium,
-        web(a.user_select_text),
+        a.user_select_text as any,
       ]}
       onPress={onPress}
       accessibilityRole="button"
@@ -123,7 +123,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         )}
       </View>
     </Pressable>
-  )
+  );
 }
 
 function ComposerReplyToImages({

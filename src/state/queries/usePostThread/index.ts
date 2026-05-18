@@ -30,7 +30,6 @@ import * as views from '#/state/queries/usePostThread/views'
 import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
-import {IS_WEB} from '#/env'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
@@ -53,9 +52,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const below = useMemo(() => {
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
-      : IS_WEB && gtPhone
+      : gtPhone
         ? TREE_VIEW_BELOW_DESKTOP
-        : TREE_VIEW_BELOW
+        : TREE_VIEW_BELOW;
   }, [view, gtPhone])
 
   const postThreadQueryKey = createPostThreadQueryKey({

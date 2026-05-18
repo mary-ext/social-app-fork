@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
@@ -10,7 +9,7 @@ import {
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
 } from '#/state/preferences'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -344,7 +343,7 @@ export function Controls({
         accessibilityHint=""
         style={[
           a.flex_1,
-          web({cursor: showCursor || !playing ? 'pointer' : 'none'}),
+          {cursor: showCursor || !playing ? 'pointer' : 'none'} as any,
         ]}
         onPress={onPressEmptySpace}
       />
@@ -356,10 +355,10 @@ export function Controls({
           a.flex_shrink_0,
           a.w_full,
           a.px_xs,
-          web({
+          {
             background:
               'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
-          }),
+          } as any,
           {opacity: showControls ? 1 : 0},
           {transition: 'opacity 0.2s ease-in-out'},
         ]}>
@@ -446,5 +445,5 @@ export function Controls({
         </View>
       )}
     </div>
-  )
+  );
 }

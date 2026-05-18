@@ -9,7 +9,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
@@ -119,7 +119,7 @@ export function Member({
                 />
                 <ProfileCard.Handle
                   profile={profile}
-                  textStyle={[a.text_xs, native({top: -1})]}
+                  textStyle={[a.text_xs, undefined as any]}
                 />
                 {!isProfileOwner && (
                   <Text
@@ -128,7 +128,7 @@ export function Member({
                       a.text_xs,
                       a.leading_snug,
                       t.atoms.text_contrast_medium,
-                      web(a.pt_2xs),
+                      a.pt_2xs,
                     ]}>
                     {joinedReason}
                   </Text>
@@ -148,7 +148,7 @@ export function Member({
         {statusBadge}
       </View>
     </SubtleHoverWrapper>
-  )
+  );
 }
 
 export function MemberPlaceholder() {

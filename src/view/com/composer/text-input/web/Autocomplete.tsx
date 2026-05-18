@@ -87,15 +87,15 @@ export function createSuggestion({
             return false
           }
 
-          return component?.ref?.onKeyDown(props) || false
+          return component?.ref?.onKeyDown(props) ?? false
         },
 
         onExit() {
           hide()
         },
-      }
+      };
     },
-  }
+  };
 }
 
 const MentionList = forwardRef<

@@ -96,14 +96,11 @@ export function isBskyAppUrl(url: string): boolean {
 }
 
 export function isRelativeUrl(url: string): boolean {
-  return /^\/[^/]/.test(url)
+  return /^\/[^/]/.test(url);
 }
 
 export function isBskyRSSUrl(url: string): boolean {
-  return (
-    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
-    /\/rss\/?$/.test(url)
-  )
+  return ((url.startsWith('https://bsky.app/') || isRelativeUrl(url)) && /\/rss\/?$/.test(url));
 }
 
 export function isExternalUrl(url: string): boolean {
@@ -122,7 +119,7 @@ export function isBskyPostUrl(url: string): boolean {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
-      )
+      );
     } catch {}
   }
   return false
@@ -134,7 +131,7 @@ export function isBskyCustomFeedUrl(url: string): boolean {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
-      )
+      );
     } catch {}
   }
   return false
@@ -146,7 +143,7 @@ export function isBskyListUrl(url: string): boolean {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/lists\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
-      )
+      );
     } catch {
       console.error('Unexpected error in isBskyListUrl()', url)
     }
@@ -158,7 +155,7 @@ export function isBskyStartUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
-      return /start\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
+      return /start\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname);
     } catch {
       console.error('Unexpected error in isBskyStartUrl()', url)
     }
@@ -170,7 +167,7 @@ export function isBskyStarterPackUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
-      return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
+      return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname);
     } catch {
       console.error('Unexpected error in isBskyStartUrl()', url)
     }
@@ -318,7 +315,7 @@ export function splitApexDomain(hostname: string): [string, string] {
 
 export function createBskyAppAbsoluteUrl(path: string): string {
   const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '')
-  return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
+  return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`;
 }
 
 export function createProxiedUrl(url: string): string {

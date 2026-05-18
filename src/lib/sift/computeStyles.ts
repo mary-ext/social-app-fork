@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {Platform, type ViewStyle} from 'react-native'
+import { type ViewStyle } from 'react-native';
 
 import {type Placement} from './useSift'
 
@@ -63,7 +63,7 @@ export async function computeStyles(
   const insetBottom = options.insets?.bottom ?? 0
   // android reports measurements minus insets
   const anchorTop =
-    Platform.OS === 'android' ? anchorRect.y + insetTop : anchorRect.y
+    anchorRect.y
 
   let top: number | 'auto' = 'auto'
   let bottom: number | 'auto' = 'auto'

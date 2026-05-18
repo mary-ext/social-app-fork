@@ -17,7 +17,7 @@ import {
 } from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, flatten, native, useTheme, web} from '#/alf'
+import { atoms as a, flatten, useTheme } from '#/alf';
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -26,7 +26,6 @@ import {createStaticClick, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const X_ICON_OFFSET = 16
@@ -142,14 +141,14 @@ function TranslationLink({
         a.gap_xs,
       ]}>
       <Link
-        role={IS_WEB ? 'link' : 'button'}
+        role={'link'}
         {...createStaticClick(() => {
           handleTranslate()
         })}
         label={l`Translate`}
         hoverStyle={[
-          native({opacity: 0.5}),
-          web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+          undefined as any,
+          [a.underline, {textDecorationColor: t.palette.primary_500}] as any,
         ]}
         hitSlop={HITSLOP_30}>
         <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
@@ -157,7 +156,7 @@ function TranslationLink({
         </Text>
       </Link>
     </View>
-  )
+  );
 }
 
 function TranslationError({
@@ -214,7 +213,7 @@ function TranslationError({
         <Button
           label={l`Hide translation`}
           hitSlop={HITSLOP_30}
-          hoverStyle={native({opacity: 0.5})}
+          hoverStyle={undefined as any}
           style={[a.absolute, a.z_10, {top: 0, right: 0}]}
           onPress={clearTranslation}>
           <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
@@ -227,8 +226,8 @@ function TranslationError({
           })}
           label={l`Try Google Translate`}
           hoverStyle={[
-            native({opacity: 0.5}),
-            web([a.underline, {textDecorationColor: t.palette.primary_500}]),
+            undefined as any,
+            [a.underline, {textDecorationColor: t.palette.primary_500}] as any,
           ]}
           hitSlop={HITSLOP_30}>
           <Text
@@ -243,7 +242,7 @@ function TranslationError({
         </Link>
       </View>
     </View>
-  )
+  );
 }
 
 function TranslationResult({
@@ -348,7 +347,7 @@ function TranslationResult({
           <Button
             label={l`Hide translation`}
             hitSlop={HITSLOP_30}
-            hoverStyle={native({opacity: 0.5})}
+            hoverStyle={undefined as any}
             style={[a.absolute, a.z_10, {top: 0, right: 0}]}
             onPress={clearTranslation}>
             <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
@@ -359,7 +358,7 @@ function TranslationResult({
         </Text>
       </View>
     </View>
-  )
+  );
 }
 
 function TranslationLanguageSelect({
@@ -419,7 +418,7 @@ function TranslationLanguageSelect({
               label={props.accessibilityLabel}
               {...props}
               hitSlop={HITSLOP_30}
-              hoverStyle={native({opacity: 0.5})}>
+              hoverStyle={undefined as any}>
               <Text
                 style={[
                   a.text_xs,
@@ -430,7 +429,7 @@ function TranslationLanguageSelect({
                 <Trans>Change</Trans>
               </Text>
             </Button>
-          )
+          );
         }}
       </Select.Trigger>
       <Select.Content
@@ -444,5 +443,5 @@ function TranslationLanguageSelect({
         items={items}
       />
     </Select.Root>
-  )
+  );
 }

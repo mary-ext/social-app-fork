@@ -8,7 +8,6 @@ import {
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import {IS_LIQUID_GLASS} from '#/env'
 
 export function Header({
   renderLeft,
@@ -36,7 +35,7 @@ export function Header({
         a.flex_row,
         a.justify_center,
         a.align_center,
-        {minHeight: IS_LIQUID_GLASS ? 64 : 50},
+        {minHeight: 50},
         a.border_b,
         t.atoms.border_contrast_medium,
         t.atoms.bg,
@@ -45,18 +44,18 @@ export function Header({
         style,
       ]}>
       {renderLeft && (
-        <View style={[a.absolute, {left: IS_LIQUID_GLASS ? 12 : 6}]}>
+        <View style={[a.absolute, {left: 6}]}>
           {renderLeft()}
         </View>
       )}
       {children}
       {renderRight && (
-        <View style={[a.absolute, {right: IS_LIQUID_GLASS ? 12 : 6}]}>
+        <View style={[a.absolute, {right: 6}]}>
           {renderRight()}
         </View>
       )}
     </View>
-  )
+  );
 }
 
 export function HeaderText({

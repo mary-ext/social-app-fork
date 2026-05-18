@@ -10,8 +10,7 @@ import {
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
@@ -49,7 +48,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
+import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import {useActorStatus} from '#/features/liveNow'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
@@ -88,7 +87,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   onBeforePress?: () => void
 }
 
-const BLUR_AMOUNT = IS_WEB ? 5 : 100
+const BLUR_AMOUNT = 5
 
 let DefaultAvatar = ({
   type,
@@ -285,8 +284,7 @@ let UserAvatar = ({
     ]
   }, [size, style])
 
-  return avatar &&
-    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
+  return avatar ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
         <RNImage
@@ -327,7 +325,7 @@ let UserAvatar = ({
       )}
       {alert}
     </View>
-  )
+  );
 }
 UserAvatar = memo(UserAvatar)
 export {UserAvatar}
@@ -394,20 +392,8 @@ let EditableUserAvatar = ({
     }
 
     try {
-      if (IS_NATIVE) {
-        onSelectNewAvatar(
-          await compressIfNeeded(
-            await openCropper({
-              imageUri: item.path,
-              shape: circular ? 'circle' : 'rectangle',
-              aspectRatio: 1,
-            }),
-          ),
-        )
-      } else {
-        setRawImage(await createComposerImage(item))
-        editImageDialogControl.open()
-      }
+      setRawImage(await createComposerImage(item))
+      editImageDialogControl.open()
     } catch (e) {
       // Don't log errors for user-cancelled selection on iOS or Android.
       if (!isCancelledError(e)) {
@@ -464,28 +450,13 @@ let EditableUserAvatar = ({
         </Menu.Trigger>
         <Menu.Outer showCancel>
           <Menu.Group>
-            {IS_NATIVE && (
-              <Menu.Item
-                testID="changeAvatarCameraBtn"
-                label={l`Upload from Camera`}
-                onPress={onOpenCamera}>
-                <Menu.ItemText>
-                  <Trans>Upload from Camera</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={CameraIcon} />
-              </Menu.Item>
-            )}
 
             <Menu.Item
               testID="changeAvatarLibraryBtn"
               label={l`Upload from Library`}
               onPress={onOpenLibrary}>
               <Menu.ItemText>
-                {IS_NATIVE ? (
-                  <Trans>Upload from Library</Trans>
-                ) : (
-                  <Trans>Upload from Files</Trans>
-                )}
+                {(<Trans>Upload from Files</Trans>)}
               </Menu.ItemText>
               <Menu.ItemIcon icon={LibraryIcon} />
             </Menu.Item>
@@ -516,7 +487,7 @@ let EditableUserAvatar = ({
         circularCrop={circular}
       />
     </>
-  )
+  );
 }
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
@@ -565,7 +536,7 @@ let PreviewableUserAvatar = ({
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       {disableNavigation ? (
         avatarEl
-      ) : status.isActive && (IS_NATIVE || IS_WEB_TOUCH_DEVICE) ? (
+      ) : status.isActive && (IS_WEB_TOUCH_DEVICE) ? (
         <>
           <Button
             label={l`${sanitizeDisplayName(
@@ -598,7 +569,7 @@ let PreviewableUserAvatar = ({
         </Link>
       )}
     </ProfileHoverCard>
-  )
+  );
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}

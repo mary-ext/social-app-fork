@@ -5,8 +5,7 @@ import {
   type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
@@ -38,7 +37,7 @@ import {
 } from '#/state/queries/usePostThread'
 import {useAgent, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -51,7 +50,6 @@ import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icon
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 
 export type PostInteractionSettingsFormProps = {
   canSave?: boolean
@@ -102,12 +100,12 @@ function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
   return (
     <Dialog.ScrollableInner
       label={l`Edit post interaction settings`}
-      style={[web({maxWidth: 400}), a.w_full]}>
+      style={[{maxWidth: 400} as any, a.w_full]}>
       <Header />
       <PostInteractionSettingsForm {...props} />
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 export type PostInteractionSettingsDialogProps = {
@@ -248,7 +246,7 @@ export function PostInteractionSettingsDialogControlledInner(
   return (
     <Dialog.ScrollableInner
       label={l`Edit post interaction settings`}
-      style={[web({maxWidth: 400}), a.w_full]}>
+      style={[{maxWidth: 400} as any, a.w_full]}>
       {isLoading ? (
         <View
           style={[
@@ -279,7 +277,7 @@ export function PostInteractionSettingsDialogControlledInner(
       )}
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 export function PostInteractionSettingsForm({
@@ -519,12 +517,6 @@ export function PostInteractionSettingsForm({
                 hitSlop={0}
                 onPress={() => {
                   playHaptic('Light')
-                  if (IS_IOS && !showLists) {
-                    LayoutAnimation.configureNext({
-                      ...LayoutAnimation.Presets.linear,
-                      duration: 175,
-                    })
-                  }
                   setShowLists(s => !s)
                 }}>
                 <Toggle.Panel
@@ -654,7 +646,7 @@ export function PostInteractionSettingsForm({
         {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
     </View>
-  )
+  );
 }
 
 function Header() {

@@ -14,7 +14,6 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {IS_ANDROID, IS_IOS} from '#/env'
 import {resetToTab} from '#/Navigation'
 import {router} from '#/routes'
 import * as Notifications from '#/shims/notifications'
@@ -96,97 +95,7 @@ export function useNotificationsHandler() {
   // channels allow for the mute/unmute functionality we want for the background
   // handler.
   useEffect(() => {
-    if (!IS_ANDROID) return
-    // assign both chat notifications to a group
-    // NOTE: I don't think that it will retroactively move them into the group
-    // if the channels already exist. no big deal imo -sfn
-    const CHAT_GROUP = 'chat'
-    Notifications.setNotificationChannelGroupAsync(CHAT_GROUP, {
-      name: l`Chat`,
-      description: l`You can choose whether chat notifications have sound in the chat settings within the app`,
-    })
-    Notifications.setNotificationChannelAsync('chat-messages', {
-      name: l`Chat messages - sound`,
-      groupId: CHAT_GROUP,
-      importance: Notifications.AndroidImportance.MAX,
-      sound: 'dm.mp3',
-      showBadge: true,
-      vibrationPattern: [250],
-      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
-    })
-    Notifications.setNotificationChannelAsync('chat-messages-muted', {
-      name: l`Chat messages - silent`,
-      groupId: CHAT_GROUP,
-      importance: Notifications.AndroidImportance.MAX,
-      sound: null,
-      showBadge: true,
-      vibrationPattern: [250],
-      lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
-    })
-
-    Notifications.setNotificationChannelAsync(
-      'like' satisfies NotificationReason,
-      {
-        name: l`Likes`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'repost' satisfies NotificationReason,
-      {
-        name: l`Reposts`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'reply' satisfies NotificationReason,
-      {
-        name: l`Replies`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'mention' satisfies NotificationReason,
-      {
-        name: l`Mentions`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'quote' satisfies NotificationReason,
-      {
-        name: l`Quotes`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'follow' satisfies NotificationReason,
-      {
-        name: l`New followers`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'like-via-repost' satisfies NotificationReason,
-      {
-        name: l`Likes of your reposts`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'repost-via-repost' satisfies NotificationReason,
-      {
-        name: l`Reposts of your reposts`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
-    Notifications.setNotificationChannelAsync(
-      'subscribed-post' satisfies NotificationReason,
-      {
-        name: l`Activity from others`,
-        importance: Notifications.AndroidImportance.HIGH,
-      },
-    )
+    return
   }, [l])
 
   useEffect(() => {
@@ -386,7 +295,7 @@ export function getNotificationPayload(
   }
 
   const payload = (
-    IS_IOS ? e.request.trigger.payload : e.request.content.data
+    e.request.content.data
   ) as NotificationPayload
 
   if (payload && payload.reason) {

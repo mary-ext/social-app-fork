@@ -546,7 +546,7 @@ export const Button = forwardRef<View, ButtonProps>(
         color,
         size,
         shape,
-        disabled: disabled || false,
+        disabled: !!disabled,
       }),
       [state, variant, color, size, shape, disabled],
     )
@@ -561,9 +561,9 @@ export const Button = forwardRef<View, ButtonProps>(
         aria-label={label}
         aria-pressed={state.pressed}
         accessibilityLabel={label}
-        disabled={disabled || false}
+        disabled={!!disabled}
         accessibilityState={{
-          disabled: disabled || false,
+          disabled: !!disabled,
         }}
         style={[
           a.flex_row,
@@ -586,7 +586,7 @@ export const Button = forwardRef<View, ButtonProps>(
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
       </PressableComponent>
-    )
+    );
   },
 )
 Button.displayName = 'Button'

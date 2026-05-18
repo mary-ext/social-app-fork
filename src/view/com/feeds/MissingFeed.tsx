@@ -1,20 +1,18 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getFeedTypeFromUri} from '#/state/queries/feed'
 import {useProfileQuery} from '#/state/queries/profile'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 export function MissingFeed({
   style,
@@ -83,11 +81,7 @@ export function MissingFeed({
                 a.italic,
               ]}
               numberOfLines={1}>
-              {IS_WEB ? (
-                <Trans>Click for information</Trans>
-              ) : (
-                <Trans>Tap for information</Trans>
-              )}
+              {(<Trans>Click for information</Trans>)}
             </Text>
           </View>
         </View>
@@ -97,7 +91,7 @@ export function MissingFeed({
         <DialogInner uri={uri} type={type} error={error} />
       </Dialog.Outer>
     </>
-  )
+  );
 }
 
 function DialogInner({
@@ -123,7 +117,7 @@ function DialogInner({
       label={
         type === 'feed' ? l`Unavailable feed information` : l`Deleted list`
       }
-      style={web({maxWidth: 500})}>
+      style={{maxWidth: 500} as any}>
       <View style={[a.gap_sm]}>
         <Text style={[a.font_bold, a.text_2xl]}>
           {type === 'feed' ? (
@@ -202,20 +196,8 @@ function DialogInner({
           </>
         )}
       </View>
-      {IS_NATIVE && (
-        <Button
-          label={l`Close`}
-          onPress={() => control.close()}
-          size="small"
-          variant="solid"
-          color="secondary"
-          style={[a.mt_5xl]}>
-          <ButtonText>
-            <Trans>Close</Trans>
-          </ButtonText>
-        </Button>
-      )}
+
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }

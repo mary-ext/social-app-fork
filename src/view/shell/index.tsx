@@ -32,7 +32,6 @@ import {SigninDialog} from '#/components/dialogs/Signin'
 import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {updateActiveViewAsync} from '#/shims/bluesky-swiss-army'
 import {BottomSheetOutlet} from '#/shims/bottom-sheet'
@@ -50,17 +49,7 @@ function ShellInner() {
   useNotificationsRegistration()
   useNotificationsHandler()
 
-  useEffect(() => {
-    if (IS_ANDROID) {
-      const listener = BackHandler.addEventListener('hardwareBackPress', () => {
-        return closeAnyActiveElement()
-      })
-
-      return () => {
-        listener.remove()
-      }
-    }
-  }, [closeAnyActiveElement])
+  useEffect(() => {}, [closeAnyActiveElement])
 
   // HACK
   // video adapter doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually
@@ -71,16 +60,7 @@ function ShellInner() {
   const navigation = useNavigation()
   const dedupe = useDedupe(1000)
   useEffect(() => {
-    if (!IS_ANDROID) return
-    const onFocusOrBlur = () => {
-      setTimeout(() => {
-        dedupe(updateActiveViewAsync)
-      }, 500)
-    }
-    navigation.addListener('state', onFocusOrBlur)
-    return () => {
-      navigation.removeListener('state', onFocusOrBlur)
-    }
+    return
   }, [dedupe, navigation])
 
   const drawerLayout = useCallback(
@@ -174,19 +154,17 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       swipeEdgeWidth={winDim.width}
       swipeMinVelocity={100}
       swipeMinDistance={10}
-      drawerType={IS_IOS ? 'slide' : 'front'}
+      drawerType={'front'}
       overlayStyle={{
         backgroundColor: select(t.name, {
           light: 'rgba(0, 57, 117, 0.1)',
-          dark: IS_ANDROID
-            ? 'rgba(16, 133, 254, 0.1)'
-            : 'rgba(1, 82, 168, 0.1)',
+          dark: 'rgba(1, 82, 168, 0.1)',
           dim: 'rgba(10, 13, 16, 0.8)',
         }),
       }}>
       {children}
     </Drawer>
-  )
+  );
 }
 
 export function Shell() {
@@ -205,8 +183,7 @@ export function Shell() {
       <SystemBars
         style={{
           statusBar:
-            t.name !== 'light' ||
-            (IS_IOS && !IS_LIQUID_GLASS && fullyExpandedCount > 0)
+            t.name !== 'light'
               ? 'light'
               : 'dark',
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
@@ -222,5 +199,5 @@ export function Shell() {
         </RoutesContainer>
       )}
     </View>
-  )
+  );
 }

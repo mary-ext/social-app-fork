@@ -4,7 +4,6 @@ import {type ColorSchemeName, useColorScheme} from 'react-native'
 import {useThemePrefs} from '#/state/shell'
 import {type ThemeName} from '#/alf/base'
 import {dark, dim, light} from '#/alf/themes'
-import {IS_WEB} from '#/env'
 
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()
@@ -40,7 +39,7 @@ function getThemeName(
 
 function updateDocument(theme: ThemeName) {
   // @ts-ignore web only
-  if (IS_WEB && typeof window !== 'undefined') {
+  if (typeof window !== 'undefined') {
     // @ts-ignore web only
     const html = window.document.documentElement
     // @ts-ignore web only

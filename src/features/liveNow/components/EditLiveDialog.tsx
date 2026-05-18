@@ -5,15 +5,14 @@ import {
   AppBskyActorStatus,
   type AppBskyEmbedExternal,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useTickEveryMinute} from '#/state/shell'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -117,7 +116,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={l`You are Live`}
-      style={web({maxWidth: 420})}>
+      style={{maxWidth: 420} as any}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_2xl]}>
@@ -194,14 +193,11 @@ function DialogInner({
         )}
 
         <View
-          style={platform({
-            native: [a.gap_md, a.pt_lg],
-            web: [a.flex_row_reverse, a.gap_md, a.align_center],
-          })}>
+          style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
           {isDirty ? (
             <Button
               label={l`Save`}
-              size={platform({native: 'large', web: 'small'})}
+              size={'small'}
               color="primary"
               variant="solid"
               onPress={() => goLive()}
@@ -214,7 +210,7 @@ function DialogInner({
           ) : (
             <Button
               label={l`Close`}
-              size={platform({native: 'large', web: 'small'})}
+              size={'small'}
               color="primary"
               variant="solid"
               onPress={() => control.close()}>
@@ -226,7 +222,7 @@ function DialogInner({
           <Button
             label={l`Remove live status`}
             onPress={() => removeLiveStatus()}
-            size={platform({native: 'large', web: 'small'})}
+            size={'small'}
             color="negative_subtle"
             variant="solid"
             disabled={isRemovingLiveStatus || isGoingLive}>
@@ -239,5 +235,5 @@ function DialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }

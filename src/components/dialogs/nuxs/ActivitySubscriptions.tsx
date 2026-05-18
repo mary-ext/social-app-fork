@@ -1,15 +1,13 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 
 export function ActivitySubscriptionsNUX() {
@@ -29,7 +27,7 @@ export function ActivitySubscriptionsNUX() {
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Introducing activity notifications`}
-        style={[web({maxWidth: 400})]}
+        style={[{maxWidth: 400} as any]}
         contentContainerStyle={[
           {
             paddingTop: 0,
@@ -43,8 +41,8 @@ export function ActivitySubscriptionsNUX() {
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
             {
-              gap: IS_WEB ? 16 : 24,
-              paddingTop: IS_WEB ? 24 : 48,
+              gap: 16,
+              paddingTop: 24,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
@@ -117,7 +115,7 @@ export function ActivitySubscriptionsNUX() {
           style={[
             a.align_center,
             a.px_xl,
-            IS_WEB ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_3xl, a.gap_3xl],
+            [a.pt_xl, a.gap_xl, a.pb_sm],
           ]}>
           <View style={[a.gap_md, a.align_center]}>
             <Text
@@ -127,7 +125,7 @@ export function ActivitySubscriptionsNUX() {
                 a.font_bold,
                 a.text_center,
                 {
-                  fontSize: IS_WEB ? 28 : 32,
+                  fontSize: 28,
                   maxWidth: 300,
                 },
               ]}>
@@ -150,25 +148,10 @@ export function ActivitySubscriptionsNUX() {
             </Text>
           </View>
 
-          {!IS_WEB && (
-            <Button
-              label={l`Close`}
-              size="large"
-              variant="solid"
-              color="primary"
-              onPress={() => {
-                control.close()
-              }}
-              style={[a.w_full, {maxWidth: 280}]}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
-          )}
         </View>
 
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

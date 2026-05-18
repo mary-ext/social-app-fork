@@ -1,12 +1,11 @@
 import {useCallback, useImperativeHandle, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {BSKY_SERVICE} from '#/lib/constants'
 import * as persisted from '#/state/persisted'
 import {useSession} from '#/state/session'
-import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -122,7 +121,7 @@ function DialogInner({
     <Dialog.ScrollableInner
       accessibilityDescribedBy="dialog-description"
       accessibilityLabelledBy="dialog-title"
-      style={web({maxWidth: 500})}>
+      style={{maxWidth: 500} as any}>
       <View style={[a.relative, a.gap_md, a.w_full]}>
         <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
           <Trans>Choose your account provider</Trans>
@@ -219,10 +218,7 @@ function DialogInner({
             testID="doneBtn"
             variant="solid"
             color="primary"
-            size={platform({
-              native: 'large',
-              web: 'small',
-            })}
+            size={'small'}
             onPress={() => control.close()}
             label={l`Done`}>
             <ButtonText>
@@ -232,5 +228,5 @@ function DialogInner({
         </View>
       </View>
     </Dialog.ScrollableInner>
-  )
+  );
 }

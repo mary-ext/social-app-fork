@@ -1,26 +1,17 @@
 import {useEffect, useRef, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useOnboardingDispatch} from '#/state/shell'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
-import {
-  atoms as a,
-  native,
-  type TextStyleProp,
-  tokens,
-  useBreakpoints,
-  useTheme,
-  web,
-} from '#/alf'
+import { atoms as a, type TextStyleProp, tokens, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
-import {IS_ANDROID, IS_INTERNAL, IS_WEB} from '#/env'
+import { IS_INTERNAL } from '#/env';
 
 const ONBOARDING_COL_WIDTH = 420
 
@@ -57,12 +48,12 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
       accessibilityHint={l`Customizes your Bluesky experience`}
-      style={[IS_WEB ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
+      style={[a.fixed, a.inset_0, a.flex_1, t.atoms.bg]}>
       {!gtMobile ? (
         <View
           style={[
-            web(a.fixed),
-            native(a.absolute),
+            a.fixed,
+            undefined as any,
             a.top_0,
             a.left_0,
             a.right_0,
@@ -71,9 +62,9 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             a.justify_center,
             a.z_20,
             a.px_xl,
-            {paddingTop: (web(tokens.space.lg) ?? 0) + insets.top},
-            native([t.atoms.bg, a.pb_xs, {minHeight: 48}]),
-            web(a.pointer_events_box_none),
+            {paddingTop: (tokens.space.lg ?? 0) + insets.top},
+            undefined as any,
+            a.pointer_events_box_none,
           ]}
           onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}>
           <View
@@ -82,8 +73,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               a.align_center,
               a.flex_row,
               a.justify_between,
-              web({maxWidth: ONBOARDING_COL_WIDTH}),
-              web(a.pointer_events_box_none),
+              {maxWidth: ONBOARDING_COL_WIDTH} as any,
+              a.pointer_events_box_none,
             ]}>
             <HeaderSlot>
               {state.canGoBack && (
@@ -149,14 +140,14 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           paddingTop: gtMobile ? 40 : headerHeight,
           paddingBottom: footerHeight,
         }}
-        showsVerticalScrollIndicator={!IS_ANDROID}
+        showsVerticalScrollIndicator={true}
         scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
         // @ts-expect-error web only --prf
         dataSet={{'stable-gutters': 1}}
         centerContent={gtMobile}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
-          <View style={[a.flex_1, web({maxWidth: ONBOARDING_COL_WIDTH})]}>
+          <View style={[a.flex_1, {maxWidth: ONBOARDING_COL_WIDTH} as any]}>
             <View style={[a.w_full, a.py_md]}>{children}</View>
           </View>
         </View>
@@ -164,19 +155,14 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       <View
         onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
         style={[
-          IS_WEB ? a.fixed : a.absolute,
+          a.fixed,
           {bottom: 0, left: 0, right: 0},
           t.atoms.bg,
           t.atoms.border_contrast_low,
           a.border_t,
           a.align_center,
           gtMobile ? a.px_5xl : a.px_xl,
-          IS_WEB
-            ? a.py_2xl
-            : {
-                paddingTop: tokens.space.md,
-                paddingBottom: insets.bottom + tokens.space.md,
-              },
+          a.py_2xl,
         ]}>
         <View
           style={[
@@ -203,7 +189,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         </View>
       </View>
     </View>
-  )
+  );
 }
 
 function HeaderSlot({children}: {children?: React.ReactNode}) {

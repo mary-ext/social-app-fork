@@ -8,8 +8,7 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -44,7 +43,7 @@ import {
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
@@ -53,7 +52,6 @@ import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 import type * as bsky from '#/types/bsky'
@@ -131,7 +129,7 @@ export function Wizard({
     <Layout.Screen
       minimalShell
       testID="starterPackWizardScreen"
-      style={web([{minHeight: 0}, a.flex_1])}>
+      style={[{minHeight: 0}, a.flex_1] as any}>
       <Provider
         starterPack={starterPack}
         listItems={listItems}
@@ -146,7 +144,7 @@ export function Wizard({
         />
       </Provider>
     </Layout.Screen>
-  )
+  );
 }
 
 function WizardInner({
@@ -416,15 +414,6 @@ function Footer({
         {
           paddingBottom: a.pb_lg.paddingBottom + bottomInset,
         },
-        IS_NATIVE && [
-          a.border_l,
-          a.border_r,
-          t.atoms.shadow_md,
-          {
-            borderTopLeftRadius: 14,
-            borderTopRightRadius: 14,
-          },
-        ],
       ]}>
       {items.length > minimumItems && (
         <View style={[a.absolute, {right: 14, top: 31}]}>
@@ -434,7 +423,6 @@ function Footer({
           </Text>
         </View>
       )}
-
       <View style={[a.flex_row]}>
         {items.slice(0, 6).map((p, index) => (
           <View
@@ -457,7 +445,6 @@ function Footer({
           </View>
         ))}
       </View>
-
       {
         state.currentStep === 'Profiles' ? (
           <Text style={[a.text_center, textStyles]}>
@@ -576,13 +563,12 @@ function Footer({
           )
         ) : null /* Should not happen. */
       }
-
       <View
         style={[
           a.w_full,
           a.align_center,
           a.gap_2xl,
-          IS_NATIVE ? a.mt_sm : a.mt_md,
+          a.mt_md,
         ]}>
         {state.currentStep === 'Profiles' && items.length < 8 && (
           <Text
@@ -610,7 +596,7 @@ function Footer({
         </Button>
       </View>
     </View>
-  )
+  );
 }
 
 function getName(

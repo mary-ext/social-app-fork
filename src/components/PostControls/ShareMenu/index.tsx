@@ -15,7 +15,6 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {native} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
@@ -90,16 +89,16 @@ let ShareMenuButton = ({
                 big={big}
                 label={props.accessibilityLabel}
                 {...props}
-                onLongPress={native(onNativeLongPress)}
+                onLongPress={undefined as any}
                 hitSlop={hitSlop}>
                 <PostControlButtonIcon icon={ArrowShareRightIcon} />
               </PostControlButton>
-            )
+            );
           }}
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          <ShareMenuItems
+          (<ShareMenuItems
             testID={testID}
             post={post}
             record={record}
@@ -107,11 +106,11 @@ let ShareMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShare={onShare}
-          />
+          />)
         )}
       </Menu.Root>
     </EventStopper>
-  )
+  );
 }
 
 ShareMenuButton = memo(ShareMenuButton)

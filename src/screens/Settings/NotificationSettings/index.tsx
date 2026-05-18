@@ -1,8 +1,7 @@
 import {useEffect} from 'react'
 import {Linking, View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/appState'
@@ -29,7 +28,6 @@ import {
 } from '#/components/icons/Repost'
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import * as Layout from '#/components/Layout'
-import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
 import * as Notification from '#/shims/notifications'
 import * as SettingsList from '../components/SettingsList'
 import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
@@ -45,8 +43,7 @@ export function NotificationSettingsScreen({}: Props) {
   const {data: permissions, refetch} = useQuery({
     queryKey: RQKEY,
     queryFn: async () => {
-      if (IS_WEB) return null
-      return await Notification.getPermissionsAsync()
+      return null
     },
   })
 
@@ -58,29 +55,7 @@ export function NotificationSettingsScreen({}: Props) {
   }, [appState, refetch])
 
   const onRequestPermissions = async () => {
-    if (IS_WEB) return
-    if (permissions?.canAskAgain) {
-      const response = await Notification.requestPermissionsAsync()
-      queryClient.setQueryData(RQKEY, response)
-    } else {
-      if (IS_ANDROID) {
-        try {
-          await Linking.sendIntent(
-            'android.settings.APP_NOTIFICATION_SETTINGS',
-            [
-              {
-                key: 'android.provider.extra.APP_PACKAGE',
-                value: 'xyz.blueskyweb.app',
-              },
-            ],
-          )
-        } catch {
-          Linking.openSettings()
-        }
-      } else if (IS_IOS) {
-        Linking.openSettings()
-      }
-    }
+    return
   }
 
   return (
@@ -96,7 +71,7 @@ export function NotificationSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
-          {permissions && !permissions.granted && (
+          {(permissions as any) && !(permissions as any).granted && (
             <>
               <SettingsList.PressableItem
                 label={l`Enable push notifications`}

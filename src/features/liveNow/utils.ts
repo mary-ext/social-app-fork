@@ -57,7 +57,7 @@ export function sanitizeLiveNowHost(hostname: string) {
   const parsed = psl.parse(hostname)
   if (parsed.error || !parsed.listed || !parsed.domain) {
     // fall back to dumb version
-    return hostname.replace(/^www\./, '')
+    return hostname.replace(/^www\./, '');
   }
   return parsed.domain
 }

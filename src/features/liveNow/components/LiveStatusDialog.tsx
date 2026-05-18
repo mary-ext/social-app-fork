@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import {android, atoms as a, platform, tokens, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
@@ -82,7 +82,7 @@ function DialogInner({
     <Dialog.ScrollableInner
       label={l`${sanitizeHandle(profile.handle)} is live`}
       contentContainerStyle={[a.pt_0, a.px_0]}
-      style={[web({maxWidth: 420}), a.overflow_hidden]}>
+      style={[{maxWidth: 420} as any, a.overflow_hidden]}>
       <LiveStatus
         status={status}
         profile={profile}
@@ -91,7 +91,7 @@ function DialogInner({
       />
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 export function LiveStatus({
@@ -132,13 +132,7 @@ export function LiveStatus({
                 t.atoms.bg_contrast_25,
                 a.w_full,
                 a.aspect_card,
-                android([
-                  a.overflow_hidden,
-                  {
-                    borderTopLeftRadius: a.rounded_md.borderRadius,
-                    borderTopRightRadius: a.rounded_md.borderRadius,
-                  },
-                ]),
+                undefined as any,
               ]}>
               <Image
                 source={embed.external.thumb}
@@ -185,7 +179,7 @@ export function LiveStatus({
         </View>
         <Button
           label={l`Watch now`}
-          size={platform({native: 'large', web: 'small'})}
+          size={'small'}
           color="primary"
           variant="solid"
           onPress={() => {
@@ -205,7 +199,7 @@ export function LiveStatus({
               disabledPreview
             />
             {/* Ensure wide enough on web hover */}
-            <View style={[a.flex_1, web({minWidth: 100})]}>
+            <View style={[a.flex_1, {minWidth: 100} as any]}>
               <ProfileCard.NameAndHandle
                 profile={profile}
                 moderationOpts={moderationOpts}
@@ -265,7 +259,7 @@ export function LiveStatus({
         </View>
       </View>
     </>
-  )
+  );
 }
 
 function ModeratedImage() {
@@ -302,9 +296,8 @@ function ModeratedImage() {
              * `#/features/liveNow/index.tsx`. But for clarity, I've included
              * this here.
              */
-            <Trans comment="Image has been moderated and is not visible to the user">
-              Image is unavailable.
-            </Trans>
+            (<Trans comment="Image has been moderated and is not visible to the user">Image is unavailable.
+                          </Trans>)
           )}
         </Text>
 
@@ -319,5 +312,5 @@ function ModeratedImage() {
         )}
       </View>
     </View>
-  )
+  );
 }

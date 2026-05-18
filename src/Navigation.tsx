@@ -126,7 +126,6 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
-import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
 import {Referrer} from '#/shims/bluesky-swiss-army'
 import * as Linking from '#/shims/linking'
@@ -719,17 +718,7 @@ function screenOptions(t: Theme) {
 function HomeTabNavigator() {
   const t = useTheme()
 
-  const BLURRED_SCROLL_EDGE_EFFECT = IS_LIQUID_GLASS
-    ? ({
-        headerShown: true,
-        headerTransparent: true,
-        headerTitle: '',
-        headerBackVisible: false,
-        scrollEdgeEffects: {
-          top: 'soft',
-        },
-      } as const)
-    : {}
+  const BLURRED_SCROLL_EDGE_EFFECT = {}
 
   return (
     <HomeTab.Navigator screenOptions={screenOptions(t)} initialRouteName="Home">
@@ -901,34 +890,11 @@ const LINKING = {
     // native, since the home tab and the home screen are defined as initial routes, we don't need to return a state
     // since it will be created by react-navigation.
     if (path.includes('intent/')) {
-      if (IS_NATIVE) return
       return buildStateObject('Flat', 'Home', params)
     }
 
-    if (IS_NATIVE) {
-      if (name === 'Search') {
-        return buildStateObject('SearchTab', 'Search', params)
-      }
-      if (name === 'Notifications') {
-        return buildStateObject('NotificationsTab', 'Notifications', params)
-      }
-      if (name === 'Home') {
-        return buildStateObject('HomeTab', 'Home', params)
-      }
-      if (name === 'Messages') {
-        return buildStateObject('MessagesTab', 'Messages', params)
-      }
-      // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
-      return buildStateObject('HomeTab', name, params, [
-        {
-          name: 'Home',
-          params: {},
-        },
-      ])
-    } else {
-      const res = buildStateObject('Flat', name, params)
-      return res
-    }
+    const res = buildStateObject('Flat', name, params)
+    return res
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
@@ -976,51 +942,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   )
 
   function handlePushNotificationEntry() {
-    if (!IS_NATIVE) return
-
-    // intent urls are handled by `useIntentHandler`
-    if (linkingUrl) return
-
-    const notificationResponse = Notifications.getLastNotificationResponse()
-
-    if (notificationResponse) {
-      notyLogger.debug(`handlePushNotificationEntry: response`, {
-        response: notificationResponse,
-      })
-
-      // Clear the last notification response to ensure it's not used again
-      try {
-        Notifications.clearLastNotificationResponse()
-      } catch (error) {
-        notyLogger.error(
-          `handlePushNotificationEntry: error clearing notification response`,
-          {error},
-        )
-      }
-
-      const payload = getNotificationPayload(notificationResponse.notification)
-
-      if (payload) {
-        if (payload.reason === 'chat-message') {
-          handleChatMessage(payload)
-        } else {
-          const path = notificationToURL(payload)
-
-          if (path === '/notifications') {
-            resetToTab('NotificationsTab')
-            notyLogger.debug(`handlePushNotificationEntry: default navigate`)
-          } else if (path) {
-            const [screen, params] = router.matchPath(path)
-            // @ts-expect-error nested navigators aren't typed -sfn
-            navigate('HomeTab', {screen, params})
-            notyLogger.debug(`handlePushNotificationEntry: navigate`, {
-              screen,
-              params,
-            })
-          }
-        }
-      }
-    }
+    return
   }
 
   const onNavigationReady = useCallOnce(() => {
@@ -1029,10 +951,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     handlePushNotificationEntry()
 
-    if (IS_WEB) {
-      const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-      }
+    const referrerInfo = Referrer.getReferrerInfo()
+    if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
     }
   })
 
@@ -1110,7 +1030,7 @@ function reset(): Promise<void> {
     navigationRef.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{name: IS_NATIVE ? 'HomeTab' : 'Home'}],
+        routes: [{name: 'Home'}],
       }),
     )
     return Promise.race([

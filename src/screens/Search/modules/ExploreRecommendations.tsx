@@ -15,7 +15,6 @@ import {
   TrendingTopicSkeleton,
 } from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 // Note: This module is not currently used and may be removed in the future.
 
@@ -36,9 +35,7 @@ function Inner() {
       <View
         style={[
           a.flex_row,
-          IS_WEB
-            ? [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
-            : [a.p_lg, a.pt_2xl, a.gap_md],
+          [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md],
           a.border_b,
           t.atoms.border_contrast_low,
         ]}>
@@ -105,7 +102,7 @@ function Inner() {
         </View>
       </View>
     </>
-  )
+  );
 }
 
 function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendingTopic[]) {

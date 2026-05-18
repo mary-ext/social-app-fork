@@ -12,13 +12,12 @@ import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {codeToLanguageName} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences/languages'
-import {atoms as a, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {
   guessLanguageAsync,
   type LanguageResult,
@@ -35,7 +34,7 @@ type LanguageDetectionConfig = {
   overrides: Record<string, LanguageDetectionPerLanguageConfig>
 }
 
-const MIN_TEXT_LENGTH = IS_WEB ? 20 : 10
+const MIN_TEXT_LENGTH = 20
 const NOISE_FLOOR = 0.1
 
 /**
@@ -47,12 +46,7 @@ const NOISE_FLOOR = 0.1
  * threshold.
  */
 const DEFAULT_CONFIG: LanguageDetectionConfig = {
-  acceptanceThreshold: platform({
-    web: 0.97,
-    ios: 0.9,
-    android: 0.9,
-    default: 0.97,
-  }),
+  acceptanceThreshold: 0.97,
   /*
    * Device locales are an independent prior — the OS tells us which
    * languages the user has installed, separate from what the model sees
@@ -69,12 +63,7 @@ const DEFAULT_CONFIG: LanguageDetectionConfig = {
    * locale signal is noisier (navigator.languages usually includes
    * English regardless of what the user actually reads).
    */
-  deviceLocaleAcceptanceThreshold: platform({
-    web: 0.97,
-    ios: 0.8,
-    android: 0.8,
-    default: 0.97,
-  }),
+  deviceLocaleAcceptanceThreshold: 0.97,
   /*
    * Per-language carve-outs for known confusable pairs / clusters. The
    * acceptance bar is raised above the platform baseline because these
@@ -87,15 +76,14 @@ const DEFAULT_CONFIG: LanguageDetectionConfig = {
    * discriminates between them, so we can't afford to drop the bar as
    * aggressively.
    *
-   * Each value uses `platform({web, default})` — `default` applies to
-   * iOS/Android/etc. (MLKit is better at these distinctions, so the
-   * bump above baseline is smaller).
+   * Web thresholds are stricter than the old native defaults because browser
+   * language detection is less reliable for these tightly-confusable pairs.
    */
   overrides: {
     // Example
     // id: {
-    //   acceptanceThreshold: platform({web: 0.99, default: 0.95}),
-    //   deviceLocaleAcceptanceThreshold: platform({web: 0.97, default: 0.9}),
+    //   acceptanceThreshold: 0.99,
+    //   deviceLocaleAcceptanceThreshold: 0.97,
     // },
   },
 }

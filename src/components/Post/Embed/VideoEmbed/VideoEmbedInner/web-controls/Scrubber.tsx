@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {clamp} from '#/lib/numbers'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {formatTime} from './utils'
@@ -177,7 +177,7 @@ export function Scrubber({
             a.overflow_hidden,
             {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
             {height: hovered || scrubberActive ? 6 : 3},
-            web({transition: 'height 0.1s ease'}),
+            {transition: 'height 0.1s ease'} as any,
           ]}>
           {duration > 0 && (
             <View
@@ -231,5 +231,5 @@ export function Scrubber({
         </div>
       </div>
     </View>
-  )
+  );
 }

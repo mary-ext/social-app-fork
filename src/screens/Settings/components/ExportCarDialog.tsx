@@ -6,7 +6,7 @@ import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
@@ -89,7 +89,7 @@ export function ExportCarDialog({
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title"
-        style={web({maxWidth: 500})}>
+        style={{maxWidth: 500} as any}>
         <View style={[a.relative, a.w_full]}>
           <Text
             nativeID="dialog-title"
@@ -179,5 +179,5 @@ export function ExportCarDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

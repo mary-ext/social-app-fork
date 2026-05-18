@@ -1,6 +1,5 @@
 import {Keyboard, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -9,7 +8,7 @@ import {
   type OtherSelfLabel,
   type SelfLabel,
 } from '#/lib/moderation'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -17,7 +16,6 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon} from '#/components/icons/Chevron'
 import {Shield_Stroke2_Corner0_Rounded} from '#/components/icons/Shield'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 export function LabelsBtn({
   labels,
@@ -209,12 +207,12 @@ function DialogInner({
           </View>
         </View>
       </View>
-      <View style={[a.mt_sm, web([a.flex_row, a.ml_auto])]}>
+      <View style={[a.mt_sm, [a.flex_row, a.ml_auto] as any]}>
         <Button
           label={l`Done`}
           onPress={() => control.close()}
           color="primary"
-          size={IS_WEB ? 'small' : 'large'}
+          size={'small'}
           variant="solid"
           testID="confirmBtn">
           <ButtonText>
@@ -223,5 +221,5 @@ function DialogInner({
         </Button>
       </View>
     </Dialog.ScrollableInner>
-  )
+  );
 }

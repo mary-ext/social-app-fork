@@ -7,7 +7,6 @@ import Animated, {
   SlideInLeft,
   SlideInRight,
 } from '#/lib/animations/reanimatedCompat'
-import {IS_WEB} from '#/env'
 
 export function ScreenTransition({
   direction,
@@ -30,10 +29,10 @@ export function ScreenTransition({
 
   return (
     <Animated.View
-      entering={IS_WEB ? webEntering : entering}
-      exiting={IS_WEB ? webExiting : exiting}
+      entering={webEntering}
+      exiting={webExiting}
       style={style}>
       {children}
     </Animated.View>
-  )
+  );
 }

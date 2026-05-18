@@ -8,8 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
@@ -25,7 +24,7 @@ import {
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, ios, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -34,7 +33,6 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -132,12 +130,7 @@ export function ProfileStarterPacks({
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  useEffect(() => {
-    if (IS_IOS && enabled && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [enabled, scrollElRef, setScrollViewTag])
+  useEffect(() => {}, [enabled, scrollElRef, setScrollViewTag])
 
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
@@ -165,7 +158,7 @@ export function ProfileStarterPacks({
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
         headerOffset={headerOffset}
-        progressViewOffset={ios(0)}
+        progressViewOffset={undefined as any}
         contentContainerStyle={{
           minHeight: height + headerOffset,
           paddingBottom: bottomBarOffset,
@@ -182,7 +175,7 @@ export function ProfileStarterPacks({
         }
       />
     </View>
-  )
+  );
 }
 
 function CreateAnother() {

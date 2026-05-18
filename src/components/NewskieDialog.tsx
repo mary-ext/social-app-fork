@@ -1,8 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -10,14 +9,13 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 export function NewskieDialog({
   profile,
@@ -112,7 +110,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={l`New user info dialog`}
-      style={web({maxWidth: 400})}>
+      style={{maxWidth: 400} as any}>
       <View style={[a.gap_md]}>
         <View style={[a.align_center]}>
           <View
@@ -156,20 +154,8 @@ function DialogInner({
           </StarterPackCard.Link>
         ) : null}
 
-        {IS_NATIVE && (
-          <Button
-            label={l`Close`}
-            color="secondary"
-            size="small"
-            style={[a.mt_sm]}
-            onPress={() => control.close()}>
-            <ButtonText>
-              <Trans>Close</Trans>
-            </ButtonText>
-          </Button>
-        )}
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 import {Pressable, View} from 'react-native'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as TextField from '#/components/forms/TextField'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
@@ -45,10 +45,10 @@ export function DateFieldButton({
   return (
     <View
       style={[a.relative, a.w_full]}
-      {...web({
+      {...{
         onMouseOver: onHoverIn,
         onMouseOut: onHoverOut,
-      })}>
+      } as any}>
       <Pressable
         aria-label={label}
         accessibilityLabel={label}
@@ -65,11 +65,8 @@ export function DateFieldButton({
             borderColor: 'transparent',
             borderWidth: 1,
           },
-          native({
-            paddingTop: 10,
-            paddingBottom: 10,
-          }),
-          web(a.py_md),
+          undefined as any,
+          a.py_md,
           a.flex_row,
           a.flex_1,
           a.w_full,
@@ -95,5 +92,5 @@ export function DateFieldButton({
         </Text>
       </Pressable>
     </View>
-  )
+  );
 }

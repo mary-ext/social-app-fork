@@ -1,14 +1,13 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
@@ -90,7 +89,7 @@ export function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={l`Appeal livestream suspension`}
-      style={[web({maxWidth: 400})]}>
+      style={[{maxWidth: 400} as any]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_md]}>
           <Text
@@ -141,5 +140,5 @@ export function DialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }

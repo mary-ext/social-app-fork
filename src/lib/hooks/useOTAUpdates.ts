@@ -3,7 +3,6 @@ import {Alert, AppState, type AppStateStatus} from 'react-native'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
 import {nativeBuildVersion} from '#/shims/application'
 import {
   checkForUpdateAsync,
@@ -18,20 +17,20 @@ const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
 async function setExtraParams() {
   await setExtraParamAsync(
-    IS_IOS ? 'ios-build-number' : 'android-build-number',
+    'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
   )
   await setExtraParamAsync(
     'channel',
-    IS_TESTFLIGHT ? 'testflight' : 'production',
+    'production',
   )
 }
 
 async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync(
-    IS_IOS ? 'ios-build-number' : 'android-build-number',
+    'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
     // This just ensures it gets passed as a string
     `${nativeBuildVersion}`,
@@ -169,14 +168,7 @@ export function useOTAUpdates() {
       return
     }
 
-    // We use this setTimeout to allow analytics to initialize before we check for an update
-    // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
-    // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
-    // immediately.
-    if (IS_TESTFLIGHT) {
-      onIsTestFlight()
-      return
-    } else if (!shouldReceiveUpdates || ranInitialCheck.current) {
+    if (!shouldReceiveUpdates || ranInitialCheck.current) {
       return
     }
 
@@ -191,13 +183,6 @@ export function useOTAUpdates() {
     if (!isEnabled || currentChannel?.startsWith('pull-request')) {
       return
     }
-
-    // TEMP: disable wake-from-background OTA loading on Android.
-    // This is causing a crash when the thread view is open due to
-    // `maintainVisibleContentPosition`. See repro repo for more details:
-    // https://github.com/mozzius/ota-crash-repro
-    // Old Arch only - re-enable once we're on the New Archictecture! -sfn
-    if (IS_ANDROID) return
 
     const subscription = AppState.addEventListener(
       'change',

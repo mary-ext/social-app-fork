@@ -11,17 +11,7 @@ import {
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
-import {
-  android,
-  applyFonts,
-  atoms as a,
-  platform,
-  type TextStyleProp,
-  tokens,
-  useAlf,
-  useTheme,
-  web,
-} from '#/alf'
+import { applyFonts, atoms as a, type TextStyleProp, tokens, useAlf, useTheme } from '#/alf';
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -94,15 +84,15 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.px_md,
           style,
         ]}
-        {...web({
+        {...{
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,
           onMouseOut: onHoverOut,
-        })}>
+        } as any}>
         {children}
       </View>
     </Context.Provider>
-  )
+  );
 }
 
 export function useSharedInputStyles() {
@@ -219,20 +209,13 @@ export function createInput(Component: typeof TextInput) {
         paddingTop: 13,
         paddingBottom: 13,
       },
-      android({
-        paddingTop: 8,
-        paddingBottom: 9,
-      }),
-      /*
-       * Margins are needed here to avoid autofill background overlapping the
-       * top and bottom borders - esb
-       */
-      web({
+      undefined as any,
+      {
         paddingTop: 11,
         paddingBottom: 11,
         marginTop: 2,
         marginBottom: 2,
-      }),
+      } as any,
       style,
     ])
 
@@ -290,7 +273,7 @@ export function createInput(Component: typeof TextInput) {
         />
       </>
     )
-  }
+  };
 }
 
 export const Input = createInput(TextInput)
@@ -382,13 +365,13 @@ export function SuffixText({
         a.text_md,
         t.atoms.text_contrast_medium,
         a.pointer_events_none,
-        web([{marginTop: -2}, a.leading_snug]),
+        [{marginTop: -2}, a.leading_snug] as any,
         (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
         style,
       ]}>
       {children}
     </Text>
-  )
+  );
 }
 
 export function GhostText({
@@ -407,26 +390,14 @@ export function GhostText({
         a.absolute,
         a.z_10,
         {
-          paddingLeft: platform({
-            native:
-              // input padding
-              tokens.space.md +
-              // icon
-              tokens.space.xl +
-              // icon padding
-              tokens.space.xs +
-              // text input padding
-              tokens.space.xs,
-            web:
-              // icon
-              tokens.space.xl +
-              // icon padding
-              tokens.space.xs +
-              // text input padding
-              tokens.space.xs,
-          }),
+          paddingLeft: // icon
+          tokens.space.xl +
+          // icon padding
+          tokens.space.xs +
+          // text input padding
+          tokens.space.xs,
         },
-        web(a.pr_md),
+        a.pr_md,
         a.overflow_hidden,
         a.max_w_full,
       ]}
@@ -452,5 +423,5 @@ export function GhostText({
         </Text>
       </Text>
     </View>
-  )
+  );
 }

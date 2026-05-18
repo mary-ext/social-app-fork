@@ -11,7 +11,7 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {Easing, LinearTransition} from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {atoms as a, native, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {
   Button,
   type ButtonProps,
@@ -251,7 +251,7 @@ function Slider({x, width}: {x: number; width: number}) {
 
   return (
     <Animated.View
-      layout={native(LinearTransition.easing(Easing.out(Easing.exp)))}
+      layout={undefined as any}
       style={[
         a.absolute,
         a.curve_continuous,
@@ -263,25 +263,11 @@ function Slider({x, width}: {x: number; width: number}) {
           width,
           borderRadius: 10,
         },
-        // TODO: new arch supports boxShadow on native
-        // in the meantime this is an attempt to get close
-        platform({
-          web: {
-            boxShadow: '0px 2px 4px 0px #0000000D',
-          },
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0x0d / 0xff,
-            shadowRadius: 4,
-          },
-          android: {elevation: 0.25},
-        }),
-        platform({
-          native: [{left: x}],
-          web: [{transform: [{translateX: x}]}, a.transition_transform],
-        }),
+        {
+          boxShadow: '0px 2px 4px 0px #0000000D',
+        },
+        [{transform: [{translateX: x}]}, a.transition_transform],
       ]}
     />
-  )
+  );
 }

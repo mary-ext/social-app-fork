@@ -6,7 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import {atoms as a, native, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
@@ -103,9 +103,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         },
         a.flex_grow,
         a.py_md,
-        native({
-          paddingBottom: 10,
-        }),
+        undefined as any,
         a.px_md,
         t.atoms.bg,
         t.atoms.border_contrast_low,
@@ -115,7 +113,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
       ]}>
       {children}
     </View>
-  )
+  );
 }
 
 /**

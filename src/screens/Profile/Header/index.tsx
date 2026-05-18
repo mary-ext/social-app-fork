@@ -25,7 +25,6 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
-import {IS_NATIVE} from '#/env'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -83,17 +82,10 @@ let ProfileHeader = ({setMinimumHeight, ...props}: Props): React.ReactNode => {
 
   return (
     <>
-      {IS_NATIVE && (
-        <MinimalHeader
-          onLayout={evt => setMinimumHeight(evt.nativeEvent.layout.height)}
-          profile={props.profile}
-          labeler={props.labeler}
-          hideBackButton={props.hideBackButton}
-        />
-      )}
+      {false}
       {content}
     </>
-  )
+  );
 }
 ProfileHeader = memo(ProfileHeader)
 export {ProfileHeader}

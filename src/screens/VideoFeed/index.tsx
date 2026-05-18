@@ -71,7 +71,7 @@ import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {Header} from '#/screens/VideoFeed/components/Header'
-import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
+import { atoms as a, ThemeProvider, useTheme } from '#/alf';
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -87,7 +87,6 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID} from '#/env'
 import {useEvent, useEventListener} from '#/shims/core'
 import {Image, type ImageStyle} from '#/shims/image'
 import {LinearGradient} from '#/shims/linear-gradient'
@@ -104,11 +103,7 @@ function createThreeVideoPlayers(
   sources?: [string, string, string],
 ): [VideoPlayer, VideoPlayer, VideoPlayer] {
   // android is typically slower and can't keep up with a 0.1 interval
-  const eventInterval = platform({
-    ios: 0.2,
-    android: 0.5,
-    default: 0,
-  })
+  const eventInterval = 0
   const p1 = createVideoPlayer(sources?.[0] ?? '')
   p1.loop = true
   p1.timeUpdateEventInterval = eventInterval
@@ -513,7 +508,7 @@ let VideoItem = ({
   // TODO: high-performance android phones should also
   // be capable of rendering 3 video players, but currently
   // we can't distinguish between them
-  const shouldRenderVideo = active || ios(adjacent)
+  const shouldRenderVideo = active || undefined as any
 
   return (
     <View style={[a.relative, {height, width}]}>
@@ -571,13 +566,9 @@ function VideoItemInner({
   embed: AppBskyEmbedVideo.View
 }) {
   const {bottom} = useSafeAreaInsets()
-  const [isReady, setIsReady] = useState(!IS_ANDROID)
+  const [isReady, setIsReady] = useState(true)
 
-  useEventListener(player, 'timeUpdate', evt => {
-    if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
-      setIsReady(true)
-    }
-  })
+  useEventListener(player, 'timeUpdate', evt => {})
 
   return (
     <VideoView

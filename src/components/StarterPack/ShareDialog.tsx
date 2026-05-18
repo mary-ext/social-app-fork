@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
@@ -15,7 +14,6 @@ import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/ico
 import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 
 interface Props {
@@ -105,17 +103,13 @@ function ShareDialogInner({
                 ],
               ]}>
               <Button
-                label={IS_WEB ? l`Copy link` : l`Share link`}
+                label={l`Copy link`}
                 color="primary_subtle"
                 size="large"
                 onPress={onShareLink}>
                 <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
-                  {IS_WEB ? (
-                    <Trans>Copy Link</Trans>
-                  ) : (
-                    <Trans>Share link</Trans>
-                  )}
+                  {(<Trans>Copy Link</Trans>)}
                 </ButtonText>
               </Button>
               <Button
@@ -132,23 +126,12 @@ function ShareDialogInner({
                   <Trans>Share QR code</Trans>
                 </ButtonText>
               </Button>
-              {IS_NATIVE && (
-                <Button
-                  label={l`Save image`}
-                  color="secondary"
-                  size="large"
-                  onPress={onSave}>
-                  <ButtonIcon icon={DownloadIcon} />
-                  <ButtonText>
-                    <Trans>Save image</Trans>
-                  </ButtonText>
-                </Button>
-              )}
+
             </View>
           </View>
         )}
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </>
-  )
+  );
 }

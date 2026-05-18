@@ -6,8 +6,7 @@ import {
   type AppBskyFeedDefs,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type ListMethods} from '#/view/com/util/List'
@@ -15,7 +14,7 @@ import {
   type WizardAction,
   type WizardState,
 } from '#/screens/StarterPack/Wizard/State'
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {
@@ -23,7 +22,6 @@ import {
   WizardProfileCard,
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 function keyExtractor(
   item: AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView,
@@ -90,7 +88,7 @@ export function WizardEditListDialog({
         ListHeaderComponent={
           <View
             style={[
-              native(a.pt_4xl),
+              undefined as any,
               a.flex_row,
               a.justify_between,
               a.border_b,
@@ -98,14 +96,12 @@ export function WizardEditListDialog({
               a.mb_sm,
               t.atoms.bg,
               t.atoms.border_contrast_medium,
-              IS_WEB
-                ? [
+              [
                     a.align_center,
                     {
                       height: 48,
                     },
-                  ]
-                : [a.pb_sm, a.align_end],
+                  ],
             ]}>
             <View style={{width: 60}} />
             <Text style={[a.font_semi_bold, a.text_xl]}>
@@ -116,30 +112,23 @@ export function WizardEditListDialog({
               )}
             </Text>
             <View style={{width: 60}}>
-              {IS_WEB && (
-                <Button
-                  label={l`Close`}
-                  variant="ghost"
-                  color="primary"
-                  size="small"
-                  onPress={() => control.close()}>
-                  <ButtonText>
-                    <Trans>Close</Trans>
-                  </ButtonText>
-                </Button>
-              )}
+              {(<Button
+                label={l`Close`}
+                variant="ghost"
+                color="primary"
+                size="small"
+                onPress={() => control.close()}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>)}
             </View>
           </View>
         }
         stickyHeaderIndices={[0]}
         style={[
-          web([a.py_0, {height: '100vh', maxHeight: 600}, a.px_0]),
-          native({
-            height: '100%',
-            paddingHorizontal: 0,
-            marginTop: 0,
-            paddingTop: 0,
-          }),
+          [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
+          undefined as any,
         ]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         keyboardDismissMode="on-drag"
@@ -147,5 +136,5 @@ export function WizardEditListDialog({
         initialNumToRender={initialNumToRender}
       />
     </Dialog.Outer>
-  )
+  );
 }

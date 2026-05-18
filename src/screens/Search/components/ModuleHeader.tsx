@@ -5,7 +5,7 @@ import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 import {Button, ButtonIcon} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {sizes as iconSizes} from '#/components/icons/common'
@@ -132,7 +132,7 @@ export function SearchButton({
       variant="ghost"
       color="secondary"
       shape="round"
-      PressableComponent={native(PressableScale)}
+      PressableComponent={undefined as any}
       onPress={() => {
         onPress?.()
       }}
@@ -143,7 +143,7 @@ export function SearchButton({
       ]}>
       <ButtonIcon icon={SearchIcon} size="lg" />
     </Button>
-  )
+  );
 }
 
 export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {

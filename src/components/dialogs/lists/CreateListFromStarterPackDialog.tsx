@@ -8,8 +8,7 @@ import {
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
@@ -20,7 +19,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -138,7 +137,7 @@ export function CreateListFromStarterPackDialog({
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Create list from starter pack`}
-          style={web({maxWidth: 400})}>
+          style={{maxWidth: 400} as any}>
           <View style={[a.gap_lg]}>
             <Text style={[a.text_xl, a.font_bold]}>
               <Trans>Create list from starter pack</Trans>
@@ -161,20 +160,14 @@ export function CreateListFromStarterPackDialog({
 
             <View
               style={[
-                platform({
-                  web: [a.flex_row_reverse],
-                  native: [a.flex_col],
-                }),
+                [a.flex_row_reverse],
                 a.gap_md,
                 a.pt_sm,
               ]}>
               <Button
                 label={l`Create list`}
                 onPress={onPressCreate}
-                size={platform({
-                  web: 'small',
-                  native: 'large',
-                })}
+                size={'small'}
                 color="primary">
                 <ButtonText>
                   <Trans>Create list</Trans>
@@ -183,10 +176,7 @@ export function CreateListFromStarterPackDialog({
               <Button
                 label={l`Cancel`}
                 onPress={() => control.close()}
-                size={platform({
-                  web: 'small',
-                  native: 'large',
-                })}
+                size={'small'}
                 color="secondary">
                 <ButtonText>
                   <Trans>Cancel</Trans>
@@ -213,7 +203,7 @@ export function CreateListFromStarterPackDialog({
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Adding members to list...`}
-          style={web({maxWidth: 400})}>
+          style={{maxWidth: 400} as any}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />
             <Text style={[a.text_lg, t.atoms.text_contrast_high]}>
@@ -223,5 +213,5 @@ export function CreateListFromStarterPackDialog({
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
-  )
+  );
 }

@@ -11,7 +11,6 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import * as bsky from '#/types/bsky'
 
 const LazyViewShot = lazy(
@@ -120,7 +119,7 @@ export function QrCodeInner({link}: {link: string}) {
   return (
     <View style={{position: 'relative'}}>
       {/* An SVG version of the logo is placed on top of normal `QRCode` `logo` prop, since the PNG fails to load before the export completes on web. */}
-      {IS_WEB && logoArea && (
+      {logoArea && (
         <View
           style={{
             position: 'absolute',
@@ -138,9 +137,9 @@ export function QrCodeInner({link}: {link: string}) {
           a.rounded_sm,
           {height: 225, width: 225, backgroundColor: '#f3f3f3'},
         ]}
-        pieceSize={IS_WEB ? 8 : 6}
+        pieceSize={8}
         padding={20}
-        pieceBorderRadius={IS_WEB ? 4.5 : 3.5}
+        pieceBorderRadius={4.5}
         outerEyesOptions={{
           topLeft: {
             borderRadius: [12, 12, 0, 12],
@@ -158,17 +157,15 @@ export function QrCodeInner({link}: {link: string}) {
         innerEyesOptions={{borderRadius: 3}}
         logo={{
           href: require('../../../assets/logo.png'),
-          ...(IS_WEB && {
+
+          ...({
             onChange: onLogoAreaChange,
             padding: 28,
           }),
-          ...(!IS_WEB && {
-            padding: 2,
-            scale: 0.95,
-          }),
+
           hidePieces: true,
         }}
       />
     </View>
-  )
+  );
 }

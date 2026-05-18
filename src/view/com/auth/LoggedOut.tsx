@@ -17,7 +17,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
-import {atoms as a, native, tokens, useTheme} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {SplashScreen} from './SplashScreen'
@@ -88,7 +88,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             color="secondary_inverted"
             size="small"
             shape="round"
-            PressableComponent={native(PressableScale)}
+            PressableComponent={undefined as any}
             style={[
               a.absolute,
               {
@@ -131,5 +131,5 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         ) : undefined}
       </ErrorBoundary>
     </View>
-  )
+  );
 }

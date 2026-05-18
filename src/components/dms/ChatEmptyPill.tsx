@@ -13,7 +13,6 @@ import {ShrinkAndPop} from '#/lib/custom-animations/ShrinkAndPop'
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -40,13 +39,11 @@ export function ChatEmptyPill() {
   }, [l])
 
   const onPressIn = useCallback(() => {
-    if (IS_WEB) return
-    scale.set(() => withTiming(1.075, {duration: 100}))
+    return
   }, [scale])
 
   const onPressOut = useCallback(() => {
-    if (IS_WEB) return
-    scale.set(() => withTiming(1, {duration: 100}))
+    return
   }, [scale])
 
   const onPress = useCallback(() => {

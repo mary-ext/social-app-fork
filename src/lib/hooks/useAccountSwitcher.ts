@@ -9,7 +9,6 @@ import {
 } from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/components/Toast'
-import {IS_WEB} from '#/env'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
@@ -26,14 +25,12 @@ export function useAccountSwitcher() {
       try {
         setPendingDid(account.did)
         if (account.accessJwt) {
-          if (IS_WEB) {
-            // We're switching accounts, which remounts the entire app.
-            // On mobile, this gets us Home, but on the web we also need reset the URL.
-            // We can't change the URL via a navigate() call because the navigator
-            // itself is about to unmount, and it calls pushState() too late.
-            // So we change the URL ourselves. The navigator will pick it up on remount.
-            history.pushState(null, '', '/')
-          }
+          // We're switching accounts, which remounts the entire app.
+          // On mobile, this gets us Home, but on the web we also need reset the URL.
+          // We can't change the URL via a navigate() call because the navigator
+          // itself is about to unmount, and it calls pushState() too late.
+          // So we change the URL ourselves. The navigator will pick it up on remount.
+          history.pushState(null, '', '/')
           await resumeSession(account, true)
           Toast.show(l`Signed in as @${account.handle}`)
         } else {

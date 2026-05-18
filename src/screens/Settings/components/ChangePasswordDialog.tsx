@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -9,13 +8,12 @@ import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {android, atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 enum Stages {
   RequestCode = 'RequestCode',
@@ -33,11 +31,11 @@ export function ChangePasswordDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={android({minHeight: height / 2})}>
+      nativeOptions={undefined as any}>
       <Dialog.Handle />
       <Inner />
     </Dialog.Outer>
-  )
+  );
 }
 
 function Inner() {
@@ -150,7 +148,7 @@ function Inner() {
   return (
     <Dialog.ScrollableInner
       label={l`Change password dialog`}
-      style={web({maxWidth: 400})}>
+      style={{maxWidth: 400} as any}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>
@@ -230,18 +228,7 @@ function Inner() {
                   <Trans>Already have a code?</Trans>
                 </ButtonText>
               </Button>
-              {IS_NATIVE && (
-                <Button
-                  label={l`Cancel`}
-                  color="secondary"
-                  size="large"
-                  disabled={isProcessing}
-                  onPress={() => control.close()}>
-                  <ButtonText>
-                    <Trans>Cancel</Trans>
-                  </ButtonText>
-                </Button>
-              )}
+              {false}
             </>
           ) : stage === Stages.ChangePassword ? (
             <>
@@ -285,5 +272,5 @@ function Inner() {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }

@@ -6,7 +6,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {type AutocompleteItem} from '#/components/Autocomplete/types'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {Portal} from '#/components/Portal'
-import {IS_WEB} from '#/env'
 import {AutocompleteItemEmoji} from './AutocompleteItemEmoji'
 import {AutocompleteItemProfile} from './AutocompleteItemProfile'
 import {AutocompleteItemSearch} from './AutocompleteItemSearch'
@@ -62,11 +61,9 @@ export function Autocomplete({
           a.rounded_md,
           a.w_full,
           t.atoms.shadow_lg,
-          IS_WEB
-            ? {
+          {
                 maxWidth: 300,
-              }
-            : {},
+              },
         ]}
         innerStyle={[
           a.overflow_hidden,
@@ -75,14 +72,12 @@ export function Autocomplete({
           t.atoms.border_contrast_low,
           t.atoms.bg,
           a.w_full,
-          IS_WEB
-            ? {
+          {
                 maxWidth: 300,
-              }
-            : {},
+              },
         ]}
         render={render}
       />
     </Portal>
-  )
+  );
 }

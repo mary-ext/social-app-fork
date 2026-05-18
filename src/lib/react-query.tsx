@@ -12,7 +12,6 @@ import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 import {isQueryPersisted} from '#/state/queries/util'
 import * as env from '#/env'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 declare global {
   interface Window {
@@ -86,16 +85,7 @@ setInterval(() => {
 }, 2000)
 
 focusManager.setEventListener(onFocus => {
-  if (IS_NATIVE) {
-    const subscription = AppState.addEventListener(
-      'change',
-      (status: AppStateStatus) => {
-        focusManager.setFocused(status === 'active')
-      },
-    )
-
-    return () => subscription.remove()
-  } else if (typeof window !== 'undefined' && window.addEventListener) {
+  if (typeof window !== 'undefined' && window.addEventListener) {
     // these handlers are a bit redundant but focus catches when the browser window
     // is blurred/focused while visibilitychange seems to only handle when the
     // window minimizes (both of them catch tab changes)
@@ -187,14 +177,7 @@ function QueryProviderInner({
       buster: env.APP_VERSION,
     } satisfies Omit<PersistQueryClientOptions, 'queryClient'>
   })
-  useEffect(() => {
-    if (IS_WEB) {
-      // WARNING, BROKEN
-      // something since v5.32.0 causes OOMs. not important
-      // so disable for now
-      // window.__TANSTACK_QUERY_CLIENT__ = queryClient
-    }
-  }, [queryClient])
+  useEffect(() => {}, [queryClient])
   return (
     <PersistQueryClientProvider
       client={queryClient}

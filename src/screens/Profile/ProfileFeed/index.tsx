@@ -42,7 +42,6 @@ import {useTheme} from '#/alf'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
-import {IS_NATIVE} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
@@ -148,7 +147,7 @@ export function ProfileFeedScreenInner({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: 0, // -headerHeight,
     })
     void truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
@@ -177,7 +176,7 @@ export function ProfileFeedScreenInner({
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return IS_NATIVE && _isVideoFeed
+    return false;
   }, [feedInfo])
 
   return (

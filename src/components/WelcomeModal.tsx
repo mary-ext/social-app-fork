@@ -1,12 +1,11 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
+import { atoms as a, flatten, useBreakpoints } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
@@ -40,7 +39,6 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   useEffect(() => {
     if (control.isOpen) {
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [control.isOpen])
 
   const onPressCreateAccount = () => {
@@ -69,7 +67,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
         a.justify_center,
         a.align_center,
         {zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.2)'},
-        web({backdropFilter: 'blur(15px)'}),
+        {backdropFilter: 'blur(15px)'} as any,
         isExiting ? a.fade_out : a.fade_in,
       ]}>
       <FocusScope.FocusScope asChild loop trapped>
@@ -126,7 +124,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     a.font_semi_bold,
                     a.text_center,
                     {color: '#354358'},
-                    web({
+                    {
                       backgroundImage:
                         'linear-gradient(180deg, #313F54 0%, #667B99 83.65%, rgba(102, 123, 153, 0.50) 100%)',
                       backgroundClip: 'text',
@@ -135,7 +133,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                       color: 'transparent',
                       lineHeight: 1.2,
                       letterSpacing: -0.5,
-                    }),
+                    } as any,
                   ]}>
                   <Trans>Real people.</Trans>
                   {'\n'}
@@ -238,5 +236,5 @@ export function WelcomeModal({control}: WelcomeModalProps) {
         </View>
       </FocusScope.FocusScope>
     </View>
-  )
+  );
 }

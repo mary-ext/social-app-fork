@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {ActivityIndicator, Platform, View} from 'react-native'
+import { ActivityIndicator, View } from 'react-native';
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -10,20 +10,14 @@ import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
-import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import { GCP_PROJECT_ID } from '#/env';
 import {BackNextButtons} from '../BackNextButtons'
 
 const CAPTCHA_PATH =
-  IS_WEB || GCP_PROJECT_ID === 0
-    ? '/gate/signup'
-    : '/gate/signup/attempt-attest'
+  '/gate/signup'
 
 export function StepCaptcha() {
-  if (IS_WEB) {
-    return <StepCaptchaInner />
-  } else {
-    return <StepCaptchaNative />
-  }
+  return <StepCaptchaInner />
 }
 
 export function StepCaptchaNative() {
@@ -35,17 +29,10 @@ export function StepCaptchaNative() {
     void (async () => {
       logger.debug('trying to generate attestation token...')
       try {
-        if (IS_IOS) {
-          logger.debug('starting to generate devicecheck token...')
-          const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
-          setToken(token)
-          logger.debug(`generated devicecheck token: ${token}`)
-        } else {
-          const {token, payload} =
-            await ReactNativeDeviceAttest.getIntegrityToken('signup')
-          setToken(token)
-          setPayload(base64UrlEncode(payload))
-        }
+        const {token, payload} =
+          await ReactNativeDeviceAttest.getIntegrityToken('signup')
+        setToken(token)
+        setPayload(base64UrlEncode(payload))
       } catch (err) {
         const e = err as Error
         logger.error(e)
@@ -85,14 +72,6 @@ function StepCaptchaInner({
     )
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.name)
-
-    if (IS_NATIVE && token) {
-      newUrl.searchParams.set('platform', Platform.OS)
-      newUrl.searchParams.set('token', token)
-      if (IS_ANDROID && payload) {
-        newUrl.searchParams.set('payload', payload)
-      }
-    }
 
     return newUrl.href
   }, [
@@ -181,5 +160,5 @@ function base64UrlEncode(data: string): string {
   const binaryString = String.fromCharCode(...bytes)
   const base64 = btoa(binaryString)
 
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/[=]/g, '')
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/[=]/g, '');
 }

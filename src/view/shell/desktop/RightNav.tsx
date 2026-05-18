@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
@@ -10,13 +9,7 @@ import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
-import {
-  atoms as a,
-  useGutters,
-  useLayoutBreakpoints,
-  useTheme,
-  web,
-} from '#/alf'
+import { atoms as a, useGutters, useLayoutBreakpoints, useTheme } from '#/alf';
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
@@ -65,7 +58,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         gutters,
         a.gap_lg,
         a.pr_2xs,
-        web({
+        {
           position: 'fixed',
           left: '50%',
           transform: [
@@ -79,7 +72,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
            */
           width: width + gutters.paddingLeft + 2,
           maxHeight: '100vh',
-        }),
+        } as any,
       ]}>
       {!isSearchScreen && <DesktopSearch />}
       {hasSession && (
@@ -138,5 +131,5 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         </Text>
       )}
     </View>
-  )
+  );
 }

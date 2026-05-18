@@ -1,13 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
@@ -15,7 +14,6 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 export const SetNewPasswordForm = ({
@@ -147,22 +145,20 @@ export const SetNewPasswordForm = ({
         </TextField.Root>
       </View>
       <FormError error={error} />
-      <View style={[web([a.flex_row, a.align_center]), a.pt_lg]}>
-        {IS_WEB && (
-          <>
-            <Button
-              label={l`Back`}
-              variant="solid"
-              color="secondary"
-              size="large"
-              onPress={onPressBack}>
-              <ButtonText>
-                <Trans>Back</Trans>
-              </ButtonText>
-            </Button>
-            <View style={a.flex_1} />
-          </>
-        )}
+      <View style={[[a.flex_row, a.align_center] as any, a.pt_lg]}>
+        {(<>
+          <Button
+            label={l`Back`}
+            variant="solid"
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>
+              <Trans>Back</Trans>
+            </ButtonText>
+          </Button>
+          <View style={a.flex_1} />
+        </>)}
 
         <Button
           label={l`Next`}
@@ -177,5 +173,5 @@ export const SetNewPasswordForm = ({
         </Button>
       </View>
     </FormContainer>
-  )
+  );
 }

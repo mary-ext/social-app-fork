@@ -1,6 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
@@ -8,7 +7,7 @@ import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorde
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, ios, native, useBreakpoints, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
@@ -65,10 +64,7 @@ export function ThreadComposePrompt({
           onPressCompose()
           playHaptic('Light')
         }}
-        onLongPress={ios(() => {
-          onPressCompose()
-          playHaptic('Heavy')
-        })}
+        onLongPress={undefined as any}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}
         style={[
@@ -78,7 +74,7 @@ export function ThreadComposePrompt({
           a.gap_sm,
           a.rounded_full,
           (!gtMobile || hovered) && t.atoms.bg_contrast_25,
-          native([a.border, t.atoms.border_contrast_low]),
+          undefined as any,
           a.transition_color,
         ]}>
         <UserAvatar
@@ -91,5 +87,5 @@ export function ThreadComposePrompt({
         </Text>
       </PressableScale>
     </View>
-  )
+  );
 }

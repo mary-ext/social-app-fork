@@ -7,7 +7,6 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
   return item.uri
@@ -27,7 +26,7 @@ export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
-        animated: IS_NATIVE,
+        animated: false,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])
@@ -44,12 +43,12 @@ export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(
         <View
           style={[
             a.p_lg,
-            (IS_WEB || index !== 0) && a.border_t,
+            a.border_t,
             t.atoms.border_contrast_low,
           ]}>
           <FeedCard.Default view={item} />
         </View>
-      )
+      );
     }
 
     return (

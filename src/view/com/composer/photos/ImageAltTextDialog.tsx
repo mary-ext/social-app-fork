@@ -1,7 +1,6 @@
 import {useMemo, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
@@ -14,7 +13,6 @@ import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 
 type Props = {
@@ -69,10 +67,7 @@ const ImageAltTextInner = ({
   const {width: screenWidth} = useWindowDimensions()
 
   const imageStyle = useMemo<ImageStyle>(() => {
-    const maxWidth = IS_WEB
-      ? 450
-      : screenWidth - // account for dialog padding
-        2 * (IS_LIQUID_GLASS ? tokens.space._2xl : tokens.space.xl)
+    const maxWidth = 450
     const source = image.transformed ?? image.source
 
     if (source.height > source.width) {
@@ -95,12 +90,10 @@ const ImageAltTextInner = ({
       <Dialog.Close />
       <View>
         {/* vertical space is too precious - gets scrolled out of the way anyway */}
-        {IS_WEB && (
-          <Text
-            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
-            <Trans>Add alt text</Trans>
-          </Text>
-        )}
+        {(<Text
+          style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
+          <Trans>Add alt text</Trans>
+        </Text>)}
 
         <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
           <Image
@@ -173,5 +166,5 @@ const ImageAltTextInner = ({
         </AltTextCounterWrapper>
       </View>
     </Dialog.ScrollableInner>
-  )
+  );
 }

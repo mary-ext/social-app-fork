@@ -8,7 +8,6 @@ import {UITextView} from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
 import {type Alf, applyFonts, atoms, flatten} from '#/alf'
-import {IS_IOS, IS_NATIVE} from '#/env'
 
 /**
  * Ensures that `lineHeight` defaults to a relative value of `1`, or applies
@@ -36,9 +35,8 @@ export function normalizeTextStyles(
     if (s.lineHeight !== 0 && s.lineHeight <= 2) {
       s.lineHeight = Math.round(s.fontSize * s.lineHeight)
     }
-  } else if (!IS_NATIVE) {
-    s.lineHeight = s.fontSize
-  }
+  } else
+    s.lineHeight = s.fontSize;
 
   applyFonts(s, fontFamily)
 
@@ -83,30 +81,7 @@ export function renderChildrenWithEmoji(
   props: Omit<TextProps, 'children'> = {},
   emoji: boolean,
 ) {
-  if (!IS_IOS || !emoji) {
-    return children
-  }
-  return Children.map(children, child => {
-    if (typeof child !== 'string') return child
-
-    const emojis = child.match(EMOJI)
-
-    if (emojis === null) {
-      return child
-    }
-
-    return child.split(EMOJI).map((stringPart, index) => [
-      stringPart,
-      emojis[index] ? (
-        <UITextView
-          {...props}
-          style={[props?.style, {fontFamily: 'System'}]}
-          key={index}>
-          {emojis[index]}
-        </UITextView>
-      ) : null,
-    ])
-  })
+  return children
 }
 
 const SINGLE_EMOJI_RE =

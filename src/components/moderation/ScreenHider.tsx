@@ -6,15 +6,14 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {type NavigationProp} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -139,9 +138,9 @@ export function ScreenHider({
                   {
                     color: t.palette.primary_500,
                   },
-                  web({
+                  {
                     cursor: 'pointer',
-                  }),
+                  } as any,
                 ]}>
                 <Trans>Learn More</Trans>
               </Text>
@@ -184,5 +183,5 @@ export function ScreenHider({
         )}
       </View>
     </CenteredView>
-  )
+  );
 }

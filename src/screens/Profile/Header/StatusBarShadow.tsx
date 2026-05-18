@@ -6,7 +6,6 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
-import {IS_IOS} from '#/env'
 import {LinearGradient} from '#/shims/linear-gradient'
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
@@ -14,11 +13,6 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 export function StatusBarShadow() {
   const {top: topInset} = useSafeAreaInsets()
   const pagerContext = usePagerHeaderContext()
-
-  if (IS_IOS && pagerContext) {
-    const {scrollY} = pagerContext
-    return <StatusBarShadowInnner scrollY={scrollY} />
-  }
 
   return (
     <LinearGradient

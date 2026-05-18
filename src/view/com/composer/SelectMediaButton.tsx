@@ -16,7 +16,6 @@ import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import {File} from '#/shims/file-system'
 import {type ImagePickerAsset} from '#/shims/image-picker'
 import {isAnimatedGif} from './videos/isAnimatedGif'
@@ -93,7 +92,6 @@ const SUPPORTED_IMAGE_MIME_TYPES = (
     'image/svg+xml',
     'image/webp',
     'image/avif',
-    IS_NATIVE && 'image/heic',
   ] as const
 ).filter(Boolean)
 type SupportedImageMimeType = Exclude<
@@ -122,7 +120,7 @@ const extensionToMimeType: Record<
   jpeg: 'image/jpeg',
   png: 'image/png',
   svg: 'image/svg+xml',
-  heic: 'image/heic',
+  heic: 'image/heic' as SupportedImageMimeType,
 }
 
 /**
@@ -182,14 +180,7 @@ async function classifyImagePickerAsset(asset: ImagePickerAsset): Promise<
   let type: AssetType | undefined
   if (mimeType === 'image/gif') {
     let bytes: ArrayBuffer | undefined
-    if (IS_WEB) {
-      bytes = await asset.file?.arrayBuffer()
-    } else {
-      const file = new File(asset.uri)
-      if (file.exists) {
-        bytes = await file.arrayBuffer()
-      }
-    }
+    bytes = await asset.file?.arrayBuffer()
     if (bytes) {
       const {isAnimated} = isAnimatedGif(bytes)
       type = isAnimated ? 'gif' : 'image'
@@ -279,7 +270,7 @@ async function processImagePickerAssets(
        * We don't care too much about mimeType at this point on native,
        * since the `processVideo` step later on will convert to `.mp4`.
        */
-      if (IS_WEB && !isSupportedVideoMimeType(mimeType)) {
+      if (!isSupportedVideoMimeType(mimeType)) {
         errors.add(SelectedAssetError.Unsupported)
         continue
       }
@@ -289,7 +280,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress these anyway,
        * so we only check on web.
        */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -308,7 +299,7 @@ async function processImagePickerAssets(
        * to filter out large files on web. On native, we compress GIFs as
        * videos anyway, so we only check on web.
        */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+      if (asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
         errors.add(SelectedAssetError.FileTooBig)
         continue
       }
@@ -326,7 +317,7 @@ async function processImagePickerAssets(
        * base64 data-uri, so we construct it here for web only.
        */
       uri:
-        IS_WEB && asset.base64
+        asset.base64
           ? `data:${mimeType};base64,${asset.base64}`
           : asset.uri,
     })
@@ -345,12 +336,10 @@ async function processImagePickerAssets(
       }
 
       if (supportedAssets[0].duration) {
-        if (IS_WEB) {
-          /*
-           * Web reports duration as seconds
-           */
-          supportedAssets[0].duration = supportedAssets[0].duration * 1000
-        }
+        /*
+         * Web reports duration as seconds
+         */
+        supportedAssets[0].duration = supportedAssets[0].duration * 1000
 
         if (supportedAssets[0].duration > VIDEO_MAX_DURATION_MS) {
           errors.add(SelectedAssetError.VideoTooLong)
@@ -436,24 +425,6 @@ export function SelectMediaButton({
   )
 
   const onPressSelectMedia = useCallback(async () => {
-    if (IS_NATIVE) {
-      const [photoAccess, videoAccess] = await Promise.all([
-        requestPhotoAccessIfNeeded(),
-        requestVideoAccessIfNeeded(),
-      ])
-
-      if (!photoAccess && !videoAccess) {
-        toast.show(l`You need to allow access to your media library.`, {
-          type: 'error',
-        })
-        return
-      }
-    }
-
-    if (IS_NATIVE && Keyboard.isVisible()) {
-      Keyboard.dismiss()
-    }
-
     const {assets, canceled} = await sheetWrapper(
       openUnifiedPicker({selectionCountRemaining}),
     )

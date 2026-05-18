@@ -5,8 +5,7 @@ import {
   type AppBskyBookmarkDefs,
   AppBskyFeedDefs,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {
   type NavigationProp,
   useFocusEffect,
@@ -35,7 +34,6 @@ import {ListFooter} from '#/components/Lists'
 import * as Skele from '#/components/Skeleton'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_IOS} from '#/env'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
 
@@ -184,11 +182,11 @@ function BookmarksInner() {
       }
       initialNumToRender={initialNumToRender}
       windowSize={9}
-      maxToRenderPerBatch={IS_IOS ? 5 : 1}
+      maxToRenderPerBatch={1}
       updateCellsBatchingPeriod={40}
       sideBorders={false}
     />
-  )
+  );
 }
 
 function BookmarkNotFound({

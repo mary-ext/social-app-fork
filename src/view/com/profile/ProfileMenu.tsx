@@ -1,7 +1,6 @@
 import {memo, useCallback, useMemo} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -55,7 +54,6 @@ import * as Toast from '#/components/Toast'
 import {useFullVerificationState} from '#/components/verification'
 import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
-import {IS_WEB} from '#/env'
 import {useActorStatus, useLiveNowConfig} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
@@ -274,7 +272,7 @@ let ProfileMenu = ({
           <Menu.Group>
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
-              label={IS_WEB ? l`Copy link to profile` : l`Share via...`}
+              label={l`Copy link to profile`}
               onPress={() => {
                 if (showLoggedOutWarning) {
                   loggedOutWarningPromptControl.open()
@@ -283,14 +281,10 @@ let ProfileMenu = ({
                 }
               }}>
               <Menu.ItemText>
-                {IS_WEB ? (
-                  <Trans>Copy link to profile</Trans>
-                ) : (
-                  <Trans>Share via...</Trans>
-                )}
+                {(<Trans>Copy link to profile</Trans>)}
               </Menu.ItemText>
               <Menu.ItemIcon
-                icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                icon={ChainLinkIcon}
               />
             </Menu.Item>
             <Menu.Item
@@ -389,7 +383,7 @@ let ProfileMenu = ({
                           a.flex_0,
                           {
                             color: t.palette.primary_500,
-                            right: IS_WEB ? -8 : -4,
+                            right: -8,
                           },
                         ]}>
                         <Trans>New</Trans>
@@ -572,7 +566,7 @@ let ProfileMenu = ({
         <GoLiveDialog control={goLiveDialogControl} profile={profile} />
       )}
     </EventStopper>
-  )
+  );
 }
 
 ProfileMenu = memo(ProfileMenu)

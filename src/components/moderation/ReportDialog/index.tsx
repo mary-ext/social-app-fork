@@ -8,8 +8,7 @@ import {
 } from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
 import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
@@ -36,7 +35,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
@@ -172,12 +170,11 @@ function Inner(props: ReportDialogProps) {
         return (
           // supports new reason type
           // supports old reason type (backwards compat)
-          supportedReasonTypes.includes(state.selectedOption.reason) ||
-          supportedReasonTypes.includes(
+          (supportedReasonTypes.includes(state.selectedOption.reason) || supportedReasonTypes.includes(
             NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
-          )
-        )
-      })
+          ))
+        );
+      });
   }, [
     props.subject,
     allLabelers,
@@ -250,7 +247,7 @@ function Inner(props: ReportDialogProps) {
       label={l`Report dialog`}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
-      <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
+      <View style={[a.gap_2xl, false]}>
         <StepOuter>
           <StepTitle
             index={1}
@@ -475,12 +472,12 @@ function Inner(props: ReportDialogProps) {
                       </View>
                     ) : (
                       // should never happen in our app
-                      <Admonition.Admonition type="warning">
+                      (<Admonition.Admonition type="warning">
                         <Trans>
                           Unfortunately, none of your subscribed labelers
                           supports this report type.
                         </Trans>
-                      </Admonition.Admonition>
+                      </Admonition.Admonition>)
                     )}
                   </>
                 )}
@@ -578,7 +575,7 @@ function Inner(props: ReportDialogProps) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 function ActionOnce({

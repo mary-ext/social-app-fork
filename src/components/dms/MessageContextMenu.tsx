@@ -23,7 +23,6 @@ import {ReportDialog} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {usePromptControl} from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {IS_NATIVE} from '#/env'
 import * as Clipboard from '#/shims/clipboard'
 import type * as bsky from '#/types/bsky'
 import {EmojiReactionPicker} from './EmojiReactionPicker'
@@ -107,16 +106,6 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
-        {IS_NATIVE && (
-          <ContextMenu.AuxiliaryView
-            align={isFromSelf ? 'right' : 'left'}
-            style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
-            <EmojiReactionPicker
-              message={message}
-              onEmojiSelect={onEmojiSelect}
-            />
-          </ContextMenu.AuxiliaryView>
-        )}
 
         <ContextMenu.Trigger
           label={l`Message options`}
@@ -125,7 +114,6 @@ export let MessageContextMenu = ({
           }: ${message.text}`}>
           {children}
         </ContextMenu.Trigger>
-
         <ContextMenu.Outer
           align={isFromSelf ? 'right' : 'left'}
           label={l`Sent at ${i18n.date(new Date(message.sentAt), {
@@ -203,6 +191,6 @@ export let MessageContextMenu = ({
         onConfirm={onDelete}
       />
     </>
-  )
+  );
 }
 MessageContextMenu = memo(MessageContextMenu)

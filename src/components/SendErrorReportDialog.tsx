@@ -6,7 +6,7 @@ import {useMutation} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {sendErrorReport} from '#/logger/reporting/sendErrorReport'
 import {useSession} from '#/state/session'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -58,7 +58,7 @@ function SendErrorReportDialogInner() {
   return (
     <Dialog.ScrollableInner
       label={l`Send error report`}
-      style={web({maxWidth: 420})}>
+      style={{maxWidth: 420} as any}>
       <View style={[a.gap_lg]}>
         <Text style={[a.text_2xl, a.font_semi_bold]}>
           {l`Send error report`}
@@ -104,5 +104,5 @@ function SendErrorReportDialogInner() {
         </View>
       </View>
     </Dialog.ScrollableInner>
-  )
+  );
 }

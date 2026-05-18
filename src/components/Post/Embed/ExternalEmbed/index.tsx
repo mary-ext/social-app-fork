@@ -17,7 +17,6 @@ import {Divider} from '#/components/Divider'
 import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
@@ -55,12 +54,7 @@ export const ExternalEmbed = ({
     onOpen?.()
   }, [playHaptic, onOpen])
 
-  const onShareExternal = useCallback(() => {
-    if (link.uri && IS_NATIVE) {
-      playHaptic('Heavy')
-      shareUrl(link.uri)
-    }
-  }, [link.uri, playHaptic])
+  const onShareExternal = useCallback(() => {}, [link.uri, playHaptic])
 
   if (
     embedPlayerParams?.source === 'tenor' ||

@@ -6,19 +6,17 @@ import {
   interpretLabelValueDefinitions,
   type ModerationOpts,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {List, type ListRef} from '#/view/com/util/List'
-import {atoms as a, ios, tokens, useTheme} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
-import {IS_IOS, IS_NATIVE} from '#/env'
 import {ErrorState} from '../ErrorState'
 import {type SectionRef} from './types'
 
@@ -49,7 +47,7 @@ export function ProfileLabelsSection({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: -headerHeight,
     })
   }, [scrollElRef, headerHeight])
@@ -58,12 +56,7 @@ export function ProfileLabelsSection({
     scrollToTop: onScrollToTop,
   }))
 
-  useEffect(() => {
-    if (IS_IOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [isFocused, scrollElRef, setScrollViewTag])
+  useEffect(() => {}, [isFocused, scrollElRef, setScrollViewTag])
 
   const isSubscribed = labelerInfo
     ? !!isLabelerSubscribed(labelerInfo, moderationOpts)
@@ -125,7 +118,7 @@ export function ProfileLabelsSection({
         keyExtractor={keyExtractor}
         contentContainerStyle={a.px_xl}
         headerOffset={headerHeight}
-        progressViewOffset={ios(0)}
+        progressViewOffset={undefined as any}
         ListHeaderComponent={
           <LabelerListHeader
             isLabelerLoading={isLabelerLoading}
@@ -143,7 +136,7 @@ export function ProfileLabelsSection({
         }
       />
     </View>
-  )
+  );
 }
 
 function keyExtractor(item: InterpretedLabelValueDefinition) {

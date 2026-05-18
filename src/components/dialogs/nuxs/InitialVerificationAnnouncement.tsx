@@ -1,7 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -12,7 +11,6 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {Image} from '#/shims/image'
 
 export function InitialVerificationAnnouncement() {
@@ -159,26 +157,12 @@ export function InitialVerificationAnnouncement() {
                 <Trans>Read blog post</Trans>
               </ButtonText>
             </Link>
-            {IS_NATIVE && (
-              <Button
-                label={l`Close`}
-                size="small"
-                variant="solid"
-                color="secondary"
-                style={[a.justify_center, a.w_full]}
-                onPress={() => {
-                  control.close()
-                }}>
-                <ButtonText>
-                  <Trans>Close</Trans>
-                </ButtonText>
-              </Button>
-            )}
+
           </View>
         </View>
 
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }

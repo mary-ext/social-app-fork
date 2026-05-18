@@ -36,7 +36,6 @@ import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
-import {IS_NATIVE, IS_WEB} from '#/env'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -120,7 +119,7 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
+  if (!hasSession && (activeRouteRequiresAuth)) {
     return <LoggedOut />
   }
   if (hasSession && currentAccount?.signupQueued) {
@@ -138,47 +137,45 @@ function NativeStackNavigator({
   // Evicted screens render a lightweight placeholder — the route stays in
   // state so browser back/forward still works; the component just re-mounts.
   let finalDescriptors = descriptors
-  if (IS_WEB) {
-    const focusedKey = activeRoute.key
+  const focusedKey = activeRoute.key
 
-    // Update LRU: move focused key to front
-    const lru = lruKeysRef.current
-    const idx = lru.indexOf(focusedKey)
-    if (idx > 0) {
-      lru.splice(idx, 1)
-      lru.unshift(focusedKey)
-    } else if (idx === -1) {
-      lru.unshift(focusedKey)
+  // Update LRU: move focused key to front
+  const lru = lruKeysRef.current
+  const idx = lru.indexOf(focusedKey)
+  if (idx > 0) {
+    lru.splice(idx, 1)
+    lru.unshift(focusedKey)
+  } else if (idx === -1) {
+    lru.unshift(focusedKey)
+  }
+
+  // Remove keys for routes no longer in the stack
+  const routeKeySet = new Set(state.routes.map(r => r.key))
+  lruKeysRef.current = lruKeysRef.current.filter(k => routeKeySet.has(k))
+
+  // Build mount set: Home (pinned) + focused + N most recent
+  const mountSet = new Set<string>()
+  mountSet.add(focusedKey)
+  const homeKey = state.routes.find(r => r.name === 'Home')?.key
+  if (homeKey) mountSet.add(homeKey)
+  let cached = 0
+  for (const key of lruKeysRef.current) {
+    if (cached >= WEB_MAX_CACHED_SCREENS) break
+    if (!mountSet.has(key)) {
+      mountSet.add(key)
+      cached++
     }
+  }
 
-    // Remove keys for routes no longer in the stack
-    const routeKeySet = new Set(state.routes.map(r => r.key))
-    lruKeysRef.current = lruKeysRef.current.filter(k => routeKeySet.has(k))
-
-    // Build mount set: Home (pinned) + focused + N most recent
-    const mountSet = new Set<string>()
-    mountSet.add(focusedKey)
-    const homeKey = state.routes.find(r => r.name === 'Home')?.key
-    if (homeKey) mountSet.add(homeKey)
-    let cached = 0
-    for (const key of lruKeysRef.current) {
-      if (cached >= WEB_MAX_CACHED_SCREENS) break
-      if (!mountSet.has(key)) {
-        mountSet.add(key)
-        cached++
-      }
-    }
-
-    // Evicted screens get a lightweight placeholder instead of their full tree
-    finalDescriptors = {} as typeof descriptors
-    for (const key in descriptors) {
-      if (mountSet.has(key)) {
-        finalDescriptors[key] = descriptors[key]
-      } else {
-        finalDescriptors[key] = {
-          ...descriptors[key],
-          render: () => <View />,
-        }
+  // Evicted screens get a lightweight placeholder instead of their full tree
+  finalDescriptors = {} as typeof descriptors
+  for (const key in descriptors) {
+    if (mountSet.has(key)) {
+      finalDescriptors[key] = descriptors[key]
+    } else {
+      finalDescriptors[key] = {
+        ...descriptors[key],
+        render: () => <View />,
       }
     }
   }
@@ -198,18 +195,16 @@ function NativeStackNavigator({
           describe={describe}
         />
       </View>
-      {IS_WEB && (
-        <>
-          {showBottomBar ? (
-            <BottomBarWeb />
-          ) : (
-            <DesktopLeftNav routeName={activeRoute.name} />
-          )}
-          {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
-        </>
-      )}
+      {(<>
+        {showBottomBar ? (
+          <BottomBarWeb />
+        ) : (
+          <DesktopLeftNav routeName={activeRoute.name} />
+        )}
+        {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
+      </>)}
     </NavigationContent>
-  )
+  );
 }
 
 export function createNativeStackNavigatorWithAuth<

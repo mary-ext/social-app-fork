@@ -1,8 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AppBskyFeedPostgate} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
 import {type AnimatedStyle} from '#/lib/animations/reanimatedCompat'
@@ -24,7 +23,6 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Glo
 import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Group'
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {useThreadgateNudged} from '#/storage/hooks/threadgate-nudged'
 
 export function ThreadgateBtn({
@@ -66,10 +64,6 @@ export function ThreadgateBtn({
   const [persist, setPersist] = useState(false)
 
   const onPress = () => {
-    if (IS_NATIVE && Keyboard.isVisible()) {
-      Keyboard.dismiss()
-    }
-
     setShowTooltip(false)
     setThreadgateNudged(true)
 

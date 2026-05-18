@@ -21,13 +21,13 @@ import {
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
-import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
-import {GCP_PROJECT_ID, IS_ANDROID} from '#/env'
+import { GCP_PROJECT_ID } from '#/env';
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -106,16 +106,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
   useEffect(() => {
-    if (!IS_ANDROID) {
-      return
-    }
-    ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>
-      logger.error(err),
-    )
+    return
   }, [])
 
   return (
-    <Animated.View exiting={native(FadeIn.duration(90))} style={a.flex_1}>
+    <Animated.View exiting={undefined as any} style={a.flex_1}>
       <SignupContext.Provider value={{state, dispatch}}>
         <LoggedOutLayout
           leadin=""
@@ -230,5 +225,5 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         </LoggedOutLayout>
       </SignupContext.Provider>
     </Animated.View>
-  )
+  );
 }

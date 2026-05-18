@@ -11,7 +11,6 @@ import {
   renderChildrenWithEmoji,
   type StringChild,
 } from '#/alf/typography'
-import {IS_IOS, IS_WEB} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -81,14 +80,12 @@ function Text_DEPRECATED({
     }
 
     return {
-      uiTextView: selectable && IS_IOS,
+      uiTextView: false,
       selectable,
       style: flattened,
-      dataSet: IS_WEB
-        ? Object.assign({tooltip: title}, dataSet || {})
-        : undefined,
+      dataSet: Object.assign({tooltip: title}, dataSet || {}),
       ...props,
-    }
+    };
   }, [
     dataSet,
     fonts.family,

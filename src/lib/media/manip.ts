@@ -3,7 +3,6 @@ import uuid from 'react-native-uuid'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
-import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   cacheDirectory,
   copyAsync,
@@ -111,57 +110,7 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
 
   // save
   try {
-    if (IS_ANDROID) {
-      // android triggers an annoying permission prompt if you try and move an image
-      // between albums. therefore, we need to either create the album with the image
-      // as the starting image, or put it directly into the album
-      const album = await MediaLibrary.getAlbumAsync(ALBUM_NAME)
-      if (album) {
-        // try and migrate if needed
-        try {
-          if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
-            await MediaLibrary.migrateAlbumIfNeededAsync(album)
-          }
-        } catch (err) {
-          logger.info('Attempted and failed to migrate album', {
-            safeMessage: err,
-          })
-        }
-
-        try {
-          // if album exists, put the image straight in there
-          await MediaLibrary.createAssetAsync(imagePath, album)
-        } catch (err) {
-          logger.info('Failed to create asset', {safeMessage: err})
-          // however, it's possible that we don't have write permission to the album
-          // try making a new one!
-          try {
-            await MediaLibrary.createAlbumAsync(
-              ALBUM_NAME,
-              undefined,
-              undefined,
-              imagePath,
-            )
-          } catch (err2) {
-            logger.info('Failed to create asset in a fresh album', {
-              safeMessage: err2,
-            })
-            // ... and if all else fails, just put it in DCIM
-            await MediaLibrary.createAssetAsync(imagePath)
-          }
-        }
-      } else {
-        // otherwise, create album with asset (albums must always have at least one asset)
-        await MediaLibrary.createAlbumAsync(
-          ALBUM_NAME,
-          undefined,
-          undefined,
-          imagePath,
-        )
-      }
-    } else {
-      await MediaLibrary.saveToLibraryAsync(imagePath)
-    }
+    await MediaLibrary.saveToLibraryAsync(imagePath)
   } catch (err) {
     logger.error(err instanceof Error ? err : String(err), {
       message: 'Failed to save image to media library',
@@ -308,7 +257,7 @@ function joinPath(a: string, b: string) {
 }
 
 function normalizePath(str: string, allPlatforms = false): string {
-  if (IS_ANDROID || allPlatforms) {
+  if (allPlatforms) {
     if (!str.startsWith('file://')) {
       return `file://${str}`
     }
@@ -336,30 +285,23 @@ export async function saveToDevice(
   type: string,
 ) {
   try {
-    if (IS_IOS) {
-      await withTempFile(filename, encoded, async tmpFileUrl => {
-        await Sharing.shareAsync(tmpFileUrl, {UTI: type})
-      })
-      return true
-    } else {
-      const permissions =
-        await StorageAccessFramework.requestDirectoryPermissionsAsync()
+    const permissions =
+      await StorageAccessFramework.requestDirectoryPermissionsAsync()
 
-      if (!permissions.granted) {
-        return false
-      }
-
-      const fileUrl = await StorageAccessFramework.createFileAsync(
-        permissions.directoryUri,
-        filename,
-        type,
-      )
-
-      await writeAsStringAsync(fileUrl, encoded, {
-        encoding: EncodingType.Base64,
-      })
-      return true
+    if (!permissions.granted) {
+      return false
     }
+
+    const fileUrl = await StorageAccessFramework.createFileAsync(
+      permissions.directoryUri,
+      filename,
+      type,
+    )
+
+    await writeAsStringAsync(fileUrl, encoded, {
+      encoding: EncodingType.Base64,
+    })
+    return true
   } catch (e) {
     logger.error('Error occurred while saving file', {message: e})
     return false

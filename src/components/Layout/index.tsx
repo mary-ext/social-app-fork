@@ -15,17 +15,10 @@ import Animated, {
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
-import {
-  atoms as a,
-  useBreakpoints,
-  useLayoutBreakpoints,
-  useTheme,
-  web,
-} from '#/alf'
+import { atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
 import {useDialogContext} from '#/components/Dialog'
 import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {IS_WEB} from '#/env'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -52,7 +45,7 @@ export const Screen = memo(function Screen({
 
   return (
     <>
-      {IS_WEB && !isWithinSplitView && <WebCenterBorders />}
+      {!isWithinSplitView && <WebCenterBorders />}
       <View
         style={[
           a.util_screen_outer,
@@ -63,7 +56,7 @@ export const Screen = memo(function Screen({
         {...props}
       />
     </>
-  )
+  );
 })
 
 export type ContentProps = AnimatedScrollViewProps & {
@@ -110,25 +103,21 @@ export const Content = memo(
         style={[
           a.w_full,
           isWithinSplitView &&
-            web({
+            {
               flex: 1,
               overflowY: 'scroll',
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
-            }),
+            } as any,
           style,
         ]}
         contentContainerStyle={[contentContainerStyle]}
         {...props}>
-        {IS_WEB ? (
-          <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-            {children}
-          </Center>
-        ) : (
-          children
-        )}
+        {(<Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+          {children}
+        </Center>)}
       </Animated.ScrollView>
-    )
+    );
   }),
 )
 
@@ -166,7 +155,7 @@ export const Center = memo(function LayoutCenter({
                     ? CENTER_COLUMN_OFFSET
                     : 0,
               },
-              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+              {translateX: SCROLLBAR_OFFSET ?? 0},
             ],
           },
         style,
@@ -176,7 +165,7 @@ export const Center = memo(function LayoutCenter({
         {children}
       </ScrollbarOffsetContext.Provider>
     </View>
-  )
+  );
 })
 
 /**
@@ -194,7 +183,7 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
         a.border_l,
         a.border_r,
         t.atoms.border_contrast_low,
-        web({
+        {
           width: 602,
           left: '50%',
           transform: [
@@ -202,8 +191,8 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
             {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             ...a.scrollbar_offset.transform,
           ],
-        }),
+        } as any,
       ]}
     />
-  ) : null
+  ) : null;
 })

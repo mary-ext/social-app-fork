@@ -1,7 +1,6 @@
 import {type JSX, memo, useCallback, useMemo} from 'react'
 import {
   type GestureResponderEvent,
-  Platform,
   Pressable,
   type StyleProp,
   type TextProps,
@@ -9,7 +8,7 @@ import {
   type TouchableOpacity,
   View,
   type ViewStyle,
-} from 'react-native'
+} from 'react-native';
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions} from '@react-navigation/native'
 
@@ -30,7 +29,6 @@ import {useModalControls} from '#/state/modals'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {IS_WEB} from '#/env'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
@@ -218,7 +216,6 @@ export const TextLink = memo(function TextLink({
         })
       }
       if (
-        IS_WEB &&
         href !== '#' &&
         e != null &&
         isModifiedEvent(e as React.MouseEvent)
@@ -322,35 +319,21 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   onBeforePress,
   ...props
 }: TextLinkOnWebOnlyProps) {
-  if (IS_WEB) {
-    return (
-      <TextLink
-        testID={testID}
-        type={type}
-        style={style}
-        href={href}
-        text={text}
-        numberOfLines={numberOfLines}
-        lineHeight={lineHeight}
-        title={props.title}
-        navigationAction={navigationAction}
-        disableMismatchWarning={disableMismatchWarning}
-        onBeforePress={onBeforePress}
-        {...props}
-      />
-    )
-  }
   return (
-    <Text
+    <TextLink
       testID={testID}
       type={type}
       style={style}
+      href={href}
+      text={text}
       numberOfLines={numberOfLines}
       lineHeight={lineHeight}
       title={props.title}
-      {...props}>
-      {text}
-    </Text>
+      navigationAction={navigationAction}
+      disableMismatchWarning={disableMismatchWarning}
+      onBeforePress={onBeforePress}
+      {...props}
+    />
   )
 })
 
@@ -373,20 +356,18 @@ function onPressInner(
   href: string,
   navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   openLink: (href: string) => void,
-  e?: Event,
+  e?: any,
 ) {
   let shouldHandle = false
   const isLeftClick =
-    // @ts-ignore Web only -prf
-    Platform.OS === 'web' && (e.button == null || e.button === 0)
+    (e.button == null || e.button === 0)
   // @ts-ignore Web only -prf
-  const isMiddleClick = Platform.OS === 'web' && e.button === 1
+  const isMiddleClick = e.button === 1
   const isMetaKey =
-    // @ts-ignore Web only -prf
-    Platform.OS === 'web' && (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
+    (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
   const newTab = isMetaKey || isMiddleClick
 
-  if (Platform.OS !== 'web' || !e) {
+  if (!e) {
     shouldHandle = e ? !e.defaultPrevented : true
   } else if (
     !e.defaultPrevented && // onPress prevented default

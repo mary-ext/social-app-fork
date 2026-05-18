@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -21,7 +20,7 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
 import {useSuggestedOnboardingUsers} from '#/screens/Search/util/useSuggestedOnboardingUsers'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotate'
@@ -30,7 +29,6 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as toast from '#/components/Toast'
-import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {bulkWriteFollows} from '../util'
 
@@ -162,9 +160,7 @@ export function StepSuggestedAccounts() {
         style={[
           a.overflow_hidden,
           a.mt_sm,
-          IS_WEB
-            ? [a.max_w_full, web({minHeight: '100vh'})]
-            : {marginHorizontal: tokens.space.xl * -1},
+          [a.max_w_full, {minHeight: '100vh'} as any],
           a.flex_1,
           a.justify_start,
         ]}>
@@ -212,7 +208,7 @@ export function StepSuggestedAccounts() {
               a.mt_md,
               a.border_y,
               t.atoms.border_contrast_low,
-              IS_WEB && [a.border_x, a.rounded_sm, a.overflow_hidden],
+              [a.border_x, a.rounded_sm, a.overflow_hidden],
             ]}>
             {suggestedUsers?.actors.map((user, index) => (
               <SuggestedProfileCard
@@ -280,7 +276,7 @@ export function StepSuggestedAccounts() {
         )}
       </OnboardingControls.Portal>
     </View>
-  )
+  );
 }
 
 function TabBar({
@@ -319,9 +315,9 @@ function TabBar({
               ...interestsDisplayNames,
             }
       }
-      gutterWidth={IS_WEB ? 0 : tokens.space.xl}
+      gutterWidth={0}
     />
-  )
+  );
 }
 
 function SuggestedProfileCard({
@@ -349,7 +345,7 @@ function SuggestedProfileCard({
     const node = cardRef.current
     if (!node || hasTrackedRef.current) return
 
-    if (IS_WEB && typeof IntersectionObserver !== 'undefined') {
+    if (typeof IntersectionObserver !== 'undefined') {
       const observer = new IntersectionObserver(
         entries => {
           if (entries[0]?.isIntersecting && !hasTrackedRef.current) {

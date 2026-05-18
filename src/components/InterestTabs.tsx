@@ -9,7 +9,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
-import {atoms as a, tokens, useTheme, web} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonIcon} from '#/components/Button'
 import {
@@ -17,7 +17,6 @@ import {
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRight,
 } from '#/components/icons/Arrow'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 /**
  * Tab component that automatically scrolls the selected tab into view - used for interests
@@ -235,7 +234,7 @@ export function InterestTabs({
           )
         })}
       </DraggableScrollView>
-      {IS_WEB && canScrollLeft && (
+      {canScrollLeft && (
         <View
           style={[
             a.absolute,
@@ -246,9 +245,9 @@ export function InterestTabs({
             {paddingLeft: gutterWidth},
             a.pr_md,
             a.z_10,
-            web({
+            {
               background: `linear-gradient(to right,  ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
-            }),
+            } as any,
           ]}>
           <Button
             label={l`Scroll left`}
@@ -269,7 +268,7 @@ export function InterestTabs({
           </Button>
         </View>
       )}
-      {IS_WEB && canScrollRight && (
+      {canScrollRight && (
         <View
           style={[
             a.absolute,
@@ -280,9 +279,9 @@ export function InterestTabs({
             {paddingRight: gutterWidth},
             a.pl_md,
             a.z_10,
-            web({
+            {
               background: `linear-gradient(to left, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
-            }),
+            } as any,
           ]}>
           <Button
             label={l`Scroll right`}
@@ -304,7 +303,7 @@ export function InterestTabs({
         </View>
       )}
     </View>
-  )
+  );
 }
 
 function Tab({
@@ -346,7 +345,7 @@ function Tab({
         label={label}
         onPress={() => onSelectTab(index)}
         // disable focus ring, we handle it
-        style={web({outline: 'none'})}>
+        style={{outline: 'none'} as any}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
@@ -376,7 +375,7 @@ function Tab({
         )}
       </Button>
     </View>
-  )
+  );
 }
 
 export function boostInterests(boosts?: string[]) {

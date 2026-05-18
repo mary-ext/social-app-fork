@@ -19,7 +19,7 @@ import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -96,7 +96,7 @@ let SearchResults = ({
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <Layout.Center style={[a.z_10, web([a.sticky, {top: headerHeight}])]}>
+        <Layout.Center style={[a.z_10, [a.sticky, {top: headerHeight}] as any]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}
@@ -105,7 +105,7 @@ let SearchResults = ({
         <View key={i}>{section.component}</View>
       ))}
     </Pager>
-  )
+  );
 }
 SearchResults = memo(SearchResults)
 export {SearchResults}

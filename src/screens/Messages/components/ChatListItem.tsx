@@ -28,7 +28,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import * as tokens from '#/alf/tokens'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {useDialogControl} from '#/components/Dialog'
@@ -48,7 +48,6 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {createPortalGroup} from '#/components/Portal'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {useIsWithinSplitView} from './splitView/context'
 
@@ -453,22 +452,11 @@ function BaseChatItem({
             label={title}
             accessibilityHint={accessibilityHint}
             accessibilityActions={
-              showMenu && IS_NATIVE
-                ? [
-                    {
-                      name: 'magicTap',
-                      label: l`Open conversation options`,
-                    },
-                    {
-                      name: 'longpress',
-                      label: l`Open conversation options`,
-                    },
-                  ]
-                : undefined
+              undefined
             }
             onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
             onPress={onPress}
-            onLongPress={showMenu && IS_NATIVE ? onLongPress : undefined}
+            onLongPress={undefined}
             onAccessibilityAction={showMenu ? onLongPress : undefined}>
             {({hovered, pressed, focused}) => (
               <View
@@ -487,7 +475,7 @@ function BaseChatItem({
                 <View style={{width: avatarSize, height: avatarSize}} />
 
                 <View
-                  style={[a.flex_1, a.justify_center, web({paddingRight: 40})]}>
+                  style={[a.flex_1, a.justify_center, {paddingRight: 40} as any]}>
                   <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                     <View style={[a.flex_shrink]}>
                       <Text
@@ -521,7 +509,7 @@ function BaseChatItem({
                                 a.text_sm,
                                 {lineHeight: 21},
                                 t.atoms.text_contrast_medium,
-                                web({whiteSpace: 'preserve nowrap'}),
+                                {whiteSpace: 'preserve nowrap'} as any,
                               ]}>
                               &middot; {timeElapsed}
                             </Text>
@@ -535,7 +523,7 @@ function BaseChatItem({
                           a.text_sm,
                           {lineHeight: 21},
                           t.atoms.text_contrast_medium,
-                          web({whiteSpace: 'preserve nowrap'}),
+                          {whiteSpace: 'preserve nowrap'} as any,
                         ]}>
                         {' '}
                         &middot;{' '}
@@ -614,7 +602,7 @@ function BaseChatItem({
               control={menuControl}
               currentScreen="list"
               showMarkAsRead={convo.view.unreadCount > 0}
-              hideTrigger={IS_NATIVE}
+              hideTrigger={false}
               blockInfo={blockInfo}
               style={[
                 a.absolute,
@@ -639,5 +627,5 @@ function BaseChatItem({
         </View>
       </GestureActionView>
     </ChatListItemPortal.Provider>
-  )
+  );
 }

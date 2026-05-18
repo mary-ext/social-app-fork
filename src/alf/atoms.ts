@@ -2,7 +2,6 @@ import {type StyleProp, type ViewStyle} from 'react-native'
 
 import {CARD_ASPECT_RATIO} from '#/lib/constants'
 import {atoms as baseAtoms} from '#/alf/base'
-import {native, platform, web} from '#/alf/util/platform'
 import * as Layout from '#/components/Layout'
 
 const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)'
@@ -10,21 +9,19 @@ const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)'
 export const atoms = {
   ...baseAtoms,
 
-  h_full_vh: web({
+  h_full_vh: {
     height: '100vh',
-  }),
+  } as any,
 
   /**
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
   util_screen_outer: [
-    web({
+    {
       minHeight: '100dvh',
-    }),
-    native({
-      height: '100%',
-    }),
+    } as any,
+    undefined as any,
   ] as StyleProp<ViewStyle>,
 
   /*
@@ -47,72 +44,72 @@ export const atoms = {
   /*
    * Transition
    */
-  transition_none: web({
+  transition_none: {
     transitionProperty: 'none',
-  }),
-  transition_timing_default: web({
+  } as any,
+  transition_timing_default: {
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  }),
-  transition_all: web({
+  } as any,
+  transition_all: {
     transitionProperty: 'all',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  }),
-  transition_color: web({
+  } as any,
+  transition_color: {
     transitionProperty:
       'color, background-color, border-color, text-decoration-color, fill, stroke',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  }),
-  transition_opacity: web({
+  } as any,
+  transition_opacity: {
     transitionProperty: 'opacity',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  }),
-  transition_transform: web({
+  } as any,
+  transition_transform: {
     transitionProperty: 'transform',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  }),
-  transition_delay_50ms: web({
+  } as any,
+  transition_delay_50ms: {
     transitionDelay: '50ms',
-  }),
+  } as any,
 
   /*
    * Animations
    */
-  fade_in: web({
+  fade_in: {
     animation: 'fadeIn ease-out 0.15s',
-  }),
-  fade_out: web({
+  } as any,
+  fade_out: {
     animation: 'fadeOut ease-out 0.15s',
     animationFillMode: 'forwards',
-  }),
-  zoom_in: web({
+  } as any,
+  zoom_in: {
     animation: 'zoomIn ease-out 0.1s',
-  }),
-  zoom_out: web({
+  } as any,
+  zoom_out: {
     animation: 'zoomOut ease-out 0.1s',
-  }),
-  slide_in_left: web({
+  } as any,
+  slide_in_left: {
     // exponential easing function
     animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
-  }),
-  slide_out_left: web({
+  } as any,
+  slide_out_left: {
     animation: 'slideOutLeft ease-in 0.15s',
     animationFillMode: 'forwards',
-  }),
+  } as any,
   // special composite animation for dialogs
-  zoom_fade_in: web({
+  zoom_fade_in: {
     animation: `zoomIn ${EXP_CURVE} 0.3s, fadeIn ${EXP_CURVE} 0.3s`,
-  }),
+  } as any,
 
   /**
    * Visually hidden but available to screen readers (web).
    * Use for live regions or off-screen labels (e.g. "Image 1 of 3").
    */
-  sr_only: web({
+  sr_only: {
     position: 'absolute',
     width: 1,
     height: 1,
@@ -122,21 +119,16 @@ export const atoms = {
     clip: 'rect(0,0,0,0)',
     whiteSpace: 'nowrap',
     borderWidth: 0,
-  }),
+  } as any,
 
   /**
    * {@link Layout.SCROLLBAR_OFFSET}
    */
-  scrollbar_offset: platform({
-    web: {
-      transform: [
-        {
-          translateX: Layout.SCROLLBAR_OFFSET,
-        },
-      ],
-    },
-    native: {
-      transform: [],
-    },
-  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+  scrollbar_offset: {
+    transform: [
+      {
+        translateX: Layout.SCROLLBAR_OFFSET,
+      },
+    ],
+  } as {transform: Exclude<ViewStyle['transform'], string | undefined>},
 } as const

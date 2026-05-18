@@ -2,7 +2,7 @@ import {memo} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {type $Typed, type AppBskyEmbedRecord} from '@atproto/api'
 
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {MessageContextProvider} from './MessageContext'
 
@@ -29,15 +29,12 @@ let MessageItemEmbed = ({
       <View
         style={[
           !isFromSelf && a.ml_sm,
-          native({
-            flexBasis: 0,
-            width: Math.min(screen.width, 600) / 1.4,
-          }),
-          web({
+          undefined as any,
+          {
             width: '100%',
             minWidth: 280,
             maxWidth: 360,
-          }),
+          } as any,
           {
             marginTop: CLUSTERED_MESSAGE_GAP,
           },
@@ -75,7 +72,7 @@ let MessageItemEmbed = ({
         </View>
       </View>
     </MessageContextProvider>
-  )
+  );
 }
 MessageItemEmbed = memo(MessageItemEmbed)
 export {MessageItemEmbed}

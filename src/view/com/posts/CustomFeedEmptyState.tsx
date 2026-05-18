@@ -14,7 +14,6 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
-import {IS_WEB} from '#/env'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
@@ -40,12 +39,7 @@ export function CustomFeedEmptyState() {
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = useCallback(() => {
-    if (IS_WEB) {
-      navigation.navigate('Search', {})
-    } else {
-      navigation.navigate('SearchTab')
-      navigation.popToTop()
-    }
+    navigation.navigate('Search', {})
   }, [navigation])
 
   return (

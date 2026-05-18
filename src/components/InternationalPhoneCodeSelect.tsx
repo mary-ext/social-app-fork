@@ -8,9 +8,8 @@ import {
   INTERNATIONAL_TELEPHONE_CODES,
 } from '#/lib/international-telephone-codes'
 import {regionName} from '#/locale/helpers'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import * as Select from '#/components/Select'
-import {IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 
 /**
@@ -78,7 +77,7 @@ export function InternationalPhoneCodeSelect({
             <Select.Item value={item.value} label={item.label}>
               <Select.ItemIndicator />
               <Select.ItemText style={[a.flex_1]} emoji>
-                {IS_WEB ? <Flag {...item} /> : item.unicodeFlag + ' '}
+                {<Flag {...item} />}
                 {item.name}
               </Select.ItemText>
               <Select.ItemText style={[a.text_right]}>
@@ -91,22 +90,19 @@ export function InternationalPhoneCodeSelect({
         )}
       />
     </Select.Root>
-  )
+  );
 }
 
 function Flag({unicodeFlag, svgFlag}: {unicodeFlag: string; svgFlag: any}) {
-  if (IS_WEB) {
-    return (
-      <Image
-        source={svgFlag}
-        style={[
-          a.rounded_2xs,
-          {height: 13, aspectRatio: 4 / 3, marginRight: 6},
-          web({verticalAlign: 'bottom'}),
-        ]}
-        accessibilityIgnoresInvertColors
-      />
-    )
-  }
-  return <RNText style={[{lineHeight: 21}]}>{unicodeFlag + ' '}</RNText>
+  return (
+    <Image
+      source={svgFlag}
+      style={[
+        a.rounded_2xs,
+        {height: 13, aspectRatio: 4 / 3, marginRight: 6},
+        {verticalAlign: 'bottom'} as any,
+      ]}
+      accessibilityIgnoresInvertColors
+    />
+  );
 }

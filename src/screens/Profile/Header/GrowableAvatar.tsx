@@ -7,7 +7,6 @@ import Animated, {
   useAnimatedStyle,
 } from '#/lib/animations/reanimatedCompat'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
-import {IS_IOS} from '#/env'
 
 export function GrowableAvatar({
   children,
@@ -18,18 +17,7 @@ export function GrowableAvatar({
 }) {
   const pagerContext = usePagerHeaderContext()
 
-  // pagerContext should only be present on iOS, but better safe than sorry
-  if (!pagerContext || !IS_IOS) {
-    return <View style={style}>{children}</View>
-  }
-
-  const {scrollY} = pagerContext
-
-  return (
-    <GrowableAvatarInner scrollY={scrollY} style={style}>
-      {children}
-    </GrowableAvatarInner>
-  )
+  return <View style={style}>{children}</View>
 }
 
 function GrowableAvatarInner({

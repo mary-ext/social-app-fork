@@ -14,7 +14,6 @@ import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {Image} from '#/shims/image'
 
 export function ExternalGif({
@@ -65,14 +64,8 @@ export function ExternalGif({
       // Control animation on native
       setIsAnimating(prev => {
         if (prev) {
-          if (IS_NATIVE) {
-            imageRef.current?.stopAnimating()
-          }
           return false
         } else {
-          if (IS_NATIVE) {
-            imageRef.current?.startAnimating()
-          }
           return true
         }
       })
@@ -110,7 +103,7 @@ export function ExternalGif({
         <Image
           source={{
             uri:
-              !isPrefetched || (IS_WEB && !isAnimating)
+              !isPrefetched || (!isAnimating)
                 ? link.thumb
                 : params.playerUri,
           }} // Web uses the thumb to control playback
@@ -121,7 +114,7 @@ export function ExternalGif({
           accessibilityIgnoresInvertColors
           accessibilityLabel={link.title}
           accessibilityHint={link.title}
-          cachePolicy={IS_IOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+          cachePolicy={'memory-disk'} // cant control playback with memory-disk on ios
         />
 
         {(!isPrefetched || !isAnimating) && (
@@ -136,14 +129,14 @@ export function ExternalGif({
             />
 
             {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-              <PlayButtonIcon />
+              (<PlayButtonIcon />)
             ) : (
               // Activity indicator while gif loads
-              <ActivityIndicator size="large" color="white" />
+              (<ActivityIndicator size="large" color="white" />)
             )}
           </Fill>
         )}
       </Pressable>
     </>
-  )
+  );
 }

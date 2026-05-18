@@ -1,8 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'
@@ -21,7 +20,7 @@ import {
 import {useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -50,7 +49,6 @@ import {
 import {RichText} from '#/components/RichText'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 export function ProfileFeedHeaderSkeleton() {
   const t = useTheme()
@@ -179,7 +177,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   return (
     <>
       <Layout.Center
-        style={[t.atoms.bg, a.z_10, web([a.sticky, a.z_10, {top: 0}])]}>
+        style={[t.atoms.bg, a.z_10, [a.sticky, a.z_10, {top: 0}] as any]}>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content align="left">
@@ -188,7 +186,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
               style={[
                 a.justify_start,
                 {
-                  paddingVertical: IS_WEB ? 2 : 4,
+                  paddingVertical: 2,
                   paddingRight: 8,
                 },
               ]}
@@ -207,7 +205,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                       t.atoms.bg_contrast_25,
                       {
                         opacity: 0,
-                        left: IS_WEB ? -2 : -4,
+                        left: -2,
                         right: 0,
                       },
                       pressed && {
@@ -359,7 +357,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
-  )
+  );
 }
 
 function DialogInner({

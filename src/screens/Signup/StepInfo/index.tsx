@@ -9,7 +9,7 @@ import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
 import {useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
-import {atoms as a, native} from '#/alf'
+import { atoms as a } from '#/alf';
 import * as Admonition from '#/components/Admonition'
 import * as DateField from '#/components/forms/DateField'
 import {type DateFieldRef} from '#/components/forms/DateField/types'
@@ -178,10 +178,8 @@ export function StepInfo({
                     autoComplete="email"
                     keyboardType="email-address"
                     returnKeyType="next"
-                    submitBehavior={native('submit')}
-                    onSubmitEditing={native(() =>
-                      emailInputRef.current?.focus(),
-                    )}
+                    submitBehavior={undefined as any}
+                    onSubmitEditing={undefined as any}
                   />
                 </TextField.Root>
               </View>
@@ -214,10 +212,8 @@ export function StepInfo({
                   autoComplete="email"
                   keyboardType="email-address"
                   returnKeyType="next"
-                  submitBehavior={native('submit')}
-                  onSubmitEditing={native(() =>
-                    passwordInputRef.current?.focus(),
-                  )}
+                  submitBehavior={undefined as any}
+                  onSubmitEditing={undefined as any}
                 />
               </TextField.Root>
             </View>
@@ -242,10 +238,8 @@ export function StepInfo({
                   autoComplete="new-password"
                   autoCapitalize="none"
                   returnKeyType="next"
-                  submitBehavior={native('blurAndSubmit')}
-                  onSubmitEditing={native(() =>
-                    birthdateInputRef.current?.focus(),
-                  )}
+                  submitBehavior={undefined as any}
+                  onSubmitEditing={undefined as any}
                   passwordRules="minlength: 8;"
                 />
               </TextField.Root>
@@ -310,5 +304,5 @@ export function StepInfo({
         overrideNextText={hasWarnedEmail ? l`It's correct` : undefined}
       />
     </>
-  )
+  );
 }

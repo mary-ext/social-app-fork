@@ -1,14 +1,13 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTickEveryMinute} from '#/state/shell'
-import {atoms as a, ios, native, platform, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -95,7 +94,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const hasLink = !!debouncedUrl && !isSourceInvalid
 
   return (
-    <Dialog.ScrollableInner label={l`Go Live`} style={web({maxWidth: 420})}>
+    <Dialog.ScrollableInner label={l`Go Live`} style={{maxWidth: 420} as any}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_2xl]}>
@@ -175,7 +174,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               value={String(duration)}
               onValueChange={onChangeDuration}>
               <Select.Trigger label={l`Select duration`}>
-                <Text style={[ios(a.py_xs)]}>
+                <Text style={[undefined as any]}>
                   {displayDuration(i18n, duration)}
                   {'  '}
                   <Text style={[t.atoms.text_contrast_low]}>
@@ -196,8 +195,8 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                         {'  '}
                         <Text
                           style={[
-                            native(a.text_md),
-                            web(a.ml_xs),
+                            undefined as any,
+                            a.ml_xs,
                             selectedValue === String(item)
                               ? t.atoms.text_contrast_medium
                               : t.atoms.text_contrast_low,
@@ -207,7 +206,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                         </Text>
                       </Select.ItemText>
                     </Select.Item>
-                  )
+                  );
                 }}
                 items={DURATIONS}
                 valueExtractor={d => String(d)}
@@ -221,14 +220,11 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
         )}
 
         <View
-          style={platform({
-            native: [a.gap_md, a.pt_lg],
-            web: [a.flex_row_reverse, a.gap_md, a.align_center],
-          })}>
+          style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
           {hasLink && (
             <Button
               label={l`Go Live`}
-              size={platform({native: 'large', web: 'small'})}
+              size={'small'}
               color="primary"
               variant="solid"
               onPress={() => goLive()}
@@ -244,9 +240,9 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           <Button
             label={l`Cancel`}
             onPress={() => control.close()}
-            size={platform({native: 'large', web: 'small'})}
+            size={'small'}
             color="secondary"
-            variant={platform({native: 'solid', web: 'ghost'})}>
+            variant={'ghost'}>
             <ButtonText>
               <Trans>Cancel</Trans>
             </ButtonText>
@@ -255,5 +251,5 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }

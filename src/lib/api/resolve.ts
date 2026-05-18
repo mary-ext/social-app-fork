@@ -160,7 +160,6 @@ export async function resolveLink(
       view: res.data.starterPack,
     }
   }
-  return resolveExternal(agent, uri)
 
   // Forked from useGetPost. TODO: move into RQ.
   async function getPost({uri}: {uri: string}) {
@@ -190,6 +189,8 @@ export async function resolveLink(
     }
     return identifier
   }
+
+  return resolveExternal(agent, uri)
 }
 
 export async function resolveGif(

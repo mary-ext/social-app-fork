@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {Alert, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -13,7 +12,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_INTERNAL} from '#/env'
+import { IS_INTERNAL } from '#/env';
 import * as DynamicAppIcon from '#/shims/dynamic-app-icon'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
@@ -26,30 +25,7 @@ export function AppIconSettingsScreen({}: Props) {
   )
 
   const onSetAppIcon = (icon: DynamicAppIcon.IconName) => {
-    if (IS_ANDROID) {
-      const next =
-        sets.defaults.find(i => i.id === icon) ??
-        sets.core.find(i => i.id === icon)
-      Alert.alert(
-        next ? l`Change app icon to "${next.name}"` : l`Change app icon`,
-        l`The app will be restarted`,
-        [
-          {
-            text: l`Cancel`,
-            style: 'cancel',
-          },
-          {
-            text: l`OK`,
-            onPress: () => {
-              setCurrentAppIcon(setAppIcon(icon))
-            },
-            style: 'default',
-          },
-        ],
-      )
-    } else {
-      setCurrentAppIcon(setAppIcon(icon))
-    }
+    setCurrentAppIcon(setAppIcon(icon))
   }
 
   return (
@@ -124,7 +100,7 @@ function getAppIconName(icon: string | false): DynamicAppIcon.IconName {
   if (!icon || icon === 'DEFAULT') {
     return 'default_light'
   } else {
-    return icon as DynamicAppIcon.IconName
+    return icon
   }
 }
 
@@ -146,7 +122,7 @@ function Group({
       values={[value]}
       maxSelections={1}
       onChange={vals => {
-        if (vals[0]) onChange(vals[0] as DynamicAppIcon.IconName)
+        if (vals[0]) onChange(vals[0])
       }}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         {children}
@@ -214,29 +190,9 @@ function AppIcon({icon, size = 50}: {icon: AppIconSet; size: number}) {
       accessibilityHint={l`Changes app icon`}
       targetScale={0.95}
       onPress={() => {
-        if (IS_ANDROID) {
-          Alert.alert(
-            l`Change app icon to "${icon.name}"`,
-            l`The app will be restarted`,
-            [
-              {
-                text: l`Cancel`,
-                style: 'cancel',
-              },
-              {
-                text: l`OK`,
-                onPress: () => {
-                  DynamicAppIcon.setAppIcon(icon.id)
-                },
-                style: 'default',
-              },
-            ],
-          )
-        } else {
-          DynamicAppIcon.setAppIcon(icon.id)
-        }
+        DynamicAppIcon.setAppIcon(icon.id)
       }}>
       <AppIconImage icon={icon} size={size} />
     </PressableScale>
-  )
+  );
 }

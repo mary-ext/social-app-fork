@@ -36,7 +36,6 @@ import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {type Lightbox} from '#/components/Lightbox/state'
-import {IS_IOS} from '#/env'
 import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 import {Gesture} from '#/shims/native-gesture-handler'
 import * as ScreenOrientation from '#/shims/screen-orientation'
@@ -55,13 +54,13 @@ const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 
 const SLOW_SPRING: WithSpringConfig = {
-  mass: IS_IOS ? 1.25 : 0.75,
+  mass: 0.75,
   damping: 300,
   stiffness: 800,
   restDisplacementThreshold: 0.001,
 }
 const FAST_SPRING: WithSpringConfig = {
-  mass: IS_IOS ? 1.25 : 0.75,
+  mass: 0.75,
   damping: 150,
   stiffness: 900,
   restDisplacementThreshold: 0.001,
@@ -200,7 +199,7 @@ export default function ImageViewRoot({
         )}
       </Animated.View>
     </View>
-  )
+  );
 }
 
 function ImageView({
@@ -263,7 +262,7 @@ function ImageView({
       )
       opacity -= dragProgress
     }
-    const factor = IS_IOS ? 100 : 50
+    const factor = 50
     return {
       opacity: Math.round(opacity * factor) / factor,
     }

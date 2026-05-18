@@ -32,7 +32,7 @@ import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {android, atoms as a, ios, platform, tokens, useTheme} from '#/alf'
+import { atoms as a, tokens, useTheme } from '#/alf';
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -42,13 +42,11 @@ import {
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
-import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '#/shims/bottom-sheet'
 import {
+type BottomSheetNativeComponent,
   type BottomSheetSnapPointChangeEvent,
-  type BottomSheetStateChangeEvent,
-} from '#/shims/bottom-sheet'
-import {type BottomSheetNativeComponent} from '#/shims/bottom-sheet'
+  type BottomSheetStateChangeEvent} from '#/shims/bottom-sheet'
 import {useReanimatedKeyboardAnimation} from '#/shims/native-keyboard-controller'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
@@ -175,7 +173,7 @@ export function Outer({
     <BottomSheet
       ref={ref}
       // device-bezel radius when undefined
-      cornerRadius={IS_LIQUID_GLASS ? undefined : 20}
+      cornerRadius={20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
@@ -189,7 +187,7 @@ export function Outer({
         </View>
       </Context.Provider>
     </BottomSheet>
-  )
+  );
 }
 
 /**
@@ -204,15 +202,13 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          IS_LIQUID_GLASS
-            ? a.pb_2xl
-            : {paddingBottom: insets.bottom + insets.top},
+          {paddingBottom: insets.bottom + insets.top},
           style,
         ]}>
         {children}
       </View>
     </>
-  )
+  );
 }
 
 export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
@@ -225,7 +221,7 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
     const insets = useSafeAreaInsets()
     const [keyboardHeight, setKeyboardHeight] = useState(() =>
-      IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
+      0,
     )
 
     const keyboardEventHandler = useCallback<KeyboardEventListener>(e => {
@@ -235,15 +231,7 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
     useOnKeyboard('keyboardDidHide', keyboardEventHandler)
 
     const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!IS_ANDROID) {
-        return
-      }
-      const {contentOffset} = e.nativeEvent
-      if (contentOffset.y > 0 && !disableDrag) {
-        setDisableDrag(true)
-      } else if (contentOffset.y <= 1 && disableDrag) {
-        setDisableDrag(false)
-      }
+      return
     }
 
     return (
@@ -251,17 +239,12 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
         style={[isHeightConstrained && a.flex_1, style]}
         contentContainerStyle={[
           a.pt_2xl,
-          IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
-          platform({
-            ios: a.pb_2xl,
-            android: {
-              paddingBottom: keyboardHeight + insets.bottom + tokens.space.xl,
-            },
-          }),
+          a.px_xl,
+          undefined,
           contentContainerStyle,
         ]}
         ref={ref}
-        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+        showsVerticalScrollIndicator={undefined}
         contentInsetAdjustmentBehavior={
           isAtMaxSnapPoint ? 'automatic' : 'never'
         }
@@ -272,18 +255,18 @@ export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
         // set drag state based on scroll on android.
         // we want to detect if it's at the top or not, so watch
         // scrollEndDrag and momentumScrollEnd as well
-        onScroll={android(onScroll)}
-        onScrollEndDrag={android(onScroll)}
-        onMomentumScrollEnd={android(onScroll)}
+        onScroll={undefined as any}
+        onScrollEndDrag={undefined as any}
+        onMomentumScrollEnd={undefined as any}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
         // dialogs that use this that actually scroll -sfn
-        stickyHeaderIndices={ios(header ? [0] : undefined)}>
+        stickyHeaderIndices={undefined as any}>
         {header}
         {children}
       </ScrollView>
-    )
+    );
   },
 )
 
@@ -304,16 +287,8 @@ export const InnerFlatList = forwardRef<
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
   const onScroll = (e: ScrollEvent) => {
-    'worklet'
-    if (!IS_ANDROID) {
-      return
-    }
-    const {contentOffset} = e
-    if (contentOffset.y > 0 && !disableDrag) {
-      runOnJS(setDisableDrag)(true)
-    } else if (contentOffset.y <= 1 && disableDrag) {
-      runOnJS(setDisableDrag)(false)
-    }
+    'worklet';
+    return
   }
 
   return (
@@ -330,20 +305,18 @@ export const InnerFlatList = forwardRef<
         scrollIndicatorInsets={{top: headerOffset}}
         bounces={isAtMaxSnapPoint}
         ref={ref}
-        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+        showsVerticalScrollIndicator={undefined}
         {...props}
         style={[a.h_full, style]}
         contentContainerStyle={[
           {paddingTop: headerOffset},
-          android({
-            paddingBottom: insets.top + insets.bottom + tokens.space.xl,
-          }),
+          undefined as any,
           contentContainerStyle,
         ]}
       />
       {footer}
     </ScrollProvider>
-  )
+  );
 })
 
 export function FlatListFooter({
@@ -358,10 +331,7 @@ export function FlatListFooter({
   const {height} = useReanimatedKeyboardAnimation()
 
   const animatedStyle = useAnimatedStyle(() => {
-    if (!IS_IOS) return {}
-    return {
-      transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
-    }
+    return {}
   })
 
   return (
@@ -378,13 +348,11 @@ export function FlatListFooter({
         a.px_lg,
         a.pt_md,
         {paddingBottom: bottom + tokens.space.md},
-        // TODO: had to admit defeat here, but we should
-        // try and get this to work for Android as well -sfn
-        ios(animatedStyle),
+        undefined as any,
       ]}>
       {children}
     </Animated.View>
-  )
+  );
 }
 
 export function Handle({

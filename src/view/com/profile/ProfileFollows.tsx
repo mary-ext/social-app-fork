@@ -12,7 +12,6 @@ import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
 import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {IS_WEB} from '#/env'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
@@ -47,12 +46,7 @@ export function ProfileFollows({name}: {name: string}) {
   const navigation = useNavigation<NavigationProp>()
 
   const onPressFindAccounts = useCallback(() => {
-    if (IS_WEB) {
-      navigation.navigate('Search', {})
-    } else {
-      navigation.navigate('SearchTab')
-      navigation.popToTop()
-    }
+    navigation.navigate('Search', {})
   }, [navigation])
 
   const [isPTRing, setIsPTRing] = useState(false)

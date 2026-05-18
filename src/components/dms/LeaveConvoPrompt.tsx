@@ -6,7 +6,6 @@ import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
 import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {IS_NATIVE} from '#/env'
 
 export function LeaveConvoPrompt({
   control,
@@ -26,7 +25,7 @@ export function LeaveConvoPrompt({
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
-          StackActions.replace('Messages', IS_NATIVE ? {animation: 'pop'} : {}),
+          StackActions.replace('Messages', {}),
         )
       }
     },

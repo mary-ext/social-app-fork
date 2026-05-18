@@ -1,8 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -23,7 +22,6 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
 
@@ -55,14 +53,12 @@ export function Deactivated() {
   }, [setShowLoggedOut])
 
   const onPressLogout = useCallback(() => {
-    if (IS_WEB) {
-      // We're switching accounts, which remounts the entire app.
-      // On mobile, this gets us Home, but on the web we also need reset the URL.
-      // We can't change the URL via a navigate() call because the navigator
-      // itself is about to unmount, and it calls pushState() too late.
-      // So we change the URL ourselves. The navigator will pick it up on remount.
-      history.pushState(null, '', '/')
-    }
+    // We're switching accounts, which remounts the entire app.
+    // On mobile, this gets us Home, but on the web we also need reset the URL.
+    // We can't change the URL via a navigate() call because the navigator
+    // itself is about to unmount, and it calls pushState() too late.
+    // So we change the URL ourselves. The navigator will pick it up on remount.
+    history.pushState(null, '', '/')
     logoutCurrentAccount('Deactivated')
   }, [logoutCurrentAccount])
 
@@ -99,8 +95,8 @@ export function Deactivated() {
         contentContainerStyle={[
           a.px_2xl,
           {
-            paddingTop: IS_WEB ? 64 : insets.top + 16,
-            paddingBottom: IS_WEB ? 64 : insets.bottom,
+            paddingTop: 64,
+            paddingBottom: 64,
           },
         ]}>
         <View
@@ -203,5 +199,5 @@ export function Deactivated() {
         </View>
       </Layout.Content>
     </View>
-  )
+  );
 }

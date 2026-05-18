@@ -1,6 +1,5 @@
 import {Platform} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useMutation} from '@tanstack/react-query'
 
@@ -21,7 +20,6 @@ import * as Prompt from '#/components/Prompt'
 import {SendErrorReportDialog} from '#/components/SendErrorReportDialog'
 import * as Toast from '#/components/Toast'
 import * as env from '#/env'
-import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
 import {setStringAsync} from '#/shims/clipboard'
 import * as FileSystem from '#/shims/file-system/legacy'
 import {Image} from '#/shims/image'
@@ -46,23 +44,7 @@ export function AboutSettingsScreen({}: Props) {
         return spaceDiff * -1
       },
       onSuccess: sizeDiffBytes => {
-        if (IS_ANDROID) {
-          Toast.show(
-            l({
-              message: `Image cache cleared, freed ${i18n.number(
-                Math.abs(sizeDiffBytes / 1024 / 1024),
-                {
-                  notation: 'compact',
-                  style: 'unit',
-                  unit: 'megabyte',
-                },
-              )}`,
-              comment: `Android-only toast message which includes amount of space freed using localized number formatting`,
-            }),
-          )
-        } else {
-          Toast.show(l`Image cache cleared`)
-        }
+        Toast.show(l`Image cache cleared`)
       },
     })
 
@@ -116,18 +98,7 @@ export function AboutSettingsScreen({}: Props) {
               <Trans>Send error report</Trans>
             </SettingsList.ItemText>
           </SettingsList.PressableItem>
-          {IS_NATIVE && (
-            <SettingsList.PressableItem
-              onPress={() => onClearImageCache()}
-              label={l`Clear image cache`}
-              disabled={isClearingImageCache}>
-              <SettingsList.ItemIcon icon={BroomSparkleIcon} />
-              <SettingsList.ItemText>
-                <Trans>Clear image cache</Trans>
-              </SettingsList.ItemText>
-              {isClearingImageCache && <SettingsList.ItemIcon icon={Loader} />}
-            </SettingsList.PressableItem>
-          )}
+
           <SettingsList.PressableItem
             label={l`Version ${env.APP_VERSION}`}
             accessibilityHint={l`Copies build version to clipboard`}
@@ -148,7 +119,7 @@ export function AboutSettingsScreen({}: Props) {
             }}
             onPress={() => {
               setStringAsync(
-                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId()}`,
+                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${'web'}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId()}`,
               )
               Toast.show(l`Copied build version to clipboard`)
             }}>
@@ -161,31 +132,12 @@ export function AboutSettingsScreen({}: Props) {
           {devModeEnabled && (
             <>
               <OTAInfo />
-              {IS_IOS && (
-                <SettingsList.PressableItem
-                  onPress={() => {
-                    const newDemoModeEnabled = !demoModeEnabled
-                    setDemoModeEnabled(newDemoModeEnabled)
-                    Toast.show(
-                      'Demo mode ' +
-                        (newDemoModeEnabled ? 'enabled' : 'disabled'),
-                    )
-                  }}
-                  label={
-                    demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'
-                  }
-                  disabled={isClearingImageCache}>
-                  <SettingsList.ItemIcon icon={AtomIcon} />
-                  <SettingsList.ItemText>
-                    {demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'}
-                  </SettingsList.ItemText>
-                </SettingsList.PressableItem>
-              )}
+              {false}
             </>
           )}
         </SettingsList.Container>
       </Layout.Content>
       <SendErrorReportDialog control={sendErrorReportControl} />
     </Layout.Screen>
-  )
+  );
 }

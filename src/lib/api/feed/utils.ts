@@ -2,10 +2,9 @@ import {AtUri} from '@atproto/api'
 
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
-import {IS_WEB} from '#/env'
 
 let debugTopics = ''
-if (IS_WEB && typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   debugTopics = params.get('debug_topics') ?? ''
 }

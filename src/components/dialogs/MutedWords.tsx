@@ -1,8 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {
@@ -11,14 +10,7 @@ import {
   useUpdateMutedWordMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import {
-  atoms as a,
-  native,
-  useBreakpoints,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -33,7 +25,6 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
@@ -125,7 +116,6 @@ function MutedWordsInner() {
             can result in no posts being shown.
           </Trans>
         </Text>
-
         <View style={[a.pb_sm]}>
           <Dialog.Input
             autoCorrect={false}
@@ -144,7 +134,6 @@ function MutedWordsInner() {
             onSubmitEditing={submit}
           />
         </View>
-
         <View style={[a.pb_xl, a.gap_sm]}>
           <Toggle.Group
             label={l`Select how long to mute this word for.`}
@@ -356,16 +345,14 @@ function MutedWordsInner() {
                 style={[
                   a.italic,
                   {color: t.palette.white},
-                  native({marginTop: 2}),
+                  undefined as any,
                 ]}>
                 {error}
               </Text>
             </View>
           )}
         </View>
-
         <Divider />
-
         <View style={[a.pt_2xl]}>
           <Text
             style={[
@@ -409,11 +396,10 @@ function MutedWordsInner() {
           )}
         </View>
 
-        {IS_NATIVE && <View style={{height: 20}} />}
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 function MutedWordRow({
@@ -470,10 +456,10 @@ function MutedWordRow({
                 a.flex_1,
                 a.leading_snug,
                 a.font_semi_bold,
-                web({
+                {
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
-                }),
+                } as any,
               ]}>
               {word.targets.find(t => t === 'content') ? (
                 <Trans comment="Pattern: {wordValue} in text, tags">
@@ -612,7 +598,7 @@ function MutedWordRow({
         </Button>
       </View>
     </>
-  )
+  );
 }
 
 function TargetToggle({children}: React.PropsWithChildren<{}>) {

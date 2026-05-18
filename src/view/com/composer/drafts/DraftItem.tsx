@@ -17,7 +17,6 @@ import * as MediaPreview from '#/components/MediaPreview'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import * as VideoThumbnails from '#/shims/video-thumbnails'
 import {type DraftPostDisplay, type DraftSummary} from './state/schema'
 import * as storage from './state/storage'
@@ -296,18 +295,8 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
       if (post.video?.exists && post.video.localPath) {
         try {
           const url = await storage.loadMediaFromLocal(post.video.localPath)
-          if (IS_WEB) {
-            // can't generate thumbnails on web
-            setVideoThumbnail("yep, there's a video")
-          } else {
-            logger.debug('generating thumbnail of ', {url})
-            const thumbnail = await VideoThumbnails.getThumbnailAsync(url, {
-              time: 0,
-              quality: 0.2,
-            })
-            logger.debug('thumbnail generated', {thumbnail})
-            setVideoThumbnail(thumbnail.uri)
-          }
+          // can't generate thumbnails on web
+          setVideoThumbnail("yep, there's a video")
         } catch (e) {
           // Video doesn't exist locally
         }
@@ -332,10 +321,10 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
       )}
       {post.video && videoThumbnail && (
         <MediaPreview.VideoItem
-          thumbnail={IS_WEB ? undefined : videoThumbnail}
+          thumbnail={undefined}
           alt={post.video.altText}
         />
       )}
     </MediaPreview.Outer>
-  )
+  );
 }

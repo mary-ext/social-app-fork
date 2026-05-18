@@ -10,18 +10,10 @@ import {
 import Animated, {Easing, LinearTransition} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {
-  atoms as a,
-  native,
-  platform,
-  type TextStyleProp,
-  useTheme,
-  type ViewStyleProp,
-} from '#/alf'
+import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 
 export * from './Panel'
 
@@ -266,14 +258,12 @@ export function LabelText({
             ? t.atoms.text_contrast_low.color
             : t.atoms.text_contrast_high.color,
         },
-        native({
-          paddingTop: 2,
-        }),
+        undefined as any,
         style,
       ]}>
       {children}
     </Text>
-  )
+  );
 }
 
 // TODO(eric) refactor to memoize styles without knowledge of state
@@ -492,10 +482,7 @@ export function Switch() {
       ]}>
       <Animated.View
         layout={LinearTransition.duration(
-          platform({
-            web: 100,
-            default: 200,
-          }),
+          100,
         ).easing(Easing.inOut(Easing.cubic))}
         style={[
           a.rounded_full,
@@ -509,7 +496,7 @@ export function Switch() {
         ]}
       />
     </View>
-  )
+  );
 }
 
 export function Radio() {
@@ -597,4 +584,4 @@ export function RadioWithLabel({
   )
 }
 
-export const Platform = IS_NATIVE ? Switch : Checkbox
+export const Platform = Checkbox

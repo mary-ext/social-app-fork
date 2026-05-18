@@ -1,8 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import Animated, {
@@ -14,7 +13,7 @@ import Animated, {
   SlideOutLeft,
 } from '#/lib/animations/reanimatedCompat'
 import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
-import {atoms as a, native, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -23,7 +22,6 @@ import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {CopyButton} from './CopyButton'
 
 export function AddAppPasswordDialog({
@@ -97,12 +95,12 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
 
   return (
     <Dialog.ScrollableInner label={l`Add app password`}>
-      <View style={[native(a.pt_md)]}>
+      <View style={[undefined as any]}>
         <LayoutAnimationConfig skipEntering skipExiting>
           {!data ? (
             <Animated.View
               style={[a.gap_lg]}
-              exiting={native(SlideOutLeft)}
+              exiting={undefined as any}
               key={0}>
               <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Add App Password</Trans>
@@ -136,7 +134,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
               )}
               <Animated.View
                 style={[a.gap_lg]}
-                layout={native(LinearTransition)}>
+                layout={undefined as any}>
                 <Toggle.Item
                   name="privileged"
                   type="checkbox"
@@ -178,7 +176,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
           ) : (
             <Animated.View
               style={[a.gap_lg]}
-              entering={IS_WEB ? FadeIn.delay(200) : SlideInRight}
+              entering={FadeIn.delay(200)}
               key={1}>
               <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Here is your app password!</Trans>
@@ -224,7 +222,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 class DisplayableError extends Error {

@@ -13,7 +13,7 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -21,7 +21,6 @@ import {DateField} from '#/components/forms/DateField'
 import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Span, Text} from '#/components/Typography'
-import {IS_IOS, IS_WEB} from '#/env'
 
 export function BirthDateSettingsDialog({
   control,
@@ -47,7 +46,7 @@ export function BirthDateSettingsDialog({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`My birthdate`}
-        style={web({maxWidth: 400})}>
+        style={{maxWidth: 400} as any}>
         <View style={[a.gap_md]}>
           <Text style={[a.text_xl, a.font_semi_bold]}>
             <Trans>My birthdate</Trans>
@@ -83,7 +82,7 @@ export function BirthDateSettingsDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  )
+  );
 }
 
 function BirthdayInner({
@@ -124,7 +123,7 @@ function BirthdayInner({
 
   return (
     <View style={a.gap_lg} testID="birthDateSettingsDialog">
-      <View style={IS_IOS && [a.w_full, a.align_center]}>
+      <View style={false}>
         <DateField
           testID="birthdayInput"
           value={date}
@@ -157,7 +156,7 @@ function BirthdayInner({
       {errorMessage ? (
         <ErrorMessage message={errorMessage} style={[a.rounded_sm]} />
       ) : undefined}
-      <View style={IS_WEB && [a.flex_row, a.justify_end]}>
+      <View style={[a.flex_row, a.justify_end]}>
         <Button
           label={hasChanged ? l`Save birthdate` : l`Done`}
           size="large"
@@ -172,5 +171,5 @@ function BirthdayInner({
         </Button>
       </View>
     </View>
-  )
+  );
 }

@@ -53,7 +53,6 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
-import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {
   isStatusStillActive,
   isStatusValidForViewers,
@@ -224,7 +223,7 @@ let PostFeed = ({
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
-  const areVideoFeedsEnabled = IS_NATIVE
+  const areVideoFeedsEnabled = false
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
@@ -807,7 +806,7 @@ let PostFeed = ({
      * reach the end, so that content isn't cut off by the bottom of the
      * screen.
      */
-    const offset = Math.max(headerOffset, 32) * (IS_WEB ? 1 : 2)
+    const offset = Math.max(headerOffset, 32) * (1)
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
@@ -926,12 +925,12 @@ let PostFeed = ({
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
-        maxToRenderPerBatch={IS_IOS ? 5 : 1}
+        maxToRenderPerBatch={1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
       />
     </View>
-  )
+  );
 }
 PostFeed = memo(PostFeed)
 export {PostFeed}

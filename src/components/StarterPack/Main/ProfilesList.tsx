@@ -21,7 +21,6 @@ import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
-import {IS_NATIVE, IS_WEB} from '#/env'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
   return `${item.did}-${index}`
@@ -75,7 +74,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
-        animated: IS_NATIVE,
+        animated: false,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])
@@ -93,7 +92,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
           style={[
             a.p_lg,
             t.atoms.border_contrast_low,
-            (IS_WEB || index !== 0) && a.border_t,
+            a.border_t,
           ]}>
           <ProfileCard
             profile={item}
@@ -101,7 +100,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
             logContext="StarterPackProfilesList"
           />
         </View>
-      )
+      );
     }
 
     if (!data) {

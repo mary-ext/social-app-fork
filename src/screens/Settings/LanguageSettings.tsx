@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -10,7 +9,7 @@ import {
 import {languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {atoms as a, web} from '#/alf'
+import { atoms as a } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -145,7 +144,7 @@ export function LanguageSettingsScreen({}: Props) {
                 </Admonition>
               )}
 
-              <View style={[a.w_full, web({maxWidth: 400})]}>
+              <View style={[a.w_full, {maxWidth: 400} as any]}>
                 <Toggle.Group
                   label={l`Select content languages`}
                   values={contentLanguages}
@@ -205,5 +204,5 @@ export function LanguageSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  )
+  );
 }

@@ -27,11 +27,10 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {atoms as a, ios, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as FeedCard from '#/components/FeedCard'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {ListFooter} from '#/components/Lists'
-import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -110,7 +109,7 @@ export function ProfileFeedgens({
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: -headerOffset,
     })
     queryClient.invalidateQueries({queryKey: RQKEY(did)})
@@ -191,14 +190,14 @@ export function ProfileFeedgens({
         return (
           <View
             style={[
-              (index !== 0 || IS_WEB) && a.border_t,
+              a.border_t,
               t.atoms.border_contrast_low,
               a.px_lg,
               a.py_lg,
             ]}>
             <FeedCard.Default view={item} />
           </View>
-        )
+        );
       }
       return null
     },
@@ -214,12 +213,7 @@ export function ProfileFeedgens({
     ],
   )
 
-  useEffect(() => {
-    if (IS_IOS && enabled && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [enabled, scrollElRef, setScrollViewTag])
+  useEffect(() => {}, [enabled, scrollElRef, setScrollViewTag])
 
   const ProfileFeedgensFooter = useCallback(() => {
     if (isEmpty) return null
@@ -253,14 +247,14 @@ export function ProfileFeedgens({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        progressViewOffset={ios(0)}
+        progressViewOffset={undefined as any}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
         contentContainerStyle={{minHeight: height + headerOffset}}
       />
     </View>
-  )
+  );
 }
 
 function keyExtractor(item: any) {

@@ -1,7 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
 
 import {type SharedValue} from '#/lib/animations/reanimatedCompat'
-import {IS_NATIVE} from '#/env'
 
 export const PagerHeaderContext = createContext<{
   scrollY: SharedValue<number>
@@ -35,16 +34,9 @@ export function PagerHeaderProvider({
   )
 }
 
-export function usePagerHeaderContext() {
+export function usePagerHeaderContext(): React.ContextType<
+  typeof PagerHeaderContext
+> {
   const ctx = useContext(PagerHeaderContext)
-  if (IS_NATIVE) {
-    if (!ctx) {
-      throw new Error(
-        'usePagerHeaderContext must be used within a HeaderProvider',
-      )
-    }
-    return ctx
-  } else {
-    return null
-  }
+  return null
 }

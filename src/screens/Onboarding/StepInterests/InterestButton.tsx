@@ -3,7 +3,7 @@ import {type TextStyle, View, type ViewStyle} from 'react-native'
 
 import {type Interest, useInterestsDisplayNames} from '#/lib/interests'
 import {capitalize} from '#/lib/strings/capitalize'
-import {atoms as a, native, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
@@ -70,11 +70,11 @@ export function InterestButton({interest}: {interest: Interest}) {
             color: t.palette.contrast_900,
           },
           a.font_semi_bold,
-          native({paddingTop: 2}),
+          undefined as any,
           ctx.selected ? styles.textSelected : {},
         ]}>
         {interestsDisplayNames[interest] || capitalize(interest)}
       </Text>
     </View>
-  )
+  );
 }

@@ -10,7 +10,7 @@ import {useLingui} from '@lingui/react/macro'
 import {DropdownMenu} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, useTheme, web} from '#/alf'
+import { atoms as a, flatten, useTheme } from '#/alf';
 import type * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
@@ -268,27 +268,27 @@ export function Item({
           a.rounded_xs,
           a.overflow_hidden,
           {minHeight: 32, paddingHorizontal: 10},
-          web({outline: 0}),
+          {outline: 0} as any,
           (hovered || focused) &&
             !rest.disabled && [
-              web({outline: '0 !important'}),
+              {outline: '0 !important'} as any,
               t.name === 'light'
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
           style,
         ])}
-        {...web({
+        {...{
           onMouseEnter,
           onMouseLeave,
-        })}>
+        } as any}>
         <ItemContext.Provider
           value={{disabled: Boolean(rest.disabled), destructive}}>
           {children}
         </ItemContext.Provider>
       </Pressable>
     </DropdownMenu.Item>
-  )
+  );
 }
 
 export function ItemText({children, style}: ItemTextProps) {

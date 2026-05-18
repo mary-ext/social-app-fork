@@ -1,13 +1,12 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -16,7 +15,6 @@ import {PageText_Stroke2_Corner0_Rounded as PageTextIcon} from '#/components/ico
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
 const MAX_NUM_CAPTIONS = 1
@@ -37,11 +35,9 @@ export function SubtitleDialogBtn(props: Props) {
   return (
     <View style={[a.flex_row, a.my_xs]}>
       <Button
-        label={IS_WEB ? l`Captions & alt text` : l`Alt text`}
+        label={l`Captions & alt text`}
         accessibilityHint={
-          IS_WEB
-            ? l`Opens captions and alt text dialog`
-            : l`Opens alt text dialog`
+          l`Opens captions and alt text dialog`
         }
         size="small"
         color="secondary"
@@ -52,11 +48,7 @@ export function SubtitleDialogBtn(props: Props) {
         }}>
         <ButtonIcon icon={CCIcon} />
         <ButtonText>
-          {IS_WEB ? (
-            <Trans>Captions & alt text</Trans>
-          ) : (
-            <Trans>Alt text</Trans>
-          )}
+          {(<Trans>Captions & alt text</Trans>)}
         </ButtonText>
       </Button>
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -64,7 +56,7 @@ export function SubtitleDialogBtn(props: Props) {
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
     </View>
-  )
+  );
 }
 
 function SubtitleDialogInner({
@@ -141,55 +133,53 @@ function SubtitleDialogInner({
           </Text>
         )}
 
-        {IS_WEB && (
-          <>
-            <View
-              style={[
-                a.border_t,
-                a.w_full,
-                t.atoms.border_contrast_medium,
-                a.my_md,
-              ]}
-            />
-            <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
-              <Trans>Captions (.vtt)</Trans>
+        {(<>
+          <View
+            style={[
+              a.border_t,
+              a.w_full,
+              t.atoms.border_contrast_medium,
+              a.my_md,
+            ]}
+          />
+          <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
+            <Trans>Captions (.vtt)</Trans>
+          </Text>
+          <SubtitleFilePicker
+            onSelectFile={handleSelectFile}
+            disabled={
+              subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
+            }
+          />
+          <View>
+            {captions.map((subtitle, i) => (
+              <SubtitleFileRow
+                key={subtitle.lang}
+                language={subtitle.lang}
+                file={subtitle.file}
+                setCaptions={setCaptions}
+                otherLanguages={LANGUAGES.filter(
+                  lang =>
+                    langCode(lang) === subtitle.lang ||
+                    !captions.some(s => s.lang === langCode(lang)),
+                )}
+                style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
+              />
+            ))}
+          </View>
+          {subtitleMissingLanguage && (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>
+                Ensure you have selected a language for each caption file.
+              </Trans>
             </Text>
-            <SubtitleFilePicker
-              onSelectFile={handleSelectFile}
-              disabled={
-                subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
-              }
-            />
-            <View>
-              {captions.map((subtitle, i) => (
-                <SubtitleFileRow
-                  key={subtitle.lang}
-                  language={subtitle.lang}
-                  file={subtitle.file}
-                  setCaptions={setCaptions}
-                  otherLanguages={LANGUAGES.filter(
-                    lang =>
-                      langCode(lang) === subtitle.lang ||
-                      !captions.some(s => s.lang === langCode(lang)),
-                  )}
-                  style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
-                />
-              ))}
-            </View>
-            {subtitleMissingLanguage && (
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans>
-                  Ensure you have selected a language for each caption file.
-                </Trans>
-              </Text>
-            )}
-          </>
-        )}
+          )}
+        </>)}
 
-        <View style={web([a.flex_row, a.justify_end])}>
+        <View style={[a.flex_row, a.justify_end] as any}>
           <Button
             label={l`Done`}
-            size={IS_WEB ? 'small' : 'large'}
+            size={'small'}
             color="primary"
             variant="solid"
             onPress={() => {
@@ -206,7 +196,7 @@ function SubtitleDialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 function SubtitleFileRow({

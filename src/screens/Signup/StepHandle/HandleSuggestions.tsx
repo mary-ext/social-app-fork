@@ -1,9 +1,8 @@
 import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import Animated, {Easing, FadeInDown, FadeOut} from '#/lib/animations/reanimatedCompat'
-import {atoms as a, native, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {borderRadius} from '#/alf/tokens'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -22,8 +21,8 @@ export function HandleSuggestions({
 
   return (
     <Animated.View
-      entering={native(FadeInDown.easing(Easing.out(Easing.exp)))}
-      exiting={native(FadeOut)}
+      entering={undefined as any}
+      exiting={undefined as any}
       style={[
         a.flex_1,
         a.border,
@@ -74,5 +73,5 @@ export function HandleSuggestions({
         </Button>
       ))}
     </Animated.View>
-  )
+  );
 }

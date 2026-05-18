@@ -1,6 +1,5 @@
 import {type FontVariant, type TextStyle} from 'react-native'
 
-import {IS_ANDROID, IS_WEB} from '#/env'
 import {type Device, device} from '#/storage'
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
@@ -39,60 +38,19 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  */
 export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
   if (fontFamily === 'theme') {
-    if (IS_ANDROID) {
-      style.fontFamily =
-        {
-          400: 'Inter-Regular',
-          500: 'Inter-Medium',
-          600: 'Inter-SemiBold',
-          700: 'Inter-Bold',
-          800: 'Inter-Bold',
-          900: 'Inter-Bold',
-        }[String(style.fontWeight || '400')] || 'Inter-Regular'
+    style.fontFamily = 'InterVariable'
 
-      if (style.fontStyle === 'italic') {
-        if (style.fontFamily === 'Inter-Regular') {
-          style.fontFamily = 'Inter-Italic'
-        } else {
-          style.fontFamily += 'Italic'
-        }
-      }
-
-      /*
-       * These are not supported on Android and actually break the styling.
-       */
-      delete style.fontWeight
-      delete style.fontStyle
-    } else {
-      style.fontFamily = 'InterVariable'
-
-      if (style.fontStyle === 'italic') {
-        style.fontFamily += 'Italic'
-      }
+    if (style.fontStyle === 'italic') {
+      style.fontFamily += 'Italic'
     }
-
-    if (IS_WEB) {
-      // fallback families only supported on web
-      style.fontFamily += `, ${WEB_FONT_FAMILIES}`
-    }
-
-    /**
-     * Disable contextual alternates and emoji overrides in Inter
-     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
-     */
-    if (IS_WEB) {
-      style.fontVariant = (style.fontVariant || []).concat(
-        'no-contextual',
-        'unicode' as FontVariant, // web supports 'unicode' as a valid value for fontVariant
-      )
-    } else {
-      style.fontVariant = (style.fontVariant || []).concat('no-contextual')
-    }
-  } else {
     // fallback families only supported on web
-    if (IS_WEB) {
-      style.fontFamily = style.fontFamily || WEB_FONT_FAMILIES
-    }
+    style.fontFamily += `, ${WEB_FONT_FAMILIES}`
+    style.fontVariant = (style.fontVariant || []).concat(
+      'no-contextual',
+      'unicode' as FontVariant, // web supports 'unicode' as a valid value for fontVariant
+    )
+  } else {
+    style.fontFamily = style.fontFamily || WEB_FONT_FAMILIES
 
     /**
      * Overridden to previous spacing for the `system` font option.

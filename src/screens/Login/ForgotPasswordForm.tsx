@@ -1,14 +1,13 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -16,7 +15,6 @@ import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
@@ -114,21 +112,19 @@ export const ForgotPasswordForm = ({
         </Trans>
       </Text>
       <FormError error={error} />
-      <View style={[web([a.flex_row, a.align_center]), a.pt_md]}>
-        {IS_WEB && (
-          <>
-            <Button
-              label={l`Back`}
-              color="secondary"
-              size="large"
-              onPress={onPressBack}>
-              <ButtonText>
-                <Trans>Back</Trans>
-              </ButtonText>
-            </Button>
-            <View style={a.flex_1} />
-          </>
-        )}
+      <View style={[[a.flex_row, a.align_center] as any, a.pt_md]}>
+        {(<>
+          <Button
+            label={l`Back`}
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>
+              <Trans>Back</Trans>
+            </ButtonText>
+          </Button>
+          <View style={a.flex_1} />
+        </>)}
         {!serviceDescription ? (
           <Button
             label={l`Connecting to service...`}
@@ -176,5 +172,5 @@ export const ForgotPasswordForm = ({
         </Button>
       </View>
     </FormContainer>
-  )
+  );
 }

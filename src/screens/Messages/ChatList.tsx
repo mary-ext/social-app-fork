@@ -19,7 +19,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
@@ -37,7 +37,6 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE} from '#/env'
 import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
@@ -187,12 +186,12 @@ export function ChatList({
 
       return conversations.map(
         convo =>
-          ({
+          (({
             type: 'CONVERSATION',
             conversation: convo,
             selected: convo.id === selectedChat,
-          }) as const,
-      ) satisfies ListItem[]
+          }) as const),
+      ) satisfies ListItem[];
     }
     return []
   }, [data, leftConvos, selectedChat])
@@ -218,7 +217,7 @@ export function ChatList({
 
   const onSoftReset = useCallback(async () => {
     scrollElRef.current?.scrollToOffset({
-      animated: IS_NATIVE,
+      animated: false,
       offset: 0,
     })
     try {
@@ -238,7 +237,7 @@ export function ChatList({
 
   if (conversations.length === 0) {
     return (
-      <Layout.Center style={web({minHeight: '100%'})}>
+      <Layout.Center style={{minHeight: '100%'} as any}>
         {isLoading ? (
           <ChatListLoadingPlaceholder />
         ) : (
@@ -285,7 +284,7 @@ export function ChatList({
                 iconSize="4xl"
                 textStyle={t.atoms.text}
                 iconColor={t.atoms.text.color}
-                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
+                style={[a.h_full, a.justify_center, {paddingBottom: 120}] as any}
               />
             ) : (
               <EmptyState
@@ -302,13 +301,13 @@ export function ChatList({
                   color: 'primary',
                   icon: MessagePlusIcon,
                 }}
-                style={web([a.h_full, a.justify_center, {paddingBottom: 120}])}
+                style={[a.h_full, a.justify_center, {paddingBottom: 120}] as any}
               />
             )}
           </>
         )}
       </Layout.Center>
-    )
+    );
   }
 
   return (
@@ -329,7 +328,7 @@ export function ChatList({
           hasNextPage={hasNextPage}
         />
       }
-      onEndReachedThreshold={IS_NATIVE ? 1.5 : 0}
+      onEndReachedThreshold={0}
       initialNumToRender={initialNumToRender}
       windowSize={11}
       desktopFixedHeight
@@ -338,15 +337,15 @@ export function ChatList({
       style={
         isWithinSplitView && [
           a.w_full,
-          web({
+          {
             scrollbarWidth: 'thin',
             scrollbarColor: `${t.palette.contrast_100} transparent`,
-          }),
+          } as any,
         ]
       }
       contentContainerStyle={isWithinSplitView && a.py_sm}
     />
-  )
+  );
 }
 
 export function Header({newChatControl}: {newChatControl: DialogControlProps}) {

@@ -1,11 +1,10 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
-import {atoms as a, platform, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -110,10 +109,7 @@ export function Inner({
             name="push"
             style={[
               a.py_xs,
-              platform({
-                native: [a.justify_between],
-                web: [a.flex_row_reverse, a.gap_sm],
-              }),
+              [a.flex_row_reverse, a.gap_sm],
             ]}>
             <Toggle.LabelText
               style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
@@ -127,10 +123,7 @@ export function Inner({
               name="list"
               style={[
                 a.py_xs,
-                platform({
-                  native: [a.justify_between],
-                  web: [a.flex_row_reverse, a.gap_sm],
-                }),
+                [a.flex_row_reverse, a.gap_sm],
               ]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
@@ -187,5 +180,5 @@ export function Inner({
         </>
       )}
     </View>
-  )
+  );
 }

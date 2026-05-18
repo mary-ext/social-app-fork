@@ -1,8 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans,useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -17,7 +16,7 @@ import {
 import {useAgent} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -25,7 +24,6 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 300
@@ -55,7 +53,7 @@ export function CreateOrEditListDialog({
 
   // 'You might lose unsaved changes' warning
   useEffect(() => {
-    if (IS_WEB && dirty) {
+    if (dirty) {
       const abortController = new AbortController()
       const {signal} = abortController
       window.addEventListener('beforeunload', evt => evt.preventDefault(), {
@@ -375,7 +373,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={title}
-      style={[a.overflow_hidden, web({maxWidth: 500})]}
+      style={[a.overflow_hidden, {maxWidth: 500} as any]}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
@@ -473,5 +471,5 @@ function DialogInner({
         </View>
       </View>
     </Dialog.ScrollableInner>
-  )
+  );
 }

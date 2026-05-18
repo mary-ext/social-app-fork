@@ -6,7 +6,6 @@ import {
 } from '#/lib/strings/starter-pack'
 import {useHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
-import {IS_ANDROID} from '#/env'
 import {Referrer, SharedPrefs} from '#/shims/bluesky-swiss-army'
 
 export function useStarterPackEntry() {
@@ -30,30 +29,22 @@ export function useStarterPackEntry() {
     }, 500)
 
     ;(async () => {
-      let uri: string | null | undefined
+    let uri: string | null | undefined
 
-      if (IS_ANDROID) {
-        const res = await Referrer.getGooglePlayReferrerInfoAsync()
+    const starterPackUri = SharedPrefs.getString('starterPackUri')
+    if (starterPackUri) {
+      uri = httpStarterPackUriToAtUri(starterPackUri)
+      SharedPrefs.setValue('starterPackUri', null)
+    }
 
-        if (res && res.installReferrer) {
-          uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
-        }
-      } else {
-        const starterPackUri = SharedPrefs.getString('starterPackUri')
-        if (starterPackUri) {
-          uri = httpStarterPackUriToAtUri(starterPackUri)
-          SharedPrefs.setValue('starterPackUri', null)
-        }
-      }
+    if (uri) {
+      setActiveStarterPack({
+        uri,
+      })
+    }
 
-      if (uri) {
-        setActiveStarterPack({
-          uri,
-        })
-      }
-
-      setReady(true)
-    })()
+    setReady(true)
+  })()
 
     return () => {
       clearTimeout(timeout)

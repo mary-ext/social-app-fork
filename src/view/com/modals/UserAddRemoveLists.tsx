@@ -6,8 +6,7 @@ import {
   View,
 } from 'react-native'
 import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -23,7 +22,7 @@ import {
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
 import {useSession} from '#/state/session'
-import {IS_ANDROID, IS_WEB, IS_WEB_MOBILE} from '#/env'
+import { IS_WEB_MOBILE } from '#/env';
 import {MyLists} from '../lists/MyLists'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -58,9 +57,8 @@ export function Component({
   const listStyle = useMemo(() => {
     if (IS_WEB_MOBILE) {
       return [pal.border, {height: screenHeight / 2}]
-    } else if (IS_WEB) {
-      return [pal.border, {height: screenHeight / 1.5}]
-    }
+    } else
+      return [pal.border, {height: screenHeight / 1.5}];
 
     return [pal.border, {flex: 1, borderTopWidth: StyleSheet.hairlineWidth}]
   }, [pal.border, screenHeight])
@@ -243,7 +241,7 @@ function ListItem({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: IS_WEB ? 0 : 16,
+    paddingHorizontal: 0,
   },
   btns: {
     position: 'relative',
@@ -252,7 +250,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     paddingTop: 10,
-    paddingBottom: IS_ANDROID ? 10 : 0,
+    paddingBottom: 0,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   footerBtn: {

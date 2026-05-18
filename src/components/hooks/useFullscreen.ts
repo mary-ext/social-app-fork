@@ -6,7 +6,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 
-import {IS_WEB, IS_WEB_FIREFOX, IS_WEB_SAFARI} from '#/env'
+import { IS_WEB_FIREFOX, IS_WEB_SAFARI } from '#/env';
 
 function fullscreenSubscribe(onChange: () => void) {
   document.addEventListener('fullscreenchange', onChange)
@@ -14,7 +14,6 @@ function fullscreenSubscribe(onChange: () => void) {
 }
 
 export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
-  if (!IS_WEB) throw new Error("'useFullscreen' is a web-only hook")
   const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () =>
     Boolean(document.fullscreenElement),
   )

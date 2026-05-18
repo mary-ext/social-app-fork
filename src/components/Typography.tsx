@@ -1,7 +1,7 @@
 import {UITextView} from 'react-native-uitextview'
 
 import {logger} from '#/logger'
-import {atoms as a, type TextStyleProp, useAlf, useTheme, web} from '#/alf'
+import { atoms as a, type TextStyleProp, useAlf, useTheme } from '#/alf';
 import {
   childHasEmoji,
   normalizeTextStyles,
@@ -31,7 +31,7 @@ export function Text({
     [
       a.text_sm,
       t.atoms.text,
-      web(numberOfLines === 1 && numberOfLinesClippingFix),
+      numberOfLines === 1 && (numberOfLinesClippingFix as any),
       style,
     ],
     {
@@ -68,13 +68,12 @@ export function Text({
 
 function createHeadingElement({level}: {level: number}) {
   return function HeadingElement({style, ...rest}: TextProps) {
-    const attr =
-      web({
-        role: 'heading',
-        'aria-level': level,
-      }) || {}
+    const attr = {
+      role: 'heading',
+      'aria-level': level,
+    } as any
     return <Text {...attr} {...rest} style={style} />
-  }
+  };
 }
 
 /*
@@ -87,10 +86,9 @@ export const H4 = createHeadingElement({level: 4})
 export const H5 = createHeadingElement({level: 5})
 export const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
-  const attr =
-    web({
-      role: 'paragraph',
-    }) || {}
+  const attr = {
+    role: 'paragraph',
+  } as any
   return (
     <Text {...attr} {...rest} style={[a.text_md, a.leading_relaxed, style]} />
   )

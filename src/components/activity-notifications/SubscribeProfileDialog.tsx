@@ -6,8 +6,7 @@ import {
   type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {
   type InfiniteData,
   useMutation,
@@ -21,7 +20,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
-import {atoms as a, platform, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {
   Button,
@@ -35,7 +34,6 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
@@ -191,19 +189,10 @@ function DialogInner({
         disabled: isSaving,
       }
     } else {
-      // on web, a disabled save button feels more natural than a massive close button
-      if (IS_WEB) {
-        return {
-          label: l`Save changes`,
-          color: 'secondary',
-          disabled: true,
-        }
-      } else {
-        return {
-          label: l`Cancel`,
-          color: 'secondary',
-          onPress: () => control.close(),
-        }
+      return {
+        label: l`Save changes`,
+        color: 'secondary',
+        disabled: true,
       }
     }
   }, [state, initialState, control, l, isSaving, saveChanges])
@@ -212,7 +201,7 @@ function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      style={web({maxWidth: 400})}
+      style={{maxWidth: 400} as any}
       label={l`Get notified of new posts from ${name}`}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_xs]}>
@@ -249,10 +238,7 @@ function DialogInner({
               style={[
                 a.flex_1,
                 a.py_xs,
-                platform({
-                  native: [a.justify_between],
-                  web: [a.flex_row_reverse, a.gap_sm],
-                }),
+                [a.flex_row_reverse, a.gap_sm],
               ]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
@@ -266,10 +252,7 @@ function DialogInner({
               style={[
                 a.flex_1,
                 a.py_xs,
-                platform({
-                  native: [a.justify_between],
-                  web: [a.flex_row_reverse, a.gap_sm],
-                }),
+                [a.flex_row_reverse, a.gap_sm],
               ]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
@@ -293,7 +276,7 @@ function DialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  )
+  );
 }
 
 function parseActivitySubscription(

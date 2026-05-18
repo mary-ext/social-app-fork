@@ -2,7 +2,6 @@ import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/components/Toast'
-import {IS_IOS, IS_WEB} from '#/env'
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
@@ -56,11 +55,11 @@ export async function openUnifiedPicker({
     quality: 1,
     allowsMultipleSelection: true,
     legacy: true,
-    base64: IS_WEB,
-    selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
+    base64: true,
+    selectionLimit: undefined,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
     videoExportPreset: VideoExportPreset.Passthrough,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
-  })
+  });
 }

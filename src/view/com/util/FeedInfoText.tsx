@@ -2,7 +2,7 @@ import {type StyleProp, type TextStyle} from 'react-native'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useFeedSourceInfoQuery} from '#/state/queries/feed'
-import {atoms as a, platform} from '#/alf'
+import { atoms as a } from '#/alf';
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 
@@ -39,10 +39,7 @@ export function FeedNameText({
         height={8}
         style={[
           a.ml_2xs,
-          platform({
-            native: [a.mt_2xs],
-            web: [{top: -1}],
-          }),
+          [{top: -1}],
         ]}
       />
     )

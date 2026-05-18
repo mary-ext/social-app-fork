@@ -122,7 +122,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
 
     if (shadowed && 'status' in shadowed && shadowed.status) {
       const isValid = isStatusValidForViewers(shadowed.status, config)
-      const isDisabled = shadowed.status.isDisabled || false
+      const isDisabled = shadowed.status.isDisabled
       const isActive = isStatusStillActive(shadowed.status.expiresAt)
       if (isValid && !isDisabled && isActive) {
         return {
@@ -149,7 +149,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
     } else {
       return DEFAULT_STATE
     }
-  }, [shadowed, config, tick, moderation])
+  }, [shadowed, config, tick, moderation]);
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {

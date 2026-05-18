@@ -1,5 +1,4 @@
 import {useCallback, useEffect} from 'react'
-import {Platform} from 'react-native'
 import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
@@ -11,7 +10,7 @@ import {
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
-import {IS_DEV, IS_NATIVE} from '#/env'
+import { IS_DEV } from '#/env';
 import BackgroundNotificationHandler from '#/shims/background-notification-handler'
 import * as Notifications from '#/shims/notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from '#/shims/notifications'
@@ -38,7 +37,7 @@ async function _registerPushToken({
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,
-      platform: Platform.OS,
+      platform: 'web',
       token: token.data,
       appId: 'xyz.blueskyweb.app',
       ageRestricted: extra.ageRestricted ?? false,
@@ -136,33 +135,10 @@ export function useGetAndRegisterPushToken() {
     }: {
       isAgeRestricted?: boolean
     } = {}) => {
-      if (!IS_NATIVE || IS_DEV) return
-
-      /**
-       * This will also fire the listener added via `addPushTokenListener`. That
-       * listener also handles registration.
-       */
-      const token = await getPushToken()
-
-      notyLogger.debug(`useGetAndRegisterPushToken`, {
-        token: token ?? 'undefined',
-      })
-
-      if (token) {
-        /**
-         * The listener should have registered the token already, but just in
-         * case, call the debounced function again.
-         */
-        registerPushToken({
-          token,
-          isAgeRestricted: isAgeRestrictedOverride ?? false,
-        })
-      }
-
-      return token
+      return
     },
     [registerPushToken],
-  )
+  );
 }
 
 /**
@@ -229,53 +205,12 @@ export function useRequestNotificationsPermission() {
   ) => {
     const permissions = await Notifications.getPermissionsAsync()
 
-    if (
-      !IS_NATIVE ||
-      permissions?.status === 'granted' ||
-      (permissions?.status === 'denied' && !permissions.canAskAgain)
-    ) {
-      return
-    }
-    if (context === 'AfterOnboarding') {
-      return
-    }
-    if (context === 'Home' && !currentAccount) {
-      return
-    }
-
-    const res = await Notifications.requestPermissionsAsync()
-
-    if (res.granted) {
-      if (currentAccount) {
-        /**
-         * If we have an account in scope, we can safely call
-         * `getAndRegisterPushToken`.
-         */
-        getAndRegisterPushToken()
-      } else {
-        /**
-         * Right after login, `currentAccount` in this scope will be undefined,
-         * but calling `getPushToken` will result in `addPushTokenListener`
-         * listeners being called, which will handle the registration with the
-         * Bluesky server.
-         */
-        getPushToken()
-      }
-    }
-  }
+    return
+  };
 }
 
 export async function decrementBadgeCount(by: number) {
-  if (!IS_NATIVE) return
-
-  let count = await getBadgeCountAsync()
-  count -= by
-  if (count < 0) {
-    count = 0
-  }
-
-  await BackgroundNotificationHandler.setBadgeCountAsync(count)
-  await setBadgeCountAsync(count)
+  return
 }
 
 export async function resetBadgeCount() {
@@ -284,31 +219,5 @@ export async function resetBadgeCount() {
 }
 
 export async function unregisterPushToken(agents: AtpAgent[]) {
-  if (!IS_NATIVE) return
-
-  try {
-    const token = await getPushToken()
-    if (token) {
-      for (const agent of agents) {
-        await agent.app.bsky.notification.unregisterPush(
-          {
-            serviceDid: agent.serviceUrl.hostname.includes('staging')
-              ? PUBLIC_STAGING_APPVIEW_DID
-              : PUBLIC_APPVIEW_DID,
-            platform: Platform.OS,
-            token: token.data,
-            appId: 'xyz.blueskyweb.app',
-          },
-          {
-            headers: BLUESKY_NOTIF_SERVICE_HEADERS,
-          },
-        )
-        notyLogger.debug(`Push token unregistered for ${agent.session?.handle}`)
-      }
-    } else {
-      notyLogger.debug('Tried to unregister push token, but could not find one')
-    }
-  } catch (error) {
-    notyLogger.debug('Failed to unregister push token', {message: error})
-  }
+  return
 }

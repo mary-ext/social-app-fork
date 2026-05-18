@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {useCallback, useRef, useState, useSyncExternalStore} from 'react'
-import {Platform, type TextInput} from 'react-native'
+import { type TextInput } from 'react-native';
 
 import * as defaultFacets from './facets'
 import {
@@ -24,7 +24,7 @@ import {
 export * as facets from './facets'
 export * from './types'
 
-const IS_WEB = Platform.OS === 'web'
+const IS_WEB = true
 
 export class Tapper {
   private facetRegexes: CompiledFacetRegexes

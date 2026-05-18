@@ -413,7 +413,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             post.quoteCount !== 0 ||
             post.bookmarkCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
-              <View
+              (<View
                 style={[
                   a.flex_row,
                   a.flex_wrap,
@@ -503,7 +503,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     </Trans>
                   </Text>
                 ) : null}
-              </View>
+              </View>)
             ) : null}
             <View
               style={[
@@ -533,7 +533,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         </View>
       </GalleryBleed>
     </>
-  )
+  );
 })
 
 function ExpandedPostDetails({

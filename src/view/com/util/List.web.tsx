@@ -23,7 +23,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
-import {useTheme, web} from '#/alf'
+import { useTheme } from '#/alf';
 import * as Layout from '#/components/Layout'
 
 export type ListMethods = {
@@ -338,10 +338,10 @@ function ListImpl<ItemT>(
       {...props}
       style={[
         isWithinSplitView &&
-          web({
+          {
             scrollbarWidth: 'thin',
             scrollbarColor: `${t.palette.contrast_100} transparent`,
-          }),
+          } as any,
         style,
         disableFullWindowScroll && {
           flex: 1,
@@ -407,7 +407,7 @@ function ListImpl<ItemT>(
         </View>
       </Layout.Center>
     </View>
-  )
+  );
 }
 
 function EdgeVisibility({

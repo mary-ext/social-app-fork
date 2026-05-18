@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -27,7 +26,7 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {atoms as a, useTheme, web} from '#/alf'
+import { atoms as a, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
@@ -35,7 +34,6 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {IS_NATIVE} from '#/env'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -144,7 +142,7 @@ export function NotificationsScreen({}: Props) {
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
+          <Layout.Center style={[a.z_10, [a.sticky, {top: 0}] as any]}>
             <TabBar
               {...props}
               items={sections.map(section => section.title)}
@@ -166,7 +164,7 @@ export function NotificationsScreen({}: Props) {
         accessibilityHint=""
       />
     </Layout.Screen>
-  )
+  );
 }
 
 function NotificationsTab({
@@ -194,7 +192,7 @@ function NotificationsTab({
   // event handlers
   // =
   const scrollToTop = useCallback(() => {
-    scrollElRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
+    scrollElRef.current?.scrollToOffset({animated: false, offset: 0})
   }, [scrollElRef])
 
   const onPressLoadLatest = useCallback(() => {
@@ -223,13 +221,9 @@ function NotificationsTab({
     // on focus, check for latest, but only invalidate if the user
     // isnt scrolled down to avoid moving content underneath them
     let currentIsScrolledDown
-    if (IS_NATIVE) {
-      currentIsScrolledDown = isScrolledDown
-    } else {
-      // On the web, this isn't always updated in time so
-      // we're just going to look it up synchronously.
-      currentIsScrolledDown = window.scrollY > 200
-    }
+    // On the web, this isn't always updated in time so
+    // we're just going to look it up synchronously.
+    currentIsScrolledDown = window.scrollY > 200
     checkUnread({invalidate: !currentIsScrolledDown})
   })
 
