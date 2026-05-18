@@ -49,7 +49,6 @@ import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
-import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
@@ -104,47 +103,45 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <PolicyUpdateOverlayProvider>
-                      <ComposerProvider>
-                        <MessagesProvider>
-                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                          <LabelDefsProvider>
-                            <ModerationOptsProvider>
-                              <LoggedOutViewProvider>
-                                <SelectedFeedProvider>
-                                  <HiddenRepliesProvider>
-                                    <HomeBadgeProvider>
-                                      <UnreadNotifsProvider>
-                                        <BackgroundNotificationPreferencesProvider>
-                                          <MutedThreadsProvider>
-                                            <SafeAreaProvider>
-                                              <ProgressGuideProvider>
-                                                <ServiceConfigProvider>
-                                                  <HideBottomBarBorderProvider>
-                                                    <IntentDialogProvider>
-                                                      <TranslateOnDeviceProvider>
-                                                        <HotkeysProvider>
-                                                          <Shell />
-                                                          <ToastOutlet />
-                                                        </HotkeysProvider>
-                                                      </TranslateOnDeviceProvider>
-                                                    </IntentDialogProvider>
-                                                  </HideBottomBarBorderProvider>
-                                                </ServiceConfigProvider>
-                                              </ProgressGuideProvider>
-                                            </SafeAreaProvider>
-                                          </MutedThreadsProvider>
-                                        </BackgroundNotificationPreferencesProvider>
-                                      </UnreadNotifsProvider>
-                                    </HomeBadgeProvider>
-                                  </HiddenRepliesProvider>
-                                </SelectedFeedProvider>
-                              </LoggedOutViewProvider>
-                            </ModerationOptsProvider>
-                          </LabelDefsProvider>
-                        </MessagesProvider>
-                      </ComposerProvider>
-                    </PolicyUpdateOverlayProvider>
+                    <ComposerProvider>
+                      <MessagesProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <HiddenRepliesProvider>
+                                  <HomeBadgeProvider>
+                                    <UnreadNotifsProvider>
+                                      <BackgroundNotificationPreferencesProvider>
+                                        <MutedThreadsProvider>
+                                          <SafeAreaProvider>
+                                            <ProgressGuideProvider>
+                                              <ServiceConfigProvider>
+                                                <HideBottomBarBorderProvider>
+                                                  <IntentDialogProvider>
+                                                    <TranslateOnDeviceProvider>
+                                                      <HotkeysProvider>
+                                                        <Shell />
+                                                        <ToastOutlet />
+                                                      </HotkeysProvider>
+                                                    </TranslateOnDeviceProvider>
+                                                  </IntentDialogProvider>
+                                                </HideBottomBarBorderProvider>
+                                              </ServiceConfigProvider>
+                                            </ProgressGuideProvider>
+                                          </SafeAreaProvider>
+                                        </MutedThreadsProvider>
+                                      </BackgroundNotificationPreferencesProvider>
+                                    </UnreadNotifsProvider>
+                                  </HomeBadgeProvider>
+                                </HiddenRepliesProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </MessagesProvider>
+                    </ComposerProvider>
                   </QueryProvider>
                 </Fragment>
               </ActiveVideoProvider>

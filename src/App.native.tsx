@@ -57,7 +57,6 @@ import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as LightboxStateProvider} from '#/components/Lightbox/state'
-import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import * as Toast from '#/components/Toast'
@@ -124,49 +123,47 @@ function InnerApp() {
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <PolicyUpdateOverlayProvider>
-                    <ComposerProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <HomeBadgeProvider>
-                                    <UnreadNotifsProvider>
-                                      <BackgroundNotificationPreferencesProvider>
-                                        <MutedThreadsProvider>
-                                          <ProgressGuideProvider>
-                                            <ServiceAccountManager>
-                                              <HideBottomBarBorderProvider>
-                                                <GestureHandlerRootView
-                                                  style={a.h_full}>
-                                                  <GlobalGestureEventsProvider>
-                                                    <IntentDialogProvider>
-                                                      <TranslateOnDeviceProvider>
-                                                        <TestCtrls />
-                                                        <Shell />
-                                                        <ToastOutlet />
-                                                      </TranslateOnDeviceProvider>
-                                                    </IntentDialogProvider>
-                                                  </GlobalGestureEventsProvider>
-                                                </GestureHandlerRootView>
-                                              </HideBottomBarBorderProvider>
-                                            </ServiceAccountManager>
-                                          </ProgressGuideProvider>
-                                        </MutedThreadsProvider>
-                                      </BackgroundNotificationPreferencesProvider>
-                                    </UnreadNotifsProvider>
-                                  </HomeBadgeProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </ComposerProvider>
-                  </PolicyUpdateOverlayProvider>
+                  <ComposerProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <HiddenRepliesProvider>
+                                <HomeBadgeProvider>
+                                  <UnreadNotifsProvider>
+                                    <BackgroundNotificationPreferencesProvider>
+                                      <MutedThreadsProvider>
+                                        <ProgressGuideProvider>
+                                          <ServiceAccountManager>
+                                            <HideBottomBarBorderProvider>
+                                              <GestureHandlerRootView
+                                                style={a.h_full}>
+                                                <GlobalGestureEventsProvider>
+                                                  <IntentDialogProvider>
+                                                    <TranslateOnDeviceProvider>
+                                                      <TestCtrls />
+                                                      <Shell />
+                                                      <ToastOutlet />
+                                                    </TranslateOnDeviceProvider>
+                                                  </IntentDialogProvider>
+                                                </GlobalGestureEventsProvider>
+                                              </GestureHandlerRootView>
+                                            </HideBottomBarBorderProvider>
+                                          </ServiceAccountManager>
+                                        </ProgressGuideProvider>
+                                      </MutedThreadsProvider>
+                                    </BackgroundNotificationPreferencesProvider>
+                                  </UnreadNotifsProvider>
+                                </HomeBadgeProvider>
+                              </HiddenRepliesProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </ComposerProvider>
                 </QueryProvider>
               </Fragment>
             </VideoVolumeProvider>

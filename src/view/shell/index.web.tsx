@@ -23,10 +23,6 @@ import {SigninDialog} from '#/components/dialogs/Signin'
 import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
 import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
-import {
-  Outlet as PolicyUpdateOverlayPortalOutlet,
-  usePolicyUpdateContext,
-} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {WelcomeModal} from '#/components/WelcomeModal'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
@@ -37,7 +33,6 @@ import {DrawerContent} from './Drawer'
 function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {state: policyUpdateState} = usePolicyUpdateContext()
   const welcomeModalControl = useWelcomeModal()
 
   useIntentHandler()
@@ -74,14 +69,7 @@ function ShellInner() {
         <WelcomeModal control={welcomeModalControl} />
       )}
 
-      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
-      {policyUpdateState.completed && (
-        <>
-          <PortalOutlet />
-        </>
-      )}
-
-      <PolicyUpdateOverlayPortalOutlet />
+      <PortalOutlet />
     </>
   )
 }

@@ -11,11 +11,6 @@ export enum Nux {
   LiveNowBetaDialog = 'LiveNowBetaDialog',
   LiveNowBetaNudge = 'LiveNowBetaNudge',
   DraftsAnnouncement = 'DraftsAnnouncement',
-
-  /*
-   * Blocking announcements. New IDs are required for each new announcement.
-   */
-  PolicyUpdate202508 = 'PolicyUpdate202508',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -35,10 +30,6 @@ export type AppNux = BaseNux<
     }
   | {
       id: Nux.ActivitySubscriptions
-      data: undefined
-    }
-  | {
-      id: Nux.PolicyUpdate202508
       data: undefined
     }
   | {
@@ -64,7 +55,6 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.ExploreInterestsCard]: undefined,
   [Nux.InitialVerificationAnnouncement]: undefined,
   [Nux.ActivitySubscriptions]: undefined,
-  [Nux.PolicyUpdate202508]: undefined,
   [Nux.BookmarksAnnouncement]: undefined,
   [Nux.LiveNowBetaDialog]: undefined,
   [Nux.LiveNowBetaNudge]: undefined,

@@ -445,16 +445,16 @@ The three sub-phases are independent — apply in any order, one commit each. Ph
 **Note on Phase 2.3 cross-reference:** Phase 2.3 above instructs leaving the policy-update overlay portal intact. That guidance was scoped to that phase, not a long-term commitment —  2.6c is where it gets removed.
 
 **Checklist:**
-- [ ] `rm -rf src/components/PolicyUpdateOverlay`
-- [ ] In `src/App.web.tsx` and `src/App.native.tsx`: remove `<PolicyUpdateOverlayProvider>` and its import
-- [ ] In `src/view/shell/index.tsx` and `src/view/shell/index.web.tsx`: drop the `usePolicyUpdateContext()` hook, the `policyUpdateState.completed` conditional around `<PortalOutlet />` / `<BottomSheetOutlet />`, and the `<PolicyUpdateOverlayPortalOutlet />` mount. Both outlets render unconditionally afterward
-- [ ] In `src/view/shell/createNativeStackNavigatorWithAuth.tsx:39,213-214`: drop the `<PolicyUpdateOverlay />` import and render. This file is typecheck-visible even though the web shell doesn't reach it at runtime — leaving it referencing the deleted component breaks typecheck
-- [ ] In `src/screens/Signup/StepInfo/index.tsx`: drop the `usePreemptivelyCompleteActivePolicyUpdate()` call and its import
-- [ ] In `src/state/queries/nuxs/definitions.ts`: drop `Nux.PolicyUpdate202508` from the enum (`:19-22`), its arm in the `AppNux` discriminated union (`:52-55`), **and** its entry in `NuxSchemas` (`:82-90`). All three references must go together — leaving any one breaks compile
-- [ ] In `src/storage/schema.ts`: drop `policyUpdateDebugOverride` and the `[PolicyUpdate202508]` key from the `Device` type
-- [ ] In `src/screens/Settings/Settings.tsx` (`DevOptions`): drop the policy-update DevOptions controls — the debug-override toggle and the "reset" button that calls `device.set([PolicyUpdate202508], false)` + `agent.bskyAppRemoveNuxs([...])`. Other NUX debug controls stay
-- [ ] In `src/logger/types.ts`: drop the `PolicyUpdate = 'policy-update'` context entry once `src/components/PolicyUpdateOverlay/logger.ts` is gone
-- [ ] Verify:
+- [x] `rm -rf src/components/PolicyUpdateOverlay`
+- [x] In `src/App.web.tsx` and `src/App.native.tsx`: remove `<PolicyUpdateOverlayProvider>` and its import
+- [x] In `src/view/shell/index.tsx` and `src/view/shell/index.web.tsx`: drop the `usePolicyUpdateContext()` hook, the `policyUpdateState.completed` conditional around `<PortalOutlet />` / `<BottomSheetOutlet />`, and the `<PolicyUpdateOverlayPortalOutlet />` mount. Both outlets render unconditionally afterward
+- [x] In `src/view/shell/createNativeStackNavigatorWithAuth.tsx:39,213-214`: drop the `<PolicyUpdateOverlay />` import and render. This file is typecheck-visible even though the web shell doesn't reach it at runtime — leaving it referencing the deleted component breaks typecheck
+- [x] In `src/screens/Signup/StepInfo/index.tsx`: drop the `usePreemptivelyCompleteActivePolicyUpdate()` call and its import
+- [x] In `src/state/queries/nuxs/definitions.ts`: drop `Nux.PolicyUpdate202508` from the enum (`:19-22`), its arm in the `AppNux` discriminated union (`:52-55`), **and** its entry in `NuxSchemas` (`:82-90`). All three references must go together — leaving any one breaks compile
+- [x] In `src/storage/schema.ts`: drop `policyUpdateDebugOverride` and the `[PolicyUpdate202508]` key from the `Device` type
+- [x] In `src/screens/Settings/Settings.tsx` (`DevOptions`): drop the policy-update DevOptions controls — the debug-override toggle and the "reset" button that calls `device.set([PolicyUpdate202508], false)` + `agent.bskyAppRemoveNuxs([...])`. Other NUX debug controls stay
+- [x] In `src/logger/types.ts`: drop the `PolicyUpdate = 'policy-update'` context entry once `src/components/PolicyUpdateOverlay/logger.ts` is gone
+- [x] Verify:
   ```sh
   rg -n "PolicyUpdate|policy-update|policyUpdate|PolicyUpdateOverlay" src --glob '!locale/**' --glob '!**/*.po'
   ```

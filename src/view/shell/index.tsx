@@ -33,10 +33,6 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
-import {
-  Outlet as PolicyUpdateOverlayPortalOutlet,
-  usePolicyUpdateContext,
-} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
@@ -49,7 +45,6 @@ import {DrawerContent} from './Drawer'
 function ShellInner() {
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const {state: policyUpdateState} = usePolicyUpdateContext()
 
   const closeAnyActiveElement = useCloseAnyActiveElement()
 
@@ -115,16 +110,8 @@ function ShellInner() {
       <Lightbox />
       <NuxDialogs />
       <GlobalReportDialog />
-
-      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
-      {policyUpdateState.completed && (
-        <>
-          <PortalOutlet />
-          <BottomSheetOutlet />
-        </>
-      )}
-
-      <PolicyUpdateOverlayPortalOutlet />
+      <PortalOutlet />
+      <BottomSheetOutlet />
     </>
   )
 }
