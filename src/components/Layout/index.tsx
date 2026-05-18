@@ -10,7 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {
   type AnimatedScrollView,
   type AnimatedScrollViewProps,
-  useAnimatedProps,
+  useAnimatedStyle,
 } from '#/lib/animations/reanimatedCompat'
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -82,14 +82,14 @@ export const Content = memo(
     const t = useTheme()
     const {footerHeight} = useShellLayout()
     const {isWithinSplitView} = useIsWithinSplitView()
-    const animatedProps = useAnimatedProps(() => {
+
+    // note - if we ever make the footer transparent in any way,
+    // we'll need to change this to use contentInsets/scrollIndicatorInsets
+    // on iOS and contentContainerStyle padding on Android -sfn
+    const animatedStyle = useAnimatedStyle(() => {
       return {
-        scrollIndicatorInsets: {
-          bottom: footerHeight.get(),
-          top: 0,
-          right: 1,
-        },
-      } satisfies AnimatedScrollViewProps
+        marginBottom: footerHeight.get(),
+      }
     })
 
     return (
@@ -98,10 +98,9 @@ export const Content = memo(
         id="content"
         automaticallyAdjustsScrollIndicatorInsets={false}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        // sets the scroll inset to the height of the footer
-        animatedProps={animatedProps}
         style={[
           a.w_full,
+          animatedStyle,
           isWithinSplitView &&
             {
               flex: 1,
