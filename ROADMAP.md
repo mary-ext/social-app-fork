@@ -895,10 +895,10 @@ returns only transitively-shadowed files.
 **Motivation:** drop the `expo/registerRootComponent` dependency at the entry point before the rest of the Expo strip. Also drop `src/platform/polyfills.web.ts` — for modern browsers in 2026, none of its three pieces are needed.
 
 **Prerequisite — rewrite the three `setImmediate()` callers** (the only thing in `polyfills.web.ts` that actually has runtime callers; `Array.prototype.findLast` is in every browser since 2022, and the dev-only RNW console-error hijack is QoL):
-- [ ] `src/components/dms/AddMembersFlow.tsx` — `setImmediate(fn)` → `setTimeout(fn, 0)` (or `queueMicrotask(fn)` if order vs paint doesn't matter)
-- [ ] `src/components/dms/InitiateChatFlow.tsx` — same
-- [ ] `src/components/dialogs/SearchablePeopleList.tsx` — same
-- [ ] While at it: in `src/state/cache/thread-mutes.tsx`, remove the stale `// @ts-ignore findLast is polyfilled - esb` comment (modern TS knows about `findLast`)
+- [x] `src/components/dms/AddMembersFlow.tsx` — `setImmediate(fn)` → `setTimeout(fn, 0)` (or `queueMicrotask(fn)` if order vs paint doesn't matter)
+- [x] `src/components/dms/InitiateChatFlow.tsx` — same
+- [x] `src/components/dialogs/SearchablePeopleList.tsx` — same
+- [x] While at it: in `src/state/cache/thread-mutes.tsx`, remove the stale `// @ts-ignore findLast is polyfilled - esb` comment (modern TS knows about `findLast`)
 
 Replace `index.web.js` with:
 
@@ -918,11 +918,11 @@ createRoot(rootEl).render(
 )
 ```
 
-- [ ] `rm src/platform/polyfills.web.ts src/platform/markBundleStartTime.web.ts`
-- [ ] Drop the bundle-start-time perf line from `src/Navigation.tsx` (reads `global.__BUNDLE_START_TIME__` — sole reader of the deleted module)
-- [ ] `yarn remove array.prototype.findlast setimmediate` (and remove their `@types/*` siblings if present)
-- [ ] Ensure `web/index.html` contains `<div id="root"></div>`
-- [ ] Keep `index.js` (native entry) temporarily; delete in Phase 4.6 (native cleanup)
+- [x] `rm src/platform/polyfills.web.ts src/platform/markBundleStartTime.web.ts`
+- [x] Drop the bundle-start-time perf line from `src/Navigation.tsx` (reads `global.__BUNDLE_START_TIME__` — sole reader of the deleted module) — no reader remained by the time this phase ran
+- [x] `yarn remove array.prototype.findlast setimmediate` (and remove their `@types/*` siblings if present) — direct deps removed; both names still appear only as transitive lockfile entries
+- [x] Ensure `web/index.html` contains `<div id="root"></div>`
+- [x] Keep `index.js` (native entry) temporarily; delete in Phase 4.6 (native cleanup)
 
 ## Phase 4.2 — Remove Sentry React Native
 

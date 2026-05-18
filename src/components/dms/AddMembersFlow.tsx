@@ -294,9 +294,9 @@ export function AddMembersFlow({
 
   useLayoutEffect(() => {
     if (IS_WEB) {
-      setImmediate(() => {
+      setTimeout(() => {
         inputRef?.current?.focus()
-      })
+      }, 0)
     }
   }, [])
 
