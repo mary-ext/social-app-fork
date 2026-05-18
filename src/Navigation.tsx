@@ -72,7 +72,6 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {BookmarksScreen} from '#/screens/Bookmarks'
-import {FindContactsFlowScreen} from '#/screens/FindContactsFlowScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {LogScreen} from '#/screens/Log'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
@@ -106,7 +105,6 @@ import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {AutomationLabelSettingsScreen} from '#/screens/Settings/AutomationLabelSettings'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
-import {FindContactsSettingsScreen} from '#/screens/Settings/FindContactsSettings'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
 import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
@@ -425,14 +423,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
-        name="FindContactsSettings"
-        getComponent={() => FindContactsSettingsScreen}
-        options={{
-          title: title(msg`Find Contacts`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
@@ -630,15 +620,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Saved Posts`),
           requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="FindContactsFlow"
-        getComponent={() => FindContactsFlowScreen}
-        options={{
-          title: title(msg`Find Contacts`),
-          requireAuth: true,
-          gestureEnabled: false,
         }}
       />
     </>

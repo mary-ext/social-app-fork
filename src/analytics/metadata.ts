@@ -1,5 +1,3 @@
-import {type Geolocation} from '#/geolocation'
-
 export type BaseMetadata = {
   deviceId: string
   sessionId: string
@@ -10,8 +8,6 @@ export type BaseMetadata = {
   referrerSrc: string
   referrerUrl: string
 }
-
-export type GeolocationMetadata = Geolocation
 
 export type SessionMetadata = {
   did: string
@@ -35,7 +31,6 @@ export type MergeableMetadata = {
 
 export type Metadata = {
   base: BaseMetadata
-  geolocation: GeolocationMetadata
 } & MergeableMetadata
 
 /*
@@ -64,7 +59,6 @@ export function setNavigationMetadata(meta: NavigationMetadata | undefined) {
  */
 export function getMetadataForLogger({
   base,
-  geolocation,
   session,
 }: Metadata): Record<string, any> {
   return {
@@ -72,8 +66,6 @@ export function getMetadataForLogger({
     sessionId: base.sessionId,
     platform: base.platform,
     appVersion: base.appVersion,
-    countryCode: geolocation.countryCode,
-    regionCode: geolocation.regionCode,
     isBskyPds: session?.isBskyPds || 'anonymous',
   }
 }

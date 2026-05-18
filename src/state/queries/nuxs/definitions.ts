@@ -8,8 +8,6 @@ export enum Nux {
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
   ActivitySubscriptions = 'ActivitySubscriptions',
   BookmarksAnnouncement = 'BookmarksAnnouncement',
-  FindContactsAnnouncement = 'FindContactsAnnouncement',
-  FindContactsDismissibleBanner = 'FindContactsDismissibleBanner',
   LiveNowBetaDialog = 'LiveNowBetaDialog',
   LiveNowBetaNudge = 'LiveNowBetaNudge',
   DraftsAnnouncement = 'DraftsAnnouncement',
@@ -48,14 +46,6 @@ export type AppNux = BaseNux<
       data: undefined
     }
   | {
-      id: Nux.FindContactsAnnouncement
-      data: undefined
-    }
-  | {
-      id: Nux.FindContactsDismissibleBanner
-      data: undefined
-    }
-  | {
       id: Nux.LiveNowBetaDialog
       data: undefined
     }
@@ -76,8 +66,6 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.ActivitySubscriptions]: undefined,
   [Nux.PolicyUpdate202508]: undefined,
   [Nux.BookmarksAnnouncement]: undefined,
-  [Nux.FindContactsAnnouncement]: undefined,
-  [Nux.FindContactsDismissibleBanner]: undefined,
   [Nux.LiveNowBetaDialog]: undefined,
   [Nux.LiveNowBetaNudge]: undefined,
   [Nux.DraftsAnnouncement]: undefined,

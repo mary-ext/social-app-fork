@@ -10,10 +10,6 @@ import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {
-  useDeviceGeolocationApi,
-  useRequestDeviceGeolocation,
-} from '#/geolocation'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
@@ -34,8 +30,6 @@ export default function Storybook() {
   const [showContainedList, setShowContainedList] = useState(false)
   const debugFeedContextEnabled = useDebugFeedContextEnabled()
   const setDebugFeedContextEnabled = useSetDebugFeedContextEnabled()
-  const requestDeviceGeolocation = useRequestDeviceGeolocation()
-  const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
   return (
     <>
@@ -78,20 +72,6 @@ export default function Storybook() {
                 <ButtonText>Dark</ButtonText>
               </Button>
             </View>
-
-            <Button
-              color="primary_subtle"
-              size="large"
-              onPress={() =>
-                requestDeviceGeolocation().then(req => {
-                  if (req.granted && req.location) {
-                    setDeviceGeolocation(req.location)
-                  }
-                })
-              }
-              label="crash">
-              <ButtonText>Get GPS Location</ButtonText>
-            </Button>
 
             <ThemeProvider theme="light">
               <Theming />

@@ -8503,11 +8503,6 @@ expo-constants@~18.0.12, expo-constants@~18.0.13:
     "@expo/config" "~12.0.13"
     "@expo/env" "~2.0.8"
 
-expo-contacts@^15.0.10:
-  version "15.0.11"
-  resolved "https://registry.yarnpkg.com/expo-contacts/-/expo-contacts-15.0.11.tgz#f3164a1d8298d41b0bac9fcb3500bfa6027aa18b"
-  integrity sha512-buKkoQuWJgVSEvR1Yloa5SvGC/ud7T2YeYDe0R7Aa0oz8pwQpjk3W7OoL3QrXIfYcuKTrIz6ffqC8lc3peaAyg==
-
 expo-dev-client@~6.0.20:
   version "6.0.20"
   resolved "https://registry.yarnpkg.com/expo-dev-client/-/expo-dev-client-6.0.20.tgz#d5b65974785100ae7f2538e16701fa1ef55f5fad"
@@ -8633,11 +8628,6 @@ expo-localization@~17.0.8:
   dependencies:
     rtl-detect "^1.0.2"
 
-expo-location@~19.0.8:
-  version "19.0.8"
-  resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-19.0.8.tgz#1805393151b1286021c1ad36246b6fd095d09b55"
-  integrity sha512-H/FI75VuJ1coodJbbMu82pf+Zjess8X8Xkiv9Bv58ZgPKS/2ztjC1YO1/XMcGz7+s9DrbLuMIw22dFuP4HqneA==
-
 expo-manifests@~1.0.10:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/expo-manifests/-/expo-manifests-1.0.10.tgz#5dfb3db1cdf6b46fee349f1d68a25edf5e087994"
@@ -8716,11 +8706,6 @@ expo-sharing@~14.0.8:
   version "14.0.8"
   resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-14.0.8.tgz#cfd5fcf77ab5f64cf3d192a40a925abb316d3545"
   integrity sha512-A1pPr2iBrxypFDCWVAESk532HK+db7MFXbvO2sCV9ienaFXAk7lIBm6bkqgE6vzRd9O3RGdEGzYx80cYlc089Q==
-
-expo-sms@^14.0.7:
-  version "14.0.8"
-  resolved "https://registry.yarnpkg.com/expo-sms/-/expo-sms-14.0.8.tgz#c1b17ab17eb9c7f7a8150e86131ff3fe3ebf7915"
-  integrity sha512-yNdUUP4Y+arvQByXsSzY8UFPadezxcFPH4u1Ubab2VIRNmDJZf7TIAFmDi8dAbm5CPxbzjKBEbBIkmkVKppHHA==
 
 expo-splash-screen@~31.0.13:
   version "31.0.13"

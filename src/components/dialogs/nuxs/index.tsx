@@ -24,7 +24,6 @@ import {
 } from '#/components/dialogs/nuxs/DraftsAnnouncement'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {type EnabledCheckProps} from '#/components/dialogs/nuxs/utils'
-import {useGeolocation} from '#/geolocation'
 
 type Context = {
   activeNux: Nux | undefined
@@ -87,7 +86,6 @@ function Inner({
   currentProfile: AppBskyActorDefs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse
 }) {
-  const geolocation = useGeolocation()
   const {nuxs} = useNuxs()
   const [snoozed, setSnoozed] = useState(() => {
     return isSnoozed()
@@ -134,7 +132,6 @@ function Inner({
           currentAccount,
           currentProfile,
           preferences,
-          geolocation,
         })
       ) {
         continue
@@ -169,7 +166,6 @@ function Inner({
     currentAccount,
     currentProfile,
     preferences,
-    geolocation,
   ])
 
   const ctx = useMemo(() => {

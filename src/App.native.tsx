@@ -73,7 +73,6 @@ import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
 } from '#/features/liveEvents/context'
-import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -91,10 +90,6 @@ if (IS_ANDROID) {
   )
 }
 
-/**
- * Begin geolocation ASAP
- */
-void Geo.resolve()
 void prefetchLiveEvents()
 void prefetchAppConfig()
 
@@ -202,8 +197,8 @@ function App() {
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    void Promise.all([initPersistedState(), Geo.resolve(), setupDeviceId]).then(
-      () => setIsReady(true),
+    void Promise.all([initPersistedState(), setupDeviceId]).then(() =>
+      setIsReady(true),
     )
   }, [])
 
@@ -216,42 +211,40 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <Geo.Provider>
-      <AppConfigProvider>
-        <A11yProvider>
-          <KeyboardControllerProvider preload={false}>
-            <OnboardingProvider>
-              <AnalyticsContext>
-                <SessionProvider>
-                  <PrefsStateProvider>
-                    <I18nProvider>
-                      <ShellStateProvider>
-                        <ModalStateProvider>
-                          <DialogStateProvider>
-                            <LightboxStateProvider>
-                              <PortalProvider>
-                                <BottomSheetProvider>
-                                  <StarterPackProvider>
-                                    <SafeAreaProvider
-                                      initialMetrics={initialWindowMetrics}>
-                                      <InnerApp />
-                                    </SafeAreaProvider>
-                                  </StarterPackProvider>
-                                </BottomSheetProvider>
-                              </PortalProvider>
-                            </LightboxStateProvider>
-                          </DialogStateProvider>
-                        </ModalStateProvider>
-                      </ShellStateProvider>
-                    </I18nProvider>
-                  </PrefsStateProvider>
-                </SessionProvider>
-              </AnalyticsContext>
-            </OnboardingProvider>
-          </KeyboardControllerProvider>
-        </A11yProvider>
-      </AppConfigProvider>
-    </Geo.Provider>
+    <AppConfigProvider>
+      <A11yProvider>
+        <KeyboardControllerProvider preload={false}>
+          <OnboardingProvider>
+            <AnalyticsContext>
+              <SessionProvider>
+                <PrefsStateProvider>
+                  <I18nProvider>
+                    <ShellStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <StarterPackProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <InnerApp />
+                                  </SafeAreaProvider>
+                                </StarterPackProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </ShellStateProvider>
+                  </I18nProvider>
+                </PrefsStateProvider>
+              </SessionProvider>
+            </AnalyticsContext>
+          </OnboardingProvider>
+        </KeyboardControllerProvider>
+      </A11yProvider>
+    </AppConfigProvider>
   )
 }
 

@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HELP_DESK_URL} from '#/lib/constants'
-import {IMPORT_CONTACTS_SETTINGS_DISABLED} from '#/lib/feature-flags'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
@@ -32,7 +31,6 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {Button, ButtonText} from '#/components/Button'
-import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -41,7 +39,6 @@ import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
-import {Contacts_Stroke2_Corner2_Rounded as ContactsIcon} from '#/components/icons/Contacts'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
 import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
@@ -84,8 +81,6 @@ export function SettingsScreen({}: Props) {
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const [showAccounts, setShowAccounts] = useState(false)
   const [showDevOptions, setShowDevOptions] = useState(false)
-  const findContactsEnabled =
-    useIsFindContactsFeatureEnabledBasedOnGeolocation()
 
   return (
     <Layout.Screen>
@@ -204,18 +199,6 @@ export function SettingsScreen({}: Props) {
               <Trans>Content and media</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          {IS_NATIVE &&
-            findContactsEnabled &&
-            !IMPORT_CONTACTS_SETTINGS_DISABLED && (
-              <SettingsList.LinkItem
-                to="/settings/find-contacts"
-                label={l`Find friends from contacts`}>
-                <SettingsList.ItemIcon icon={ContactsIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Find friends from contacts</Trans>
-                </SettingsList.ItemText>
-              </SettingsList.LinkItem>
-            )}
           <SettingsList.LinkItem
             to="/settings/appearance"
             label={l`Appearance`}>
