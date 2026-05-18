@@ -2,7 +2,7 @@ import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import {AccessibilityInfo} from 'react-native'
 
 import {IS_WEB} from '#/env'
-import {PlatformInfo} from '../../modules/expo-bluesky-swiss-army'
+import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 
 const Context = createContext({
   reduceMotionEnabled: false,

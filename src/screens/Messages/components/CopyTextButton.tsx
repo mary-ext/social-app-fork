@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 import {Trans} from '@lingui/react/macro'
 
 import Animated, {
@@ -12,6 +11,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {SquareBehindSquare_Stroke2_Corner2_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
+import * as Clipboard from '#/shims/clipboard'
 
 export function CopyTextButton({
   children,

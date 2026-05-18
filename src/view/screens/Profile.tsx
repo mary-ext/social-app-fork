@@ -50,7 +50,7 @@ import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {navigate} from '#/Navigation'
-import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
+import {ExpoScrollForwarderView} from '#/shims/scroll-forwarder'
 
 interface SectionRef {
   scrollToTop: () => void

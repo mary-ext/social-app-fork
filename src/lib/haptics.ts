@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
-import * as Device from 'expo-device'
-import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
 
 import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
 import {IS_IOS, IS_WEB} from '#/env'
+import * as Device from '#/shims/device'
+import {impactAsync, ImpactFeedbackStyle} from '#/shims/haptics'
 
 export function useHaptics() {
   const isHapticsDisabled = useHapticsDisabled()

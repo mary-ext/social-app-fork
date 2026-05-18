@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
@@ -14,6 +13,7 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {Image} from '#/shims/image'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()

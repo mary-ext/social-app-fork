@@ -1,7 +1,7 @@
 import {getVideoMetaData, Video} from 'react-native-compressor'
-import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {SUPPORTED_MIME_TYPES, type SupportedMimeTypes} from '#/lib/constants'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {type CompressedVideo} from './types'
 import {extToMime} from './util'
 

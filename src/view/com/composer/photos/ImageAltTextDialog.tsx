@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
-import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
 
@@ -16,6 +15,7 @@ import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
 
 type Props = {
   control: Dialog.DialogOuterProps['control']

@@ -1,6 +1,5 @@
 import {Fragment, useMemo} from 'react'
 import {Text as RNText} from 'react-native'
-import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {
@@ -12,6 +11,7 @@ import {regionName} from '#/locale/helpers'
 import {atoms as a, web} from '#/alf'
 import * as Select from '#/components/Select'
 import {IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
 
 /**
  * Country picker for a phone number input.

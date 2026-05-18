@@ -11,7 +11,7 @@ import {useHotkeysContext} from '#/lib/hotkeys'
 import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 import {IS_WEB} from '#/env'
-import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
+import {BottomSheetNativeComponent} from '#/shims/bottom-sheet'
 
 interface IDialogContext {
   /**

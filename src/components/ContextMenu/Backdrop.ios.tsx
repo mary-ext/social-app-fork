@@ -1,5 +1,4 @@
 import {Pressable} from 'react-native'
-import {BlurView} from 'expo-blur'
 import {useLingui} from '@lingui/react/macro'
 
 import Animated, {
@@ -10,6 +9,7 @@ import Animated, {
   useAnimatedStyle,
 } from '#/lib/animations/reanimatedCompat'
 import {atoms as a, useTheme} from '#/alf'
+import {BlurView} from '#/shims/blur'
 import {useContextMenuContext} from './context'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)

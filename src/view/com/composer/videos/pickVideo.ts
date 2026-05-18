@@ -1,12 +1,12 @@
 import {getVideoMetaData} from 'react-native-compressor'
+
+import {VIDEO_MAX_DURATION_MS} from '#/lib/constants'
+import {extToMime} from '#/lib/media/video/util'
 import {
   type ImagePickerAsset,
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
-} from 'expo-image-picker'
-
-import {VIDEO_MAX_DURATION_MS} from '#/lib/constants'
-import {extToMime} from '#/lib/media/video/util'
+} from '#/shims/image-picker'
 
 export async function pickVideo() {
   return await launchImageLibraryAsync({

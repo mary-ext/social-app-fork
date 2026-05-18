@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
-import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -33,6 +32,7 @@ import {Fill} from '#/components/Fill'
 import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_NATIVE} from '#/env'
+import {Image} from '#/shims/image'
 
 interface ShouldStartLoadRequest {
   url: string

@@ -2,10 +2,6 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {moderateProfile} from '@atproto/api'
-import {
-  ScrollEdgeEffect,
-  ScrollEdgeEffectProvider,
-} from '@bsky.app/expo-scroll-edge-effect'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type RouteProp,
@@ -44,6 +40,10 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {IS_INTERNAL, IS_LIQUID_GLASS} from '#/env'
+import {
+  ScrollEdgeEffect,
+  ScrollEdgeEffectProvider,
+} from '#/shims/bsky-scroll-edge-effect'
 import {ChatDisabled} from './components/ChatDisabled'
 import {ChatEnded} from './components/ChatEnded'
 import {ChatLocked} from './components/ChatLocked'

@@ -1,6 +1,5 @@
 import {useMemo, useRef} from 'react'
 import {type DimensionValue, Pressable, View} from 'react-native'
-import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {useLingui} from '@lingui/react/macro'
@@ -18,6 +17,7 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {Image} from '#/shims/image'
 
 export function ConstrainedImage({
   aspectRatio,

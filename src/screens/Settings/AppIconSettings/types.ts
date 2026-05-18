@@ -1,5 +1,6 @@
 import {type ImageSourcePropType} from 'react-native'
-import type * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
+
+import type * as DynamicAppIcon from '#/shims/dynamic-app-icon'
 
 export type AppIconSet = {
   id: DynamicAppIcon.IconName

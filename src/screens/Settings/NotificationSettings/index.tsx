@@ -1,6 +1,5 @@
 import {useEffect} from 'react'
 import {Linking, View} from 'react-native'
-import * as Notification from 'expo-notifications'
 import {type AppBskyNotificationDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
@@ -31,6 +30,7 @@ import {
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import * as Layout from '#/components/Layout'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
+import * as Notification from '#/shims/notifications'
 import * as SettingsList from '../components/SettingsList'
 import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
 

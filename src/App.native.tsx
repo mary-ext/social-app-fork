@@ -5,9 +5,6 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
-import * as ScreenOrientation from 'expo-screen-orientation'
-import * as SplashScreen from 'expo-splash-screen'
-import * as SystemUI from 'expo-system-ui'
 import {useLingui} from '@lingui/react/macro'
 
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
@@ -58,11 +55,14 @@ import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbe
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {BackgroundNotificationPreferencesProvider} from '#/shims/background-notification-handler'
+import {BottomSheetProvider} from '#/shims/bottom-sheet'
 import {GestureHandlerRootView} from '#/shims/native-gesture-handler'
 import {KeyboardProvider as KeyboardControllerProvider} from '#/shims/native-keyboard-controller'
+import * as ScreenOrientation from '#/shims/screen-orientation'
+import * as SplashScreen from '#/shims/splash-screen'
+import * as SystemUI from '#/shims/system-ui'
 import {Splash} from '#/Splash'
-import {BottomSheetProvider} from '../modules/bottom-sheet'
-import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 void SplashScreen.preventAutoHideAsync()
 if (IS_IOS) {

@@ -2,8 +2,7 @@
  * Native file system storage for draft media.
  * Media is stored by localRefPath key (unique identifier stored in server draft).
  */
-import {Directory, File, Paths} from 'expo-file-system'
-
+import {Directory, File, Paths} from '#/shims/file-system'
 import {logger} from './logger'
 
 const MEDIA_DIR = 'bsky-draft-media'
@@ -42,7 +41,7 @@ export async function saveMediaToLocal(
 
   const destFile = getMediaFile(localRefPath)
 
-  // Ensure source path has file:// prefix for expo-file-system
+  // Ensure source path has file:// prefix for local file system
   let normalizedSource = sourcePath
   if (!sourcePath.startsWith('file://') && sourcePath.startsWith('/')) {
     normalizedSource = `file://${sourcePath}`

@@ -1,8 +1,7 @@
-import {type ImagePickerAsset, type ImagePickerResult} from 'expo-image-picker'
-
 import {SUPPORTED_MIME_TYPES} from '#/lib/constants'
+import {type ImagePickerAsset, type ImagePickerResult} from '#/shims/image-picker'
 
-// mostly copied from expo-image-picker and adapted to support gifs
+// mostly copied from local image picker and adapted to support gifs
 // also adds support for reading video metadata
 
 export async function pickVideo(): Promise<ImagePickerResult> {

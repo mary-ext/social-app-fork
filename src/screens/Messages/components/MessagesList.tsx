@@ -15,7 +15,6 @@ import {
   ChatBskyConvoDefs,
   RichText,
 } from '@atproto/api'
-import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
 import {
   runOnJS,
@@ -56,6 +55,7 @@ import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
+import {useScrollEdgeEffectRef} from '#/shims/bsky-scroll-edge-effect'
 import {
   KeyboardChatScrollView,
   type KeyboardChatScrollViewProps,

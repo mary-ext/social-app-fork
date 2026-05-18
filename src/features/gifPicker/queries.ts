@@ -1,9 +1,9 @@
 import {Platform} from 'react-native'
-import {getLocales} from 'expo-localization'
 import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH} from '#/lib/constants'
 import {type Gif} from '#/features/gifPicker/types'
+import {getLocales} from '#/shims/localization'
 
 export const RQKEY_ROOT = 'klipy-gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']

@@ -1,6 +1,10 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Alert, AppState, type AppStateStatus} from 'react-native'
-import {nativeBuildVersion} from 'expo-application'
+
+import {isNetworkError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
+import {nativeBuildVersion} from '#/shims/application'
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
@@ -8,11 +12,7 @@ import {
   reloadAsync,
   setExtraParamAsync,
   useUpdates,
-} from 'expo-updates'
-
-import {isNetworkError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {IS_ANDROID, IS_IOS, IS_TESTFLIGHT} from '#/env'
+} from '#/shims/updates'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 

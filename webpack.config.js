@@ -17,9 +17,6 @@ const reactNativeWebWebviewConfiguration = {
 }
 
 module.exports = async function (env, argv) {
-  env.babel = {
-    dangerouslyAddModulePathsToTranspile: ['@bsky.app/expo'],
-  }
   let config = await createExpoWebpackConfigAsync(env, argv)
   config = withAlias(config, {
     'react-native$': 'react-native-web',

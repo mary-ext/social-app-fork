@@ -1,10 +1,10 @@
 import {TouchableWithoutFeedback, View} from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 
 import {atoms as a, useTheme} from '#/alf'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import * as Clipboard from '#/shims/clipboard'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
 /**

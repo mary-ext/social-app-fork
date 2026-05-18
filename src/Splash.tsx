@@ -8,8 +8,6 @@ import {
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, type SvgProps} from 'react-native-svg'
-import {Image} from 'expo-image'
-import * as SplashScreen from 'expo-splash-screen'
 
 import Animated, {
   Easing,
@@ -20,6 +18,8 @@ import Animated, {
   withTiming,
 } from '#/lib/animations/reanimatedCompat'
 import {Logotype} from '#/view/icons/Logotype'
+import {Image} from '#/shims/image'
+import * as SplashScreen from '#/shims/splash-screen'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'
 // @ts-ignore

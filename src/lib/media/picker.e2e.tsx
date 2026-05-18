@@ -1,13 +1,12 @@
+import ExpoImageCropTool, {
+  type OpenCropperOptions,
+} from '#/shims/bsky-image-crop-tool'
 import {
   documentDirectory,
   getInfoAsync,
   readDirectoryAsync,
-} from 'expo-file-system/legacy'
-import {type ImagePickerResult} from 'expo-image-picker'
-import ExpoImageCropTool, {
-  type OpenCropperOptions,
-} from '@bsky.app/expo-image-crop-tool'
-
+} from '#/shims/file-system/legacy'
+import {type ImagePickerResult} from '#/shims/image-picker'
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
 

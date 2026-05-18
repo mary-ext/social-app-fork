@@ -4,7 +4,6 @@ import {
   type GestureResponderEvent,
   Pressable,
 } from 'react-native'
-import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
@@ -16,6 +15,7 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
 
 export function ExternalGif({
   link,

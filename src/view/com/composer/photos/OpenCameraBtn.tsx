@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import * as MediaLibrary from 'expo-media-library'
 import {useLingui} from '@lingui/react/macro'
 
 import {POST_IMG_MAX} from '#/lib/constants'
@@ -11,6 +10,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 import {IS_NATIVE, IS_WEB_MOBILE} from '#/env'
+import * as MediaLibrary from '#/shims/media-library'
 
 type Props = {
   disabled?: boolean

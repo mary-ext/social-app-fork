@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {Image as ExpoImage} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
@@ -9,6 +8,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
+import {Image as ExpoImage} from '#/shims/image'
 
 export function AvatarCircle({
   openLibrary,

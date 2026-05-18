@@ -1,5 +1,4 @@
-import {type OpenCropperOptions} from '@bsky.app/expo-image-crop-tool'
-
+import {type OpenCropperOptions} from '#/shims/bsky-image-crop-tool'
 import {type PickerImage} from './picker.shared'
 import {type CameraOpts} from './types'
 

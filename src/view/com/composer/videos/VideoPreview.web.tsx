@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type ImagePickerAsset} from 'expo-image-picker'
 import {useLingui} from '@lingui/react/macro'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
@@ -9,6 +8,7 @@ import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import * as Toast from '#/components/Toast'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 
 export function VideoPreview({
   asset,

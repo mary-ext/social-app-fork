@@ -1,6 +1,5 @@
-import {getLocales as defaultGetLocales, type Locale} from 'expo-localization'
-
 import {dedupArray} from '#/lib/functions'
+import {getLocales as defaultGetLocales, type Locale} from '#/shims/localization'
 
 type LocalWithLanguageCode = Locale & {
   languageCode: string

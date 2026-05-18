@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
@@ -75,6 +74,7 @@ import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
 import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<

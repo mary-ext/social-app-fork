@@ -1,14 +1,14 @@
-import {
-  type ImagePickerOptions,
-  launchImageLibraryAsync,
-  UIImagePickerPreferredAssetRepresentationMode,
-  VideoExportPreset,
-} from 'expo-image-picker'
 import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/components/Toast'
 import {IS_IOS, IS_WEB} from '#/env'
+import {
+  type ImagePickerOptions,
+  launchImageLibraryAsync,
+  UIImagePickerPreferredAssetRepresentationMode,
+  VideoExportPreset,
+} from '#/shims/image-picker'
 import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
 

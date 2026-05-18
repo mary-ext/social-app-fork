@@ -14,7 +14,7 @@ import {
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {IS_DEV} from '#/env'
-import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
+import {BottomSheetSnapPoint} from '#/shims/bottom-sheet'
 
 export const Context = createContext<DialogContextProps>({
   close: () => {},

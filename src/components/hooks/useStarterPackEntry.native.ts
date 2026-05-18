@@ -7,7 +7,7 @@ import {
 import {useHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {IS_ANDROID} from '#/env'
-import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
+import {Referrer, SharedPrefs} from '#/shims/bluesky-swiss-army'
 
 export function useStarterPackEntry() {
   const [ready, setReady] = useState(false)

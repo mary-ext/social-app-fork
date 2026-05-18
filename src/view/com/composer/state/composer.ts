@@ -1,4 +1,3 @@
-import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   type AppBskyActorDefs,
   type AppBskyDraftDefs,
@@ -26,6 +25,7 @@ import {
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {type Gif} from '#/features/gifPicker/types'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {
   createVideoState,
   type VideoAction,

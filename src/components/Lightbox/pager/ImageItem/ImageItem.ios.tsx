@@ -9,7 +9,6 @@
 import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
 
 import Animated, {
   type AnimatedScrollView,
@@ -22,6 +21,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from '#/lib/animations/reanimatedCompat'
+import {Image} from '#/shims/image'
 import {
   Gesture,
   GestureDetector,

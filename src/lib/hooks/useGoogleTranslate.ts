@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
-import * as IntentLauncher from 'expo-intent-launcher'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
 import {IS_ANDROID} from '#/env'
+import * as IntentLauncher from '#/shims/intent-launcher'
 
 /**
  * @deprecated Will always link out to Google Translate. Prefer `useTranslate`.

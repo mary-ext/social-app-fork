@@ -24,8 +24,6 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import * as FileSystem from 'expo-file-system'
-import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyDraftCreateDraft,
   AppBskyUnspeccedDefs,
@@ -138,7 +136,9 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {type Gif} from '#/features/gifPicker/types'
-import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {BottomSheetPortalProvider} from '#/shims/bottom-sheet'
+import * as FileSystem from '#/shims/file-system'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {
   draftToComposerPosts,
   extractLocalRefs,
@@ -400,7 +400,7 @@ export const ComposePost = ({
         } else {
           let uri = videoInfo.uri
           if (IS_ANDROID) {
-            // Android: expo-file-system double-encodes filenames with special chars.
+            // Android: local file system double-encodes filenames with special chars.
             // The file exists, but react-native-compressor's MediaMetadataRetriever
             // can't handle the double-encoded URI. Copy to a temp file with a simple name.
             const sourceFile = new FileSystem.File(videoInfo.uri)

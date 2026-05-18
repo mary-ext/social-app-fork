@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
-import * as MediaLibrary from 'expo-media-library'
 import {useLingui} from '@lingui/react/macro'
 
 import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
+import * as MediaLibrary from '#/shims/media-library'
 import {saveImageToMediaLibrary} from './manip'
 
 /**

@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {Image as RNImage, View} from 'react-native'
-import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
@@ -10,6 +9,7 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {Image} from '#/shims/image'
 // @ts-ignore
 import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
 // @ts-ignore

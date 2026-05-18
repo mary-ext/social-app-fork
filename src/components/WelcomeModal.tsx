@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {ImageBackground} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
@@ -11,6 +10,7 @@ import {atoms as a, flatten, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {ImageBackground} from '#/shims/image'
 
 const welcomeModalBg = require('../../assets/images/welcome-modal-bg.jpg')
 

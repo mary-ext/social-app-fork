@@ -1,10 +1,10 @@
 import {Share} from 'react-native'
-// import * as Sharing from 'expo-sharing'
-import {setStringAsync} from 'expo-clipboard'
 import {t} from '@lingui/core/macro'
 
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS} from '#/env'
+// import * as Sharing from '#/shims/sharing'
+import {setStringAsync} from '#/shims/clipboard'
 
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard

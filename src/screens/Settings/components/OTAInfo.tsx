@@ -1,4 +1,3 @@
-import * as Updates from 'expo-updates'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQuery} from '@tanstack/react-query'
@@ -8,6 +7,7 @@ import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
+import * as Updates from '#/shims/updates'
 import * as SettingsList from '../components/SettingsList'
 
 export function OTAInfo() {

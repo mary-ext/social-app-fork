@@ -1,7 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
 import {
   type AppBskyActorDefs,
   AppBskyEmbedVideo,
@@ -26,6 +24,8 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {Image} from '#/shims/image'
+import {LinearGradient} from '#/shims/linear-gradient'
 import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {

@@ -8,10 +8,10 @@ import Svg, {
   Stop,
   type SvgProps,
 } from 'react-native-svg'
-import {Image} from 'expo-image'
 
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {flatten, useTheme} from '#/alf'
+import {Image} from '#/shims/image'
 
 const ratio = 57 / 64
 

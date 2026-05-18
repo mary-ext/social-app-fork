@@ -5,7 +5,6 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
@@ -96,6 +95,7 @@ import {
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {IS_INTERNAL} from '#/env'
+import * as Clipboard from '#/shims/clipboard'
 
 let PostMenuItems = ({
   post,

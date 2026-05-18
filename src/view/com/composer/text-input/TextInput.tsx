@@ -12,7 +12,6 @@ import {
   type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
-import {type PasteEventPayload, TextInputWrapper} from 'expo-paste-input'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
@@ -28,6 +27,7 @@ import {
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {type PasteEventPayload, TextInputWrapper} from '#/shims/paste-input'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
 

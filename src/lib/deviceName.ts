@@ -1,6 +1,5 @@
-import * as Device from 'expo-device'
-
 import * as env from '#/env'
+import * as Device from '#/shims/device'
 
 export const FALLBACK_ANDROID = 'Android'
 export const FALLBACK_IOS = 'iOS'

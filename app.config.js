@@ -234,43 +234,9 @@ module.exports = function (_config) {
         checkAutomatically: 'NEVER',
       },
       plugins: [
-        'expo-video',
-        'expo-localization',
-        'expo-web-browser',
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
-        ],
-        [
-          'expo-build-properties',
-          {
-            ios: {
-              deploymentTarget: '15.1',
-              buildReactNativeFromSource: true,
-              ccacheEnabled: IS_DEV,
-              extraPods: [
-                {
-                  name: 'MCEmojiPicker',
-                  git: 'https://github.com/bluesky-social/MCEmojiPicker.git',
-                  branch: 'main',
-                },
-              ],
-            },
-            android: {
-              compileSdkVersion: 36,
-              targetSdkVersion: 35,
-              buildToolsVersion: '35.0.0',
-              buildReactNativeFromSource: IS_PRODUCTION,
-            },
-          },
-        ],
-        [
-          'expo-notifications',
-          {
-            icon: './assets/icon-android-notification.png',
-            color: '#1185fe',
-            sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
-          },
         ],
         'react-native-compressor',
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
@@ -282,119 +248,6 @@ module.exports = function (_config) {
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
-        [
-          'expo-font',
-          {
-            fonts: [
-              './assets/fonts/inter/InterVariable.woff2',
-              './assets/fonts/inter/InterVariable-Italic.woff2',
-              // Android only
-              './assets/fonts/inter/Inter-Regular.otf',
-              './assets/fonts/inter/Inter-Italic.otf',
-              './assets/fonts/inter/Inter-Medium.otf',
-              './assets/fonts/inter/Inter-MediumItalic.otf',
-              './assets/fonts/inter/Inter-SemiBold.otf',
-              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
-              './assets/fonts/inter/Inter-Bold.otf',
-              './assets/fonts/inter/Inter-BoldItalic.otf',
-            ],
-          },
-        ],
-        [
-          'expo-splash-screen',
-          {
-            ios: {
-              enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#006AFF', // primary_500
-              image: './assets/splash/splash.png',
-              resizeMode: 'cover',
-              dark: {
-                enableFullScreenImage_legacy: true, // iOS only
-                backgroundColor: '#002861', // primary_900
-                image: './assets/splash/splash-dark.png',
-                resizeMode: 'cover',
-              },
-            },
-            android: {
-              backgroundColor: '#006AFF', // primary_500
-              image: './assets/splash/android-splash-logo-white.png',
-              imageWidth: 102, // even division of 306px
-              dark: {
-                backgroundColor: '#002861', // primary_900
-                image: './assets/splash/android-splash-logo-white.png',
-                imageWidth: 102,
-              },
-            },
-          },
-        ],
-        [
-          '@mozzius/expo-dynamic-app-icon',
-          {
-            /**
-             * Default set
-             */
-            default_light: {
-              ios: './assets/app-icons/ios_icon_legacy_light.png',
-              android: './assets/app-icons/android_icon_legacy_light.png',
-              prerendered: true,
-            },
-            default_dark: {
-              ios: './assets/app-icons/ios_icon_legacy_dark.png',
-              android: './assets/app-icons/android_icon_legacy_dark.png',
-              prerendered: true,
-            },
-
-            /**
-             * Bluesky+ core set
-             */
-            core_aurora: {
-              ios: './assets/app-icons/ios_icon_core_aurora.png',
-              android: './assets/app-icons/android_icon_core_aurora.png',
-              prerendered: true,
-            },
-            core_bonfire: {
-              ios: './assets/app-icons/ios_icon_core_bonfire.png',
-              android: './assets/app-icons/android_icon_core_bonfire.png',
-              prerendered: true,
-            },
-            core_sunrise: {
-              ios: './assets/app-icons/ios_icon_core_sunrise.png',
-              android: './assets/app-icons/android_icon_core_sunrise.png',
-              prerendered: true,
-            },
-            core_sunset: {
-              ios: './assets/app-icons/ios_icon_core_sunset.png',
-              android: './assets/app-icons/android_icon_core_sunset.png',
-              prerendered: true,
-            },
-            core_midnight: {
-              ios: './assets/app-icons/ios_icon_core_midnight.png',
-              android: './assets/app-icons/android_icon_core_midnight.png',
-              prerendered: true,
-            },
-            core_flat_blue: {
-              ios: './assets/app-icons/ios_icon_core_flat_blue.png',
-              android: './assets/app-icons/android_icon_core_flat_blue.png',
-              prerendered: true,
-            },
-            core_flat_white: {
-              ios: './assets/app-icons/ios_icon_core_flat_white.png',
-              android: './assets/app-icons/android_icon_core_flat_white.png',
-              prerendered: true,
-            },
-            core_flat_black: {
-              ios: './assets/app-icons/ios_icon_core_flat_black.png',
-              android: './assets/app-icons/android_icon_core_flat_black.png',
-              prerendered: true,
-            },
-            core_classic: {
-              ios: './assets/app-icons/ios_icon_core_classic.png',
-              android: './assets/app-icons/android_icon_core_classic.png',
-              prerendered: true,
-            },
-          },
-        ],
-        ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
       ],
       extra: {
         eas: {

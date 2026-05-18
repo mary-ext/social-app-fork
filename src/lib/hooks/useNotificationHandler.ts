@@ -1,5 +1,4 @@
 import {useEffect} from 'react'
-import * as Notifications from 'expo-notifications'
 import {AtUri} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {CommonActions, useNavigation} from '@react-navigation/native'
@@ -18,6 +17,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {resetToTab} from '#/Navigation'
 import {router} from '#/routes'
+import * as Notifications from '#/shims/notifications'
 
 export type NotificationReason =
   | 'like'

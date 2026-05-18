@@ -1,7 +1,7 @@
-import {copyAsync} from 'expo-file-system/legacy'
 import {type BskyAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
 
 import {safeDeleteAsync} from '#/lib/media/manip'
+import {copyAsync} from '#/shims/file-system/legacy'
 
 /**
  * @param encoding Allows overriding the blob's type

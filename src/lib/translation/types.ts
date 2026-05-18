@@ -1,4 +1,4 @@
-import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
+import {type TranslationTaskResult} from '#/shims/bsky-translate-text'
 
 export type TranslationState =
   | {status: 'idle'}

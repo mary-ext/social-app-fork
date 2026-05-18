@@ -1,7 +1,5 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
@@ -13,6 +11,8 @@ import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 export function BookmarksAnnouncement() {
   const t = useTheme()

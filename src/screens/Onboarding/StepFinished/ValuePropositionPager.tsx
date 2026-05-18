@@ -1,11 +1,11 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import PagerView from 'react-native-pager-view'
-import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {Image} from '#/shims/image'
 import {PROP_1, PROP_2, PROP_3} from './images'
 import {Dot, useValuePropText} from './ValuePropositionPager.shared'
 

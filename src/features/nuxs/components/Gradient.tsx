@@ -1,6 +1,5 @@
-import {LinearGradient} from 'expo-linear-gradient'
-
 import {atoms as a, useTheme, utils, type ViewStyleProp} from '#/alf'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 /**
  * A gradient overlay using the primary color at low opacity. This component is

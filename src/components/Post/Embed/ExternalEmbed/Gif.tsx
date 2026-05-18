@@ -8,8 +8,8 @@ import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
-import {type GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
+import {GifView} from '#/shims/gif-view'
+import {type GifViewStateChangeEvent} from '#/shims/gif-view'
 import {GifPresentationControls} from '../VideoEmbed/GifPresentationControls'
 
 export function GifEmbed({

@@ -1,5 +1,4 @@
 import {Pressable} from 'react-native'
-import * as Clipboard from 'expo-clipboard'
 import {t} from '@lingui/core/macro'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
@@ -9,6 +8,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_INTERNAL} from '#/env'
+import * as Clipboard from '#/shims/clipboard'
 
 export function DiscoverDebug({
   feedContext,

@@ -1,5 +1,4 @@
 import {memo, useMemo} from 'react'
-import * as ExpoClipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
@@ -24,6 +23,7 @@ import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
+import * as ExpoClipboard from '#/shims/clipboard'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'

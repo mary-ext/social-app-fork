@@ -1,5 +1,4 @@
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {Image, type ImageStyle} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {useLingui} from '@lingui/react/macro'
@@ -15,6 +14,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
+import {Image, type ImageStyle} from '#/shims/image'
 
 type EventFunction = (index: number) => void
 

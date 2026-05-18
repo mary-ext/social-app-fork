@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {Alert, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
-import * as DynamicAppIcon from '@mozzius/expo-dynamic-app-icon'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -15,6 +14,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_INTERNAL} from '#/env'
+import * as DynamicAppIcon from '#/shims/dynamic-app-icon'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppIconSettings'>
 export function AppIconSettingsScreen({}: Props) {

@@ -1,8 +1,5 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {getLocales} from 'expo-localization'
-import {onTranslateTask} from '@bsky.app/expo-translate-text'
-import {type TranslationTaskResult} from '@bsky.app/expo-translate-text/build/ExpoTranslateText.types'
 import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -11,6 +8,9 @@ import {codeToLanguageName} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences'
 import {IS_ANDROID, IS_IOS, IS_TRANSLATION_SUPPORTED} from '#/env'
+import {onTranslateTask} from '#/shims/bsky-translate-text'
+import {type TranslationTaskResult} from '#/shims/bsky-translate-text'
+import {getLocales} from '#/shims/localization'
 import {Context} from './context'
 import {
   type ContextType,
@@ -29,7 +29,7 @@ const E_EMPTY_RESULT = 'Translation result is empty.'
 const E_INVALID_SOURCE_LANGUAGE = 'Invalid source language'
 
 /**
- * Attempts on-device translation via @bsky.app/expo-translate-text.
+ * Attempts on-device translation via local translation adapter.
  * Uses a lazy import to avoid crashing if the native module isn't linked into
  * the current build.
  */

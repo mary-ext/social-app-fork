@@ -1,6 +1,5 @@
 import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
 
 import Animated, {
   type AnimatableValue,
@@ -12,6 +11,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from '#/lib/animations/reanimatedCompat'
+import {Image} from '#/shims/image'
 import {
   Gesture,
   GestureDetector,

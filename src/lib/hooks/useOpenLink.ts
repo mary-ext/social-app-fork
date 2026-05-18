@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {Linking} from 'react-native'
-import * as WebBrowser from 'expo-web-browser'
 
 import {
   createBskyAppAbsoluteUrl,
@@ -15,6 +14,7 @@ import {useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {IS_NATIVE} from '#/env'
+import * as WebBrowser from '#/shims/web-browser'
 
 export function useOpenLink() {
   const enabled = useInAppBrowser()

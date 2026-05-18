@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {Image} from 'expo-image'
 import {type ModerationUI} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
@@ -32,6 +31,7 @@ import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
 import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {Image} from '#/shims/image'
 
 export function UserBanner({
   type,

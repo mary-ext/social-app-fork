@@ -1,7 +1,5 @@
 import {useCallback, useEffect, useRef} from 'react'
 import {Keyboard} from 'react-native'
-import {File} from 'expo-file-system'
-import {type ImagePickerAsset} from 'expo-image-picker'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -19,6 +17,8 @@ import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {File} from '#/shims/file-system'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {isAnimatedGif} from './videos/isAnimatedGif'
 
 export type SelectMediaButtonProps = {
@@ -45,7 +45,7 @@ export type SelectMediaButtonProps = {
 export type AssetType = 'video' | 'image' | 'gif'
 
 /**
- * Shadows `ImagePickerAsset` from `expo-image-picker`, but with a guaranteed `mimeType`
+ * Shadows `ImagePickerAsset` from `local image picker`, but with a guaranteed `mimeType`
  */
 type ValidatedImagePickerAsset = Omit<ImagePickerAsset, 'mimeType'> & {
   mimeType: string
@@ -143,7 +143,7 @@ async function classifyImagePickerAsset(asset: ImagePickerAsset): Promise<
     }
 > {
   /*
-   * Try to use the `mimeType` reported by `expo-image-picker` first.
+   * Try to use the `mimeType` reported by `local image picker` first.
    */
   let mimeType = asset.mimeType
 
@@ -222,7 +222,7 @@ async function classifyImagePickerAsset(asset: ImagePickerAsset): Promise<
 }
 
 /**
- * Takes in raw assets from `expo-image-picker` and applies validation. Returns
+ * Takes in raw assets from `local image picker` and applies validation. Returns
  * the dominant `AssetType`, any valid assets, and any errors encountered along
  * the way.
  */
@@ -321,7 +321,7 @@ async function processImagePickerAssets(
       mimeType,
       ...asset,
       /*
-       * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
+       * In `local image picker` >= v17, `uri` is now a `blob:` URL, not a
        * data-uri. Our handling elsewhere in the app (for web) relies on the
        * base64 data-uri, so we construct it here for web only.
        */

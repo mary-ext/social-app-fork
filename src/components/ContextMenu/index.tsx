@@ -25,7 +25,6 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
-import {Image, type ImageErrorEventData} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -67,6 +66,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {Image, type ImageErrorEventData} from '#/shims/image'
 import {
   Gesture,
   GestureDetector,

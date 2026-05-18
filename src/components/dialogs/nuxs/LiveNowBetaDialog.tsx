@@ -1,7 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
@@ -17,6 +15,8 @@ import {
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
 import {IS_E2E, IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 export const enabled = createIsEnabledCheck(props => {
   return (

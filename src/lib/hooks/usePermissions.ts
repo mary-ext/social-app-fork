@@ -1,9 +1,9 @@
 import {Linking} from 'react-native'
-import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
-import * as MediaLibrary from 'expo-media-library'
 
 import {Alert} from '#/view/com/util/Alert'
 import {IS_WEB} from '#/env'
+import {useCameraPermissions as useExpoCameraPermissions} from '#/shims/camera'
+import * as MediaLibrary from '#/shims/media-library'
 
 const openPermissionAlert = (perm: string) => {
   Alert.alert(

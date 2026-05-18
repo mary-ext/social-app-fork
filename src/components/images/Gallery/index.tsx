@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react'
 import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
-import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -40,6 +39,7 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
 
 export * from './const'
 export * from './maybeApplyGalleryOffsetStyles'

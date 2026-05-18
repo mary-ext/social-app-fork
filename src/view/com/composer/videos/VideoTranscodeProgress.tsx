@@ -1,11 +1,11 @@
 import {View} from 'react-native'
 // @ts-expect-error no type definition
 import ProgressPie from 'react-native-progress/Pie'
-import {type ImagePickerAsset} from 'expo-image-picker'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {IS_WEB} from '#/env'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {ExternalEmbedRemoveBtn} from '../ExternalEmbedRemoveBtn'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 

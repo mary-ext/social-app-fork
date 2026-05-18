@@ -1,7 +1,5 @@
 import {useRef} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {type ImagePickerAsset} from 'expo-image-picker'
 import {BlueskyVideoView} from '@bsky.app/video'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
@@ -10,6 +8,8 @@ import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {Image} from '#/shims/image'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
 export function VideoPreview({

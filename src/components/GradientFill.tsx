@@ -1,6 +1,5 @@
-import {LinearGradient} from 'expo-linear-gradient'
-
 import {atoms as a, type tokens, type ViewStyleProp} from '#/alf'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 export function GradientFill({
   gradient,

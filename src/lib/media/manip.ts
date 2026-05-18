@@ -1,5 +1,9 @@
 import {Image as RNImage} from 'react-native'
 import uuid from 'react-native-uuid'
+
+import {POST_IMG_MAX} from '#/lib/constants'
+import {logger} from '#/logger'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   cacheDirectory,
   copyAsync,
@@ -11,14 +15,10 @@ import {
   moveAsync,
   StorageAccessFramework,
   writeAsStringAsync,
-} from 'expo-file-system/legacy'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
-import * as MediaLibrary from 'expo-media-library'
-import * as Sharing from 'expo-sharing'
-
-import {POST_IMG_MAX} from '#/lib/constants'
-import {logger} from '#/logger'
-import {IS_ANDROID, IS_IOS} from '#/env'
+} from '#/shims/file-system/legacy'
+import {manipulateAsync, SaveFormat} from '#/shims/image-manipulator'
+import * as MediaLibrary from '#/shims/media-library'
+import * as Sharing from '#/shims/sharing'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {convertCdnPreset} from './util'

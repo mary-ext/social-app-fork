@@ -1,5 +1,4 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
@@ -13,6 +12,7 @@ import {atoms as a, ios, native, useBreakpoints, useTheme} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 export function ThreadComposePrompt({
   onPressCompose,

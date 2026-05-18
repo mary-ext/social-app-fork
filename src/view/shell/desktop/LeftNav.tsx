@@ -81,7 +81,7 @@ import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
-import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
+import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 
 const NAV_ICON_WIDTH = 28
 

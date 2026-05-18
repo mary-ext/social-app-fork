@@ -1,7 +1,7 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
 import {gradients} from '#/alf/tokens'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 export function LinearGradientBackground({
   style,

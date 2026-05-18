@@ -1,7 +1,6 @@
-import {Image} from 'expo-image'
-
 import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {Image} from '#/shims/image'
 
 export function AppIconImage({
   icon,

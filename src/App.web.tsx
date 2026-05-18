@@ -51,8 +51,8 @@ import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbe
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
+import {BackgroundNotificationPreferencesProvider} from '#/shims/background-notification-handler'
 import {Splash} from '#/Splash'
-import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 function InnerApp() {

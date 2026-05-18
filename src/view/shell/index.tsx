@@ -34,10 +34,10 @@ import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
+import {updateActiveViewAsync} from '#/shims/bluesky-swiss-army'
+import {BottomSheetOutlet} from '#/shims/bottom-sheet'
 import {Drawer} from '#/shims/native-drawer-layout'
 import {Gesture} from '#/shims/native-gesture-handler'
-import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
-import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
@@ -63,7 +63,7 @@ function ShellInner() {
   }, [closeAnyActiveElement])
 
   // HACK
-  // expo-video doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually
+  // video adapter doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually
   // unregister that player to let the new screen register it. This is only a problem on Android, so we only need to
   // apply it there.
   // The `state` event should only fire whenever we push or pop to a screen, and should not fire consecutively quickly.

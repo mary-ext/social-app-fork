@@ -1,6 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
   type AppBskyEmbedExternal,
@@ -29,6 +28,7 @@ import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
+import {Image} from '#/shims/image'
 import type * as bsky from '#/types/bsky'
 
 export function LiveStatusDialog({

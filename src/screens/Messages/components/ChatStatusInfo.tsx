@@ -1,6 +1,5 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {ChatBskyConvoDefs, moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -15,6 +14,7 @@ import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {KnownFollowers} from '#/components/KnownFollowers'
 import {usePromptControl} from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {LinearGradient} from '#/shims/linear-gradient'
 import type * as bsky from '#/types/bsky'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 

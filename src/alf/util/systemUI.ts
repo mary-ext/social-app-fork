@@ -1,8 +1,8 @@
-import * as SystemUI from 'expo-system-ui'
 import {type Theme} from '@bsky.app/alf'
 
 import {logger} from '#/logger'
 import {IS_ANDROID} from '#/env'
+import * as SystemUI from '#/shims/system-ui'
 
 export function setSystemUITheme(themeType: 'theme' | 'lightbox', t: Theme) {
   if (IS_ANDROID) {

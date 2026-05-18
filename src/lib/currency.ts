@@ -267,7 +267,7 @@ export const countryCodeToCurrency: Record<string, string> = {
 /**
  * Best-guess currency formatting.
  *
- * Attempts to use `getLocales` from `expo-localization` if available,
+ * Attempts to use `getLocales` from `localization shim` if available,
  * otherwise falls back to the `persisted.appLanguage` setting.
  */
 export function useFormatCurrency(

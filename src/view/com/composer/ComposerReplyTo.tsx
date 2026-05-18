@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
-import {Image} from 'expo-image'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -17,6 +16,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {QuoteEmbed} from '#/components/Post/Embed'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {Image} from '#/shims/image'
 import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {

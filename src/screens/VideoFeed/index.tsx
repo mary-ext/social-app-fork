@@ -12,10 +12,6 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
-import {useEvent, useEventListener} from 'expo'
-import {Image, type ImageStyle} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
-import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
@@ -92,11 +88,15 @@ import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
+import {useEvent, useEventListener} from '#/shims/core'
+import {Image, type ImageStyle} from '#/shims/image'
+import {LinearGradient} from '#/shims/linear-gradient'
 import {
   Gesture,
   GestureDetector,
   type NativeGesture,
 } from '#/shims/native-gesture-handler'
+import {createVideoPlayer, type VideoPlayer, VideoView} from '#/shims/video'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 

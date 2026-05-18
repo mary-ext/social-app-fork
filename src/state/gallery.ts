@@ -1,16 +1,3 @@
-import {
-  cacheDirectory,
-  copyAsync,
-  deleteAsync,
-  makeDirectoryAsync,
-  moveAsync,
-} from 'expo-file-system/legacy'
-import {
-  type Action,
-  type ActionCrop,
-  manipulateAsync,
-  SaveFormat,
-} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
 import {POST_IMG_MAX} from '#/lib/constants'
@@ -20,6 +7,19 @@ import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {isCancelledError} from '#/lib/strings/errors'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {
+  cacheDirectory,
+  copyAsync,
+  deleteAsync,
+  makeDirectoryAsync,
+  moveAsync,
+} from '#/shims/file-system/legacy'
+import {
+  type Action,
+  type ActionCrop,
+  manipulateAsync,
+  SaveFormat,
+} from '#/shims/image-manipulator'
 
 export type ImageTransformation = {
   crop?: ActionCrop['crop']

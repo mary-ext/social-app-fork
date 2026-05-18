@@ -1,8 +1,9 @@
-import {type ImagePickerOptions, launchCameraAsync} from 'expo-image-picker'
+import {t} from '@lingui/core/macro'
+
 import ExpoImageCropTool, {
   type OpenCropperOptions,
-} from '@bsky.app/expo-image-crop-tool'
-import {t} from '@lingui/core/macro'
+} from '#/shims/bsky-image-crop-tool'
+import {type ImagePickerOptions, launchCameraAsync} from '#/shims/image-picker'
 
 export {
   openPicker,

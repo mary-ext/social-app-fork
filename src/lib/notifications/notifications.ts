@@ -1,7 +1,5 @@
 import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
-import * as Notifications from 'expo-notifications'
-import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
@@ -13,8 +11,10 @@ import {
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNetworkError} from '#/lib/strings/errors'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
-import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 import {IS_DEV, IS_NATIVE} from '#/env'
+import BackgroundNotificationHandler from '#/shims/background-notification-handler'
+import * as Notifications from '#/shims/notifications'
+import {getBadgeCountAsync, setBadgeCountAsync} from '#/shims/notifications'
 
 /**
  * @private
@@ -113,7 +113,7 @@ async function getPushToken() {
  * Should only be called after a user has logged-in, since registration is an
  * authed endpoint.
  *
- * N.B. A previous regression in `expo-notifications` caused
+ * N.B. A previous regression in `notifications adapter` caused
  * `addPushTokenListener` to not fire on Android after calling
  * `getPushToken()`. Therefore, as insurance, we also call
  * `registerPushToken` here.

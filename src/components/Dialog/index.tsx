@@ -43,13 +43,13 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {useReanimatedKeyboardAnimation} from '#/shims/native-keyboard-controller'
-import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
+import {BottomSheet, BottomSheetSnapPoint} from '#/shims/bottom-sheet'
 import {
   type BottomSheetSnapPointChangeEvent,
   type BottomSheetStateChangeEvent,
-} from '../../../modules/bottom-sheet/src/BottomSheet.types'
-import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
+} from '#/shims/bottom-sheet'
+import {type BottomSheetNativeComponent} from '#/shims/bottom-sheet'
+import {useReanimatedKeyboardAnimation} from '#/shims/native-keyboard-controller'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'

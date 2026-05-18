@@ -1,7 +1,6 @@
-import {type ImagePickerAsset} from 'expo-image-picker'
-
 import {VIDEO_MAX_SIZE} from '#/lib/constants'
 import {VideoTooLargeError} from '#/lib/media/video/errors'
+import {type ImagePickerAsset} from '#/shims/image-picker'
 import {type CompressedVideo} from './types'
 
 // doesn't actually compress, converts to ArrayBuffer

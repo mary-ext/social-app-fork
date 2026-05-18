@@ -1,6 +1,4 @@
 import {type JSX, useCallback, useRef} from 'react'
-import * as Linking from 'expo-linking'
-import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {defineMessage} from '@lingui/core/macro'
 import {
@@ -130,7 +128,9 @@ import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {router} from '#/routes'
-import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {Referrer} from '#/shims/bluesky-swiss-army'
+import * as Linking from '#/shims/linking'
+import * as Notifications from '#/shims/notifications'
 import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()

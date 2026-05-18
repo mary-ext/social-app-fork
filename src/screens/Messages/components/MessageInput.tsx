@@ -1,7 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {GlassContainer} from 'expo-glass-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -24,6 +23,7 @@ import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
+import {GlassContainer} from '#/shims/glass-effect'
 import {
   useFocusedInputHandler,
   useKeyboardHandler,

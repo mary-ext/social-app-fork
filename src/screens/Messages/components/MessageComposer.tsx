@@ -1,9 +1,6 @@
 import {useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {GlassContainer} from 'expo-glass-effect'
-import {LinearGradient} from 'expo-linear-gradient'
-import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
@@ -29,6 +26,9 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/i
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {ScrollEdgeEffect} from '#/shims/bsky-scroll-edge-effect'
+import {GlassContainer} from '#/shims/glass-effect'
+import {LinearGradient} from '#/shims/linear-gradient'
 import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,

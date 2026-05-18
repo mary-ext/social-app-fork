@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -18,6 +17,7 @@ import {
   type LinkProps as BaseLinkProps,
 } from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {Image} from '#/shims/image'
 import * as bsky from '#/types/bsky'
 
 export function Default({

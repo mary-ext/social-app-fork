@@ -12,7 +12,7 @@ import {
 import * as Dialog from '#/components/Dialog'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
-import {type BottomSheetViewProps} from '../../modules/bottom-sheet'
+import {type BottomSheetViewProps} from '#/shims/bottom-sheet'
 
 export {
   type DialogControlProps as PromptControlProps,

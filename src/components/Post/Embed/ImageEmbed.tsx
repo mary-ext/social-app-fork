@@ -1,5 +1,4 @@
 import {InteractionManager, View} from 'react-native'
-import {Image} from 'expo-image'
 
 import {
   type AnimatedRef,
@@ -13,6 +12,7 @@ import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {Image} from '#/shims/image'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
 

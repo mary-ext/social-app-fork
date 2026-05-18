@@ -1,5 +1,4 @@
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {LinearGradient} from 'expo-linear-gradient'
 
 import Animated, {
   type SharedValue,
@@ -8,6 +7,7 @@ import Animated, {
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
 import {IS_IOS} from '#/env'
+import {LinearGradient} from '#/shims/linear-gradient'
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 

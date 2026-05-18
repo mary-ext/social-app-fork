@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {Image} from 'expo-image'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
@@ -17,6 +16,7 @@ import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/Q
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {Image} from '#/shims/image'
 
 interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView

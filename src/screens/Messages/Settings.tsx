@@ -20,7 +20,7 @@ import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {useBackgroundNotificationPreferences} from '#/shims/background-notification-handler'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 

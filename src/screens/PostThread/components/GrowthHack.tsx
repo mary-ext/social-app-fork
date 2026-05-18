@@ -1,12 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {PrivacySensitive} from 'expo-privacy-sensitive'
 
 import {useAppState} from '#/lib/appState'
 import {atoms as a, useTheme} from '#/alf'
 import {sizes as iconSizes} from '#/components/icons/common'
 import {Mark as Logo} from '#/components/icons/Logo'
 import {IS_IOS} from '#/env'
+import {PrivacySensitive} from '#/shims/privacy-sensitive'
 
 const ICON_SIZE = 'xl' as const
 

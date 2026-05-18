@@ -11,7 +11,6 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import PagerView from 'react-native-pager-view'
-import * as ScreenOrientation from 'expo-screen-orientation'
 
 import Animated, {
   type AnimatableValue,
@@ -38,8 +37,9 @@ import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
+import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 import {Gesture} from '#/shims/native-gesture-handler'
-import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
+import * as ScreenOrientation from '#/shims/screen-orientation'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
 import {

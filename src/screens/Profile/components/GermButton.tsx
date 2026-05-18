@@ -1,5 +1,4 @@
 import {Platform, View} from 'react-native'
-import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
   type AppBskyActorGetProfile,
@@ -23,6 +22,7 @@ import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {Image} from '#/shims/image'
 import type * as bsky from '#/types/bsky'
 
 export function GermButton({

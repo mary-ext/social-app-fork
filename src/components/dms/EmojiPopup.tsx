@@ -1,1 +1,1 @@
-export {EmojiPicker as EmojiPopup} from '../../../modules/expo-emoji-picker'
+export {EmojiPicker as EmojiPopup} from '#/shims/emoji-picker'

@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import * as VideoThumbnails from 'expo-video-thumbnails'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -19,6 +18,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import * as VideoThumbnails from '#/shims/video-thumbnails'
 import {type DraftPostDisplay, type DraftSummary} from './state/schema'
 import * as storage from './state/storage'
 

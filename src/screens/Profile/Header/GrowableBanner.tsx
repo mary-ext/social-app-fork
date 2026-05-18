@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
 
 import Animated, {
@@ -22,6 +21,7 @@ import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
 import {IS_IOS} from '#/env'
+import {BlurView} from '#/shims/blur'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 

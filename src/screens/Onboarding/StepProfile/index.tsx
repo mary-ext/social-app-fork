@@ -8,13 +8,6 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {Image as ExpoImage} from 'expo-image'
-import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
-import {
-  type ImagePickerOptions,
-  launchImageLibraryAsync,
-  UIImagePickerPreferredAssetRepresentationMode,
-} from 'expo-image-picker'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
@@ -46,6 +39,13 @@ import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {Image as ExpoImage} from '#/shims/image'
+import {ImageManipulator, SaveFormat} from '#/shims/image-manipulator'
+import {
+  type ImagePickerOptions,
+  launchImageLibraryAsync,
+  UIImagePickerPreferredAssetRepresentationMode,
+} from '#/shims/image-picker'
 import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
 
 export interface Avatar {

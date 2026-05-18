@@ -1,6 +1,7 @@
 import {useId} from 'react'
-import {useKeepAwake} from 'expo-keep-awake'
 import {useIsFocused} from '@react-navigation/native'
+
+import {useKeepAwake} from '#/shims/keep-awake'
 
 /**
  * Stops the screen from sleeping. Only applies to the current screen.

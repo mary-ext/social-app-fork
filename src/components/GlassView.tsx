@@ -1,18 +1,18 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+
+import {useTheme} from '#/alf'
 import {
   GlassView as ExpoGlassView,
   type GlassViewProps as ExpoGlassViewProps,
   isGlassEffectAPIAvailable,
   isLiquidGlassAvailable,
-} from 'expo-glass-effect'
-
-import {useTheme} from '#/alf'
+} from '#/shims/glass-effect'
 
 export const IS_GLASS_AVAILABLE =
   isLiquidGlassAvailable() && isGlassEffectAPIAvailable()
 
 /**
- * Liquid Glass View that uses `expo-glass-effect`
+ * Liquid Glass View that uses `native glass effect`
  *
  * If unavailable, falls back to a regular `View`. Use `fallbackStyle` to customize the fallback appearance.
  */

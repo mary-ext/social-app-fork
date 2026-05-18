@@ -1067,6 +1067,13 @@ rg "modules/" src
 
 **Footgun:** some files without a `.web` suffix import native Expo modules but are shadowed by `.web` siblings at resolve time. Preserve the extension ordering before deleting either side.
 
+**Completed in this fork:**
+- [x] Added local web adapters under `src/shims/` for the typecheck-visible Expo/native module surfaces, including image, gradient, blur/glass, clipboard/linking/localization, notifications, file system, media picker/manipulation, video, background-notification preferences, bottom-sheet portals, GIF view, emoji picker, and swiss-army helpers.
+- [x] Retargeted source imports away from runtime Expo packages, `@bsky.app/expo-*`, `@mozzius/expo-dynamic-app-icon`, and local `modules/` Expo wrappers.
+- [x] Removed runtime Expo package deps and matching patches. The `expo` / `@expo/webpack-config` / `babel-preset-expo` build-tool trio remains intentionally deferred to Phase 4.7.
+- [x] Removed `expo-video` early by routing the typecheck-visible native VideoFeed files through `src/shims/video`; Phase 4.5 still deletes the VideoFeed feature during platform collapse.
+- [x] Verified: runtime Expo source/config grep is clean; `modules/` grep only finds ordinary app feature folders; `yarn install --frozen-lockfile`, `yarn typecheck`, `yarn lint`, and `yarn build-web` pass.
+
 ## Phase 4.4 — In-house remaining `@bsky.app/*` packages
 
 **Motivation:** the fork will diverge from upstream over time, and npm dep boundaries create publish/version friction for code you want to freely mutate. After Phase 4.3 retires the `@bsky.app/expo-*` siblings (and Phase 2.8 already rewrote the storage layer away from `@bsky.app/react-native-mmkv`), three non-Expo packages remain — inline them so the `@bsky.app/*` surface is fully under fork control.

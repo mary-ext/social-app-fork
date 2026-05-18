@@ -1,14 +1,14 @@
 import {useCallback, useEffect} from 'react'
 import {Alert} from 'react-native'
-import * as Linking from 'expo-linking'
-import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {IS_IOS, IS_NATIVE} from '#/env'
-import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
+import {Referrer} from '#/shims/bluesky-swiss-army'
+import * as Linking from '#/shims/linking'
+import * as WebBrowser from '#/shims/web-browser'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'apply-ota'
