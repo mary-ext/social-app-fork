@@ -518,7 +518,7 @@ export function MessagesList({
             style={{
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
-              scrollbarGutter: 'stable both-edges',
+              scrollbarGutter: 'stable',
             } as any}
             contentInset={{top: transparentHeaderHeight}}
             scrollIndicatorInsets={{top: transparentHeaderHeight}}

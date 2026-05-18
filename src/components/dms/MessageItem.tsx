@@ -5,7 +5,6 @@ import {
   type StyleProp,
   type TextStyle,
   View,
-  type ViewStyle,
 } from 'react-native'
 import {
   AppBskyEmbedRecord,
@@ -319,9 +318,7 @@ let MessageItem = ({
               t.atoms.border_contrast_low,
               t.atoms.shadow_xs,
               hasSelfReacted
-                ? {
-                    backgroundColor: t.palette.primary_100,
-                  }
+                ? {backgroundColor: t.palette.primary_100}
                 : t.atoms.bg_contrast_25,
               {
                 paddingTop: 3,
@@ -381,7 +378,7 @@ let MessageItem = ({
     </LayoutAnimationConfig>
   )
 
-  const messageInset = isFromSelf ? a.mr_sm : isGroupChat ? a.ml_sm : undefined
+  const messageInset = isFromSelf ? a.mr_lg : isGroupChat ? a.ml_lg : undefined
 
   return (
     <>
