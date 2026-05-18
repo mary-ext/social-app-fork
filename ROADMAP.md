@@ -132,14 +132,14 @@ Mechanical removals. Two phases. Pure deletions — the storage rewrite and code
 **Motivation:** capture the current coupling before starting so each phase is verifiable independently.
 
 **Checklist:**
-- [ ] `yarn install`
-- [ ] `yarn typecheck` (capture baseline status)
-- [ ] `yarn lint` (capture baseline status)
-- [ ] Add `.inventory-*` to your local exclude so the scratch files don't show up as tracked:
+- [x] `yarn install`
+- [x] `yarn typecheck` (capture baseline status)
+- [x] `yarn lint` (capture baseline status)
+- [x] Add `.inventory-*` to your local exclude so the scratch files don't show up as tracked:
   ```sh
   echo '.inventory-*.txt' >> .git/info/exclude
   ```
-- [ ] Save these inventory outputs:
+- [x] Save these inventory outputs:
   ```sh
   rg -n "Features\.|features\.enabled|features\.isOn|useFeatureGate|#/analytics/features|GrowthBook|@growthbook" src --glob '!locale/**' --glob '!**/*.po' > .inventory-features.txt
   rg -n "from '#/ageAssurance|from '#/components/ageAssurance|ageAssurance|AgeAssurance|age-assurance" src --glob '!locale/**' --glob '!**/*.po' > .inventory-ageAssurance.txt
