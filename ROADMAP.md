@@ -1479,7 +1479,7 @@ Note: `rsbuild preview` requires a prior production build (`yarn build-web`).
 
 ## Phase 4.9 — Final verification
 
-Status: done for unauthenticated web verification. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, external GIF playback, and Apple Music external-player consent/iframe load. Authenticated compose/upload/login flows remain manual without credentials.
+Status: done for unauthenticated web verification plus local-PDS authenticated smoke. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, external GIF playback, and Apple Music external-player consent/iframe load. A throwaway `@atproto/dev-env` PDS account verified custom-service login, text posting, and image upload through the composer. Video picker selection works, but video upload remains manual against a real Bluesky account because the app routes video through the external Bluesky video service.
 
 **Build verification:**
 ```sh
@@ -1507,14 +1507,14 @@ npx @rsdoctor/cli analyze
 - [x] App loads at `/`
 - [x] Hard-refresh on nested routes works (`historyApiFallback`)
 - [x] Logged-out home renders
-- [ ] Login works
+- [x] Login works
 - [x] Timeline loads
 - [x] Profile page loads
 - [x] Post thread loads
 - [x] Search works
-- [ ] Composer opens, text post submits
+- [x] Composer opens, text post submits
 - [ ] **Media — distinct surfaces** (don't lump these — Streams 1-4 each touch a different piece):
-  - [ ] Image upload (composer → post timeline thumbnail)
+  - [x] Image upload (composer → post timeline thumbnail)
   - [x] Hosted images render (feed/thread thumbnails; lightbox open remains manual)
   - [x] Video post inline playback (`<video>` element in `VideoEmbedInnerWeb`)
   - [x] Video scrubber drags correctly (`web-controls/Scrubber`)
