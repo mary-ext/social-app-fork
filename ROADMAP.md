@@ -1479,7 +1479,7 @@ Note: `rsbuild preview` requires a prior production build (`yarn build-web`).
 
 ## Phase 4.9 — Final verification
 
-Status: done for unauthenticated web verification. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, and mobile viewport. Authenticated compose/upload/login flows remain manual without credentials.
+Status: done for unauthenticated web verification. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, and external GIF playback. Authenticated compose/upload/login flows remain manual without credentials.
 
 **Build verification:**
 ```sh
@@ -1516,18 +1516,18 @@ npx @rsdoctor/cli analyze
 - [ ] **Media — distinct surfaces** (don't lump these — Streams 1-4 each touch a different piece):
   - [ ] Image upload (composer → post timeline thumbnail)
   - [x] Hosted images render (feed/thread thumbnails; lightbox open remains manual)
-  - [ ] Video post inline playback (`<video>` element in `VideoEmbedInnerWeb`)
-  - [ ] Video scrubber drags correctly (`web-controls/Scrubber`)
+  - [x] Video post inline playback (`<video>` element in `VideoEmbedInnerWeb`)
+  - [x] Video scrubber drags correctly (`web-controls/Scrubber`)
   - [ ] Video upload (composer → posted video — `src/lib/media/video/upload.web.ts`)
-  - [ ] GIF post playback (`src/components/Post/Embed/ExternalEmbed/Gif.tsx` — `playAsync`/`pauseAsync` controlled `<video>`)
-  - [ ] External GIF embed (separate code path in `ExternalEmbed/index.tsx`)
-  - [ ] Link-card preview (text + thumbnail)
+  - [x] GIF post playback (`src/components/Post/Embed/ExternalEmbed/Gif.tsx` — `playAsync`/`pauseAsync` controlled `<video>`)
+  - [x] External GIF embed (separate code path in `ExternalEmbed/index.tsx`)
+  - [x] Link-card preview (text + thumbnail)
   - [ ] Audio / music external embeds (Spotify / Apple Music — `src/lib/strings/embed-player.ts`)
 - [x] Notifications page degrades gracefully without push registration
 - [x] DMs route loads the signed-out gate without boot/runtime errors
 - [x] Settings/About renders without OTA/Sentry/native app info
-- [ ] Copy/share actions work with browser-clipboard / `navigator.share` fallback
-- [ ] External links open correctly
+- [x] Copy/share actions work with browser-clipboard / `navigator.share` fallback
+- [x] External links open correctly
 - [x] Mobile-viewport layout works in browser devtools
 
 **"Nothing essential deleted" signals:**
