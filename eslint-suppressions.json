@@ -75,14 +75,6 @@
       "count": 3
     }
   },
-  "src/components/InternationalPhoneCodeSelect.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
   "src/components/Layout/Header/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -440,7 +432,7 @@
       "count": 6
     },
     "@typescript-eslint/no-unused-vars": {
-      "count": 6
+      "count": 5
     }
   },
   "src/components/dms/MessageItemEmbed.tsx": {
@@ -653,11 +645,6 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useMinimalShellTransform.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
-    }
-  },
   "src/lib/hooks/useNonReactiveCallback.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -671,11 +658,6 @@
   "src/lib/hooks/useWebScrollRestoration.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/lib/international-telephone-codes.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/lib/media/picker.shared.ts": {
@@ -1484,9 +1466,6 @@
   "src/view/com/util/MainScrollProvider.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 7
     }
   },
   "src/view/com/util/PostMeta.tsx": {

@@ -78,7 +78,7 @@ msgstr ""
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:289
+#: src/components/dms/MessageItem.tsx:288
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
@@ -223,7 +223,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:284
+#: src/components/dms/MessageItem.tsx:283
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -240,8 +240,8 @@ msgstr "{0} was removed from the group"
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:46
-msgid "{0}, {1}and {memberCount, plural, one {# other} other {# others}} added to chat"
-msgstr "{0}, {1}and {memberCount, plural, one {# other} other {# others}} added to chat"
+msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
+msgstr "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -264,7 +264,7 @@ msgid "{0}'s avatar"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(profile)
-#: src/components/dms/MessageItem.tsx:220
+#: src/components/dms/MessageItem.tsx:219
 msgid "{0}’s avatar"
 msgstr "{0}’s avatar"
 
@@ -1125,7 +1125,7 @@ msgstr ""
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:283
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:170
-#: src/view/screens/Notifications.tsx:84
+#: src/view/screens/Notifications.tsx:83
 msgid "All"
 msgstr ""
 
@@ -2043,8 +2043,8 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:82
 #: src/Navigation.tsx:565
-#: src/screens/Messages/ChatList.tsx:395
-#: src/screens/Messages/ChatList.tsx:428
+#: src/screens/Messages/ChatList.tsx:417
+#: src/screens/Messages/ChatList.tsx:450
 msgid "Chat settings"
 msgstr ""
 
@@ -2070,8 +2070,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:383
-#: src/screens/Messages/ChatList.tsx:417
+#: src/screens/Messages/ChatList.tsx:405
+#: src/screens/Messages/ChatList.tsx:439
 msgid "Chats"
 msgstr ""
 
@@ -2192,7 +2192,7 @@ msgstr "Click here to view the invite link for this group chat"
 msgid "Click to open tag menu for {0}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:536
+#: src/components/dms/MessageItem.tsx:533
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -3143,7 +3143,7 @@ msgctxt "action"
 msgid "Done"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:443
+#: src/components/dms/MessageItem.tsx:440
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -3780,7 +3780,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
 
-#: src/screens/Messages/ChatList.tsx:265
+#: src/screens/Messages/ChatList.tsx:286
 #: src/screens/Messages/Inbox.tsx:200
 msgid "Failed to load conversations"
 msgstr ""
@@ -5011,7 +5011,7 @@ msgstr ""
 msgid "In-app, Push, People you follow"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:282
+#: src/screens/Messages/ChatList.tsx:303
 msgid "Inbox empty"
 msgstr "Inbox empty"
 
@@ -5547,7 +5547,7 @@ msgstr ""
 msgid "Load more suggested feeds"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:267
+#: src/view/screens/Notifications.tsx:264
 msgid "Load new notifications"
 msgstr ""
 
@@ -5710,7 +5710,7 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:134
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
-#: src/view/screens/Notifications.tsx:97
+#: src/view/screens/Notifications.tsx:96
 msgid "Mentions"
 msgstr ""
 
@@ -5742,7 +5742,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:530
+#: src/components/dms/MessageItem.tsx:527
 msgid "Message failed to send."
 msgstr "Message failed to send."
 
@@ -6080,11 +6080,11 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:95
 #: src/components/dms/dialogs/NewChatDialog.tsx:105
-#: src/screens/Messages/ChatList.tsx:116
 #: src/screens/Messages/ChatList.tsx:117
-#: src/screens/Messages/ChatList.tsx:297
-#: src/screens/Messages/ChatList.tsx:298
-#: src/screens/Messages/ChatList.tsx:403
+#: src/screens/Messages/ChatList.tsx:118
+#: src/screens/Messages/ChatList.tsx:318
+#: src/screens/Messages/ChatList.tsx:319
+#: src/screens/Messages/ChatList.tsx:425
 msgid "New chat"
 msgstr ""
 
@@ -6156,7 +6156,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:229
 #: src/screens/ProfileList/index.tsx:272
 #: src/view/screens/Feeds.tsx:533
-#: src/view/screens/Notifications.tsx:163
+#: src/view/screens/Notifications.tsx:162
 #: src/view/screens/Profile.tsx:581
 msgid "New post"
 msgstr ""
@@ -6225,7 +6225,7 @@ msgstr ""
 msgid "No app passwords yet"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:291
+#: src/screens/Messages/ChatList.tsx:312
 msgid "No chats yet"
 msgstr "No chats yet"
 
@@ -6466,7 +6466,7 @@ msgstr ""
 
 #: src/Navigation.tsx:429
 #: src/Navigation.tsx:590
-#: src/view/screens/Notifications.tsx:132
+#: src/view/screens/Notifications.tsx:131
 msgid "Notification settings"
 msgstr ""
 
@@ -6486,7 +6486,7 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
 #: src/screens/Settings/Settings.tsx:183
 #: src/screens/Settings/Settings.tsx:186
-#: src/view/screens/Notifications.tsx:126
+#: src/view/screens/Notifications.tsx:125
 #: src/view/shell/bottom-bar/BottomBar.tsx:248
 #: src/view/shell/desktop/LeftNav.tsx:714
 #: src/view/shell/Drawer.tsx:453
@@ -6781,7 +6781,7 @@ msgstr ""
 msgid "Opens this draft in the composer"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:221
+#: src/components/dms/MessageItem.tsx:220
 #: src/view/com/notifications/NotificationFeedItem.tsx:986
 #: src/view/com/util/UserAvatar.tsx:561
 msgid "Opens this profile"
@@ -7585,7 +7585,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:269
+#: src/screens/Messages/ChatList.tsx:290
 #: src/screens/Messages/Inbox.tsx:204
 msgid "Reload conversations"
 msgstr ""
@@ -8079,7 +8079,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:348
 #: src/screens/Login/LoginForm.tsx:309
 #: src/screens/Login/LoginForm.tsx:315
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:295
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Messages/Inbox.tsx:209
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
@@ -8229,7 +8229,7 @@ msgstr ""
 msgid "Say hello!"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:110
+#: src/screens/Messages/ChatList.tsx:111
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
@@ -9038,7 +9038,7 @@ msgid "Someone left the group"
 msgstr "Someone left the group"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:286
+#: src/components/dms/MessageItem.tsx:285
 msgid "Someone reacted {0}"
 msgstr ""
 
@@ -9364,7 +9364,7 @@ msgstr "Tap to remove"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
-#: src/components/dms/MessageItem.tsx:540
+#: src/components/dms/MessageItem.tsx:537
 msgid "Tap to retry"
 msgstr "Tap to retry"
 
@@ -9377,7 +9377,7 @@ msgstr "Tap to show {0} reactions"
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
-#: src/components/dms/MessageItem.tsx:309
+#: src/components/dms/MessageItem.tsx:308
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
@@ -10813,7 +10813,7 @@ msgstr ""
 msgid "Visit site"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:292
+#: src/view/screens/Notifications.tsx:289
 msgid "Visit your notification settings"
 msgstr ""
 
@@ -10984,7 +10984,7 @@ msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:254
+#: src/screens/Messages/ChatList.tsx:275
 #: src/screens/Messages/Inbox.tsx:189
 msgid "Whoops!"
 msgstr ""
@@ -11252,7 +11252,7 @@ msgstr ""
 msgid "You have blocked this user. You cannot view their content."
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:287
+#: src/view/screens/Notifications.tsx:284
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 
@@ -11374,7 +11374,7 @@ msgid "You previously deactivated @{0}."
 msgstr ""
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:279
+#: src/components/dms/MessageItem.tsx:278
 msgid "You reacted {0}"
 msgstr ""
 
