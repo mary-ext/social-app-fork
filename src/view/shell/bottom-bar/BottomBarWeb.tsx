@@ -1,11 +1,11 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import Animated from 'react-native-reanimated'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigationState} from '@react-navigation/native'
 
+import Animated from '#/lib/animations/reanimatedCompat'
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'

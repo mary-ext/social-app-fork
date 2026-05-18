@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useReducedMotion} from 'react-native-reanimated'
 
+import {useReducedMotion} from '#/lib/animations/reanimatedCompat'
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 
 const animationConfig = {

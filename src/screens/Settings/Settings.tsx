@@ -1,11 +1,11 @@
 import {useState} from 'react'
 import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
-import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useReducedMotion} from '#/lib/animations/reanimatedCompat'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'

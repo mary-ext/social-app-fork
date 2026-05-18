@@ -6,9 +6,9 @@ import {
   StyleSheet,
   type ViewStyle,
 } from 'react-native'
-import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import Animated from '#/lib/animations/reanimatedCompat'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'

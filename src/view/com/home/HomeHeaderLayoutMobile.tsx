@@ -1,9 +1,9 @@
 import {View} from 'react-native'
-import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import Animated from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'

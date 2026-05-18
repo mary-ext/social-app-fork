@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native'
-import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useMediaQuery} from 'react-responsive'
 
+import Animated from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_20} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
