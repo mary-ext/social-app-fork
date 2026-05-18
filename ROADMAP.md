@@ -643,13 +643,13 @@ returns nothing and passes.
   # Enumerate then batch:
   rg -l "from '@lingui/core/macro'|_\\(msg\`" src \
     | xargs -n 50 npx jscodeshift -t .jscodeshift/file/lingui-v5.js --parser=tsx
-  # Verify no remaining v4 patterns:
-  rg "from '@lingui/core/macro'|_\\(msg\`" src
+  # Verify no remaining v4 msg-call patterns:
+  rg "_\\(msg\`|\\bmsg\`" src
   ```
   This is mechanical but produces a large diff. Land as its own commit titled something like "Apply lingui v5 codemod across remaining files". After landing, smoke-test the UI — codemod failures usually show up as runtime-only translation lookups returning the raw key
 - [x] **Per-codemod gate:** after each sweep, `yarn typecheck && yarn build-web` before moving on
-- [ ] `rm -rf .jscodeshift` in a final commit
-- [ ] Cross-reference CLAUDE.md's "Refactor existing uses of `` _(msg`foo`) `` to use `` l`foo` ``" — this phase is the bulk-execution of that guidance; CLAUDE.md can stop mentioning it once 2.10 lands
+- [x] `rm -rf .jscodeshift` in a final commit
+- [x] Cross-reference CLAUDE.md's "Refactor existing uses of `` _(msg`foo`) `` to use `` l`foo` ``" — this phase is the bulk-execution of that guidance; CLAUDE.md can stop mentioning it once 2.10 lands
 
 **Footguns:**
 - The lingui-v5 codemod is named `file/lingui-v5.js` because upstream invokes it per-file. Batched invocation via `xargs -n 50 jscodeshift` works but skip files that already use `@lingui/react/macro` — the codemod is mostly idempotent but the diff churn is wasted on already-migrated files. The `-l` grep before xargs already filters those out
@@ -657,10 +657,10 @@ returns nothing and passes.
 
 **Done when:**
 ```sh
-rg "from '@lingui/core/macro'|_\\(msg\`|from '#/view/com/util/Toast'|^import React from 'react'" src
+rg "_\\(msg\`|\\bmsg\`|from '#/view/com/util/Toast'|^import React from 'react'" src
 ls .jscodeshift 2>/dev/null
 ```
-both return nothing.
+both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, and `defineMessage` callsites that are not hook-bound.
 
 ## Phase 2.11 — Reduce to English-only (drop Crowdin, narrow locales) + refresh Lingui catalog
 
