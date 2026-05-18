@@ -1479,7 +1479,7 @@ Note: `rsbuild preview` requires a prior production build (`yarn build-web`).
 
 ## Phase 4.9 — Final verification
 
-Status: done for unauthenticated web verification. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, and external GIF playback. Authenticated compose/upload/login flows remain manual without credentials.
+Status: done for unauthenticated web verification. `yarn install`, `yarn typecheck`, `yarn lint`, `yarn build-web`, and `yarn dev --host 127.0.0.1` pass; browser smoke covered `/`, hard-refresh nested routes, logged-out Discover, public profile, public post thread, search, signed-out notifications/messages redirects, settings/about, mobile viewport, public link cards/external links, share-menu copy, inline video playback/scrubbing, external GIF playback, and Apple Music external-player consent/iframe load. Authenticated compose/upload/login flows remain manual without credentials.
 
 **Build verification:**
 ```sh
@@ -1522,7 +1522,7 @@ npx @rsdoctor/cli analyze
   - [x] GIF post playback (`src/components/Post/Embed/ExternalEmbed/Gif.tsx` — `playAsync`/`pauseAsync` controlled `<video>`)
   - [x] External GIF embed (separate code path in `ExternalEmbed/index.tsx`)
   - [x] Link-card preview (text + thumbnail)
-  - [ ] Audio / music external embeds (Spotify / Apple Music — `src/lib/strings/embed-player.ts`)
+  - [x] Audio / music external embeds (Spotify / Apple Music — `src/lib/strings/embed-player.ts`)
 - [x] Notifications page degrades gracefully without push registration
 - [x] DMs route loads the signed-out gate without boot/runtime errors
 - [x] Settings/About renders without OTA/Sentry/native app info
