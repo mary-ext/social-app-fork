@@ -8,7 +8,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -154,14 +153,7 @@ export function ChatList({
     newChatControl.open()
   }, [newChatControl])
 
-  const requireEmailVerification = useRequireEmailVerification()
-  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
-    instructions: [
-      <Trans key="new-chat">
-        Before you can message another user, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOpenChatControl = openChatControl
 
   const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
   const [isPTRing, setIsPTRing] = useState(false)
@@ -360,7 +352,6 @@ export function ChatList({
 export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const requireEmailVerification = useRequireEmailVerification()
   const leftConvos = useLeftConvos()
 
   const {data: unreadInboxData, hasNextPage: hasMoreRequests} =
@@ -382,13 +373,7 @@ export function Header({newChatControl}: {newChatControl: DialogControlProps}) {
   const openChatControl = useCallback(() => {
     newChatControl.open()
   }, [newChatControl])
-  const wrappedOpenChatControl = requireEmailVerification(openChatControl, {
-    instructions: [
-      <Trans key="new-chat">
-        Before you can message another user, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOpenChatControl = openChatControl
 
   return (
     <Layout.Header.Outer>

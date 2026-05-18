@@ -3,10 +3,8 @@ import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useGetConvoAvailabilityQuery} from '#/state/queries/messages/get-convo-availability'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -26,7 +24,6 @@ export function MessageProfileButton({
   const t = useTheme()
   const ax = useAnalytics()
   const navigation = useNavigation<NavigationProp>()
-  const requireEmailVerification = useRequireEmailVerification()
 
   const {data: convoAvailability} = useGetConvoAvailabilityQuery(profile.did)
   const {mutate: initiateConvo} = useGetConvoForMembers({
@@ -55,13 +52,7 @@ export function MessageProfileButton({
     }
   }, [ax, navigation, profile.did, initiateConvo, convoAvailability])
 
-  const wrappedOnPress = requireEmailVerification(onPress, {
-    instructions: [
-      <Trans key="message">
-        Before you can message another user, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOnPress = onPress
 
   if (!convoAvailability) {
     // show pending state based on declaration

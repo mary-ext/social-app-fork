@@ -20,7 +20,6 @@ import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -66,15 +65,10 @@ export function MessageInput({
   const inputRef = useAnimatedRef<TextInput>()
   const [shouldEnforceClear, setShouldEnforceClear] = useState(false)
 
-  const {needsEmailVerification} = useEmail()
-
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = useCallback(() => {
-    if (needsEmailVerification) {
-      return
-    }
     if (!hasEmbed && message.trim() === '') {
       return
     }
@@ -103,7 +97,6 @@ export function MessageInput({
       void onSendMessage(message)
     })
   }, [
-    needsEmailVerification,
     hasEmbed,
     message,
     clearDraft,
@@ -139,8 +132,7 @@ export function MessageInput({
     scrollEnabled: isInputScrollable.get(),
   }))
 
-  const submitDisabled =
-    needsEmailVerification || (!hasEmbed && message.trim().length === 0)
+  const submitDisabled = !hasEmbed && message.trim().length === 0
 
   const blur = useCallback(() => {
     inputRef.current?.blur()
@@ -209,7 +201,6 @@ export function MessageInput({
             ref={inputRef}
             hitSlop={HITSLOP_10}
             animatedProps={animatedProps}
-            editable={!needsEmailVerification}
           />
         </GlassView>
         <GlassView

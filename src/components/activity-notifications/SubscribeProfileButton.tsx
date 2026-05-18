@@ -4,7 +4,6 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -26,7 +25,6 @@ export function SubscribeProfileButton({
   disableHint?: boolean
 }) {
   const {_} = useLingui()
-  const requireEmailVerification = useRequireEmailVerification()
   const subscribeDialogControl = useDialogControl()
   const [activitySubscriptionsNudged, setActivitySubscriptionsNudged] =
     useActivitySubscriptionsNudged()
@@ -54,14 +52,7 @@ export function SubscribeProfileButton({
 
   const name = createSanitizedDisplayName(profile, true)
 
-  const wrappedOnPress = requireEmailVerification(onPress, {
-    instructions: [
-      <Trans key="message">
-        Before you can get notifications for {name}'s posts, you must first
-        verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOnPress = onPress
 
   const isSubscribed =
     profile.viewer?.activitySubscription?.post ||

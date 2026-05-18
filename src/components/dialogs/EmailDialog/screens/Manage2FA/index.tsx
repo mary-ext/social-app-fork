@@ -1,5 +1,4 @@
-import {useEffect, useState} from 'react'
-import {Trans} from '@lingui/react/macro'
+import {useState} from 'react'
 
 import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
 import {Disable} from '#/components/dialogs/EmailDialog/screens/Manage2FA/Disable'
@@ -9,30 +8,11 @@ import {
   type ScreenProps,
 } from '#/components/dialogs/EmailDialog/types'
 
-export function Manage2FA({showScreen}: ScreenProps<ScreenID.Manage2FA>) {
-  const {isEmailVerified, email2FAEnabled} = useAccountEmailState()
+export function Manage2FA(_props: ScreenProps<ScreenID.Manage2FA>) {
+  const {email2FAEnabled} = useAccountEmailState()
   const [requestedAction, setRequestedAction] = useState<
     'enable' | 'disable' | null
   >(null)
-
-  useEffect(() => {
-    if (!isEmailVerified) {
-      showScreen({
-        id: ScreenID.Verify,
-        instructions: [
-          <Trans key="2fa">
-            You need to verify your email address before you can enable email
-            2FA.
-          </Trans>,
-        ],
-        onVerify: () => {
-          showScreen({
-            id: ScreenID.Manage2FA,
-          })
-        },
-      })
-    }
-  }, [isEmailVerified, showScreen])
 
   /*
    * Wacky state handling so that once 2FA settings change, we don't show the

@@ -18,7 +18,6 @@ import {
   TokenField,
 } from '#/components/dialogs/EmailDialog/components/TokenField'
 import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
-import {useRequestEmailVerification} from '#/components/dialogs/EmailDialog/data/useRequestEmailVerification'
 import {useUpdateEmail} from '#/components/dialogs/EmailDialog/data/useUpdateEmail'
 import {
   type ScreenID,
@@ -120,7 +119,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
 
   const {mutateAsync: updateEmail} = useUpdateEmail()
   const {mutateAsync: requestEmailUpdate} = useRequestEmailUpdate()
-  const {mutateAsync: requestEmailVerification} = useRequestEmailVerification()
 
   const handleEmailChange = (email: string) => {
     dispatch({
@@ -182,11 +180,6 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           type: 'setMutationStatus',
           status: 'success',
         })
-
-        try {
-          // fire off a confirmation email immediately
-          await requestEmailVerification()
-        } catch {}
       }
     } catch (e) {
       logger.error('EmailDialog: update email failed', {safeMessage: e})
@@ -288,11 +281,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
               </Text>
             </View>
             <Text style={[a.leading_snug]}>
-              <Trans>
-                Please click on the link in the email we just sent you to verify
-                your new email address. This is an important step to allow you
-                to continue enjoying all the features of Bluesky.
-              </Trans>
+              <Trans>Your email address has been updated.</Trans>
             </Text>
           </View>
         </>

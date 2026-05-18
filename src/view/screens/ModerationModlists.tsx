@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -23,20 +22,13 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>
 export function ModerationModlistsScreen({}: Props) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const requireEmailVerification = useRequireEmailVerification()
   const createListDialogControl = useDialogControl()
 
   const onPressNewList = useCallback(() => {
     createListDialogControl.open()
   }, [createListDialogControl])
 
-  const wrappedOnPressNewList = requireEmailVerification(onPressNewList, {
-    instructions: [
-      <Trans key="modlist">
-        Before creating a list, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOnPressNewList = onPressNewList
 
   const onCreateList = useCallback(
     (uri: string) => {

@@ -20,14 +20,12 @@ import {
   GROUP_CHATS_ENABLED,
   GROUP_CHATS_HAS_BEEN_RELEASED,
 } from '#/lib/feature-flags'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -37,10 +35,6 @@ import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
@@ -196,7 +190,6 @@ function InnerReady({
   isDisabled: boolean
   hasMessages: boolean
 }) {
-  const navigation = useNavigation<NavigationProp>()
   const {top: topInset} = useSafeAreaInsets()
   const [headerHeight, setHeaderHeight] = useState(0)
   const onHeaderLayout = (e: LayoutChangeEvent) => {
@@ -204,47 +197,6 @@ function InnerReady({
   }
   const {params} =
     useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>()
-  const {needsEmailVerification} = useEmail()
-  const emailDialogControl = useEmailDialogControl()
-
-  /**
-   * Must be non-reactive, otherwise the update to open the global dialog will
-   * cause a re-render loop.
-   */
-  const maybeBlockForEmailVerification = useNonReactiveCallback(() => {
-    if (needsEmailVerification) {
-      /*
-       * HACKFIX
-       *
-       * Load bearing timeout, to bump this state update until the after the
-       * `navigator.addListener('state')` handler closes elements from
-       * `shell/index.*.tsx`  - sfn & esb
-       */
-      setTimeout(() =>
-        emailDialogControl.open({
-          id: EmailDialogScreenID.Verify,
-          instructions: [
-            <Trans key="pre-compose">
-              Before you can message another user, you must first verify your
-              email.
-            </Trans>,
-          ],
-          onCloseWithoutVerifying: () => {
-            if (navigation.canGoBack()) {
-              navigation.goBack()
-            } else {
-              navigation.navigate('Messages', {animation: 'pop'})
-            }
-          },
-        }),
-      )
-    }
-  })
-
-  useEffect(() => {
-    maybeBlockForEmailVerification()
-  }, [maybeBlockForEmailVerification])
-
   const primaryMember = useMaybeProfileShadow(convo?.primaryMember)
   const moderationOpts = useModerationOpts()
   const primaryMemberModeration = useMemo(() => {

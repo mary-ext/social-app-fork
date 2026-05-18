@@ -114,11 +114,6 @@
       "count": 1
     }
   },
-  "src/components/dialogs/DeviceLocationRequestDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -204,11 +199,6 @@
       "count": 3
     }
   },
-  "src/geolocation/service.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/lib/ScrollContext.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
@@ -255,11 +245,6 @@
     }
   },
   "src/lib/hooks/useOTAUpdates.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/lib/hooks/useRequireEmailVerification.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
@@ -414,11 +399,6 @@
       "count": 1
     }
   },
-  "src/screens/Settings/FindContactsSettings.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -510,11 +490,6 @@
     }
   },
   "src/state/queries/util.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/state/session/agent.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

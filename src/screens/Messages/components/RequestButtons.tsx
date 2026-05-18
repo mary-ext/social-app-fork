@@ -6,7 +6,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useEmail} from '#/state/email-verification'
 import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
 import {precacheConvoQuery} from '#/state/queries/messages/conversation'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -21,10 +20,6 @@ import {
   ButtonText,
 } from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
 import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
@@ -220,8 +215,6 @@ export function AcceptChatButton({
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp>()
-  const {needsEmailVerification} = useEmail()
-  const emailDialogControl = useEmailDialogControl()
 
   const {mutate: acceptConvo, isPending} = useAcceptConversation(convo.id, {
     onMutate: () => {
@@ -252,20 +245,8 @@ export function AcceptChatButton({
   })
 
   const onPressAccept = useCallback(() => {
-    if (needsEmailVerification) {
-      emailDialogControl.open({
-        id: EmailDialogScreenID.Verify,
-        instructions: [
-          <Trans key="request-btn">
-            Before you can accept this chat request, you must first verify your
-            email.
-          </Trans>,
-        ],
-      })
-    } else {
-      acceptConvo()
-    }
-  }, [acceptConvo, needsEmailVerification, emailDialogControl])
+    acceptConvo()
+  }, [acceptConvo])
 
   let Icon: React.ReactNode = null
   if (isPending) {

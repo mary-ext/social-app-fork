@@ -80,33 +80,6 @@ export function AccountSettingsScreen({}: Props) {
               </>
             )}
           </SettingsList.Item>
-          {currentAccount && !currentAccount.emailConfirmed && (
-            <SettingsList.PressableItem
-              label={_(msg`Verify your email`)}
-              onPress={() =>
-                emailDialogControl.open({
-                  id: EmailDialogScreenID.Verify,
-                })
-              }
-              style={[
-                a.my_xs,
-                a.mx_lg,
-                a.rounded_md,
-                {backgroundColor: t.palette.primary_50},
-              ]}
-              hoverStyle={[{backgroundColor: t.palette.primary_100}]}
-              contentContainerStyle={[a.rounded_md, a.px_lg]}>
-              <SettingsList.ItemIcon
-                icon={ShieldIcon}
-                color={t.palette.primary_500}
-              />
-              <SettingsList.ItemText
-                style={[{color: t.palette.primary_500}, a.font_semi_bold]}>
-                <Trans>Verify your email</Trans>
-              </SettingsList.ItemText>
-              <SettingsList.Chevron color={t.palette.primary_500} />
-            </SettingsList.PressableItem>
-          )}
           <SettingsList.PressableItem
             label={_(msg`Update email`)}
             onPress={() =>

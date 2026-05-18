@@ -9,12 +9,10 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {
   type CommonNavigatorParams,
@@ -177,7 +175,6 @@ function ProfileScreenLoaded({
   const {hasSession, currentAccount} = useSession()
   const {openComposer} = useOpenComposer()
   const navigation = useNavigation<NavigationProp>()
-  const requireEmailVerification = useRequireEmailVerification()
   const {
     data: labelerInfo,
     error: labelerError,
@@ -345,13 +342,7 @@ function ProfileScreenLoaded({
   const navToWizard = useCallback(() => {
     navigation.navigate('StarterPackWizard', {})
   }, [navigation])
-  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
-    instructions: [
-      <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedNavToWizard = navToWizard
 
   // rendering
   // =

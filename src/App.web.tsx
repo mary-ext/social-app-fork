@@ -17,7 +17,6 @@ import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
-import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
@@ -121,18 +120,16 @@ function InnerApp() {
                                             <SafeAreaProvider>
                                               <ProgressGuideProvider>
                                                 <ServiceConfigProvider>
-                                                  <EmailVerificationProvider>
-                                                    <HideBottomBarBorderProvider>
-                                                      <IntentDialogProvider>
-                                                        <TranslateOnDeviceProvider>
-                                                          <HotkeysProvider>
-                                                            <Shell />
-                                                            <ToastOutlet />
-                                                          </HotkeysProvider>
-                                                        </TranslateOnDeviceProvider>
-                                                      </IntentDialogProvider>
-                                                    </HideBottomBarBorderProvider>
-                                                  </EmailVerificationProvider>
+                                                  <HideBottomBarBorderProvider>
+                                                    <IntentDialogProvider>
+                                                      <TranslateOnDeviceProvider>
+                                                        <HotkeysProvider>
+                                                          <Shell />
+                                                          <ToastOutlet />
+                                                        </HotkeysProvider>
+                                                      </TranslateOnDeviceProvider>
+                                                    </IntentDialogProvider>
+                                                  </HideBottomBarBorderProvider>
                                                 </ServiceConfigProvider>
                                               </ProgressGuideProvider>
                                             </SafeAreaProvider>

@@ -16,7 +16,6 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
@@ -380,17 +379,6 @@ function DevOptions() {
     Toast.show(l`Storage cleared, you need to restart the app now.`)
   }
 
-  const onPressUnsnoozeReminder = () => {
-    const lastEmailConfirm = new Date()
-    // wind back 3 days
-    lastEmailConfirm.setDate(lastEmailConfirm.getDate() - 3)
-    void persisted.write('reminders', {
-      ...persisted.get('reminders'),
-      lastEmailConfirm: lastEmailConfirm.toISOString(),
-    })
-    Toast.show(l`You probably want to restart the app now.`)
-  }
-
   const onPressActySubsUnNudge = () => {
     setActyNotifNudged(false)
   }
@@ -454,13 +442,6 @@ function DevOptions() {
         label={l`Reset onboarding state`}>
         <SettingsList.ItemText>
           <Trans>Reset onboarding state</Trans>
-        </SettingsList.ItemText>
-      </SettingsList.PressableItem>
-      <SettingsList.PressableItem
-        onPress={onPressUnsnoozeReminder}
-        label={l`Unsnooze email reminder`}>
-        <SettingsList.ItemText>
-          <Trans>Unsnooze email reminder</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       {actyNotifNudged && (

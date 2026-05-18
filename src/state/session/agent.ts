@@ -24,7 +24,6 @@ import {
 } from '#/lib/constants'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
-import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -230,13 +229,6 @@ export async function createAgentAndCreateAccount(
         )
       }
     })
-  }
-
-  try {
-    // snooze first prompt after signup, defer to next prompt
-    snoozeEmailConfirmationPrompt()
-  } catch (e: any) {
-    logger.error(e, {message: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())

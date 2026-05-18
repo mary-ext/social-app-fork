@@ -376,12 +376,12 @@ The three sub-phases are independent — apply in any order, one commit each. Ph
 - **Stays:** the user-initiated email-*update* flow (`Update.tsx` + `useUpdateEmail` + `useRequestEmailUpdate`) and the 2FA-disable flow that piggybacks on `agent.com.atproto.server.updateEmail`. Changing your own email address is unrelated to forced verification.
 
 **Checklist:**
-- [ ] `rm src/components/dialogs/EmailDialog/screens/Verify.tsx src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx`
-- [ ] `rm src/components/dialogs/EmailDialog/data/useRequestEmailVerification.ts src/components/dialogs/EmailDialog/data/useConfirmEmail.ts`
-- [ ] `rm src/components/intents/VerifyEmailIntentDialog.tsx`; in `src/components/intents/IntentDialogs.tsx`, drop the `<VerifyEmailIntentDialog />` mount and its import
-- [ ] `rm src/state/email-verification.tsx`; remove `<EmailVerificationProvider>` from both `src/App.web.tsx` and `src/App.native.tsx`
-- [ ] In `src/state/shell/reminders.ts`, delete `shouldRequestEmailConfirmation()` and `snoozeEmailConfirmationPrompt()`. Remove the caller in `src/state/session/agent.ts` (signup path)
-- [ ] `rm src/lib/hooks/useRequireEmailVerification.tsx`. **Codemod-able sweep — write a jscodeshift transform** that handles the ~11 consumers (`SubscribeProfileButton`, `StarterPackDialog`, `ProfileStarterPacks`, `NewChatDialog`, `MessageProfileButton`, `useOpenComposer`, `ChatList`, `MemberMenu`, `Lists`, `ModerationModlists`, `Profile` — re-grep at execution time). The transform:
+- [x] `rm src/components/dialogs/EmailDialog/screens/Verify.tsx src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx`
+- [x] `rm src/components/dialogs/EmailDialog/data/useRequestEmailVerification.ts src/components/dialogs/EmailDialog/data/useConfirmEmail.ts`
+- [x] `rm src/components/intents/VerifyEmailIntentDialog.tsx`; in `src/components/intents/IntentDialogs.tsx`, drop the `<VerifyEmailIntentDialog />` mount and its import
+- [x] `rm src/state/email-verification.tsx`; remove `<EmailVerificationProvider>` from both `src/App.web.tsx` and `src/App.native.tsx`
+- [x] In `src/state/shell/reminders.ts`, delete `shouldRequestEmailConfirmation()` and `snoozeEmailConfirmationPrompt()`. Remove the caller in `src/state/session/agent.ts` (signup path)
+- [x] `rm src/lib/hooks/useRequireEmailVerification.tsx`. **Codemod-able sweep — write a jscodeshift transform** that handles the ~11 consumers (`SubscribeProfileButton`, `StarterPackDialog`, `ProfileStarterPacks`, `NewChatDialog`, `MessageProfileButton`, `useOpenComposer`, `ChatList`, `MemberMenu`, `Lists`, `ModerationModlists`, `Profile` — re-grep at execution time). The transform:
   - Delete `const requireEmailVerification = useRequireEmailVerification()`
   - Rewrite `requireEmailVerification(action)` → `action`
   - Rewrite `requireEmailVerification(action, options)` → `action` (drop the options object)
@@ -392,21 +392,21 @@ The three sub-phases are independent — apply in any order, one commit each. Ph
   ```sh
   rg -n "useRequireEmailVerification|requireEmailVerification" src
   ```
-- [ ] **Direct `useEmail()` / `needsEmailVerification` consumers — separate sweep.** The DM gating doesn't go through the wrapper; it reads the hook directly. Edit each:
+- [x] **Direct `useEmail()` / `needsEmailVerification` consumers — separate sweep.** The DM gating doesn't go through the wrapper; it reads the hook directly. Edit each:
   - `src/screens/Messages/components/MessageInput.tsx` — remove the `useEmail()` import and the `needsEmailVerification` conditional that disables send
   - `src/screens/Messages/components/MessageComposer.tsx` — same pattern
   - `src/screens/Messages/components/RequestButtons.tsx` — gate on accept/decline
   - `src/screens/Messages/Conversation.tsx` — gate on reply
   
   Grep for stragglers: `rg -n "useEmail|needsEmailVerification" src --glob '!locale/**' --glob '!**/*.po'`
-- [ ] **Settings + nav-level verification UI.** Several screens display a "Verify your email" affordance independent of the wrapper:
+- [x] **Settings + nav-level verification UI.** Several screens display a "Verify your email" affordance independent of the wrapper:
   - `src/screens/Settings/AccountSettings.tsx:84-110` renders a "Verify your email" settings row — delete the row
   - `src/screens/Settings/Settings.tsx:404-412` has a DevOptions "unsnooze email reminder" entry that writes `reminders.lastEmailConfirm` — delete
   - `src/Navigation.tsx:1026-1031` opens the `VerificationReminder` screen on launch — delete the dispatch
   - `src/components/dialogs/EmailDialog/screens/Manage2FA/index.tsx:18-35` redirects unverified users to `ScreenID.Verify`. With `Verify` gone, remove the redirect (the 2FA flow should now assume the email is usable as-is)
-- [ ] In `src/components/dialogs/EmailDialog/types.ts`, drop `ScreenID.Verify` and `ScreenID.VerificationReminder`; in `src/components/dialogs/EmailDialog/index.tsx`, drop the matching `switch` cases (`Update` is the only remaining screen)
-- [ ] In `src/components/dialogs/EmailDialog/screens/Update.tsx`, drop the post-update `useRequestEmailVerification` chain — once verification is gone, the auto-send-confirm-email-after-update step is dead UI
-- [ ] Verify:
+- [x] In `src/components/dialogs/EmailDialog/types.ts`, drop `ScreenID.Verify` and `ScreenID.VerificationReminder`; in `src/components/dialogs/EmailDialog/index.tsx`, drop the matching `switch` cases (`Update` is the only remaining screen)
+- [x] In `src/components/dialogs/EmailDialog/screens/Update.tsx`, drop the post-update `useRequestEmailVerification` chain — once verification is gone, the auto-send-confirm-email-after-update step is dead UI
+- [x] Verify:
   ```sh
   rg -n "VerifyEmail|verifyEmail|EmailVerificationProvider|useRequireEmailVerification|useEmail\b|needsEmailVerification|requestEmailConfirmation|confirmEmail\(|ScreenID\.Verify|VerificationReminder" src --glob '!locale/**' --glob '!**/*.po'
   ```

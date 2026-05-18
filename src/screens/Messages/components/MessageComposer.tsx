@@ -21,7 +21,6 @@ import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isBskyPostUrl} from '#/lib/strings/url-helpers'
-import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
@@ -53,8 +52,6 @@ export function MessageComposer({
   const t = useTheme()
   const {t: l} = useLingui()
   const playHaptic = useHaptics()
-  const {needsEmailVerification} = useEmail()
-  const editable = !needsEmailVerification
   const {getDraft, clearDraft} = useMessageDraft()
   const composerInternalApiRef = useComposerInternalApiRef()
 
@@ -75,10 +72,9 @@ export function MessageComposer({
     },
   })
 
-  const submitDisabled = !editable || (!hasEmbed && text.trim().length === 0)
+  const submitDisabled = !hasEmbed && text.trim().length === 0
 
   const onSubmit = (message: string) => {
-    if (!editable) return
     if (!hasEmbed && message.trim() === '') return
     const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
@@ -213,7 +209,6 @@ export function MessageComposer({
               autocompletePlacement="top-start"
               internalApiRef={composerInternalApiRef}
               defaultValue={text}
-              editable={editable}
               autoFocus={IS_WEB}
               maxRows={12}
               outerStyle={[a.flex_1]}

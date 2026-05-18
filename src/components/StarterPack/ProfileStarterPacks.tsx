@@ -15,7 +15,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
@@ -225,7 +224,6 @@ function Empty() {
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
   const errorDialogControl = useDialogControl()
-  const requireEmailVerification = useRequireEmailVerification()
 
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -259,23 +257,11 @@ function Empty() {
   const openConfirmDialog = useCallback(() => {
     confirmDialogControl.open()
   }, [confirmDialogControl])
-  const wrappedOpenConfirmDialog = requireEmailVerification(openConfirmDialog, {
-    instructions: [
-      <Trans key="confirm">
-        Before creating a starter pack, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOpenConfirmDialog = openConfirmDialog
   const navToWizard = useCallback(() => {
     navigation.navigate('StarterPackWizard', {})
   }, [navigation])
-  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
-    instructions: [
-      <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedNavToWizard = navToWizard
 
   return (
     <LinearGradientBackground

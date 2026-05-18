@@ -46,10 +46,6 @@ import {bskyTitle} from '#/lib/strings/headings'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {
-  shouldRequestEmailConfirmation,
-  snoozeEmailConfirmationPrompt,
-} from '#/state/shell/reminders'
 import {useCloseAllActiveElements} from '#/state/util'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
@@ -131,10 +127,6 @@ import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
 import {type Theme, useTheme} from '#/alf'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
@@ -896,7 +888,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const {onPressSwitchAccount} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const previousScreen = useRef<string | undefined>(undefined)
-  const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
   const linkingUrl = Linking.useLinkingURL()
 
@@ -997,13 +988,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     handlePushNotificationEntry()
 
     ax.metric('router:navigate', {})
-
-    if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
-      emailDialogControl.open({
-        id: EmailDialogScreenID.VerificationReminder,
-      })
-      snoozeEmailConfirmationPrompt()
-    }
 
     ax.metric('init', {
       initMs: Math.round(

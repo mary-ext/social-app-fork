@@ -9,7 +9,6 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -50,7 +49,6 @@ export function StarterPackDialog({
   enabled,
 }: StarterPackDialogProps) {
   const navigation = useNavigation<NavigationProp>()
-  const requireEmailVerification = useRequireEmailVerification()
 
   const navToWizard = useCallback(() => {
     control.close()
@@ -67,13 +65,7 @@ export function StarterPackDialog({
     })
   }, [navigation, control, targetDid])
 
-  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
-    instructions: [
-      <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedNavToWizard = navToWizard
 
   return (
     <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>

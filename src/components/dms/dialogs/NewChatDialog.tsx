@@ -1,8 +1,7 @@
 import {useCallback} from 'react'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {useLingui} from '@lingui/react/macro'
 
 import {GROUP_CHATS_ENABLED} from '#/lib/feature-flags'
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -25,7 +24,6 @@ export function NewChat({
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const requireEmailVerification = useRequireEmailVerification()
 
   const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
@@ -90,13 +88,7 @@ export function NewChat({
   const onPress = useCallback(() => {
     control.open()
   }, [control])
-  const wrappedOnPress = requireEmailVerification(onPress, {
-    instructions: [
-      <Trans key="new-chat">
-        Before you can message another user, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const wrappedOnPress = onPress
 
   return (
     <>

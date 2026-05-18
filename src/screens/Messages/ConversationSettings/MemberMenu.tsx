@@ -3,7 +3,6 @@ import {Pressable} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
@@ -47,8 +46,6 @@ export function MemberMenu({
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  const requireEmailVerification = useRequireEmailVerification()
-
   const blockMemberPrompt = Prompt.usePromptControl()
 
   const [menuDidOpen, setMenuDidOpen] = useState(false)
@@ -89,13 +86,7 @@ export function MemberMenu({
     }
   }
 
-  const handleMessageMember = requireEmailVerification(messageMember, {
-    instructions: [
-      <Trans key="message">
-        Before you can message another user, you must first verify your email.
-      </Trans>,
-    ],
-  })
+  const handleMessageMember = messageMember
 
   const handleBlockMember = async () => {
     if (profile.viewer?.blocking) {

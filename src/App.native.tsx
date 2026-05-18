@@ -23,7 +23,6 @@ import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
-import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
@@ -140,22 +139,20 @@ function InnerApp() {
                                         <MutedThreadsProvider>
                                           <ProgressGuideProvider>
                                             <ServiceAccountManager>
-                                              <EmailVerificationProvider>
-                                                <HideBottomBarBorderProvider>
-                                                  <GestureHandlerRootView
-                                                    style={a.h_full}>
-                                                    <GlobalGestureEventsProvider>
-                                                      <IntentDialogProvider>
-                                                        <TranslateOnDeviceProvider>
-                                                          <TestCtrls />
-                                                          <Shell />
-                                                          <ToastOutlet />
-                                                        </TranslateOnDeviceProvider>
-                                                      </IntentDialogProvider>
-                                                    </GlobalGestureEventsProvider>
-                                                  </GestureHandlerRootView>
-                                                </HideBottomBarBorderProvider>
-                                              </EmailVerificationProvider>
+                                              <HideBottomBarBorderProvider>
+                                                <GestureHandlerRootView
+                                                  style={a.h_full}>
+                                                  <GlobalGestureEventsProvider>
+                                                    <IntentDialogProvider>
+                                                      <TranslateOnDeviceProvider>
+                                                        <TestCtrls />
+                                                        <Shell />
+                                                        <ToastOutlet />
+                                                      </TranslateOnDeviceProvider>
+                                                    </IntentDialogProvider>
+                                                  </GlobalGestureEventsProvider>
+                                                </GestureHandlerRootView>
+                                              </HideBottomBarBorderProvider>
                                             </ServiceAccountManager>
                                           </ProgressGuideProvider>
                                         </MutedThreadsProvider>

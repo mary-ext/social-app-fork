@@ -7,13 +7,12 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
-type IntentType = 'compose' | 'verify-email' | 'apply-ota'
+type IntentType = 'compose' | 'apply-ota'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
@@ -24,7 +23,6 @@ export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
   const ax = useAnalytics()
   const composeIntent = useComposeIntent()
-  const verifyEmailIntent = useVerifyEmailIntent()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
@@ -62,12 +60,6 @@ export function useIntentHandler() {
           })
           return
         }
-        case 'verify-email': {
-          const code = params.get('code')
-          if (!code) return
-          verifyEmailIntent(code)
-          return
-        }
         case 'apply-ota': {
           const channel = params.get('channel')
           if (!channel) {
@@ -90,14 +82,7 @@ export function useIntentHandler() {
       handleIncomingURL(incomingUrl)
       previousIntentUrl = incomingUrl
     }
-  }, [
-    incomingUrl,
-    ax,
-    composeIntent,
-    verifyEmailIntent,
-    currentAccount,
-    tryApplyUpdate,
-  ])
+  }, [incomingUrl, ax, composeIntent, currentAccount, tryApplyUpdate])
 }
 
 export function useComposeIntent() {
@@ -155,23 +140,5 @@ export function useComposeIntent() {
       }, 500)
     },
     [hasSession, closeAllActiveElements, openComposer],
-  )
-}
-
-function useVerifyEmailIntent() {
-  const closeAllActiveElements = useCloseAllActiveElements()
-  const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
-    useIntentDialogs()
-  return useCallback(
-    (code: string) => {
-      closeAllActiveElements()
-      setState({
-        code,
-      })
-      setTimeout(() => {
-        control.open()
-      }, 1000)
-    },
-    [closeAllActiveElements, control, setState],
   )
 }
