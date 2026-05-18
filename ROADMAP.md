@@ -425,12 +425,12 @@ The three sub-phases are independent — apply in any order, one commit each. Ph
 **Dependency note:** Phase 2.3 already trims the AA-coupled parts of `src/state/birthdate.ts`. This phase deletes the snooze layer that survives 2.3.
 
 **Checklist:**
-- [ ] In `src/state/birthdate.ts`: delete `BIRTHDATE_DELAY_HOURS`, `snoozeBirthdateUpdateAllowedForDid`, `hasSnoozedBirthdateUpdateForDid`, and `useIsBirthdateUpdateAllowed`. In `useBirthdateMutation`, drop the trailing `snoozeBirthdateUpdateAllowedForDid()` call. If the file is empty after this and the AA edits from 2.3, `rm src/state/birthdate.ts` and move `useBirthdateMutation` to its consumer (or a sibling state file)
-- [ ] `src/state/session/agent.ts`: drop the `snoozeBirthdateUpdateAllowedForDid()` call on login/account fetch (and the import)
-- [ ] `src/components/dialogs/BirthDateSettings.tsx`: collapse the conditional — delete the locked-state branch (the "wait a day or two" dialog at ~lines 52-115) and render the editable form unconditionally. Drop the `useIsBirthdateUpdateAllowed` import
-- [ ] `src/screens/Moderation/index.tsx`: drop the `useIsBirthdateUpdateAllowed` import (Phase 2.3 deletes the `NoAccessScreen` it fed, but the import line may survive)
-- [ ] `src/storage/schema.ts`: delete `birthdateLastUpdatedAt` from the `Account` type. **Stale persisted blobs are tolerated** — Zod's `.passthrough()` / extra-field handling won't reject them, but the data becomes dead. Acceptable for a personal fork; don't write a migration
-- [ ] Verify:
+- [x] In `src/state/birthdate.ts`: delete `BIRTHDATE_DELAY_HOURS`, `snoozeBirthdateUpdateAllowedForDid`, `hasSnoozedBirthdateUpdateForDid`, and `useIsBirthdateUpdateAllowed`. In `useBirthdateMutation`, drop the trailing `snoozeBirthdateUpdateAllowedForDid()` call. If the file is empty after this and the AA edits from 2.3, `rm src/state/birthdate.ts` and move `useBirthdateMutation` to its consumer (or a sibling state file)
+- [x] `src/state/session/agent.ts`: drop the `snoozeBirthdateUpdateAllowedForDid()` call on login/account fetch (and the import)
+- [x] `src/components/dialogs/BirthDateSettings.tsx`: collapse the conditional — delete the locked-state branch (the "wait a day or two" dialog at ~lines 52-115) and render the editable form unconditionally. Drop the `useIsBirthdateUpdateAllowed` import
+- [x] `src/screens/Moderation/index.tsx`: drop the `useIsBirthdateUpdateAllowed` import (Phase 2.3 deletes the `NoAccessScreen` it fed, but the import line may survive)
+- [x] `src/storage/schema.ts`: delete `birthdateLastUpdatedAt` from the `Account` type. **Stale persisted blobs are tolerated** — Zod's `.passthrough()` / extra-field handling won't reject them, but the data becomes dead. Acceptable for a personal fork; don't write a migration
+- [x] Verify:
   ```sh
   rg -n "useIsBirthdateUpdateAllowed|snoozeBirthdateUpdate|hasSnoozedBirthdateUpdate|BIRTHDATE_DELAY_HOURS|birthdateLastUpdatedAt" src --glob '!locale/**' --glob '!**/*.po'
   ```

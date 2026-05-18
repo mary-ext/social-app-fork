@@ -37,12 +37,6 @@ export type Account = {
   searchTermHistory?: string[]
   searchAccountHistory?: string[]
 
-  /**
-   * The ISO date string of when this account's birthdate was last updated on
-   * this device.
-   */
-  birthdateLastUpdatedAt?: string
-
   lastSelectedHomeFeed?: string
 
   /**

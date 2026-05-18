@@ -6,10 +6,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {isAppPassword} from '#/lib/jwt'
 import {getAge, getDateAgo} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {
-  useBirthdateMutation,
-  useIsBirthdateUpdateAllowed,
-} from '#/state/birthdate'
+import {useBirthdateMutation} from '#/state/birthdate'
 import {
   usePreferencesQuery,
   type UsePreferencesQueryResponse,
@@ -34,7 +31,6 @@ export function BirthDateSettingsDialog({
   const t = useTheme()
   const {t: l} = useLingui()
   const {isLoading, error, data: preferences} = usePreferencesQuery()
-  const isBirthdateUpdateAllowed = useIsBirthdateUpdateAllowed()
   const {currentAccount} = useSession()
   const isUsingAppPassword = isAppPassword(currentAccount?.accessJwt || '')
   const cleanError = useCleanError()
@@ -49,70 +45,43 @@ export function BirthDateSettingsDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      {isBirthdateUpdateAllowed ? (
-        <Dialog.ScrollableInner
-          label={l`My birthdate`}
-          style={web({maxWidth: 400})}>
-          <View style={[a.gap_md]}>
-            <Text style={[a.text_xl, a.font_semi_bold]}>
-              <Trans>My birthdate</Trans>
-            </Text>
-            <Text
-              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+      <Dialog.ScrollableInner
+        label={l`My birthdate`}
+        style={web({maxWidth: 400})}>
+        <View style={[a.gap_md]}>
+          <Text style={[a.text_xl, a.font_semi_bold]}>
+            <Trans>My birthdate</Trans>
+          </Text>
+          <Text
+            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              This information is private and not shared with other users.
+            </Trans>
+          </Text>
+
+          {isLoading ? (
+            <Loader size="xl" />
+          ) : fetchErrorMessage || !preferences ? (
+            <ErrorMessage
+              message={fetchErrorMessage || defaultErrorMessage}
+              style={[a.rounded_sm]}
+            />
+          ) : isUsingAppPassword ? (
+            <Admonition type="info">
               <Trans>
-                This information is private and not shared with other users.
+                Hmm, it looks like you're signed in with an{' '}
+                <Span style={[a.italic]}>App Password</Span>. To set your
+                birthdate, you'll need to sign in with your main account
+                password, or ask whomever controls this account to do so.
               </Trans>
-            </Text>
+            </Admonition>
+          ) : (
+            <BirthdayInner control={control} preferences={preferences} />
+          )}
+        </View>
 
-            {isLoading ? (
-              <Loader size="xl" />
-            ) : fetchErrorMessage || !preferences ? (
-              <ErrorMessage
-                message={fetchErrorMessage || defaultErrorMessage}
-                style={[a.rounded_sm]}
-              />
-            ) : isUsingAppPassword ? (
-              <Admonition type="info">
-                <Trans>
-                  Hmm, it looks like you're signed in with an{' '}
-                  <Span style={[a.italic]}>App Password</Span>. To set your
-                  birthdate, you'll need to sign in with your main account
-                  password, or ask whomever controls this account to do so.
-                </Trans>
-              </Admonition>
-            ) : (
-              <BirthdayInner control={control} preferences={preferences} />
-            )}
-          </View>
-
-          <Dialog.Close />
-        </Dialog.ScrollableInner>
-      ) : (
-        <Dialog.ScrollableInner
-          label={l`You recently changed your birthdate`}
-          style={web({maxWidth: 400})}>
-          <View style={[a.gap_sm]}>
-            <Text
-              style={[
-                a.text_xl,
-                a.font_semi_bold,
-                a.leading_snug,
-                {paddingRight: 32},
-              ]}>
-              <Trans>You recently changed your birthdate</Trans>
-            </Text>
-            <Text
-              style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
-              <Trans>
-                There is a limit to how often you can change your birthdate. You
-                may need to wait a day or two before updating it again.
-              </Trans>
-            </Text>
-          </View>
-
-          <Dialog.Close />
-        </Dialog.ScrollableInner>
-      )}
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
 }

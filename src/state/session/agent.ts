@@ -23,7 +23,6 @@ import {
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {logger} from '#/logger'
-import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -148,8 +147,6 @@ export async function createAgentAndCreateAccount(
 
   const createdAt = new Date().toISOString()
   const birthdate = birthDate.toISOString()
-
-  snoozeBirthdateUpdateAllowedForDid(account.did)
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
