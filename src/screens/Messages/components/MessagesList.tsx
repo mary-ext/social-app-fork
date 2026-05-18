@@ -8,11 +8,6 @@ import {
 } from 'react'
 import {type LayoutChangeEvent, type ScrollViewProps, View} from 'react-native'
 import {
-  KeyboardChatScrollView,
-  type KeyboardChatScrollViewProps,
-  KeyboardGestureArea,
-} from 'react-native-keyboard-controller'
-import {
   runOnJS,
   type ScrollEvent,
   type SharedValue,
@@ -61,6 +56,11 @@ import {SystemMessageItem} from '#/components/dms/SystemMessageItem'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_NATIVE, IS_WEB} from '#/env'
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewProps,
+  KeyboardGestureArea,
+} from '#/shims/react-native-keyboard-controller'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
 import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'

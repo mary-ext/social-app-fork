@@ -26,7 +26,6 @@ import {
   type GestureUpdateEvent,
   type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
-import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
@@ -75,6 +74,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {KeyboardEvents} from '#/shims/react-native-keyboard-controller'
 import {Backdrop} from './Backdrop'
 
 export {

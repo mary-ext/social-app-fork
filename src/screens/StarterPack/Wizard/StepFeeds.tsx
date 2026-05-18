@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {type AppBskyFeedDefs, type ModerationOpts} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
@@ -20,6 +19,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
   return item.uri

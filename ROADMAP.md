@@ -748,12 +748,12 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
 - `KeyboardEvents` API — no-op emitter
 
 **Checklist:**
-- [ ] Create `src/shims/react-native-keyboard-controller/index.ts` exporting the surface above. Header-comment with the retirement plan per the Conventions classification — this is likely a long-lived adapter, not temporary scaffolding (the app continues to use these components on web; the shim replaces their internals)
-- [ ] Add the alias to `webpack.config.js` (active build) AND `tsconfig.json` `compilerOptions.paths` so `yarn typecheck` resolves the shim. Phase 4.7 ports the same alias to `rsbuild.config.ts` `resolve.alias`
-- [ ] In `src/App.web.tsx`: replace the live `KeyboardProvider` import with the shim's passthrough (the alias does this automatically once configured)
-- [ ] Don't preemptively rebuild the keyboard model. The shim returns zeros for keyboard height / animation values; if a concrete composer-focus UX bug emerges on mobile browsers, add a `visualViewport`-based polyfill **then**, not now
-- [ ] `yarn remove react-native-keyboard-controller` + delete the matching patch (`patches/react-native-keyboard-controller+*.patch` at fork time imports `scrollTo`/`useAnimatedReaction` — becomes stale)
-- [ ] Verify:
+- [x] Create `src/shims/react-native-keyboard-controller/index.ts` exporting the surface above. Header-comment with the retirement plan per the Conventions classification — this is likely a long-lived adapter, not temporary scaffolding (the app continues to use these components on web; the shim replaces their internals)
+- [x] Add the alias to `webpack.config.js` (active build) AND `tsconfig.json` `compilerOptions.paths` so `yarn typecheck` resolves the shim. Phase 4.7 ports the same alias to `rsbuild.config.ts` `resolve.alias`
+- [x] In `src/App.web.tsx`: replace the live `KeyboardProvider` import with the shim's passthrough (the alias does this automatically once configured)
+- [x] Don't preemptively rebuild the keyboard model. The shim returns zeros for keyboard height / animation values; if a concrete composer-focus UX bug emerges on mobile browsers, add a `visualViewport`-based polyfill **then**, not now
+- [x] `yarn remove react-native-keyboard-controller` + delete the matching patch (`patches/react-native-keyboard-controller+*.patch` at fork time imports `scrollTo`/`useAnimatedReaction` — becomes stale)
+- [x] Verify:
   ```sh
   rg "react-native-keyboard-controller" src package.json yarn.lock webpack.config.js
   yarn install

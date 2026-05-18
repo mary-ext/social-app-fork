@@ -1,6 +1,5 @@
 import {useEffect} from 'react'
 import {Keyboard, View} from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {
@@ -56,6 +55,7 @@ import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditLi
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 

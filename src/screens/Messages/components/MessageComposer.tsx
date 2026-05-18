@@ -1,9 +1,5 @@
 import {useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {
-  useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -33,6 +29,10 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/i
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {
+  useKeyboardHandler,
+  useReanimatedKeyboardAnimation,
+} from '#/shims/react-native-keyboard-controller'
 
 const MIN_HEIGHT = 40
 

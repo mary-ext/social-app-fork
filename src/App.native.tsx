@@ -3,7 +3,6 @@ import '#/view/icons'
 
 import {Fragment, useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -62,6 +61,7 @@ import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbe
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {KeyboardProvider as KeyboardControllerProvider} from '#/shims/react-native-keyboard-controller'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'

@@ -1,10 +1,5 @@
 import {useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions} from 'react-native'
-import {
-  useFocusedInputHandler,
-  useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller'
 import Animated, {
   measure,
   runOnJS,
@@ -29,6 +24,11 @@ import {GlassView} from '#/components/GlassView'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
+import {
+  useFocusedInputHandler,
+  useKeyboardHandler,
+  useReanimatedKeyboardAnimation,
+} from '#/shims/react-native-keyboard-controller'
 import {ComposerContainer} from './MessageComposer'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 

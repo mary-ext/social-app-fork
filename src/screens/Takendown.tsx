@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
@@ -23,6 +22,7 @@ import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
+import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
 
 const COL_WIDTH = 400
 
