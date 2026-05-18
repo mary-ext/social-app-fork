@@ -21,7 +21,6 @@ import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
@@ -34,6 +33,10 @@ import {
 import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
+import {
+  HomeHeaderModeProvider,
+  useHomeHeaderMode,
+} from '#/view/com/util/MainScrollProvider'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
@@ -79,11 +82,13 @@ export function HomeScreen(props: Props) {
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <Layout.Screen testID="HomeScreen" noInsetTop={false}>
-        <HomeScreenReady
-          {...props}
-          preferences={preferences}
-          pinnedFeedInfos={pinnedFeedInfos}
-        />
+        <HomeHeaderModeProvider>
+          <HomeScreenReady
+            {...props}
+            preferences={preferences}
+            pinnedFeedInfos={pinnedFeedInfos}
+          />
+        </HomeHeaderModeProvider>
       </Layout.Screen>
     );
   } else {
@@ -136,7 +141,7 @@ function HomeScreenReady({
   }, [selectedIndex])
 
   const {hasSession} = useSession()
-  const {headerMode} = useMinimalShellMode()
+  const headerMode = useHomeHeaderMode()
   const showHeader = useCallback(() => {
     'worklet'
     headerMode.set(() => withSpring(0, {overshootClamping: true}))

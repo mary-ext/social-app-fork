@@ -1,35 +1,8 @@
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-
 import {interpolate, useAnimatedStyle} from '#/lib/animations/reanimatedCompat'
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 
 // Keep these separated so that we only pay for useAnimatedStyle that gets used.
-
-export function useMinimalShellHeaderTransform() {
-  const {headerMode} = useMinimalShellMode()
-  const {headerHeight} = useShellLayout()
-  const {top: topInset} = useSafeAreaInsets()
-
-  const headerPinnedHeight = 0
-
-  const headerTransform = useAnimatedStyle(() => {
-    const headerModeValue = headerMode.get()
-    const hHeight = headerHeight.get()
-
-    return {
-      pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
-      opacity: Math.pow(1 - headerModeValue, 2),
-      transform: [
-        {
-          translateY: interpolate(headerModeValue, [0, 1], [0, -hHeight]),
-        },
-      ],
-    }
-  })
-
-  return headerTransform
-}
 
 export function useMinimalShellFooterTransform() {
   const {footerMode} = useMinimalShellMode()

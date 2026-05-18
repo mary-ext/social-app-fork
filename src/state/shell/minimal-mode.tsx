@@ -15,7 +15,6 @@ import {
 } from '#/lib/animations/reanimatedCompat'
 
 type StateContext = {
-  headerMode: SharedValue<number>
   footerMode: SharedValue<number>
 }
 type SetContext = {
@@ -29,24 +28,18 @@ const setContext = createContext<SetContext | null>(null)
 setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const headerMode = useSharedValue(0)
   const footerMode = useSharedValue(0)
 
   const setModeWorklet = useCallback(
     (v: boolean) => {
       'worklet'
-      headerMode.set(() =>
-        withSpring(v ? 1 : 0, {
-          overshootClamping: true,
-        }),
-      )
       footerMode.set(() =>
         withSpring(v ? 1 : 0, {
           overshootClamping: true,
         }),
       )
     },
-    [headerMode, footerMode],
+    [footerMode],
   )
 
   // defaults to "visible", if the count is >0 it gets hidden
@@ -75,10 +68,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const value = useMemo(
     () => ({
-      headerMode,
       footerMode,
     }),
-    [headerMode, footerMode],
+    [footerMode],
   )
   return (
     <stateContext.Provider value={value}>

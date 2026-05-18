@@ -1,27 +1,68 @@
-import {useCallback, useEffect} from 'react'
+import {createContext, useCallback, useContext, useEffect} from 'react'
 import {type NativeScrollEvent} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {EventEmitter} from 'eventemitter3'
 
 import {
-  clamp,
   interpolate,
+  type SharedValue,
+  useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from '#/lib/animations/reanimatedCompat'
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 
-export function MainScrollProvider({children}: {children: React.ReactNode}) {
+const HomeHeaderModeContext = createContext<SharedValue<number> | null>(null)
+HomeHeaderModeContext.displayName = 'HomeHeaderModeContext'
+
+export function HomeHeaderModeProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const headerMode = useSharedValue(0)
+  return (
+    <HomeHeaderModeContext.Provider value={headerMode}>
+      {children}
+    </HomeHeaderModeContext.Provider>
+  )
+}
+
+export function useHomeHeaderMode() {
+  const headerMode = useContext(HomeHeaderModeContext)
+  if (!headerMode) {
+    throw new Error(
+      'useHomeHeaderMode must be used within a HomeHeaderModeProvider',
+    )
+  }
+  return headerMode
+}
+
+export function useHomeHeaderTransform() {
+  const headerMode = useHomeHeaderMode()
   const {headerHeight} = useShellLayout()
-  const {headerMode} = useMinimalShellMode()
-  const {top: topInset} = useSafeAreaInsets()
-  const headerPinnedHeight = 0
+
+  return useAnimatedStyle(() => {
+    const headerModeValue = headerMode.get()
+    const hHeight = headerHeight.get()
+
+    return {
+      pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - headerModeValue, 2),
+      transform: [
+        {
+          translateY: interpolate(headerModeValue, [0, 1], [0, -hHeight]),
+        },
+      ],
+    }
+  })
+}
+
+export function MainScrollProvider({children}: {children: React.ReactNode}) {
+  const headerMode = useHomeHeaderMode()
   const startDragOffset = useSharedValue<number | null>(null)
-  const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
 
   const setMode = useCallback(
@@ -39,40 +80,9 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   useEffect(() => {
     return listenToForcedWindowScroll(() => {
       startDragOffset.set(null)
-      startMode.set(null)
       didJustRestoreScroll.set(true)
     })
   })
-
-  const snapToClosestState = useCallback(
-    (e: NativeScrollEvent) => {
-      'worklet';
-      const offsetY = Math.max(0, e.contentOffset.y)
-    },
-    [startDragOffset, startMode, setMode, headerMode, headerHeight],
-  )
-
-  const onBeginDrag = useCallback(
-    (e: NativeScrollEvent) => {
-      'worklet';
-      const offsetY = Math.max(0, e.contentOffset.y)
-    },
-    [headerMode, startDragOffset, startMode],
-  )
-
-  const onEndDrag = useCallback(
-    (e: NativeScrollEvent) => {
-      'worklet';
-    },
-    [snapToClosestState],
-  )
-
-  const onMomentumEnd = useCallback(
-    (e: NativeScrollEvent) => {
-      'worklet';
-    },
-    [snapToClosestState],
-  )
 
   const onScroll = useCallback(
     (e: NativeScrollEvent) => {
@@ -95,25 +105,13 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       }
     },
     [
-      headerHeight,
-      headerPinnedHeight,
-      headerMode,
       setMode,
       startDragOffset,
-      startMode,
       didJustRestoreScroll,
     ],
   )
 
-  return (
-    <ScrollProvider
-      onBeginDrag={onBeginDrag}
-      onEndDrag={onEndDrag}
-      onScroll={onScroll}
-      onMomentumEnd={onMomentumEnd}>
-      {children}
-    </ScrollProvider>
-  )
+  return <ScrollProvider onScroll={onScroll}>{children}</ScrollProvider>
 }
 
 const emitter = new EventEmitter()
