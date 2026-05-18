@@ -12,7 +12,6 @@ export enum LogContext {
   ReportDialog = 'report-dialog',
   FeedFeedback = 'feed-feedback',
   PostSource = 'post-source',
-  Geolocation = 'geolocation',
   Drafts = 'drafts',
 
   /**

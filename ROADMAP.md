@@ -581,22 +581,22 @@ returns nothing and passes.
 **Motivation:** after the big directories are gone, sweep dead storage keys, env vars, deps, Sentry/logger contexts, and query keys.
 
 **Checklist:**
-- [ ] Dead imports: `rg -n "#/(analytics|ageAssurance|geolocation)" src --glob '!locale/**' --glob '!**/*.po'`
-- [ ] Dead env vars: `rg -n "GROWTHBOOK|GEOLOCATION|METRICS_API_HOST|events\.bsky\.app|ip\.bsky\.app" . src app.config.* eas.json package.json` (note: `app.config.*` / `eas.json` will be deleted in Stream 4)
-- [ ] Dead package deps: `rg -n "@growthbook|expo-location" package.json yarn.lock src`, then `yarn install`
-- [ ] **`@react-native-async-storage/async-storage` closeout** (deferred from Phase 2.8). Phase 2.8 rewrote `src/state/persisted/index.ts` away from AsyncStorage but left the remaining importers to die with their owning features: `src/ageAssurance/data.tsx` (deleted in Phase 2.3) and `src/analytics/identifiers/device.ts` (deleted in Phase 2.7). Verify zero importers and remove:
+- [x] Dead imports: `rg -n "#/(analytics|ageAssurance|geolocation)" src --glob '!locale/**' --glob '!**/*.po'`
+- [x] Dead env vars: `rg -n "GROWTHBOOK|GEOLOCATION|METRICS_API_HOST|events\.bsky\.app|ip\.bsky\.app" . src app.config.* eas.json package.json` (note: `app.config.*` / `eas.json` will be deleted in Stream 4)
+- [x] Dead package deps: `rg -n "@growthbook|expo-location" package.json yarn.lock src`, then `yarn install`
+- [x] **`@react-native-async-storage/async-storage` closeout** (deferred from Phase 2.8). Phase 2.8 rewrote `src/state/persisted/index.ts` away from AsyncStorage but left the remaining importers to die with their owning features: `src/ageAssurance/data.tsx` (deleted in Phase 2.3) and `src/analytics/identifiers/device.ts` (deleted in Phase 2.7). Verify zero importers and remove:
   ```sh
   rg -n "@react-native-async-storage/async-storage" src package.json yarn.lock
   yarn remove @react-native-async-storage/async-storage
   ```
   Phase 4.8's package-cleanup section also lists this — landing it here keeps the dep tree clean throughout Stream 4 rather than only at the end
-- [ ] Dead persisted keys (sweep): `rg -n "nativeSessionId|nativeSessionIdLastEventAt|geolocation|geolocationServiceResponse|deviceGeolocation|mergedGeolocation|bsky_features_cache|STATSIG_LOCAL_STORAGE_STABLE_ID" src --glob '!locale/**' --glob '!**/*.po'`
-- [ ] **Intentionally retained keys** (do NOT delete in this sweep): `deviceId` (still needed for local drafts and About settings), `debugFeedContextEnabled` (added in Phase 2.1a — this is the local replacement for the GrowthBook gate)
-- [ ] Trim `src/storage/schema.ts` and `src/state/persisted/schema.ts` to remove dead keys only
-- [ ] Sentry/logger leftovers: `rg -n "Sentry\.(setContext|setTag|setExtra|setUser)|scope\.set|AgeAssurance|Geolocation|Growthbook|growthbook" src --glob '!locale/**' --glob '!**/*.po'`
-- [ ] In `src/logger/types.ts`, remove logger contexts `AgeAssurance`, `Geolocation`, `Growthbook` once no callers remain
-- [ ] Query keys / params: `rg -n "ageAssurance|geolocation|geo|countryCode|regionCode|deviceGeolocation|mergedGeolocation|feature:viewed|experiment:viewed|growthbook" src --glob '!locale/**' --glob '!**/*.po'`
-- [ ] Final verification: `yarn typecheck && yarn lint && yarn build-web`
+- [x] Dead persisted keys (sweep): `rg -n "nativeSessionId|nativeSessionIdLastEventAt|geolocation|geolocationServiceResponse|deviceGeolocation|mergedGeolocation|bsky_features_cache|STATSIG_LOCAL_STORAGE_STABLE_ID" src --glob '!locale/**' --glob '!**/*.po'`
+- [x] **Intentionally retained keys** (do NOT delete in this sweep): `deviceId` (still needed for local drafts and About settings), `debugFeedContextEnabled` (added in Phase 2.1a — this is the local replacement for the GrowthBook gate)
+- [x] Trim `src/storage/schema.ts` and `src/state/persisted/schema.ts` to remove dead keys only
+- [x] Sentry/logger leftovers: `rg -n "Sentry\.(setContext|setTag|setExtra|setUser)|scope\.set|AgeAssurance|Geolocation|Growthbook|growthbook" src --glob '!locale/**' --glob '!**/*.po'` — remaining `scope.setExtras` in error-report attachments is unrelated
+- [x] In `src/logger/types.ts`, remove logger contexts `AgeAssurance`, `Geolocation`, `Growthbook` once no callers remain
+- [x] Query keys / params: `rg -n "ageAssurance|geolocation|geo|countryCode|regionCode|deviceGeolocation|mergedGeolocation|feature:viewed|experiment:viewed|growthbook" src --glob '!locale/**' --glob '!**/*.po'` — remaining hits are locale/phone/currency/link-metadata uses, not deleted feature keys
+- [x] Final verification: `yarn typecheck && yarn lint && yarn build-web`
 
 **Footguns:**
 - `countryCode` may still be valid for phone-number / locale purposes; don't blindly delete.

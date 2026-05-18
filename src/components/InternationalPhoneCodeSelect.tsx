@@ -15,10 +15,7 @@ import * as Select from '#/components/Select'
 import {IS_WEB} from '#/env'
 
 /**
- * Country picker for a phone number input
- *
- * Pro tip: you can use `location?.countryCode` from `useGeolocationStatus()`
- * to set a default value.
+ * Country picker for a phone number input.
  */
 export function InternationalPhoneCodeSelect({
   value,
