@@ -42,7 +42,6 @@ export type Events = {
       | 'SignupQueued'
       | 'Deactivated'
       | 'Takendown'
-      | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
   'notifications:openApp': {
@@ -998,35 +997,6 @@ export type Events = {
     name: string
     value: string
   }
-
-  'ageAssurance:navigateToSettings': {}
-  'ageAssurance:dismissFeedBanner': {}
-  'ageAssurance:dismissSettingsNotice': {}
-  'ageAssurance:initDialogOpen': {
-    hasInitiatedPreviously: boolean
-  }
-  'ageAssurance:initDialogSubmit': {}
-  'ageAssurance:api:begin': {
-    platform: string
-    countryCode: string
-    regionCode?: string
-  }
-  'ageAssurance:initDialogError': {
-    code: string
-  }
-  'ageAssurance:redirectDialogOpen': {}
-  'ageAssurance:redirectDialogSuccess': {}
-  'ageAssurance:redirectDialogFail': {}
-  'ageAssurance:appealDialogOpen': {}
-  'ageAssurance:appealDialogSubmit': {}
-  'ageAssurance:noAccessScreen:shown': {
-    accountCreatedAt: string
-    isAARegion: boolean
-    hasDeclaredAge: boolean
-    canUpdateBirthday: boolean
-  }
-  'ageAssurance:noAccessScreen:openBirthdateDialog': {}
-  'ageAssurance:noAccessScreen:openDeleteAccountDialog': {}
 
   /*
    * Specifically for the `BlockedGeoOverlay`

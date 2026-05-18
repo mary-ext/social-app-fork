@@ -17,7 +17,6 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
@@ -32,7 +31,6 @@ let ShareMenuItems = ({
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
-  const aa = useAgeAssurance()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -88,7 +86,7 @@ let ShareMenuItems = ({
       <Menu.Outer>
         {!hideInPWI && copyLinkItem}
 
-        {hasSession && aa.state.access === aa.Access.Full && (
+        {hasSession && (
           <Menu.Item
             testID="postDropdownSendViaDMBtn"
             label={_(msg`Send via direct message`)}

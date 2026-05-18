@@ -13,7 +13,7 @@ import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
-type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
+type IntentType = 'compose' | 'verify-email' | 'apply-ota'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
@@ -66,10 +66,6 @@ export function useIntentHandler() {
           const code = params.get('code')
           if (!code) return
           verifyEmailIntent(code)
-          return
-        }
-        case 'age-assurance': {
-          // Handled in `#/ageAssurance/components/RedirectOverlay.tsx`
           return
         }
         case 'apply-ota': {

@@ -1,4 +1,3 @@
-import {useCallback} from 'react'
 import {
   type AppBskyActorDefs,
   type BskyFeedViewPreference,
@@ -22,8 +21,6 @@ import {
 import {createQueryKey} from '#/state/queries/util'
 import {useAgent} from '#/state/session'
 import {saveLabelers} from '#/state/session/agent-config'
-import {useAgeAssurance} from '#/ageAssurance'
-import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
 import {useAnalytics} from '#/analytics'
 
 export * from '#/state/queries/preferences/const'
@@ -38,7 +35,6 @@ export const preferencesQueryKey = createQueryKey(
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const aa = useAgeAssurance()
 
   const query = useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
@@ -78,27 +74,6 @@ export function usePreferencesQuery() {
         return preferences
       }
     },
-    select: useCallback(
-      (data: UsePreferencesQueryResponse) => {
-        /**
-         * Prefs are all downstream of age assurance now. For logged-out
-         * users, we override moderation prefs based on AA state.
-         */
-        if (
-          aa.state.access !== aa.Access.Full ||
-          aa.flags.adultContentDisabled
-        ) {
-          data = {
-            ...data,
-            moderationPrefs: makeAgeRestrictedModerationPrefs(
-              data.moderationPrefs,
-            ),
-          }
-        }
-        return data
-      },
-      [aa],
-    ),
   })
 
   if (query.data?.birthDate) {

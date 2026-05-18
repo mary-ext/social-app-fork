@@ -24,7 +24,6 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/i
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 import {useDevMode} from '#/storage/hooks/dev-mode'
@@ -41,7 +40,6 @@ let ShareMenuItems = ({
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
-  const aa = useAgeAssurance()
   const queryClient = useQueryClient()
 
   const postUri = post.uri
@@ -103,7 +101,7 @@ let ShareMenuItems = ({
   return (
     <>
       <Menu.Outer>
-        {hasSession && aa.state.access === aa.Access.Full && (
+        {hasSession && (
           <Menu.Group>
             <Menu.ContainerItem>
               <RecentChats

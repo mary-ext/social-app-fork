@@ -25,7 +25,6 @@ import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
-import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -39,9 +38,6 @@ import {
   usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {useAgeAssurance} from '#/ageAssurance'
-import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
-import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
@@ -114,7 +110,6 @@ function ShellInner() {
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
-      <AgeAssuranceRedirectDialog />
       <InAppBrowserConsentDialog />
       <LinkWarningDialog />
       <Lightbox />
@@ -208,7 +203,6 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
 
 export function Shell() {
   const t = useTheme()
-  const aa = useAgeAssurance()
   const {currentAccount} = useSession()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
 
@@ -235,17 +229,9 @@ export function Shell() {
       ) : currentAccount?.status === 'deactivated' ? (
         <Deactivated />
       ) : (
-        <>
-          {aa.state.access === aa.Access.None ? (
-            <NoAccessScreen />
-          ) : (
-            <RoutesContainer>
-              <ShellInner />
-            </RoutesContainer>
-          )}
-
-          <RedirectOverlay />
-        </>
+        <RoutesContainer>
+          <ShellInner />
+        </RoutesContainer>
       )}
 
       <PassiveAnalytics />

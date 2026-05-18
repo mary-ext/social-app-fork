@@ -9,7 +9,6 @@ import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {SCROLLBAR_OFFSET} from '#/components/Layout'
 import {LockScroll} from '#/components/LockScroll'
-import {useAgeAssurance} from '#/ageAssurance'
 import {IS_WEB} from '#/env'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
 import {SplitViewProvider} from './context'
@@ -45,10 +44,9 @@ function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
   const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
   const newChatControl = useDialogControl()
   const t = useTheme()
-  const aa = useAgeAssurance()
   const isFocused = useIsFocused()
 
-  if (!IS_WEB || !rightNavVisible || aa.state.access !== aa.Access.Full) {
+  if (!IS_WEB || !rightNavVisible) {
     return children
   }
 

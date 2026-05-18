@@ -60,10 +60,6 @@ import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbe
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import * as Toast from '#/components/Toast'
 import {ToastOutlet} from '#/components/Toast'
-import {
-  prefetchAgeAssuranceConfig,
-  Provider as AgeAssuranceV2Provider,
-} from '#/ageAssurance'
 import {AnalyticsContext, setupDeviceId} from '#/analytics'
 import {
   prefetchLiveEvents,
@@ -78,7 +74,6 @@ import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottom
  * Begin geolocation ASAP
  */
 void Geo.resolve()
-void prefetchAgeAssuranceConfig()
 void prefetchLiveEvents()
 void prefetchAppConfig()
 
@@ -126,54 +121,52 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                      <PolicyUpdateOverlayProvider>
-                        <LiveEventsProvider>
-                          <AgeAssuranceV2Provider>
-                            <ComposerProvider>
-                              <MessagesProvider>
-                                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                                <LabelDefsProvider>
-                                  <ModerationOptsProvider>
-                                    <LoggedOutViewProvider>
-                                      <SelectedFeedProvider>
-                                        <HiddenRepliesProvider>
-                                          <HomeBadgeProvider>
-                                            <UnreadNotifsProvider>
-                                              <BackgroundNotificationPreferencesProvider>
-                                                <MutedThreadsProvider>
-                                                  <SafeAreaProvider>
-                                                    <ProgressGuideProvider>
-                                                      <ServiceConfigProvider>
-                                                        <EmailVerificationProvider>
-                                                          <HideBottomBarBorderProvider>
-                                                            <IntentDialogProvider>
-                                                              <TranslateOnDeviceProvider>
-                                                                <HotkeysProvider>
-                                                                  <Shell />
-                                                                  <ToastOutlet />
-                                                                </HotkeysProvider>
-                                                              </TranslateOnDeviceProvider>
-                                                            </IntentDialogProvider>
-                                                          </HideBottomBarBorderProvider>
-                                                        </EmailVerificationProvider>
-                                                      </ServiceConfigProvider>
-                                                    </ProgressGuideProvider>
-                                                  </SafeAreaProvider>
-                                                </MutedThreadsProvider>
-                                              </BackgroundNotificationPreferencesProvider>
-                                            </UnreadNotifsProvider>
-                                          </HomeBadgeProvider>
-                                        </HiddenRepliesProvider>
-                                      </SelectedFeedProvider>
-                                    </LoggedOutViewProvider>
-                                  </ModerationOptsProvider>
-                                </LabelDefsProvider>
-                              </MessagesProvider>
-                            </ComposerProvider>
-                          </AgeAssuranceV2Provider>
-                        </LiveEventsProvider>
-                      </PolicyUpdateOverlayProvider>
-                    </QueryProvider>
+                    <PolicyUpdateOverlayProvider>
+                      <LiveEventsProvider>
+                        <ComposerProvider>
+                          <MessagesProvider>
+                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                            <LabelDefsProvider>
+                              <ModerationOptsProvider>
+                                <LoggedOutViewProvider>
+                                  <SelectedFeedProvider>
+                                    <HiddenRepliesProvider>
+                                      <HomeBadgeProvider>
+                                        <UnreadNotifsProvider>
+                                          <BackgroundNotificationPreferencesProvider>
+                                            <MutedThreadsProvider>
+                                              <SafeAreaProvider>
+                                                <ProgressGuideProvider>
+                                                  <ServiceConfigProvider>
+                                                    <EmailVerificationProvider>
+                                                      <HideBottomBarBorderProvider>
+                                                        <IntentDialogProvider>
+                                                          <TranslateOnDeviceProvider>
+                                                            <HotkeysProvider>
+                                                              <Shell />
+                                                              <ToastOutlet />
+                                                            </HotkeysProvider>
+                                                          </TranslateOnDeviceProvider>
+                                                        </IntentDialogProvider>
+                                                      </HideBottomBarBorderProvider>
+                                                    </EmailVerificationProvider>
+                                                  </ServiceConfigProvider>
+                                                </ProgressGuideProvider>
+                                              </SafeAreaProvider>
+                                            </MutedThreadsProvider>
+                                          </BackgroundNotificationPreferencesProvider>
+                                        </UnreadNotifsProvider>
+                                      </HomeBadgeProvider>
+                                    </HiddenRepliesProvider>
+                                  </SelectedFeedProvider>
+                                </LoggedOutViewProvider>
+                              </ModerationOptsProvider>
+                            </LabelDefsProvider>
+                          </MessagesProvider>
+                        </ComposerProvider>
+                      </LiveEventsProvider>
+                    </PolicyUpdateOverlayProvider>
+                  </QueryProvider>
                 </Fragment>
               </ActiveVideoProvider>
             </VideoVolumeProvider>

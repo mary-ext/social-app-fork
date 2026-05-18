@@ -36,8 +36,6 @@ import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useTheme, web} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
 import {
   EmailDialogScreenID,
@@ -62,15 +60,7 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationScreen(props: Props) {
-  const {t: l} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-  return (
-    <AgeRestrictedScreen
-      screenTitle={l`Conversation`}
-      infoText={aaCopy.chatsInfoText}>
-      <MessagesConversationScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
+  return <MessagesConversationScreenInner {...props} />
 }
 
 export function MessagesConversationScreenInner({route}: Props) {

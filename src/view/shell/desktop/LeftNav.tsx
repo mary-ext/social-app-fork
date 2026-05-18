@@ -79,7 +79,6 @@ import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useActorStatus} from '#/features/liveNow'
 import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
@@ -593,14 +592,13 @@ function ChatNavItem({minimal}: {minimal: boolean}) {
   const t = useTheme()
   const {_} = useLingui()
   const numUnreadMessages = useUnreadMessageCount()
-  const aa = useAgeAssurance()
 
   return (
     <NavItem
       href="/messages"
       minimal={minimal}
-      count={aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread}
-      hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
+      count={numUnreadMessages.numUnread}
+      hasNew={numUnreadMessages.hasNew}
       icon={
         <Message
           style={t.atoms.text}
@@ -626,11 +624,9 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
-  const aa = useAgeAssurance()
   // splitview uses the minimal variant of the leftnav. unfortunately there's no easy
   // way to thread this data through because of the view hierarchy, so just check the route name
-  const isMessagesRelatedScreen =
-    routeName.startsWith('Messages') && aa.state.access === aa.Access.Full
+  const isMessagesRelatedScreen = routeName.startsWith('Messages')
   const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()

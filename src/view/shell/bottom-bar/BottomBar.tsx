@@ -49,7 +49,6 @@ import {
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
 import {Text} from '#/components/Typography'
-import {useAgeAssurance} from '#/ageAssurance'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
@@ -66,7 +65,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
-  const aa = useAgeAssurance()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
@@ -215,15 +213,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 )
               }
               onPress={onPressMessages}
-              notificationCount={
-                aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
-              }
-              hasNew={aa.flags.chatDisabled ? false : numUnreadMessages.hasNew}
+              notificationCount={numUnreadMessages.numUnread}
+              hasNew={numUnreadMessages.hasNew}
               accessible={true}
               accessibilityRole="tab"
               accessibilityLabel={_(msg`Chat`)}
               accessibilityHint={
-                !aa.flags.chatDisabled && numUnreadMessages.count > 0
+                numUnreadMessages.count > 0
                   ? _(
                       plural(numUnreadMessages.numUnread ?? 0, {
                         one: '# unread item',

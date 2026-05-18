@@ -24,15 +24,7 @@ import {
 } from '#/lib/constants'
 import {logger} from '#/logger'
 import {snoozeBirthdateUpdateAllowedForDid} from '#/state/birthdate'
-import {restrictChatSettings} from '#/state/queries/messages/restrictChatSettings'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
-import {
-  prefetchAgeAssuranceData,
-  setBirthdateForDid,
-  setCreatedAtForDid,
-} from '#/ageAssurance/data'
-import {getAndComputeAgeAssuranceState} from '#/ageAssurance/state'
-import {AgeAssuranceAccess} from '#/ageAssurance/types'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -72,13 +64,10 @@ export async function createAgentAndResume(
     agent.sessionManager.session = prevSession
   }
 
-  // after session is attached
-  const aa = prefetchAgeAssuranceData({agent})
-
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [moderation, aa],
+    resolvers: [moderation],
     onSessionChange,
   })
 }
@@ -111,12 +100,11 @@ export async function createAgentAndLogin(
 
   const account = agentToSessionAccountOrThrow(agent)
   const moderation = configureModerationForAccount(agent, account)
-  const aa = prefetchAgeAssuranceData({agent})
 
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [moderation, aa],
+    resolvers: [moderation],
     onSessionChange,
   })
 }
@@ -162,17 +150,7 @@ export async function createAgentAndCreateAccount(
   const createdAt = new Date().toISOString()
   const birthdate = birthDate.toISOString()
 
-  /*
-   * Since we have a race with account creation, profile creation, and AA
-   * state, set these values locally to ensure sync reads. Values are written
-   * to the server in the next step, so on subsequent reloads, the server will
-   * be the source of truth.
-   */
-  setCreatedAtForDid({did: account.did, createdAt})
-  setBirthdateForDid({did: account.did, birthdate})
   snoozeBirthdateUpdateAllowedForDid(account.did)
-  // do this last
-  const aa = prefetchAgeAssuranceData({agent})
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
@@ -213,13 +191,6 @@ export async function createAgentAndCreateAccount(
       }).catch(e => {
         logger.info(`createAgentAndCreateAccount: failed to set initial feeds`)
         throw e
-      }),
-      // wait for AA data to load first, then check state
-      aa.then(async () => {
-        const state = getAndComputeAgeAssuranceState({did: account.did})
-        if (state.access !== AgeAssuranceAccess.Full) {
-          restrictChatSettings({agent, did: account.did})
-        }
       }),
     ]).then(promises => {
       const rejected = promises.filter(p => p.status === 'rejected')
@@ -271,7 +242,7 @@ export async function createAgentAndCreateAccount(
   agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare({
-    resolvers: [moderation, aa],
+    resolvers: [moderation],
     onSessionChange,
   })
 }

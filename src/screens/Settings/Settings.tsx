@@ -30,7 +30,6 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
-import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {Button, ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
@@ -101,8 +100,6 @@ export function SettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
-          <AgeAssuranceDismissibleNotice style={[a.px_lg, a.pt_xs, a.pb_xl]} />
-
           <View
             style={[
               a.px_xl,

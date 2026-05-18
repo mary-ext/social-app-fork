@@ -10,8 +10,6 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {ExportCarDialog} from '#/screens/Settings/components/ExportCarDialog'
 import {atoms as a, useTheme} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -29,16 +27,7 @@ type AllowIncoming = 'all' | 'none' | 'following'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
 
 export function MessagesSettingsScreen(props: Props) {
-  const {t: l} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-
-  return (
-    <AgeRestrictedScreen
-      screenTitle={l`Chat settings`}
-      infoText={aaCopy.chatsInfoText}>
-      <MessagesSettingsScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
+  return <MessagesSettingsScreenInner {...props} />
 }
 
 export function MessagesSettingsScreenInner({}: Props) {
