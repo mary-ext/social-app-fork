@@ -9,7 +9,7 @@ import {
   type Transport,
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
-import {ENV} from '#/env'
+import {ENV, LOG_DEBUG, LOG_LEVEL} from '#/env'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
@@ -39,9 +39,9 @@ export class Logger {
 
   static create(context?: LogContext, metadata: Record<string, unknown> = {}) {
     const logger = new Logger({
-      level: process.env.EXPO_PUBLIC_LOG_LEVEL as LogLevel,
+      level: LOG_LEVEL as LogLevel,
       context,
-      contextFilter: process.env.EXPO_PUBLIC_LOG_DEBUG || '',
+      contextFilter: LOG_DEBUG,
       metadata,
     })
     for (const transport of TRANSPORTS) {

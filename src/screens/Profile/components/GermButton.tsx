@@ -269,7 +269,7 @@ function constructGermUrl(
       urlp.pathname = urlp.pathname.slice(0, -1)
     }
 
-    urlp.pathname += `/${platform()}`
+    urlp.pathname += '/web'
 
     if (viewerDid) {
       urlp.hash = `#${profile.did}+${viewerDid}`
@@ -290,10 +290,6 @@ function isCustomGermDomain(url: string) {
   } catch {
     return false
   }
-}
-
-function platform() {
-  return 'web'
 }
 
 async function whenAppViewReady(

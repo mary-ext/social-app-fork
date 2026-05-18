@@ -94,9 +94,7 @@ export function ActionsWrapper({
           hasReactions ? [a.mb_2xl] : undefined,
         ]}>
         <EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
-          {({props, state, IS_NATIVE, control}) => {
-            // always false, file is platform split
-            if (IS_NATIVE) return null
+          {({props, state, control}) => {
             const showMenuTrigger = showActions || control.isOpen ? 1 : 0
             return (
               <Pressable
@@ -116,9 +114,7 @@ export function ActionsWrapper({
           }}
         </EmojiReactionPicker>
         <MessageContextMenu message={message} senderProfile={senderProfile}>
-          {({props, state, IS_NATIVE, control}) => {
-            // always false, file is platform split
-            if (IS_NATIVE) return null
+          {({props, state, control}) => {
             const showMenuTrigger = showActions || control.isOpen ? 1 : 0
             return (
               <Pressable

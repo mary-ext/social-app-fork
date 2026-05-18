@@ -76,72 +76,26 @@ export type ItemContextType = {
 export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
-  /**
-   * When activated, this is the accessibility label for the entire thing that has been triggered.
-   * For example, if the trigger is a message bubble, use the message content.
-   *
-   * @platform ios, android
-   */
   contentLabel: string
   hint?: string
   role?: AccessibilityRole
   style?: StyleProp<ViewStyle>
-  /**
-   * Callback for single taps. Composed with the double-tap and
-   * press-and-hold gestures via `Gesture.Exclusive`, so a double tap
-   * does not also fire this handler.
-   *
-   * @platform ios, android
-   */
-  onTap?: () => void
 }
-export type TriggerChildProps =
-  | {
-      IS_NATIVE: true
-      control: {
-        isOpen: boolean
-        open: (mode: 'full' | 'auxiliary-only') => void
-      }
-      state: {
-        hovered: false
-        focused: false
-        pressed: false
-      }
-      /**
-       * We don't necessarily know what these will be spread on to, so we
-       * should add props one-by-one.
-       *
-       * On web, these properties are applied to a parent `Pressable`, so this
-       * object is empty.
-       */
-      props: {
-        ref: null
-        onPress: null
-        onFocus: null
-        onBlur: null
-        onPressIn: null
-        onPressOut: null
-        accessibilityHint: null
-        accessibilityLabel: string
-        accessibilityRole: null
-      }
-    }
-  | {
-      IS_NATIVE: false
-      control: Dialog.DialogOuterProps['control']
-      state: {
-        hovered: false
-        focused: false
-        pressed: false
-      }
-      props: RadixPassThroughTriggerProps & {
-        onPress: () => void
-        onFocus: () => void
-        onBlur: () => void
-        onMouseEnter: () => void
-        onMouseLeave: () => void
-        accessibilityHint?: string
-        accessibilityLabel: string
-        accessibilityRole: AccessibilityRole
-      }
-    }
+export type TriggerChildProps = {
+  control: Dialog.DialogOuterProps['control']
+  state: {
+    hovered: false
+    focused: false
+    pressed: false
+  }
+  props: RadixPassThroughTriggerProps & {
+    onPress: () => void
+    onFocus: () => void
+    onBlur: () => void
+    onMouseEnter: () => void
+    onMouseLeave: () => void
+    accessibilityHint?: string
+    accessibilityLabel: string
+    accessibilityRole: AccessibilityRole
+  }
+}

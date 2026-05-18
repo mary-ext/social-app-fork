@@ -8,10 +8,9 @@ import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
-import { IS_E2E } from '#/env';
 import {Image} from '#/shims/image'
 import {LinearGradient} from '#/shims/linear-gradient'
-import {createIsEnabledCheck, isExistingUserAsOf} from './utils'
+import {createIsEnabledCheck} from './utils'
 
 export const enabled = createIsEnabledCheck(props => {
   return false;

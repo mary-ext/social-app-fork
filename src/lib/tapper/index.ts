@@ -24,8 +24,6 @@ import {
 export * as facets from './facets'
 export * from './types'
 
-const IS_WEB = true
-
 export class Tapper {
   private facetRegexes: CompiledFacetRegexes
   private triggers: Map<string, string>
@@ -355,7 +353,7 @@ export function useTapper(config: TapperConfig) {
     },
     inputProps: {
       ref: handleSetInput,
-      value: IS_WEB ? state.text : undefined,
+      value: state.text,
       onChangeText: store.handleTextChange,
       onSelectionChange: store.handleSelectionChange,
     },

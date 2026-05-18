@@ -13,13 +13,11 @@ import {
 } from '#/components/dialogs/nuxs/utils'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Text} from '#/components/Typography'
-import { IS_E2E } from '#/env';
 import {Image} from '#/shims/image'
 import {LinearGradient} from '#/shims/linear-gradient'
 
 export const enabled = createIsEnabledCheck(props => {
   return (
-    !IS_E2E &&
     isExistingUserAsOf(
       '2026-01-16T00:00:00.000Z',
       props.currentProfile.createdAt,

@@ -15,14 +15,6 @@ export const APP_VERSION = RELEASE_VERSION
 export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${__DEV__ ? 'dev' : 'prod'})`
 
 /**
- * Platform detection
- */
-export const IS_IOS: boolean = false
-export const IS_ANDROID: boolean = false
-export const IS_NATIVE: boolean = false
-export const IS_WEB: boolean = true
-
-/**
  * Web-specific platform detection
  */
 export const IS_WEB_TOUCH_DEVICE =
@@ -47,5 +39,3 @@ export const IS_WEB_FIREFOX: boolean = /firefox|fxios/i.test(
 export const IS_HIGH_DPI: boolean = window.matchMedia(
   '(min-resolution: 2dppx)',
 ).matches
-export const IS_LIQUID_GLASS: boolean = false
-export const IS_TRANSLATION_SUPPORTED: boolean = false

@@ -42,59 +42,24 @@ export type TriggerProps = {
   hint?: string
   role?: AccessibilityRole
 }
-export type TriggerChildProps =
-  | {
-      IS_NATIVE: true
-      control: Dialog.DialogOuterProps['control']
-      state: {
-        /**
-         * Web only, `false` on native
-         */
-        hovered: false
-        focused: boolean
-        pressed: boolean
-      }
-      /**
-       * We don't necessarily know what these will be spread on to, so we
-       * should add props one-by-one.
-       *
-       * On web, these properties are applied to a parent `Pressable`, so this
-       * object is empty.
-       */
-      props: {
-        ref: null
-        onPress: () => void
-        onFocus: () => void
-        onBlur: () => void
-        onPressIn: () => void
-        onPressOut: () => void
-        accessibilityHint?: string
-        accessibilityLabel: string
-        accessibilityRole: AccessibilityRole
-      }
-    }
-  | {
-      IS_NATIVE: false
-      control: Dialog.DialogOuterProps['control']
-      state: {
-        hovered: boolean
-        focused: boolean
-        /**
-         * Native only, `false` on web
-         */
-        pressed: false
-      }
-      props: RadixPassThroughTriggerProps & {
-        onPress: () => void
-        onFocus: () => void
-        onBlur: () => void
-        onMouseEnter: () => void
-        onMouseLeave: () => void
-        accessibilityHint?: string
-        accessibilityLabel: string
-        accessibilityRole: AccessibilityRole
-      }
-    }
+export type TriggerChildProps = {
+  control: Dialog.DialogOuterProps['control']
+  state: {
+    hovered: boolean
+    focused: boolean
+    pressed: false
+  }
+  props: Omit<RadixPassThroughTriggerProps, 'disabled'> & {
+    onPress: () => void
+    onFocus: () => void
+    onBlur: () => void
+    onMouseEnter: () => void
+    onMouseLeave: () => void
+    accessibilityHint?: string
+    accessibilityLabel: string
+    accessibilityRole: AccessibilityRole
+  }
+}
 
 export type ItemProps = React.PropsWithChildren<
   Omit<PressableProps, 'style'> &

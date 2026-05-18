@@ -1144,9 +1144,9 @@ The largest of the three. The target layout under `src/alf/base/` mirrors the up
 
 Write a single jscodeshift transform under `.jscodeshift/repo/collapse-platform.js` that does the inline-and-fold. Land as **one commit**: large diff but mechanically reviewable.
 
-Status: done in the Phase 4.5a/4.5b checkpoint. The transform preserves the old loose `web()` / `platform()` style typing with `as any` casts where needed, so the mechanical branch collapse stays typecheck-clean before the later style-system redesign.
+Status: done in the Phase 4.5a/4.5b checkpoint, with a follow-up closeout removing the leftover exported literal platform constants from `src/env` and the stale native/web render-prop discriminators in `Menu`, `Select`, and `ContextMenu`. The transform preserved the old loose `web()` / `platform()` style typing with `as any` casts where needed, so the mechanical branch collapse stayed typecheck-clean before the later style-system redesign.
 
-**Constants to fold to literals** (re-verify exports in `src/env/index.web.ts`, `src/env/common.ts`, and `src/alf/base/platform/index.ts` before running — the list may have drifted):
+**Constants folded during the codemod, then removed from the public env surface** (if reconstructing this phase, these are historical inputs to the transform, not constants to keep exported):
 
 | Symbol | Folds to | Source |
 |---|---|---|
@@ -1156,10 +1156,10 @@ Status: done in the Phase 4.5a/4.5b checkpoint. The transform preserves the old 
 | `IS_ANDROID` | `false` | `#/env` |
 | `IS_LIQUID_GLASS` | `false` | `#/env` (iOS 26+ only) |
 | `IS_TRANSLATION_SUPPORTED` | `false` | `#/env` (iOS Apple Translation only) |
-| `IS_TESTFLIGHT` | `false` | `#/env/common` (iOS TestFlight only) |
+| `IS_E2E` | `false` | `#/env/common` (E2E infra deleted in Phase 1.2) |
 | `Platform.OS` | `'web'` | `react-native` |
 
-**Stays — these are runtime browser checks and must not fold:** `IS_WEB_MOBILE`, `IS_WEB_MOBILE_IOS`, `IS_WEB_MOBILE_ANDROID`, `IS_WEB_TOUCH_DEVICE`, `IS_WEB_SAFARI`, `IS_WEB_FIREFOX`, `IS_HIGH_DPI`, `IS_DEV`, `IS_INTERNAL`, `__DEV__`. The codemod must allowlist by name — substring-matching on `IS_` would catch these.
+**Stays — these are runtime browser/build checks and must not fold:** `IS_WEB_MOBILE`, `IS_WEB_MOBILE_IOS`, `IS_WEB_MOBILE_ANDROID`, `IS_WEB_TOUCH_DEVICE`, `IS_WEB_SAFARI`, `IS_WEB_FIREFOX`, `IS_HIGH_DPI`, `IS_DEV`, `IS_INTERNAL`, `__DEV__`. The codemod must allowlist by name — substring-matching on `IS_` would catch these.
 
 **Helpers to fold** (web-only `#/alf` platform helpers, Phase 4.4 already simplified the implementations):
 
@@ -1216,9 +1216,9 @@ After the codemod lands, the remaining work is bounded:
   ```
 - [x] Verify no callsites of the folded helpers remain:
   ```sh
-  rg "IS_NATIVE|IS_IOS|IS_ANDROID|IS_LIQUID_GLASS|IS_TRANSLATION_SUPPORTED|IS_TESTFLIGHT|Platform\.OS|\\b(web|ios|android|native|platform)\(" src --glob '!locale/**'
+  rg "IS_NATIVE|IS_IOS|IS_ANDROID|IS_LIQUID_GLASS|IS_TRANSLATION_SUPPORTED|Platform\.OS|\\b(web|ios|android|native|platform)\(" src --glob '!locale/**'
   ```
-  Expected hits: only `IS_WEB_MOBILE` / `IS_WEB_TOUCH_DEVICE` / etc. (the dynamic browser-detection allowlist) and any `web`/`native`/etc. that happen to be local variable names (not the helpers). Spot-check that nothing real survives
+  Expected hits: only `IS_WEB_MOBILE` / `IS_WEB_TOUCH_DEVICE` / etc. (the dynamic browser-detection allowlist) and any `web`/`native`/etc. that happen to be local variable names (not the helpers). Spot-check that nothing real survives. Do not leave `IS_NATIVE`/`IS_WEB`-style render-prop discriminators behind in component types; delete the native union branch instead.
 
 **Recovery:** if the codemod produces a diff that's worse than expected, `git checkout -- src/` reverts cleanly. Iterate on the transform, re-run. That's the value of doing this as a codemod rather than ~600 hand edits.
 
@@ -1228,7 +1228,7 @@ After the codemod lands, the remaining work is bounded:
 - [x] Delete native-only files once the codemod and typecheck confirm nothing resolves to them: `src/App.native.tsx`, `*.ios.tsx`, `*.android.tsx`, `*.native.tsx`, `index.js`
 - [x] Rename `.web.tsx`/`.web.ts` → `.tsx`/`.ts` once their non-web siblings are gone (this is what makes Phase 4.7's rsbuild config simple)
 - [x] First targets:
-  - `src/env/`: **don't flatten the whole module into constants.** `src/env/index.web.ts` already exports the right static booleans (`IS_NATIVE=false`, `IS_WEB=true`, …) AND computes browser-specific flags dynamically (mobile-Safari detection, etc.). Delete `src/env/index.ts` (the native variant), then rename `src/env/index.web.ts` → `src/env/index.ts`. Keep the dynamic browser-flag logic. **Also delete `GCP_PROJECT_ID` from `src/env/common.ts`** — it only feeds the Android Play Integrity warmup and gets unreferenced as soon as the IS_ANDROID branches collapse
+  - `src/env/`: **don't flatten the whole module into constants.** The final web-only module exports only the runtime browser/build checks (`IS_WEB_MOBILE`, `IS_WEB_TOUCH_DEVICE`, `IS_DEV`, `IS_INTERNAL`, etc.). Delete the static literal platform exports (`IS_NATIVE`, `IS_WEB`, `IS_IOS`, `IS_ANDROID`, `IS_LIQUID_GLASS`, `IS_TRANSLATION_SUPPORTED`) once their callers are folded. Also delete `IS_E2E` with the E2E infra and **delete `GCP_PROJECT_ID` from `src/env/common.ts`** — it only feeds the Android Play Integrity warmup and gets unreferenced as soon as the IS_ANDROID branches collapse
   - `src/Navigation.tsx` notification/linking imports
   - **VideoFeed feature deletion.** `src/screens/VideoFeed/` is a TikTok-style swipeable video feed that ships as a `null` stub on web (`VideoFeed.web.tsx` returns nothing) — the platform collapse alone would just delete the native file and leave a no-op route. Better: delete the whole feature explicitly. `rm -rf src/screens/VideoFeed`, drop the `VideoFeed: '/video-feed'` entry from `src/routes.ts`, and drop the import + `<Stack.Screen name="VideoFeed">` registration from `src/Navigation.tsx`. Then re-verify the deferred `yarn remove expo-video` (the only non-`.web` importer was `VideoFeed/index.tsx` + `Scrubber.tsx`)
   - `src/lib/notifications/*` — careful with `resetBadgeCount()`. It calls `BackgroundNotificationHandler` and `expo-notifications` **without** an `IS_NATIVE` guard at fork time, but is reached on web from `src/state/queries/notifications/unread.tsx`'s `markAllRead()`. Explicitly stub or delete it — not just "trim imports"
@@ -1308,19 +1308,18 @@ import {pluginBabel} from '@rsbuild/plugin-babel'
 // By this point (post-Streams 1/2/3 + Phases 4.2-4.6) the env-key surface is
 // much smaller than the upstream baseline — METRICS/GROWTHBOOK/SENTRY_DSN/
 // BITDRIFT/GEOLOCATION/LIVE_EVENTS/APP_CONFIG/JEST_WORKER_ID are gone, and
-// EXPO_PUBLIC_GCP_PROJECT_ID (Android-only Play Integrity attestation, dead
-// once Phase 4.5 constant-folds IS_ANDROID → false) goes with the native code.
+// Legacy Android-only Play Integrity env (GCP project id) goes with the native code.
 //
 //   rg -oN "process\.env\.[A-Z_][A-Z0-9_]*" src index.web.js | sort -u
 const publicEnvKeys = [
-  'EXPO_PUBLIC_RELEASE_VERSION',
-  'EXPO_PUBLIC_ENV',
-  'EXPO_PUBLIC_BUNDLE_IDENTIFIER',
-  'EXPO_PUBLIC_BUNDLE_DATE',
-  'EXPO_PUBLIC_LOG_LEVEL',
-  'EXPO_PUBLIC_LOG_DEBUG',
-  'EXPO_PUBLIC_BLUESKY_PROXY_DID',
-  'EXPO_PUBLIC_CHAT_PROXY_DID',
+  'PUBLIC_RELEASE_VERSION',
+  'PUBLIC_ENV',
+  'PUBLIC_BUNDLE_IDENTIFIER',
+  'PUBLIC_BUNDLE_DATE',
+  'PUBLIC_LOG_LEVEL',
+  'PUBLIC_LOG_DEBUG',
+  'PUBLIC_BLUESKY_PROXY_DID',
+  'PUBLIC_CHAT_PROXY_DID',
 ]
 
 const define = Object.fromEntries(
