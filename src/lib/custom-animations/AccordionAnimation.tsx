@@ -4,6 +4,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+
 import Animated, {
   Easing,
   FadeInUp,
@@ -11,8 +12,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {IS_IOS, IS_WEB} from '#/env'
 
 type AccordionAnimationProps = React.PropsWithChildren<{

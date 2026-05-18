@@ -1,15 +1,16 @@
 import {memo, useCallback, useEffect, useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {
-  type AnimatedRef,
-  useAnimatedRef,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import Animated, {
+  type AnimatedRef,
+  type AnimatedView,
+  useAnimatedRef,
+} from '#/lib/animations/reanimatedCompat'
 import {BACK_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -58,7 +59,7 @@ let ProfileHeaderShell = ({
   const liveStatusControl = useDialogControl()
 
   const aviRef = useAnimatedRef()
-  const bannerRef = useAnimatedRef<Animated.View>()
+  const bannerRef = useAnimatedRef<AnimatedView>()
 
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
@@ -71,7 +72,7 @@ let ProfileHeaderShell = ({
   const _openLightbox = useCallback(
     (
       uri: string,
-      thumbRef: AnimatedRef<any>,
+      thumbRef: AnimatedRef<AnimatedView>,
       type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
     ) => {
       openLightbox({

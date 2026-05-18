@@ -4,8 +4,8 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import {type SharedValue} from 'react-native-reanimated'
 
+import {type SharedValue} from '#/lib/animations/reanimatedCompat'
 import type * as Dialog from '#/components/Dialog'
 import {
   type ItemProps as MenuItemProps,

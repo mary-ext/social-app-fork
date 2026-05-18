@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+
 import Animated, {
   type AnimatedRef,
   runOnUI,
@@ -14,8 +15,7 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {
   Pager,
@@ -123,9 +123,9 @@ export function PagerWithHeader({
     ],
   )
 
-  const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
+  const scrollRefs = useSharedValue<Array<AnimatedRef<ListMethods | ScrollView> | null>>([])
   const registerRef = useCallback(
-    (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
+    (scrollRef: AnimatedRef<ListMethods | ScrollView> | null, atIndex: number) => {
       scrollRefs.modify(refs => {
         'worklet'
         refs[atIndex] = scrollRef
@@ -355,11 +355,11 @@ function PagerItem({
   index: number
   isFocused: boolean
   isReady: boolean
-  registerRef: (scrollRef: AnimatedRef<any> | null, atIndex: number) => void
+  registerRef: (scrollRef: AnimatedRef<ListMethods | ScrollView> | null, atIndex: number) => void
   onScrollWorklet: (e: NativeScrollEvent) => void
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
 }) {
-  const scrollElRef = useAnimatedRef()
+  const scrollElRef = useAnimatedRef<ListMethods | ScrollView>()
 
   useEffect(() => {
     registerRef(scrollElRef, index)

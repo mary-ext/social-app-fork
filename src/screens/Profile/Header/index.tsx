@@ -1,11 +1,5 @@
 import {memo, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
-import Animated, {
-  runOnJS,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  withTiming,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type AppBskyActorDefs,
@@ -16,6 +10,12 @@ import {
 } from '@atproto/api'
 import {useIsFocused} from '@react-navigation/native'
 
+import Animated, {
+  runOnJS,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  withTiming,
+} from '#/lib/animations/reanimatedCompat'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

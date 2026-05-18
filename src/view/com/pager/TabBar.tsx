@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+
 import Animated, {
   interpolate,
   runOnJS,
@@ -15,8 +16,7 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useTheme} from '#/alf'

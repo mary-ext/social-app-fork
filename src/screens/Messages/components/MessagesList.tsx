@@ -7,14 +7,6 @@ import {
   useState,
 } from 'react'
 import {type LayoutChangeEvent, type ScrollViewProps, View} from 'react-native'
-import {
-  runOnJS,
-  type ScrollEvent,
-  type SharedValue,
-  useAnimatedRef,
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type $Typed,
@@ -25,6 +17,14 @@ import {
 } from '@atproto/api'
 import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 
+import {
+  runOnJS,
+  type ScrollEvent,
+  type SharedValue,
+  useAnimatedRef,
+  useDerivedValue,
+  useSharedValue,
+} from '#/lib/animations/reanimatedCompat'
 import {DMS_NEW_MESSAGE_COMPOSER_ENABLED} from '#/lib/feature-flags'
 import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'

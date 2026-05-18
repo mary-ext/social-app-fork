@@ -1,5 +1,6 @@
 import {useEffect} from 'react'
 import {View} from 'react-native'
+
 import Animated, {
   Easing,
   type SharedValue,
@@ -7,8 +8,7 @@ import Animated, {
   useSharedValue,
   withDelay,
   withTiming,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'

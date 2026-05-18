@@ -1,12 +1,12 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
+import {nanoid} from 'nanoid/non-secure'
+
 import {
   measure,
   type MeasuredDimensions,
   runOnJS,
   runOnUI,
-} from 'react-native-reanimated'
-import {nanoid} from 'nanoid/non-secure'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useHotkeysContext} from '#/lib/hotkeys'
 import {type ImageSource} from '#/components/Lightbox/types'

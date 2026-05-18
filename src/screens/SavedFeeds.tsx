@@ -1,7 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import type Animated from 'react-native-reanimated'
-import {useAnimatedRef, useScrollViewOffset} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import {useLingui} from '@lingui/react/macro'
@@ -9,6 +7,11 @@ import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {
+  type AnimatedScrollView,
+  useAnimatedRef,
+  useScrollViewOffset,
+} from '#/lib/animations/reanimatedCompat'
 import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
@@ -67,7 +70,7 @@ function SavedFeedsInner({
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
   const navigation = useNavigation<NavigationProp>()
-  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  const scrollRef = useAnimatedRef<AnimatedScrollView>()
   const scrollOffset = useScrollViewOffset(scrollRef)
 
   /*

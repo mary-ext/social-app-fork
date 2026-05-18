@@ -1,5 +1,10 @@
 import {useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {GlassContainer} from 'expo-glass-effect'
+import {useLingui} from '@lingui/react/macro'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
+
 import Animated, {
   measure,
   runOnJS,
@@ -7,12 +12,7 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {GlassContainer} from 'expo-glass-effect'
-import {useLingui} from '@lingui/react/macro'
-import {countGraphemes} from 'unicode-segmenter/grapheme'
-
+} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {

@@ -6,12 +6,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import Animated, {
-  measure,
-  runOnJS,
-  useAnimatedRef,
-  useFrameCallback,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
@@ -19,6 +13,12 @@ import {type AppBskyEmbedExternal} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import Animated, {
+  measure,
+  runOnJS,
+  useAnimatedRef,
+  useFrameCallback,
+} from '#/lib/animations/reanimatedCompat'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type EmbedPlayerParams,

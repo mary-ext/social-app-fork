@@ -1,10 +1,10 @@
 import {View} from 'react-native'
+
 import Animated, {
   Keyframe,
   LayoutAnimationConfig,
   useReducedMotion,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useTheme} from '#/alf'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,

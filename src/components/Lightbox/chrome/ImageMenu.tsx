@@ -1,5 +1,7 @@
 import {useRef, useState} from 'react'
 import {Modal, Pressable, StyleSheet, View} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   interpolate,
   runOnJS,
@@ -7,9 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-} from 'react-native-reanimated'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {atoms as a} from '#/alf'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowShareRight'
 import {type Props as IconProps} from '#/components/icons/common'

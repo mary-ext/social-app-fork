@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
 import {
   AppBskyGraphDefs,
   AtUri,
@@ -12,6 +11,7 @@ import {Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAnimatedRef} from '#/lib/animations/reanimatedCompat'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {

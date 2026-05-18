@@ -119,7 +119,6 @@ export const ViewSelector = forwardRef<
   const data = useMemo(() => [HEADER_ITEM, SELECTOR_ITEM, ...items], [items])
   return (
     <FlatList_INTERNAL
-      // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
       ref={flatListRef}
       data={data}
       keyExtractor={keyExtractor}

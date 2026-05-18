@@ -12,6 +12,8 @@ import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
+import * as ScreenOrientation from 'expo-screen-orientation'
+
 import Animated, {
   type AnimatableValue,
   type AnimatedRef,
@@ -31,9 +33,7 @@ import Animated, {
   withDecay,
   withSpring,
   type WithSpringConfig,
-} from 'react-native-reanimated'
-import * as ScreenOrientation from 'expo-screen-orientation'
-
+} from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'

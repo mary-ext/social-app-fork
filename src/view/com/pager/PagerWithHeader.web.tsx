@@ -1,8 +1,8 @@
 import {forwardRef, memo, useCallback, useState} from 'react'
 import {type JSX} from 'react'
 import {type ScrollView, View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
 
+import {useAnimatedRef} from '#/lib/animations/reanimatedCompat'
 import {
   Pager,
   type PagerRef,

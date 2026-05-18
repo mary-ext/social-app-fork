@@ -1,12 +1,12 @@
 import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
+
 import Animated, {
   Easing,
   LayoutAnimationConfig,
   useReducedMotion,
   withTiming,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 import {atoms as a} from '#/alf'
 

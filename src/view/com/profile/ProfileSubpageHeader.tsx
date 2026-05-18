@@ -1,11 +1,11 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import Animated, {useAnimatedRef} from '#/lib/animations/reanimatedCompat'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'

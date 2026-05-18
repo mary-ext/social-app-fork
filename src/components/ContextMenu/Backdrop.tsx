@@ -1,12 +1,12 @@
 import {Pressable} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   Extrapolation,
   interpolate,
   type SharedValue,
   useAnimatedStyle,
-} from 'react-native-reanimated'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {atoms as a, useTheme} from '#/alf'
 import {useContextMenuContext} from './context'
 

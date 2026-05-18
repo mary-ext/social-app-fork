@@ -26,17 +26,6 @@ import {
   type GestureUpdateEvent,
   type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
-import Animated, {
-  clamp,
-  interpolate,
-  runOnJS,
-  type SharedValue,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  type WithSpringConfig,
-} from 'react-native-reanimated'
 import {
   type EdgeInsets,
   useSafeAreaFrame,
@@ -48,6 +37,17 @@ import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
+import Animated, {
+  clamp,
+  interpolate,
+  runOnJS,
+  type SharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  type WithSpringConfig,
+} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

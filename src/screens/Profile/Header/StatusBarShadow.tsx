@@ -1,10 +1,10 @@
-import Animated, {
-  type SharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle,
+} from '#/lib/animations/reanimatedCompat'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
 import {IS_IOS} from '#/env'

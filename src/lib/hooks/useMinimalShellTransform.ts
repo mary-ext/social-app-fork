@@ -1,6 +1,6 @@
-import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {interpolate, useAnimatedStyle} from '#/lib/animations/reanimatedCompat'
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {IS_LIQUID_GLASS} from '#/env'

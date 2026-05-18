@@ -6,12 +6,13 @@ import {
   useMemo,
   useRef,
 } from 'react'
+import {useFocusEffect} from '@react-navigation/native'
+
 import {
   type SharedValue,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
+} from '#/lib/animations/reanimatedCompat'
 
 type StateContext = {
   headerMode: SharedValue<number>

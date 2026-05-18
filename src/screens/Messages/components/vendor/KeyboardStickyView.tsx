@@ -1,5 +1,4 @@
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-
+import Animated, {useAnimatedStyle} from '#/lib/animations/reanimatedCompat'
 import {
   type KeyboardStickyViewProps,
   useReanimatedKeyboardAnimation,

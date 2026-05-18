@@ -1,4 +1,4 @@
-import {withDelay, withSequence, withTiming} from 'react-native-reanimated'
+import {withDelay, withSequence, withTiming} from '#/lib/animations/reanimatedCompat'
 
 export function ShrinkAndPop() {
   'worklet'

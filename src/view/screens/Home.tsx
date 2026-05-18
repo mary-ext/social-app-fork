@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {withSpring} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {withSpring} from '#/lib/animations/reanimatedCompat'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'

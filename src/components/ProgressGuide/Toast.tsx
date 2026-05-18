@@ -7,16 +7,16 @@ import {
   useState,
 } from 'react'
 import {Pressable, useWindowDimensions, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   Easing,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {IS_WEB} from '#/env'

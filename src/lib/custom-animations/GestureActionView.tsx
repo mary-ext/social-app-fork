@@ -1,6 +1,7 @@
 import {useMemo, useState} from 'react'
 import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+
 import Animated, {
   clamp,
   interpolate,
@@ -13,8 +14,7 @@ import Animated, {
   useSharedValue,
   withSequence,
   withTiming,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
 
 interface GestureAction {

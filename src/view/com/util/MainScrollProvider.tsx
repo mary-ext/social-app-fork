@@ -1,14 +1,14 @@
 import {useCallback, useEffect} from 'react'
 import {type NativeScrollEvent} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {EventEmitter} from 'eventemitter3'
+
 import {
   clamp,
   interpolate,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {EventEmitter} from 'eventemitter3'
-
+} from '#/lib/animations/reanimatedCompat'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'

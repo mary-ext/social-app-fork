@@ -1,6 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
-import {type SharedValue} from 'react-native-reanimated'
 
+import {type SharedValue} from '#/lib/animations/reanimatedCompat'
 import {IS_NATIVE} from '#/env'
 
 export const PagerHeaderContext = createContext<{

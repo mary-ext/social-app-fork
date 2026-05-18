@@ -1,15 +1,16 @@
 import {useMemo, useRef} from 'react'
 import {type DimensionValue, Pressable, View} from 'react-native'
-import Animated, {
-  type AnimatedRef,
-  useAnimatedRef,
-} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
+import Animated, {
+  type AnimatedRef,
+  type AnimatedView,
+  useAnimatedRef,
+} from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -73,7 +74,7 @@ export function AutoSizedImage({
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
   onPress?: (
-    containerRef: AnimatedRef<any>,
+    containerRef: AnimatedRef<AnimatedView>,
     fetchedDims: Dimensions | null,
   ) => void
   onLongPress?: () => void

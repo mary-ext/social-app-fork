@@ -1,7 +1,12 @@
 import {useEffect, useState} from 'react'
 import {ActivityIndicator, Pressable, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {BlurView} from 'expo-blur'
+import {useIsFetching} from '@tanstack/react-query'
+
 import Animated, {
   type AnimatedRef,
+  type AnimatedView,
   Extrapolation,
   interpolate,
   runOnJS,
@@ -9,11 +14,7 @@ import Animated, {
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {BlurView} from 'expo-blur'
-import {useIsFetching} from '@tanstack/react-query'
-
+} from '#/lib/animations/reanimatedCompat'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
 import {RQKEY_ROOT as FEED_RQKEY_ROOT} from '#/state/queries/post-feed'
 import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens'
@@ -35,7 +36,7 @@ export function GrowableBanner({
   backButton?: React.ReactNode
   children: React.ReactNode
   onPress?: () => void
-  bannerRef?: AnimatedRef<Animated.View>
+  bannerRef?: AnimatedRef<AnimatedView>
   testID?: string
   label?: string
 }) {
@@ -87,7 +88,7 @@ function GrowableBannerInner({
   backButton?: React.ReactNode
   children: React.ReactNode
   onPress?: () => void
-  bannerRef?: AnimatedRef<Animated.View>
+  bannerRef?: AnimatedRef<AnimatedView>
   testID?: string
   label?: string
 }) {

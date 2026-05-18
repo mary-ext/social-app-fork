@@ -9,16 +9,17 @@ import {
   useState,
 } from 'react'
 import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
-import Animated, {
-  type AnimatedRef,
-  useAnimatedRef,
-} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
+import Animated, {
+  type AnimatedRef,
+  type AnimatedView,
+  useAnimatedRef,
+} from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
@@ -47,7 +48,7 @@ interface GalleryProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<any>[],
+    containerRefs: AnimatedRef<AnimatedView>[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onPressIn?: (index: number) => void
@@ -150,7 +151,7 @@ export function Gallery({
   const flatListRef = useRef<FlatList>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
   const itemRefsRef = useRef<Map<number, View>>(new Map())
-  const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
+  const containerRefsRef = useRef<Map<number, AnimatedRef<AnimatedView>>>(new Map())
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
 
@@ -282,7 +283,7 @@ export function Gallery({
                 onPress={
                   onPress
                     ? () => {
-                        const refs: AnimatedRef<any>[] = []
+                        const refs: AnimatedRef<AnimatedView>[] = []
                         const dims: (Dimensions | null)[] = []
                         for (let i = 0; i < images.length; i++) {
                           refs.push(containerRefsRef.current.get(i)!)
@@ -374,7 +375,7 @@ function GalleryImage({
   itemRef: (node: View | null) => void
   hideBadges?: boolean
   largeAltBadge?: boolean
-  onContainerRef: (index: number, ref: AnimatedRef<any>) => void
+  onContainerRef: (index: number, ref: AnimatedRef<AnimatedView>) => void
   onThumbDims: (index: number, dims: Dimensions) => void
   onPress?: () => void
   onPressIn?: () => void

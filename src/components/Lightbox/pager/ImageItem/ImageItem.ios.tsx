@@ -13,7 +13,11 @@ import {
   GestureDetector,
   type PanGesture,
 } from 'react-native-gesture-handler'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
+
 import Animated, {
+  type AnimatedScrollView,
   runOnJS,
   type SharedValue,
   useAnimatedProps,
@@ -22,10 +26,7 @@ import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
-
+} from '#/lib/animations/reanimatedCompat'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,
@@ -67,7 +68,7 @@ const ImageItem = ({
   dismissSwipePan,
   transforms,
 }: Props) => {
-  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const scrollViewRef = useAnimatedRef<AnimatedScrollView>()
   const [scaled, setScaled] = useState(false)
   const isDragging = useSharedValue(false)
   const screenSizeDelayedForJSThreadOnly = useSafeAreaFrame()

@@ -1,11 +1,11 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
-import {type AnimatedStyle} from 'react-native-reanimated'
 import {type AppBskyFeedPostgate} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
+import {type AnimatedStyle} from '#/lib/animations/reanimatedCompat'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'

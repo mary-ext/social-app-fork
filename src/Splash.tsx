@@ -6,6 +6,11 @@ import {
   useColorScheme,
   View,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Svg, {Path, type SvgProps} from 'react-native-svg'
+import {Image} from 'expo-image'
+import * as SplashScreen from 'expo-splash-screen'
+
 import Animated, {
   Easing,
   interpolate,
@@ -13,12 +18,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Svg, {Path, type SvgProps} from 'react-native-svg'
-import {Image} from 'expo-image'
-import * as SplashScreen from 'expo-splash-screen'
-
+} from '#/lib/animations/reanimatedCompat'
 import {Logotype} from '#/view/icons/Logotype'
 // @ts-ignore
 import splashImagePointer from '../assets/splash/splash.png'

@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAnimatedRef} from '#/lib/animations/reanimatedCompat'
 import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'

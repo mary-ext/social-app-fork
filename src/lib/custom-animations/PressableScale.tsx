@@ -4,14 +4,14 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
+
 import Animated, {
   cancelAnimation,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {IS_NATIVE, IS_WEB_TOUCH_DEVICE} from '#/env'
 
 const DEFAULT_TARGET_SCALE = IS_NATIVE || IS_WEB_TOUCH_DEVICE ? 0.98 : 1

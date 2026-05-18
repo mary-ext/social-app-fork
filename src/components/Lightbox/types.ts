@@ -8,10 +8,11 @@
 
 import {type Component} from 'react'
 import {type TransformsStyle} from 'react-native'
+
 import {
   type AnimatedRef,
   type MeasuredDimensions,
-} from 'react-native-reanimated'
+} from '#/lib/animations/reanimatedCompat'
 
 export type Dimensions = {
   width: number

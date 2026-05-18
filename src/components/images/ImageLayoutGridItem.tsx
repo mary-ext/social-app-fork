@@ -1,11 +1,14 @@
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AnimatedRef} from 'react-native-reanimated'
 import {Image, type ImageStyle} from 'expo-image'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
+import {
+  type AnimatedRef,
+  type AnimatedView,
+} from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
@@ -20,7 +23,7 @@ interface Props {
   index: number
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<any>[],
+    containerRefs: AnimatedRef<AnimatedView>[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: EventFunction
@@ -28,7 +31,7 @@ interface Props {
   imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
   insetBorderStyle?: StyleProp<ViewStyle>
-  containerRefs: AnimatedRef<any>[]
+  containerRefs: AnimatedRef<AnimatedView>[]
   thumbDimsRef: React.RefObject<(Dimensions | null)[]>
 }
 

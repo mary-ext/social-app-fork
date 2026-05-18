@@ -5,12 +5,13 @@ import {
   type ViewProps,
   type ViewStyle,
 } from 'react-native'
-import Animated, {
-  type AnimatedScrollViewProps,
-  useAnimatedProps,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import Animated, {
+  type AnimatedScrollView,
+  type AnimatedScrollViewProps,
+  useAnimatedProps,
+} from '#/lib/animations/reanimatedCompat'
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
@@ -75,7 +76,7 @@ export type ContentProps = AnimatedScrollViewProps & {
  * Default scroll view for simple pages
  */
 export const Content = memo(
-  forwardRef<Animated.ScrollView, ContentProps>(function Content(
+  forwardRef<AnimatedScrollView, ContentProps>(function Content(
     {
       children,
       style,
@@ -121,7 +122,6 @@ export const Content = memo(
         {...props}>
         {IS_WEB ? (
           <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-            {/* @ts-expect-error web only -esb */}
             {children}
           </Center>
         ) : (

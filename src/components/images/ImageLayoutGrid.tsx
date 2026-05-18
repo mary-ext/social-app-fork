@@ -1,8 +1,12 @@
 import {useRef} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AnimatedRef, useAnimatedRef} from 'react-native-reanimated'
 import {type AppBskyEmbedImages} from '@atproto/api'
 
+import {
+  type AnimatedRef,
+  type AnimatedView,
+  useAnimatedRef,
+} from '#/lib/animations/reanimatedCompat'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -12,7 +16,7 @@ interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<any>[],
+    containerRefs: AnimatedRef<AnimatedView>[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void
@@ -43,7 +47,7 @@ interface ImageLayoutGridInnerProps {
   images: AppBskyEmbedImages.ViewImage[]
   onPress?: (
     index: number,
-    containerRefs: AnimatedRef<any>[],
+    containerRefs: AnimatedRef<AnimatedView>[],
     fetchedDims: (Dimensions | null)[],
   ) => void
   onLongPress?: (index: number) => void

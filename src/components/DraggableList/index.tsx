@@ -1,7 +1,10 @@
 import {useLayoutEffect, useRef} from 'react'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+
 import Animated, {
   type AnimatedRef,
+  type AnimatedScrollView,
+  type AnimatedView,
   measure,
   runOnJS,
   scrollTo,
@@ -12,8 +15,7 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-} from 'react-native-reanimated'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme, web} from '#/alf'
 import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
@@ -40,7 +42,7 @@ interface SortableListProps<T> {
   /** Fixed row height used for position math. */
   itemHeight: number
   /** Ref to the parent Animated.ScrollView for auto-scroll. */
-  scrollRef?: AnimatedRef<Animated.ScrollView>
+  scrollRef?: AnimatedRef<AnimatedScrollView>
   /** Scroll offset shared value from useScrollViewOffset. */
   scrollOffset?: SharedValue<number>
 }
@@ -89,7 +91,7 @@ export function SortableList<T>({
   const trackedScrollY = useSharedValue(0)
 
   // For measuring list position within scroll content
-  const listRef = useAnimatedRef<Animated.View>()
+  const listRef = useAnimatedRef<AnimatedView>()
   const listContentOffset = useSharedValue(0)
   const viewportHeight = useSharedValue(0)
   const measureDone = useSharedValue(false)
@@ -130,9 +132,7 @@ export function SortableList<T>({
     // Measure list and scroll view on first frame of drag.
     // Use scrollOffset here (only once) since no lag has occurred yet.
     if (!measureDone.get()) {
-      const scrollM = measure(
-        scrollRef as unknown as AnimatedRef<Animated.View>,
-      )
+      const scrollM = measure(scrollRef)
       const listM = measure(listRef)
       if (!scrollM || !listM) return
       trackedScrollY.set(scrollOffset.get())
@@ -237,8 +237,8 @@ function SortableItem<T>({
   itemKey: string
   itemCount: number
   itemHeight: number
-  state: Animated.SharedValue<DragState>
-  dragY: Animated.SharedValue<number>
+  state: SharedValue<DragState>
+  dragY: SharedValue<number>
   scrollCompensation: SharedValue<number>
   isGestureActive: SharedValue<boolean>
   measureDone: SharedValue<boolean>

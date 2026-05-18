@@ -1,4 +1,8 @@
 import {Pressable, View} from 'react-native'
+import {type ChatBskyActorDefs} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   FadeIn,
   FadeOut,
@@ -6,11 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   withTiming,
-} from 'react-native-reanimated'
-import {type ChatBskyActorDefs} from '@atproto/api'
-import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {type SystemMessageGroupItem} from '#/screens/Messages/components/groupSystemMessages'
 import {atoms as a, useTheme} from '#/alf'

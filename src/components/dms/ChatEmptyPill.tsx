@@ -1,13 +1,13 @@
 import {useCallback, useMemo, useState} from 'react'
 import {Pressable, View} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {ScaleAndFadeIn} from '#/lib/custom-animations/ScaleAndFade'
 import {ShrinkAndPop} from '#/lib/custom-animations/ShrinkAndPop'
 import {useHaptics} from '#/lib/haptics'

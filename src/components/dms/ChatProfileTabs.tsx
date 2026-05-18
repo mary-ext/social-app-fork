@@ -1,9 +1,9 @@
 import {useCallback, useEffect} from 'react'
 import {type ScrollView, View} from 'react-native'
-import Animated, {useAnimatedRef, useSharedValue} from 'react-native-reanimated'
 import {moderateProfile} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
+import Animated, {useAnimatedRef, useSharedValue} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'

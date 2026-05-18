@@ -1,5 +1,6 @@
 import {createContext, useContext, useMemo} from 'react'
-import {type SharedValue, useSharedValue} from 'react-native-reanimated'
+
+import {type SharedValue, useSharedValue} from '#/lib/animations/reanimatedCompat'
 
 type StateContext = {
   headerHeight: SharedValue<number>
@@ -9,7 +10,9 @@ type StateContext = {
 const stateContext = createContext<StateContext>({
   headerHeight: {
     value: 0,
-    addListener() {},
+    addListener() {
+      return 0
+    },
     removeListener() {},
     modify() {},
     get() {
@@ -19,7 +22,9 @@ const stateContext = createContext<StateContext>({
   },
   footerHeight: {
     value: 0,
-    addListener() {},
+    addListener() {
+      return 0
+    },
     removeListener() {},
     modify() {},
     get() {

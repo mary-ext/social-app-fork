@@ -1,13 +1,13 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+
 import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-
+} from '#/lib/animations/reanimatedCompat'
 import {
   ScaleAndFadeIn,
   ScaleAndFadeOut,

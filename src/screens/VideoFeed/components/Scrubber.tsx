@@ -5,6 +5,13 @@ import {
   GestureDetector,
   type NativeGesture,
 } from 'react-native-gesture-handler'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
+import {useEventListener} from 'expo'
+import {type VideoPlayer} from 'expo-video'
+
 import Animated, {
   clamp,
   interpolate,
@@ -15,14 +22,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from 'react-native-reanimated'
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
-import {useEventListener} from 'expo'
-import {type VideoPlayer} from 'expo-video'
-
+} from '#/lib/animations/reanimatedCompat'
 import {tokens} from '#/alf'
 import {atoms as a} from '#/alf'
 import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'

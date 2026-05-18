@@ -1,7 +1,10 @@
 import {InteractionManager, View} from 'react-native'
-import {type AnimatedRef} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
+import {
+  type AnimatedRef,
+  type AnimatedView,
+} from '#/lib/animations/reanimatedCompat'
 import {POST_GALLERY_EMBED_ENABLED} from '#/lib/feature-flags'
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
@@ -32,7 +35,7 @@ export function ImageEmbed({
     }))
     const onPress = (
       index: number,
-      refs: AnimatedRef<any>[],
+      refs: AnimatedRef<AnimatedView>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
       openLightbox({

@@ -3,8 +3,8 @@
 import {memo} from 'react'
 import {View} from 'react-native'
 import {type PanGesture} from 'react-native-gesture-handler'
-import {type SharedValue} from 'react-native-reanimated'
 
+import {type SharedValue} from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {
   type Dimensions as ImageDimensions,

@@ -17,15 +17,15 @@ import PagerView, {
   type PagerViewOnPageSelectedEventData,
   type PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'
+import {useFocusEffect} from '@react-navigation/native'
+
 import Animated, {
   runOnJS,
   type SharedValue,
   useEvent,
   useHandler,
   useSharedValue,
-} from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 
@@ -186,7 +186,7 @@ function usePagerHandlers(
   },
   dependencies: unknown[],
 ) {
-  const {doDependenciesDiffer} = useHandler(handlers as any, dependencies)
+  const {doDependenciesDiffer} = useHandler(handlers, dependencies)
   const subscribeForEvents = [
     'onPageScroll',
     'onPageScrollStateChanged',
@@ -197,13 +197,13 @@ function usePagerHandlers(
       'worklet'
       const {onPageScroll, onPageScrollStateChanged, onPageSelected} = handlers
       if (event.eventName.endsWith('onPageScroll')) {
-        onPageScroll(event as any as PagerViewOnPageScrollEventData)
+        onPageScroll(event as unknown as PagerViewOnPageScrollEventData)
       } else if (event.eventName.endsWith('onPageScrollStateChanged')) {
         onPageScrollStateChanged(
-          event as any as PageScrollStateChangedNativeEventData,
+          event as unknown as PageScrollStateChangedNativeEventData,
         )
       } else if (event.eventName.endsWith('onPageSelected')) {
-        onPageSelected(event as any as PagerViewOnPageSelectedEventData)
+        onPageSelected(event as unknown as PagerViewOnPageSelectedEventData)
       }
     },
     subscribeForEvents,

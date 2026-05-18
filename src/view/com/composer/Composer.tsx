@@ -23,8 +23,25 @@ import {
 } from 'react-native'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import * as FileSystem from 'expo-file-system'
+import {type ImagePickerAsset} from 'expo-image-picker'
+import {
+  AppBskyDraftCreateDraft,
+  AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
+  AtUri,
+  type BskyAgent,
+  type RichText,
+} from '@atproto/api'
+import {plural} from '@lingui/core/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+
 import Animated, {
   type AnimatedRef,
+  type AnimatedScrollView,
   Easing,
   FadeIn,
   FadeOut,
@@ -42,23 +59,7 @@ import Animated, {
   withTiming,
   ZoomIn,
   ZoomOut,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import * as FileSystem from 'expo-file-system'
-import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyDraftCreateDraft,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
-  type BskyAgent,
-  type RichText,
-} from '@atproto/api'
-import {plural} from '@lingui/core/macro'
-import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
-
+} from '#/lib/animations/reanimatedCompat'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {useAppState} from '#/lib/appState'
@@ -900,20 +901,21 @@ export const ComposePost = ({
             posts,
           }
         }
-      } catch (waitErr: any) {
+      } catch (waitErr: unknown) {
         logger.info(`composer: waiting for app view failed`, {
           safeMessage: waitErr,
         })
       }
-    } catch (e: any) {
-      logger.error(e, {
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e : new Error(String(e))
+      logger.error(error, {
         message: `Composer: create post failed`,
         hasImages: filteredThread.posts.some(
           p => p.embed.media?.type === 'images',
         ),
       })
 
-      let err = cleanError(e.message)
+      let err = cleanError(error.message)
       if (
         e instanceof apilib.ReplyDeletedError ||
         err.includes('not locate record')
@@ -1067,7 +1069,7 @@ export const ComposePost = ({
     }
   }
 
-  const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
+  const scrollViewRef = useAnimatedRef<AnimatedScrollView>()
   useEffect(() => {
     if (composerState.mutableNeedsFocusActive) {
       composerState.mutableNeedsFocusActive = false
@@ -2026,7 +2028,7 @@ function useScrollTracker({
   scrollViewRef,
   stickyBottom,
 }: {
-  scrollViewRef: AnimatedRef<Animated.ScrollView>
+  scrollViewRef: AnimatedRef<AnimatedScrollView>
   stickyBottom: boolean
 }) {
   const t = useTheme()

@@ -1,14 +1,14 @@
 import {useEffect} from 'react'
+import {useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
+
 import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
   withTiming,
-} from 'react-native-reanimated'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {codeToLanguageName} from '#/locale/helpers'
 import {

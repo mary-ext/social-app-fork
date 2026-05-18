@@ -1,13 +1,13 @@
 import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
 import {RefreshControl, type ViewToken} from 'react-native'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
+
 import {
   type FlatListPropsWithLayout,
   runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
-} from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@bsky.app/video'
-
+} from '#/lib/animations/reanimatedCompat'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
@@ -176,7 +176,6 @@ let List = forwardRef<ListMethods, ListProps>(
         scrollsToTop={scrollsToTop}
         scrollEventThrottle={1}
         style={style}
-        // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
         ref={ref}
       />
     )

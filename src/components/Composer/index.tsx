@@ -4,10 +4,6 @@ import {
   type TextInputSubmitEditingEvent,
   View,
 } from 'react-native'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
 import {useSift, type UseSiftReturn} from '@bsky.app/sift'
 import {
   facets,
@@ -16,6 +12,10 @@ import {
   useTapper,
 } from '@bsky.app/tapper'
 
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from '#/lib/animations/reanimatedCompat'
 import {mergeRefs} from '#/lib/merge-refs'
 import {
   atoms as a,

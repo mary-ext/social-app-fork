@@ -1,14 +1,14 @@
 import {Pressable} from 'react-native'
+import {BlurView} from 'expo-blur'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   Extrapolation,
   interpolate,
   type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
-} from 'react-native-reanimated'
-import {BlurView} from 'expo-blur'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {atoms as a, useTheme} from '#/alf'
 import {useContextMenuContext} from './context'
 

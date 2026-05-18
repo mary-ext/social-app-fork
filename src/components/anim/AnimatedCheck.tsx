@@ -1,13 +1,13 @@
 import {forwardRef, useCallback, useEffect, useImperativeHandle} from 'react'
+import Svg, {Circle, Path} from 'react-native-svg'
+
 import Animated, {
   Easing,
   useAnimatedProps,
   useSharedValue,
   withDelay,
   withTiming,
-} from 'react-native-reanimated'
-import Svg, {Circle, Path} from 'react-native-svg'
-
+} from '#/lib/animations/reanimatedCompat'
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)

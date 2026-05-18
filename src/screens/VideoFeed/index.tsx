@@ -13,10 +13,6 @@ import {
   GestureDetector,
   type NativeGesture,
 } from 'react-native-gesture-handler'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
 import {
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -43,6 +39,10 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

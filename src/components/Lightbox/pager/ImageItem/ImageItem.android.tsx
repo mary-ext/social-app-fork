@@ -5,6 +5,8 @@ import {
   GestureDetector,
   type PanGesture,
 } from 'react-native-gesture-handler'
+import {Image} from 'expo-image'
+
 import Animated, {
   type AnimatableValue,
   runOnJS,
@@ -14,9 +16,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated'
-import {Image} from 'expo-image'
-
+} from '#/lib/animations/reanimatedCompat'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,

@@ -21,8 +21,10 @@ import {
   View,
   type ViewProps,
 } from 'react-native'
-import Animated from 'react-native-reanimated'
 
+import Animated, {
+  type AnimatedScrollView,
+} from '#/lib/animations/reanimatedCompat'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
@@ -143,7 +145,7 @@ export const FlatList_INTERNAL = forwardRef(function FlatListImpl<ItemT>(
  */
 export const ScrollView = forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
-  ref: React.Ref<Animated.ScrollView>,
+  ref: React.Ref<AnimatedScrollView>,
 ) {
   const {isMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()

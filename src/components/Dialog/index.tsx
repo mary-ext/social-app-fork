@@ -19,14 +19,14 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useLingui} from '@lingui/react/macro'
+
 import Animated, {
   runOnJS,
   type ScrollEvent,
   useAnimatedStyle,
-} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react/macro'
-
+} from '#/lib/animations/reanimatedCompat'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'

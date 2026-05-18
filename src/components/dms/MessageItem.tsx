@@ -7,17 +7,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LayoutAnimationConfig,
-  LinearTransition,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  ZoomIn,
-  ZoomOut,
-} from 'react-native-reanimated'
 import {
   AppBskyEmbedRecord,
   type ChatBskyActorDefs,
@@ -28,6 +17,17 @@ import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LayoutAnimationConfig,
+  LinearTransition,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  ZoomIn,
+  ZoomOut,
+} from '#/lib/animations/reanimatedCompat'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type ConvoItem} from '#/state/messages/convo/types'

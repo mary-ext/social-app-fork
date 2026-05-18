@@ -7,9 +7,9 @@ import {
   useState,
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {Trans} from '@lingui/react/macro'
 
+import Animated, {useAnimatedStyle} from '#/lib/animations/reanimatedCompat'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
