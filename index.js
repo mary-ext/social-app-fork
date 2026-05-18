@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler' // must be first
 import '#/platform/polyfills'
 
 import {LogBox} from 'react-native'

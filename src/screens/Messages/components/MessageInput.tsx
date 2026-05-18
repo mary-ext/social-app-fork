@@ -28,7 +28,7 @@ import {
   useFocusedInputHandler,
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,
-} from '#/shims/react-native-keyboard-controller'
+} from '#/shims/native-keyboard-controller'
 import {ComposerContainer} from './MessageComposer'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 

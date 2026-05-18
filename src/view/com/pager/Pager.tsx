@@ -9,8 +9,6 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {DrawerGestureContext} from 'react-native-drawer-layout'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import PagerView, {
   type PagerViewOnPageScrollEventData,
   type PagerViewOnPageSelectedEvent,
@@ -28,6 +26,8 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
+import {DrawerGestureContext} from '#/shims/native-drawer-layout'
+import {Gesture, GestureDetector} from '#/shims/native-gesture-handler'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 

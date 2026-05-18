@@ -3,7 +3,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme} from '#/alf'
 import {IS_WEB} from '#/env'
-import {KeyboardStickyView} from '#/shims/react-native-keyboard-controller'
+import {KeyboardStickyView} from '#/shims/native-keyboard-controller'
 
 export function KeyboardAccessory({children}: {children: React.ReactNode}) {
   const t = useTheme()

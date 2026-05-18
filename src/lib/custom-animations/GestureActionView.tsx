@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 
 import Animated, {
   clamp,
@@ -16,6 +15,7 @@ import Animated, {
   withTiming,
 } from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
+import {Gesture, GestureDetector} from '#/shims/native-gesture-handler'
 
 interface GestureAction {
   color: ColorValue

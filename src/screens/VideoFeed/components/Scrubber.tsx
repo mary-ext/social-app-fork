@@ -1,11 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  Gesture,
-  GestureDetector,
-  type NativeGesture,
-} from 'react-native-gesture-handler'
-import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
@@ -27,6 +22,11 @@ import {tokens} from '#/alf'
 import {atoms as a} from '#/alf'
 import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'
 import {Text} from '#/components/Typography'
+import {
+  Gesture,
+  GestureDetector,
+  type NativeGesture,
+} from '#/shims/native-gesture-handler'
 
 // magic number that is roughly the min height of the write reply button
 // we inset the video by this amount

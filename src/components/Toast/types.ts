@@ -1,12 +1,9 @@
-import {type toast as sonner} from 'sonner-native'
-
-/**
- * This is not exported from `sonner-native` so just hacking it in here.
- */
-export type ExternalToast = Exclude<
-  Parameters<typeof sonner.custom>[1],
-  undefined
->
+export type ExternalToast = {
+  dismissible?: boolean
+  duration?: number
+  id?: string
+  promiseOptions?: unknown
+}
 
 export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info'
 
@@ -16,7 +13,7 @@ export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info'
  */
 export type BaseToastOptions = Pick<
   ExternalToast,
-  'duration' | 'dismissible' | 'promiseOptions'
+  'duration' | 'dismissible' | 'id' | 'promiseOptions'
 > & {
   type?: ToastType
 

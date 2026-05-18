@@ -1,5 +1,4 @@
 import {useLayoutEffect, useRef} from 'react'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 
 import Animated, {
   type AnimatedRef,
@@ -20,6 +19,7 @@ import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme, web} from '#/alf'
 import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
 import {IS_IOS} from '#/env'
+import {Gesture, GestureDetector} from '#/shims/native-gesture-handler'
 
 /**
  * Drag-to-reorder list. Items are absolutely positioned in a fixed-height

@@ -14,7 +14,7 @@ import {
 } from 'react-native'
 
 /*
- * Long-lived web adapter for react-native-keyboard-controller.
+ * Long-lived web adapter for native keyboard controller APIs.
  *
  * Web does not have a native soft-keyboard controller. Keep this shim as a
  * dependency boundary while native keyboard behavior is removed from the web

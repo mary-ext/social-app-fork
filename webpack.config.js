@@ -1,6 +1,5 @@
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const {withAlias} = require('@expo/webpack-config/addons')
-const path = require('path')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 const {sentryWebpackPlugin} = require('@sentry/webpack-plugin')
@@ -31,11 +30,6 @@ module.exports = async function (env, argv) {
     'unicode-segmenter/grapheme': require
       .resolve('unicode-segmenter/grapheme')
       .replace(/\.cjs$/, '.js'),
-    'react-native-gesture-handler': false, // RNGH should not be used on web, so let's cause a build error if it sneaks in
-    'react-native-keyboard-controller': path.resolve(
-      __dirname,
-      'src/shims/react-native-keyboard-controller',
-    ),
     '@sentry-internal/replay': false, // not used, ~300kb of dead weight
   })
   config.module.rules = [

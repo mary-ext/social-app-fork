@@ -1,13 +1,14 @@
 import {createContext, useContext, useMemo, useRef, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {EventEmitter} from 'eventemitter3'
+
 import {
   Gesture,
   GestureDetector,
   type GestureStateChangeEvent,
   type GestureUpdateEvent,
   type PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler'
-import {EventEmitter} from 'eventemitter3'
+} from '#/shims/native-gesture-handler'
 
 export type GlobalGestureEvents = {
   begin: GestureStateChangeEvent<PanGestureHandlerEventPayload>

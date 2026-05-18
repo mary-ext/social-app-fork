@@ -60,7 +60,7 @@ import {
   KeyboardChatScrollView,
   type KeyboardChatScrollViewProps,
   KeyboardGestureArea,
-} from '#/shims/react-native-keyboard-controller'
+} from '#/shims/native-keyboard-controller'
 import {ChatStatusInfo} from './ChatStatusInfo'
 import {groupSystemMessages, type RenderItem} from './groupSystemMessages'
 import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
@@ -469,7 +469,7 @@ export function MessagesList({
     <InviteLinkDialogProvider convo={convoState.convo}>
       <KeyboardGestureArea
         interpolator="ios"
-        // HACKFIX: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1419
+        // HACKFIX: upstream keyboard controller issue #1419
         offset={Math.round(inputHeightJS)}
         // slightly too buggy unfortunately, enable when possible
         // textInputNativeID={textInputId}

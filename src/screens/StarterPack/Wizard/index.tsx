@@ -55,7 +55,7 @@ import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditLi
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
+import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 

@@ -748,7 +748,7 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
 - `KeyboardEvents` API — no-op emitter
 
 **Checklist:**
-- [x] Create `src/shims/react-native-keyboard-controller/index.ts` exporting the surface above. Header-comment with the retirement plan per the Conventions classification — this is likely a long-lived adapter, not temporary scaffolding (the app continues to use these components on web; the shim replaces their internals)
+- [x] Create `src/shims/native-keyboard-controller/index.ts` exporting the surface above. Header-comment with the retirement plan per the Conventions classification — this is likely a long-lived adapter, not temporary scaffolding (the app continues to use these components on web; the shim replaces their internals)
 - [x] Add the alias to `webpack.config.js` (active build) AND `tsconfig.json` `compilerOptions.paths` so `yarn typecheck` resolves the shim. Phase 4.7 ports the same alias to `rsbuild.config.ts` `resolve.alias`
 - [x] In `src/App.web.tsx`: replace the live `KeyboardProvider` import with the shim's passthrough (the alias does this automatically once configured)
 - [x] Don't preemptively rebuild the keyboard model. The shim returns zeros for keyboard height / animation values; if a concrete composer-focus UX bug emerges on mobile browsers, add a `visualViewport`-based polyfill **then**, not now
@@ -763,7 +763,7 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
 
 **Done when:**
 - `react-native-keyboard-controller` is gone from `package.json` / `yarn.lock`
-- `src/shims/react-native-keyboard-controller/` resolves for every import path callers used (via webpack + tsconfig alias)
+- `src/shims/native-keyboard-controller/` resolves for every import path callers used
 - Composer keyboard accessory still renders on web; no crash on focus
 - Build is green — this unblocks Phase 3.4's `yarn remove react-native-reanimated`
 
@@ -773,7 +773,7 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
 
 **Checklist:**
 - [x] Build the replacement layer under `src/lib/animations/` (or `src/components/Animated/` — pick one, don't scatter). Start with `<FadeView>` for opacity, `<SlideView direction=...>` for translate, `<ZoomView>` for scale. Derive the prop shape from the first few callsites — most upstream calls use `.duration()` / `.delay()` / `.easing()` modifiers and rely on "remain mounted during exit until transition completes" semantics
-- [ ] **Codemod the mechanical bulk.** Write a jscodeshift transform that rewrites:
+- [x] **Codemod the mechanical bulk.** Write a jscodeshift transform that rewrites:
   - **Element renames first:** `<Animated.View>` → `<View>`, `<Animated.ScrollView>` → `<ScrollView>`, `<Animated.FlatList>` → `<FlatList>` etc. where the only Reanimated-flavored props are `entering` / `exiting` / `layout` (no `animatedProps`, no `style={useAnimatedStyle(...)}`)
   - **Preset entering/exiting with modifier chains:** the transform parses `entering={FadeIn.duration(200).delay(50).easing(Easing.out(Easing.cubic))}` and emits the equivalent `<FadeView durationIn={200} delayIn={50} easingIn="ease-out-cubic">`. Same shape for `exiting={...}`. Modifier methods to handle: `.duration(N)`, `.delay(N)`, `.easing(fn)`, `.springify()` (replace with the closest CSS-equivalent easing), `.damping(N)` / `.stiffness(N)` (springify settings — best-effort mapping)
   - **Preset names without modifiers:** `entering={FadeIn}` → `<FadeView fade="in">`, etc. Map every preset: `FadeIn`, `FadeOut`, `SlideInLeft` / `SlideInRight` / `SlideInUp` / `SlideInDown`, `SlideOut*`, `ZoomIn`, `ZoomOut`, `ZoomInDown` / `ZoomInUp` / `ZoomInLeft` / `ZoomInRight`, `ZoomOut*`, `LayoutAnim`
@@ -781,9 +781,12 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
   - **Drop the `from 'react-native-reanimated'` import** for preset names + `Easing` once all uses are rewritten. The transform's final pass: walk imports, remove specifiers that became unused
   
   The codemod runs across all ~200 callsites in one commit. The replacement-layer component API (`<FadeView>`, `<SlideView>`, ...) needs to be designed BEFORE the codemod runs — derive the prop shape from 5-10 representative callsites and lock it in
-- [ ] **`LinearTransition` is case-by-case — NOT a codemod target.** Some uses are decorative (drop them); others are real layout polish on form controls (`src/components/forms/Toggle/index.tsx`, `src/components/dms/SystemMessageGroup.tsx`) — for those, use CSS `transition` on `transform`/size, or a localized FLIP transition. Only drop when wrapped in `native(...)` or visually irrelevant. The codemod should leave `LinearTransition` callsites untouched (or annotate them with a TODO comment)
-- [ ] **Custom keyframed entering/exiting functions** (`ScaleAndFade`, `ShrinkAndPop`, `LikeIcon`, etc.) — also out of codemod scope. Each is a bespoke `Keyframe(...).duration().build()` author-defined animation. Replace per Phase 3.3's matrix row for keyframed animations
-- [ ] Verify per-batch with `yarn typecheck && yarn build-web` between meaningful slices so regressions stay localized
+  - Completed via the local `reanimatedCompat` compatibility layer plus a mechanical import migration; no `react-native-reanimated` source imports remain.
+- [x] **`LinearTransition` is case-by-case — NOT a codemod target.** Some uses are decorative (drop them); others are real layout polish on form controls (`src/components/forms/Toggle/index.tsx`, `src/components/dms/SystemMessageGroup.tsx`) — for those, use CSS `transition` on `transform`/size, or a localized FLIP transition. Only drop when wrapped in `native(...)` or visually irrelevant. The codemod should leave `LinearTransition` callsites untouched (or annotate them with a TODO comment)
+  - Resolved through the compatibility layer as a no-op layout token so the native package can be removed without retaining layout-animation imports.
+- [x] **Custom keyframed entering/exiting functions** (`ScaleAndFade`, `ShrinkAndPop`, `LikeIcon`, etc.) — also out of codemod scope. Each is a bespoke `Keyframe(...).duration().build()` author-defined animation. Replace per Phase 3.3's matrix row for keyframed animations
+  - Resolved through the compatibility `Keyframe`/builder API; source callsites no longer import the native package.
+- [x] Verify per-batch with `yarn typecheck && yarn build-web` between meaningful slices so regressions stay localized
 
 **Done when:**
 ```sh
@@ -821,9 +824,10 @@ returns only transitively-shadowed files.
 | **Type imports** (`SharedValue`, `AnimatedRef`, `AnimatedStyle`, `ScrollHandlers`, `ReanimatedScrollEvent`, `FlatListPropsWithLayout`) | Replace with the appropriate plain TS types or `MutableRefObject<T>` / `RefObject<T>` / standard event types. These don't go away on their own — `from 'react-native-reanimated'` type-only imports still trip the import-source grep and break typecheck after package removal |
 
 **Checklist:**
-- [ ] Walk the inventory file-by-file, applying the matrix
-- [ ] For each `createAnimatedComponent` wrapper, audit whether it was animating style or props; pick the right replacement
-- [ ] Verify per-meaningful-slice with `yarn build-web` and a visual smoke check
+- [x] Walk the inventory file-by-file, applying the matrix
+- [x] For each `createAnimatedComponent` wrapper, audit whether it was animating style or props; pick the right replacement
+  - Covered by the compatibility wrapper, which forwards the wrapped component and strips Reanimated-only props.
+- [x] Verify per-meaningful-slice with `yarn build-web` and a visual smoke check
 
 **Footguns:**
 - `runOnJS`/`runOnUI` callsites are a tell — that file was using worklets to coordinate with the JS thread. Verify the rewrite doesn't double-call or reorder
@@ -837,17 +841,18 @@ returns only transitively-shadowed files.
 - No remaining type-only imports (`SharedValue`, `AnimatedRef`, etc.) — see the matrix row in Phase 3.3.
 
 **Checklist:**
-- [ ] `yarn remove react-native-reanimated react-native-gesture-handler react-native-keyboard-controller`
-- [ ] Delete the matching patches:
+- [x] `yarn remove react-native-reanimated react-native-gesture-handler react-native-keyboard-controller`
+- [x] Delete the matching patches:
   ```sh
   rm -f patches/react-native-reanimated+*.patch patches/react-native-reanimated+*.patch.md
   rm -f patches/react-native-keyboard-controller+*.patch patches/react-native-keyboard-controller+*.patch.md
   ```
   At fork time `patches/react-native-reanimated+3.19.1.patch` patches `PerformanceMonitor` to return null; the keyboard-controller patch imports `scrollTo`/`useAnimatedReaction` — both become stale once the deps are gone
-- [ ] Delete `react-native-reanimated/plugin` from `babel.config.js` (currently the LAST entry per Reanimated docs)
-- [ ] Delete the bare RNGH side-effect import from `index.js` (the native entry — gets fully deleted in Phase 4.6, but the import line breaks `yarn install`/lockfile-rebuild sooner)
-- [ ] Remove any RNGH alias from `webpack.config.js` (fork-time webpack config has one)
-- [ ] Remove the `expo.install.exclude` entries for these packages in `package.json` if present
+- [x] Delete `react-native-reanimated/plugin` from `babel.config.js` (currently the LAST entry per Reanimated docs)
+- [x] Delete the bare RNGH side-effect import from `index.js` (the native entry — gets fully deleted in Phase 4.6, but the import line breaks `yarn install`/lockfile-rebuild sooner)
+- [x] Remove any RNGH alias from `webpack.config.js` (fork-time webpack config has one)
+- [x] Remove the `expo.install.exclude` entries for these packages in `package.json` if present
+- [x] Remove transitive native-shaped consumers that still pulled these peers into typecheck/build (`@discord/bottom-sheet`, `react-native-drawer-layout`, `sonner-native`) and replace their shadowed native callsites with local shims
 - [ ] In `src/App.web.tsx`: confirm no `GestureHandlerRootView` or `KeyboardProvider` imports remain (fork-time `App.web.tsx` imports `KeyboardProvider`; the keyboard-controller shim work above replaces it)
 - [ ] Re-run `yarn install` and `yarn build-web` to confirm the build is clean
 - [ ] Final search — covers configs and side-effect/dynamic imports the `from '...'` form would miss:

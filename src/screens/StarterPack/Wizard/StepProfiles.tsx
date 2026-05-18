@@ -15,7 +15,7 @@ import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
-import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
+import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 import type * as bsky from '#/types/bsky'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {

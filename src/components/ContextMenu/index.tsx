@@ -20,13 +20,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  Gesture,
-  GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler'
-import {
   type EdgeInsets,
   useSafeAreaFrame,
   useSafeAreaInsets,
@@ -74,7 +67,14 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS} from '#/env'
-import {KeyboardEvents} from '#/shims/react-native-keyboard-controller'
+import {
+  Gesture,
+  GestureDetector,
+  type GestureStateChangeEvent,
+  type GestureUpdateEvent,
+  type PanGestureHandlerEventPayload,
+} from '#/shims/native-gesture-handler'
+import {KeyboardEvents} from '#/shims/native-keyboard-controller'
 import {Backdrop} from './Backdrop'
 
 export {

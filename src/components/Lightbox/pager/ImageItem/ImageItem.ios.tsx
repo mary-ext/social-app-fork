@@ -8,11 +8,6 @@
 
 import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  type PanGesture,
-} from 'react-native-gesture-handler'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
@@ -27,6 +22,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from '#/lib/animations/reanimatedCompat'
+import {
+  Gesture,
+  GestureDetector,
+  type PanGesture,
+} from '#/shims/native-gesture-handler'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,

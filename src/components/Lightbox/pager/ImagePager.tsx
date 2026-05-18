@@ -10,7 +10,6 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import * as ScreenOrientation from 'expo-screen-orientation'
 
@@ -39,6 +38,7 @@ import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {IS_IOS} from '#/env'
+import {Gesture} from '#/shims/native-gesture-handler'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
@@ -114,14 +114,14 @@ export default function ImageViewRoot({
 
     const isAnimated = canAnimate(nextLightbox)
 
-    // https://github.com/software-mansion/react-native-reanimated/issues/6677
+    // Keep the first open animation one frame after rect initialization.
     rAF_FIXED(() => {
       openProgress.set(() =>
         isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1,
       )
     })
     return () => {
-      // https://github.com/software-mansion/react-native-reanimated/issues/6677
+      // Match the open path by scheduling the close animation one frame later.
       rAF_FIXED(() => {
         openProgress.set(() =>
           isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0,

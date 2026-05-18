@@ -2,10 +2,10 @@ import Animated, {useAnimatedStyle} from '#/lib/animations/reanimatedCompat'
 import {
   type KeyboardStickyViewProps,
   useReanimatedKeyboardAnimation,
-} from '#/shims/react-native-keyboard-controller'
+} from '#/shims/native-keyboard-controller'
 
-// Vendored from https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/src/components/KeyboardStickyView/index.tsx
-// Converted to Reanimated to support `minimumOffset` clamping.
+// Vendored keyboard sticky view, converted to local animation helpers for
+// `minimumOffset` clamping.
 export function KeyboardStickyView({
   children,
   offset: {closed = 0, opened = 0} = {},

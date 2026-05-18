@@ -2,10 +2,10 @@
 
 import {memo} from 'react'
 import {View} from 'react-native'
-import {type PanGesture} from 'react-native-gesture-handler'
 
 import {type SharedValue} from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
+import {type PanGesture} from '#/shims/native-gesture-handler'
 import {
   type Dimensions as ImageDimensions,
   type ImageSource,

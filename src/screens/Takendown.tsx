@@ -22,7 +22,7 @@ import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
 import {IS_WEB} from '#/env'
-import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
+import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 
 const COL_WIDTH = 400
 

@@ -19,7 +19,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
-import {KeyboardAwareScrollView} from '#/shims/react-native-keyboard-controller'
+import {KeyboardAwareScrollView} from '#/shims/native-keyboard-controller'
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
   return item.uri

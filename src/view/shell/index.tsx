@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
-import {Drawer} from 'react-native-drawer-layout'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
@@ -36,6 +34,8 @@ import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
+import {Drawer} from '#/shims/native-drawer-layout'
+import {Gesture} from '#/shims/native-gesture-handler'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
@@ -143,7 +143,9 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       renderDrawerContent={renderDrawerContent}
       drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
       configureGestureHandler={handler => {
-        handler = handler.requireExternalGestureToFail(trendingScrollGesture)
+        handler = handler.requireExternalGestureToFail(
+          trendingScrollGesture as never,
+        )
 
         if (swipeEnabled) {
           if (isDrawerOpen) {

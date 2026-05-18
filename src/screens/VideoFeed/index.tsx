@@ -9,11 +9,6 @@ import {
   type ViewToken,
 } from 'react-native'
 import {
-  Gesture,
-  GestureDetector,
-  type NativeGesture,
-} from 'react-native-gesture-handler'
-import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
@@ -97,6 +92,11 @@ import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
+import {
+  Gesture,
+  GestureDetector,
+  type NativeGesture,
+} from '#/shims/native-gesture-handler'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 

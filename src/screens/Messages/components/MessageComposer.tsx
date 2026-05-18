@@ -32,7 +32,7 @@ import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {
   useKeyboardHandler,
   useReanimatedKeyboardAnimation,
-} from '#/shims/react-native-keyboard-controller'
+} from '#/shims/native-keyboard-controller'
 
 const MIN_HEIGHT = 40
 

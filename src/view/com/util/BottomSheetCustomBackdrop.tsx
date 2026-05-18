@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
-import {type BottomSheetBackdropProps} from '@discord/bottom-sheet/src'
 import {useLingui} from '@lingui/react/macro'
 
 import Animated, {
@@ -8,6 +7,7 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from '#/lib/animations/reanimatedCompat'
+import {type BottomSheetBackdropProps} from '#/shims/native-bottom-sheet'
 
 export function createCustomBackdrop(
   onClose?: () => void,

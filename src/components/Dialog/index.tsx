@@ -43,7 +43,7 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {useReanimatedKeyboardAnimation} from '#/shims/react-native-keyboard-controller'
+import {useReanimatedKeyboardAnimation} from '#/shims/native-keyboard-controller'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   type BottomSheetSnapPointChangeEvent,

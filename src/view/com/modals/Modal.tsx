@@ -1,11 +1,11 @@
 import {Fragment, useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import BottomSheet from '@discord/bottom-sheet/src'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
+import BottomSheet, {type BottomSheetMethods} from '#/shims/native-bottom-sheet'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 
@@ -15,7 +15,7 @@ const HANDLE_HEIGHT = 24
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
   const {closeModal} = useModalControls()
-  const bottomSheetRef = useRef<BottomSheet>(null)
+  const bottomSheetRef = useRef<BottomSheetMethods>(null)
   const pal = usePalette('default')
   const activeModal = activeModals[activeModals.length - 1]
 
