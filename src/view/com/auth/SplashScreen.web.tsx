@@ -14,7 +14,6 @@ import {
   postAppClipMessage,
 } from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, useTheme} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -180,8 +179,6 @@ function Footer() {
           Jobs
         </Trans>
       </InlineLinkText>
-      <View style={a.flex_1} />
-      <AppLanguageDropdown />
     </View>
   )
 }

@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
-import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
-import {findSupportedAppLanguage} from '#/locale/helpers'
+import {deviceLanguageCodes} from '#/locale/deviceLocales'
+import {AppLanguage} from '#/locale/languages'
 import {logger} from '#/logger'
 import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
@@ -151,11 +151,7 @@ export const defaults: Schema = {
     postLanguageHistory: (deviceLanguageCodes || [])
       .concat(['en', 'ja', 'pt', 'de'])
       .slice(0, 6),
-    // try full language tag first, then fallback to language code
-    appLanguage: findSupportedAppLanguage([
-      deviceLocales.at(0)?.languageTag,
-      deviceLanguageCodes[0],
-    ]),
+    appLanguage: AppLanguage.en,
   },
   requireAltTextEnabled: false,
   largeAltBadgeEnabled: false,

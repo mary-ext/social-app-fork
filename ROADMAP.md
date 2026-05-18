@@ -672,32 +672,32 @@ both return nothing. `@lingui/core/macro` remains valid for v5 `t`, `plural`, an
 
 **Checklist:**
 
-- [ ] **Delete non-English catalogs:**
+- [x] **Delete non-English catalogs:**
   ```sh
   cd src/locale/locales && ls | grep -vx 'en' | xargs rm -rf
   ```
   This removes 47 locale directories. `en` is the only survivor (drop `en-GB` too unless you specifically want it — it's just a thin override)
-- [ ] **Crowdin removal:**
+- [x] **Crowdin removal:**
   - `rm -f crowdin.yml`
   - `yarn remove @crowdin/cli`
   - In `package.json` scripts, delete `intl:pull`, `intl:push`, `intl:push-sources`, `intl:release` (all four invoke `crowdin`)
   - (The nightly Crowdin GitHub Action is already gone — Phase 1.1 deleted `.github/`)
-- [ ] **Documentation cleanup:**
+- [x] **Documentation cleanup:**
   - `rm -f docs/localization.md`
-- [ ] **`src/locale/i18n.web.ts`** — collapse the 48-arm `switch` in `dynamicActivate` to just the `en` case. Drop all the other `import('./locales/<x>/messages')` / `import('date-fns/locale/<x>')` arms. The function effectively becomes a single-locale loader (and can be inlined to a top-level import + `i18n.load`/`i18n.activate` pair)
-- [ ] **`src/locale/i18n.ts`** — same narrowing. (This file gets deleted entirely in Phase 4.5 platform-branch collapse, but doing it here keeps `yarn typecheck` green throughout Stream 2.) The `@formatjs/intl-*` polyfill imports stay in `i18n.ts` until Phase 4.5 deletes the file — **don't `yarn remove @formatjs/intl-*` in this phase**
-- [ ] **`src/locale/languages.ts`** — narrow `AppLanguage` enum to just `en` (or delete the enum and replace its uses with the literal `'en'`). `LANGUAGES` and the `Language` interface are about *content* languages and stay
-- [ ] **`src/locale/helpers.ts`** — `sanitizeAppLanguageSetting()` becomes trivial: always returns `'en'`. Delete the device-locale-matching logic (it was for picking the closest supported UI locale)
-- [ ] **`src/state/preferences/languages.tsx`** — keep `contentLanguages`, `postLanguage`, etc. Narrow the `setAppLanguage` API to `'en'` only, or delete it outright (every caller now passes `'en'`)
-- [ ] **`lingui.config.ts`** — narrow the `locales` array to `['en']`. Otherwise `lingui compile` / future extractions will look for the deleted catalog directories and either fail or no-op confusingly
-- [ ] **App-language UI lives in more places than Settings.** Delete `src/components/AppLanguageDropdown.tsx` (or stub it to a one-option `'English'` display) and remove its consumers: `src/view/shell/desktop/RightNav.tsx`, `src/view/shell/NavSignupCard.tsx`, `src/view/com/auth/SplashScreen.web.tsx`, `src/screens/Signup/index.tsx`, plus the Settings entry. Recommended: delete the component entirely — a one-option language selector is dead UI. The content-language picker (post-language detection, etc.) stays
-- [ ] Drop `intl:extract:all` from `package.json` scripts (the `:all` variant exists to extract every locale; with only `en`, simplify `intl:build` to call `intl:extract`)
-- [ ] **Refresh the catalog** against the trimmed Stream 2 UI: `yarn intl:extract --clean --locale en && yarn intl:compile`. Then verify nothing stale survived:
+- [x] **`src/locale/i18n.web.ts`** — collapse the 48-arm `switch` in `dynamicActivate` to just the `en` case. Drop all the other `import('./locales/<x>/messages')` / `import('date-fns/locale/<x>')` arms. The function effectively becomes a single-locale loader (and can be inlined to a top-level import + `i18n.load`/`i18n.activate` pair)
+- [x] **`src/locale/i18n.ts`** — same narrowing. (This file gets deleted entirely in Phase 4.5 platform-branch collapse, but doing it here keeps `yarn typecheck` green throughout Stream 2.) The `@formatjs/intl-*` polyfill imports stay in `i18n.ts` until Phase 4.5 deletes the file — **don't `yarn remove @formatjs/intl-*` in this phase**
+- [x] **`src/locale/languages.ts`** — narrow `AppLanguage` enum to just `en` (or delete the enum and replace its uses with the literal `'en'`). `LANGUAGES` and the `Language` interface are about *content* languages and stay
+- [x] **`src/locale/helpers.ts`** — `sanitizeAppLanguageSetting()` becomes trivial: always returns `'en'`. Delete the device-locale-matching logic (it was for picking the closest supported UI locale)
+- [x] **`src/state/preferences/languages.tsx`** — keep `contentLanguages`, `postLanguage`, etc. Narrow the `setAppLanguage` API to `'en'` only, or delete it outright (every caller now passes `'en'`)
+- [x] **`lingui.config.ts`** — narrow the `locales` array to `['en']`. Otherwise `lingui compile` / future extractions will look for the deleted catalog directories and either fail or no-op confusingly
+- [x] **App-language UI lives in more places than Settings.** Delete `src/components/AppLanguageDropdown.tsx` (or stub it to a one-option `'English'` display) and remove its consumers: `src/view/shell/desktop/RightNav.tsx`, `src/view/shell/NavSignupCard.tsx`, `src/view/com/auth/SplashScreen.web.tsx`, `src/screens/Signup/index.tsx`, plus the Settings entry. Recommended: delete the component entirely — a one-option language selector is dead UI. The content-language picker (post-language detection, etc.) stays
+- [x] Drop `intl:extract:all` from `package.json` scripts (the `:all` variant exists to extract every locale; with only `en`, simplify `intl:build` to call `intl:extract`)
+- [x] **Refresh the catalog** against the trimmed Stream 2 UI: `yarn intl:extract --clean --locale en && yarn intl:compile`. Then verify nothing stale survived:
   ```sh
   rg "AgeAssurance|ageAssurance|geolocation|DeviceLocationRequest|FindContacts" src/locale/locales/en/messages.po
   ```
   Hits at this point are real bugs (source still references AA/geolocation/contacts); zero hits = clean
-- [ ] Commit the regenerated `messages.po` and `messages.ts`
+- [x] Commit the regenerated `messages.po` and `messages.ts`
 
 **Footguns:**
 - Upstream CLAUDE.md says nightly CI normally handles `intl:extract` / `intl:compile`. After ripping out the Crowdin pipeline + nightly workflow, that's no longer true — extract+compile runs locally for any commit touching user-facing strings

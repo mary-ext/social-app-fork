@@ -17,7 +17,6 @@ import {
   useTheme,
   web,
 } from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
@@ -52,8 +51,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const searchQuery = webqueryParams?.q
   const showExploreScreenDuplicatedContent =
     !isSearchScreen || (isSearchScreen && !!searchQuery)
-  const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
-    useLayoutBreakpoints()
+  const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
 
   if (!rightNavVisible || isMessagesRelatedScreen) {
     return null
@@ -138,11 +136,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             </InlineLinkText>
           </Trans>
         </Text>
-      )}
-      {!hasSession && leftNavMinimal && (
-        <View style={[a.w_full, {height: 32}]}>
-          <AppLanguageDropdown />
-        </View>
       )}
     </View>
   )

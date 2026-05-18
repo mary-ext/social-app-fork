@@ -22,7 +22,6 @@ import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
@@ -209,7 +208,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       a.gap_md,
                       a.align_center,
                     ]}>
-                    <AppLanguageDropdown />
                     <Text
                       style={[
                         a.flex_1,

@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 
-import {type AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
 
 type SetStateCb = (
@@ -19,7 +18,6 @@ type ApiContext = {
   setPostLanguage: (commaSeparatedLangCodes: string) => void
   setContentLanguages: (code2s: string[]) => void
   savePostLanguageToHistory: () => void
-  setAppLanguage: (code2: AppLanguage) => void
 }
 
 const stateContext = createContext<StateContext>(
@@ -31,7 +29,6 @@ const apiContext = createContext<ApiContext>({
   setPostLanguage: (_: string) => {},
   setContentLanguages: (_: string[]) => {},
   savePostLanguageToHistory: () => {},
-  setAppLanguage: (_: AppLanguage) => {},
 })
 apiContext.displayName = 'LanguagePrefsApiContext'
 
@@ -83,9 +80,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             .slice(0, 6),
         }))
       },
-      setAppLanguage(code2: AppLanguage) {
-        setStateWrapped(s => ({...s, appLanguage: code2}))
-      },
     }),
     [setStateWrapped],
   )
@@ -109,14 +103,8 @@ export function getContentLanguages() {
   return persisted.get('languagePrefs').contentLanguages
 }
 
-/**
- * Be careful with this. It's used for the PWI home screen so that users can
- * select a UI language and have it apply to the fetched Discover feed.
- *
- * We only support BCP-47 two-letter codes here, hence the split.
- */
 export function getAppLanguageAsContentLanguage() {
-  return persisted.get('languagePrefs').appLanguage.split('-')[0]
+  return 'en'
 }
 
 export function toPostLanguages(postLanguage: string): string[] {

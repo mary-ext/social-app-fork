@@ -7,7 +7,6 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -60,9 +59,6 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
             <Trans>Sign in</Trans>
           </ButtonText>
         </Button>
-      </View>
-      <View style={[a.mt_md, a.w_full, {height: 32}]}>
-        <AppLanguageDropdown />
       </View>
     </View>
   )

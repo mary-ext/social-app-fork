@@ -4,16 +4,6 @@
       "count": 1
     }
   },
-  "src/analytics/metadata.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/analytics/metrics/client.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    }
-  },
   "src/components/Composer/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -300,11 +290,6 @@
     }
   },
   "src/lib/strings/errors.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/locale/i18n.web.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
