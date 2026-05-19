@@ -6,7 +6,12 @@ import {
   useRef,
   useState,
 } from 'react'
-import {type LayoutChangeEvent, type ScrollViewProps, View} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  type ScrollViewProps,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   type $Typed,
@@ -64,6 +69,16 @@ import {InviteLinkDialogProvider} from './InviteLinkDialogProvider'
 import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
 import {MessagesListInfoPanel} from './MessagesListInfoPanel'
 import {KeyboardStickyView} from './vendor/KeyboardStickyView'
+
+type WebViewStyle = ViewStyle & {
+  scrollbarColor?: string
+  scrollbarGutter?: 'stable'
+  scrollbarWidth?: 'thin'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -515,13 +530,11 @@ export function MessagesList({
                 onLayout={onFooterLayout}
               />
             }
-            style={
-              {
+            style={webViewStyle({
                 scrollbarWidth: 'thin',
                 scrollbarColor: `${t.palette.contrast_100} transparent`,
                 scrollbarGutter: 'stable',
-              } as any
-            }
+              })}
             contentInset={{top: transparentHeaderHeight}}
             scrollIndicatorInsets={{top: transparentHeaderHeight}}
           />

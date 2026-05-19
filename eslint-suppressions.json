@@ -14,11 +14,6 @@
       "count": 1
     }
   },
-  "src/components/DraggableList/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/components/Lists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -54,22 +49,7 @@
       "count": 1
     }
   },
-  "src/components/suggested-follows-dialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/features/gifPicker/components/GifPickerGrid.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useNonReactiveCallback.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Messages/components/MessagesList.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -77,16 +57,6 @@
   "src/screens/Profile/Sections/Feed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/view/com/composer/Composer.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/feeds/ComposerPrompt.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "src/view/com/notifications/NotificationFeedItem.tsx": {
@@ -120,11 +90,6 @@
     }
   },
   "src/view/shell/createNativeStackNavigatorWithAuth.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/shell/desktop/LeftNav.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

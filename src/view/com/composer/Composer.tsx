@@ -168,6 +168,16 @@ type CancelRef = {
   onPressCancel: () => void
 }
 
+type WebViewStyle = Omit<ViewStyle, 'position'> & {
+  position?: 'sticky'
+  scrollbarColor?: string
+  scrollbarGutter?: 'stable'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
+
 type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
@@ -1098,10 +1108,10 @@ export const ComposePost = ({
             contentContainerStyle={a.flex_grow}
             style={[
               a.flex_1,
-              {
+              webViewStyle({
                 scrollbarGutter: 'stable',
                 scrollbarColor: `${t.palette.contrast_200} transparent`,
-              } as any,
+              }),
             ]}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
@@ -2087,10 +2097,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 12,
   },
-  stickyFooterWeb: {
+  stickyFooterWeb: webViewStyle({
     position: 'sticky',
     bottom: 0,
-  } as any,
+  }),
   errorLine: {
     flexDirection: 'row',
     alignItems: 'center',

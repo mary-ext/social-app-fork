@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, View, type ViewStyle} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -10,6 +10,15 @@ import {Button} from '#/components/Button'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+
+type WebViewStyle = ViewStyle & {
+  cursor?: 'pointer'
+  outline?: 'none'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function ComposerPrompt() {
   const t = useTheme()
@@ -50,11 +59,11 @@ export function ComposerPrompt() {
         },
         a.py_md,
         undefined,
-        {
+        webViewStyle({
           cursor: 'pointer',
           outline: 'none',
-        } as any,
-        pressed && ({outline: 'none'} as any),
+        }),
+        pressed && webViewStyle({outline: 'none'}),
       ]}>
       <SubtleHover hover={hover} />
       <UserAvatar

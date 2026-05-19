@@ -1,8 +1,26 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {type TextStyle, View, type ViewStyle} from 'react-native'
 
 import {useTheme} from '#/alf'
 import {DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon} from '#/components/icons/DotGrid'
+
+type WebTextStyle = TextStyle & {
+  pointerEvents?: 'none'
+}
+
+type WebViewStyle = ViewStyle & {
+  boxShadow?: string
+  scale?: number
+  transition?: string
+}
+
+const webTextStyle = (style: WebTextStyle): TextStyle => {
+  return style
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style
+}
 
 /**
  * Web implementation of SortableList using pointer events.
@@ -133,7 +151,7 @@ export function SortableList<T>({
             <GripIcon
               size="lg"
               fill={t.atoms.text_contrast_medium.color}
-              style={{pointerEvents: 'none'} as any}
+              style={webTextStyle({pointerEvents: 'none'})}
             />
           </div>
         )
@@ -142,7 +160,7 @@ export function SortableList<T>({
           <View
             key={keyExtractor(item)}
             style={[
-              {
+              webViewStyle({
                 position: 'absolute',
                 top: index * itemHeight,
                 left: 0,
@@ -159,7 +177,7 @@ export function SortableList<T>({
                   : dragState
                     ? 'transform 200ms ease'
                     : 'none',
-              } as any,
+              }),
             ]}>
             {renderItem(item, dragHandle)}
           </View>

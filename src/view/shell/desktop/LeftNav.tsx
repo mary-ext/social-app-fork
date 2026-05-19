@@ -1,5 +1,5 @@
 import {type JSX, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -82,6 +82,14 @@ import {router} from '#/routes'
 import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 
 const NAV_ICON_WIDTH = 28
+
+type WebViewStyle = ViewStyle & {
+  overflowX?: 'hidden'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 function ProfileCard({minimal}: {minimal: boolean}) {
   const {currentAccount, accounts} = useSession()
@@ -846,7 +854,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 86,
     alignItems: 'center',
-    ...({overflowX: 'hidden'} as any),
+    ...webViewStyle({overflowX: 'hidden'}),
   },
   backBtn: {
     position: 'absolute',

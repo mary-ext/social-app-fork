@@ -1,4 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  type ComponentProps,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {TextInput, View, type ViewToken} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -21,6 +29,15 @@ import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+
+type WebViewProps = ComponentProps<typeof View> & {
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}
+
+const webViewProps = (props: WebViewProps): ComponentProps<typeof View> => {
+  return props
+}
 
 type Item =
   | {
@@ -585,10 +602,10 @@ function SearchInput({
 
   return (
     <View
-      {...({
+      {...webViewProps({
         onMouseEnter,
         onMouseLeave,
-      } as any)}
+      })}
       style={[a.flex_row, a.align_center, a.gap_sm, a.px_lg, a.py_xs]}>
       <SearchIcon
         size="md"
