@@ -1,7 +1,6 @@
 import {Platform} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useMutation} from '@tanstack/react-query'
 
 import {getDeviceId} from '#/lib/device-id'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -12,8 +11,6 @@ import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import * as env from '#/env'
 import {setStringAsync} from '#/shims/clipboard'
-import * as FileSystem from '#/shims/file-system/legacy'
-import {Image} from '#/shims/image'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
@@ -22,19 +19,6 @@ export function AboutSettingsScreen({}: Props) {
   const {t: l} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [] = useDemoMode()
-
-  useMutation({
-    mutationFn: async () => {
-      const freeSpaceBefore = await FileSystem.getFreeDiskStorageAsync()
-      await Image.clearDiskCache()
-      const freeSpaceAfter = await FileSystem.getFreeDiskStorageAsync()
-      const spaceDiff = freeSpaceBefore - freeSpaceAfter
-      return spaceDiff * -1
-    },
-    onSuccess: () => {
-      Toast.show(l`Image cache cleared`)
-    },
-  })
 
   return (
     <Layout.Screen>

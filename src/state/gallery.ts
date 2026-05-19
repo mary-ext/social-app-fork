@@ -5,11 +5,6 @@ import {getImageDim} from '#/lib/media/manip'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {
-  deleteAsync,
-  makeDirectoryAsync,
-  moveAsync,
-} from '#/shims/file-system/legacy'
-import {
   type Action,
   type ActionCrop,
   manipulateAsync,
@@ -231,17 +226,6 @@ export async function compressImage(
 }
 
 async function moveIfNecessary(from: string) {
-  const cacheDir = false
-
-  if (cacheDir && !from.startsWith(cacheDir)) {
-    const to = joinPath(cacheDir, nanoid(36))
-
-    await makeDirectoryAsync(cacheDir, {intermediates: true})
-    await moveAsync({from, to})
-
-    return to
-  }
-
   return from
 }
 
@@ -292,26 +276,7 @@ function blobToDataUri(blob: Blob): Promise<string> {
 }
 
 /** Purge files that were created to accomodate image manipulation */
-export async function purgeTemporaryImageFiles() {
-  const cacheDir = false
-
-  if (cacheDir) {
-    await deleteAsync(cacheDir, {idempotent: true})
-    await makeDirectoryAsync(cacheDir)
-  }
-}
-
-function joinPath(a: string, b: string) {
-  if (a.endsWith('/')) {
-    if (b.startsWith('/')) {
-      return a.slice(0, -1) + b
-    }
-    return a + b
-  } else if (b.startsWith('/')) {
-    return a + b
-  }
-  return a + '/' + b
-}
+export async function purgeTemporaryImageFiles() {}
 
 function containImageRes(
   w: number,

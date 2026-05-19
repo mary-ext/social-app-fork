@@ -1,7 +1,6 @@
 import {t} from '@lingui/core/macro'
 
 import * as Toast from '#/components/Toast'
-// import * as Sharing from '#/shims/sharing'
 import {setStringAsync} from '#/shims/clipboard'
 
 /**
