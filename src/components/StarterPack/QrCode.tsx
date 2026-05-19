@@ -1,8 +1,7 @@
-import {lazy, useState} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
-import type ViewShot from 'react-native-view-shot'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
@@ -13,19 +12,12 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
-const LazyViewShot = lazy(
-  // @ts-expect-error dynamic import
-  () => import('react-native-view-shot/src/index'),
-)
-
 export function QrCode({
   starterPack,
   link,
-  ref,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   link: string
-  ref: React.Ref<ViewShot>
 }) {
   const {record} = starterPack
 
@@ -39,62 +31,60 @@ export function QrCode({
   }
 
   return (
-    <LazyViewShot ref={ref}>
-      <LinearGradientBackground
-        style={[
-          {width: 300, minHeight: 390},
-          a.align_center,
-          a.px_sm,
-          a.py_xl,
-          a.rounded_sm,
-          a.justify_between,
-          a.gap_md,
-        ]}>
-        <View style={[a.gap_sm]}>
-          <Text
-            style={[
-              a.font_semi_bold,
-              a.text_3xl,
-              a.text_center,
-              {color: 'white'},
-            ]}>
-            {record.name}
-          </Text>
+    <LinearGradientBackground
+      style={[
+        {width: 300, minHeight: 390},
+        a.align_center,
+        a.px_sm,
+        a.py_xl,
+        a.rounded_sm,
+        a.justify_between,
+        a.gap_md,
+      ]}>
+      <View style={[a.gap_sm]}>
+        <Text
+          style={[
+            a.font_semi_bold,
+            a.text_3xl,
+            a.text_center,
+            {color: 'white'},
+          ]}>
+          {record.name}
+        </Text>
+      </View>
+      <View style={[a.gap_xl, a.align_center]}>
+        <Text
+          style={[
+            a.font_semi_bold,
+            a.text_center,
+            {color: 'white', fontSize: 18},
+          ]}>
+          <Trans>Join the conversation</Trans>
+        </Text>
+        <View style={[a.rounded_sm, a.overflow_hidden]}>
+          <QrCodeInner link={link} />
         </View>
-        <View style={[a.gap_xl, a.align_center]}>
-          <Text
-            style={[
-              a.font_semi_bold,
-              a.text_center,
-              {color: 'white', fontSize: 18},
-            ]}>
-            <Trans>Join the conversation</Trans>
-          </Text>
-          <View style={[a.rounded_sm, a.overflow_hidden]}>
-            <QrCodeInner link={link} />
-          </View>
 
-          <Text
-            style={[
-              a.flex,
-              a.flex_row,
-              a.align_center,
-              a.font_semi_bold,
-              {color: 'white', fontSize: 18, gap: 6},
-            ]}>
-            <Trans>
-              on
-              <View style={[a.flex_row, a.align_center, {gap: 6}]}>
-                <Logo width={25} fill="white" />
-                <View style={[{marginTop: 3.5}]}>
-                  <Logotype width={72} fill="white" />
-                </View>
+        <Text
+          style={[
+            a.flex,
+            a.flex_row,
+            a.align_center,
+            a.font_semi_bold,
+            {color: 'white', fontSize: 18, gap: 6},
+          ]}>
+          <Trans>
+            on
+            <View style={[a.flex_row, a.align_center, {gap: 6}]}>
+              <Logo width={25} fill="white" />
+              <View style={[{marginTop: 3.5}]}>
+                <Logotype width={72} fill="white" />
               </View>
-            </Trans>
-          </Text>
-        </View>
-      </LinearGradientBackground>
-    </LazyViewShot>
+            </View>
+          </Trans>
+        </Text>
+      </View>
+    </LinearGradientBackground>
   )
 }
 

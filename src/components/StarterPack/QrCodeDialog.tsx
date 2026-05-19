@@ -1,19 +1,12 @@
-import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
-import type ViewShot from 'react-native-view-shot'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {type AppBskyGraphDefs} from '@atproto/api'
+import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useBreakpoints} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components/icons/FloppyDisk'
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
-import * as Toast from '#/components/Toast'
-import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
   starterPack,
@@ -25,119 +18,17 @@ export function QrCodeDialog({
   control: DialogControlProps
 }) {
   const {t: l} = useLingui()
-  const {gtMobile} = useBreakpoints()
-  const [isSaveProcessing, setIsSaveProcessing] = useState(false)
-  const [isCopyProcessing, setIsCopyProcessing] = useState(false)
-
-  const ref = useRef<ViewShot>(null)
-
-  const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
-    return new Promise(resolve => {
-      const image = new Image()
-      image.onload = () => {
-        const canvas = document.createElement('canvas')
-        canvas.width = image.width
-        canvas.height = image.height
-
-        const ctx = canvas.getContext('2d')
-        ctx?.drawImage(image, 0, 0)
-        resolve(canvas)
-      }
-      image.src = base64
-    })
-  }
-
-  const onSavePress = async () => {
-    ref.current?.capture?.().then(async (uri: string) => {
-      setIsSaveProcessing(true)
-
-      if (
-        !bsky.validate(
-          starterPack.record,
-          AppBskyGraphStarterpack.validateRecord,
-        )
-      ) {
-        return
-      }
-
-      const canvas = await getCanvas(uri)
-      const imgHref = canvas
-        .toDataURL('image/png')
-        .replace('image/png', 'image/octet-stream')
-
-      const link = document.createElement('a')
-      link.setAttribute(
-        'download',
-        `${starterPack.record.name.replaceAll(' ', '_')}_Share_Card.png`,
-      )
-      link.setAttribute('href', imgHref)
-      link.click()
-
-      setIsSaveProcessing(false)
-      Toast.show(l`QR code has been downloaded!`)
-      control.close()
-    })
-  }
-
-  const onCopyPress = async () => {
-    setIsCopyProcessing(true)
-    ref.current?.capture?.().then(async (uri: string) => {
-      const canvas = await getCanvas(uri)
-      // @ts-expect-error web only
-      canvas.toBlob((blob: Blob) => {
-        const item = new ClipboardItem({'image/png': blob})
-        navigator.clipboard.write([item])
-      })
-
-      Toast.show(l`QR code copied to your clipboard!`)
-      setIsCopyProcessing(false)
-      control.close()
-    })
-  }
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={l`Create a QR code for a starter pack`}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
-          <Suspense fallback={<Loading />}>
-            {!link ? (
-              <Loading />
-            ) : (
-              <>
-                <QrCode starterPack={starterPack} link={link} ref={ref} />
-                <View
-                  style={[
-                    a.w_full,
-                    a.gap_md,
-                    gtMobile && [a.flex_row, a.justify_center, a.flex_wrap],
-                  ]}>
-                  <Button
-                    label={l`Copy QR code`}
-                    color="primary_subtle"
-                    size="large"
-                    onPress={onCopyPress}>
-                    <ButtonIcon
-                      icon={isCopyProcessing ? Loader : ChainLinkIcon}
-                    />
-                    <ButtonText>{<Trans>Copy</Trans>}</ButtonText>
-                  </Button>
-                  <Button
-                    label={l`Save QR code`}
-                    color="secondary"
-                    size="large"
-                    onPress={onSavePress}>
-                    <ButtonIcon
-                      icon={isSaveProcessing ? Loader : FloppyDiskIcon}
-                    />
-                    <ButtonText>
-                      <Trans>Save</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-              </>
-            )}
-          </Suspense>
+          {!link ? (
+            <Loading />
+          ) : (
+            <QrCode starterPack={starterPack} link={link} />
+          )}
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>

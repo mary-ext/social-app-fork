@@ -2,7 +2,6 @@ nodeLinker: 'hoisted'
 autoInstallPeers: true
 strictPeerDependencies: false
 overrides:
-  '@react-native/babel-preset': '0.81.5'
   '@react-native/normalize-colors': '0.81.5'
   '@types/estree': '1.0.6'
   'metro': '0.83.3'
@@ -17,5 +16,3 @@ allowBuilds:
   'dtrace-provider': true
   'esbuild': true
   'unrs-resolver': true
-patchedDependencies:
-  'react-native-view-shot@4.0.3': patches/react-native-view-shot@4.0.3.patch
