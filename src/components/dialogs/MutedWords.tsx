@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {View} from 'react-native'
+import {type TextStyle,View} from 'react-native'
 import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -25,6 +25,15 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+
+type WebTextStyle = TextStyle & {
+  overflowWrap?: 'break-word'
+  wordBreak?: 'break-word'
+}
+
+const webTextStyle = (style: WebTextStyle): TextStyle => {
+  return style
+}
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
@@ -448,10 +457,10 @@ function MutedWordRow({
                 a.flex_1,
                 a.leading_snug,
                 a.font_semi_bold,
-                {
+                webTextStyle({
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
-                } as any,
+                }),
               ]}>
               {word.targets.find(t => t === 'content') ? (
                 <Trans comment="Pattern: {wordValue} in text, tags">

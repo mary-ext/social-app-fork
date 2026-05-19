@@ -45,6 +45,14 @@ import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
 import {Explore} from './Explore'
 import {SearchResults} from './SearchResults'
 
+type WebViewStyle = Omit<ViewStyle, 'position'> & {
+  position?: 'sticky'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
+
 type TabParam = 'user' | 'profile' | 'feed' | 'latest'
 
 // Map tab parameter to tab index
@@ -301,10 +309,10 @@ export function SearchScreenShell({
         style={[
           a.relative,
           a.z_10,
-          {
+          webViewStyle({
             position: 'sticky',
             top: 0,
-          } as any,
+          }),
         ]}>
         <Layout.Center style={t.atoms.bg}>
           {showHeader && (

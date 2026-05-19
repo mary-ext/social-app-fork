@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {View, type ViewStyle} from 'react-native'
 import {
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
@@ -21,6 +21,15 @@ import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
+
+type WebViewStyle = Omit<ViewStyle, 'position' | 'zIndex'> & {
+  position?: 'static'
+  zIndex?: 'unset'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function StarterPackCard({
   view,
@@ -80,10 +89,10 @@ export function StarterPackCard({
                 a.flex_row,
                 a.align_start,
                 a.gap_lg,
-                {
+                webViewStyle({
                   position: 'static',
                   zIndex: 'unset',
-                } as any,
+                }),
               ]}>
               <View style={[a.flex_1]}>
                 <Text
@@ -284,10 +293,10 @@ export function StarterPackCardSkeleton() {
           a.flex_row,
           a.align_start,
           a.gap_lg,
-          {
+          webViewStyle({
             position: 'static',
             zIndex: 'unset',
-          } as any,
+          }),
         ]}>
         <View style={[a.flex_1, a.gap_xs]}>
           <LoadingPlaceholder width={180} height={18} />

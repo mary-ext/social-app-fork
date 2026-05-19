@@ -1,5 +1,5 @@
 import {memo, useCallback} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type StyleProp, type TextStyle, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,6 +20,14 @@ import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
 import {TimeElapsed} from './TimeElapsed'
 import {PreviewableUserAvatar} from './UserAvatar'
+
+type WebTextStyle = TextStyle & {
+  whiteSpace?: 'nowrap'
+}
+
+const webTextStyle = (style: WebTextStyle): TextStyle => {
+  return style
+}
 
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
@@ -144,9 +152,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.leading_tight,
                 a.text_right,
                 t.atoms.text_contrast_medium,
-                {
+                webTextStyle({
                   whiteSpace: 'nowrap',
-                } as any,
+                }),
               ]}>
               {
                 <Text

@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type TextStyle,View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -7,6 +7,16 @@ import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useTheme} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
+
+type WebTextStyle = TextStyle & {
+  direction?: 'ltr'
+  unicodeBidi?: 'isolate'
+  wordBreak?: 'break-all'
+}
+
+const webTextStyle = (style: WebTextStyle): TextStyle => {
+  return style
+}
 
 export function ProfileHeaderHandle({
   profile,
@@ -45,11 +55,11 @@ export function ProfileHeaderHandle({
                 {borderColor: t.palette.contrast_200},
               ]
             : [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
-          {
+          webTextStyle({
             wordBreak: 'break-all',
             direction: 'ltr',
             unicodeBidi: 'isolate',
-          } as any,
+          }),
         ]}>
         {invalidHandle
           ? l`⚠Invalid Handle`
