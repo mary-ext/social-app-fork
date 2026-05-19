@@ -10,6 +10,7 @@ import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
 import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
 import {atoms as a, useGutters, useLayoutBreakpoints, useTheme} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -56,7 +57,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   const searchQuery = webqueryParams?.q
   const showExploreScreenDuplicatedContent =
     !isSearchScreen || (isSearchScreen && !!searchQuery)
-  const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
+  const {rightNavVisible, centerColumnOffset, leftNavMinimal} =
+    useLayoutBreakpoints()
 
   if (!rightNavVisible || isMessagesRelatedScreen) {
     return null
@@ -140,6 +142,11 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             </InlineLinkText>
           </Trans>
         </Text>
+      )}
+      {!hasSession && leftNavMinimal && (
+        <View style={[a.w_full, {height: 32}]}>
+          <AppLanguageDropdown />
+        </View>
       )}
     </View>
   )

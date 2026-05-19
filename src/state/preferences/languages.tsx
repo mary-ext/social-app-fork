@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 
+import {type AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
 
 type SetStateCb = (
@@ -14,9 +15,10 @@ type SetStateCb = (
 ) => persisted.Schema['languagePrefs']
 type StateContext = persisted.Schema['languagePrefs']
 type ApiContext = {
+  setAppLanguage: (code2: AppLanguage) => void
+  setContentLanguages: (code2s: string[]) => void
   setPrimaryLanguage: (code2: string) => void
   setPostLanguage: (commaSeparatedLangCodes: string) => void
-  setContentLanguages: (code2s: string[]) => void
   savePostLanguageToHistory: () => void
 }
 
@@ -25,9 +27,10 @@ const stateContext = createContext<StateContext>(
 )
 stateContext.displayName = 'LanguagePrefsStateContext'
 const apiContext = createContext<ApiContext>({
+  setAppLanguage: (_: AppLanguage) => {},
+  setContentLanguages: (_: string[]) => {},
   setPrimaryLanguage: (_: string) => {},
   setPostLanguage: (_: string) => {},
-  setContentLanguages: (_: string[]) => {},
   savePostLanguageToHistory: () => {},
 })
 apiContext.displayName = 'LanguagePrefsApiContext'
@@ -52,14 +55,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const api = useMemo(
     () => ({
+      setAppLanguage(code2: AppLanguage) {
+        setStateWrapped(s => ({...s, appLanguage: code2}))
+      },
+      setContentLanguages(code2s: string[]) {
+        setStateWrapped(s => ({...s, contentLanguages: code2s}))
+      },
       setPrimaryLanguage(code2: string) {
         setStateWrapped(s => ({...s, primaryLanguage: code2}))
       },
       setPostLanguage(commaSeparatedLangCodes: string) {
         setStateWrapped(s => ({...s, postLanguage: commaSeparatedLangCodes}))
-      },
-      setContentLanguages(code2s: string[]) {
-        setStateWrapped(s => ({...s, contentLanguages: code2s}))
       },
       /**
        * Saves whatever language codes are currently selected into a history array,
@@ -104,7 +110,7 @@ export function getContentLanguages() {
 }
 
 export function getAppLanguageAsContentLanguage() {
-  return 'en'
+  return persisted.get('languagePrefs').appLanguage.split('-')[0] ?? 'en'
 }
 
 export function toPostLanguages(postLanguage: string): string[] {

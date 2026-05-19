@@ -6,8 +6,8 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {languageName} from '#/locale/helpers'
-import {LANGUAGES} from '#/locale/languages'
+import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -51,9 +51,25 @@ export function LanguageSettingsScreen({}: Props) {
 
   const contentLanguagePrefsControl = useDialogControl()
 
+  const onChangeAppLanguage = useCallback(
+    (value: string) => {
+      if (!value) {
+        return
+      }
+
+      if (langPrefs.appLanguage !== value) {
+        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
+      }
+    },
+    [langPrefs, setLangPrefs],
+  )
+
   const onChangePrimaryLanguage = useCallback(
     (value: string) => {
-      if (!value) return
+      if (!value) {
+        return
+      }
+
       if (langPrefs.primaryLanguage !== value) {
         setLangPrefs.setPrimaryLanguage(value)
       }
@@ -90,6 +106,40 @@ export function LanguageSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
+          <SettingsList.Group iconInset={false}>
+            <SettingsList.ItemText>
+              <Trans>App language</Trans>
+            </SettingsList.ItemText>
+            <View style={[a.gap_md, a.w_full]}>
+              <Text style={[a.leading_snug]}>
+                <Trans>
+                  Select which language to use for the app's user interface.
+                </Trans>
+              </Text>
+              <Select.Root
+                value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+                onValueChange={onChangeAppLanguage}>
+                <Select.Trigger label={l`Select app language`}>
+                  <Select.ValueText />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  label={l`App language`}
+                  renderItem={({label, value}) => (
+                    <Select.Item value={value} label={label}>
+                      <Select.ItemIndicator />
+                      <Select.ItemText>{label}</Select.ItemText>
+                    </Select.Item>
+                  )}
+                  items={APP_LANGUAGES.map(language => ({
+                    label: language.name,
+                    value: language.code2,
+                  }))}
+                />
+              </Select.Root>
+            </View>
+          </SettingsList.Group>
+          <SettingsList.Divider />
           <SettingsList.Group iconInset={false}>
             <SettingsList.ItemText>
               <Trans>Primary language</Trans>
