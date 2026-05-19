@@ -28,7 +28,7 @@ interface PaddingStyle {
  * non-numeric `DimensionValue` (e.g. percentages) is treated as 0.
  */
 export function extractPadding(style: PaddingStyle | PaddingStyle[]) {
-  const s = flatten(style as any) ?? {}
+  const s = flatten(style) ?? {}
   const base = num(s.padding)
   return {
     paddingTop: num(s.paddingTop) || num(s.paddingVertical) || base,

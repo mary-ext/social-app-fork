@@ -4,11 +4,6 @@
       "count": 18
     }
   },
-  "src/alf/util/flatten.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/BotAccountAlert.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -454,11 +449,6 @@
       "count": 2
     }
   },
-  "src/lib/merge-refs.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/lib/react-query.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -470,11 +460,6 @@
     }
   },
   "src/lib/routes/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/strings/errors.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -777,11 +762,6 @@
   "src/state/queries/util.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/storage/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 8
     }
   },
   "src/view/com/auth/LoggedOut.tsx": {

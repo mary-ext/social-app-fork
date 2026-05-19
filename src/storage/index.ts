@@ -163,26 +163,18 @@ export class Storage<Scopes extends unknown[], Schema> {
   }
 }
 
-type StorageSchema<T extends Storage<any, any>> =
-  T extends Storage<any, infer U> ? U : never
-type StorageScopes<T extends Storage<any, any>> =
-  T extends Storage<infer S, any> ? S : never
-
 /**
  * Hook to use a storage instance. Acts like a useState hook, but persists the
  * value in storage.
  */
 export function useStorage<
-  Store extends Storage<any, any>,
-  Key extends keyof StorageSchema<Store>,
+  Scopes extends unknown[],
+  Schema extends object,
+  Key extends keyof Schema,
 >(
-  storage: Store,
-  scopes: [...StorageScopes<Store>, Key],
-): [
-  StorageSchema<Store>[Key] | undefined,
-  (data: StorageSchema<Store>[Key]) => void,
-] {
-  type Schema = StorageSchema<Store>
+  storage: Storage<Scopes, Schema>,
+  scopes: [...Scopes, Key],
+): [Schema[Key] | undefined, (data: Schema[Key]) => void] {
   const [value, setValue] = useState<Schema[Key] | undefined>(() =>
     storage.get(scopes),
   )

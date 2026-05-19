@@ -1,13 +1,11 @@
 import {XRPCError} from '@atproto/api'
 import {t} from '@lingui/core/macro'
 
-export function cleanError(str: any): string {
-  if (!str) {
+export function cleanError(error: unknown): string {
+  if (!error) {
     return ''
   }
-  if (typeof str !== 'string') {
-    str = str.toString()
-  }
+  const str = typeof error === 'string' ? error : String(error)
   if (isNetworkError(str)) {
     return t`Unable to connect. Please check your internet connection and try again.`
   }

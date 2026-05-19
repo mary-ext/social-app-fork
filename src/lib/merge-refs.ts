@@ -12,7 +12,7 @@
  * @returns The function `mergeRefs` is being returned. It takes an array of mutable or legacy refs and
  * returns a ref callback function that can be used to merge multiple refs into a single ref.
  */
-export function mergeRefs<T = any>(
+export function mergeRefs<T = unknown>(
   refs: Array<React.MutableRefObject<T> | React.Ref<T> | undefined>,
 ): React.RefCallback<T> {
   return value => {
