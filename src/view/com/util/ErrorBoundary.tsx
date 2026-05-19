@@ -8,13 +8,13 @@ import {CenteredView} from './Views'
 
 interface Props {
   children?: ReactNode
-  renderError?: (error: any) => ReactNode
+  renderError?: (error: unknown) => ReactNode
   style?: StyleProp<ViewStyle>
 }
 
 interface State {
   hasError: boolean
-  error: any
+  error: unknown
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -23,7 +23,7 @@ export class ErrorBoundary extends Component<Props, State> {
     error: undefined,
   }
 
-  public static getDerivedStateFromError(error: Error): State {
+  public static getDerivedStateFromError(error: unknown): State {
     return {hasError: true, error}
   }
 
@@ -39,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <CenteredView style={[{height: '100%', flex: 1}, this.props.style]}>
-          <TranslatedErrorScreen details={this.state.error.toString()} />
+          <TranslatedErrorScreen details={String(this.state.error)} />
         </CenteredView>
       )
     }

@@ -15,7 +15,7 @@ export function EventStopper({
    */
   onKeyDown?: boolean
 }>) {
-  const stop = (e: any) => {
+  const stop = (e: {stopPropagation: () => void}) => {
     e.stopPropagation()
   }
   return (

@@ -12,6 +12,21 @@ import {
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
 
+type EmptyStateIconSize =
+  | 'xs'
+  | 'sm'
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | '3xl'
+  | '4xl'
+
+type EmptyStateIcon = React.ComponentType<{
+  size?: EmptyStateIconSize
+  style?: {color: string}
+}>
+
 export type EmptyStateButtonProps = Omit<ButtonProps, 'children' | 'label'> & {
   label: string
   text: string
@@ -29,8 +44,8 @@ export function EmptyState({
   button,
 }: {
   testID?: string
-  icon?: React.ComponentType<any> | React.ReactElement | null
-  iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
+  icon?: EmptyStateIcon | React.ReactElement | null
+  iconSize?: EmptyStateIconSize
   iconColor?: string
   message: string
   style?: StyleProp<ViewStyle>
