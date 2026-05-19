@@ -2,7 +2,7 @@ import {type Insets} from 'react-native'
 import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
-import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583'
 export const BSKY_SERVICE = 'https://bsky.social'
@@ -74,18 +74,7 @@ export const POST_IMG_MAX = {
   size: 1000000,
 }
 
-const STAGING_LINK_META_PROXY =
-  'https://cardyb.staging.bsky.dev/v1/extract?url='
-
-const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
-
-export function LINK_META_PROXY(_serviceUrl: string) {
-  if (IS_DEV) {
-    return STAGING_LINK_META_PROXY
-  }
-
-  return PROD_LINK_META_PROXY
-}
+export const LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
 // Hitslop constants
 export const createHitslop = (size: number): Insets => ({

@@ -189,7 +189,6 @@ export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
   const {t: l} = useLingui()
 
-  const agent = useAgent()
   return useQuery({
     enabled: !!url,
     queryKey: ['link-meta', url],
@@ -205,7 +204,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
         )
       }
 
-      return await getLinkMeta(agent, url)
+      return await getLinkMeta(url)
     },
   })
 }

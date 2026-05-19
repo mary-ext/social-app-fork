@@ -205,7 +205,7 @@ export async function resolveLink(
     return identifier
   }
 
-  return resolveExternal(agent, uri)
+  return resolveExternal(uri)
 }
 
 export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
@@ -247,11 +247,8 @@ function getFileSlug(url: string | undefined): string | undefined {
   return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
 }
 
-async function resolveExternal(
-  agent: BskyAgent,
-  uri: string,
-): Promise<ResolvedExternalLink> {
-  const result = await getLinkMeta(agent, uri)
+async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
+  const result = await getLinkMeta(uri)
   return {
     type: 'external',
     uri: result.url,

@@ -1,5 +1,3 @@
-import {type BskyAgent} from '@atproto/api'
-
 import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
@@ -30,7 +28,6 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(
-  agent: BskyAgent,
   url: string,
   timeout = 15e3,
 ): Promise<LinkMeta> {
@@ -79,7 +76,7 @@ export async function getLinkMeta(
 
   try {
     const response = await fetch(
-      `${LINK_META_PROXY(agent.serviceUrl.toString() || '')}${encodeURIComponent(
+      `${LINK_META_PROXY}${encodeURIComponent(
         url,
       )}`,
       {signal: controller.signal},
