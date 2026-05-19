@@ -5,7 +5,6 @@ import {parseLanguageString} from '@atproto/syntax'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
-import {COMPOSER_LANGUAGE_DETECTION_ENABLED} from '#/lib/feature-flags'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useNonReactiveObject} from '#/lib/hooks/useNonReactiveObject'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
@@ -204,23 +203,21 @@ export function SuggestedLanguage({
       setHasInteracted(true)
     }
 
-    if (COMPOSER_LANGUAGE_DETECTION_ENABLED) {
-      const textTrimmed = sanitizeTextForDetection(text)
+    const textTrimmed = sanitizeTextForDetection(text)
 
-      /*
-       * If text drops under the min length requirement, reset suggestions state
-       * objects.
-       *
-       * And we don't run the language model on small posts, the results are
-       * likely to be inaccurate.
-       */
-      if (textTrimmed.length < MIN_TEXT_LENGTH) {
-        setSuggLang(undefined)
-        return
-      }
-
-      void detectLanguage(textTrimmed)
+    /*
+     * If text drops under the min length requirement, reset suggestions state
+     * objects.
+     *
+     * And we don't run the language model on small posts, the results are
+     * likely to be inaccurate.
+     */
+    if (textTrimmed.length < MIN_TEXT_LENGTH) {
+      setSuggLang(undefined)
+      return
     }
+
+    void detectLanguage(textTrimmed)
 
     // Cancel any pending debounced invocation on unmount / re-run so we
     // don't call setSuggLang after the composer has closed (or after the

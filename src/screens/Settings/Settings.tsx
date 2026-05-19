@@ -60,7 +60,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import { IS_INTERNAL } from '#/env';
+import { IS_DEV } from '#/env';
 import {useActorStatus} from '#/features/liveNow'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
@@ -246,7 +246,7 @@ export function SettingsScreen({}: Props) {
               <Trans>Sign out</Trans>
             </SettingsList.ItemText>
           </SettingsList.PressableItem>
-          {IS_INTERNAL && (
+          {IS_DEV && (
             <>
               <SettingsList.Divider />
               <SettingsList.PressableItem

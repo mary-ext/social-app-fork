@@ -24,7 +24,6 @@ import {
   useDerivedValue,
   useSharedValue,
 } from '#/lib/animations/reanimatedCompat'
-import {DMS_NEW_MESSAGE_COMPOSER_ENABLED} from '#/lib/feature-flags'
 import {mergeRefs} from '#/lib/merge-refs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
@@ -43,7 +42,6 @@ import {useGetPost} from '#/state/queries/post'
 import {useAgent} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
-import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
 import { atoms as a, tokens, useTheme } from '#/alf';
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
@@ -536,25 +534,13 @@ export function MessagesList({
             <ConversationFooter
               convoState={convoState}
               hasAcceptOverride={hasAcceptOverride}>
-              {DMS_NEW_MESSAGE_COMPOSER_ENABLED ? (
-                <MessageComposer
-                  textInputId={textInputId}
-                  onSendMessage={(message: string) =>
-                    void onSendMessage(message)
-                  }
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageComposer>
-              ) : (
-                <MessageInput
-                  textInputId={textInputId}
-                  onSendMessage={onSendMessage}
-                  hasEmbed={!!embedUri}
-                  setEmbed={setEmbed}>
-                  <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-                </MessageInput>
-              )}
+              <MessageComposer
+                textInputId={textInputId}
+                onSendMessage={(message: string) => void onSendMessage(message)}
+                hasEmbed={!!embedUri}
+                setEmbed={setEmbed}>
+                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+              </MessageComposer>
             </ConversationFooter>
           )}
         </KeyboardStickyView>

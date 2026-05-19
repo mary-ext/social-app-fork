@@ -4,11 +4,9 @@ import {
   type AnimatedRef,
   type AnimatedView,
 } from '#/lib/animations/reanimatedCompat'
-import {POST_GALLERY_EMBED_ENABLED} from '#/lib/feature-flags'
 import {atoms as a, tokens} from '#/alf'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery} from '#/components/images/Gallery'
-import {ImageLayoutGrid} from '#/components/images/ImageLayoutGrid'
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -24,7 +22,6 @@ export function ImageEmbed({
 }) {
   const {openLightbox} = useLightboxControls()
   const {images} = embed.view
-  const galleryEnabled = POST_GALLERY_EMBED_ENABLED
 
   if (images.length > 0) {
     const items = images.map(img => ({
@@ -83,22 +80,9 @@ export function ImageEmbed({
       )
     }
 
-    if (galleryEnabled) {
-      return (
-        <View style={[a.mt_sm, rest.style]}>
-          <Gallery
-            images={images}
-            onPress={onPress}
-            onPressIn={onPressIn}
-            viewContext={rest.viewContext}
-          />
-        </View>
-      )
-    }
-
     return (
       <View style={[a.mt_sm, rest.style]}>
-        <ImageLayoutGrid
+        <Gallery
           images={images}
           onPress={onPress}
           onPressIn={onPressIn}

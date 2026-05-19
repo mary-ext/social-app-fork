@@ -24,11 +24,6 @@ export const ENV: string = process.env.PUBLIC_ENV as
 export const IS_DEV = __DEV__
 
 /**
- * Indicates whether the app is `__DEV__`
- */
-export const IS_INTERNAL = IS_DEV
-
-/**
  * The commit hash that the current bundle was made from. The user can
  * see the commit hash in the app's settings along with the other version info.
  * Useful for debugging/reporting.

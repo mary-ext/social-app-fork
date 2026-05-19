@@ -4,7 +4,6 @@ import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {GROUP_CHATS_ENABLED} from '#/lib/feature-flags'
 import {useGoogleTranslate} from '#/lib/hooks/useGoogleTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useConvoActive} from '#/state/messages/convo'
@@ -47,7 +46,6 @@ export let MessageContextMenu = ({
   const translate = useGoogleTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
-  const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
   const onCopyMessage = useCallback(() => {
     const str = richTextToString(
@@ -118,7 +116,7 @@ export let MessageContextMenu = ({
           label={l`Sent at ${i18n.date(new Date(message.sentAt), {
             timeStyle: 'short',
           })}`}
-          style={[isFromSelf && isGroupChatEnabled ? null : a.ml_sm]}>
+          style={[isFromSelf ? null : a.ml_sm]}>
           {message.text.length > 0 && (
             <>
               <ContextMenu.Item

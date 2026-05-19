@@ -16,7 +16,6 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -445,9 +444,7 @@ let PostMenuItems = ({
 
   const onPressHideTranslation = () => clearTranslation()
 
-  const isDiscoverDebugUser =
-    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    debugFeedContextEnabled
+  const isDiscoverDebugUser = debugFeedContextEnabled
 
   return (
     <>

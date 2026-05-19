@@ -15,7 +15,6 @@ import {isAfter, parseISO} from 'date-fns'
 
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
-import {LIVE_NOW_BETA_DISABLED} from '#/lib/feature-flags'
 import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {logger} from '#/logger'
 import {
@@ -78,7 +77,7 @@ export function useLiveNowConfig(): LiveNowConfig {
       )
     }
 
-    if (!currentAccount?.did || LIVE_NOW_BETA_DISABLED) {
+    if (!currentAccount?.did) {
       return {
         canGoLive: false,
         currentAccountAllowedHosts: new Set(),

@@ -7,7 +7,6 @@ import {
   type ModerationUI,
 } from '@atproto/api'
 
-import {POST_GALLERY_EMBED_ENABLED} from '#/lib/feature-flags'
 import {unique} from '#/lib/moderation'
 import {type AppModerationCause} from '#/components/Pills'
 import * as bsky from '#/types/bsky'
@@ -27,8 +26,6 @@ export function maybeApplyGalleryOffsetStyles(
     additionalCauses?: ModerationCause[] | AppModerationCause[]
   },
 ) {
-  if (!POST_GALLERY_EMBED_ENABLED) return
-
   if (
     !bsky.dangerousIsType<AppBskyFeedPost.Record>(
       post.record,

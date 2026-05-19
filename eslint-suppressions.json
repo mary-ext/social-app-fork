@@ -728,9 +728,6 @@
   "src/screens/Messages/Conversation.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 5
     }
   },
   "src/screens/Messages/ConversationSettings/Member.tsx": {

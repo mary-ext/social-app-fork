@@ -11,7 +11,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
-import { IS_INTERNAL } from '#/env';
+import { IS_DEV } from '#/env';
 
 const ONBOARDING_COL_WIDTH = 420
 
@@ -91,7 +91,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               )}
             </HeaderSlot>
 
-            {IS_INTERNAL && (
+            {IS_DEV && (
               <Button
                 variant="ghost"
                 color="negative"
@@ -110,7 +110,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         </View>
       ) : (
         <>
-          {IS_INTERNAL && (
+          {IS_DEV && (
             <View
               style={[
                 a.absolute,

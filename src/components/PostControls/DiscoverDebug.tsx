@@ -1,9 +1,7 @@
 import {Pressable} from 'react-native'
 import {t} from '@lingui/core/macro'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useDebugFeedContextEnabled} from '#/state/preferences/debug'
-import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
@@ -15,10 +13,7 @@ export function DiscoverDebug({
   feedContext: string | undefined
 }) {
   const debugFeedContextEnabled = useDebugFeedContextEnabled()
-  const {currentAccount} = useSession()
-  const isDiscoverDebugUser =
-    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
-    debugFeedContextEnabled
+  const isDiscoverDebugUser = debugFeedContextEnabled
   const theme = useTheme()
 
   return (

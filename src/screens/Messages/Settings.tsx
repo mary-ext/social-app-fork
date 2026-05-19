@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {GROUP_CHATS_ENABLED} from '#/lib/feature-flags'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -38,8 +37,6 @@ export function MessagesSettingsScreenInner({}: Props) {
   })
   const {preferences, setPref} = useBackgroundNotificationPreferences()
   const exportCarControl = Dialog.useDialogControl()
-
-  const isGroupChatEnabled = GROUP_CHATS_ENABLED
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
     {
@@ -163,54 +160,50 @@ export function MessagesSettingsScreenInner({}: Props) {
             </Toggle.Group>
           </View>
           <Divider style={{marginVertical: 10}} />
-          {isGroupChatEnabled ? (
-            <>
-              <View style={[a.px_xl]}>
-                <Text
-                  style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
-                  <Trans>Allow group chat invites from</Trans>
-                </Text>
-                <Text
-                  style={[
-                    a.pb_md,
-                    a.text_sm,
-                    a.leading_snug,
-                    t.atoms.text_contrast_high,
-                  ]}>
-                  <Trans>
-                    You can continue ongoing conversations regardless of which
-                    setting you choose.
-                  </Trans>
-                </Text>
-                <Toggle.Group
-                  label={l`Allow group chat invites from`}
-                  type="radio"
-                  values={[
-                    (profile?.associated?.chat
-                      ?.allowGroupInvites as AllowIncoming) ?? 'following',
-                  ]}
-                  onChange={onSelectGroupInvitesFrom}>
-                  <View>
-                    {allowGroupInvitesFromOptions.map(option => (
-                      <Toggle.Item
-                        key={option.name}
-                        highlightRow
-                        name={option.name}
-                        label={option.label}>
-                        {({selected}) => (
-                          <Toggle.RadioWithLabel
-                            label={option.label}
-                            selected={selected}
-                          />
-                        )}
-                      </Toggle.Item>
-                    ))}
-                  </View>
-                </Toggle.Group>
+          <View style={[a.px_xl]}>
+            <Text
+              style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
+              <Trans>Allow group chat invites from</Trans>
+            </Text>
+            <Text
+              style={[
+                a.pb_md,
+                a.text_sm,
+                a.leading_snug,
+                t.atoms.text_contrast_high,
+              ]}>
+              <Trans>
+                You can continue ongoing conversations regardless of which
+                setting you choose.
+              </Trans>
+            </Text>
+            <Toggle.Group
+              label={l`Allow group chat invites from`}
+              type="radio"
+              values={[
+                (profile?.associated?.chat?.allowGroupInvites as AllowIncoming) ??
+                  'following',
+              ]}
+              onChange={onSelectGroupInvitesFrom}>
+              <View>
+                {allowGroupInvitesFromOptions.map(option => (
+                  <Toggle.Item
+                    key={option.name}
+                    highlightRow
+                    name={option.name}
+                    label={option.label}>
+                    {({selected}) => (
+                      <Toggle.RadioWithLabel
+                        label={option.label}
+                        selected={selected}
+                      />
+                    )}
+                  </Toggle.Item>
+                ))}
               </View>
-              <Divider style={{marginVertical: 10}} />
-            </>
-          ) : null}
+            </Toggle.Group>
+          </View>
+          <Divider style={{marginVertical: 10}} />
 
           <View style={[a.px_xl]}>
             <Toggle.Item

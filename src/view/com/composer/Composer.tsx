@@ -69,10 +69,6 @@ import {
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
 } from '#/lib/constants'
-import {
-  IMAGE_UPLOADS_BLOB_SIZE_2MB_ENABLED,
-  IMAGE_UPLOADS_HIGH_RESOLUTION,
-} from '#/lib/feature-flags'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {mimeToExt} from '#/lib/media/video/util'
@@ -809,8 +805,8 @@ export const ComposePost = ({
             langs: currentLanguages,
           },
           {
-            highResolutionImages: IMAGE_UPLOADS_HIGH_RESOLUTION,
-            increasedBlobSizeLimit: IMAGE_UPLOADS_BLOB_SIZE_2MB_ENABLED,
+            highResolutionImages: true,
+            increasedBlobSizeLimit: true,
           },
         )
       ).uris[0]
