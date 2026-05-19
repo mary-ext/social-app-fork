@@ -1,6 +1,5 @@
 import {type TextStyle} from 'react-native'
 
-import {isWeb} from '../platform'
 import * as tokens from '../tokens'
 
 /**
@@ -17,14 +16,7 @@ import * as tokens from '../tokens'
 export function leading(textStyle: TextStyle): Pick<TextStyle, 'lineHeight'> {
   const lineHeight = textStyle?.lineHeight || tokens.lineHeight.snug
 
-  if (isWeb) {
-    return {
-      lineHeight: String(lineHeight) as unknown as TextStyle['lineHeight'],
-    }
-  } else {
-    const size = textStyle?.fontSize || tokens.fontSize.sm
-    return {
-      lineHeight: Math.round(size * lineHeight),
-    }
+  return {
+    lineHeight: String(lineHeight) as unknown as TextStyle['lineHeight'],
   }
 }

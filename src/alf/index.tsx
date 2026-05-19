@@ -23,7 +23,6 @@ export * from '#/alf/breakpoints'
 export * from '#/alf/fonts'
 export * as tokens from '#/alf/tokens'
 export * from '#/alf/util/flatten'
-export * from '#/alf/util/platform'
 export * from '#/alf/util/themeSelector'
 export * from '#/alf/util/useGutters'
 

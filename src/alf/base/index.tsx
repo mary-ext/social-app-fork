@@ -5,7 +5,6 @@ import {type Theme, themes} from './themes'
 
 export * from './atoms'
 export * from './palette'
-export * from './platform'
 export * from './themes'
 export * as tokens from './tokens'
 export * as utils from './utils'
