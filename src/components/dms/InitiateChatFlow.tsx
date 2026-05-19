@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {LayoutAnimation, type TextInput, View} from 'react-native'
+import {LayoutAnimation, type TextInput, View, type ViewStyle} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -39,6 +39,14 @@ import {GroupChatProfileCard} from './components/GroupChatProfileCard'
 import {ProfileCardSkeleton} from './components/ProfileCardSkeleton'
 import {UserLabel} from './components/UserLabel'
 import {UserSearchInput} from './components/UserSearchInput'
+
+type WebViewStyle = ViewStyle & {
+  display?: 'contents'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 type NewGroupChatItem = {
   type: 'newGroupChat'
@@ -611,7 +619,7 @@ export function InitiateChatFlow({
           ? l`Select group chat members`
           : l`Start chat`
       }
-      style={[a.contents] as any}>
+      style={[webViewStyle(a.contents)]}>
       <Dialog.InnerFlatList
         ref={listRef}
         data={items}

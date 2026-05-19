@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {View} from 'react-native'
+import {View, type ViewStyle} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
@@ -14,6 +14,14 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+
+type WebViewStyle = ViewStyle & {
+  display?: 'contents'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 type FlatListItem =
   | {
@@ -264,7 +272,7 @@ export function DialogInner({
       type="checkbox"
       maxSelections={maxLanguages}
       label={l`Select languages`}
-      style={[a.contents] as any}>
+      style={[webViewStyle(a.contents)]}>
       <Dialog.InnerFlatList
         data={flatListData}
         ListHeaderComponent={listHeader}

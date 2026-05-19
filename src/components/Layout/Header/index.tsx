@@ -1,5 +1,10 @@
 import {createContext, useCallback, useContext} from 'react'
-import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  Keyboard,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -26,6 +31,10 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {Text} from '#/components/Typography'
+
+const webViewStyle = (style: unknown): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function Outer({
   children,
@@ -54,7 +63,7 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && ([a.sticky, {top: 0}, a.z_10, t.atoms.bg] as any),
+        sticky && [webViewStyle(a.sticky), {top: 0}, a.z_10, t.atoms.bg],
         gutters,
         a.py_xs,
         {minHeight: 52},

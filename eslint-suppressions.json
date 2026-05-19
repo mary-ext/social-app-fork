@@ -19,11 +19,6 @@
       "count": 2
     }
   },
-  "src/components/Layout/Header/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/Lists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -61,20 +56,10 @@
   },
   "src/components/dialogs/LanguageSelectDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/dialogs/MutedWords.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/components/dms/AddMembersFlow.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/components/dms/InitiateChatFlow.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

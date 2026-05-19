@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {LayoutAnimation, type TextInput, View} from 'react-native'
+import {LayoutAnimation, type TextInput, View, type ViewStyle} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -31,6 +31,14 @@ import {GroupChatProfileCard} from './components/GroupChatProfileCard'
 import {ProfileCardSkeleton} from './components/ProfileCardSkeleton'
 import {UserLabel} from './components/UserLabel'
 import {UserSearchInput} from './components/UserSearchInput'
+
+type WebViewStyle = ViewStyle & {
+  display?: 'contents'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 type LabelItem = {
   type: 'label'
@@ -429,7 +437,7 @@ export function AddMembersFlow({
       onChange={setGroupChatMembers}
       type="checkbox"
       label={l`Add group chat members`}
-      style={[a.contents] as any}>
+      style={[webViewStyle(a.contents)]}>
       <Dialog.InnerFlatList
         ref={listRef}
         data={items}
