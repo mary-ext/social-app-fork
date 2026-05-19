@@ -18,7 +18,7 @@
     "intl:build": "yarn intl:extract && yarn intl:compile",
     "intl:extract": "lingui extract --clean --locale en",
     "intl:compile": "lingui compile",
-    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.ts ] || yarn intl:compile",
+    "intl:compile-if-needed": "[ -f src/locale/locales/en/messages.ts ] || yarn intl:compile",
     "icons:optimize": "svgo -f ./assets/icons",
     "nuke": "rm -rf ./node_modules ./web-build"
   },
