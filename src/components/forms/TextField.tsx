@@ -23,6 +23,12 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
+type WebRootProps = {
+  onClick?: () => void
+  onMouseOut?: () => void
+  onMouseOver?: () => void
+}
+
 const Context = createContext<{
   inputRef: React.RefObject<TextInput | null> | null
   isInvalid: boolean
@@ -79,6 +85,11 @@ export function Root({children, isInvalid = false, style}: RootProps) {
       isInvalid,
     ],
   )
+  const webProps: WebRootProps = {
+    onClick: () => inputRef.current?.focus(),
+    onMouseOver: onHoverIn,
+    onMouseOut: onHoverOut,
+  }
 
   return (
     <Context.Provider value={context}>
@@ -91,11 +102,7 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.px_md,
           style,
         ]}
-        {...({
-          onClick: () => inputRef.current?.focus(),
-          onMouseOver: onHoverIn,
-          onMouseOut: onHoverOut,
-        } as any)}>
+        {...webProps}>
         {children}
       </View>
     </Context.Provider>
@@ -222,20 +229,15 @@ export function createInput(Component: typeof TextInput) {
         paddingBottom: 11,
         marginTop: 2,
         marginBottom: 2,
-      } as any,
+      },
       style,
-    ])
+    ]) as TextStyle
 
     applyFonts(flattened, fonts.family)
 
     // should always be defined on `typography`
-    // @ts-ignore
     if (flattened.fontSize) {
-      // @ts-ignore
-      flattened.fontSize = Math.round(
-        // @ts-ignore
-        flattened.fontSize * fonts.scaleMultiplier,
-      )
+      flattened.fontSize = Math.round(flattened.fontSize * fonts.scaleMultiplier)
     }
 
     return (

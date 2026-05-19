@@ -175,7 +175,7 @@ export function Item({
   }, [needsUpdate, update])
 
   const onPress = useCallback(
-    (evt: any) => {
+    (evt: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
       playHaptic('Light')
       ctx.onSelectValue(value, position)
       onPressProp?.(evt)

@@ -12,7 +12,7 @@ import {Text} from '#/components/Typography'
 
 type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps & {
-    children: React.ReactElement<any>
+    children: React.ReactElement
     testID?: string
   }
 

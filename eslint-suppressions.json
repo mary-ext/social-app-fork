@@ -209,21 +209,6 @@
       "count": 1
     }
   },
-  "src/components/forms/SegmentedControl.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/components/forms/TextField.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/components/forms/ToggleButton.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/images/AutoSizedImage.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
