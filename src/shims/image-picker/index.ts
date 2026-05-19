@@ -42,12 +42,6 @@ export enum VideoExportPreset {
   Passthrough = 'passthrough',
 }
 
-export async function launchCameraAsync(
-  _options?: ImagePickerOptions,
-): Promise<ImagePickerResult> {
-  return {canceled: true, assets: null}
-}
-
 export async function launchImageLibraryAsync(
   options?: ImagePickerOptions,
 ): Promise<ImagePickerResult> {

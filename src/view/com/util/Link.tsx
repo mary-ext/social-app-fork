@@ -278,61 +278,6 @@ export const TextLink = memo(function TextLink({
   )
 })
 
-/**
- * Only acts as a link on desktop web
- */
-interface TextLinkOnWebOnlyProps extends TextProps {
-  testID?: string
-  type?: TypographyVariant
-  style?: StyleProp<TextStyle>
-  href: string
-  text: string | JSX.Element
-  numberOfLines?: number
-  lineHeight?: number
-  accessible?: boolean
-  accessibilityLabel?: string
-  accessibilityHint?: string
-  title?: string
-  navigationAction?: 'push' | 'replace' | 'navigate'
-  disableMismatchWarning?: boolean
-  onBeforePress?: () => void
-  onPointerEnter?: () => void
-  anchorNoUnderline?: boolean
-}
-/**
- * @deprecated use WebOnlyInlineLinkText from `#/components/Link.tsx` instead
- */
-export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
-  testID,
-  type = 'md',
-  style,
-  href,
-  text,
-  numberOfLines,
-  lineHeight,
-  navigationAction,
-  disableMismatchWarning,
-  onBeforePress,
-  ...props
-}: TextLinkOnWebOnlyProps) {
-  return (
-    <TextLink
-      testID={testID}
-      type={type}
-      style={style}
-      href={href}
-      text={text}
-      numberOfLines={numberOfLines}
-      lineHeight={lineHeight}
-      title={props.title}
-      navigationAction={navigationAction}
-      disableMismatchWarning={disableMismatchWarning}
-      onBeforePress={onBeforePress}
-      {...props}
-    />
-  )
-})
-
 const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/']
 
 // NOTE

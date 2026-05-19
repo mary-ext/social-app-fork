@@ -5,7 +5,6 @@ import {atoms as a, type TextStyleProp, useAlf, useTheme} from '#/alf'
 import {
   childHasEmoji,
   normalizeTextStyles,
-  renderChildrenWithEmoji,
   type TextProps,
 } from '#/alf/typography'
 
@@ -58,11 +57,7 @@ export function Text({
     ...rest,
   }
 
-  return (
-    <RNText {...shared}>
-      {renderChildrenWithEmoji(children, shared, emoji ?? false)}
-    </RNText>
-  )
+  return <RNText {...shared}>{children}</RNText>
 }
 
 function createHeadingElement({level}: {level: number}) {

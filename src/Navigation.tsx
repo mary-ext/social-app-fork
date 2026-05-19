@@ -996,7 +996,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onReady={onNavigationReady}
       // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
       // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
-      // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
+      // See BottomBarWeb.tsx for an example of how to handle nested navigators in the tabs correctly.
       // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
       // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
       // -sfn

@@ -3,16 +3,10 @@ import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {
-  useCameraPermission,
-  usePhotoLibraryPermission,
-  useVideoLibraryPermission,
-} from '#/lib/hooks/usePermissions'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
@@ -23,10 +17,6 @@ export function ComposerPrompt() {
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
-  useCameraPermission()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
-  const sheetWrapper = useSheetWrapper()
 
   const onPress = useCallback(() => {
     openComposer({logContext: 'Fab'})
@@ -35,12 +25,7 @@ export function ComposerPrompt() {
   const onPressImage = useCallback(async () => {
     openComposer({openGallery: true, logContext: 'Fab'})
     return
-  }, [
-    openComposer,
-    requestPhotoAccessIfNeeded,
-    requestVideoAccessIfNeeded,
-    sheetWrapper,
-  ])
+  }, [openComposer])
 
   if (!profile) {
     return null

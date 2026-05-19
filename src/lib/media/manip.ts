@@ -2,21 +2,6 @@ import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {blobToDataUri, convertCdnPreset, getDataUriSize} from './util'
 
-export async function compressIfNeeded(
-  img: PickerImage,
-  maxSize: number = 1_000_000,
-): Promise<PickerImage> {
-  if (img.size < maxSize) {
-    return img
-  }
-  return await doResize(img.path, {
-    width: img.width,
-    height: img.height,
-    mode: 'stretch',
-    maxSize,
-  })
-}
-
 export interface DownloadAndResizeOpts {
   uri: string
   width: number
@@ -35,11 +20,6 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
 
   const dataUri = await blobToDataUri(resBody)
   return await doResize(dataUri, opts)
-}
-
-export async function shareImageModal(_opts: {uri: string}) {
-  // TODO
-  throw new Error('TODO')
 }
 
 /**
@@ -182,8 +162,4 @@ function downloadUrl(href: string, filename: string) {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-}
-
-export async function safeDeleteAsync() {
-  // no-op
 }

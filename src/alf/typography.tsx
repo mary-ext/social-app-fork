@@ -73,14 +73,6 @@ export function childHasEmoji(children: React.ReactNode) {
   return hasEmoji
 }
 
-export function renderChildrenWithEmoji(
-  children: React.ReactNode,
-  _props: Omit<TextProps, 'children'> = {},
-  _emoji = false,
-) {
-  return children
-}
-
 const SINGLE_EMOJI_RE =
   /^[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D]+$/u
 export function isOnlyEmoji(text: string) {

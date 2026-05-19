@@ -3,10 +3,6 @@ import {Pressable, StyleSheet, View} from 'react-native'
 import {type ModerationUI} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {
-  useCameraPermission,
-  usePhotoLibraryPermission,
-} from '#/lib/hooks/usePermissions'
 import {openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {isCancelledError} from '#/lib/strings/errors'
@@ -20,7 +16,6 @@ import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon} from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -40,17 +35,11 @@ export function UserBanner({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  useCameraPermission()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const sheetWrapper = useSheetWrapper()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
   const editImageDialogControl = useDialogControl()
 
   const onOpenLibrary = useCallback(async () => {
-    if (!(await requestPhotoAccessIfNeeded())) {
-      return
-    }
-    const items = await sheetWrapper(openPicker())
+    const items = await openPicker()
     if (!items[0]) {
       return
     }
@@ -64,12 +53,7 @@ export function UserBanner({
         logger.error('Failed to crop banner', {error: e})
       }
     }
-  }, [
-    onSelectNewBanner,
-    requestPhotoAccessIfNeeded,
-    sheetWrapper,
-    editImageDialogControl,
-  ])
+  }, [editImageDialogControl])
 
   const onRemoveBanner = useCallback(() => {
     onSelectNewBanner?.(null)

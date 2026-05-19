@@ -14,10 +14,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
-import {
-  useCameraPermission,
-  usePhotoLibraryPermission,
-} from '#/lib/hooks/usePermissions'
 import {openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {convertCdnPreset} from '#/lib/media/util'
@@ -36,7 +32,6 @@ import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon} from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -334,12 +329,8 @@ let EditableUserAvatar = ({
 }: EditableUserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const {t: l} = useLingui()
-  useCameraPermission()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
   const editImageDialogControl = useDialogControl()
-
-  const sheetWrapper = useSheetWrapper()
 
   const circular = type !== 'algo' && type !== 'list'
 
@@ -359,15 +350,9 @@ let EditableUserAvatar = ({
   }, [circular, size])
 
   const onOpenLibrary = useCallback(async () => {
-    if (!(await requestPhotoAccessIfNeeded())) {
-      return
-    }
-
-    const items = await sheetWrapper(
-      openPicker({
-        aspect: [1, 1],
-      }),
-    )
+    const items = await openPicker({
+      aspect: [1, 1],
+    })
     const item = items[0]
     if (!item) {
       return
@@ -382,13 +367,7 @@ let EditableUserAvatar = ({
         logger.error('Failed to crop avatar', {error: e})
       }
     }
-  }, [
-    onSelectNewAvatar,
-    requestPhotoAccessIfNeeded,
-    sheetWrapper,
-    editImageDialogControl,
-    circular,
-  ])
+  }, [editImageDialogControl])
 
   const onRemoveAvatar = useCallback(() => {
     onSelectNewAvatar(null)

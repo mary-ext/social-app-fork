@@ -5,11 +5,7 @@ import {lh, s} from '#/lib/styles'
 import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {applyFonts, useAlf} from '#/alf'
-import {
-  childHasEmoji,
-  renderChildrenWithEmoji,
-  type StringChild,
-} from '#/alf/typography'
+import {childHasEmoji, type StringChild} from '#/alf/typography'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -97,9 +93,5 @@ function Text_DEPRECATED({
     type,
   ])
 
-  return (
-    <RNText {...textProps}>
-      {renderChildrenWithEmoji(children, textProps, emoji ?? false)}
-    </RNText>
-  )
+  return <RNText {...textProps}>{children}</RNText>
 }
