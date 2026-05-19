@@ -149,11 +149,6 @@
       "count": 1
     }
   },
-  "src/screens/PostThread/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/screens/Profile/Header/Handle.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -174,11 +169,6 @@
       "count": 2
     }
   },
-  "src/state/cache/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/state/queries/post-feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -195,11 +185,6 @@
     }
   },
   "src/view/com/composer/ComposerReplyTo.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/composer/drafts/DraftsListDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

@@ -182,8 +182,8 @@ export function PostThread({uri}: {uri: string}) {
    */
   const onContentSizeChangeWebOnly = () => {
     const list = listRef.current
-    const anchor = anchorRef.current as any as Element
-    const header = headerRef.current as any as Element
+    const anchor = anchorRef.current as unknown as Element
+    const header = headerRef.current as unknown as Element
 
     if (list && anchor && header && shouldHandleScroll.current) {
       const anchorOffsetTop = anchor.getBoundingClientRect().top

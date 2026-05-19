@@ -161,7 +161,7 @@ export function DraftsListDialog({
         renderItem={renderItem}
         keyExtractor={(item: DraftSummary) => item.id}
         ListHeaderComponent={header}
-        stickyHeaderIndices={[0] as any}
+        stickyHeaderIndices={[0]}
         ListEmptyComponent={emptyComponent}
         ListFooterComponent={footerComponent}
         onEndReached={onEndReached}

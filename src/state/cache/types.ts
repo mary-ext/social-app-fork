@@ -3,5 +3,5 @@ declare const shadowTag: unique symbol
 export type Shadow<T> = T & {[shadowTag]: true}
 
 export function castAsShadow<T>(value: T): Shadow<T> {
-  return value as any as Shadow<T>
+  return value as unknown as Shadow<T>
 }
