@@ -117,10 +117,7 @@ export function Member({
                   profile={profile}
                   moderationOpts={moderationOpts}
                 />
-                <ProfileCard.Handle
-                  profile={profile}
-                  textStyle={[a.text_xs, undefined as any]}
-                />
+                <ProfileCard.Handle profile={profile} textStyle={[a.text_xs]} />
                 {!isProfileOwner && (
                   <Text
                     numberOfLines={1}

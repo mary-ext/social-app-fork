@@ -35,7 +35,10 @@ function Inner() {
       <View
         style={[
           a.flex_row,
-          [a.px_lg, a.py_lg, a.pt_2xl, a.gap_md],
+          a.px_lg,
+          a.py_lg,
+          a.pt_2xl,
+          a.gap_md,
           a.border_b,
           t.atoms.border_contrast_low,
         ]}>

@@ -56,7 +56,8 @@ export function Outer({
         a.gap_sm,
         sticky && ([a.sticky, {top: 0}, a.z_10, t.atoms.bg] as any),
         gutters,
-        [a.py_xs, {minHeight: 52}],
+        a.py_xs,
+        {minHeight: 52},
         t.atoms.border_contrast_low,
         gtMobile && [a.mx_auto, {maxWidth: 600}],
         !isWithinOffsetView &&

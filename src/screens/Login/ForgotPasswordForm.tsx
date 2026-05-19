@@ -112,7 +112,7 @@ export const ForgotPasswordForm = ({
         </Trans>
       </Text>
       <FormError error={error} />
-      <View style={[[a.flex_row, a.align_center] as any, a.pt_md]}>
+      <View style={[a.flex_row, a.align_center, a.pt_md]}>
         {
           <>
             <Button

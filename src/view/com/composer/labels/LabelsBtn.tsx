@@ -215,7 +215,7 @@ function DialogInner({
           </View>
         </View>
       </View>
-      <View style={[a.mt_sm, [a.flex_row, a.ml_auto] as any]}>
+      <View style={[a.mt_sm, a.flex_row, a.ml_auto]}>
         <Button
           label={l`Done`}
           onPress={() => control.close()}

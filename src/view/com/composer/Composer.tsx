@@ -1093,7 +1093,7 @@ export const ComposePost = ({
 
           <Animated.ScrollView
             ref={scrollViewRef}
-            layout={undefined as any}
+            layout={undefined}
             onScroll={scrollHandler}
             contentContainerStyle={a.flex_grow}
             style={[
@@ -1311,7 +1311,7 @@ let ComposerPost = memo(function ComposerPost({
         !isActive && isLastPost && a.mb_lg,
         !isActive && styles.inactivePost,
       ]}>
-      <View style={[a.flex_row, false]}>
+      <View style={[a.flex_row]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
           size={42}
@@ -1446,8 +1446,8 @@ function ComposerTopBar({
   const {t: l} = useLingui()
 
   return (
-    <Animated.View style={topBarAnimatedStyle} layout={undefined as any}>
-      <View style={[a.flex_row, a.align_center, a.gap_xs, [a.p_sm]]}>
+    <Animated.View style={topBarAnimatedStyle} layout={undefined}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs, a.p_sm]}>
         <Button
           label={l`Cancel`}
           variant="ghost"
@@ -1590,8 +1590,8 @@ function ComposerEmbeds({
         {video && (
           <Animated.View
             style={[a.w_full, a.mt_lg]}
-            entering={undefined as any}
-            exiting={undefined as any}>
+            entering={undefined}
+            exiting={undefined}>
             {video.asset &&
               (video.status !== 'compressing' && video.video ? (
                 <VideoPreview
@@ -1629,7 +1629,7 @@ function ComposerEmbeds({
         )}
       </LayoutAnimationConfig>
       {embed.quote?.uri ? (
-        <View style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], [a.pb_md]]}>
+        <View style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], a.pb_md]}>
           <View style={[a.relative]}>
             <LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
             {canRemoveQuote && (

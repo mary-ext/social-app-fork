@@ -311,8 +311,6 @@ export function AddMembersFlow({
           style={[
             a.relative,
             a.pt_lg,
-            undefined as any,
-            undefined as any,
             a.px_lg,
             a.border_b,
             t.atoms.border_contrast_low,
@@ -354,7 +352,7 @@ export function AddMembersFlow({
               </Button>
             }
           </View>
-          <View style={[a.pt_xs, undefined as any]}>
+          <View style={[a.pt_xs]}>
             <UserSearchInput
               inputRef={inputRef}
               value={searchText}
@@ -446,10 +444,7 @@ export function AddMembersFlow({
           ) : null
         }
         keyExtractor={(item: Item) => item.key}
-        style={[
-          [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
-          undefined as any,
-        ]}
+        style={[a.py_0, a.h_full_vh, {maxHeight: 600}, a.px_0]}
         contentContainerStyle={items.length === 0 ? {flexGrow: 1} : undefined}
         webInnerContentContainerStyle={[
           a.py_0,

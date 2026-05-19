@@ -269,8 +269,8 @@ export function DialogInner({
         data={flatListData}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
-        contentContainerStyle={[a.gap_0, false]}
-        style={[false, {paddingBottom: 120}]}
+        contentContainerStyle={[a.gap_0]}
+        style={[{paddingBottom: 120}]}
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         renderItem={({item, index}: {item: FlatListItem; index: number}) => {
           if (item.type === 'header') {

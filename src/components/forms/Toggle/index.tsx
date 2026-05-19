@@ -266,7 +266,6 @@ export function LabelText({
             ? t.atoms.text_contrast_low.color
             : t.atoms.text_contrast_high.color,
         },
-        undefined as any,
         style,
       ]}>
       {children}

@@ -145,7 +145,7 @@ export const SetNewPasswordForm = ({
         </TextField.Root>
       </View>
       <FormError error={error} />
-      <View style={[[a.flex_row, a.align_center] as any, a.pt_lg]}>
+      <View style={[a.flex_row, a.align_center, a.pt_lg]}>
         {
           <>
             <Button

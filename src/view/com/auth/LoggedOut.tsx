@@ -79,7 +79,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             color="secondary_inverted"
             size="small"
             shape="round"
-            PressableComponent={undefined as any}
+            PressableComponent={undefined}
             style={[
               a.absolute,
               {

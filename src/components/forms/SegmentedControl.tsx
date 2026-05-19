@@ -251,7 +251,7 @@ function Slider({x, width}: {x: number; width: number}) {
 
   return (
     <Animated.View
-      layout={undefined as any}
+      layout={undefined}
       style={[
         a.absolute,
         a.curve_continuous,
@@ -266,7 +266,8 @@ function Slider({x, width}: {x: number; width: number}) {
         {
           boxShadow: '0px 2px 4px 0px #0000000D',
         },
-        [{transform: [{translateX: x}]}, a.transition_transform],
+        {transform: [{translateX: x}]},
+        a.transition_transform,
       ]}
     />
   )

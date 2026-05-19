@@ -174,7 +174,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               value={String(duration)}
               onValueChange={onChangeDuration}>
               <Select.Trigger label={l`Select duration`}>
-                <Text style={[undefined as any]}>
+                <Text>
                   {displayDuration(i18n, duration)}
                   {'  '}
                   <Text style={[t.atoms.text_contrast_low]}>
@@ -195,7 +195,6 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                         {'  '}
                         <Text
                           style={[
-                            undefined as any,
                             a.ml_xs,
                             selectedValue === String(item)
                               ? t.atoms.text_contrast_medium

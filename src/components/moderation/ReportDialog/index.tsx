@@ -248,7 +248,7 @@ function Inner(props: ReportDialogProps) {
       label={l`Report dialog`}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
-      <View style={[a.gap_2xl, false]}>
+      <View style={[a.gap_2xl]}>
         <StepOuter>
           <StepTitle
             index={1}
@@ -711,7 +711,7 @@ function CategoryCard({
             {option.title}
           </Text>
           <Text
-            style={[a.text_sm, , a.leading_snug, t.atoms.text_contrast_medium]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
             {option.description}
           </Text>
         </View>

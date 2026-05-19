@@ -34,11 +34,7 @@ export function FeedNameText({
     )
   } else {
     inner = (
-      <LoadingPlaceholder
-        width={80}
-        height={8}
-        style={[a.ml_2xs, [{top: -1}]]}
-      />
+      <LoadingPlaceholder width={80} height={8} style={[a.ml_2xs, {top: -1}]} />
     )
   }
 

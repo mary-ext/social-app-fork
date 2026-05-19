@@ -309,15 +309,13 @@ export function SearchablePeopleList({
         style={[
           a.relative,
           a.pt_lg,
-          undefined as any,
-          undefined as any,
           a.pb_xs,
           a.px_lg,
           a.border_b,
           t.atoms.border_contrast_low,
           t.atoms.bg,
         ]}>
-        <View style={[a.relative, undefined as any, a.justify_center]}>
+        <View style={[a.relative, a.justify_center]}>
           <Text
             style={[
               a.z_10,
@@ -335,13 +333,7 @@ export function SearchablePeopleList({
               shape="round"
               variant={'ghost'}
               color="secondary"
-              style={[
-                a.absolute,
-                a.z_20,
-                {right: -4} as any,
-                undefined as any,
-                undefined as any,
-              ]}
+              style={[a.absolute, a.z_20, {right: -4} as any]}
               onPress={() => control.close()}>
               <ButtonIcon icon={X} size="md" />
             </Button>
@@ -378,10 +370,7 @@ export function SearchablePeopleList({
       ListHeaderComponent={listHeader}
       stickyHeaderIndices={[0]}
       keyExtractor={(item: Item) => item.key}
-      style={[
-        [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
-        undefined as any,
-      ]}
+      style={[a.py_0, a.h_full_vh, {maxHeight: 600}, a.px_0]}
       webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       scrollIndicatorInsets={{top: headerHeight}}

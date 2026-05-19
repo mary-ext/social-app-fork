@@ -461,8 +461,6 @@ export function InitiateChatFlow({
           style={[
             a.relative,
             a.pt_lg,
-            undefined as any,
-            undefined as any,
             a.px_lg,
             chatState !== ChatState.GROUP_NAME ? a.pb_xs : a.pb_lg,
             chatState !== ChatState.GROUP_NAME && a.border_b,
@@ -505,9 +503,9 @@ export function InitiateChatFlow({
               </Button>
             }
           </View>
-          <View style={[a.pt_xs, undefined as any]}>
+          <View style={[a.pt_xs]}>
             {chatState === ChatState.GROUP_NAME ? (
-              <View style={[a.w_full, a.relative, a.pt_md, undefined as any]}>
+              <View style={[a.w_full, a.relative, a.pt_md]}>
                 <TextField.Root>
                   <TextField.Input
                     label={l`Group name`}
@@ -621,10 +619,7 @@ export function InitiateChatFlow({
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
         keyExtractor={(item: Item) => item.key}
-        style={[
-          [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
-          undefined as any,
-        ]}
+        style={[a.py_0, a.h_full_vh, {maxHeight: 600}, a.px_0]}
         webInnerContentContainerStyle={[a.py_0, {paddingBottom: footerHeight}]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}

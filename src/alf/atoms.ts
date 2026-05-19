@@ -21,7 +21,7 @@ export const atoms = {
     {
       minHeight: '100dvh',
     } as any,
-    undefined as any,
+    undefined,
   ] as StyleProp<ViewStyle>,
 
   /*

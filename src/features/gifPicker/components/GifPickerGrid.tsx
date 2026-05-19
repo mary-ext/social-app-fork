@@ -69,7 +69,6 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
           </View>
         )}
         keyExtractor={(_item, index) => `masonry-${index}`}
-        contentContainerStyle={[undefined as any]}
         webInnerStyle={[{minHeight: '80vh'} as any]}
         webInnerContentContainerStyle={[a.pb_0]}
         ListHeaderComponent={<>{header}</>}

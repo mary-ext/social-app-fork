@@ -49,7 +49,7 @@ export function ComposerPrompt() {
           paddingRight: 15,
         },
         a.py_md,
-        undefined as any,
+        undefined,
         {
           cursor: 'pointer',
           outline: 'none',

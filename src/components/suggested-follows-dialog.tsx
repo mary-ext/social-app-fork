@@ -276,11 +276,7 @@ function DialogInner() {
       ListHeaderComponent={listHeader}
       stickyHeaderIndices={[0]}
       keyExtractor={(item: Item) => item.key}
-      style={[
-        a.px_0,
-        [a.py_0, {height: '100vh', maxHeight: 600}] as any,
-        undefined as any,
-      ]}
+      style={[a.h_full_vh, a.px_0, a.py_0, {maxHeight: 600}]}
       webInnerContentContainerStyle={a.py_0}
       webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
       keyboardDismissMode="on-drag"
@@ -322,7 +318,6 @@ let Header = ({
       style={[
         a.relative,
         a.pt_lg,
-        undefined as any,
         a.pb_xs,
         a.border_b,
         t.atoms.border_contrast_low,
@@ -383,13 +378,7 @@ function HeaderTop() {
           shape="round"
           variant={'ghost'}
           color="secondary"
-          style={[
-            a.absolute,
-            a.z_20,
-            {right: 8} as any,
-            undefined as any,
-            undefined as any,
-          ]}
+          style={[a.absolute, a.z_20, {right: 8} as any]}
           onPress={() => control.close()}>
           <ButtonIcon icon={X} size="md" />
         </Button>

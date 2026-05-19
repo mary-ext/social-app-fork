@@ -78,7 +78,7 @@ export default function TopicScreen({
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <Layout.Center style={[a.z_10, [a.sticky, {top: 0}] as any]}>
+          <Layout.Center style={[a.z_10, a.sticky, {top: 0}]}>
             <Layout.Header.Outer noBottomBorder>
               <Layout.Header.BackButton />
               <Layout.Header.Content>

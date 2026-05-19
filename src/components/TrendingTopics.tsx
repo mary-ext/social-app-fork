@@ -143,7 +143,7 @@ export function TrendingTopicLink({
     <InternalLink
       label={topic.label}
       to={topic.url}
-      PressableComponent={undefined as any}
+      PressableComponent={undefined}
       {...rest}>
       {children}
     </InternalLink>

@@ -113,7 +113,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               a.flex_row,
               a.align_center,
               a.gap_xs,
-              (hovered || focused || pressed) && (undefined as any),
+              (hovered || focused || pressed) && undefined,
               style,
             ]}>
             <Icon

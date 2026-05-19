@@ -28,7 +28,6 @@ let MessageItemEmbed = ({
       <View
         style={[
           !isFromSelf && a.ml_sm,
-          undefined as any,
           {
             width: '100%',
             minWidth: 280,

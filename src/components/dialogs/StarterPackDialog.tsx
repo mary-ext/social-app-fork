@@ -159,14 +159,7 @@ function StarterPackList({
 
   const listHeader = (
     <>
-      <View
-        style={[
-          a.justify_between,
-          a.align_center,
-          a.flex_row,
-          a.pb_lg,
-          undefined as any,
-        ]}>
+      <View style={[a.justify_between, a.align_center, a.flex_row, a.pb_lg]}>
         <Text style={[a.text_lg, a.font_semi_bold]}>
           <Trans>Add to starter packs</Trans>
         </Text>

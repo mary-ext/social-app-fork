@@ -230,7 +230,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
               accessibilityHint={l`Enter your password`}
-              onLayout={undefined as any}
+              onLayout={undefined}
             />
             <Button
               testID="forgotPasswordButton"
@@ -289,7 +289,7 @@ export const LoginForm = ({
         </View>
       )}
       <FormError error={error} />
-      <View style={[a.pt_md, [a.justify_between, a.flex_row] as any]}>
+      <View style={[a.pt_md, a.justify_between, a.flex_row]}>
         {
           <Button
             label={l`Back`}

@@ -127,13 +127,7 @@ export function LiveStatus({
             <ModeratedImage />
           </Hider.Mask>
           <Hider.Content>
-            <View
-              style={[
-                t.atoms.bg_contrast_25,
-                a.w_full,
-                a.aspect_card,
-                undefined as any,
-              ]}>
+            <View style={[t.atoms.bg_contrast_25, a.w_full, a.aspect_card]}>
               <Image
                 source={embed.external.thumb}
                 contentFit="cover"

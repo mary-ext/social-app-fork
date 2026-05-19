@@ -104,7 +104,7 @@ export function CreateListFromStarterPackDialog({
               </Trans>
             </Admonition>
 
-            <View style={[[a.flex_row_reverse], a.gap_md, a.pt_sm]}>
+            <View style={[a.flex_row_reverse, a.gap_md, a.pt_sm]}>
               <Button
                 label={l`Create list`}
                 onPress={onPressCreate}

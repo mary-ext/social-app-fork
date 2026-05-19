@@ -107,7 +107,7 @@ export function Inner({
           <Toggle.Item
             label={l`Receive push notifications`}
             name="push"
-            style={[a.py_xs, [a.flex_row_reverse, a.gap_sm]]}>
+            style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}>
             <Toggle.LabelText
               style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
               <Trans>Push notifications</Trans>
@@ -118,7 +118,7 @@ export function Inner({
             <Toggle.Item
               label={l`Receive in-app notifications`}
               name="list"
-              style={[a.py_xs, [a.flex_row_reverse, a.gap_sm]]}>
+              style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>In-app notifications</Trans>

@@ -59,7 +59,7 @@ export function ReactionsDialog({
 
   const header = (
     <>
-      <View style={[a.px_2xl, [a.pt_xl, a.pb_md]]}>
+      <View style={[a.px_2xl, a.pt_xl, a.pb_md]}>
         <Text style={[a.font_bold, a.text_2xl, a.mb_sm]}>
           <Trans>Reactions</Trans>
         </Text>
@@ -187,7 +187,7 @@ function ReactionRow({
           </Text>
           <Text
             numberOfLines={1}
-            style={[a.text_xs, t.atoms.text_contrast_medium, [a.mt_xs] as any]}>
+            style={[a.text_xs, t.atoms.text_contrast_medium, a.mt_xs]}>
             {isFromSelf ? l`Tap to remove` : handle}
           </Text>
         </View>

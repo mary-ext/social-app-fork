@@ -246,7 +246,7 @@ function ProfileListScreenLoaded({
         <View style={[a.util_screen_outer]}>
           <Layout.Center
             onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
-            style={[undefined as any, a.border_b, t.atoms.border_contrast_low]}>
+            style={[a.border_b, t.atoms.border_contrast_low]}>
             {renderHeader()}
           </Layout.Center>
           {headerHeight !== null && (

@@ -216,7 +216,7 @@ export function createInput(Component: typeof TextInput) {
         paddingTop: 13,
         paddingBottom: 13,
       },
-      undefined as any,
+      undefined,
       {
         paddingTop: 11,
         paddingBottom: 11,
@@ -372,7 +372,8 @@ export function SuffixText({
         a.text_md,
         t.atoms.text_contrast_medium,
         a.pointer_events_none,
-        [{marginTop: -2}, a.leading_snug] as any,
+        {marginTop: -2},
+        a.leading_snug,
         (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
         style,
       ]}>

@@ -64,7 +64,7 @@ export function ThreadComposePrompt({
           onPressCompose()
           playHaptic('Light')
         }}
-        onLongPress={undefined as any}
+        onLongPress={undefined}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}
         style={[
@@ -74,7 +74,6 @@ export function ThreadComposePrompt({
           a.gap_sm,
           a.rounded_full,
           (!gtMobile || hovered) && t.atoms.bg_contrast_25,
-          undefined as any,
           a.transition_color,
         ]}>
         <UserAvatar

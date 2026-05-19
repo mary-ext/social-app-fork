@@ -238,7 +238,7 @@ export function ProfileLists({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        progressViewOffset={undefined as any}
+        progressViewOffset={undefined}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}

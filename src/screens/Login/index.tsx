@@ -196,7 +196,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   return (
     <AuthLayoutNavigationContext value={navigation}>
-      <Animated.View style={a.flex_1} entering={undefined as any}>
+      <Animated.View style={a.flex_1} entering={undefined}>
         <KeyboardAvoidingView
           testID="signIn"
           behavior="padding"

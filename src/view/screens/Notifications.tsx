@@ -141,7 +141,7 @@ export function NotificationsScreen({}: Props) {
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <Layout.Center style={[a.z_10, [a.sticky, {top: 0}] as any]}>
+          <Layout.Center style={[a.z_10, a.sticky, {top: 0}]}>
             <TabBar
               {...props}
               items={sections.map(section => section.title)}

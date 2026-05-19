@@ -68,8 +68,7 @@ export function SearchLanguageDropdown({
             label={props.accessibilityLabel}
             size="small"
             color={'secondary'}
-            variant={'solid'}
-            style={undefined as any}>
+            variant={'solid'}>
             <ButtonIcon icon={EarthIcon} />
             <ButtonText>{currentLanguageLabel}</ButtonText>
             <ButtonIcon icon={ChevronDownIcon} />

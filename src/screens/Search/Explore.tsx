@@ -1056,7 +1056,7 @@ export function Explore({
       contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      stickyHeaderIndices={undefined as any}
+      stickyHeaderIndices={undefined}
       viewabilityConfig={viewabilityConfig}
       onItemSeen={onItemSeen}
       onEndReached={handleOnEndReached}

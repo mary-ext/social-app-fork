@@ -88,7 +88,6 @@ export function WizardEditListDialog({
         ListHeaderComponent={
           <View
             style={[
-              undefined as any,
               a.flex_row,
               a.justify_between,
               a.border_b,
@@ -96,12 +95,10 @@ export function WizardEditListDialog({
               a.mb_sm,
               t.atoms.bg,
               t.atoms.border_contrast_medium,
-              [
-                a.align_center,
-                {
-                  height: 48,
-                },
-              ],
+              a.align_center,
+              {
+                height: 48,
+              },
             ]}>
             <View style={{width: 60}} />
             <Text style={[a.font_semi_bold, a.text_xl]}>
@@ -128,10 +125,7 @@ export function WizardEditListDialog({
           </View>
         }
         stickyHeaderIndices={[0]}
-        style={[
-          [a.py_0, {height: '100vh', maxHeight: 600}, a.px_0] as any,
-          undefined as any,
-        ]}
+        style={[a.py_0, a.h_full_vh, {maxHeight: 600}, a.px_0]}
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         keyboardDismissMode="on-drag"
         removeClippedSubviews={true}

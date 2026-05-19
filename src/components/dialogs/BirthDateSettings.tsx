@@ -123,7 +123,7 @@ function BirthdayInner({
 
   return (
     <View style={a.gap_lg} testID="birthDateSettingsDialog">
-      <View style={false}>
+      <View>
         <DateField
           testID="birthdayInput"
           value={date}

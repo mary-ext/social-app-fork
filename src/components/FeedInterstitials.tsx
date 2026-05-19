@@ -283,7 +283,7 @@ export function ProfileGrid({
       : profiles.slice(0, maxLength).map((profile, _index) => (
           <Animated.View
             key={profile.actor.did}
-            layout={undefined as any}
+            layout={undefined}
             exiting={FadeOut.duration(DISMISS_ANIMATION_DURATION)}
             // for web, as the cards are static, not in a list
             entering={FadeIn.delay(DISMISS_ANIMATION_DURATION * 2)}

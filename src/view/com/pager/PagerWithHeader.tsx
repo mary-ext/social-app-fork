@@ -142,13 +142,11 @@ let PagerTabBar = ({
       <Layout.Center
         style={[
           a.z_10,
-          [
-            a.sticky,
-            {
-              top: 0,
-              display: isHeaderReady ? undefined : 'none',
-            },
-          ] as any,
+          a.sticky,
+          {
+            top: 0,
+            display: isHeaderReady ? undefined : 'none',
+          },
         ]}>
         <TabBar
           testID={testID}
@@ -156,8 +154,8 @@ let PagerTabBar = ({
           selectedPage={currentPage}
           onSelect={onSelect}
           onPressSelected={onCurrentPageSelected}
-          dragProgress={undefined as any /* native-only */}
-          dragState={undefined as any /* native-only */}
+          dragProgress={undefined /* native-only */}
+          dragState={undefined /* native-only */}
         />
       </Layout.Center>
     </>

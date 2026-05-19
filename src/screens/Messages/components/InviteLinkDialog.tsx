@@ -501,7 +501,7 @@ export function InviteLinkDialog({
       <Dialog.ScrollableInner
         header={
           <View>
-            <View style={[[a.px_2xl, a.pt_xl]]}>
+            <View style={[a.px_2xl, a.pt_xl]}>
               <Text style={[a.font_bold, a.text_2xl, a.mb_sm, t.atoms.text]}>
                 {header}
               </Text>

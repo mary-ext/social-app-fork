@@ -53,7 +53,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
               <Trans>Enable media players for</Trans>
             </SettingsList.ItemText>
             <View style={[a.mt_sm, a.w_full]}>
-              {undefined as any}
+              {undefined}
               {Object.entries(externalEmbedLabels)
                 .filter(
                   ([key]) =>
@@ -66,7 +66,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
                       label={label}
                       key={key}
                     />
-                    {undefined as any}
+                    {undefined}
                   </Fragment>
                 ))}
             </View>
@@ -99,7 +99,7 @@ function PrefSelector({
           sources?.[source] === 'show' ? 'hide' : 'show',
         )
       }
-      style={[a.flex_1, a.py_md, undefined as any]}>
+      style={[a.flex_1, a.py_md]}>
       <Toggle.Platform />
       <Toggle.LabelText style={[a.text_md]}>{label}</Toggle.LabelText>
     </Toggle.Item>

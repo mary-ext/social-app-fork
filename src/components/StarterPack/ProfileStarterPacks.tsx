@@ -157,7 +157,7 @@ export function ProfileStarterPacks({
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
         headerOffset={headerOffset}
-        progressViewOffset={undefined as any}
+        progressViewOffset={undefined}
         contentContainerStyle={{
           minHeight: height + headerOffset,
           paddingBottom: bottomBarOffset,

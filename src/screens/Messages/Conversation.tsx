@@ -107,7 +107,7 @@ function Inner({convoId}: {convoId: string}) {
   if (convoState.status === ConvoStatus.Error) {
     return (
       <>
-        <Layout.Center style={[a.w_full, false]}>
+        <Layout.Center style={[a.w_full]}>
           <MessagesListHeader convo={convo} />
         </Layout.Center>
         <Error
@@ -123,7 +123,7 @@ function Inner({convoId}: {convoId: string}) {
   return (
     <Layout.Center style={[a.flex_1]}>
       {!readyToShow && (
-        <View style={false}>
+        <View>
           <MessagesListHeader convo={convo} />
         </View>
       )}

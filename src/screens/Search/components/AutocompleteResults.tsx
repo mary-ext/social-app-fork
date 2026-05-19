@@ -47,7 +47,7 @@ let AutocompleteResults = ({
           keyboardDismissMode="on-drag">
           <SearchLinkCard
             label={l`Search for "${searchText}"`}
-            onPress={undefined as any}
+            onPress={undefined}
             to={`/search?q=${encodeURIComponent(searchText)}`}
             style={a.border_b}
           />

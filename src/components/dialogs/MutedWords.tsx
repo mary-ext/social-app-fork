@@ -319,7 +319,6 @@ function MutedWordsInner() {
               size="large"
               color="primary"
               variant="solid"
-              style={[]}
               onPress={submit}>
               <ButtonText>
                 <Trans>Add</Trans>
@@ -341,10 +340,7 @@ function MutedWordsInner() {
                   backgroundColor: t.palette.negative_400,
                 },
               ]}>
-              <Text
-                style={[a.italic, {color: t.palette.white}, undefined as any]}>
-                {error}
-              </Text>
+              <Text style={[a.italic, {color: t.palette.white}]}>{error}</Text>
             </View>
           )}
         </View>

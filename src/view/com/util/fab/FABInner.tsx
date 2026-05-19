@@ -43,12 +43,12 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
       ]}>
       <PressableScale
         testID={testID}
-        onPressIn={undefined as any}
+        onPressIn={undefined}
         onPress={evt => {
           onPress?.(evt)
           playHaptic('Light')
         }}
-        onLongPress={undefined as any}
+        onLongPress={undefined}
         targetScale={0.9}
         style={[
           a.rounded_full,

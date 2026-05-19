@@ -103,7 +103,6 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         },
         a.flex_grow,
         a.py_md,
-        undefined as any,
         a.px_md,
         t.atoms.bg,
         t.atoms.border_contrast_low,

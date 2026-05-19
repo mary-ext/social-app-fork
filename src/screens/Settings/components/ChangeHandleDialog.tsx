@@ -108,8 +108,8 @@ function ChangeHandleDialogInner() {
             {page === 'provided-handle' ? (
               <Animated.View
                 key={page}
-                entering={undefined as any}
-                exiting={undefined as any}>
+                entering={undefined}
+                exiting={undefined}>
                 <ProvidedHandlePage
                   serviceInfo={serviceInfo}
                   goToOwnHandle={() => setPage('own-handle')}
@@ -118,8 +118,8 @@ function ChangeHandleDialogInner() {
             ) : (
               <Animated.View
                 key={page}
-                entering={undefined as any}
-                exiting={undefined as any}>
+                entering={undefined}
+                exiting={undefined}>
                 <OwnHandlePage
                   goToServiceHandle={() => setPage('provided-handle')}
                 />
@@ -195,7 +195,7 @@ function ProvidedHandlePage({
             <ChangeHandleError error={error} />
           </Animated.View>
         )}
-        <Animated.View layout={undefined as any} style={[a.flex_1, a.gap_md]}>
+        <Animated.View layout={undefined} style={[a.flex_1, a.gap_md]}>
           {verification.isVerified && verification.role === 'default' && (
             <Admonition type="error">
               <Trans>
@@ -362,7 +362,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View
-        layout={undefined as any}
+        layout={undefined}
         style={[a.flex_1, a.gap_md, a.overflow_hidden]}>
         <View>
           <TextField.LabelText>
@@ -505,14 +505,11 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         )}
       </Animated.View>
       {isVerified && (
-        <Animated.View
-          entering={FadeIn}
-          exiting={FadeOut}
-          layout={undefined as any}>
+        <Animated.View entering={FadeIn} exiting={FadeOut} layout={undefined}>
           <SuccessMessage text={l`Domain verified!`} />
         </Animated.View>
       )}
-      <Animated.View layout={undefined as any}>
+      <Animated.View layout={undefined}>
         {currentAccount?.handle?.endsWith('.bsky.social') && (
           <Admonition type="info" style={[a.mb_md]}>
             <Trans>

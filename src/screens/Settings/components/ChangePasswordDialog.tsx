@@ -29,7 +29,7 @@ export function ChangePasswordDialog({
   useWindowDimensions()
 
   return (
-    <Dialog.Outer control={control} nativeOptions={undefined as any}>
+    <Dialog.Outer control={control} nativeOptions={undefined}>
       <Dialog.Handle />
       <Inner />
     </Dialog.Outer>

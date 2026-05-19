@@ -176,8 +176,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
   return (
     <>
-      <Layout.Center
-        style={[t.atoms.bg, a.z_10, [a.sticky, a.z_10, {top: 0}] as any]}>
+      <Layout.Center style={[t.atoms.bg, a.z_10, a.sticky, a.z_10, {top: 0}]}>
         <Layout.Header.Outer>
           <Layout.Header.BackButton />
           <Layout.Header.Content align="left">

@@ -118,7 +118,7 @@ export function ProfileLabelsSection({
         keyExtractor={keyExtractor}
         contentContainerStyle={a.px_xl}
         headerOffset={headerHeight}
-        progressViewOffset={undefined as any}
+        progressViewOffset={undefined}
         ListHeaderComponent={
           <LabelerListHeader
             isLabelerLoading={isLabelerLoading}

@@ -25,15 +25,7 @@ export function GifPickerHeader({
   const t = useTheme()
 
   return (
-    <View
-      style={[
-        undefined as any,
-        a.relative,
-        a.pb_md,
-        a.flex_row,
-        a.align_center,
-        t.atoms.bg,
-      ]}>
+    <View style={[a.relative, a.pb_md, a.flex_row, a.align_center, t.atoms.bg]}>
       <TextField.Root style={a.flex_1}>
         <TextField.Icon icon={Search} />
         <TextField.Input

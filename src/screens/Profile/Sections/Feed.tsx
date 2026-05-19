@@ -95,7 +95,7 @@ export function ProfileFeedSection({
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
-        progressViewOffset={undefined as any}
+        progressViewOffset={undefined}
         renderEndOfFeed={isVideoFeed ? undefined : ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
         initialNumToRender={

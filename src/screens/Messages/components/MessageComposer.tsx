@@ -94,7 +94,7 @@ export function MessageComposer({
   return (
     <ComposerContainer>
       {children}
-      <View collapsable={false} ref={undefined as any}>
+      <View collapsable={false} ref={undefined}>
         <GlassContainer
           style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]}
           spacing={tokens.space.sm}>

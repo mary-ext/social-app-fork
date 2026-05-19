@@ -77,7 +77,7 @@ let ShareMenuButton = ({
                 big={big}
                 label={props.accessibilityLabel}
                 {...props}
-                onLongPress={undefined as any}
+                onLongPress={undefined}
                 hitSlop={hitSlop}>
                 <PostControlButtonIcon icon={ArrowShareRightIcon} />
               </PostControlButton>

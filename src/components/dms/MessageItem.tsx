@@ -325,11 +325,9 @@ let MessageItem = ({
             onPress={isGroupChat ? reactionsControl.open : undefined}>
             {groupedReactions.map(group => (
               <Animated.View
-                entering={undefined as any}
-                exiting={
-                  groupedReactions.length > 1 ? (undefined as any) : undefined
-                }
-                layout={undefined as any}
+                entering={undefined}
+                exiting={groupedReactions.length > 1 ? undefined : undefined}
+                layout={undefined}
                 key={group.value}
                 style={[a.py_2xs]}>
                 <Text
@@ -377,7 +375,7 @@ let MessageItem = ({
     <>
       <LayoutAnimationConfig skipExiting skipEntering>
         {hasLargeGapFromPrev && (
-          <Animated.View entering={undefined as any} exiting={undefined as any}>
+          <Animated.View entering={undefined} exiting={undefined}>
             <DateDivider date={message.sentAt} />
           </Animated.View>
         )}

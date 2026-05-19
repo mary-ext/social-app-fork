@@ -131,7 +131,7 @@ export function SearchButton({
       variant="ghost"
       color="secondary"
       shape="round"
-      PressableComponent={undefined as any}
+      PressableComponent={undefined}
       onPress={() => {
         onPress?.()
       }}

@@ -96,7 +96,7 @@ let SearchResults = ({
     <Pager
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <Layout.Center style={[a.z_10, [a.sticky, {top: headerHeight}] as any]}>
+        <Layout.Center style={[a.z_10, a.sticky, {top: headerHeight}]}>
           <TabBar items={sections.map(section => section.title)} {...props} />
         </Layout.Center>
       )}

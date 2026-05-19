@@ -92,9 +92,7 @@ export function AppearanceSettingsScreen({}: Props) {
             />
 
             {colorMode !== 'light' && (
-              <Animated.View
-                entering={undefined as any}
-                exiting={undefined as any}>
+              <Animated.View entering={undefined} exiting={undefined}>
                 <AppearanceToggleButtonGroup
                   title={l`Dark theme`}
                   icon={MoonIcon}
@@ -114,7 +112,7 @@ export function AppearanceSettingsScreen({}: Props) {
               </Animated.View>
             )}
 
-            <Animated.View layout={undefined as any}>
+            <Animated.View layout={undefined}>
               <SettingsList.Divider />
               <AppearanceToggleButtonGroup
                 title={l`Font`}

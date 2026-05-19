@@ -146,10 +146,8 @@ function TranslationLink({
           handleTranslate()
         })}
         label={l`Translate`}
-        hoverStyle={[
-          undefined as any,
-          [a.underline, {textDecorationColor: t.palette.primary_500}] as any,
-        ]}
+        // @ts-expect-error web-only text decoration cascades to link text
+        hoverStyle={[a.underline, {textDecorationColor: t.palette.primary_500}]}
         hitSlop={HITSLOP_30}>
         <Text style={[a.text_sm, {color: t.palette.primary_500}]}>
           <Trans>Translate</Trans>
@@ -179,6 +177,10 @@ function TranslationError({
       forceGoogleTranslate: true,
     })
   }
+  const hoverUnderlineStyle = [
+    a.underline,
+    {textDecorationColor: t.palette.primary_500},
+  ]
 
   return (
     <View
@@ -213,7 +215,6 @@ function TranslationError({
         <Button
           label={l`Hide translation`}
           hitSlop={HITSLOP_30}
-          hoverStyle={undefined as any}
           style={[a.absolute, a.z_10, {top: 0, right: 0}]}
           onPress={clearTranslation}>
           <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
@@ -225,10 +226,8 @@ function TranslationError({
             handleFallback()
           })}
           label={l`Try Google Translate`}
-          hoverStyle={[
-            undefined as any,
-            [a.underline, {textDecorationColor: t.palette.primary_500}] as any,
-          ]}
+          // @ts-expect-error web-only text decoration cascades to link text
+          hoverStyle={hoverUnderlineStyle}
           hitSlop={HITSLOP_30}>
           <Text
             style={[
@@ -347,7 +346,6 @@ function TranslationResult({
           <Button
             label={l`Hide translation`}
             hitSlop={HITSLOP_30}
-            hoverStyle={undefined as any}
             style={[a.absolute, a.z_10, {top: 0, right: 0}]}
             onPress={clearTranslation}>
             <XIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
@@ -417,8 +415,7 @@ function TranslationLanguageSelect({
             <Button
               label={props.accessibilityLabel}
               {...props}
-              hitSlop={HITSLOP_30}
-              hoverStyle={undefined as any}>
+              hitSlop={HITSLOP_30}>
               <Text
                 style={[
                   a.text_xs,

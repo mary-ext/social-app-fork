@@ -92,13 +92,10 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
 
   return (
     <Dialog.ScrollableInner label={l`Add app password`}>
-      <View style={[undefined as any]}>
+      <View>
         <LayoutAnimationConfig skipEntering skipExiting>
           {!data ? (
-            <Animated.View
-              style={[a.gap_lg]}
-              exiting={undefined as any}
-              key={0}>
+            <Animated.View style={[a.gap_lg]} exiting={undefined} key={0}>
               <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Add App Password</Trans>
               </Text>
@@ -129,7 +126,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   <Admonition type="error">{error.message}</Admonition>
                 </Animated.View>
               )}
-              <Animated.View style={[a.gap_lg]} layout={undefined as any}>
+              <Animated.View style={[a.gap_lg]} layout={undefined}>
                 <Toggle.Item
                   name="privileged"
                   type="checkbox"
