@@ -42,6 +42,26 @@ export {Input} from '#/components/forms/TextField'
 
 // 100 minus 10vh of paddingVertical
 export const WEB_DIALOG_HEIGHT = '80vh'
+type DialogWebStyle = Omit<
+  ViewStyle,
+  | 'cursor'
+  | 'maxHeight'
+  | 'minHeight'
+  | 'overflowY'
+  | 'paddingVertical'
+  | 'position'
+> & {
+  cursor?: 'default'
+  maxHeight?: string
+  minHeight?: string
+  overflowY?: 'auto'
+  paddingVertical?: string | number
+  position?: 'static'
+}
+
+const dialogWebStyle = (style: DialogWebStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 const stopPropagation = (e: {stopPropagation: () => void}) =>
   e.stopPropagation()
@@ -134,10 +154,10 @@ export function Outer({
                   a.px_xl,
                   webOptions?.alignCenter ? a.justify_center : undefined,
                   a.align_center,
-                  {
+                  dialogWebStyle({
                     overflowY: 'auto',
                     paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
-                  } as any,
+                  }),
                 ]}>
                 <Backdrop />
                 {/**
@@ -150,7 +170,7 @@ export function Outer({
                     a.w_full,
                     a.z_20,
                     a.align_center,
-                    {minHeight: '60vh', position: 'static'} as any,
+                    dialogWebStyle({minHeight: '60vh', position: 'static'}),
                   ]}>
                   {children}
                 </View>
@@ -198,14 +218,14 @@ export function Inner({
           a.w_full,
           a.border,
           t.atoms.bg,
-          {
+          dialogWebStyle({
             cursor: 'default', // The overlay applies `cursor: 'pointer'` to all children.
             maxWidth: 600,
             borderColor: t.palette.contrast_200,
             shadowColor: t.palette.black,
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
-          },
+          }),
           !reduceMotionEnabled && a.zoom_fade_in,
           style,
         ])}>
@@ -251,7 +271,7 @@ export const InnerFlatList = forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        {maxHeight: WEB_DIALOG_HEIGHT} as any,
+        dialogWebStyle({maxHeight: WEB_DIALOG_HEIGHT}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>

@@ -16,7 +16,7 @@
   },
   "src/components/Dialog/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 5
+      "count": 2
     }
   },
   "src/components/Dialog/types.ts": {
