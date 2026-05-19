@@ -129,7 +129,7 @@ export function Wizard({
     <Layout.Screen
       minimalShell
       testID="starterPackWizardScreen"
-      style={[{minHeight: 0}, a.flex_1] as any}>
+      style={[{minHeight: 0}, a.flex_1]}>
       <Provider
         starterPack={starterPack}
         listItems={listItems}

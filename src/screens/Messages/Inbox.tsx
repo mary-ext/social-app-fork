@@ -172,7 +172,7 @@ function RequestList({
 
   if (conversations.length < 1) {
     return (
-      <Layout.Center style={[a.h_full] as any}>
+      <Layout.Center style={[a.h_full]}>
         {isLoading ? (
           <ChatListLoadingPlaceholder />
         ) : (
@@ -241,7 +241,7 @@ function RequestList({
                         icon: ArrowLeftIcon,
                       }
                 }
-                style={[a.h_full, a.justify_center, a.pb_5xl] as any}
+                style={[a.h_full, a.justify_center, a.pb_5xl]}
               />
             )}
           </>

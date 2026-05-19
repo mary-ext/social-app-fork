@@ -69,7 +69,7 @@ export const ChooseAccountForm = ({
     <FormContainer
       testID="chooseAccountForm"
       titleText={<Trans>Select account</Trans>}
-      style={[a.py_2xl] as any}>
+      style={[a.py_2xl]}>
       <View>
         {
           <TextField.LabelText>

@@ -24,7 +24,7 @@ export const PasswordUpdatedForm = ({
       <Text style={[a.text_center, a.mx_auto, {maxWidth: '80%'}]}>
         <Trans>You can now sign in with your new password.</Trans>
       </Text>
-      <View style={[a.flex_row, a.justify_center] as any}>
+      <View style={[a.flex_row, a.justify_center]}>
         <Button
           onPress={onPressNext}
           label={l`Close alert`}

@@ -60,7 +60,7 @@ export function MessagesConversationScreenInner({route}: Props) {
       minimalShell
       testID="convoScreen"
       noInsetTop={false}
-      style={[{minHeight: 0}, a.flex_1] as any}>
+      style={[{minHeight: 0}, a.flex_1]}>
       <ScrollEdgeEffectProvider>
         <ConvoProvider key={convoId} convoId={convoId}>
           <Inner convoId={convoId} />

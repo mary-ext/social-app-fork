@@ -193,7 +193,7 @@ export function LiveStatus({
               disabledPreview
             />
             {/* Ensure wide enough on web hover */}
-            <View style={[a.flex_1, {minWidth: 100} as any]}>
+            <View style={[a.flex_1, {minWidth: 100}]}>
               <ProfileCard.NameAndHandle
                 profile={profile}
                 moderationOpts={moderationOpts}

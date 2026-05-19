@@ -214,7 +214,7 @@ function GermSelfButton({did}: {did: string}) {
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Germ DM Link`}
-          style={[{maxWidth: 400, borderRadius: 36}] as any}>
+          style={[{maxWidth: 400, borderRadius: 36}]}>
           <View style={[a.flex_row, a.align_center, {gap: 6}]}>
             <GermLogo size="large" />
             <Text style={[a.text_2xl, a.font_bold]}>

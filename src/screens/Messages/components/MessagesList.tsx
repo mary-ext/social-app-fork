@@ -511,7 +511,7 @@ export function MessagesList({
             }}
             ListFooterComponent={
               <View
-                style={{height: tokens.space.md + inputHeightJS} as any}
+                style={{height: tokens.space.md + inputHeightJS}}
                 onLayout={onFooterLayout}
               />
             }

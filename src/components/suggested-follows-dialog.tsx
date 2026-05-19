@@ -378,7 +378,7 @@ function HeaderTop() {
           shape="round"
           variant={'ghost'}
           color="secondary"
-          style={[a.absolute, a.z_20, {right: 8} as any]}
+          style={[a.absolute, a.z_20, {right: 8}]}
           onPress={() => control.close()}>
           <ButtonIcon icon={X} size="md" />
         </Button>

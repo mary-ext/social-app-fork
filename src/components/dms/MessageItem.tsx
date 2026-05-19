@@ -464,7 +464,7 @@ let MessageItem = ({
                         a.leading_tight,
                         // Visually align bottom of the emoji with the avatar
                         !isFromSelf &&
-                          ({marginBottom: -a.mb_sm.marginBottom} as any),
+                          {marginBottom: -a.mb_sm.marginBottom},
                       ],
                     ]}
                     interactiveStyle={a.underline}

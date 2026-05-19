@@ -59,11 +59,6 @@
       "count": 2
     }
   },
-  "src/components/Prompt.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/StarterPack/ProfileStarterPacks.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -109,11 +104,6 @@
       "count": 1
     }
   },
-  "src/components/dms/MessageItem.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/dms/MessageItemEmbed.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -126,15 +116,10 @@
   },
   "src/components/suggested-follows-dialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/features/gifPicker/components/GifPickerGrid.tsx": {
-    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
-  "src/features/liveNow/components/LiveStatusDialog.tsx": {
+  "src/features/gifPicker/components/GifPickerGrid.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -174,29 +159,9 @@
       "count": 1
     }
   },
-  "src/screens/Login/ChooseAccountForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/PasswordUpdatedForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Messages/Conversation.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Messages/Inbox.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/screens/Messages/components/MessagesList.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     }
   },
   "src/screens/PostThread/index.tsx": {
@@ -214,11 +179,6 @@
       "count": 1
     }
   },
-  "src/screens/Profile/components/GermButton.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/Search/Shell.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -229,29 +189,14 @@
       "count": 2
     }
   },
-  "src/screens/StarterPack/Wizard/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/state/cache/types.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
-  "src/state/queries/notifications/feed.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/state/queries/post-feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/state/queries/search-posts.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "src/state/queries/util.ts": {
@@ -270,11 +215,6 @@
     }
   },
   "src/view/com/composer/drafts/DraftsListDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/composer/videos/SubtitleDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

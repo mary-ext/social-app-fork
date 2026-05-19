@@ -174,7 +174,7 @@ function SubtitleDialogInner({
           </>
         }
 
-        <View style={[a.flex_row, a.justify_end] as any}>
+        <View style={[a.flex_row, a.justify_end]}>
           <Button
             label={l`Done`}
             size={'small'}
