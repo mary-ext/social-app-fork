@@ -3115,7 +3115,7 @@ msgstr ""
 msgid "Drafts"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.tsx:366
+#: src/view/com/composer/text-input/TextInput.tsx:253
 msgid "Drop to add images"
 msgstr ""
 
@@ -6215,10 +6215,6 @@ msgstr ""
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:89
 msgid "No reposts yet"
-msgstr ""
-
-#: src/view/com/composer/text-input/web/Autocomplete.tsx:192
-msgid "No result"
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:248

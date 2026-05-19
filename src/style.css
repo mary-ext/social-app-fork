@@ -72,41 +72,9 @@ a[role='link'][data-no-underline='1']:hover {
   scrollbar-gutter: stable both-edges;
 }
 
-/* ProseMirror */
-.ProseMirror {
-  min-height: inherit;
-}
-.ProseMirror-dark {
-  color: white;
-}
-.ProseMirror p {
-  margin: 0;
-}
-.ProseMirror p.is-editor-empty:first-child::before {
-  color: #8d8e96;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-}
-.ProseMirror .mention {
-  color: #0085ff;
-}
-.ProseMirror a,
-.ProseMirror .autolink {
-  color: #0085ff;
-}
-/* OLLIE: TODO -- this is not accessible */
-/* Remove focus state on inputs */
-.ProseMirror-focused {
-  outline: 0;
-}
 textarea:focus,
 input:focus {
   outline: 0;
-}
-.tippy-content .items {
-  width: fit-content;
 }
 
 /* Tooltips */
