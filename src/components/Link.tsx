@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {type GestureResponderEvent, Linking} from 'react-native'
+import {type GestureResponderEvent, Linking, type TextStyle} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {
   type LinkProps as RNLinkProps,
@@ -24,6 +24,62 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, type TextProps} from '#/components/Typography'
 import {router} from '#/routes'
 import {useGlobalDialogsControlContext} from './dialogs/Context'
+
+type WebTextStyle = TextStyle & {
+  outline?: number
+  textDecorationColor?: TextStyle['color']
+}
+
+type LinkWebProps = {
+  dataSet: {
+    noUnderline: '1'
+  }
+  href: string
+  hrefAttrs: {
+    download?: string
+    rel?: string
+    target?: string
+  }
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}
+
+const webLinkProps = ({
+  download,
+  href,
+  isExternal,
+  onMouseEnter,
+  onMouseLeave,
+}: {
+  download?: string
+  href: string
+  isExternal: boolean
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}): LinkWebProps => {
+  return {
+    href,
+    hrefAttrs: {
+      target: download ? undefined : isExternal ? 'blank' : undefined,
+      rel: isExternal ? 'noopener noreferrer' : undefined,
+      download,
+    },
+    dataSet: {
+      // default to no underline, apply this ourselves
+      noUnderline: '1',
+    },
+    onMouseEnter,
+    onMouseLeave,
+  }
+}
+
+const underlineStyle = (color: TextStyle['color']): WebTextStyle => {
+  return {
+    outline: 0,
+    textDecorationLine: 'underline',
+    textDecorationColor: color,
+  }
+}
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -252,20 +308,9 @@ export function Link({
       style={[a.justify_start, rest.style]}
       role="link"
       accessibilityRole="link"
-      href={href}
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      {...({
-        hrefAttrs: {
-          target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
-          download,
-        },
-        dataSet: {
-          // no underline, only `InlineLink` has underlines
-          noUnderline: '1',
-        },
-      } as any)}>
+      {...webLinkProps({download, href, isExternal})}>
       {children}
     </Button>
   )
@@ -323,34 +368,21 @@ export function InlineLinkText({
       style={[
         {color: t.palette.primary_500},
         hovered &&
-          !disableUnderline && {
-            ...({
-              outline: 0,
-              textDecorationLine: 'underline',
-              textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
-            } as any),
-          },
+          !disableUnderline &&
+          underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
         flattenedStyle,
       ]}
       role="link"
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      onMouseEnter={onHoverIn}
-      onMouseLeave={onHoverOut}
       accessibilityRole="link"
-      href={href}
-      {...({
-        hrefAttrs: {
-          target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
-          download,
-        },
-        dataSet: {
-          // default to no underline, apply this ourselves
-          noUnderline: '1',
-        },
-      } as any)}>
+      {...webLinkProps({
+        download,
+        href,
+        isExternal,
+        onMouseEnter: onHoverIn,
+        onMouseLeave: onHoverOut,
+      })}>
       {children}
     </Text>
   )
@@ -406,33 +438,20 @@ export function SimpleInlineLinkText({
       style={[
         {color: t.palette.primary_500},
         hovered &&
-          !disableUnderline && {
-            ...({
-              outline: 0,
-              textDecorationLine: 'underline',
-              textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
-            } as any),
-          },
+          !disableUnderline &&
+          underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
         flattenedStyle,
       ]}
       role="link"
       onPress={onPress}
-      onMouseEnter={onHoverIn}
-      onMouseLeave={onHoverOut}
       accessibilityRole="link"
-      href={href}
-      {...({
-        hrefAttrs: {
-          target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
-          download,
-        },
-        dataSet: {
-          // default to no underline, apply this ourselves
-          noUnderline: '1',
-        },
-      } as any)}>
+      {...webLinkProps({
+        download,
+        href,
+        isExternal,
+        onMouseEnter: onHoverIn,
+        onMouseLeave: onHoverOut,
+      })}>
       {children}
     </Text>
   )

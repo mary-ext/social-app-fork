@@ -54,11 +54,6 @@
       "count": 2
     }
   },
-  "src/components/Link.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    }
-  },
   "src/components/Lists.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
