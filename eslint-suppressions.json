@@ -714,11 +714,6 @@
       "count": 1
     }
   },
-  "src/view/com/profile/ProfileMenu.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    }
-  },
   "src/view/com/util/EmptyState.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

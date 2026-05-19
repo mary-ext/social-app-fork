@@ -57,6 +57,10 @@ import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
 import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabledDialog'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
+const isAbortError = (error: unknown) => {
+  return error instanceof Error && error.name === 'AbortError'
+}
+
 let ProfileMenu = ({
   profile,
 }: {
@@ -128,10 +132,10 @@ let ProfileMenu = ({
       try {
         await queueUnmute()
         Toast.show(l({message: 'Account unmuted', context: 'toast'}))
-      } catch (e: any) {
-        if (e?.name !== 'AbortError') {
+      } catch (e) {
+        if (!isAbortError(e)) {
           logger.error('Failed to unmute account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
+          Toast.show(l`There was an issue! ${String(e)}`, {
             type: 'error',
           })
         }
@@ -140,10 +144,10 @@ let ProfileMenu = ({
       try {
         await queueMute()
         Toast.show(l({message: 'Account muted', context: 'toast'}))
-      } catch (e: any) {
-        if (e?.name !== 'AbortError') {
+      } catch (e) {
+        if (!isAbortError(e)) {
           logger.error('Failed to mute account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
+          Toast.show(l`There was an issue! ${String(e)}`, {
             type: 'error',
           })
         }
@@ -156,10 +160,10 @@ let ProfileMenu = ({
       try {
         await queueUnblock()
         Toast.show(l({message: 'Account unblocked', context: 'toast'}))
-      } catch (e: any) {
-        if (e?.name !== 'AbortError') {
+      } catch (e) {
+        if (!isAbortError(e)) {
           logger.error('Failed to unblock account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
+          Toast.show(l`There was an issue! ${String(e)}`, {
             type: 'error',
           })
         }
@@ -168,10 +172,10 @@ let ProfileMenu = ({
       try {
         await queueBlock()
         Toast.show(l({message: 'Account blocked', context: 'toast'}))
-      } catch (e: any) {
-        if (e?.name !== 'AbortError') {
+      } catch (e) {
+        if (!isAbortError(e)) {
           logger.error('Failed to block account', {message: e})
-          Toast.show(l`There was an issue! ${e.toString()}`, {
+          Toast.show(l`There was an issue! ${String(e)}`, {
             type: 'error',
           })
         }
@@ -183,10 +187,10 @@ let ProfileMenu = ({
     try {
       await queueFollow()
       Toast.show(l({message: 'Account followed', context: 'toast'}))
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
+    } catch (e) {
+      if (!isAbortError(e)) {
         logger.error('Failed to follow account', {message: e})
-        Toast.show(l`There was an issue! ${e.toString()}`, {
+        Toast.show(l`There was an issue! ${String(e)}`, {
           type: 'error',
         })
       }
@@ -197,10 +201,10 @@ let ProfileMenu = ({
     try {
       await queueUnfollow()
       Toast.show(l({message: 'Account unfollowed', context: 'toast'}))
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
+    } catch (e) {
+      if (!isAbortError(e)) {
         logger.error('Failed to unfollow account', {message: e})
-        Toast.show(l`There was an issue! ${e.toString()}`, {
+        Toast.show(l`There was an issue! ${String(e)}`, {
           type: 'error',
         })
       }
