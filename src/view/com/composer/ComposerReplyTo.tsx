@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {LayoutAnimation, Pressable, View} from 'react-native'
+import {LayoutAnimation, Pressable, View, type ViewStyle} from 'react-native'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -18,6 +18,14 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {Image} from '#/shims/image'
 import {parseEmbed} from '#/types/bsky/post'
+
+type WebViewStyle = ViewStyle & {
+  userSelect?: 'text'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
@@ -79,7 +87,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         a.mx_lg,
         a.border_b,
         t.atoms.border_contrast_medium,
-        a.user_select_text as any,
+        webViewStyle(a.user_select_text),
       ]}
       onPress={onPress}
       accessibilityRole="button"

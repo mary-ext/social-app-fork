@@ -5,6 +5,11 @@ import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 
+type WebViewProps = {
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}
+
 export function UserSearchInput({
   value,
   onChangeText,
@@ -25,20 +30,20 @@ export function UserSearchInput({
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const interacted = hovered || focused
+  const webProps: WebViewProps = {
+    onMouseEnter,
+    onMouseLeave,
+  }
 
   return (
     <View
-      {...({
-        onMouseEnter,
-        onMouseLeave,
-      } as any)}
+      {...webProps}
       style={[a.flex_row, a.align_center, a.gap_sm]}>
       <SearchIcon
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
       <TextInput
-        // @ts-ignore bottom sheet input types issue - esb
         ref={inputRef}
         placeholder={l`Search for people`}
         value={value}

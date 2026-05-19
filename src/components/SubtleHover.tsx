@@ -1,7 +1,15 @@
-import {View} from 'react-native'
+import {View, type ViewStyle} from 'react-native'
 
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
+
+type WebViewStyle = ViewStyle & {
+  willChange?: 'opacity'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function SubtleHover({
   style,
@@ -32,7 +40,7 @@ export function SubtleHover({
         a.transition_opacity,
         t.atoms.bg_contrast_50,
         style,
-        {willChange: 'opacity'} as any,
+        webViewStyle({willChange: 'opacity'}),
         {opacity: hover ? opacity : 0},
       ]}
     />
