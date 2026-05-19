@@ -89,7 +89,7 @@ export type TriggerChildProps = {
  * you'll need to pass a function to `children` that extracts the label from an item.
  */
 export type ValueProps = {
-  children?: (value: any) => React.ReactNode
+  children?: (value: unknown) => React.ReactNode
   placeholder?: string
   style?: StyleProp<TextStyle>
   /**
@@ -98,7 +98,7 @@ export type ValueProps = {
    *
    * @platform web
    */
-  webOverrideValue?: any
+  webOverrideValue?: unknown
 }
 
 /*
@@ -139,7 +139,7 @@ export type ContentProps<T> = {
     item: T,
     index: number,
     selectedValue?: string | null,
-  ) => React.ReactElement<any>
+  ) => React.ReactElement
   /*
    * Extracts the value from an item. Defaults to `item => item.value`
    */

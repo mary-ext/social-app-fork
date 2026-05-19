@@ -84,16 +84,6 @@
       "count": 1
     }
   },
-  "src/components/Select/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "src/components/Select/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/components/SendErrorReportDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -112,11 +102,6 @@
   "src/components/SubtleHover.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/components/Typography.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
     }
   },
   "src/components/WhoCanReply.tsx": {

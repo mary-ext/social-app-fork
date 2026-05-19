@@ -1,5 +1,5 @@
 import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
-import {View} from 'react-native'
+import {type TextStyle, View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
@@ -26,6 +26,10 @@ import {
 const SelectedValueContext = createContext<string | undefined | null>(null)
 SelectedValueContext.displayName = 'SelectSelectedValueContext'
 
+type WebTextStyle = TextStyle & {
+  pointerEvents?: 'inherit'
+}
+
 export function Root(props: RootProps) {
   return (
     <SelectedValueContext.Provider value={props.value}>
@@ -39,7 +43,7 @@ const RadixTriggerPassThrough = forwardRef(
     props: {
       children: (
         props: RadixPassThroughTriggerProps & {
-          ref: React.Ref<any>
+          ref: React.Ref<HTMLElement>
         },
       ) => React.ReactNode
     },
@@ -230,8 +234,8 @@ export function Content<T>({
   )
 }
 
-function defaultItemValueExtractor(item: any) {
-  return item.value
+function defaultItemValueExtractor(item: unknown) {
+  return (item as {value: string}).value
 }
 
 const ItemContext = createContext<{
@@ -296,7 +300,7 @@ export function Item({ref, value, style, children}: ItemProps) {
 export const ItemText = function ItemText({children, style}: ItemTextProps) {
   return (
     <RadixSelect.ItemText asChild>
-      <Text style={flatten([style, {pointerEvents: 'inherit'} as any])}>
+      <Text style={flatten([style, {pointerEvents: 'inherit'} as WebTextStyle])}>
         {children}
       </Text>
     </RadixSelect.ItemText>

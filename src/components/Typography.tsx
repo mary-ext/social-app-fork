@@ -1,7 +1,7 @@
-import {Text as RNText} from 'react-native'
+import {Text as RNText, type TextStyle} from 'react-native'
 
 import {logger} from '#/logger'
-import {atoms as a, type TextStyleProp, useAlf, useTheme} from '#/alf'
+import {atoms as a, useAlf, useTheme} from '#/alf'
 import {
   childHasEmoji,
   normalizeTextStyles,
@@ -30,7 +30,7 @@ export function Text({
     [
       a.text_sm,
       t.atoms.text,
-      numberOfLines === 1 && (numberOfLinesClippingFix as any),
+      numberOfLines === 1 && numberOfLinesClippingFix,
       style,
     ],
     {
@@ -65,7 +65,7 @@ function createHeadingElement({level}: {level: number}) {
     const attr = {
       role: 'heading',
       'aria-level': level,
-    } as any
+    } as unknown as Pick<TextProps, 'role'> & {'aria-level': number}
     return <Text {...attr} {...rest} style={style} />
   }
 }
@@ -82,7 +82,7 @@ export const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
   const attr = {
     role: 'paragraph',
-  } as any
+  } as unknown as Pick<TextProps, 'role'>
   return (
     <Text {...attr} {...rest} style={[a.text_md, a.leading_relaxed, style]} />
   )
@@ -106,4 +106,4 @@ const numberOfLinesClippingFix = {
   minWidth: 0,
   // this is neater and supports vertical writing modes, but it's only baseline newly available
   // overflowInline: 'clip',
-} satisfies React.CSSProperties as TextStyleProp
+} as unknown as TextStyle
