@@ -1,4 +1,4 @@
-import {Pressable, View} from 'react-native'
+import {Pressable, View, type ViewStyle} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
@@ -17,6 +17,14 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
+
+type WebViewStyle = ViewStyle & {
+  overflowY?: 'auto'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function DesktopFeeds() {
   const t = useTheme()
@@ -62,7 +70,7 @@ export function DesktopFeeds() {
     <View
       style={[
         a.flex_1,
-        {
+        webViewStyle({
           gap: 2,
           /*
            * Small padding prevents overflow prior to actually overflowing the
@@ -70,7 +78,7 @@ export function DesktopFeeds() {
            */
           paddingTop: 2,
           overflowY: 'auto',
-        } as any,
+        }),
       ]}>
       {pinnedFeedInfos.map((feedInfo, index) => {
         const feed = feedInfo.feedDescriptor

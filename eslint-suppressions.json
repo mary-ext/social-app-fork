@@ -64,11 +64,6 @@
       "count": 1
     }
   },
-  "src/components/dms/MessageItemEmbed.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/suggested-follows-dialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -179,17 +174,7 @@
       "count": 1
     }
   },
-  "src/view/shell/desktop/Feeds.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/view/shell/desktop/LeftNav.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/shell/desktop/RightNav.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

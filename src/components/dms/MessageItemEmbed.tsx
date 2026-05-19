@@ -32,7 +32,7 @@ let MessageItemEmbed = ({
             width: '100%',
             minWidth: 280,
             maxWidth: 360,
-          } as any,
+          },
           {
             marginTop: CLUSTERED_MESSAGE_GAP,
           },
