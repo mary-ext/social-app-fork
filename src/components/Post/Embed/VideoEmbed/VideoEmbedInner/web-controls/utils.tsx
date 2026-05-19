@@ -78,12 +78,11 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
       if (playWhenReadyRef.current) {
         try {
           await ref.current.play()
-        } catch (e: any) {
+        } catch (e) {
+          const message = e instanceof Error ? e.message : String(e)
           if (
-            !e.message?.includes(
-              `The request is not allowed by the user agent`,
-            ) &&
-            !e.message?.includes(
+            !message.includes(`The request is not allowed by the user agent`) &&
+            !message.includes(
               `The play() request was interrupted by a call to pause()`,
             )
           ) {

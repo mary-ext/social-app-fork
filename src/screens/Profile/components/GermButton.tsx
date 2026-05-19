@@ -148,8 +148,9 @@ function GermSelfButton({did}: {did: string}) {
           await queryClient.refetchQueries({queryKey: RQKEY(did)})
 
           Toast.show(l`Germ DM reconnected`)
-        } catch (e: any) {
-          Toast.show(l`Failed to reconnect Germ DM. Error: ${e?.message}`, {
+        } catch (e) {
+          const message = e instanceof Error ? e.message : String(e)
+          Toast.show(l`Failed to reconnect Germ DM. Error: ${message}`, {
             type: 'error',
           })
           if (!isNetworkError(e)) {

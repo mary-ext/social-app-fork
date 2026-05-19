@@ -142,7 +142,7 @@ function DialogInner({
       try {
         setNewUserAvatar(img)
         setUserAvatar(img.path)
-      } catch (e: any) {
+      } catch (e) {
         setImageError(cleanError(e))
       }
     },
@@ -160,7 +160,7 @@ function DialogInner({
       try {
         setNewUserBanner(img)
         setUserBanner(img.path)
-      } catch (e: any) {
+      } catch (e) {
         setImageError(cleanError(e))
       }
     },
@@ -181,7 +181,7 @@ function DialogInner({
       })
       control.close(() => onUpdate?.())
       Toast.show(l({message: 'Profile updated', context: 'toast'}))
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to update user profile', {message: String(e)})
     }
   }, [

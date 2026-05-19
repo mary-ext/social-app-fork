@@ -73,13 +73,13 @@ export async function getPostgateRecord({
     } else {
       return undefined
     }
-  } catch (e: any) {
+  } catch (e) {
     /*
      * If the record doesn't exist, we want to return null instead of
      * throwing an error. NB: This will also catch reference errors, such as
      * a typo in the URI.
      */
-    if (e.message.includes(`Could not locate record:`)) {
+    if (e instanceof Error && e.message.includes(`Could not locate record:`)) {
       return undefined
     } else {
       throw e
@@ -239,10 +239,10 @@ export function useToggleQuoteDetachmentMutation() {
               detached: false,
             }),
           })
-        } catch (e: any) {
+        } catch (e) {
           // ok if this fails, it's just optimistic UI
           logger.error(`Postgate: failed to get quote post for re-attachment`, {
-            safeMessage: e.message,
+            safeMessage: e instanceof Error ? e.message : String(e),
           })
         }
       }

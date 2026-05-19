@@ -101,7 +101,7 @@
   },
   "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     }
   },
   "src/components/ProfileHoverCard/index.tsx": {
@@ -196,7 +196,7 @@
   },
   "src/components/dialogs/PostInteractionSettingsDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 4
+      "count": 2
     }
   },
   "src/components/dialogs/SearchablePeopleList.tsx": {
@@ -216,7 +216,7 @@
   },
   "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 1
     }
   },
   "src/components/dms/AddMembersFlow.tsx": {
@@ -341,7 +341,7 @@
   },
   "src/features/liveNow/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 2
     }
   },
   "src/lib/ScrollContext.tsx": {
@@ -424,29 +424,14 @@
       "count": 2
     }
   },
-  "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/screens/PostThread/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }
   },
-  "src/screens/Profile/Header/EditProfileDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/screens/Profile/Header/Handle.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/screens/Profile/Header/ProfileHeaderLabeler.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "src/screens/Profile/Sections/Feed.tsx": {
@@ -456,7 +441,7 @@
   },
   "src/screens/Profile/components/GermButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
+      "count": 1
     }
   },
   "src/screens/Search/Shell.tsx": {
@@ -499,11 +484,6 @@
       "count": 3
     }
   },
-  "src/state/messages/events/agent.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/state/queries/notifications/feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -514,19 +494,9 @@
       "count": 3
     }
   },
-  "src/state/queries/postgate/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/state/queries/search-posts.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/state/queries/threadgate/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/state/queries/util.ts": {
@@ -545,11 +515,6 @@
     }
   },
   "src/view/com/composer/drafts/DraftsListDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/composer/drafts/state/queries.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }

@@ -216,10 +216,10 @@ export function PostInteractionSettingsDialogControlledInner(
       await Promise.all(requests)
 
       props.control.close()
-    } catch (e: any) {
+    } catch (e) {
       logger.error(`Failed to save post interaction settings`, {
         source: 'PostInteractionSettingsDialogControlledInner',
-        safeMessage: e.message,
+        safeMessage: e instanceof Error ? e.message : String(e),
       })
       Toast.show(
         l`There was an issue. Please check your internet connection and try again.`,
@@ -688,9 +688,9 @@ export function usePrefetchPostInteractionSettings({
           staleTime: STALE.SECONDS.THIRTY,
         }),
       ])
-    } catch (e: any) {
+    } catch (e) {
       logger.error(`Failed to prefetch post interaction settings`, {
-        safeMessage: e.message,
+        safeMessage: e instanceof Error ? e.message : String(e),
       })
     }
   }, [queryClient, agent, postUri, rootPostUri, getPost])

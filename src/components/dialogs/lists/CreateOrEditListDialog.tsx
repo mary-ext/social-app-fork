@@ -199,7 +199,7 @@ function DialogInner({
       try {
         setNewListAvatar(img)
         setListAvatar(img.path)
-      } catch (e: any) {
+      } catch (e) {
         setImageError(cleanError(e))
       }
     },
@@ -253,7 +253,7 @@ function DialogInner({
         )
         control.close(() => onSave?.(uri))
       }
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to create/edit list', {message: String(e)})
     }
   }, [

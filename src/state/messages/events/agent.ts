@@ -262,17 +262,17 @@ export class MessagesEventBus {
       }
 
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
-    } catch (e: any) {
+    } catch (e) {
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`init failed`, {
-          safeMessage: e.message,
+          safeMessage: e instanceof Error ? e.message : String(e),
         })
       }
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,
         payload: {
-          exception: e,
+          exception: e instanceof Error ? e : new Error(String(e)),
           code: MessagesEventBusErrorCode.InitFailed,
           retry: () => {
             this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
@@ -377,17 +377,17 @@ export class MessagesEventBus {
       if (needsEmit) {
         this.emitter.emit('event', {type: 'logs', logs: batch})
       }
-    } catch (e: any) {
+    } catch (e) {
       if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`poll events failed`, {
-          safeMessage: e.message,
+          safeMessage: e instanceof Error ? e.message : String(e),
         })
       }
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,
         payload: {
-          exception: e,
+          exception: e instanceof Error ? e : new Error(String(e)),
           code: MessagesEventBusErrorCode.PollFailed,
           retry: () => {
             this.dispatch({event: MessagesEventBusDispatchEvent.Resume})

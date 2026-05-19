@@ -63,10 +63,10 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
         try {
           const url = await storage.loadMediaFromLocal(img.localRef.path)
           loadedMedia.set(img.localRef.path, url)
-        } catch (e: any) {
+        } catch (e) {
           logger.error('Failed to load draft image', {
             path: img.localRef.path,
-            safeMessage: e.message,
+            safeMessage: e instanceof Error ? e.message : String(e),
           })
         }
       }
@@ -77,10 +77,10 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
         try {
           const url = await storage.loadMediaFromLocal(vid.localRef.path)
           loadedMedia.set(vid.localRef.path, url)
-        } catch (e: any) {
+        } catch (e) {
           logger.error('Failed to load draft video', {
             path: vid.localRef.path,
-            safeMessage: e.message,
+            safeMessage: e instanceof Error ? e.message : String(e),
           })
         }
       }
