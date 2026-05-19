@@ -6,14 +6,19 @@ import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {DraggableScrollView} from './DraggableScrollView'
 
+type WebViewNode = View & Element
+type WebViewStyle = {
+  overflowX?: 'hidden'
+}
+
 export interface TabBarProps {
   testID?: string
   selectedPage: number
   items: string[]
   indicatorColor?: string
   backgroundColor?: string
-  dragProgress?: any
-  dragState?: any
+  dragProgress?: unknown
+  dragState?: unknown
   transparent?: boolean
 
   onSelect?: (index: number) => void
@@ -33,7 +38,7 @@ export function TabBar({
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
-  const itemRefs = useRef<Array<Element>>([])
+  const itemRefs = useRef<Array<WebViewNode | null>>([])
   const {gtMobile} = useBreakpoints()
   const styles = gtMobile ? desktopStyles : mobileStyles
 
@@ -110,7 +115,7 @@ export function TabBar({
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
               ref={node => {
-                itemRefs.current[i] = node as any
+                itemRefs.current[i] = node as unknown as WebViewNode | null
               }}
               style={styles.item}
               hoverStyle={t.atoms.bg_contrast_25}
@@ -166,7 +171,7 @@ const desktopStyles = StyleSheet.create({
   },
   itemInner: {
     alignItems: 'center',
-    ...({overflowX: 'hidden'} as any),
+    ...({overflowX: 'hidden'} satisfies WebViewStyle),
   },
   itemText: {
     textAlign: 'center',
@@ -209,7 +214,7 @@ const mobileStyles = StyleSheet.create({
   itemInner: {
     flexGrow: 1,
     alignItems: 'center',
-    ...({overflowX: 'hidden'} as any),
+    ...({overflowX: 'hidden'} satisfies WebViewStyle),
   },
   itemText: {
     textAlign: 'center',
