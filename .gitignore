@@ -118,3 +118,5 @@ src/locale/locales/**/messages.ts
 *.apk
 *.aab
 *.ipa
+
+.research/
