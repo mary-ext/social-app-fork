@@ -63,8 +63,8 @@ export const SetNewPasswordForm = ({
         password,
       })
       onPasswordSet()
-    } catch (e: any) {
-      const errMsg = e.toString()
+    } catch (e) {
+      const errMsg = String(e)
       logger.warn('Failed to set new password', {error: e})
       setIsProcessing(false)
       if (isNetworkError(e)) {

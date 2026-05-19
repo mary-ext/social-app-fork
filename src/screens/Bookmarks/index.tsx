@@ -207,9 +207,9 @@ function BookmarkNotFound({
       toast.show(l`Removed from saved posts`, {
         type: 'info',
       })
-    } catch (e: any) {
+    } catch (e) {
       const {raw, clean} = cleanError(e)
-      toast.show(clean || raw || e, {
+      toast.show(clean || raw || String(e), {
         type: 'error',
       })
     }

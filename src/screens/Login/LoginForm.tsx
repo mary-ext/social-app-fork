@@ -130,8 +130,8 @@ export const LoginForm = ({
       onAttemptSuccess()
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
-    } catch (e: any) {
-      const errMsg = e.toString()
+    } catch (e) {
+      const errMsg = String(e)
       setIsProcessing(false)
       if (
         e instanceof ComAtprotoServerCreateSession.AuthFactorTokenRequiredError

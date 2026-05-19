@@ -16,7 +16,7 @@
   },
   "src/components/Dialog/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 8
+      "count": 5
     }
   },
   "src/components/Dialog/types.ts": {
@@ -409,37 +409,12 @@
       "count": 1
     }
   },
-  "src/screens/Bookmarks/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Deactivated.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/Login/ChooseAccountForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/screens/Login/ForgotPasswordForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/LoginForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },
   "src/screens/Login/PasswordUpdatedForm.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Login/SetNewPasswordForm.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }

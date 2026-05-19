@@ -45,7 +45,7 @@ export const ChooseAccountForm = ({
         setPendingDid(account.did)
         await resumeSession(account, true)
         Toast.show(l`Signed in as @${account.handle}`)
-      } catch (e: any) {
+      } catch (e) {
         logger.error('choose account: initSession failed', {
           message: e instanceof Error ? e.message : 'Unknown error',
         })
