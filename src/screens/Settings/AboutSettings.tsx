@@ -6,12 +6,9 @@ import {useMutation} from '@tanstack/react-query'
 import {getDeviceId} from '#/lib/device-id'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
-import * as Prompt from '#/components/Prompt'
-import {SendErrorReportDialog} from '#/components/SendErrorReportDialog'
 import * as Toast from '#/components/Toast'
 import * as env from '#/env'
 import {setStringAsync} from '#/shims/clipboard'
@@ -25,7 +22,6 @@ export function AboutSettingsScreen({}: Props) {
   const {t: l} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [] = useDemoMode()
-  const sendErrorReportControl = Prompt.usePromptControl()
 
   useMutation({
     mutationFn: async () => {
@@ -60,15 +56,6 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.PressableItem
-            onPress={() => sendErrorReportControl.open()}
-            label={l`Send error report`}>
-            <SettingsList.ItemIcon icon={BubblesIcon} />
-            <SettingsList.ItemText>
-              <Trans>Send error report</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.PressableItem>
-
-          <SettingsList.PressableItem
             label={l`Version ${env.APP_VERSION}`}
             accessibilityHint={l`Copies build version to clipboard`}
             onLongPress={() => {
@@ -100,7 +87,6 @@ export function AboutSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
         </SettingsList.Container>
       </Layout.Content>
-      <SendErrorReportDialog control={sendErrorReportControl} />
     </Layout.Screen>
   )
 }
