@@ -13,6 +13,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {type FeedNotification} from '#/state/queries/notifications/feed'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -22,9 +23,26 @@ import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {NotificationFeedItem} from './NotificationFeedItem'
 
-const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
-const LOADING_ITEM = {_reactKey: '__loading__'}
+const EMPTY_FEED_ITEM = {_reactKey: '__empty__'} as const
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'} as const
+const LOADING_ITEM = {_reactKey: '__loading__'} as const
+
+type NotificationItem =
+  | FeedNotification
+  | typeof EMPTY_FEED_ITEM
+  | typeof LOAD_MORE_ERROR_ITEM
+  | typeof LOADING_ITEM
+type NotificationSentinel = Exclude<NotificationItem, FeedNotification>
+
+const isNotificationSentinel = (
+  item: NotificationItem,
+): item is NotificationSentinel => {
+  return (
+    item === EMPTY_FEED_ITEM ||
+    item === LOAD_MORE_ERROR_ITEM ||
+    item === LOADING_ITEM
+  )
+}
 
 export function NotificationFeed({
   filter,
@@ -70,7 +88,7 @@ export function NotificationFeed({
     !isFetching && !data?.pages.find(page => page.items.length > 0)
 
   const items = useMemo(() => {
-    let arr: any[] = []
+    let arr: NotificationItem[] = []
     if (isFetched) {
       if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
@@ -116,8 +134,19 @@ export function NotificationFeed({
   }, [fetchNextPage])
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
-      if (item === EMPTY_FEED_ITEM) {
+    ({item, index}: ListRenderItemInfo<NotificationItem>) => {
+      if (isNotificationSentinel(item)) {
+        if (item === LOAD_MORE_ERROR_ITEM) {
+          return (
+            <LoadMoreRetryBtn
+              label={l`There was an issue fetching notifications. Tap here to try again.`}
+              onPress={onPressRetryLoadMore}
+            />
+          )
+        }
+        if (item === LOADING_ITEM) {
+          return <NotificationFeedLoadingPlaceholder />
+        }
         return (
           <EmptyState
             icon={BellIcon}
@@ -125,15 +154,6 @@ export function NotificationFeed({
             style={styles.emptyState}
           />
         )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={l`There was an issue fetching notifications. Tap here to try again.`}
-            onPress={onPressRetryLoadMore}
-          />
-        )
-      } else if (item === LOADING_ITEM) {
-        return <NotificationFeedLoadingPlaceholder />
       }
       return (
         <NotificationFeedItem

@@ -12,6 +12,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -31,10 +32,22 @@ import * as FeedCard from '#/components/FeedCard'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {ListFooter} from '#/components/Lists'
 
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING = {_reactKey: '__loading__'} as const
+const EMPTY = {_reactKey: '__empty__'} as const
+const ERROR_ITEM = {_reactKey: '__error__'} as const
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'} as const
+
+type FeedgenItem =
+  | AppBskyFeedDefs.GeneratorView
+  | typeof EMPTY
+  | typeof ERROR_ITEM
+  | typeof LOADING
+  | typeof LOAD_MORE_ERROR_ITEM
+type FeedgenSentinel = Exclude<FeedgenItem, AppBskyFeedDefs.GeneratorView>
+
+const isFeedgenSentinel = (item: FeedgenItem): item is FeedgenSentinel => {
+  return '_reactKey' in item
+}
 
 interface SectionRef {
   scrollToTop: () => void
@@ -83,7 +96,7 @@ export function ProfileFeedgens({
   const isSelf = currentAccount?.did === did
 
   const items = useMemo(() => {
-    let items: any[] = []
+    let items: FeedgenItem[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
@@ -146,8 +159,27 @@ export function ProfileFeedgens({
   // =
 
   const renderItem = useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
-      if (item === EMPTY) {
+    ({item}: ListRenderItemInfo<FeedgenItem>) => {
+      if (isFeedgenSentinel(item)) {
+        if (item === ERROR_ITEM) {
+          return (
+            <ErrorMessage
+              message={cleanError(error)}
+              onPressTryAgain={refetch}
+            />
+          )
+        }
+        if (item === LOAD_MORE_ERROR_ITEM) {
+          return (
+            <LoadMoreRetryBtn
+              label={l`There was an issue fetching your lists. Tap here to try again.`}
+              onPress={onPressRetryLoadMore}
+            />
+          )
+        }
+        if (item === LOADING) {
+          return <FeedLoadingPlaceholder />
+        }
         return (
           <EmptyState
             style={{width: '100%'}}
@@ -171,19 +203,6 @@ export function ProfileFeedgens({
             }
           />
         )
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={l`There was an issue fetching your lists. Tap here to try again.`}
-            onPress={onPressRetryLoadMore}
-          />
-        )
-      } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
       }
       if (preferences) {
         return (
@@ -251,6 +270,6 @@ export function ProfileFeedgens({
   )
 }
 
-function keyExtractor(item: any) {
-  return item._reactKey || item.uri
+function keyExtractor(item: FeedgenItem) {
+  return isFeedgenSentinel(item) ? item._reactKey : item.uri
 }

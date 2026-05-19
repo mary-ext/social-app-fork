@@ -25,10 +25,24 @@ import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as bsky from '#/types/bsky'
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const EMPTY_ITEM = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING_ITEM = {_reactKey: '__loading__'} as const
+const EMPTY_ITEM = {_reactKey: '__empty__'} as const
+const ERROR_ITEM = {_reactKey: '__error__'} as const
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'} as const
+
+type ListMemberItem =
+  | AppBskyGraphDefs.ListItemView
+  | typeof EMPTY_ITEM
+  | typeof ERROR_ITEM
+  | typeof LOADING_ITEM
+  | typeof LOAD_MORE_ERROR_ITEM
+type ListMemberSentinel = Exclude<ListMemberItem, AppBskyGraphDefs.ListItemView>
+
+const isListMemberSentinel = (
+  item: ListMemberItem,
+): item is ListMemberSentinel => {
+  return '_reactKey' in item
+}
 
 export function ListMembers({
   list,
@@ -75,7 +89,7 @@ export function ListMembers({
     currentAccount && data?.pages[0]!.list.creator.did === currentAccount.did
 
   const items = useMemo(() => {
-    let items: any[] = []
+    let items: ListMemberItem[] = []
     if (isFetched) {
       if (isEmpty && isError) {
         items = items.concat([ERROR_ITEM])
@@ -139,28 +153,31 @@ export function ListMembers({
   // =
 
   const renderItem = useCallback(
-    ({item}: {item: any}) => {
-      if (item === EMPTY_ITEM) {
+    ({item}: {item: ListMemberItem}) => {
+      if (isListMemberSentinel(item)) {
+        if (item === ERROR_ITEM) {
+          return (
+            <ErrorMessage
+              message={cleanError(error)}
+              onPressTryAgain={onPressTryAgain}
+            />
+          )
+        }
+        if (item === LOAD_MORE_ERROR_ITEM) {
+          return (
+            <LoadMoreRetryBtn
+              label={l`There was an issue fetching the list. Tap here to try again.`}
+              onPress={onPressRetryLoadMore}
+            />
+          )
+        }
+        if (item === LOADING_ITEM) {
+          return <ProfileCardFeedLoadingPlaceholder />
+        }
         return renderEmptyState()
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage
-            message={cleanError(error)}
-            onPressTryAgain={onPressTryAgain}
-          />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={l`There was an issue fetching the list. Tap here to try again.`}
-            onPress={onPressRetryLoadMore}
-          />
-        )
-      } else if (item === LOADING_ITEM) {
-        return <ProfileCardFeedLoadingPlaceholder />
       }
 
-      const profile = (item as AppBskyGraphDefs.ListItemView).subject
+      const profile = item.subject
       if (!moderationOpts) return null
 
       return (
@@ -242,7 +259,9 @@ export function ListMembers({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item.subject?.did || item._reactKey}
+        keyExtractor={item =>
+          isListMemberSentinel(item) ? item._reactKey : item.subject.did
+        }
         renderItem={renderItem}
         ListHeaderComponent={!isEmpty ? renderHeader : undefined}
         ListFooterComponent={renderFooter}

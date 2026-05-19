@@ -534,31 +534,6 @@
       "count": 1
     }
   },
-  "src/view/com/feeds/ProfileFeedgens.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "src/view/com/lists/ListMembers.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "src/view/com/lists/MyLists.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/lists/ProfileLists.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "src/view/com/notifications/NotificationFeed.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/view/com/notifications/NotificationFeedItem.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

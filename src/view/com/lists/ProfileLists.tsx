@@ -12,6 +12,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -31,10 +32,24 @@ import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons
 import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
 
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING = {_reactKey: '__loading__'} as const
+const EMPTY = {_reactKey: '__empty__'} as const
+const ERROR_ITEM = {_reactKey: '__error__'} as const
+const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'} as const
+
+type ProfileListItem =
+  | AppBskyGraphDefs.ListView
+  | typeof EMPTY
+  | typeof ERROR_ITEM
+  | typeof LOADING
+  | typeof LOAD_MORE_ERROR_ITEM
+type ProfileListSentinel = Exclude<ProfileListItem, AppBskyGraphDefs.ListView>
+
+const isProfileListSentinel = (
+  item: ProfileListItem,
+): item is ProfileListSentinel => {
+  return '_reactKey' in item
+}
 
 interface SectionRef {
   scrollToTop: () => void
@@ -83,7 +98,7 @@ export function ProfileLists({
   const isSelf = currentAccount?.did === did
 
   const items = useMemo(() => {
-    let items: any[] = []
+    let items: ProfileListItem[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
@@ -146,8 +161,27 @@ export function ProfileLists({
   // =
 
   const renderItem = useCallback(
-    ({item}: ListRenderItemInfo<any>) => {
-      if (item === EMPTY) {
+    ({item}: ListRenderItemInfo<ProfileListItem>) => {
+      if (isProfileListSentinel(item)) {
+        if (item === ERROR_ITEM) {
+          return (
+            <ErrorMessage
+              message={cleanError(error)}
+              onPressTryAgain={refetch}
+            />
+          )
+        }
+        if (item === LOAD_MORE_ERROR_ITEM) {
+          return (
+            <LoadMoreRetryBtn
+              label={l`There was an issue fetching your lists. Tap here to try again.`}
+              onPress={onPressRetryLoadMore}
+            />
+          )
+        }
+        if (item === LOADING) {
+          return <FeedLoadingPlaceholder />
+        }
         return (
           <EmptyState
             icon={ListIcon}
@@ -168,19 +202,6 @@ export function ProfileLists({
             }
           />
         )
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={l`There was an issue fetching your lists. Tap here to try again.`}
-            onPress={onPressRetryLoadMore}
-          />
-        )
-      } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
       }
       if (preferences) {
         return (
@@ -248,6 +269,6 @@ export function ProfileLists({
   )
 }
 
-function keyExtractor(item: any) {
-  return item._reactKey || item.uri
+function keyExtractor(item: ProfileListItem) {
+  return isProfileListSentinel(item) ? item._reactKey : item.uri
 }

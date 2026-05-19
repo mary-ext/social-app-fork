@@ -23,9 +23,20 @@ import {Text} from '#/components/Typography'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
+const LOADING = {_reactKey: '__loading__'} as const
+const EMPTY = {_reactKey: '__empty__'} as const
+const ERROR_ITEM = {_reactKey: '__error__'} as const
+
+type MyListItem =
+  | GraphDefs.ListView
+  | typeof EMPTY
+  | typeof ERROR_ITEM
+  | typeof LOADING
+type MyListSentinel = Exclude<MyListItem, GraphDefs.ListView>
+
+const isMyListSentinel = (item: MyListItem): item is MyListSentinel => {
+  return '_reactKey' in item
+}
 
 export function MyLists({
   filter,
@@ -50,7 +61,7 @@ export function MyLists({
   const isEmpty = !isFetching && !data?.length
 
   const items = useMemo(() => {
-    let items: any[] = []
+    let items: MyListItem[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
@@ -58,7 +69,7 @@ export function MyLists({
       items = items.concat([LOADING])
     } else if (isEmpty) {
       items = items.concat([EMPTY])
-    } else {
+    } else if (data) {
       items = items.concat(data)
     }
     return items
@@ -94,8 +105,23 @@ export function MyLists({
   // =
 
   const renderItemInner = useCallback(
-    ({item, index}: {item: any; index: number}) => {
-      if (item === EMPTY) {
+    ({item, index}: {item: MyListItem; index: number}) => {
+      if (isMyListSentinel(item)) {
+        if (item === ERROR_ITEM) {
+          return (
+            <ErrorMessage
+              message={cleanError(error)}
+              onPressTryAgain={onRefresh}
+            />
+          )
+        }
+        if (item === LOADING) {
+          return (
+            <View style={{padding: 20}}>
+              <ActivityIndicator />
+            </View>
+          )
+        }
         return (
           <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_3xl]}>
             <View
@@ -125,19 +151,6 @@ export function MyLists({
             </Text>
           </View>
         )
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage
-            message={cleanError(error)}
-            onPressTryAgain={onRefresh}
-          />
-        )
-      } else if (item === LOADING) {
-        return (
-          <View style={{padding: 20}}>
-            <ActivityIndicator />
-          </View>
-        )
       }
       return renderItem ? (
         renderItem(item, index)
@@ -163,7 +176,9 @@ export function MyLists({
           <RNFlatList
             testID={testID ? `${testID}-flatlist` : undefined}
             data={items}
-            keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
+            keyExtractor={item =>
+              isMyListSentinel(item) ? item._reactKey : item.uri
+            }
             renderItem={renderItemInner}
             refreshControl={
               <RefreshControl
@@ -186,7 +201,9 @@ export function MyLists({
           <List
             testID={testID ? `${testID}-flatlist` : undefined}
             data={items}
-            keyExtractor={item => (item.uri ? item.uri : item._reactKey)}
+            keyExtractor={item =>
+              isMyListSentinel(item) ? item._reactKey : item.uri
+            }
             renderItem={renderItemInner}
             refreshing={isPTRing}
             onRefresh={onRefresh}
