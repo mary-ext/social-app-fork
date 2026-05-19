@@ -29,6 +29,28 @@ export type ScreenProps = React.ComponentProps<typeof View> & {
   minimalShell?: boolean
 }
 
+type WebScrollStyle = ViewStyle & {
+  overflowY?: 'scroll'
+  scrollbarColor?: string
+  scrollbarWidth?: 'thin'
+}
+
+type WebCenterBorderStyle = Omit<ViewStyle, 'left' | 'transform'> & {
+  left?: string
+  transform?: (
+    | NonNullable<ViewStyle['transform']>[number]
+    | {translateX: string}
+  )[]
+}
+
+const webScrollStyle = (style: WebScrollStyle): ViewStyle => {
+  return style
+}
+
+const webCenterBorderStyle = (style: WebCenterBorderStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
+
 /**
  * Outermost component of every screen
  */
@@ -102,12 +124,12 @@ export const Content = memo(
           a.w_full,
           animatedStyle,
           isWithinSplitView &&
-            ({
+            webScrollStyle({
               flex: 1,
               overflowY: 'scroll',
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
-            } as any),
+            }),
           style,
         ]}
         contentContainerStyle={[contentContainerStyle]}
@@ -184,7 +206,7 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
         a.border_l,
         a.border_r,
         t.atoms.border_contrast_low,
-        {
+        webCenterBorderStyle({
           width: 602,
           left: '50%',
           transform: [
@@ -192,7 +214,7 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
             {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             ...a.scrollbar_offset.transform,
           ],
-        } as any,
+        }),
       ]}
     />
   ) : null

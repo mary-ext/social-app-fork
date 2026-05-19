@@ -1,7 +1,7 @@
 export const SCROLLBAR_OFFSET =
-  'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)' as any
+  'calc(-1 * var(--removed-body-scroll-bar-size, 0px) / 2)' as unknown as number
 export const SCROLLBAR_OFFSET_POSITIVE =
-  'calc(var(--removed-body-scroll-bar-size, 0px) / 2)' as any
+  'calc(var(--removed-body-scroll-bar-size, 0px) / 2)' as unknown as number
 
 /**
  * Useful for visually aligning icons within header buttons with the elements
