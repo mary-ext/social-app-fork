@@ -1,6 +1,6 @@
-import {type Route, type RouteParams} from './types'
+import {type Route, type RouteBuildParams, type RouteParams} from './types'
 
-export class Router<T extends Record<string, any>> {
+export class Router<T extends Record<string, unknown>> {
   routes: [string, Route][] = []
   constructor(description: Record<keyof T, string | string[]>) {
     for (const [screen, pattern] of Object.entries(description)) {
@@ -55,22 +55,41 @@ function createRoute(pattern: string): Route {
       }
       return undefined
     },
-    build(params = {}) {
+    build(params: RouteBuildParams = {}) {
       const str = pattern.replace(
         /:([\w]+)/g,
-        (_m, name) => params[encodeURIComponent(name)] || 'undefined',
+        (_m, name) => {
+          return (
+            stringifyRouteParam(params[encodeURIComponent(name)]) ?? 'undefined'
+          )
+        },
       )
 
       let hasQp = false
       const qp = new URLSearchParams()
       for (const paramName in params) {
         if (!pathParamNames.has(paramName)) {
-          qp.set(paramName, params[paramName])
-          hasQp = true
+          const value = params[paramName]
+          const stringValue = stringifyRouteParam(value)
+          if (stringValue !== undefined) {
+            qp.set(paramName, stringValue)
+            hasQp = true
+          }
         }
       }
 
       return str + (hasQp ? `?${qp.toString()}` : '')
     },
+  }
+}
+
+function stringifyRouteParam(value: unknown): string | undefined {
+  switch (typeof value) {
+    case 'boolean':
+    case 'number':
+    case 'string':
+      return String(value)
+    default:
+      return undefined
   }
 }

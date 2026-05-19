@@ -181,10 +181,12 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
     } else {
       const promise = ref.current.play()
       if (promise !== undefined) {
-        promise.catch((err: any) => {
+        promise.catch((err: unknown) => {
+          const message = err instanceof Error ? err.message : String(err)
+
           if (
             // ignore this common error. it's fine
-            !err.message?.includes(
+            !message.includes(
               `The play() request was interrupted by a call to pause()`,
             )
           ) {

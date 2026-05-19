@@ -125,7 +125,7 @@ const createQueryClient = () =>
 
 const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
   {
-    shouldDehydrateMutation: (_: any) => false,
+    shouldDehydrateMutation: (_: unknown) => false,
     shouldDehydrateQuery: query => {
       return isQueryPersisted(query.queryKey)
     },

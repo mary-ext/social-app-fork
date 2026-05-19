@@ -69,7 +69,7 @@ export function isQueryPersisted(
   )
 }
 
-export async function truncateAndInvalidate<T = any>(
+export async function truncateAndInvalidate<T = unknown>(
   queryClient: QueryClient,
   queryKey: QueryKey,
 ) {

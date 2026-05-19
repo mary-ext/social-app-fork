@@ -145,9 +145,10 @@ export type State =
   | NavigationState
   | Omit<PartialState<NavigationState>, 'stale'>
 
-export type RouteParams = Record<string, string>
+export type RouteBuildParams = Record<string, unknown>
 export type MatchResult = {params: RouteParams}
+export type RouteParams = Record<string, string>
 export type Route = {
   match: (path: string) => MatchResult | undefined
-  build: (params?: Record<string, any>) => string
+  build: (params?: RouteBuildParams) => string
 }

@@ -29,11 +29,6 @@
       "count": 1
     }
   },
-  "src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/ProfileHoverCard/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -45,11 +40,6 @@
     }
   },
   "src/components/StarterPack/Wizard/WizardEditListDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -74,37 +64,7 @@
       "count": 1
     }
   },
-  "src/features/liveNow/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/lib/broadcast/stub.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/getUserDisplayName.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useNonReactiveCallback.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/react-query.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/routes/router.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/lib/routes/types.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
@@ -115,16 +75,6 @@
     }
   },
   "src/screens/Profile/Sections/Feed.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/state/queries/post-feed.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/state/queries/util.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
