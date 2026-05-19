@@ -8,7 +8,14 @@ import {
   useRef,
   useState,
 } from 'react'
-import {FlatList, Pressable, useWindowDimensions, View} from 'react-native'
+import {
+  FlatList,
+  Pressable,
+  type StyleProp,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
@@ -61,6 +68,23 @@ const Context = createContext<{
   bleedWidth: 0,
 })
 
+type GalleryBleedChildProps = {
+  ref?: React.Ref<View>
+  onLayout?: (e: {nativeEvent: {layout: {width: number}}}) => void
+  style?: StyleProp<ViewStyle>
+}
+
+type WebViewStyle = Omit<ViewStyle, 'cursor'> & {
+  border?: 0
+  cursor?: 'inherit'
+  outline?: 0
+  transitionDuration?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
+
 export function GalleryBleed({children}: {children: React.ReactNode}) {
   const ref = useRef<View>(null)
   const [bleedWidth, setBleedWidth] = useState(0)
@@ -69,7 +93,7 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
     throw new Error('GalleryBleed children must be a single React element')
   }
 
-  const node = children as React.ReactElement<any>
+  const node = children as React.ReactElement<GalleryBleedChildProps>
 
   return (
     <Context.Provider value={{bleedRef: ref, bleedWidth}}>
@@ -407,16 +431,14 @@ function GalleryImage({
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          [
-            {
-              cursor: 'inherit',
-              outline: 0,
-              border: 0,
-            },
-            a.transition_transform,
-            {transitionDuration: '200ms'},
-            pressed && {transform: [{scale: 0.99}]},
-          ] as any,
+          webViewStyle({
+            cursor: 'inherit',
+            outline: 0,
+            border: 0,
+          }),
+          a.transition_transform,
+          webViewStyle({transitionDuration: '200ms'}),
+          pressed && {transform: [{scale: 0.99}]},
         ]}>
         <Image
           source={{uri: image.thumb}}

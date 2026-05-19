@@ -1,5 +1,5 @@
 import {useMemo, useRef} from 'react'
-import {type DimensionValue, Pressable, View} from 'react-native'
+import {type DimensionValue, Pressable, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
@@ -15,6 +15,14 @@ import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {Image} from '#/shims/image'
+
+type WebViewStyle = ViewStyle & {
+  transitionDuration?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function ConstrainedImage({
   aspectRatio,
@@ -211,11 +219,9 @@ export function AutoSizedImage({
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           {aspectRatio: max ?? 1},
-          [
-            a.transition_transform,
-            {transitionDuration: '200ms'},
-            pressed && {transform: [{scale: 0.99}]},
-          ] as any,
+          a.transition_transform,
+          webViewStyle({transitionDuration: '200ms'}),
+          pressed && {transform: [{scale: 0.99}]},
         ]}>
         {contents}
       </Pressable>
@@ -241,11 +247,9 @@ export function AutoSizedImage({
             a.h_full,
             a.rounded_md,
             a.overflow_hidden,
-            [
-              a.transition_transform,
-              {transitionDuration: '200ms'},
-              pressed && {transform: [{scale: 0.99}]},
-            ] as any,
+            a.transition_transform,
+            webViewStyle({transitionDuration: '200ms'}),
+            pressed && {transform: [{scale: 0.99}]},
           ]}>
           {contents}
         </Pressable>
