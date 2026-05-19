@@ -209,16 +209,6 @@
       "count": 1
     }
   },
-  "src/components/forms/AutosizedTextarea.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/components/forms/DateField/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/forms/SegmentedControl.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -242,16 +232,6 @@
   "src/components/images/Gallery/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/components/moderation/ModerationDetailsDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/components/moderation/ScreenHider.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/components/suggested-follows-dialog.tsx": {

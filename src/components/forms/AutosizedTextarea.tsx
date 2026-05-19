@@ -3,11 +3,19 @@ import {
   TextInput,
   type TextInputContentSizeChangeEvent,
   type TextInputProps,
+  type TextStyle,
 } from 'react-native'
 
 import {mergeRefs} from '#/lib/merge-refs'
 import {atoms as a, extractPadding, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
+
+type WebTextInputStyle = TextStyle & {
+  outline?: 'none'
+  resize?: 'none'
+  whiteSpace?: 'pre-wrap'
+  wordBreak?: 'break-word'
+}
 
 export type AutosizedTextareaProps = Omit<TextInputProps, 'multiline'> & {
   ref?: React.Ref<TextInput>
@@ -142,7 +150,7 @@ export function AutosizedTextarea({
           outline: 'none',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
-        } as any,
+        } as WebTextInputStyle,
         style,
         {},
       ]}

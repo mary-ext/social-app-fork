@@ -135,7 +135,7 @@ function ModerationDetailsDialogInner({
       style={
         {
           maxWidth: 460,
-        } as any
+        }
       }>
       <View style={[xGutters, a.pb_lg]}>
         <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>

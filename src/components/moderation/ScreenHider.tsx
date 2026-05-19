@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {
   type StyleProp,
+  type TextStyle,
   TouchableWithoutFeedback,
   View,
   type ViewStyle,
@@ -20,6 +21,10 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
+
+type WebTextStyle = TextStyle & {
+  cursor?: 'pointer'
+}
 
 export function ScreenHider({
   testID,
@@ -140,7 +145,7 @@ export function ScreenHider({
                   },
                   {
                     cursor: 'pointer',
-                  } as any,
+                  } as WebTextStyle,
                 ]}>
                 <Trans>Learn More</Trans>
               </Text>
