@@ -12,7 +12,6 @@ import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -20,6 +19,7 @@ import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -283,7 +283,7 @@ let SearchScreenPostResults = ({
   }, [posts, isFetchingNextPage])
 
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   const fireTracking = useCallOnce(() => {
     if (sort) {
@@ -295,7 +295,7 @@ let SearchScreenPostResults = ({
 
   const showSignIn = () => {
     closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'none'})
+    signinDialogControl.open({})
   }
 
   if (!hasSession) {

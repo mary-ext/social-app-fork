@@ -11,7 +11,6 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -22,7 +21,6 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -46,8 +44,8 @@ export const LoginForm = ({
   setError: (v: string) => void
   setServiceUrl: (v: string) => void
   onPressRetryConnect: () => void
-  onPressBack: () => void
-  onPressForgotPassword: () => void
+  onPressBack?: () => void
+  onPressForgotPassword?: () => void
   onAttemptSuccess: () => void
   onAttemptFailed: () => void
 }) => {
@@ -64,7 +62,6 @@ export const LoginForm = ({
   const passwordRef = useRef<TextInput>(null)
   const {t: l} = useLingui()
   const {login} = useSessionApi()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
   const onPressSelectService = useCallback(() => {
@@ -128,7 +125,6 @@ export const LoginForm = ({
         'LoginForm',
       )
       onAttemptSuccess()
-      setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
     } catch (e) {
       const errMsg = String(e)
@@ -167,7 +163,7 @@ export const LoginForm = ({
   }
 
   return (
-    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
+    <View style={[a.gap_md, a.flex_1]}>
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
@@ -232,23 +228,25 @@ export const LoginForm = ({
               accessibilityHint={l`Enter your password`}
               onLayout={undefined}
             />
-            <Button
-              testID="forgotPasswordButton"
-              onPress={onPressForgotPassword}
-              label={l`Forgot password?`}
-              accessibilityHint={l`Opens password reset form`}
-              variant="solid"
-              color="secondary"
-              style={[
-                a.rounded_sm,
-                // t.atoms.bg_contrast_100,
-                {marginLeft: 'auto', left: 6, padding: 6},
-                a.z_10,
-              ]}>
-              <ButtonText>
-                <Trans>Forgot?</Trans>
-              </ButtonText>
-            </Button>
+            {onPressForgotPassword && (
+              <Button
+                testID="forgotPasswordButton"
+                onPress={onPressForgotPassword}
+                label={l`Forgot password?`}
+                accessibilityHint={l`Opens password reset form`}
+                variant="solid"
+                color="secondary"
+                style={[
+                  a.rounded_sm,
+                  // t.atoms.bg_contrast_100,
+                  {marginLeft: 'auto', left: 6, padding: 6},
+                  a.z_10,
+                ]}>
+                <ButtonText>
+                  <Trans>Forgot?</Trans>
+                </ButtonText>
+              </Button>
+            )}
           </TextField.Root>
         </View>
       </View>
@@ -290,7 +288,7 @@ export const LoginForm = ({
       )}
       <FormError error={error} />
       <View style={[a.pt_md, a.justify_between, a.flex_row]}>
-        {
+        {onPressBack && (
           <Button
             label={l`Back`}
             color="secondary"
@@ -300,7 +298,7 @@ export const LoginForm = ({
               <Trans>Back</Trans>
             </ButtonText>
           </Button>
-        }
+        )}
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
@@ -337,6 +335,6 @@ export const LoginForm = ({
           </Button>
         )}
       </View>
-    </FormContainer>
+    </View>
   )
 }

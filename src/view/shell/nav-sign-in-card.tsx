@@ -3,23 +3,24 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
+import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 let NavSignInCard = ({}: {}): React.ReactNode => {
   const {t: l} = useLingui()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
   const closeAllActiveElements = useCloseAllActiveElements()
 
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'none'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
+    signinDialogControl.open({})
+  }, [signinDialogControl, closeAllActiveElements])
 
   return (
     <View style={[{maxWidth: 245}]}>
@@ -43,6 +44,9 @@ let NavSignInCard = ({}: {}): React.ReactNode => {
             <Trans>Sign in</Trans>
           </ButtonText>
         </Button>
+      </View>
+      <View style={[a.mt_md, a.w_full, {height: 32}]}>
+        <AppLanguageDropdown />
       </View>
     </View>
   )

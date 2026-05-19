@@ -1,83 +1,183 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
+import {DEFAULT_SERVICE} from '#/lib/constants'
+import {logger} from '#/logger'
+import {useServiceQuery} from '#/state/queries/service'
+import {
+  type SessionAccount,
+  useSession,
+  useSessionApi,
+} from '#/state/session'
+import {LoginForm} from '#/screens/Login/LoginForm'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {AccountList} from '#/components/AccountList'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {Divider} from '#/components/Divider'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function SigninDialog() {
-  const {signinDialogControl: control} = useGlobalDialogsControlContext()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={signinDialogControl.control}
+      onClose={signinDialogControl.clear}>
       <Dialog.Handle />
-      <SigninDialogInner control={control} />
+      <SigninDialogInner />
     </Dialog.Outer>
   )
 }
 
-function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
+function SigninDialogInner() {
   const t = useTheme()
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
-  const closeAllActiveElements = useCloseAllActiveElements()
+  const queryClient = useQueryClient()
+  const {accounts, currentAccount} = useSession()
+  const {resumeSession} = useSessionApi()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
+  const payload = signinDialogControl.value
+  const requestedAccount = payload?.requestedAccount
+  const showStoredAccounts = payload?.showStoredAccounts ?? true
+  const [pendingDid, setPendingDid] = useState<string | null>(null)
+  const [selectedAccount, setSelectedAccount] = useState<
+    SessionAccount | undefined
+  >(requestedAccount)
+  const [error, setError] = useState('')
+  const [serviceUrl, setServiceUrl] = useState(
+    requestedAccount?.service || DEFAULT_SERVICE,
+  )
 
-  const showSignIn = useCallback(() => {
-    closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'none'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
+  useEffect(() => {
+    setSelectedAccount(requestedAccount)
+    setServiceUrl(requestedAccount?.service || DEFAULT_SERVICE)
+    setError('')
+  }, [requestedAccount])
+
+  const {
+    data: serviceDescription,
+    error: serviceError,
+    refetch: refetchService,
+  } = useServiceQuery(serviceUrl)
+
+  useEffect(() => {
+    if (serviceError) {
+      setError(
+        l`Unable to contact your service. Please check your Internet connection.`,
+      )
+      logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
+        error: String(serviceError),
+      })
+    } else {
+      setError('')
+    }
+  }, [serviceError, serviceUrl, l])
+
+  const onSelectAccount = useCallback(
+    async (account: SessionAccount) => {
+      if (pendingDid) {
+        return
+      }
+      if (account.did === currentAccount?.did) {
+        signinDialogControl.control.close()
+        Toast.show(l`Already signed in as @${account.handle}`)
+        return
+      }
+      if (!account.accessJwt) {
+        setSelectedAccount(account)
+        setServiceUrl(account.service)
+        return
+      }
+      try {
+        setPendingDid(account.did)
+        history.pushState(null, '', '/')
+        await resumeSession(account, true)
+        signinDialogControl.control.close()
+        await queryClient.resetQueries()
+        Toast.show(l`Signed in as @${account.handle}`)
+      } catch (e) {
+        logger.error('sign in dialog: resume account failed', {
+          message: e instanceof Error ? e.message : String(e),
+        })
+        setSelectedAccount(account)
+        setServiceUrl(account.service)
+      } finally {
+        setPendingDid(null)
+      }
+    },
+    [
+      currentAccount?.did,
+      l,
+      pendingDid,
+      queryClient,
+      resumeSession,
+      signinDialogControl.control,
+    ],
+  )
+
+  const onAttemptSuccess = useCallback(() => {
+    signinDialogControl.control.close()
+  }, [signinDialogControl.control])
+
+  const onPressRetryConnect = useCallback(() => {
+    void refetchService()
+  }, [refetchService])
+
+  const onSelectStoredAccount = useCallback(
+    (account: SessionAccount) => {
+      void onSelectAccount(account)
+    },
+    [onSelectAccount],
+  )
 
   return (
     <Dialog.ScrollableInner
       label={l`Sign in to Bluesky`}
-      style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
-      <View style={[a.p_2xl]}>
-        <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.justify_center,
-            a.gap_sm,
-            a.pb_lg,
-          ]}>
-          <Logo width={36} />
-          <View style={{paddingTop: 6}}>
-            <Logotype width={120} fill={t.atoms.text.color} />
+      style={[gtMobile ? {width: 'auto', maxWidth: 560} : a.w_full]}>
+      <View style={[a.gap_2xl]}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.font_semi_bold, a.text_2xl]}>
+            <Trans>Sign in</Trans>
+          </Text>
+          <Text
+            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+            <Trans>Sign in to join the conversation.</Trans>
+          </Text>
+        </View>
+        <LoginForm
+          key={`${serviceUrl}:${selectedAccount?.did || 'new-account'}`}
+          error={error}
+          serviceUrl={serviceUrl}
+          serviceDescription={serviceDescription}
+          initialHandle={selectedAccount?.handle || ''}
+          setError={setError}
+          onAttemptFailed={() => {}}
+          onAttemptSuccess={onAttemptSuccess}
+          setServiceUrl={setServiceUrl}
+          onPressRetryConnect={onPressRetryConnect}
+        />
+        {showStoredAccounts && accounts.length > 0 && (
+          <View style={[a.gap_md]}>
+            <Divider />
+            <Text
+              style={[
+                a.text_sm,
+                a.text_center,
+                a.font_semi_bold,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>or sign in to an existing account</Trans>
+            </Text>
+            <AccountList
+              onSelectAccount={onSelectStoredAccount}
+              pendingDid={pendingDid}
+            />
           </View>
-        </View>
-        <Text
-          style={[
-            a.text_lg,
-            a.text_center,
-            t.atoms.text,
-            a.pb_2xl,
-            a.leading_snug,
-            a.mx_auto,
-            {
-              maxWidth: 300,
-            },
-          ]}>
-          <Trans>Sign in to join the conversation!</Trans>
-        </Text>
-        <View style={[a.flex_col, a.gap_md]}>
-          <Button
-            variant="solid"
-            color="primary"
-            size="large"
-            onPress={showSignIn}
-            label={l`Sign in`}>
-            <ButtonText>
-              <Trans>Sign in</Trans>
-            </ButtonText>
-          </Button>
-        </View>
+        )}
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>

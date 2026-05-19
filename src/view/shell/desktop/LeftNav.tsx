@@ -21,7 +21,6 @@ import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
@@ -36,6 +35,7 @@ import {
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -241,12 +241,12 @@ function SwitchMenuItems({
   signOutPromptControl: DialogControlProps
 }) {
   const {t: l} = useLingui()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
   const closeEverything = useCloseAllActiveElements()
 
   const onAddAnotherAccount = () => {
-    setShowLoggedOut(true)
     closeEverything()
+    signinDialogControl.open({showStoredAccounts: false})
   }
 
   return (

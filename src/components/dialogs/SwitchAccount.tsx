@@ -5,9 +5,9 @@ import {Trans} from '@lingui/react/macro'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {type SessionAccount, useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AccountList} from '../AccountList'
 import {Text} from '../Typography'
 
@@ -19,7 +19,7 @@ export function SwitchAccountDialog({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   const onSelectAccount = useCallback(
     (account: SessionAccount) => {
@@ -36,9 +36,9 @@ export function SwitchAccountDialog({
 
   const onPressAddAccount = useCallback(() => {
     control.close(() => {
-      setShowLoggedOut(true)
+      signinDialogControl.open({showStoredAccounts: false})
     })
-  }, [setShowLoggedOut, control])
+  }, [signinDialogControl, control])
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>

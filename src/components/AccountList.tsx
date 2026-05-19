@@ -26,7 +26,7 @@ export function AccountList({
   pendingDid,
 }: {
   onSelectAccount: (account: SessionAccount) => void
-  onSelectOther: () => void
+  onSelectOther?: () => void
   otherLabel?: string
   pendingDid: string | null
 }) {
@@ -38,7 +38,7 @@ export function AccountList({
   })
 
   const onPressAddAccount = useCallback(() => {
-    onSelectOther()
+    onSelectOther?.()
   }, [onSelectOther])
 
   return (
@@ -62,39 +62,42 @@ export function AccountList({
           <View style={[a.border_b, t.atoms.border_contrast_low]} />
         </Fragment>
       ))}
-      <Button
-        testID="chooseAddAccountBtn"
-        style={[a.flex_1]}
-        onPress={pendingDid ? undefined : onPressAddAccount}
-        label={l`Sign in to account that is not listed`}>
-        {({hovered, pressed}) => (
-          <View
-            style={[
-              a.flex_1,
-              a.flex_row,
-              a.align_center,
-              a.p_lg,
-              a.gap_sm,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
+      {onSelectOther && (
+        <Button
+          testID="chooseAddAccountBtn"
+          style={[a.flex_1]}
+          onPress={pendingDid ? undefined : onPressAddAccount}
+          label={l`Sign in to account that is not listed`}>
+          {({hovered, pressed}) => (
             <View
               style={[
-                t.atoms.bg_contrast_25,
-                a.rounded_full,
-                {width: 48, height: 48},
-                a.justify_center,
+                a.flex_1,
+                a.flex_row,
                 a.align_center,
-                (hovered || pressed) && t.atoms.bg_contrast_50,
+                a.p_lg,
+                a.gap_sm,
+                (hovered || pressed) && t.atoms.bg_contrast_25,
               ]}>
-              <PlusIcon style={[t.atoms.text_contrast_low]} size="md" />
+              <View
+                style={[
+                  t.atoms.bg_contrast_25,
+                  a.rounded_full,
+                  {width: 48, height: 48},
+                  a.justify_center,
+                  a.align_center,
+                  (hovered || pressed) && t.atoms.bg_contrast_50,
+                ]}>
+                <PlusIcon style={[t.atoms.text_contrast_low]} size="md" />
+              </View>
+              <Text
+                style={[a.flex_1, a.leading_tight, a.text_md, a.font_medium]}>
+                {otherLabel ?? <Trans>Other account</Trans>}
+              </Text>
+              <ChevronIcon size="md" style={[t.atoms.text_contrast_low]} />
             </View>
-            <Text style={[a.flex_1, a.leading_tight, a.text_md, a.font_medium]}>
-              {otherLabel ?? <Trans>Other account</Trans>}
-            </Text>
-            <ChevronIcon size="md" style={[t.atoms.text_contrast_low]} />
-          </View>
-        )}
-      </Button>
+          )}
+        </Button>
+      )}
     </View>
   )
 }

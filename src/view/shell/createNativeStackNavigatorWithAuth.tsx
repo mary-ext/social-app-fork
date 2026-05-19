@@ -27,10 +27,6 @@ import {
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSession} from '#/state/session'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
@@ -112,15 +108,10 @@ function NativeStackNavigator({
   const activeRoute = state.routes[state.index]!
   const activeDescriptor = descriptors[activeRoute.key]!
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
-  const {showLoggedOut} = useLoggedOutView()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
   if (!hasSession && activeRouteRequiresAuth) {
     return <LoggedOut />
-  }
-  if (showLoggedOut) {
-    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   // On web, limit how many screens stay mounted to prevent memory growth.
   // Home is always pinned, the focused screen is always mounted, and the

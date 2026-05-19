@@ -11,11 +11,11 @@ import {
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import * as Layout from '#/components/Layout'
@@ -29,7 +29,7 @@ export function Deactivated() {
   const t = useTheme()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
   const hasOtherAccounts = accounts.length > 1
   const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
@@ -47,8 +47,8 @@ export function Deactivated() {
   )
 
   const onPressAddAccount = useCallback(() => {
-    setShowLoggedOut(true)
-  }, [setShowLoggedOut])
+    signinDialogControl.open({showStoredAccounts: false})
+  }, [signinDialogControl])
 
   const onPressLogout = useCallback(() => {
     // We're switching accounts, which remounts the entire app.
@@ -187,7 +187,7 @@ export function Deactivated() {
                 size="large"
                 variant="solid"
                 color="secondary"
-                onPress={() => setShowLoggedOut(true)}>
+                onPress={onPressAddAccount}>
                 <ButtonText>
                   <Trans>Sign in</Trans>
                 </ButtonText>

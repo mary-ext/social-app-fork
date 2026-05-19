@@ -361,7 +361,7 @@ export function useRequireAuth() {
         fn()
       } else {
         closeAll()
-        signinDialogControl.open()
+        signinDialogControl.open({})
       }
     },
     [hasSession, signinDialogControl, closeAll],

@@ -24,13 +24,13 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import * as Toggle from '#/components/forms/Toggle'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
@@ -432,12 +432,12 @@ function DevOptions() {
 
 function AddAccountRow() {
   const {t: l} = useLingui()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
   const closeEverything = useCloseAllActiveElements()
 
   const onAddAnotherAccount = () => {
-    setShowLoggedOut(true)
     closeEverything()
+    signinDialogControl.open({showStoredAccounts: false})
   }
 
   return (

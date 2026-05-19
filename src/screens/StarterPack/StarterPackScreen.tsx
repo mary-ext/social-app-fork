@@ -36,13 +36,13 @@ import {
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
 import {useAgent, useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {CreateListFromStarterPackDialog} from '#/components/dialogs/lists/CreateListFromStarterPackDialog'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -299,7 +299,7 @@ function Header({
   const agent = useAgent()
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   const [isProcessing, setIsProcessing] = useState(false)
 
@@ -458,7 +458,7 @@ function Header({
                 setActiveStarterPack({
                   uri: starterPack.uri,
                 })
-                requestSwitchToAccount({requestedAccount: 'none'})
+                signinDialogControl.open({})
               }}
               variant="solid"
               color="primary"

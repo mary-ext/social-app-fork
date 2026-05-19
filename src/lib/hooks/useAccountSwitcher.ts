@@ -7,14 +7,14 @@ import {
   type SessionAccount,
   useSessionApi,
 } from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import * as Toast from '#/components/Toast'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {t: l} = useLingui()
   const {resumeSession} = useSessionApi()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   const onPressSwitchAccount = useCallback(
     async (account: SessionAccount, _logContext: AccountLoggedInLogContext) => {
@@ -34,7 +34,7 @@ export function useAccountSwitcher() {
           await resumeSession(account, true)
           Toast.show(l`Signed in as @${account.handle}`)
         } else {
-          requestSwitchToAccount({requestedAccount: account.did})
+          signinDialogControl.open({requestedAccount: account})
           Toast.show(l`Please sign in as @${account.handle}`, {
             type: 'warning',
           })
@@ -43,7 +43,7 @@ export function useAccountSwitcher() {
         logger.error(`switch account: selectAccount failed`, {
           message: e instanceof Error ? e.message : String(e),
         })
-        requestSwitchToAccount({requestedAccount: account.did})
+        signinDialogControl.open({requestedAccount: account})
         Toast.show(l`Please sign in as @${account.handle}`, {
           type: 'warning',
         })
@@ -51,7 +51,7 @@ export function useAccountSwitcher() {
         setPendingDid(null)
       }
     },
-    [l, resumeSession, requestSwitchToAccount, pendingDid],
+    [l, resumeSession, signinDialogControl, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}

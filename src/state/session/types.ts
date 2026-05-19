@@ -5,7 +5,6 @@ export type SessionAccount = PersistedAccount
 export type AccountLoggedInLogContext =
   | 'LoginForm'
   | 'SwitchAccount'
-  | 'ChooseAccountForm'
   | 'Settings'
   | 'Notification'
 

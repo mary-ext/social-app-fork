@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
@@ -7,38 +7,20 @@ import {useQueryClient} from '@tanstack/react-query'
 import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
 import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Login} from '#/screens/Login'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {SplashScreen} from './SplashScreen'
-
-enum ScreenState {
-  S_Welcome,
-  S_Login,
-}
-export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   useEnableMinimalShellMode()
-  const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = useState<ScreenState>(() => {
-    if (requestedAccountSwitchTo != null) {
-      return ScreenState.S_Login
-    } else {
-      return ScreenState.S_Welcome
-    }
-  })
-  const {clearRequestedAccount} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
 
   const queryClient = useQueryClient()
   const {accounts} = useSession()
@@ -60,8 +42,11 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     if (onDismiss) {
       onDismiss()
     }
-    clearRequestedAccount()
-  }, [clearRequestedAccount, onDismiss])
+  }, [onDismiss])
+
+  const showSignIn = useCallback(() => {
+    signinDialogControl.open({})
+  }, [signinDialogControl])
 
   return (
     <View
@@ -72,7 +57,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         {paddingTop: insets.top, paddingBottom: insets.bottom},
       ]}>
       <ErrorBoundary>
-        {onDismiss && screenState === ScreenState.S_Welcome ? (
+        {onDismiss ? (
           <Button
             label={l`Go back`}
             variant="solid"
@@ -93,21 +78,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           </Button>
         ) : null}
 
-        {screenState === ScreenState.S_Welcome ? (
-          <SplashScreen
-            onPressSignin={() => {
-              setScreenState(ScreenState.S_Login)
-            }}
-          />
-        ) : undefined}
-        {screenState === ScreenState.S_Login ? (
-          <Login
-            onPressBack={() => {
-              setScreenState(ScreenState.S_Welcome)
-              clearRequestedAccount()
-            }}
-          />
-        ) : undefined}
+        <SplashScreen onPressSignin={showSignIn} />
       </ErrorBoundary>
     </View>
   )

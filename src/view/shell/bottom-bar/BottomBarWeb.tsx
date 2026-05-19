@@ -15,7 +15,6 @@ import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Link} from '#/view/com/util/Link'
@@ -25,6 +24,7 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -50,7 +50,7 @@ export function BottomBarWeb() {
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {footerHeight} = useShellLayout()
   const hideBorder = useHideBottomBarBorder()
@@ -63,8 +63,8 @@ export function BottomBarWeb() {
 
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'none'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
+    signinDialogControl.open({})
+  }, [signinDialogControl, closeAllActiveElements])
 
   const onLongPressProfile = useCallback(() => {
     accountSwitchControl.open()

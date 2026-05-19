@@ -19,7 +19,6 @@ import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
 import {HomeHeader} from '#/view/com/home/HomeHeader'
@@ -41,22 +40,12 @@ import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const {data: preferences} = usePreferencesQuery()
   const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
 
   useEffect(() => {
-    if (!currentAccount) {
-      const getParams = new URLSearchParams(window.location.search)
-      const splash = getParams.get('splash')
-      if (splash === 'true') {
-        setShowLoggedOut(true)
-        return
-      }
-    }
-
     const params = props.route.params
     if (
       currentAccount &&
@@ -74,7 +63,6 @@ export function HomeScreen(props: Props) {
     props.navigation,
     props.route.name,
     props.route.params,
-    setShowLoggedOut,
   ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
