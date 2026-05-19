@@ -4,20 +4,18 @@ import {type Gif} from '#/features/gifPicker/types'
  * Data that's specific to the device and does not vary based account
  */
 export type Device = {
+  activitySubscriptionsNudged?: boolean
+  demoMode: boolean
+  devMode: boolean
   /**
    * Formerly managed by StatSig, this is the migrated stable ID for the
    * device, used with our logging and metrics tracking.
    */
   deviceId?: string
-  fontScale: '-2' | '-1' | '0' | '1' | '2'
   fontFamily: 'system' | 'theme'
-  lastNuxDialog: string | undefined
-
-  trendingBetaEnabled: boolean
-  devMode: boolean
-  demoMode: boolean
-  activitySubscriptionsNudged?: boolean
+  fontScale: '-2' | '-1' | '0' | '1' | '2'
   threadgateNudged?: boolean
+  trendingBetaEnabled: boolean
 }
 
 export type Account = {

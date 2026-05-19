@@ -730,29 +730,6 @@ msgstr ""
 msgid "a message"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:85
-msgid "A new form of verification"
-msgstr ""
-
-#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:132
-msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr ""
-
-#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:105
-msgid "A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads \"inventing a saturday that immediately follows monday\"."
-msgstr ""
-
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:109
-msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
-
-#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:87
-msgid "A screenshot of the post composer with a new button next to the post button that says \"Drafts\", with a rainbow firework effect. Below, the text in the composer reads \"Hey, did you hear the news? Bluesky has drafts now!!!\"."
-msgstr ""
-
 #: src/Navigation.tsx:533
 #: src/screens/Settings/AboutSettings.tsx:56
 #: src/screens/Settings/Settings.tsx:229
@@ -1310,7 +1287,6 @@ msgstr ""
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:79
 #: src/components/verification/VerifierDialog.tsx:84
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
@@ -1344,10 +1320,6 @@ msgstr ""
 msgid "An issue occurred, please try again."
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:111
-msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
-msgstr ""
-
 #: src/components/moderation/ModerationDetailsDialog.tsx:125
 #: src/lib/moderation/useModerationCauseDescription.ts:130
 msgid "an unknown labeler"
@@ -1371,10 +1343,6 @@ msgstr ""
 
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:96
 msgid "Animated GIF"
-msgstr ""
-
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:33
-msgid "Announcing verification on Bluesky"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
@@ -1630,10 +1598,6 @@ msgstr ""
 msgid "Banned user returning"
 msgstr ""
 
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:97
-msgid "Beta Feature"
-msgstr ""
-
 #: src/components/dialogs/BirthDateSettings.tsx:131
 msgid "Birthdate"
 msgstr ""
@@ -1779,10 +1743,6 @@ msgstr ""
 
 #: src/screens/Settings/components/PwiOptOut.tsx:95
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr ""
-
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:124
-msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:55
@@ -3178,7 +3138,6 @@ msgstr "Download image"
 msgid "Doxxing"
 msgstr ""
 
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:107
 #: src/view/com/composer/drafts/DraftsButton.tsx:61
 #: src/view/com/composer/drafts/DraftsButton.tsx:70
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:107
@@ -4065,10 +4024,6 @@ msgstr ""
 msgid "Finalizing"
 msgstr ""
 
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:138
-msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
-msgstr ""
-
 #: src/lib/interests.ts:59
 msgid "Finance"
 msgstr ""
@@ -4410,10 +4365,6 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified when {name} posts"
-msgstr ""
-
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:132
-msgid "Get notified when someone posts"
 msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:186
@@ -5042,18 +4993,6 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:235
 msgid "Interaction settings"
-msgstr ""
-
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:29
-msgid "Introducing activity notifications"
-msgstr ""
-
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:39
-msgid "Introducing drafts"
-msgstr ""
-
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:34
-msgid "Introducing saved posts AKA bookmarks"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:150
@@ -6109,13 +6048,6 @@ msgstr "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} mor
 msgid "New email address"
 msgstr ""
 
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:71
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:70
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:75
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:59
-msgid "New Feature"
-msgstr ""
-
 #: src/Navigation.tsx:477
 msgid "New follower notifications"
 msgstr ""
@@ -6441,10 +6373,6 @@ msgstr "Not followed by anyone you’re following"
 #: src/Navigation.tsx:144
 #: src/view/screens/Profile.tsx:129
 msgid "Not Found"
-msgstr ""
-
-#: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:118
-msgid "Not ready to hit post? Keep your best ideas in Drafts until the timing is just right."
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:540
@@ -7511,11 +7439,6 @@ msgctxt "english-only-resource"
 msgid "read about how to use search filters"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:149
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:156
-msgid "Read blog post"
-msgstr ""
-
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:71
 msgid "Read more replies"
 msgstr ""
@@ -8211,7 +8134,6 @@ msgstr ""
 msgid "Saved Feeds"
 msgstr ""
 
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:127
 #: src/Navigation.tsx:629
 #: src/screens/Bookmarks/index.tsx:49
 msgid "Saved Posts"
@@ -8868,11 +8790,6 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:58
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:154
-msgid "Show when you’re live"
-msgstr ""
-
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:587
 msgid "Shows information about when this post was created"
 msgstr ""
@@ -9219,10 +9136,6 @@ msgstr ""
 #: src/Navigation.tsx:297
 #: src/screens/Settings/Settings.tsx:414
 msgid "Storybook"
-msgstr ""
-
-#: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:165
-msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
 msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:333
@@ -10102,10 +10015,6 @@ msgstr ""
 msgid "Trolling"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:130
-msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
-msgstr ""
-
 #: src/screens/Search/SearchResults.tsx:187
 msgctxt "english-only-resource"
 msgid "Try a different search term, or <0>read about how to use search filters</0>."
@@ -10906,10 +10815,6 @@ msgstr ""
 msgid "We’re having network issues, try again"
 msgstr "We’re having network issues, try again"
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:88
-msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
-msgstr ""
-
 #: src/screens/Signup/index.tsx:111
 msgid "We’re so excited to have you join us!"
 msgstr "We’re so excited to have you join us!"
@@ -10962,10 +10867,6 @@ msgstr ""
 msgid "What's up?"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:138
-msgid "When you tap on a check, you’ll see which organizations have granted verification."
-msgstr ""
-
 #: src/components/WhoCanReply.tsx:211
 msgid "Who can interact with this post?"
 msgstr ""
@@ -10977,10 +10878,6 @@ msgstr "Who can join this group chat and how"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:409
 #: src/components/WhoCanReply.tsx:103
 msgid "Who can reply"
-msgstr ""
-
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:119
-msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
@@ -11177,10 +11074,6 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:134
 #: src/screens/Messages/Settings.tsx:180
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
-
-#: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:143
-msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
 msgstr ""
 
 #: src/screens/Login/index.tsx:187

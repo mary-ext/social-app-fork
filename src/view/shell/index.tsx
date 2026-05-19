@@ -17,7 +17,6 @@ import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
 import {Lightbox} from '#/components/Lightbox'
@@ -60,7 +59,6 @@ function ShellInner() {
       <EmailDialog />
       <LinkWarningDialog />
       <Lightbox />
-      <NuxDialogs />
       <GlobalReportDialog />
 
       {welcomeModalControl.isOpen && (
