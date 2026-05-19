@@ -384,11 +384,6 @@
       "count": 1
     }
   },
-  "src/screens/Messages/ChatList.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    }
-  },
   "src/screens/Messages/Conversation.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1

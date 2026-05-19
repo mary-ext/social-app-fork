@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {View, type ViewStyle} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -41,6 +41,11 @@ import {ChatListItem} from './components/ChatListItem'
 import {InboxRequests} from './components/InboxRequests'
 import {useIsWithinSplitView} from './components/splitView/context'
 import {splitViewLeftScroll} from './components/splitView/leftColumnScroll'
+
+type WebScrollStyle = Omit<ViewStyle, 'scrollbarColor' | 'scrollbarWidth'> & {
+  scrollbarColor?: string
+  scrollbarWidth?: 'thin'
+}
 
 type ListItem = {
   type: 'CONVERSATION'
@@ -258,7 +263,7 @@ export function ChatList({
 
   if (conversations.length === 0) {
     return (
-      <Layout.Center style={{minHeight: '100%'} as any}>
+      <Layout.Center style={{minHeight: '100%'}}>
         {isLoading ? (
           <ChatListLoadingPlaceholder />
         ) : (
@@ -305,9 +310,7 @@ export function ChatList({
                 iconSize="4xl"
                 textStyle={t.atoms.text}
                 iconColor={t.atoms.text.color}
-                style={
-                  [a.h_full, a.justify_center, {paddingBottom: 120}] as any
-                }
+                style={[a.h_full, a.justify_center, {paddingBottom: 120}]}
               />
             ) : (
               <EmptyState
@@ -324,9 +327,7 @@ export function ChatList({
                   color: 'primary',
                   icon: MessagePlusIcon,
                 }}
-                style={
-                  [a.h_full, a.justify_center, {paddingBottom: 120}] as any
-                }
+                style={[a.h_full, a.justify_center, {paddingBottom: 120}]}
               />
             )}
           </>
@@ -366,7 +367,7 @@ export function ChatList({
           {
             scrollbarWidth: 'thin',
             scrollbarColor: `${t.palette.contrast_100} transparent`,
-          } as any,
+          } as WebScrollStyle,
         ]
       }
       contentContainerStyle={isWithinSplitView && a.py_sm}
