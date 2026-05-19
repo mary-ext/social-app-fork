@@ -11,7 +11,6 @@ import {
 } from 'react'
 import {
   ActivityIndicator,
-  BackHandler,
   Keyboard,
   KeyboardAvoidingView,
   type LayoutChangeEvent,
@@ -45,7 +44,6 @@ import Animated, {
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
-  LinearTransition,
   runOnUI,
   scrollTo,
   useAnimatedRef,
@@ -55,8 +53,6 @@ import Animated, {
   useSharedValue,
   withRepeat,
   withTiming,
-  ZoomIn,
-  ZoomOut,
 } from '#/lib/animations/reanimatedCompat'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -130,7 +126,6 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {type Gif} from '#/features/gifPicker/types'
 import {BottomSheetPortalProvider} from '#/shims/bottom-sheet'
-import * as FileSystem from '#/shims/file-system'
 import {type ImagePickerAsset} from '#/shims/image-picker'
 import {
   draftToComposerPosts,
@@ -211,7 +206,7 @@ export const ComposePost = ({
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
 
-  const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
+  const [isKeyboardVisible] = useIsKeyboardVisible()
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
@@ -296,7 +291,7 @@ export const ComposePost = ({
     post => post.richtext.graphemeLength <= MAX_DRAFT_GRAPHEME_LENGTH,
   )
 
-  const activePost = thread.posts[composerState.activePostIndex]
+  const activePost = thread.posts[composerState.activePostIndex]!
   const nextPost: PostDraft | undefined =
     thread.posts[composerState.activePostIndex + 1]
   const dispatch = useCallback(
@@ -505,15 +500,10 @@ export const ComposePost = ({
       // Track when the draft was created for metrics
       setLoadedDraftCreatedAt(draftSummary.createdAt)
 
-      // Fire draft:load metric
-      const _draftPosts = draftSummary.posts
-      const _draftAgeMs =
-        Date.now() - new Date(draftSummary.createdAt).getTime()
-
       // Initiate video processing for any restored videos
       // This is async but we don't await - videos process in the background
       for (const [postIndex, videoInfo] of restoredVideos) {
-        const postId = posts[postIndex].id
+        const postId = posts[postIndex]!.id
         restoreVideo(postId, videoInfo)
       }
     },
@@ -555,16 +545,12 @@ export const ComposePost = ({
     if (!validateDraftTextOrError()) {
       return
     }
-    const _isNewDraft = !composerState.draftId
     try {
       const result = await saveDraft({
         composerState,
         existingDraftId: composerState.draftId,
       })
       composerDispatch({type: 'mark_saved', draftId: result.draftId})
-
-      // Fire draft:save metric
-      const _posts = composerState.thread.posts
 
       onClose()
     } catch (e) {
@@ -607,24 +593,17 @@ export const ComposePost = ({
     getDraftSaveError,
   ])
 
-  // Handle discard action - fires metric and closes composer
+  // Handle discard action and close the composer.
   const handleDiscard = useCallback(() => {
-    const posts = thread.posts
-    const _hasContent = posts.some(
-      post =>
-        post.richtext.text.trim().length > 0 ||
-        post.embed.media ||
-        post.embed.link,
-    )
     onClose()
-  }, [thread.posts, onClose])
+  }, [onClose])
 
   // Check if composer is empty (no content to save)
   const isComposerEmpty = useMemo(() => {
     // Has multiple posts means it's not empty
     if (thread.posts.length > 1) return false
 
-    const firstPost = thread.posts[0]
+    const firstPost = thread.posts[0]!
     // Has text
     if (firstPost.richtext.text.trim().length > 0) return false
     // Has media
@@ -695,7 +674,7 @@ export const ComposePost = ({
       return
     }
     for (let i = 0; i < thread.posts.length; i++) {
-      const media = thread.posts[i].embed.media
+      const media = thread.posts[i]!.embed.media
       if (media) {
         if (media.type === 'images' && media.images.some(img => !img.alt)) {
           return l`One or more images is missing alt text.`
@@ -739,7 +718,7 @@ export const ComposePost = ({
 
     let lastNonEmptyIndex = -1
     for (let i = thread.posts.length - 1; i >= 0; i--) {
-      if (!isEmptyPost(thread.posts[i])) {
+      if (!isEmptyPost(thread.posts[i]!)) {
         lastNonEmptyIndex = i
         break
       }
@@ -879,12 +858,6 @@ export const ComposePost = ({
     }
     // Clean up draft and its media after successful publish
     if (composerState.draftId && composerState.originalLocalRefs) {
-      // Fire draft:post metric
-      if (loadedDraftCreatedAt) {
-        const _draftAgeMs =
-          Date.now() - new Date(loadedDraftCreatedAt).getTime()
-      }
-
       logger.debug('post published, cleaning up draft', {
         draftId: composerState.draftId,
         mediaFileCount: composerState.originalLocalRefs.size,
@@ -1004,7 +977,7 @@ export const ComposePost = ({
   let erroredVideoPostId: string | undefined
   let erroredVideo: VideoState | NoVideoState = NO_VIDEO
   for (let i = 0; i < thread.posts.length; i++) {
-    const post = thread.posts[i]
+    const post = thread.posts[i]!
     if (
       post.embed.media?.type === 'video' &&
       post.embed.media.video.status === 'error'
@@ -1104,7 +1077,7 @@ export const ComposePost = ({
             isDirty={composerState.isDirty}
             isEditingDraft={!!composerState.draftId}
             canSaveDraft={allPostsWithinLimit}
-            textLength={thread.posts[0].richtext.text.length}>
+            textLength={thread.posts[0]!.richtext.text.length}>
             {missingAltError && <AltTextReminder error={missingAltError} />}
             <ErrorBanner
               error={error}
@@ -1308,14 +1281,14 @@ let ComposerPost = memo(function ComposerPost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
-        const [mimeType] = uri.slice('data:'.length).split(';')
+        const mimeType = uri.slice('data:'.length).split(';')[0]!
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
           Toast.show(l`Unsupported video type: ${mimeType}`, {
             type: 'error',
           })
           return
         }
-        const name = `pasted.${mimeToExt(mimeType)}`
+        const name = `pasted.${mimeToExt(mimeType as SupportedMimeTypes)}`
         const file = await fetch(uri)
           .then(res => res.blob())
           .then(blob => new File([blob], name, {type: mimeType}))
@@ -1844,9 +1817,9 @@ function ComposerFooter({
 
           onImageAdd(selectedImages)
         } else if (type === 'video') {
-          onSelectVideo(post.id, assets[0])
+          onSelectVideo(post.id, assets[0]!)
         } else if (type === 'gif') {
-          onSelectVideo(post.id, assets[0])
+          onSelectVideo(post.id, assets[0]!)
         }
       }
 
@@ -2067,7 +2040,7 @@ function useScrollTracker({
 }
 
 function useKeyboardVerticalOffset() {
-  const {top, bottom} = useSafeAreaInsets()
+  const {bottom} = useSafeAreaInsets()
 
   // need to account for the edge-to-edge nav bar
   return bottom * -1
@@ -2236,7 +2209,7 @@ function ErrorBanner({
 }
 
 function ToolbarWrapper({
-  style,
+  style: _style,
   children,
 }: {
   style: StyleProp<ViewStyle>

@@ -84,7 +84,7 @@ export class MergeFeedAPI implements FeedAPI {
     const res = await this.agent.getTimeline({
       limit: 1,
     })
-    return res.data.feed[0]
+    return res.data.feed[0]!
   }
 
   async fetch({
@@ -163,7 +163,9 @@ export class MergeFeedAPI implements FeedAPI {
     }
     if (shouldSample || !hasFollows) {
       // time to sample, or the user isnt following anybody
-      return candidateFeeds[this.sampleCursor++ % candidateFeeds.length].take(1)
+      return candidateFeeds[this.sampleCursor++ % candidateFeeds.length]!.take(
+        1,
+      )
     }
     if (!hasFollowsReady) {
       // stop here so more follows can be fetched

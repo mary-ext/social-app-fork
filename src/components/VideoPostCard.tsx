@@ -1,11 +1,11 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  AtUri,
   type AppBskyActorDefs,
   AppBskyEmbedVideo,
   type AppBskyFeedDefs,
   AppBskyFeedPost,
+  AtUri,
   type ModerationDecision,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'

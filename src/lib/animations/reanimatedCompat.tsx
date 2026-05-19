@@ -377,7 +377,7 @@ export function withDelay<Value>(_delayMs: number, value: Value): Value {
 }
 
 export function withSequence<Value>(...values: Value[]): Value {
-  return values[values.length - 1]
+  return values[values.length - 1]!
 }
 
 export function withRepeat<Value>(value: Value, ..._args: unknown[]): Value {
@@ -423,10 +423,10 @@ export function interpolate(
   if (inputRange.length === 0 || outputRange.length === 0) {
     return value
   }
-  const firstInput = inputRange[0]
-  const lastInput = inputRange[inputRange.length - 1]
-  const firstOutput = outputRange[0]
-  const lastOutput = outputRange[outputRange.length - 1]
+  const firstInput = inputRange[0]!
+  const lastInput = inputRange[inputRange.length - 1]!
+  const firstOutput = outputRange[0]!
+  const lastOutput = outputRange[outputRange.length - 1]!
   if (lastInput === firstInput) {
     return firstOutput
   }
@@ -439,7 +439,7 @@ export function interpolateColor(
   inputRange: readonly number[],
   outputRange: readonly string[],
 ) {
-  return value <= inputRange[0] ? outputRange[0] : outputRange.at(-1)
+  return value <= inputRange[0]! ? outputRange[0]! : outputRange.at(-1)!
 }
 
 export function clamp(value: number, lowerBound: number, upperBound: number) {

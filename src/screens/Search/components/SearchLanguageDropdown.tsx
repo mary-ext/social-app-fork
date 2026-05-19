@@ -4,12 +4,8 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {languageName} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, tokens} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,
-} from '#/components/icons/Chevron'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
 import * as Menu from '#/components/Menu'
 

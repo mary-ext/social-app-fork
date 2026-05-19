@@ -424,7 +424,7 @@ function EdgeVisibility({
   onVisibleChange: (isVisible: boolean) => void
 }) {
   const [containerHeight, setContainerHeight] = useState(0)
-  useResizeObserver(containerRef, (w, h) => {
+  useResizeObserver(containerRef, (_w, h) => {
     setContainerHeight(h)
   })
   return (

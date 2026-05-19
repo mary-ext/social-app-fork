@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
+import {type StyleProp, type ViewStyle} from 'react-native'
 import {type AppBskyFeedPostgate} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
@@ -116,7 +116,7 @@ export function ThreadgateBtn({
 
   const anyoneCanReply =
     threadgateAllowUISettings.length === 1 &&
-    threadgateAllowUISettings[0].type === 'everybody'
+    threadgateAllowUISettings[0]!.type === 'everybody'
   const anyoneCanQuote =
     !postgate.embeddingRules || postgate.embeddingRules.length === 0
   const anyoneCanInteract = anyoneCanReply && anyoneCanQuote

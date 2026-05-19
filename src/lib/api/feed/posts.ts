@@ -40,7 +40,7 @@ export class PostListFeedAPI implements FeedAPI {
       ...this.params,
     })
     if (res.success) {
-      this.peek = {post: res.data.posts[0]}
+      this.peek = {post: res.data.posts[0]!}
       return {
         feed: res.data.posts.map(post => ({post})),
       }

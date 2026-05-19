@@ -75,7 +75,7 @@ export function suggestLinkCardUri(
 
   let suggestedUri: string | undefined
   if (suggestedUris.size > 0) {
-    suggestedUri = Array.from(suggestedUris)[0]
+    suggestedUri = Array.from(suggestedUris)[0]!
     pastSuggestedUris.add(suggestedUri)
   }
 

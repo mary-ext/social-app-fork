@@ -7,12 +7,12 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
@@ -41,7 +41,6 @@ const POLL_FREQ = 60e3 // 60sec
 export function FeedPage({
   testID,
   isPageFocused,
-  isPageAdjacent,
   feed,
   feedParams,
   renderEmptyState,
@@ -71,10 +70,6 @@ export function FeedPage({
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
-    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
-    const feedIsVideoMode =
-      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
-    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return false
   }, [feedInfo])
   const t = useTheme()

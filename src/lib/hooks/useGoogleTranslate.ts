@@ -2,7 +2,6 @@ import {useCallback} from 'react'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getTranslatorLink} from '#/locale/helpers'
-import * as IntentLauncher from '#/shims/intent-launcher'
 
 /**
  * @deprecated Will always link out to Google Translate. Prefer `useTranslate`.

@@ -90,7 +90,7 @@ export function buildPostSourceKey(key: string, handle: string) {
  * Just a lil dev helper
  */
 function assertValidDevOnly(key: string, message: string, beChill = false) {
-  if (__DEV__) {
+  if (import.meta.env.DEV) {
     const urip = new AtUri(key)
     if (urip.host.startsWith('did:')) {
       if (beChill) {

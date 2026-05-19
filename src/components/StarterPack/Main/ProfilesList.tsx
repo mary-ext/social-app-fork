@@ -85,7 +85,6 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
 
     const renderItem = ({
       item,
-      index,
     }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
       return (
         <View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>

@@ -83,7 +83,7 @@ function ContentHiderActive({
   const {labelDefs} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
   const {i18n} = useLingui()
-  const blur = modui?.blurs[0]
+  const blur = modui.blurs[0]!
   const desc = useModerationCauseDescription(blur)
 
   const labelName = useMemo(() => {

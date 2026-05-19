@@ -85,7 +85,7 @@ export function useAcceptConversation(
                       ...convoBeingAccepted,
                       status: 'accepted',
                     },
-                    ...old.pages[0].convos,
+                    ...old.pages[0]!.convos,
                   ],
                 },
                 ...old.pages.slice(1),

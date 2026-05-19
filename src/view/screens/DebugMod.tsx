@@ -66,7 +66,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const t = useTheme()
   const [scenario, setScenario] = useState<string[]>(['label'])
   const [scenarioSwitches, setScenarioSwitches] = useState<string[]>([])
-  const [label, setLabel] = useState<string[]>([LABEL_VALUES[0]])
+  const [label, setLabel] = useState<string[]>([LABEL_VALUES[0]!])
   const [target, setTarget] = useState<string[]>(['account'])
   const [visibility, setVisiblity] = useState<string[]>(['warn'])
   const [customLabelDef, setCustomLabelDef] =
@@ -110,7 +110,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
           ? [
               mock.label({
                 src: isSelfLabel ? did : undefined,
-                val: label[0],
+                val: label[0]!,
                 uri: `at://${did}/`,
               }),
             ]
@@ -118,7 +118,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             ? [
                 mock.label({
                   src: isSelfLabel ? did : undefined,
-                  val: label[0],
+                  val: label[0]!,
                   uri: `at://${did}/app.bsky.actor.profile/self`,
                 }),
               ]
@@ -156,7 +156,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
           ? [
               mock.label({
                 src: isSelfLabel ? did : undefined,
-                val: label[0],
+                val: label[0]!,
                 uri: `at://${did}/app.bsky.feed.post/fake`,
               }),
             ]
@@ -172,7 +172,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   ? [
                       mock.label({
                         src: isSelfLabel ? did : undefined,
-                        val: label[0],
+                        val: label[0]!,
                         uri: `at://${did}/app.bsky.feed.post/fake`,
                       }),
                     ]
@@ -215,19 +215,19 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
           ? [
               mock.label({
                 src: isSelfLabel ? did : undefined,
-                val: label[0],
+                val: label[0]!,
                 uri: `at://${did}/app.bsky.feed.post/fake`,
               }),
             ]
           : undefined,
     })
     const [item] = groupNotifications([notif])
-    item.subject = mock.postView({
+    item!.subject = mock.postView({
       record: notif.record as AppBskyFeedPost.Record,
       author: profile,
       labels: notif.labels,
     })
-    return item
+    return item!
   }, [scenario, label, target, profile, isSelfLabel, did])
 
   const followNotif = useMemo(() => {
@@ -236,7 +236,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       subjectDid: currentAccount?.did || '',
     })
     const [item] = groupNotifications([notif])
-    return item
+    return item!
   }, [profile, currentAccount])
 
   const modOpts = useMemo(() => {
@@ -245,12 +245,12 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       prefs: {
         adultContentEnabled: !noAdult,
         labels: {
-          [label[0]]: visibility[0] as LabelPreference,
+          [label[0]!]: visibility[0] as LabelPreference,
         },
         labelers: [
           {
             did: 'did:plc:fake-labeler',
-            labels: {[label[0]]: visibility[0] as LabelPreference},
+            labels: {[label[0]!]: visibility[0] as LabelPreference},
           },
         ],
         mutedWords: [],
@@ -328,7 +328,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                           <Toggle.Item
                             key={labelValue}
                             name={labelValue}
-                            label={labelStrings[labelValue].name}
+                            label={labelStrings[labelValue]!.name}
                             disabled={disabled}
                             style={disabled ? {opacity: 0.5} : undefined}>
                             <Toggle.Radio />
@@ -571,7 +571,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                     mod={postModeration}
                   />
                   <DataView
-                    label={label[0]}
+                    label={label[0]!}
                     data={LABELS[label[0] as keyof typeof LABELS]}
                   />
                   <DataView
@@ -645,7 +645,7 @@ function CustomLabelForm({
             label="Blurs"
             type="radio"
             values={[def.blurs]}
-            onChange={values => setDef(v => ({...v, blurs: values[0]}))}>
+            onChange={values => setDef(v => ({...v, blurs: values[0]!}))}>
             <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
               <Toggle.Item name="content" label="Content">
                 <Toggle.Radio />
@@ -681,7 +681,7 @@ function CustomLabelForm({
             label="Severity"
             type="radio"
             values={[def.severity]}
-            onChange={values => setDef(v => ({...v, severity: values[0]}))}>
+            onChange={values => setDef(v => ({...v, severity: values[0]!}))}>
             <View style={[a.flex_row, a.gap_md, a.flex_wrap, a.align_center]}>
               <Toggle.Item name="alert" label="Alert">
                 <Toggle.Radio />

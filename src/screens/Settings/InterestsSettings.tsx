@@ -175,10 +175,7 @@ function Inner({
             const name = interestsDisplayNames[interest]
             if (!name) return null
             return (
-              <Toggle.Item
-                key={interest}
-                name={interest}
-                label={interestsDisplayNames[interest]}>
+              <Toggle.Item key={interest} name={interest} label={name}>
                 <InterestButton interest={interest} />
               </Toggle.Item>
             )

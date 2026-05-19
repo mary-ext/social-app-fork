@@ -17,10 +17,9 @@ export function useServiceQuery(serviceUrl: string) {
   })
 }
 
-function isValidUrl(url: string) {
+function isValidUrl(_url: string) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const urlp = new URL(url)
     return true
   } catch {
     return false

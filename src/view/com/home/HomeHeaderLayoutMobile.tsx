@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -29,7 +28,6 @@ export function HomeHeaderLayoutMobile({
   const t = useTheme()
   const {t: l} = useLingui()
   const {headerHeight} = useShellLayout()
-  const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useHomeHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()

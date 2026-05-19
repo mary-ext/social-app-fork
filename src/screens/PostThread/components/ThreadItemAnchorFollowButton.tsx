@@ -15,7 +15,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import * as Toast from '#/components/Toast'
-import {GrowthHack} from './GrowthHack'
 
 export function ThreadItemAnchorFollowButton({
   did,

@@ -88,7 +88,7 @@ export async function post(
   let tid: TID | undefined
 
   for (let i = 0; i < thread.posts.length; i++) {
-    const draft = thread.posts[i]
+    const draft = thread.posts[i]!
 
     // Not awaited to avoid waterfalls.
     const rtPromise = resolveRT(agent, draft.richtext)
@@ -399,11 +399,7 @@ async function resolveMedia(
   }
   if (embedDraft.media?.type === 'gif') {
     const gifDraft = embedDraft.media
-    const resolvedGif = await fetchResolveGifQuery(
-      queryClient,
-      agent,
-      gifDraft.gif,
-    )
+    const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif)
     let blob: BlobRef | undefined
     if (resolvedGif.thumb) {
       onStateChange?.(t`Uploading link thumbnail...`)
@@ -466,7 +462,7 @@ async function resolveRecord(
 const mf_sha256 = Hasher.from({
   name: 'sha2-256',
   code: 0x12,
-  encode: input => {
+  encode: (input: Uint8Array) => {
     const digest = sha256.arrayBuffer(input)
     return new Uint8Array(digest)
   },

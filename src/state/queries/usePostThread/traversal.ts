@@ -41,7 +41,7 @@ export function sortAndAnnotateThreadItems(
   const metadatas = new Map<string, TraversalMetadata>()
 
   traversal: for (let i = 0; i < thread.length; i++) {
-    const item = thread[i]
+    const item = thread[i]!
     let parentMetadata: TraversalMetadata | undefined
     let metadata: TraversalMetadata | undefined
 
@@ -81,7 +81,7 @@ export function sortAndAnnotateThreadItems(
         threadItems.push(post)
 
         parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
-          const parent = thread[pi]
+          const parent = thread[pi]!
 
           if (
             AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent.value)
@@ -177,7 +177,7 @@ export function sortAndAnnotateThreadItems(
             const startIndex = branch.start + 1
 
             for (let ci = startIndex; ci <= branch.end; ci++) {
-              const child = thread[ci]
+              const child = thread[ci]!
 
               if (AppBskyUnspeccedDefs.isThreadItemPost(child.value)) {
                 const childParentMetadata = metadatas.get(
@@ -247,7 +247,7 @@ export function sortAndAnnotateThreadItems(
    */
   for (const subset of [threadItems, otherThreadItems]) {
     for (let i = 0; i < subset.length; i++) {
-      const item = subset[i]
+      const item = subset[i]!
       const prevItem = subset.at(i - 1)
       const nextItem = subset.at(i + 1)
 
@@ -500,7 +500,7 @@ export function buildThread({
     }
   } else {
     for (let i = 0; i < items.length; i++) {
-      const item = items[i]
+      const item = items[i]!
       if (
         item.type === 'threadPost' &&
         item.depth === 0 &&
@@ -557,7 +557,7 @@ export function getBranch(
   let end = branchStartIndex
 
   for (let ci = branchStartIndex + 1; ci < thread.length; ci++) {
-    const next = thread[ci]
+    const next = thread[ci]!
     if (next.depth > branchStartDepth) {
       end = ci
     } else {

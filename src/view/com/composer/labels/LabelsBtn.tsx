@@ -34,7 +34,11 @@ export function LabelsBtn({
     const filtered = labels.filter(
       l => !ADULT_CONTENT_LABELS.includes(l as AdultSelfLabel),
     )
-    onChange([...new Set([...filtered, newLabel].filter(Boolean))])
+    onChange(
+      [...new Set([...filtered, newLabel])].filter(
+        (label): label is SelfLabel => Boolean(label),
+      ),
+    )
   }
 
   const updateOtherLabels = (newLabels: OtherSelfLabel[]) => {
@@ -42,7 +46,11 @@ export function LabelsBtn({
     const filtered = labels.filter(
       l => !OTHER_SELF_LABELS.includes(l as OtherSelfLabel),
     )
-    onChange([...new Set([...filtered, newLabel].filter(Boolean))])
+    onChange(
+      [...new Set([...filtered, newLabel])].filter(
+        (label): label is SelfLabel => Boolean(label),
+      ),
+    )
   }
 
   return (

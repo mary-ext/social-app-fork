@@ -94,7 +94,7 @@ export function Inner({
   const onChangeFilter = ([declaration]: string[]) => {
     mutate({
       $type: 'app.bsky.notification.declaration',
-      allowSubscriptions: declaration,
+      allowSubscriptions: declaration!,
     })
   }
 

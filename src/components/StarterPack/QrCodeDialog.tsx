@@ -4,20 +4,15 @@ import type ViewShot from 'react-native-view-shot'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components/icons/FloppyDisk'
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
 import * as Toast from '#/components/Toast'
-import {requestMediaLibraryPermissionsAsync} from '#/shims/image-picker'
-import {createAssetAsync} from '#/shims/media-library'
-import * as Sharing from '#/shims/sharing'
 import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
@@ -97,16 +92,6 @@ export function QrCodeDialog({
       Toast.show(l`QR code copied to your clipboard!`)
       setIsCopyProcessing(false)
       control.close()
-    })
-  }
-
-  const onSharePress = async () => {
-    ref.current?.capture?.().then(async (uri: string) => {
-      control.close(() => {
-        Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
-          () => {},
-        )
-      })
     })
   }
 

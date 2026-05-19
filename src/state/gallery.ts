@@ -2,13 +2,9 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
-import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
-import {isCancelledError} from '#/lib/strings/errors'
 import {
-  cacheDirectory,
-  copyAsync,
   deleteAsync,
   makeDirectoryAsync,
   moveAsync,
@@ -53,12 +49,6 @@ type ComposerImageWithTransformation = ComposerImageBase & {
 export type ComposerImage =
   | ComposerImageWithoutTransformation
   | ComposerImageWithTransformation
-
-let _imageCacheDirectory: string
-
-function getImageCacheDirectory(): string | null {
-  return null
-}
 
 export async function createComposerImage(
   raw: ImageMeta,
@@ -113,7 +103,7 @@ export async function pasteImage(
       path: uri,
       width: width,
       height: height,
-      mime: match ? match[1] : 'image/jpeg',
+      mime: match ? match[1]! : 'image/jpeg',
     },
   }
 }

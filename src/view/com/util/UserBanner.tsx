@@ -7,8 +7,7 @@ import {
   useCameraPermission,
   usePhotoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
+import {openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -22,10 +21,7 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {
-  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon,
-  Camera_Stroke2_Corner0_Rounded as CameraIcon,
-} from '#/components/icons/Camera'
+import {Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon} from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
@@ -44,24 +40,11 @@ export function UserBanner({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
   const editImageDialogControl = useDialogControl()
-
-  const onOpenCamera = useCallback(async () => {
-    if (!(await requestCameraAccessIfNeeded())) {
-      return
-    }
-    onSelectNewBanner?.(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [3, 1],
-        }),
-      ),
-    )
-  }, [onSelectNewBanner, requestCameraAccessIfNeeded])
 
   const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {

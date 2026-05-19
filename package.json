@@ -13,7 +13,7 @@
     "build": "pnpm build-web",
     "preview": "rsbuild preview",
     "lint": "eslint --cache --quiet src",
-    "typecheck": "tsgo --project ./tsconfig.json",
+    "typecheck": "tsgo -b",
     "intl:build": "pnpm intl:extract && pnpm intl:compile",
     "intl:extract": "lingui extract --clean --locale en",
     "intl:compile": "lingui compile",

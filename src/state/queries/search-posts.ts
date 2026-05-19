@@ -87,7 +87,7 @@ export function useSearchPostsQuery({
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.
-        let reusedPages = []
+        let reusedPages: AppBskyFeedSearchPosts.OutputSchema[] = []
         if (lastRun.current) {
           const {
             data: lastData,
@@ -107,7 +107,7 @@ export function useSearchPostsQuery({
           if (canReuse) {
             for (let i = 0; i < data.pages.length; i++) {
               if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-                reusedPages.push(lastResult.pages[i])
+                reusedPages.push(lastResult.pages[i]!)
                 continue
               }
               // Stop as soon as pages stop matching up.

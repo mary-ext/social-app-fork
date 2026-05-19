@@ -1,11 +1,5 @@
 import {Fragment, useMemo, useRef} from 'react'
-import {
-  Keyboard,
-  Platform,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {Platform, type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -21,7 +15,7 @@ import {
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {
@@ -74,8 +68,8 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   }
 
   const anyoneCanReply =
-    settings.length === 1 && settings[0].type === 'everybody'
-  const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
+    settings.length === 1 && settings[0]!.type === 'everybody'
+  const noOneCanReply = settings.length === 1 && settings[0]!.type === 'nobody'
   const description = anyoneCanReply
     ? l`Everybody can reply`
     : noOneCanReply
@@ -248,9 +242,9 @@ function Rules({
             This post has an unknown type of threadgate on it. Your app may be
             out of date.
           </Trans>
-        ) : settings[0].type === 'everybody' ? (
+        ) : settings[0]!.type === 'everybody' ? (
           <Trans>Everybody can reply to this post.</Trans>
-        ) : settings[0].type === 'nobody' ? (
+        ) : settings[0]!.type === 'nobody' ? (
           <Trans>Replies to this post are disabled.</Trans>
         ) : (
           <Trans>

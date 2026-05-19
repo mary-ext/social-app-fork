@@ -58,21 +58,21 @@ export function MessagesListInfoPanel({
   let names: React.ReactNode = null
   if (members.length === 1) {
     names = (
-      <Trans>New chat with {createSanitizedDisplayName(members[0])}</Trans>
+      <Trans>New chat with {createSanitizedDisplayName(members[0]!)}</Trans>
     )
   } else if (members.length === 2) {
     names = (
       <Trans>
-        New chat with {createSanitizedDisplayName(members[0])} and{' '}
-        {createSanitizedDisplayName(members[1])}
+        New chat with {createSanitizedDisplayName(members[0]!)} and{' '}
+        {createSanitizedDisplayName(members[1]!)}
       </Trans>
     )
   } else if (members.length > 2) {
     const memberCount = convo.details.memberCount - 2
     names = (
       <Trans>
-        New chat with {createSanitizedDisplayName(members[0])},{' '}
-        {createSanitizedDisplayName(members[1])}, and{' '}
+        New chat with {createSanitizedDisplayName(members[0]!)},{' '}
+        {createSanitizedDisplayName(members[1]!)}, and{' '}
         <Plural
           value={memberCount}
           one={`${memberCount} more`}

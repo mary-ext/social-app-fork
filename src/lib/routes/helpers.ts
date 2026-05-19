@@ -16,9 +16,9 @@ export function getCurrentRoute(state?: State) {
     return {name: 'Home'}
   }
 
-  let node = state.routes[state.index || 0]
+  let node = state.routes[state.index || 0]!
   while (node.state?.routes && typeof node.state?.index === 'number') {
-    node = node.state?.routes[node.state?.index]
+    node = node.state.routes[node.state.index]!
   }
   return node
 }
@@ -65,7 +65,7 @@ export function getTabState(state: State | undefined, tab: string): TabState {
   const currentRoute = getCurrentRoute(state)
   if (isTab(currentRoute.name, tab)) {
     return TabState.InsideAtRoot
-  } else if (isTab(state.routes[state.index || 0].name, tab)) {
+  } else if (isTab(state.routes[state.index || 0]!.name, tab)) {
     return TabState.Inside
   }
   return TabState.Outside

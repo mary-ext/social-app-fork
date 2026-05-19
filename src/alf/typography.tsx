@@ -63,8 +63,6 @@ export type TextProps = RNTextProps & {
   emoji?: boolean
 }
 
-const EMOJI = createEmojiRegex()
-
 export function childHasEmoji(children: React.ReactNode) {
   let hasEmoji = false
   Children.forEach(children, child => {
@@ -77,8 +75,8 @@ export function childHasEmoji(children: React.ReactNode) {
 
 export function renderChildrenWithEmoji(
   children: React.ReactNode,
-  props: Omit<TextProps, 'children'> = {},
-  emoji: boolean,
+  _props: Omit<TextProps, 'children'> = {},
+  _emoji = false,
 ) {
   return children
 }

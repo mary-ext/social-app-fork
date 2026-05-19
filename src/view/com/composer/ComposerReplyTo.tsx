@@ -146,7 +146,7 @@ function ComposerReplyToImages({
       ]}>
       {(images.length === 1 && (
         <Image
-          source={{uri: images[0].thumb}}
+          source={{uri: images[0]!.thumb}}
           style={[a.flex_1]}
           cachePolicy="memory-disk"
           accessibilityIgnoresInvertColors
@@ -155,13 +155,13 @@ function ComposerReplyToImages({
         (images.length === 2 && (
           <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
             <Image
-              source={{uri: images[0].thumb}}
+              source={{uri: images[0]!.thumb}}
               style={[a.flex_1]}
               cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
             <Image
-              source={{uri: images[1].thumb}}
+              source={{uri: images[1]!.thumb}}
               style={[a.flex_1]}
               cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
@@ -171,20 +171,20 @@ function ComposerReplyToImages({
         (images.length === 3 && (
           <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
             <Image
-              source={{uri: images[0].thumb}}
+              source={{uri: images[0]!.thumb}}
               style={[a.flex_1]}
               cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
             <View style={[a.flex_1, a.gap_2xs]}>
               <Image
-                source={{uri: images[1].thumb}}
+                source={{uri: images[1]!.thumb}}
                 style={[a.flex_1]}
                 cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
               <Image
-                source={{uri: images[2].thumb}}
+                source={{uri: images[2]!.thumb}}
                 style={[a.flex_1]}
                 cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
@@ -196,13 +196,13 @@ function ComposerReplyToImages({
           <View style={[a.flex_1, a.gap_2xs]}>
             <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
               <Image
-                source={{uri: images[0].thumb}}
+                source={{uri: images[0]!.thumb}}
                 style={[a.flex_1]}
                 cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
               <Image
-                source={{uri: images[1].thumb}}
+                source={{uri: images[1]!.thumb}}
                 style={[a.flex_1]}
                 cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
@@ -210,13 +210,13 @@ function ComposerReplyToImages({
             </View>
             <View style={[a.flex_1, a.flex_row, a.gap_2xs]}>
               <Image
-                source={{uri: images[2].thumb}}
+                source={{uri: images[2]!.thumb}}
                 style={[a.flex_1]}
                 cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors
               />
               <Image
-                source={{uri: images[3].thumb}}
+                source={{uri: images[3]!.thumb}}
                 style={[a.flex_1]}
                 cachePolicy="memory-disk"
                 accessibilityIgnoresInvertColors

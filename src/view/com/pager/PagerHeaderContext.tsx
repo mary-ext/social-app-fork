@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo} from 'react'
+import {createContext, useMemo} from 'react'
 
 import {type SharedValue} from '#/lib/animations/reanimatedCompat'
 
@@ -37,6 +37,5 @@ export function PagerHeaderProvider({
 export function usePagerHeaderContext(): React.ContextType<
   typeof PagerHeaderContext
 > {
-  const ctx = useContext(PagerHeaderContext)
   return null
 }

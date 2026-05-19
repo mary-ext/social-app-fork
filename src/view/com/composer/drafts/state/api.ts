@@ -47,8 +47,8 @@ function parseVideoMimeType(localRefPath: string): string {
   const parts = localRefPath.split(':')
   // New format: video:video/mp4:abc123 -> parts[1] is mime type
   // Legacy format: video:abc123 -> no mime type, default to video/mp4
-  if (parts.length >= 3 && parts[1].includes('/')) {
-    return parts[1]
+  if (parts.length >= 3 && parts[1]!.includes('/')) {
+    return parts[1]!
   }
   return 'video/mp4' // Default for legacy drafts
 }
@@ -518,7 +518,7 @@ export async function draftToComposerPosts(
 
       // Collect video for restoration (processed async by caller)
       if (post.embedVideos && post.embedVideos.length > 0) {
-        const vid = post.embedVideos[0]
+        const vid = post.embedVideos[0]!
         const videoUri = loadedMedia.get(vid.localRef.path)
         if (videoUri) {
           const mimeType = parseVideoMimeType(vid.localRef.path)
@@ -543,7 +543,7 @@ export async function draftToComposerPosts(
 
       // Restore quote embed
       if (post.embedRecords && post.embedRecords.length > 0) {
-        const record = post.embedRecords[0]
+        const record = post.embedRecords[0]!
         const urip = new AtUri(record.record.uri)
         const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`
         embed.quote = {type: 'link', uri: url}

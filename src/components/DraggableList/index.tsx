@@ -29,8 +29,6 @@ export function SortableList<T>({
   onReorder,
   onDragStart,
   onDragEnd,
-  scrollRef,
-  scrollOffset,
   itemHeight,
 }: SortableListProps<T>) {
   const t = useTheme()
@@ -64,7 +62,7 @@ export function SortableList<T>({
     if (newPos !== dragState.activeIndex) {
       const next = [...data]
       const [moved] = next.splice(dragState.activeIndex, 1)
-      next.splice(newPos, 0, moved)
+      next.splice(newPos, 0, moved!)
       onReorder(next)
     }
     setDragState(null)

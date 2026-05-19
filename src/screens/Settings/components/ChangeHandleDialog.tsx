@@ -8,11 +8,6 @@ import Animated, {
   FadeIn,
   FadeOut,
   LayoutAnimationConfig,
-  LinearTransition,
-  SlideInLeft,
-  SlideInRight,
-  SlideOutLeft,
-  SlideOutRight,
 } from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
@@ -175,7 +170,7 @@ function ProvidedHandlePage({
     },
   })
 
-  const host = serviceInfo.availableUserDomains[0]
+  const host = serviceInfo.availableUserDomains[0]!
 
   const validation = useMemo(
     () => validateServiceHandle(subdomain, host),

@@ -3,9 +3,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {
-  useHapticsDisabled,
   useRequireAltTextEnabled,
-  useSetHapticsDisabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
 import {
@@ -16,7 +14,6 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
-import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
@@ -28,8 +25,6 @@ export function AccessibilitySettingsScreen({}: Props) {
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
-  const hapticsDisabled = useHapticsDisabled()
-  const setHapticsDisabled = useSetHapticsDisabled()
   const largeAltBadgeEnabled = useLargeAltBadgeEnabled()
   const setLargeAltBadgeEnabled = useSetLargeAltBadgeEnabled()
 

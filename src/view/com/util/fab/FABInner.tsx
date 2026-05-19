@@ -1,6 +1,5 @@
 import {type ComponentProps, type JSX} from 'react'
 import {
-  type GestureResponderEvent,
   type Pressable,
   type StyleProp,
   StyleSheet,

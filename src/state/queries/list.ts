@@ -174,7 +174,7 @@ export function useListMetadataMutation() {
       )
       return res
     },
-    onSuccess(data, variables) {
+    onSuccess(_data, variables) {
       invalidateMyLists(queryClient)
       queryClient.invalidateQueries({
         queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
@@ -271,7 +271,7 @@ export function useListMuteMutation() {
         return Boolean(v?.data.list.viewer?.muted) === mute
       })
     },
-    onSuccess(data, variables) {
+    onSuccess(_data, variables) {
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.uri),
       })
@@ -296,7 +296,7 @@ export function useListBlockMutation() {
           : !v?.data.list.viewer?.blocked
       })
     },
-    onSuccess(data, variables) {
+    onSuccess(_data, variables) {
       queryClient.invalidateQueries({
         queryKey: RQKEY(variables.uri),
       })

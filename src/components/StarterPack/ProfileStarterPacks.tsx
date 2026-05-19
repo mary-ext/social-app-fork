@@ -1,6 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
-  findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
   useWindowDimensions,

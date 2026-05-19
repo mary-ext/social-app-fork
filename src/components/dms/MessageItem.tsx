@@ -17,15 +17,10 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import Animated, {
-  FadeIn,
-  FadeOut,
   LayoutAnimationConfig,
-  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  ZoomIn,
-  ZoomOut,
 } from '#/lib/animations/reanimatedCompat'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -272,7 +267,7 @@ let MessageItem = ({
   const reactionsLabel = useMemo(() => {
     if (reactions.length === 0) return ''
     if (reactions.length === 1) {
-      const reaction = reactions[0]
+      const reaction = reactions[0]!
       const sender = reaction.sender
       if (sender.did === currentAccount?.did) {
         return l`You reacted ${reaction.value}`

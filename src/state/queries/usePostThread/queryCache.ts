@@ -87,7 +87,7 @@ export function createCacheMutator({
 
       function mutator<T>(thread: ApiThreadItem[]): T[] {
         for (let i = 0; i < thread.length; i++) {
-          const parent = thread[i]
+          const parent = thread[i]!
 
           if (!AppBskyUnspeccedDefs.isThreadItemPost(parent.value)) continue
           if (parent.uri !== parentUri) continue
@@ -181,7 +181,7 @@ export function createCacheMutator({
           const thread = [...queryData.thread]
 
           for (let i = 0; i < thread.length; i++) {
-            const existingPost = thread[i]
+            const existingPost = thread[i]!
             if (!AppBskyUnspeccedDefs.isThreadItemPost(post.value)) continue
 
             if (existingPost.uri === post.uri) {
@@ -342,7 +342,7 @@ export function useUpdatePostThreadThreadgateQueryCache() {
 
       function mutator<T>(thread: ApiThreadItem[]): T[] {
         for (let i = 0; i < thread.length; i++) {
-          const item = thread[i]
+          const item = thread[i]!
 
           if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) continue
 

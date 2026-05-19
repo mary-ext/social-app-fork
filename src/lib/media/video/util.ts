@@ -10,7 +10,7 @@ export const createVideoEndpointUrl = (
   url.pathname = route
   if (params) {
     for (const key in params) {
-      url.searchParams.set(key, params[key])
+      url.searchParams.set(key, params[key]!)
     }
   }
   return url.href

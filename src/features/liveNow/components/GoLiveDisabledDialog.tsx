@@ -49,7 +49,7 @@ export function DialogInner({
         throw new Error('Status is missing uri or cid')
       }
 
-      if (__DEV__) {
+      if (import.meta.env.DEV) {
         logger.info('Submitting go live appeal', {
           details,
         })

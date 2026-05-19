@@ -92,7 +92,12 @@ export async function resolveLink(
   }
   if (isBskyPostUrl(uri)) {
     uri = convertBskyAppUrlIfNeeded(uri)
-    const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
+    const [_0, user, _1, rkey] = uri.split('/').filter(Boolean) as [
+      string,
+      string,
+      string,
+      string,
+    ]
     const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
     const post = await getPost({uri: recordUri})
     if (post.viewer?.embeddingDisabled) {
@@ -110,7 +115,12 @@ export async function resolveLink(
   }
   if (isBskyCustomFeedUrl(uri)) {
     uri = convertBskyAppUrlIfNeeded(uri)
-    const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
+    const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [
+      string,
+      string,
+      string,
+      string,
+    ]
     const did = await fetchDid(handleOrDid)
     const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
     const res = await agent.app.bsky.feed.getFeedGenerator({feed})
@@ -126,7 +136,12 @@ export async function resolveLink(
   }
   if (isBskyListUrl(uri)) {
     uri = convertBskyAppUrlIfNeeded(uri)
-    const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
+    const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [
+      string,
+      string,
+      string,
+      string,
+    ]
     const did = await fetchDid(handleOrDid)
     const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
     const res = await agent.app.bsky.graph.getList({list})
@@ -193,10 +208,7 @@ export async function resolveLink(
   return resolveExternal(agent, uri)
 }
 
-export async function resolveGif(
-  agent: BskyAgent,
-  gif: Gif,
-): Promise<ResolvedExternalLink> {
+export async function resolveGif(gif: Gif): Promise<ResolvedExternalLink> {
   const gifUrl = gif.media_formats.gif.url
   const params = new URLSearchParams()
   params.set('hh', String(gif.media_formats.gif.dims[1]))

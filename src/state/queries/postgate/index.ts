@@ -231,7 +231,7 @@ export function useToggleQuoteDetachmentMutation() {
           updatePostShadow(queryClient, post.uri, {
             embed: createMaybeDetachedQuoteEmbed({
               post,
-              quote,
+              quote: quote!,
               quoteUri: undefined,
               detached: false,
             }),

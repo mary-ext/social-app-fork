@@ -29,7 +29,6 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
 import {
-  type AuthorFilter,
   type FeedDescriptor,
   type FeedParams,
   type FeedPostSlice,
@@ -214,7 +213,7 @@ let PostFeed = ({
   const [isPTRing, setIsPTRing] = useState(false)
   // eslint-disable-next-line react-hooks/purity
   const lastFetchRef = useRef<number>(Date.now())
-  const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
+  const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const areVideoFeedsEnabled = false
 
@@ -248,7 +247,7 @@ let PostFeed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  const lastFetchedAt = data?.pages[0].fetchedAt
+  const lastFetchedAt = data?.pages[0]?.fetchedAt
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
@@ -352,7 +351,8 @@ let PostFeed = ({
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
     const sliceItem = (row: Extract<FeedRow, {type: 'sliceItem'}>) => {
-      if (hasPressedShowLessUris.has(row.slice.items[row.indexInSlice]?.uri)) {
+      const uri = row.slice.items[row.indexInSlice]?.uri
+      if (uri && hasPressedShowLessUris.has(uri)) {
         return {
           type: 'showLessFollowup',
           key: row.key,
@@ -427,7 +427,7 @@ let PostFeed = ({
             reqId: string | undefined
           }[][] = []
           for (let i = 0; i < videos.length; i++) {
-            const video = videos[i]
+            const video = videos[i]!
             const item = video.item
             const cols = gtMobile ? 3 : 2
             const rowItem = {
@@ -438,7 +438,7 @@ let PostFeed = ({
             if (i % cols === 0) {
               rows.push([rowItem])
             } else {
-              rows[rows.length - 1].push(rowItem)
+              rows[rows.length - 1]!.push(rowItem)
             }
           }
 
@@ -523,7 +523,7 @@ let PostFeed = ({
                 arr.push(
                   sliceItem({
                     type: 'sliceItem',
-                    key: slice.items[0]._reactKey,
+                    key: slice.items[0]!._reactKey,
                     slice: slice,
                     indexInSlice: 0,
                     showReplyTo: false,
@@ -532,23 +532,23 @@ let PostFeed = ({
                 arr.push({
                   type: 'sliceViewFullThread',
                   key: slice._reactKey + '-viewFullThread',
-                  uri: slice.items[0].uri,
+                  uri: slice.items[0]!.uri,
                 })
                 arr.push(
                   sliceItem({
                     type: 'sliceItem',
-                    key: slice.items[beforeLast]._reactKey,
+                    key: slice.items[beforeLast]!._reactKey,
                     slice: slice,
                     indexInSlice: beforeLast,
                     showReplyTo:
-                      slice.items[beforeLast].parentAuthor?.did !==
-                      slice.items[beforeLast].post.author.did,
+                      slice.items[beforeLast]!.parentAuthor?.did !==
+                      slice.items[beforeLast]!.post.author.did,
                   }),
                 )
                 arr.push(
                   sliceItem({
                     type: 'sliceItem',
-                    key: slice.items[last]._reactKey,
+                    key: slice.items[last]!._reactKey,
                     slice: slice,
                     indexInSlice: last,
                     showReplyTo: false,
@@ -556,10 +556,11 @@ let PostFeed = ({
                 )
               } else {
                 for (let i = 0; i < slice.items.length; i++) {
+                  const item = slice.items[i]!
                   arr.push(
                     sliceItem({
                       type: 'sliceItem',
-                      key: slice.items[i]._reactKey,
+                      key: item._reactKey,
                       slice: slice,
                       indexInSlice: i,
                       showReplyTo: i === 0,
@@ -698,7 +699,7 @@ let PostFeed = ({
       } else if (row.type === 'sliceItem') {
         const slice = row.slice
         const indexInSlice = row.indexInSlice
-        const item = slice.items[indexInSlice]
+        const item = slice.items[indexInSlice]!
         return (
           <PostFeedItem
             post={item.post}
@@ -718,7 +719,7 @@ let PostFeed = ({
             isParentBlocked={item.isParentBlocked}
             isParentNotFound={item.isParentNotFound}
             hideTopBorder={rowIndex === 0 && indexInSlice === 0}
-            rootPost={slice.items[0].post}
+            rootPost={slice.items[0]!.post}
             onShowLess={onPressShowLess}
           />
         )
@@ -785,7 +786,7 @@ let PostFeed = ({
 
   // Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
   const getPostPosition = useNonReactiveCallback(
-    (type: FeedRow['type'], key: string) => {
+    (_type: FeedRow['type'], key: string) => {
       // Calculate position: find the row index in feedItems, then calculate position
       const rowIndex = feedItems.findIndex(
         row => row.type === 'sliceItem' && row.key === key,
@@ -794,7 +795,7 @@ let PostFeed = ({
       if (rowIndex >= 0) {
         let position = 0
         for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
-          const row = feedItems[i]
+          const row = feedItems[i]!
           if (row.type === 'sliceItem') {
             // Only count root posts (indexInSlice === 0), not thread replies
             if (row.indexInSlice === 0) {
@@ -818,14 +819,12 @@ let PostFeed = ({
       if (item.type === 'sliceItem') {
         const slice = item.slice
         const indexInSlice = item.indexInSlice
-        const postItem = slice.items[indexInSlice]
+        const postItem = slice.items[indexInSlice]!
         const post = postItem.post
 
         // Only track the root post of each slice (index 0) to avoid double-counting thread items
         if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
           seenPostUrisRef.current.add(post.uri)
-
-          const _position = getPostPosition('sliceItem', item.key)
         }
 
         // Live status tracking (existing code)
@@ -842,13 +841,11 @@ let PostFeed = ({
       } else if (item.type === 'videoGridRow') {
         // Track each video in the grid row
         for (let i = 0; i < item.items.length; i++) {
-          const postItem = item.items[i]
+          const postItem = item.items[i]!
           const post = postItem.post
 
           if (!seenPostUrisRef.current.has(post.uri)) {
             seenPostUrisRef.current.add(post.uri)
-
-            const _position = getPostPosition('videoGridRow', item.key)
           }
         }
       }

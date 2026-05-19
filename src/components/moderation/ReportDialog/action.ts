@@ -35,7 +35,7 @@ export function useSubmitReportMutation() {
       const labelerSupportedReasonTypes = labeler.reasonTypes || []
 
       let reasonType = state.selectedOption.reason
-      const backwardsCompatibleReasonType = NEW_TO_OLD_REASONS_MAP[reasonType]
+      const backwardsCompatibleReasonType = NEW_TO_OLD_REASONS_MAP[reasonType]!
       const supportsNewReasonType =
         labelerSupportedReasonTypes.includes(reasonType)
       const supportsOldReasonType = labelerSupportedReasonTypes.includes(
@@ -100,7 +100,7 @@ export function useSubmitReportMutation() {
         }
       }
 
-      if (__DEV__) {
+      if (import.meta.env.DEV) {
         logger.info('Submitting report (dry run)', {
           labeler: {
             handle: labeler.creator.handle,

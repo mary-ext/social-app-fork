@@ -21,6 +21,10 @@ export async function pickVideo(): Promise<ImagePickerResult> {
     input.addEventListener('change', async () => {
       if (input.files) {
         const file = input.files[0]
+        if (!file) {
+          resolve({canceled: true, assets: null})
+          return
+        }
         resolve({
           canceled: false,
           assets: [await getVideoMetadata(file)],

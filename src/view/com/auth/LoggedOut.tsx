@@ -4,7 +4,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {STALE} from '#/state/queries'
 import {profilesQueryKey} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'

@@ -84,7 +84,7 @@ export function AvatarBubbles({
           <AvatarBubble
             key={i}
             profile={profiles[i]}
-            scale={scales[i]}
+            scale={scales[i]!}
             size={layout.size}
             x={layout.x}
             y={layout.y}

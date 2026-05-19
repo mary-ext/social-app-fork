@@ -6,7 +6,6 @@ import Animated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
 } from '#/lib/animations/reanimatedCompat'
 import {
   ScaleAndFadeIn,

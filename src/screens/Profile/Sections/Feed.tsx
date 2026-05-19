@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
-import {findNodeHandle, View} from 'react-native'
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 

@@ -31,7 +31,7 @@ export function useEmojiSearch(): (
       return results.map(result => ({
         key: result.item.id,
         type: 'emoji' as const,
-        value: result.item.skins[0].native,
+        value: result.item.skins[0]!.native,
         emoji: result.item,
       }))
     },

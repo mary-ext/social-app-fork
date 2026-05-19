@@ -3,16 +3,14 @@ import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {StackActions, useNavigation} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
-import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
-import {emitSoftReset} from '#/state/events'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -152,7 +150,6 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 
   const onPressTab = useCallback(
     (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
-      const state = navigation.getState()
       setDrawerOpen(false)
       // hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
       if (tab === 'MyProfile') {

@@ -956,7 +956,7 @@ export function Explore({
         case 'preview:sliceItem': {
           const slice = item.slice
           const indexInSlice = item.indexInSlice
-          const subItem = slice.items[indexInSlice]
+          const subItem = slice.items[indexInSlice]!
           return (
             <PostFeedItem
               post={subItem.post}
@@ -976,7 +976,7 @@ export function Explore({
               isParentBlocked={subItem.isParentBlocked}
               isParentNotFound={subItem.isParentNotFound}
               hideTopBorder={item.hideTopBorder}
-              rootPost={slice.items[0].post}
+              rootPost={slice.items[0]!.post}
             />
           )
         }
@@ -1009,18 +1009,6 @@ export function Explore({
     ],
   )
 
-  const stickyHeaderIndices = useMemo(
-    () =>
-      items.reduce(
-        (acc, curr) =>
-          ['topBorder', 'preview:header'].includes(curr.type)
-            ? acc.concat(items.indexOf(curr))
-            : acc,
-        [] as number[],
-      ),
-    [items],
-  )
-
   // track headers and report module viewability
   const alreadyReportedRef = useRef<Map<string, string>>(new Map())
   const seenProfilesRef = useRef<Set<string>>(new Set())
@@ -1034,9 +1022,6 @@ export function Explore({
         // Track individual profile seen events
         if (!seenProfilesRef.current.has(item.profile.did)) {
           seenProfilesRef.current.add(item.profile.did)
-          const _position = suggestedFollowsModule.findIndex(
-            i => i.type === 'profile' && i.profile.did === item.profile.did,
-          )
         }
       } else if (item.type === 'feed') {
         module = 'suggestedFeeds'

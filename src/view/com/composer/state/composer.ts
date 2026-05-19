@@ -189,7 +189,7 @@ export function composerReducer(
       if (postIndex !== -1) {
         nextPosts = state.thread.posts.slice()
         nextPosts[postIndex] = postReducer(
-          state.thread.posts[postIndex],
+          state.thread.posts[postIndex]!,
           action.postAction,
         )
       }
@@ -235,7 +235,7 @@ export function composerReducer(
       )
       let nextPosts = [...state.thread.posts]
       if (indexToRemove !== -1) {
-        const postToRemove = state.thread.posts[indexToRemove]
+        const postToRemove = state.thread.posts[indexToRemove]!
         if (postToRemove.embed.media?.type === 'video') {
           postToRemove.embed.media.video.abortController.abort()
         }

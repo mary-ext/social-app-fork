@@ -57,7 +57,7 @@ export function ImageEmbed({
     }
 
     if (images.length === 1) {
-      const image = images[0]
+      const image = images[0]!
       return (
         <View style={[a.mt_sm, rest.style]}>
           <AutoSizedImage

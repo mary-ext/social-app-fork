@@ -41,7 +41,7 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
   const flush = () => {
     if (run.length === 0) return
 
-    const firstSentAt = run[0].message.sentAt
+    const firstSentAt = run[0]!.message.sentAt
     const hasLargeGap =
       runAnchor === null ||
       new Date(firstSentAt).getTime() - new Date(runAnchor).getTime() >
@@ -50,7 +50,7 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
     if (hasLargeGap) {
       result.push({
         type: 'system-message-date-divider',
-        key: `system-message-date-divider:${run[0].key}`,
+        key: `system-message-date-divider:${run[0]!.key}`,
         sentAt: firstSentAt,
       })
     }
@@ -65,7 +65,7 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
       // group collapses.
       result.push({
         type: 'system-message-group',
-        key: `system-message-group:${run[0].key}`,
+        key: `system-message-group:${run[0]!.key}`,
         items: run,
       })
     }
@@ -77,7 +77,7 @@ export function groupSystemMessages(items: ConvoItem[]): RenderItem[] {
       const day = localDateString(new Date(item.message.sentAt))
       const lastDay =
         run.length > 0
-          ? localDateString(new Date(run[run.length - 1].message.sentAt))
+          ? localDateString(new Date(run[run.length - 1]!.message.sentAt))
           : null
       if (lastDay !== null && lastDay !== day) {
         flush()

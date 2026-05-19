@@ -1,5 +1,4 @@
 import {useCallback} from 'react'
-import {SystemBars} from 'react-native-edge-to-edge'
 
 /**
  * If we're calling a system API like the image picker that opens a sheet

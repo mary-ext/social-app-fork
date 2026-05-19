@@ -11,7 +11,7 @@ export class DemoFeedAPI implements FeedAPI {
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    return DEMO_FEED.feed[0]
+    return DEMO_FEED.feed[0]!
   }
 
   async fetch(): Promise<FeedAPIResponse> {

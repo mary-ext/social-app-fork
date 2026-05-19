@@ -461,7 +461,7 @@ export function usePinnedFeedsInfos() {
           })
           .then(res => {
             for (let i = 0; i < res.data.feeds.length; i++) {
-              const feedView = res.data.feeds[i]
+              const feedView = res.data.feeds[i]!
               resolved.set(feedView.uri, hydrateFeedGenerator(feedView))
             }
           })

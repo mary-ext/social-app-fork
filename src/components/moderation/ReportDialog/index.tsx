@@ -172,7 +172,7 @@ function Inner(props: ReportDialogProps) {
           // supports old reason type (backwards compat)
           supportedReasonTypes.includes(state.selectedOption.reason) ||
           supportedReasonTypes.includes(
-            NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
+            NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason]!,
           )
         )
       })
@@ -315,7 +315,7 @@ function Inner(props: ReportDialogProps) {
                         dispatch({
                           type: 'selectCategory',
                           option: o,
-                          otherOption: getCategory('other').options[0],
+                          otherOption: getCategory('other').options[0]!,
                         })
                       }}
                     />
@@ -404,7 +404,7 @@ function Inner(props: ReportDialogProps) {
             callback={() => {
               dispatch({
                 type: 'selectLabeler',
-                labeler: supportedLabelers[0],
+                labeler: supportedLabelers[0]!,
               })
             }}
           />
@@ -446,13 +446,13 @@ function Inner(props: ReportDialogProps) {
                       <View style={[a.gap_sm]}>
                         {hasSingleSupportedLabeler ? (
                           <>
-                            <LabelerCard labeler={supportedLabelers[0]} />
+                            <LabelerCard labeler={supportedLabelers[0]!} />
                             <ActionOnce
                               check={() => !state.selectedLabeler}
                               callback={() => {
                                 dispatch({
                                   type: 'selectLabeler',
-                                  labeler: supportedLabelers[0],
+                                  labeler: supportedLabelers[0]!,
                                 })
                               }}
                             />

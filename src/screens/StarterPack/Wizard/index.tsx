@@ -450,7 +450,7 @@ function Footer({
           <Text style={[a.text_center, textStyles]}>
             {
               items.length < 2 ? (
-                currentAccount?.did === items[0].did ? (
+                currentAccount?.did === items[0]!.did ? (
                   <Trans>
                     It's just you right now! Add more people to your starter
                     pack by searching above.
@@ -459,31 +459,31 @@ function Footer({
                   <Trans>
                     It's just{' '}
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[0])}{' '}
+                      {getName(items[0]!)}{' '}
                     </Text>
                     right now! Add more people to your starter pack by searching
                     above.
                   </Trans>
                 )
               ) : items.length === 2 ? (
-                currentAccount?.did === items[0].did ? (
+                currentAccount?.did === items[0]!.did ? (
                   <Trans>
                     <Text style={[a.font_semi_bold, textStyles]}>You</Text> and
                     <Text> </Text>
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[1] /* [0] is self, skip it */)}{' '}
+                      {getName(items[1]! /* [0] is self, skip it */)}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
                 ) : (
                   <Trans>
                     <Text style={[a.font_semi_bold, textStyles]}>
-                      {getName(items[0])}
+                      {getName(items[0]!)}
                     </Text>{' '}
                     and
                     <Text> </Text>
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[1] /* [0] is self, skip it */)}{' '}
+                      {getName(items[1]! /* [0] is self, skip it */)}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
@@ -491,10 +491,10 @@ function Footer({
               ) : items.length > 2 ? (
                 <Trans context="profiles">
                   <Text style={[a.font_semi_bold, textStyles]} emoji>
-                    {getName(items[1] /* [0] is self, skip it */)},{' '}
+                    {getName(items[1]! /* [0] is self, skip it */)},{' '}
                   </Text>
                   <Text style={[a.font_semi_bold, textStyles]} emoji>
-                    {getName(items[2])},{' '}
+                    {getName(items[2]!)},{' '}
                   </Text>
                   and{' '}
                   <Plural
@@ -525,29 +525,29 @@ function Footer({
                 items.length === 1 ? (
                   <Trans>
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[0])}
+                      {getName(items[0]!)}
                     </Text>{' '}
                     is included in your starter pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[0])}
+                      {getName(items[0]!)}
                     </Text>{' '}
                     and
                     <Text> </Text>
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[1])}{' '}
+                      {getName(items[1]!)}{' '}
                     </Text>
                     are included in your starter pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[0])},{' '}
+                      {getName(items[0]!)},{' '}
                     </Text>
                     <Text style={[a.font_semi_bold, textStyles]} emoji>
-                      {getName(items[1])},{' '}
+                      {getName(items[1]!)},{' '}
                     </Text>
                     and{' '}
                     <Plural

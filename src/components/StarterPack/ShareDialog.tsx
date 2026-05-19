@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -10,7 +9,6 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -52,12 +50,6 @@ function ShareDialogInner({
     if (!link) return
     shareUrl(link)
     control.close()
-  }
-
-  const saveImageToAlbum = useSaveImageToMediaLibrary()
-
-  const onSave = async () => {
-    await saveImageToAlbum(imageUrl)
   }
 
   return (

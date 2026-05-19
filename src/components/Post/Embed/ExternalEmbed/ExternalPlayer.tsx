@@ -142,7 +142,7 @@ export function ExternalPlayer({
     const measurement = measure(viewRef)
     if (!measurement) return
 
-    const {height: winHeight, width: winWidth} = windowDims
+    const {height: winHeight} = windowDims
 
     // Get the proper screen height depending on what is going on
     const realWinHeight = winHeight // On web, we always want the actual screen height

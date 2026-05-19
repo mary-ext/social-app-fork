@@ -4,14 +4,10 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
-  AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
-import {toShareUrl} from '#/lib/strings/url-helpers'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -69,14 +65,6 @@ let ShareMenuButton = ({
       post.author.did,
     ],
   )
-
-  const onNativeLongPress = () => {
-    const urip = new AtUri(post.uri)
-    const href = makeProfileLink(post.author, 'post', urip.rkey)
-    const url = toShareUrl(href)
-    shareUrl(url)
-    onShare()
-  }
 
   return (
     <EventStopper onKeyDown={false}>

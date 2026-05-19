@@ -73,7 +73,7 @@ export function InterestTabs({
   }
 
   function handleSelectTab(index: number) {
-    const tab = interests[index]
+    const tab = interests[index]!
     onSelectTab(tab)
     scrollIntoViewIfNeeded(index)
   }
@@ -126,7 +126,7 @@ export function InterestTabs({
       cleanupRef.current()
     }
 
-    let holdTimeout: NodeJS.Timeout | null = null
+    let holdTimeout: ReturnType<typeof setTimeout> | null = null
     let animationFrame: number | null = null
     let isActive = true
     isContinuouslyScrollingRef.current = false
@@ -228,7 +228,7 @@ export function InterestTabs({
               active={active}
               index={i}
               interest={interest}
-              interestsDisplayName={interestsDisplayNames[interest]}
+              interestsDisplayName={interestsDisplayNames[interest]!}
               onLayout={handleTabLayout}
             />
           )

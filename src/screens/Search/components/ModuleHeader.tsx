@@ -2,7 +2,6 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'

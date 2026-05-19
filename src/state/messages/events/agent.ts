@@ -287,7 +287,7 @@ export class MessagesEventBus {
    */
 
   private isPolling = false
-  private pollIntervalRef: NodeJS.Timeout | undefined
+  private pollIntervalRef: ReturnType<typeof setInterval> | undefined
 
   private getPollInterval() {
     switch (this.status) {

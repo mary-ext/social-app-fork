@@ -174,7 +174,6 @@ export function TitleText({
   style,
 }: {children: React.ReactNode} & TextStyleProp) {
   const {gtMobile} = useBreakpoints()
-  const align = useContext(AlignmentContext)
   return (
     <Text
       style={[
@@ -194,7 +193,6 @@ export function TitleText({
 
 export function SubtitleText({children}: {children: React.ReactNode}) {
   const t = useTheme()
-  const align = useContext(AlignmentContext)
   return (
     <Text
       style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}

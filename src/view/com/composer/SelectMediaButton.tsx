@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useRef} from 'react'
-import {Keyboard} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -15,8 +14,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
-import * as toast from '#/components/Toast'
-import {File} from '#/shims/file-system'
 import {type ImagePickerAsset} from '#/shims/image-picker'
 import {isAnimatedGif} from './videos/isAnimatedGif'
 
@@ -332,13 +329,13 @@ async function processImagePickerAssets(
         supportedAssets = supportedAssets.slice(0, 1)
       }
 
-      if (supportedAssets[0].duration) {
+      if (supportedAssets[0]!.duration) {
         /*
          * Web reports duration as seconds
          */
-        supportedAssets[0].duration = supportedAssets[0].duration * 1000
+        supportedAssets[0]!.duration = supportedAssets[0]!.duration * 1000
 
-        if (supportedAssets[0].duration > VIDEO_MAX_DURATION_MS) {
+        if (supportedAssets[0]!.duration > VIDEO_MAX_DURATION_MS) {
           errors.add(SelectedAssetError.VideoTooLong)
           supportedAssets = []
         }
@@ -422,9 +419,7 @@ export function SelectMediaButton({
   )
 
   const onPressSelectMedia = useCallback(async () => {
-    const {assets, canceled} = await sheetWrapper(
-      openUnifiedPicker({selectionCountRemaining}),
-    )
+    const {assets, canceled} = await sheetWrapper(openUnifiedPicker())
 
     if (canceled) return
 

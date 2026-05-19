@@ -56,13 +56,13 @@ function reducer(state: State, action: Action): State {
   if (action.type === 'Next' && state.currentStep !== 'Feeds') {
     updatedState = {
       ...state,
-      currentStep: steps[currentIndex + 1],
+      currentStep: steps[currentIndex + 1]!,
       transitionDirection: 'Forward',
     }
   } else if (action.type === 'Back' && state.currentStep !== 'Details') {
     updatedState = {
       ...state,
-      currentStep: steps[currentIndex - 1],
+      currentStep: steps[currentIndex - 1]!,
       transitionDirection: 'Backward',
     }
   }

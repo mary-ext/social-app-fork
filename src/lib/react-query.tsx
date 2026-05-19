@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react'
-import {AppState, type AppStateStatus} from 'react-native'
+import {AppState} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
 import {

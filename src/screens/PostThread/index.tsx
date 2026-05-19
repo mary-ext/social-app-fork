@@ -236,11 +236,6 @@ export function PostThread({uri}: {uri: string}) {
   }
 
   /**
-   * Ditto the above, but for native.
-   */
-  const onContentSizeChangeNativeOnly = undefined as any
-
-  /**
    * Called any time the user changes thread params, such as `view` or `sort`.
    * Prepares the UI for repositioning of the scroll so that the anchor post is
    * always at the top after a params change.
@@ -306,7 +301,7 @@ export function PostThread({uri}: {uri: string}) {
     let childrenCount = 0
 
     for (let i = 0; i < thread.data.items.length; i++) {
-      const item = thread.data.items[i]
+      const item = thread.data.items[i]!
       /*
        * Need to check `depth`, since not found or blocked posts are not
        * `threadPost`s, but still have `depth`.
@@ -332,7 +327,7 @@ export function PostThread({uri}: {uri: string}) {
           if (start >= 0) {
             const limit = Math.max(0, start - maxParentCount)
             for (let pi = start; pi >= limit; pi--) {
-              results.unshift(thread.data.items[pi])
+              results.unshift(thread.data.items[pi]!)
             }
           }
         }

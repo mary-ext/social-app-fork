@@ -7,15 +7,12 @@ import {STATUS_PAGE_URL} from '#/lib/constants'
 import {getDeviceId} from '#/lib/device-id'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
-import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {SendErrorReportDialog} from '#/components/SendErrorReportDialog'
 import * as Toast from '#/components/Toast'
@@ -28,24 +25,23 @@ import {useDevMode} from '#/storage/hooks/dev-mode'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AboutSettings'>
 export function AboutSettingsScreen({}: Props) {
-  const {t: l, i18n} = useLingui()
+  const {t: l} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
-  const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
+  const [] = useDemoMode()
   const sendErrorReportControl = Prompt.usePromptControl()
 
-  const {mutate: onClearImageCache, isPending: isClearingImageCache} =
-    useMutation({
-      mutationFn: async () => {
-        const freeSpaceBefore = await FileSystem.getFreeDiskStorageAsync()
-        await Image.clearDiskCache()
-        const freeSpaceAfter = await FileSystem.getFreeDiskStorageAsync()
-        const spaceDiff = freeSpaceBefore - freeSpaceAfter
-        return spaceDiff * -1
-      },
-      onSuccess: sizeDiffBytes => {
-        Toast.show(l`Image cache cleared`)
-      },
-    })
+  useMutation({
+    mutationFn: async () => {
+      const freeSpaceBefore = await FileSystem.getFreeDiskStorageAsync()
+      await Image.clearDiskCache()
+      const freeSpaceAfter = await FileSystem.getFreeDiskStorageAsync()
+      const spaceDiff = freeSpaceBefore - freeSpaceAfter
+      return spaceDiff * -1
+    },
+    onSuccess: () => {
+      Toast.show(l`Image cache cleared`)
+    },
+  })
 
   return (
     <Layout.Screen>

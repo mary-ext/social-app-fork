@@ -140,7 +140,7 @@ export function useFeedPreviews(
     enabled,
     queryKey: RQKEY(uris),
     queryFn: async ({pageParam}) => {
-      const feed = feeds[pageParam]
+      const feed = feeds[pageParam]!
       const api = new CustomFeedAPI({
         agent,
         feedParams: {feed: feed.uri},
@@ -189,7 +189,7 @@ export function useFeedPreviews(
           })
         } else if (data) {
           for (let pageIndex = 0; pageIndex < data.pages.length; pageIndex++) {
-            const page = data.pages[pageIndex]
+            const page = data.pages[pageIndex]!
 
             const cachedPage = processedPageCache.current.get(page)
             if (cachedPage) {
@@ -234,7 +234,7 @@ export function useFeedPreviews(
                       uri: subItem.post.uri,
                       post: subItem.post,
                       record: subItem.record,
-                      moderation: moderations[i],
+                      moderation: moderations[i]!,
                       parentAuthor: subItem.parentAuthor,
                       isParentBlocked: subItem.isParentBlocked,
                       isParentNotFound: subItem.isParentNotFound,
@@ -247,7 +247,7 @@ export function useFeedPreviews(
                 const last = slice.items.length - 1
                 slices.push({
                   type: 'preview:sliceItem',
-                  key: slice.items[0]._reactKey,
+                  key: slice.items[0]!._reactKey,
                   slice: slice,
                   indexInSlice: 0,
                   feed: page.feed,
@@ -257,22 +257,22 @@ export function useFeedPreviews(
                 slices.push({
                   type: 'preview:sliceViewFullThread',
                   key: slice._reactKey + '-viewFullThread',
-                  uri: slice.items[0].uri,
+                  uri: slice.items[0]!.uri,
                 })
                 slices.push({
                   type: 'preview:sliceItem',
-                  key: slice.items[beforeLast]._reactKey,
+                  key: slice.items[beforeLast]!._reactKey,
                   slice: slice,
                   indexInSlice: beforeLast,
                   feed: page.feed,
                   showReplyTo:
-                    slice.items[beforeLast].parentAuthor?.did !==
-                    slice.items[beforeLast].post.author.did,
+                    slice.items[beforeLast]!.parentAuthor?.did !==
+                    slice.items[beforeLast]!.post.author.did,
                   hideTopBorder: false,
                 })
                 slices.push({
                   type: 'preview:sliceItem',
-                  key: slice.items[last]._reactKey,
+                  key: slice.items[last]!._reactKey,
                   slice: slice,
                   indexInSlice: last,
                   feed: page.feed,
@@ -281,9 +281,10 @@ export function useFeedPreviews(
                 })
               } else {
                 for (let i = 0; i < slice.items.length; i++) {
+                  const sliceItem = slice.items[i]!
                   slices.push({
                     type: 'preview:sliceItem',
-                    key: slice.items[i]._reactKey,
+                    key: sliceItem._reactKey,
                     slice: slice,
                     indexInSlice: i,
                     feed: page.feed,

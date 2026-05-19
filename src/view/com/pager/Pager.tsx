@@ -40,7 +40,6 @@ export function Pager({
   initialPage = 0,
   renderTabBar,
   onPageSelected,
-  onPageScrollStateChanged,
 }: React.PropsWithChildren<Props>) {
   const [selectedPage, setSelectedPage] = useState(initialPage)
   const scrollYs = useRef<Array<number | null>>([])

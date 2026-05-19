@@ -115,7 +115,7 @@ function FeedgenErrorMessage({
     [l, knownError],
   )
   const [__, uri] = feedDesc.split('|')
-  const [ownerDid] = safeParseFeedgenUri(uri)
+  const [ownerDid] = safeParseFeedgenUri(uri!)
   const removePromptControl = Prompt.usePromptControl()
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 

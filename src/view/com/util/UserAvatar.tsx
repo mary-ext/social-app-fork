@@ -18,8 +18,7 @@ import {
   useCameraPermission,
   usePhotoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
+import {openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {convertCdnPreset} from '#/lib/media/util'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -38,10 +37,7 @@ import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {
-  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon,
-  Camera_Stroke2_Corner0_Rounded as CameraIcon,
-} from '#/components/icons/Camera'
+import {Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon} from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
@@ -338,7 +334,7 @@ let EditableUserAvatar = ({
 }: EditableUserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
   const editImageDialogControl = useDialogControl()
@@ -361,20 +357,6 @@ let EditableUserAvatar = ({
       borderRadius: Math.floor(size / 2),
     }
   }, [circular, size])
-
-  const onOpenCamera = useCallback(async () => {
-    if (!(await requestCameraAccessIfNeeded())) {
-      return
-    }
-
-    onSelectNewAvatar(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [1, 1],
-        }),
-      ),
-    )
-  }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
   const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {

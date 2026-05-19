@@ -72,7 +72,7 @@ export function SuggestedAccountsTabBar({
       <InterestTabs
         interests={hideDefaultTab ? interests : ['all', ...interests]}
         selectedInterest={
-          selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+          selectedInterest || (hideDefaultTab ? interests[0]! : 'all')
         }
         onSelectTab={tab => {
           onSelectInterest(tab === 'all' ? null : tab)

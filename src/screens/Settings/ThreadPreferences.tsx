@@ -51,7 +51,7 @@ export function ThreadPreferencesScreen({}: Props) {
                 label={l`Sort replies by`}
                 type="radio"
                 values={sort ? [sort] : []}
-                onChange={values => setSort(normalizeSort(values[0]))}>
+                onChange={values => setSort(normalizeSort(values[0]!))}>
                 <View style={[a.gap_sm, a.flex_1]}>
                   <Toggle.Item name="top" label={l`Top replies first`}>
                     <Toggle.Radio />

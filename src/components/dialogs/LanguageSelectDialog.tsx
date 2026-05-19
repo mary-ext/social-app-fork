@@ -7,7 +7,7 @@ import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -116,7 +116,9 @@ export function DialogInner({
   // ordering.
   const displayedLanguages = useMemo(() => {
     function mapCode2List(code2List: string[]) {
-      return code2List.map(code2 => LANGUAGES_MAP_CODE2[code2]).filter(Boolean)
+      return code2List
+        .map(code2 => LANGUAGES_MAP_CODE2[code2])
+        .filter((lang): lang is Language => Boolean(lang))
     }
 
     // NOTE(@elijaharita): Get recent language codes and map them to language

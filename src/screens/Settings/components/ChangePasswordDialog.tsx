@@ -26,7 +26,7 @@ export function ChangePasswordDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {height} = useWindowDimensions()
+  useWindowDimensions()
 
   return (
     <Dialog.Outer control={control} nativeOptions={undefined as any}>

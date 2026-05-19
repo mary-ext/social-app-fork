@@ -7,7 +7,6 @@ export function SubtleHover({
   style,
   hover,
   web = true,
-  native = false,
 }: ViewStyleProp & {hover: boolean; web?: boolean; native?: boolean}) {
   const t = useTheme()
 

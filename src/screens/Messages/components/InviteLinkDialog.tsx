@@ -246,8 +246,8 @@ export function InviteLinkDialog({
               size="large"
               disabled={isSaving}
               onPress={() => {
-                const parts = whoCanJoin[0].split(':')
-                const joinRule = parts[0]
+                const parts = whoCanJoin[0]!.split(':')
+                const joinRule = parts[0]!
                 const requireApproval = parts[1] === 'requireApproval'
                 if (joinLink && enabledStatus === 'enabled') {
                   editJoinLink({
@@ -279,12 +279,12 @@ export function InviteLinkDialog({
       const createdAt = joinLink ? new Date(joinLink.createdAt) : null
       const currentOptionName = joinLink
         ? `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`
-        : whoCanJoinOptions[0].name
+        : whoCanJoinOptions[0]!.name
       const currentOption = whoCanJoinOptions.find(
         o => o.name === currentOptionName,
       )
-      const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0].owner
-      const memberValue = currentOption?.member ?? whoCanJoinOptions[0].member
+      const ownerValue = currentOption?.owner ?? whoCanJoinOptions[0]!.owner
+      const memberValue = currentOption?.member ?? whoCanJoinOptions[0]!.member
       header =
         enabledStatus === 'enabled' ? l`Invite link` : l`Invite link disabled`
       content = (

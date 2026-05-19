@@ -13,7 +13,7 @@ export class FollowingFeedAPI implements FeedAPI {
     const res = await this.agent.getTimeline({
       limit: 1,
     })
-    return res.data.feed[0]
+    return res.data.feed[0]!
   }
 
   async fetch({

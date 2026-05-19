@@ -93,7 +93,7 @@ export function Sift<Item extends {key: string}>({
     onHome: inverted ? last : first,
     onEnd: inverted ? first : last,
     onSelect: () => {
-      onSelect?.(data[activeIndexRef.current])
+      onSelect?.(data[activeIndexRef.current]!)
     },
     onDismiss,
   })

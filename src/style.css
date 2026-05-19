@@ -275,7 +275,7 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
   border-color: transparent;
 }
 
-/* #/components/Select/index.web.tsx */
+/* #/components/Select/index.tsx */
 .radix-select-content {
   box-shadow:
     0px 6px 24px -10px rgba(22, 23, 24, 0.25),
@@ -285,7 +285,7 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
 }
 
 /*
- * #/components/Tooltip/index.web.tsx
+ * #/components/Tooltip/index.tsx
  */
 .radix-popover-content {
   animation-duration: 300ms;
@@ -320,7 +320,7 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
 }
 
 /*
- * #/components/Toast/index.web.tsx
+ * #/components/Toast/index.tsx
  */
 @keyframes toastFadeIn {
   from {

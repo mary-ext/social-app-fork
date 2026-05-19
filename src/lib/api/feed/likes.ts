@@ -26,7 +26,7 @@ export class LikesFeedAPI implements FeedAPI {
       ...this.params,
       limit: 1,
     })
-    return res.data.feed[0]
+    return res.data.feed[0]!
   }
 
   async fetch({

@@ -22,7 +22,7 @@ function useWebQueryParams() {
     return navigation.addListener('state', e => {
       try {
         const {state} = e.data
-        const lastRoute = state.routes[state.routes.length - 1]
+        const lastRoute = state.routes[state.routes.length - 1]!
         setParams(lastRoute.params)
       } catch (err) {}
     })

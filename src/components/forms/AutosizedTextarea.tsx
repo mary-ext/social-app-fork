@@ -31,44 +31,43 @@ export function AutosizedTextarea({
 }: AutosizedTextareaProps) {
   const {theme: t, fonts} = useAlf()
   const internalRef = useRef<TextInput>(null)
-  const {style, minInputHeight, maxInputHeight, verticalContentPadding} =
-    useMemo(() => {
-      const normalizedStyles = normalizeTextStyles(
-        [a.text_md, a.leading_snug, t.atoms.text, outerStyle],
-        {
-          fontScale: fonts.scaleMultiplier,
-          fontFamily: fonts.family,
-          flags: {},
-        },
-      )
-      const lineHeight = normalizedStyles.lineHeight || 20
-      const {paddingTop, paddingBottom} = extractPadding(normalizedStyles ?? {})
-      const verticalContentPadding = paddingTop + paddingBottom
-      const minInputHeight = lineHeight * minRows + verticalContentPadding
-      const maxInputHeight = maxRows
-        ? lineHeight * maxRows + verticalContentPadding
-        : Infinity
+  const {style, minInputHeight, maxInputHeight} = useMemo(() => {
+    const normalizedStyles = normalizeTextStyles(
+      [a.text_md, a.leading_snug, t.atoms.text, outerStyle],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+    const lineHeight = normalizedStyles.lineHeight || 20
+    const {paddingTop, paddingBottom} = extractPadding(normalizedStyles ?? {})
+    const verticalContentPadding = paddingTop + paddingBottom
+    const minInputHeight = lineHeight * minRows + verticalContentPadding
+    const maxInputHeight = maxRows
+      ? lineHeight * maxRows + verticalContentPadding
+      : Infinity
 
-      /*
-       * iOS: minHeight/maxHeight works fine natively.
-       * Web + Android: we set an explicit initial height and resize dynamically
-       * (web via DOM measurement, Android via onContentSizeChange state).
-       *
-       * iOS also seems to need 1px headroom to actually expand to the correct
-       * maxHeight
-       */
-      const heightConstraints = {height: minInputHeight}
+    /*
+     * iOS: minHeight/maxHeight works fine natively.
+     * Web + Android: we set an explicit initial height and resize dynamically
+     * (web via DOM measurement, Android via onContentSizeChange state).
+     *
+     * iOS also seems to need 1px headroom to actually expand to the correct
+     * maxHeight
+     */
+    const heightConstraints = {height: minInputHeight}
 
-      return {
-        style: {
-          ...normalizedStyles,
-          ...heightConstraints,
-        },
-        minInputHeight,
-        maxInputHeight,
-        verticalContentPadding,
-      }
-    }, [t, fonts, outerStyle, minRows, maxRows])
+    return {
+      style: {
+        ...normalizedStyles,
+        ...heightConstraints,
+      },
+      minInputHeight,
+      maxInputHeight,
+      verticalContentPadding,
+    }
+  }, [t, fonts, outerStyle, minRows, maxRows])
 
   /*
    * Web handling

@@ -8,9 +8,6 @@ import Animated, {
   FadeIn,
   FadeOut,
   LayoutAnimationConfig,
-  LinearTransition,
-  SlideInRight,
-  SlideOutLeft,
 } from '#/lib/animations/reanimatedCompat'
 import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
 import {atoms as a, useTheme} from '#/alf'
@@ -232,7 +229,7 @@ class DisplayableError extends Error {
 
 function useRandomName() {
   return useState(
-    () => shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
+    () => shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)]!,
   )[0]
 }
 

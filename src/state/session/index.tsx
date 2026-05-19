@@ -305,7 +305,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   // @ts-expect-error window type is not declared, debug only
   // eslint-disable-next-line react-hooks/immutability
-  if (__DEV__) window.agent = state.currentAgentState.agent
+  if (import.meta.env.DEV) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAppAgent
   const currentAgentRef = useRef(agent)

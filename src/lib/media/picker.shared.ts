@@ -44,11 +44,7 @@ export async function openPicker(opts?: ImagePickerOptions) {
     }))
 }
 
-export async function openUnifiedPicker({
-  selectionCountRemaining,
-}: {
-  selectionCountRemaining: number
-}) {
+export async function openUnifiedPicker() {
   return await launchImageLibraryAsync({
     exif: false,
     mediaTypes: ['images', 'videos'],

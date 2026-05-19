@@ -6,7 +6,6 @@ import {
   useState,
 } from 'react'
 import {
-  findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
   useWindowDimensions,
@@ -147,7 +146,7 @@ export function ProfileFeedgens({
   // =
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
+    ({item}: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
         return (
           <EmptyState

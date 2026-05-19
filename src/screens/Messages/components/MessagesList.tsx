@@ -346,7 +346,9 @@ export function MessagesList({
                 if (AppBskyRichtextFacet.isLink(feature)) {
                   if (isBskyPostUrl(feature.uri)) {
                     const url = convertBskyAppUrlIfNeeded(feature.uri)
-                    const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
+                    const [_0, _1, _2, rkey] = url
+                      .split('/')
+                      .filter(Boolean) as [string, string, string, string]
 
                     // this might have a handle instead of a DID
                     // so just compare the rkey - not particularly dangerous
@@ -562,7 +564,7 @@ function ChatScrollComponent({
   inputHeight: SharedValue<number>
 }) {
   const scrollEdgeRef = useScrollEdgeEffectRef()
-  const {bottom: bottomInset} = useSafeAreaInsets()
+  useSafeAreaInsets()
 
   const offset = 0
 

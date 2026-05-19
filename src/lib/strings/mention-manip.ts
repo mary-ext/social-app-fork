@@ -10,13 +10,13 @@ export function getMentionAt(
   let re = /(^|\s)@([a-z0-9.-]*)/gi
   let match
   while ((match = re.exec(text))) {
-    const spaceOffset = match[1].length
+    const spaceOffset = match[1]!.length
     const index = match.index + spaceOffset
     if (
       cursorPos >= index &&
       cursorPos <= index + match[0].length - spaceOffset
     ) {
-      return {value: match[2], index}
+      return {value: match[2]!, index}
     }
   }
   return undefined

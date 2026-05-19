@@ -5,11 +5,9 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import Animated, {
-  Easing,
   FadeIn,
   FadeOut,
   LayoutAnimationConfig,
-  LinearTransition,
 } from '#/lib/animations/reanimatedCompat'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -100,7 +98,7 @@ export function SuggestedFeedsCardPlaceholder() {
 
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
   const {currentAccount} = useSession()
-  const [feedType, feedUriOrDid] = feed.split('|')
+  const [feedType, feedUriOrDid] = feed.split('|') as [string, string]
   if (feedType === 'author') {
     if (currentAccount?.did === feedUriOrDid) {
       return null
@@ -198,7 +196,6 @@ export function ProfileGrid({
 
   const isLoading = isSuggestionsLoading || !moderationOpts
   const isProfileHeaderContext = viewContext === 'profileHeader'
-  const _isFeedContext = viewContext === 'feed'
 
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4

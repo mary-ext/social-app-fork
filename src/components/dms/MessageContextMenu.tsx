@@ -23,8 +23,6 @@ import {usePromptControl} from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import * as Clipboard from '#/shims/clipboard'
 import type * as bsky from '#/types/bsky'
-import {EmojiReactionPicker} from './EmojiReactionPicker'
-import {hasReachedReactionLimit} from './util'
 
 export let MessageContextMenu = ({
   message,
@@ -73,30 +71,6 @@ export let MessageContextMenu = ({
       .then(() => Toast.show(l({message: 'Message deleted', context: 'toast'})))
       .catch(() => Toast.show(l`Failed to delete message`))
   }, [l, convo, message.id])
-
-  const onEmojiSelect = useCallback(
-    (emoji: string) => {
-      if (
-        message.reactions?.find(
-          reaction =>
-            reaction.value === emoji &&
-            reaction.sender.did === currentAccount?.did,
-        )
-      ) {
-        convo
-          .removeReaction(message.id, emoji)
-          .catch(() => Toast.show(l`Failed to remove emoji reaction`))
-      } else {
-        if (hasReachedReactionLimit(message, currentAccount?.did)) return
-        convo.addReaction(message.id, emoji).catch(() =>
-          Toast.show(l`Failed to add emoji reaction`, {
-            type: 'error',
-          }),
-        )
-      }
-    },
-    [l, convo, message, currentAccount?.did],
-  )
 
   const sender = senderProfile
 

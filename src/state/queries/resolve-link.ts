@@ -45,25 +45,20 @@ export function precacheResolveLinkQuery(
 }
 
 export function useResolveGifQuery(gif: Gif) {
-  const agent = useAgent()
   return useQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
-      return await resolveGif(agent, gif)
+      return await resolveGif(gif)
     },
   })
 }
-export function fetchResolveGifQuery(
-  queryClient: QueryClient,
-  agent: BskyAgent,
-  gif: Gif,
-) {
+export function fetchResolveGifQuery(queryClient: QueryClient, gif: Gif) {
   return queryClient.fetchQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
-      return await resolveGif(agent, gif)
+      return await resolveGif(gif)
     },
   })
 }

@@ -17,8 +17,8 @@ export function isAnimatedGif(buffer: ArrayBuffer): {
   let i = 13 // Skip header + logical screen descriptor
 
   // Skip global color table if present
-  if (bytes[10] & 0x80) {
-    const gctSize = 3 * (1 << ((bytes[10] & 0x07) + 1))
+  if (bytes[10]! & 0x80) {
+    const gctSize = 3 * (1 << ((bytes[10]! & 0x07) + 1))
     i += gctSize
   }
 
@@ -34,20 +34,20 @@ export function isAnimatedGif(buffer: ArrayBuffer): {
       // Skip image descriptor fields
       i += 8
       // Skip local color table if present
-      if (bytes[i] & 0x80) {
-        const lctSize = 3 * (1 << ((bytes[i] & 0x07) + 1))
+      if (bytes[i]! & 0x80) {
+        const lctSize = 3 * (1 << ((bytes[i]! & 0x07) + 1))
         i += lctSize + 1
       } else {
         i++
       }
       // Skip image data blocks
       i++ // LZW minimum code size
-      while (bytes[i]) i += bytes[i] + 1
+      while (bytes[i]) i += bytes[i]! + 1
       i++
     } else if (block === 0x21) {
       // Extension
       i++ // Extension type
-      while (bytes[i]) i += bytes[i] + 1
+      while (bytes[i]) i += bytes[i]! + 1
       i++
     } else if (block === 0x3b) {
       // Trailer

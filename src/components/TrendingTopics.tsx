@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {type AtUri} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {makeProfileLink} from '#/lib/routes/links'
 // import {feedUriToHref} from '#/lib/strings/url-helpers'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'

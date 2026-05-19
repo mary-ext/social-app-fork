@@ -146,7 +146,7 @@ function VideoCards({
     return data.pages
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
-      .filter(Boolean)
+      .filter((item): item is NonNullable<typeof item> => Boolean(item))
       .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
       .slice(0, 8)
   }, [data])

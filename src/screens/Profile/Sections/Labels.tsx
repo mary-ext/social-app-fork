@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
-import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {
   type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,

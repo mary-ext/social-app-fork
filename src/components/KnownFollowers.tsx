@@ -188,12 +188,12 @@ function KnownFollowersInner({
               serverCount > 2 ? (
                 <Trans>
                   Followed by{' '}
-                  <Text emoji key={slice[0].profile.did} style={textStyle}>
-                    {slice[0].profile.displayName}
+                  <Text emoji key={slice[0]!.profile.did} style={textStyle}>
+                    {slice[0]!.profile.displayName}
                   </Text>
                   ,{' '}
-                  <Text emoji key={slice[1].profile.did} style={textStyle}>
-                    {slice[1].profile.displayName}
+                  <Text emoji key={slice[1]!.profile.did} style={textStyle}>
+                    {slice[1]!.profile.displayName}
                   </Text>
                   , and{' '}
                   <Plural
@@ -205,12 +205,12 @@ function KnownFollowersInner({
               ) : (
                 <Trans>
                   Followed by{' '}
-                  <Text emoji key={slice[0].profile.did} style={textStyle}>
-                    {slice[0].profile.displayName}
+                  <Text emoji key={slice[0]!.profile.did} style={textStyle}>
+                    {slice[0]!.profile.displayName}
                   </Text>{' '}
                   and{' '}
-                  <Text emoji key={slice[1].profile.did} style={textStyle}>
-                    {slice[1].profile.displayName}
+                  <Text emoji key={slice[1]!.profile.did} style={textStyle}>
+                    {slice[1]!.profile.displayName}
                   </Text>
                 </Trans>
               )
@@ -218,8 +218,8 @@ function KnownFollowersInner({
               // 1-n followers, including blocks
               <Trans>
                 Followed by{' '}
-                <Text emoji key={slice[0].profile.did} style={textStyle}>
-                  {slice[0].profile.displayName}
+                <Text emoji key={slice[0]!.profile.did} style={textStyle}>
+                  {slice[0]!.profile.displayName}
                 </Text>{' '}
                 and{' '}
                 <Plural
@@ -232,8 +232,8 @@ function KnownFollowersInner({
               // only 1
               <Trans>
                 Followed by{' '}
-                <Text emoji key={slice[0].profile.did} style={textStyle}>
-                  {slice[0].profile.displayName}
+                <Text emoji key={slice[0]!.profile.did} style={textStyle}>
+                  {slice[0]!.profile.displayName}
                 </Text>
               </Trans>
             )}

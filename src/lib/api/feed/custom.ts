@@ -40,7 +40,7 @@ export class CustomFeedAPI implements FeedAPI {
       },
       {headers: {'Accept-Language': contentLangs}},
     )
-    return res.data.feed[0]
+    return res.data.feed[0]!
   }
 
   async fetch({

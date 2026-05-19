@@ -180,11 +180,10 @@ export function usePostLikeMutationQueue(
 }
 
 function usePostLikeMutation(
-  feedDescriptor: string | undefined,
-  logContext: PostActionLogContext,
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  _feedDescriptor: string | undefined,
+  _logContext: PostActionLogContext,
+  _post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-  const _postAuthor = post.author
   const agent = useAgent()
   return useMutation<
     {uri: string}, // responds with the uri of the like

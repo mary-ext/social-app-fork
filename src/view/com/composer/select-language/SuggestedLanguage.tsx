@@ -270,7 +270,7 @@ export function SuggestedLanguage({
   } else if (hasSuggestedReplyLanguage) {
     return (
       <ReplyLanguageNudge
-        language={replyToLanguages[0]}
+        language={replyToLanguages[0]!}
         onAccept={onAccept}
         onDecline={onDecline}
       />

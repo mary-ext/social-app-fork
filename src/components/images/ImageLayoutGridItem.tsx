@@ -48,7 +48,7 @@ export function GalleryItem({
   const t = useTheme()
   const {t: l} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
-  const image = images[index]
+  const image = images[index]!
   const hasAlt = !!image.alt
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia

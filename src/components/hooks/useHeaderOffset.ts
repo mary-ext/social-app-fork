@@ -1,12 +1,10 @@
 import {useWindowDimensions} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useBreakpoints} from '#/alf'
 
 export function useHeaderOffset() {
   const {gtMobile} = useBreakpoints()
   const {fontScale} = useWindowDimensions()
-  const insets = useSafeAreaInsets()
   if (gtMobile) {
     return 0
   }

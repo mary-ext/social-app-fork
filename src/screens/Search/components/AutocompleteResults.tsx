@@ -20,7 +20,6 @@ let AutocompleteResults = ({
   isAutocompleteFetching,
   autocompleteData,
   searchText,
-  onSubmit,
   onResultPress,
   onProfileClick,
 }: {

@@ -1,4 +1,3 @@
-import {Share} from 'react-native'
 import {t} from '@lingui/core/macro'
 
 import * as Toast from '#/components/Toast'

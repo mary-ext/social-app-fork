@@ -62,7 +62,6 @@ export const LoginForm = ({
   const [authFactorToken, setAuthFactorToken] = useState('')
   const identifierRef = useRef<TextInput>(null)
   const passwordRef = useRef<TextInput>(null)
-  const hasFocusedOnce = useRef<boolean>(false)
   const {t: l} = useLingui()
   const {login} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -113,7 +112,7 @@ export const LoginForm = ({
         if (!matched) {
           fullIdent = createFullHandle(
             identifier,
-            serviceDescription.availableUserDomains[0],
+            serviceDescription.availableUserDomains[0]!,
           )
         }
       }

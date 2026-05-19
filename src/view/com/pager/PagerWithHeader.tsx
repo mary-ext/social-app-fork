@@ -47,7 +47,6 @@ export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
       initialPage,
       onPageSelected,
       onCurrentPageSelected,
-      allowHeaderOverScroll,
     }: PagerWithHeaderProps,
     ref,
   ) {

@@ -7,8 +7,6 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {Referrer} from '#/shims/bluesky-swiss-army'
 import * as Linking from '#/shims/linking'
 
-const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
-
 // This needs to stay outside of react to persist between account switches
 let previousIntentUrl = ''
 
@@ -65,7 +63,6 @@ export function useComposeIntent() {
   return useCallback(
     ({
       text,
-      imageUrisStr,
       videoUri,
     }: {
       text: string | null
@@ -77,7 +74,11 @@ export function useComposeIntent() {
 
       // Whenever a video URI is present, we don't support adding images right now.
       if (videoUri) {
-        const [uri, width, height] = videoUri.split('|')
+        const [uri, width, height] = videoUri.split('|') as [
+          string,
+          string,
+          string,
+        ]
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
@@ -85,23 +86,6 @@ export function useComposeIntent() {
         })
         return
       }
-
-      const imageUris = imageUrisStr
-        ?.split(',')
-        .filter(part => {
-          // For some security, we're going to filter out any image uri that is external. We don't want someone to
-          // be able to provide some link like "bluesky://intent/compose?imageUris=https://IHaveYourIpNow.com/image.jpeg
-          // and we load that image
-          if (part.includes('https://') || part.includes('http://')) {
-            return false
-          }
-          // We also should just filter out cases that don't have all the info we need
-          return VALID_IMAGE_REGEX.test(part)
-        })
-        .map(part => {
-          const [uri, width, height] = part.split('|')
-          return {uri, width: Number(width), height: Number(height)}
-        })
 
       setTimeout(() => {
         openComposer({

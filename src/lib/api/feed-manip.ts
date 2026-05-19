@@ -92,7 +92,7 @@ export class FeedViewPostsSlice {
       if (post.record.reply) {
         // This reply wasn't properly hydrated by the AppView.
         this.isOrphan = true
-        this.items[0].isParentNotFound = true
+        this.items[0]!.isParentNotFound = true
       }
       return
     }
@@ -264,7 +264,7 @@ export class FeedTuner {
       // To avoid showing the same context (root and/or parent) more than once, we do last resort
       // per-post deduplication. It hides already seen posts as long as this doesn't break the thread.
       for (let i = 0; i < slice.items.length; i++) {
-        const item = slice.items[i]
+        const item = slice.items[i]!
         if (this.seenUris.has(item.post.uri)) {
           if (i === 0) {
             // Omit contiguous seen leading items.
@@ -301,12 +301,12 @@ export class FeedTuner {
   }
 
   static removeReplies(
-    tuner: FeedTuner,
+    _tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
     _dryRun: boolean,
   ) {
     for (let i = 0; i < slices.length; i++) {
-      const slice = slices[i]
+      const slice = slices[i]!
       if (
         slice.isReply &&
         !slice.isRepost &&
@@ -322,12 +322,12 @@ export class FeedTuner {
   }
 
   static removeReposts(
-    tuner: FeedTuner,
+    _tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
     _dryRun: boolean,
   ) {
     for (let i = 0; i < slices.length; i++) {
-      if (slices[i].isRepost) {
+      if (slices[i]!.isRepost) {
         slices.splice(i, 1)
         i--
       }
@@ -336,12 +336,12 @@ export class FeedTuner {
   }
 
   static removeQuotePosts(
-    tuner: FeedTuner,
+    _tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
     _dryRun: boolean,
   ) {
     for (let i = 0; i < slices.length; i++) {
-      if (slices[i].isQuotePost) {
+      if (slices[i]!.isQuotePost) {
         slices.splice(i, 1)
         i--
       }
@@ -350,12 +350,12 @@ export class FeedTuner {
   }
 
   static removeOrphans(
-    tuner: FeedTuner,
+    _tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
     _dryRun: boolean,
   ) {
     for (let i = 0; i < slices.length; i++) {
-      if (slices[i].isOrphan) {
+      if (slices[i]!.isOrphan) {
         slices.splice(i, 1)
         i--
       }
@@ -364,12 +364,12 @@ export class FeedTuner {
   }
 
   static removeMutedThreads(
-    tuner: FeedTuner,
+    _tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
     _dryRun: boolean,
   ) {
     for (let i = 0; i < slices.length; i++) {
-      if (slices[i].isThreadMuted) {
+      if (slices[i]!.isThreadMuted) {
         slices.splice(i, 1)
         i--
       }
@@ -383,8 +383,9 @@ export class FeedTuner {
     dryRun: boolean,
   ): FeedViewPostsSlice[] {
     for (let i = 0; i < slices.length; i++) {
-      const rootUri = slices[i].rootUri
-      if (!slices[i].isRepost && tuner.seenRootUris.has(rootUri)) {
+      const slice = slices[i]!
+      const rootUri = slice.rootUri
+      if (!slice.isRepost && tuner.seenRootUris.has(rootUri)) {
         slices.splice(i, 1)
         i--
       } else {
@@ -398,12 +399,12 @@ export class FeedTuner {
 
   static followedRepliesOnly({userDid}: {userDid: string}) {
     return (
-      tuner: FeedTuner,
+      _tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
       _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
       for (let i = 0; i < slices.length; i++) {
-        const slice = slices[i]
+        const slice = slices[i]!
         if (
           slice.isReply &&
           !slice.isRepost &&
@@ -426,7 +427,7 @@ export class FeedTuner {
    */
   static preferredLangOnly(preferredLangsCode2: string[]) {
     return (
-      tuner: FeedTuner,
+      _tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
       _dryRun: boolean,
     ): FeedViewPostsSlice[] => {

@@ -4,10 +4,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useAutoplayDisabled, useSetAutoplayDisabled} from '#/state/preferences'
 import {
-  useInAppBrowser,
-  useSetInAppBrowser,
-} from '#/state/preferences/in-app-browser'
-import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
@@ -21,7 +17,6 @@ import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
 import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
-import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<
@@ -32,8 +27,6 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const {t: l} = useLingui()
   const autoplayDisabledPref = useAutoplayDisabled()
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
-  const inAppBrowserPref = useInAppBrowser()
-  const setUseInAppBrowser = useSetInAppBrowser()
   const {enabled: trendingEnabled} = useTrendingConfig()
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
   const {setTrendingDisabled, setTrendingVideoDisabled} =

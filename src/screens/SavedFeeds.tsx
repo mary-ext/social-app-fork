@@ -285,13 +285,13 @@ function SavedFeedsA11y({
 
   const onMoveUp = (index: number) => {
     const pinned = [...pinnedFeeds]
-    ;[pinned[index - 1], pinned[index]] = [pinned[index], pinned[index - 1]]
+    ;[pinned[index - 1], pinned[index]] = [pinned[index]!, pinned[index - 1]!]
     setCurrentFeeds([...pinned, ...unpinnedFeeds])
   }
 
   const onMoveDown = (index: number) => {
     const pinned = [...pinnedFeeds]
-    ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
+    ;[pinned[index], pinned[index + 1]] = [pinned[index + 1]!, pinned[index]!]
     setCurrentFeeds([...pinned, ...unpinnedFeeds])
   }
 

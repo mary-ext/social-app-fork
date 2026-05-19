@@ -57,7 +57,7 @@ export async function launchImageLibraryAsync(
     input.accept = getAccept(options)
     input.multiple = Boolean(
       options?.allowsMultipleSelection ||
-        (options?.selectionLimit && options.selectionLimit > 1),
+      (options?.selectionLimit && options.selectionLimit > 1),
     )
     input.style.display = 'none'
 

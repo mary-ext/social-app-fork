@@ -13,7 +13,7 @@ const BSKY_TRUSTED_HOSTS = [
   'bsky\\.social',
   'blueskyweb\\.xyz',
   'blueskyweb\\.zendesk\\.com',
-  ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
+  ...(import.meta.env.DEV ? ['localhost:19006', 'localhost:8100'] : []),
 ]
 
 /*
@@ -302,7 +302,7 @@ export function isPossiblyAUrl(str: string): boolean {
     return true
   }
   const [firstWord] = str.split(/[\s\/]/)
-  return isValidDomain(firstWord)
+  return isValidDomain(firstWord!)
 }
 
 export function splitApexDomain(hostname: string): [string, string] {
@@ -378,7 +378,7 @@ export function definitelyUrl(maybeUrl: string) {
     // Ensure there are at least two labels (e.g., 'example' and 'com')
     if (labels.length < 2) return null
 
-    const tld = labels[labels.length - 1]
+    const tld = labels[labels.length - 1]!
 
     // Check that the TLD is at least two characters long and contains only letters
     if (!/^[a-z]{2,}$/i.test(tld)) return null

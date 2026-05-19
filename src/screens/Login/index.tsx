@@ -3,7 +3,6 @@ import {KeyboardAvoidingView} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import Animated, {
-  FadeIn,
   LayoutAnimationConfig,
 } from '#/lib/animations/reanimatedCompat'
 import {DEFAULT_SERVICE} from '#/lib/constants'
@@ -41,7 +40,6 @@ const OrderedForms = [
 export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const {t: l} = useLingui()
   const failedAttemptCountRef = useRef(0)
-  const _startTimeRef = useRef(Date.now())
 
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()

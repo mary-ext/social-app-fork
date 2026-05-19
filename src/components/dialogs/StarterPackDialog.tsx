@@ -283,7 +283,6 @@ function StarterPackItem({
     if (!starterPack.list?.uri || isPending) return
 
     const listUri = starterPack.list.uri
-    const _starterPackUri = starterPack.uri
 
     if (!isInPack) {
       addMembership({

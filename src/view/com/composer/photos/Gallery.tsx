@@ -1,6 +1,5 @@
 import {memo, useMemo, useState} from 'react'
 import {
-  findNodeHandle,
   type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
@@ -15,7 +14,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
 import {colors} from '#/lib/styles'
-import {type ComposerImage, cropImage} from '#/state/gallery'
+import {type ComposerImage} from '#/state/gallery'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
@@ -149,9 +148,9 @@ const GalleryItem = ({
 
   const altTextControl = Dialog.useDialogControl()
   const editControl = Dialog.useDialogControl()
-  const [altBtnViewTag, setAltBtnViewTag] = useState<number>()
+  const [altBtnViewTag] = useState<number>()
 
-  const altBtnRef = (node: View | null) => {}
+  const altBtnRef = () => {}
 
   const onImageEdit = () => {
     editControl.open()

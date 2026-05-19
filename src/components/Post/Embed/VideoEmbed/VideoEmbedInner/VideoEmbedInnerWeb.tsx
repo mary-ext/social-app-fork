@@ -169,7 +169,7 @@ function useHLS({
       const video = videoRef.current
       if (!video) return
       for (let i = 0; i < video.textTracks.length; i++) {
-        const track = video.textTracks[i]
+        const track = video.textTracks[i]!
         if (track.cues) {
           for (let j = 0; j < track.cues.length; j++) {
             const cue = track.cues[j] as VTTCue
@@ -305,9 +305,9 @@ function useHLS({
     if (
       hls.nextAutoLevel > 0 &&
       lowQualityFragments.length === 1 &&
-      lowQualityFragments[0].start === 0
+      lowQualityFragments[0]!.start === 0
     ) {
-      const lowQualFrag = lowQualityFragments[0]
+      const lowQualFrag = lowQualityFragments[0]!
 
       hls.trigger(Hls.Events.BUFFER_FLUSHING, {
         startOffset: lowQualFrag.start,

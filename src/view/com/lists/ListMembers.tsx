@@ -40,7 +40,6 @@ export function ListMembers({
   renderEmptyState,
   testID,
   headerOffset = 0,
-  desktopFixedHeightOffset,
 }: {
   list: string
   style?: StyleProp<ViewStyle>
@@ -71,9 +70,9 @@ export function ListMembers({
     hasNextPage,
     isFetchingNextPage,
   } = useListMembersQuery(list)
-  const isEmpty = !isFetching && !data?.pages[0].items.length
+  const isEmpty = !isFetching && !data?.pages[0]!.items.length
   const isOwner =
-    currentAccount && data?.pages[0].list.creator.did === currentAccount.did
+    currentAccount && data?.pages[0]!.list.creator.did === currentAccount.did
 
   const items = useMemo(() => {
     let items: any[] = []

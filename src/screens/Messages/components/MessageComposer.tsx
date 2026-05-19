@@ -1,18 +1,11 @@
-import {useRef, useState} from 'react'
+import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import Animated, {
-  Extrapolation,
-  interpolate,
-  runOnJS,
-  useAnimatedStyle,
-} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isBskyPostUrl} from '#/lib/strings/url-helpers'
 import {
   useMessageDraft,
@@ -25,7 +18,6 @@ import {GlassView} from '#/components/GlassView'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} from '#/components/icons/PaperPlane'
 import * as Toast from '#/components/Toast'
-import {ScrollEdgeEffect} from '#/shims/bsky-scroll-edge-effect'
 import {GlassContainer} from '#/shims/glass-effect'
 import {LinearGradient} from '#/shims/linear-gradient'
 import {
@@ -58,12 +50,9 @@ export function MessageComposer({
   useSaveMessageDraft(text)
 
   // Android interactive dismiss sometimes doesn't blur the input
-  const blur = useNonReactiveCallback(() => {
-    composerInternalApiRef.current?.input?.blur()
-  })
 
   useKeyboardHandler({
-    onEnd: evt => {
+    onEnd: () => {
       'worklet'
     },
   })
@@ -94,7 +83,6 @@ export function MessageComposer({
     })
   }
 
-  const isFlushingAutocorrectSuggestion = useRef(false)
   const handleSubmit = () => {
     onSubmit(text)
   }
@@ -239,21 +227,9 @@ function SubmitButton({
 
 // TODO: remove export when MessageInput is deleted
 export function ComposerContainer({children}: {children: React.ReactNode}) {
-  const {bottom: bottomInset} = useSafeAreaInsets()
-  const {progress} = useReanimatedKeyboardAnimation()
+  useSafeAreaInsets()
+  useReanimatedKeyboardAnimation()
   const t = useTheme()
-
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    paddingHorizontal: interpolate(
-      progress.get(),
-      [0, 1],
-      [bottomInset, tokens.space.md],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    ),
-  }))
 
   return (
     <>

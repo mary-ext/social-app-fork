@@ -296,7 +296,7 @@ export function Gallery({
               />
             )
           }}
-          onScroll={e => {
+          onScroll={() => {
             return
           }}
           style={[

@@ -53,14 +53,12 @@ export function useGutters([top, right, bottom, left]: Gutter[]) {
     left = right
   }
   return useMemo(() => {
+    const breakpoint = activeBreakpoint || 'default'
     return {
-      paddingTop: top === 0 ? 0 : gutters[top][activeBreakpoint || 'default'],
-      paddingRight:
-        right === 0 ? 0 : gutters[right][activeBreakpoint || 'default'],
-      paddingBottom:
-        bottom === 0 ? 0 : gutters[bottom][activeBreakpoint || 'default'],
-      paddingLeft:
-        left === 0 ? 0 : gutters[left][activeBreakpoint || 'default'],
+      paddingTop: top === 0 ? 0 : gutters[top!][breakpoint],
+      paddingRight: right === 0 ? 0 : gutters[right!][breakpoint],
+      paddingBottom: bottom === 0 ? 0 : gutters[bottom!][breakpoint],
+      paddingLeft: left === 0 ? 0 : gutters[left!][breakpoint],
     }
   }, [activeBreakpoint, top, right, bottom, left])
 }

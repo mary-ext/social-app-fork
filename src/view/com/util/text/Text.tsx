@@ -46,7 +46,7 @@ function Text_DEPRECATED({
   const theme = useTheme()
   const {fonts} = useAlf()
 
-  if (__DEV__) {
+  if (import.meta.env.DEV) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-base-to-string

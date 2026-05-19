@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Keyboard, Pressable, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -8,15 +8,11 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
-import {openCamera, openUnifiedPicker} from '#/lib/media/picker'
-import {logger} from '#/logger'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
@@ -27,7 +23,7 @@ export function ComposerPrompt() {
   const {openComposer} = useOpenComposer()
   const profile = useCurrentAccountProfile()
   const [hover, setHover] = useState(false)
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
+  useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
@@ -45,35 +41,6 @@ export function ComposerPrompt() {
     requestVideoAccessIfNeeded,
     sheetWrapper,
   ])
-
-  const onPressCamera = useCallback(async () => {
-    try {
-      if (!(await requestCameraAccessIfNeeded())) {
-        return
-      }
-
-      const image = await openCamera({
-        mediaTypes: 'images',
-      })
-
-      const imageUris = [
-        {
-          uri: image.path,
-          width: image.width,
-          height: image.height,
-        },
-      ]
-
-      openComposer({
-        imageUris: undefined,
-        logContext: 'Fab',
-      })
-    } catch (err: any) {
-      if (!String(err).toLowerCase().includes('cancel')) {
-        logger.error('Error opening camera', {error: err})
-      }
-    }
-  }, [openComposer, requestCameraAccessIfNeeded])
 
   if (!profile) {
     return null

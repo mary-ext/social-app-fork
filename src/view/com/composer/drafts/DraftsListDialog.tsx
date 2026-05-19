@@ -62,8 +62,6 @@ export function DraftsListDialog({
   const handleDeleteDraft = useCallback(
     (draftSummary: DraftSummary) => {
       // Fire draft:delete metric
-      const _draftAgeMs =
-        Date.now() - new Date(draftSummary.createdAt).getTime()
       deleteDraft({draftId: draftSummary.id, draft: draftSummary.draft})
     },
     [deleteDraft],

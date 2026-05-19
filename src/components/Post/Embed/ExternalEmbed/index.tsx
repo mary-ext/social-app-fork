@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react/macro'
 
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {useHaptics} from '#/lib/haptics'
-import {shareUrl} from '#/lib/sharing'
 import {
   exemptExternalEmbedSources,
   parseEmbedPlayerFromUrl,

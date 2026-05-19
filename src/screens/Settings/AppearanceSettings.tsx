@@ -2,10 +2,7 @@ import {useCallback} from 'react'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import Animated, {
-  FadeInUp,
-  FadeOutUp,
   LayoutAnimationConfig,
-  LinearTransition,
 } from '#/lib/animations/reanimatedCompat'
 import {
   type CommonNavigatorParams,

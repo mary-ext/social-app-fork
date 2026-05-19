@@ -19,7 +19,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const langPrefs = useLanguagePrefs()
   const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
   const trending = useMemo<TrendingContext>(() => {
-    if (__DEV__) {
+    if (import.meta.env.DEV) {
       return {enabled: true}
     }
 

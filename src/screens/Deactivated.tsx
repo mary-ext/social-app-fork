@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -28,7 +27,6 @@ const COL_WIDTH = 400
 export function Deactivated() {
   const {t: l} = useLingui()
   const t = useTheme()
-  const insets = useSafeAreaInsets()
   const {currentAccount, accounts} = useSession()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()

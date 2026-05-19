@@ -1,24 +1,16 @@
 import {View} from 'react-native'
 import {
-  type $Typed,
   type AppBskyGraphDefs,
-  type AppBskyGraphListitem,
   type AppBskyGraphStarterpack,
   AtUri,
-  type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
-import {TID} from '@atproto/common-web'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
 
-import {until} from '#/lib/async/until'
-import {wait} from '#/lib/async/wait'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {getAllListMembers} from '#/state/queries/list-members'
-import {useAgent, useSession} from '#/state/session'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -37,7 +29,6 @@ export function CreateListFromStarterPackDialog({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const queryClient = useQueryClient()
@@ -66,51 +57,6 @@ export function CreateListFromStarterPackDialog({
 
     try {
       // Fetch all members and add them, with minimum 3s duration for UX
-      const _listItems = await wait(
-        3000,
-        (async () => {
-          const items = await getAllListMembers(agent, starterPack.list!.uri)
-
-          if (items.length > 0) {
-            const listitemWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] =
-              items.map(item => {
-                const listitemRecord: $Typed<AppBskyGraphListitem.Record> = {
-                  $type: 'app.bsky.graph.listitem',
-                  subject: item.subject.did,
-                  list: listUri,
-                  createdAt: new Date().toISOString(),
-                }
-                return {
-                  $type: 'com.atproto.repo.applyWrites#create',
-                  collection: 'app.bsky.graph.listitem',
-                  rkey: TID.nextStr(),
-                  value: listitemRecord,
-                }
-              })
-
-            const chunks = chunk(listitemWrites, 50)
-            for (const c of chunks) {
-              await agent.com.atproto.repo.applyWrites({
-                repo: currentAccount.did,
-                writes: c,
-              })
-            }
-
-            await until(
-              5,
-              1e3,
-              (res: {data: {items: unknown[]}}) => res.data.items.length > 0,
-              () =>
-                agent.app.bsky.graph.getList({
-                  list: listUri,
-                  limit: 1,
-                }),
-            )
-          }
-
-          return items
-        })(),
-      )
 
       queryClient.invalidateQueries({queryKey: ['list-members', listUri]})
     } catch (e) {

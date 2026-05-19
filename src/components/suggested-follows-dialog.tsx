@@ -229,9 +229,6 @@ function DialogInner() {
         if (item.type === 'profile') {
           if (!seenProfilesRef.current.has(item.profile.did)) {
             seenProfilesRef.current.add(item.profile.did)
-            const _position = itemsRef.current.findIndex(
-              i => i.type === 'profile' && i.profile.did === item.profile.did,
-            )
           }
         }
       }

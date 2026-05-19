@@ -112,11 +112,11 @@ function HomeScreenReady({
     [pinnedFeedInfos],
   )
   const maybeRawSelectedFeed: FeedDescriptor | undefined =
-    useSelectedFeed() ?? allFeeds[0]
+    useSelectedFeed() ?? allFeeds[0]!
   const setSelectedFeed = useSetSelectedFeed()
   const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
-  const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
+  const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]!
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
 
@@ -160,7 +160,7 @@ function HomeScreenReady({
       // Mutate the ref before setting state to avoid the imperative syncing effect
       // above from starting a loop on Android when swiping back and forth.
       lastPagerReportedIndexRef.current = index
-      setSelectedFeed(maybeFeed)
+      setSelectedFeed(maybeFeed!)
 
       if (maybeFeed) {
       }
@@ -244,7 +244,7 @@ function HomeScreenReady({
           isPageAdjacent={false}
           feed="demo"
           renderEmptyState={renderCustomFeedEmptyState}
-          feedInfo={pinnedFeedInfos[0]}
+          feedInfo={pinnedFeedInfos[0]!}
         />
         <FeedPage
           testID="customFeedPage"
@@ -252,7 +252,7 @@ function HomeScreenReady({
           isPageAdjacent={false}
           feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
           renderEmptyState={renderCustomFeedEmptyState}
-          feedInfo={pinnedFeedInfos[0]}
+          feedInfo={pinnedFeedInfos[0]!}
         />
       </Pager>
     )
@@ -315,7 +315,7 @@ function HomeScreenReady({
         isPageAdjacent={false}
         feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
         renderEmptyState={renderCustomFeedEmptyState}
-        feedInfo={pinnedFeedInfos[0]}
+        feedInfo={pinnedFeedInfos[0]!}
       />
     </Pager>
   )

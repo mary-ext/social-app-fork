@@ -1,5 +1,5 @@
 import {memo} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {type $Typed, type AppBskyEmbedRecord} from '@atproto/api'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -22,7 +22,6 @@ let MessageItemEmbed = ({
   squaredBottomCorner: boolean
 }): React.ReactNode => {
   const t = useTheme()
-  const screen = useWindowDimensions()
 
   return (
     <MessageContextProvider>

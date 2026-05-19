@@ -13,7 +13,7 @@ let cachedIsDevMode: boolean | undefined
  * to reload the app so it can pull a fresh value from storage.
  */
 export function isDevMode() {
-  if (__DEV__) return true
+  if (import.meta.env.DEV) return true
   if (cachedIsDevMode === undefined) {
     cachedIsDevMode = device.get(['devMode']) ?? false
   }

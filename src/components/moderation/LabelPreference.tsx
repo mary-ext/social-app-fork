@@ -126,13 +126,10 @@ export function GlobalLabelPreference({
   const pref = variables?.visibility ?? savedPref ?? 'warn'
 
   const allLabelStrings = useGlobalLabelStrings()
-  const labelStrings =
-    labelDefinition.identifier in allLabelStrings
-      ? allLabelStrings[labelDefinition.identifier]
-      : {
-          name: labelDefinition.identifier,
-          description: `Labeled "${labelDefinition.identifier}"`,
-        }
+  const labelStrings = allLabelStrings[labelDefinition.identifier] ?? {
+    name: labelDefinition.identifier,
+    description: `Labeled "${labelDefinition.identifier}"`,
+  }
 
   const labelOptions = {
     hide: l`Hide`,

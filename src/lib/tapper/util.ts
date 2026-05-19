@@ -16,7 +16,7 @@ const BOUNDARY_PREFIX = '(^|\\s|\\()'
 // `eric@blueskyweb.xyz` should not synthesize a mention trigger.
 function isBoundaryBefore(text: string, i: number) {
   if (i === 0) return true
-  const prev = text[i - 1]
+  const prev = text[i - 1]!
   return prev === '(' || WHITESPACE.test(prev)
 }
 let nextNodeId = 0
@@ -128,7 +128,7 @@ export function parseNodesFromText(
   // splice a 'trigger' node out of the containing text node.
   if (cursor != null && triggers) {
     for (let i = cursor - 1; i >= 0; i--) {
-      const ch = text[i]
+      const ch = text[i]!
       if (WHITESPACE.test(ch)) break
       const facetType = triggers.get(ch)
       if (facetType && isBoundaryBefore(text, i)) {
@@ -138,7 +138,7 @@ export function parseNodesFromText(
           n => n.type === 'text' && n.start <= i && n.end > i,
         )
         if (textNodeIdx !== -1) {
-          const node = nodes[textNodeIdx]
+          const node = nodes[textNodeIdx]!
           const spliced: TapperNode[] = []
           if (node.start < i) {
             const raw = text.slice(node.start, i)
@@ -280,7 +280,7 @@ export function detectActiveFacet(
   )
   if (!inCommitted) {
     for (let i = cursor - 1; i >= 0; i--) {
-      const ch = text[i]
+      const ch = text[i]!
       // Stop at whitespace — triggers don't span across words
       if (WHITESPACE.test(ch)) break
       const type = triggers.get(ch)

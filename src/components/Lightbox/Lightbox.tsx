@@ -177,7 +177,7 @@ function LightboxGallery({
     {animationDelay: '0.2s', animationFillMode: 'both'},
   ]
 
-  const img = imgs[index]
+  const img = imgs[index]!
 
   return (
     <View style={[a.absolute, a.inset_0]}>

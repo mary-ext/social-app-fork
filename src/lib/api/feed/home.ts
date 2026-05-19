@@ -93,7 +93,7 @@ export class HomeFeedAPI implements FeedAPI {
       }
     }
 
-    if (this.usingDiscover && !__DEV__) {
+    if (this.usingDiscover && !import.meta.env.DEV) {
       const res = await this.discover.fetch({cursor, limit})
       returnCursor = res.cursor
       posts = posts.concat(res.feed)

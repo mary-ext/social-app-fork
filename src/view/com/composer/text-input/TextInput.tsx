@@ -310,7 +310,7 @@ function handleTransferItems(
   onError: (err: string) => void,
 ) {
   for (let index = 0; index < items.length; index++) {
-    const item = items[index]
+    const item = items[index]!
     const type = item.type
 
     if (type === 'text/plain') {

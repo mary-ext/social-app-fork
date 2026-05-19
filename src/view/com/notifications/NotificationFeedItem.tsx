@@ -168,7 +168,7 @@ let NotificationFeedItem = ({
   }, [item, moderationOpts])
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
-  const firstAuthor = authors[0]
+  const firstAuthor = authors[0]!
   const firstAuthorName = sanitizeDisplayName(
     firstAuthor.profile.displayName || firstAuthor.profile.handle,
   )
@@ -574,7 +574,7 @@ let NotificationFeedItem = ({
               {
                 name: 'viewProfile',
                 label: l`View ${
-                  authors[0].profile.displayName || authors[0].profile.handle
+                  authors[0]!.profile.displayName || authors[0]!.profile.handle
                 }'s profile`,
               },
             ]
@@ -903,11 +903,11 @@ function CondensedAuthorsList({
       <View style={[a.flex_row, a.align_center]}>
         <PreviewableUserAvatar
           size={35}
-          profile={authors[0].profile}
-          moderation={authors[0].moderation.ui('avatar')}
-          type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
+          profile={authors[0]!.profile}
+          moderation={authors[0]!.moderation.ui('avatar')}
+          type={authors[0]!.profile.associated?.labeler ? 'labeler' : 'user'}
         />
-        {showDmButton ? <SayHelloBtn profile={authors[0].profile} /> : null}
+        {showDmButton ? <SayHelloBtn profile={authors[0]!.profile} /> : null}
       </View>
     )
   }

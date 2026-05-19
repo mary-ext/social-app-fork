@@ -31,7 +31,6 @@ export function AuxiliaryView({}: AuxiliaryViewProps) {
 
 export function Outer({
   children,
-  align,
   label,
   style,
 }: {

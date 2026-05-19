@@ -244,7 +244,7 @@ export function usePostFeedQuery(
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.
-        let reusedPages = []
+        let reusedPages: FeedPage[] = []
         if (lastRun.current) {
           const {
             data: lastData,
@@ -264,9 +264,9 @@ export function usePostFeedQuery(
           if (canReuse) {
             for (let i = 0; i < data.pages.length; i++) {
               if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-                reusedPages.push(lastResult.pages[i])
+                reusedPages.push(lastResult.pages[i]!)
                 // Keep the tuner in sync so that the end result is deterministic.
-                tuner.tune(lastData.pages[i].feed)
+                tuner.tune(lastData.pages[i]!.feed)
                 continue
               }
               // Stop as soon as pages stop matching up.
@@ -294,10 +294,10 @@ export function usePostFeedQuery(
                   // apply moderation filter
                   for (let i = 0; i < slice.items.length; i++) {
                     const ignoreFilter =
-                      slice.items[i].post.author.did === ignoreFilterFor
+                      slice.items[i]!.post.author.did === ignoreFilterFor
                     if (ignoreFilter) {
                       // remove mutes to avoid confused UIs
-                      moderations[i].causes = moderations[i].causes.filter(
+                      moderations[i]!.causes = moderations[i]!.causes.filter(
                         cause => cause.type !== 'muted',
                       )
                     }
@@ -340,7 +340,7 @@ export function usePostFeedQuery(
                         uri: item.post.uri,
                         post: item.post,
                         record: item.record,
-                        moderation: moderations[i],
+                        moderation: moderations[i]!,
                         parentAuthor: item.parentAuthor,
                         isParentBlocked: item.isParentBlocked,
                         isParentNotFound: item.isParentNotFound,
@@ -350,7 +350,7 @@ export function usePostFeedQuery(
                   }
                   return feedPostSlice
                 })
-                .filter(n => !!n),
+                .filter((n): n is FeedPostSlice => !!n),
             })),
           ],
         }
@@ -469,23 +469,23 @@ function createApi({
       }
     }
   } else if (feedDesc.startsWith('author')) {
-    const [__, actor, filter] = feedDesc.split('|')
+    const [__, actor, filter] = feedDesc.split('|') as [string, string, string]
     return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
-    const [__, actor] = feedDesc.split('|')
+    const [__, actor] = feedDesc.split('|') as [string, string]
     return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
-    const [__, feed] = feedDesc.split('|')
+    const [__, feed] = feedDesc.split('|') as [string, string]
     return new CustomFeedAPI({
       agent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
-    const [__, list] = feedDesc.split('|')
+    const [__, list] = feedDesc.split('|') as [string, string]
     return new ListFeedAPI({agent, feedParams: {list}})
   } else if (feedDesc.startsWith('posts')) {
-    const [__, uriList] = feedDesc.split('|')
+    const [__, uriList] = feedDesc.split('|') as [string, string]
     return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})

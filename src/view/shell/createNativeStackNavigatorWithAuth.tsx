@@ -109,8 +109,8 @@ function NativeStackNavigator({
   // Web LRU: tracks route keys in most-recently-focused order
   const lruKeysRef = useRef<string[]>([])
   const {hasSession} = useSession()
-  const activeRoute = state.routes[state.index]
-  const activeDescriptor = descriptors[activeRoute.key]
+  const activeRoute = state.routes[state.index]!
+  const activeDescriptor = descriptors[activeRoute.key]!
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -162,10 +162,10 @@ function NativeStackNavigator({
   finalDescriptors = {} as typeof descriptors
   for (const key in descriptors) {
     if (mountSet.has(key)) {
-      finalDescriptors[key] = descriptors[key]
+      finalDescriptors[key] = descriptors[key]!
     } else {
       finalDescriptors[key] = {
-        ...descriptors[key],
+        ...descriptors[key]!,
         render: () => <View />,
       }
     }

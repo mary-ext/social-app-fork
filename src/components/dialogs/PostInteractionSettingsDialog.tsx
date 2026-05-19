@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {LayoutAnimation, Text as NestedText, View} from 'react-native'
+import {Text as NestedText, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPostgate,

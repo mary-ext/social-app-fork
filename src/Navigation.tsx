@@ -47,9 +47,9 @@ const AccountSettingsScreen = lazy(() =>
   })),
 )
 const ActivityNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/ActivityNotificationSettings'
-  ).then(m => ({default: m.ActivityNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/ActivityNotificationSettings').then(
+    m => ({default: m.ActivityNotificationSettingsScreen}),
+  ),
 )
 const ActivityPrivacySettingsScreen = lazy(() =>
   import('#/screens/Settings/ActivityPrivacySettings').then(m => ({
@@ -127,14 +127,14 @@ const LegacyNotificationSettingsScreen = lazy(() =>
   })),
 )
 const LikeNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/LikeNotificationSettings'
-  ).then(m => ({default: m.LikeNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/LikeNotificationSettings').then(
+    m => ({default: m.LikeNotificationSettingsScreen}),
+  ),
 )
 const LikesOnRepostsNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
-  ).then(m => ({default: m.LikesOnRepostsNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings').then(
+    m => ({default: m.LikesOnRepostsNotificationSettingsScreen}),
+  ),
 )
 const ListsScreen = lazy(() =>
   import('#/view/screens/Lists').then(m => ({default: m.ListsScreen})),
@@ -143,9 +143,9 @@ const LogScreen = lazy(() =>
   import('#/screens/Log').then(m => ({default: m.LogScreen})),
 )
 const MentionNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/MentionNotificationSettings'
-  ).then(m => ({default: m.MentionNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/MentionNotificationSettings').then(
+    m => ({default: m.MentionNotificationSettingsScreen}),
+  ),
 )
 const MessagesConversationScreen = lazy(() =>
   import('#/screens/Messages/Conversation').then(m => ({
@@ -173,14 +173,14 @@ const MessagesSettingsScreen = lazy(() =>
   })),
 )
 const MessagesSplitViewLayout = lazy(() =>
-  import(
-    '#/screens/Messages/components/splitView/MessagesSplitViewLayout'
-  ).then(m => ({default: m.MessagesSplitViewLayout})),
+  import('#/screens/Messages/components/splitView/MessagesSplitViewLayout').then(
+    m => ({default: m.MessagesSplitViewLayout}),
+  ),
 )
 const MiscellaneousNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
-  ).then(m => ({default: m.MiscellaneousNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings').then(
+    m => ({default: m.MiscellaneousNotificationSettingsScreen}),
+  ),
 )
 const ModerationBlockedAccounts = lazy(() =>
   import('#/view/screens/ModerationBlockedAccounts').then(m => ({
@@ -211,9 +211,9 @@ const ModerationVerificationSettings = lazy(() =>
   })),
 )
 const NewFollowerNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
-  ).then(m => ({default: m.NewFollowerNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings').then(
+    m => ({default: m.NewFollowerNotificationSettingsScreen}),
+  ),
 )
 const NotFoundScreen = lazy(() =>
   import('#/view/screens/NotFound').then(m => ({default: m.NotFoundScreen})),
@@ -305,24 +305,24 @@ const ProfileSearchScreen = lazy(() =>
   })),
 )
 const QuoteNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/QuoteNotificationSettings'
-  ).then(m => ({default: m.QuoteNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/QuoteNotificationSettings').then(
+    m => ({default: m.QuoteNotificationSettingsScreen}),
+  ),
 )
 const ReplyNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/ReplyNotificationSettings'
-  ).then(m => ({default: m.ReplyNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/ReplyNotificationSettings').then(
+    m => ({default: m.ReplyNotificationSettingsScreen}),
+  ),
 )
 const RepostNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/RepostNotificationSettings'
-  ).then(m => ({default: m.RepostNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/RepostNotificationSettings').then(
+    m => ({default: m.RepostNotificationSettingsScreen}),
+  ),
 )
 const RepostsOnRepostsNotificationSettingsScreen = lazy(() =>
-  import(
-    '#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
-  ).then(m => ({default: m.RepostsOnRepostsNotificationSettingsScreen})),
+  import('#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings').then(
+    m => ({default: m.RepostsOnRepostsNotificationSettingsScreen}),
+  ),
 )
 const SavedFeeds = lazy(() =>
   import('#/screens/SavedFeeds').then(m => ({default: m.SavedFeeds})),
@@ -940,9 +940,9 @@ const LINKING = {
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
-    let node = state.routes[state.index || 0]
+    let node = state.routes[state.index || 0]!
     while (node.state?.routes && typeof node.state?.index === 'number') {
-      node = node.state?.routes[node.state?.index]
+      node = node.state.routes[node.state.index]!
     }
 
     // build the path

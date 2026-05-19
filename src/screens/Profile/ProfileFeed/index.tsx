@@ -1,12 +1,10 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {AppBskyFeedDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnimatedRef} from '#/lib/animations/reanimatedCompat'
-import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -172,10 +170,6 @@ export function ProfileFeedScreenInner({
   }, [l])
 
   const isVideoFeed = useMemo(() => {
-    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
-    const feedIsVideoMode =
-      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
-    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return false
   }, [feedInfo])
 

@@ -51,7 +51,7 @@ let ProfileHeaderShell = ({
   const {t: l} = useLingui()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
-  const {top: topInset} = useSafeAreaInsets()
+  useSafeAreaInsets()
   const playHaptic = useHaptics()
   const liveStatusControl = useDialogControl()
 

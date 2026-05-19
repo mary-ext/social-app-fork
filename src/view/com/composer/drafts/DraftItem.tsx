@@ -4,7 +4,6 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import * as device from '#/lib/deviceName'
-import {logger} from '#/view/com/composer/drafts/state/logger'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, select, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -17,7 +16,6 @@ import * as MediaPreview from '#/components/MediaPreview'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as VideoThumbnails from '#/shims/video-thumbnails'
 import {type DraftPostDisplay, type DraftSummary} from './state/schema'
 import * as storage from './state/storage'
 
@@ -33,7 +31,7 @@ export function DraftItem({
   const {t: l} = useLingui()
   const t = useTheme()
   const discardPromptControl = Prompt.usePromptControl()
-  const post = draft.posts[0]
+  const post = draft.posts[0]!
 
   const mediaExistsOnOtherDevice =
     !draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia
@@ -294,7 +292,6 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
 
       if (post.video?.exists && post.video.localPath) {
         try {
-          const url = await storage.loadMediaFromLocal(post.video.localPath)
           // can't generate thumbnails on web
           setVideoThumbnail("yep, there's a video")
         } catch (e) {

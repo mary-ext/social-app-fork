@@ -35,7 +35,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
     ref,
   ) {
     const {gtMobile} = useBreakpoints()
-    const {height} = useWindowDimensions()
+    useWindowDimensions()
     const numColumns = gtMobile ? 3 : 2
 
     const columns = distributeIntoColumns(items, numColumns)
@@ -114,7 +114,7 @@ function distributeIntoColumns(items: Gif[], numColumns: number): Gif[][] {
     for (let i = 1; i < numColumns; i++) {
       if (heights[i] < heights[shortest]) shortest = i
     }
-    columns[shortest].push(item)
+    columns[shortest]!.push(item)
     heights[shortest] += ratio
   }
 

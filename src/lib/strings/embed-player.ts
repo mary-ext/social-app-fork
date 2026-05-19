@@ -455,7 +455,11 @@ export function parseEmbedPlayerFromUrl(
   // link shortened flickr path
   if (urlp.hostname === 'flic.kr') {
     const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-    let [__, type, idBase58Enc] = urlp.pathname.split('/')
+    let [__, type, idBase58Enc] = urlp.pathname.split('/') as [
+      string,
+      string,
+      string,
+    ]
     let id = 0n
     for (const char of idBase58Enc) {
       const nextIdx = b58alph.indexOf(char)
