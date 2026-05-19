@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
+import {LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -8,7 +8,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useReducedMotion} from '#/lib/animations/reanimatedCompat'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -358,12 +357,6 @@ function DevOptions() {
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
   const debugFeedContextEnabled = useDebugFeedContextEnabled()
   const setDebugFeedContextEnabled = useSetDebugFeedContextEnabled()
-  const {
-    tryApplyUpdate,
-    revertToEmbedded,
-    isCurrentlyRunningPullRequestDeployment,
-    currentChannel,
-  } = useApplyPullRequestOTAUpdate()
   const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
   const resetOnboarding = () => {
@@ -379,30 +372,6 @@ function DevOptions() {
 
   const onPressActySubsUnNudge = () => {
     setActyNotifNudged(false)
-  }
-
-  const onPressApplyOta = () => {
-    Alert.prompt(
-      'Apply OTA',
-      'Enter the channel for the OTA you wish to apply.',
-      [
-        {
-          style: 'cancel',
-          text: 'Cancel',
-        },
-        {
-          style: 'default',
-          text: 'Apply',
-          onPress: (channel?: string) => {
-            void tryApplyUpdate(channel ?? '')
-          },
-        },
-      ],
-      'plain-text',
-      isCurrentlyRunningPullRequestDeployment
-        ? currentChannel
-        : 'pull-request-',
-    )
   }
 
   return (

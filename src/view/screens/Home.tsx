@@ -5,7 +5,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {withSpring} from '#/lib/animations/reanimatedCompat'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {
@@ -122,7 +121,6 @@ function HomeScreenReady({
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
-  useOTAUpdates()
 
   useEffect(() => {
     requestNotificationsPermission('Home')

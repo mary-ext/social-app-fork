@@ -263,11 +263,6 @@
       "count": 1
     }
   },
-  "src/components/WelcomeModal.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/components/WhoCanReply.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -997,11 +992,6 @@
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 3
-    }
-  },
-  "src/screens/Settings/Settings.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 2
     }
   },
   "src/screens/Settings/components/AddAppPasswordDialog.tsx": {

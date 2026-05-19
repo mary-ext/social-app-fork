@@ -1,5 +1,4 @@
 import {useCallback, useEffect} from 'react'
-import {Alert} from 'react-native'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
@@ -7,9 +6,6 @@ import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Referrer} from '#/shims/bluesky-swiss-army'
 import * as Linking from '#/shims/linking'
-import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
-
-type IntentType = 'compose' | 'apply-ota'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
@@ -20,7 +16,6 @@ export function useIntentHandler() {
   const incomingUrl = Linking.useLinkingURL()
   const composeIntent = useComposeIntent()
   const {currentAccount} = useSession()
-  const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   useEffect(() => {
     const handleIncomingURL = async (url: string) => {
@@ -37,22 +32,13 @@ export function useIntentHandler() {
 
       if (!isIntent) return
 
-      switch (intentType as IntentType) {
+      switch (intentType) {
         case 'compose': {
           composeIntent({
             text: params.get('text'),
             imageUrisStr: params.get('imageUris'),
             videoUri: params.get('videoUri'),
           })
-          return
-        }
-        case 'apply-ota': {
-          const channel = params.get('channel')
-          if (!channel) {
-            Alert.alert('Error', 'No channel provided to look for.')
-          } else {
-            tryApplyUpdate(channel)
-          }
           return
         }
         default: {
@@ -68,7 +54,7 @@ export function useIntentHandler() {
       handleIncomingURL(incomingUrl)
       previousIntentUrl = incomingUrl
     }
-  }, [incomingUrl, composeIntent, currentAccount, tryApplyUpdate])
+  }, [incomingUrl, composeIntent, currentAccount])
 }
 
 export function useComposeIntent() {
