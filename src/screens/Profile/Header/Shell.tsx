@@ -31,7 +31,6 @@ import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
-import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
@@ -149,7 +148,6 @@ let ProfileHeaderShell = ({
       <View
         pointerEvents={'box-none'}
         style={[a.relative, {height: 150}]}>
-        <StatusBarShadow />
         <GrowableBanner
           testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
           label={

@@ -111,7 +111,6 @@ import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
-import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
@@ -120,7 +119,6 @@ import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
-import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import {Admonition} from '#/components/Admonition'
@@ -174,7 +172,6 @@ import {
 } from './state/video'
 import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
-import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -531,9 +528,8 @@ export const ComposePost = ({
 
   const onClose = useCallback(() => {
     closeComposer()
-    clearThumbnailCache(queryClient)
     revokeAllMediaUrls()
-  }, [closeComposer, queryClient])
+  }, [closeComposer])
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
@@ -1640,13 +1636,7 @@ function ComposerEmbeds({
             entering={undefined as any}
             exiting={undefined as any}>
             {video.asset &&
-              (video.status === 'compressing' ? (
-                <VideoTranscodeProgress
-                  asset={video.asset}
-                  progress={video.progress}
-                  clear={clearVideo}
-                />
-              ) : video.video ? (
+              (video.status !== 'compressing' && video.video ? (
                 <VideoPreview
                   asset={video.asset}
                   video={video.video}
@@ -1910,10 +1900,6 @@ function ComposerFooter({
                 selectedAssetsCount={selectedAssetsCount}
                 onSelectAssets={onSelectAssets}
                 autoOpen={openGallery}
-              />
-              <OpenCameraBtn
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
-                onAdd={onImageAdd}
               />
               <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
               {gtPhone ? (

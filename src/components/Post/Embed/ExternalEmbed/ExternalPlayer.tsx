@@ -29,7 +29,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
-import {KeepAwake} from '#/components/KeepAwake'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {Image} from '#/shims/image'
 
@@ -94,24 +93,21 @@ function Player({
   if (!isPlayerActive) return null
 
   return (
-    <>
-      <EventStopper style={[a.absolute, a.inset_0, {zIndex: 3}]}>
-        <WebView
-          javaScriptEnabled={true}
-          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          mediaPlaybackRequiresUserAction={false}
-          allowsInlineMediaPlayback
-          bounces={false}
-          allowsFullscreenVideo
-          nestedScrollEnabled
-          source={{uri: params.playerUri}}
-          onLoad={onLoad}
-          style={a.bg_transparent}
-          setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-        />
-      </EventStopper>
-      <KeepAwake />
-    </>
+    <EventStopper style={[a.absolute, a.inset_0, {zIndex: 3}]}>
+      <WebView
+        javaScriptEnabled={true}
+        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+        mediaPlaybackRequiresUserAction={false}
+        allowsInlineMediaPlayback
+        bounces={false}
+        allowsFullscreenVideo
+        nestedScrollEnabled
+        source={{uri: params.playerUri}}
+        onLoad={onLoad}
+        style={a.bg_transparent}
+        setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+      />
+    </EventStopper>
   )
 }
 
