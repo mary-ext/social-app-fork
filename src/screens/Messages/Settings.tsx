@@ -12,13 +12,11 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
-import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useBackgroundNotificationPreferences} from '#/shims/background-notification-handler'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 
@@ -35,7 +33,6 @@ export function MessagesSettingsScreenInner({}: Props) {
   const {data: profile} = useProfileQuery({
     did: currentAccount!.did,
   })
-  const {preferences, setPref} = useBackgroundNotificationPreferences()
   const exportCarControl = Dialog.useDialogControl()
 
   const allowMessagesFromOptions: {name: AllowIncoming; label: string}[] = [
@@ -95,13 +92,6 @@ export function MessagesSettingsScreenInner({}: Props) {
       updateDeclaration({allowGroupInvites: key as AllowIncoming})
     },
     [updateDeclaration],
-  )
-
-  const onSelectSoundSetting = useCallback(
-    (selected: boolean) => {
-      setPref('playSoundChat', selected)
-    },
-    [setPref],
   )
 
   return (
@@ -208,8 +198,7 @@ export function MessagesSettingsScreenInner({}: Props) {
           <View style={[a.px_xl]}>
             <Toggle.Item
               label={l`Export chat data`}
-              name="playSoundChat"
-              value={preferences.playSoundChat}
+              name="exportChatData"
               style={[a.flex_row, a.align_center, a.justify_between]}
               onChange={() => {
                 exportCarControl.open()

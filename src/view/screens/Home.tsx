@@ -6,7 +6,6 @@ import {withSpring} from '#/lib/animations/reanimatedCompat'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {
   type HomeTabNavigatorParams,
   type NativeStackScreenProps,
@@ -118,13 +117,8 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
-  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
-
-  useEffect(() => {
-    requestNotificationsPermission('Home')
-  }, [requestNotificationsPermission])
 
   const pagerRef = useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = useRef(selectedIndex)

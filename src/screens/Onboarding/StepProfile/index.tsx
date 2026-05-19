@@ -2,7 +2,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -14,7 +13,6 @@ import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getDataUriSize} from '#/lib/media/util'
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {
@@ -76,7 +74,6 @@ export function StepProfile() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = useState('')
@@ -91,10 +88,6 @@ export function StepProfile() {
   })
 
   const canvasRef = useRef<PlaceholderCanvasRef>(null)
-
-  useEffect(() => {
-    requestNotificationsPermission('StartOnboarding')
-  }, [requestNotificationsPermission])
 
   const sheetWrapper = useSheetWrapper()
   const openPicker = useCallback(

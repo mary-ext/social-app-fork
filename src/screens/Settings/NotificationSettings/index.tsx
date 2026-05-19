@@ -1,10 +1,7 @@
-import {useEffect} from 'react'
-import {Linking, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
 import {Trans,useLingui} from '@lingui/react/macro'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/appState'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
@@ -15,7 +12,6 @@ import {Admonition} from '#/components/Admonition'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
-import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import {
   Heart2_Stroke2_Corner0_Rounded as HeartIcon,
   LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
@@ -28,35 +24,13 @@ import {
 } from '#/components/icons/Repost'
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import * as Layout from '#/components/Layout'
-import * as Notification from '#/shims/notifications'
 import * as SettingsList from '../components/SettingsList'
 import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
-
-const RQKEY = ['notification-permissions']
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
 export function NotificationSettingsScreen({}: Props) {
   const {t: l} = useLingui()
-  const queryClient = useQueryClient()
   const {data: settings, isError} = useNotificationSettingsQuery()
-
-  const {data: permissions, refetch} = useQuery({
-    queryKey: RQKEY,
-    queryFn: async () => {
-      return null
-    },
-  })
-
-  const appState = useAppState()
-  useEffect(() => {
-    if (appState === 'active') {
-      refetch()
-    }
-  }, [appState, refetch])
-
-  const onRequestPermissions = async () => {
-    return
-  }
 
   return (
     <Layout.Screen>
@@ -71,19 +45,6 @@ export function NotificationSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
-          {(permissions as any) && !(permissions as any).granted && (
-            <>
-              <SettingsList.PressableItem
-                label={l`Enable push notifications`}
-                onPress={onRequestPermissions}>
-                <SettingsList.ItemIcon icon={HapticIcon} />
-                <SettingsList.ItemText>
-                  <Trans>Enable push notifications</Trans>
-                </SettingsList.ItemText>
-              </SettingsList.PressableItem>
-              <SettingsList.Divider />
-            </>
-          )}
           {isError && (
             <View style={[a.px_lg, a.pb_md]}>
               <Admonition type="error">

@@ -6,7 +6,6 @@ import {
 } from '@atproto/api'
 import {Trans,useLingui} from '@lingui/react/macro'
 
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -66,7 +65,6 @@ export const LoginForm = ({
   const hasFocusedOnce = useRef<boolean>(false)
   const {t: l} = useLingui()
   const {login} = useSessionApi()
-  const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
@@ -133,7 +131,6 @@ export const LoginForm = ({
       onAttemptSuccess()
       setShowLoggedOut(false)
       setHasCheckedForStarterPack(true)
-      requestNotificationsPermission('Login')
     } catch (e: any) {
       const errMsg = e.toString()
       setIsProcessing(false)

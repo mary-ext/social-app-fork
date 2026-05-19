@@ -623,11 +623,6 @@
       "count": 1
     }
   },
-  "src/lib/notifications/notifications.ts": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 9
-    }
-  },
   "src/lib/react-query.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -732,11 +727,6 @@
   },
   "src/screens/Messages/Inbox.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/screens/Messages/Settings.tsx": {
-    "@typescript-eslint/no-unused-vars": {
       "count": 2
     }
   },
@@ -984,14 +974,6 @@
   "src/screens/Settings/LanguageSettings.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/screens/Settings/NotificationSettings/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
     }
   },
   "src/screens/Settings/components/AddAppPasswordDialog.tsx": {

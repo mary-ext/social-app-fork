@@ -12,7 +12,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
 import {useHaptics} from '#/lib/haptics'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {decrementBadgeCount} from '#/lib/notifications/notifications'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {
   type Shadow,
@@ -381,7 +380,6 @@ function BaseChatItem({
         unstableCacheProfileView(queryClient, member)
       }
       precacheConvoQuery(queryClient, convo.view)
-      void decrementBadgeCount(convo.view.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
         menuControl.open()

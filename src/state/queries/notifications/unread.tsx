@@ -15,7 +15,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
-import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
@@ -127,7 +126,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        resetBadgeCount()
       },
 
       async checkUnread({

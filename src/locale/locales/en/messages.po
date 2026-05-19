@@ -3348,11 +3348,6 @@ msgstr ""
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:77
-#: src/screens/Settings/NotificationSettings/index.tsx:81
-msgid "Enable push notifications"
-msgstr ""
-
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:602
 msgid "Enable quote posts of this post"
 msgstr ""
