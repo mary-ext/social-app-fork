@@ -1,7 +1,16 @@
+import {type ViewStyle} from 'react-native'
 import {type SvgProps} from 'react-native-svg'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {atoms as a, useTheme} from '#/alf'
+
+type WebViewStyle = ViewStyle & {
+  transition?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function ControlButton({
   active,
@@ -28,7 +37,7 @@ export function ControlButton({
       style={[
         a.p_xs,
         a.rounded_full,
-        {transition: 'background-color 0.1s'} as any,
+        webViewStyle({transition: 'background-color 0.1s'}),
       ]}
       hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.2)'}}>
       {active ? (

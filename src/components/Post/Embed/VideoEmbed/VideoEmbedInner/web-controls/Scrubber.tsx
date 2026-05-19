@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {View, type ViewStyle} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {clamp} from '#/lib/numbers'
@@ -7,6 +7,14 @@ import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE} from '#/env'
 import {formatTime} from './utils'
+
+type WebViewStyle = ViewStyle & {
+  transition?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function Scrubber({
   duration,
@@ -177,7 +185,7 @@ export function Scrubber({
             a.overflow_hidden,
             {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
             {height: hovered || scrubberActive ? 6 : 3},
-            {transition: 'height 0.1s ease'} as any,
+            webViewStyle({transition: 'height 0.1s ease'}),
           ]}>
           {duration > 0 && (
             <View

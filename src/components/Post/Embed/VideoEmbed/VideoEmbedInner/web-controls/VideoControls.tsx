@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, View, type ViewStyle} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
@@ -32,6 +32,16 @@ import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
 import {formatTime, useVideoElement} from './utils'
 import {VolumeControl} from './VolumeControl'
+
+type WebViewStyle = Omit<ViewStyle, 'cursor'> & {
+  background?: string
+  cursor?: 'none' | 'pointer'
+  transition?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function Controls({
   videoRef,
@@ -343,7 +353,7 @@ export function Controls({
         accessibilityHint=""
         style={[
           a.flex_1,
-          {cursor: showCursor || !playing ? 'pointer' : 'none'} as any,
+          webViewStyle({cursor: showCursor || !playing ? 'pointer' : 'none'}),
         ]}
         onPress={onPressEmptySpace}
       />
@@ -355,12 +365,12 @@ export function Controls({
           a.flex_shrink_0,
           a.w_full,
           a.px_xs,
-          {
+          webViewStyle({
             background:
               'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
-          } as any,
+          }),
           {opacity: showControls ? 1 : 0},
-          {transition: 'opacity 0.2s ease-in-out'},
+          webViewStyle({transition: 'opacity 0.2s ease-in-out'}),
         ]}>
         {(!volumeHovered || IS_WEB_TOUCH_DEVICE) && (
           <Scrubber
