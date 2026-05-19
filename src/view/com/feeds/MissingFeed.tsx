@@ -117,7 +117,7 @@ function DialogInner({
       label={
         type === 'feed' ? l`Unavailable feed information` : l`Deleted list`
       }
-      style={{maxWidth: 500} as any}>
+      style={{maxWidth: 500}}>
       <View style={[a.gap_sm]}>
         <Text style={[a.font_bold, a.text_2xl]}>
           {type === 'feed' ? (

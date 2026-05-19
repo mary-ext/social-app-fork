@@ -74,7 +74,7 @@ function LinkWarningDialogInner({
 
   return (
     <Dialog.ScrollableInner
-      style={{maxWidth: 450} as any}
+      style={{maxWidth: 450}}
       label={
         potentiallyMisleading
           ? l`Potentially misleading link warning`

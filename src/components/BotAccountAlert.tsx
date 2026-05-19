@@ -30,7 +30,7 @@ export function BotAccountAlert({
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.ScrollableInner
         label={l`Automated account`}
-        style={[{maxWidth: 320} as any]}>
+        style={[{maxWidth: 320}]}>
         <View style={[a.align_center, a.pb_md, a.shadow_sm]}>
           <RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
         </View>

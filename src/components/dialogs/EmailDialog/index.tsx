@@ -27,7 +27,7 @@ export function EmailDialog() {
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Make adjustments to email settings for your account`}
-        style={{maxWidth: 400} as any}>
+        style={{maxWidth: 400}}>
         <Inner control={emailDialogControl} />
         <Dialog.Close />
       </Dialog.ScrollableInner>

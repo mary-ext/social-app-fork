@@ -89,7 +89,7 @@ export function ExportCarDialog({
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title"
-        style={{maxWidth: 500} as any}>
+        style={{maxWidth: 500}}>
         <View style={[a.relative, a.w_full]}>
           <Text
             nativeID="dialog-title"

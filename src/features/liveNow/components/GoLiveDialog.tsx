@@ -94,7 +94,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const hasLink = !!debouncedUrl && !isSourceInvalid
 
   return (
-    <Dialog.ScrollableInner label={l`Go Live`} style={{maxWidth: 420} as any}>
+    <Dialog.ScrollableInner label={l`Go Live`} style={{maxWidth: 420}}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_2xl]}>

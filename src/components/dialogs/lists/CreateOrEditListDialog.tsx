@@ -373,7 +373,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={title}
-      style={[a.overflow_hidden, {maxWidth: 500} as any]}
+      style={[a.overflow_hidden, {maxWidth: 500}]}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
         <Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>

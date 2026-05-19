@@ -110,7 +110,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={l`New user info dialog`}
-      style={{maxWidth: 400} as any}>
+      style={{maxWidth: 400}}>
       <View style={[a.gap_md]}>
         <View style={[a.align_center]}>
           <View

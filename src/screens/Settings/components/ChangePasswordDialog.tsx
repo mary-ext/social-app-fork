@@ -146,7 +146,7 @@ function Inner() {
   return (
     <Dialog.ScrollableInner
       label={l`Change password dialog`}
-      style={{maxWidth: 400} as any}>
+      style={{maxWidth: 400}}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>

@@ -50,7 +50,7 @@ export function EmbedConsentDialog({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`External Media`}
-        style={{maxWidth: 400} as any}>
+        style={{maxWidth: 400}}>
         <View style={a.gap_sm}>
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>External Media</Trans>

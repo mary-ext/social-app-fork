@@ -89,7 +89,7 @@ export function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={l`Appeal livestream suspension`}
-      style={[{maxWidth: 400} as any]}>
+      style={[{maxWidth: 400}]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_md]}>
           <Text

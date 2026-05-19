@@ -83,7 +83,7 @@ export function CreateListFromStarterPackDialog({
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Create list from starter pack`}
-          style={{maxWidth: 400} as any}>
+          style={{maxWidth: 400}}>
           <View style={[a.gap_lg]}>
             <Text style={[a.text_xl, a.font_bold]}>
               <Trans>Create list from starter pack</Trans>
@@ -144,7 +144,7 @@ export function CreateListFromStarterPackDialog({
         <Dialog.Handle />
         <Dialog.ScrollableInner
           label={l`Adding members to list...`}
-          style={{maxWidth: 400} as any}>
+          style={{maxWidth: 400}}>
           <View style={[a.align_center, a.gap_lg, a.py_5xl]}>
             <Loader size="xl" />
             <Text style={[a.text_lg, t.atoms.text_contrast_high]}>

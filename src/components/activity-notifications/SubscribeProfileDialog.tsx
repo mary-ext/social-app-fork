@@ -201,7 +201,7 @@ function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      style={{maxWidth: 400} as any}
+      style={{maxWidth: 400}}
       label={l`Get notified of new posts from ${name}`}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_xs]}>

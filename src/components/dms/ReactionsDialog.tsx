@@ -89,7 +89,7 @@ export function ReactionsDialog({
         label={l`Reactions`}
         contentContainerStyle={[a.pt_0]}
         header={header}
-        style={[{maxWidth: 400} as any]}>
+        style={[{maxWidth: 400}]}>
         {filteredReactions
           ?.sort((a, b) => {
             if (a.sender.did === currentAccount?.did) return -1

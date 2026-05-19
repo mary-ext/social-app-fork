@@ -144,7 +144,7 @@ export function LanguageSettingsScreen({}: Props) {
                 </Admonition>
               )}
 
-              <View style={[a.w_full, {maxWidth: 400} as any]}>
+              <View style={[a.w_full, {maxWidth: 400}]}>
                 <Toggle.Group
                   label={l`Select content languages`}
                   values={contentLanguages}

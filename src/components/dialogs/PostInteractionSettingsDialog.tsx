@@ -100,7 +100,7 @@ function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
   return (
     <Dialog.ScrollableInner
       label={l`Edit post interaction settings`}
-      style={[{maxWidth: 400} as any, a.w_full]}>
+      style={[{maxWidth: 400}, a.w_full]}>
       <Header />
       <PostInteractionSettingsForm {...props} />
       <Dialog.Close />
@@ -246,7 +246,7 @@ export function PostInteractionSettingsDialogControlledInner(
   return (
     <Dialog.ScrollableInner
       label={l`Edit post interaction settings`}
-      style={[{maxWidth: 400} as any, a.w_full]}>
+      style={[{maxWidth: 400}, a.w_full]}>
       {isLoading ? (
         <View
           style={[

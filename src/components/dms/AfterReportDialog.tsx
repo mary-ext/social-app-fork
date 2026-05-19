@@ -43,7 +43,7 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Would you like to block this user and/or delete this conversation?`}
-        style={[{maxWidth: 400} as any]}>
+        style={[{maxWidth: 400}]}>
         <DialogInner params={params} currentScreen={currentScreen} />
         <Dialog.Close />
       </Dialog.ScrollableInner>

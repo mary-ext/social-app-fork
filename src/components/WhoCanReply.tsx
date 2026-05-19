@@ -199,7 +199,7 @@ function WhoCanReplyDialog({
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={l`Dialog: adjust who can interact with this post`}
-        style={{maxWidth: 400} as any}>
+        style={{maxWidth: 400}}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_xl, a.pb_sm]}>
             <Trans>Who can interact with this post?</Trans>

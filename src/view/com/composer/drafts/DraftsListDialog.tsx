@@ -168,7 +168,7 @@ export function DraftsListDialog({
         onEndReachedThreshold={0.5}
         style={[
           a.px_0,
-          {minHeight: 500} as any,
+          {minHeight: 500},
           {
             backgroundColor: select(t.name, {
               light: t.palette.contrast_50,

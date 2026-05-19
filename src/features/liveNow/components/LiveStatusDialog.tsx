@@ -82,7 +82,7 @@ function DialogInner({
     <Dialog.ScrollableInner
       label={l`${sanitizeHandle(profile.handle)} is live`}
       contentContainerStyle={[a.pt_0, a.px_0]}
-      style={[{maxWidth: 420} as any, a.overflow_hidden]}>
+      style={[{maxWidth: 420}, a.overflow_hidden]}>
       <LiveStatus
         status={status}
         profile={profile}

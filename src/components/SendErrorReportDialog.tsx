@@ -58,7 +58,7 @@ function SendErrorReportDialogInner() {
   return (
     <Dialog.ScrollableInner
       label={l`Send error report`}
-      style={{maxWidth: 420} as any}>
+      style={{maxWidth: 420}}>
       <View style={[a.gap_lg]}>
         <Text style={[a.text_2xl, a.font_semi_bold]}>
           {l`Send error report`}
