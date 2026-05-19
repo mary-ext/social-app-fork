@@ -18,11 +18,9 @@ import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
-import {useWelcomeModal} from '#/components/hooks/useWelcomeModal'
 import {Lightbox} from '#/components/Lightbox'
 import {GlobalReportDialog} from '#/components/moderation/ReportDialog'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {WelcomeModal} from '#/components/WelcomeModal'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -30,7 +28,6 @@ import {DrawerContent} from './Drawer'
 function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const welcomeModalControl = useWelcomeModal()
 
   useIntentHandler()
 
@@ -60,10 +57,6 @@ function ShellInner() {
       <LinkWarningDialog />
       <Lightbox />
       <GlobalReportDialog />
-
-      {welcomeModalControl.isOpen && (
-        <WelcomeModal control={welcomeModalControl} />
-      )}
 
       <PortalOutlet />
     </>
