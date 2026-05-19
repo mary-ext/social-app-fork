@@ -45,7 +45,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
       if (hasDiscoverPinned) {
         setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
       }
-    } catch (err: any) {
+    } catch (err) {
       Toast.show(
         l`There was an issue updating your feeds, please check your internet connection and try again.`,
         {
@@ -64,7 +64,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
       })
       setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
       Toast.show(l`The feed has been replaced with Discover.`)
-    } catch (err: any) {
+    } catch (err) {
       Toast.show(
         l`There was an issue updating your feeds, please check your internet connection and try again.`,
         {

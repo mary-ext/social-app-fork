@@ -279,8 +279,11 @@ function SaveButtonInner({
           ])
         }
         Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
-      } catch (err: any) {
-        logger.error(err, {message: `FeedCard: failed to update feeds`, pin})
+      } catch (err) {
+        logger.error(err instanceof Error ? err : String(err), {
+          message: `FeedCard: failed to update feeds`,
+          pin,
+        })
         Toast.show(l`Failed to update feeds`, {
           type: 'error',
         })

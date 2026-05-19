@@ -65,9 +65,9 @@ export const BookmarkButton = memo(function BookmarkButton({
           type: 'success',
         },
       )
-    } catch (e: any) {
+    } catch (e) {
       const {raw, clean} = cleanError(e)
-      toast.show(clean || raw || e, {
+      toast.show(clean || raw || String(e), {
         type: 'error',
       })
     }
@@ -95,9 +95,9 @@ export const BookmarkButton = memo(function BookmarkButton({
           )}
         </toast.Outer>,
       )
-    } catch (e: any) {
+    } catch (e) {
       const {raw, clean} = cleanError(e)
-      toast.show(clean || raw || e, {
+      toast.show(clean || raw || String(e), {
         type: 'error',
       })
     }

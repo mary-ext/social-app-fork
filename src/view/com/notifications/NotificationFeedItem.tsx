@@ -738,8 +738,8 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           profile.displayName || profile.handle,
         )}`,
       )
-    } catch (err: any) {
-      if (err?.name !== 'AbortError') {
+    } catch (err) {
+      if (!(err instanceof Error && err.name === 'AbortError')) {
         Toast.show(l`An issue occurred, please try again.`, {
           type: 'error',
         })
@@ -758,8 +758,8 @@ function FollowBackButton({profile}: {profile: AppBskyActorDefs.ProfileView}) {
           profile.displayName || profile.handle,
         )}`,
       )
-    } catch (err: any) {
-      if (err?.name !== 'AbortError') {
+    } catch (err) {
+      if (!(err instanceof Error && err.name === 'AbortError')) {
         Toast.show(l`An issue occurred, please try again.`, {
           type: 'error',
         })

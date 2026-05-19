@@ -91,9 +91,10 @@ function MutedWordsInner() {
         },
       ])
       setField('')
-    } catch (e: any) {
-      logger.error(`Failed to save muted word`, {message: e.message})
-      setError(e.message)
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e)
+      logger.error(`Failed to save muted word`, {message})
+      setError(message)
     }
   }, [l, field, targets, addMutedWord, setField, durations, excludeFollowing])
 
