@@ -34,6 +34,20 @@ import {Text} from '#/components/Typography'
 export {useMenuContext}
 export type MenuControlProps = Dialog.DialogControlProps
 
+type WebPressableProps = {
+  className?: string
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}
+
+type WebViewStyle = ViewStyle & {
+  outline?: 0 | string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style
+}
+
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = useId()
   const [isOpen, setIsOpen] = useState(false)
@@ -239,12 +253,16 @@ export function Item({
     onOut: onMouseLeave,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const webPointerProps: WebPressableProps = {
+    className: 'radix-dropdown-item',
+    onMouseEnter,
+    onMouseLeave,
+  }
 
   return (
     <DropdownMenu.Item asChild>
       <Pressable
         {...rest}
-        className="radix-dropdown-item"
         accessibilityHint=""
         accessibilityLabel={label}
         onPress={e => {
@@ -269,20 +287,17 @@ export function Item({
           a.rounded_xs,
           a.overflow_hidden,
           {minHeight: 32, paddingHorizontal: 10},
-          {outline: 0} as any,
+          webViewStyle({outline: 0}),
           (hovered || focused) &&
             !rest.disabled && [
-              {outline: '0 !important'} as any,
+              webViewStyle({outline: '0 !important'}),
               t.name === 'light'
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
           style,
         ])}
-        {...({
-          onMouseEnter,
-          onMouseLeave,
-        } as any)}>
+        {...webPointerProps}>
         <ItemContext.Provider
           value={{disabled: Boolean(rest.disabled), destructive}}>
           {children}

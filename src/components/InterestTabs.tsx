@@ -18,6 +18,15 @@ import {
 } from '#/components/icons/Arrow'
 import {Text} from '#/components/Typography'
 
+type WebViewStyle = ViewStyle & {
+  background?: string
+  outline?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style
+}
+
 /**
  * Tab component that automatically scrolls the selected tab into view - used for interests
  * in the Find Follows dialog, Explore screen, etc.
@@ -245,9 +254,9 @@ export function InterestTabs({
             {paddingLeft: gutterWidth},
             a.pr_md,
             a.z_10,
-            {
+            webViewStyle({
               background: `linear-gradient(to right,  ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
-            } as any,
+            }),
           ]}>
           <Button
             label={l`Scroll left`}
@@ -279,9 +288,9 @@ export function InterestTabs({
             {paddingRight: gutterWidth},
             a.pl_md,
             a.z_10,
-            {
+            webViewStyle({
               background: `linear-gradient(to left, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
-            } as any,
+            }),
           ]}>
           <Button
             label={l`Scroll right`}
@@ -345,7 +354,7 @@ function Tab({
         label={label}
         onPress={() => onSelectTab(index)}
         // disable focus ring, we handle it
-        style={{outline: 'none'} as any}>
+        style={webViewStyle({outline: 'none'})}>
         {({hovered, pressed, focused}) => (
           <View
             style={[

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, View, type ViewStyle} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -35,6 +35,14 @@ const DISMISS_ANIMATION_DURATION = 200
 
 const MOBILE_CARD_WIDTH = 165
 const FINAL_CARD_WIDTH = 120
+
+type WebViewStyle = Omit<ViewStyle, 'width'> & {
+  width?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 function CardOuter({
   children,
@@ -248,8 +256,7 @@ export function ProfileGrid({
         },
         {threshold: 0.5},
       )
-      // @ts-ignore - web only
-      observer.observe(node)
+      observer.observe(node as unknown as Element)
       return () => observer.disconnect()
     } else {
       // On native, delay slightly to account for layout shifts during hydration
@@ -272,8 +279,8 @@ export function ProfileGrid({
                 ([
                   a.flex_0,
                   a.flex_grow,
-                  {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-                ] as any),
+                  webViewStyle({width: `calc(30% - ${a.gap_md.gap / 2}px)`}),
+                ]),
             ]}>
             <SuggestedFollowPlaceholder />
           </View>
@@ -293,8 +300,8 @@ export function ProfileGrid({
                 ([
                   a.flex_0,
                   a.flex_grow,
-                  {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-                ] as any),
+                  webViewStyle({width: `calc(30% - ${a.gap_md.gap / 2}px)`}),
+                ]),
             ]}>
             <ProfileCard.Link
               profile={profile.actor}
@@ -429,7 +436,7 @@ export function ProfileGrid({
                   ({
                     textDecorationLine: 'underline',
                     textDecorationColor: t.palette.primary_500,
-                  } as any),
+                  }),
               ]}>
               <Trans>See more</Trans>
             </Text>
