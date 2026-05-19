@@ -3,14 +3,11 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useMutation} from '@tanstack/react-query'
 
-import {STATUS_PAGE_URL} from '#/lib/constants'
 import {getDeviceId} from '#/lib/device-id'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
-import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
-import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import * as Prompt from '#/components/Prompt'
@@ -56,29 +53,6 @@ export function AboutSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
-          <SettingsList.LinkItem
-            to="https://bsky.social/about/support/tos"
-            label={l`Terms of Service`}>
-            <SettingsList.ItemIcon icon={NewspaperIcon} />
-            <SettingsList.ItemText>
-              <Trans>Terms of Service</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            to="https://bsky.social/about/support/privacy-policy"
-            label={l`Privacy Policy`}>
-            <SettingsList.ItemIcon icon={NewspaperIcon} />
-            <SettingsList.ItemText>
-              <Trans>Privacy Policy</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem to={STATUS_PAGE_URL} label={l`Status Page`}>
-            <SettingsList.ItemIcon icon={GlobeIcon} />
-            <SettingsList.ItemText>
-              <Trans>Status Page</Trans>
-            </SettingsList.ItemText>
-          </SettingsList.LinkItem>
-          <SettingsList.Divider />
           <SettingsList.LinkItem to="/sys/log" label={l`System log`}>
             <SettingsList.ItemIcon icon={CodeLinesIcon} />
             <SettingsList.ItemText>
@@ -124,7 +98,6 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeText>{env.APP_METADATA}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
-          {false}
         </SettingsList.Container>
       </Layout.Content>
       <SendErrorReportDialog control={sendErrorReportControl} />

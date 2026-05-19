@@ -21,4 +21,5 @@ interface ImportMetaEnv {
   PUBLIC_LOG_DEBUG?: string
   PUBLIC_LOG_LEVEL?: string
   PUBLIC_RELEASE_VERSION?: string
+  PUBLIC_SOURCE_CODE_URL?: string
 }

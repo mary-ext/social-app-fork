@@ -3,7 +3,6 @@ import {View, type ViewStyle} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
@@ -14,6 +13,7 @@ import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {SOURCE_CODE_URL} from '#/env/common'
 
 type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position' | 'transform'> & {
   maxHeight?: string
@@ -48,7 +48,7 @@ function useWebQueryParams() {
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
@@ -96,39 +96,11 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       )}
       {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
-        {hasSession && (
-          <>
-            <InlineLinkText
-              to={FEEDBACK_FORM_URL({
-                email: currentAccount?.email,
-                handle: currentAccount?.handle,
-              })}
-              style={[t.atoms.text_contrast_medium]}
-              label={l`Feedback`}>
-              {l`Feedback`}
-            </InlineLinkText>
-            <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-          </>
-        )}
         <InlineLinkText
-          to="https://bsky.social/about/support/privacy-policy"
+          to={SOURCE_CODE_URL}
           style={[t.atoms.text_contrast_medium]}
-          label={l`Privacy`}>
-          {l`Privacy`}
-        </InlineLinkText>
-        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-        <InlineLinkText
-          to="https://bsky.social/about/support/tos"
-          style={[t.atoms.text_contrast_medium]}
-          label={l`Terms`}>
-          {l`Terms`}
-        </InlineLinkText>
-        <Text style={[t.atoms.text_contrast_low]}>{' ∙ '}</Text>
-        <InlineLinkText
-          label={l`Help`}
-          to={HELP_DESK_URL}
-          style={[t.atoms.text_contrast_medium]}>
-          {l`Help`}
+          label={l`Source code`}>
+          {l`Source code`}
         </InlineLinkText>
       </Text>
       {kawaii && (

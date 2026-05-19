@@ -5,7 +5,6 @@ import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583'
-export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://bsky.social'
 export const BSKY_SERVICE_DID = 'did:web:bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
@@ -15,15 +14,6 @@ export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
 export const CARD_ASPECT_RATIO = 1200 / 630
-
-// HACK
-// Yes, this is exactly what it looks like. It's a hard-coded constant
-// reflecting the number of new users in the last week. We don't have
-// time to add a route to the servers for this so we're just going to hard
-// code and update this number with each release until we can get the
-// server route done.
-// -prf
-export const JOINED_THIS_WEEK = 560000 // estimate as of 12/18/24
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -62,14 +52,10 @@ export function IS_TEST_USER(handle?: string) {
   return handle && handle?.endsWith('.test')
 }
 
-export function IS_PROD_SERVICE(url?: string) {
-  return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
-}
-
 export const PROD_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
 
-export const STAGING_DEFAULT_FEED = (rkey: string) =>
+const STAGING_DEFAULT_FEED = (rkey: string) =>
   `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
 
 export const PROD_FEEDS = [
@@ -88,10 +74,10 @@ export const POST_IMG_MAX = {
   size: 1000000,
 }
 
-export const STAGING_LINK_META_PROXY =
+const STAGING_LINK_META_PROXY =
   'https://cardyb.staging.bsky.dev/v1/extract?url='
 
-export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
+const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
 export function LINK_META_PROXY(_serviceUrl: string) {
   if (IS_DEV) {
@@ -100,8 +86,6 @@ export function LINK_META_PROXY(_serviceUrl: string) {
 
   return PROD_LINK_META_PROXY
 }
-
-export const STATUS_PAGE_URL = 'https://status.bsky.app/'
 
 // Hitslop constants
 export const createHitslop = (size: number): Insets => ({
@@ -117,7 +101,7 @@ export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
-export const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur'
+const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur'
 
 export const BSKY_FEED_OWNER_DIDS = [
   BSKY_APP_ACCOUNT_DID,
@@ -129,9 +113,6 @@ export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
 export const VIDEO_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids'
-export const STAGING_VIDEO_FEED_URI =
-  'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/thevids'
-export const VIDEO_FEED_URIS = [VIDEO_FEED_URI, STAGING_VIDEO_FEED_URI]
 export const DISCOVER_SAVED_FEED = {
   type: 'feed',
   value: DISCOVER_FEED_URI,
@@ -140,11 +121,6 @@ export const DISCOVER_SAVED_FEED = {
 export const TIMELINE_SAVED_FEED = {
   type: 'timeline',
   value: 'following',
-  pinned: true,
-}
-export const VIDEO_SAVED_FEED = {
-  type: 'feed',
-  value: VIDEO_FEED_URI,
   pinned: true,
 }
 
@@ -157,7 +133,7 @@ export const KNOWN_SHUTDOWN_FEEDS = [
   'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze
 ]
 
-export const GIF_SERVICE = 'https://gifs.bsky.app'
+const GIF_SERVICE = 'https://gifs.bsky.app'
 
 export const GIF_KLIPY_SEARCH = (params: string) =>
   `${GIF_SERVICE}/klipy/v2/search?${params}`
@@ -203,13 +179,6 @@ export const urls = {
   },
 }
 
-export const PUBLIC_APPVIEW = 'https://api.bsky.app'
-export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
-export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
-
-export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
-export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
-
 // temp hack for e2e - esb
 export const BLUESKY_PROXY_HEADER = {
   value: `${BLUESKY_PROXY_DID}#bsky_appview`,
@@ -227,15 +196,4 @@ export const DM_SERVICE_HEADERS = {
 
 export const BLUESKY_MOD_SERVICE_HEADERS = {
   'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
-}
-
-export const BLUESKY_NOTIF_SERVICE_HEADERS = {
-  'atproto-proxy': `${BLUESKY_PROXY_DID}#bsky_notif`,
-}
-
-export const webLinks = {
-  tos: `https://bsky.social/about/support/tos`,
-  privacy: `https://bsky.social/about/support/privacy-policy`,
-  community: `https://bsky.social/about/support/community-guidelines`,
-  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
 }

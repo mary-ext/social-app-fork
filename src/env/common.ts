@@ -56,6 +56,13 @@ export const LOG_LEVEL = (import.meta.env.PUBLIC_LOG_LEVEL || 'info') as
 export const LOG_DEBUG: string = import.meta.env.PUBLIC_LOG_DEBUG || ''
 
 /**
+ * the source code URL shown in the desktop right nav.
+ */
+export const SOURCE_CODE_URL: string =
+  import.meta.env.PUBLIC_SOURCE_CODE_URL ||
+  'https://tangled.org/did:plc:sdgf6fjeih24rhq43zy3vhkc'
+
+/**
  * The DID of the Bluesky appview to proxy to
  */
 export const BLUESKY_PROXY_DID: Did = (import.meta.env
