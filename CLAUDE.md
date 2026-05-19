@@ -4,12 +4,12 @@ a web-only fork of `bluesky-social/social-app`. native code, Expo, Sentry, Growt
 
 ### project management
 
-- Node.js and Yarn (1.x) are managed by mise
-- `yarn dev` starts the dev server (rsbuild)
-- `yarn build-web` runs `yarn typecheck` then `rsbuild build`
-- `yarn lint` runs ESLint (flat config plus the in-repo `eslint-plugin-bsky-internal`)
-- `yarn typecheck` runs `tsgo` against `tsconfig.check.json`, which spans all of `src/` — not just web-resolved files
-- never run `yarn intl:extract` or `yarn intl:compile`; extraction and message compilation run nightly in CI
+- Node.js and pnpm are managed by mise
+- `pnpm dev` starts the dev server (rsbuild)
+- `pnpm build-web` runs `pnpm typecheck` then `rsbuild build`
+- `pnpm lint` runs ESLint (flat config plus the in-repo `eslint-plugin-bsky-internal`)
+- `pnpm typecheck` runs `tsgo` against `tsconfig.json`, which spans all of `src/` — not just web-resolved files
+- never run `pnpm intl:extract` or `pnpm intl:compile`; extraction and message compilation run nightly in CI
 - check the in-tree shims under `src/shims/` and the existing dependency list before adding a new package; local web shims for Expo and native APIs already exist for most surfaces
 
 ### code writing

@@ -1,6 +1,6 @@
 import {type I18n} from '@lingui/core'
 import {plural} from '@lingui/core/macro'
-import psl from 'psl'
+import {parse as parseDomain} from 'psl'
 
 export function displayDuration(i18n: I18n, durationInMinutes: number) {
   const roundedDurationInMinutes = Math.round(durationInMinutes)
@@ -54,7 +54,7 @@ export function sanitizeLiveNowHost(hostname: string) {
   if (hostname === 'nba.smart.link') {
     return hostname
   }
-  const parsed = psl.parse(hostname)
+  const parsed = parseDomain(hostname)
   if (parsed.error || !parsed.listed || !parsed.domain) {
     // fall back to dumb version
     return hostname.replace(/^www\./, '')

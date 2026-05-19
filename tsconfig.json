@@ -1,21 +1,7 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
-    "types": ["node"],
-    "paths": {
-      "#/*": ["./src/*"],
-      "multiformats/cid": ["./node_modules/multiformats/types/src/cid.d.ts"],
-      "multiformats/hashes/hasher": ["./node_modules/multiformats/types/src/hashes/hasher.d.ts"]
-    },
-    "plugins": [
-      {
-        "name": "ts-plugin-sort-import-suggestions",
-        "moveUpPatterns": ["#/", "@lingui/react/macro"],
-      }
-    ]
-  },
-  "exclude": ["web-build"]
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
 }

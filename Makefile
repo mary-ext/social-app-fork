@@ -10,23 +10,20 @@ help: ## Print info about all commands
 
 .PHONY: build-web
 build-web: ## Compile web bundle
-	yarn intl:build
-	yarn build-web
+	pnpm build-web
 
 .PHONY: lint
 lint: ## Run style checks and verify syntax
-	yarn run lint
+	pnpm lint
 
 #.PHONY: fmt
 #fmt: ## Run syntax re-formatting
-#	yarn prettier
+#	pnpm prettier
 
 .PHONY: deps
-deps: ## Installs dependent libs using 'yarn install'
-	yarn install --frozen-lockfile
+deps: ## Installs dependent libs using 'pnpm install'
+	pnpm install --frozen-lockfile
 
-.PHONY: nvm-setup
-nvm-setup: ## Use NVM to install and activate node+yarn
-	nvm install 20
-	nvm use 20
-	npm install --global yarn
+.PHONY: mise-setup
+mise-setup: ## Install project tools with mise
+	mise install
