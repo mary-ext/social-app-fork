@@ -17,6 +17,10 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {clearStorage} from '#/state/persisted'
+import {
+  useDebugFeedContextEnabled,
+  useSetDebugFeedContextEnabled,
+} from '#/state/preferences/debug'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
@@ -30,6 +34,7 @@ import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
+import * as Toggle from '#/components/forms/Toggle'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
 import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
@@ -351,6 +356,8 @@ function DevOptions() {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const debugFeedContextEnabled = useDebugFeedContextEnabled()
+  const setDebugFeedContextEnabled = useSetDebugFeedContextEnabled()
   const {
     tryApplyUpdate,
     revertToEmbedded,
@@ -400,6 +407,18 @@ function DevOptions() {
 
   return (
     <>
+      <Toggle.Item
+        name="debug_feed_context"
+        label={l`Show feed context debug`}
+        value={debugFeedContextEnabled}
+        onChange={setDebugFeedContextEnabled}>
+        <SettingsList.Item>
+          <SettingsList.ItemText>
+            <Trans>Show feed context debug</Trans>
+          </SettingsList.ItemText>
+          <Toggle.Platform />
+        </SettingsList.Item>
+      </Toggle.Item>
       <SettingsList.PressableItem
         onPress={() => navigation.navigate('Log')}
         label={l`Open system log`}>

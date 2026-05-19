@@ -33,11 +33,11 @@ import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
-  useDebugFeedContextEnabled,
   useHiddenPosts,
   useHiddenPostsApi,
   useLanguagePrefs,
 } from '#/state/preferences'
+import {useDebugFeedContextEnabled} from '#/state/preferences/debug'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -94,7 +94,6 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
-import {IS_INTERNAL} from '#/env'
 import * as Clipboard from '#/shims/clipboard'
 
 let PostMenuItems = ({
@@ -447,7 +446,6 @@ let PostMenuItems = ({
   const onPressHideTranslation = () => clearTranslation()
 
   const isDiscoverDebugUser =
-    IS_INTERNAL ||
     DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
     debugFeedContextEnabled
 
