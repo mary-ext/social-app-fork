@@ -56,7 +56,7 @@ export function LanguageSelectDialog({
   maxLanguages?: number
 }) {
   const renderErrorBoundary = useCallback(
-    (error: any) => <DialogError details={String(error)} />,
+    (error: unknown) => <DialogError details={String(error)} />,
     [],
   )
 

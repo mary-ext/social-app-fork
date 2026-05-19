@@ -217,7 +217,7 @@ function safeParseFeedgenUri(uri: string): [string, string] {
 
 function detectKnownError(
   feedDesc: FeedDescriptor,
-  error: any,
+  error: unknown,
 ): KnownError | undefined {
   if (!error) {
     return undefined
@@ -230,38 +230,44 @@ function detectKnownError(
   }
 
   // check status codes
-  if (error?.status === 429) {
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'status' in error &&
+    error.status === 429
+  ) {
     return KnownError.FeedTooManyRequests
   }
 
   // convert error to string and continue
-  if (typeof error !== 'string') {
-    error = error.toString()
-  }
-  if (error.includes(KnownError.FeedSignedInOnly)) {
+  const errorString = typeof error === 'string' ? error : String(error)
+
+  if (errorString.includes(KnownError.FeedSignedInOnly)) {
     return KnownError.FeedSignedInOnly
   }
   if (!feedDesc.startsWith('feedgen')) {
     return KnownError.Unknown
   }
-  if (error.includes('could not find feed')) {
+  if (errorString.includes('could not find feed')) {
     return KnownError.FeedgenDoesNotExist
   }
-  if (error.includes('feed unavailable')) {
+  if (errorString.includes('feed unavailable')) {
     return KnownError.FeedgenOffline
   }
-  if (error.includes('invalid did document')) {
+  if (errorString.includes('invalid did document')) {
     return KnownError.FeedgenMisconfigured
   }
-  if (error.includes('could not resolve did document')) {
+  if (errorString.includes('could not resolve did document')) {
     return KnownError.FeedgenMisconfigured
   }
   if (
-    error.includes('invalid feed generator service details in did document')
+    errorString.includes(
+      'invalid feed generator service details in did document',
+    )
   ) {
     return KnownError.FeedgenMisconfigured
   }
-  if (error.includes('invalid response')) {
+  if (errorString.includes('invalid response')) {
     return KnownError.FeedgenBadResponse
   }
   return KnownError.FeedgenUnknown

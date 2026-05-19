@@ -6,6 +6,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {
   EmptyState,
   type EmptyStateButtonProps,
+  type EmptyStateIcon,
 } from '#/view/com/util/EmptyState'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -149,7 +150,7 @@ let ListMaybePlaceholder = ({
   hideBackButton?: boolean
   sideBorders?: boolean
   topBorder?: boolean
-  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  emptyStateIcon?: EmptyStateIcon | React.ReactElement
   emptyStateButton?: EmptyStateButtonProps
   useEmptyState?: boolean
 }): React.ReactNode => {

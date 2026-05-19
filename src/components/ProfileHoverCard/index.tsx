@@ -85,11 +85,11 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
 type State =
   | {
       stage: 'hidden' | 'might-hide' | 'hiding'
-      effect?: () => () => any
+      effect?: () => () => void
     }
   | {
       stage: 'might-show' | 'showing'
-      effect?: () => () => any
+      effect?: () => () => void
       reason: 'hovered-target' | 'hovered-card'
     }
 

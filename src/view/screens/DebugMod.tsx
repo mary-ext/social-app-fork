@@ -759,7 +759,7 @@ function SmallToggler({
   )
 }
 
-function DataView({label, data}: {label: string; data: any}) {
+function DataView({label, data}: {label: string; data: unknown}) {
   return (
     <Toggler label={label}>
       <Text style={[{fontFamily: 'monospace'}, a.p_md]}>

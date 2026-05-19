@@ -14,7 +14,9 @@ const noop = () => {}
  *
  * For objects, see `useNonReactiveObject` instead.
  */
-export function useNonReactiveCallback<T extends Function = () => void>(
+type AnyFn = (...args: never[]) => unknown
+
+export function useNonReactiveCallback<T extends AnyFn = () => void>(
   fn?: T,
 ): T {
   const ref = useRef<T>((fn ?? noop) as T)
@@ -22,9 +24,9 @@ export function useNonReactiveCallback<T extends Function = () => void>(
     ref.current = (fn ?? noop) as T
   }, [fn])
   return useCallback(
-    (...args: any) => {
+    (...args: Parameters<T>): ReturnType<T> => {
       const latestFn = ref.current
-      return latestFn(...args)
+      return latestFn(...args) as ReturnType<T>
     },
     [ref],
   ) as unknown as T

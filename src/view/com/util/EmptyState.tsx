@@ -22,7 +22,7 @@ type EmptyStateIconSize =
   | '3xl'
   | '4xl'
 
-type EmptyStateIcon = React.ComponentType<{
+export type EmptyStateIcon = React.ComponentType<{
   size?: EmptyStateIconSize
   style?: {color: string}
 }>

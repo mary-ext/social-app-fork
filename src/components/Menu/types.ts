@@ -19,7 +19,7 @@ export type ItemContextType = {
 }
 
 export type RadixPassThroughTriggerProps = {
-  ref: React.RefObject<any>
+  ref: React.RefObject<never>
   id: string
   type: 'button'
   disabled: boolean

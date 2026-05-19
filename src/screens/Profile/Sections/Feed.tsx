@@ -13,6 +13,7 @@ import {PostFeed} from '#/view/com/posts/PostFeed'
 import {
   EmptyState,
   type EmptyStateButtonProps,
+  type EmptyStateIcon,
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -31,7 +32,7 @@ interface FeedSectionProps {
   setScrollViewTag: (tag: number | null) => void
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
-  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  emptyStateIcon?: EmptyStateIcon | React.ReactElement
 }
 
 export function ProfileFeedSection({

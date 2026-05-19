@@ -23,10 +23,9 @@ import {
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 
-function keyExtractor(
-  item: AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView,
-  index: number,
-) {
+type ListItem = AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView
+
+function keyExtractor(item: ListItem, index: number) {
   return `${item.did}-${index}`
 }
 
@@ -55,8 +54,8 @@ export function WizardEditListDialog({
     return [profile, ...state.profiles.filter(p => p.did !== profile.did)]
   }
 
-  const renderItem = ({item}: ListRenderItemInfo<any>) =>
-    state.currentStep === 'Profiles' ? (
+  const renderItem = ({item}: ListRenderItemInfo<ListItem>) =>
+    'handle' in item ? (
       <WizardProfileCard
         profile={item}
         btnType="remove"

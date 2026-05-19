@@ -20,6 +20,7 @@ import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
 import {
   EmptyState,
   type EmptyStateButtonProps,
+  type EmptyStateIcon,
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -49,7 +50,7 @@ interface ProfileFeedgensProps {
   isMe: boolean
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
-  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  emptyStateIcon?: EmptyStateIcon | React.ReactElement
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
