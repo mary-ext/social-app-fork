@@ -36,6 +36,22 @@ import {Text} from './text/Text'
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
+type DataSet = Record<string, string | number | undefined>
+
+const compactDataSet = (
+  dataSet: DataSet | undefined,
+): Record<string, string | number> | undefined => {
+  if (!dataSet) {
+    return undefined
+  }
+  return Object.fromEntries(
+    Object.entries(dataSet).filter(
+      (entry): entry is [string, string | number] => {
+        return entry[1] !== undefined
+      },
+    ),
+  )
+}
 
 interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   testID?: string
@@ -46,7 +62,7 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   hoverStyle?: StyleProp<ViewStyle>
   noFeedback?: boolean
   asAnchor?: boolean
-  dataSet?: any
+  dataSet?: DataSet
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
@@ -102,9 +118,9 @@ export const Link = memo(function Link({
     {name: 'activate', label: title},
   ]
 
-  const dataSet = anchorNoUnderline
-    ? {...dataSetProp, noUnderline: 1}
-    : dataSetProp
+  const dataSet = compactDataSet(
+    anchorNoUnderline ? {...dataSetProp, noUnderline: 1} : dataSetProp,
+  )
 
   if (noFeedback) {
     return (
@@ -183,7 +199,7 @@ export const TextLink = memo(function TextLink({
   text: string | JSX.Element | React.ReactNode
   numberOfLines?: number
   lineHeight?: number
-  dataSet?: any
+  dataSet?: DataSet
   title?: string
   disableMismatchWarning?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
@@ -199,9 +215,9 @@ export const TextLink = memo(function TextLink({
     console.error('Unable to detect mismatching label')
   }
 
-  const dataSet = anchorNoUnderline
-    ? {...dataSetProp, noUnderline: 1}
-    : dataSetProp
+  const dataSet = compactDataSet(
+    anchorNoUnderline ? {...dataSetProp, noUnderline: 1} : dataSetProp,
+  )
 
   const onPress = useCallback(
     (e?: Event) => {
@@ -297,24 +313,35 @@ function onPressInner(
   href: string,
   navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   openLink: (href: string) => void,
-  e?: any,
+  e?: unknown,
 ) {
+  const event = e as
+    | {
+        altKey?: boolean
+        button?: number | null
+        ctrlKey?: boolean
+        currentTarget?: {target?: string | null}
+        defaultPrevented?: boolean
+        metaKey?: boolean
+        preventDefault?: () => void
+        shiftKey?: boolean
+      }
+    | undefined
   let shouldHandle = false
-  const isLeftClick = e.button == null || e.button === 0
-  // @ts-ignore Web only -prf
-  const isMiddleClick = e.button === 1
-  const isMetaKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey
+  const isLeftClick = event?.button == null || event.button === 0
+  const isMiddleClick = event?.button === 1
+  const isMetaKey =
+    event?.metaKey || event?.altKey || event?.ctrlKey || event?.shiftKey
   const newTab = isMetaKey || isMiddleClick
 
-  if (!e) {
-    shouldHandle = e ? !e.defaultPrevented : true
+  if (!event) {
+    shouldHandle = true
   } else if (
-    !e.defaultPrevented && // onPress prevented default
+    !event.defaultPrevented && // onPress prevented default
     (isLeftClick || isMiddleClick) && // ignore everything but left and middle clicks
-    // @ts-ignore Web only -prf
-    [undefined, null, '', 'self'].includes(e.currentTarget?.target) // let browser handle "target=_blank" etc.
+    [undefined, null, '', 'self'].includes(event.currentTarget?.target) // let browser handle "target=_blank" etc.
   ) {
-    e.preventDefault()
+    event.preventDefault?.()
     shouldHandle = true
   }
 

@@ -579,11 +579,6 @@
       "count": 1
     }
   },
-  "src/view/com/util/Link.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/view/com/util/List.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 3
