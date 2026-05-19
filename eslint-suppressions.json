@@ -409,11 +409,6 @@
       "count": 1
     }
   },
-  "src/state/feed-feedback.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/state/queries/notifications/feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -421,7 +416,7 @@
   },
   "src/state/queries/post-feed.ts": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 1
     }
   },
   "src/state/queries/search-posts.ts": {
@@ -491,7 +486,7 @@
   },
   "src/view/com/util/List.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
+      "count": 2
     }
   },
   "src/view/com/util/MainScrollProvider.tsx": {
@@ -502,11 +497,6 @@
   "src/view/com/util/PostMeta.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/view/com/util/load-latest/LoadLatestBtn.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
     }
   },
   "src/view/screens/DebugMod.tsx": {

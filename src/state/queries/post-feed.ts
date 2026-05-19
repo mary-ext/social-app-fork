@@ -252,13 +252,13 @@ export function usePostFeedQuery(
             result: lastResult,
           } = lastRun.current
           let canReuse = true
-          for (let key in selectArgs) {
-            if (selectArgs.hasOwnProperty(key)) {
-              if ((selectArgs as any)[key] !== (lastArgs as any)[key]) {
-                // Can't do reuse anything if any input has changed.
-                canReuse = false
-                break
-              }
+          for (const key of Object.keys(
+            selectArgs,
+          ) as (keyof typeof selectArgs)[]) {
+            if (selectArgs[key] !== lastArgs[key]) {
+              // Can't do reuse anything if any input has changed.
+              canReuse = false
+              break
             }
           }
           if (canReuse) {

@@ -63,7 +63,7 @@ import {PostFeedItem} from './PostFeedItem'
 import {ShowLessFollowup} from './ShowLessFollowup'
 import {ViewFullThread} from './ViewFullThread'
 
-type FeedRow =
+export type FeedRow =
   | {
       type: 'loading'
       key: string

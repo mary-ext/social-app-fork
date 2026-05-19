@@ -21,7 +21,7 @@ import {
   type FeedDescriptor,
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
-import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
+import * as PostFeed from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
@@ -44,7 +44,7 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
 
 export type StateContext = {
   enabled: boolean
-  onItemSeen: (item: any) => void
+  onItemSeen: (item: PostFeed.FeedRow) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
   feedDescriptor: FeedDescriptor | undefined
   feedSourceInfo: FeedSourceInfo | undefined
@@ -52,7 +52,7 @@ export type StateContext = {
 
 const stateContext = createContext<StateContext>({
   enabled: false,
-  onItemSeen: (_item: any) => {},
+  onItemSeen: (_item: PostFeed.FeedRow) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
   feedSourceInfo: undefined,
@@ -183,11 +183,11 @@ export function useFeedFeedback(
   }, [enabled, sendToFeed])
 
   const onItemSeen = useCallback(
-    (feedItem: any) => {
+    (feedItem: PostFeed.FeedRow) => {
       if (!enabled) {
         return
       }
-      const items = getItemsForFeedback(feedItem)
+      const items = PostFeed.getItemsForFeedback(feedItem)
       for (const {item: postItem, feedContext, reqId} of items) {
         if (!history.current.has(postItem)) {
           history.current.add(postItem)

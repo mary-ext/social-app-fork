@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, type ViewStyle} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useMediaQuery} from 'react-responsive'
 
@@ -14,6 +14,14 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
+
+type WebViewStyle = Omit<ViewStyle, 'left'> & {
+  left?: string
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function LoadLatestBtn({
   onPress,
@@ -101,13 +109,13 @@ export function LoadLatestBtn({
 }
 
 const styles = StyleSheet.create({
-  loadLatestInline: {
+  loadLatestInline: webViewStyle({
     left: 'calc(50vw - 282px)',
-  } as any,
-  loadLatestInlineOffset: {
+  }),
+  loadLatestInlineOffset: webViewStyle({
     left: `calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`,
-  } as any,
-  loadLatestOutOfLine: {
+  }),
+  loadLatestOutOfLine: webViewStyle({
     left: 'calc(50vw - 382px)',
-  } as any,
+  }),
 })

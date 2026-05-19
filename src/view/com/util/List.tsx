@@ -15,6 +15,7 @@ import {
   StyleSheet,
   View,
   type ViewProps,
+  type ViewStyle,
 } from 'react-native'
 
 import {type ReanimatedScrollEvent} from '#/lib/animations/reanimatedCompat'
@@ -31,6 +32,16 @@ export type ListMethods = {
   scrollToOffset: (options: {animated: boolean; offset: number}) => void
   scrollToEnd: (options?: {animated?: boolean}) => void
 }
+type WebViewStyle = ViewStyle & {
+  overflowY?: 'scroll'
+  scrollbarColor?: string
+  scrollbarWidth?: 'thin'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style
+}
+
 export type ListProps<ItemT = any> = Omit<
   FlatListProps<ItemT>,
   | 'onScroll' // Use ScrollContext instead.
@@ -338,15 +349,16 @@ function ListImpl<ItemT>(
       {...props}
       style={[
         isWithinSplitView &&
-          ({
+          webViewStyle({
             scrollbarWidth: 'thin',
             scrollbarColor: `${t.palette.contrast_100} transparent`,
-          } as any),
+          }),
         style,
-        disableFullWindowScroll && {
-          flex: 1,
-          overflowY: 'scroll',
-        },
+        disableFullWindowScroll &&
+          webViewStyle({
+            flex: 1,
+            overflowY: 'scroll',
+          }),
       ]}
       ref={nativeRef as unknown as React.RefObject<View>}>
       <Visibility
