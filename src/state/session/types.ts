@@ -2,12 +2,6 @@ import {type PersistedAccount} from '#/state/persisted'
 
 export type SessionAccount = PersistedAccount
 
-export type AccountCreateSuccessMetrics = {
-  signupDuration: number
-  fieldErrorsTotal: number
-  backgroundCount: number
-}
-
 export type AccountLoggedInLogContext =
   | 'LoginForm'
   | 'SwitchAccount'
@@ -18,7 +12,6 @@ export type AccountLoggedInLogContext =
 export type AccountLoggedOutLogContext =
   | 'SwitchAccount'
   | 'Settings'
-  | 'SignupQueued'
   | 'Deactivated'
   | 'Takendown'
 
@@ -29,19 +22,6 @@ export type SessionStateContext = {
 }
 
 export type SessionApiContext = {
-  createAccount: (
-    props: {
-      service: string
-      email: string
-      password: string
-      handle: string
-      birthDate: Date
-      inviteCode?: string
-      verificationPhone?: string
-      verificationCode?: string
-    },
-    metrics: AccountCreateSuccessMetrics,
-  ) => Promise<void>
   login: (
     props: {
       service: string

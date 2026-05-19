@@ -25,7 +25,7 @@ type Controls = {
     /**
      * The did of the account to populate the login form with.
      */
-    requestedAccount?: (string & {}) | 'none' | 'new' | 'starterpack'
+    requestedAccount?: (string & {}) | 'none'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is
@@ -53,9 +53,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const shouldShowStarterPack = Boolean(activeStarterPack?.uri) && !hasSession
   const [state, setState] = useState<State>({
     showLoggedOut: shouldShowStarterPack,
-    requestedAccountSwitchTo: shouldShowStarterPack
-      ? 'starterpack'
-      : undefined,
+    requestedAccountSwitchTo: shouldShowStarterPack ? 'none' : undefined,
   })
 
   const controls = useMemo<Controls>(

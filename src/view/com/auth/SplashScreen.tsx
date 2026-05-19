@@ -1,4 +1,3 @@
-import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useLingui} from '@lingui/react/macro'
@@ -9,10 +8,6 @@ import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {
-  AppClipOverlay,
-  postAppClipMessage,
-} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
@@ -22,27 +17,13 @@ import {Text} from '#/components/Typography'
 export const SplashScreen = ({
   onDismiss,
   onPressSignin,
-  onPressCreateAccount,
 }: {
   onDismiss?: () => void
   onPressSignin: () => void
-  onPressCreateAccount: () => void
 }) => {
   const {t: l} = useLingui()
   const t = useTheme()
   const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
-  const [showClipOverlay, setShowClipOverlay] = useState(false)
-
-  useEffect(() => {
-    const getParams = new URLSearchParams(window.location.search)
-    const clip = getParams.get('clip')
-    if (clip === 'true') {
-      setShowClipOverlay(true)
-      postAppClipMessage({
-        action: 'present',
-      })
-    }
-  }, [])
 
   const kawaii = useKawaiiMode()
 
@@ -106,18 +87,6 @@ export const SplashScreen = ({
               testID="signinOrCreateAccount"
               style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
               <Button
-                testID="createAccountButton"
-                onPress={onPressCreateAccount}
-                label={l`Create new account`}
-                accessibilityHint={l`Opens flow to create a new Bluesky account`}
-                size="large"
-                variant="solid"
-                color="primary">
-                <ButtonText>
-                  <Trans>Create account</Trans>
-                </ButtonText>
-              </Button>
-              <Button
                 testID="signInButton"
                 onPress={onPressSignin}
                 label={l`Sign in`}
@@ -134,10 +103,6 @@ export const SplashScreen = ({
         </View>
         <Footer />
       </Layout.Center>
-      <AppClipOverlay
-        visible={showClipOverlay}
-        setIsVisible={setShowClipOverlay}
-      />
     </>
   )
 }

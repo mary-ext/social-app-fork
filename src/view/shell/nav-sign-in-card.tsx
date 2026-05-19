@@ -11,7 +11,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-let NavSignupCard = ({}: {}): React.ReactNode => {
+let NavSignInCard = ({}: {}): React.ReactNode => {
   const {t: l} = useLingui()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -19,12 +19,6 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
-
-  const showCreateAccount = useCallback(() => {
-    closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'new'})
-    // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
   return (
@@ -35,26 +29,16 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
       <View style={[a.pt_lg]}>
         <Text
           style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
-          <Trans>Join the conversation</Trans>
+          <Trans>Sign in to continue</Trans>
         </Text>
       </View>
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm, a.pt_md]}>
-        <Button
-          onPress={showCreateAccount}
-          label={l`Create account`}
-          size="small"
-          variant="solid"
-          color="primary">
-          <ButtonText>
-            <Trans>Create account</Trans>
-          </ButtonText>
-        </Button>
         <Button
           onPress={showSignIn}
           label={l`Sign in`}
           size="small"
           variant="solid"
-          color="secondary">
+          color="primary">
           <ButtonText>
             <Trans>Sign in</Trans>
           </ButtonText>
@@ -63,5 +47,5 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
     </View>
   )
 }
-NavSignupCard = memo(NavSignupCard)
-export {NavSignupCard}
+NavSignInCard = memo(NavSignInCard)
+export {NavSignInCard}

@@ -597,7 +597,7 @@ function FollowProfileCardInner({
               <ProfileCard.FollowButton
                 profile={profile}
                 moderationOpts={moderationOpts}
-                logContext="PostOnboardingFindFollows"
+                logContext="ProgressGuideFindFollows"
                 shape="round"
                 onPress={() => {
                   onFollow?.()

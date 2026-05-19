@@ -13,12 +13,8 @@ export function useStarterPackEntry() {
     const atUri = httpStarterPackUriToAtUri(href)
 
     if (atUri) {
-      const url = new URL(href)
-      // Determines if an App Clip is loading this landing page
-      const isClip = url.searchParams.get('clip') === 'true'
       setActiveStarterPack({
         uri: atUri,
-        isClip,
       })
     }
 

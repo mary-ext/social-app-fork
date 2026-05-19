@@ -3,7 +3,6 @@ import {createContext, useContext, useState} from 'react'
 type StateContext =
   | {
       uri: string
-      isClip?: boolean
     }
   | undefined
 type SetContext = (v: StateContext) => void

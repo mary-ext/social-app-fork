@@ -70,10 +70,9 @@ export type ProfileFollowLogContext =
   | 'AvatarButton'
   | 'StarterPackProfilesList'
   | 'FeedInterstitial'
-  | 'PostOnboardingFindFollows'
+  | 'ProgressGuideFindFollows'
   | 'ImmersiveVideo'
   | 'ExploreSuggestedAccounts'
-  | 'OnboardingSuggestedAccounts'
   | 'GroupChat'
 
 export type ProfileUnfollowLogContext = ProfileFollowLogContext | 'Chat'

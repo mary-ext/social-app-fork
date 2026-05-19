@@ -17,14 +17,12 @@ import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
   type BskyAppAgent,
-  createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
   sessionAccountToSession,
 } from './agent'
-import {type Action, getInitialState, reducer, type State} from './reducer'
-export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
+import {type Action, getInitialState, reducer, type State} from './reducer'
 export type {
   AccountLoggedInLogContext,
   AccountLoggedOutLogContext,
@@ -36,7 +34,6 @@ import {
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
-import {useOnboardingDispatch} from '#/state/shell/onboarding'
 
 const StateContext = createContext<SessionStateContext>({
   accounts: [],
@@ -49,7 +46,6 @@ const AgentContext = createContext<AtpAgent | null>(null)
 AgentContext.displayName = 'SessionAgentContext'
 
 const ApiContext = createContext<SessionApiContext>({
-  createAccount: async () => {},
   login: async () => {},
   logoutCurrentAccount: () => {},
   logoutEveryAccount: () => {},
@@ -105,7 +101,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // eslint-disable-next-line react/hook-use-state
   const [store] = useState(() => new SessionStore())
   const state = useSyncExternalStore(store.subscribe, store.getState)
-  const onboardingDispatch = useOnboardingDispatch()
 
   const onAgentSessionChange = useCallback(
     (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
@@ -122,28 +117,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
     },
     [store],
-  )
-
-  const createAccount = useCallback<SessionApiContext['createAccount']>(
-    async (params, _metrics) => {
-      addSessionDebugLog({type: 'method:start', method: 'createAccount'})
-      const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndCreateAccount(
-        params,
-        onAgentSessionChange,
-      )
-
-      if (signal.aborted) {
-        return
-      }
-      store.dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
-      })
-      addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
-    },
-    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const login = useCallback<SessionApiContext['login']>(
@@ -182,10 +155,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (prevState.currentAgentState.did) {
         void clearPersistedQueryStorage(prevState.currentAgentState.did)
       }
-      // reset onboarding flow on logout
-      onboardingDispatch({type: 'skip'})
     },
-    [store, cancelPendingTask, onboardingDispatch],
+    [store, cancelPendingTask],
   )
 
   const logoutEveryAccount = useCallback<
@@ -202,14 +173,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       for (const account of prevState.accounts) {
         void clearPersistedQueryStorage(account.did)
       }
-      // reset onboarding flow on logout
-      onboardingDispatch({type: 'skip'})
     },
-    [store, cancelPendingTask, onboardingDispatch],
+    [store, cancelPendingTask],
   )
 
   const resumeSession = useCallback<SessionApiContext['resumeSession']>(
-    async (storedAccount, isSwitchingAccounts = false) => {
+    async storedAccount => {
       addSessionDebugLog({
         type: 'method:start',
         method: 'resumeSession',
@@ -230,12 +199,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAccount: account,
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
-      if (isSwitchingAccounts) {
-        // reset onboarding flow on switch account
-        onboardingDispatch({type: 'skip'})
-      }
     },
-    [store, onAgentSessionChange, cancelPendingTask, onboardingDispatch],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const partialRefreshSession = useCallback<
@@ -321,7 +286,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const api = useMemo(
     () => ({
-      createAccount,
       login,
       logoutCurrentAccount,
       logoutEveryAccount,
@@ -330,7 +294,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       partialRefreshSession,
     }),
     [
-      createAccount,
       login,
       logoutCurrentAccount,
       logoutEveryAccount,

@@ -12,7 +12,6 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
-import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -21,11 +20,9 @@ import {
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {StarterPackDialog} from '#/components/dialogs/StarterPackDialog'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
@@ -58,8 +55,6 @@ import {useActorStatus, useLiveNowConfig} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {GoLiveDialog} from '#/features/liveNow/components/GoLiveDialog'
 import {GoLiveDisabledDialog} from '#/features/liveNow/components/GoLiveDisabledDialog'
-import {Dot} from '#/features/nuxs/components/Dot'
-import {Gradient} from '#/features/nuxs/components/Gradient'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 
 let ProfileMenu = ({
@@ -67,7 +62,6 @@ let ProfileMenu = ({
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
 }): React.ReactNode => {
-  const t = useTheme()
   const {t: l} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
@@ -83,13 +77,6 @@ let ProfileMenu = ({
   const verification = useFullVerificationState({profile})
   const {canGoLive} = useLiveNowConfig()
   const status = useActorStatus(profile)
-  const statusNudge = useNux(Nux.LiveNowBetaNudge)
-  const statusNudgeActive =
-    isSelf &&
-    canGoLive &&
-    statusNudge.status === 'ready' &&
-    !statusNudge.nux?.completed
-  const {mutate: saveNux} = useSaveNux()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -259,10 +246,8 @@ let ProfileMenu = ({
                   color="secondary"
                   size="small"
                   shape="round">
-                  {statusNudgeActive && <Gradient style={[a.rounded_full]} />}
                   <ButtonIcon icon={Ellipsis} size="sm" />
                 </Button>
-                {statusNudgeActive && <Dot top={1} right={1} />}
               </>
             )
           }}
@@ -361,13 +346,7 @@ let ProfileMenu = ({
                       } else {
                         goLiveDialogControl.open()
                       }
-                      saveNux({
-                        id: Nux.LiveNowBetaNudge,
-                        data: undefined,
-                        completed: true,
-                      })
                     }}>
-                    {statusNudgeActive && <Gradient />}
                     <Menu.ItemText>
                       {status.isDisabled ? (
                         <Trans>Go live (disabled)</Trans>
@@ -377,25 +356,8 @@ let ProfileMenu = ({
                         <Trans>Go live</Trans>
                       )}
                     </Menu.ItemText>
-                    {statusNudgeActive && (
-                      <Menu.ItemText
-                        style={[
-                          a.flex_0,
-                          {
-                            color: t.palette.primary_500,
-                            right: -8,
-                          },
-                        ]}>
-                        <Trans>New</Trans>
-                      </Menu.ItemText>
-                    )}
                     <Menu.ItemIcon
                       icon={LiveIcon}
-                      fill={
-                        statusNudgeActive
-                          ? () => t.palette.primary_500
-                          : undefined
-                      }
                     />
                   </Menu.Item>
                 )}

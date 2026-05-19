@@ -19,22 +19,12 @@ type Log =
     }
   | {
       type: 'method:start'
-      method:
-        | 'createAccount'
-        | 'login'
-        | 'logout'
-        | 'resumeSession'
-        | 'removeAccount'
+      method: 'login' | 'logout' | 'resumeSession' | 'removeAccount'
       account?: SessionAccount
     }
   | {
       type: 'method:end'
-      method:
-        | 'createAccount'
-        | 'login'
-        | 'logout'
-        | 'resumeSession'
-        | 'removeAccount'
+      method: 'login' | 'logout' | 'resumeSession' | 'removeAccount'
       account?: SessionAccount
     }
   | {

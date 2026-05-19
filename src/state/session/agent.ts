@@ -1,28 +1,21 @@
 import {
   Agent as BaseAgent,
-  type AppBskyActorProfile,
   type AtprotoServiceType,
   type AtpSessionData,
   type AtpSessionEvent,
   BskyAgent,
   type Did,
-  type Un$Typed,
 } from '@atproto/api'
 import {type FetchHandler} from '@atproto/api/dist/agent'
 import {type SessionManager} from '@atproto/api/dist/session-manager'
-import {TID} from '@atproto/common-web'
 import {type FetchHandlerOptions} from '@atproto/xrpc'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
   BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
-  DISCOVER_SAVED_FEED,
-  IS_PROD_SERVICE,
   PUBLIC_BSKY_SERVICE,
-  TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
-import {logger} from '#/logger'
 import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
@@ -30,7 +23,7 @@ import {
   configureModerationForGuest,
 } from './moderation'
 import {type SessionAccount} from './types'
-import {isSessionExpired, isSignupQueued} from './util'
+import {isSessionExpired} from './util'
 
 export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`
 
@@ -107,135 +100,6 @@ export async function createAgentAndLogin(
   })
 }
 
-export async function createAgentAndCreateAccount(
-  {
-    service,
-    email,
-    password,
-    handle,
-    birthDate,
-    inviteCode,
-    verificationPhone,
-    verificationCode,
-  }: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    birthDate: Date
-    inviteCode?: string
-    verificationPhone?: string
-    verificationCode?: string
-  },
-  onSessionChange: (
-    agent: BskyAgent,
-    did: string,
-    event: AtpSessionEvent,
-  ) => void,
-) {
-  const agent = new BskyAppAgent({service})
-  await agent.createAccount({
-    email,
-    password,
-    handle,
-    inviteCode,
-    verificationPhone,
-    verificationCode,
-  })
-  const account = agentToSessionAccountOrThrow(agent)
-  const moderation = configureModerationForAccount(agent, account)
-
-  const createdAt = new Date().toISOString()
-  const birthdate = birthDate.toISOString()
-
-  // Not awaited so that we can still get into onboarding.
-  // This is OK because we won't let you toggle adult stuff until you set the date.
-  if (IS_PROD_SERVICE(service)) {
-    void Promise.allSettled([
-      networkRetry(3, () => {
-        return agent.setPersonalDetails({
-          birthDate: birthdate,
-        })
-      }).catch(e => {
-        logger.info(`createAgentAndCreateAccount: failed to set birthDate`)
-        throw e
-      }),
-      networkRetry(3, () => {
-        return agent.upsertProfile(prev => {
-          const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
-          next.displayName = handle
-          next.createdAt = createdAt
-          return next
-        })
-      }).catch(e => {
-        logger.info(
-          `createAgentAndCreateAccount: failed to set initial profile`,
-        )
-        throw e
-      }),
-      networkRetry(1, () => {
-        return agent.overwriteSavedFeeds([
-          {
-            ...DISCOVER_SAVED_FEED,
-            id: TID.nextStr(),
-          },
-          {
-            ...TIMELINE_SAVED_FEED,
-            id: TID.nextStr(),
-          },
-        ])
-      }).catch(e => {
-        logger.info(`createAgentAndCreateAccount: failed to set initial feeds`)
-        throw e
-      }),
-    ]).then(promises => {
-      const rejected = promises.filter(p => p.status === 'rejected')
-      if (rejected.length > 0) {
-        logger.error(
-          `session: createAgentAndCreateAccount failed to save personal details and feeds`,
-        )
-      }
-    })
-  } else {
-    void Promise.allSettled([
-      networkRetry(3, () => {
-        return agent.setPersonalDetails({
-          birthDate: birthDate.toISOString(),
-        })
-      }).catch(e => {
-        logger.info(`createAgentAndCreateAccount: failed to set birthDate`)
-        throw e
-      }),
-      networkRetry(3, () => {
-        return agent.upsertProfile(prev => {
-          const next: Un$Typed<AppBskyActorProfile.Record> = prev || {}
-          next.createdAt = prev?.createdAt || new Date().toISOString()
-          return next
-        })
-      }).catch(e => {
-        logger.info(
-          `createAgentAndCreateAccount: failed to set initial profile`,
-        )
-        throw e
-      }),
-    ]).then(promises => {
-      const rejected = promises.filter(p => p.status === 'rejected')
-      if (rejected.length > 0) {
-        logger.error(
-          `session: createAgentAndCreateAccount failed to save personal details and feeds`,
-        )
-      }
-    })
-  }
-
-  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
-
-  return agent.prepare({
-    resolvers: [moderation],
-    onSessionChange,
-  })
-}
-
 export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
   const account = agentToSessionAccount(agent)
   if (!account) {
@@ -259,7 +123,6 @@ export function agentToSessionAccount(
     emailAuthFactor: agent.session.emailAuthFactor,
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
-    signupQueued: isSignupQueued(agent.session.accessJwt),
     active: agent.session.active,
     status: agent.session.status,
     pdsUrl: agent.pdsUrl?.toString(),

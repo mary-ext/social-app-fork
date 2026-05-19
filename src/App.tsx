@@ -34,7 +34,6 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
-import {Provider as OnboardingProvider} from '#/state/shell/onboarding'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
@@ -163,27 +162,25 @@ function App() {
    */
   return (
     <A11yProvider>
-      <OnboardingProvider>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <PortalProvider>
-                        <StarterPackProvider>
-                          <InnerApp />
-                        </StarterPackProvider>
-                      </PortalProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
-      </OnboardingProvider>
+      <SessionProvider>
+        <PrefsStateProvider>
+          <I18nProvider>
+            <ShellStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <PortalProvider>
+                      <StarterPackProvider>
+                        <InnerApp />
+                      </StarterPackProvider>
+                    </PortalProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </ShellStateProvider>
+          </I18nProvider>
+        </PrefsStateProvider>
+      </SessionProvider>
     </A11yProvider>
   )
 }

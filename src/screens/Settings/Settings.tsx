@@ -24,7 +24,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -352,18 +351,11 @@ function ProfilePreview({
 
 function DevOptions() {
   const {t: l} = useLingui()
-  const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
   const debugFeedContextEnabled = useDebugFeedContextEnabled()
   const setDebugFeedContextEnabled = useSetDebugFeedContextEnabled()
   const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
-
-  const resetOnboarding = () => {
-    navigation.navigate('Home')
-    onboardingDispatch({type: 'start'})
-    Toast.show(l`Onboarding reset`)
-  }
 
   const clearAllStorage = async () => {
     await clearStorage()
@@ -414,13 +406,6 @@ function DevOptions() {
         label={l`Open storybook page`}>
         <SettingsList.ItemText>
           <Trans>Delete chat declaration record</Trans>
-        </SettingsList.ItemText>
-      </SettingsList.PressableItem>
-      <SettingsList.PressableItem
-        onPress={() => void resetOnboarding()}
-        label={l`Reset onboarding state`}>
-        <SettingsList.ItemText>
-          <Trans>Reset onboarding state</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       {actyNotifNudged && (

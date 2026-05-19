@@ -21,7 +21,6 @@ import {
   useFeedPreviews,
 } from '#/state/queries/explore-feed-previews'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
-import {Nux, useNux} from '#/state/queries/nuxs'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {
   createGetSuggestedFeedsQueryKey,
@@ -46,7 +45,6 @@ import {
   StarterPackCard,
   StarterPackCardSkeleton,
 } from '#/screens/Search/components/StarterPackCard'
-import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCard'
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
@@ -203,10 +201,6 @@ type ExploreScreenItems =
       key: string
     }
   | FeedPreviewItem
-  | {
-      type: 'interests-card'
-      key: 'interests-card'
-    }
 
 export function Explore({
   focusSearchInput,
@@ -251,10 +245,6 @@ export function Explore({
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10, enabled: useFullExperience})
-  const interestsNux = useNux(Nux.ExploreInterestsCard)
-  const showInterestsNux =
-    interestsNux.status === 'ready' && !interestsNux.nux?.completed
-
   const {
     data: suggestedSPs,
     isLoading: isLoadingSuggestedSPs,
@@ -696,23 +686,12 @@ export function Explore({
     return i
   }, [feedPreviewSlices, isFetchingNextPageFeedPreviews])
 
-  const interestsNuxModule = useMemo<ExploreScreenItems[]>(() => {
-    if (!showInterestsNux) return []
-    return [
-      {
-        type: 'interests-card',
-        key: 'interests-card',
-      },
-    ]
-  }, [showInterestsNux])
-
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
     // Dynamic module ordering
 
     i.push(topBorder)
-    i.push(...interestsNuxModule)
 
     if (useFullExperience) {
       i.push(trendingTopicsModule)
@@ -732,7 +711,6 @@ export function Explore({
     suggestedFeedsModule,
     trendingTopicsModule,
     feedPreviewsModule,
-    interestsNuxModule,
     useFullExperience,
   ])
 
@@ -1012,9 +990,6 @@ export function Explore({
               onPress={handleOnPressRetry}
             />
           )
-        }
-        case 'interests-card': {
-          return <ExploreInterestsCard />
         }
       }
     },

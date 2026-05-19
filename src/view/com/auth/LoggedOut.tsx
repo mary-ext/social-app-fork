@@ -15,18 +15,14 @@ import {
 import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
-import {Signup} from '#/screens/Signup'
-import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
-  S_LoginOrCreateAccount,
+  S_Welcome,
   S_Login,
-  S_CreateAccount,
-  S_StarterPack,
 }
 export {ScreenState as LoggedOutScreenState}
 
@@ -37,14 +33,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   useEnableMinimalShellMode()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = useState<ScreenState>(() => {
-    if (requestedAccountSwitchTo === 'new') {
-      return ScreenState.S_CreateAccount
-    } else if (requestedAccountSwitchTo === 'starterpack') {
-      return ScreenState.S_StarterPack
-    } else if (requestedAccountSwitchTo != null) {
+    if (requestedAccountSwitchTo != null) {
       return ScreenState.S_Login
     } else {
-      return ScreenState.S_LoginOrCreateAccount
+      return ScreenState.S_Welcome
     }
   })
   const {clearRequestedAccount} = useLoggedOutViewControls()
@@ -81,7 +73,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         {paddingTop: insets.top, paddingBottom: insets.bottom},
       ]}>
       <ErrorBoundary>
-        {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
+        {onDismiss && screenState === ScreenState.S_Welcome ? (
           <Button
             label={l`Go back`}
             variant="solid"
@@ -102,34 +94,22 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           </Button>
         ) : null}
 
-        {screenState === ScreenState.S_StarterPack ? (
-          <LandingScreen setScreenState={setScreenState} />
-        ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
+        {screenState === ScreenState.S_Welcome ? (
           <SplashScreen
             onPressSignin={() => {
               setScreenState(ScreenState.S_Login)
-            }}
-            onPressCreateAccount={() => {
-              setScreenState(ScreenState.S_CreateAccount)
             }}
           />
         ) : undefined}
         {screenState === ScreenState.S_Login ? (
           <Login
             onPressBack={() => {
-              setScreenState(ScreenState.S_LoginOrCreateAccount)
+              setScreenState(ScreenState.S_Welcome)
               clearRequestedAccount()
             }}
           />
         ) : undefined}
-        {screenState === ScreenState.S_CreateAccount ? (
-          <Signup
-            onPressBack={() =>
-              setScreenState(ScreenState.S_LoginOrCreateAccount)
-            }
-          />
-        ) : undefined}
       </ErrorBoundary>
     </View>
-  );
+  )
 }

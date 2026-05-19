@@ -14,6 +14,7 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import {bulkWriteFollows} from '#/lib/bulk-write-follows'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
@@ -43,7 +44,6 @@ import {
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
-import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -460,18 +460,18 @@ function Header({
           {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
-              label={l`Join Bluesky`}
+              label={l`Sign in`}
               onPress={() => {
                 setActiveStarterPack({
                   uri: starterPack.uri,
                 })
-                requestSwitchToAccount({requestedAccount: 'new'})
+                requestSwitchToAccount({requestedAccount: 'none'})
               }}
               variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Sign in</Trans>
               </ButtonText>
             </Button>
           ) : null}

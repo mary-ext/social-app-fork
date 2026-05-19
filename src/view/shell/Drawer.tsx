@@ -20,7 +20,7 @@ import {type SessionAccount, useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {NavSignInCard} from '#/view/shell/nav-sign-in-card'
 import { atoms as a, tokens, useTheme } from '#/alf';
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
@@ -241,7 +241,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
             />
           ) : (
             <View style={[a.pr_xl]}>
-              <NavSignupCard />
+              <NavSignInCard />
             </View>
           )}
 

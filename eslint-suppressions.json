@@ -766,44 +766,6 @@
       "count": 1
     }
   },
-  "src/screens/Onboarding/Layout.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    }
-  },
-  "src/screens/Onboarding/StepFinished/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepInterests/InterestButton.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepInterests/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepProfile/index.tsx": {
-    "@typescript-eslint/no-unused-vars": {
-      "count": 4
-    }
-  },
-  "src/screens/Onboarding/StepSuggestedAccounts/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/PostThread/components/GrowthHack.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 11
@@ -1015,48 +977,6 @@
       "count": 1
     }
   },
-  "src/screens/Signup/StepHandle/HandleSuggestions.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
-    }
-  },
-  "src/screens/Signup/StepHandle/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 4
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 3
-    }
-  },
-  "src/screens/Signup/StepInfo/Policies.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/screens/Signup/StepInfo/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
-    }
-  },
-  "src/screens/Signup/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
-  "src/screens/SignupQueued.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    }
-  },
   "src/screens/StarterPack/StarterPackScreen.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 1
@@ -1110,11 +1030,6 @@
   "src/state/queries/notifications/feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/state/queries/nuxs/definitions.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/state/queries/pinned-post.ts": {
@@ -1340,9 +1255,6 @@
   "src/view/com/profile/ProfileMenu.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 6
-    },
-    "@typescript-eslint/no-unused-vars": {
-      "count": 1
     }
   },
   "src/view/com/util/EmptyState.tsx": {

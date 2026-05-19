@@ -27,14 +27,11 @@ import {
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSession} from '#/state/session'
-import {useOnboardingState} from '#/state/shell'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
-import {Onboarding} from '#/screens/Onboarding'
-import {SignupQueued} from '#/screens/SignupQueued'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
@@ -110,11 +107,10 @@ function NativeStackNavigator({
   // --- our custom logic starts here ---
   // Web LRU: tracks route keys in most-recently-focused order
   const lruKeysRef = useRef<string[]>([])
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
-  const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
@@ -122,14 +118,8 @@ function NativeStackNavigator({
   if (!hasSession && (activeRouteRequiresAuth)) {
     return <LoggedOut />
   }
-  if (hasSession && currentAccount?.signupQueued) {
-    return <SignupQueued />
-  }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
-  }
-  if (onboardingState.isActive) {
-    return <Onboarding />
   }
   // On web, limit how many screens stay mounted to prevent memory growth.
   // Home is always pinned, the focused screen is always mounted, and the
@@ -180,8 +170,9 @@ function NativeStackNavigator({
     }
   }
 
-  // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
-  // on both tablet and mobile web so that we see the create account CTA.
+  // Show the bottom bar if we have a session only on mobile web. If we don't
+  // have a session, show it on both tablet and mobile web so sign-in remains
+  // easy to reach.
   const showBottomBar = hasSession ? isMobile : leftNavMinimal
 
   return (

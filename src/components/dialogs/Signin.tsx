@@ -34,14 +34,9 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = useCallback(() => {
-    closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'new'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
-
   return (
     <Dialog.ScrollableInner
-      label={l`Sign in to Bluesky or create a new account`}
+      label={l`Sign in to Bluesky`}
       style={[gtMobile ? {width: 'auto', maxWidth: 420} : a.w_full]}>
       <View style={[a.p_2xl]}>
         <View
@@ -69,25 +64,12 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
               maxWidth: 300,
             },
           ]}>
-          <Trans>
-            Sign in or create your account to join the conversation!
-          </Trans>
+          <Trans>Sign in to join the conversation!</Trans>
         </Text>
         <View style={[a.flex_col, a.gap_md]}>
           <Button
             variant="solid"
             color="primary"
-            size="large"
-            onPress={showCreateAccount}
-            label={l`Create an account`}>
-            <ButtonText>
-              <Trans>Create an account</Trans>
-            </ButtonText>
-          </Button>
-
-          <Button
-            variant="solid"
-            color="secondary"
             size="large"
             onPress={showSignIn}
             label={l`Sign in`}>

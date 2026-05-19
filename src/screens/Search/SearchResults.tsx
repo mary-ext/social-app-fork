@@ -298,11 +298,6 @@ let SearchScreenPostResults = ({
     requestSwitchToAccount({requestedAccount: 'none'})
   }
 
-  const showCreateAccount = () => {
-    closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'new'})
-  }
-
   if (!hasSession) {
     return (
       <SearchError title={l`Search is currently unavailable when logged out`}>
@@ -310,13 +305,6 @@ let SearchScreenPostResults = ({
           <Trans>
             <InlineLinkText label={l`Sign in`} to="#" onPress={showSignIn}>
               Sign in
-            </InlineLinkText>
-            <Text style={t.atoms.text_contrast_medium}> or </Text>
-            <InlineLinkText
-              label={l`Create an account`}
-              to={'#'}
-              onPress={showCreateAccount}>
-              create an account
             </InlineLinkText>
             <Text> </Text>
             <Text style={t.atoms.text_contrast_medium}>

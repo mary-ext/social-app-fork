@@ -80,12 +80,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = useCallback(() => {
-    closeAllActiveElements()
-    requestSwitchToAccount({requestedAccount: 'new'})
-    // setShowLoggedOut(true)
-  }, [requestSwitchToAccount, closeAllActiveElements])
-
   const onPressTab = useCallback(
     (tab: TabOptions) => {
       const state = navigation.getState()
@@ -314,21 +308,11 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
               <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
                 <Button
-                  onPress={showCreateAccount}
-                  label={l`Create account`}
-                  size="small"
-                  variant="solid"
-                  color="primary">
-                  <ButtonText>
-                    <Trans>Create account</Trans>
-                  </ButtonText>
-                </Button>
-                <Button
                   onPress={showSignIn}
                   label={l`Sign in`}
                   size="small"
                   variant="solid"
-                  color="secondary">
+                  color="primary">
                   <ButtonText>
                     <Trans>Sign in</Trans>
                   </ButtonText>

@@ -20,7 +20,6 @@ const accountSchema = z.object({
   emailAuthFactor: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
-  signupQueued: z.boolean().optional(),
   active: z.boolean().optional(), // optional for backwards compat
   /**
    * Known values: takendown, suspended, deactivated
@@ -113,9 +112,6 @@ const schema = z.object({
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
-  onboarding: z.object({
-    step: z.string(),
-  }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
   /** @deprecated */
@@ -159,9 +155,6 @@ export const defaults: Schema = {
   mutedThreads: [],
   invites: {
     copiedInvites: [],
-  },
-  onboarding: {
-    step: 'Home',
   },
   hiddenPosts: [],
   useInAppBrowser: undefined,
