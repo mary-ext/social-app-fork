@@ -29,7 +29,7 @@ let NavSignInCard = ({}: {}): React.ReactNode => {
       <View style={[a.pt_lg]}>
         <Text
           style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
-          <Trans>Sign in to continue</Trans>
+          <Trans>Join the conversation</Trans>
         </Text>
       </View>
       <View style={[a.flex_row, a.flex_wrap, a.gap_sm, a.pt_md]}>
