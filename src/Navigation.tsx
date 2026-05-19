@@ -1,4 +1,16 @@
-import {type ComponentProps, lazy, useRef} from 'react'
+import {
+  type ComponentProps,
+  type ComponentType,
+  createContext,
+  lazy,
+  Suspense,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import {View} from 'react-native'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {defineMessage} from '@lingui/core/macro'
 import {
@@ -8,24 +20,44 @@ import {
   DefaultTheme,
   type LinkingOptions,
   NavigationContainer,
+  type ScreenLayoutArgs,
   StackActions,
+  type StackNavigationState,
 } from '@react-navigation/native'
+import {
+  createNativeStackNavigator,
+  type NativeStackNavigationEventMap,
+  type NativeStackNavigationProp,
+  type NativeStackNavigatorProps,
+} from '@react-navigation/native-stack'
 
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
   type FlatNavigatorParams,
+  type NativeStackNavigationOptionsWithAuth,
   type RouteParams,
   type State,
 } from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
-import {type Theme, useTheme} from '#/alf'
+import {useSession} from '#/state/session'
+import {LoggedOut} from '#/view/com/auth/LoggedOut'
+import {BottomBarWeb} from '#/view/shell/bottom-bar/BottomBarWeb'
+import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
+import {DesktopRightNav} from '#/view/shell/desktop/RightNav'
+import {RouteLoadingScreen} from '#/view/shell/route-loading-screen'
+import {
+  atoms as a,
+  type Theme,
+  useLayoutBreakpoints,
+  useTheme,
+} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '#/shims/bluesky-swiss-army'
 
@@ -369,12 +401,169 @@ const Wizard = lazy(() =>
 )
 
 function renderMessagesSplitViewLayout(
-  props: ComponentProps<typeof MessagesSplitViewLayout>,
+  props: FlatScreenLayoutProps<MessageScreens>,
 ) {
-  return <MessagesSplitViewLayout {...props} />
+  return (
+    <RouteScreenLayout {...props}>
+      <MessagesSplitViewLayout {...props} />
+    </RouteScreenLayout>
+  )
 }
 
-const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
+const WEB_MAX_CACHED_SCREENS = 5
+
+type MessageScreens =
+  | 'Messages'
+  | 'MessagesConversation'
+  | 'MessagesConversationSettings'
+  | 'MessagesInbox'
+  | 'MessagesSettings'
+
+type FlatStackTypeBag = {
+  ParamList: FlatNavigatorParams
+  NavigatorID: string | undefined
+  State: StackNavigationState<FlatNavigatorParams>
+  ScreenOptions: NativeStackNavigationOptionsWithAuth
+  EventMap: NativeStackNavigationEventMap
+  NavigationList: {
+    [RouteName in keyof FlatNavigatorParams]: NativeStackNavigationProp<
+      FlatNavigatorParams,
+      RouteName,
+      string | undefined
+    >
+  }
+  Navigator: ComponentType<NativeStackNavigatorProps>
+}
+
+const Flat = createNativeStackNavigator<
+  FlatNavigatorParams,
+  string | undefined,
+  FlatStackTypeBag
+>()
+
+type FlatNavigatorLayoutProps = Parameters<
+  NonNullable<ComponentProps<typeof Flat.Navigator>['layout']>
+>[0]
+
+type FlatScreenLayoutProps<
+  RouteName extends keyof FlatNavigatorParams = keyof FlatNavigatorParams,
+> = ScreenLayoutArgs<
+  FlatNavigatorParams,
+  RouteName,
+  NativeStackNavigationOptionsWithAuth,
+  FlatStackTypeBag['NavigationList'][RouteName]
+>
+
+const MountedRouteKeysContext = createContext<ReadonlySet<string> | undefined>(
+  undefined,
+)
+
+function renderRouteScreenLayout(props: FlatScreenLayoutProps) {
+  return <RouteScreenLayout {...props} />
+}
+
+function RouteScreenLayout({
+  children,
+  route,
+}: FlatScreenLayoutProps): React.JSX.Element {
+  const mountedRouteKeys = useContext(MountedRouteKeysContext)
+  if (mountedRouteKeys && !mountedRouteKeys.has(route.key)) {
+    return <View />
+  }
+
+  return <Suspense fallback={<RouteLoadingScreen />}>{children}</Suspense>
+}
+
+function stringArraysEqual(a: string[], b: string[]) {
+  if (a.length !== b.length) {
+    return false
+  }
+
+  return a.every((value, index) => value === b[index])
+}
+
+function FlatNavigatorLayout({
+  children,
+  descriptors,
+  navigation,
+  outerLayout,
+  state,
+}: FlatNavigatorLayoutProps & {
+  outerLayout: ComponentProps<typeof Flat.Navigator>['layout']
+}) {
+  const {hasSession} = useSession()
+  const activeRoute = state.routes[state.index]!
+  const activeDescriptor = descriptors[activeRoute.key]!
+  const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
+  const {isMobile} = useWebMediaQueries()
+  const {leftNavMinimal} = useLayoutBreakpoints()
+  const focusedKey = activeRoute.key
+  const [lruKeys, setLruKeys] = useState<string[]>([])
+
+  useEffect(() => {
+    const routeKeySet = new Set(state.routes.map(r => r.key))
+    setLruKeys(prev => {
+      const next = [
+        focusedKey,
+        ...prev.filter(k => k !== focusedKey && routeKeySet.has(k)),
+      ]
+      return stringArraysEqual(prev, next) ? prev : next
+    })
+  }, [focusedKey, state.routes])
+
+  if (!hasSession && activeRouteRequiresAuth) {
+    return <LoggedOut />
+  }
+
+  const routeKeySet = new Set(state.routes.map(r => r.key))
+  const mountedRouteKeys = new Set<string>()
+  mountedRouteKeys.add(focusedKey)
+  const homeKey = state.routes.find(r => r.name === 'Home')?.key
+  if (homeKey) {
+    mountedRouteKeys.add(homeKey)
+  }
+
+  let cached = 0
+  for (const key of lruKeys) {
+    if (cached >= WEB_MAX_CACHED_SCREENS) {
+      break
+    }
+    if (routeKeySet.has(key) && !mountedRouteKeys.has(key)) {
+      mountedRouteKeys.add(key)
+      cached++
+    }
+  }
+
+  const showBottomBar = hasSession ? isMobile : leftNavMinimal
+  const content = (
+    <>
+      <View role="main" style={a.flex_1}>
+        <MountedRouteKeysContext.Provider value={mountedRouteKeys}>
+          {children}
+        </MountedRouteKeysContext.Provider>
+      </View>
+      <>
+        {showBottomBar ? (
+          <BottomBarWeb />
+        ) : (
+          <DesktopLeftNav routeName={activeRoute.name} />
+        )}
+        {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
+      </>
+    </>
+  )
+
+  if (outerLayout) {
+    return outerLayout({
+      children: content,
+      descriptors,
+      navigation,
+      state,
+    })
+  }
+
+  return content
+}
 
 function screenOptions(t: Theme) {
   return {
@@ -397,12 +586,19 @@ const FlatNavigator = ({
   const numUnread = useUnreadNotifications()
   const screenListeners = useWebScrollRestoration()
   const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread)
+  const renderNavigatorLayout = useCallback(
+    (props: FlatNavigatorLayoutProps) => (
+      <FlatNavigatorLayout {...props} outerLayout={layout} />
+    ),
+    [layout],
+  )
 
   return (
     <Flat.Navigator
-      layout={layout}
+      layout={renderNavigatorLayout}
       screenListeners={screenListeners}
-      screenOptions={screenOptions(t)}>
+      screenOptions={screenOptions(t)}
+      screenLayout={renderRouteScreenLayout}>
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}

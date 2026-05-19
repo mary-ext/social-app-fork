@@ -48,7 +48,7 @@ export function LoadLatestBtn({
   const isTallViewport = useMediaQuery({minHeight: 700})
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
-  // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
+  // it on both tablet and mobile since the shell shows the bottom bar there too.
   const showBottomBar = hasSession ? isMobile : isTabletOrMobile
 
   const bottomPosition = isTablet

@@ -4,9 +4,11 @@ import {type ScreenLayoutArgs, useIsFocused} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 import {type ReanimatedScrollEvent} from '#/lib/animations/reanimatedCompat'
-import {type FlatNavigatorParams} from '#/lib/routes/types'
+import {
+  type FlatNavigatorParams,
+  type NativeStackNavigationOptionsWithAuth,
+} from '#/lib/routes/types'
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'

@@ -1,7 +1,15 @@
 import {type NavigationState, type PartialState} from '@react-navigation/native'
-import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {
+  type NativeStackNavigationOptions,
+  type NativeStackNavigationProp,
+} from '@react-navigation/native-stack'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
+
+export type NativeStackNavigationOptionsWithAuth =
+  NativeStackNavigationOptions & {
+    requireAuth?: boolean
+  }
 
 export type CommonNavigatorParams = {
   NotFound: undefined
