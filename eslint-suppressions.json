@@ -304,11 +304,6 @@
       "count": 1
     }
   },
-  "src/lib/hooks/useWebScrollRestoration.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/lib/react-query.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -464,11 +459,6 @@
       "count": 1
     }
   },
-  "src/view/com/pager/DraggableScrollView.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/view/com/pager/Pager.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -485,11 +475,6 @@
     }
   },
   "src/view/com/util/List.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/util/MainScrollProvider.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     }

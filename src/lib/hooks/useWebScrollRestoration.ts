@@ -14,6 +14,11 @@ function createInitialScrollState() {
   }
 }
 
+type UnsafeActionNavigation = {
+  addListener: (event: '__unsafe_action__', listener: () => void) => () => void
+  removeListener: (event: '__unsafe_action__', listener: () => void) => void
+}
+
 export function useWebScrollRestoration() {
   const [state] = useState(createInitialScrollState)
   const navigation = useNavigation()
@@ -32,9 +37,10 @@ export function useWebScrollRestoration() {
     // We want to intercept any push/pop/replace *before* the re-render.
     // There is no official way to do this yet, but this works okay for now.
     // https://twitter.com/satya164/status/1737301243519725803
-    navigation.addListener('__unsafe_action__' as any, onDispatch)
+    const unsafeNavigation = navigation as unknown as UnsafeActionNavigation
+    unsafeNavigation.addListener('__unsafe_action__', onDispatch)
     return () => {
-      navigation.removeListener('__unsafe_action__' as any, onDispatch)
+      unsafeNavigation.removeListener('__unsafe_action__', onDispatch)
     }
   }, [state, navigation])
 

@@ -1,8 +1,16 @@
 import {type ComponentPropsWithRef} from 'react'
-import {ScrollView} from 'react-native'
+import {ScrollView, type ViewStyle} from 'react-native'
 
 import {useDraggableScroll} from '#/lib/hooks/useDraggableScrollView'
 import {atoms as a} from '#/alf'
+
+type WebViewStyle = ViewStyle & {
+  userSelect?: 'none'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style
+}
 
 export function DraggableScrollView({
   ref,
@@ -17,7 +25,7 @@ export function DraggableScrollView({
   return (
     <ScrollView
       ref={refs}
-      style={[style, a.user_select_none as any]}
+      style={[style, webViewStyle(a.user_select_none)]}
       horizontal
       {...props}
     />

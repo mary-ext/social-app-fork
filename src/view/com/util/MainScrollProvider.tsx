@@ -112,16 +112,18 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
 
 const emitter = new EventEmitter()
 
-const originalScroll = window.scroll
-window.scroll = function () {
+const originalScroll = window.scroll.bind(window) as (...args: unknown[]) => void
+window.scroll = function (...args: unknown[]) {
   emitter.emit('forced-scroll')
-  return originalScroll.apply(this, arguments as any)
+  return originalScroll(...args)
 }
 
-const originalScrollTo = window.scrollTo
-window.scrollTo = function () {
+const originalScrollTo = window.scrollTo.bind(window) as (
+  ...args: unknown[]
+) => void
+window.scrollTo = function (...args: unknown[]) {
   emitter.emit('forced-scroll')
-  return originalScrollTo.apply(this, arguments as any)
+  return originalScrollTo(...args)
 }
 
 function listenToForcedWindowScroll(listener: () => void) {
