@@ -18,7 +18,11 @@ export function dedupArray<T>(arr: T[]): T[] {
  * If not, it will replace any deeply equal children of `b` with those of `a`.
  * This can be used for structural sharing between JSON values for example.
  */
-export function replaceEqualDeep(a: any, b: any): any {
+type PlainObject = Record<string, unknown>
+
+export function replaceEqualDeep<T>(a: T, b: T): T
+export function replaceEqualDeep(a: unknown, b: unknown): unknown
+export function replaceEqualDeep(a: unknown, b: unknown): unknown {
   if (a === b) {
     return a
   }
@@ -27,21 +31,37 @@ export function replaceEqualDeep(a: any, b: any): any {
     return a.getTime() === b.getTime() ? a : b
   }
 
-  const array = isPlainArray(a) && isPlainArray(b)
-
-  if (array || (isPlainObject(a) && isPlainObject(b))) {
-    const aItems = array ? a : Object.keys(a)
+  if (isPlainArray(a) && isPlainArray(b)) {
+    const aItems = a
     const aSize = aItems.length
-    const bItems = array ? b : Object.keys(b)
+    const bItems = b
     const bSize = bItems.length
-    const copy: any = array ? [] : {}
+    const copy: unknown[] = []
 
     let equalItems = 0
 
     for (let i = 0; i < bSize; i++) {
-      const key = array ? i : bItems[i]
+      copy[i] = replaceEqualDeep(a[i], b[i])
+      if (copy[i] === a[i] && a[i] !== undefined) {
+        equalItems++
+      }
+    }
+
+    return aSize === bSize && equalItems === aSize ? a : copy
+  }
+
+  if (isPlainObject(a) && isPlainObject(b)) {
+    const aItems = Object.keys(a)
+    const aSize = aItems.length
+    const bItems = Object.keys(b)
+    const bSize = bItems.length
+    const copy: PlainObject = {}
+
+    let equalItems = 0
+
+    for (let i = 0; i < bSize; i++) {
+      const key = bItems[i]!
       if (
-        !array &&
         a[key] === undefined &&
         b[key] === undefined &&
         aItems.includes(key)
@@ -62,12 +82,12 @@ export function replaceEqualDeep(a: any, b: any): any {
   return b
 }
 
-export function isPlainArray(value: unknown) {
+export function isPlainArray(value: unknown): value is unknown[] {
   return Array.isArray(value) && value.length === Object.keys(value).length
 }
 
 // Copied from: https://github.com/jonschlinkert/is-plain-object
-export function isPlainObject(o: any): o is object {
+export function isPlainObject(o: unknown): o is PlainObject {
   if (!hasObjectPrototype(o)) {
     return false
   }
@@ -93,6 +113,6 @@ export function isPlainObject(o: any): o is object {
   return true
 }
 
-function hasObjectPrototype(o: any): boolean {
+function hasObjectPrototype(o: unknown): o is PlainObject {
   return Object.prototype.toString.call(o) === '[object Object]'
 }

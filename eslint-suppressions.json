@@ -374,24 +374,9 @@
       "count": 5
     }
   },
-  "src/lib/async/retry.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/lib/async/until.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/lib/broadcast/stub.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/lib/functions.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 6
     }
   },
   "src/lib/getUserDisplayName.ts": {
@@ -407,11 +392,6 @@
   "src/lib/hooks/useNonReactiveCallback.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/lib/hooks/useToggleMutationQueue.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "src/lib/hooks/useWebScrollRestoration.ts": {

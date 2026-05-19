@@ -3,7 +3,7 @@ import {timeout} from './timeout'
 export async function until<T>(
   retries: number,
   delay: number,
-  cond: (v: T, err: any) => boolean,
+  cond: (v: T, err: unknown) => boolean,
   fn: () => Promise<T>,
 ): Promise<boolean> {
   while (retries > 0) {
@@ -12,7 +12,7 @@ export async function until<T>(
       if (cond(v, undefined)) {
         return true
       }
-    } catch (e: any) {
+    } catch (e) {
       // TODO: change the type signature of cond to accept undefined
       // however this breaks every existing usage of until -sfn
       if (cond(undefined as unknown as T, e)) {
