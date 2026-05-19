@@ -1,16 +1,11 @@
 import {useCallback} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {
-  type AllNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 
-type Props = NativeStackScreenProps<
-  AllNavigatorParams,
-  'LegacyNotificationSettings'
->
-export function LegacyNotificationSettingsScreen({navigation}: Props) {
+export function LegacyNotificationSettingsScreen() {
+  const navigation = useNavigation<NavigationProp>()
+
   useFocusEffect(
     useCallback(() => {
       navigation.replace('NotificationSettings')

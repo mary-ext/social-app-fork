@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {withSpring} from '#/lib/animations/reanimatedCompat'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -9,6 +9,7 @@ import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {
   type HomeTabNavigatorParams,
   type NativeStackScreenProps,
+  type NavigationProp,
 } from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {
@@ -42,6 +43,7 @@ type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {currentAccount} = useSession()
+  const navigation = useNavigation<NavigationProp>()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
 
@@ -53,17 +55,12 @@ export function HomeScreen(props: Props) {
       params?.name &&
       params?.rkey
     ) {
-      props.navigation.navigate('StarterPack', {
+      navigation.navigate('StarterPack', {
         rkey: params.rkey,
         name: params.name,
       })
     }
-  }, [
-    currentAccount,
-    props.navigation,
-    props.route.name,
-    props.route.params,
-  ])
+  }, [currentAccount, navigation, props.route.name, props.route.params])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
@@ -104,7 +101,7 @@ function HomeScreenReady({
   const setSelectedFeed = useSetSelectedFeed()
   const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
-  const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]!
+  const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
 

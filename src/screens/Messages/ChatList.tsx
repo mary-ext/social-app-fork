@@ -2,13 +2,20 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View, type ViewStyle} from 'react-native'
 import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAnimatedRef} from '#/lib/animations/reanimatedCompat'
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {type MessagesTabNavigatorParams} from '#/lib/routes/types'
+import {
+  type MessagesTabNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
@@ -67,9 +74,10 @@ export function MessagesScreen(props: Props) {
   return <MessagesScreenInner {...props} />
 }
 
-export function MessagesScreenInner({navigation, route}: Props) {
+export function MessagesScreenInner({route}: Props) {
   const {isWithinSplitView} = useIsWithinSplitView()
   const {t: l} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const newChatControl = useDialogControl()
   const pushToConversation = route.params?.pushToConversation
