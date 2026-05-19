@@ -20,7 +20,7 @@ import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-f
 import {useGetSuggestedUsersForDiscoverQuery} from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery'
 import {useSession} from '#/state/session'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
@@ -272,11 +272,11 @@ export function ProfileGrid({
             style={[
               a.flex_1,
               gtMobile &&
-                [
+                ([
                   a.flex_0,
                   a.flex_grow,
                   {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-                ] as any,
+                ] as any),
             ]}>
             <SuggestedFollowPlaceholder />
           </View>
@@ -293,11 +293,11 @@ export function ProfileGrid({
             style={[
               a.flex_1,
               gtMobile &&
-                [
+                ([
                   a.flex_0,
                   a.flex_grow,
                   {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-                ] as any,
+                ] as any),
             ]}>
             <ProfileCard.Link
               profile={profile.actor}
@@ -429,10 +429,10 @@ export function ProfileGrid({
                 a.text_sm,
                 {color: t.palette.primary_500},
                 hovered &&
-                  {
+                  ({
                     textDecorationLine: 'underline',
                     textDecorationColor: t.palette.primary_500,
-                  } as any,
+                  } as any),
               ]}>
               <Trans>See more</Trans>
             </Text>
@@ -467,7 +467,7 @@ export function ProfileGrid({
         )}
       </LayoutAnimationConfig>
     </View>
-  );
+  )
 }
 
 function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {

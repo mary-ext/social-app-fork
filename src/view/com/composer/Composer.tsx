@@ -116,7 +116,7 @@ import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as EmojiPicker from '#/components/EmojiPicker'
@@ -649,8 +649,7 @@ export const ComposePost = ({
   const viewStyles = useMemo(
     () => ({
       paddingTop: 0,
-      paddingBottom:
-        0,
+      paddingBottom: 0,
     }),
     [insets, isKeyboardVisible],
   )
@@ -1230,7 +1229,7 @@ export const ComposePost = ({
         />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
-  );
+  )
 }
 
 let ComposerPost = memo(function ComposerPost({
@@ -1308,10 +1307,7 @@ let ComposerPost = memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (
-        uri.startsWith('data:video/') ||
-        (uri.startsWith('data:image/gif'))
-      ) {
+      if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
           Toast.show(l`Unsupported video type: ${mimeType}`, {
@@ -1431,7 +1427,7 @@ let ComposerPost = memo(function ComposerPost({
         isActivePost={isActive}
       />
     </View>
-  );
+  )
 })
 
 function ComposerTopBar({
@@ -1477,16 +1473,8 @@ function ComposerTopBar({
   const {t: l} = useLingui()
 
   return (
-    <Animated.View
-      style={topBarAnimatedStyle}
-      layout={undefined as any}>
-      <View
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.gap_xs,
-          [a.p_sm],
-        ]}>
+    <Animated.View style={topBarAnimatedStyle} layout={undefined as any}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs, [a.p_sm]]}>
         <Button
           label={l`Cancel`}
           variant="ghost"
@@ -1571,7 +1559,7 @@ function ComposerTopBar({
       </View>
       {children}
     </Animated.View>
-  );
+  )
 }
 
 function AltTextReminder({error}: {error: string}) {
@@ -1668,8 +1656,7 @@ function ComposerEmbeds({
         )}
       </LayoutAnimationConfig>
       {embed.quote?.uri ? (
-        <View
-          style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], [a.pb_md]]}>
+        <View style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], [a.pb_md]]}>
           <View style={[a.relative]}>
             <LazyQuoteEmbed uri={embed.quote.uri} linkDisabled />
             {canRemoveQuote && (
@@ -1682,7 +1669,7 @@ function ComposerEmbeds({
         </View>
       ) : null}
     </>
-  );
+  )
 }
 
 function ComposerPills({
@@ -1943,7 +1930,7 @@ function ComposerFooter({
         />
       </View>
     </View>
-  );
+  )
 }
 
 export function useComposerCancelRef() {

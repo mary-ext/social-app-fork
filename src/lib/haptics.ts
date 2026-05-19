@@ -12,5 +12,5 @@ export function useHaptics() {
       return
     },
     [isHapticsDisabled],
-  );
+  )
 }

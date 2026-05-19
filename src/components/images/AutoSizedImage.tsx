@@ -1,7 +1,7 @@
 import {useMemo, useRef} from 'react'
 import {type DimensionValue, Pressable, View} from 'react-native'
 import {type AppBskyEmbedImages} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import Animated, {
   type AnimatedRef,
@@ -10,7 +10,7 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat'
 import {type Dimensions} from '#/lib/media/types'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import { atoms as a, useTheme, utils } from '#/alf';
+import {atoms as a, useTheme, utils} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
@@ -219,7 +219,7 @@ export function AutoSizedImage({
         ]}>
         {contents}
       </Pressable>
-    );
+    )
   } else {
     return (
       <ConstrainedImage
@@ -250,6 +250,6 @@ export function AutoSizedImage({
           {contents}
         </Pressable>
       </ConstrainedImage>
-    );
+    )
   }
 }

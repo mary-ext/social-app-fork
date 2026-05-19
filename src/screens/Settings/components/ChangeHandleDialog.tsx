@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import Animated, {
@@ -27,7 +27,7 @@ import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -138,7 +138,7 @@ function ChangeHandleDialogInner() {
         )}
       </View>
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 function ProvidedHandlePage({
@@ -200,9 +200,7 @@ function ProvidedHandlePage({
             <ChangeHandleError error={error} />
           </Animated.View>
         )}
-        <Animated.View
-          layout={undefined as any}
-          style={[a.flex_1, a.gap_md]}>
+        <Animated.View layout={undefined as any} style={[a.flex_1, a.gap_md]}>
           {verification.isVerified && verification.role === 'default' && (
             <Admonition type="error">
               <Trans>
@@ -296,7 +294,7 @@ function ProvidedHandlePage({
         </Animated.View>
       </View>
     </LayoutAnimationConfig>
-  );
+  )
 }
 
 function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
@@ -581,7 +579,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Button>
       </Animated.View>
     </View>
-  );
+  )
 }
 
 class DidMismatchError extends Error {

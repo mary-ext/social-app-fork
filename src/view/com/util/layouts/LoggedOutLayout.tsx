@@ -77,9 +77,7 @@ export const LoggedOutLayout = ({
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
-            <View style={[styles.contentWrapper, a.my_auto]}>
-              {children}
-            </View>
+            <View style={[styles.contentWrapper, a.my_auto]}>{children}</View>
           </ScrollView>
         </View>
       ) : (
@@ -88,7 +86,7 @@ export const LoggedOutLayout = ({
         </View>
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

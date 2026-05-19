@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {useCallback, useRef, useState, useSyncExternalStore} from 'react'
-import { type TextInput } from 'react-native';
+import {type TextInput} from 'react-native'
 
 import * as defaultFacets from './facets'
 import {

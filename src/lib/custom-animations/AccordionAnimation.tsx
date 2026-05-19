@@ -68,9 +68,9 @@ function MobileAccordion({
       pointerEvents={'box-none'}>
       {children}
     </Animated.View>
-  );
+  )
 }
 
 export function AccordionAnimation(props: AccordionAnimationProps) {
-  return <WebAccordion {...props} />;
+  return <WebAccordion {...props} />
 }

@@ -586,7 +586,7 @@ export const Button = forwardRef<View, ButtonProps>(
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
       </PressableComponent>
-    );
+    )
   },
 )
 Button.displayName = 'Button'

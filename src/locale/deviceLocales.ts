@@ -1,5 +1,8 @@
 import {dedupArray} from '#/lib/functions'
-import {getLocales as defaultGetLocales, type Locale} from '#/shims/localization'
+import {
+  getLocales as defaultGetLocales,
+  type Locale,
+} from '#/shims/localization'
 
 type LocalWithLanguageCode = Locale & {
   languageCode: string

@@ -1,13 +1,13 @@
 import {View} from 'react-native'
 import {type ModerationCause} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useSession} from '#/state/session'
-import { atoms as a, useGutters, useTheme } from '#/alf';
+import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
@@ -132,9 +132,11 @@ function ModerationDetailsDialogInner({
         paddingRight: 0,
         paddingBottom: 0,
       }}
-      style={{
-        maxWidth: 460,
-      } as any}>
+      style={
+        {
+          maxWidth: 460,
+        } as any
+      }>
       <View style={[xGutters, a.pb_lg]}>
         <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
           {name}
@@ -220,5 +222,5 @@ function ModerationDetailsDialogInner({
       )}
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

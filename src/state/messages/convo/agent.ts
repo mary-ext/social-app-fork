@@ -733,7 +733,7 @@ export class Convo {
             limit: 60,
           },
           {headers: DM_SERVICE_HEADERS},
-        );
+        )
       })
       const {cursor, messages, relatedProfiles} = response.data
 
@@ -749,7 +749,7 @@ export class Convo {
        * If the response contained fewer messages than the limit, we know
        * there are no more pages, regardless of whether a cursor was returned.
        */
-      if (messages.length < (60)) {
+      if (messages.length < 60) {
         this.oldestRev = null
       }
 

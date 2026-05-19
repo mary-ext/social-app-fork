@@ -185,51 +185,63 @@ function KnownFollowersInner({
             {slice.length >= 2 ? (
               // 2-n followers, including blocks
               // only 2
-              (serverCount > 2 ? (<Trans>Followed by{' '}
-                <Text emoji key={slice[0].profile.did} style={textStyle}>
-                  {slice[0].profile.displayName}
-                </Text>,{' '}
-                <Text emoji key={slice[1].profile.did} style={textStyle}>
-                  {slice[1].profile.displayName}
-                </Text>, and{' '}
-                <Plural
-                  value={serverCount - 2}
-                  one="# other"
-                  other="# others"
-                />
-              </Trans>) : (<Trans>Followed by{' '}
-                <Text emoji key={slice[0].profile.did} style={textStyle}>
-                  {slice[0].profile.displayName}
-                </Text>{' '}and{' '}
-                <Text emoji key={slice[1].profile.did} style={textStyle}>
-                  {slice[1].profile.displayName}
-                </Text>
-              </Trans>))
+              serverCount > 2 ? (
+                <Trans>
+                  Followed by{' '}
+                  <Text emoji key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>
+                  ,{' '}
+                  <Text emoji key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                  , and{' '}
+                  <Plural
+                    value={serverCount - 2}
+                    one="# other"
+                    other="# others"
+                  />
+                </Trans>
+              ) : (
+                <Trans>
+                  Followed by{' '}
+                  <Text emoji key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>{' '}
+                  and{' '}
+                  <Text emoji key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                </Trans>
+              )
             ) : serverCount > 1 ? (
               // 1-n followers, including blocks
-              (<Trans>Followed by{' '}
+              <Trans>
+                Followed by{' '}
                 <Text emoji key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
-                </Text>{' '}and{' '}
+                </Text>{' '}
+                and{' '}
                 <Plural
                   value={serverCount - 1}
                   one="# other"
                   other="# others"
                 />
-              </Trans>)
+              </Trans>
             ) : (
               // only 1
-              (<Trans>Followed by{' '}
+              <Trans>
+                Followed by{' '}
                 <Text emoji key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
                 </Text>
-              </Trans>)
+              </Trans>
             )}
           </Text>
         </>
       )}
     </Link>
-  );
+  )
 }
 
 function EmptyFallback({show}: {show?: boolean}) {

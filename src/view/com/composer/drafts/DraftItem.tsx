@@ -326,5 +326,5 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
         />
       )}
     </MediaPreview.Outer>
-  );
+  )
 }

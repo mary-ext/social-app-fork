@@ -85,7 +85,7 @@ let ProfileHeader = ({setMinimumHeight, ...props}: Props): React.ReactNode => {
       {false}
       {content}
     </>
-  );
+  )
 }
 ProfileHeader = memo(ProfileHeader)
 export {ProfileHeader}

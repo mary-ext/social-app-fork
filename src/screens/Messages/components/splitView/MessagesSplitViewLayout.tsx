@@ -7,7 +7,7 @@ import {type ReanimatedScrollEvent} from '#/lib/animations/reanimatedCompat'
 import {type FlatNavigatorParams} from '#/lib/routes/types'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {type NativeStackNavigationOptionsWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
-import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
 import {SCROLLBAR_OFFSET} from '#/components/Layout'
@@ -43,7 +43,11 @@ export function renderMessagesSplitViewLayout(props: LayoutProps) {
   return <MessagesSplitViewLayout {...props} />
 }
 
-export function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
+export function MessagesSplitViewLayout({
+  children,
+  navigation,
+  route,
+}: LayoutProps) {
   const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
   const newChatControl = useDialogControl()
   const t = useTheme()
@@ -132,5 +136,5 @@ export function MessagesSplitViewLayout({children, navigation, route}: LayoutPro
         </View>
       </SplitViewProvider>
     </View>
-  );
+  )
 }

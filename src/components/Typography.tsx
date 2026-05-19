@@ -1,7 +1,7 @@
 import {Text as RNText} from 'react-native'
 
 import {logger} from '#/logger'
-import { atoms as a, type TextStyleProp, useAlf, useTheme } from '#/alf';
+import {atoms as a, type TextStyleProp, useAlf, useTheme} from '#/alf'
 import {
   childHasEmoji,
   normalizeTextStyles,
@@ -72,7 +72,7 @@ function createHeadingElement({level}: {level: number}) {
       'aria-level': level,
     } as any
     return <Text {...attr} {...rest} style={style} />
-  };
+  }
 }
 
 /*

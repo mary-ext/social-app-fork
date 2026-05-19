@@ -1,7 +1,7 @@
 import {createContext, useContext, useMemo} from 'react'
 import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 
-import {type Theme,themes} from './themes'
+import {type Theme, themes} from './themes'
 
 export * from './atoms'
 export * from './palette'

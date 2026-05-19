@@ -9,7 +9,7 @@ export function getDataUriSize(uri: string): number {
 }
 
 export function isUriImage(uri: string): boolean {
-  return /\.(jpg|jpeg|png|webp).*$/.test(uri);
+  return /\.(jpg|jpeg|png|webp).*$/.test(uri)
 }
 
 export function blobToDataUri(blob: Blob): Promise<string> {

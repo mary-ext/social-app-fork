@@ -105,23 +105,23 @@ function InnerApp() {
                               <SelectedFeedProvider>
                                 <HiddenRepliesProvider>
                                   <HomeBadgeProvider>
-                                        <UnreadNotifsProvider>
-                                          <MutedThreadsProvider>
-                                            <SafeAreaProvider>
-                                              <ServiceConfigProvider>
-                                                <HideBottomBarBorderProvider>
-                                                  <IntentDialogProvider>
-                                                    <TranslateOnDeviceProvider>
-                                                      <HotkeysProvider>
-                                                        <Shell />
-                                                        <ToastOutlet />
-                                                      </HotkeysProvider>
-                                                    </TranslateOnDeviceProvider>
-                                                  </IntentDialogProvider>
-                                                </HideBottomBarBorderProvider>
-                                              </ServiceConfigProvider>
-                                            </SafeAreaProvider>
-                                          </MutedThreadsProvider>
+                                    <UnreadNotifsProvider>
+                                      <MutedThreadsProvider>
+                                        <SafeAreaProvider>
+                                          <ServiceConfigProvider>
+                                            <HideBottomBarBorderProvider>
+                                              <IntentDialogProvider>
+                                                <TranslateOnDeviceProvider>
+                                                  <HotkeysProvider>
+                                                    <Shell />
+                                                    <ToastOutlet />
+                                                  </HotkeysProvider>
+                                                </TranslateOnDeviceProvider>
+                                              </IntentDialogProvider>
+                                            </HideBottomBarBorderProvider>
+                                          </ServiceConfigProvider>
+                                        </SafeAreaProvider>
+                                      </MutedThreadsProvider>
                                     </UnreadNotifsProvider>
                                   </HomeBadgeProvider>
                                 </HiddenRepliesProvider>

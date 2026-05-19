@@ -1,10 +1,10 @@
-import { View } from 'react-native';
+import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   type AppBskyActorGetProfile,
   type AtpAgent,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
@@ -12,7 +12,7 @@ import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {RQKEY} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CustomLinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -254,7 +254,7 @@ function GermSelfButton({did}: {did: string}) {
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
-  );
+  )
 }
 
 function constructGermUrl(

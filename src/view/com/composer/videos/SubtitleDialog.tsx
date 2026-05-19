@@ -1,12 +1,12 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -36,9 +36,7 @@ export function SubtitleDialogBtn(props: Props) {
     <View style={[a.flex_row, a.my_xs]}>
       <Button
         label={l`Captions & alt text`}
-        accessibilityHint={
-          l`Opens captions and alt text dialog`
-        }
+        accessibilityHint={l`Opens captions and alt text dialog`}
         size="small"
         color="secondary"
         variant="ghost"
@@ -47,16 +45,14 @@ export function SubtitleDialogBtn(props: Props) {
           control.open()
         }}>
         <ButtonIcon icon={CCIcon} />
-        <ButtonText>
-          {(<Trans>Captions & alt text</Trans>)}
-        </ButtonText>
+        <ButtonText>{<Trans>Captions & alt text</Trans>}</ButtonText>
       </Button>
       <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
     </View>
-  );
+  )
 }
 
 function SubtitleDialogInner({
@@ -133,48 +129,50 @@ function SubtitleDialogInner({
           </Text>
         )}
 
-        {(<>
-          <View
-            style={[
-              a.border_t,
-              a.w_full,
-              t.atoms.border_contrast_medium,
-              a.my_md,
-            ]}
-          />
-          <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
-            <Trans>Captions (.vtt)</Trans>
-          </Text>
-          <SubtitleFilePicker
-            onSelectFile={handleSelectFile}
-            disabled={
-              subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
-            }
-          />
-          <View>
-            {captions.map((subtitle, i) => (
-              <SubtitleFileRow
-                key={subtitle.lang}
-                language={subtitle.lang}
-                file={subtitle.file}
-                setCaptions={setCaptions}
-                otherLanguages={LANGUAGES.filter(
-                  lang =>
-                    langCode(lang) === subtitle.lang ||
-                    !captions.some(s => s.lang === langCode(lang)),
-                )}
-                style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
-              />
-            ))}
-          </View>
-          {subtitleMissingLanguage && (
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              <Trans>
-                Ensure you have selected a language for each caption file.
-              </Trans>
+        {
+          <>
+            <View
+              style={[
+                a.border_t,
+                a.w_full,
+                t.atoms.border_contrast_medium,
+                a.my_md,
+              ]}
+            />
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
+              <Trans>Captions (.vtt)</Trans>
             </Text>
-          )}
-        </>)}
+            <SubtitleFilePicker
+              onSelectFile={handleSelectFile}
+              disabled={
+                subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
+              }
+            />
+            <View>
+              {captions.map((subtitle, i) => (
+                <SubtitleFileRow
+                  key={subtitle.lang}
+                  language={subtitle.lang}
+                  file={subtitle.file}
+                  setCaptions={setCaptions}
+                  otherLanguages={LANGUAGES.filter(
+                    lang =>
+                      langCode(lang) === subtitle.lang ||
+                      !captions.some(s => s.lang === langCode(lang)),
+                  )}
+                  style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
+                />
+              ))}
+            </View>
+            {subtitleMissingLanguage && (
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  Ensure you have selected a language for each caption file.
+                </Trans>
+              </Text>
+            )}
+          </>
+        }
 
         <View style={[a.flex_row, a.justify_end] as any}>
           <Button
@@ -196,7 +194,7 @@ function SubtitleDialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 function SubtitleFileRow({

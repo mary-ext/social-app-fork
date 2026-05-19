@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -22,7 +22,7 @@ import {
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
 import {useSession} from '#/state/session'
-import { IS_WEB_MOBILE } from '#/env';
+import {IS_WEB_MOBILE} from '#/env'
 import {MyLists} from '../lists/MyLists'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -57,8 +57,7 @@ export function Component({
   const listStyle = useMemo(() => {
     if (IS_WEB_MOBILE) {
       return [pal.border, {height: screenHeight / 2}]
-    } else
-      return [pal.border, {height: screenHeight / 1.5}];
+    } else return [pal.border, {height: screenHeight / 1.5}]
 
     return [pal.border, {flex: 1, borderTopWidth: StyleSheet.hairlineWidth}]
   }, [pal.border, screenHeight])

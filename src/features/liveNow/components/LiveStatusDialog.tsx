@@ -15,7 +15,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
@@ -91,7 +91,7 @@ function DialogInner({
       />
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 export function LiveStatus({
@@ -259,7 +259,7 @@ export function LiveStatus({
         </View>
       </View>
     </>
-  );
+  )
 }
 
 function ModeratedImage() {
@@ -296,8 +296,9 @@ function ModeratedImage() {
              * `#/features/liveNow/index.tsx`. But for clarity, I've included
              * this here.
              */
-            (<Trans comment="Image has been moderated and is not visible to the user">Image is unavailable.
-                          </Trans>)
+            <Trans comment="Image has been moderated and is not visible to the user">
+              Image is unavailable.
+            </Trans>
           )}
         </Text>
 
@@ -312,5 +313,5 @@ function ModeratedImage() {
         )}
       </View>
     </View>
-  );
+  )
 }

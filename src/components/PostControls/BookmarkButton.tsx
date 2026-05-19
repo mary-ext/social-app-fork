@@ -1,7 +1,7 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'

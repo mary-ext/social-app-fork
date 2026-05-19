@@ -83,7 +83,7 @@ function Text_DEPRECATED({
       style: flattened,
       dataSet: Object.assign({tooltip: title}, dataSet || {}),
       ...props,
-    };
+    }
   }, [
     dataSet,
     fonts.family,

@@ -34,8 +34,9 @@ export function normalizeTextStyles(
     if (s.lineHeight !== 0 && s.lineHeight <= 2) {
       s.lineHeight = Math.round(s.fontSize * s.lineHeight)
     }
-  } else
-    s.lineHeight = s.fontSize;
+  } else {
+    s.lineHeight = s.fontSize
+  }
 
   applyFonts(s, fontFamily)
 

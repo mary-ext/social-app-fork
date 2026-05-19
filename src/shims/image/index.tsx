@@ -53,7 +53,9 @@ type ExtraImageProps = {
 export type ImageProps = Omit<RNImageProps, 'source' | 'onLoad' | 'onError'> &
   ExtraImageProps
 
-function normalizeSource(source: ExtraImageProps['source']): RNImageProps['source'] {
+function normalizeSource(
+  source: ExtraImageProps['source'],
+): RNImageProps['source'] {
   const value = Array.isArray(source) ? source[0] : source
   if (typeof value === 'string') return {uri: value}
   if (value == null) return undefined

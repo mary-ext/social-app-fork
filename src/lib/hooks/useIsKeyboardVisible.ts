@@ -11,10 +11,8 @@ export function useIsKeyboardVisible({
   // NOTE
   // only iOS supports the "will" events
   // -prf
-  const showEvent =
-    'keyboardDidShow'
-  const hideEvent =
-    'keyboardDidHide'
+  const showEvent = 'keyboardDidShow'
+  const hideEvent = 'keyboardDidHide'
 
   useEffect(() => {
     const keyboardShowListener = Keyboard.addListener(showEvent, () =>

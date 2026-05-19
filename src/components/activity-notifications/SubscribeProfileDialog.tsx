@@ -6,7 +6,7 @@ import {
   type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type InfiniteData,
   useMutation,
@@ -20,7 +20,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {
   Button,
@@ -235,11 +235,7 @@ function DialogInner({
             <Toggle.Item
               label={l`Posts`}
               name="post"
-              style={[
-                a.flex_1,
-                a.py_xs,
-                [a.flex_row_reverse, a.gap_sm],
-              ]}>
+              style={[a.flex_1, a.py_xs, [a.flex_row_reverse, a.gap_sm]]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>Posts</Trans>
@@ -249,11 +245,7 @@ function DialogInner({
             <Toggle.Item
               label={l`Replies`}
               name="reply"
-              style={[
-                a.flex_1,
-                a.py_xs,
-                [a.flex_row_reverse, a.gap_sm],
-              ]}>
+              style={[a.flex_1, a.py_xs, [a.flex_row_reverse, a.gap_sm]]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>Replies</Trans>
@@ -276,7 +268,7 @@ function DialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 function parseActivitySubscription(

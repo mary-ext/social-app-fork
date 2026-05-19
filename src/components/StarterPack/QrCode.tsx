@@ -158,14 +158,14 @@ export function QrCodeInner({link}: {link: string}) {
         logo={{
           href: require('../../../assets/logo.png'),
 
-          ...({
+          ...{
             onChange: onLogoAreaChange,
             padding: 28,
-          }),
+          },
 
           hidePieces: true,
         }}
       />
     </View>
-  );
+  )
 }

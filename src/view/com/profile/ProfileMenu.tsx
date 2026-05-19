@@ -1,6 +1,6 @@
 import {memo, useCallback, useMemo} from 'react'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -266,11 +266,9 @@ let ProfileMenu = ({
                 }
               }}>
               <Menu.ItemText>
-                {(<Trans>Copy link to profile</Trans>)}
+                {<Trans>Copy link to profile</Trans>}
               </Menu.ItemText>
-              <Menu.ItemIcon
-                icon={ChainLinkIcon}
-              />
+              <Menu.ItemIcon icon={ChainLinkIcon} />
             </Menu.Item>
             <Menu.Item
               testID="profileHeaderDropdownSearchBtn"
@@ -356,9 +354,7 @@ let ProfileMenu = ({
                         <Trans>Go live</Trans>
                       )}
                     </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={LiveIcon}
-                    />
+                    <Menu.ItemIcon icon={LiveIcon} />
                   </Menu.Item>
                 )}
                 {verification.viewer.role === 'verifier' &&
@@ -528,7 +524,7 @@ let ProfileMenu = ({
         <GoLiveDialog control={goLiveDialogControl} profile={profile} />
       )}
     </EventStopper>
-  );
+  )
 }
 
 ProfileMenu = memo(ProfileMenu)

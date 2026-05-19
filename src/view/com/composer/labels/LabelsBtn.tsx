@@ -1,5 +1,5 @@
 import {Keyboard, View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -8,7 +8,7 @@ import {
   type OtherSelfLabel,
   type SelfLabel,
 } from '#/lib/moderation'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -221,5 +221,5 @@ function DialogInner({
         </Button>
       </View>
     </Dialog.ScrollableInner>
-  );
+  )
 }

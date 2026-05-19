@@ -10,7 +10,7 @@ export function useHeaderOffset() {
   if (gtMobile) {
     return 0
   }
-  const navBarHeight = 52 + (0)
+  const navBarHeight = 52 + 0
   const tabBarPad = 10 + 10 + 3 // padding + border
   const normalLineHeight = 20 // matches tab bar
   const tabBarText = normalLineHeight * fontScale

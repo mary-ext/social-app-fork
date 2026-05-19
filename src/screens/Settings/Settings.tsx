@@ -28,7 +28,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -58,7 +58,7 @@ import {ProfileBadges} from '#/components/ProfileBadges'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import { IS_DEV } from '#/env';
+import {IS_DEV} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
@@ -346,7 +346,7 @@ function ProfilePreview({
         {sanitizeHandle(profile.handle, '@')}
       </Text>
     </>
-  );
+  )
 }
 
 function DevOptions() {
@@ -427,7 +427,7 @@ function DevOptions() {
       {null}
       {null}
     </>
-  );
+  )
 }
 
 function AddAccountRow() {

@@ -10,7 +10,9 @@ const granted: PermissionResponse = {
   status: 'granted',
 }
 
-export function usePermissions(_options?: unknown): [
+export function usePermissions(
+  _options?: unknown,
+): [
   PermissionResponse,
   () => Promise<PermissionResponse>,
   () => Promise<PermissionResponse>,

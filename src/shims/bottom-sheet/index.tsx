@@ -79,11 +79,7 @@ export function BottomSheetOutlet() {
   return null
 }
 
-export function BottomSheetPortalProvider({
-  children,
-}: {
-  children: ReactNode
-}) {
+export function BottomSheetPortalProvider({children}: {children: ReactNode}) {
   return <>{children}</>
 }
 

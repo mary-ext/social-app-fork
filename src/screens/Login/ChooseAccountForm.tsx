@@ -1,11 +1,11 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
@@ -71,25 +71,29 @@ export const ChooseAccountForm = ({
       titleText={<Trans>Select account</Trans>}
       style={[a.py_2xl] as any}>
       <View>
-        {(<TextField.LabelText>
-          <Trans>Sign in as...</Trans>
-        </TextField.LabelText>)}
+        {
+          <TextField.LabelText>
+            <Trans>Sign in as...</Trans>
+          </TextField.LabelText>
+        }
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}
           pendingDid={pendingDid}
         />
       </View>
-      {(<View style={[a.flex_row]}>
-        <Button
-          label={l`Back`}
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>{l`Back`}</ButtonText>
-        </Button>
-        <View style={[a.flex_1]} />
-      </View>)}
+      {
+        <View style={[a.flex_row]}>
+          <Button
+            label={l`Back`}
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>{l`Back`}</ButtonText>
+          </Button>
+          <View style={[a.flex_1]} />
+        </View>
+      }
     </FormContainer>
-  );
+  )
 }

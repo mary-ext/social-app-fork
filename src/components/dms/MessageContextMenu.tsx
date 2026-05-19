@@ -103,7 +103,6 @@ export let MessageContextMenu = ({
   return (
     <>
       <ContextMenu.Root>
-
         <ContextMenu.Trigger
           label={l`Message options`}
           contentLabel={l`Message from @${
@@ -188,6 +187,6 @@ export let MessageContextMenu = ({
         onConfirm={onDelete}
       />
     </>
-  );
+  )
 }
 MessageContextMenu = memo(MessageContextMenu)

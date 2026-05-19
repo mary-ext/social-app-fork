@@ -86,7 +86,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
 
   const onScroll = useCallback(
     (e: NativeScrollEvent) => {
-      'worklet';
+      'worklet'
       const offsetY = Math.max(0, e.contentOffset.y)
       if (didJustRestoreScroll.get()) {
         didJustRestoreScroll.set(false)
@@ -104,11 +104,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         setMode(true)
       }
     },
-    [
-      setMode,
-      startDragOffset,
-      didJustRestoreScroll,
-    ],
+    [setMode, startDragOffset, didJustRestoreScroll],
   )
 
   return <ScrollProvider onScroll={onScroll}>{children}</ScrollProvider>

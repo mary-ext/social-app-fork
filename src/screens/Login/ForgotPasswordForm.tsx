@@ -1,13 +1,13 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -113,18 +113,20 @@ export const ForgotPasswordForm = ({
       </Text>
       <FormError error={error} />
       <View style={[[a.flex_row, a.align_center] as any, a.pt_md]}>
-        {(<>
-          <Button
-            label={l`Back`}
-            color="secondary"
-            size="large"
-            onPress={onPressBack}>
-            <ButtonText>
-              <Trans>Back</Trans>
-            </ButtonText>
-          </Button>
-          <View style={a.flex_1} />
-        </>)}
+        {
+          <>
+            <Button
+              label={l`Back`}
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+            <View style={a.flex_1} />
+          </>
+        }
         {!serviceDescription ? (
           <Button
             label={l`Connecting to service...`}
@@ -172,5 +174,5 @@ export const ForgotPasswordForm = ({
         </Button>
       </View>
     </FormContainer>
-  );
+  )
 }

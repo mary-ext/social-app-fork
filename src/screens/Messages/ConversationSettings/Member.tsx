@@ -9,7 +9,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useRequireAuth, useSession} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {
   type ConvoWithDetails,
   type GroupConvoMember,
@@ -148,7 +148,7 @@ export function Member({
         {statusBadge}
       </View>
     </SubtleHoverWrapper>
-  );
+  )
 }
 
 export function MemberPlaceholder() {

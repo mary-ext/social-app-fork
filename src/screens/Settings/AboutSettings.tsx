@@ -1,5 +1,5 @@
 import {Platform} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useMutation} from '@tanstack/react-query'
 
@@ -133,5 +133,5 @@ export function AboutSettingsScreen({}: Props) {
       </Layout.Content>
       <SendErrorReportDialog control={sendErrorReportControl} />
     </Layout.Screen>
-  );
+  )
 }

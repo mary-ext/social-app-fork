@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   type EmbedPlayerSource,
@@ -8,7 +8,7 @@ import {
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {useSetExternalEmbedPref} from '#/state/preferences'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -109,5 +109,5 @@ export function EmbedConsentDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 }

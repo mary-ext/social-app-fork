@@ -15,7 +15,7 @@ import Animated, {
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
-import { atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {CENTER_COLUMN_OFFSET, SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
@@ -56,7 +56,7 @@ export const Screen = memo(function Screen({
         {...props}
       />
     </>
-  );
+  )
 })
 
 export type ContentProps = AnimatedScrollViewProps & {
@@ -102,21 +102,23 @@ export const Content = memo(
           a.w_full,
           animatedStyle,
           isWithinSplitView &&
-            {
+            ({
               flex: 1,
               overflowY: 'scroll',
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_100} transparent`,
-            } as any,
+            } as any),
           style,
         ]}
         contentContainerStyle={[contentContainerStyle]}
         {...props}>
-        {(<Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-          {children}
-        </Center>)}
+        {
+          <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
+            {children}
+          </Center>
+        }
       </Animated.ScrollView>
-    );
+    )
   }),
 )
 
@@ -164,7 +166,7 @@ export const Center = memo(function LayoutCenter({
         {children}
       </ScrollbarOffsetContext.Provider>
     </View>
-  );
+  )
 })
 
 /**
@@ -193,5 +195,5 @@ const WebCenterBorders = memo(function LayoutWebCenterBorders() {
         } as any,
       ]}
     />
-  ) : null;
+  ) : null
 })

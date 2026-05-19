@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -84,14 +84,14 @@ export function RichTextTag({
             onPress={e => {
               return createStaticClickIfUnmodified(() => {
                 menuProps.onPress()
-              }).onPress(e);
+              }).onPress(e)
             }}
             onLongPress={createStaticClick(menuProps.onPress).onPress}
             accessibilityHint={hint}
             label={label}
             style={textStyle}
             emoji>
-            {(<RNText ref={menuProps.ref}>{display}</RNText>)}
+            {<RNText ref={menuProps.ref}>{display}</RNText>}
           </InlineLinkText>
         )}
       </Menu.Trigger>
@@ -160,5 +160,5 @@ export function RichTextTag({
         </Menu.Item>
       </Menu.Outer>
     </Menu.Root>
-  );
+  )
 }

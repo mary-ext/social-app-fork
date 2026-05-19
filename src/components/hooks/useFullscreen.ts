@@ -6,7 +6,7 @@ import {
   useSyncExternalStore,
 } from 'react'
 
-import { IS_WEB_FIREFOX, IS_WEB_SAFARI } from '#/env';
+import {IS_WEB_FIREFOX, IS_WEB_SAFARI} from '#/env'
 
 function fullscreenSubscribe(onChange: () => void) {
   document.addEventListener('fullscreenchange', onChange)

@@ -27,7 +27,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as tokens from '#/alf/tokens'
 import {AvatarBubbles} from '#/components/AvatarBubbles'
 import {useDialogControl} from '#/components/Dialog'
@@ -449,9 +449,7 @@ function BaseChatItem({
             to={`/messages/${convo.view.id}`}
             label={title}
             accessibilityHint={accessibilityHint}
-            accessibilityActions={
-              undefined
-            }
+            accessibilityActions={undefined}
             onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
             onPress={onPress}
             onLongPress={undefined}
@@ -473,7 +471,11 @@ function BaseChatItem({
                 <View style={{width: avatarSize, height: avatarSize}} />
 
                 <View
-                  style={[a.flex_1, a.justify_center, {paddingRight: 40} as any]}>
+                  style={[
+                    a.flex_1,
+                    a.justify_center,
+                    {paddingRight: 40} as any,
+                  ]}>
                   <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                     <View style={[a.flex_shrink]}>
                       <Text
@@ -625,5 +627,5 @@ function BaseChatItem({
         </View>
       </GestureActionView>
     </ChatListItemPortal.Provider>
-  );
+  )
 }

@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ComAtprotoAdminDefs, ToolsOzoneReportDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 

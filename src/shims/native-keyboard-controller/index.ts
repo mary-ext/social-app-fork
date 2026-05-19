@@ -79,7 +79,8 @@ type KeyboardScrollExtras = {
 }
 
 export type KeyboardChatScrollViewProps = ScrollView
-export type KeyboardAwareScrollViewProps = ScrollViewProps & KeyboardScrollExtras
+export type KeyboardAwareScrollViewProps = ScrollViewProps &
+  KeyboardScrollExtras
 
 const keyboardScrollPropKeys: Array<keyof KeyboardScrollExtras> = [
   'bottomOffset',
@@ -128,12 +129,11 @@ export function KeyboardProvider({
   return createElement(Fragment, null, children)
 }
 
-export const KeyboardAvoidingView = forwardRef<
-  View,
-  KeyboardAvoidingViewProps
->(function KeyboardAvoidingView(props, ref) {
-  return createElement(View, {...props, ref})
-})
+export const KeyboardAvoidingView = forwardRef<View, KeyboardAvoidingViewProps>(
+  function KeyboardAvoidingView(props, ref) {
+    return createElement(View, {...props, ref})
+  },
+)
 
 export const KeyboardAwareScrollView = forwardRef<
   ScrollView,

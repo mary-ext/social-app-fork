@@ -62,8 +62,8 @@ export function Autocomplete({
           a.w_full,
           t.atoms.shadow_lg,
           {
-                maxWidth: 300,
-              },
+            maxWidth: 300,
+          },
         ]}
         innerStyle={[
           a.overflow_hidden,
@@ -73,11 +73,11 @@ export function Autocomplete({
           t.atoms.bg,
           a.w_full,
           {
-                maxWidth: 300,
-              },
+            maxWidth: 300,
+          },
         ]}
         render={render}
       />
     </Portal>
-  );
+  )
 }

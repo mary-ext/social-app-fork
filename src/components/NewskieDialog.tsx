@@ -1,7 +1,7 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -9,7 +9,7 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -153,9 +153,8 @@ function DialogInner({
             </View>
           </StarterPackCard.Link>
         ) : null}
-
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

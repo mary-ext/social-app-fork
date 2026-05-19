@@ -11,7 +11,12 @@ export type BlurViewProps = ViewProps & {
     | 'systemMaterialLight'
 }
 
-export function BlurView({intensity = 50, style, tint, ...props}: BlurViewProps) {
+export function BlurView({
+  intensity = 50,
+  style,
+  tint,
+  ...props
+}: BlurViewProps) {
   const alpha = tint === 'dark' ? 0.24 : 0.12
   return (
     <View

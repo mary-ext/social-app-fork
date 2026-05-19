@@ -15,7 +15,7 @@ import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from '#/state/preferences'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -74,7 +74,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  );
+  )
 }
 
 function PrefSelector({
@@ -99,13 +99,9 @@ function PrefSelector({
           sources?.[source] === 'show' ? 'hide' : 'show',
         )
       }
-      style={[
-        a.flex_1,
-        a.py_md,
-        undefined as any,
-      ]}>
+      style={[a.flex_1, a.py_md, undefined as any]}>
       <Toggle.Platform />
       <Toggle.LabelText style={[a.text_md]}>{label}</Toggle.LabelText>
     </Toggle.Item>
-  );
+  )
 }

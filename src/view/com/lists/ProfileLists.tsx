@@ -27,7 +27,7 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
@@ -186,15 +186,10 @@ export function ProfileLists({
       if (preferences) {
         return (
           <View
-            style={[
-              a.border_t,
-              t.atoms.border_contrast_low,
-              a.px_lg,
-              a.py_lg,
-            ]}>
+            style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
             <ListCard.Default view={item} />
           </View>
-        );
+        )
       }
       return null
     },
@@ -251,7 +246,7 @@ export function ProfileLists({
         contentContainerStyle={{minHeight: height + headerOffset}}
       />
     </View>
-  );
+  )
 }
 
 function keyExtractor(item: any) {

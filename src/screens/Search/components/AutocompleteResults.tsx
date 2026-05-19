@@ -13,7 +13,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {Link} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 
 let AutocompleteResults = ({
@@ -49,9 +49,7 @@ let AutocompleteResults = ({
           <SearchLinkCard
             label={l`Search for "${searchText}"`}
             onPress={undefined as any}
-            to={
-              `/search?q=${encodeURIComponent(searchText)}`
-            }
+            to={`/search?q=${encodeURIComponent(searchText)}`}
             style={a.border_b}
           />
           {autocompleteData?.map((item, _index) => (
@@ -69,7 +67,7 @@ let AutocompleteResults = ({
         </Layout.Content>
       )}
     </>
-  );
+  )
 }
 AutocompleteResults = memo(AutocompleteResults)
 export {AutocompleteResults}

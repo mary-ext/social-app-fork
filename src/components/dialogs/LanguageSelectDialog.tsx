@@ -1,13 +1,13 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -209,15 +209,17 @@ export function DialogInner({
           )}
         </View>
 
-        {(<Button
-          variant="ghost"
-          size="small"
-          color="secondary"
-          shape="round"
-          label={l`Close dialog`}
-          onPress={handleClose}>
-          <ButtonIcon icon={XIcon} />
-        </Button>)}
+        {
+          <Button
+            variant="ghost"
+            size="small"
+            color="secondary"
+            shape="round"
+            label={l`Close dialog`}
+            onPress={handleClose}>
+            <ButtonIcon icon={XIcon} />
+          </Button>
+        }
       </View>
 
       <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs, a.pb_0]}>
@@ -265,10 +267,7 @@ export function DialogInner({
         data={flatListData}
         ListHeaderComponent={listHeader}
         stickyHeaderIndices={[0]}
-        contentContainerStyle={[
-          a.gap_0,
-          false,
-        ]}
+        contentContainerStyle={[a.gap_0, false]}
         style={[false, {paddingBottom: 120}]}
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         renderItem={({item, index}: {item: FlatListItem; index: number}) => {
@@ -326,7 +325,7 @@ export function DialogInner({
         }
       />
     </Toggle.Group>
-  );
+  )
 }
 
 function DialogError({details}: {details?: string}) {

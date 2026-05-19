@@ -2,7 +2,7 @@ import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
@@ -79,9 +79,7 @@ export function QrCodeDialog({
       link.click()
 
       setIsSaveProcessing(false)
-      Toast.show(
-        l`QR code has been downloaded!`,
-      )
+      Toast.show(l`QR code has been downloaded!`)
       control.close()
     })
   }
@@ -135,15 +133,9 @@ export function QrCodeDialog({
                     size="large"
                     onPress={onCopyPress}>
                     <ButtonIcon
-                      icon={
-                        isCopyProcessing
-                          ? Loader
-                          : ChainLinkIcon
-                      }
+                      icon={isCopyProcessing ? Loader : ChainLinkIcon}
                     />
-                    <ButtonText>
-                      {<Trans>Copy</Trans>}
-                    </ButtonText>
+                    <ButtonText>{<Trans>Copy</Trans>}</ButtonText>
                   </Button>
                   <Button
                     label={l`Save QR code`}
@@ -165,7 +157,7 @@ export function QrCodeDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 }
 
 function Loading() {

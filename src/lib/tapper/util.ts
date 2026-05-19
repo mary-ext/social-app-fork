@@ -1,4 +1,8 @@
-import {type TapperFacet,type TapperFacetConfig, type TapperNode} from './types'
+import {
+  type TapperFacet,
+  type TapperFacetConfig,
+  type TapperNode,
+} from './types'
 
 const WHITESPACE = /\s/
 // Regexes whose source starts with this prefix use a leading capture group

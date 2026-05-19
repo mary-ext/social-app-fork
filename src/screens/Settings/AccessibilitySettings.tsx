@@ -1,4 +1,4 @@
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -74,9 +74,8 @@ export function AccessibilitySettingsScreen({}: Props) {
               <Toggle.Platform />
             </Toggle.Item>
           </SettingsList.Group>
-
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  );
+  )
 }

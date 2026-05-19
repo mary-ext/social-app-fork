@@ -8,7 +8,7 @@ import {
   type TouchableOpacity,
   View,
   type ViewStyle,
-} from 'react-native';
+} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions} from '@react-navigation/native'
 
@@ -215,11 +215,7 @@ export const TextLink = memo(function TextLink({
           href,
         })
       }
-      if (
-        href !== '#' &&
-        e != null &&
-        isModifiedEvent(e as React.MouseEvent)
-      ) {
+      if (href !== '#' && e != null && isModifiedEvent(e as React.MouseEvent)) {
         // Let the browser handle opening in new tab etc.
         return
       }
@@ -359,12 +355,10 @@ function onPressInner(
   e?: any,
 ) {
   let shouldHandle = false
-  const isLeftClick =
-    (e.button == null || e.button === 0)
+  const isLeftClick = e.button == null || e.button === 0
   // @ts-ignore Web only -prf
   const isMiddleClick = e.button === 1
-  const isMetaKey =
-    (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey)
+  const isMetaKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey
   const newTab = isMetaKey || isMiddleClick
 
   if (!e) {

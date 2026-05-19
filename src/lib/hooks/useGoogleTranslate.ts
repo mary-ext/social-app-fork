@@ -20,5 +20,5 @@ export function useGoogleTranslate() {
       await openLink(translateUrl)
     },
     [openLink],
-  );
+  )
 }

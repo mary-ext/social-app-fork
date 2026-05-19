@@ -2,7 +2,7 @@ import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {plural} from '@lingui/core/macro'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
@@ -27,7 +27,13 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignInCard} from '#/view/shell/nav-sign-in-card'
-import { atoms as a, tokens, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
+import {
+  atoms as a,
+  tokens,
+  useBreakpoints,
+  useLayoutBreakpoints,
+  useTheme,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -840,7 +846,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 86,
     alignItems: 'center',
-    ...{overflowX: 'hidden'} as any,
+    ...({overflowX: 'hidden'} as any),
   },
   backBtn: {
     position: 'absolute',

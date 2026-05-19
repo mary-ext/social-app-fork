@@ -18,7 +18,7 @@ import {
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {useModalControls} from '#/state/modals'
-import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
+import {atoms as a, flatten, type TextStyleProp, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, type TextProps} from '#/components/Typography'
@@ -205,7 +205,7 @@ export function useLink({
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnLongPress?.(e)
       if (exitEarlyIfFalse === false) return
-      return undefined;
+      return undefined
     },
     [outerOnLongPress, handleLongPress, shareOnLongPress],
   )
@@ -255,7 +255,7 @@ export function Link({
       href={href}
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
-      {...{
+      {...({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
@@ -265,10 +265,10 @@ export function Link({
           // no underline, only `InlineLink` has underlines
           noUnderline: '1',
         },
-      } as any}>
+      } as any)}>
       {children}
     </Button>
-  );
+  )
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
@@ -324,12 +324,12 @@ export function InlineLinkText({
         {color: t.palette.primary_500},
         hovered &&
           !disableUnderline && {
-            ...{
+            ...({
               outline: 0,
               textDecorationLine: 'underline',
               textDecorationColor:
                 flattenedStyle.color ?? t.palette.primary_500,
-            } as any,
+            } as any),
           },
         flattenedStyle,
       ]}
@@ -340,7 +340,7 @@ export function InlineLinkText({
       onMouseLeave={onHoverOut}
       accessibilityRole="link"
       href={href}
-      {...{
+      {...({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
@@ -350,10 +350,10 @@ export function InlineLinkText({
           // default to no underline, apply this ourselves
           noUnderline: '1',
         },
-      } as any}>
+      } as any)}>
       {children}
     </Text>
-  );
+  )
 }
 
 /**
@@ -407,12 +407,12 @@ export function SimpleInlineLinkText({
         {color: t.palette.primary_500},
         hovered &&
           !disableUnderline && {
-            ...{
+            ...({
               outline: 0,
               textDecorationLine: 'underline',
               textDecorationColor:
                 flattenedStyle.color ?? t.palette.primary_500,
-            } as any,
+            } as any),
           },
         flattenedStyle,
       ]}
@@ -422,7 +422,7 @@ export function SimpleInlineLinkText({
       onMouseLeave={onHoverOut}
       accessibilityRole="link"
       href={href}
-      {...{
+      {...({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
@@ -432,10 +432,10 @@ export function SimpleInlineLinkText({
           // default to no underline, apply this ourselves
           noUnderline: '1',
         },
-      } as any}>
+      } as any)}>
       {children}
     </Text>
-  );
+  )
 }
 
 export function WebOnlyInlineLinkText({
@@ -448,7 +448,7 @@ export function WebOnlyInlineLinkText({
     <InlineLinkText {...props} to={to} onPress={onPress}>
       {children}
     </InlineLinkText>
-  );
+  )
 }
 
 /**
@@ -494,7 +494,7 @@ export function createStaticClickIfUnmodified(
         return false
       }
     },
-  };
+  }
 }
 
 /**

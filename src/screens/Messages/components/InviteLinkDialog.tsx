@@ -10,7 +10,7 @@ import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
 import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
 import {useEnableJoinLink} from '#/state/queries/messages/enable-join-link'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -514,5 +514,5 @@ export function InviteLinkDialog({
         {content}
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 }

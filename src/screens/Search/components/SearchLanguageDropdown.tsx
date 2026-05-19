@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {languageName} from '#/locale/helpers'
 import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import { atoms as a, tokens } from '#/alf';
+import {atoms as a, tokens} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -76,9 +76,7 @@ export function SearchLanguageDropdown({
             style={undefined as any}>
             <ButtonIcon icon={EarthIcon} />
             <ButtonText>{currentLanguageLabel}</ButtonText>
-            <ButtonIcon
-              icon={ChevronDownIcon}
-            />
+            <ButtonIcon icon={ChevronDownIcon} />
           </Button>
         )}
       </Menu.Trigger>
@@ -106,5 +104,5 @@ export function SearchLanguageDropdown({
         </Menu.Group>
       </Menu.Outer>
     </Menu.Root>
-  );
+  )
 }

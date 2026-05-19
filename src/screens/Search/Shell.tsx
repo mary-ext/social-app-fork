@@ -32,7 +32,7 @@ import {
   type Params,
   parseSearchQuery,
 } from '#/screens/Search/utils'
-import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
@@ -433,7 +433,7 @@ export function SearchScreenShell({
         />
       </View>
     </Layout.Screen>
-  );
+  )
 }
 
 let SearchScreenInner = ({

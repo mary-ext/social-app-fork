@@ -61,5 +61,5 @@ export async function openUnifiedPicker({
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
     videoExportPreset: VideoExportPreset.Passthrough,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
-  });
+  })
 }

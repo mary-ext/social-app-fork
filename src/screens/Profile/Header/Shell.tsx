@@ -18,7 +18,7 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import { atoms as a, useTheme, utils } from '#/alf';
+import {atoms as a, useTheme, utils} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -145,9 +145,7 @@ let ProfileHeaderShell = ({
 
   return (
     <View style={t.atoms.bg} pointerEvents={'box-none'}>
-      <View
-        pointerEvents={'box-none'}
-        style={[a.relative, {height: 150}]}>
+      <View pointerEvents={'box-none'} style={[a.relative, {height: 150}]}>
         <GrowableBanner
           testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
           label={
@@ -214,22 +212,12 @@ let ProfileHeaderShell = ({
           <LabelsOnMe
             type="account"
             labels={profile.labels}
-            style={[
-              a.px_lg,
-              a.pt_xs,
-              a.pb_sm,
-              {pointerEvents: 'box-none'},
-            ]}
+            style={[a.px_lg, a.pt_xs, a.pb_sm, {pointerEvents: 'box-none'}]}
           />
         ) : (
           <ProfileHeaderAlerts
             moderation={moderation}
-            style={[
-              a.px_lg,
-              a.pt_xs,
-              a.pb_sm,
-              {pointerEvents: 'box-none'},
-            ]}
+            style={[a.px_lg, a.pt_xs, a.pb_sm, {pointerEvents: 'box-none'}]}
           />
         ))}
       <GrowableAvatar style={[a.absolute, {top: 104, left: 10}]}>
@@ -282,7 +270,7 @@ let ProfileHeaderShell = ({
           />
         ))}
     </View>
-  );
+  )
 }
 
 ProfileHeaderShell = memo(ProfileHeaderShell)

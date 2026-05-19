@@ -21,5 +21,5 @@ export function WebAuxClickWrapper({children}: React.PropsWithChildren<{}>) {
     <div onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
       {children}
     </div>
-  );
+  )
 }

@@ -15,7 +15,7 @@ import {useListConvoMembersQuery} from '#/state/queries/messages/list-convo-memb
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged, type ConvoWithDetails} from '#/components/dms/util'
@@ -341,16 +341,18 @@ export function AddMembersFlow({
               ]}>
               {title}
             </Text>
-            {(<Button
-              label={l`Close`}
-              size="small"
-              shape="round"
-              variant="ghost"
-              color="secondary"
-              style={[a.absolute, a.z_20, {right: -4}]}
-              onPress={() => control.close()}>
-              <ButtonIcon icon={XIcon} size="lg" />
-            </Button>)}
+            {
+              <Button
+                label={l`Close`}
+                size="small"
+                shape="round"
+                variant="ghost"
+                color="secondary"
+                style={[a.absolute, a.z_20, {right: -4}]}
+                onPress={() => control.close()}>
+                <ButtonIcon icon={XIcon} size="lg" />
+              </Button>
+            }
           </View>
           <View style={[a.pt_xs, undefined as any]}>
             <UserSearchInput
@@ -458,7 +460,7 @@ export function AddMembersFlow({
         scrollIndicatorInsets={{top: headerHeight, bottom: footerHeight}}
         keyboardDismissMode="on-drag"
         footer={
-          (<Dialog.FlatListFooter
+          <Dialog.FlatListFooter
             onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}>
             <View style={[a.flex_row, a.align_center, a.justify_between]}>
               <Button
@@ -480,9 +482,9 @@ export function AddMembersFlow({
                 <ButtonText>{buttonText} </ButtonText>
               </Button>
             </View>
-          </Dialog.FlatListFooter>)
+          </Dialog.FlatListFooter>
         }
       />
     </Toggle.Group>
-  );
+  )
 }

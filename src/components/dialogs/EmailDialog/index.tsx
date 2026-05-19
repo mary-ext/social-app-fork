@@ -32,7 +32,7 @@ export function EmailDialog() {
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 }
 
 function Inner({control}: {control: StatefulControl<Screen>}) {

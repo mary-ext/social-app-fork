@@ -1,11 +1,11 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {shareUrl} from '#/lib/sharing'
 import {isPossiblyAUrl, splitApexDomain} from '#/lib/strings/url-helpers'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
@@ -135,7 +135,7 @@ function LinkWarningDialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 function LinkBox({href}: {href: string}) {
@@ -148,7 +148,7 @@ function LinkBox({href}: {href: string}) {
         urlp.protocol + '//' + subdomain,
         apexdomain,
         urlp.pathname.replace(/\/$/, '') + urlp.search + urlp.hash,
-      ];
+      ]
     } catch {
       return ['', href, '']
     }

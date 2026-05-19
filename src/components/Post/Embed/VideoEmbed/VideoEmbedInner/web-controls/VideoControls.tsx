@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
@@ -9,7 +9,7 @@ import {
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
 } from '#/state/preferences'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -445,5 +445,5 @@ export function Controls({
         </View>
       )}
     </div>
-  );
+  )
 }

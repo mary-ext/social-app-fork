@@ -72,7 +72,7 @@ export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
         )}
       </View>
     </Layout.Header.Outer>
-  );
+  )
 }
 
 function ProfileHeaderReady({

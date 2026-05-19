@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -78,9 +78,8 @@ function SigninDialogInner({}: {control: Dialog.DialogOuterProps['control']}) {
             </ButtonText>
           </Button>
         </View>
-
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

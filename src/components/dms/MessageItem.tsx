@@ -33,7 +33,7 @@ import {type ConvoItem} from '#/state/messages/convo/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {useDialogControl} from '#/components/Dialog'
 import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
@@ -332,9 +332,7 @@ let MessageItem = ({
               <Animated.View
                 entering={undefined as any}
                 exiting={
-                  groupedReactions.length > 1
-                    ? undefined as any
-                    : undefined
+                  groupedReactions.length > 1 ? (undefined as any) : undefined
                 }
                 layout={undefined as any}
                 key={group.value}
@@ -473,7 +471,7 @@ let MessageItem = ({
                         a.leading_tight,
                         // Visually align bottom of the emoji with the avatar
                         !isFromSelf &&
-                          {marginBottom: -a.mb_sm.marginBottom} as any,
+                          ({marginBottom: -a.mb_sm.marginBottom} as any),
                       ],
                     ]}
                     interactiveStyle={a.underline}
@@ -494,7 +492,7 @@ let MessageItem = ({
         )}
       </View>
     </>
-  );
+  )
 }
 MessageItem = memo(MessageItem)
 export {MessageItem}

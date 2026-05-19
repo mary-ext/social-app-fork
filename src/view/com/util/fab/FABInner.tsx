@@ -13,7 +13,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -63,7 +63,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
         {icon}
       </PressableScale>
     </Animated.View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

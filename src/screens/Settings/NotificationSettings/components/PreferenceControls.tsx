@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -107,10 +107,7 @@ export function Inner({
           <Toggle.Item
             label={l`Receive push notifications`}
             name="push"
-            style={[
-              a.py_xs,
-              [a.flex_row_reverse, a.gap_sm],
-            ]}>
+            style={[a.py_xs, [a.flex_row_reverse, a.gap_sm]]}>
             <Toggle.LabelText
               style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
               <Trans>Push notifications</Trans>
@@ -121,10 +118,7 @@ export function Inner({
             <Toggle.Item
               label={l`Receive in-app notifications`}
               name="list"
-              style={[
-                a.py_xs,
-                [a.flex_row_reverse, a.gap_sm],
-              ]}>
+              style={[a.py_xs, [a.flex_row_reverse, a.gap_sm]]}>
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>In-app notifications</Trans>
@@ -180,5 +174,5 @@ export function Inner({
         </>
       )}
     </View>
-  );
+  )
 }

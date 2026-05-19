@@ -1,5 +1,5 @@
 import {type AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -145,16 +145,9 @@ export function MoreOptionsMenu({
         </Menu.Trigger>
         <Menu.Outer showCancel>
           <Menu.Group>
-            <Menu.Item
-              label={l`Copy link to list`}
-              onPress={onPressShare}>
-              <Menu.ItemText>
-                {(<Trans>Copy link to list</Trans>)}
-              </Menu.ItemText>
-              <Menu.ItemIcon
-                position="right"
-                icon={ChainLink}
-              />
+            <Menu.Item label={l`Copy link to list`} onPress={onPressShare}>
+              <Menu.ItemText>{<Trans>Copy link to list</Trans>}</Menu.ItemText>
+              <Menu.ItemIcon position="right" icon={ChainLink} />
             </Menu.Item>
             {savedFeedConfig && (
               <Menu.Item
@@ -262,5 +255,5 @@ export function MoreOptionsMenu({
         }}
       />
     </>
-  );
+  )
 }

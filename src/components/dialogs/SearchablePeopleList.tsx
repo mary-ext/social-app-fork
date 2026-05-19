@@ -18,7 +18,7 @@ import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {
@@ -328,22 +328,24 @@ export function SearchablePeopleList({
             ]}>
             {title}
           </Text>
-          {(<Button
-            label={l`Close`}
-            size="small"
-            shape="round"
-            variant={'ghost'}
-            color="secondary"
-            style={[
-              a.absolute,
-              a.z_20,
-              {right: -4} as any,
-              undefined as any,
-              undefined as any,
-            ]}
-            onPress={() => control.close()}>
-            <ButtonIcon icon={X} size="md" />
-          </Button>)}
+          {
+            <Button
+              label={l`Close`}
+              size="small"
+              shape="round"
+              variant={'ghost'}
+              color="secondary"
+              style={[
+                a.absolute,
+                a.z_20,
+                {right: -4} as any,
+                undefined as any,
+                undefined as any,
+              ]}
+              onPress={() => control.close()}>
+              <ButtonIcon icon={X} size="md" />
+            </Button>
+          }
         </View>
         <View style={[a.pt_xs] as any}>
           <SearchInput
@@ -357,7 +359,7 @@ export function SearchablePeopleList({
           />
         </View>
       </View>
-    );
+    )
   }, [
     t.atoms.border_contrast_low,
     t.atoms.bg,
@@ -385,7 +387,7 @@ export function SearchablePeopleList({
       scrollIndicatorInsets={{top: headerHeight}}
       keyboardDismissMode="on-drag"
     />
-  );
+  )
 }
 
 function DefaultProfileCard({
@@ -642,10 +644,10 @@ function SearchInput({
 
   return (
     <View
-      {...{
+      {...({
         onMouseEnter,
         onMouseLeave,
-      } as any}
+      } as any)}
       style={[a.flex_row, a.align_center, a.gap_sm]}>
       <Search
         size="md"
@@ -678,5 +680,5 @@ function SearchInput({
         accessibilityHint={l`Searches for profiles`}
       />
     </View>
-  );
+  )
 }

@@ -23,7 +23,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {logger} from '#/logger'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
@@ -159,7 +159,7 @@ export function Outer({
         </Portal>
       )}
     </>
-  );
+  )
 }
 
 export function Inner({
@@ -261,7 +261,7 @@ export const InnerFlatList = forwardRef<
       />
       {footer}
     </Inner>
-  );
+  )
 })
 
 export function FlatListFooter({

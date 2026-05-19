@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
@@ -108,9 +108,7 @@ function ShareDialogInner({
                 size="large"
                 onPress={onShareLink}>
                 <ButtonIcon icon={ChainLinkIcon} />
-                <ButtonText>
-                  {(<Trans>Copy Link</Trans>)}
-                </ButtonText>
+                <ButtonText>{<Trans>Copy Link</Trans>}</ButtonText>
               </Button>
               <Button
                 label={l`Share QR code`}
@@ -126,12 +124,11 @@ function ShareDialogInner({
                   <Trans>Share QR code</Trans>
                 </ButtonText>
               </Button>
-
             </View>
           </View>
         )}
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </>
-  );
+  )
 }

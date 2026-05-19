@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import { atoms as a, type TextStyleProp, useTheme } from '#/alf';
+import {atoms as a, type TextStyleProp, useTheme} from '#/alf'
 import {
   Button,
   type ButtonColor,
@@ -75,7 +75,7 @@ export function Outer({
         </Dialog.ScrollableInner>
       </Context.Provider>
     </Dialog.Outer>
-  );
+  )
 }
 
 export function TitleText({

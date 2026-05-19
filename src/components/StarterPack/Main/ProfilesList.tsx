@@ -88,19 +88,14 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
       index,
     }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
       return (
-        <View
-          style={[
-            a.p_lg,
-            t.atoms.border_contrast_low,
-            a.border_t,
-          ]}>
+        <View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
           <ProfileCard
             profile={item}
             moderationOpts={moderationOpts}
             logContext="StarterPackProfilesList"
           />
         </View>
-      );
+      )
     }
 
     if (!data) {

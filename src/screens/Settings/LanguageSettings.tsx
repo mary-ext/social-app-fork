@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -9,7 +9,7 @@ import {
 import {languageName} from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -204,5 +204,5 @@ export function LanguageSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  );
+  )
 }

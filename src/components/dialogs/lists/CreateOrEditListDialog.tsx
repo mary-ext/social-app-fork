@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
@@ -16,7 +16,7 @@ import {
 import {useAgent} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -471,5 +471,5 @@ function DialogInner({
         </View>
       </View>
     </Dialog.ScrollableInner>
-  );
+  )
 }

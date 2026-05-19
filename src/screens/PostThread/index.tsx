@@ -48,7 +48,7 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import { atoms as a, useBreakpoints } from '#/alf';
+import {atoms as a, useBreakpoints} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 
@@ -422,7 +422,7 @@ export function PostThread({uri}: {uri: string}) {
                 postSource={anchorPostSource}
               />
             </View>
-          );
+          )
         } else {
           if (thread.state.view === 'tree') {
             return (
@@ -586,7 +586,7 @@ export function PostThread({uri}: {uri: string}) {
         <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
     </PostThreadContextProvider>
-  );
+  )
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {

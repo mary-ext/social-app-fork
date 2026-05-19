@@ -23,7 +23,10 @@ function pointY(point: PointInput) {
 
 function pointToDeg(start?: PointInput, end?: PointInput) {
   if (!start || !end) return '180deg'
-  const radians = Math.atan2(pointY(end) - pointY(start), pointX(end) - pointX(start))
+  const radians = Math.atan2(
+    pointY(end) - pointY(start),
+    pointX(end) - pointX(start),
+  )
   return `${90 + (radians * 180) / Math.PI}deg`
 }
 

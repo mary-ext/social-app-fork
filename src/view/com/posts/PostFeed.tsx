@@ -764,7 +764,7 @@ let PostFeed = ({
      * reach the end, so that content isn't cut off by the bottom of the
      * screen.
      */
-    const offset = Math.max(headerOffset, 32) * (1)
+    const offset = Math.max(headerOffset, 32) * 1
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
@@ -888,7 +888,7 @@ let PostFeed = ({
         onItemSeen={onItemSeen}
       />
     </View>
-  );
+  )
 }
 PostFeed = memo(PostFeed)
 export {PostFeed}

@@ -151,8 +151,7 @@ export function MessagesSettingsScreenInner({}: Props) {
           </View>
           <Divider style={{marginVertical: 10}} />
           <View style={[a.px_xl]}>
-            <Text
-              style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
+            <Text style={[a.pb_xs, a.text_md, a.font_semi_bold, t.atoms.text]}>
               <Trans>Allow group chat invites from</Trans>
             </Text>
             <Text
@@ -171,8 +170,8 @@ export function MessagesSettingsScreenInner({}: Props) {
               label={l`Allow group chat invites from`}
               type="radio"
               values={[
-                (profile?.associated?.chat?.allowGroupInvites as AllowIncoming) ??
-                  'following',
+                (profile?.associated?.chat
+                  ?.allowGroupInvites as AllowIncoming) ?? 'following',
               ]}
               onChange={onSelectGroupInvitesFrom}>
               <View>
@@ -216,5 +215,5 @@ export function MessagesSettingsScreenInner({}: Props) {
       </Layout.Content>
       <ExportCarDialog control={exportCarControl} />
     </Layout.Screen>
-  );
+  )
 }

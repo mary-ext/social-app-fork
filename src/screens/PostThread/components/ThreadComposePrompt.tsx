@@ -1,5 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
@@ -7,7 +7,7 @@ import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorde
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
@@ -87,5 +87,5 @@ export function ThreadComposePrompt({
         </Text>
       </PressableScale>
     </View>
-  );
+  )
 }

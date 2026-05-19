@@ -1,12 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
@@ -146,19 +146,21 @@ export const SetNewPasswordForm = ({
       </View>
       <FormError error={error} />
       <View style={[[a.flex_row, a.align_center] as any, a.pt_lg]}>
-        {(<>
-          <Button
-            label={l`Back`}
-            variant="solid"
-            color="secondary"
-            size="large"
-            onPress={onPressBack}>
-            <ButtonText>
-              <Trans>Back</Trans>
-            </ButtonText>
-          </Button>
-          <View style={a.flex_1} />
-        </>)}
+        {
+          <>
+            <Button
+              label={l`Back`}
+              variant="solid"
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+            <View style={a.flex_1} />
+          </>
+        }
 
         <Button
           label={l`Next`}
@@ -173,5 +175,5 @@ export const SetNewPasswordForm = ({
         </Button>
       </View>
     </FormContainer>
-  );
+  )
 }

@@ -8,5 +8,5 @@ import {SystemBars} from 'react-native-edge-to-edge'
 export function useSheetWrapper() {
   return useCallback(async <T>(promise: Promise<T>): Promise<T> => {
     return await promise
-  }, []);
+  }, [])
 }

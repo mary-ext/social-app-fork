@@ -18,7 +18,7 @@ import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import { atoms as a, tokens, useTheme, utils } from '#/alf';
+import {atoms as a, tokens, useTheme, utils} from '#/alf'
 import {Composer, useComposerInternalApiRef} from '#/components/Composer'
 import * as EmojiPicker from '#/components/EmojiPicker'
 import {GlassView} from '#/components/GlassView'
@@ -64,7 +64,7 @@ export function MessageComposer({
 
   useKeyboardHandler({
     onEnd: evt => {
-      'worklet';
+      'worklet'
     },
   })
 
@@ -106,9 +106,7 @@ export function MessageComposer({
   return (
     <ComposerContainer>
       {children}
-      <View
-        collapsable={false}
-        ref={undefined as any}>
+      <View collapsable={false} ref={undefined as any}>
         <GlassContainer
           style={[a.w_full, a.flex_row, a.gap_sm, a.align_end]}
           spacing={tokens.space.sm}>
@@ -118,47 +116,49 @@ export function MessageComposer({
             style={[a.flex_1, a.rounded_xl, {minHeight: MIN_HEIGHT}]}
             tintColor={t.palette.contrast_50}
             fallbackStyle={[t.atoms.bg_contrast_50]}>
-            {(<EmojiPicker.Root
-              onEmojiSelect={emoji =>
-                composerInternalApiRef.current?.insert(emoji.native)
-              }
-              nextFocusRef={() =>
-                composerInternalApiRef.current?.input?.element
-              }>
-              <EmojiPicker.Trigger label={l`Open emoji picker`}>
-                {({props, state, control}) => (
-                  <Pressable
-                    {...props}
-                    style={[
-                      a.overflow_hidden,
-                      a.absolute,
-                      a.rounded_full,
-                      a.align_center,
-                      a.justify_center,
-                      a.z_30,
-                      {
-                        height: 20,
-                        width: 20,
-                        top: 10,
-                        right: 10,
-                      },
-                    ]}>
-                    <EmojiSmileIcon
-                      size="md"
-                      style={
-                        state.hovered ||
-                        state.focused ||
-                        state.pressed ||
-                        control.isOpen
-                          ? {color: t.palette.primary_500}
-                          : t.atoms.text_contrast_high
-                      }
-                    />
-                  </Pressable>
-                )}
-              </EmojiPicker.Trigger>
-              <EmojiPicker.Picker />
-            </EmojiPicker.Root>)}
+            {
+              <EmojiPicker.Root
+                onEmojiSelect={emoji =>
+                  composerInternalApiRef.current?.insert(emoji.native)
+                }
+                nextFocusRef={() =>
+                  composerInternalApiRef.current?.input?.element
+                }>
+                <EmojiPicker.Trigger label={l`Open emoji picker`}>
+                  {({props, state, control}) => (
+                    <Pressable
+                      {...props}
+                      style={[
+                        a.overflow_hidden,
+                        a.absolute,
+                        a.rounded_full,
+                        a.align_center,
+                        a.justify_center,
+                        a.z_30,
+                        {
+                          height: 20,
+                          width: 20,
+                          top: 10,
+                          right: 10,
+                        },
+                      ]}>
+                      <EmojiSmileIcon
+                        size="md"
+                        style={
+                          state.hovered ||
+                          state.focused ||
+                          state.pressed ||
+                          control.isOpen
+                            ? {color: t.palette.primary_500}
+                            : t.atoms.text_contrast_high
+                        }
+                      />
+                    </Pressable>
+                  )}
+                </EmojiPicker.Trigger>
+                <EmojiPicker.Picker />
+              </EmojiPicker.Root>
+            }
 
             <Composer
               nativeID={textInputId}
@@ -194,7 +194,7 @@ export function MessageComposer({
         </GlassContainer>
       </View>
     </ComposerContainer>
-  );
+  )
 }
 
 function SubmitButton({
@@ -279,5 +279,5 @@ export function ComposerContainer({children}: {children: React.ReactNode}) {
       {/* covers the gap between the keyboard and the input during keyboard animation */}
       {false}
     </>
-  );
+  )
 }

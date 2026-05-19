@@ -29,7 +29,7 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {List} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -247,7 +247,7 @@ function RequestList({
           </>
         )}
       </Layout.Center>
-    );
+    )
   }
 
   return (
@@ -276,7 +276,7 @@ function RequestList({
       />
       {hasUnreadConvos && <MarkAllReadFAB />}
     </>
-  );
+  )
 }
 
 function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {

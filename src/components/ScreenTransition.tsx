@@ -28,11 +28,8 @@ export function ScreenTransition({
   const webExiting = enabledWeb ? FadeOut.duration(90) : undefined
 
   return (
-    <Animated.View
-      entering={webEntering}
-      exiting={webExiting}
-      style={style}>
+    <Animated.View entering={webEntering} exiting={webExiting} style={style}>
       {children}
     </Animated.View>
-  );
+  )
 }

@@ -1,12 +1,12 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getFeedTypeFromUri} from '#/state/queries/feed'
 import {useProfileQuery} from '#/state/queries/profile'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -81,7 +81,7 @@ export function MissingFeed({
                 a.italic,
               ]}
               numberOfLines={1}>
-              {(<Trans>Click for information</Trans>)}
+              {<Trans>Click for information</Trans>}
             </Text>
           </View>
         </View>
@@ -91,7 +91,7 @@ export function MissingFeed({
         <DialogInner uri={uri} type={type} error={error} />
       </Dialog.Outer>
     </>
-  );
+  )
 }
 
 function DialogInner({
@@ -199,5 +199,5 @@ function DialogInner({
 
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

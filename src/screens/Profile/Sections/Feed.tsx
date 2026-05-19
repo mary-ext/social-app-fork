@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {findNodeHandle, View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -16,7 +16,7 @@ import {
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
 import {type SectionRef} from './types'
@@ -111,7 +111,7 @@ export function ProfileFeedSection({
         />
       )}
     </View>
-  );
+  )
 }
 
 function ProfileEndOfFeed() {

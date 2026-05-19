@@ -8,7 +8,7 @@ import {
 } from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
 import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
 import {getLabelingServiceTitle} from '#/lib/moderation'
@@ -170,11 +170,12 @@ function Inner(props: ReportDialogProps) {
         return (
           // supports new reason type
           // supports old reason type (backwards compat)
-          (supportedReasonTypes.includes(state.selectedOption.reason) || supportedReasonTypes.includes(
+          supportedReasonTypes.includes(state.selectedOption.reason) ||
+          supportedReasonTypes.includes(
             NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
-          ))
-        );
-      });
+          )
+        )
+      })
   }, [
     props.subject,
     allLabelers,
@@ -472,12 +473,12 @@ function Inner(props: ReportDialogProps) {
                       </View>
                     ) : (
                       // should never happen in our app
-                      (<Admonition.Admonition type="warning">
+                      <Admonition.Admonition type="warning">
                         <Trans>
                           Unfortunately, none of your subscribed labelers
                           supports this report type.
                         </Trans>
-                      </Admonition.Admonition>)
+                      </Admonition.Admonition>
                     )}
                   </>
                 )}
@@ -575,7 +576,7 @@ function Inner(props: ReportDialogProps) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 function ActionOnce({

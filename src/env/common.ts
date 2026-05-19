@@ -58,11 +58,11 @@ export const LOG_DEBUG: string = process.env.PUBLIC_LOG_DEBUG || ''
 /**
  * The DID of the Bluesky appview to proxy to
  */
-export const BLUESKY_PROXY_DID: Did =
-  (process.env.PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app') as Did
+export const BLUESKY_PROXY_DID: Did = (process.env.PUBLIC_BLUESKY_PROXY_DID ||
+  'did:web:api.bsky.app') as Did
 
 /**
  * The DID of the chat service to proxy to
  */
-export const CHAT_PROXY_DID: Did =
-  (process.env.PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat') as Did
+export const CHAT_PROXY_DID: Did = (process.env.PUBLIC_CHAT_PROXY_DID ||
+  'did:web:api.bsky.chat') as Did

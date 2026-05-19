@@ -61,7 +61,7 @@ export function parse(url: string) {
     path: parsed.pathname.replace(/^\//, ''),
     queryParams: Object.fromEntries(parsed.searchParams.entries()),
     scheme: parsed.protocol.replace(/:$/, ''),
-  };
+  }
 }
 
 export function sendIntent() {

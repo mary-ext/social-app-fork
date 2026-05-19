@@ -1,4 +1,8 @@
-import {withDelay, withSequence, withTiming} from '#/lib/animations/reanimatedCompat'
+import {
+  withDelay,
+  withSequence,
+  withTiming,
+} from '#/lib/animations/reanimatedCompat'
 
 export function ShrinkAndPop() {
   'worklet'

@@ -13,7 +13,7 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -82,7 +82,7 @@ export function BirthDateSettingsDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 }
 
 function BirthdayInner({
@@ -171,5 +171,5 @@ function BirthdayInner({
         </Button>
       </View>
     </View>
-  );
+  )
 }

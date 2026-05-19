@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
@@ -8,7 +8,7 @@ import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -29,13 +29,11 @@ export function ChangePasswordDialog({
   const {height} = useWindowDimensions()
 
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={undefined as any}>
+    <Dialog.Outer control={control} nativeOptions={undefined as any}>
       <Dialog.Handle />
       <Inner />
     </Dialog.Outer>
-  );
+  )
 }
 
 function Inner() {
@@ -272,5 +270,5 @@ function Inner() {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

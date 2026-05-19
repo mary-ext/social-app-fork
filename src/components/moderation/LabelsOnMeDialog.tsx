@@ -2,7 +2,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoLabelDefs, ToolsOzoneReportDefs} from '@atproto/api'
 import {XRPCError} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
@@ -337,5 +337,5 @@ function AppealForm({
       </View>
       {false}
     </>
-  );
+  )
 }

@@ -162,7 +162,7 @@ function GrowableBannerInner({
         style={[
           a.absolute,
           a.inset_0,
-          {top: topInset - (0)},
+          {top: topInset - 0},
           a.justify_center,
           a.align_center,
         ]}>
@@ -180,7 +180,7 @@ function GrowableBannerInner({
         {backButton}
       </Animated.View>
     </>
-  );
+  )
 }
 
 function useIsProfileFetching() {

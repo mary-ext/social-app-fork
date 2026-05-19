@@ -2,7 +2,10 @@ import {useEffect, useRef, useState} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import Animated, {FadeIn, LayoutAnimationConfig} from '#/lib/animations/reanimatedCompat'
+import Animated, {
+  FadeIn,
+  LayoutAnimationConfig,
+} from '#/lib/animations/reanimatedCompat'
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
@@ -13,7 +16,7 @@ import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
 import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {ChooseAccountForm} from './ChooseAccountForm'
 import * as AuthLayout from './components/AuthLayout'
@@ -221,5 +224,5 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         </KeyboardAvoidingView>
       </Animated.View>
     </AuthLayoutNavigationContext>
-  );
+  )
 }

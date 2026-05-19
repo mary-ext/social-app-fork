@@ -40,15 +40,10 @@ export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(
       index,
     }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
       return (
-        <View
-          style={[
-            a.p_lg,
-            a.border_t,
-            t.atoms.border_contrast_low,
-          ]}>
+        <View style={[a.p_lg, a.border_t, t.atoms.border_contrast_low]}>
           <FeedCard.Default view={item} />
         </View>
-      );
+      )
     }
 
     return (

@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {AtUri} from '@atproto/api'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {makeCustomFeedLink, makeProfileLink} from '#/lib/routes/links'
@@ -20,7 +20,7 @@ import {
 import {useSession} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -357,7 +357,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
-  );
+  )
 }
 
 function DialogInner({

@@ -19,7 +19,7 @@ import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -105,7 +105,7 @@ let SearchResults = ({
         <View key={i}>{section.component}</View>
       ))}
     </Pager>
-  );
+  )
 }
 SearchResults = memo(SearchResults)
 export {SearchResults}

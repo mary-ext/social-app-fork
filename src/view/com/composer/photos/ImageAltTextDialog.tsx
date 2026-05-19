@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {type ImageStyle, useWindowDimensions, View} from 'react-native'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {enforceLen} from '#/lib/strings/helpers'
@@ -90,10 +90,12 @@ const ImageAltTextInner = ({
       <Dialog.Close />
       <View>
         {/* vertical space is too precious - gets scrolled out of the way anyway */}
-        {(<Text
-          style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
-          <Trans>Add alt text</Trans>
-        </Text>)}
+        {
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
+            <Trans>Add alt text</Trans>
+          </Text>
+        }
 
         <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
           <Image
@@ -166,5 +168,5 @@ const ImageAltTextInner = ({
         </AltTextCounterWrapper>
       </View>
     </Dialog.ScrollableInner>
-  );
+  )
 }

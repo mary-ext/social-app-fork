@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AppBskyFeedPostgate} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
 import {type AnimatedStyle} from '#/lib/animations/reanimatedCompat'

@@ -14,7 +14,7 @@ import {
   useGutters,
   useLayoutBreakpoints,
   useTheme,
-} from '#/alf';
+} from '#/alf'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -54,7 +54,7 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && [a.sticky, {top: 0}, a.z_10, t.atoms.bg] as any,
+        sticky && ([a.sticky, {top: 0}, a.z_10, t.atoms.bg] as any),
         gutters,
         [a.py_xs, {minHeight: 52}],
         t.atoms.border_contrast_low,
@@ -69,7 +69,7 @@ export function Outer({
       ]}>
       {children}
     </View>
-  );
+  )
 }
 
 const AlignmentContext = createContext<'platform' | 'left'>('platform')
@@ -83,13 +83,12 @@ export function Content({
   align?: 'platform' | 'left'
 }) {
   return (
-    <View
-      style={[a.flex_1, a.justify_center, {minHeight: HEADER_SLOT_SIZE}]}>
+    <View style={[a.flex_1, a.justify_center, {minHeight: HEADER_SLOT_SIZE}]}>
       <AlignmentContext.Provider value={align}>
         {children}
       </AlignmentContext.Provider>
     </View>
-  );
+  )
 }
 
 export function Slot({children}: {children?: React.ReactNode}) {
@@ -178,13 +177,19 @@ export function TitleText({
   const align = useContext(AlignmentContext)
   return (
     <Text
-      style={[a.text_lg, a.font_semi_bold, a.leading_tight, gtMobile && a.text_xl, style]}
+      style={[
+        a.text_lg,
+        a.font_semi_bold,
+        a.leading_tight,
+        gtMobile && a.text_xl,
+        style,
+      ]}
       numberOfLines={2}
       emoji
       maxFontSizeMultiplier={2}>
       {children}
     </Text>
-  );
+  )
 }
 
 export function SubtitleText({children}: {children: React.ReactNode}) {
@@ -196,5 +201,5 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
       numberOfLines={2}>
       {children}
     </Text>
-  );
+  )
 }

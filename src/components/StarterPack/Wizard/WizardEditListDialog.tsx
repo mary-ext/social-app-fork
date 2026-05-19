@@ -6,7 +6,7 @@ import {
   type AppBskyFeedDefs,
   type ModerationOpts,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {type ListMethods} from '#/view/com/util/List'
@@ -14,7 +14,7 @@ import {
   type WizardAction,
   type WizardState,
 } from '#/screens/StarterPack/Wizard/State'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {
@@ -97,11 +97,11 @@ export function WizardEditListDialog({
               t.atoms.bg,
               t.atoms.border_contrast_medium,
               [
-                    a.align_center,
-                    {
-                      height: 48,
-                    },
-                  ],
+                a.align_center,
+                {
+                  height: 48,
+                },
+              ],
             ]}>
             <View style={{width: 60}} />
             <Text style={[a.font_semi_bold, a.text_xl]}>
@@ -112,16 +112,18 @@ export function WizardEditListDialog({
               )}
             </Text>
             <View style={{width: 60}}>
-              {(<Button
-                label={l`Close`}
-                variant="ghost"
-                color="primary"
-                size="small"
-                onPress={() => control.close()}>
-                <ButtonText>
-                  <Trans>Close</Trans>
-                </ButtonText>
-              </Button>)}
+              {
+                <Button
+                  label={l`Close`}
+                  variant="ghost"
+                  color="primary"
+                  size="small"
+                  onPress={() => control.close()}>
+                  <ButtonText>
+                    <Trans>Close</Trans>
+                  </ButtonText>
+                </Button>
+              }
             </View>
           </View>
         }
@@ -136,5 +138,5 @@ export function WizardEditListDialog({
         initialNumToRender={initialNumToRender}
       />
     </Dialog.Outer>
-  );
+  )
 }

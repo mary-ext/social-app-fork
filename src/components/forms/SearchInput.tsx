@@ -93,5 +93,5 @@ export function SearchInput({
         </View>
       )}
     </View>
-  );
+  )
 }

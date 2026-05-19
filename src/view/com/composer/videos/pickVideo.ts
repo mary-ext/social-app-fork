@@ -1,5 +1,8 @@
 import {SUPPORTED_MIME_TYPES} from '#/lib/constants'
-import {type ImagePickerAsset, type ImagePickerResult} from '#/shims/image-picker'
+import {
+  type ImagePickerAsset,
+  type ImagePickerResult,
+} from '#/shims/image-picker'
 
 // mostly copied from local image picker and adapted to support gifs
 // also adds support for reading video metadata

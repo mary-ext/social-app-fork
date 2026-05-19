@@ -4,7 +4,7 @@ import {
   type AppBskyGraphGetStarterPacksWithMembership,
   AppBskyGraphStarterpack,
 } from '@atproto/api'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -17,7 +17,7 @@ import {
 } from '#/state/queries/list-memberships'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -105,7 +105,7 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
         </Button>
       </View>
     </View>
-  );
+  )
 }
 
 function StarterPackList({
@@ -230,7 +230,7 @@ function StarterPackList({
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
       style={[a.px_2xl, {minHeight: 500}]}
     />
-  );
+  )
 }
 
 function StarterPackItem({

@@ -4,7 +4,7 @@ import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
@@ -12,7 +12,7 @@ import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
@@ -291,15 +291,17 @@ export const LoginForm = ({
       )}
       <FormError error={error} />
       <View style={[a.pt_md, [a.justify_between, a.flex_row] as any]}>
-        {(<Button
-          label={l`Back`}
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>)}
+        {
+          <Button
+            label={l`Back`}
+            color="secondary"
+            size="large"
+            onPress={onPressBack}>
+            <ButtonText>
+              <Trans>Back</Trans>
+            </ButtonText>
+          </Button>
+        }
         {!serviceDescription && error ? (
           <Button
             testID="loginRetryButton"
@@ -337,5 +339,5 @@ export const LoginForm = ({
         )}
       </View>
     </FormContainer>
-  );
+  )
 }

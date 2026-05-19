@@ -1,6 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {type TextInput, View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCleanError} from '#/lib/hooks/useCleanError'

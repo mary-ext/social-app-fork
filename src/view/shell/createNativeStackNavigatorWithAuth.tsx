@@ -116,7 +116,7 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  if (!hasSession && (activeRouteRequiresAuth)) {
+  if (!hasSession && activeRouteRequiresAuth) {
     return <LoggedOut />
   }
   if (showLoggedOut) {
@@ -189,16 +189,18 @@ function NativeStackNavigator({
           />
         </Suspense>
       </View>
-      {(<>
-        {showBottomBar ? (
-          <BottomBarWeb />
-        ) : (
-          <DesktopLeftNav routeName={activeRoute.name} />
-        )}
-        {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
-      </>)}
+      {
+        <>
+          {showBottomBar ? (
+            <BottomBarWeb />
+          ) : (
+            <DesktopLeftNav routeName={activeRoute.name} />
+          )}
+          {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
+        </>
+      }
     </NavigationContent>
-  );
+  )
 }
 
 export function createNativeStackNavigatorWithAuth<

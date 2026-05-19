@@ -1,13 +1,13 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTickEveryMinute} from '#/state/shell'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -206,7 +206,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                         </Text>
                       </Select.ItemText>
                     </Select.Item>
-                  );
+                  )
                 }}
                 items={DURATIONS}
                 valueExtractor={d => String(d)}
@@ -219,8 +219,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
           <Admonition type="error">{cleanError(goLiveError)}</Admonition>
         )}
 
-        <View
-          style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
+        <View style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
           {hasLink && (
             <Button
               label={l`Go Live`}
@@ -251,5 +250,5 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

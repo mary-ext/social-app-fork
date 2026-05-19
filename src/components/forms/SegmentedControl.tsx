@@ -8,10 +8,13 @@ import {
 } from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
-import Animated, {Easing, LinearTransition} from '#/lib/animations/reanimatedCompat'
+import Animated, {
+  Easing,
+  LinearTransition,
+} from '#/lib/animations/reanimatedCompat'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
   type ButtonProps,
@@ -269,5 +272,5 @@ function Slider({x, width}: {x: number; width: number}) {
         [{transform: [{translateX: x}]}, a.transition_transform],
       ]}
     />
-  );
+  )
 }

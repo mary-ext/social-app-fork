@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
 import {
@@ -10,7 +10,7 @@ import {
   useUpdateMutedWordMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -342,11 +342,7 @@ function MutedWordsInner() {
                 },
               ]}>
               <Text
-                style={[
-                  a.italic,
-                  {color: t.palette.white},
-                  undefined as any,
-                ]}>
+                style={[a.italic, {color: t.palette.white}, undefined as any]}>
                 {error}
               </Text>
             </View>
@@ -395,11 +391,10 @@ function MutedWordsInner() {
             </View>
           )}
         </View>
-
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 function MutedWordRow({
@@ -598,7 +593,7 @@ function MutedWordRow({
         </Button>
       </View>
     </>
-  );
+  )
 }
 
 function TargetToggle({children}: React.PropsWithChildren<{}>) {

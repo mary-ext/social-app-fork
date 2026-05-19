@@ -8,7 +8,7 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -610,18 +610,11 @@ function OverflowMenu({
             <>
               <Menu.Group>
                 <Menu.Item
-                  label={
-                    l`Copy link to starter pack`
-                  }
+                  label={l`Copy link to starter pack`}
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
-                  <Menu.ItemText>
-                    {(<Trans>Copy link</Trans>)}
-                  </Menu.ItemText>
-                  <Menu.ItemIcon
-                    icon={ChainLinkIcon}
-                    position="right"
-                  />
+                  <Menu.ItemText>{<Trans>Copy link</Trans>}</Menu.ItemText>
+                  <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
                 </Menu.Item>
               </Menu.Group>
 
@@ -694,7 +687,7 @@ function OverflowMenu({
         starterPack={starterPack}
       />
     </>
-  );
+  )
 }
 
 function InvalidStarterPack({rkey}: {rkey: string}) {

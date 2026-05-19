@@ -46,7 +46,7 @@ export function GifPickerDialog({
         <GifPickerBody control={control} onSelectGif={onSelectGif} />
       </ErrorBoundary>
     </Dialog.Outer>
-  );
+  )
 }
 
 function GifPickerBody({

@@ -43,7 +43,7 @@ import {useAgent} from '#/state/session'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {MessageComposer} from '#/screens/Messages/components/MessageComposer'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {DateDivider} from '#/components/dms/DateDivider'
 import {MessageItem} from '#/components/dms/MessageItem'
@@ -513,11 +513,13 @@ export function MessagesList({
                 onLayout={onFooterLayout}
               />
             }
-            style={{
-              scrollbarWidth: 'thin',
-              scrollbarColor: `${t.palette.contrast_100} transparent`,
-              scrollbarGutter: 'stable',
-            } as any}
+            style={
+              {
+                scrollbarWidth: 'thin',
+                scrollbarColor: `${t.palette.contrast_100} transparent`,
+                scrollbarGutter: 'stable',
+              } as any
+            }
             contentInset={{top: transparentHeaderHeight}}
             scrollIndicatorInsets={{top: transparentHeaderHeight}}
           />
@@ -547,7 +549,7 @@ export function MessagesList({
       </KeyboardGestureArea>
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </InviteLinkDialogProvider>
-  );
+  )
 }
 
 /** Note: native only */

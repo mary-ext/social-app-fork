@@ -24,9 +24,7 @@ export function LeaveConvoPrompt({
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
-        navigation.dispatch(
-          StackActions.replace('Messages', {}),
-        )
+        navigation.dispatch(StackActions.replace('Messages', {}))
       }
     },
     onError: () => {

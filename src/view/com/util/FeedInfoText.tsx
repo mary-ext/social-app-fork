@@ -2,7 +2,7 @@ import {type StyleProp, type TextStyle} from 'react-native'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useFeedSourceInfoQuery} from '#/state/queries/feed'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
 import {LoadingPlaceholder} from './LoadingPlaceholder'
 
@@ -37,10 +37,7 @@ export function FeedNameText({
       <LoadingPlaceholder
         width={80}
         height={8}
-        style={[
-          a.ml_2xs,
-          [{top: -1}],
-        ]}
+        style={[a.ml_2xs, [{top: -1}]]}
       />
     )
   }

@@ -174,8 +174,11 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey]
   }, [post.uri, post.author])
-  const {sendInteraction, feedSourceInfo, feedDescriptor: _feedDescriptor} =
-    useFeedFeedbackContext()
+  const {
+    sendInteraction,
+    feedSourceInfo,
+    feedDescriptor: _feedDescriptor,
+  } = useFeedFeedbackContext()
 
   const onPressReply = () => {
     sendInteraction({

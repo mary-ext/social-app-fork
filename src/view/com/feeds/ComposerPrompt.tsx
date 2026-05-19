@@ -1,6 +1,6 @@
 import {useCallback, useState} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
@@ -13,7 +13,7 @@ import {logger} from '#/logger'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
@@ -102,7 +102,7 @@ export function ComposerPrompt() {
           cursor: 'pointer',
           outline: 'none',
         } as any,
-        pressed && {outline: 'none'} as any,
+        pressed && ({outline: 'none'} as any),
       ]}>
       <SubtleHover hover={hover} />
       <UserAvatar
@@ -130,7 +130,6 @@ export function ComposerPrompt() {
           <Trans>What's up?</Trans>
         </Text>
         <View style={[a.flex_row, a.gap_md]}>
-
           <Button
             onPress={e => {
               e.stopPropagation()
@@ -155,5 +154,5 @@ export function ComposerPrompt() {
         </View>
       </View>
     </Pressable>
-  );
+  )
 }

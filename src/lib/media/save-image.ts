@@ -56,5 +56,5 @@ export function useSaveImageToMediaLibrary() {
       }
     },
     [permissionResponse, requestPermission, getPermission, l],
-  );
+  )
 }

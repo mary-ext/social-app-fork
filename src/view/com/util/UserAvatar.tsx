@@ -10,7 +10,7 @@ import {
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
@@ -48,7 +48,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import { IS_WEB_TOUCH_DEVICE } from '#/env';
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
 import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
@@ -325,7 +325,7 @@ let UserAvatar = ({
       )}
       {alert}
     </View>
-  );
+  )
 }
 UserAvatar = memo(UserAvatar)
 export {UserAvatar}
@@ -450,14 +450,11 @@ let EditableUserAvatar = ({
         </Menu.Trigger>
         <Menu.Outer showCancel>
           <Menu.Group>
-
             <Menu.Item
               testID="changeAvatarLibraryBtn"
               label={l`Upload from Library`}
               onPress={onOpenLibrary}>
-              <Menu.ItemText>
-                {(<Trans>Upload from Files</Trans>)}
-              </Menu.ItemText>
+              <Menu.ItemText>{<Trans>Upload from Files</Trans>}</Menu.ItemText>
               <Menu.ItemIcon icon={LibraryIcon} />
             </Menu.Item>
           </Menu.Group>
@@ -487,7 +484,7 @@ let EditableUserAvatar = ({
         circularCrop={circular}
       />
     </>
-  );
+  )
 }
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
@@ -536,7 +533,7 @@ let PreviewableUserAvatar = ({
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       {disableNavigation ? (
         avatarEl
-      ) : status.isActive && (IS_WEB_TOUCH_DEVICE) ? (
+      ) : status.isActive && IS_WEB_TOUCH_DEVICE ? (
         <>
           <Button
             label={l`${sanitizeDisplayName(
@@ -569,7 +566,7 @@ let PreviewableUserAvatar = ({
         </Link>
       )}
     </ProfileHoverCard>
-  );
+  )
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}

@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   useCameraPermission,
@@ -140,13 +140,12 @@ export function UserBanner({
           </Menu.Trigger>
           <Menu.Outer showCancel>
             <Menu.Group>
-
               <Menu.Item
                 testID="changeBannerLibraryBtn"
                 label={l`Upload from Library`}
                 onPress={onOpenLibrary}>
                 <Menu.ItemText>
-                  {(<Trans>Upload from Files</Trans>)}
+                  {<Trans>Upload from Files</Trans>}
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={LibraryIcon} />
               </Menu.Item>
@@ -194,7 +193,7 @@ export function UserBanner({
         type === 'labeler' ? styles.labelerBanner : t.atoms.bg_contrast_25,
       ]}
     />
-  );
+  )
 }
 
 const styles = StyleSheet.create({

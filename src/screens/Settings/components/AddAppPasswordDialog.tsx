@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
 import Animated, {
@@ -13,7 +13,7 @@ import Animated, {
   SlideOutLeft,
 } from '#/lib/animations/reanimatedCompat'
 import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -132,9 +132,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
                   <Admonition type="error">{error.message}</Admonition>
                 </Animated.View>
               )}
-              <Animated.View
-                style={[a.gap_lg]}
-                layout={undefined as any}>
+              <Animated.View style={[a.gap_lg]} layout={undefined as any}>
                 <Toggle.Item
                   name="privileged"
                   type="checkbox"
@@ -222,7 +220,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 class DisplayableError extends Error {

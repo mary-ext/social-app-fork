@@ -6,7 +6,7 @@ import {useMutation} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {sendErrorReport} from '#/logger/reporting/sendErrorReport'
 import {useSession} from '#/state/session'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -104,5 +104,5 @@ function SendErrorReportDialogInner() {
         </View>
       </View>
     </Dialog.ScrollableInner>
-  );
+  )
 }

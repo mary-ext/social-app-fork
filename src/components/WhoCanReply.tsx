@@ -12,7 +12,7 @@ import {
   type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
@@ -20,7 +20,7 @@ import {
   type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -119,7 +119,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               a.flex_row,
               a.align_center,
               a.gap_xs,
-              (hovered || focused || pressed) && undefined as any,
+              (hovered || focused || pressed) && (undefined as any),
               style,
             ]}>
             <Icon
@@ -163,7 +163,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         />
       )}
     </>
-  );
+  )
 }
 
 function Icon({
@@ -220,7 +220,7 @@ function WhoCanReplyDialog({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 }
 
 function Rules({

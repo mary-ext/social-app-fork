@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -661,16 +661,14 @@ function FeedsSavedHeader() {
 
   return (
     <View
-      style={
-        [
-              a.flex_row,
-              a.px_md,
-              a.py_lg,
-              a.gap_md,
-              a.border_b,
-              t.atoms.border_contrast_low,
-            ]
-      }>
+      style={[
+        a.flex_row,
+        a.px_md,
+        a.py_lg,
+        a.gap_md,
+        a.border_b,
+        t.atoms.border_contrast_low,
+      ]}>
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
@@ -681,17 +679,14 @@ function FeedsSavedHeader() {
         </Text>
       </View>
     </View>
-  );
+  )
 }
 
 function FeedsAboutHeader() {
   const t = useTheme()
 
   return (
-    <View
-      style={
-        [a.flex_row, a.px_md, a.pt_lg, a.pb_lg, a.gap_md]
-      }>
+    <View style={[a.flex_row, a.px_md, a.pt_lg, a.pb_lg, a.gap_md]}>
       <IconCircle
         icon={ListMagnifyingGlass_Stroke2_Corner0_Rounded}
         size="lg"
@@ -708,7 +703,7 @@ function FeedsAboutHeader() {
         </Text>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

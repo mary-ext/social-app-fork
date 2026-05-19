@@ -301,15 +301,17 @@ export function useScrollViewOffset(_ref?: unknown) {
   return useSharedValue(0)
 }
 
-export function useAnimatedScrollHandler<Context extends Record<string, unknown>>(
-  handlers:
-    | ((event: ReanimatedScrollEvent) => void)
-    | ScrollHandlers<Context>,
+export function useAnimatedScrollHandler<
+  Context extends Record<string, unknown>,
+>(
+  handlers: ((event: ReanimatedScrollEvent) => void) | ScrollHandlers<Context>,
   _dependencies?: unknown[],
 ): (event: ScrollHandlerEvent) => void {
   return (event: ScrollHandlerEvent) => {
     const scrollEvent =
-      'nativeEvent' in event ? (event.nativeEvent as ReanimatedScrollEvent) : event
+      'nativeEvent' in event
+        ? (event.nativeEvent as ReanimatedScrollEvent)
+        : event
     if (typeof handlers === 'function') {
       handlers(scrollEvent)
     } else {
@@ -335,10 +337,7 @@ export function useEvent(
 export function useHandler<
   Handlers extends object,
   Context extends Record<string, unknown> = Record<string, unknown>,
->(
-  handlers: Handlers,
-  _dependencies?: unknown[],
-) {
+>(handlers: Handlers, _dependencies?: unknown[]) {
   return {
     context: {} as Context,
     doDependenciesDiffer: false,
@@ -405,7 +404,9 @@ export function scrollTo(
   y: number,
   animated?: boolean,
 ) {
-  const scrollable = ref.current as {scrollTo?: (options: unknown) => void} | null
+  const scrollable = ref.current as {
+    scrollTo?: (options: unknown) => void
+  } | null
   scrollable?.scrollTo?.({x, y, animated})
 }
 

@@ -1,6 +1,9 @@
 import {createContext, useContext, useMemo} from 'react'
 
-import {type SharedValue, useSharedValue} from '#/lib/animations/reanimatedCompat'
+import {
+  type SharedValue,
+  useSharedValue,
+} from '#/lib/animations/reanimatedCompat'
 
 type StateContext = {
   headerHeight: SharedValue<number>

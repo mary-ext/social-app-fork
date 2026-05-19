@@ -11,7 +11,7 @@ import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {codeToLanguageName} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {useLanguagePrefs} from '#/state/preferences/languages'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'

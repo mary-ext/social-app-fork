@@ -11,7 +11,14 @@ import {
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
-import { applyFonts, atoms as a, type TextStyleProp, tokens, useAlf, useTheme } from '#/alf';
+import {
+  applyFonts,
+  atoms as a,
+  type TextStyleProp,
+  tokens,
+  useAlf,
+  useTheme,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
@@ -84,15 +91,15 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           a.px_md,
           style,
         ]}
-        {...{
+        {...({
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,
           onMouseOut: onHoverOut,
-        } as any}>
+        } as any)}>
         {children}
       </View>
     </Context.Provider>
-  );
+  )
 }
 
 export function useSharedInputStyles() {
@@ -273,7 +280,7 @@ export function createInput(Component: typeof TextInput) {
         />
       </>
     )
-  };
+  }
 }
 
 export const Input = createInput(TextInput)
@@ -371,7 +378,7 @@ export function SuffixText({
       ]}>
       {children}
     </Text>
-  );
+  )
 }
 
 export function GhostText({
@@ -390,12 +397,13 @@ export function GhostText({
         a.absolute,
         a.z_10,
         {
-          paddingLeft: // icon
-          tokens.space.xl +
-          // icon padding
-          tokens.space.xs +
-          // text input padding
-          tokens.space.xs,
+          // icon
+          paddingLeft:
+            tokens.space.xl +
+            // icon padding
+            tokens.space.xs +
+            // text input padding
+            tokens.space.xs,
         },
         a.pr_md,
         a.overflow_hidden,
@@ -423,5 +431,5 @@ export function GhostText({
         </Text>
       </Text>
     </View>
-  );
+  )
 }

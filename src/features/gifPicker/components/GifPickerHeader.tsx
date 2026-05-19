@@ -2,7 +2,7 @@ import {type Ref} from 'react'
 import {type TextInput, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass'
@@ -74,5 +74,5 @@ export function GifPickerHeader({
         )}
       </TextField.Root>
     </View>
-  );
+  )
 }

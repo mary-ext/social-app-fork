@@ -93,12 +93,12 @@ let ShareMenuButton = ({
                 hitSlop={hitSlop}>
                 <PostControlButtonIcon icon={ArrowShareRightIcon} />
               </PostControlButton>
-            );
+            )
           }}
         </Menu.Trigger>
         {hasBeenOpen && (
           // Lazily initialized. Once mounted, they stay mounted.
-          (<ShareMenuItems
+          <ShareMenuItems
             testID={testID}
             post={post}
             record={record}
@@ -106,11 +106,11 @@ let ShareMenuButton = ({
             timestamp={timestamp}
             threadgateRecord={threadgateRecord}
             onShare={onShare}
-          />)
+          />
         )}
       </Menu.Root>
     </EventStopper>
-  );
+  )
 }
 
 ShareMenuButton = memo(ShareMenuButton)

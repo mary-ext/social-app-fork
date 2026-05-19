@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import Animated, {
   FadeInUp,
@@ -12,7 +12,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
-import { type Alf, atoms as a, useAlf, useTheme } from '#/alf';
+import {type Alf, atoms as a, useAlf, useTheme} from '#/alf'
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
@@ -156,13 +156,12 @@ export function AppearanceSettingsScreen({}: Props) {
                 value={fonts.scale}
                 onChange={onChangeFontScale}
               />
-
             </Animated.View>
           </SettingsList.Container>
         </Layout.Content>
       </Layout.Screen>
     </LayoutAnimationConfig>
-  );
+  )
 }
 
 export function AppearanceToggleButtonGroup<T extends string>({

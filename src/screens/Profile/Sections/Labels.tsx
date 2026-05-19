@@ -6,11 +6,11 @@ import {
   interpretLabelValueDefinitions,
   type ModerationOpts,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {List, type ListRef} from '#/view/com/util/List'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {ListFooter} from '#/components/Lists'
@@ -136,7 +136,7 @@ export function ProfileLabelsSection({
         }
       />
     </View>
-  );
+  )
 }
 
 function keyExtractor(item: InterpretedLabelValueDefinition) {

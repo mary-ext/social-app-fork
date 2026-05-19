@@ -148,7 +148,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
     } else {
       return DEFAULT_STATE
     }
-  }, [shadowed, config, tick, moderation]);
+  }, [shadowed, config, tick, moderation])
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {

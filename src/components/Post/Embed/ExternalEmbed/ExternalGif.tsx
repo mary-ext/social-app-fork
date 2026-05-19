@@ -102,10 +102,7 @@ export function ExternalGif({
         accessibilityLabel={l`Play ${link.title}`}>
         <Image
           source={{
-            uri:
-              !isPrefetched || (!isAnimating)
-                ? link.thumb
-                : params.playerUri,
+            uri: !isPrefetched || !isAnimating ? link.thumb : params.playerUri,
           }} // Web uses the thumb to control playback
           style={{flex: 1}}
           ref={imageRef}
@@ -129,14 +126,14 @@ export function ExternalGif({
             />
 
             {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-              (<PlayButtonIcon />)
+              <PlayButtonIcon />
             ) : (
               // Activity indicator while gif loads
-              (<ActivityIndicator size="large" color="white" />)
+              <ActivityIndicator size="large" color="white" />
             )}
           </Fill>
         )}
       </Pressable>
     </>
-  );
+  )
 }

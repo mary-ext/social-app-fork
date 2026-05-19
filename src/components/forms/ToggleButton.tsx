@@ -6,7 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
@@ -113,7 +113,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
       ]}>
       {children}
     </View>
-  );
+  )
 }
 
 /**

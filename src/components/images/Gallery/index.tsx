@@ -23,7 +23,7 @@ import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {
@@ -149,7 +149,9 @@ export function Gallery({
   const flatListRef = useRef<FlatList>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
   const itemRefsRef = useRef<Map<number, View>>(new Map())
-  const containerRefsRef = useRef<Map<number, AnimatedRef<AnimatedView>>>(new Map())
+  const containerRefsRef = useRef<Map<number, AnimatedRef<AnimatedView>>>(
+    new Map(),
+  )
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
 
@@ -312,7 +314,7 @@ export function Gallery({
         />
       </BlockDrawerGesture>
     </View>
-  );
+  )
 }
 
 function computeDims({
@@ -506,5 +508,5 @@ function GalleryImage({
         />
       </Pressable>
     </Animated.View>
-  );
+  )
 }

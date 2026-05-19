@@ -176,7 +176,7 @@ export function ProfileFeedScreenInner({
     const feedIsVideoMode =
       feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
-    return false;
+    return false
   }, [feedInfo])
 
   return (

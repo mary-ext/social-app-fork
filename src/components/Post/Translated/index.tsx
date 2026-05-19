@@ -17,7 +17,7 @@ import {
 } from '#/locale/helpers'
 import {LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
-import { atoms as a, flatten, useTheme } from '#/alf';
+import {atoms as a, flatten, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -156,7 +156,7 @@ function TranslationLink({
         </Text>
       </Link>
     </View>
-  );
+  )
 }
 
 function TranslationError({
@@ -242,7 +242,7 @@ function TranslationError({
         </Link>
       </View>
     </View>
-  );
+  )
 }
 
 function TranslationResult({
@@ -358,7 +358,7 @@ function TranslationResult({
         </Text>
       </View>
     </View>
-  );
+  )
 }
 
 function TranslationLanguageSelect({
@@ -429,7 +429,7 @@ function TranslationLanguageSelect({
                 <Trans>Change</Trans>
               </Text>
             </Button>
-          );
+          )
         }}
       </Select.Trigger>
       <Select.Content
@@ -443,5 +443,5 @@ function TranslationLanguageSelect({
         items={items}
       />
     </Select.Root>
-  );
+  )
 }

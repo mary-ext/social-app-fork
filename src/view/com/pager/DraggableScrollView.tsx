@@ -2,7 +2,7 @@ import {type ComponentPropsWithRef} from 'react'
 import {ScrollView} from 'react-native'
 
 import {useDraggableScroll} from '#/lib/hooks/useDraggableScrollView'
-import { atoms as a } from '#/alf';
+import {atoms as a} from '#/alf'
 
 export function DraggableScrollView({
   ref,
@@ -21,5 +21,5 @@ export function DraggableScrollView({
       horizontal
       {...props}
     />
-  );
+  )
 }

@@ -316,10 +316,7 @@ async function processImagePickerAssets(
        * data-uri. Our handling elsewhere in the app (for web) relies on the
        * base64 data-uri, so we construct it here for web only.
        */
-      uri:
-        asset.base64
-          ? `data:${mimeType};base64,${asset.base64}`
-          : asset.uri,
+      uri: asset.base64 ? `data:${mimeType};base64,${asset.base64}` : asset.uri,
     })
   }
 

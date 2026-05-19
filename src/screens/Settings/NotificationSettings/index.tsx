@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   type AllNavigatorParams,

@@ -54,7 +54,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       ? LINEAR_VIEW_BELOW
       : gtPhone
         ? TREE_VIEW_BELOW_DESKTOP
-        : TREE_VIEW_BELOW;
+        : TREE_VIEW_BELOW
   }, [view, gtPhone])
 
   const postThreadQueryKey = createPostThreadQueryKey({

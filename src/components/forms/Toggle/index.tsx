@@ -7,10 +7,18 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import Animated, {Easing, LinearTransition} from '#/lib/animations/reanimatedCompat'
+import Animated, {
+  Easing,
+  LinearTransition,
+} from '#/lib/animations/reanimatedCompat'
 import {HITSLOP_10} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+import {
+  atoms as a,
+  type TextStyleProp,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
@@ -263,7 +271,7 @@ export function LabelText({
       ]}>
       {children}
     </Text>
-  );
+  )
 }
 
 // TODO(eric) refactor to memoize styles without knowledge of state
@@ -481,9 +489,9 @@ export function Switch() {
         hovered ? baseHoverStyles : {},
       ]}>
       <Animated.View
-        layout={LinearTransition.duration(
-          100,
-        ).easing(Easing.inOut(Easing.cubic))}
+        layout={LinearTransition.duration(100).easing(
+          Easing.inOut(Easing.cubic),
+        )}
         style={[
           a.rounded_full,
           {
@@ -496,7 +504,7 @@ export function Switch() {
         ]}
       />
     </View>
-  );
+  )
 }
 
 export function Radio() {

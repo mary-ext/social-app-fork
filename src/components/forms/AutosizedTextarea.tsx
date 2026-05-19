@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 
 import {mergeRefs} from '#/lib/merge-refs'
-import { atoms as a, extractPadding, useAlf } from '#/alf';
+import {atoms as a, extractPadding, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 
 export type AutosizedTextareaProps = Omit<TextInputProps, 'multiline'> & {
@@ -159,5 +159,5 @@ export function AutosizedTextarea({
       onChangeText={onChangeText}
       onContentSizeChange={onContentSizeChange}
     />
-  );
+  )
 }

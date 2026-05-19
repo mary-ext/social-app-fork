@@ -102,7 +102,7 @@ function Inner() {
         </View>
       </View>
     </>
-  );
+  )
 }
 
 function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendingTopic[]) {

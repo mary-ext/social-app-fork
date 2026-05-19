@@ -11,7 +11,7 @@ export function normalizeCode(value: string) {
 }
 
 export function isValidCode(value?: string) {
-  return Boolean(value && /^[A-Z2-7]{5}-[A-Z2-7]{5}$/.test(value));
+  return Boolean(value && /^[A-Z2-7]{5}-[A-Z2-7]{5}$/.test(value))
 }
 
 export function TokenField({

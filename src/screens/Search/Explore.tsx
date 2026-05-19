@@ -5,7 +5,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyGraphDefs,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -48,7 +48,7 @@ import {
 import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
 import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
 import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -335,18 +335,18 @@ export function Explore({
 
   const topBorder = useMemo(
     () =>
-      (({
+      ({
         type: 'topBorder',
         key: 'top-border',
-      }) as const),
+      }) as const,
     [],
   )
   const trendingTopicsModule = useMemo(
     () =>
-      (({
+      ({
         type: 'trendingTopics',
         key: 'trending-topics',
-      }) as const),
+      }) as const,
     [],
   )
   const suggestedFollowsModule = useMemo(() => {
@@ -1112,7 +1112,7 @@ export function Explore({
       refreshing={isPTR}
       onRefresh={handleOnRefresh}
     />
-  );
+  )
 }
 
 function keyExtractor(item: FeedPreviewItem) {

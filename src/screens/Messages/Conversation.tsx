@@ -20,7 +20,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
 import {useSession} from '#/state/session'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
 import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
 import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
@@ -67,7 +67,7 @@ export function MessagesConversationScreenInner({route}: Props) {
         </ConvoProvider>
       </ScrollEdgeEffectProvider>
     </Layout.Screen>
-  );
+  )
 }
 
 function Inner({convoId}: {convoId: string}) {
@@ -107,8 +107,7 @@ function Inner({convoId}: {convoId: string}) {
   if (convoState.status === ConvoStatus.Error) {
     return (
       <>
-        <Layout.Center
-          style={[a.w_full, false]}>
+        <Layout.Center style={[a.w_full, false]}>
           <MessagesListHeader convo={convo} />
         </Layout.Center>
         <Error
@@ -118,7 +117,7 @@ function Inner({convoId}: {convoId: string}) {
           sideBorders={false}
         />
       </>
-    );
+    )
   }
 
   return (
@@ -155,7 +154,7 @@ function Inner({convoId}: {convoId: string}) {
         )}
       </View>
     </Layout.Center>
-  );
+  )
 }
 
 function InnerReady({
@@ -217,5 +216,5 @@ function InnerReady({
         />
       )}
     </>
-  );
+  )
 }

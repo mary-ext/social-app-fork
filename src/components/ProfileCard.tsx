@@ -27,7 +27,12 @@ import {
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+import {
+  atoms as a,
+  type TextStyleProp,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -261,11 +266,7 @@ function InlineNameAndHandle({
       <ProfileBadges
         profile={profile}
         size="md"
-        style={[
-          a.pl_2xs,
-          a.self_center,
-          {marginTop: 0},
-        ]}
+        style={[a.pl_2xs, a.self_center, {marginTop: 0}]}
       />
       <Text
         emoji
@@ -278,7 +279,7 @@ function InlineNameAndHandle({
         {NON_BREAKING_SPACE + handle}
       </Text>
     </View>
-  );
+  )
 }
 
 export function Name({

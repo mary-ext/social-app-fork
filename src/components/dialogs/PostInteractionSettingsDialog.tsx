@@ -5,7 +5,7 @@ import {
   type AppBskyFeedPostgate,
   AtUri,
 } from '@atproto/api'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
@@ -37,7 +37,7 @@ import {
 } from '#/state/queries/usePostThread'
 import {useAgent, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -105,7 +105,7 @@ function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
       <PostInteractionSettingsForm {...props} />
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 export type PostInteractionSettingsDialogProps = {
@@ -277,7 +277,7 @@ export function PostInteractionSettingsDialogControlledInner(
       )}
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }
 
 export function PostInteractionSettingsForm({
@@ -646,7 +646,7 @@ export function PostInteractionSettingsForm({
         {isSaving && <ButtonIcon icon={Loader} />}
       </Button>
     </View>
-  );
+  )
 }
 
 function Header() {

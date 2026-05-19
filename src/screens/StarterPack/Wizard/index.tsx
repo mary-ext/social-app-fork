@@ -8,7 +8,7 @@ import {
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -43,7 +43,7 @@ import {
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
@@ -144,7 +144,7 @@ export function Wizard({
         />
       </Provider>
     </Layout.Screen>
-  );
+  )
 }
 
 function WizardInner({
@@ -563,13 +563,7 @@ function Footer({
           )
         ) : null /* Should not happen. */
       }
-      <View
-        style={[
-          a.w_full,
-          a.align_center,
-          a.gap_2xl,
-          a.mt_md,
-        ]}>
+      <View style={[a.w_full, a.align_center, a.gap_2xl, a.mt_md]}>
         {state.currentStep === 'Profiles' && items.length < 8 && (
           <Text
             style={[
@@ -596,7 +590,7 @@ function Footer({
         </Button>
       </View>
     </View>
-  );
+  )
 }
 
 function getName(

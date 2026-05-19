@@ -1,9 +1,9 @@
 import {forwardRef} from 'react'
-import { useWindowDimensions, View } from 'react-native';
+import {useWindowDimensions, View} from 'react-native'
 
 import {cleanError} from '#/lib/strings/errors'
 import {type ListMethods} from '#/view/com/util/List'
-import { atoms as a, useBreakpoints } from '#/alf';
+import {atoms as a, useBreakpoints} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {ListFooter} from '#/components/Lists'
 import {GifPickerItem} from '#/features/gifPicker/components/GifPickerItem'
@@ -92,7 +92,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
           ) : null
         }
       />
-    );
+    )
   },
 )
 

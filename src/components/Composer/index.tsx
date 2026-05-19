@@ -17,7 +17,7 @@ import {
   type TapperFacet,
   useTapper,
 } from '#/lib/tapper'
-import { atoms as a, type TextStyleProp, useAlf, type ViewStyleProp } from '#/alf';
+import {atoms as a, type TextStyleProp, useAlf, type ViewStyleProp} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {
   Autocomplete as AutocompleteBase,
@@ -31,7 +31,7 @@ import {
   type AutosizedTextareaProps,
 } from '#/components/forms/AutosizedTextarea'
 import {Span, Text} from '#/components/Typography'
-import { IS_WEB_TOUCH_DEVICE } from '#/env';
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
 
 export type SubmitRequest =
   | {
@@ -273,7 +273,7 @@ export function Composer({
                 }>
                 {node.raw}
               </Span>
-            );
+            )
         }
       })}
     </Text>
@@ -282,24 +282,26 @@ export function Composer({
   return (
     <>
       <View style={[a.relative, outerStyle]}>
-        {(<View
-          pointerEvents="none"
-          style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}
-          ref={node => {
-            if (node) {
-              // @ts-ignore web only a11y
-              node.setAttribute('inert', '')
-            }
-          }}>
-          <Animated.View
-            style={[
-              contentPaddingStyle,
-              {position: 'absolute', left: 0, right: 0},
-              previewScrollStyle,
-            ]}>
-            {textContent}
-          </Animated.View>
-        </View>)}
+        {
+          <View
+            pointerEvents="none"
+            style={[a.absolute, a.inset_0, a.z_10, {overflow: 'hidden'}]}
+            ref={node => {
+              if (node) {
+                // @ts-ignore web only a11y
+                node.setAttribute('inert', '')
+              }
+            }}>
+            <Animated.View
+              style={[
+                contentPaddingStyle,
+                {position: 'absolute', left: 0, right: 0},
+                previewScrollStyle,
+              ]}>
+              {textContent}
+            </Animated.View>
+          </View>
+        }
         <AutosizedTextarea
           placeholderTextColor={t.palette.contrast_500}
           accessibilityLabel={label}
@@ -355,7 +357,7 @@ export function Composer({
         />
       )}
     </>
-  );
+  )
 }
 
 /*

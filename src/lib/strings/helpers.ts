@@ -44,7 +44,7 @@ export function isOverMaxGraphemeCount({
 
 export function countLines(str: string | undefined): number {
   if (!str) return 0
-  return str.match(/\n/g)?.length ?? 0;
+  return str.match(/\n/g)?.length ?? 0
 }
 
 // Augments search query with additional syntax like `from:me`
@@ -67,10 +67,10 @@ export function augmentSearchQuery(query: string, {did}: {did?: string}) {
   return splits
     .map((str, idx) => {
       if (idx % 2 === 0) {
-        return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`);
+        return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`)
       }
 
       return str
     })
-    .join('');
+    .join('')
 }

@@ -44,18 +44,14 @@ export function Header({
         style,
       ]}>
       {renderLeft && (
-        <View style={[a.absolute, {left: 6}]}>
-          {renderLeft()}
-        </View>
+        <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
       )}
       {children}
       {renderRight && (
-        <View style={[a.absolute, {right: 6}]}>
-          {renderRight()}
-        </View>
+        <View style={[a.absolute, {right: 6}]}>{renderRight()}</View>
       )}
     </View>
-  );
+  )
 }
 
 export function HeaderText({

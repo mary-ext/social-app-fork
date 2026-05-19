@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import deepEqual from 'fast-deep-equal'
 
 import {logger} from '#/logger'

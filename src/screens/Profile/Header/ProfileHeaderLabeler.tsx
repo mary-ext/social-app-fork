@@ -8,7 +8,7 @@ import {
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {plural} from '@lingui/core/macro'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'
@@ -106,9 +106,7 @@ let ProfileHeaderLabeler = ({
       moderation={moderation}
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
-      <View
-        style={[a.px_lg, a.pt_md, a.pb_sm]}
-        pointerEvents={'box-none'}>
+      <View style={[a.px_lg, a.pt_md, a.pb_sm]} pointerEvents={'box-none'}>
         <View
           style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
           pointerEvents={'box-none'}>
@@ -190,7 +188,7 @@ let ProfileHeaderLabeler = ({
         )}
       </View>
     </ProfileHeaderShell>
-  );
+  )
 }
 ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
 export {ProfileHeaderLabeler}
@@ -290,7 +288,7 @@ export function HeaderLabelerButtons({
         // hidden in the minimal header, because it's not shadowed so the two buttons
         // can get out of sync. if you want to reenable, you'll need to add shadowing
         // to the subscribed state -sfn
-        (<Button
+        <Button
           testID="toggleSubscribeBtn"
           label={
             isSubscribed
@@ -334,10 +332,10 @@ export function HeaderLabelerButtons({
               </Text>
             </View>
           )}
-        </Button>)
+        </Button>
       ) : null}
       <ProfileMenu profile={profile} />
       <CantSubscribePrompt control={cantSubscribePrompt} />
     </>
-  );
+  )
 }

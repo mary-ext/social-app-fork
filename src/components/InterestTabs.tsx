@@ -9,7 +9,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonIcon} from '#/components/Button'
 import {
@@ -303,7 +303,7 @@ export function InterestTabs({
         </View>
       )}
     </View>
-  );
+  )
 }
 
 function Tab({
@@ -375,7 +375,7 @@ function Tab({
         )}
       </Button>
     </View>
-  );
+  )
 }
 
 export function boostInterests(boosts?: string[]) {

@@ -293,7 +293,7 @@ function DialogInner() {
       onViewableItemsChanged={onViewableItemsChanged}
       viewabilityConfig={viewabilityConfig}
     />
-  );
+  )
 }
 
 let Header = ({
@@ -352,7 +352,7 @@ let Header = ({
         />
       </View>
     </View>
-  );
+  )
 }
 Header = memo(Header)
 
@@ -379,24 +379,26 @@ function HeaderTop() {
         ]}>
         <Trans>Find people to follow</Trans>
       </Text>
-      {(<Button
-        label={l`Close`}
-        size="small"
-        shape="round"
-        variant={'ghost'}
-        color="secondary"
-        style={[
-          a.absolute,
-          a.z_20,
-          {right: 8} as any,
-          undefined as any,
-          undefined as any,
-        ]}
-        onPress={() => control.close()}>
-        <ButtonIcon icon={X} size="md" />
-      </Button>)}
+      {
+        <Button
+          label={l`Close`}
+          size="small"
+          shape="round"
+          variant={'ghost'}
+          color="secondary"
+          style={[
+            a.absolute,
+            a.z_20,
+            {right: 8} as any,
+            undefined as any,
+            undefined as any,
+          ]}
+          onPress={() => control.close()}>
+          <ButtonIcon icon={X} size="md" />
+        </Button>
+      }
     </View>
-  );
+  )
 }
 
 let Tab = ({
@@ -551,7 +553,7 @@ function FollowProfileCardInner({
         </CardOuter>
       )}
     </ProfileCard.Link>
-  );
+  )
 }
 
 function CardOuter({
@@ -597,10 +599,10 @@ function SearchInput({
 
   return (
     <View
-      {...{
+      {...({
         onMouseEnter,
         onMouseLeave,
-      } as any}
+      } as any)}
       style={[a.flex_row, a.align_center, a.gap_sm, a.px_lg, a.py_xs]}>
       <SearchIcon
         size="md"
@@ -631,7 +633,7 @@ function SearchInput({
         accessibilityHint={l`Searches for profiles`}
       />
     </View>
-  );
+  )
 }
 
 function ProfileCardSkeleton() {

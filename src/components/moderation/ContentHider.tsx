@@ -6,7 +6,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type ModerationUI} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   ADULT_CONTENT_LABELS,
@@ -18,7 +18,7 @@ import {getDefinition, getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useLabelDefinitions} from '#/state/preferences'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -258,5 +258,5 @@ function ContentHiderActive({
       )}
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>
-  );
+  )
 }

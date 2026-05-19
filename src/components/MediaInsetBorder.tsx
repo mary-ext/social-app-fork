@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 
-import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {IS_HIGH_DPI} from '#/env'
 
@@ -42,5 +42,5 @@ export function MediaInsetBorder({
       ]}>
       {children}
     </Fill>
-  );
+  )
 }

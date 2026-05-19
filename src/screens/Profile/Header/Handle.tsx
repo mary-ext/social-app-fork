@@ -1,10 +1,10 @@
 import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {type Shadow} from '#/state/cache/types'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
 
@@ -53,12 +53,8 @@ export function ProfileHeaderHandle({
         ]}>
         {invalidHandle
           ? l`⚠Invalid Handle`
-          : sanitizeHandle(
-              profile.handle,
-              '@',
-              false,
-            )}
+          : sanitizeHandle(profile.handle, '@', false)}
       </Text>
     </View>
-  );
+  )
 }

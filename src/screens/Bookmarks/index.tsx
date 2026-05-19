@@ -5,7 +5,7 @@ import {
   type AppBskyBookmarkDefs,
   AppBskyFeedDefs,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {
   type NavigationProp,
   useFocusEffect,
@@ -186,7 +186,7 @@ function BookmarksInner() {
       updateCellsBatchingPeriod={40}
       sideBorders={false}
     />
-  );
+  )
 }
 
 function BookmarkNotFound({

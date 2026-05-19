@@ -8,7 +8,7 @@ import {
   type ComAtprotoRepoApplyWrites,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
@@ -19,7 +19,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -158,12 +158,7 @@ export function CreateListFromStarterPackDialog({
               </Trans>
             </Admonition>
 
-            <View
-              style={[
-                [a.flex_row_reverse],
-                a.gap_md,
-                a.pt_sm,
-              ]}>
+            <View style={[[a.flex_row_reverse], a.gap_md, a.pt_sm]}>
               <Button
                 label={l`Create list`}
                 onPress={onPressCreate}
@@ -213,5 +208,5 @@ export function CreateListFromStarterPackDialog({
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
-  );
+  )
 }

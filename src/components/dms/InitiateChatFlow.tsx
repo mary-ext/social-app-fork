@@ -17,7 +17,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {canBeMessaged} from '#/components/dms/util'
@@ -492,21 +492,22 @@ export function InitiateChatFlow({
               ]}>
               {screenTitle}
             </Text>
-            {(<Button
-              label={l`Close`}
-              size="small"
-              shape="round"
-              variant="ghost"
-              color="secondary"
-              style={[a.absolute, a.z_20, {right: -4}]}
-              onPress={() => control.close()}>
-              <ButtonIcon icon={XIcon} size="lg" />
-            </Button>)}
+            {
+              <Button
+                label={l`Close`}
+                size="small"
+                shape="round"
+                variant="ghost"
+                color="secondary"
+                style={[a.absolute, a.z_20, {right: -4}]}
+                onPress={() => control.close()}>
+                <ButtonIcon icon={XIcon} size="lg" />
+              </Button>
+            }
           </View>
           <View style={[a.pt_xs, undefined as any]}>
             {chatState === ChatState.GROUP_NAME ? (
-              <View
-                style={[a.w_full, a.relative, a.pt_md, undefined as any]}>
+              <View style={[a.w_full, a.relative, a.pt_md, undefined as any]}>
                 <TextField.Root>
                   <TextField.Input
                     label={l`Group name`}
@@ -661,7 +662,7 @@ export function InitiateChatFlow({
         }
       />
     </Toggle.Group>
-  );
+  )
 }
 
 function NewGroupChatButton({onPress}: {onPress: () => void}) {

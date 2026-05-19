@@ -6,7 +6,7 @@ import {
   moderateUserList,
   type ModerationOpts,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -32,7 +32,7 @@ import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
@@ -121,13 +121,11 @@ function ProfileListScreenInner(props: Props) {
         <Layout.Header.Content />
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Content
-        centerContent
-        contentContainerStyle={[a.mx_auto]}>
+      <Layout.Content centerContent contentContainerStyle={[a.mx_auto]}>
         <Loader size="2xl" />
       </Layout.Content>
     </>
-  );
+  )
 }
 
 function ProfileListScreenLoaded({
@@ -248,12 +246,7 @@ function ProfileListScreenLoaded({
         <View style={[a.util_screen_outer]}>
           <Layout.Center
             onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
-            style={[
-              undefined as any,
-
-              a.border_b,
-              t.atoms.border_contrast_low,
-            ]}>
+            style={[undefined as any, a.border_b, t.atoms.border_contrast_low]}>
             {renderHeader()}
           </Layout.Center>
           {headerHeight !== null && (
@@ -280,5 +273,5 @@ function ProfileListScreenLoaded({
         />
       </Hider.Content>
     </Hider.Outer>
-  );
+  )
 }

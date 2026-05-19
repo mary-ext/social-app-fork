@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 
-import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
-import { IS_WEB_TOUCH_DEVICE } from '#/env';
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
 
 export function SubtleHover({
   style,

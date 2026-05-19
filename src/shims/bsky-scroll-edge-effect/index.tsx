@@ -5,11 +5,7 @@ export function ScrollEdgeEffect(props: ViewProps & {edge?: string}) {
   return <View {...props} />
 }
 
-export function ScrollEdgeEffectProvider({
-  children,
-}: {
-  children: ReactNode
-}) {
+export function ScrollEdgeEffectProvider({children}: {children: ReactNode}) {
   return <>{children}</>
 }
 

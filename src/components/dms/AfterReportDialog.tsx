@@ -1,7 +1,7 @@
 import {memo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
@@ -11,7 +11,7 @@ import {
   useProfileBlockMutationQueue,
   useProfileQuery,
 } from '#/state/queries/profile'
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
@@ -48,7 +48,7 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
-  );
+  )
 })
 
 function DialogInner({
@@ -100,7 +100,7 @@ function DialogInner({
       currentScreen={currentScreen}
       profile={profile}
     />
-  );
+  )
 }
 
 function DoneStep({
@@ -124,9 +124,7 @@ function DoneStep({
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
-        navigation.dispatch(
-          StackActions.replace('Messages', {}),
-        )
+        navigation.dispatch(StackActions.replace('Messages', {}))
       }
     },
     onError: () => {

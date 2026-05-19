@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {
   useProfileQuery,
@@ -20,8 +20,7 @@ export function PwiOptOut() {
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const updateProfile = useProfileUpdateMutation()
 
-  const isOptedOut =
-    profile?.labels?.some(l => l.val === '!no-unauthenticated')
+  const isOptedOut = profile?.labels?.some(l => l.val === '!no-unauthenticated')
   const canToggle = profile && !updateProfile.isPending
 
   const onToggleOptOut = useCallback(() => {

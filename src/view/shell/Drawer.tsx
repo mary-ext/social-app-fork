@@ -2,7 +2,7 @@ import {type ComponentProps, type JSX, memo, useCallback} from 'react'
 import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
-import {Plural, Trans,useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
@@ -21,7 +21,7 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignInCard} from '#/view/shell/nav-sign-in-card'
-import { atoms as a, tokens, useTheme } from '#/alf';
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
@@ -628,19 +628,14 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
             ) : undefined}
           </View>
           <Text
-            style={[
-              a.flex_1,
-              a.text_2xl,
-              bold && a.font_bold,
-              a.leading_snug,
-            ]}
+            style={[a.flex_1, a.text_2xl, bold && a.font_bold, a.leading_snug]}
             numberOfLines={1}>
             {label}
           </Text>
         </View>
       )}
     </Button>
-  );
+  )
 }
 
 function ExtraLinks() {

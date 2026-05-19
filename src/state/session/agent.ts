@@ -127,7 +127,7 @@ export function agentToSessionAccount(
     status: agent.session.status,
     pdsUrl: agent.pdsUrl?.toString(),
     isSelfHosted: !agent.serviceUrl.toString().startsWith(BSKY_SERVICE),
-  };
+  }
 }
 
 export function sessionAccountToSession(

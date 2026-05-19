@@ -58,7 +58,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
        * @see https://github.com/necolas/react-native-web/discussions/2072
        */
       screenReaderEnabled: false,
-    };
+    }
   }, [reduceMotionEnabled, screenReaderEnabled])
 
   return <Context.Provider value={ctx}>{children}</Context.Provider>

@@ -72,5 +72,5 @@ function createRoute(pattern: string): Route {
 
       return str + (hasQp ? `?${qp.toString()}` : '')
     },
-  };
+  }
 }

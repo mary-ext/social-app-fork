@@ -88,7 +88,7 @@ export function HomeScreen(props: Props) {
           />
         </HomeHeaderModeProvider>
       </Layout.Screen>
-    );
+    )
   } else {
     return (
       <Layout.Screen>

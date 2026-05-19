@@ -5,14 +5,14 @@ import {
   AppBskyActorStatus,
   type AppBskyEmbedExternal,
 } from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {differenceInMinutes} from 'date-fns'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useTickEveryMinute} from '#/state/shell'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -192,8 +192,7 @@ function DialogInner({
           </Admonition>
         )}
 
-        <View
-          style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
+        <View style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
           {isDirty ? (
             <Button
               label={l`Save`}
@@ -235,5 +234,5 @@ function DialogInner({
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
-  );
+  )
 }

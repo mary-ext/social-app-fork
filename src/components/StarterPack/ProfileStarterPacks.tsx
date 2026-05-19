@@ -8,7 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
@@ -24,7 +24,7 @@ import {
 } from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import { atoms as a, useTheme } from '#/alf';
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -175,7 +175,7 @@ export function ProfileStarterPacks({
         }
       />
     </View>
-  );
+  )
 }
 
 function CreateAnother() {

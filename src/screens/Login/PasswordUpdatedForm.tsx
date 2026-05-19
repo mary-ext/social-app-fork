@@ -1,7 +1,7 @@
 import {View} from 'react-native'
-import {Trans,useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
-import { atoms as a, useBreakpoints } from '#/alf';
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
@@ -37,5 +37,5 @@ export const PasswordUpdatedForm = ({
         </Button>
       </View>
     </FormContainer>
-  );
+  )
 }

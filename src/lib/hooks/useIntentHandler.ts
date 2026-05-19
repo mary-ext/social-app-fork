@@ -112,5 +112,5 @@ export function useComposeIntent() {
       }, 500)
     },
     [hasSession, closeAllActiveElements, openComposer],
-  );
+  )
 }

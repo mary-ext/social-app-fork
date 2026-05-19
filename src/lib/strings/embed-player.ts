@@ -3,9 +3,9 @@ import {Dimensions} from 'react-native'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 const IFRAME_HOST = // @ts-ignore only for web
-window.location.host === 'localhost:8100'
-? 'http://localhost:8100'
-: 'https://bsky.app'
+  window.location.host === 'localhost:8100'
+    ? 'http://localhost:8100'
+    : 'https://bsky.app'
 
 export const embedPlayerSources = [
   'youtube',
@@ -148,8 +148,7 @@ export function parseEmbedPlayerFromUrl(
     urlp.hostname === 'www.twitch.tv' ||
     urlp.hostname === 'm.twitch.tv'
   ) {
-    const parent = // @ts-ignore only for web
-    window.location.hostname
+    const parent = window.location.hostname // @ts-ignore only for web
 
     const [__, channelOrVideo, clipOrId, id] = urlp.pathname.split('/')
 
