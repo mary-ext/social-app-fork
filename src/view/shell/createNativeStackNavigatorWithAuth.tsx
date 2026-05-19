@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {Suspense, useEffect, useRef} from 'react'
 import {View} from 'react-native'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
@@ -36,6 +36,7 @@ import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
+import {RouteLoadingScreen} from './route-loading-screen'
 
 // On web, only this many screens (beyond Home + focused) stay mounted.
 // Older screens are unmounted to prevent memory growth during long sessions.
@@ -178,13 +179,15 @@ function NativeStackNavigator({
   return (
     <NavigationContent>
       <View role="main" style={a.flex_1}>
-        <NativeStackView
-          {...rest}
-          state={state}
-          navigation={navigation}
-          descriptors={finalDescriptors}
-          describe={describe}
-        />
+        <Suspense fallback={<RouteLoadingScreen />}>
+          <NativeStackView
+            {...rest}
+            state={state}
+            navigation={navigation}
+            descriptors={finalDescriptors}
+            describe={describe}
+          />
+        </Suspense>
       </View>
       {(<>
         {showBottomBar ? (

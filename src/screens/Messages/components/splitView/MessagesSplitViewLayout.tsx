@@ -43,7 +43,7 @@ export function renderMessagesSplitViewLayout(props: LayoutProps) {
   return <MessagesSplitViewLayout {...props} />
 }
 
-function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
+export function MessagesSplitViewLayout({children, navigation, route}: LayoutProps) {
   const {rightNavVisible, centerColumnOffset} = useLayoutBreakpoints()
   const newChatControl = useDialogControl()
   const t = useTheme()
