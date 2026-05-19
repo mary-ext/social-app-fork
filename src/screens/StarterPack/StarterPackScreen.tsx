@@ -37,10 +37,6 @@ import {
 } from '#/state/queries/starter-packs'
 import {useAgent, useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '#/state/shell/progress-guide'
 import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
@@ -305,7 +301,6 @@ function Header({
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
-  const {captureAction} = useProgressGuideControls()
 
   const [isProcessing, setIsProcessing] = useState(false)
 
@@ -388,7 +383,6 @@ function Header({
       }
     })
     Toast.show(l`All accounts have been followed!`)
-    captureAction(ProgressGuideAction.Follow, dids.length)
   }
 
   if (

@@ -29,10 +29,9 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
-import {ProgressGuideList} from '#/components/ProgressGuide/List'
+import {SuggestedFollowsDialog} from '#/components/suggested-follows-dialog'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
 
 const DISMISS_ANIMATION_DURATION = 200
 
@@ -440,7 +439,7 @@ export function ProfileGrid({
           )}
         </Button>
       </View>
-      <FollowDialogWithoutGuide control={followDialogControl} />
+      <SuggestedFollowsDialog control={followDialogControl} />
       <LayoutAnimationConfig skipExiting skipEntering>
         {gtMobile ? (
           <View style={[a.p_lg, a.pt_md]}>
@@ -622,22 +621,6 @@ export function SuggestedFeeds() {
           </ScrollView>
         </BlockDrawerGesture>
       )}
-    </View>
-  )
-}
-
-export function ProgressGuide() {
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  return (
-    <View
-      style={[
-        t.atoms.border_contrast_low,
-        a.px_lg,
-        a.py_lg,
-        !gtMobile && {marginTop: 4},
-      ]}>
-      <ProgressGuideList />
     </View>
   )
 }

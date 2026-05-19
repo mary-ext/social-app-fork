@@ -10,20 +10,17 @@ import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useGetSuggestedUsersForSeeMoreQuery} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {useSession} from '#/state/session'
-import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {type ListMethods} from '#/view/com/util/List'
-import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {ProgressGuideTask} from './Task'
 
 type Item =
   | {
@@ -45,43 +42,7 @@ type Item =
       key: string
     }
 
-export function FollowDialog({
-  guide,
-  showArrow,
-}: {
-  guide: Follow10ProgressGuide
-  showArrow?: boolean
-}) {
-  const {t: l} = useLingui()
-  const control = Dialog.useDialogControl()
-  const {gtPhone} = useBreakpoints()
-
-  return (
-    <>
-      <Button
-        label={l`Find people to follow`}
-        onPress={() => {
-          control.open()
-        }}
-        size={gtPhone ? 'small' : 'large'}
-        color="primary">
-        <ButtonText>
-          <Trans>Find people to follow</Trans>
-        </ButtonText>
-        {showArrow && <ButtonIcon icon={ArrowRightIcon} />}
-      </Button>
-      <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
-        <Dialog.Handle />
-        <DialogInner guide={guide} />
-      </Dialog.Outer>
-    </>
-  )
-}
-
-/**
- * Same as {@link FollowDialog} but without a progress guide.
- */
-export function FollowDialogWithoutGuide({
+export function SuggestedFollowsDialog({
   control,
 }: {
   control: Dialog.DialogOuterProps['control']
@@ -100,7 +61,7 @@ let lastSearchText = ''
 
 const FOR_YOU_TAB = 'all'
 
-function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
+function DialogInner() {
   const {t: l} = useLingui()
   const rawInterestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
@@ -224,7 +185,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
     isSearchResultsError,
   ])
 
-  const isGuide = Boolean(guide)
   const recIdForLogging = hasSearchText ? undefined : suggestions?.recId
 
   const renderItems = useCallback(
@@ -239,7 +199,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
               position={index}
               recSource={hasSearchText ? 'Search' : undefined}
               recId={recIdForLogging}
-              isGuide={isGuide}
             />
           )
         }
@@ -253,7 +212,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
           return null
       }
     },
-    [moderationOpts, hasSearchText, recIdForLogging, isGuide],
+    [moderationOpts, hasSearchText, recIdForLogging],
   )
 
   // Track seen profiles
@@ -300,7 +259,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
 
   const listHeader = (
     <Header
-      guide={guide}
       inputRef={inputRef}
       listRef={listRef}
       searchText={searchText}
@@ -339,7 +297,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
 }
 
 let Header = ({
-  guide,
   inputRef,
   listRef,
   searchText,
@@ -350,7 +307,6 @@ let Header = ({
   selectedInterest,
   interestsDisplayNames,
 }: {
-  guide?: Follow10ProgressGuide
   inputRef: React.RefObject<TextInput | null>
   listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
@@ -375,7 +331,7 @@ let Header = ({
         t.atoms.border_contrast_low,
         t.atoms.bg,
       ]}>
-      <HeaderTop guide={guide} />
+      <HeaderTop />
       <View style={[a.pt_xs, a.pb_xs]}>
         <SearchInput
           inputRef={inputRef}
@@ -400,7 +356,7 @@ let Header = ({
 }
 Header = memo(Header)
 
-function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
+function HeaderTop() {
   const {t: l} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
@@ -423,16 +379,6 @@ function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
         ]}>
         <Trans>Find people to follow</Trans>
       </Text>
-      {guide && (
-        <View style={{paddingRight: 36}}>
-          <ProgressGuideTask
-            current={guide.numFollows + 1}
-            total={10 + 1}
-            title={`${guide.numFollows} / 10`}
-            tabularNumsTitle
-          />
-        </View>
-      )}
       {(<Button
         label={l`Close`}
         size="small"
@@ -526,7 +472,6 @@ let FollowProfileCard = ({
   position,
   recSource,
   recId,
-  isGuide,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -534,7 +479,6 @@ let FollowProfileCard = ({
   position: number
   recSource?: 'Search'
   recId?: string
-  isGuide: boolean
 }): React.ReactNode => {
   return (
     <FollowProfileCardInner
@@ -544,7 +488,6 @@ let FollowProfileCard = ({
       position={position}
       recSource={recSource}
       recId={recId}
-      isGuide={isGuide}
     />
   )
 }
@@ -558,7 +501,6 @@ function FollowProfileCardInner({
   position: _position,
   recSource: _recSource,
   recId: _recId,
-  isGuide: _isGuide,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
@@ -567,7 +509,6 @@ function FollowProfileCardInner({
   position: number
   recSource?: 'Search'
   recId?: string
-  isGuide: boolean
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
@@ -597,7 +538,7 @@ function FollowProfileCardInner({
               <ProfileCard.FollowButton
                 profile={profile}
                 moderationOpts={moderationOpts}
-                logContext="ProgressGuideFindFollows"
+                logContext="SuggestedFollowsDialog"
                 shape="round"
                 onPress={() => {
                   onFollow?.()

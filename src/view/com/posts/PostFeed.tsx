@@ -40,12 +40,11 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {useProgressGuide} from '#/state/shell/progress-guide'
 import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
-import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
+import {useBreakpoints} from '#/alf'
+import {SuggestedFollows} from '#/components/FeedInterstitials'
 import {
   PostFeedVideoGridRow,
   PostFeedVideoGridRowPlaceholder,
@@ -116,10 +115,6 @@ type FeedRow =
     }
   | {
       type: 'interstitialFollows'
-      key: string
-    }
-  | {
-      type: 'interstitialProgressGuide'
       key: string
     }
   | {
@@ -221,7 +216,6 @@ let PostFeed = ({
   const lastFetchRef = useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
-  const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = false
 
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
@@ -347,12 +341,6 @@ let PostFeed = ({
     }
   }, [pollInterval, checkForNew])
 
-  const followProgressGuide = useProgressGuide('follow-10')
-  const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
-
-  const showProgressInterstitial =
-    (followProgressGuide || followAndLikeProgressGuide) && !rightNavVisible
-
   const {trendingVideoDisabled} = useTrendingSettings()
 
   const blockedOrMutedAuthors = usePostAuthorShadowFilter(
@@ -473,12 +461,6 @@ let PostFeed = ({
               if (hasSession) {
                 if (feedKind === 'discover') {
                   if (sliceIndex === 0) {
-                    if (showProgressInterstitial) {
-                      arr.push({
-                        type: 'interstitialProgressGuide',
-                        key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-                      })
-                    }
                     // Show composer prompt for Discover and Following feeds
                     if (
                       hasSession &&
@@ -621,7 +603,6 @@ let PostFeed = ({
     feedUriOrActorDid,
     feedTab,
     hasSession,
-    showProgressInterstitial,
     trendingVideoDisabled,
     gtMobile,
     isVideoFeed,
@@ -702,8 +683,6 @@ let PostFeed = ({
         return <FeedShutdownMsg feedUri={feedUriOrActorDid} />
       } else if (row.type === 'interstitialFollows') {
         return <SuggestedFollows feed={feed} />
-      } else if (row.type === 'interstitialProgressGuide') {
-        return <ProgressGuide />
       } else if (row.type === 'interstitialTrending') {
         return <TrendingInterstitial />
       } else if (row.type === 'composerPrompt') {

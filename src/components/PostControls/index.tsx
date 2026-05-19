@@ -20,10 +20,6 @@ import {
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
 import {useRequireAuth} from '#/state/session'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -90,7 +86,6 @@ let PostControls = ({
   )
   const requireAuth = useRequireAuth()
   const {sendInteraction} = useFeedFeedbackContext()
-  const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const isBlocked = Boolean(
     post.author.viewer?.blocking ||
@@ -121,7 +116,6 @@ let PostControls = ({
           feedContext,
           reqId,
         })
-        captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
         await queueUnlike()

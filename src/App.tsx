@@ -34,7 +34,6 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
-import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
@@ -106,25 +105,23 @@ function InnerApp() {
                               <SelectedFeedProvider>
                                 <HiddenRepliesProvider>
                                   <HomeBadgeProvider>
-                                    <UnreadNotifsProvider>
-                                      <MutedThreadsProvider>
-                                        <SafeAreaProvider>
-                                          <ProgressGuideProvider>
-                                            <ServiceConfigProvider>
-                                              <HideBottomBarBorderProvider>
-                                                <IntentDialogProvider>
-                                                  <TranslateOnDeviceProvider>
-                                                    <HotkeysProvider>
-                                                      <Shell />
-                                                      <ToastOutlet />
-                                                    </HotkeysProvider>
-                                                  </TranslateOnDeviceProvider>
-                                                </IntentDialogProvider>
-                                              </HideBottomBarBorderProvider>
-                                            </ServiceConfigProvider>
-                                          </ProgressGuideProvider>
-                                        </SafeAreaProvider>
-                                      </MutedThreadsProvider>
+                                        <UnreadNotifsProvider>
+                                          <MutedThreadsProvider>
+                                            <SafeAreaProvider>
+                                              <ServiceConfigProvider>
+                                                <HideBottomBarBorderProvider>
+                                                  <IntentDialogProvider>
+                                                    <TranslateOnDeviceProvider>
+                                                      <HotkeysProvider>
+                                                        <Shell />
+                                                        <ToastOutlet />
+                                                      </HotkeysProvider>
+                                                    </TranslateOnDeviceProvider>
+                                                  </IntentDialogProvider>
+                                                </HideBottomBarBorderProvider>
+                                              </ServiceConfigProvider>
+                                            </SafeAreaProvider>
+                                          </MutedThreadsProvider>
                                     </UnreadNotifsProvider>
                                   </HomeBadgeProvider>
                                 </HiddenRepliesProvider>

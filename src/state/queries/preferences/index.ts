@@ -393,23 +393,6 @@ export function useDismissNudgesMutation() {
   })
 }
 
-export function useSetActiveProgressGuideMutation() {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
-
-  return useMutation({
-    mutationFn: async (
-      guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
-    ) => {
-      await agent.bskyAppSetActiveProgressGuide(guide)
-      // triggers a refetch
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
 export function useSetVerificationPrefsMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()

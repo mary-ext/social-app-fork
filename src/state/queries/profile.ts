@@ -36,10 +36,6 @@ import {useUpdateProfileVerificationCache} from '#/state/queries/verification/us
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import type * as bsky from '#/types/bsky'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '../shell/progress-guide'
 import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
@@ -70,7 +66,7 @@ export type ProfileFollowLogContext =
   | 'AvatarButton'
   | 'StarterPackProfilesList'
   | 'FeedInterstitial'
-  | 'ProgressGuideFindFollows'
+  | 'SuggestedFollowsDialog'
   | 'ImmersiveVideo'
   | 'ExploreSuggestedAccounts'
   | 'GroupChat'
@@ -387,11 +383,9 @@ function useProfileFollowMutation(
   _contextProfileDid?: string,
 ) {
   const agent = useAgent()
-  const {captureAction} = useProgressGuideControls()
 
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      captureAction(ProgressGuideAction.Follow)
       return await agent.follow(did)
     },
   })

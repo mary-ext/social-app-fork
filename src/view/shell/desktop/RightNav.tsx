@@ -12,7 +12,6 @@ import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
 import { atoms as a, useGutters, useLayoutBreakpoints, useTheme } from '#/alf';
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
-import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
 
 function useWebQueryParams() {
@@ -78,7 +77,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       {hasSession && (
         <>
           <DesktopFeeds />
-          <ProgressGuideList />
         </>
       )}
       {showExploreScreenDuplicatedContent && <SidebarTrendingTopics />}

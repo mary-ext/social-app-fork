@@ -174,7 +174,7 @@
       "count": 2
     }
   },
-  "src/components/ProgressGuide/FollowDialog.tsx": {
+  "src/components/suggested-follows-dialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 7
     }
@@ -1058,11 +1058,6 @@
     }
   },
   "src/state/queries/util.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/state/shell/progress-guide.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
