@@ -40,12 +40,13 @@ type WebPressableProps = {
   onMouseLeave?: () => void
 }
 
-type WebViewStyle = ViewStyle & {
+type WebViewStyle = Omit<ViewStyle, 'overflow'> & {
   outline?: 0 | string
+  overflow?: 'auto'
 }
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-  return style
+  return style as unknown as ViewStyle
 }
 
 export function useMenuControl(): Dialog.DialogControlProps {
@@ -216,7 +217,7 @@ export function Outer({
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
             t.atoms.border_contrast_low,
-            a.overflow_auto,
+            webViewStyle(a.overflow_auto),
             !reduceMotionEnabled && a.zoom_fade_in,
             style,
           ]}>

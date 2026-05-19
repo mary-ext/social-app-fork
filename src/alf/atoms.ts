@@ -1,4 +1,10 @@
-import {type StyleProp, type ViewStyle} from 'react-native'
+import {type CSSProperties} from 'react'
+import {
+  type ImageStyle,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
+} from 'react-native'
 
 import {CARD_ASPECT_RATIO} from '#/lib/constants'
 import {atoms as baseAtoms} from '#/alf/base'
@@ -6,21 +12,27 @@ import * as Layout from '#/components/Layout'
 
 const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)'
 
+type WebAtomStyle = CSSProperties & ImageStyle & TextStyle & ViewStyle
+
+const webStyle = (style: CSSProperties): WebAtomStyle => {
+  return style as unknown as WebAtomStyle
+}
+
 export const atoms = {
   ...baseAtoms,
 
-  h_full_vh: {
+  h_full_vh: webStyle({
     height: '100vh',
-  } as any,
+  }),
 
   /**
    * Used for the outermost components on screens, to ensure that they can fill
    * the screen and extend beyond.
    */
   util_screen_outer: [
-    {
+    webStyle({
       minHeight: '100dvh',
-    } as any,
+    }),
     undefined,
   ] as StyleProp<ViewStyle>,
 
@@ -44,72 +56,72 @@ export const atoms = {
   /*
    * Transition
    */
-  transition_none: {
+  transition_none: webStyle({
     transitionProperty: 'none',
-  } as any,
-  transition_timing_default: {
+  }),
+  transition_timing_default: webStyle({
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  } as any,
-  transition_all: {
+  }),
+  transition_all: webStyle({
     transitionProperty: 'all',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  } as any,
-  transition_color: {
+  }),
+  transition_color: webStyle({
     transitionProperty:
       'color, background-color, border-color, text-decoration-color, fill, stroke',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  } as any,
-  transition_opacity: {
+  }),
+  transition_opacity: webStyle({
     transitionProperty: 'opacity',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  } as any,
-  transition_transform: {
+  }),
+  transition_transform: webStyle({
     transitionProperty: 'transform',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
     transitionDuration: '100ms',
-  } as any,
-  transition_delay_50ms: {
+  }),
+  transition_delay_50ms: webStyle({
     transitionDelay: '50ms',
-  } as any,
+  }),
 
   /*
    * Animations
    */
-  fade_in: {
+  fade_in: webStyle({
     animation: 'fadeIn ease-out 0.15s',
-  } as any,
-  fade_out: {
+  }),
+  fade_out: webStyle({
     animation: 'fadeOut ease-out 0.15s',
     animationFillMode: 'forwards',
-  } as any,
-  zoom_in: {
+  }),
+  zoom_in: webStyle({
     animation: 'zoomIn ease-out 0.1s',
-  } as any,
-  zoom_out: {
+  }),
+  zoom_out: webStyle({
     animation: 'zoomOut ease-out 0.1s',
-  } as any,
-  slide_in_left: {
+  }),
+  slide_in_left: webStyle({
     // exponential easing function
     animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
-  } as any,
-  slide_out_left: {
+  }),
+  slide_out_left: webStyle({
     animation: 'slideOutLeft ease-in 0.15s',
     animationFillMode: 'forwards',
-  } as any,
+  }),
   // special composite animation for dialogs
-  zoom_fade_in: {
+  zoom_fade_in: webStyle({
     animation: `zoomIn ${EXP_CURVE} 0.3s, fadeIn ${EXP_CURVE} 0.3s`,
-  } as any,
+  }),
 
   /**
    * Visually hidden but available to screen readers (web).
    * Use for live regions or off-screen labels (e.g. "Image 1 of 3").
    */
-  sr_only: {
+  sr_only: webStyle({
     position: 'absolute',
     width: 1,
     height: 1,
@@ -119,7 +131,7 @@ export const atoms = {
     clip: 'rect(0,0,0,0)',
     whiteSpace: 'nowrap',
     borderWidth: 0,
-  } as any,
+  }),
 
   /**
    * {@link Layout.SCROLLBAR_OFFSET}

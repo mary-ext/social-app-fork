@@ -3,7 +3,6 @@ import {
   type AppBskyFeedDefs,
   AppBskyFeedPost,
   moderatePost,
-  type ModerationDecision,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
@@ -22,11 +21,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: {
-    post: AppBskyFeedDefs.PostView
-    moderation: ModerationDecision
-    record: AppBskyFeedPost.Record
-  }
+  item: {post: AppBskyFeedDefs.PostView}
   index: number
 }) {
   return <Post post={item.post} hideTopBorder={index === 0} />
@@ -34,8 +29,6 @@ function renderItem({
 
 function keyExtractor(item: {
   post: AppBskyFeedDefs.PostView
-  moderation: ModerationDecision
-  record: AppBskyFeedPost.Record
 }) {
   return item.post.uri
 }

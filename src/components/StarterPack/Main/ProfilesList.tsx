@@ -22,7 +22,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
+function keyExtractor(item: {did: string}, index: number) {
   return `${item.did}-${index}`
 }
 
@@ -52,10 +52,13 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
     // The server returns these sorted by descending creation date, so we want to invert
 
     const profiles = data
-      ?.filter(
-        p => !isBlockedOrBlocking(p.subject) && !p.subject.associated?.labeler,
+      ?.map(p => p.subject)
+      .filter(
+        (profile): profile is AppBskyActorDefs.ProfileView =>
+          profile !== undefined &&
+          !isBlockedOrBlocking(profile) &&
+          !profile.associated?.labeler,
       )
-      .map(p => p.subject)
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
@@ -64,9 +67,10 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
       if (!isOwn) return profiles
 
       const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
-      return myIndex !== -1
+      const myProfile = profiles[myIndex]
+      return myIndex !== -1 && myProfile
         ? [
-            profiles[myIndex],
+            myProfile,
             ...profiles.slice(0, myIndex),
             ...profiles.slice(myIndex + 1),
           ]
@@ -83,9 +87,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
       scrollToTop: onScrollToTop,
     }))
 
-    const renderItem = ({
-      item,
-    }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+    const renderItem = ({item}: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
       return (
         <View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
           <ProfileCard

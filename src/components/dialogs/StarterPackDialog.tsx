@@ -32,6 +32,9 @@ import * as bsky from '#/types/bsky'
 
 type StarterPackWithMembership =
   AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
+type StarterPackDialogItem =
+  | StarterPackWithMembership
+  | {type: 'starter_pack_dialog_loader'}
 
 export type StarterPackDialogProps = {
   control: Dialog.DialogControlProps
@@ -143,13 +146,23 @@ function StarterPackList({
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   const renderItem = useCallback(
-    ({item}: {item: StarterPackWithMembership}) => (
-      <StarterPackItem
-        starterPackWithMembership={item}
-        targetDid={targetDid}
-        subject={subject}
-      />
-    ),
+    ({item}: {item: StarterPackDialogItem}) => {
+      if ('type' in item) {
+        return (
+          <View style={[a.align_center, a.py_2xl]}>
+            <Loader size="xl" />
+          </View>
+        )
+      }
+
+      return (
+        <StarterPackItem
+          starterPackWithMembership={item}
+          targetDid={targetDid}
+          subject={subject}
+        />
+      )
+    },
     [targetDid, subject],
   )
 
@@ -202,20 +215,14 @@ function StarterPackList({
 
   return (
     <Dialog.InnerFlatList
-      data={isLoading ? [{}] : membershipItems}
-      renderItem={
+      data={
         isLoading
-          ? () => (
-              <View style={[a.align_center, a.py_2xl]}>
-                <Loader size="xl" />
-              </View>
-            )
-          : renderItem
+          ? [{type: 'starter_pack_dialog_loader'}]
+          : membershipItems
       }
-      keyExtractor={
-        isLoading
-          ? () => 'starter_pack_dialog_loader'
-          : (item: StarterPackWithMembership) => item.starterPack.uri
+      renderItem={renderItem}
+      keyExtractor={item =>
+        'type' in item ? item.type : item.starterPack.uri
       }
       onEndReached={onEndReached}
       onEndReachedThreshold={0.1}

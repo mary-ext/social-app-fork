@@ -1,7 +1,6 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {type CSSProperties, useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import {Trans,useLingui} from '@lingui/react/macro'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -394,12 +393,12 @@ function LightboxGalleryItem({
         <img
           src={source}
           style={flatten([
-            styles.avi,
+            styles.avi as unknown as CSSProperties,
             {
               borderRadius:
                 type === 'circle-avi' ? '50%' : type === 'rect-avi' ? '10%' : 0,
             },
-            zoomInWhenReady,
+            zoomInWhenReady as unknown as CSSProperties,
           ])}
           alt={alt}
           onLoad={handleLoad}

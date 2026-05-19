@@ -1,27 +1,2 @@
 {
-  "src/alf/atoms.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 17
-    }
-  },
-  "src/components/Dialog/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/components/Dialog/types.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/view/com/pager/Pager.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/view/com/util/List.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  }
 }

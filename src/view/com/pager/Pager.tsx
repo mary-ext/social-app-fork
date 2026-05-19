@@ -20,8 +20,8 @@ export interface RenderTabBarFnProps {
   selectedPage: number
   onSelect?: (index: number) => void
   tabBarAnchor?: JSX.Element
-  dragProgress?: any
-  dragState?: any
+  dragProgress?: unknown
+  dragState?: unknown
 }
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
 

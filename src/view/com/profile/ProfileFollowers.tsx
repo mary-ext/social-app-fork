@@ -34,7 +34,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: ActorDefs.ProfileViewBasic) {
+function keyExtractor(item: {did: string}) {
   return item.did
 }
 

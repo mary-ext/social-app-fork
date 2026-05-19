@@ -20,7 +20,7 @@ type WebViewStyle = ViewStyle & {
 }
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-  return style as unknown as ViewStyle
+  return style
 }
 
 type FlatListItem =
@@ -251,16 +251,22 @@ export function DialogInner({
 
   const isDisplayedLanguagesEmpty = displayedLanguages.all.length === 0
 
-  const flatListData = [
+  const flatListData: FlatListItem[] = [
     ...(isCheckedRecentEmpty
-      ? [{type: 'header', label: l`Recently used`}]
+      ? [{type: 'header' as const, label: l`Recently used`}]
       : []),
-    ...displayedLanguages.checkedRecent.map(lang => ({type: 'item', lang})),
-    ...displayedLanguages.uncheckedRecent.map(lang => ({type: 'item', lang})),
+    ...displayedLanguages.checkedRecent.map(lang => ({
+      type: 'item' as const,
+      lang,
+    })),
+    ...displayedLanguages.uncheckedRecent.map(lang => ({
+      type: 'item' as const,
+      lang,
+    })),
     ...(isDisplayedLanguagesEmpty
       ? []
-      : [{type: 'header', label: l`All languages`}]),
-    ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
+      : [{type: 'header' as const, label: l`All languages`}]),
+    ...displayedLanguages.all.map(lang => ({type: 'item' as const, lang})),
   ]
 
   const numItems = flatListData.length

@@ -22,8 +22,9 @@ import {
   WizardProfileCard,
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
 
-type ListItem = AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView
+type ListItem = bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView
 
 function keyExtractor(item: ListItem, index: number) {
   return `${item.did}-${index}`

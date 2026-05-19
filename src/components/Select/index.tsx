@@ -1,4 +1,11 @@
-import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
+import {
+  createContext,
+  type CSSProperties,
+  forwardRef,
+  Fragment,
+  useContext,
+  useMemo,
+} from 'react'
 import {type TextStyle, View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
@@ -288,10 +295,10 @@ export function Item({ref, value, style, children}: ItemProps) {
         a.text_sm,
         {outline: 0},
         (hovered || focused) && {backgroundColor: t.palette.primary_50},
-        selected && [a.font_semi_bold],
+        selected && a.font_semi_bold,
         a.transition_color,
         style,
-      ])}>
+      ]) as CSSProperties}>
       <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
     </RadixSelect.Item>
   )

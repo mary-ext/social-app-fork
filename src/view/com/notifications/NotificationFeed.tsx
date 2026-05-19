@@ -207,6 +207,9 @@ export function NotificationFeed({
         onEndReachedThreshold={2}
         onScrolledDownChange={onScrolledDownChange}
         onItemSeen={item => {
+          if (isNotificationSentinel(item)) {
+            return
+          }
           if (
             (item.type === 'reply' ||
               item.type === 'mention' ||

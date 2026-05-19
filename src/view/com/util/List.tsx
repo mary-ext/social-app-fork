@@ -42,7 +42,7 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
   return style
 }
 
-export type ListProps<ItemT = any> = Omit<
+export type ListProps<ItemT = unknown> = Omit<
   FlatListProps<ItemT>,
   | 'onScroll' // Use ScrollContext instead.
   | 'refreshControl' // Pass refreshing and/or onRefresh instead.
@@ -617,9 +617,13 @@ let Visibility = ({
 }
 Visibility = memo(Visibility)
 
-export const List = memo(forwardRef(ListImpl)) as (
-  props: ListProps<any> & {ref?: React.Ref<ListMethods>},
-) => React.ReactElement
+const MemoizedList = memo(forwardRef(ListImpl))
+
+export function List<ItemT = unknown>(
+  props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
+): React.ReactElement {
+  return <MemoizedList {...(props as ListProps<unknown>)} />
+}
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 

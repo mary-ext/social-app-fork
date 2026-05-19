@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, View, type ViewStyle} from 'react-native'
 import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
@@ -9,6 +9,15 @@ import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
+
+type WebViewStyle = ViewStyle & {
+  animationDelay?: number
+  animationFillMode?: 'backwards'
+}
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+  return style as unknown as ViewStyle
+}
 
 export function Composer({}: {winHeight: number}) {
   const state = useComposerState()
@@ -68,8 +77,8 @@ function Inner({state}: {state: ComposerOpts}) {
             t.atoms.border_contrast_medium,
             !reduceMotionEnabled && [
               a.zoom_fade_in,
-              {animationDelay: 0.1},
-              {animationFillMode: 'backwards'},
+              webViewStyle({animationDelay: 0.1}),
+              webViewStyle({animationFillMode: 'backwards'}),
             ],
           ]}>
           <ComposePost

@@ -201,7 +201,7 @@ export function Inner({
   return (
     <FocusScope.FocusScope loop asChild trapped>
       <View
-        ref={ref}
+        ref={ref as React.Ref<View>}
         role="dialog"
         aria-role="dialog"
         aria-label={label}
@@ -246,14 +246,14 @@ export function Inner({
 
 export const ScrollableInner = Inner
 
-export const InnerFlatList = forwardRef<
-  any,
-  FlatListProps<any> & {label?: string} & {
-    webInnerStyle?: StyleProp<ViewStyle>
-    webInnerContentContainerStyle?: StyleProp<ViewStyle>
-    footer?: React.ReactNode
-  }
->(function InnerFlatList(
+type InnerFlatListProps<ItemT> = FlatListProps<ItemT> & {
+  label?: string
+  webInnerStyle?: StyleProp<ViewStyle>
+  webInnerContentContainerStyle?: StyleProp<ViewStyle>
+  footer?: React.ReactNode
+}
+
+function InnerFlatListImpl<ItemT>(
   {
     label,
     style,
@@ -261,8 +261,8 @@ export const InnerFlatList = forwardRef<
     webInnerContentContainerStyle,
     footer,
     ...props
-  },
-  ref,
+  }: InnerFlatListProps<ItemT>,
+  ref: React.Ref<FlatList<ItemT>>,
 ) {
   const {gtMobile} = useBreakpoints()
   return (
@@ -283,7 +283,15 @@ export const InnerFlatList = forwardRef<
       {footer}
     </Inner>
   )
-})
+}
+
+const InnerFlatListRoot = forwardRef(InnerFlatListImpl)
+
+export function InnerFlatList<ItemT>(
+  props: InnerFlatListProps<ItemT> & {ref?: React.Ref<unknown>},
+): React.ReactElement {
+  return <InnerFlatListRoot {...(props as InnerFlatListProps<unknown>)} />
+}
 
 export function FlatListFooter({
   children,
