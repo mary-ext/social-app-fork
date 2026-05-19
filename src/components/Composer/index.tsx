@@ -2,6 +2,7 @@ import {useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react'
 import {
   type TextInput,
   type TextInputSubmitEditingEvent,
+  type TextStyle,
   View,
 } from 'react-native'
 
@@ -32,6 +33,33 @@ import {
 } from '#/components/forms/AutosizedTextarea'
 import {Span, Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
+
+type WebKeyboardEvent = React.KeyboardEvent<Element> & {
+  nativeEvent: KeyboardEvent
+}
+
+type WebTextStyle = TextStyle & {
+  whiteSpace?: 'pre-wrap'
+}
+
+type WebInputStyle = Omit<
+  TextStyle,
+  | 'background'
+  | 'caretColor'
+  | 'overscrollBehavior'
+  | 'scrollbarColor'
+  | 'scrollbarWidth'
+> & {
+  background?: 'transparent'
+  caretColor?: TextStyle['color']
+  overscrollBehavior?: 'none'
+  scrollbarColor?: string
+  scrollbarWidth?: 'thin'
+}
+
+const webInputStyle = (style: WebInputStyle): TextStyle => {
+  return style
+}
 
 export type SubmitRequest =
   | {
@@ -225,7 +253,8 @@ export function Composer({
    * Web keyboard handling
    */
   const isComposing = useRef(false)
-  const onKeyPressWeb = (e: React.KeyboardEvent | any) => {
+  const onKeyPressWeb: AutosizedTextareaProps['onKeyPress'] = event => {
+    const e = event as unknown as WebKeyboardEvent
     if (IS_WEB_TOUCH_DEVICE) return
     if (isComposing.current) return
 
@@ -255,7 +284,7 @@ export function Composer({
   }
 
   const textContent = (
-    <Text style={[textStyle, {whiteSpace: 'pre-wrap'} as any]}>
+    <Text style={[textStyle, {whiteSpace: 'pre-wrap'} as WebTextStyle]}>
       {tapper.state.nodes.map((node, i) => {
         switch (node.type) {
           case 'text':
@@ -313,16 +342,14 @@ export function Composer({
             textStyle,
             contentPaddingStyle,
             a.z_20,
-            {
+            webInputStyle({
               color: 'transparent',
               background: 'transparent',
-            },
-            {
               caretColor: textStyle.color ?? 'black',
               overscrollBehavior: 'none',
               scrollbarWidth: 'thin',
               scrollbarColor: `${t.palette.contrast_200} transparent`,
-            } as any,
+            }),
           ]}
           {...rest}
           {...tapper.inputProps}
@@ -334,7 +361,9 @@ export function Composer({
           }}
           onKeyPress={onKeyPressWeb}
           onScroll={e => {
-            inputScrollSharedValue.value = (e.target as any).scrollTop
+            inputScrollSharedValue.value = (
+              e.target as unknown as {scrollTop: number}
+            ).scrollTop
           }}
           // @ts-ignore web only
           onCompositionStart={() => {
