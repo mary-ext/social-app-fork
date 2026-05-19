@@ -36,6 +36,11 @@ import {AvatarBubbles} from '../AvatarBubbles'
 import {Error} from '../Error'
 import {ProfileBadges} from '../ProfileBadges'
 
+type WebViewProps = {
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+}
+
 export type ProfileItem = {
   type: 'profile'
   key: string
@@ -333,13 +338,13 @@ export function SearchablePeopleList({
               shape="round"
               variant={'ghost'}
               color="secondary"
-              style={[a.absolute, a.z_20, {right: -4} as any]}
+              style={[a.absolute, a.z_20, {right: -4}]}
               onPress={() => control.close()}>
               <ButtonIcon icon={X} size="md" />
             </Button>
           }
         </View>
-        <View style={[a.pt_xs] as any}>
+        <View style={[a.pt_xs]}>
           <SearchInput
             inputRef={inputRef}
             value={searchText}
@@ -630,20 +635,20 @@ function SearchInput({
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const interacted = hovered || focused
+  const webProps: WebViewProps = {
+    onMouseEnter,
+    onMouseLeave,
+  }
 
   return (
     <View
-      {...({
-        onMouseEnter,
-        onMouseLeave,
-      } as any)}
+      {...webProps}
       style={[a.flex_row, a.align_center, a.gap_sm]}>
       <Search
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
       <TextInput
-        // @ts-ignore bottom sheet input types issue — esb
         ref={inputRef}
         placeholder={l`Search`}
         value={value}

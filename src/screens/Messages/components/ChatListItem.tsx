@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, type TextStyle, View} from 'react-native'
 import {
   ChatBskyConvoDefs,
   moderateProfile,
@@ -51,6 +51,10 @@ import type * as bsky from '#/types/bsky'
 import {useIsWithinSplitView} from './splitView/context'
 
 export const ChatListItemPortal = createPortalGroup()
+
+type WebTextStyle = TextStyle & {
+  whiteSpace?: 'preserve nowrap'
+}
 
 export function ChatListItem({
   convo: convoView,
@@ -474,7 +478,7 @@ function BaseChatItem({
                   style={[
                     a.flex_1,
                     a.justify_center,
-                    {paddingRight: 40} as any,
+                    {paddingRight: 40},
                   ]}>
                   <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                     <View style={[a.flex_shrink]}>
@@ -509,7 +513,7 @@ function BaseChatItem({
                                 a.text_sm,
                                 {lineHeight: 21},
                                 t.atoms.text_contrast_medium,
-                                {whiteSpace: 'preserve nowrap'} as any,
+                                {whiteSpace: 'preserve nowrap'} as WebTextStyle,
                               ]}>
                               &middot; {timeElapsed}
                             </Text>
@@ -523,7 +527,7 @@ function BaseChatItem({
                           a.text_sm,
                           {lineHeight: 21},
                           t.atoms.text_contrast_medium,
-                          {whiteSpace: 'preserve nowrap'} as any,
+                          {whiteSpace: 'preserve nowrap'} as WebTextStyle,
                         ]}>
                         {' '}
                         &middot;{' '}

@@ -154,11 +154,6 @@
       "count": 2
     }
   },
-  "src/components/dialogs/SearchablePeopleList.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/components/dialogs/ServerInput.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -249,11 +244,6 @@
       "count": 2
     }
   },
-  "src/components/moderation/ContentHider.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
   "src/components/moderation/ModerationDetailsDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -297,11 +287,6 @@
   "src/features/liveNow/index.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/lib/ScrollContext.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
     }
   },
   "src/lib/broadcast/stub.ts": {
@@ -357,11 +342,6 @@
   "src/screens/Messages/Inbox.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/screens/Messages/components/ChatListItem.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 3
     }
   },
   "src/screens/Messages/components/InviteLinkDialog.tsx": {

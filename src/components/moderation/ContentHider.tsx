@@ -2,6 +2,7 @@ import {useMemo, useState} from 'react'
 import {
   LayoutAnimation,
   type StyleProp,
+  type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -25,6 +26,10 @@ import {
   useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
+
+type WebTextStyle = TextStyle & {
+  textDecoration?: 'underline'
+}
 
 export function ContentHider({
   testID,
@@ -198,7 +203,7 @@ function ContentHiderActive({
                 t.atoms.text_contrast_medium,
                 {
                   marginBottom: 1,
-                } as any,
+                },
               ]}
               numberOfLines={2}>
               {labelName}
@@ -212,7 +217,7 @@ function ContentHiderActive({
                   t.atoms.text_contrast_high,
                   {
                     marginBottom: 1,
-                  } as any,
+                  },
                 ]}>
                 {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
               </Text>
@@ -248,7 +253,7 @@ function ContentHiderActive({
                 style={[
                   {color: t.palette.primary_500},
                   a.text_sm,
-                  state.hovered && [{textDecoration: 'underline'} as any],
+                  state.hovered && [{textDecoration: 'underline'} as WebTextStyle],
                 ]}>
                 <Trans>Learn more.</Trans>
               </Text>
