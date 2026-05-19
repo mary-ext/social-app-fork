@@ -184,9 +184,9 @@ export async function post(
       writes: writes,
       validate: true,
     })
-  } catch (e: any) {
+  } catch (e) {
     logger.error(`Failed to create post`, {
-      safeMessage: e.message,
+      safeMessage: e instanceof Error ? e.message : String(e),
     })
     if (isNetworkError(e)) {
       throw new Error(
@@ -483,8 +483,10 @@ async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
   return cid.toString()
 }
 
+type PlainObject = Record<string, unknown>
+
 // Returns a transformed version of the object for use in DAG-CBOR.
-function prepareForHashing(v: any): any {
+function prepareForHashing(v: unknown): unknown {
   // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
   // the API client will convert this for you but we're hashing in the client,
   // so we need it *now*.
@@ -506,7 +508,7 @@ function prepareForHashing(v: any): any {
 
   // Walk through plain objects
   if (isPlainObject(v)) {
-    const obj: any = {}
+    const obj: PlainObject = {}
     let pure = true
     for (const key in v) {
       let value = v[key]
@@ -527,7 +529,7 @@ function prepareForHashing(v: any): any {
   return v
 }
 
-function isPlainObject(v: any): boolean {
+function isPlainObject(v: unknown): v is PlainObject {
   if (typeof v !== 'object' || v === null) {
     return false
   }

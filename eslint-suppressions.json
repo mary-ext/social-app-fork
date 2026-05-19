@@ -369,11 +369,6 @@
       "count": 3
     }
   },
-  "src/lib/api/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 5
-    }
-  },
   "src/lib/broadcast/stub.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
