@@ -44,8 +44,8 @@ function DeactivateAccountDialogInner({
       control.close(() => {
         logoutCurrentAccount('Deactivated')
       })
-    } catch (e: any) {
-      switch (e.message) {
+    } catch (e) {
+      switch (e instanceof Error ? e.message : undefined) {
         case 'Bad token scope':
           setError(
             l`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
@@ -56,7 +56,7 @@ function DeactivateAccountDialogInner({
           break
       }
 
-      logger.error(e, {
+      logger.error(e instanceof Error ? e : String(e), {
         message: 'Failed to deactivate account',
       })
     } finally {

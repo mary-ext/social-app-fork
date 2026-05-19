@@ -78,7 +78,7 @@ function Inner() {
         email: currentAccount.email,
       })
       setStage(Stages.ChangePassword)
-    } catch (e: any) {
+    } catch (e) {
       if (isNetworkError(e)) {
         setError(
           l`Unable to contact your service. Please check your internet connection and try again.`,
@@ -119,12 +119,12 @@ function Inner() {
         password: newPassword,
       })
       setStage(Stages.Done)
-    } catch (e: any) {
+    } catch (e) {
       if (isNetworkError(e)) {
         setError(
           l`Unable to contact your service. Please check your internet connection and try again.`,
         )
-      } else if (e?.toString().includes('Token is invalid')) {
+      } else if (String(e).includes('Token is invalid')) {
         setError(l`This confirmation code is not valid. Please try again.`)
       } else {
         logger.error('Failed to set new password', {safeMessage: e})

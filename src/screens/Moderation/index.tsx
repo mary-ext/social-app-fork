@@ -177,9 +177,9 @@ export function ModerationScreenInner({
       Toast.show(l`Removed unavailable services`, {
         type: 'success',
       })
-    } catch (e: any) {
+    } catch (e) {
       logger.error('Failed to remove unavailable labelers', {
-        safeMessage: e.message,
+        safeMessage: e instanceof Error ? e.message : String(e),
       })
     }
   }
@@ -199,9 +199,9 @@ export function ModerationScreenInner({
         await setAdultContentPref({
           enabled: selected,
         })
-      } catch (e: any) {
+      } catch (e) {
         logger.error(`Failed to set adult content pref`, {
-          message: e.message,
+          message: e instanceof Error ? e.message : String(e),
         })
       }
     },

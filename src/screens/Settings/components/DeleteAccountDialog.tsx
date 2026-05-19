@@ -91,11 +91,11 @@ function DeleteAccountDialogInner({
       setError('')
       setEmailSentCount(prevCount => prevCount + 1)
       setStep(Step.VERIFY_CODE)
-    } catch (e: any) {
+    } catch (e) {
       const {clean, raw} = cleanError(e)
-      const error = clean || raw || e
+      const error = clean || raw || String(e)
       setError(error)
-      logger.error(raw || e, {
+      logger.error(raw || String(e), {
         message: 'Failed to send account deletion verification email',
       })
     } finally {
@@ -127,11 +127,11 @@ function DeleteAccountDialogInner({
         resetToTab('HomeTab')
         removeAccount(currentAccount)
       })
-    } catch (e: any) {
+    } catch (e) {
       const {clean, raw} = cleanError(e)
-      const error = clean || raw || e
+      const error = clean || raw || String(e)
       setError(error)
-      logger.error(raw || e, {
+      logger.error(raw || String(e), {
         message: 'Failed to delete account',
       })
       setConfirmCode('')

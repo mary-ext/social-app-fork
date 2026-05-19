@@ -89,7 +89,7 @@ onUpdate satisfies PersistedApi['onUpdate']
 export async function clearStorage() {
   try {
     localStorage.removeItem(BSKY_STORAGE)
-  } catch (e: any) {
+  } catch {
     // Expected on the web in private mode.
   }
 }

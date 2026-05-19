@@ -99,10 +99,10 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
         postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
       })
       Toast.show(l({message: 'Settings saved', context: 'toast'}))
-    } catch (e: any) {
+    } catch (e) {
       logger.error(`Failed to save post interaction settings`, {
         source: 'ModerationInteractionSettingsScreen',
-        safeMessage: e.message,
+        safeMessage: e instanceof Error ? e.message : String(e),
       })
       setError(l`Failed to save settings. Please try again.`)
     }

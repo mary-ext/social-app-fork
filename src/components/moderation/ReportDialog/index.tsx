@@ -217,8 +217,8 @@ function Inner(props: ReportDialogProps) {
           props.onAfterSubmit?.()
         })
       }, 1e3)
-    } catch (e: any) {
-      logger.error(e, {
+    } catch (e) {
+      logger.error(e instanceof Error ? e : String(e), {
         source: 'ReportDialog',
       })
       dispatch({

@@ -304,11 +304,6 @@
       "count": 1
     }
   },
-  "src/components/moderation/ReportDialog/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/components/moderation/ScreenHider.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 1
@@ -429,16 +424,6 @@
       "count": 2
     }
   },
-  "src/screens/Moderation/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/screens/ModerationInteractionSettings/index.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
@@ -491,17 +476,7 @@
   },
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
     "@typescript-eslint/no-explicit-any": {
-      "count": 3
-    }
-  },
-  "src/screens/Settings/components/DeactivateAccountDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
       "count": 1
-    }
-  },
-  "src/screens/Settings/components/DeleteAccountDialog.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 2
     }
   },
   "src/screens/Settings/components/ExportCarDialog.tsx": {
@@ -529,24 +504,9 @@
       "count": 2
     }
   },
-  "src/state/persisted/index.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/state/persisted/util.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/state/queries/notifications/feed.ts": {
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/state/queries/pinned-post.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
     }
   },
   "src/state/queries/post-feed.ts": {
