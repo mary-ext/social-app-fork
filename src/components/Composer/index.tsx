@@ -244,7 +244,8 @@ export function Composer({
       return
     }
 
-    const element = tapper.input.element as unknown as HTMLTextAreaElement | null
+    const element = tapper.input
+      .element as unknown as HTMLTextAreaElement | null
     if (!element) {
       return
     }

@@ -108,7 +108,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const [accounts, setAccounts] = useState<SessionAccount[]>(boot.accounts)
   const [agent, setAgent] = useState<BskyAppAgent>(createPublicAgent)
   const [currentDid, setCurrentDid] = useState<string | undefined>(undefined)
-  const [isSessionResuming, setIsSessionResuming] = useState(() => !!bootAccount)
+  const [isSessionResuming, setIsSessionResuming] = useState(
+    () => !!bootAccount,
+  )
   const [sessionResumeFailed, setSessionResumeFailed] = useState(false)
 
   // Boot: resume the persisted current account exactly once. This is the only
@@ -181,9 +183,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return listenSessionDropped(() => window.location.reload())
   }, [isSessionResuming])
 
-  const login = useCallback<SessionApiContext['login']>(async ({identifier}) => {
-    await startOAuthSignIn({identifier})
-  }, [])
+  const login = useCallback<SessionApiContext['login']>(
+    async ({identifier}) => {
+      await startOAuthSignIn({identifier})
+    },
+    [],
+  )
 
   const completeOAuthCallback = useCallback<
     SessionApiContext['completeOAuthCallback']

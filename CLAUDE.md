@@ -9,7 +9,7 @@ a web-only fork of `bluesky-social/social-app`. native code, Expo, Sentry, Growt
 - `pnpm build-web` runs `pnpm typecheck` then `rsbuild build`
 - `pnpm lint` runs ESLint (flat config plus the in-repo `eslint-plugin-bsky-internal`)
 - `pnpm typecheck` runs `tsgo` against `tsconfig.json`, which spans all of `src/` — not just web-resolved files
-- never run `pnpm intl:extract` or `pnpm intl:compile`; extraction and message compilation run nightly in CI
+- after editing any file that uses the localization macros (`<Trans>`, `msg`, `t`), run `pnpm intl:build`. `messages.po` records a reference for every macro, so even edits that only shift line numbers leave the catalogs stale until you regenerate them
 - check the in-tree shims under `src/shims/` and the existing dependency list before adding a new package; local web shims for Expo and native APIs already exist for most surfaces
 
 ### code writing

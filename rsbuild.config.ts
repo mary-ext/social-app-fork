@@ -80,8 +80,7 @@ export default defineConfig(({envMode}) => {
     ],
     source: {
       define: {
-        'import.meta.env.PUBLIC_OAUTH_CLIENT_ID':
-          JSON.stringify(oauthClientId),
+        'import.meta.env.PUBLIC_OAUTH_CLIENT_ID': JSON.stringify(oauthClientId),
         'import.meta.env.PUBLIC_OAUTH_REDIRECT_URI':
           JSON.stringify(oauthRedirectUri),
         'import.meta.env.PUBLIC_OAUTH_SCOPE': JSON.stringify(oauthScope),

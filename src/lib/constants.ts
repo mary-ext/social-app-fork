@@ -13,7 +13,6 @@ export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
 export const CARD_ASPECT_RATIO = 1200 / 630
 
-
 export const MAX_DISPLAY_NAME = 64
 export const MAX_DESCRIPTION = 256
 

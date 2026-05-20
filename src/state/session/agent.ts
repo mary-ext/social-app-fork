@@ -20,7 +20,11 @@ import {type FetchHandlerOptions} from '@atproto/xrpc'
 
 import {networkRetry} from '#/lib/async/retry'
 import {BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
-import {emitNetworkConfirmed, emitNetworkLost, emitSessionDropped} from '../events'
+import {
+  emitNetworkConfirmed,
+  emitNetworkLost,
+  emitSessionDropped,
+} from '../events'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
@@ -97,9 +101,7 @@ const realFetchWithEvents = withNetworkEvents(
   ) => Promise<Response>,
 )
 
-type BskyAppAgentOptions =
-  | {service: string}
-  | {oauthAgent: OAuthUserAgent}
+type BskyAppAgentOptions = {service: string} | {oauthAgent: OAuthUserAgent}
 
 class BskyAppAgent extends BskyAgent {
   private oauthAgent: OAuthUserAgent | undefined

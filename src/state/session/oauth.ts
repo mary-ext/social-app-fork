@@ -11,7 +11,8 @@ import {timeout} from '#/lib/async/timeout'
 import {OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE} from '#/env'
 
 export const OAUTH_CALLBACK_PATH = '/oauth/callback'
-export const IS_OAUTH_CALLBACK = window.location.pathname === OAUTH_CALLBACK_PATH
+export const IS_OAUTH_CALLBACK =
+  window.location.pathname === OAUTH_CALLBACK_PATH
 const SLINGSHOT_SERVICE = 'https://slingshot.microcosm.blue'
 
 let configured = false
