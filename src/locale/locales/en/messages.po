@@ -466,13 +466,16 @@ msgstr ""
 msgid "{following} following"
 msgstr ""
 
+#: src/components/dms/components/GroupChatProfileCard.tsx:56
+#: src/components/dms/InitiateChatFlow.tsx:822
+msgid "{handle} can’t be added"
+msgstr "{handle} can’t be added"
+
 #: src/components/dialogs/SearchablePeopleList.tsx:445
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/components/GroupChatProfileCard.tsx:56
-#: src/components/dms/InitiateChatFlow.tsx:781
-#: src/components/dms/InitiateChatFlow.tsx:820
+#: src/components/dms/InitiateChatFlow.tsx:783
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -891,7 +894,7 @@ msgstr "Add automation label to account"
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:444
+#: src/components/dms/AddMembersFlow.tsx:448
 msgid "Add group chat members"
 msgstr "Add group chat members"
 
@@ -1411,10 +1414,10 @@ msgstr "Automation Label"
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:475
-#: src/components/dms/AddMembersFlow.tsx:481
-#: src/components/dms/InitiateChatFlow.tsx:646
-#: src/components/dms/InitiateChatFlow.tsx:653
+#: src/components/dms/AddMembersFlow.tsx:479
+#: src/components/dms/AddMembersFlow.tsx:485
+#: src/components/dms/InitiateChatFlow.tsx:648
+#: src/components/dms/InitiateChatFlow.tsx:655
 #: src/components/moderation/LabelsOnMeDialog.tsx:324
 #: src/components/moderation/LabelsOnMeDialog.tsx:325
 #: src/screens/Messages/components/ChatDisabled.tsx:160
@@ -1923,12 +1926,12 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:365
 #: src/components/dialogs/SearchablePeopleList.tsx:336
 #: src/components/dialogs/StarterPackDialog.tsx:180
-#: src/components/dms/AddMembersFlow.tsx:357
+#: src/components/dms/AddMembersFlow.tsx:361
 #: src/components/dms/AfterReportDialog.tsx:88
 #: src/components/dms/AfterReportDialog.tsx:93
 #: src/components/dms/AfterReportDialog.tsx:204
 #: src/components/dms/AfterReportDialog.tsx:209
-#: src/components/dms/InitiateChatFlow.tsx:508
+#: src/components/dms/InitiateChatFlow.tsx:510
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:106
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:114
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:120
@@ -2093,8 +2096,8 @@ msgstr ""
 msgid "Continue thread..."
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:313
-#: src/components/dms/InitiateChatFlow.tsx:451
+#: src/components/dms/AddMembersFlow.tsx:317
+#: src/components/dms/InitiateChatFlow.tsx:453
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
@@ -2249,7 +2252,7 @@ msgstr "Couldn’t load GIFs"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:103
 #: src/components/dialogs/StarterPackDialog.tsx:203
-#: src/components/dms/InitiateChatFlow.tsx:460
+#: src/components/dms/InitiateChatFlow.tsx:462
 #: src/components/StarterPack/ProfileStarterPacks.tsx:308
 msgid "Create"
 msgstr ""
@@ -2286,7 +2289,7 @@ msgstr ""
 msgid "Create another"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:459
+#: src/components/dms/InitiateChatFlow.tsx:461
 msgid "Create group chat"
 msgstr "Create group chat"
 
@@ -3883,7 +3886,7 @@ msgid "Group is locked"
 msgstr "Group is locked"
 
 #: src/components/dms/InitiateChatFlow.tsx:243
-#: src/components/dms/InitiateChatFlow.tsx:524
+#: src/components/dms/InitiateChatFlow.tsx:526
 #: src/screens/Messages/ConversationSettings/prompts.tsx:33
 msgid "Group name"
 msgstr "Group name"
@@ -5210,12 +5213,12 @@ msgid "New followers"
 msgstr ""
 
 #: src/components/dms/InitiateChatFlow.tsx:242
-#: src/components/dms/InitiateChatFlow.tsx:685
-#: src/components/dms/InitiateChatFlow.tsx:713
+#: src/components/dms/InitiateChatFlow.tsx:687
+#: src/components/dms/InitiateChatFlow.tsx:715
 msgid "New group chat"
 msgstr "New group chat"
 
-#: src/components/dms/InitiateChatFlow.tsx:277
+#: src/components/dms/InitiateChatFlow.tsx:279
 msgid "New group chat with:"
 msgstr "New group chat with:"
 
@@ -5273,8 +5276,8 @@ msgstr ""
 msgid "News"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:314
-#: src/components/dms/InitiateChatFlow.tsx:452
+#: src/components/dms/AddMembersFlow.tsx:318
+#: src/components/dms/InitiateChatFlow.tsx:454
 #: src/screens/StarterPack/Wizard/index.tsx:193
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #: src/screens/StarterPack/Wizard/index.tsx:371
@@ -5412,8 +5415,8 @@ msgid "No reposts yet"
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:253
-#: src/components/dms/AddMembersFlow.tsx:248
-#: src/components/dms/InitiateChatFlow.tsx:350
+#: src/components/dms/AddMembersFlow.tsx:252
+#: src/components/dms/InitiateChatFlow.tsx:352
 #: src/components/suggested-follows-dialog.tsx:187
 msgid "No results"
 msgstr ""
@@ -7264,7 +7267,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:624
+#: src/components/dms/InitiateChatFlow.tsx:626
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
@@ -7832,12 +7835,12 @@ msgstr ""
 msgid "Start adding people!"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:625
+#: src/components/dms/InitiateChatFlow.tsx:627
 msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:414
-#: src/components/dms/InitiateChatFlow.tsx:749
+#: src/components/dms/InitiateChatFlow.tsx:751
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -7935,8 +7938,8 @@ msgstr ""
 msgid "Successfully verified"
 msgstr ""
 
-#: src/components/dms/AddMembersFlow.tsx:234
-#: src/components/dms/InitiateChatFlow.tsx:329
+#: src/components/dms/AddMembersFlow.tsx:238
+#: src/components/dms/InitiateChatFlow.tsx:331
 msgid "Suggested"
 msgstr "Suggested"
 
@@ -9337,7 +9340,7 @@ msgid "We're having network issues, try again"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:187
-#: src/components/dms/InitiateChatFlow.tsx:266
+#: src/components/dms/InitiateChatFlow.tsx:268
 msgid "We’re having network issues, try again"
 msgstr "We’re having network issues, try again"
 

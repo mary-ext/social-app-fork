@@ -23,7 +23,7 @@ import {type ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {canBeMessaged, type ConvoWithDetails} from '#/components/dms/util'
+import {canBeAddedToGroup, type ConvoWithDetails} from '#/components/dms/util'
 import * as Toggle from '#/components/forms/Toggle'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -202,7 +202,9 @@ export function AddMembersFlow({
         }
 
         _items.sort(item => {
-          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
+          return item.type === 'profile' && canBeAddedToGroup(item.profile)
+            ? -1
+            : 1
         })
       }
     } else {
@@ -218,7 +220,9 @@ export function AddMembersFlow({
         }
 
         _items.sort(item => {
-          return item.type === 'profile' && canBeMessaged(item.profile) ? -1 : 1
+          return item.type === 'profile' && canBeAddedToGroup(item.profile)
+            ? -1
+            : 1
         })
       } else {
         for (let i = 0; i < 10; i++) {
