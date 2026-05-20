@@ -29,3 +29,17 @@ export type Account = {
    */
   recentGifs?: Gif[]
 }
+
+export type Auth = {
+  session?: AuthSession
+}
+
+export type AuthSession = {
+  accounts: AuthAccount[]
+  currentAccountDid?: string
+}
+
+export type AuthAccount = {
+  did: string
+  handle: string
+}

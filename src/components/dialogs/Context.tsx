@@ -2,7 +2,6 @@ import {createContext, useContext, useMemo, useState} from 'react'
 
 import {type SessionAccount} from '#/state/session'
 import * as Dialog from '#/components/Dialog'
-import {type Screen} from '#/components/dialogs/EmailDialog/types'
 import {type ReportSubject} from '#/components/moderation/ReportDialog'
 
 type Control = Dialog.DialogControlProps
@@ -23,7 +22,6 @@ type ControlsContext = {
   mutedWordsDialogControl: Control
   signinDialogControl: StatefulControl<SigninDialogPayload>
   inAppBrowserConsentControl: StatefulControl<string>
-  emailDialogControl: StatefulControl<Screen>
   linkWarningDialogControl: StatefulControl<{
     href: string
     displayText: string
@@ -49,7 +47,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
   const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>()
   const inAppBrowserConsentControl = useStatefulDialogControl<string>()
-  const emailDialogControl = useStatefulDialogControl<Screen>()
   const linkWarningDialogControl = useStatefulDialogControl<{
     href: string
     displayText: string
@@ -64,7 +61,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       mutedWordsDialogControl,
       signinDialogControl,
       inAppBrowserConsentControl,
-      emailDialogControl,
       linkWarningDialogControl,
       reportDialogControl,
     }),
@@ -72,7 +68,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       mutedWordsDialogControl,
       signinDialogControl,
       inAppBrowserConsentControl,
-      emailDialogControl,
       linkWarningDialogControl,
       reportDialogControl,
     ],

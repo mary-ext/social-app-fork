@@ -4,322 +4,276 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
-  useSyncExternalStore,
 } from 'react'
-import {type AtpAgent, type AtpSessionEvent} from '@atproto/api'
-
-import * as persisted from '#/state/persisted'
-import {useCloseAllActiveElements} from '#/state/util'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {emitSessionDropped} from '../events'
+import {type Did as AtcuteDid} from '@atcute/lexicons'
 import {
-  agentToSessionAccount,
-  type BskyAppAgent,
-  createAgentAndLogin,
-  createAgentAndResume,
-  sessionAccountToSession,
-} from './agent'
-import {addSessionDebugLog} from './logging'
-import {type Action, getInitialState, reducer, type State} from './reducer'
-export type {
-  AccountLoggedInLogContext,
-  AccountLoggedOutLogContext,
-  SessionAccount,
-} from '#/state/session/types'
+  deleteStoredSession,
+  TokenRefreshError,
+} from '@atcute/oauth-browser-client'
 
 import {clearPersistedQueryStorage} from '#/lib/persisted-query-storage'
+import {logger} from '#/logger'
+import {listenSessionDropped} from '#/state/events'
+import * as persisted from '#/state/persisted'
 import {
+  type SessionAccount,
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
+import {useCloseAllActiveElements} from '#/state/util'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {auth, type AuthSession} from '#/storage'
+import {
+  type BskyAppAgent,
+  createAgentAndFinalizeOAuth,
+  createAgentAndResume,
+  createPublicAgent,
+  InactiveAccountError,
+} from './agent'
+import {IS_OAUTH_CALLBACK, startOAuthSignIn} from './oauth'
+
+export type {SessionAccount} from '#/state/session/types'
+
+/**
+ * The session is immutable for a page's lifetime: it's resolved once at boot,
+ * and every account change (switch, sign-out, cross-tab change) reloads the
+ * page. Removing a non-current account is the sole live mutation.
+ */
+
+// `auth` storage notifies in-process listeners on every write. A write made by
+// this tab is already reflected locally, so the cross-tab listener latches on
+// this flag to react only to writes from *other* tabs.
+let isWritingSession = false
+
+function writeSession(next: AuthSession) {
+  isWritingSession = true
+  try {
+    auth.set(['session'], next)
+  } finally {
+    isWritingSession = false
+  }
+}
+
+/** Returns `accounts` with `account` moved to the front (most recent first). */
+function prependAccount(
+  accounts: SessionAccount[],
+  account: SessionAccount,
+): SessionAccount[] {
+  return [account, ...accounts.filter(a => a.did !== account.did)]
+}
+
+/** Persists a logged-out session, clears the given dids' caches, and reloads. */
+function signOut({
+  accounts,
+  clearDids = [],
+}: {
+  accounts: SessionAccount[]
+  clearDids?: string[]
+}) {
+  for (const did of clearDids) {
+    void clearPersistedQueryStorage(did)
+  }
+  writeSession({accounts, currentAccountDid: undefined})
+  window.location.reload()
+}
 
 const StateContext = createContext<SessionStateContext>({
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
+  isSessionResuming: false,
+  sessionResumeFailed: false,
 })
 StateContext.displayName = 'SessionStateContext'
 
-const AgentContext = createContext<AtpAgent | null>(null)
+const AgentContext = createContext<BskyAppAgent | null>(null)
 AgentContext.displayName = 'SessionAgentContext'
 
 const ApiContext = createContext<SessionApiContext>({
+  completeOAuthCallback: async () => {},
   login: async () => {},
   logoutCurrentAccount: () => {},
   logoutEveryAccount: () => {},
-  resumeSession: async () => {},
   removeAccount: () => {},
-  partialRefreshSession: async () => {},
+  switchAccount: async () => {},
 })
 ApiContext.displayName = 'SessionApiContext'
 
-class SessionStore {
-  private state: State
-  private listeners = new Set<() => void>()
-
-  constructor() {
-    // Careful: By the time this runs, `persisted` needs to already be filled.
-    const initialState = getInitialState(persisted.get('session').accounts)
-    addSessionDebugLog({type: 'reducer:init', state: initialState})
-    this.state = initialState
-  }
-
-  getState = (): State => {
-    return this.state
-  }
-
-  subscribe = (listener: () => void) => {
-    this.listeners.add(listener)
-    return () => {
-      this.listeners.delete(listener)
-    }
-  }
-
-  dispatch = (action: Action) => {
-    const nextState = reducer(this.state, action)
-    this.state = nextState
-    // Persist synchronously without waiting for the React render cycle.
-    if (nextState.needsPersist) {
-      nextState.needsPersist = false
-      const persistedData = {
-        accounts: nextState.accounts,
-        currentAccount: nextState.accounts.find(
-          a => a.did === nextState.currentAgentState.did,
-        ),
-      }
-      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
-      void persisted.write('session', persistedData)
-    }
-    this.listeners.forEach(listener => listener())
-  }
-}
-
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const cancelPendingTask = useOneTaskAtATime()
-  // eslint-disable-next-line react/hook-use-state
-  const [store] = useState(() => new SessionStore())
-  const state = useSyncExternalStore(store.subscribe, store.getState)
+  const [boot] = useState(readPersistedSession)
+  const bootAccount = IS_OAUTH_CALLBACK
+    ? undefined
+    : boot.accounts.find(a => a.did === boot.currentAccountDid)
+  const [accounts, setAccounts] = useState<SessionAccount[]>(boot.accounts)
+  const [agent, setAgent] = useState<BskyAppAgent>(createPublicAgent)
+  const [currentDid, setCurrentDid] = useState<string | undefined>(undefined)
+  const [isSessionResuming, setIsSessionResuming] = useState(() => !!bootAccount)
+  const [sessionResumeFailed, setSessionResumeFailed] = useState(false)
 
-  const onAgentSessionChange = useCallback(
-    (agent: AtpAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
-      const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
-      if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
-        emitSessionDropped()
-      }
-      store.dispatch({
-        type: 'received-agent-event',
-        agent,
-        refreshedAccount,
-        accountDid,
-        sessionEvent,
+  // Boot: resume the persisted current account exactly once. This is the only
+  // path that resumes a session — every later account change reloads the page.
+  useEffect(() => {
+    if (!bootAccount) {
+      return
+    }
+    let cancelled = false
+    createAgentAndResume(bootAccount)
+      .then(({agent: resumedAgent}) => {
+        if (cancelled) {
+          return
+        }
+        setAgent(resumedAgent)
+        setCurrentDid(bootAccount.did)
       })
-    },
-    [store],
-  )
+      .catch(e => {
+        if (cancelled) {
+          return
+        }
+        if (
+          e instanceof TokenRefreshError ||
+          e instanceof InactiveAccountError
+        ) {
+          setSessionResumeFailed(true)
+        } else {
+          logger.error('session: boot resume failed', {
+            message: e instanceof Error ? e.message : String(e),
+          })
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsSessionResuming(false)
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [bootAccount])
 
-  const login = useCallback<SessionApiContext['login']>(
-    async (params, _logContext) => {
-      addSessionDebugLog({type: 'method:start', method: 'login'})
-      const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
-        params,
-        onAgentSessionChange,
-      )
-
-      if (signal.aborted) {
+  // Another tab changed the session. Reload only when the change affects the
+  // account this tab is signed in as — it's no longer the current account, or
+  // it was removed. Edits to other accounts are left alone.
+  useEffect(() => {
+    const sub = auth.addOnValueChangedListener(['session'], () => {
+      if (isWritingSession) {
         return
       }
-      store.dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
+      const next = auth.get(['session'])
+      const accountChanged = next?.currentAccountDid !== currentDid
+      const accountRemoved =
+        currentDid !== undefined &&
+        !(next?.accounts.some(a => a.did === currentDid) ?? false)
+      if (accountChanged || accountRemoved) {
+        window.location.reload()
+      }
+    })
+    return () => sub.remove()
+  }, [currentDid])
+
+  // A live session dropped mid-use. Reload so the boot resume re-resolves it
+  // (and surfaces the failure as a logged-out state). Skipped during boot,
+  // where the resume already handles its own failures.
+  useEffect(() => {
+    if (isSessionResuming) {
+      return
+    }
+    return listenSessionDropped(() => window.location.reload())
+  }, [isSessionResuming])
+
+  const login = useCallback<SessionApiContext['login']>(async ({identifier}) => {
+    await startOAuthSignIn({identifier})
+  }, [])
+
+  const completeOAuthCallback = useCallback<
+    SessionApiContext['completeOAuthCallback']
+  >(
+    async params => {
+      const {account} = await createAgentAndFinalizeOAuth(params)
+      writeSession({
+        accounts: prependAccount(accounts, account),
+        currentAccountDid: account.did,
       })
-      addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [store, onAgentSessionChange, cancelPendingTask],
+    [accounts],
+  )
+
+  const switchAccount = useCallback<SessionApiContext['switchAccount']>(
+    async account => {
+      // Validate the stored session resolves before committing the switch.
+      await createAgentAndResume(account)
+      writeSession({
+        accounts: prependAccount(accounts, account),
+        currentAccountDid: account.did,
+      })
+      history.pushState(null, '', '/')
+      window.location.reload()
+    },
+    [accounts],
   )
 
   const logoutCurrentAccount = useCallback<
     SessionApiContext['logoutCurrentAccount']
-  >(
-    _logContext => {
-      addSessionDebugLog({type: 'method:start', method: 'logout'})
-      cancelPendingTask()
-      const prevState = store.getState()
-      store.dispatch({
-        type: 'logged-out-current-account',
-      })
-      addSessionDebugLog({type: 'method:end', method: 'logout'})
-      if (prevState.currentAgentState.did) {
-        void clearPersistedQueryStorage(prevState.currentAgentState.did)
-      }
-    },
-    [store, cancelPendingTask],
-  )
+  >(() => {
+    signOut({accounts, clearDids: currentDid ? [currentDid] : []})
+  }, [accounts, currentDid])
 
   const logoutEveryAccount = useCallback<
     SessionApiContext['logoutEveryAccount']
-  >(
-    _logContext => {
-      addSessionDebugLog({type: 'method:start', method: 'logout'})
-      cancelPendingTask()
-      const prevState = store.getState()
-      store.dispatch({
-        type: 'logged-out-every-account',
-      })
-      addSessionDebugLog({type: 'method:end', method: 'logout'})
-      for (const account of prevState.accounts) {
-        void clearPersistedQueryStorage(account.did)
-      }
-    },
-    [store, cancelPendingTask],
-  )
-
-  const resumeSession = useCallback<SessionApiContext['resumeSession']>(
-    async storedAccount => {
-      addSessionDebugLog({
-        type: 'method:start',
-        method: 'resumeSession',
-        account: storedAccount,
-      })
-      const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
-        storedAccount,
-        onAgentSessionChange,
-      )
-
-      if (signal.aborted) {
-        return
-      }
-      store.dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
-      })
-      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
-    },
-    [store, onAgentSessionChange, cancelPendingTask],
-  )
-
-  const partialRefreshSession = useCallback<
-    SessionApiContext['partialRefreshSession']
-  >(async () => {
-    const agent = state.currentAgentState.agent as BskyAppAgent
-    const signal = cancelPendingTask()
-    const {data} = await agent.com.atproto.server.getSession()
-    if (signal.aborted) return
-    store.dispatch({
-      type: 'partial-refresh-session',
-      accountDid: agent.session!.did,
-      patch: {
-        emailConfirmed: data.emailConfirmed,
-        emailAuthFactor: data.emailAuthFactor,
-      },
-    })
-  }, [store, state, cancelPendingTask])
+  >(() => {
+    signOut({accounts, clearDids: accounts.map(a => a.did)})
+  }, [accounts])
 
   const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
-      addSessionDebugLog({
-        type: 'method:start',
-        method: 'removeAccount',
-        account,
-      })
-      cancelPendingTask()
-      store.dispatch({
-        type: 'removed-account',
-        accountDid: account.did,
-      })
-      addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
-    },
-    [store, cancelPendingTask],
-  )
-  useEffect(() => {
-    return persisted.onUpdate('session', nextSession => {
-      const synced = nextSession
-      addSessionDebugLog({type: 'persisted:receive', data: synced})
-      store.dispatch({
-        type: 'synced-accounts',
-        syncedAccounts: synced.accounts,
-        syncedCurrentDid: synced.currentAccount?.did,
-      })
-      const syncedAccount = synced.accounts.find(
-        a => a.did === synced.currentAccount?.did,
-      )
-      if (syncedAccount && syncedAccount.refreshJwt) {
-        if (syncedAccount.did !== state.currentAgentState.did) {
-          /*
-           * Web handling: if leader tab has switched to a diff account that is
-           * stale, it will refresh the session before triggering the update to
-           * follower tabs. Follower tabs will therefore receive the fresh
-           * session. See APP-1960, or ask Eric.
-           */
-          void resumeSession(syncedAccount)
-        } else {
-          const agent = state.currentAgentState.agent as AtpAgent
-          const prevSession = agent.session
-          // eslint-disable-next-line react-compiler/react-compiler
-          agent.sessionManager.session = sessionAccountToSession(syncedAccount)
-          addSessionDebugLog({
-            type: 'agent:patch',
-            agent,
-            prevSession,
-            nextSession: agent.session,
-          })
-        }
+      deleteStoredSession(account.did as AtcuteDid)
+      void clearPersistedQueryStorage(account.did)
+      const nextAccounts = accounts.filter(a => a.did !== account.did)
+      if (account.did === currentDid) {
+        // Removing the signed-in account is a sign-out — reload.
+        signOut({accounts: nextAccounts})
+      } else {
+        setAccounts(nextAccounts)
+        writeSession({accounts: nextAccounts, currentAccountDid: currentDid})
       }
-    })
-  }, [store, state, resumeSession])
-
-  const stateContext = useMemo(
-    () => ({
-      accounts: state.accounts,
-      currentAccount: state.accounts.find(
-        a => a.did === state.currentAgentState.did,
-      ),
-      hasSession: !!state.currentAgentState.did,
-    }),
-    [state],
+    },
+    [accounts, currentDid],
   )
 
-  const api = useMemo(
+  const stateContext = useMemo<SessionStateContext>(
     () => ({
+      accounts,
+      currentAccount: accounts.find(a => a.did === currentDid),
+      hasSession: !!currentDid,
+      isSessionResuming,
+      sessionResumeFailed,
+    }),
+    [accounts, currentDid, isSessionResuming, sessionResumeFailed],
+  )
+
+  const api = useMemo<SessionApiContext>(
+    () => ({
+      completeOAuthCallback,
       login,
       logoutCurrentAccount,
       logoutEveryAccount,
-      resumeSession,
       removeAccount,
-      partialRefreshSession,
+      switchAccount,
     }),
     [
+      completeOAuthCallback,
       login,
       logoutCurrentAccount,
       logoutEveryAccount,
-      resumeSession,
       removeAccount,
-      partialRefreshSession,
+      switchAccount,
     ],
   )
 
   // @ts-expect-error window type is not declared, debug only
+  // eslint-disable-next-line react-compiler/react-compiler
   // eslint-disable-next-line react-hooks/immutability
-  if (import.meta.env.DEV) window.agent = state.currentAgentState.agent
-
-  const agent = state.currentAgentState.agent as BskyAppAgent
-  const currentAgentRef = useRef(agent)
-  useEffect(() => {
-    if (currentAgentRef.current !== agent) {
-      // Read the previous value and immediately advance the pointer.
-      const prevAgent = currentAgentRef.current
-      currentAgentRef.current = agent
-      addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
-      // We never reuse agents so let's fully neutralize the previous one.
-      // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose()
-    }
-  }, [agent])
+  if (import.meta.env.DEV) window.agent = agent
 
   return (
     <AgentContext.Provider value={agent}>
@@ -330,16 +284,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function useOneTaskAtATime() {
-  const abortController = useRef<AbortController | null>(null)
-  const cancelPendingTask = useCallback(() => {
-    if (abortController.current) {
-      abortController.current.abort()
-    }
-    abortController.current = new AbortController()
-    return abortController.current.signal
-  }, [])
-  return cancelPendingTask
+/**
+ * Reads the persisted session, migrating once from the legacy token-based
+ * session storage when the new storage is empty.
+ */
+function readPersistedSession(): AuthSession {
+  const stored = auth.get(['session'])
+  if (stored) {
+    return stored
+  }
+
+  const legacy = persisted.get('session')
+  const migrated: AuthSession = {
+    accounts: legacy.accounts.map(({did, handle}) => ({did, handle})),
+    currentAccountDid: legacy.currentAccount?.did,
+  }
+  if (migrated.accounts.length > 0) {
+    auth.set(['session'], migrated)
+  }
+  return migrated
 }
 
 export function useSession() {
@@ -368,7 +331,7 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): AtpAgent {
+export function useAgent(): BskyAppAgent {
   const agent = useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')

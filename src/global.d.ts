@@ -20,6 +20,9 @@ interface ImportMetaEnv {
   PUBLIC_ENV?: string
   PUBLIC_LOG_DEBUG?: string
   PUBLIC_LOG_LEVEL?: string
+  PUBLIC_OAUTH_CLIENT_ID?: string
+  PUBLIC_OAUTH_REDIRECT_URI?: string
+  PUBLIC_OAUTH_SCOPE?: string
   PUBLIC_RELEASE_VERSION?: string
   PUBLIC_SOURCE_CODE_URL?: string
 }

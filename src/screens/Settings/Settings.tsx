@@ -1,12 +1,11 @@
 import {useState} from 'react'
-import {LayoutAnimation, Linking, Pressable, View} from 'react-native'
+import {LayoutAnimation, Pressable, View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useReducedMotion} from '#/lib/animations/reanimatedCompat'
-import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {
   type CommonNavigatorParams,
@@ -37,7 +36,6 @@ import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/comp
 import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
-import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
 import {CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
@@ -146,8 +144,8 @@ export function SettingsScreen({}: Props) {
                           p => p.did === account.did,
                         )}
                         pendingDid={pendingDid}
-                        onPressSwitchAccount={(account, logContext) =>
-                          void onPressSwitchAccount(account, logContext)
+                        onPressSwitchAccount={account =>
+                          void onPressSwitchAccount(account)
                         }
                       />
                     ))}
@@ -219,16 +217,6 @@ export function SettingsScreen({}: Props) {
               <Trans>Languages</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          <SettingsList.PressableItem
-            onPress={() => void Linking.openURL(HELP_DESK_URL)}
-            label={l`Help`}
-            accessibilityHint={l`Opens helpdesk in browser`}>
-            <SettingsList.ItemIcon icon={CircleQuestionIcon} />
-            <SettingsList.ItemText>
-              <Trans>Help</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.Chevron />
-          </SettingsList.PressableItem>
           <SettingsList.LinkItem to="/settings/about" label={l`About`}>
             <SettingsList.ItemIcon icon={BubbleInfoIcon} />
             <SettingsList.ItemText>
@@ -272,7 +260,7 @@ export function SettingsScreen({}: Props) {
         control={signOutPromptControl}
         title={l`Sign out?`}
         description={l`You will be signed out of all your accounts.`}
-        onConfirm={() => logoutEveryAccount('Settings')}
+        onConfirm={() => logoutEveryAccount()}
         confirmButtonCta={l`Sign out`}
         cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
@@ -461,10 +449,7 @@ function AccountRow({
   profile?: AppBskyActorDefs.ProfileViewDetailed
   account: SessionAccount
   pendingDid: string | null
-  onPressSwitchAccount: (
-    account: SessionAccount,
-    logContext: 'Settings',
-  ) => void
+  onPressSwitchAccount: (account: SessionAccount) => void
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -476,7 +461,7 @@ function AccountRow({
 
   const onSwitchAccount = () => {
     if (pendingDid) return
-    onPressSwitchAccount(account, 'Settings')
+    onPressSwitchAccount(account)
   }
 
   return (

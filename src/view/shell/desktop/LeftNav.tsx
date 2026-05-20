@@ -219,7 +219,7 @@ function ProfileCard({minimal}: {minimal: boolean}) {
         control={signOutPromptControl}
         title={l`Sign out?`}
         description={l`You will be signed out of all your accounts.`}
-        onConfirm={() => logoutEveryAccount('Settings')}
+        onConfirm={() => logoutEveryAccount()}
         confirmButtonCta={l`Sign out`}
         cancelButtonCta={l`Cancel`}
         confirmButtonColor="negative"
@@ -361,7 +361,7 @@ function SwitchMenuItem({
         profile?.handle ?? account.handle,
         '@',
       )}`}
-      onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
+      onPress={() => void onPressSwitchAccount(account)}>
       <View>
         <UserAvatar
           avatar={profile?.avatar}

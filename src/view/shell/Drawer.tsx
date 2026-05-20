@@ -1,11 +1,10 @@
 import {type ComponentProps, type JSX, memo, useCallback} from 'react'
-import {Linking, ScrollView, TouchableOpacity, View} from 'react-native'
+import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -19,8 +18,8 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignInCard} from '#/view/shell/nav-sign-in-card'
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -200,19 +199,6 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
-  const onPressFeedback = useCallback(() => {
-    Linking.openURL(
-      FEEDBACK_FORM_URL({
-        email: currentAccount?.email,
-        handle: currentAccount?.handle,
-      }),
-    )
-  }, [currentAccount])
-
-  const onPressHelp = useCallback(() => {
-    Linking.openURL(HELP_DESK_URL)
-  }, [])
-
   // rendering
   // =
 
@@ -279,69 +265,11 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
           <ExtraLinks />
         </View>
       </ScrollView>
-
-      <DrawerFooter
-        onPressFeedback={onPressFeedback}
-        onPressHelp={onPressHelp}
-      />
     </View>
   )
 }
 DrawerContent = memo(DrawerContent)
 export {DrawerContent}
-
-let DrawerFooter = ({
-  onPressFeedback,
-  onPressHelp,
-}: {
-  onPressFeedback: () => void
-  onPressHelp: () => void
-}): React.ReactNode => {
-  const {t: l} = useLingui()
-  const insets = useSafeAreaInsets()
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.gap_sm,
-        a.flex_wrap,
-        a.pl_xl,
-        a.pt_md,
-        {
-          paddingBottom: Math.max(
-            insets.bottom + tokens.space.xs,
-            tokens.space.xl,
-          ),
-        },
-      ]}>
-      <Button
-        label={l`Send feedback`}
-        size="small"
-        variant="solid"
-        color="secondary"
-        onPress={onPressFeedback}>
-        <ButtonIcon icon={Message} position="left" />
-        <ButtonText>
-          <Trans>Feedback</Trans>
-        </ButtonText>
-      </Button>
-      <Button
-        label={l`Get help`}
-        size="small"
-        variant="outline"
-        color="secondary"
-        onPress={onPressHelp}
-        style={{
-          backgroundColor: 'transparent',
-        }}>
-        <ButtonText>
-          <Trans>Help</Trans>
-        </ButtonText>
-      </Button>
-    </View>
-  )
-}
-DrawerFooter = memo(DrawerFooter)
 
 interface MenuItemProps extends ComponentProps<typeof PressableScale> {
   icon: JSX.Element

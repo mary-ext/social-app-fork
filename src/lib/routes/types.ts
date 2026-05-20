@@ -41,13 +41,7 @@ export type CommonNavigatorParams = {
   Debug: undefined
   DebugMod: undefined
   Log: undefined
-  Support: undefined
-  PrivacyPolicy: undefined
-  TermsOfService: undefined
-  CommunityGuidelines: undefined
-  CopyrightPolicy: undefined
   LanguageSettings: undefined
-  AppPasswords: undefined
   SavedFeeds: undefined
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined

@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 
-import {type Account, type Device} from '#/storage/schema'
+import {type Account, type Auth, type Device} from '#/storage/schema'
 
 export * from '#/storage/schema'
 
@@ -209,10 +209,16 @@ export const device = new Storage<[], Device>({id: 'bsky_device'})
  */
 export const account = new Storage<[string], Account>({id: 'bsky_account'})
 
+/**
+ * OAuth-backed account list and active account pointer for this device.
+ */
+export const auth = new Storage<[], Auth>({id: 'bsky_auth'})
+
 if (import.meta.env.DEV && typeof window !== 'undefined') {
   // @ts-expect-error - dev global
   window.bsky_storage = {
     device,
     account,
+    auth,
   }
 }

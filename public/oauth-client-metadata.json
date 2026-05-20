@@ -1,0 +1,12 @@
+{
+	"application_type": "web",
+	"client_id": "https://bsky.kelinci.net/oauth-client-metadata.json",
+	"client_name": "Bluesky",
+	"client_uri": "https://bsky.kelinci.net",
+	"dpop_bound_access_tokens": true,
+	"grant_types": ["authorization_code", "refresh_token"],
+	"redirect_uris": ["https://bsky.kelinci.net/oauth/callback"],
+	"response_types": ["code"],
+	"scope": "atproto transition:generic transition:chat.bsky",
+	"token_endpoint_auth_method": "none"
+}

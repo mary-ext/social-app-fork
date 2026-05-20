@@ -88,11 +88,6 @@ const AppearanceSettingsScreen = lazy(() =>
     default: m.AppearanceSettingsScreen,
   })),
 )
-const AppPasswordsScreen = lazy(() =>
-  import('#/screens/Settings/AppPasswords').then(m => ({
-    default: m.AppPasswordsScreen,
-  })),
-)
 const AutomationLabelSettingsScreen = lazy(() =>
   import('#/screens/Settings/AutomationLabelSettings').then(m => ({
     default: m.AutomationLabelSettingsScreen,
@@ -101,19 +96,9 @@ const AutomationLabelSettingsScreen = lazy(() =>
 const BookmarksScreen = lazy(() =>
   import('#/screens/Bookmarks').then(m => ({default: m.BookmarksScreen})),
 )
-const CommunityGuidelinesScreen = lazy(() =>
-  import('#/view/screens/CommunityGuidelines').then(m => ({
-    default: m.CommunityGuidelinesScreen,
-  })),
-)
 const ContentAndMediaSettingsScreen = lazy(() =>
   import('#/screens/Settings/ContentAndMediaSettings').then(m => ({
     default: m.ContentAndMediaSettingsScreen,
-  })),
-)
-const CopyrightPolicyScreen = lazy(() =>
-  import('#/view/screens/CopyrightPolicy').then(m => ({
-    default: m.CopyrightPolicyScreen,
   })),
 )
 const DebugModScreen = lazy(() =>
@@ -285,11 +270,6 @@ const PrivacyAndSecuritySettingsScreen = lazy(() =>
     default: m.PrivacyAndSecuritySettingsScreen,
   })),
 )
-const PrivacyPolicyScreen = lazy(() =>
-  import('#/view/screens/PrivacyPolicy').then(m => ({
-    default: m.PrivacyPolicyScreen,
-  })),
-)
 const ProfileFeedLikedByScreen = lazy(() =>
   import('#/view/screens/ProfileFeedLikedBy').then(m => ({
     default: m.ProfileFeedLikedByScreen,
@@ -374,14 +354,6 @@ const StarterPackScreenShort = lazy(() =>
 )
 const StorybookScreen = lazy(() =>
   import('#/view/screens/Storybook').then(m => ({default: m.StorybookScreen})),
-)
-const SupportScreen = lazy(() =>
-  import('#/view/screens/Support').then(m => ({default: m.SupportScreen})),
-)
-const TermsOfServiceScreen = lazy(() =>
-  import('#/view/screens/TermsOfService').then(m => ({
-    default: m.TermsOfServiceScreen,
-  })),
 )
 const ThreadPreferencesScreen = lazy(() =>
   import('#/screens/Settings/ThreadPreferences').then(m => ({
@@ -793,39 +765,6 @@ const FlatNavigator = ({
         name="Log"
         getComponent={() => LogScreen}
         options={{title: title(defineMessage`Log`), requireAuth: true}}
-      />
-      <Flat.Screen
-        name="Support"
-        getComponent={() => SupportScreen}
-        options={{title: title(defineMessage`Support`)}}
-      />
-      <Flat.Screen
-        name="PrivacyPolicy"
-        getComponent={() => PrivacyPolicyScreen}
-        options={{title: title(defineMessage`Privacy Policy`)}}
-      />
-      <Flat.Screen
-        name="TermsOfService"
-        getComponent={() => TermsOfServiceScreen}
-        options={{title: title(defineMessage`Terms of Service`)}}
-      />
-      <Flat.Screen
-        name="CommunityGuidelines"
-        getComponent={() => CommunityGuidelinesScreen}
-        options={{title: title(defineMessage`Community Guidelines`)}}
-      />
-      <Flat.Screen
-        name="CopyrightPolicy"
-        getComponent={() => CopyrightPolicyScreen}
-        options={{title: title(defineMessage`Copyright Policy`)}}
-      />
-      <Flat.Screen
-        name="AppPasswords"
-        getComponent={() => AppPasswordsScreen}
-        options={{
-          title: title(defineMessage`App Passwords`),
-          requireAuth: true,
-        }}
       />
       <Flat.Screen
         name="SavedFeeds"

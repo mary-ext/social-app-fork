@@ -56,6 +56,26 @@ export const LOG_LEVEL = (import.meta.env.PUBLIC_LOG_LEVEL || 'info') as
 export const LOG_DEBUG: string = import.meta.env.PUBLIC_LOG_DEBUG || ''
 
 /**
+ * AT Protocol OAuth client id. In production this should be the URL of the
+ * OAuth client metadata document.
+ */
+export const OAUTH_CLIENT_ID: string =
+  import.meta.env.PUBLIC_OAUTH_CLIENT_ID || ''
+
+/**
+ * AT Protocol OAuth redirect URL.
+ */
+export const OAUTH_REDIRECT_URI: string =
+  import.meta.env.PUBLIC_OAUTH_REDIRECT_URI || ''
+
+/**
+ * AT Protocol OAuth scope.
+ */
+export const OAUTH_SCOPE: string =
+  import.meta.env.PUBLIC_OAUTH_SCOPE ||
+  'atproto transition:generic transition:chat.bsky'
+
+/**
  * the source code URL shown in the desktop right nav.
  */
 export const SOURCE_CODE_URL: string =

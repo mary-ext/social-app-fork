@@ -39,7 +39,6 @@ export const router = new Router<AllNavigatableRoutes>({
   Log: '/sys/log',
   // settings
   LanguageSettings: '/settings/language',
-  AppPasswords: '/settings/app-passwords',
   PreferencesFollowingFeed: '/settings/following-feed',
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
@@ -66,12 +65,6 @@ export const router = new Router<AllNavigatableRoutes>({
     '/settings/notifications/reposts-on-reposts',
   ActivityNotificationSettings: '/settings/notifications/activity',
   MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
-  // support
-  Support: '/support',
-  PrivacyPolicy: '/support/privacy',
-  TermsOfService: '/support/tos',
-  CommunityGuidelines: '/support/community-guidelines',
-  CopyrightPolicy: '/support/copyright',
   // hashtags
   Hashtag: '/hashtag/:tag',
   Topic: '/topic/:topic',

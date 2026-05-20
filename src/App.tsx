@@ -10,11 +10,9 @@ import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
-import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
-import {listenSessionDropped} from '#/state/events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {MessagesProvider} from '#/state/messages'
 import {Provider as ModalStateProvider} from '#/state/modals'
@@ -24,13 +22,7 @@ import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
 import {Provider as ServiceConfigProvider} from '#/state/service-config'
-import {
-  Provider as SessionProvider,
-  type SessionAccount,
-  useSession,
-  useSessionApi,
-} from '#/state/session'
-import {readLastActiveAccount} from '#/state/session/util'
+import {Provider as SessionProvider, useSession} from '#/state/session'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -52,43 +44,22 @@ import {Splash} from '#/Splash'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 function InnerApp() {
-  const [isReady, setIsReady] = useState(false)
-  const {currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {currentAccount, isSessionResuming, sessionResumeFailed} = useSession()
   const theme = useColorModeTheme()
   const {t: l} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
 
-  // init
   useEffect(() => {
-    async function onLaunch(account?: SessionAccount) {
-      try {
-        if (account) {
-          await resumeSession(account)
-        }
-      } catch (e) {
-        logger.error('session: resumeSession failed', {message: e})
-      } finally {
-        setIsReady(true)
-      }
+    if (sessionResumeFailed) {
+      Toast.show(l`Your session expired. Please sign in again.`, {type: 'info'})
     }
-    const account = readLastActiveAccount()
-    void onLaunch(account)
-  }, [resumeSession])
-
-  useEffect(() => {
-    return listenSessionDropped(() => {
-      Toast.show(l`Sorry! Your session expired. Please sign in again.`, {
-        type: 'info',
-      })
-    })
-  }, [l])
+  }, [sessionResumeFailed, l])
 
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
-          <Splash isReady={isReady && hasCheckedReferrer}>
+          <Splash isReady={!isSessionResuming && hasCheckedReferrer}>
             <VideoVolumeProvider>
               <ActiveVideoProvider>
                 <Fragment
@@ -151,8 +122,8 @@ function App() {
   }
 
   /*
-   * NOTE: only nothing here can depend on other data or session state, since
-   * that is set up in the InnerApp component above.
+   * NOTE: nothing here can depend on other data or session state, since that
+   * is set up in the InnerApp component above.
    */
   return (
     <A11yProvider>

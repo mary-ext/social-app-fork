@@ -1,18 +1,18 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useQueryClient} from '@tanstack/react-query'
 
-import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useServiceQuery} from '#/state/queries/service'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {LoginForm} from '#/screens/Login/LoginForm'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {Divider} from '#/components/Divider'
+import * as TextField from '#/components/forms/TextField'
+import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon} from '#/components/icons/Chevron'
+import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
@@ -29,49 +29,49 @@ export function SigninDialog() {
 }
 
 function SigninDialogInner() {
-  const t = useTheme()
   const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const queryClient = useQueryClient()
-  const {accounts, currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {accounts} = useSession()
   const {signinDialogControl} = useGlobalDialogsControlContext()
   const payload = signinDialogControl.value
   const requestedAccount = payload?.requestedAccount
   const showStoredAccounts = payload?.showStoredAccounts ?? true
-  const [pendingDid, setPendingDid] = useState<string | null>(null)
-  const [selectedAccount, setSelectedAccount] = useState<
-    SessionAccount | undefined
-  >(requestedAccount)
-  const [error, setError] = useState('')
-  const [serviceUrl, setServiceUrl] = useState(
-    requestedAccount?.service || DEFAULT_SERVICE,
+  const hasStoredAccounts = showStoredAccounts && accounts.length > 0
+
+  // The dialog stays mounted between opens, so the entry screen is derived
+  // rather than fixed: stored accounts get the chooser, everything else the
+  // new-account form.
+  const [screen, setScreen] = useState<'choose' | 'new'>(() =>
+    hasStoredAccounts && !requestedAccount ? 'choose' : 'new',
   )
-
   useEffect(() => {
-    setSelectedAccount(requestedAccount)
-    setServiceUrl(requestedAccount?.service || DEFAULT_SERVICE)
-    setError('')
-  }, [requestedAccount])
+    setScreen(hasStoredAccounts && !requestedAccount ? 'choose' : 'new')
+  }, [hasStoredAccounts, requestedAccount])
 
-  const {
-    data: serviceDescription,
-    error: serviceError,
-    refetch: refetchService,
-  } = useServiceQuery(serviceUrl)
+  return (
+    <Dialog.ScrollableInner
+      label={l`Sign in to Bluesky`}
+      style={[gtMobile ? {width: 'auto', maxWidth: 560} : a.w_full]}>
+      {screen === 'choose' ? (
+        <ChooseAccountScreen onSelectOther={() => setScreen('new')} />
+      ) : (
+        <NewAccountScreen
+          initialHandle={requestedAccount?.handle ?? ''}
+          onBack={hasStoredAccounts ? () => setScreen('choose') : undefined}
+        />
+      )}
+      <Dialog.Close />
+    </Dialog.ScrollableInner>
+  )
+}
 
-  useEffect(() => {
-    if (serviceError) {
-      setError(
-        l`Unable to contact your service. Please check your Internet connection.`,
-      )
-      logger.warn(`Failed to fetch service description for ${serviceUrl}`, {
-        error: String(serviceError),
-      })
-    } else {
-      setError('')
-    }
-  }, [serviceError, serviceUrl, l])
+function ChooseAccountScreen({onSelectOther}: {onSelectOther: () => void}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {currentAccount} = useSession()
+  const {login, switchAccount} = useSessionApi()
+  const {signinDialogControl} = useGlobalDialogsControlContext()
+  const [pendingDid, setPendingDid] = useState<string | null>(null)
 
   const onSelectAccount = useCallback(
     async (account: SessionAccount) => {
@@ -83,24 +83,14 @@ function SigninDialogInner() {
         Toast.show(l`Already signed in as @${account.handle}`)
         return
       }
-      if (!account.accessJwt) {
-        setSelectedAccount(account)
-        setServiceUrl(account.service)
-        return
-      }
       try {
         setPendingDid(account.did)
-        history.pushState(null, '', '/')
-        await resumeSession(account, true)
-        signinDialogControl.control.close()
-        await queryClient.resetQueries()
-        Toast.show(l`Signed in as @${account.handle}`)
+        await switchAccount(account)
       } catch (e) {
         logger.error('sign in dialog: resume account failed', {
           message: e instanceof Error ? e.message : String(e),
         })
-        setSelectedAccount(account)
-        setServiceUrl(account.service)
+        await login({identifier: account.did})
       } finally {
         setPendingDid(null)
       }
@@ -108,73 +98,131 @@ function SigninDialogInner() {
     [
       currentAccount?.did,
       l,
+      login,
       pendingDid,
-      queryClient,
-      resumeSession,
+      switchAccount,
       signinDialogControl.control,
     ],
   )
 
-  const onAttemptSuccess = useCallback(() => {
-    signinDialogControl.control.close()
-  }, [signinDialogControl.control])
-
-  const onPressRetryConnect = useCallback(() => {
-    void refetchService()
-  }, [refetchService])
-
-  const onSelectStoredAccount = useCallback(
-    (account: SessionAccount) => {
-      void onSelectAccount(account)
-    },
-    [onSelectAccount],
+  return (
+    <View style={[a.gap_2xl]}>
+      <View style={[a.gap_sm]}>
+        <Text style={[a.font_semi_bold, a.text_2xl]}>
+          <Trans>Sign in</Trans>
+        </Text>
+        <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+          <Trans>Choose an account to sign in with.</Trans>
+        </Text>
+      </View>
+      <AccountList
+        onSelectAccount={account => void onSelectAccount(account)}
+        onSelectOther={onSelectOther}
+        otherLabel={l`Sign in to another account`}
+        pendingDid={pendingDid}
+      />
+    </View>
   )
+}
+
+function NewAccountScreen({
+  initialHandle,
+  onBack,
+}: {
+  initialHandle: string
+  onBack?: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {login} = useSessionApi()
+  const [identifier, setIdentifier] = useState(initialHandle)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
+
+  const onSubmit = useCallback(async () => {
+    const trimmed = identifier.trim()
+    if (!trimmed) {
+      setError(l`Enter your handle or DID.`)
+      return
+    }
+
+    setError('')
+    setIsSubmitting(true)
+    try {
+      await login({identifier: trimmed})
+    } catch (e) {
+      logger.error('sign in dialog: OAuth start failed', {
+        message: e instanceof Error ? e.message : String(e),
+      })
+      setError(l`Unable to start sign in. Please try again.`)
+      setIsSubmitting(false)
+    }
+  }, [identifier, l, login])
 
   return (
-    <Dialog.ScrollableInner
-      label={l`Sign in to Bluesky`}
-      style={[gtMobile ? {width: 'auto', maxWidth: 560} : a.w_full]}>
-      <View style={[a.gap_2xl]}>
-        <View style={[a.gap_sm]}>
-          <Text style={[a.font_semi_bold, a.text_2xl]}>
-            <Trans>Sign in</Trans>
-          </Text>
-          <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-            <Trans>Sign in to join the conversation.</Trans>
-          </Text>
-        </View>
-        <LoginForm
-          key={`${serviceUrl}:${selectedAccount?.did || 'new-account'}`}
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          initialHandle={selectedAccount?.handle || ''}
-          setError={setError}
-          onAttemptFailed={() => {}}
-          onAttemptSuccess={onAttemptSuccess}
-          setServiceUrl={setServiceUrl}
-          onPressRetryConnect={onPressRetryConnect}
-        />
-        {showStoredAccounts && accounts.length > 0 && (
-          <View style={[a.gap_md]}>
-            <Divider />
-            <Text
-              style={[
-                a.text_sm,
-                a.text_center,
-                a.font_semi_bold,
-                t.atoms.text_contrast_medium,
-              ]}>
-              <Trans>or sign in to an existing account</Trans>
-            </Text>
-            <AccountList
-              onSelectAccount={onSelectStoredAccount}
-              pendingDid={pendingDid}
+    <View style={[a.gap_2xl]}>
+      <View style={[a.gap_sm]}>
+        <Text style={[a.font_semi_bold, a.text_2xl]}>
+          <Trans>Sign in</Trans>
+        </Text>
+        <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+          <Trans>Sign in with your Bluesky account.</Trans>
+        </Text>
+      </View>
+      <View style={[a.gap_md]}>
+        <View>
+          <TextField.LabelText>
+            <Trans>Handle or DID</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={!!error}>
+            <TextField.Icon icon={AtIcon} />
+            <Dialog.Input
+              autoCapitalize="none"
+              autoCorrect={false}
+              editable={!isSubmitting}
+              label={l`Handle or DID`}
+              onChangeText={setIdentifier}
+              onSubmitEditing={onSubmit}
+              placeholder={l`e.g. alice.bsky.social`}
+              value={identifier}
             />
-          </View>
+          </TextField.Root>
+          {error && (
+            <Text style={[a.text_sm, a.pt_xs, t.atoms.text_contrast_medium]}>
+              {error}
+            </Text>
+          )}
+        </View>
+        <Button
+          color="primary"
+          disabled={isSubmitting}
+          label={l`Sign in`}
+          onPress={onSubmit}
+          size="large"
+          variant="solid">
+          {isSubmitting ? (
+            <ButtonIcon icon={Loader} />
+          ) : (
+            <ButtonText>
+              <Trans>Sign in</Trans>
+            </ButtonText>
+          )}
+        </Button>
+        {onBack && (
+          <Button
+            color="secondary"
+            disabled={isSubmitting}
+            label={l`Back to your accounts`}
+            onPress={onBack}
+            size="large"
+            variant="ghost">
+            <ButtonIcon icon={ChevronLeftIcon} />
+            <ButtonText>
+              <Trans>Back to your accounts</Trans>
+            </ButtonText>
+          </Button>
         )}
       </View>
-      <Dialog.Close />
-    </Dialog.ScrollableInner>
+    </View>
   )
 }

@@ -4,7 +4,11 @@ import {defineConfig} from '@rsbuild/core'
 import {pluginBabel} from '@rsbuild/plugin-babel'
 import {pluginReact} from '@rsbuild/plugin-react'
 
+import oauthMetadata from './public/oauth-client-metadata.json' with {type: 'json'}
+
 const root = process.cwd()
+const serverHost = '127.0.0.1'
+const serverPort = 19006
 
 const transpiledPaths = [
   path.resolve(root, 'index.tsx'),
@@ -17,6 +21,18 @@ const transpiledPaths = [
 ]
 
 export default defineConfig(({envMode}) => {
+  const oauthScope = process.env.PUBLIC_OAUTH_SCOPE || oauthMetadata.scope
+  const oauthRedirectPath = new URL(oauthMetadata.redirect_uris[0]!).pathname
+  const oauthRedirectUri =
+    envMode === 'production'
+      ? process.env.PUBLIC_OAUTH_REDIRECT_URI || oauthMetadata.redirect_uris[0]!
+      : `http://${serverHost}:${serverPort}${oauthRedirectPath}`
+  const oauthClientId =
+    envMode === 'production'
+      ? process.env.PUBLIC_OAUTH_CLIENT_ID || oauthMetadata.client_id
+      : `http://localhost?redirect_uri=${encodeURIComponent(oauthRedirectUri)}` +
+        `&scope=${encodeURIComponent(oauthScope)}`
+
   return {
     plugins: [
       pluginReact(),
@@ -63,6 +79,13 @@ export default defineConfig(({envMode}) => {
       }),
     ],
     source: {
+      define: {
+        'import.meta.env.PUBLIC_OAUTH_CLIENT_ID':
+          JSON.stringify(oauthClientId),
+        'import.meta.env.PUBLIC_OAUTH_REDIRECT_URI':
+          JSON.stringify(oauthRedirectUri),
+        'import.meta.env.PUBLIC_OAUTH_SCOPE': JSON.stringify(oauthScope),
+      },
       entry: {
         index: path.resolve(root, 'index.tsx'),
       },
@@ -96,8 +119,9 @@ export default defineConfig(({envMode}) => {
       ],
     },
     server: {
+      host: serverHost,
       historyApiFallback: true,
-      port: 19006,
+      port: serverPort,
     },
     output: {
       cleanDistPath: true,

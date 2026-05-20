@@ -6,15 +6,13 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {type NavigationProp} from '#/lib/routes/types'
-import {useSession} from '#/state/session'
+import {IS_OAUTH_CALLBACK} from '#/state/session/oauth'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
+import {OAuthCallback} from '#/view/com/auth/OAuthCallback'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Deactivated} from '#/screens/Deactivated'
-import {Takendown} from '#/screens/Takendown'
 import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
-import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
@@ -53,7 +51,6 @@ function ShellInner() {
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
-      <EmailDialog />
       <LinkWarningDialog />
       <Lightbox />
       <GlobalReportDialog />
@@ -131,13 +128,11 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
 
 export function Shell() {
   const t = useTheme()
-  const {currentAccount} = useSession()
+
   return (
     <View style={[a.util_screen_outer, t.atoms.bg]}>
-      {currentAccount?.status === 'takendown' ? (
-        <Takendown />
-      ) : currentAccount?.status === 'deactivated' ? (
-        <Deactivated />
+      {IS_OAUTH_CALLBACK ? (
+        <OAuthCallback />
       ) : (
         <RoutesContainer>
           <ShellInner />
