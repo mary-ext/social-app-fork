@@ -6,11 +6,10 @@ import { configureOAuth, createAuthorizationUrl } from '@atcute/oauth-browser-cl
 
 import { timeout } from '#/lib/async/timeout';
 
-import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE } from '#/env';
+import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE, SLINGSHOT_SERVICE_URL } from '#/env';
 
 export const OAUTH_CALLBACK_PATH = '/oauth/callback';
 export const IS_OAUTH_CALLBACK = window.location.pathname === OAUTH_CALLBACK_PATH;
-const SLINGSHOT_SERVICE = 'https://slingshot.microcosm.blue';
 
 let configured = false;
 
@@ -43,7 +42,7 @@ export async function startOAuthSignIn({ identifier }: { identifier: string }) {
 
 class SlingshotActorResolver implements ActorResolver {
 	private client = new Client({
-		handler: simpleFetchHandler({ service: SLINGSHOT_SERVICE }),
+		handler: simpleFetchHandler({ service: SLINGSHOT_SERVICE_URL }),
 	});
 
 	async resolve(actor: ActorIdentifier, options?: { signal?: AbortSignal }) {

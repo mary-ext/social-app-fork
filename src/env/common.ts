@@ -44,9 +44,11 @@ export const OAUTH_REDIRECT_URI: string = import.meta.env.PUBLIC_OAUTH_REDIRECT_
 export const OAUTH_SCOPE: string =
 	import.meta.env.PUBLIC_OAUTH_SCOPE || 'atproto transition:generic transition:chat.bsky';
 
+/** The microcosm Slingshot service used to resolve identities during OAuth sign-in. */
+export const SLINGSHOT_SERVICE_URL: string = import.meta.env.PUBLIC_SLINGSHOT_SERVICE_URL;
+
 /** the source code URL shown in the desktop right nav. */
-export const SOURCE_CODE_URL: string =
-	import.meta.env.PUBLIC_SOURCE_CODE_URL || 'https://tangled.org/did:plc:sdgf6fjeih24rhq43zy3vhkc';
+export const SOURCE_CODE_URL: string = import.meta.env.PUBLIC_SOURCE_CODE_URL;
 
 /** The DID of the Bluesky appview to proxy to */
 export const BLUESKY_PROXY_DID: Did = (import.meta.env.PUBLIC_BLUESKY_PROXY_DID ||
