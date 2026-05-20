@@ -12,11 +12,13 @@ const SQUARED_BORDER_RADIUS = 4
 
 let MessageItemEmbed = ({
   embed,
+  isFirstInCluster,
   isFromSelf,
   squaredTopCorner,
   squaredBottomCorner,
 }: {
   embed: $Typed<AppBskyEmbedRecord.View>
+  isFirstInCluster: boolean
   isFromSelf: boolean
   squaredTopCorner: boolean
   squaredBottomCorner: boolean
@@ -34,10 +36,10 @@ let MessageItemEmbed = ({
             maxWidth: 360,
           },
           {
-            marginTop: CLUSTERED_MESSAGE_GAP,
+            marginTop: isFirstInCluster ? 0 : CLUSTERED_MESSAGE_GAP,
           },
         ]}>
-        <View style={{marginTop: -8}}>
+        <View>
           <Embed
             embed={embed}
             allowNestedQuotes

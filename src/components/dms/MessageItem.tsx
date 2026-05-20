@@ -424,6 +424,7 @@ let MessageItem = ({
                   isFromSelf={isFromSelf}
                   squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
                   squaredTopCorner={squaredTopCorner}
+                  isFirstInCluster={isFirstInCluster}
                 />
               )}
               {rt.text.length > 0 && (
@@ -438,9 +439,10 @@ let MessageItem = ({
                           a.py_sm,
                           a.px_md,
                           {
-                            marginTop: isFirstInCluster
-                              ? 0
-                              : CLUSTERED_MESSAGE_GAP,
+                            marginTop:
+                              hasEmbedAndText || !isFirstInCluster
+                                ? CLUSTERED_MESSAGE_GAP
+                                : 0,
                             backgroundColor: isFromSelf
                               ? isPending
                                 ? pendingColor
