@@ -58,7 +58,7 @@ msgid "{0, plural, one {# like} other {# likes}}"
 msgstr ""
 
 #. placeholder {0}: convo.members.length
-#: src/components/dialogs/SearchablePeopleList.tsx:541
+#: src/components/dialogs/SearchablePeopleList.tsx:542
 msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# member} other {# members}}"
 
@@ -283,7 +283,7 @@ msgstr "{count, plural, one {# chat update} other {# chat updates}}"
 msgid "{count, plural, one {# request} other {# requests}}"
 msgstr "{count, plural, one {# request} other {# requests}}"
 
-#: src/view/shell/desktop/LeftNav.tsx:472
+#: src/view/shell/desktop/LeftNav.tsx:479
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -471,7 +471,7 @@ msgstr ""
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:445
+#: src/components/dialogs/SearchablePeopleList.tsx:446
 msgid "{handle} can't be messaged"
 msgstr ""
 
@@ -873,8 +873,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:434
 #: src/screens/Settings/Settings.tsx:437
-#: src/view/shell/desktop/LeftNav.tsx:272
-#: src/view/shell/desktop/LeftNav.tsx:275
+#: src/view/shell/desktop/LeftNav.tsx:279
+#: src/view/shell/desktop/LeftNav.tsx:282
 msgid "Add another account"
 msgstr ""
 
@@ -1691,7 +1691,7 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:1472
 #: src/view/com/composer/photos/EditImageDialog.tsx:57
 #: src/view/com/composer/photos/EditImageDialog.tsx:66
-#: src/view/shell/desktop/LeftNav.tsx:224
+#: src/view/shell/desktop/LeftNav.tsx:231
 msgid "Cancel"
 msgstr ""
 
@@ -1761,7 +1761,7 @@ msgid "Changes to the starter pack will not be reflected in the list after creat
 msgstr ""
 
 #: src/Navigation.tsx:985
-#: src/view/shell/desktop/LeftNav.tsx:616
+#: src/view/shell/desktop/LeftNav.tsx:623
 #: src/view/shell/Drawer.tsx:351
 msgid "Chat"
 msgstr ""
@@ -1924,7 +1924,7 @@ msgstr ""
 
 #. Visible label of the button that dismisses the GIF picker error dialog.
 #: src/components/dialogs/LanguageSelectDialog.tsx:365
-#: src/components/dialogs/SearchablePeopleList.tsx:336
+#: src/components/dialogs/SearchablePeopleList.tsx:337
 #: src/components/dialogs/StarterPackDialog.tsx:180
 #: src/components/dms/AddMembersFlow.tsx:361
 #: src/components/dms/AfterReportDialog.tsx:88
@@ -1996,7 +1996,7 @@ msgstr ""
 
 #: src/lib/hotkeys/index.tsx:66
 #: src/view/com/feeds/ComposerPrompt.tsx:48
-#: src/view/shell/desktop/LeftNav.tsx:575
+#: src/view/shell/desktop/LeftNav.tsx:582
 msgid "Compose new post"
 msgstr ""
 
@@ -2101,7 +2101,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Messages/components/ChatListItem.tsx:310
+#: src/screens/Messages/components/ChatListItem.tsx:308
 msgid "Conversation deleted"
 msgstr ""
 
@@ -2458,7 +2458,7 @@ msgid "Deleted"
 msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:104
-#: src/screens/Messages/components/ChatListItem.tsx:132
+#: src/screens/Messages/components/ChatListItem.tsx:133
 #: src/screens/Messages/ConversationSettings/Member.tsx:75
 msgid "Deleted Account"
 msgstr ""
@@ -3061,7 +3061,7 @@ msgstr ""
 
 #: src/Navigation.tsx:586
 #: src/screens/Search/Shell.tsx:332
-#: src/view/shell/desktop/LeftNav.tsx:708
+#: src/view/shell/desktop/LeftNav.tsx:715
 #: src/view/shell/Drawer.tsx:299
 msgid "Explore"
 msgstr ""
@@ -3234,7 +3234,7 @@ msgstr ""
 msgid "Failed to load preference."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:295
+#: src/components/dialogs/SearchablePeopleList.tsx:296
 msgid "Failed to load profiles"
 msgstr "Failed to load profiles"
 
@@ -3399,7 +3399,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:186
 #: src/view/screens/Feeds.tsx:493
 #: src/view/screens/Profile.tsx:235
-#: src/view/shell/desktop/LeftNav.tsx:748
+#: src/view/shell/desktop/LeftNav.tsx:755
 #: src/view/shell/Drawer.tsx:413
 msgid "Feeds"
 msgstr ""
@@ -3743,7 +3743,7 @@ msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:125
 #: src/components/dialogs/LinkWarning.tsx:131
-#: src/components/Layout/Header/index.tsx:133
+#: src/components/Layout/Header/index.tsx:134
 #: src/components/moderation/ScreenHider.tsx:164
 #: src/components/moderation/ScreenHider.tsx:173
 #: src/screens/ProfileList/components/ErrorScreen.tsx:33
@@ -3799,7 +3799,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Messages/components/ChatListItem.tsx:153
+#: src/screens/Messages/components/ChatListItem.tsx:154
 msgid "Go to conversation with {0}"
 msgstr ""
 
@@ -3809,12 +3809,12 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:255
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:177
-#: src/view/shell/desktop/LeftNav.tsx:332
-#: src/view/shell/desktop/LeftNav.tsx:338
+#: src/view/shell/desktop/LeftNav.tsx:339
+#: src/view/shell/desktop/LeftNav.tsx:345
 msgid "Go to profile"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:210
+#: src/screens/Messages/components/ChatListItem.tsx:211
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
@@ -3881,7 +3881,7 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:551
+#: src/components/dialogs/SearchablePeopleList.tsx:552
 msgid "Group is locked"
 msgstr "Group is locked"
 
@@ -4075,7 +4075,7 @@ msgstr ""
 
 #: src/Navigation.tsx:581
 #: src/Navigation.tsx:606
-#: src/view/shell/desktop/LeftNav.tsx:689
+#: src/view/shell/desktop/LeftNav.tsx:696
 #: src/view/shell/Drawer.tsx:325
 msgid "Home"
 msgstr ""
@@ -4635,7 +4635,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:51
 #: src/view/screens/Profile.tsx:229
 #: src/view/screens/Profile.tsx:237
-#: src/view/shell/desktop/LeftNav.tsx:767
+#: src/view/shell/desktop/LeftNav.tsx:774
 #: src/view/shell/Drawer.tsx:428
 msgid "Lists"
 msgstr ""
@@ -4843,7 +4843,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:309
 msgid "Message deleted"
 msgstr ""
 
@@ -5243,7 +5243,7 @@ msgid "New post"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:583
+#: src/view/shell/desktop/LeftNav.tsx:590
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -5355,7 +5355,7 @@ msgstr ""
 msgid "No media yet"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:297
+#: src/screens/Messages/components/ChatListItem.tsx:295
 msgid "No messages yet"
 msgstr ""
 
@@ -5414,7 +5414,7 @@ msgstr ""
 msgid "No reposts yet"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:253
+#: src/components/dialogs/SearchablePeopleList.tsx:254
 #: src/components/dms/AddMembersFlow.tsx:252
 #: src/components/dms/InitiateChatFlow.tsx:352
 #: src/components/suggested-follows-dialog.tsx:187
@@ -5537,7 +5537,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:184
 #: src/screens/Settings/Settings.tsx:187
 #: src/view/screens/Notifications.tsx:125
-#: src/view/shell/desktop/LeftNav.tsx:728
+#: src/view/shell/desktop/LeftNav.tsx:735
 #: src/view/shell/Drawer.tsx:378
 msgid "Notifications"
 msgstr ""
@@ -5656,7 +5656,7 @@ msgstr "Open chat member options for {displayName}"
 msgid "Open draft"
 msgstr ""
 
-#: src/components/Layout/Header/index.tsx:165
+#: src/components/Layout/Header/index.tsx:166
 msgid "Open drawer menu"
 msgstr ""
 
@@ -6273,7 +6273,7 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:808
+#: src/view/shell/desktop/LeftNav.tsx:815
 #: src/view/shell/Drawer.tsx:73
 #: src/view/shell/Drawer.tsx:479
 msgid "Profile"
@@ -7002,7 +7002,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:786
+#: src/view/shell/desktop/LeftNav.tsx:793
 #: src/view/shell/Drawer.tsx:454
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -7054,7 +7054,7 @@ msgstr ""
 msgid "Scroll to top"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:651
+#: src/components/dialogs/SearchablePeopleList.tsx:652
 #: src/components/forms/SearchInput.tsx:50
 #: src/components/forms/SearchInput.tsx:52
 #: src/screens/Search/Shell.tsx:332
@@ -7140,7 +7140,7 @@ msgstr ""
 msgid "Search posts"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:671
+#: src/components/dialogs/SearchablePeopleList.tsx:672
 #: src/components/dms/components/UserSearchInput.tsx:66
 #: src/components/suggested-follows-dialog.tsx:635
 msgid "Search profiles"
@@ -7150,7 +7150,7 @@ msgstr ""
 msgid "Search..."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:672
+#: src/components/dialogs/SearchablePeopleList.tsx:673
 #: src/components/dms/components/UserSearchInput.tsx:67
 #: src/components/suggested-follows-dialog.tsx:636
 msgid "Searches for profiles"
@@ -7235,7 +7235,7 @@ msgstr "Select app language"
 msgid "Select caption file (.vtt)"
 msgstr "Select caption file (.vtt)"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:487
+#: src/components/dialogs/SearchablePeopleList.tsx:488
 msgid "Select chat \"{name}\""
 msgstr "Select chat \"{name}\""
 
@@ -7381,7 +7381,7 @@ msgstr ""
 
 #: src/Navigation.tsx:666
 #: src/screens/Settings/Settings.tsx:87
-#: src/view/shell/desktop/LeftNav.tsx:827
+#: src/view/shell/desktop/LeftNav.tsx:834
 #: src/view/shell/Drawer.tsx:492
 msgid "Settings"
 msgstr ""
@@ -7669,14 +7669,14 @@ msgstr "Sign in with your Bluesky account."
 #: src/screens/Settings/Settings.tsx:230
 #: src/screens/Settings/Settings.tsx:232
 #: src/screens/Settings/Settings.tsx:264
-#: src/view/shell/desktop/LeftNav.tsx:223
-#: src/view/shell/desktop/LeftNav.tsx:278
-#: src/view/shell/desktop/LeftNav.tsx:281
+#: src/view/shell/desktop/LeftNav.tsx:230
+#: src/view/shell/desktop/LeftNav.tsx:285
+#: src/view/shell/desktop/LeftNav.tsx:288
 msgid "Sign out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:261
-#: src/view/shell/desktop/LeftNav.tsx:220
+#: src/view/shell/desktop/LeftNav.tsx:227
 msgid "Sign out?"
 msgstr ""
 
@@ -7839,7 +7839,7 @@ msgstr ""
 msgid "Start chat"
 msgstr "Start chat"
 
-#: src/components/dialogs/SearchablePeopleList.tsx:414
+#: src/components/dialogs/SearchablePeopleList.tsx:415
 #: src/components/dms/InitiateChatFlow.tsx:751
 msgid "Start chat with {displayName}"
 msgstr ""
@@ -7961,16 +7961,16 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:109
 #: src/screens/Settings/Settings.tsx:121
 #: src/screens/Settings/Settings.tsx:471
-#: src/view/shell/desktop/LeftNav.tsx:258
+#: src/view/shell/desktop/LeftNav.tsx:265
 msgid "Switch account"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:121
+#: src/view/shell/desktop/LeftNav.tsx:128
 msgid "Switch accounts"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
-#: src/view/shell/desktop/LeftNav.tsx:360
+#: src/view/shell/desktop/LeftNav.tsx:367
 msgid "Switch to {0}"
 msgstr ""
 
@@ -8296,6 +8296,7 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
+#: src/screens/Messages/components/ChatListItem.tsx:357
 #: src/screens/Messages/components/ChatLocked.tsx:61
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -8326,7 +8327,7 @@ msgstr ""
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:154
+#: src/screens/Messages/components/ChatListItem.tsx:155
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
@@ -9334,7 +9335,7 @@ msgstr ""
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:130
+#: src/components/dialogs/SearchablePeopleList.tsx:131
 #: src/components/suggested-follows-dialog.tsx:161
 msgid "We're having network issues, try again"
 msgstr ""
@@ -9737,7 +9738,7 @@ msgid "You reacted {0} to {target}"
 msgstr "You reacted {0} to {target}"
 
 #: src/screens/Settings/Settings.tsx:262
-#: src/view/shell/desktop/LeftNav.tsx:221
+#: src/view/shell/desktop/LeftNav.tsx:228
 msgid "You will be signed out of all your accounts."
 msgstr ""
 

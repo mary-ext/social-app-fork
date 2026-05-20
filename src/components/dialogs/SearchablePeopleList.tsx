@@ -117,6 +117,7 @@ export function SearchablePeopleList({
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
   const {data: convos} = useListConvosQuery({
     enabled: showRecentConvos,
+    lockStatus: 'unlocked',
     status: 'accepted',
   })
 
