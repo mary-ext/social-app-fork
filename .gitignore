@@ -1,122 +1,22 @@
-# OSX
-#
-.DS_Store
+/.research/
 
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.xcuserstate
-
-# Android/IntelliJ
-#
-build/
-.idea
-.gradle
-local.properties
-*.iml
-*.hprof
-
-# node.js
-#
 node_modules/
-npm-debug.log
-yarn-error.log
+/web-build/
 
-# BUCK
-buck-out/
-\.buckd/
-*.keystore
-!debug.keystore
+/src/locale/locales/_build/
+/src/locale/locales/**/messages.js
+/src/locale/locales/**/messages.mjs
+/src/locale/locales/**/messages.ts
 
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
+.npm-*.log
+.pnpm-*.log
+.yarn-*.log
+npm-*.log
+pnpm-*.log
+yarn-*.log
 
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
+*.local
+*.local.json
 
-# Bundle artifact
-*.jsbundle
-
-# Ruby / CocoaPods
-/ios/Pods/
-/vendor/bundle/
-Gemfile.lock
-
-# Testing
-coverage/
-junit.xml
-artifacts
-
-# Web bundle outputs
-/dist/
-
-# Expo
-.expo/
-dist/
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-web-build/
-stats.json
-
-# Temporary files created by Metro to check the health of the file watcher
-.metro-health-check*
-
-# VSCode
-.vscode
-
-# Zed
-.zed
-
-# gitignore and github actions
-!.gitignore
-!.github
-
-
-# Android & iOS folders
-/android/
-/ios/
-
-# environment variables
-.env
-.env.*
-
-# Firebase (Android) Google services
-google-services.json
-
-# ESLint
+tsconfig.tsbuildinfo
 .eslintcache
-
-# i18n
-src/locale/locales/_build/
-src/locale/locales/**/messages.js
-src/locale/locales/**/messages.mjs
-src/locale/locales/**/messages.ts
-
-# local builds
-*.apk
-*.aab
-*.ipa
-
-.research/
