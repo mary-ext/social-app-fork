@@ -84,11 +84,7 @@ async function createPreparedOAuthAgent(session: Session) {
 	return { account, agent };
 }
 
-// `globalThis.fetch` carries a React Native ambient type; the browser
-// implementation in this web fork also accepts a `URL`.
-const realFetchWithEvents = withNetworkEvents(
-	globalThis.fetch as (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>,
-);
+const realFetchWithEvents = withNetworkEvents(fetch);
 
 type BskyAppAgentOptions = { service: string } | { oauthAgent: OAuthUserAgent };
 
@@ -111,20 +107,11 @@ class BskyAppAgent extends BskyAgent {
 			super({
 				service: options.service,
 				fetch(...args) {
-					return realFetchWithEvents(...args);
+					const [input, init] = args;
+					return realFetchWithEvents(input instanceof URL ? input.toString() : input, init);
 				},
 			});
 		}
-	}
-
-	async createAccount(): Promise<never> {
-		await Promise.resolve();
-		throw new Error('Password account creation is not supported.');
-	}
-
-	async login(): Promise<never> {
-		await Promise.resolve();
-		throw new Error('Password sign in is not supported.');
 	}
 
 	async resumeSession(_session: AtpSessionData): Promise<ComAtprotoServerRefreshSession.Response> {
@@ -166,12 +153,14 @@ function createOAuthFetch(oauthAgent: OAuthUserAgent) {
 	let dropped = false;
 	return withNetworkEvents(async (input: RequestInfo | URL, init?: RequestInit) => {
 		const request = new Request(input, withReadableStreamDuplex(init));
-		const response = await oauthAgent.handle(request.url, {
+		const requestInit: ReadableStreamRequestInit = {
 			body: request.body,
+			duplex: isReadableStreamBody(request.body) ? 'half' : undefined,
 			headers: request.headers,
 			method: request.method,
 			signal: request.signal,
-		});
+		};
+		const response = await oauthAgent.handle(request.url, requestInit);
 		// `handle` refreshes tokens on its own; an invalid-token 401 coming back
 		// out of it means that refresh failed and the session is unusable.
 		if (!dropped && isInvalidTokenResponse(response)) {
@@ -195,6 +184,10 @@ function withReadableStreamDuplex(init: RequestInit | undefined): RequestInit | 
 	};
 
 	return nextInit;
+}
+
+function isReadableStreamBody(body: BodyInit | null | undefined): body is ReadableStream<Uint8Array> {
+	return typeof ReadableStream !== 'undefined' && body instanceof ReadableStream;
 }
 
 function isInvalidTokenResponse(response: Response): boolean {
