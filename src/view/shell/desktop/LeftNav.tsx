@@ -73,7 +73,10 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import {
+  CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
+} from '#/components/Layout/const'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -82,6 +85,10 @@ import {router} from '#/routes'
 import {PlatformInfo} from '#/shims/bluesky-swiss-army'
 
 const NAV_ICON_WIDTH = 28
+
+export const LEFT_NAV_MINIMAL_WIDTH = 80
+const LEFT_NAV_PWI_WIDTH = 245
+const LEFT_NAV_STANDARD_WIDTH = 240
 
 type WebViewStyle = ViewStyle & {
   overflowX?: 'hidden'
@@ -649,10 +656,10 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
           transform: [
             {
               translateX:
-                -300 +
+                -(CENTER_COLUMN_WIDTH / 2) +
                 (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
                 (isMessagesRelatedScreen && !leftNavMinimalBreakpoint
-                  ? -153
+                  ? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
                   : 0),
             },
             {translateX: '-100%'},
@@ -841,18 +848,18 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     left: '50%',
-    width: 240,
+    width: LEFT_NAV_STANDARD_WIDTH,
     // @ts-expect-error web only
     maxHeight: '100vh',
     overflowY: 'auto',
     scrollbarWidth: 'thin',
   },
   leftNavWide: {
-    width: 245,
+    width: LEFT_NAV_PWI_WIDTH,
   },
   leftNavMinimal: {
     height: '100%',
-    width: 86,
+    width: LEFT_NAV_MINIMAL_WIDTH,
     alignItems: 'center',
     ...webViewStyle({overflowX: 'hidden'}),
   },

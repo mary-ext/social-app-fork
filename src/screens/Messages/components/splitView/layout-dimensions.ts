@@ -1,8 +1,5 @@
-const CENTER_COLUMN_WIDTH = 600
-const LEFT_NAV_FULL_WIDTH = 245
-const LEFT_NAV_MINIMAL_WIDTH = 86
-const RIGHT_NAV_FULL_WIDTH = 330
-const RIGHT_NAV_MINIMAL_WIDTH = 280
+import {LEFT_NAV_MINIMAL_WIDTH} from '#/view/shell/desktop/LeftNav'
+import {CENTER_COLUMN_WIDTH} from '#/components/Layout/const'
 
 /**
  * returns the split-view dimensions for the current shell breakpoint.
@@ -11,32 +8,23 @@ const RIGHT_NAV_MINIMAL_WIDTH = 280
  * @returns dimensions used to size and position the messages split view
  */
 export function getMessagesSplitViewLayoutDimensions({
-	centerColumnOffset,
+  centerColumnOffset,
 }: {
-	centerColumnOffset: boolean
+  centerColumnOffset: boolean
 }) {
-	const rightNavWidth = centerColumnOffset
-		? RIGHT_NAV_MINIMAL_WIDTH
-		: RIGHT_NAV_FULL_WIDTH
+  const halfLeftNavWidth = LEFT_NAV_MINIMAL_WIDTH / 2
+  const leftColumnWidth = 360
 
-	const leftNavWidth = centerColumnOffset
-		? LEFT_NAV_MINIMAL_WIDTH
-		: LEFT_NAV_FULL_WIDTH - LEFT_NAV_MINIMAL_WIDTH
+  const centerColumnWidth =
+    CENTER_COLUMN_WIDTH - (centerColumnOffset ? halfLeftNavWidth + 30 : 0)
 
-	const centerColumnWidth = centerColumnOffset
-		? CENTER_COLUMN_WIDTH - 50
-		: CENTER_COLUMN_WIDTH
+  const containerWidth = leftColumnWidth + centerColumnWidth
+  const offset = centerColumnOffset ? halfLeftNavWidth : halfLeftNavWidth / 2
 
-	const offset = centerColumnOffset
-		? LEFT_NAV_MINIMAL_WIDTH - 34
-		: LEFT_NAV_MINIMAL_WIDTH + 5
-
-	const containerWidth = leftNavWidth + centerColumnWidth + rightNavWidth
-
-	return {
-		centerColumnWidth,
-		containerWidth,
-		leftColumnWidth: containerWidth - centerColumnWidth,
-		offset,
-	}
+  return {
+    centerColumnWidth,
+    containerWidth,
+    leftColumnWidth,
+    offset,
+  }
 }

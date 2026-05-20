@@ -28,7 +28,10 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
 import {useLayoutBreakpoints} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import {
+  CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
+} from '#/components/Layout/const'
 
 /**
  * @deprecated use `Layout` components
@@ -99,7 +102,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    maxWidth: 600,
+    maxWidth: CENTER_COLUMN_WIDTH,
     marginLeft: 'auto',
     marginRight: 'auto',
   },
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   },
   containerScroll: {
     width: '100%',
-    maxWidth: 600,
+    maxWidth: CENTER_COLUMN_WIDTH,
     marginLeft: 'auto',
     marginRight: 'auto',
   },

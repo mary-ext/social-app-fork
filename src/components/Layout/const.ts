@@ -19,3 +19,8 @@ export const HEADER_SLOT_SIZE = 33
  * How far to shift the center column when in the tablet breakpoint
  */
 export const CENTER_COLUMN_OFFSET = -105
+
+/**
+ * How wide the center column is
+ */
+export const CENTER_COLUMN_WIDTH = 600
