@@ -1,23 +1,16 @@
-a web-only fork of `bluesky-social/social-app`. native code, Expo, Sentry, GrowthBook, analytics,
-Age Assurance, regional moderation, and the non-English locale matrix have been stripped; the
-`@bsky.app/*` micro-packages are in-housed under `src/`. the long-form execution plan that got the
-codebase here lives in `ROADMAP.md` (complete).
+a fork of Bluesky app, gutted down to only support web platform, with some features stripped.
 
 ## development notes
 
 ### project management
 
 - Node.js and pnpm are managed by mise
-- `pnpm dev` starts the dev server (rsbuild)
-- `pnpm build-web` runs `pnpm typecheck` then `rsbuild build`
-- `pnpm lint` runs ESLint (flat config plus the in-repo `eslint-plugin-bsky-internal`)
-- `pnpm typecheck` runs `tsgo` against `tsconfig.json`, which spans all of `src/` — not just
-  web-resolved files
-- after editing any file that uses the localization macros (`<Trans>`, `msg`, `t`), run
-  `pnpm intl:build`. `messages.po` records a reference for every macro, so even edits that only
-  shift line numbers leave the catalogs stale until you regenerate them
-- check the in-tree shims under `src/shims/` and the existing dependency list before adding a new
-  package; local web shims for Expo and native APIs already exist for most surfaces
+- start the dev server with `pnpm dev` (rsbuild)
+- build with `pnpm build` (rsbuild)
+- format with `pnpm format` (oxfmt)
+- lint with `pnpm lint` (eslint)
+- typecheck with `pnpm typecheck` (tsgo)
+- check `pnpm view <package>` before adding a new dependency
 
 ### code writing
 

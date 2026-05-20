@@ -4,10 +4,8 @@
 	"private": true,
 	"scripts": {
 		"postinstall": "pnpm intl:compile-if-needed",
-		"web": "pnpm dev",
 		"dev": "rsbuild dev",
-		"build-web": "pnpm typecheck && rsbuild build",
-		"build": "pnpm build-web",
+		"build": "pnpm typecheck && rsbuild build",
 		"preview": "rsbuild preview",
 		"lint": "eslint --cache --quiet src",
 		"format": "oxfmt",
