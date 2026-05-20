@@ -1,6 +1,7 @@
 import { AtUri } from '@atproto/api';
 
 import { BSKY_FEED_OWNER_DIDS } from '#/lib/constants';
+
 import { type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 
 let debugTopics = '';

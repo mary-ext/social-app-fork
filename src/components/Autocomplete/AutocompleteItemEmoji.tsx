@@ -1,6 +1,9 @@
 import { SiftItem } from '#/lib/sift';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
+
 import { type AutocompleteItemProps } from './types';
 
 export function AutocompleteItemEmoji({ active, props, item }: AutocompleteItemProps) {

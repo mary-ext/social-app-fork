@@ -4,10 +4,14 @@ import { type AppBskyFeedDefs } from '@atproto/api';
 import throttle from 'lodash.throttle';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
-import { Logger } from '#/logger';
+
 import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
 import { type FeedDescriptor, type FeedPostSliceItem } from '#/state/queries/post-feed';
+
+import { Logger } from '#/logger';
+
 import * as PostFeed from '#/view/com/posts/PostFeed';
+
 import { useAgent } from './session';
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS];

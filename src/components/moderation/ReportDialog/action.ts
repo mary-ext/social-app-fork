@@ -2,8 +2,10 @@ import { type $Typed, type ChatBskyConvoDefs, type ComAtprotoModerationCreateRep
 import { useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
-import { logger } from '#/logger';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { NEW_TO_OLD_REASONS_MAP } from './const';
 import { type ReportState } from './state';
 import { type ParsedReportSubject } from './types';

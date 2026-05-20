@@ -4,7 +4,9 @@ import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { Text } from '#/components/Typography';
 

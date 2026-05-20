@@ -19,7 +19,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { enforceLen } from '#/lib/strings/helpers';
 import { getStarterPackOgCard, parseStarterPackUri } from '#/lib/strings/starter-pack';
-import { logger } from '#/logger';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -29,12 +29,18 @@ import {
 	useStarterPackQuery,
 } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { useWizardState, type WizardStep } from '#/screens/StarterPack/Wizard/State';
 import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails';
 import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
 import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import * as Layout from '#/components/Layout';
@@ -43,9 +49,11 @@ import { Loader } from '#/components/Loader';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
 import type * as bsky from '#/types/bsky';
+
 import { Provider } from './State';
 
 export function Wizard({

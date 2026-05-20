@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import * as persisted from '#/state/persisted';
+
 import { useAgent, useSession } from '../session';
 
 type StateContext = Map<string, boolean>;

@@ -4,8 +4,10 @@ import { RemoveScrollBar } from 'react-remove-scroll-bar';
 import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+
 import { type Modal as ModalIface } from '#/state/modals';
 import { useModalControls, useModals } from '#/state/modals';
+
 import * as UserAddRemoveLists from './UserAddRemoveLists';
 
 export function ModalsContainer() {

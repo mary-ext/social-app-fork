@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, type ButtonProps } from '#/components/Button';
 import { Text } from '#/components/Typography';
 

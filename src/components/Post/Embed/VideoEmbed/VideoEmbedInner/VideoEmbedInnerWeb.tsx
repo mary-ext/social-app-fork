@@ -5,7 +5,9 @@ import { useLingui } from '@lingui/react/macro';
 import type * as HlsTypes from 'hls.js';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+
 import { atoms as a } from '#/alf';
+
 import * as BandwidthEstimate from './bandwidth-estimate';
 import { Controls } from './web-controls/VideoControls';
 

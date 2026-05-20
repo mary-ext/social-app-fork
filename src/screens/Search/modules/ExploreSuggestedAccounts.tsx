@@ -5,13 +5,19 @@ import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData } from '@tanstack/react-query';
 
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
-import { logger } from '#/logger';
+
 import { usePreferencesQuery } from '#/state/queries/preferences';
+
+import { logger } from '#/logger';
+
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { boostInterests, InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SubtleHover } from '#/components/SubtleHover';
+
 import type * as bsky from '#/types/bsky';
 
 export function useLoadEnoughProfiles({

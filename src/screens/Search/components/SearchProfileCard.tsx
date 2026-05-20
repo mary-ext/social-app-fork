@@ -5,8 +5,11 @@ import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Link } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 

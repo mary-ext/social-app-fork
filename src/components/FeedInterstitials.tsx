@@ -6,15 +6,20 @@ import { useNavigation } from '@react-navigation/native';
 
 import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from '#/lib/animations/reanimatedCompat';
 import { type NavigationProp } from '#/lib/routes/types';
-import { logger } from '#/logger';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetPopularFeedsQuery } from '#/state/queries/feed';
 import { type FeedDescriptor } from '#/state/queries/post-feed';
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
 import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
+
 import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import * as FeedCard from '#/components/FeedCard';
@@ -25,6 +30,7 @@ import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 const DISMISS_ANIMATION_DURATION = 200;

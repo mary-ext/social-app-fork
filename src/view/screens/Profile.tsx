@@ -22,6 +22,7 @@ import { combinedDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 import { isInvalidHandle } from '#/lib/strings/handles';
 import { colors } from '#/lib/styles';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { listenSoftReset } from '#/state/events';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -30,16 +31,20 @@ import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useAgent, useSession } from '#/state/session';
+
 import { ProfileFeedgens } from '#/view/com/feeds/ProfileFeedgens';
 import { ProfileLists } from '#/view/com/lists/ProfileLists';
 import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { type ListRef } from '#/view/com/util/List';
+
 import { ProfileHeader, ProfileHeaderLoading } from '#/screens/Profile/Header';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';
 import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon } from '#/components/icons/CircleAndSquare';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { Heart2_Stroke1_Corner0_Rounded as HeartIcon } from '#/components/icons/Heart2';
@@ -49,6 +54,7 @@ import { VideoClip_Stroke1_Corner0_Rounded as VideoIcon } from '#/components/ico
 import * as Layout from '#/components/Layout';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
+
 import { navigate } from '#/Navigation';
 import { ExpoScrollForwarderView } from '#/shims/scroll-forwarder';
 

@@ -9,14 +9,18 @@ import {
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
+
 import { List, type ListRef } from '#/view/com/util/List';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { Divider } from '#/components/Divider';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { ListFooter } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import { LabelerLabelPreference } from '#/components/moderation/LabelPreference';
 import { Text } from '#/components/Typography';
+
 import { ErrorState } from '../ErrorState';
 import { type SectionRef } from './types';
 

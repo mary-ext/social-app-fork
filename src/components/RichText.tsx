@@ -3,8 +3,10 @@ import { type StyleProp, type TextStyle } from 'react-native';
 import { AppBskyRichtextFacet, RichText as RichTextAPI } from '@atproto/api';
 
 import { toShortUrl } from '#/lib/strings/url-helpers';
+
 import { atoms as a, flatten, type TextStyleProp } from '#/alf';
 import { isOnlyEmoji } from '#/alf/typography';
+
 import { InlineLinkText, type LinkProps } from '#/components/Link';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { RichTextTag } from '#/components/RichTextTag';

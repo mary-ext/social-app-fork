@@ -4,11 +4,16 @@ import { type AppBskyActorDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
 import { Link } from '#/view/com/util/Link';
 import { Text } from '#/view/com/util/text/Text';
+
 import { SearchProfileCard } from '#/screens/Search/components/SearchProfileCard';
+
 import { atoms as a } from '#/alf';
+
 import * as Layout from '#/components/Layout';
 
 let AutocompleteResults = ({

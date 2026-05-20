@@ -10,9 +10,13 @@ import Animated, {
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
 import { LANG_DROPDOWN_HITSLOP } from '#/lib/constants';
-import { codeToLanguageName } from '#/locale/helpers';
+
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
+
+import { codeToLanguageName } from '#/locale/helpers';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, type ButtonProps } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';

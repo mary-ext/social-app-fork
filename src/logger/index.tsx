@@ -4,6 +4,7 @@ import { add } from '#/logger/logDump';
 import { consoleTransport } from '#/logger/transports/console';
 import { LogContext, LogLevel, type Metadata, type Transport } from '#/logger/types';
 import { enabledLogLevels } from '#/logger/util';
+
 import { ENV, LOG_DEBUG, LOG_LEVEL } from '#/env';
 
 const TRANSPORTS: Transport[] = (function configureTransports() {

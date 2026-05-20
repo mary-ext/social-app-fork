@@ -2,11 +2,15 @@ import { View } from 'react-native';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { logger } from '#/logger';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -16,6 +20,7 @@ import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { InviteLinkDialog } from './InviteLinkDialog';
 
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {

@@ -6,14 +6,19 @@ import { Trans } from '@lingui/react/macro';
 import { useA11y } from '#/state/a11y';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useActorSearch } from '#/state/queries/actor-search';
+
 import { List } from '#/view/com/util/List';
+
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { SearchInput } from '#/components/forms/SearchInput';
 import { Loader } from '#/components/Loader';
 import { ScreenTransition } from '#/components/ScreenTransition';
 import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Typography';
+
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
 import type * as bsky from '#/types/bsky';
 

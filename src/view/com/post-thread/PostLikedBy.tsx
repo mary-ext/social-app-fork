@@ -4,11 +4,15 @@ import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useLikedByQuery } from '#/state/queries/post-liked-by';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+
+import { logger } from '#/logger';
+
 import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
 import { List } from '#/view/com/util/List';
+
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
 function renderItem({ item, index }: { item: GetLikes.Like; index: number }) {

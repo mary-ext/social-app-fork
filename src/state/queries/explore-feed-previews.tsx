@@ -3,10 +3,11 @@ import { type AppBskyActorDefs, AppBskyFeedDefs, AtUri, moderatePost } from '@at
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
+import { FeedTuner } from '#/lib/api/feed-manip';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
-import { FeedTuner } from '#/lib/api/feed-manip';
 import { cleanError } from '#/lib/strings/errors';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type FeedPostSlice, type FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';

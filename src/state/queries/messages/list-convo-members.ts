@@ -3,10 +3,12 @@ import { type ChatBskyActorDefs, ChatBskyConvoDefs } from '@atproto/api';
 import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
+
 import { useMessagesEventBus } from '#/state/messages/events';
 import { STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
 import { useAgent } from '#/state/session';
+
 import * as bsky from '#/types/bsky';
 
 const RQKEY_ROOT = 'listConvoMembers';

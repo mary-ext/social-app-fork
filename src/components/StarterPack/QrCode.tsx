@@ -7,9 +7,12 @@ import { Trans } from '@lingui/react/macro';
 
 import { Logo } from '#/view/icons/Logo';
 import { Logotype } from '#/view/icons/Logotype';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { LinearGradientBackground } from '#/components/LinearGradientBackground';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 export function QrCode({

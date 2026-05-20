@@ -3,10 +3,14 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+
+import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
+
 import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
-import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
+
 import { atoms as a } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
@@ -16,6 +20,7 @@ import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icon
 import * as Layout from '#/components/Layout';
 import * as Select from '#/components/Select';
 import { Text } from '#/components/Typography';
+
 import * as SettingsList from './components/SettingsList';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(

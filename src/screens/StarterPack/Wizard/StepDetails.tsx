@@ -4,8 +4,11 @@ import { Trans } from '@lingui/react/macro';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as TextField from '#/components/forms/TextField';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { ScreenTransition } from '#/components/ScreenTransition';

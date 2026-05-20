@@ -4,7 +4,9 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { shareUrl } from '#/lib/sharing';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { type DialogControlProps } from '#/components/Dialog';
@@ -12,6 +14,7 @@ import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components
 import { QrCode_Stroke2_Corner0_Rounded as QrCodeIcon } from '#/components/icons/QrCode';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 
 interface Props {

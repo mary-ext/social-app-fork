@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { GIF_KLIPY_FEATURED, GIF_KLIPY_SEARCH } from '#/lib/constants';
+
 import { type Gif } from '#/features/gifPicker/types';
 import { getLocales } from '#/shims/localization';
 

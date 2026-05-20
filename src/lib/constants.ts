@@ -2,6 +2,7 @@ import { type Insets } from 'react-native';
 import { type AppBskyActorDefs, BSKY_LABELER_DID } from '@atproto/api';
 
 import { type ProxyHeaderValue } from '#/state/session/agent';
+
 import { BLUESKY_PROXY_DID, CHAT_PROXY_DID } from '#/env';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';

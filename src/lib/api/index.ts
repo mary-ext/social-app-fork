@@ -23,15 +23,20 @@ import * as Hasher from 'multiformats/hashes/hasher';
 
 import { isNetworkError } from '#/lib/strings/errors';
 import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip';
-import { logger } from '#/logger';
+
 import { compressImage } from '#/state/gallery';
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
 import {
 	createThreadgateRecord,
 	threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate';
+
+import { logger } from '#/logger';
+
 import { type EmbedDraft, type PostDraft, type ThreadDraft } from '#/view/com/composer/state/composer';
+
 import * as bsky from '#/types/bsky';
+
 import { createGIFDescription } from '../gif-alt-text';
 import { uploadBlob } from './upload-blob';
 

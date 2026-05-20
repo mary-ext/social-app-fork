@@ -12,11 +12,15 @@ import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -25,6 +29,7 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 export function SubscribeProfileDialog({

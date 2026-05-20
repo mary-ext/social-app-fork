@@ -5,12 +5,16 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
+
 import { type ListMethods } from '#/view/com/util/List';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { canBeAddedToGroup, canBeMessaged } from '#/components/dms/util';
@@ -25,7 +29,9 @@ import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/compon
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
+
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
 import { GroupChatProfileCard } from './components/GroupChatProfileCard';

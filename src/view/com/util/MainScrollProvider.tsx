@@ -10,6 +10,7 @@ import {
 	withSpring,
 } from '#/lib/animations/reanimatedCompat';
 import { ScrollProvider } from '#/lib/ScrollContext';
+
 import { useShellLayout } from '#/state/shell/shell-layout';
 
 const WEB_HIDE_SHELL_THRESHOLD = 200;

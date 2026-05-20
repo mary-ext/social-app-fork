@@ -3,8 +3,11 @@ import EmojiPicker from '@emoji-mart/react';
 import { DropdownMenu } from 'radix-ui';
 
 import { useA11y } from '#/state/a11y';
+
 import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
+
 import { atoms as a, flatten } from '#/alf';
+
 import * as Menu from '../Menu';
 import { useWebPreloadEmoji } from './preload';
 import { type Emoji, type PickerProps, type RootProps, type TriggerProps } from './types';

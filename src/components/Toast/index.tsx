@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid/non-secure';
 import { toast as sonner, Toaster } from 'sonner';
 
 import { atoms as a } from '#/alf';
+
 import { DURATION } from '#/components/Toast/const';
 import {
 	Icon as ToastIcon,

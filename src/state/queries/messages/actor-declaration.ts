@@ -2,8 +2,10 @@ import type AtpAgent from '@atproto/api';
 import { type AppBskyActorDefs, type ChatBskyActorDeclaration } from '@atproto/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { logger } from '#/logger';
 import { useAgent, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { RQKEY as PROFILE_RKEY } from '../profile';
 
 export function useUpdateActorDeclaration({

@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';
 import {
 	useListMembershipAddMutation,
@@ -14,7 +14,11 @@ import {
 } from '#/state/queries/list-memberships';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { AvatarStack } from '#/components/AvatarStack';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -25,6 +29,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;

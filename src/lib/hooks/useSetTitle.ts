@@ -3,6 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
 import { bskyTitle } from '#/lib/strings/headings';
+
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 
 export function useSetTitle(title?: string) {

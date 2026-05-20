@@ -11,14 +11,19 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePrefetchProfileQuery, useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { formatCount } from '#/view/com/util/numeric/format';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useFollowMethods } from '#/components/hooks/useFollowMethods';
 import { useRichText } from '#/components/hooks/useRichText';
@@ -32,9 +37,11 @@ import { Portal } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
+
 import { type ProfileHoverCardProps } from './types';
 
 const floatingMiddlewares = [

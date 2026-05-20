@@ -8,8 +8,11 @@ import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from '#/lib/moderation/useLabelInfo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+
 import { useLabelDefinitions } from '#/state/preferences';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import {
 	ModerationDetailsDialog,

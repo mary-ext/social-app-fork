@@ -3,10 +3,13 @@ import { type AppBskyFeedDefs } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import { isGifEmbed } from '#/lib/strings/embed-player';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
+
 import { Image } from '#/shims/image';
 import * as bsky from '#/types/bsky';
 

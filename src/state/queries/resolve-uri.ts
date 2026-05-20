@@ -3,6 +3,7 @@ import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query'
 
 import { STALE } from '#/state/queries';
 import { useAgent } from '#/state/session';
+
 import { useUnstableProfileViewCache } from './profile';
 
 const RQKEY_ROOT = 'resolved-did';

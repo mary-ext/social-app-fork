@@ -9,6 +9,7 @@ import {
 	setFontScale as persistFontScale,
 } from '#/alf/fonts';
 import { themes } from '#/alf/themes';
+
 import { type Device } from '#/storage';
 
 export { atoms } from '#/alf/atoms';

@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
 
 export function UserLabel({ message }: { message: string }) {

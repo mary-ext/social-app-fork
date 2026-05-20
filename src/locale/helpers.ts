@@ -3,6 +3,7 @@ import * as bcp47Match from 'bcp-47-match';
 import lande from 'lande';
 
 import { hasProp } from '#/lib/type-guards';
+
 import { AppLanguage, type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
 
 export function code2ToCode3(lang: string): string {

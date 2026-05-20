@@ -6,13 +6,17 @@ import { Trans } from '@lingui/react/macro';
 import { isReasonFeedSource, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { useSession } from '#/state/session';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
 import { Link } from '#/components/Link';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
+
 import { FeedNameText } from '../util/FeedInfoText';
 
 export function PostFeedReason({

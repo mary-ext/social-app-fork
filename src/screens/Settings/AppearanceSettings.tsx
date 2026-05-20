@@ -3,8 +3,11 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import Animated, { LayoutAnimationConfig } from '#/lib/animations/reanimatedCompat';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
+
 import { type Alf, atoms as a, useAlf, useTheme } from '#/alf';
+
 import * as SegmentedControl from '#/components/forms/SegmentedControl';
 import { type Props as SVGIconProps } from '#/components/icons/common';
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
@@ -13,6 +16,7 @@ import { TextSize_Stroke2_Corner0_Rounded as TextSize } from '#/components/icons
 import { TitleCase_Stroke2_Corner0_Rounded as Aa } from '#/components/icons/TitleCase';
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
+
 import * as SettingsList from './components/SettingsList';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>;

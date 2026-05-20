@@ -5,8 +5,11 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { makeListLink, makeProfileLink } from '#/lib/routes/links';
+
 import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { useDialogControl } from '#/components/Dialog';
@@ -20,6 +23,7 @@ import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/G
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 interface WhoCanReplyProps {

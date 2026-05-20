@@ -18,7 +18,7 @@ import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { isNetworkError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { listenPostCreated } from '#/state/events';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -35,10 +35,15 @@ import {
 } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { List, type ListRef } from '#/view/com/util/List';
 import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
+
 import { useBreakpoints } from '#/alf';
+
 import { SuggestedFollows } from '#/components/FeedInterstitials';
 import {
 	PostFeedVideoGridRow,
@@ -46,7 +51,9 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow';
 import { TrendingInterstitial } from '#/components/interstitials/Trending';
 import { TrendingVideos as TrendingVideosInterstitial } from '#/components/interstitials/TrendingVideos';
+
 import { isStatusStillActive, isStatusValidForViewers, useLiveNowConfig } from '#/features/liveNow';
+
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { DiscoverFallbackHeader } from './DiscoverFallbackHeader';
 import { FeedShutdownMsg } from './FeedShutdownMsg';

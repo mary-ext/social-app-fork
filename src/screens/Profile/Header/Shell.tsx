@@ -13,22 +13,28 @@ import Animated, {
 import { BACK_HITSLOP } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { type Shadow } from '#/state/cache/types';
 import { useSession } from '#/state/session';
+
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { UserBanner } from '#/view/com/util/UserBanner';
+
 import { atoms as a, useTheme, utils } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { useLightboxControls } from '#/components/Lightbox/state';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
+
 import { useActorStatus } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+
 import { GrowableAvatar } from './GrowableAvatar';
 import { GrowableBanner } from './GrowableBanner';
 

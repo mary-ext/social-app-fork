@@ -3,10 +3,13 @@ import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useVerificationCreateMutation } from '#/state/queries/verification/useVerificationCreateMutation';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useBreakpoints } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -16,6 +19,7 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+
 import type * as bsky from '#/types/bsky';
 
 export function VerificationCreatePrompt({

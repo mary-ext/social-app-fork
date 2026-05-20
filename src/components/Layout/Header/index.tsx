@@ -5,8 +5,11 @@ import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_30 } from '#/lib/constants';
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { useSetDrawerOpen } from '#/state/shell';
+
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
+
 import {
 	atoms as a,
 	type TextStyleProp,
@@ -15,6 +18,7 @@ import {
 	useLayoutBreakpoints,
 	useTheme,
 } from '#/alf';
+
 import { Button, ButtonIcon, type ButtonProps } from '#/components/Button';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';

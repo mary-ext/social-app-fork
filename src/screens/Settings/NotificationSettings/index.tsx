@@ -3,8 +3,11 @@ import { type AppBskyNotificationDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type AllNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
+
 import { atoms as a } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
@@ -21,6 +24,7 @@ import {
 } from '#/components/icons/Repost';
 import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes';
 import * as Layout from '#/components/Layout';
+
 import * as SettingsList from '../components/SettingsList';
 import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle';
 

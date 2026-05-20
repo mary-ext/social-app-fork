@@ -1,9 +1,12 @@
 import { View } from 'react-native';
 
 import { SiftItem } from '#/lib/sift';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { Text } from '#/components/Typography';
+
 import { type AutocompleteItemProps } from './types';
 
 export function AutocompleteItemSearch({ active, isFirst, isLast, props, item }: AutocompleteItemProps) {

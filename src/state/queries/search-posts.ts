@@ -10,6 +10,7 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useAgent } from '#/state/session';
+
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
 const searchPostsQueryKeyRoot = 'search-posts';

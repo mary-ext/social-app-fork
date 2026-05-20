@@ -3,15 +3,19 @@ import { Trans } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { isBotAccount } from '#/components/BotBadge';
 import { useDialogControl } from '#/components/Dialog';
 import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { Bot_Stroke as RobotIcon } from '#/components/icons/Bot';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
 import * as Layout from '#/components/Layout';
+
 import { ChangeHandleDialog } from './components/ChangeHandleDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
 

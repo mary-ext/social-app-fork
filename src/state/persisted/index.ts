@@ -1,8 +1,11 @@
 import { EventEmitter } from 'eventemitter3';
 
 import BroadcastChannel from '#/lib/broadcast';
-import { logger } from '#/logger';
+
 import { defaults, type Schema, tryParse, tryStringify } from '#/state/persisted/schema';
+
+import { logger } from '#/logger';
+
 import { type PersistedApi } from './types';
 import { normalizeData } from './util';
 

@@ -4,11 +4,15 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
 import { type Dimensions } from '#/lib/media/types';
+
 import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+
 import { atoms as a, useTheme, utils } from '#/alf';
+
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { Text } from '#/components/Typography';
+
 import { Image, type ImageStyle } from '#/shims/image';
 
 type EventFunction = (index: number) => void;

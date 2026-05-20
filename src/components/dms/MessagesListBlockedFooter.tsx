@@ -6,7 +6,9 @@ import { Trans } from '@lingui/react/macro';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { Divider } from '#/components/Divider';
@@ -14,6 +16,7 @@ import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { ReportConversationPrompt } from '#/components/dms/ReportConversationPrompt';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 export function MessagesListBlockedFooter({

@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';

@@ -4,10 +4,14 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
+
 import { type SessionAccount, useSession } from '#/state/session';
+
 import { atoms as a } from '#/alf';
+
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+
 import { AccountList } from '../AccountList';
 import { Text } from '../Typography';
 

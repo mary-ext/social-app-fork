@@ -5,7 +5,9 @@ import { Trans } from '@lingui/react/macro';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/state/preferences/trending';
 import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';

@@ -11,17 +11,21 @@ import { useMinimalShellFooterTransform } from '#/lib/hooks/useMinimalShellTrans
 import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 import { useShellLayout } from '#/state/shell/shell-layout';
 import { useCloseAllActiveElements } from '#/state/util';
+
 import { Link } from '#/view/com/util/Link';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { Logo } from '#/view/icons/Logo';
 import { Logotype } from '#/view/icons/Logotype';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
@@ -43,6 +47,7 @@ import {
 	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message';
 import { Text } from '#/components/Typography';
+
 import { styles } from './BottomBarStyles';
 
 export function BottomBarWeb() {

@@ -12,16 +12,21 @@ import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { RQKEY, useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { List, type ListRef } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as FeedCard from '#/components/FeedCard';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { ListFooter } from '#/components/Lists';

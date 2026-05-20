@@ -3,6 +3,7 @@ import { type AppBskyUnspeccedGetTrends, hasMutedWord } from '@atproto/api';
 import { useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
+
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';

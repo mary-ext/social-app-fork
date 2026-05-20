@@ -4,11 +4,15 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+
 import { useKawaiiMode } from '#/state/preferences/kawaii';
+
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import { Logo } from '#/view/icons/Logo';
 import { Logotype } from '#/view/icons/Logotype';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { Button, ButtonText } from '#/components/Button';
 import * as Layout from '#/components/Layout';

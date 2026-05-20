@@ -8,7 +8,9 @@ import {
 	type OtherSelfLabel,
 	type SelfLabel,
 } from '#/lib/moderation';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';

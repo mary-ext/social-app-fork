@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+
 import { type Props } from '#/components/icons/common';
 import { type Growth_Stroke2_Corner0_Rounded as Growth } from '#/components/icons/Growth';
 

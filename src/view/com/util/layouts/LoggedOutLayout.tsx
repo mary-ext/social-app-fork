@@ -4,7 +4,9 @@ import { useColorSchemeStyle } from '#/lib/hooks/useColorSchemeStyle';
 import { useIsKeyboardVisible } from '#/lib/hooks/useIsKeyboardVisible';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+
 import { atoms as a } from '#/alf';
+
 import { Text } from '../text/Text';
 
 export const LoggedOutLayout = ({

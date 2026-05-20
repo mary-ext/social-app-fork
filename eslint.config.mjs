@@ -1,20 +1,19 @@
 // @ts-check
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
+import tsParser from '@typescript-eslint/parser';
+import bskyInternal from 'eslint-plugin-bsky-internal';
+import importX from 'eslint-plugin-import-x';
+import lingui from 'eslint-plugin-lingui';
 import react from 'eslint-plugin-react';
+import reactCompiler from 'eslint-plugin-react-compiler';
 import reactHooks from 'eslint-plugin-react-hooks';
 // @ts-expect-error no types
 import reactNative from 'eslint-plugin-react-native';
 // @ts-expect-error no types
 import reactNativeA11y from 'eslint-plugin-react-native-a11y';
-import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import importX from 'eslint-plugin-import-x';
-import lingui from 'eslint-plugin-lingui';
-import reactCompiler from 'eslint-plugin-react-compiler';
-import bskyInternal from 'eslint-plugin-bsky-internal';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig(
 	/** Global ignores */
@@ -47,7 +46,6 @@ export default defineConfig(
 			react,
 			'react-native': reactNative,
 			'react-native-a11y': reactNativeA11y,
-			'simple-import-sort': simpleImportSort,
 			// @ts-expect-error - not sure why
 			lingui,
 			'react-compiler': reactCompiler,
@@ -121,44 +119,6 @@ export default defineConfig(
 			'react-hooks/purity': 'warn',
 			'react-hooks/refs': 'warn',
 			'react-hooks/immutability': 'warn',
-
-			/** Import sorting */
-			'simple-import-sort/imports': [
-				'error',
-				{
-					groups: [
-						// Side effect imports.
-						['^\\u0000'],
-						// Node.js builtins prefixed with `node:`.
-						['^node:'],
-						// Packages.
-						// Things that start with a letter (or digit or underscore), or `@` followed by a letter.
-						// React/React Native prioritized, followed by expo
-						// Followed by all packages excluding unprefixed relative ones
-						[
-							'^(react\\/(.*)$)|^(react$)|^(react-native(.*)$)',
-							'^(expo(.*)$)|^(expo$)',
-							'^(?!(?:alf|components|lib|locale|logger|platform|screens|state|view)(?:$|\\/))@?\\w',
-						],
-						// Relative imports.
-						// Ideally, anything that starts with a dot or #
-						// due to unprefixed relative imports being used, we whitelist the relative paths we use
-						// (?:$|\\/) matches end of string or /
-						[
-							'^(?:#\\/)?(?:lib|state|logger|platform|locale)(?:$|\\/)',
-							'^(?:#\\/)?view(?:$|\\/)',
-							'^(?:#\\/)?screens(?:$|\\/)',
-							'^(?:#\\/)?alf(?:$|\\/)',
-							'^(?:#\\/)?components(?:$|\\/)',
-							'^#\\/',
-							'^\\.',
-						],
-						// anything else - hopefully we don't have any of these
-						['^'],
-					],
-				},
-			],
-			'simple-import-sort/exports': 'error',
 
 			/** Import linting */
 			'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],

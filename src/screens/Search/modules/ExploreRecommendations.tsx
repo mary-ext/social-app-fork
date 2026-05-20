@@ -7,7 +7,9 @@ import {
 	useTrendingTopics,
 } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
+
 import { atoms as a, useGutters, useTheme } from '#/alf';
+
 import { Hashtag_Stroke2_Corner0_Rounded } from '#/components/icons/Hashtag';
 import { TrendingTopic, TrendingTopicLink, TrendingTopicSkeleton } from '#/components/TrendingTopics';
 import { Text } from '#/components/Typography';

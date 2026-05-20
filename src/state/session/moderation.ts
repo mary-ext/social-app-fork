@@ -1,6 +1,7 @@
 import { Agent, BSKY_LABELER_DID } from '@atproto/api';
 
 import { IS_TEST_USER } from '#/lib/constants';
+
 import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities';
 import { type BskyAppAgent } from './agent';
 import { readLabelers } from './agent-config';

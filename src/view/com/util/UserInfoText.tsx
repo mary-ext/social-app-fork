@@ -4,11 +4,15 @@ import { type AppBskyActorGetProfile } from '@atproto/api';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { STALE } from '#/state/queries';
 import { useProfileQuery } from '#/state/queries/profile';
+
 import { atoms as a } from '#/alf';
+
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import { LoadingPlaceholder } from './LoadingPlaceholder';
 
 export function UserInfoText({

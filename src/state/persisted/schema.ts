@@ -1,8 +1,10 @@
 import { z } from 'zod';
 
+import { logger } from '#/logger';
+
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 import { AppLanguage } from '#/locale/languages';
-import { logger } from '#/logger';
+
 import { PlatformInfo } from '#/shims/bluesky-swiss-army';
 
 const externalEmbedOptions = ['show', 'hide'] as const;

@@ -4,14 +4,18 @@ import { type AppBskyFeedDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
+
 import { type Shadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useRequireAuth } from '#/state/session';
+
 import { useTheme } from '#/alf';
+
 import { Bookmark, BookmarkFilled } from '#/components/icons/Bookmark';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as toast from '#/components/Toast';
+
 import { PostControlButton, PostControlButtonIcon } from './PostControlButton';
 
 export const BookmarkButton = memo(function BookmarkButton({

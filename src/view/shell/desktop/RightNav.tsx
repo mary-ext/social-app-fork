@@ -5,14 +5,18 @@ import { useNavigation } from '@react-navigation/native';
 
 import { useKawaiiMode } from '#/state/preferences/kawaii';
 import { useSession } from '#/state/session';
+
 import { DesktopFeeds } from '#/view/shell/desktop/Feeds';
 import { DesktopSearch } from '#/view/shell/desktop/Search';
 import { SidebarTrendingTopics } from '#/view/shell/desktop/SidebarTrendingTopics';
+
 import { atoms as a, useGutters, useLayoutBreakpoints, useTheme } from '#/alf';
+
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
 import { CENTER_COLUMN_OFFSET } from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import { SOURCE_CODE_URL } from '#/env/common';
 
 type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position' | 'transform'> & {

@@ -5,9 +5,12 @@ import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { canBeMessaged } from '#/components/dms/util';
 import { Message_Stroke2_Corner0_Rounded as Message } from '#/components/icons/Message';

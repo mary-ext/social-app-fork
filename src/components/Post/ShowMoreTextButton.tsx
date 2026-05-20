@@ -4,7 +4,9 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
+
 import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { Text } from '#/components/Typography';
 

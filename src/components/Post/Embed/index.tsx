@@ -12,12 +12,16 @@ import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { Link } from '#/view/com/util/Link';
 import { PostMeta } from '#/view/com/util/PostMeta';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
@@ -25,8 +29,10 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
+
 import * as bsky from '#/types/bsky';
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/bsky/post';
+
 import { ExternalEmbed } from './ExternalEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
 import { ImageEmbed } from './ImageEmbed';

@@ -5,12 +5,17 @@ import { useLingui } from '@lingui/react/macro';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePostQuotesQuery } from '#/state/queries/post-quotes';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
+
+import { logger } from '#/logger';
+
 import { Post } from '#/view/com/post/Post';
+
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+
 import { List } from '../util/List';
 
 function renderItem({ item, index }: { item: { post: AppBskyFeedDefs.PostView }; index: number }) {

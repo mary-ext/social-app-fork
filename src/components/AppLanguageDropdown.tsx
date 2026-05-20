@@ -2,11 +2,14 @@ import { useCallback } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { sanitizeAppLanguageSetting } from '#/locale/helpers';
-import { APP_LANGUAGES } from '#/locale/languages';
 import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 import { resetPostsFeedQueries } from '#/state/queries/post-feed';
+
+import { sanitizeAppLanguageSetting } from '#/locale/helpers';
+import { APP_LANGUAGES } from '#/locale/languages';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import * as Select from '#/components/Select';
 

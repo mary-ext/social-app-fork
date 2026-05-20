@@ -4,14 +4,19 @@ import { Trans } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { atoms as a } from '#/alf';
+
 import * as Admonition from '#/components/Admonition';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon } from '#/components/icons/EyeSlash';
 import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
+
 import { PwiOptOut } from './components/PwiOptOut';
 import { ItemTextWithSubtitle } from './NotificationSettings/components/ItemTextWithSubtitle';
 

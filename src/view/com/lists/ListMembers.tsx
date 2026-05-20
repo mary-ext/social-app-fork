@@ -4,19 +4,25 @@ import { type AppBskyGraphDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useModalControls } from '#/state/modals';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { List, type ListRef } from '#/view/com/util/List';
 import { ProfileCardFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { ListFooter } from '#/components/Lists';
 import * as ProfileCard from '#/components/ProfileCard';
+
 import type * as bsky from '#/types/bsky';
 
 const LOADING_ITEM = { _reactKey: '__loading__' } as const;

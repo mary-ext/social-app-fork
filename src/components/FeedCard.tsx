@@ -5,7 +5,7 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { precacheFeedFromGeneratorView } from '#/state/queries/feed';
 import {
 	useAddSavedFeedsMutation,
@@ -13,8 +13,13 @@ import {
 	useRemoveFeedMutation,
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
@@ -23,7 +28,9 @@ import * as Prompt from '#/components/Prompt';
 import { RichText, type RichTextProps } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
+
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from './icons/Trash';
 
 type Props = {

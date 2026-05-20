@@ -2,6 +2,7 @@ import { TextInput, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 

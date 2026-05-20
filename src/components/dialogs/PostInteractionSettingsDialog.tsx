@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useHaptics } from '#/lib/haptics';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { logger } from '#/logger';
+
 import { STALE } from '#/state/queries';
 import { useMyListsQuery } from '#/state/queries/my-lists';
 import { useGetPost } from '#/state/queries/post';
@@ -26,8 +26,13 @@ import {
 } from '#/state/queries/threadgate';
 import { PostThreadContextProvider, usePostThreadContext } from '#/state/queries/usePostThread';
 import { useAgent, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';

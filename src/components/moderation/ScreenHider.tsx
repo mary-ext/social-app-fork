@@ -7,8 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { CenteredView } from '#/view/com/util/Views';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import {
 	ModerationDetailsDialog,

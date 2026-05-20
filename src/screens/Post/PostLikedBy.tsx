@@ -2,8 +2,11 @@ import { Plural, Trans } from '@lingui/react/macro';
 
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
+
 import { usePostQuery } from '#/state/queries/post';
+
 import { PostLikedBy as PostLikedByComponent } from '#/view/com/post-thread/PostLikedBy';
+
 import * as Layout from '#/components/Layout';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostLikedBy'>;

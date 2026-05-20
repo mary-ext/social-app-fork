@@ -2,9 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { AccountList } from '#/components/AccountList';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';

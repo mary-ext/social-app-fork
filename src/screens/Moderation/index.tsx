@@ -5,7 +5,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
-import { logger } from '#/logger';
+
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
 	useMyLabelersQuery,
@@ -14,7 +14,11 @@ import {
 	usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences';
 import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
+
 import * as Admonition from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';

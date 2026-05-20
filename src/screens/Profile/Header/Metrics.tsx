@@ -4,9 +4,13 @@ import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { type Shadow } from '#/state/cache/types';
+
 import { formatCount } from '#/view/com/util/numeric/format';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 

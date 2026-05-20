@@ -3,9 +3,13 @@ import { Pressable, View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { SubtleHover } from '#/components/SubtleHover';

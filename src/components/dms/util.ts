@@ -1,7 +1,9 @@
 import { type $Typed, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atproto/api';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
+
 import { logger } from '#/logger';
+
 import * as bsky from '#/types/bsky';
 
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000;

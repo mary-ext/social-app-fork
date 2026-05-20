@@ -13,15 +13,19 @@ import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
 import { useHaptics } from '#/lib/haptics';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { type Shadow, useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import * as tokens from '#/alf/tokens';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { useDialogControl } from '#/components/Dialog';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
@@ -41,7 +45,9 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
+
 import { useIsWithinSplitView } from './splitView/context';
 
 export const ChatListItemPortal = createPortalGroup();

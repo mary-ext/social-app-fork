@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { H1, Text } from '#/components/Typography';
 
 export function Spacing() {

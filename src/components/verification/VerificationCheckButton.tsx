@@ -2,7 +2,9 @@ import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { type Shadow } from '#/state/cache/types';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { useFullVerificationState } from '#/components/verification';
@@ -10,6 +12,7 @@ import { type FullVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import { VerificationsDialog } from '#/components/verification/VerificationsDialog';
 import { VerifierDialog } from '#/components/verification/VerifierDialog';
+
 import type * as bsky from '#/types/bsky';
 
 export function shouldShowVerificationCheckButton(state: FullVerificationState) {

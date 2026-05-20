@@ -4,17 +4,22 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { logger } from '#/logger';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { type ConvoWithDetails, type GroupConvoMember } from '#/components/dms/util';
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { MemberMenu } from './MemberMenu';
 import { StatusBadge } from './StatusBadge';
 import { SubtleHoverWrapper } from './SubtleHoverWrapper';

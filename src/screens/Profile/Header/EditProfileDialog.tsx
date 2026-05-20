@@ -6,13 +6,18 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
-import { logger } from '#/logger';
+
 import { type ImageMeta } from '#/state/gallery';
 import { useProfileUpdateMutation } from '#/state/queries/profile';
+
+import { logger } from '#/logger';
+
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { EditableUserAvatar } from '#/view/com/util/UserAvatar';
 import { UserBanner } from '#/view/com/util/UserBanner';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';

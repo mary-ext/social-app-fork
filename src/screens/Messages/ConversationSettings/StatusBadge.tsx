@@ -1,6 +1,7 @@
 import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { type TriggerChildProps } from '#/components/Menu/types';
 import { Text } from '#/components/Typography';
 

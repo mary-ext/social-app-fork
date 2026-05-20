@@ -2,6 +2,7 @@ import { type AppBskyGraphDefs } from '@atproto/api';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { accumulate } from '#/lib/async/accumulate';
+
 import { STALE } from '#/state/queries';
 import { useAgent, useSession } from '#/state/session';
 

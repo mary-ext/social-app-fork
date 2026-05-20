@@ -2,7 +2,9 @@ import { View } from 'react-native';
 import { AppBskyEmbedVideo } from '@atproto/api';
 
 import { type FeedPostSliceItem } from '#/state/queries/post-feed';
+
 import { atoms as a, useGutters } from '#/alf';
+
 import * as Grid from '#/components/Grid';
 import { VideoPostCard, VideoPostCardPlaceholder } from '#/components/VideoPostCard';
 

@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { type Props, useCommonSVGProps } from '#/components/icons/common';
 import { Loader_Stroke2_Corner0_Rounded as Icon } from '#/components/icons/Loader';
 

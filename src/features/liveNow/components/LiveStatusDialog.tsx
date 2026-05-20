@@ -9,9 +9,12 @@ import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
@@ -23,6 +26,7 @@ import * as Hider from '#/components/moderation/Hider';
 import { useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { Image } from '#/shims/image';
 import type * as bsky from '#/types/bsky';

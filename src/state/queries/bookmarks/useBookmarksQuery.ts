@@ -3,6 +3,7 @@ import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } 
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
 import { useAgent } from '#/state/session';
+
 import * as bsky from '#/types/bsky';
 
 export const bookmarksQueryKeyRoot = 'bookmarks';

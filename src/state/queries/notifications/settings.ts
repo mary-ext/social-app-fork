@@ -2,8 +2,10 @@ import { type AppBskyNotificationDefs } from '@atproto/api';
 import { t } from '@lingui/core/macro';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { logger } from '#/logger';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import * as Toast from '#/components/Toast';
 
 const RQKEY_ROOT = 'notification-settings';

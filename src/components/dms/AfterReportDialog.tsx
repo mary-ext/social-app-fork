@@ -5,10 +5,13 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useProfileBlockMutationQueue, useProfileQuery } from '#/state/queries/profile';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as Toggle from '#/components/forms/Toggle';

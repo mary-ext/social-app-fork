@@ -1,6 +1,7 @@
 import { Pressable } from 'react-native';
 
 import Animated, { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
+
 import { atoms as a } from '#/alf';
 
 export function GrowableBanner({

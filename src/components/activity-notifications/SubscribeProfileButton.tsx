@@ -4,14 +4,17 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon } from '#/components/icons/BellPlus';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import * as Tooltip from '#/components/Tooltip';
 import { Text } from '#/components/Typography';
+
 import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
 import type * as bsky from '#/types/bsky';
+
 import { SubscribeProfileDialog } from './SubscribeProfileDialog';
 
 export function SubscribeProfileButton({

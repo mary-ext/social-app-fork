@@ -2,6 +2,7 @@ import { type AppBskyGraphGetLists, moderateUserList } from '@atproto/api';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useAgent } from '#/state/session';
+
 import { useModerationOpts } from '../preferences/moderation-opts';
 
 const PAGE_SIZE = 30;

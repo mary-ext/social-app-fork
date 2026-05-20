@@ -3,6 +3,7 @@ import { type Emoji } from '@emoji-mart/data';
 import Fuse from 'fuse.js';
 
 import { useGetEmojis } from '#/lib/useGetEmojis';
+
 import { type AutocompleteEmoji } from '#/components/Autocomplete/types';
 
 /*

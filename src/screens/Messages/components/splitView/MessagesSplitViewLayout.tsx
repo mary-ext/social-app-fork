@@ -6,11 +6,14 @@ import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { type ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
 import { type FlatNavigatorParams, type NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
 import { ScrollProvider } from '#/lib/ScrollContext';
+
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
+
 import { useDialogControl } from '#/components/Dialog';
 import { NewChat } from '#/components/dms/dialogs/NewChatDialog';
 import { SCROLLBAR_OFFSET } from '#/components/Layout/const';
 import { LockScroll } from '#/components/LockScroll';
+
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
 import { SplitViewProvider } from './context';
 import { getMessagesSplitViewLayoutDimensions } from './layout-dimensions';

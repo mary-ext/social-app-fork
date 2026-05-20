@@ -17,14 +17,19 @@ import Animated, {
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSetLightStatusBar } from '#/state/shell/light-status-bar';
+
 import { usePagerHeaderContext } from '#/view/com/pager/PagerHeaderContext';
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Header } from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
+
 import { HeaderLabelerButtons, ProfileHeaderLabeler } from './ProfileHeaderLabeler';
 import { HeaderStandardButtons, ProfileHeaderStandard } from './ProfileHeaderStandard';
 

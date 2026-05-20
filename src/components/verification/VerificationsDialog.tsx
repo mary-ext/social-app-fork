@@ -5,10 +5,13 @@ import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -19,6 +22,7 @@ import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 import { type FullVerificationState } from '#/components/verification';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
+
 import type * as bsky from '#/types/bsky';
 
 export { useDialogControl } from '#/components/Dialog';

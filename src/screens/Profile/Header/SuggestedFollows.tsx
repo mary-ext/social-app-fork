@@ -1,5 +1,7 @@
 import { AccordionAnimation } from '#/lib/custom-animations/AccordionAnimation';
+
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
+
 import { ProfileGrid } from '#/components/FeedInterstitials';
 
 export function ProfileHeaderSuggestedFollows({

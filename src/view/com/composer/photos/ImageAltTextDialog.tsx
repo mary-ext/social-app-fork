@@ -4,15 +4,20 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { enforceLen } from '#/lib/strings/helpers';
+
 import { type ComposerImage } from '#/state/gallery';
+
 import { AltTextCounterWrapper } from '#/view/com/composer/AltTextCounterWrapper';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { type DialogControlProps } from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 
 type Props = {

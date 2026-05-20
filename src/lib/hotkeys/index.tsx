@@ -2,6 +2,7 @@ import { useLingui } from '@lingui/react/macro';
 import { HotkeysProvider, useHotkeys, useHotkeysContext } from 'react-hotkeys-hook';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+
 import { emitFocusSearch } from '#/state/events';
 import { useSession } from '#/state/session';
 

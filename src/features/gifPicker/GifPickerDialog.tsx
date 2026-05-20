@@ -3,8 +3,10 @@ import { type TextInput } from 'react-native';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import { type ListMethods } from '#/view/com/util/List';
+
 import * as Dialog from '#/components/Dialog';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
+
 import {
 	GIF_CATEGORIES,
 	type GifCategory,

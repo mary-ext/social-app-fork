@@ -1,4 +1,5 @@
 import Animated, { useAnimatedStyle } from '#/lib/animations/reanimatedCompat';
+
 import {
 	type KeyboardStickyViewProps,
 	useReanimatedKeyboardAnimation,

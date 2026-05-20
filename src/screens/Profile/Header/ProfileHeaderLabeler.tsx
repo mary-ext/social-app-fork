@@ -14,15 +14,20 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { MAX_LABELERS } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { isAppLabeler } from '#/lib/moderation';
-import { logger } from '#/logger';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type Shadow } from '#/state/cache/types';
 import { useLabelerSubscriptionMutation } from '#/state/queries/labeler';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useRequireAuth, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { type DialogOuterProps, useDialogControl } from '#/components/Dialog';
 import {
@@ -34,6 +39,7 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { ProfileHeaderDisplayName } from './DisplayName';
 import { EditProfileDialog } from './EditProfileDialog';
 import { ProfileHeaderHandle } from './Handle';

@@ -5,10 +5,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { until } from '#/lib/async/until';
 import { isNetworkError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { RQKEY } from '#/state/queries/profile';
 import { useAgent, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarning';
@@ -17,6 +21,7 @@ import { Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 import type * as bsky from '#/types/bsky';
 

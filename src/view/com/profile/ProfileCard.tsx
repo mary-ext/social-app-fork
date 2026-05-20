@@ -1,8 +1,11 @@
 import { type GestureResponderEvent, View } from 'react-native';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as ProfileCard from '#/components/ProfileCard';
+
 import type * as bsky from '#/types/bsky';
 
 export function ProfileCardWithFollowBtn({

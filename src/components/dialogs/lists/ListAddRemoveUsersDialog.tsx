@@ -5,6 +5,7 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import {
 	getMembership,
@@ -13,13 +14,16 @@ import {
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships';
+
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { type ProfileItem, SearchablePeopleList } from '#/components/dialogs/SearchablePeopleList';
 import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
+
 import type * as bsky from '#/types/bsky';
 
 export function ListAddRemoveUsersDialog({

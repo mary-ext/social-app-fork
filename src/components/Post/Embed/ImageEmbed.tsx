@@ -1,14 +1,18 @@
 import { InteractionManager, View } from 'react-native';
 
 import { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
+
 import { atoms as a, tokens } from '#/alf';
+
 import { AutoSizedImage } from '#/components/images/AutoSizedImage';
 import { Gallery } from '#/components/images/Gallery';
 import { useLightboxControls } from '#/components/Lightbox/state';
 import { type Dimensions } from '#/components/Lightbox/types';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
+
 import { Image } from '#/shims/image';
 import { type EmbedType } from '#/types/bsky/post';
+
 import { type CommonProps } from './types';
 
 export function ImageEmbed({

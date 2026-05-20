@@ -2,10 +2,13 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useAutoplayDisabled, useSetAutoplayDisabled } from '#/state/preferences';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/state/preferences/trending';
 import { useTrendingConfig } from '#/state/service-config';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import * as Toggle from '#/components/forms/Toggle';
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';

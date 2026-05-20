@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
+
+import { logger } from '#/logger';
+
 import * as Dialog from '#/components/Dialog';
 import { SearchablePeopleList } from '#/components/dialogs/SearchablePeopleList';
 import * as Toast from '#/components/Toast';

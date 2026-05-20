@@ -3,8 +3,11 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
+
 import { useSetExternalEmbedPref } from '#/state/preferences';
+
 import { atoms as a } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';

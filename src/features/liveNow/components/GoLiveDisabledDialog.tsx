@@ -5,9 +5,13 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { BLUESKY_MOD_SERVICE_HEADERS } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Loader } from '#/components/Loader';

@@ -3,8 +3,10 @@ import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import { MEMBER_LIMIT } from './constants';
 
 export function MembersAndRequests({

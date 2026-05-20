@@ -3,14 +3,17 @@ import { type TextStyle, View } from 'react-native';
 import { type AppBskyActorDefs, sanitizeMutedWordValue } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import {
 	usePreferencesQuery,
 	useRemoveMutedWordMutation,
 	useUpdateMutedWordMutation,
 	useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';

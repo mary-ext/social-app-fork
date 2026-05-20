@@ -2,12 +2,16 @@ import { useCallback, useMemo, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
+import { useLanguagePrefs } from '#/state/preferences/languages';
+
 import { languageName } from '#/locale/helpers';
 import { type Language, LANGUAGES, LANGUAGES_MAP_CODE2 } from '#/locale/languages';
-import { useLanguagePrefs } from '#/state/preferences/languages';
+
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';

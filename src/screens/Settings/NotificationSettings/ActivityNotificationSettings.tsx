@@ -7,13 +7,18 @@ import { Trans } from '@lingui/react/macro';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { type AllNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActivitySubscriptionsQuery } from '#/state/queries/activity-subscriptions';
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
+
+import { logger } from '#/logger';
+
 import { List } from '#/view/com/util/List';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import * as Admonition from '#/components/Admonition';
 import { Button, ButtonText } from '#/components/Button';
@@ -28,7 +33,9 @@ import { ListFooter } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
+
 import * as SettingsList from '../components/SettingsList';
 import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle';
 import { PreferenceControls } from './components/PreferenceControls';

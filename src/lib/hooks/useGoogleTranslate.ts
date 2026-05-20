@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
+
 import { getTranslatorLink } from '#/locale/helpers';
 
 /** @deprecated Will always link out to Google Translate. Prefer `useTranslate`. */

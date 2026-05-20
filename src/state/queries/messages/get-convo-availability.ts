@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
+
 import { useAgent } from '#/state/session';
+
 import { STALE } from '..';
 
 const RQKEY_ROOT = 'convo-availability';

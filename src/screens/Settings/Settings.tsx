@@ -10,6 +10,7 @@ import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { clearStorage } from '#/state/persisted';
 import { useDebugFeedContextEnabled, useSetDebugFeedContextEnabled } from '#/state/preferences/debug';
@@ -18,9 +19,13 @@ import { useDeleteActorDeclaration } from '#/state/queries/messages/actor-declar
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
+
 import { AvatarStackWithFetch } from '#/components/AvatarStack';
 import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
@@ -50,6 +55,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';

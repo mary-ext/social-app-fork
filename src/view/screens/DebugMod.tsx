@@ -20,16 +20,21 @@ import { useLingui } from '@lingui/react/macro';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+
 import { moderationOptsOverrideContext, useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type FeedNotification } from '#/state/queries/notifications/types';
 import { groupNotifications, shouldFilterNotif } from '#/state/queries/notifications/util';
 import { threadPost } from '#/state/queries/usePostThread/views';
 import { useSession } from '#/state/session';
+
 import { CenteredView, ScrollView } from '#/view/com/util/Views';
+
 import { ThreadItemAnchor } from '#/screens/PostThread/components/ThreadItemAnchor';
 import { ThreadItemPost } from '#/screens/PostThread/components/ThreadItemPost';
 import { ProfileHeaderStandard } from '#/screens/Profile/Header/ProfileHeaderStandard';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Divider } from '#/components/Divider';
 import * as Toggle from '#/components/forms/Toggle';
@@ -42,6 +47,7 @@ import {
 import * as Layout from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
 import { H1, H3, P, Text } from '#/components/Typography';
+
 import { ScreenHider } from '../../components/moderation/ScreenHider';
 import { NotificationFeedItem } from '../com/notifications/NotificationFeedItem';
 import { PostFeedItem } from '../com/posts/PostFeedItem';

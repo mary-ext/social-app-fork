@@ -3,10 +3,14 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
+
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 import { useSetVerificationPrefsMutation } from '#/state/queries/preferences';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { atoms as a, useGutters } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import * as Toggle from '#/components/forms/Toggle';
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';

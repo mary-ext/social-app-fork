@@ -9,7 +9,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
-import { logger } from '#/logger';
+
 import { type Shadow } from '#/state/cache/types';
 import { useModalControls } from '#/state/modals';
 import {
@@ -19,7 +19,11 @@ import {
 	useProfileMuteMutationQueue,
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { EventStopper } from '#/view/com/util/EventStopper';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
@@ -48,6 +52,7 @@ import * as Toast from '#/components/Toast';
 import { useFullVerificationState } from '#/components/verification';
 import { VerificationCreatePrompt } from '#/components/verification/VerificationCreatePrompt';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
+
 import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { GoLiveDialog } from '#/features/liveNow/components/GoLiveDialog';

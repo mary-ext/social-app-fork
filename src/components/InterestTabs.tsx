@@ -3,9 +3,12 @@ import { type ScrollView, type StyleProp, View, type ViewStyle } from 'react-nat
 import { useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+
 import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
 import { transparentifyColor } from '#/alf/util/colorGeneration';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import {
 	ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft,

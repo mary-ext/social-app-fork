@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo } from 'react';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
 import { useServiceConfigQuery } from '#/state/queries/service-config';
+
 import { device } from '#/storage';
 
 type TrendingContext = {

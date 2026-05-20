@@ -5,8 +5,11 @@ import { FocusGuards, FocusScope } from 'radix-ui/internal';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
+
 import { useA11y } from '#/state/a11y';
+
 import { atoms as a, flatten, ThemeProvider, useBreakpoints, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { Backdrop } from '#/components/Dialog';
 import { ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon } from '#/components/icons/ArrowOutOfBox';
@@ -25,6 +28,7 @@ import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 
 export function Lightbox() {

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { type TextStyleProp } from '#/alf';
+
 import { type Props as SVGIconProps } from '#/components/icons/common';
 
 export type RootProps = {

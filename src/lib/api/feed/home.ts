@@ -1,6 +1,7 @@
 import { type AppBskyFeedDefs, type BskyAgent } from '@atproto/api';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
+
 import { CustomFeedAPI } from './custom';
 import { FollowingFeedAPI } from './following';
 import { type FeedAPI, type FeedAPIResponse } from './types';

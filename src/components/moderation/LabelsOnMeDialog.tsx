@@ -10,14 +10,19 @@ import { useLabelSubject } from '#/lib/moderation';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { useAgent, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { InlineLinkText } from '#/components/Link';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { Admonition } from '../Admonition';
 import { Divider } from '../Divider';
 import { Loader } from '../Loader';

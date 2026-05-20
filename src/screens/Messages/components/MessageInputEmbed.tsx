@@ -13,10 +13,14 @@ import { type RouteProp, useNavigation, useRoute } from '@react-navigation/nativ
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl, makeRecordUri } from '#/lib/strings/url-helpers';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { usePostQuery } from '#/state/queries/post';
+
 import { PostMeta } from '#/view/com/util/PostMeta';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
@@ -25,6 +29,7 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 export function useMessageEmbed() {

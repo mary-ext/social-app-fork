@@ -2,11 +2,14 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import { Text } from '#/components/Typography';
+
 import { navigate } from '#/Navigation';
 import type * as bsky from '#/types/bsky';
 

@@ -1,6 +1,8 @@
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
+
 import { PostThread } from '#/screens/PostThread';
+
 import * as Layout from '#/components/Layout';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>;

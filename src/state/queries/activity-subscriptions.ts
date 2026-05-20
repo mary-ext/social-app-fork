@@ -14,6 +14,7 @@ import {
 } from '@tanstack/react-query';
 
 import { useAgent, useSession } from '#/state/session';
+
 import * as Toast from '#/components/Toast';
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions'];

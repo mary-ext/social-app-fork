@@ -2,8 +2,11 @@ import { ChatBskyConvoDefs, type ChatBskyGroupDisableJoinLink } from '@atproto/a
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
 export function useDisableJoinLink(

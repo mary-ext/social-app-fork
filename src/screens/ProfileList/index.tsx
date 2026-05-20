@@ -10,6 +10,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useListQuery } from '#/state/queries/list';
 import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
@@ -17,17 +18,22 @@ import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/q
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+
 import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { type ListRef } from '#/view/com/util/List';
+
 import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { useDialogControl } from '#/components/Dialog';
 import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import * as Layout from '#/components/Layout';
 import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
+
 import { AboutSection } from './AboutSection';
 import { ErrorScreen } from './components/ErrorScreen';
 import { Header } from './components/Header';

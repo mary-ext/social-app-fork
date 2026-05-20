@@ -1,6 +1,7 @@
 import { type AppBskyFeedDefs, type BskyAgent } from '@atproto/api';
 
 import { DEMO_FEED } from '#/lib/demo';
+
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class DemoFeedAPI implements FeedAPI {

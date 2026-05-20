@@ -7,10 +7,14 @@ import Animated, {
 	type AnimatedScrollViewProps,
 	useAnimatedStyle,
 } from '#/lib/animations/reanimatedCompat';
+
 import { useEnableMinimalShellModeForScreen } from '#/state/shell';
 import { useShellLayout } from '#/state/shell/shell-layout';
+
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
+
 import { atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
+
 import { useDialogContext } from '#/components/Dialog';
 import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH, SCROLLBAR_OFFSET } from '#/components/Layout/const';
 import { ScrollbarOffsetContext } from '#/components/Layout/context';

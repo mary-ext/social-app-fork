@@ -7,13 +7,18 @@ import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { useHaptics } from '#/lib/haptics';
 import { exemptExternalEmbedSources, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
+
 import { useExternalEmbedsPrefs } from '#/state/preferences';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Divider } from '#/components/Divider';
 import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
+
 import { ExternalGif } from './ExternalGif';
 import { ExternalPlayer } from './ExternalPlayer';
 import { GifEmbed } from './Gif';

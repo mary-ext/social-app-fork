@@ -4,7 +4,9 @@ import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
+
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonIcon, type ButtonSize, ButtonText } from '#/components/Button';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { LabelsOnMeDialog, useLabelsOnMeDialogControl } from '#/components/moderation/LabelsOnMeDialog';

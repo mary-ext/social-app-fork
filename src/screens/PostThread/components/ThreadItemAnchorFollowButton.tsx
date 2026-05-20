@@ -3,11 +3,14 @@ import { type AppBskyActorDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { logger } from '#/logger';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileFollowMutationQueue, useProfileQuery } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useBreakpoints } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';

@@ -3,7 +3,9 @@ import { View } from 'react-native';
 import { type $Typed, type AppBskyEmbedRecord } from '@atproto/api';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
+
 import { MessageContextProvider } from './MessageContext';
 
 const CLUSTERED_MESSAGE_GAP = 2;

@@ -3,13 +3,18 @@ import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { type EmbedPlayerParams } from '#/lib/strings/embed-player';
+
 import { useAutoplayDisabled } from '#/state/preferences';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Fill } from '#/components/Fill';
 import { ConstrainedImage } from '#/components/images/AutoSizedImage';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
+
 import { GifView } from '#/shims/gif-view';
 import { type GifViewStateChangeEvent } from '#/shims/gif-view';
+
 import { GifPresentationControls } from '../VideoEmbed/GifPresentationControls';
 
 export function GifEmbed({

@@ -3,9 +3,11 @@ import { Keyboard } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif';
+
 import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
 import { type Gif } from '#/features/gifPicker/types';
 

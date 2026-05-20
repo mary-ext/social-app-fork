@@ -5,7 +5,9 @@ import { AtUri } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { atoms as a, select, useTheme } from '#/alf';
+
 import { Link } from '#/components/Link';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';

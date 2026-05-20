@@ -16,13 +16,17 @@ import { isAfter, parseISO } from 'date-fns';
 import { uploadBlob } from '#/lib/api';
 import { imageToThumb } from '#/lib/api/resolve';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
-import { logger } from '#/logger';
+
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useAgent, useSession } from '#/state/session';
 import { useTickEveryMinute } from '#/state/shell';
+
+import { logger } from '#/logger';
+
 import { useDialogContext } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
+
 import { getLiveNowHost, getLiveServiceNames } from '#/features/liveNow/utils';
 import type * as bsky from '#/types/bsky';
 

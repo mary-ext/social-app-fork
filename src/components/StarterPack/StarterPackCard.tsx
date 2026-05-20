@@ -7,13 +7,17 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
+
 import { precacheResolvedUri } from '#/state/queries/resolve-uri';
 import { precacheStarterPack } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack';
 import { Link as BaseLink, type LinkProps as BaseLinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 import * as bsky from '#/types/bsky';
 

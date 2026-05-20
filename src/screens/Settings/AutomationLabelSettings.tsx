@@ -5,12 +5,16 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { BotBadge } from '#/components/BotBadge';
 import * as Toggle from '#/components/forms/Toggle';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
@@ -18,6 +22,7 @@ import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
+
 import * as bsky from '#/types/bsky';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AutomationLabelSettings'>;

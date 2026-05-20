@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { type EmbedPlayerSource } from '#/lib/strings/embed-player';
+
 import * as persisted from '#/state/persisted';
 
 type StateContext = persisted.Schema['externalEmbeds'];

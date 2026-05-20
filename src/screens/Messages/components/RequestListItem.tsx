@@ -4,10 +4,13 @@ import { Trans } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
+
 import { atoms as a, tokens } from '#/alf';
+
 import { parseConvoView } from '#/components/dms/util';
 import { KnownFollowers } from '#/components/KnownFollowers';
 import { Text } from '#/components/Typography';
+
 import { ChatListItem, ChatListItemPortal } from './ChatListItem';
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
 

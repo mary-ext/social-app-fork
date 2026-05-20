@@ -3,9 +3,12 @@ import { type GestureResponderEvent, View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
 import Animated, { FadeOutUp, useReducedMotion, ZoomIn } from '#/lib/animations/reanimatedCompat';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, type ButtonProps } from '#/components/Button';
 import { Text } from '#/components/Typography';
+
 import * as Clipboard from '#/shims/clipboard';
 
 export function CopyButton({

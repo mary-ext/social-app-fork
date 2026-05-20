@@ -23,8 +23,11 @@ import { batchedUpdates } from '#/lib/batchedUpdates';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useScrollHandlers } from '#/lib/ScrollContext';
 import { addStyle } from '#/lib/styles';
+
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
+
 import { useTheme } from '#/alf';
+
 import * as Layout from '#/components/Layout';
 
 export type ListMethods = {

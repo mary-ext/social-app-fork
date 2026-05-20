@@ -8,7 +8,7 @@ import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
 import { shareUrl } from '#/lib/sharing';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { toShareUrl } from '#/lib/strings/url-helpers';
-import { logger } from '#/logger';
+
 import { type FeedSourceFeedInfo } from '#/state/queries/feed';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import {
@@ -18,9 +18,14 @@ import {
 	useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { formatCount } from '#/view/com/util/numeric/format';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Divider } from '#/components/Divider';

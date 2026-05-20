@@ -5,11 +5,14 @@ import { useLingui } from '@lingui/react/macro';
 import { DropdownMenu } from 'radix-ui';
 
 import { useSession } from '#/state/session';
+
 import { atoms as a, flatten, useTheme } from '#/alf';
+
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Typography';
+
 import { hasAlreadyReacted, hasReachedReactionLimit } from './util';
 
 export function EmojiReactionPicker({

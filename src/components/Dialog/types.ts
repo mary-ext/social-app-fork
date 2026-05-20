@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { type ViewStyleProp } from '#/alf';
+
 import { type BottomSheetViewProps } from '#/shims/bottom-sheet';
 import { type BottomSheetSnapPoint } from '#/shims/bottom-sheet';
 

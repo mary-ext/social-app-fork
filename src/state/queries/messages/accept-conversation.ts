@@ -2,8 +2,11 @@ import { type ChatBskyConvoAcceptConvo, type ChatBskyConvoListConvos } from '@at
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { RQKEY as CONVO_LIST_KEY, RQKEY_ROOT as CONVO_LIST_ROOT_KEY } from './list-conversations';
 
 export function useAcceptConversation(

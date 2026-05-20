@@ -6,6 +6,7 @@ import {
 } from '@atproto/api';
 
 import { type MessagesEventBus } from '#/state/messages/events/agent';
+
 import { type ConvoWithDetails } from '#/components/dms/util';
 
 export type ConvoParams = {

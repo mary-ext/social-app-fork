@@ -21,15 +21,21 @@ import { mergeRefs } from '#/lib/merge-refs';
 import { ScrollProvider } from '#/lib/ScrollContext';
 import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl } from '#/lib/strings/url-helpers';
-import { logger } from '#/logger';
+
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 import { useGetPost } from '#/state/queries/post';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { List, type ListMethods } from '#/view/com/util/List';
+
 import { MessageComposer } from '#/screens/Messages/components/MessageComposer';
 import { MessageListError } from '#/screens/Messages/components/MessageListError';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { ChatEmptyPill } from '#/components/dms/ChatEmptyPill';
 import { DateDivider } from '#/components/dms/DateDivider';
 import { MessageItem } from '#/components/dms/MessageItem';
@@ -38,12 +44,14 @@ import { SystemMessageGroup } from '#/components/dms/SystemMessageGroup';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import { useScrollEdgeEffectRef } from '#/shims/bsky-scroll-edge-effect';
 import {
 	KeyboardChatScrollView,
 	type KeyboardChatScrollViewProps,
 	KeyboardGestureArea,
 } from '#/shims/native-keyboard-controller';
+
 import { ChatStatusInfo } from './ChatStatusInfo';
 import { groupSystemMessages, type RenderItem } from './groupSystemMessages';
 import { InviteLinkDialogProvider } from './InviteLinkDialogProvider';

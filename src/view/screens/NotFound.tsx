@@ -7,9 +7,11 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { type NavigationProp } from '#/lib/routes/types';
 import { s } from '#/lib/styles';
+
 import { Button } from '#/view/com/util/forms/Button';
 import { Text } from '#/view/com/util/text/Text';
 import { ViewHeader } from '#/view/com/util/ViewHeader';
+
 import * as Layout from '#/components/Layout';
 
 export const NotFoundScreen = () => {

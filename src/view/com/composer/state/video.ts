@@ -10,7 +10,9 @@ import { type CompressedVideo } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { createVideoAgent } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
+
 import { logger } from '#/logger';
+
 import { type ImagePickerAsset } from '#/shims/image-picker';
 
 type CaptionsTrack = { lang: string; file: File };

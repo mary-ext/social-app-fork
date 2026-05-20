@@ -1,6 +1,7 @@
 import { type Agent, type AppBskyFeedDefs, type AppBskyFeedGetPosts } from '@atproto/api';
 
 import { logger } from '#/logger';
+
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class PostListFeedAPI implements FeedAPI {

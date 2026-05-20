@@ -12,6 +12,7 @@ import {
 	type ThreadItem,
 	type TraversalMetadata,
 } from '#/state/queries/usePostThread/types';
+
 import { isDevMode } from '#/storage/hooks/dev-mode';
 import * as bsky from '#/types/bsky';
 

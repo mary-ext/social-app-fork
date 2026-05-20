@@ -9,10 +9,15 @@ import Animated, {
 	withDelay,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
+
 import { useSession } from '#/state/session';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
+
 import type * as bsky from '#/types/bsky';
 
 type Layout = {

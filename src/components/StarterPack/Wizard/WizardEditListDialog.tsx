@@ -5,13 +5,18 @@ import { type AppBskyActorDefs, type AppBskyFeedDefs, type ModerationOpts } from
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
+
 import { type ListMethods } from '#/view/com/util/List';
+
 import { type WizardAction, type WizardState } from '#/screens/StarterPack/Wizard/State';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 type ListItem = bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView;

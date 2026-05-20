@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
 import { useSession } from '#/state/session';
+
 import type * as bsky from '#/types/bsky';
 
 export type FullVerificationState = {

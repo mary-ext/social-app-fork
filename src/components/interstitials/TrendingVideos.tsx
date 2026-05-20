@@ -7,10 +7,14 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { VIDEO_FEED_URI } from '#/lib/constants';
 import { makeCustomFeedLink } from '#/lib/routes/links';
+
 import { useTrendingSettingsApi } from '#/state/preferences/trending';
 import { RQKEY, usePostFeedQuery } from '#/state/queries/post-feed';
+
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
+
 import { atoms as a, useGutters, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';

@@ -4,11 +4,14 @@ import { Trans } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { canBeAddedToGroup } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 export function GroupChatProfileCard({

@@ -1,11 +1,14 @@
 import { useWindowDimensions, View } from 'react-native';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
+
 import { atoms as a, useAlf, type ViewStyleProp } from '#/alf';
+
 import { BotBadge, BotBadgeButton, isBotAccount } from '#/components/BotBadge';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import { VerificationCheckButton } from '#/components/verification/VerificationCheckButton';
+
 import type * as bsky from '#/types/bsky';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

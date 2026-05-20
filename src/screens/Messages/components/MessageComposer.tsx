@@ -7,14 +7,18 @@ import { countGraphemes } from 'unicode-segmenter/grapheme';
 import { HITSLOP_10, MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { isBskyPostUrl } from '#/lib/strings/url-helpers';
+
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
+
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
+
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { GlassView } from '#/components/GlassView';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import * as Toast from '#/components/Toast';
+
 import { GlassContainer } from '#/shims/glass-effect';
 import { LinearGradient } from '#/shims/linear-gradient';
 import { useKeyboardHandler, useReanimatedKeyboardAnimation } from '#/shims/native-keyboard-controller';

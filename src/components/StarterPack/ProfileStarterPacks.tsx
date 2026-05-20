@@ -14,12 +14,17 @@ import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { type NavigationProp } from '#/lib/routes/types';
 import { parseStarterPackUri } from '#/lib/strings/starter-pack';
-import { logger } from '#/logger';
+
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
+
+import { logger } from '#/logger';
+
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
 import { List, type ListRef } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
@@ -28,6 +33,7 @@ import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
 import { Default as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 interface SectionRef {

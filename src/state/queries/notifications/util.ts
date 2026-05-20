@@ -15,7 +15,9 @@ import { type QueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
+
 import * as bsky from '#/types/bsky';
+
 import { precacheProfile } from '../profile';
 import { type FeedNotification, type FeedPage, type NotificationType } from './types';
 

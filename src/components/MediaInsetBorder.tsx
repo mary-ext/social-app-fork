@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
+
 import { Fill } from '#/components/Fill';
+
 import { IS_HIGH_DPI } from '#/env';
 
 /** Applies and thin border within a bounding box. Used to contrast media from bg of the container. */

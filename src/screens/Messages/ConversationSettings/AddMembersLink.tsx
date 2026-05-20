@@ -3,9 +3,13 @@ import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { logger } from '#/logger';
+
 import { useAddGroupMembers } from '#/state/queries/messages/add-group-members';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { AddMembersFlow } from '#/components/dms/AddMembersFlow';

@@ -11,14 +11,18 @@ import { type SelfLabel } from '#/lib/moderation';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 import { isBskyPostUrl, postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
+
 import { type ComposerImage, createInitialImages } from '#/state/gallery';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting } from '#/state/queries/threadgate';
 import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 import { type ComposerOpts } from '#/state/shell/composer';
+
 import { type LinkFacetMatch, suggestLinkCardUri } from '#/view/com/composer/text-input/text-input-util';
+
 import { type Gif } from '#/features/gifPicker/types';
 import { type ImagePickerAsset } from '#/shims/image-picker';
+
 import { createVideoState, type VideoAction, videoReducer, type VideoState } from './video';
 
 type ImagesMedia = {

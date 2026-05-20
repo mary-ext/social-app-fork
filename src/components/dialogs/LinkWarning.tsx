@@ -5,10 +5,13 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
 import { isPossiblyAUrl, splitApexDomain } from '#/lib/strings/url-helpers';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Text } from '#/components/Typography';
+
 import { useGlobalDialogsControlContext } from './Context';
 
 export function LinkWarningDialog() {

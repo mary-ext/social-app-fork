@@ -12,6 +12,7 @@ import {
 } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
+import { FeedTuner, type FeedTunerFn } from '#/lib/api/feed-manip';
 import { AuthorFeedAPI } from '#/lib/api/feed/author';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { DemoFeedAPI } from '#/lib/api/feed/demo';
@@ -23,14 +24,17 @@ import { MergeFeedAPI } from '#/lib/api/feed/merge';
 import { PostListFeedAPI } from '#/lib/api/feed/posts';
 import { type FeedAPI, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
-import { FeedTuner, type FeedTunerFn } from '#/lib/api/feed-manip';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { useAgent } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
+
+import { logger } from '#/logger';
+
 import { KnownError } from '#/view/com/posts/PostFeedErrorMessage';
+
 import { useFeedTuners } from '../preferences/feed-tuners';
 import { useModerationOpts } from '../preferences/moderation-opts';
 import { usePreferencesQuery } from './preferences';

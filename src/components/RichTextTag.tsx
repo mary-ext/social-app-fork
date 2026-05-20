@@ -5,11 +5,13 @@ import { useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle } from '#/lib/strings/handles';
+
 import {
 	usePreferencesQuery,
 	useRemoveMutedWordsMutation,
 	useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences';
+
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass';
 import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';

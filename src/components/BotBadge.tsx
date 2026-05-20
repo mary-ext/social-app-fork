@@ -3,10 +3,12 @@ import { type ComAtprotoLabelDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { BotAccountAlert } from '#/components/BotAccountAlert';
 import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
+
 import type * as bsky from '#/types/bsky';
 
 export function isBotAccount(profile: { did: string; labels?: ComAtprotoLabelDefs.Label[] }): boolean {

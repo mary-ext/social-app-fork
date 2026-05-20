@@ -5,8 +5,10 @@ import Animated, { useAnimatedStyle, useSharedValue } from '#/lib/animations/rea
 import { mergeRefs } from '#/lib/merge-refs';
 import { useSift, type UseSiftReturn } from '#/lib/sift';
 import { facets, type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
+
 import { atoms as a, type TextStyleProp, useAlf, type ViewStyleProp } from '#/alf';
 import { normalizeTextStyles } from '#/alf/typography';
+
 import {
 	Autocomplete as AutocompleteBase,
 	AutocompleteItemEmoji,
@@ -16,6 +18,7 @@ import {
 } from '#/components/Autocomplete';
 import { AutosizedTextarea, type AutosizedTextareaProps } from '#/components/forms/AutosizedTextarea';
 import { Span, Text } from '#/components/Typography';
+
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 
 type WebKeyboardEvent = React.KeyboardEvent<Element> & {

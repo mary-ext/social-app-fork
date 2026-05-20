@@ -2,9 +2,12 @@ import { Plural } from '@lingui/react/macro';
 
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
+
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+
 import { ProfileFollowers as ProfileFollowersComponent } from '#/view/com/profile/ProfileFollowers';
+
 import * as Layout from '#/components/Layout';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>;

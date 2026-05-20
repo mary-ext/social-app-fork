@@ -3,13 +3,18 @@ import { type Did as AtcuteDid } from '@atcute/lexicons';
 import { deleteStoredSession, TokenRefreshError } from '@atcute/oauth-browser-client';
 
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
-import { logger } from '#/logger';
+
 import { listenSessionDropped } from '#/state/events';
 import * as persisted from '#/state/persisted';
 import { type SessionAccount, type SessionApiContext, type SessionStateContext } from '#/state/session/types';
 import { useCloseAllActiveElements } from '#/state/util';
+
+import { logger } from '#/logger';
+
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+
 import { auth, type AuthSession } from '#/storage';
+
 import {
 	type BskyAppAgent,
 	createAgentAndFinalizeOAuth,

@@ -6,7 +6,7 @@ import { Trans } from '@lingui/react/macro';
 
 import { useHaptics } from '#/lib/haptics';
 import { makeListLink } from '#/lib/routes/links';
-import { logger } from '#/logger';
+
 import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 import {
 	useAddSavedFeedsMutation,
@@ -14,13 +14,19 @@ import {
 	useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
+
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Loader } from '#/components/Loader';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
+
 import { MoreOptionsMenu } from './MoreOptionsMenu';
 import { SubscribeMenu } from './SubscribeMenu';
 

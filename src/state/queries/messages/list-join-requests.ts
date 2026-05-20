@@ -3,9 +3,11 @@ import { ChatBskyConvoDefs } from '@atproto/api';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
+
 import { useMessagesEventBus } from '#/state/messages/events';
 import { createQueryKey } from '#/state/queries/util';
 import { useAgent } from '#/state/session';
+
 import { STALE } from '..';
 
 const listJoinRequestsQueryKeyRoot = 'list-join-requests';

@@ -1,6 +1,7 @@
 import { Text as RNText, type TextStyle } from 'react-native';
 
 import { logger } from '#/logger';
+
 import { atoms as a, useAlf, useTheme } from '#/alf';
 import { childHasEmoji, normalizeTextStyles, type TextProps } from '#/alf/typography';
 

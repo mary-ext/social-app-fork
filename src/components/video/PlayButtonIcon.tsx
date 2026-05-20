@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Play_Filled_Corner0_Rounded as PlayIcon } from '#/components/icons/Play';
 
 export function PlayButtonIcon({ size = 32 }: { size?: number }) {

@@ -29,7 +29,9 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { useAgent } from '#/state/session';
 import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
+
 import type * as bsky from '#/types/bsky';
+
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
 import { type FeedPage } from './types';
 import { useUnreadNotificationsApi } from './unread';

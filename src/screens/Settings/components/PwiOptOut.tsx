@@ -5,9 +5,12 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 export function PwiOptOut() {

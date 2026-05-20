@@ -1,6 +1,7 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
 import { useTheme } from '#/alf';
+
 import {
 	GlassView as ExpoGlassView,
 	type GlassViewProps as ExpoGlassViewProps,

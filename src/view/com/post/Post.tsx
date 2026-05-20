@@ -14,13 +14,17 @@ import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
+
 import { Link } from '#/view/com/util/Link';
 import { PostMeta } from '#/view/com/util/PostMeta';
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, select, useTheme } from '#/alf';
+
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -32,6 +36,7 @@ import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
+
 import * as bsky from '#/types/bsky';
 
 export function Post({

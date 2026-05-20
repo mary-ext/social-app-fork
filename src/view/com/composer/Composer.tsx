@@ -72,7 +72,7 @@ import { useCallOnce } from '#/lib/once';
 import { type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { colors } from '#/lib/styles';
-import { logger } from '#/logger';
+
 import { useDialogStateControlContext } from '#/state/dialogs';
 import { emitPostCreated } from '#/state/events';
 import { type ComposerImage, createComposerImage, pasteImage } from '#/state/gallery';
@@ -84,6 +84,9 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useAgent, useSession } from '#/state/session';
 import { useComposerControls } from '#/state/shell/composer';
 import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
+
+import { logger } from '#/logger';
+
 import { CharProgress } from '#/view/com/composer/char-progress/CharProgress';
 import { ComposerReplyTo } from '#/view/com/composer/ComposerReplyTo';
 import { DraftsButton } from '#/view/com/composer/drafts/DraftsButton';
@@ -101,7 +104,9 @@ import { ThreadgateBtn } from '#/view/com/composer/threadgate/ThreadgateBtn';
 import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as EmojiPicker from '#/components/EmojiPicker';
@@ -113,9 +118,11 @@ import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { type Gif } from '#/features/gifPicker/types';
 import { BottomSheetPortalProvider } from '#/shims/bottom-sheet';
 import { type ImagePickerAsset } from '#/shims/image-picker';
+
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
 import {
 	loadDraftMedia,

@@ -4,18 +4,23 @@ import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import {
 	type FeedSourceInfo,
 	hydrateFeedGenerator,
 	hydrateList,
 	useFeedSourceInfoQuery,
 } from '#/state/queries/feed';
+
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Link } from '#/components/Link';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+
 import { MissingFeed } from './MissingFeed';
 
 type FeedSourceCardProps = {

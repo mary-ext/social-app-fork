@@ -2,7 +2,9 @@ import { useLingui } from '@lingui/react/macro';
 
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
+
 import { ViewHeader } from '#/view/com/util/ViewHeader';
+
 import * as Layout from '#/components/Layout';
 import { LikedByList } from '#/components/LikedByList';
 

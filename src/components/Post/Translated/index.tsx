@@ -6,10 +6,14 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { HITSLOP_30 } from '#/lib/constants';
 import { useTranslate } from '#/lib/translation';
 import { type TranslationFunction, type TranslationFunctionParams } from '#/lib/translation';
+
+import { useLanguagePrefs } from '#/state/preferences';
+
 import { codeToLanguageName, getPostLanguageTags, isPostInLanguage, languageName } from '#/locale/helpers';
 import { LANGUAGES } from '#/locale/languages';
-import { useLanguagePrefs } from '#/state/preferences';
+
 import { atoms as a, flatten, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
@@ -18,6 +22,7 @@ import { createStaticClick, Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import * as Select from '#/components/Select';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 const X_ICON_OFFSET = 16;

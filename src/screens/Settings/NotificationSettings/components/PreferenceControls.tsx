@@ -4,10 +4,13 @@ import { type AppBskyNotificationDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Toggle from '#/components/forms/Toggle';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import { Divider } from '../../components/SettingsList';
 
 export function PreferenceControls({

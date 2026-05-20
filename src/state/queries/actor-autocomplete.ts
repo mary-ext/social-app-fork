@@ -3,9 +3,12 @@ import { type AppBskyActorDefs, moderateProfile, type ModerationOpts } from '@at
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
-import { logger } from '#/logger';
+
 import { STALE } from '#/state/queries';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { useModerationOpts } from '../preferences/moderation-opts';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from './preferences';
 

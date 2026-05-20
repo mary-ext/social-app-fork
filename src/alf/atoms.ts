@@ -2,7 +2,9 @@ import { type CSSProperties } from 'react';
 import { type ImageStyle, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
 
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
+
 import { atoms as baseAtoms } from '#/alf/base';
+
 import * as Layout from '#/components/Layout';
 
 const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)';

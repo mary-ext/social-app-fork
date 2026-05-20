@@ -17,11 +17,16 @@ import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getTabState, TabState } from '#/lib/routes/helpers';
 import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#/lib/strings/url-helpers';
 import { type TypographyVariant } from '#/lib/ThemeContext';
+
 import { emitSoftReset } from '#/state/events';
 import { useModalControls } from '#/state/modals';
+
 import { WebAuxClickWrapper } from '#/view/com/util/WebAuxClickWrapper';
+
 import { useTheme } from '#/alf';
+
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+
 import { router } from '../../../routes';
 import { PressableWithHover } from './PressableWithHover';
 import { Text } from './text/Text';

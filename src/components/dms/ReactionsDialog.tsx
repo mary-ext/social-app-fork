@@ -6,15 +6,20 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { HITSLOP_10 } from '#/lib/constants';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { type ActiveConvoStates, useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
 import { type SessionAccount } from '#/state/session/types';
+
 import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Dialog from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 type Reaction = {

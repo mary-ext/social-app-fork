@@ -2,11 +2,14 @@ import { useCallback } from 'react';
 import { type AppBskyActorDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import { useVerificationsRemoveMutation } from '#/state/queries/verification/useVerificationsRemoveMutation';
+
+import { logger } from '#/logger';
+
 import { type DialogControlProps } from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+
 import type * as bsky from '#/types/bsky';
 
 export { useDialogControl as usePromptControl } from '#/components/Dialog';

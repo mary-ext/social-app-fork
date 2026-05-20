@@ -2,7 +2,9 @@ import { ChatBskyConvoDefs, type ChatBskyConvoLockConvo } from '@atproto/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
+
 import { useAgent } from '#/state/session';
+
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
 export function useLockConvo(

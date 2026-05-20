@@ -2,6 +2,7 @@ import { useLayoutEffect } from 'react';
 import { type ColorSchemeName, useColorScheme } from 'react-native';
 
 import { useThemePrefs } from '#/state/shell';
+
 import { type ThemeName } from '#/alf/base';
 import { dark, dim, light } from '#/alf/themes';
 

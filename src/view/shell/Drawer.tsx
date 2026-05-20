@@ -10,15 +10,19 @@ import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { colors } from '#/lib/styles';
+
 import { useKawaiiMode } from '#/state/preferences/kawaii';
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 import { useSetDrawerOpen } from '#/state/shell';
+
 import { formatCount } from '#/view/com/util/numeric/format';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { Divider } from '#/components/Divider';
 import {
@@ -51,6 +55,7 @@ import {
 import { InlineLinkText } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+
 import { useActorStatus } from '#/features/liveNow';
 
 const iconWidth = 26;

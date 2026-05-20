@@ -12,14 +12,19 @@ import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { type ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 import { type OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+
 import { PostMeta } from '#/view/com/util/PostMeta';
+
 import { OUTER_SPACE, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';

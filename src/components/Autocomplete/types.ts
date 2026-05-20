@@ -1,6 +1,7 @@
 import { type Emoji } from '@emoji-mart/data';
 
 import { type Sift } from '#/lib/sift';
+
 import type * as bsky from '#/types/bsky';
 
 export type AutocompleteProfile = {

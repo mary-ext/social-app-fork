@@ -8,7 +8,9 @@ import {
 } from '@atproto/api';
 
 import { unique } from '#/lib/moderation';
+
 import { type AppModerationCause } from '#/components/Pills';
+
 import * as bsky from '#/types/bsky';
 
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 10 };

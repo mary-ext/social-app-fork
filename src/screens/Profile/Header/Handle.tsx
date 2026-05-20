@@ -3,8 +3,11 @@ import { type AppBskyActorDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
+
 import { type Shadow } from '#/state/cache/types';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { NewskieDialog } from '#/components/NewskieDialog';
 import { Text } from '#/components/Typography';
 

@@ -4,12 +4,16 @@ import { type AppBskyEmbedExternal } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { type EmbedPlayerParams } from '#/lib/strings/embed-player';
+
 import { useExternalEmbedsPrefs } from '#/state/preferences';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { useDialogControl } from '#/components/Dialog';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
 import { Fill } from '#/components/Fill';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
+
 import { Image } from '#/shims/image';
 
 export function ExternalGif({

@@ -12,6 +12,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
+
 import { emitSoftReset } from '#/state/events';
 import { useFetchHandle } from '#/state/queries/handle';
 import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations';
@@ -19,11 +20,14 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
+
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { PressableWithHover } from '#/view/com/util/PressableWithHover';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
+
 import { atoms as a, tokens, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { type DialogControlProps } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
@@ -68,6 +72,7 @@ import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH } from '#/components/Layout/c
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
+
 import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';
 import { PlatformInfo } from '#/shims/bluesky-swiss-army';

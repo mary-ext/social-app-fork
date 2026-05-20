@@ -9,6 +9,7 @@ import { DISCOVER_FEED_URI } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getRootNavigation, getTabState, TabState } from '#/lib/routes/helpers';
 import { type AllNavigatorParams } from '#/lib/routes/types';
+
 import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { useSetHomeBadge } from '#/state/home-badge';
@@ -16,12 +17,15 @@ import { type FeedSourceInfo } from '#/state/queries/feed';
 import { type FeedDescriptor, type FeedParams, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { type ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { MainScrollProvider } from '#/view/com/util/MainScrollProvider';
+
 import { useTheme } from '#/alf';
+
 import { useHeaderOffset } from '#/components/hooks/useHeaderOffset';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 

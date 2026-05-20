@@ -3,8 +3,11 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
+
 import { CenteredView } from '#/view/com/util/Views';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { Text } from '#/components/Typography';
 

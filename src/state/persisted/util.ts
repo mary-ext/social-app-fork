@@ -1,8 +1,10 @@
 import { parse } from 'bcp-47';
 
 import { dedupArray } from '#/lib/functions';
-import { logger } from '#/logger';
+
 import { type Schema } from '#/state/persisted/schema';
+
+import { logger } from '#/logger';
 
 export function normalizeData(data: Schema) {
 	const next = { ...data };

@@ -9,8 +9,10 @@ import {
 } from '@tanstack/react-query-persist-client';
 
 import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
+
 import { listenNetworkConfirmed, listenNetworkLost } from '#/state/events';
 import { isQueryPersisted } from '#/state/queries/util';
+
 import * as env from '#/env';
 
 declare global {

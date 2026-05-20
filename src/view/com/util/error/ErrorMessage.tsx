@@ -4,7 +4,9 @@ import { useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useTheme } from '#/lib/ThemeContext';
+
 import * as Layout from '#/components/Layout';
+
 import { Text } from '../text/Text';
 
 export function ErrorMessage({

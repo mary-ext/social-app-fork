@@ -3,9 +3,13 @@ import { type JSX } from 'react';
 import { type ScrollView, View } from 'react-native';
 
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
+
 import { Pager, type PagerRef, type RenderTabBarFnProps } from '#/view/com/pager/Pager';
+
 import { atoms as a } from '#/alf';
+
 import * as Layout from '#/components/Layout';
+
 import { type ListMethods } from '../util/List';
 import { TabBar } from './TabBar';
 

@@ -8,12 +8,16 @@ import { getDeviceName } from '#/lib/deviceName';
 import { getImageDim } from '#/lib/media/manip';
 import { mimeToExt } from '#/lib/media/video/util';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
+
 import { type ComposerImage } from '#/state/gallery';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
 import { createPublicAgent } from '#/state/session/agent';
+
 import { type ComposerState, type EmbedDraft, type PostDraft } from '#/view/com/composer/state/composer';
 import { type VideoState } from '#/view/com/composer/state/video';
+
 import { type Gif } from '#/features/gifPicker/types';
+
 import { logger } from './logger';
 import { type DraftPostDisplay, type DraftSummary } from './schema';
 import * as storage from './storage';

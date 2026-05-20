@@ -3,8 +3,11 @@ import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { type Shadow } from '#/state/cache/types';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
 
 export function ProfileHeaderDisplayName({

@@ -5,13 +5,17 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { useSession } from '#/state/session';
+
 import { type ListMethods } from '#/view/com/util/List';
+
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
@@ -20,6 +24,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import { boostInterests, InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 type WebViewProps = ComponentProps<typeof View> & {

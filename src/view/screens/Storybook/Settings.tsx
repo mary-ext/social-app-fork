@@ -1,7 +1,9 @@
 import { View } from 'react-native';
 
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Alien_Stroke2_Corner0_Rounded as AlienIcon } from '#/components/icons/Alien';
 import { BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon } from '#/components/icons/BirthdayCake';
 import { BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon } from '#/components/icons/BubbleInfo';

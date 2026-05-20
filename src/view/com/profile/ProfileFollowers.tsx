@@ -5,12 +5,16 @@ import { useNavigation } from '@react-navigation/native';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useProfileFollowersQuery } from '#/state/queries/profile-followers';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon } from '#/components/icons/PeopleRemove2';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+
 import { List } from '../util/List';
 import { ProfileCardWithFollowBtn } from './ProfileCard';
 

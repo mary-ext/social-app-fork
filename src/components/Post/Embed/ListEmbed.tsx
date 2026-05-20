@@ -2,10 +2,14 @@ import { useMemo } from 'react';
 import { moderateUserList } from '@atproto/api';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
+
 import { type EmbedType } from '#/types/bsky/post';
+
 import { type CommonProps } from './types';
 
 export function ListEmbed({

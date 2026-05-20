@@ -4,9 +4,13 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
-import { LANGUAGES } from '#/locale/languages';
+
 import { useLanguagePrefs } from '#/state/preferences';
+
+import { LANGUAGES } from '#/locale/languages';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';
@@ -15,6 +19,7 @@ import { PageText_Stroke2_Corner0_Rounded as PageTextIcon } from '#/components/i
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { Text } from '#/components/Typography';
+
 import { SubtitleFilePicker } from './SubtitleFilePicker';
 
 const MAX_NUM_CAPTIONS = 1;

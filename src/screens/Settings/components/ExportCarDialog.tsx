@@ -4,9 +4,13 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
 import { saveBytesToDisk } from '#/lib/media/manip';
-import { logger } from '#/logger';
+
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';

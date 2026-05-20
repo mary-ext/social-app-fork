@@ -12,14 +12,18 @@ import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { enforceLen } from '#/lib/strings/helpers';
+
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
+
 import { Pager } from '#/view/com/pager/Pager';
 import { TabBar } from '#/view/com/pager/TabBar';
 import { Post } from '#/view/com/post/Post';
 import { List } from '#/view/com/util/List';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';

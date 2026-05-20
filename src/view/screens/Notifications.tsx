@@ -7,19 +7,24 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { type NativeStackScreenProps, type NotificationsTabNavigatorParams } from '#/lib/routes/types';
-import { logger } from '#/logger';
+
 import { emitSoftReset, listenSoftReset } from '#/state/events';
 import { RQKEY as NOTIFS_RQKEY } from '#/state/queries/notifications/feed';
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 import { useUnreadNotifications, useUnreadNotificationsApi } from '#/state/queries/notifications/unread';
 import { truncateAndInvalidate } from '#/state/queries/util';
+
+import { logger } from '#/logger';
+
 import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
 import { Pager } from '#/view/com/pager/Pager';
 import { TabBar } from '#/view/com/pager/TabBar';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { type ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { ButtonIcon } from '#/components/Button';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';

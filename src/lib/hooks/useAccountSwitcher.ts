@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import { type SessionAccount, useSessionApi } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as Toast from '#/components/Toast';
 

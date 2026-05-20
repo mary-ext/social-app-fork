@@ -1,8 +1,10 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
+
 import * as SettingsList from '../../components/SettingsList';
 
 export function ItemTextWithSubtitle({

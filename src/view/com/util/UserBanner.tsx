@@ -6,16 +6,22 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { openPicker } from '#/lib/media/picker';
 import { type PickerImage } from '#/lib/media/picker.shared';
 import { isCancelledError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { type ComposerImage, compressImage, createComposerImage } from '#/state/gallery';
+
+import { logger } from '#/logger';
+
 import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog';
 import { EventStopper } from '#/view/com/util/EventStopper';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { useDialogControl } from '#/components/Dialog';
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import * as Menu from '#/components/Menu';
+
 import { Image } from '#/shims/image';
 
 export function UserBanner({

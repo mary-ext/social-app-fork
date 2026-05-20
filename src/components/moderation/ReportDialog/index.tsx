@@ -7,11 +7,16 @@ import { wait } from '#/lib/async/wait';
 import { getLabelingServiceTitle } from '#/lib/moderation';
 import { useCallOnce } from '#/lib/once';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { Logger } from '#/logger';
+
 import { useMyLabelersQuery } from '#/state/queries/preferences';
+
+import { Logger } from '#/logger';
+
 import { CharProgress } from '#/view/com/composer/char-progress/CharProgress';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useGutters, useTheme } from '#/alf';
+
 import * as Admonition from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -28,6 +33,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import { createStaticClick, InlineLinkText, Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import { useSubmitReportMutation } from './action';
 import {
 	BSKY_LABELER_ONLY_REPORT_REASONS,

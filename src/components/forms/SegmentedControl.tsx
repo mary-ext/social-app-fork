@@ -4,7 +4,9 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import Animated from '#/lib/animations/reanimatedCompat';
 import { useHaptics } from '#/lib/haptics';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, type ButtonProps, ButtonText, type ButtonTextProps } from '../Button';
 
 const InternalContext = createContext<{

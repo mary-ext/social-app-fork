@@ -15,6 +15,7 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { niceDate } from '#/lib/strings/time';
+
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
@@ -23,10 +24,14 @@ import { useSession } from '#/state/session';
 import { type OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import { type PostSource } from '#/state/unstable-post-source';
+
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock';
@@ -48,6 +53,7 @@ import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
 import { WhoCanReply } from '#/components/WhoCanReply';
+
 import { useActorStatus } from '#/features/liveNow';
 import * as bsky from '#/types/bsky';
 

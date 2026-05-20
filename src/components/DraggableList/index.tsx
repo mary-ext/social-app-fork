@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { type TextStyle, View, type ViewStyle } from 'react-native';
 
 import { useTheme } from '#/alf';
+
 import { DotGrid2x3_Stroke2_Corner0_Rounded as GripIcon } from '#/components/icons/DotGrid';
 
 type WebTextStyle = TextStyle & {

@@ -1,4 +1,5 @@
 import { Router } from '#/lib/routes/router';
+
 import { type FlatNavigatorParams } from './lib/routes/types';
 
 type AllNavigatableRoutes = Omit<FlatNavigatorParams, 'NotFound'>;

@@ -7,13 +7,18 @@ import Animated, { useAnimatedRef, useSharedValue } from '#/lib/animations/reani
 import { HITSLOP_10 } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
 import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 type Props = {

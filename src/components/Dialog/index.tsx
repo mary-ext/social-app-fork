@@ -13,10 +13,13 @@ import { useLingui } from '@lingui/react/macro';
 import { DismissableLayer, FocusGuards, FocusScope } from 'radix-ui/internal';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
-import { logger } from '#/logger';
 import { useA11y } from '#/state/a11y';
 import { useDialogStateControlContext } from '#/state/dialogs';
+
+import { logger } from '#/logger';
+
 import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { Context } from '#/components/Dialog/context';
 import {

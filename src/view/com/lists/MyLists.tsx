@@ -13,13 +13,18 @@ import { useLingui } from '@lingui/react/macro';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { cleanError } from '#/lib/strings/errors';
 import { s } from '#/lib/styles';
-import { logger } from '#/logger';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type MyListsFilter, useMyListsQuery } from '#/state/queries/my-lists';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import * as ListCard from '#/components/ListCard';
 import { Text } from '#/components/Typography';
+
 import { ErrorMessage } from '../util/error/ErrorMessage';
 import { List } from '../util/List';
 

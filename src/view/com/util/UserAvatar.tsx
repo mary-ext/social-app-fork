@@ -14,11 +14,16 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isCancelledError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { type ComposerImage, compressImage, createComposerImage } from '#/state/gallery';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+
+import { logger } from '#/logger';
+
 import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
@@ -28,6 +33,7 @@ import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import * as Menu from '#/components/Menu';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
+
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';

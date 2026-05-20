@@ -1,7 +1,9 @@
 import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 import { logger } from '#/logger';
+
 import { useVideoVolumeState } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
+
 import { IS_WEB_SAFARI } from '#/env';
 
 export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {

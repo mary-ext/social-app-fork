@@ -8,11 +8,15 @@ import {
 	exemptExternalEmbedSources,
 	externalEmbedLabels,
 } from '#/lib/strings/embed-player';
+
 import { useExternalEmbedsPrefs, useSetExternalEmbedPref } from '#/state/preferences';
+
 import { atoms as a } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import * as Toggle from '#/components/forms/Toggle';
 import * as Layout from '#/components/Layout';
+
 import * as SettingsList from './components/SettingsList';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesExternalEmbeds'>;

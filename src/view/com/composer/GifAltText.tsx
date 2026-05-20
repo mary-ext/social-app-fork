@@ -6,9 +6,13 @@ import { Plural, Trans } from '@lingui/react/macro';
 import { HITSLOP_10, MAX_ALT_TEXT } from '#/lib/constants';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
+
 import { useResolveGifQuery } from '#/state/queries/resolve-link';
+
 import { AltTextCounterWrapper } from '#/view/com/composer/AltTextCounterWrapper';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -19,6 +23,7 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/i
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { GifEmbed } from '#/components/Post/Embed/ExternalEmbed/Gif';
 import { Text } from '#/components/Typography';
+
 import { type Gif } from '#/features/gifPicker/types';
 
 export function GifAltTextDialog({

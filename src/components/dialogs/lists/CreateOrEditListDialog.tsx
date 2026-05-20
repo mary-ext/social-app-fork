@@ -7,13 +7,18 @@ import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip';
-import { logger } from '#/logger';
+
 import { type ImageMeta } from '#/state/gallery';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { EditableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';

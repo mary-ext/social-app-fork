@@ -5,9 +5,12 @@ import { Trans } from '@lingui/react/macro';
 
 import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
 import { blobToDataUri, isUriImage } from '#/lib/media/util';
+
 import { type LinkFacetMatch, suggestLinkCardUri } from '#/view/com/composer/text-input/text-input-util';
 import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
+
 import { atoms as a, useAlf } from '#/alf';
+
 import {
 	Composer as TapperComposer,
 	type SubmitRequest,
@@ -16,6 +19,7 @@ import {
 import { type Emoji } from '#/components/EmojiPicker';
 import { Portal } from '#/components/Portal';
 import { Text } from '#/components/Typography';
+
 import { type TextInputProps } from './TextInput.types';
 
 export function TextInput({

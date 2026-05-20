@@ -3,9 +3,13 @@ import { type ListRenderItemInfo, View } from 'react-native';
 import { type AppBskyFeedDefs } from '@atproto/api';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
+
 import { List, type ListRef } from '#/view/com/util/List';
+
 import { type SectionRef } from '#/screens/Profile/Sections/types';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as FeedCard from '#/components/FeedCard';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {

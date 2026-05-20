@@ -2,8 +2,10 @@ import { type AppBskyActorDefs, type AppBskyActorGetProfile, AtUri } from '@atpr
 import { useMutation } from '@tanstack/react-query';
 
 import { until } from '#/lib/async/until';
+
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { useAgent, useSession } from '#/state/session';
+
 import type * as bsky from '#/types/bsky';
 
 export function useVerificationsRemoveMutation() {

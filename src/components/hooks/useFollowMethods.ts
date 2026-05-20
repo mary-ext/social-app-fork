@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
-import { logger } from '#/logger';
 import { type Shadow } from '#/state/cache/types';
 import {
 	type ProfileFollowLogContext,
@@ -9,7 +8,11 @@ import {
 	useProfileFollowMutationQueue,
 } from '#/state/queries/profile';
 import { useRequireAuth } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import * as Toast from '#/components/Toast';
+
 import type * as bsky from '#/types/bsky';
 
 export function useFollowMethods({

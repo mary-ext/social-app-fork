@@ -1,7 +1,9 @@
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
+
 import { type Gif } from '#/features/gifPicker/types';
 import { gifPreviewUrl } from '#/features/gifPicker/utils';
 import { Image } from '#/shims/image';

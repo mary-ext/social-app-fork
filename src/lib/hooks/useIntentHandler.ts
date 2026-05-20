@@ -2,8 +2,10 @@ import { useCallback, useEffect } from 'react';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { parseLinkingUrl } from '#/lib/parseLinkingUrl';
+
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
+
 import { Referrer } from '#/shims/bluesky-swiss-army';
 import * as Linking from '#/shims/linking';
 

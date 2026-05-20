@@ -6,16 +6,21 @@ import { createHitslop, HITSLOP_10 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
+
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 export function SearchHistory({

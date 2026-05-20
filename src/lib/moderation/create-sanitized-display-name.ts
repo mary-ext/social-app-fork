@@ -2,6 +2,7 @@ import { type ModerationUI } from '@atproto/api';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import type * as bsky from '#/types/bsky';
 
 export function createSanitizedDisplayName(

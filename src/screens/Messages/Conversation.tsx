@@ -7,6 +7,7 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
@@ -14,15 +15,20 @@ import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
 import { useSession } from '#/state/session';
+
 import { MessagesList } from '#/screens/Messages/components/MessagesList';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { MessagesListBlockedFooter } from '#/components/dms/MessagesListBlockedFooter';
 import { MessagesListHeader } from '#/components/dms/MessagesListHeader';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import * as Layout from '#/components/Layout';
 import { Loader } from '#/components/Loader';
+
 import { ScrollEdgeEffectProvider } from '#/shims/bsky-scroll-edge-effect';
+
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
 import { ChatLocked } from './components/ChatLocked';

@@ -9,11 +9,15 @@ import Animated, {
 	useAnimatedRef,
 } from '#/lib/animations/reanimatedCompat';
 import { type Dimensions } from '#/lib/media/types';
+
 import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+
 import { atoms as a, useTheme, utils } from '#/alf';
+
 import { ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen } from '#/components/icons/ArrowsDiagonal';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 
 type WebViewStyle = ViewStyle & {

@@ -2,9 +2,12 @@ import { Pressable } from 'react-native';
 import { t } from '@lingui/core/macro';
 
 import { useDebugFeedContextEnabled } from '#/state/preferences/debug';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import * as Clipboard from '#/shims/clipboard';
 
 export function DiscoverDebug({ feedContext }: { feedContext: string | undefined }) {

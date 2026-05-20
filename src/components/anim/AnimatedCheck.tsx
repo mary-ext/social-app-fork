@@ -8,6 +8,7 @@ import Animated, {
 	withDelay,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
+
 import { type Props, useCommonSVGProps } from '#/components/icons/common';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);

@@ -2,7 +2,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
 import { InfoCircleIcon } from '#/lib/icons';
+
 import { Text } from '#/view/com/util/text/Text';
+
 import { atoms as a, useTheme } from '#/alf';
 
 export function PostPlaceholder({ children }: { children: React.ReactNode }) {

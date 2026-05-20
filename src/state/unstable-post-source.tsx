@@ -1,8 +1,9 @@
 import { useEffect, useId, useState } from 'react';
 import { type AppBskyFeedDefs, AtUri } from '@atproto/api';
 
-import { Logger } from '#/logger';
 import { type FeedSourceInfo } from '#/state/queries/feed';
+
+import { Logger } from '#/logger';
 
 /** Separate logger for better debugging */
 const logger = Logger.create(Logger.Context.PostSource);

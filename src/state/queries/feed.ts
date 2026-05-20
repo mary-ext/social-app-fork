@@ -22,12 +22,15 @@ import {
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { createQueryKey } from '#/state/queries/util';
 import { useAgent, useSession } from '#/state/session';
+
 import { router } from '#/routes';
+
 import { useModerationOpts } from '../preferences/moderation-opts';
 import { type FeedDescriptor } from './post-feed';
 import { precacheResolvedUri } from './resolve-uri';

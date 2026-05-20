@@ -10,14 +10,19 @@ import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { niceDate } from '#/lib/strings/time';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { WebOnlyInlineLinkText } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
+
 import { useActorStatus } from '#/features/liveNow';
+
 import { TimeElapsed } from './TimeElapsed';
 import { PreviewableUserAvatar } from './UserAvatar';
 

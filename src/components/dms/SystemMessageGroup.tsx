@@ -12,8 +12,11 @@ import Animated, {
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
+
 import { type SystemMessageGroupItem } from '#/screens/Messages/components/groupSystemMessages';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown } from '#/components/icons/Chevron';
 import { Text } from '#/components/Typography';

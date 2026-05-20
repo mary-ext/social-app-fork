@@ -7,8 +7,11 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useTrendingSettings } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTrendingConfig } from '#/state/service-config';
+
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+
 import { atoms as a, useGutters, useTheme, type ViewStyleProp } from '#/alf';
+
 import { AvatarStack } from '#/components/AvatarStack';
 import { type Props as SVGIconProps } from '#/components/icons/common';
 import { Flame_Stroke2_Corner1_Rounded as FlameIcon } from '#/components/icons/Flame';

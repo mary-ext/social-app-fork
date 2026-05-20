@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { type AccessibilityProps, type TextStyle, View, type ViewStyle } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
 

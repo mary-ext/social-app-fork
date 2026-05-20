@@ -7,12 +7,17 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useGoBack } from '#/lib/hooks/useGoBack';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { RQKEY_ROOT as listQueryRoot, useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 import { type UsePreferencesQueryResponse, useRemoveFeedMutation } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { CenteredView } from '#/view/com/util/Views';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
 import { Loader } from '#/components/Loader';

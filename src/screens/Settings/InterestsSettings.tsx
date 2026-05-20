@@ -8,6 +8,7 @@ import debounce from 'lodash.debounce';
 
 import { type Interest, interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { createGetSuggestedFeedsQueryKey } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
@@ -16,7 +17,9 @@ import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trend
 import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { createSuggestedStarterPacksQueryKey } from '#/state/queries/useSuggestedStarterPacksQuery';
 import { useAgent } from '#/state/session';
+
 import { atoms as a, useGutters, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Divider } from '#/components/Divider';
 import * as Toggle from '#/components/forms/Toggle';

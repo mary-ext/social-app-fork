@@ -5,7 +5,9 @@ import ProgressCircle from 'react-native-progress/Circle';
 import ProgressPie from 'react-native-progress/Pie';
 
 import { MAX_GRAPHEME_LENGTH } from '#/lib/constants';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
 
 export function CharProgress({

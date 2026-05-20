@@ -3,6 +3,7 @@ import { createContext, useContext } from 'react';
 import { type TextStyle, type ViewStyle } from 'react-native';
 
 import { type ThemeName } from '#/alf';
+
 import { darkTheme, defaultTheme, dimTheme } from './themes';
 
 export type ColorScheme = 'light' | 'dark';

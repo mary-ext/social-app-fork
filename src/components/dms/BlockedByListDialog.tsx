@@ -4,7 +4,9 @@ import { type ModerationCause } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { listUriToHref } from '#/lib/strings/url-helpers';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Dialog from '#/components/Dialog';
 import { type DialogControlProps } from '#/components/Dialog';
 import { InlineLinkText } from '#/components/Link';

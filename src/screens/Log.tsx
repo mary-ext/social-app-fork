@@ -5,9 +5,13 @@ import { Trans } from '@lingui/react/macro';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
-import { getEntries } from '#/logger/logDump';
+
 import { useTickEveryMinute } from '#/state/shell';
+
+import { getEntries } from '#/logger/logDump';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronTopIcon,

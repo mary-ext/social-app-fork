@@ -21,7 +21,7 @@ import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
-import { logger } from '#/logger';
+
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { getAllListMembers } from '#/state/queries/list-members';
@@ -31,9 +31,14 @@ import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
 import { useAgent, useSession } from '#/state/session';
 import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
+
+import { logger } from '#/logger';
+
 import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
@@ -58,6 +63,7 @@ import { QrCodeDialog } from '#/components/StarterPack/QrCodeDialog';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 import * as bsky from '#/types/bsky';
 

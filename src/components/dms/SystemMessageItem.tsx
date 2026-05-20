@@ -3,9 +3,13 @@ import { type ChatBskyActorDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { type ConvoItem } from '#/state/messages/convo/types';
+
 import { useInviteLinkDialog } from '#/screens/Messages/components/InviteLinkDialogProvider';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { Link } from '#/components/Link';

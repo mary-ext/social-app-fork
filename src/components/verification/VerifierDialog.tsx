@@ -4,14 +4,18 @@ import { Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
+
 import { useSession } from '#/state/session';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { VerifierCheck } from '#/components/icons/VerifierCheck';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
 import { type FullVerificationState } from '#/components/verification';
+
 import { Image } from '#/shims/image';
 import type * as bsky from '#/types/bsky';
 

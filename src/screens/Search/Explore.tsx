@@ -8,7 +8,7 @@ import * as bcp47Match from 'bcp-47-match';
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { useLanguagePrefs } from '#/state/preferences/languages';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { RQKEY_ROOT as useActorSearchQueryKeyRoot } from '#/state/queries/actor-search';
@@ -28,17 +28,23 @@ import {
 	createSuggestedStarterPacksQueryKey,
 	useSuggestedStarterPacksQuery,
 } from '#/state/queries/useSuggestedStarterPacksQuery';
+
+import { logger } from '#/logger';
+
 import { isThreadChildAt, isThreadParentAt } from '#/view/com/posts/PostFeed';
 import { PostFeedItem } from '#/view/com/posts/PostFeedItem';
 import { ViewFullThread } from '#/view/com/posts/ViewFullThread';
 import { List } from '#/view/com/util/List';
 import { FeedFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
+
 import { StarterPackCard, StarterPackCardSkeleton } from '#/screens/Search/components/StarterPackCard';
 import { ExploreRecommendations } from '#/screens/Search/modules/ExploreRecommendations';
 import { ExploreTrendingTopics } from '#/screens/Search/modules/ExploreTrendingTopics';
 import { ExploreTrendingVideos } from '#/screens/Search/modules/ExploreTrendingVideos';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button } from '#/components/Button';
 import * as FeedCard from '#/components/FeedCard';
@@ -53,6 +59,7 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+
 import * as ModuleHeader from './components/ModuleHeader';
 import { SuggestedAccountsTabBar, SuggestedProfileCard } from './modules/ExploreSuggestedAccounts';
 

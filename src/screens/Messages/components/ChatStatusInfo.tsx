@@ -5,17 +5,23 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type ActiveConvoStates } from '#/state/messages/convo';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { KnownFollowers } from '#/components/KnownFollowers';
 import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
+
 import { LinearGradient } from '#/shims/linear-gradient';
 import type * as bsky from '#/types/bsky';
+
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
 
 export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }) {

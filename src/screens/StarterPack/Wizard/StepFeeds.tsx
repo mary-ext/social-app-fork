@@ -4,17 +4,23 @@ import { type AppBskyFeedDefs, type ModerationOpts } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
+
 import { useA11y } from '#/state/a11y';
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
+
 import { List } from '#/view/com/util/List';
+
 import { useWizardState } from '#/screens/StarterPack/Wizard/State';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { SearchInput } from '#/components/forms/SearchInput';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
 import { Loader } from '#/components/Loader';
 import { ScreenTransition } from '#/components/ScreenTransition';
 import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Typography';
+
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {

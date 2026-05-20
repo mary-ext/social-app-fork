@@ -3,8 +3,11 @@ import { View } from 'react-native';
 import { type AppBskyFeedDefs, AtUri } from '@atproto/api';
 
 import { makeCustomFeedLink } from '#/lib/routes/links';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import * as FeedCard from '#/components/FeedCard';
 import { sizes as iconSizes } from '#/components/icons/common';

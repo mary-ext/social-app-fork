@@ -1,6 +1,7 @@
 import { Pressable, View } from 'react-native';
 
 import { atoms as a } from '#/alf';
+
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import * as Toast from '#/components/Toast';
 import { H1 } from '#/components/Typography';

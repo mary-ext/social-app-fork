@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import { type DimensionValue, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import { s } from '#/lib/styles';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble';
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,

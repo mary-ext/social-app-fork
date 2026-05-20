@@ -4,7 +4,9 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
 import { useSift } from '#/lib/sift';
+
 import { atoms as a } from '#/alf';
+
 import {
 	Autocomplete as AutocompleteBase,
 	type AutocompleteItem,

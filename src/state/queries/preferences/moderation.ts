@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { BskyAgent, DEFAULT_LABEL_SETTINGS, interpretLabelValueDefinitions } from '@atproto/api';
 
 import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
+
 import { useLabelersDetailedInfoQuery } from '../labeler';
 import { usePreferencesQuery } from './index';
 

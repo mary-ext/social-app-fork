@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid/non-secure';
 import { networkRetry } from '#/lib/async/retry';
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
 import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
-import { Logger } from '#/logger';
+
 import { BACKGROUND_POLL_INTERVAL, DEFAULT_POLL_INTERVAL } from '#/state/messages/events/const';
 import {
 	type MessagesEventBusDispatch,
@@ -15,6 +15,8 @@ import {
 	type MessagesEventBusParams,
 	MessagesEventBusStatus,
 } from '#/state/messages/events/types';
+
+import { Logger } from '#/logger';
 
 const logger = Logger.create(Logger.Context.DMsAgent);
 

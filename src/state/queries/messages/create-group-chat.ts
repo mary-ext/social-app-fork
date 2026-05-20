@@ -2,8 +2,11 @@ import { type ChatBskyGroupCreateGroup } from '@atproto/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { precacheConvoQuery } from './conversation';
 
 export function useCreateGroupChat({

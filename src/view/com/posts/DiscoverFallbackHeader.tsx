@@ -3,6 +3,7 @@ import { Trans } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';
 import { InfoCircleIcon } from '#/lib/icons';
+
 import { TextLink } from '../util/Link';
 import { Text } from '../util/text/Text';
 

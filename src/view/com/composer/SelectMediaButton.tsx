@@ -5,11 +5,16 @@ import { useLingui } from '@lingui/react/macro';
 import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE } from '#/lib/constants';
 import { openUnifiedPicker } from '#/lib/media/picker';
 import { extractDataUriMime } from '#/lib/media/util';
+
 import { MAX_IMAGES } from '#/view/com/composer/state/composer';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
+
 import { type ImagePickerAsset } from '#/shims/image-picker';
+
 import { isAnimatedGif } from './videos/isAnimatedGif';
 
 export type SelectMediaButtonProps = {

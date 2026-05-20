@@ -8,11 +8,15 @@ import { STALE } from '#/state/queries';
 import { profilesQueryKey } from '#/state/queries/profile';
 import { useAgent, useSession } from '#/state/session';
 import { useEnableMinimalShellMode } from '#/state/shell/minimal-mode';
+
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+
 import { SplashScreen } from './SplashScreen';
 
 export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {

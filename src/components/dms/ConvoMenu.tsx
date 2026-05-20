@@ -6,12 +6,15 @@ import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { type Shadow } from '#/state/cache/types';
 import { useConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
+
 import { type ViewStyleProp } from '#/alf';
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
@@ -32,6 +35,7 @@ import * as Menu from '#/components/Menu';
 import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+
 import type * as bsky from '#/types/bsky';
 
 let ConvoMenu = ({

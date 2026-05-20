@@ -2,13 +2,15 @@ import { type AppBskyFeedDefs } from '@atproto/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import {
 	optimisticallyDeleteBookmark,
 	optimisticallySaveBookmark,
 } from '#/state/queries/bookmarks/useBookmarksQuery';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
 
 type MutationArgs =
 	| { action: 'create'; post: AppBskyFeedDefs.PostView }

@@ -10,6 +10,7 @@ import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
+
 import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
@@ -19,6 +20,7 @@ import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/q
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
+
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
@@ -26,8 +28,11 @@ import { FAB } from '#/view/com/util/fab/FAB';
 import { type ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+
 import { ProfileFeedHeader, ProfileFeedHeaderSkeleton } from '#/screens/Profile/components/ProfileFeedHeader';
+
 import { useTheme } from '#/alf';
+
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import * as Layout from '#/components/Layout';

@@ -12,11 +12,14 @@ import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { formatCount } from '#/view/com/util/numeric/format';
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
 import { BLUE_HUE } from '#/alf/util/colorGeneration';
 import { select } from '#/alf/util/themeSelector';
+
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { EyeSlash_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/EyeSlash';
 import { Heart2_Stroke2_Corner0_Rounded as Heart } from '#/components/icons/Heart2';
@@ -25,6 +28,7 @@ import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import * as Hider from '#/components/moderation/Hider';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 import { LinearGradient } from '#/shims/linear-gradient';
 import * as bsky from '#/types/bsky';

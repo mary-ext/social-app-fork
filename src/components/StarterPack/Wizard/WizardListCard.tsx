@@ -13,14 +13,20 @@ import { Trans } from '@lingui/react/macro';
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useSession } from '#/state/session';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { type WizardAction, type WizardState } from '#/screens/StarterPack/Wizard/State';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Checkbox } from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 function WizardListCard({

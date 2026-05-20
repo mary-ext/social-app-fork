@@ -1,6 +1,7 @@
 import { View, type ViewStyle } from 'react-native';
 
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
+
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 
 type WebViewStyle = ViewStyle & {

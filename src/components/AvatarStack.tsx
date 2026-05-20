@@ -1,11 +1,15 @@
 import { View } from 'react-native';
 import { moderateProfile } from '@atproto/api';
 
-import { logger } from '#/logger';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfilesQuery } from '#/state/queries/profile';
+
+import { logger } from '#/logger';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import type * as bsky from '#/types/bsky';
 
 export function AvatarStack({

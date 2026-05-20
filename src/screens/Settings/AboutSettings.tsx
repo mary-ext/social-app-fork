@@ -4,11 +4,14 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { getDeviceId } from '#/lib/device-id';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon } from '#/components/icons/CodeLines';
 import { Wrench_Stroke2_Corner2_Rounded as WrenchIcon } from '#/components/icons/Wrench';
 import * as Layout from '#/components/Layout';
 import * as Toast from '#/components/Toast';
+
 import * as env from '#/env';
 import { setStringAsync } from '#/shims/clipboard';
 import { useDemoMode } from '#/storage/hooks/demo-mode';

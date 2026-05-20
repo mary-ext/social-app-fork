@@ -1,4 +1,3 @@
-import '#/view/icons';
 import './style.css';
 
 import { Fragment, useEffect, useState } from 'react';
@@ -9,7 +8,7 @@ import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { QueryProvider } from '#/lib/react-query';
 import { ThemeProvider } from '#/lib/ThemeContext';
 import { Provider as TranslateOnDeviceProvider } from '#/lib/translation';
-import I18nProvider from '#/locale/i18nProvider';
+
 import { Provider as A11yProvider } from '#/state/a11y';
 import { Provider as MutedThreadsProvider } from '#/state/cache/thread-mutes';
 import { Provider as DialogStateProvider } from '#/state/dialogs';
@@ -28,9 +27,15 @@ import { Provider as ComposerProvider } from '#/state/shell/composer';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
 import { Provider as StarterPackProvider } from '#/state/shell/starter-pack';
 import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
+
+import I18nProvider from '#/locale/i18nProvider';
+
+import '#/view/icons';
 import { Shell } from '#/view/shell/index';
+
 import { ThemeProvider as Alf } from '#/alf';
 import { useColorModeTheme } from '#/alf/util/useColorModeTheme';
+
 import { Provider as ContextMenuProvider } from '#/components/ContextMenu';
 import { useStarterPackEntry } from '#/components/hooks/useStarterPackEntry';
 import { Provider as IntentDialogProvider } from '#/components/intents/IntentDialogs';
@@ -40,7 +45,9 @@ import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEm
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
 import * as Toast from '#/components/Toast';
 import { ToastOutlet } from '#/components/Toast';
+
 import { Splash } from '#/Splash';
+
 import { Provider as HideBottomBarBorderProvider } from './lib/hooks/useHideBottomBarBorder';
 
 function InnerApp() {

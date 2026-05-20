@@ -16,7 +16,9 @@ import Animated, { type AnimatedScrollView } from '#/lib/animations/reanimatedCo
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { addStyle } from '#/lib/styles';
+
 import { useLayoutBreakpoints } from '#/alf';
+
 import { useDialogContext } from '#/components/Dialog';
 import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
 

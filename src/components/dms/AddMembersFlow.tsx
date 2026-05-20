@@ -7,8 +7,11 @@ import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useListConvoMembersQuery } from '#/state/queries/messages/list-convo-members';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
+
 import { type ListMethods } from '#/view/com/util/List';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { canBeAddedToGroup, type ConvoWithDetails } from '#/components/dms/util';
@@ -17,7 +20,9 @@ import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
+
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
 import { GroupChatProfileCard } from './components/GroupChatProfileCard';

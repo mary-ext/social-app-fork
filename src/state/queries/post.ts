@@ -3,10 +3,12 @@ import { type AppBskyFeedDefs, AtUri } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
+
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { type Shadow } from '#/state/cache/types';
 import { useAgent } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
+
 import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
 
 const RQKEY_ROOT = 'post';

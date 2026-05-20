@@ -9,11 +9,14 @@ import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient }
 import throttle from 'lodash.throttle';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
+
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useAgent, useSession } from '#/state/session';
+
 import { parseConvoView } from '#/components/dms/util';
+
 import { useLeftConvos } from './leave-conversation';
 
 const DEFAULT_LIMIT = 10;

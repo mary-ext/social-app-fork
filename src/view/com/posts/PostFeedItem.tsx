@@ -17,16 +17,20 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
+
 import { Link } from '#/view/com/util/Link';
 import { PostMeta } from '#/view/com/util/PostMeta';
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, select, useTheme } from '#/alf';
+
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -41,8 +45,10 @@ import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
+
 import { useActorStatus } from '#/features/liveNow';
 import * as bsky from '#/types/bsky';
+
 import { PostFeedReason } from './PostFeedReason';
 
 interface FeedItemProps {

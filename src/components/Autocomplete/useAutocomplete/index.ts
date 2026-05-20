@@ -3,16 +3,19 @@ import { moderateProfile, type ModerationOpts } from '@atproto/api';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences';
 import { useAgent } from '#/state/session';
+
 import {
 	type AutocompleteApi,
 	type AutocompleteItem,
 	type AutocompleteItemType,
 	type AutocompleteProfile,
 } from '#/components/Autocomplete/types';
+
 import { useEmojiSearch } from './useEmojiSearch';
 
 const DEFAULT_MOD_OPTS = {

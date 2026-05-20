@@ -4,8 +4,11 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
+
 import { OUTER_SPACE } from '#/screens/PostThread/const';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import * as Layout from '#/components/Layout';

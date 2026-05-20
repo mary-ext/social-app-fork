@@ -4,11 +4,15 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useUpdateActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { ExportCarDialog } from '#/screens/Settings/components/ExportCarDialog';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Dialog from '#/components/Dialog';
 import { Divider } from '#/components/Divider';
 import * as Toggle from '#/components/forms/Toggle';

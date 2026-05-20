@@ -7,6 +7,7 @@ import Animated, {
 	useSharedValue,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
+
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 
 const DEFAULT_TARGET_SCALE = IS_WEB_TOUCH_DEVICE ? 0.98 : 1;

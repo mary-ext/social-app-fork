@@ -1,7 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { type AppLanguage } from '#/locale/languages';
 import * as persisted from '#/state/persisted';
+
+import { type AppLanguage } from '#/locale/languages';
 
 type SetStateCb = (s: persisted.Schema['languagePrefs']) => persisted.Schema['languagePrefs'];
 type StateContext = persisted.Schema['languagePrefs'];

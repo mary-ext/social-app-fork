@@ -3,8 +3,11 @@ import { type ChatBskyConvoLeaveConvo, type ChatBskyConvoListConvos } from '@atp
 import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
 
 const RQKEY_ROOT = 'leave-convo';

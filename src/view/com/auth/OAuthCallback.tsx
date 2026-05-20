@@ -4,12 +4,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLingui } from '@lingui/react/macro';
 
 import { useCallOnce } from '#/lib/once';
-import { logger } from '#/logger';
+
 import { useSessionApi } from '#/state/session';
 import { InactiveAccountError } from '#/state/session/agent';
 import { useEnableMinimalShellMode } from '#/state/shell/minimal-mode';
+
+import { logger } from '#/logger';
+
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';

@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import { type TextStyleProp, type ViewStyleProp } from '#/alf';
+
 import type * as Dialog from '#/components/Dialog';
 import { type Props as SVGIconProps } from '#/components/icons/common';
 

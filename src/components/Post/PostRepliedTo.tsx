@@ -2,11 +2,15 @@ import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
+
 import { UserInfoText } from '#/view/com/util/UserInfoText';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 export function PostRepliedTo({

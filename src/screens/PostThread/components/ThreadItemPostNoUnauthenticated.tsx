@@ -2,8 +2,11 @@ import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
 import { type ThreadItem } from '#/state/queries/usePostThread/types';
+
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';

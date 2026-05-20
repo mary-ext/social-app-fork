@@ -5,7 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { ScaleAndFadeIn, ScaleAndFadeOut } from '#/lib/custom-animations/ScaleAndFade';
 import { useHaptics } from '#/lib/haptics';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon } from '#/components/icons/Arrow';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

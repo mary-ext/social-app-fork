@@ -5,13 +5,17 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
+
 import { type ListMethods } from '#/view/com/util/List';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { canBeMessaged, type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
@@ -20,7 +24,9 @@ import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
+
 import { AvatarBubbles } from '../AvatarBubbles';
 import { Error } from '../Error';
 import { ProfileBadges } from '../ProfileBadges';

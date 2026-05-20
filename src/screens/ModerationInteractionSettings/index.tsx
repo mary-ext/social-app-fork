@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
-import { logger } from '#/logger';
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
@@ -11,7 +10,11 @@ import {
 	threadgateAllowUISettingToAllowRecordValue,
 	threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useGutters } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog';
 import * as Layout from '#/components/Layout';

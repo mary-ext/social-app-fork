@@ -2,7 +2,9 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
+
 import { type ThreadPreferences } from '#/state/queries/preferences/useThreadPreferences';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider } from '#/components/icons/SettingsSlider';
 import * as Menu from '#/components/Menu';

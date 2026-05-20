@@ -6,7 +6,7 @@ import deepEqual from 'fast-deep-equal';
 
 import { type AnimatedStyle } from '#/lib/animations/reanimatedCompat';
 import { isNetworkError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -15,6 +15,9 @@ import {
 	threadgateAllowUISettingToAllowRecordValue,
 	threadgateRecordToAllowUISetting,
 } from '#/state/queries/threadgate';
+
+import { logger } from '#/logger';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
@@ -23,6 +26,7 @@ import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/G
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import * as Tooltip from '#/components/Tooltip';
 import { Text } from '#/components/Typography';
+
 import { useThreadgateNudged } from '#/storage/hooks/threadgate-nudged';
 
 export function ThreadgateBtn({

@@ -3,10 +3,13 @@ import { AtUri } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { getFeedTypeFromUri } from '#/state/queries/feed';
 import { useProfileQuery } from '#/state/queries/profile';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Divider } from '#/components/Divider';

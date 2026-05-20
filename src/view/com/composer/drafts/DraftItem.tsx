@@ -4,8 +4,11 @@ import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import * as device from '#/lib/deviceName';
+
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
+
 import { atoms as a, select, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlusIcon } from '#/components/icons/CirclePlus';
 import { type Props as SVGIconProps } from '#/components/icons/common';
@@ -16,6 +19,7 @@ import * as MediaPreview from '#/components/MediaPreview';
 import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+
 import { type DraftPostDisplay, type DraftSummary } from './state/schema';
 import * as storage from './state/storage';
 

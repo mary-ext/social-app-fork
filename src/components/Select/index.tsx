@@ -3,7 +3,9 @@ import { type TextStyle, View } from 'react-native';
 import { Select as RadixSelect } from 'radix-ui';
 
 import { useA11y } from '#/state/a11y';
+
 import { atoms as a, flatten, useTheme } from '#/alf';
+
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import {
@@ -11,6 +13,7 @@ import {
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
 import { Text } from '#/components/Typography';
+
 import {
 	type ContentProps,
 	type IconProps,

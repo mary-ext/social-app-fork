@@ -10,6 +10,7 @@ import {
 } from '@atproto/api';
 
 import { makeProfileLink } from '#/lib/routes/links';
+
 import {
 	type ApiThreadItem,
 	type ThreadItem,

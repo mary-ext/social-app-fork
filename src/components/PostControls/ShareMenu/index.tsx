@@ -10,10 +10,13 @@ import { useLingui } from '@lingui/react/macro';
 
 import { type Shadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
+
 import { EventStopper } from '#/view/com/util/EventStopper';
+
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
 import * as Menu from '#/components/Menu';
 import { useMenuControl } from '#/components/Menu';
+
 import { PostControlButton, PostControlButtonIcon } from '../PostControlButton';
 import { ShareMenuItems } from './ShareMenuItems';
 

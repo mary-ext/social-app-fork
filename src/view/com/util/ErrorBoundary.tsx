@@ -3,6 +3,7 @@ import { type StyleProp, type ViewStyle } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { logger } from '#/logger';
+
 import { ErrorScreen } from './error/ErrorScreen';
 import { CenteredView } from './Views';
 

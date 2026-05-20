@@ -12,12 +12,17 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useHaptics } from '#/lib/haptics';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { logger } from '#/logger';
+
 import { type Shadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
@@ -30,7 +35,9 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { useActorStatus } from '#/features/liveNow';
+
 import { GermButton } from '../components/GermButton';
 import { EditProfileDialog } from './EditProfileDialog';
 import { ProfileHeaderHandle } from './Handle';

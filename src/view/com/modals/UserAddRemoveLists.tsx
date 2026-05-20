@@ -8,6 +8,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { s } from '#/lib/styles';
+
 import { useModalControls } from '#/state/modals';
 import {
 	getMembership,
@@ -17,7 +18,9 @@ import {
 	useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships';
 import { useSession } from '#/state/session';
+
 import { IS_WEB_MOBILE } from '#/env';
+
 import { MyLists } from '../lists/MyLists';
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';

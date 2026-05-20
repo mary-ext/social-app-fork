@@ -10,6 +10,7 @@ import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { s } from '#/lib/styles';
+
 import {
 	type SavedFeedItem,
 	useGetPopularFeedsQuery,
@@ -17,14 +18,18 @@ import {
 	useSearchPopularFeedsMutation,
 } from '#/state/queries/feed';
 import { useSession } from '#/state/session';
+
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { FAB } from '#/view/com/util/fab/FAB';
 import { List, type ListMethods } from '#/view/com/util/List';
 import { FeedFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { Text } from '#/view/com/util/text/Text';
+
 import { NoFollowingFeed } from '#/screens/Feeds/NoFollowingFeed';
 import { NoSavedFeedsOfAnyType } from '#/screens/Feeds/NoSavedFeedsOfAnyType';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { ButtonIcon } from '#/components/Button';
 import { Divider } from '#/components/Divider';
 import * as FeedCard from '#/components/FeedCard';

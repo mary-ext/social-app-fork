@@ -18,18 +18,22 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
+
 import { type ConvoItem } from '#/state/messages/convo/types';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useSession } from '#/state/session';
+
 import { atoms as a, useTheme } from '#/alf';
 import { isOnlyEmoji } from '#/alf/typography';
+
 import { useDialogControl } from '#/components/Dialog';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
 import { InlineLinkText, Link } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+
 import { DateDivider } from './DateDivider';
 import { MessageItemEmbed } from './MessageItemEmbed';
 import { ReactionsDialog } from './ReactionsDialog';

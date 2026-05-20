@@ -8,13 +8,17 @@ import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from '#/lib/animatio
 import { HITSLOP_10, urls } from '#/lib/constants';
 import { cleanError } from '#/lib/strings/errors';
 import { createFullHandle, sanitizeHandle, validateServiceHandle } from '#/lib/strings/handles';
+
 import { useFetchDid, useUpdateHandleMutation } from '#/state/queries/handle';
 import { RQKEY as RQKEY_PROFILE } from '#/state/queries/profile';
 import { useServiceQuery } from '#/state/queries/service';
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
 import { useAgent, useSession } from '#/state/session';
+
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -31,6 +35,7 @@ import { InlineLinkText } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
 import { useSimpleVerificationState } from '#/components/verification';
+
 import { CopyButton } from './CopyButton';
 
 export function ChangeHandleDialog({ control }: { control: Dialog.DialogControlProps }) {

@@ -118,7 +118,6 @@
 		"eslint-plugin-react-hooks": "7.0.1",
 		"eslint-plugin-react-native": "^5.0.0",
 		"eslint-plugin-react-native-a11y": "^3.5.1",
-		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"globals": "^17.0.0",
 		"is-ci": "^3.0.1",
 		"oxfmt": "^0.50.0",

@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 
+import { useLanguagePrefs } from '#/state/preferences';
+
 import { languageName } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
-import { useLanguagePrefs } from '#/state/preferences';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';

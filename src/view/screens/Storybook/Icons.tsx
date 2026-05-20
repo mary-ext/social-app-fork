@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight } from '#/components/icons/Arrow';
 import { CalendarDays_Stroke2_Corner0_Rounded as CalendarDays } from '#/components/icons/CalendarDays';
 import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';

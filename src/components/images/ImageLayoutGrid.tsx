@@ -3,9 +3,12 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { type AppBskyEmbedImages } from '@atproto/api';
 
 import { type AnimatedRef, type AnimatedView, useAnimatedRef } from '#/lib/animations/reanimatedCompat';
+
 import { atoms as a, useBreakpoints } from '#/alf';
+
 import { type Dimensions } from '#/components/Lightbox/types';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
+
 import { GalleryItem } from './ImageLayoutGridItem';
 
 interface ImageLayoutGridProps {

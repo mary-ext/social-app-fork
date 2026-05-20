@@ -2,7 +2,9 @@ import { useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 
 import { ScrollProvider } from '#/lib/ScrollContext';
+
 import { List, type ListMethods } from '#/view/com/util/List';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';

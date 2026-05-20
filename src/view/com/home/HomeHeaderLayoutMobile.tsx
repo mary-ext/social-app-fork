@@ -7,16 +7,21 @@ import { HITSLOP_10 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import { useHaptics } from '#/lib/haptics';
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { emitSoftReset } from '#/state/events';
 import { useSession } from '#/state/session';
 import { useShellLayout } from '#/state/shell/shell-layout';
+
 import { useHomeHeaderTransform } from '#/view/com/util/MainScrollProvider';
 import { Logo } from '#/view/icons/Logo';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { ButtonIcon } from '#/components/Button';
 import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
 import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
+
 import { IS_DEV } from '#/env';
 
 export function HomeHeaderLayoutMobile({

@@ -4,7 +4,9 @@ import { Pressable, type PressableProps, type StyleProp, View, type ViewStyle } 
 import Animated, { Easing, LinearTransition } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
+
 import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { CheckThick_Stroke2_Corner0_Rounded as Checkmark } from '#/components/icons/Check';
 import { Text } from '#/components/Typography';

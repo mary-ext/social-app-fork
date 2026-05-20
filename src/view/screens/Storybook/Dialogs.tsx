@@ -2,12 +2,15 @@ import { useRef, useState } from 'react';
 import { View } from 'react-native';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
+
 import { atoms as a } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { H3, P, Text } from '#/components/Typography';
+
 import { PlatformInfo } from '#/shims/bluesky-swiss-army';
 
 export function Dialogs() {

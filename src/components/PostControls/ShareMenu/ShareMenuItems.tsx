@@ -8,15 +8,19 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useSession } from '#/state/session';
+
 import { useDialogControl } from '#/components/Dialog';
 import { SendViaChatDialog } from '#/components/dms/dialogs/ShareViaChatDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
 import * as Menu from '#/components/Menu';
+
 import { useDevMode } from '#/storage/hooks/dev-mode';
+
 import { type ShareMenuItemsProps } from './ShareMenuItems.types';
 
 let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode => {

@@ -5,12 +5,16 @@ import { useLingui } from '@lingui/react/macro';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { useProfileKnownFollowersQuery } from '#/state/queries/known-followers';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
+
+import { logger } from '#/logger';
+
 import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
 import { List } from '#/view/com/util/List';
 import { ViewHeader } from '#/view/com/util/ViewHeader';
+
 import * as Layout from '#/components/Layout';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 

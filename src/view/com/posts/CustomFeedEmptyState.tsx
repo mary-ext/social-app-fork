@@ -9,8 +9,10 @@ import { usePalette } from '#/lib/hooks/usePalette';
 import { MagnifyingGlassIcon } from '#/lib/icons';
 import { type NavigationProp } from '#/lib/routes/types';
 import { s } from '#/lib/styles';
+
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useSession } from '#/state/session';
+
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
 

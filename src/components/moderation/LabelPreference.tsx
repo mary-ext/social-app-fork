@@ -6,11 +6,15 @@ import { Trans } from '@lingui/react/macro';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { useLabelBehaviorDescription } from '#/lib/moderation/useLabelBehaviorDescription';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
+
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import * as ToggleButton from '#/components/forms/ToggleButton';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '../icons/CircleInfo';
 
 export function Outer({ children }: React.PropsWithChildren<{}>) {

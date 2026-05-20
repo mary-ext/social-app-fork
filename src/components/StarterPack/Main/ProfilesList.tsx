@@ -6,11 +6,16 @@ import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
+
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
+
 import { List, type ListRef } from '#/view/com/util/List';
+
 import { type SectionRef } from '#/screens/Profile/Sections/types';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Default as ProfileCard } from '#/components/ProfileCard';
 

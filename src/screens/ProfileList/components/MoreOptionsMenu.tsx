@@ -5,10 +5,13 @@ import { useNavigation } from '@react-navigation/native';
 import { type NavigationProp } from '#/lib/routes/types';
 import { shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
-import { logger } from '#/logger';
+
 import { useListBlockMutation, useListDeleteMutation, useListMuteMutation } from '#/state/queries/list';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';

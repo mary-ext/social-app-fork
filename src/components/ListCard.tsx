@@ -6,14 +6,18 @@ import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheList } from '#/state/queries/feed';
 import { useSession } from '#/state/session';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Avatar, Description, Header, Outer, SaveButton } from '#/components/FeedCard';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import * as Hider from '#/components/moderation/Hider';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 /*

@@ -11,11 +11,14 @@ import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { emitSoftReset } from '#/state/events';
+
 import { TextLink } from '#/view/com/util/Link';
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { Text } from '#/view/com/util/text/Text';
 import { UserAvatar, type UserAvatarType } from '#/view/com/util/UserAvatar';
+
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Layout from '#/components/Layout';
 import { useLightboxControls } from '#/components/Lightbox/state';

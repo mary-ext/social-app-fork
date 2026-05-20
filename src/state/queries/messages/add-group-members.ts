@@ -7,10 +7,14 @@ import {
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import { useProfileQuery } from '#/state/queries/profile';
 import { useAgent, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import type * as bsky from '#/types/bsky';
+
 import { RQKEY as CONVO_KEY } from './conversation';
 import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
 import { listConvoMembersQueryKey } from './list-convo-members';

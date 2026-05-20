@@ -3,7 +3,9 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { HITSLOP_20 } from '#/lib/constants';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { Fill } from '#/components/Fill';
 import * as Prompt from '#/components/Prompt';

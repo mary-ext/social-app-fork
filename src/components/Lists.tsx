@@ -3,9 +3,12 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
+
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
 import { CenteredView } from '#/view/com/util/Views';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { Error } from '#/components/Error';
 import { Loader } from '#/components/Loader';

@@ -1,4 +1,5 @@
 import { interpolate, useAnimatedStyle } from '#/lib/animations/reanimatedCompat';
+
 import { useMinimalShellMode } from '#/state/shell/minimal-mode';
 import { useShellLayout } from '#/state/shell/shell-layout';
 

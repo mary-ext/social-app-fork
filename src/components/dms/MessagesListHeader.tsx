@@ -7,11 +7,15 @@ import { useNavigation } from '@react-navigation/native';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
+
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, ButtonIcon } from '#/components/Button';
 import { ConvoMenu } from '#/components/dms/ConvoMenu';
@@ -21,6 +25,7 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+
 import { type ConvoWithDetails } from './util';
 
 const PFP_SIZE = 40;

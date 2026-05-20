@@ -4,8 +4,11 @@ import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
 import { type PostThreadParams, type ThreadItem } from '#/state/queries/usePostThread';
+
 import { LINEAR_AVI_WIDTH, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlus } from '#/components/icons/CirclePlus';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';

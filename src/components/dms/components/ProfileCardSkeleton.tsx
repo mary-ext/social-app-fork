@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 
 import { atoms as a } from '#/alf';
+
 import * as ProfileCard from '#/components/ProfileCard';
 
 export function ProfileCardSkeleton() {

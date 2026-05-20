@@ -18,8 +18,7 @@ import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/ty
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 import { useTranslate } from '#/lib/translation';
-import { getPostLanguageTags } from '#/locale/helpers';
-import { logger } from '#/logger';
+
 import { type Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -38,6 +37,11 @@ import {
 } from '#/state/queries/threadgate';
 import { useRequireAuth, useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
+
+import { logger } from '#/logger';
+
+import { getPostLanguageTags } from '#/locale/helpers';
+
 import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import {
@@ -72,6 +76,7 @@ import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+
 import * as Clipboard from '#/shims/clipboard';
 
 let PostMenuItems = ({

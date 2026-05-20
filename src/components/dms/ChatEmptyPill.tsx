@@ -6,7 +6,9 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from '#/lib/anima
 import { ScaleAndFadeIn } from '#/lib/custom-animations/ScaleAndFade';
 import { ShrinkAndPop } from '#/lib/custom-animations/ShrinkAndPop';
 import { useHaptics } from '#/lib/haptics';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);

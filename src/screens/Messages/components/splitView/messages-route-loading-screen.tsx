@@ -1,9 +1,12 @@
 import { View } from 'react-native';
 
 import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
+
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
+
 import { SCROLLBAR_OFFSET } from '#/components/Layout/const';
 import { Loader } from '#/components/Loader';
+
 import { getMessagesSplitViewLayoutDimensions } from './layout-dimensions';
 
 /**

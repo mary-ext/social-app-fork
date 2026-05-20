@@ -10,7 +10,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { networkRetry, retry } from '#/lib/async/retry';
-import { logger } from '#/logger';
+
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { STALE } from '#/state/queries';
 import { useGetPosts } from '#/state/queries/post';
@@ -21,6 +21,9 @@ import {
 	POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import * as bsky from '#/types/bsky';
 
 export async function getPostgateRecord({

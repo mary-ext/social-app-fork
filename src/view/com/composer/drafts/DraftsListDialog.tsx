@@ -3,14 +3,18 @@ import { Keyboard, View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCallOnce } from '#/lib/once';
+
 import { EmptyState } from '#/view/com/util/EmptyState';
+
 import { atoms as a, select, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
 import { ListFooter } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import { DraftItem } from './DraftItem';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
 import { type DraftSummary } from './state/schema';

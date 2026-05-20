@@ -15,6 +15,7 @@ import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import {
 	type ProfileFollowLogContext,
@@ -22,8 +23,11 @@ import {
 	useProfileFollowMutationQueue,
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
@@ -33,6 +37,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import { useActorStatus } from '#/features/liveNow';
 import type * as bsky from '#/types/bsky';
 

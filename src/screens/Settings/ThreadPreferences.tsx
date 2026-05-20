@@ -3,17 +3,21 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+
 import {
 	normalizeSort,
 	normalizeView,
 	useThreadPreferences,
 } from '#/state/queries/preferences/useThreadPreferences';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import * as Toggle from '#/components/forms/Toggle';
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { Tree_Stroke2_Corner0_Rounded as TreeIcon } from '#/components/icons/Tree';
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
+
 import * as SettingsList from './components/SettingsList';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>;

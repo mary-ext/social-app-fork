@@ -1,4 +1,5 @@
 import { LEFT_NAV_MINIMAL_WIDTH } from '#/view/shell/desktop/LeftNav';
+
 import { CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
 
 /**

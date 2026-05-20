@@ -5,6 +5,7 @@ import type {} from '@atcute/microcosm';
 import { configureOAuth, createAuthorizationUrl } from '@atcute/oauth-browser-client';
 
 import { timeout } from '#/lib/async/timeout';
+
 import { OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE } from '#/env';
 
 export const OAUTH_CALLBACK_PATH = '/oauth/callback';

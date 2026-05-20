@@ -3,7 +3,9 @@ import { StyleSheet, Text as RNText, type TextProps } from 'react-native';
 
 import { lh, s } from '#/lib/styles';
 import { type TypographyVariant, useTheme } from '#/lib/ThemeContext';
+
 import { logger } from '#/logger';
+
 import { applyFonts, useAlf } from '#/alf';
 import { childHasEmoji, type StringChild } from '#/alf/typography';
 

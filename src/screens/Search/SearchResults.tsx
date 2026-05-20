@@ -8,17 +8,21 @@ import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import { useCallOnce } from '#/lib/once';
 import { cleanError } from '#/lib/strings/errors';
 import { augmentSearchQuery } from '#/lib/strings/helpers';
+
 import { useActorSearch } from '#/state/queries/actor-search';
 import { usePopularFeedsSearch } from '#/state/queries/feed';
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
+
 import { Pager } from '#/view/com/pager/Pager';
 import { TabBar } from '#/view/com/pager/TabBar';
 import { Post } from '#/view/com/post/Post';
 import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
 import { List } from '#/view/com/util/List';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as FeedCard from '#/components/FeedCard';
 import * as Layout from '#/components/Layout';
@@ -26,6 +30,7 @@ import { InlineLinkText } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
 import { Text } from '#/components/Typography';
+
 import type * as bsky from '#/types/bsky';
 
 type SearchResultPressTab = 'top' | 'latest' | 'people' | 'feeds' | undefined;

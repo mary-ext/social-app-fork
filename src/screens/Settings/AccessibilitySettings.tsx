@@ -2,10 +2,14 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
+
 import { useRequireAltTextEnabled, useSetRequireAltTextEnabled } from '#/state/preferences';
 import { useLargeAltBadgeEnabled, useSetLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
+
 import { atoms as a } from '#/alf';
+
 import * as Toggle from '#/components/forms/Toggle';
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
 import * as Layout from '#/components/Layout';

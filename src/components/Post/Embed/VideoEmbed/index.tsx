@@ -4,7 +4,9 @@ import { type AppBskyEmbedVideo } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
 import { ConstrainedImage } from '#/components/images/AutoSizedImage';
@@ -14,7 +16,9 @@ import {
 	VideoEmbedInnerWeb,
 	VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb';
+
 import { IS_WEB_FIREFOX } from '#/env';
+
 import { useActiveVideoWeb } from './ActiveVideoWebContext';
 import * as VideoFallback from './VideoEmbedInner/VideoFallback';
 

@@ -22,6 +22,7 @@ import {
 import { uploadBlob } from '#/lib/api';
 import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
+
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { type Shadow } from '#/state/cache/types';
 import { type ImageMeta } from '#/state/gallery';
@@ -35,7 +36,9 @@ import {
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { useAgent, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
+
 import type * as bsky from '#/types/bsky';
+
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';
 import { RQKEY as RQKEY_MY_MUTED } from './my-muted-accounts';

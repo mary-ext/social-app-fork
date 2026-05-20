@@ -2,11 +2,13 @@ import { type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsersForSeeMore
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
-import { logger } from '#/logger';
+
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useAgent } from '#/state/session';
+
+import { logger } from '#/logger';
 
 export type QueryProps = {
 	category?: string | null;

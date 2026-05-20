@@ -14,13 +14,18 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { type Dimensions } from '#/lib/media/types';
 import { colors } from '#/lib/styles';
+
 import { type ComposerImage } from '#/state/gallery';
+
 import { atoms as a, tokens, useTheme } from '#/alf';
+
 import { Admonition } from '#/components/Admonition';
 import * as Dialog from '#/components/Dialog';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
+
 import { type PostAction } from '../state/composer';
 import { EditImageDialog } from './EditImageDialog';
 import { ImageAltTextDialog } from './ImageAltTextDialog';

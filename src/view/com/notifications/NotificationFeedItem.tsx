@@ -32,18 +32,23 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { niceDate } from '#/lib/strings/time';
 import { s } from '#/lib/styles';
-import { logger } from '#/logger';
+
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type FeedNotification } from '#/state/queries/notifications/feed';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useAgent, useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
 import { Post } from '#/view/com/post/Post';
 import { formatCount } from '#/view/com/util/numeric/format';
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
@@ -66,6 +71,7 @@ import { Notification as StarterPackCard } from '#/components/StarterPack/Starte
 import { SubtleHover } from '#/components/SubtleHover';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
 
 const MAX_AUTHORS = 5;

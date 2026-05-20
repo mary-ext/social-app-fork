@@ -11,7 +11,7 @@ import {
 	type NativeStackScreenProps,
 	type NavigationProp,
 } from '#/lib/routes/types';
-import { logger } from '#/logger';
+
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -22,8 +22,13 @@ import { useListJoinRequestsQuery } from '#/state/queries/messages/list-join-req
 import { useLockConvo } from '#/state/queries/messages/lock-conversation';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { useSession } from '#/state/session';
+
+import { logger } from '#/logger';
+
 import { List } from '#/view/com/util/List';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, type ButtonColor, ButtonIcon } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
@@ -44,7 +49,9 @@ import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
 import * as bsky from '#/types/bsky';
+
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { AddMembersLink } from './AddMembersLink';
 import { Member, MemberPlaceholder } from './Member';

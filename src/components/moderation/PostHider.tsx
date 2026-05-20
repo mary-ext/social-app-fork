@@ -7,10 +7,14 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { addStyle } from '#/lib/styles';
+
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
+
 // import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
 import { Link } from '#/view/com/util/Link';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,

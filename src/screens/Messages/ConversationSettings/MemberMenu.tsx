@@ -4,13 +4,17 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { type NavigationProp } from '#/lib/routes/types';
-import { logger } from '#/logger';
+
 import { type Shadow } from '#/state/cache/types';
 import { useGetConvoAvailabilityQuery } from '#/state/queries/messages/get-convo-availability';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
 import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { type ConvoWithDetails } from '#/components/dms/util';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
@@ -23,7 +27,9 @@ import {
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+
 import type * as bsky from '#/types/bsky';
+
 import { BlockMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
 

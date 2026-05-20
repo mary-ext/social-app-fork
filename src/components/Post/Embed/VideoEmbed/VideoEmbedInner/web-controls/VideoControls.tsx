@@ -4,8 +4,11 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';
+
 import { useAutoplayDisabled, useSetSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
@@ -21,7 +24,9 @@ import { Pause_Filled_Corner0_Rounded as PauseIcon } from '#/components/icons/Pa
 import { Play_Filled_Corner0_Rounded as PlayIcon } from '#/components/icons/Play';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
+
 import { GifPresentationControls } from '../../GifPresentationControls';
 import { TimeIndicator } from '../TimeIndicator';
 import { ControlButton } from './ControlButton';

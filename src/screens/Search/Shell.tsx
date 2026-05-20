@@ -8,18 +8,24 @@ import { HITSLOP_10, HITSLOP_20 } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { MagnifyingGlassIcon } from '#/lib/icons';
 import { type NavigationProp } from '#/lib/routes/types';
+
 import { listenSoftReset } from '#/state/events';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { unstableCacheProfileView, useProfilesQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
+
 import { makeSearchQuery, type Params, parseSearchQuery } from '#/screens/Search/utils';
+
 import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonText } from '#/components/Button';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
+
 import { account, useStorage } from '#/storage';
 import type * as bsky from '#/types/bsky';
+
 import { AutocompleteResults } from './components/AutocompleteResults';
 import { SearchHistory } from './components/SearchHistory';
 import { SearchLanguageDropdown } from './components/SearchLanguageDropdown';

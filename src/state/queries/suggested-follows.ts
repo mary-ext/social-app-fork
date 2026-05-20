@@ -8,6 +8,7 @@ import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@
 
 import { STALE } from '#/state/queries';
 import { useAgent } from '#/state/session';
+
 import type * as bsky from '#/types/bsky';
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows';

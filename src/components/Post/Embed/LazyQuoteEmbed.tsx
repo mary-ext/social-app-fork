@@ -3,7 +3,9 @@ import { View } from 'react-native';
 
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { QuoteEmbed } from '#/components/Post/Embed';
 
 export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisabled?: boolean }) {

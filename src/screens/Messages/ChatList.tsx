@@ -10,16 +10,21 @@ import { useAppState } from '#/lib/appState';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { type MessagesTabNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { listenSoftReset } from '#/state/events';
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { useLeftConvos } from '#/state/queries/messages/leave-conversation';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
+
+import { logger } from '#/logger';
+
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { List, type ListRef } from '#/view/com/util/List';
 import { ChatListLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { type DialogControlProps, useDialogControl } from '#/components/Dialog';
 import { NewChat } from '#/components/dms/dialogs/NewChatDialog';
@@ -37,6 +42,7 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
 import { Text } from '#/components/Typography';
+
 import { ChatListItem } from './components/ChatListItem';
 import { InboxRequests } from './components/InboxRequests';
 import { useIsWithinSplitView } from './components/splitView/context';

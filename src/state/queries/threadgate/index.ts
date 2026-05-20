@@ -2,6 +2,7 @@ import { type AppBskyFeedDefs, AppBskyFeedThreadgate, AtUri, type BskyAgent } fr
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { networkRetry, retry } from '#/lib/async/retry';
+
 import { STALE } from '#/state/queries';
 import { useGetPost } from '#/state/queries/post';
 import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
@@ -14,6 +15,7 @@ import {
 import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread';
 import { useAgent } from '#/state/session';
 import { useThreadgateHiddenReplyUrisAPI } from '#/state/threadgate-hidden-replies';
+
 import * as bsky from '#/types/bsky';
 
 export * from '#/state/queries/threadgate/types';

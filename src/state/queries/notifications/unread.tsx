@@ -6,9 +6,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { EventEmitter } from 'eventemitter3';
 
 import BroadcastChannel from '#/lib/broadcast';
+
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useAgent, useSession } from '#/state/session';
+
 import { RQKEY as RQKEY_NOTIFS } from './feed';
 import { type CachedFeedPage, type FeedPage } from './types';
 import { fetchPage } from './util';

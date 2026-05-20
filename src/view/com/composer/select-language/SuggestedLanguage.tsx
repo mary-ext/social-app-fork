@@ -7,16 +7,22 @@ import debounce from 'lodash.debounce';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useNonReactiveObject } from '#/lib/hooks/useNonReactiveObject';
+
+import { useLanguagePrefs } from '#/state/preferences/languages';
+
+import { logger } from '#/logger';
+
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 import { codeToLanguageName } from '#/locale/helpers';
-import { logger } from '#/logger';
-import { useLanguagePrefs } from '#/state/preferences/languages';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
+
 import { guessLanguageAsync, type LanguageResult } from '#/shims/bsky-guess-language';
 
 type LanguageDetectionPerLanguageConfig = {

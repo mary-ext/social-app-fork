@@ -3,14 +3,18 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
-import { logger } from '#/logger';
+
 import {
 	usePreferencesQuery,
 	useRemoveFeedMutation,
 	useReplaceForYouWithDiscoverFeedMutation,
 } from '#/state/queries/preferences';
 import { useSetSelectedFeed } from '#/state/shell/selected-feed';
+
+import { logger } from '#/logger';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { InlineLinkText } from '#/components/Link';
 import { Loader } from '#/components/Loader';

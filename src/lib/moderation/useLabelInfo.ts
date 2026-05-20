@@ -9,6 +9,7 @@ import { useLingui } from '@lingui/react';
 import * as bcp47Match from 'bcp-47-match';
 
 import { type GlobalLabelStrings, useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
+
 import { useLabelDefinitions } from '#/state/preferences';
 
 export interface LabelInfo {

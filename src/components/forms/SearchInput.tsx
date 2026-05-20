@@ -4,8 +4,11 @@ import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { mergeRefs } from '#/lib/merge-refs';
+
 import { listenFocusSearch } from '#/state/events';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { Button, ButtonIcon } from '#/components/Button';
 import * as TextField from '#/components/forms/TextField';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';

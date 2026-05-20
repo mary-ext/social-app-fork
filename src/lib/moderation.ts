@@ -12,6 +12,7 @@ import {
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+
 import { type AppModerationCause } from '#/components/Pills';
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;

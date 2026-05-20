@@ -2,10 +2,13 @@ import { useCallback } from 'react';
 import { View } from 'react-native';
 
 import { Sift, type UseSiftReturn } from '#/lib/sift';
+
 import { atoms as a, useTheme } from '#/alf';
+
 import { type AutocompleteItem } from '#/components/Autocomplete/types';
 import { useOnKeyboard } from '#/components/hooks/useOnKeyboard';
 import { Portal } from '#/components/Portal';
+
 import { AutocompleteItemEmoji } from './AutocompleteItemEmoji';
 import { AutocompleteItemProfile } from './AutocompleteItemProfile';
 import { AutocompleteItemSearch } from './AutocompleteItemSearch';

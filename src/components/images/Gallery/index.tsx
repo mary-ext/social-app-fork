@@ -20,10 +20,14 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import { type Dimensions } from '#/lib/media/types';
 import { mergeRefs } from '#/lib/merge-refs';
+
 import { useA11y } from '#/state/a11y';
 import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
+
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
+
 import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
+
 import { ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen } from '#/components/icons/ArrowsDiagonal';
 import { AutoSizedImage } from '#/components/images/AutoSizedImage';
 import { ITEM_GAP, MAX_ASPECT_RATIO, MIN_ASPECT_RATIO } from '#/components/images/Gallery/const';
@@ -33,6 +37,7 @@ import { getAspectRatio } from '#/components/images/Gallery/utils';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { Text } from '#/components/Typography';
+
 import { Image } from '#/shims/image';
 
 export * from './const';

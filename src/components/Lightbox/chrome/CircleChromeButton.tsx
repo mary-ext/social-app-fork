@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { HITSLOP_10 } from '#/lib/constants';
+
 import { type Props as IconProps } from '#/components/icons/common';
 
 type Props = {

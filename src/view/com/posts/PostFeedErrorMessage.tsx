@@ -7,11 +7,15 @@ import { useNavigation } from '@react-navigation/native';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { logger } from '#/logger';
+
 import { type FeedDescriptor } from '#/state/queries/post-feed';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
+
+import { logger } from '#/logger';
+
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Prompt from '#/components/Prompt';
+
 import { EmptyState } from '../util/EmptyState';
 import { ErrorMessage } from '../util/error/ErrorMessage';
 import { Button } from '../util/forms/Button';

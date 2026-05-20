@@ -4,6 +4,7 @@ import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
 
 /** Absolutely positioned time indicator showing how many seconds are remaining Time is in seconds */

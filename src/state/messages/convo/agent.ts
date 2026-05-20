@@ -13,7 +13,7 @@ import { nanoid } from 'nanoid/non-secure';
 import { networkRetry } from '#/lib/async/retry';
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
 import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
-import { Logger } from '#/logger';
+
 import {
 	ACTIVE_POLL_INTERVAL,
 	BACKGROUND_POLL_INTERVAL,
@@ -34,6 +34,9 @@ import {
 } from '#/state/messages/convo/types';
 import { type MessagesEventBus } from '#/state/messages/events/agent';
 import { type MessagesEventBusError } from '#/state/messages/events/types';
+
+import { Logger } from '#/logger';
+
 import { type ConvoWithDetails, type GroupConvoMember, parseConvoView } from '#/components/dms/util';
 
 const logger = Logger.create(Logger.Context.ConversationAgent);

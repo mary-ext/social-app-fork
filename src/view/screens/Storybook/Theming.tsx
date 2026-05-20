@@ -1,7 +1,9 @@
 import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
+
 import { Text } from '#/components/Typography';
+
 import { Palette } from './Palette';
 
 export function Theming() {
