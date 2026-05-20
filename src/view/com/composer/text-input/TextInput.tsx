@@ -194,7 +194,7 @@ export function TextInput({
   )
 
   const handlePaste = useCallback(
-    (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    (event: ClipboardEvent) => {
       isPastingRef.current = true
       window.setTimeout(() => {
         isPastingRef.current = false
@@ -235,7 +235,7 @@ export function TextInput({
         onChange={handleRichTextChange}
         onFocus={onFocus}
         onRequestSubmit={handleRequestSubmit}
-        {...({onPaste: handlePaste} as Record<string, unknown>)}
+        onPaste={handlePaste}
       />
 
       {isDropping && (

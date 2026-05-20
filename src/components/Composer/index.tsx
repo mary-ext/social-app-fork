@@ -38,6 +38,8 @@ type WebKeyboardEvent = React.KeyboardEvent<Element> & {
   nativeEvent: KeyboardEvent
 }
 
+type WebPasteHandler = (event: ClipboardEvent) => void
+
 type WebTextStyle = TextStyle & {
   whiteSpace?: 'pre-wrap'
 }
@@ -117,6 +119,7 @@ export type ComposerProps = Omit<
   onChange?: (text: string) => void
   onActiveFacet?: (activeFacet: TapperActiveFacet | null) => void
   onFacetCommitted?: (facet: TapperFacet) => void
+  onPaste?: WebPasteHandler
   onRequestSubmit?: (request: SubmitRequest) => void
   autocompletePlacement?: Exclude<
     Parameters<typeof useSift>[0],
@@ -135,6 +138,7 @@ export function Composer({
   onChange: onChangeOuter,
   onActiveFacet: onActiveFacetOuter,
   onFacetCommitted: onFacetCommittedOuter,
+  onPaste,
   onRequestSubmit,
   autocompletePlacement,
   defaultValue,
@@ -230,6 +234,26 @@ export function Composer({
       offAfterInsert()
     }
   }, [tapper.on, tapper.input])
+
+  /*
+   * React Native Web's TextInput only forwards an allowlist of DOM event props,
+   * so web-only paste handling has to attach to the underlying textarea.
+   */
+  useEffect(() => {
+    if (!onPaste) {
+      return
+    }
+
+    const element = tapper.input.element as unknown as HTMLTextAreaElement | null
+    if (!element) {
+      return
+    }
+
+    element.addEventListener('paste', onPaste)
+    return () => {
+      element.removeEventListener('paste', onPaste)
+    }
+  }, [onPaste, tapper.input.element])
 
   /*
    * Styles
