@@ -1,6 +1,12 @@
 import 'react-image-crop/dist/ReactCrop.css'
 
-import {useCallback, useImperativeHandle, useRef, useState} from 'react'
+import {
+  type CSSProperties,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
@@ -130,6 +136,13 @@ function EditImageInner({
 
   const initialCrop = getInitialCrop(source, image.manips)
   const [crop, setCrop] = useState(initialCrop)
+  const sourceDimensions =
+    source.width > 0 && source.height > 0
+      ? {
+          height: source.height,
+          width: source.width,
+        }
+      : undefined
 
   const onPressSubmit = useCallback(async () => {
     const result = await manipulateImage(image, {
@@ -175,7 +188,12 @@ function EditImageInner({
         className="ReactCrop--no-animate"
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}>
-        <img src={source.path} style={{maxHeight: `50vh`}} />
+        <img
+          alt=""
+          src={source.path}
+          {...sourceDimensions}
+          style={imageStyle}
+        />
       </ReactCrop>
       {/* Eat clicks when dragging, otherwise mousing up over the backdrop
         causes the dialog to close */}
@@ -183,6 +201,13 @@ function EditImageInner({
     </View>
   )
 }
+
+const imageStyle = {
+  display: 'block',
+  height: 'auto',
+  maxHeight: '50vh',
+  maxWidth: '100%',
+} satisfies CSSProperties
 
 const getInitialCrop = (
   source: ImageSource,
