@@ -16,9 +16,9 @@ build-web: ## Compile web bundle
 lint: ## Run style checks and verify syntax
 	pnpm lint
 
-#.PHONY: fmt
-#fmt: ## Run syntax re-formatting
-#	pnpm prettier
+.PHONY: fmt
+fmt: ## Run syntax re-formatting
+	pnpm format
 
 .PHONY: deps
 deps: ## Installs dependent libs using 'pnpm install'

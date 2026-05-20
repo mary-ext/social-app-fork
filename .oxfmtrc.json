@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "arrowParens": "avoid",
+  "bracketSameLine": true,
+  "bracketSpacing": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "*",
+    "!**/*.js",
+    "!**/*.jsx",
+    "!**/*.ts",
+    "!**/*.tsx",
+    "!*/",
+    "!**/*.css",
+    ".expo",
+    "android",
+    "ios",
+    "src/locale/locales",
+    "lib/react-compiler-runtime",
+    "bskyweb/static",
+    "coverage",
+    "web-build"
+  ]
+}
