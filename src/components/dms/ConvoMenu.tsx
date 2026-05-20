@@ -1,311 +1,279 @@
-import {memo, useCallback} from 'react'
-import {Keyboard, View} from 'react-native'
-import {ChatBskyConvoDefs, type ModerationCause} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { memo, useCallback } from 'react';
+import { Keyboard, View } from 'react-native';
+import { ChatBskyConvoDefs, type ModerationCause } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { useNavigation } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {type Shadow} from '#/state/cache/types'
+import { type NavigationProp } from '#/lib/routes/types';
+import { type Shadow } from '#/state/cache/types';
+import { useConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
+import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
+import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
+import { type ViewStyleProp } from '#/alf';
+import { atoms as a } from '#/alf';
+import { Button, ButtonIcon } from '#/components/Button';
+import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
+import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog';
+import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
+import { ReportConversationPrompt } from '#/components/dms/ReportConversationPrompt';
+import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
+import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble';
+import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
+import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
+import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import {
-  useConvoQuery,
-  useMarkAsReadMutation,
-} from '#/state/queries/messages/conversation'
-import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
-import {
-  unstableCacheProfileView,
-  useProfileBlockMutationQueue,
-} from '#/state/queries/profile'
-import {type ViewStyleProp} from '#/alf'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {AfterReportDialog} from '#/components/dms/AfterReportDialog'
-import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
-import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon} from '#/components/icons/ArrowBoxLeft'
-import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
-import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {
-  Person_Stroke2_Corner0_Rounded as Person,
-  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
-  PersonX_Stroke2_Corner0_Rounded as PersonX,
-} from '#/components/icons/Person'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import * as Menu from '#/components/Menu'
-import {ReportDialog} from '#/components/moderation/ReportDialog'
-import * as Prompt from '#/components/Prompt'
-import * as Toast from '#/components/Toast'
-import type * as bsky from '#/types/bsky'
+	Person_Stroke2_Corner0_Rounded as Person,
+	PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
+	PersonX_Stroke2_Corner0_Rounded as PersonX,
+} from '#/components/icons/Person';
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
+import * as Menu from '#/components/Menu';
+import { ReportDialog } from '#/components/moderation/ReportDialog';
+import * as Prompt from '#/components/Prompt';
+import * as Toast from '#/components/Toast';
+import type * as bsky from '#/types/bsky';
 
 let ConvoMenu = ({
-  convo,
-  profile,
-  control,
-  currentScreen,
-  showMarkAsRead,
-  hideTrigger,
-  blockInfo,
-  latestReportableMessage,
-  style,
+	convo,
+	profile,
+	control,
+	currentScreen,
+	showMarkAsRead,
+	hideTrigger,
+	blockInfo,
+	latestReportableMessage,
+	style,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  profile: Shadow<bsky.profile.AnyProfileView>
-  control?: Menu.MenuControlProps
-  currentScreen: 'list' | 'conversation'
-  showMarkAsRead?: boolean
-  hideTrigger?: boolean
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
-  latestReportableMessage?: ChatBskyConvoDefs.MessageView
-  style?: ViewStyleProp['style']
+	convo: ChatBskyConvoDefs.ConvoView;
+	profile: Shadow<bsky.profile.AnyProfileView>;
+	control?: Menu.MenuControlProps;
+	currentScreen: 'list' | 'conversation';
+	showMarkAsRead?: boolean;
+	hideTrigger?: boolean;
+	blockInfo: {
+		listBlocks: ModerationCause[];
+		userBlock?: ModerationCause;
+	};
+	latestReportableMessage?: ChatBskyConvoDefs.MessageView;
+	style?: ViewStyleProp['style'];
 }): React.ReactNode => {
-  const {t: l} = useLingui()
-  const queryClient = useQueryClient()
+	const { t: l } = useLingui();
+	const queryClient = useQueryClient();
 
-  const leaveConvoControl = Prompt.usePromptControl()
-  const reportControl = Prompt.usePromptControl()
-  const blockedByListControl = Prompt.usePromptControl()
-  const blockOrDeleteControl = Prompt.usePromptControl()
+	const leaveConvoControl = Prompt.usePromptControl();
+	const reportControl = Prompt.usePromptControl();
+	const blockedByListControl = Prompt.usePromptControl();
+	const blockOrDeleteControl = Prompt.usePromptControl();
 
-  const {listBlocks} = blockInfo
+	const { listBlocks } = blockInfo;
 
-  return (
-    <>
-      <Menu.Root control={control}>
-        {!hideTrigger && (
-          <View style={[style]}>
-            <Menu.Trigger label={l`Chat settings`}>
-              {({props}) => (
-                <Button
-                  label={props.accessibilityLabel}
-                  {...props}
-                  onPress={() => {
-                    Keyboard.dismiss()
-                    props.onPress()
-                  }}
-                  size="small"
-                  color="secondary"
-                  shape="round"
-                  variant="ghost"
-                  style={[a.bg_transparent]}>
-                  <ButtonIcon icon={DotsHorizontalIcon} size="md" />
-                </Button>
-              )}
-            </Menu.Trigger>
-          </View>
-        )}
+	return (
+		<>
+			<Menu.Root control={control}>
+				{!hideTrigger && (
+					<View style={[style]}>
+						<Menu.Trigger label={l`Chat settings`}>
+							{({ props }) => (
+								<Button
+									label={props.accessibilityLabel}
+									{...props}
+									onPress={() => {
+										Keyboard.dismiss();
+										props.onPress();
+									}}
+									size="small"
+									color="secondary"
+									shape="round"
+									variant="ghost"
+									style={[a.bg_transparent]}
+								>
+									<ButtonIcon icon={DotsHorizontalIcon} size="md" />
+								</Button>
+							)}
+						</Menu.Trigger>
+					</View>
+				)}
 
-        <Menu.Outer>
-          <MenuContent
-            profile={profile}
-            showMarkAsRead={showMarkAsRead}
-            blockInfo={blockInfo}
-            convo={convo}
-            leaveConvoControl={leaveConvoControl}
-            reportControl={reportControl}
-            blockedByListControl={blockedByListControl}
-          />
-        </Menu.Outer>
-      </Menu.Root>
-      <LeaveConvoPrompt
-        control={leaveConvoControl}
-        convoId={convo.id}
-        currentScreen={currentScreen}
-      />
-      {latestReportableMessage ? (
-        <>
-          <ReportDialog
-            subject={{
-              view: 'convo',
-              convoId: convo.id,
-              message: latestReportableMessage,
-            }}
-            control={reportControl}
-            onAfterSubmit={() => {
-              const sender = convo.members.find(
-                member => member.did === latestReportableMessage.sender.did,
-              )
-              if (sender) {
-                unstableCacheProfileView(queryClient, sender)
-              }
-              blockOrDeleteControl.open()
-            }}
-          />
-          <AfterReportDialog
-            control={blockOrDeleteControl}
-            currentScreen={currentScreen}
-            params={{
-              convoId: convo.id,
-              message: latestReportableMessage,
-            }}
-          />
-        </>
-      ) : (
-        <ReportConversationPrompt control={reportControl} />
-      )}
-      <BlockedByListDialog
-        control={blockedByListControl}
-        listBlocks={listBlocks}
-      />
-    </>
-  )
-}
-ConvoMenu = memo(ConvoMenu)
+				<Menu.Outer>
+					<MenuContent
+						profile={profile}
+						showMarkAsRead={showMarkAsRead}
+						blockInfo={blockInfo}
+						convo={convo}
+						leaveConvoControl={leaveConvoControl}
+						reportControl={reportControl}
+						blockedByListControl={blockedByListControl}
+					/>
+				</Menu.Outer>
+			</Menu.Root>
+			<LeaveConvoPrompt control={leaveConvoControl} convoId={convo.id} currentScreen={currentScreen} />
+			{latestReportableMessage ? (
+				<>
+					<ReportDialog
+						subject={{
+							view: 'convo',
+							convoId: convo.id,
+							message: latestReportableMessage,
+						}}
+						control={reportControl}
+						onAfterSubmit={() => {
+							const sender = convo.members.find(
+								(member) => member.did === latestReportableMessage.sender.did,
+							);
+							if (sender) {
+								unstableCacheProfileView(queryClient, sender);
+							}
+							blockOrDeleteControl.open();
+						}}
+					/>
+					<AfterReportDialog
+						control={blockOrDeleteControl}
+						currentScreen={currentScreen}
+						params={{
+							convoId: convo.id,
+							message: latestReportableMessage,
+						}}
+					/>
+				</>
+			) : (
+				<ReportConversationPrompt control={reportControl} />
+			)}
+			<BlockedByListDialog control={blockedByListControl} listBlocks={listBlocks} />
+		</>
+	);
+};
+ConvoMenu = memo(ConvoMenu);
 
 function MenuContent({
-  convo: initialConvo,
-  profile,
-  showMarkAsRead,
-  blockInfo,
-  leaveConvoControl,
-  reportControl,
-  blockedByListControl,
+	convo: initialConvo,
+	profile,
+	showMarkAsRead,
+	blockInfo,
+	leaveConvoControl,
+	reportControl,
+	blockedByListControl,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  profile: Shadow<bsky.profile.AnyProfileView>
-  showMarkAsRead?: boolean
-  blockInfo: {
-    listBlocks: ModerationCause[]
-    userBlock?: ModerationCause
-  }
-  leaveConvoControl: Prompt.PromptControlProps
-  reportControl: Prompt.PromptControlProps
-  blockedByListControl: Prompt.PromptControlProps
+	convo: ChatBskyConvoDefs.ConvoView;
+	profile: Shadow<bsky.profile.AnyProfileView>;
+	showMarkAsRead?: boolean;
+	blockInfo: {
+		listBlocks: ModerationCause[];
+		userBlock?: ModerationCause;
+	};
+	leaveConvoControl: Prompt.PromptControlProps;
+	reportControl: Prompt.PromptControlProps;
+	blockedByListControl: Prompt.PromptControlProps;
 }) {
-  const navigation = useNavigation<NavigationProp>()
-  const {t: l} = useLingui()
-  const {mutate: markAsRead} = useMarkAsReadMutation()
+	const navigation = useNavigation<NavigationProp>();
+	const { t: l } = useLingui();
+	const { mutate: markAsRead } = useMarkAsReadMutation();
 
-  const {listBlocks, userBlock} = blockInfo
-  const isBlocking = userBlock || !!listBlocks.length
-  const isDeletedAccount = profile.handle === 'missing.invalid'
-  const isGroupConvo = ChatBskyConvoDefs.isGroupConvo(initialConvo.kind)
+	const { listBlocks, userBlock } = blockInfo;
+	const isBlocking = userBlock || !!listBlocks.length;
+	const isDeletedAccount = profile.handle === 'missing.invalid';
+	const isGroupConvo = ChatBskyConvoDefs.isGroupConvo(initialConvo.kind);
 
-  const convoId = initialConvo.id
-  const {data: convo} = useConvoQuery({convoId})
+	const convoId = initialConvo.id;
+	const { data: convo } = useConvoQuery({ convoId });
 
-  const onNavigateToProfile = useCallback(() => {
-    navigation.navigate('Profile', {name: profile.did})
-  }, [navigation, profile.did])
+	const onNavigateToProfile = useCallback(() => {
+		navigation.navigate('Profile', { name: profile.did });
+	}, [navigation, profile.did]);
 
-  const {mutate: muteConvo} = useMuteConvo(convoId, {
-    onSuccess: data => {
-      if (data.convo.muted) {
-        Toast.show(l({message: 'Chat muted', context: 'toast'}))
-      } else {
-        Toast.show(l({message: 'Chat unmuted', context: 'toast'}))
-      }
-    },
-    onError: () => {
-      Toast.show(l`Could not mute chat`, {
-        type: 'error',
-      })
-    },
-  })
+	const { mutate: muteConvo } = useMuteConvo(convoId, {
+		onSuccess: (data) => {
+			if (data.convo.muted) {
+				Toast.show(l({ message: 'Chat muted', context: 'toast' }));
+			} else {
+				Toast.show(l({ message: 'Chat unmuted', context: 'toast' }));
+			}
+		},
+		onError: () => {
+			Toast.show(l`Could not mute chat`, {
+				type: 'error',
+			});
+		},
+	});
 
-  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 
-  const toggleBlock = useCallback(() => {
-    if (listBlocks.length) {
-      blockedByListControl.open()
-      return
-    }
+	const toggleBlock = useCallback(() => {
+		if (listBlocks.length) {
+			blockedByListControl.open();
+			return;
+		}
 
-    if (userBlock) {
-      void queueUnblock()
-    } else {
-      void queueBlock()
-    }
-  }, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock])
+		if (userBlock) {
+			void queueUnblock();
+		} else {
+			void queueBlock();
+		}
+	}, [userBlock, listBlocks, blockedByListControl, queueBlock, queueUnblock]);
 
-  return isDeletedAccount ? (
-    <Menu.Item
-      destructive
-      label={l`Leave conversation`}
-      onPress={leaveConvoControl.open}>
-      <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-      <Menu.ItemText>
-        <Trans>Leave conversation</Trans>
-      </Menu.ItemText>
-    </Menu.Item>
-  ) : (
-    <>
-      <Menu.Group>
-        {showMarkAsRead && (
-          <Menu.Item
-            label={l`Mark as read`}
-            onPress={() => markAsRead({convoId})}>
-            <Menu.ItemIcon icon={BubbleIcon} />
-            <Menu.ItemText>
-              <Trans>Mark as read</Trans>
-            </Menu.ItemText>
-          </Menu.Item>
-        )}
-        {isGroupConvo ? null : (
-          <Menu.Item
-            label={l`Go to user's profile`}
-            onPress={onNavigateToProfile}>
-            <Menu.ItemIcon icon={Person} />
-            <Menu.ItemText>
-              <Trans>Go to profile</Trans>
-            </Menu.ItemText>
-          </Menu.Item>
-        )}
-        <Menu.Item
-          label={l`Mute conversation`}
-          onPress={() => muteConvo({mute: !convo?.muted})}>
-          <Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
-          <Menu.ItemText>
-            {convo?.muted ? (
-              <Trans>Unmute conversation</Trans>
-            ) : (
-              <Trans>Mute conversation</Trans>
-            )}
-          </Menu.ItemText>
-        </Menu.Item>
-      </Menu.Group>
-      <Menu.Divider />
-      <Menu.Group>
-        {isGroupConvo ? null : (
-          <Menu.Item
-            destructive
-            label={isBlocking ? l`Unblock account` : l`Block account`}
-            onPress={toggleBlock}>
-            <Menu.ItemIcon icon={isBlocking ? PersonCheck : PersonX} />
-            <Menu.ItemText>
-              {isBlocking ? l`Unblock account` : l`Block account`}
-            </Menu.ItemText>
-          </Menu.Item>
-        )}
-        <Menu.Item
-          destructive
-          label={l`Report conversation`}
-          onPress={reportControl.open}>
-          <Menu.ItemIcon icon={Flag} />
-          <Menu.ItemText>
-            <Trans>Report conversation</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
-      </Menu.Group>
-      <Menu.Divider />
-      <Menu.Group>
-        <Menu.Item
-          destructive
-          label={l`Leave conversation`}
-          onPress={leaveConvoControl.open}>
-          <Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-          <Menu.ItemText>
-            <Trans>Leave conversation</Trans>
-          </Menu.ItemText>
-        </Menu.Item>
-      </Menu.Group>
-    </>
-  )
+	return isDeletedAccount ? (
+		<Menu.Item destructive label={l`Leave conversation`} onPress={leaveConvoControl.open}>
+			<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+			<Menu.ItemText>
+				<Trans>Leave conversation</Trans>
+			</Menu.ItemText>
+		</Menu.Item>
+	) : (
+		<>
+			<Menu.Group>
+				{showMarkAsRead && (
+					<Menu.Item label={l`Mark as read`} onPress={() => markAsRead({ convoId })}>
+						<Menu.ItemIcon icon={BubbleIcon} />
+						<Menu.ItemText>
+							<Trans>Mark as read</Trans>
+						</Menu.ItemText>
+					</Menu.Item>
+				)}
+				{isGroupConvo ? null : (
+					<Menu.Item label={l`Go to user's profile`} onPress={onNavigateToProfile}>
+						<Menu.ItemIcon icon={Person} />
+						<Menu.ItemText>
+							<Trans>Go to profile</Trans>
+						</Menu.ItemText>
+					</Menu.Item>
+				)}
+				<Menu.Item label={l`Mute conversation`} onPress={() => muteConvo({ mute: !convo?.muted })}>
+					<Menu.ItemIcon icon={convo?.muted ? Unmute : Mute} />
+					<Menu.ItemText>
+						{convo?.muted ? <Trans>Unmute conversation</Trans> : <Trans>Mute conversation</Trans>}
+					</Menu.ItemText>
+				</Menu.Item>
+			</Menu.Group>
+			<Menu.Divider />
+			<Menu.Group>
+				{isGroupConvo ? null : (
+					<Menu.Item
+						destructive
+						label={isBlocking ? l`Unblock account` : l`Block account`}
+						onPress={toggleBlock}
+					>
+						<Menu.ItemIcon icon={isBlocking ? PersonCheck : PersonX} />
+						<Menu.ItemText>{isBlocking ? l`Unblock account` : l`Block account`}</Menu.ItemText>
+					</Menu.Item>
+				)}
+				<Menu.Item destructive label={l`Report conversation`} onPress={reportControl.open}>
+					<Menu.ItemIcon icon={Flag} />
+					<Menu.ItemText>
+						<Trans>Report conversation</Trans>
+					</Menu.ItemText>
+				</Menu.Item>
+			</Menu.Group>
+			<Menu.Divider />
+			<Menu.Group>
+				<Menu.Item destructive label={l`Leave conversation`} onPress={leaveConvoControl.open}>
+					<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
+					<Menu.ItemText>
+						<Trans>Leave conversation</Trans>
+					</Menu.ItemText>
+				</Menu.Item>
+			</Menu.Group>
+		</>
+	);
 }
 
-export {ConvoMenu}
+export { ConvoMenu };

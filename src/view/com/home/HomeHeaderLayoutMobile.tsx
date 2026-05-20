@@ -1,96 +1,99 @@
-import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import { View } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
+import { useNavigation } from '@react-navigation/native';
 
-import Animated from '#/lib/animations/reanimatedCompat'
-import {HITSLOP_10} from '#/lib/constants'
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {useHaptics} from '#/lib/haptics'
-import {type NavigationProp} from '#/lib/routes/types'
-import {emitSoftReset} from '#/state/events'
-import {useSession} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
-import {useHomeHeaderTransform} from '#/view/com/util/MainScrollProvider'
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useTheme} from '#/alf'
-import {ButtonIcon} from '#/components/Button'
-import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
-import * as Layout from '#/components/Layout'
-import {Link} from '#/components/Link'
-import {IS_DEV} from '#/env'
+import Animated from '#/lib/animations/reanimatedCompat';
+import { HITSLOP_10 } from '#/lib/constants';
+import { PressableScale } from '#/lib/custom-animations/PressableScale';
+import { useHaptics } from '#/lib/haptics';
+import { type NavigationProp } from '#/lib/routes/types';
+import { emitSoftReset } from '#/state/events';
+import { useSession } from '#/state/session';
+import { useShellLayout } from '#/state/shell/shell-layout';
+import { useHomeHeaderTransform } from '#/view/com/util/MainScrollProvider';
+import { Logo } from '#/view/icons/Logo';
+import { atoms as a, useTheme } from '#/alf';
+import { ButtonIcon } from '#/components/Button';
+import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
+import * as Layout from '#/components/Layout';
+import { Link } from '#/components/Link';
+import { IS_DEV } from '#/env';
 
 export function HomeHeaderLayoutMobile({
-  children,
+	children,
 }: {
-  children: React.ReactNode
-  tabBarAnchor: React.ReactElement | null | undefined
+	children: React.ReactNode;
+	tabBarAnchor: React.ReactElement | null | undefined;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {headerHeight} = useShellLayout()
-  const headerMinimalShellTransform = useHomeHeaderTransform()
-  const {hasSession} = useSession()
-  const playHaptic = useHaptics()
-  const {navigate} = useNavigation<NavigationProp>()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { headerHeight } = useShellLayout();
+	const headerMinimalShellTransform = useHomeHeaderTransform();
+	const { hasSession } = useSession();
+	const playHaptic = useHaptics();
+	const { navigate } = useNavigation<NavigationProp>();
 
-  return (
-    <Animated.View
-      style={[
-        a.fixed,
-        a.z_10,
-        t.atoms.bg,
-        {
-          top: 0,
-          left: 0,
-          right: 0,
-        },
-        headerMinimalShellTransform,
-      ]}
-      onLayout={e => {
-        headerHeight.set(e.nativeEvent.layout.height)
-      }}>
-      <Layout.Header.Outer noBottomBorder>
-        <Layout.Header.Slot>
-          <Layout.Header.MenuButton />
-        </Layout.Header.Slot>
+	return (
+		<Animated.View
+			style={[
+				a.fixed,
+				a.z_10,
+				t.atoms.bg,
+				{
+					top: 0,
+					left: 0,
+					right: 0,
+				},
+				headerMinimalShellTransform,
+			]}
+			onLayout={(e) => {
+				headerHeight.set(e.nativeEvent.layout.height);
+			}}
+		>
+			<Layout.Header.Outer noBottomBorder>
+				<Layout.Header.Slot>
+					<Layout.Header.MenuButton />
+				</Layout.Header.Slot>
 
-        <View style={[a.flex_1, a.align_center]}>
-          <PressableScale
-            targetScale={0.9}
-            onPress={() => {
-              if (IS_DEV) {
-                navigate('Debug')
-              } else {
-                playHaptic('Light')
-                emitSoftReset()
-              }
-            }}>
-            <Logo width={30} />
-          </PressableScale>
-        </View>
+				<View style={[a.flex_1, a.align_center]}>
+					<PressableScale
+						targetScale={0.9}
+						onPress={() => {
+							if (IS_DEV) {
+								navigate('Debug');
+							} else {
+								playHaptic('Light');
+								emitSoftReset();
+							}
+						}}
+					>
+						<Logo width={30} />
+					</PressableScale>
+				</View>
 
-        <Layout.Header.Slot>
-          {hasSession && (
-            <Link
-              testID="viewHeaderHomeFeedPrefsBtn"
-              to={{screen: 'Feeds'}}
-              hitSlop={HITSLOP_10}
-              label={l`View your feeds and explore more`}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="square"
-              style={[
-                a.justify_center,
-                {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
-                a.bg_transparent,
-              ]}>
-              <ButtonIcon icon={FeedsIcon} size="lg" />
-            </Link>
-          )}
-        </Layout.Header.Slot>
-      </Layout.Header.Outer>
-      {children}
-    </Animated.View>
-  )
+				<Layout.Header.Slot>
+					{hasSession && (
+						<Link
+							testID="viewHeaderHomeFeedPrefsBtn"
+							to={{ screen: 'Feeds' }}
+							hitSlop={HITSLOP_10}
+							label={l`View your feeds and explore more`}
+							size="small"
+							variant="ghost"
+							color="secondary"
+							shape="square"
+							style={[
+								a.justify_center,
+								{ marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET },
+								a.bg_transparent,
+							]}
+						>
+							<ButtonIcon icon={FeedsIcon} size="lg" />
+						</Link>
+					)}
+				</Layout.Header.Slot>
+			</Layout.Header.Outer>
+			{children}
+		</Animated.View>
+	);
 }

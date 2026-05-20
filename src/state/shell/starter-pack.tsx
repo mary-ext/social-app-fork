@@ -1,26 +1,26 @@
-import {createContext, useContext, useState} from 'react'
+import { createContext, useContext, useState } from 'react';
 
 type StateContext =
-  | {
-      uri: string
-    }
-  | undefined
-type SetContext = (v: StateContext) => void
+	| {
+			uri: string;
+	  }
+	| undefined;
+type SetContext = (v: StateContext) => void;
 
-const stateContext = createContext<StateContext>(undefined)
-stateContext.displayName = 'ActiveStarterPackStateContext'
-const setContext = createContext<SetContext>((_: StateContext) => {})
-setContext.displayName = 'ActiveStarterPackSetContext'
+const stateContext = createContext<StateContext>(undefined);
+stateContext.displayName = 'ActiveStarterPackStateContext';
+const setContext = createContext<SetContext>((_: StateContext) => {});
+setContext.displayName = 'ActiveStarterPackSetContext';
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = useState<StateContext>()
+export function Provider({ children }: { children: React.ReactNode }) {
+	const [state, setState] = useState<StateContext>();
 
-  return (
-    <stateContext.Provider value={state}>
-      <setContext.Provider value={setState}>{children}</setContext.Provider>
-    </stateContext.Provider>
-  )
+	return (
+		<stateContext.Provider value={state}>
+			<setContext.Provider value={setState}>{children}</setContext.Provider>
+		</stateContext.Provider>
+	);
 }
 
-export const useActiveStarterPack = () => useContext(stateContext)
-export const useSetActiveStarterPack = () => useContext(setContext)
+export const useActiveStarterPack = () => useContext(stateContext);
+export const useSetActiveStarterPack = () => useContext(setContext);

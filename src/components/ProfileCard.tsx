@@ -1,637 +1,574 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react';
 import {
-  type GestureResponderEvent,
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  moderateProfile,
-  type ModerationOpts,
-  RichText as RichTextApi,
-} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
+	type GestureResponderEvent,
+	type StyleProp,
+	type TextStyle,
+	View,
+	type ViewStyle,
+} from 'react-native';
+import { moderateProfile, type ModerationOpts, RichText as RichTextApi } from '@atproto/api';
+import { useLingui } from '@lingui/react/macro';
 
-import {getModerationCauseKey} from '#/lib/moderation'
-import {makeProfileLink} from '#/lib/routes/links'
-import {forceLTR} from '#/lib/strings/bidi'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import { getModerationCauseKey } from '#/lib/moderation';
+import { makeProfileLink } from '#/lib/routes/links';
+import { forceLTR } from '#/lib/strings/bidi';
+import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
+import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { sanitizeHandle } from '#/lib/strings/handles';
+import { useProfileShadow } from '#/state/cache/profile-shadow';
 import {
-  type ProfileFollowLogContext,
-  type ProfileUnfollowLogContext,
-  useProfileFollowMutationQueue,
-} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  atoms as a,
-  type TextStyleProp,
-  useTheme,
-  type ViewStyleProp,
-} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonProps,
-  ButtonText,
-} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Link as InternalLink, type LinkProps} from '#/components/Link'
-import * as Pills from '#/components/Pills'
-import {ProfileBadges} from '#/components/ProfileBadges'
-import {RichText} from '#/components/RichText'
-import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
-import {useActorStatus} from '#/features/liveNow'
-import type * as bsky from '#/types/bsky'
+	type ProfileFollowLogContext,
+	type ProfileUnfollowLogContext,
+	useProfileFollowMutationQueue,
+} from '#/state/queries/profile';
+import { useSession } from '#/state/session';
+import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar';
+import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
+import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
+import { Link as InternalLink, type LinkProps } from '#/components/Link';
+import * as Pills from '#/components/Pills';
+import { ProfileBadges } from '#/components/ProfileBadges';
+import { RichText } from '#/components/RichText';
+import * as Toast from '#/components/Toast';
+import { Text } from '#/components/Typography';
+import { useActorStatus } from '#/features/liveNow';
+import type * as bsky from '#/types/bsky';
 
 export function Default({
-  profile,
-  moderationOpts,
-  logContext = 'ProfileCard',
-  testID,
-  position,
-  contextProfileDid,
-  onPress,
+	profile,
+	moderationOpts,
+	logContext = 'ProfileCard',
+	testID,
+	position,
+	contextProfileDid,
+	onPress,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  logContext?: 'ProfileCard' | 'StarterPackProfilesList'
-  testID?: string
-  position?: number
-  contextProfileDid?: string
-  onPress?: (e: GestureResponderEvent) => void
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
+	testID?: string;
+	position?: number;
+	contextProfileDid?: string;
+	onPress?: (e: GestureResponderEvent) => void;
 }) {
-  return (
-    <Link testID={testID} profile={profile} onPress={onPress}>
-      <Card
-        profile={profile}
-        moderationOpts={moderationOpts}
-        logContext={logContext}
-        position={position}
-        contextProfileDid={contextProfileDid}
-      />
-    </Link>
-  )
+	return (
+		<Link testID={testID} profile={profile} onPress={onPress}>
+			<Card
+				profile={profile}
+				moderationOpts={moderationOpts}
+				logContext={logContext}
+				position={position}
+				contextProfileDid={contextProfileDid}
+			/>
+		</Link>
+	);
 }
 
 export function Card({
-  profile,
-  moderationOpts,
-  logContext = 'ProfileCard',
-  position,
-  contextProfileDid,
+	profile,
+	moderationOpts,
+	logContext = 'ProfileCard',
+	position,
+	contextProfileDid,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  logContext?: 'ProfileCard' | 'StarterPackProfilesList'
-  position?: number
-  contextProfileDid?: string
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
+	position?: number;
+	contextProfileDid?: string;
 }) {
-  return (
-    <Outer>
-      <Header>
-        <Avatar profile={profile} moderationOpts={moderationOpts} />
-        <NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-        <FollowButton
-          profile={profile}
-          moderationOpts={moderationOpts}
-          logContext={logContext}
-          position={position}
-          contextProfileDid={contextProfileDid}
-        />
-      </Header>
+	return (
+		<Outer>
+			<Header>
+				<Avatar profile={profile} moderationOpts={moderationOpts} />
+				<NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+				<FollowButton
+					profile={profile}
+					moderationOpts={moderationOpts}
+					logContext={logContext}
+					position={position}
+					contextProfileDid={contextProfileDid}
+				/>
+			</Header>
 
-      <Labels profile={profile} moderationOpts={moderationOpts} />
+			<Labels profile={profile} moderationOpts={moderationOpts} />
 
-      <Description profile={profile} />
-    </Outer>
-  )
+			<Description profile={profile} />
+		</Outer>
+	);
 }
 
-export function Outer({
-  children,
-}: {
-  children: React.ReactNode | React.ReactNode[]
-}) {
-  return <View style={[a.w_full, a.flex_1, a.gap_xs]}>{children}</View>
+export function Outer({ children }: { children: React.ReactNode | React.ReactNode[] }) {
+	return <View style={[a.w_full, a.flex_1, a.gap_xs]}>{children}</View>;
 }
 
-export function Header({
-  children,
-}: {
-  children: React.ReactNode | React.ReactNode[]
-}) {
-  return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>
+export function Header({ children }: { children: React.ReactNode | React.ReactNode[] }) {
+	return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>;
 }
 
 export function Link({
-  profile,
-  children,
-  style,
-  ...rest
+	profile,
+	children,
+	style,
+	...rest
 }: {
-  profile: bsky.profile.AnyProfileView
+	profile: bsky.profile.AnyProfileView;
 } & Omit<LinkProps, 'to' | 'label'>) {
-  const {t: l} = useLingui()
+	const { t: l } = useLingui();
 
-  const profileURL = makeProfileLink({
-    did: profile.did,
-    handle: profile.handle,
-  })
+	const profileURL = makeProfileLink({
+		did: profile.did,
+		handle: profile.handle,
+	});
 
-  return (
-    <InternalLink
-      testID={`profileCard-${profile.handle}-link`}
-      label={l`View ${
-        profile.displayName || sanitizeHandle(profile.handle)
-      }’s profile`}
-      to={profileURL}
-      style={[a.flex_col, style]}
-      {...rest}>
-      {children}
-    </InternalLink>
-  )
+	return (
+		<InternalLink
+			testID={`profileCard-${profile.handle}-link`}
+			label={l`View ${profile.displayName || sanitizeHandle(profile.handle)}’s profile`}
+			to={profileURL}
+			style={[a.flex_col, style]}
+			{...rest}
+		>
+			{children}
+		</InternalLink>
+	);
 }
 
 export function Avatar({
-  profile,
-  moderationOpts,
-  onPress,
-  disabledPreview,
-  liveOverride,
-  size = 40,
+	profile,
+	moderationOpts,
+	onPress,
+	disabledPreview,
+	liveOverride,
+	size = 40,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  onPress?: () => void
-  disabledPreview?: boolean
-  liveOverride?: boolean
-  size?: number
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	onPress?: () => void;
+	disabledPreview?: boolean;
+	liveOverride?: boolean;
+	size?: number;
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
+	const moderation = moderateProfile(profile, moderationOpts);
 
-  const {isActive: live} = useActorStatus(profile)
+	const { isActive: live } = useActorStatus(profile);
 
-  return disabledPreview ? (
-    <UserAvatar
-      size={size}
-      avatar={profile.avatar}
-      type={profile.associated?.labeler ? 'labeler' : 'user'}
-      moderation={moderation.ui('avatar')}
-      live={liveOverride ?? live}
-    />
-  ) : (
-    <PreviewableUserAvatar
-      size={size}
-      profile={profile}
-      moderation={moderation.ui('avatar')}
-      onBeforePress={onPress}
-      live={liveOverride ?? live}
-    />
-  )
+	return disabledPreview ? (
+		<UserAvatar
+			size={size}
+			avatar={profile.avatar}
+			type={profile.associated?.labeler ? 'labeler' : 'user'}
+			moderation={moderation.ui('avatar')}
+			live={liveOverride ?? live}
+		/>
+	) : (
+		<PreviewableUserAvatar
+			size={size}
+			profile={profile}
+			moderation={moderation.ui('avatar')}
+			onBeforePress={onPress}
+			live={liveOverride ?? live}
+		/>
+	);
 }
 
-export function AvatarPlaceholder({size = 40}: {size?: number}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.rounded_full,
-        t.atoms.bg_contrast_50,
-        {
-          width: size,
-          height: size,
-        },
-      ]}
-    />
-  )
+export function AvatarPlaceholder({ size = 40 }: { size?: number }) {
+	const t = useTheme();
+	return (
+		<View
+			style={[
+				a.rounded_full,
+				t.atoms.bg_contrast_50,
+				{
+					width: size,
+					height: size,
+				},
+			]}
+		/>
+	);
 }
 
 export function NameAndHandle({
-  profile,
-  moderationOpts,
-  inline = false,
+	profile,
+	moderationOpts,
+	inline = false,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  inline?: boolean
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	inline?: boolean;
 }) {
-  if (inline) {
-    return (
-      <InlineNameAndHandle profile={profile} moderationOpts={moderationOpts} />
-    )
-  } else {
-    return (
-      <View style={[a.flex_1]}>
-        <Name profile={profile} moderationOpts={moderationOpts} />
-        <Handle profile={profile} />
-      </View>
-    )
-  }
+	if (inline) {
+		return <InlineNameAndHandle profile={profile} moderationOpts={moderationOpts} />;
+	} else {
+		return (
+			<View style={[a.flex_1]}>
+				<Name profile={profile} moderationOpts={moderationOpts} />
+				<Handle profile={profile} />
+			</View>
+		);
+	}
 }
 
 function InlineNameAndHandle({
-  profile,
-  moderationOpts,
+	profile,
+	moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
 }) {
-  const t = useTheme()
-  const moderation = moderateProfile(profile, moderationOpts)
-  const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
-    moderation.ui('displayName'),
-  )
-  const handle = sanitizeHandle(profile.handle, '@')
-  return (
-    <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-      <Text
-        emoji
-        style={[
-          a.font_semi_bold,
-          a.leading_tight,
-          a.flex_shrink_0,
-          {maxWidth: '70%'},
-        ]}
-        numberOfLines={1}>
-        {forceLTR(name)}
-      </Text>
-      <ProfileBadges
-        profile={profile}
-        size="md"
-        style={[a.pl_2xs, a.self_center, {marginTop: 0}]}
-      />
-      <Text
-        emoji
-        style={[
-          a.leading_tight,
-          t.atoms.text_contrast_medium,
-          {flexShrink: 10},
-        ]}
-        numberOfLines={1}>
-        {NON_BREAKING_SPACE + handle}
-      </Text>
-    </View>
-  )
+	const t = useTheme();
+	const moderation = moderateProfile(profile, moderationOpts);
+	const name = sanitizeDisplayName(
+		profile.displayName || sanitizeHandle(profile.handle),
+		moderation.ui('displayName'),
+	);
+	const handle = sanitizeHandle(profile.handle, '@');
+	return (
+		<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+			<Text
+				emoji
+				style={[a.font_semi_bold, a.leading_tight, a.flex_shrink_0, { maxWidth: '70%' }]}
+				numberOfLines={1}
+			>
+				{forceLTR(name)}
+			</Text>
+			<ProfileBadges profile={profile} size="md" style={[a.pl_2xs, a.self_center, { marginTop: 0 }]} />
+			<Text
+				emoji
+				style={[a.leading_tight, t.atoms.text_contrast_medium, { flexShrink: 10 }]}
+				numberOfLines={1}
+			>
+				{NON_BREAKING_SPACE + handle}
+			</Text>
+		</View>
+	);
 }
 
 export function Name({
-  profile,
-  moderationOpts,
-  style,
-  textStyle,
+	profile,
+	moderationOpts,
+	style,
+	textStyle,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  style?: StyleProp<ViewStyle>
-  textStyle?: StyleProp<TextStyle>
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	style?: StyleProp<ViewStyle>;
+	textStyle?: StyleProp<TextStyle>;
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
-  const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
-    moderation.ui('displayName'),
-  )
-  return (
-    <View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
-      <Text
-        emoji
-        style={[
-          a.text_md,
-          a.font_semi_bold,
-          a.leading_snug,
-          a.self_start,
-          a.flex_shrink,
-          textStyle,
-        ]}
-        numberOfLines={1}>
-        {name}
-      </Text>
-      <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
-    </View>
-  )
+	const moderation = moderateProfile(profile, moderationOpts);
+	const name = sanitizeDisplayName(
+		profile.displayName || sanitizeHandle(profile.handle),
+		moderation.ui('displayName'),
+	);
+	return (
+		<View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
+			<Text
+				emoji
+				style={[a.text_md, a.font_semi_bold, a.leading_snug, a.self_start, a.flex_shrink, textStyle]}
+				numberOfLines={1}
+			>
+				{name}
+			</Text>
+			<ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+		</View>
+	);
 }
 
 export function Handle({
-  profile,
-  textStyle,
+	profile,
+	textStyle,
 }: {
-  profile: bsky.profile.AnyProfileView
-  textStyle?: StyleProp<TextStyle>
+	profile: bsky.profile.AnyProfileView;
+	textStyle?: StyleProp<TextStyle>;
 }) {
-  const t = useTheme()
-  const handle = sanitizeHandle(profile.handle, '@')
+	const t = useTheme();
+	const handle = sanitizeHandle(profile.handle, '@');
 
-  return (
-    <Text
-      emoji
-      style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]}
-      numberOfLines={1}>
-      {handle}
-    </Text>
-  )
+	return (
+		<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]} numberOfLines={1}>
+			{handle}
+		</Text>
+	);
 }
 
 export function NameAndHandlePlaceholder() {
-  const t = useTheme()
+	const t = useTheme();
 
-  return (
-    <View style={[a.flex_1, a.gap_xs]}>
-      <View
-        style={[
-          a.rounded_xs,
-          t.atoms.bg_contrast_50,
-          {
-            width: '60%',
-            height: 14,
-          },
-        ]}
-      />
+	return (
+		<View style={[a.flex_1, a.gap_xs]}>
+			<View
+				style={[
+					a.rounded_xs,
+					t.atoms.bg_contrast_50,
+					{
+						width: '60%',
+						height: 14,
+					},
+				]}
+			/>
 
-      <View
-        style={[
-          a.rounded_xs,
-          t.atoms.bg_contrast_50,
-          {
-            width: '40%',
-            height: 10,
-          },
-        ]}
-      />
-    </View>
-  )
+			<View
+				style={[
+					a.rounded_xs,
+					t.atoms.bg_contrast_50,
+					{
+						width: '40%',
+						height: 10,
+					},
+				]}
+			/>
+		</View>
+	);
 }
 
-export function NamePlaceholder({style}: ViewStyleProp) {
-  const t = useTheme()
+export function NamePlaceholder({ style }: ViewStyleProp) {
+	const t = useTheme();
 
-  return (
-    <View
-      style={[
-        a.rounded_xs,
-        t.atoms.bg_contrast_50,
-        {
-          width: '60%',
-          height: 14,
-        },
-        style,
-      ]}
-    />
-  )
+	return (
+		<View
+			style={[
+				a.rounded_xs,
+				t.atoms.bg_contrast_50,
+				{
+					width: '60%',
+					height: 14,
+				},
+				style,
+			]}
+		/>
+	);
 }
 
 export function Description({
-  profile: profileUnshadowed,
-  numberOfLines = 3,
-  style,
+	profile: profileUnshadowed,
+	numberOfLines = 3,
+	style,
 }: {
-  profile: bsky.profile.AnyProfileView
-  numberOfLines?: number
+	profile: bsky.profile.AnyProfileView;
+	numberOfLines?: number;
 } & TextStyleProp) {
-  const profile = useProfileShadow(profileUnshadowed)
-  const rt = useMemo(() => {
-    if (!('description' in profile)) return
-    const rt = new RichTextApi({text: profile.description || ''})
-    rt.detectFacetsWithoutResolution()
-    return rt
-  }, [profile])
-  if (!rt) return null
-  if (
-    profile.viewer &&
-    (profile.viewer.blockedBy ||
-      profile.viewer.blocking ||
-      profile.viewer.blockingByList)
-  )
-    return null
-  return (
-    <View style={[a.pt_xs]}>
-      <RichText
-        value={rt}
-        style={style}
-        numberOfLines={numberOfLines}
-        disableLinks
-      />
-    </View>
-  )
+	const profile = useProfileShadow(profileUnshadowed);
+	const rt = useMemo(() => {
+		if (!('description' in profile)) return;
+		const rt = new RichTextApi({ text: profile.description || '' });
+		rt.detectFacetsWithoutResolution();
+		return rt;
+	}, [profile]);
+	if (!rt) return null;
+	if (
+		profile.viewer &&
+		(profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList)
+	)
+		return null;
+	return (
+		<View style={[a.pt_xs]}>
+			<RichText value={rt} style={style} numberOfLines={numberOfLines} disableLinks />
+		</View>
+	);
 }
 
-export function DescriptionPlaceholder({
-  numberOfLines = 3,
-}: {
-  numberOfLines?: number
-}) {
-  const t = useTheme()
-  return (
-    <View style={[a.pt_2xs, {gap: 6}]}>
-      {Array(numberOfLines)
-        .fill(0)
-        .map((_, i) => (
-          <View
-            key={i}
-            style={[
-              a.rounded_xs,
-              a.w_full,
-              t.atoms.bg_contrast_50,
-              {height: 12, width: i + 1 === numberOfLines ? '60%' : '100%'},
-            ]}
-          />
-        ))}
-    </View>
-  )
+export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: number }) {
+	const t = useTheme();
+	return (
+		<View style={[a.pt_2xs, { gap: 6 }]}>
+			{Array(numberOfLines)
+				.fill(0)
+				.map((_, i) => (
+					<View
+						key={i}
+						style={[
+							a.rounded_xs,
+							a.w_full,
+							t.atoms.bg_contrast_50,
+							{ height: 12, width: i + 1 === numberOfLines ? '60%' : '100%' },
+						]}
+					/>
+				))}
+		</View>
+	);
 }
 
 export type FollowButtonProps = {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  logContext: ProfileFollowLogContext & ProfileUnfollowLogContext
-  colorInverted?: boolean
-  onFollow?: () => void
-  withIcon?: boolean
-  position?: number
-  contextProfileDid?: string
-} & Partial<ButtonProps>
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
+	colorInverted?: boolean;
+	onFollow?: () => void;
+	withIcon?: boolean;
+	position?: number;
+	contextProfileDid?: string;
+} & Partial<ButtonProps>;
 
 export function FollowButton(props: FollowButtonProps) {
-  const {currentAccount, hasSession} = useSession()
-  const isMe = props.profile.did === currentAccount?.did
-  return hasSession && !isMe ? <FollowButtonInner {...props} /> : null
+	const { currentAccount, hasSession } = useSession();
+	const isMe = props.profile.did === currentAccount?.did;
+	return hasSession && !isMe ? <FollowButtonInner {...props} /> : null;
 }
 
 export function FollowButtonInner({
-  profile: profileUnshadowed,
-  moderationOpts,
-  logContext,
-  onPress: onPressProp,
-  onFollow,
-  colorInverted,
-  withIcon = true,
-  position,
-  contextProfileDid,
-  ...rest
+	profile: profileUnshadowed,
+	moderationOpts,
+	logContext,
+	onPress: onPressProp,
+	onFollow,
+	colorInverted,
+	withIcon = true,
+	position,
+	contextProfileDid,
+	...rest
 }: FollowButtonProps) {
-  const {t: l} = useLingui()
-  const profile = useProfileShadow(profileUnshadowed)
-  const moderation = moderateProfile(profile, moderationOpts)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
-    profile,
-    logContext,
-    position,
-    contextProfileDid,
-  )
-  const isRound = Boolean(rest.shape && rest.shape === 'round')
+	const { t: l } = useLingui();
+	const profile = useProfileShadow(profileUnshadowed);
+	const moderation = moderateProfile(profile, moderationOpts);
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+		profile,
+		logContext,
+		position,
+		contextProfileDid,
+	);
+	const isRound = Boolean(rest.shape && rest.shape === 'round');
 
-  const onPressFollow = async (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    try {
-      await queueFollow()
-      Toast.show(
-        l`Following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-          moderation.ui('displayName'),
-        )}`,
-      )
-      onPressProp?.(e)
-      onFollow?.()
-    } catch (e) {
-      const err = e as Error
-      if (err?.name !== 'AbortError') {
-        Toast.show(l`An issue occurred, please try again.`, {
-          type: 'error',
-        })
-      }
-    }
-  }
+	const onPressFollow = async (e: GestureResponderEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		try {
+			await queueFollow();
+			Toast.show(
+				l`Following ${sanitizeDisplayName(
+					profile.displayName || profile.handle,
+					moderation.ui('displayName'),
+				)}`,
+			);
+			onPressProp?.(e);
+			onFollow?.();
+		} catch (e) {
+			const err = e as Error;
+			if (err?.name !== 'AbortError') {
+				Toast.show(l`An issue occurred, please try again.`, {
+					type: 'error',
+				});
+			}
+		}
+	};
 
-  const onPressUnfollow = async (e: GestureResponderEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    try {
-      await queueUnfollow()
-      Toast.show(
-        l`No longer following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
-          moderation.ui('displayName'),
-        )}`,
-      )
-      onPressProp?.(e)
-    } catch (e) {
-      const err = e as Error
-      if (err?.name !== 'AbortError') {
-        Toast.show(l`An issue occurred, please try again.`, {
-          type: 'error',
-        })
-      }
-    }
-  }
+	const onPressUnfollow = async (e: GestureResponderEvent) => {
+		e.preventDefault();
+		e.stopPropagation();
+		try {
+			await queueUnfollow();
+			Toast.show(
+				l`No longer following ${sanitizeDisplayName(
+					profile.displayName || profile.handle,
+					moderation.ui('displayName'),
+				)}`,
+			);
+			onPressProp?.(e);
+		} catch (e) {
+			const err = e as Error;
+			if (err?.name !== 'AbortError') {
+				Toast.show(l`An issue occurred, please try again.`, {
+					type: 'error',
+				});
+			}
+		}
+	};
 
-  const unfollowLabel = l({
-    message: 'Following',
-    comment: 'User is following this account, click to unfollow',
-  })
-  const followLabel = profile.viewer?.followedBy
-    ? l({
-        message: 'Follow back',
-        comment: 'User is not following this account, click to follow back',
-      })
-    : l({
-        message: 'Follow',
-        comment: 'User is not following this account, click to follow',
-      })
+	const unfollowLabel = l({
+		message: 'Following',
+		comment: 'User is following this account, click to unfollow',
+	});
+	const followLabel = profile.viewer?.followedBy
+		? l({
+				message: 'Follow back',
+				comment: 'User is not following this account, click to follow back',
+			})
+		: l({
+				message: 'Follow',
+				comment: 'User is not following this account, click to follow',
+			});
 
-  if (!profile.viewer) return null
-  if (
-    profile.viewer.blockedBy ||
-    profile.viewer.blocking ||
-    profile.viewer.blockingByList
-  )
-    return null
+	if (!profile.viewer) return null;
+	if (profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList) return null;
 
-  return (
-    <View>
-      {profile.viewer.following ? (
-        <Button
-          label={unfollowLabel}
-          size="small"
-          variant="solid"
-          color="secondary"
-          {...rest}
-          onPress={(e: GestureResponderEvent) => {
-            void onPressUnfollow(e)
-          }}>
-          {withIcon && (
-            <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
-          )}
-          {isRound ? null : <ButtonText>{unfollowLabel}</ButtonText>}
-        </Button>
-      ) : (
-        <Button
-          label={followLabel}
-          size="small"
-          variant="solid"
-          color={colorInverted ? 'secondary_inverted' : 'primary'}
-          {...rest}
-          onPress={(e: GestureResponderEvent) => {
-            void onPressFollow(e)
-          }}>
-          {withIcon && (
-            <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
-          )}
-          {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
-        </Button>
-      )}
-    </View>
-  )
+	return (
+		<View>
+			{profile.viewer.following ? (
+				<Button
+					label={unfollowLabel}
+					size="small"
+					variant="solid"
+					color="secondary"
+					{...rest}
+					onPress={(e: GestureResponderEvent) => {
+						void onPressUnfollow(e);
+					}}
+				>
+					{withIcon && <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />}
+					{isRound ? null : <ButtonText>{unfollowLabel}</ButtonText>}
+				</Button>
+			) : (
+				<Button
+					label={followLabel}
+					size="small"
+					variant="solid"
+					color={colorInverted ? 'secondary_inverted' : 'primary'}
+					{...rest}
+					onPress={(e: GestureResponderEvent) => {
+						void onPressFollow(e);
+					}}
+				>
+					{withIcon && <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />}
+					{isRound ? null : <ButtonText>{followLabel}</ButtonText>}
+				</Button>
+			)}
+		</View>
+	);
 }
 
-export function FollowButtonPlaceholder({style}: ViewStyleProp) {
-  const t = useTheme()
+export function FollowButtonPlaceholder({ style }: ViewStyleProp) {
+	const t = useTheme();
 
-  return (
-    <View
-      style={[
-        a.rounded_sm,
-        t.atoms.bg_contrast_50,
-        a.w_full,
-        {
-          height: 33,
-        },
-        style,
-      ]}
-    />
-  )
+	return (
+		<View
+			style={[
+				a.rounded_sm,
+				t.atoms.bg_contrast_50,
+				a.w_full,
+				{
+					height: 33,
+				},
+				style,
+			]}
+		/>
+	);
 }
 
 export function Labels({
-  profile,
-  moderationOpts,
+	profile,
+	moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
 }) {
-  const moderation = moderateProfile(profile, moderationOpts)
-  const modui = moderation.ui('profileList')
-  const followedBy = profile.viewer?.followedBy
+	const moderation = moderateProfile(profile, moderationOpts);
+	const modui = moderation.ui('profileList');
+	const followedBy = profile.viewer?.followedBy;
 
-  if (!followedBy && !modui.inform && !modui.alert) {
-    return null
-  }
+	if (!followedBy && !modui.inform && !modui.alert) {
+		return null;
+	}
 
-  return (
-    <Pills.Row style={[a.pt_xs]}>
-      {followedBy && <Pills.FollowsYou />}
-      {modui.alerts.map(alert => (
-        <Pills.Label key={getModerationCauseKey(alert)} cause={alert} />
-      ))}
-      {modui.informs.map(inform => (
-        <Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
-      ))}
-    </Pills.Row>
-  )
+	return (
+		<Pills.Row style={[a.pt_xs]}>
+			{followedBy && <Pills.FollowsYou />}
+			{modui.alerts.map((alert) => (
+				<Pills.Label key={getModerationCauseKey(alert)} cause={alert} />
+			))}
+			{modui.informs.map((inform) => (
+				<Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
+			))}
+		</Pills.Row>
+	);
 }

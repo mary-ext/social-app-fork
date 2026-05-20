@@ -1,1 +1,1 @@
-export {openPicker, openUnifiedPicker} from './picker.shared'
+export { openPicker, openUnifiedPicker } from './picker.shared';

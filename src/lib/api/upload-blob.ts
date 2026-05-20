@@ -1,4 +1,4 @@
-import {type BskyAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
+import { type BskyAgent, type ComAtprotoRepoUploadBlob } from '@atproto/api';
 
 /**
  * @note It is recommended, on web, to use the `file` instance of the file
@@ -7,23 +7,20 @@ import {type BskyAgent, type ComAtprotoRepoUploadBlob} from '@atproto/api'
  * be passed directly to this function.
  */
 export async function uploadBlob(
-  agent: BskyAgent,
-  input: string | Blob,
-  encoding?: string,
+	agent: BskyAgent,
+	input: string | Blob,
+	encoding?: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
-  if (
-    typeof input === 'string' &&
-    (input.startsWith('data:') || input.startsWith('blob:'))
-  ) {
-    const blob = await fetch(input).then(r => r.blob())
-    return agent.uploadBlob(blob, {encoding})
-  }
+	if (typeof input === 'string' && (input.startsWith('data:') || input.startsWith('blob:'))) {
+		const blob = await fetch(input).then((r) => r.blob());
+		return agent.uploadBlob(blob, { encoding });
+	}
 
-  if (input instanceof Blob) {
-    return agent.uploadBlob(input, {
-      encoding,
-    })
-  }
+	if (input instanceof Blob) {
+		return agent.uploadBlob(input, {
+			encoding,
+		});
+	}
 
-  throw new TypeError(`Invalid uploadBlob input: ${typeof input}`)
+	throw new TypeError(`Invalid uploadBlob input: ${typeof input}`);
 }

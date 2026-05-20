@@ -1,633 +1,575 @@
-import {useCallback, useMemo, useState} from 'react'
-import {type GestureResponderEvent, type TextStyle, View} from 'react-native'
+import { useCallback, useMemo, useState } from 'react';
+import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
 import {
-  ChatBskyConvoDefs,
-  moderateProfile,
-  type ModerationDecision,
-  type ModerationOpts,
-} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {useQueryClient} from '@tanstack/react-query'
+	ChatBskyConvoDefs,
+	moderateProfile,
+	type ModerationDecision,
+	type ModerationOpts,
+} from '@atproto/api';
+import { useLingui } from '@lingui/react/macro';
+import { useQueryClient } from '@tanstack/react-query';
 
-import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
-import {useHaptics} from '#/lib/haptics'
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {
-  type Shadow,
-  useMaybeProfileShadow,
-  useProfileShadow,
-} from '#/state/cache/profile-shadow'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  precacheConvoQuery,
-  useMarkAsReadMutation,
-} from '#/state/queries/messages/conversation'
-import {unstableCacheProfileView} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import * as tokens from '#/alf/tokens'
-import {AvatarBubbles} from '#/components/AvatarBubbles'
-import {useDialogControl} from '#/components/Dialog'
-import {ConvoMenu} from '#/components/dms/ConvoMenu'
-import {getMessageInfo} from '#/components/dms/getMessageInfo'
-import {getReactionInfo} from '#/components/dms/getReactionInfo'
-import {getSystemMessageInfo} from '#/components/dms/getSystemMessageInfo'
-import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {type ConvoWithDetails, parseConvoView} from '#/components/dms/util'
-import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
-import {Lock_Stroke2_Corner2_Rounded as LockIcon} from '#/components/icons/Lock'
-import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
-import {Link} from '#/components/Link'
-import {useMenuControl} from '#/components/Menu'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {createPortalGroup} from '#/components/Portal'
-import {ProfileBadges} from '#/components/ProfileBadges'
-import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
-import {useIsWithinSplitView} from './splitView/context'
+import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
+import { useHaptics } from '#/lib/haptics';
+import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { sanitizeHandle } from '#/lib/strings/handles';
+import { type Shadow, useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { precacheConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
+import { unstableCacheProfileView } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
+import { TimeElapsed } from '#/view/com/util/TimeElapsed';
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import * as tokens from '#/alf/tokens';
+import { AvatarBubbles } from '#/components/AvatarBubbles';
+import { useDialogControl } from '#/components/Dialog';
+import { ConvoMenu } from '#/components/dms/ConvoMenu';
+import { getMessageInfo } from '#/components/dms/getMessageInfo';
+import { getReactionInfo } from '#/components/dms/getReactionInfo';
+import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
+import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
+import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
+import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
+import { type Props as SVGIconProps } from '#/components/icons/common';
+import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/components/icons/EnveopeOpen';
+import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
+import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash';
+import { Link } from '#/components/Link';
+import { useMenuControl } from '#/components/Menu';
+import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { createPortalGroup } from '#/components/Portal';
+import { ProfileBadges } from '#/components/ProfileBadges';
+import { Text } from '#/components/Typography';
+import type * as bsky from '#/types/bsky';
+import { useIsWithinSplitView } from './splitView/context';
 
-export const ChatListItemPortal = createPortalGroup()
+export const ChatListItemPortal = createPortalGroup();
 
 type WebTextStyle = TextStyle & {
-  whiteSpace?: 'preserve nowrap'
-}
+	whiteSpace?: 'preserve nowrap';
+};
 
 export function ChatListItem({
-  convo: convoView,
-  showMenu = true,
-  selected = false,
-  children,
+	convo: convoView,
+	showMenu = true,
+	selected = false,
+	children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  showMenu?: boolean
-  selected?: boolean
-  children?: React.ReactNode
+	convo: ChatBskyConvoDefs.ConvoView;
+	showMenu?: boolean;
+	selected?: boolean;
+	children?: React.ReactNode;
 }) {
-  const {currentAccount} = useSession()
-  const moderationOpts = useModerationOpts()
+	const { currentAccount } = useSession();
+	const moderationOpts = useModerationOpts();
 
-  if (!moderationOpts) {
-    return null
-  }
+	if (!moderationOpts) {
+		return null;
+	}
 
-  const convo = parseConvoView(convoView, currentAccount?.did)
+	const convo = parseConvoView(convoView, currentAccount?.did);
 
-  switch (convo?.kind) {
-    case 'direct': {
-      return (
-        <DirectChatItem
-          convo={convo}
-          moderationOpts={moderationOpts}
-          showMenu={showMenu}
-          selected={selected}>
-          {children}
-        </DirectChatItem>
-      )
-    }
-    case 'group': {
-      return (
-        <GroupChatItem
-          convo={convo}
-          moderationOpts={moderationOpts}
-          showMenu={showMenu}
-          selected={selected}>
-          {children}
-        </GroupChatItem>
-      )
-    }
-    default: {
-      return null
-    }
-  }
+	switch (convo?.kind) {
+		case 'direct': {
+			return (
+				<DirectChatItem convo={convo} moderationOpts={moderationOpts} showMenu={showMenu} selected={selected}>
+					{children}
+				</DirectChatItem>
+			);
+		}
+		case 'group': {
+			return (
+				<GroupChatItem convo={convo} moderationOpts={moderationOpts} showMenu={showMenu} selected={selected}>
+					{children}
+				</GroupChatItem>
+			);
+		}
+		default: {
+			return null;
+		}
+	}
 }
 
 function DirectChatItem({
-  convo,
-  moderationOpts,
-  showMenu,
-  selected,
-  children,
+	convo,
+	moderationOpts,
+	showMenu,
+	selected,
+	children,
 }: {
-  convo: Extract<ConvoWithDetails, {kind: 'direct'}>
-  moderationOpts: ModerationOpts
-  showMenu?: boolean
-  selected?: boolean
-  children?: React.ReactNode
+	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
+	moderationOpts: ModerationOpts;
+	showMenu?: boolean;
+	selected?: boolean;
+	children?: React.ReactNode;
 }) {
-  const {t: l} = useLingui()
-  const profile = useProfileShadow(convo.primaryMember)
-  const {isWithinSplitView} = useIsWithinSplitView()
+	const { t: l } = useLingui();
+	const profile = useProfileShadow(convo.primaryMember);
+	const { isWithinSplitView } = useIsWithinSplitView();
 
-  const moderation = useMemo(
-    () => moderateProfile(profile, moderationOpts),
-    [profile, moderationOpts],
-  )
+	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
 
-  const isDeletedAccount = profile.handle === 'missing.invalid'
-  const displayName = isDeletedAccount
-    ? l`Deleted Account`
-    : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
+	const isDeletedAccount = profile.handle === 'missing.invalid';
+	const displayName = isDeletedAccount
+		? l`Deleted Account`
+		: createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
 
-  return (
-    <BaseChatItem
-      convo={convo}
-      avatar={
-        <PreviewableUserAvatar
-          profile={profile}
-          size={isWithinSplitView ? 48 : 52}
-          moderation={moderation.ui('avatar')}
-        />
-      }
-      primaryProfile={profile}
-      primaryProfileModeration={moderation}
-      title={displayName}
-      subtitle={
-        isDeletedAccount ? undefined : sanitizeHandle(profile.handle, '@')
-      }
-      accessibilityHint={
-        !isDeletedAccount
-          ? l`Go to conversation with ${profile.handle}`
-          : l`This conversation is with a deleted or a deactivated account. Press for options`
-      }
-      showMenu={showMenu}
-      selected={selected}
-      isDeletedAccount={isDeletedAccount}
-      isBlockedAccount={moderation.blocked}
-      showProfileBadges
-      postAlerts={
-        isWithinSplitView ? null : (
-          <PostAlerts
-            modui={moderation.ui('contentList')}
-            size="sm"
-            style={[a.pb_2xs, a.max_w_full, a.overflow_hidden]}
-          />
-        )
-      }>
-      {children}
-    </BaseChatItem>
-  )
+	return (
+		<BaseChatItem
+			convo={convo}
+			avatar={
+				<PreviewableUserAvatar
+					profile={profile}
+					size={isWithinSplitView ? 48 : 52}
+					moderation={moderation.ui('avatar')}
+				/>
+			}
+			primaryProfile={profile}
+			primaryProfileModeration={moderation}
+			title={displayName}
+			subtitle={isDeletedAccount ? undefined : sanitizeHandle(profile.handle, '@')}
+			accessibilityHint={
+				!isDeletedAccount
+					? l`Go to conversation with ${profile.handle}`
+					: l`This conversation is with a deleted or a deactivated account. Press for options`
+			}
+			showMenu={showMenu}
+			selected={selected}
+			isDeletedAccount={isDeletedAccount}
+			isBlockedAccount={moderation.blocked}
+			showProfileBadges
+			postAlerts={
+				isWithinSplitView ? null : (
+					<PostAlerts
+						modui={moderation.ui('contentList')}
+						size="sm"
+						style={[a.pb_2xs, a.max_w_full, a.overflow_hidden]}
+					/>
+				)
+			}
+		>
+			{children}
+		</BaseChatItem>
+	);
 }
 
 function GroupChatItem({
-  convo,
-  moderationOpts,
-  showMenu,
-  selected,
-  children,
+	convo,
+	moderationOpts,
+	showMenu,
+	selected,
+	children,
 }: {
-  convo: Extract<ConvoWithDetails, {kind: 'group'}>
-  moderationOpts: ModerationOpts
-  showMenu?: boolean
-  selected?: boolean
-  children?: React.ReactNode
+	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
+	moderationOpts: ModerationOpts;
+	showMenu?: boolean;
+	selected?: boolean;
+	children?: React.ReactNode;
 }) {
-  const {t: l} = useLingui()
-  const groupOwner = useMaybeProfileShadow(convo.primaryMember)
-  const {isWithinSplitView} = useIsWithinSplitView()
+	const { t: l } = useLingui();
+	const groupOwner = useMaybeProfileShadow(convo.primaryMember);
+	const { isWithinSplitView } = useIsWithinSplitView();
 
-  const moderation = useMemo(
-    () =>
-      groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined,
-    [groupOwner, moderationOpts],
-  )
+	const moderation = useMemo(
+		() => (groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined),
+		[groupOwner, moderationOpts],
+	);
 
-  const chatName = convo.details.name
+	const chatName = convo.details.name;
 
-  return (
-    <BaseChatItem
-      convo={convo}
-      avatar={
-        <AvatarBubbles
-          profiles={convo.members}
-          size={isWithinSplitView ? 48 : 52}
-        />
-      }
-      title={chatName}
-      accessibilityHint={l`Go to the group chat named "${chatName}"`}
-      primaryProfile={groupOwner}
-      primaryProfileModeration={moderation}
-      isBlockedAccount={false}
-      isDeletedAccount={false}
-      showProfileBadges={false}
-      selected={selected}
-      showMenu={showMenu}>
-      {children}
-    </BaseChatItem>
-  )
+	return (
+		<BaseChatItem
+			convo={convo}
+			avatar={<AvatarBubbles profiles={convo.members} size={isWithinSplitView ? 48 : 52} />}
+			title={chatName}
+			accessibilityHint={l`Go to the group chat named "${chatName}"`}
+			primaryProfile={groupOwner}
+			primaryProfileModeration={moderation}
+			isBlockedAccount={false}
+			isDeletedAccount={false}
+			showProfileBadges={false}
+			selected={selected}
+			showMenu={showMenu}
+		>
+			{children}
+		</BaseChatItem>
+	);
 }
 
 function BaseChatItem({
-  convo,
-  avatar,
-  title,
-  subtitle,
-  accessibilityHint,
-  isDeletedAccount,
-  isBlockedAccount,
-  primaryProfile,
-  primaryProfileModeration,
-  showMenu,
-  selected,
-  showProfileBadges,
-  postAlerts,
-  children,
+	convo,
+	avatar,
+	title,
+	subtitle,
+	accessibilityHint,
+	isDeletedAccount,
+	isBlockedAccount,
+	primaryProfile,
+	primaryProfileModeration,
+	showMenu,
+	selected,
+	showProfileBadges,
+	postAlerts,
+	children,
 }: {
-  convo: ConvoWithDetails
-  avatar: React.ReactNode
-  title: string
-  subtitle?: string
-  accessibilityHint: string
-  isDeletedAccount: boolean
-  isBlockedAccount: boolean
-  primaryProfile?: Shadow<bsky.profile.AnyProfileView>
-  primaryProfileModeration?: ModerationDecision
-  showMenu?: boolean
-  selected?: boolean
-  showProfileBadges: boolean
-  postAlerts?: React.ReactNode
-  children?: React.ReactNode
+	convo: ConvoWithDetails;
+	avatar: React.ReactNode;
+	title: string;
+	subtitle?: string;
+	accessibilityHint: string;
+	isDeletedAccount: boolean;
+	isBlockedAccount: boolean;
+	primaryProfile?: Shadow<bsky.profile.AnyProfileView>;
+	primaryProfileModeration?: ModerationDecision;
+	showMenu?: boolean;
+	selected?: boolean;
+	showProfileBadges: boolean;
+	postAlerts?: React.ReactNode;
+	children?: React.ReactNode;
 }) {
-  const t = useTheme()
-  const {t: l, i18n} = useLingui()
-  const {currentAccount} = useSession()
-  const menuControl = useMenuControl()
-  const leaveConvoControl = useDialogControl()
-  const {mutate: markAsRead} = useMarkAsReadMutation()
-  const {gtMobile} = useBreakpoints()
-  const {isWithinSplitView} = useIsWithinSplitView()
+	const t = useTheme();
+	const { t: l, i18n } = useLingui();
+	const { currentAccount } = useSession();
+	const menuControl = useMenuControl();
+	const leaveConvoControl = useDialogControl();
+	const { mutate: markAsRead } = useMarkAsReadMutation();
+	const { gtMobile } = useBreakpoints();
+	const { isWithinSplitView } = useIsWithinSplitView();
 
-  const playHaptic = useHaptics()
-  const queryClient = useQueryClient()
-  const hasUnread =
-    convo.view.unreadCount > 0 &&
-    !isDeletedAccount &&
-    (convo.kind !== 'group' || convo.details.lockStatus === 'unlocked')
+	const playHaptic = useHaptics();
+	const queryClient = useQueryClient();
+	const hasUnread =
+		convo.view.unreadCount > 0 &&
+		!isDeletedAccount &&
+		(convo.kind !== 'group' || convo.details.lockStatus === 'unlocked');
 
-  const blockInfo = useMemo(() => {
-    if (!primaryProfileModeration) return {listBlocks: [], userBlock: undefined}
-    const modui = primaryProfileModeration.ui('profileView')
-    const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
-    const listBlocks = blocks.filter(alert => alert.source.type === 'list')
-    const userBlock = blocks.find(alert => alert.source.type === 'user')
-    return {
-      listBlocks,
-      userBlock,
-    }
-  }, [primaryProfileModeration])
+	const blockInfo = useMemo(() => {
+		if (!primaryProfileModeration) return { listBlocks: [], userBlock: undefined };
+		const modui = primaryProfileModeration.ui('profileView');
+		const blocks = modui.alerts.filter((alert) => alert.type === 'blocking');
+		const listBlocks = blocks.filter((alert) => alert.source.type === 'list');
+		const userBlock = blocks.find((alert) => alert.source.type === 'user');
+		return {
+			listBlocks,
+			userBlock,
+		};
+	}, [primaryProfileModeration]);
 
-  const isDimStyle =
-    convo.view.muted ||
-    isBlockedAccount ||
-    isDeletedAccount ||
-    (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked')
+	const isDimStyle =
+		convo.view.muted ||
+		isBlockedAccount ||
+		isDeletedAccount ||
+		(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
 
-  const {
-    lastMessage,
-    LastMessageIcon,
-    lastMessageSentAt,
-    latestReportableMessage,
-  } = useMemo(() => {
-    let lastMessage = l`No messages yet`
+	const { lastMessage, LastMessageIcon, lastMessageSentAt, latestReportableMessage } = useMemo(() => {
+		let lastMessage = l`No messages yet`;
 
-    let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null
+		let LastMessageIcon: React.ComponentType<SVGIconProps> | null = null;
 
-    let lastMessageSentAt: string | null = null
+		let lastMessageSentAt: string | null = null;
 
-    let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
+		let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined;
 
-    // Deleted message
-    if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
-      lastMessageSentAt = convo.view.lastMessage.sentAt
+		// Deleted message
+		if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+			lastMessageSentAt = convo.view.lastMessage.sentAt;
 
-      lastMessage = isDeletedAccount
-        ? l`Conversation deleted`
-        : l`Message deleted`
-    }
+			lastMessage = isDeletedAccount ? l`Conversation deleted` : l`Message deleted`;
+		}
 
-    // Message
-    if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
-      const info = getMessageInfo({
-        convo: convo.view,
-        currentAccountDid: currentAccount?.did,
-        i18n,
-      })
-      if (info) {
-        lastMessage = info.message ?? lastMessage
-        lastMessageSentAt = info.sentAt
-        latestReportableMessage = info.reportableMessage
-      }
-    }
+		// Message
+		if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
+			const info = getMessageInfo({
+				convo: convo.view,
+				currentAccountDid: currentAccount?.did,
+				i18n,
+			});
+			if (info) {
+				lastMessage = info.message ?? lastMessage;
+				lastMessageSentAt = info.sentAt;
+				latestReportableMessage = info.reportableMessage;
+			}
+		}
 
-    // Reaction
-    if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
-      const info = getReactionInfo({
-        convo: convo.view,
-        currentAccountDid: currentAccount?.did,
-        i18n,
-      })
-      if (
-        info &&
-        (!lastMessageSentAt ||
-          new Date(lastMessageSentAt) < new Date(info.createdAt))
-      ) {
-        lastMessage = info.message
-        lastMessageSentAt = info.createdAt
-      }
-    }
+		// Reaction
+		if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
+			const info = getReactionInfo({
+				convo: convo.view,
+				currentAccountDid: currentAccount?.did,
+				i18n,
+			});
+			if (info && (!lastMessageSentAt || new Date(lastMessageSentAt) < new Date(info.createdAt))) {
+				lastMessage = info.message;
+				lastMessageSentAt = info.createdAt;
+			}
+		}
 
-    // System message
-    if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
-      const info = getSystemMessageInfo(
-        convo.view.lastMessage.data,
-        new Map(convo.view.members.map(m => [m.did, m])),
-      )
-      if (info) {
-        lastMessage = i18n._(info.message)
-        LastMessageIcon = info.Icon
-        lastMessageSentAt = convo.view.lastMessage.sentAt
-      }
-    }
+		// System message
+		if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
+			const info = getSystemMessageInfo(
+				convo.view.lastMessage.data,
+				new Map(convo.view.members.map((m) => [m.did, m])),
+			);
+			if (info) {
+				lastMessage = i18n._(info.message);
+				LastMessageIcon = info.Icon;
+				lastMessageSentAt = convo.view.lastMessage.sentAt;
+			}
+		}
 
-    if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
-      lastMessage = l`This chat is locked`
-      LastMessageIcon = LockIcon
-    }
+		if (convo.kind === 'group' && convo.details.lockStatus !== 'unlocked') {
+			lastMessage = l`This chat is locked`;
+			LastMessageIcon = LockIcon;
+		}
 
-    return {
-      lastMessage,
-      LastMessageIcon,
-      lastMessageSentAt,
-      latestReportableMessage,
-    }
-  }, [l, convo, currentAccount?.did, isDeletedAccount, i18n])
+		return {
+			lastMessage,
+			LastMessageIcon,
+			lastMessageSentAt,
+			latestReportableMessage,
+		};
+	}, [l, convo, currentAccount?.did, isDeletedAccount, i18n]);
 
-  const [showActions, setShowActions] = useState(false)
+	const [showActions, setShowActions] = useState(false);
 
-  const onMouseEnter = useCallback(() => {
-    setShowActions(true)
-  }, [])
+	const onMouseEnter = useCallback(() => {
+		setShowActions(true);
+	}, []);
 
-  const onMouseLeave = useCallback(() => {
-    setShowActions(false)
-  }, [])
+	const onMouseLeave = useCallback(() => {
+		setShowActions(false);
+	}, []);
 
-  const onFocus = useCallback<React.FocusEventHandler>(e => {
-    if (e.nativeEvent.relatedTarget == null) return
-    setShowActions(true)
-  }, [])
+	const onFocus = useCallback<React.FocusEventHandler>((e) => {
+		if (e.nativeEvent.relatedTarget == null) return;
+		setShowActions(true);
+	}, []);
 
-  const onPress = useCallback(
-    (e: GestureResponderEvent) => {
-      for (const member of convo.view.members) {
-        unstableCacheProfileView(queryClient, member)
-      }
-      precacheConvoQuery(queryClient, convo.view)
-      if (isDeletedAccount) {
-        e.preventDefault()
-        menuControl.open()
-        return false
-      } else {
-      }
-    },
-    [isDeletedAccount, menuControl, queryClient, convo],
-  )
+	const onPress = useCallback(
+		(e: GestureResponderEvent) => {
+			for (const member of convo.view.members) {
+				unstableCacheProfileView(queryClient, member);
+			}
+			precacheConvoQuery(queryClient, convo.view);
+			if (isDeletedAccount) {
+				e.preventDefault();
+				menuControl.open();
+				return false;
+			} else {
+			}
+		},
+		[isDeletedAccount, menuControl, queryClient, convo],
+	);
 
-  const onLongPress = useCallback(() => {
-    playHaptic()
-    menuControl.open()
-  }, [playHaptic, menuControl])
+	const onLongPress = useCallback(() => {
+		playHaptic();
+		menuControl.open();
+	}, [playHaptic, menuControl]);
 
-  const markReadAction = {
-    threshold: 120,
-    color: t.palette.primary_500,
-    icon: EnvelopeOpen,
-    action: () => {
-      markAsRead({
-        convoId: convo.view.id,
-      })
-    },
-  }
+	const markReadAction = {
+		threshold: 120,
+		color: t.palette.primary_500,
+		icon: EnvelopeOpen,
+		action: () => {
+			markAsRead({
+				convoId: convo.view.id,
+			});
+		},
+	};
 
-  const deleteAction = {
-    threshold: 225,
-    color: t.palette.negative_500,
-    icon: Trash_Stroke2_Corner0_Rounded,
-    action: () => {
-      leaveConvoControl.open()
-    },
-  }
+	const deleteAction = {
+		threshold: 225,
+		color: t.palette.negative_500,
+		icon: Trash_Stroke2_Corner0_Rounded,
+		action: () => {
+			leaveConvoControl.open();
+		},
+	};
 
-  const actions = hasUnread
-    ? {
-        leftFirst: markReadAction,
-        leftSecond: deleteAction,
-      }
-    : {
-        leftFirst: deleteAction,
-      }
+	const actions = hasUnread
+		? {
+				leftFirst: markReadAction,
+				leftSecond: deleteAction,
+			}
+		: {
+				leftFirst: deleteAction,
+			};
 
-  const avatarSize = isWithinSplitView ? 48 : 52
+	const avatarSize = isWithinSplitView ? 48 : 52;
 
-  return (
-    <ChatListItemPortal.Provider>
-      <GestureActionView actions={actions}>
-        <View
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          // @ts-expect-error web only
-          onFocus={onFocus}
-          onBlur={onMouseLeave}
-          style={[a.relative, t.atoms.bg, isWithinSplitView && a.mx_sm]}>
-          <View
-            style={[
-              a.z_10,
-              a.absolute,
-              {top: tokens.space.md, left: tokens.space.lg},
-            ]}>
-            {avatar}
-          </View>
+	return (
+		<ChatListItemPortal.Provider>
+			<GestureActionView actions={actions}>
+				<View
+					onMouseEnter={onMouseEnter}
+					onMouseLeave={onMouseLeave}
+					// @ts-expect-error web only
+					onFocus={onFocus}
+					onBlur={onMouseLeave}
+					style={[a.relative, t.atoms.bg, isWithinSplitView && a.mx_sm]}
+				>
+					<View style={[a.z_10, a.absolute, { top: tokens.space.md, left: tokens.space.lg }]}>{avatar}</View>
 
-          <Link
-            to={`/messages/${convo.view.id}`}
-            label={title}
-            accessibilityHint={accessibilityHint}
-            accessibilityActions={undefined}
-            onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
-            onPress={onPress}
-            onLongPress={undefined}
-            onAccessibilityAction={showMenu ? onLongPress : undefined}>
-            {({hovered, pressed, focused}) => (
-              <View
-                style={[
-                  a.flex_row,
-                  isDeletedAccount ? a.align_center : a.align_start,
-                  a.flex_1,
-                  a.px_lg,
-                  a.py_md,
-                  a.gap_md,
-                  isWithinSplitView && a.rounded_sm,
-                  (hovered || pressed || focused) && t.atoms.bg_contrast_25,
-                  selected && t.atoms.bg_contrast_50,
-                ]}>
-                {/* Avatar goes here */}
-                <View style={{width: avatarSize, height: avatarSize}} />
+					<Link
+						to={`/messages/${convo.view.id}`}
+						label={title}
+						accessibilityHint={accessibilityHint}
+						accessibilityActions={undefined}
+						onPressIn={() => precacheConvoQuery(queryClient, convo.view)}
+						onPress={onPress}
+						onLongPress={undefined}
+						onAccessibilityAction={showMenu ? onLongPress : undefined}
+					>
+						{({ hovered, pressed, focused }) => (
+							<View
+								style={[
+									a.flex_row,
+									isDeletedAccount ? a.align_center : a.align_start,
+									a.flex_1,
+									a.px_lg,
+									a.py_md,
+									a.gap_md,
+									isWithinSplitView && a.rounded_sm,
+									(hovered || pressed || focused) && t.atoms.bg_contrast_25,
+									selected && t.atoms.bg_contrast_50,
+								]}
+							>
+								{/* Avatar goes here */}
+								<View style={{ width: avatarSize, height: avatarSize }} />
 
-                <View style={[a.flex_1, a.justify_center, {paddingRight: 40}]}>
-                  <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
-                    <View style={[a.flex_shrink]}>
-                      <Text
-                        emoji
-                        numberOfLines={1}
-                        style={[
-                          a.text_md,
-                          t.atoms.text,
-                          a.font_semi_bold,
-                          {lineHeight: 21},
-                          isDimStyle && t.atoms.text_contrast_medium,
-                        ]}>
-                        {title}
-                      </Text>
-                    </View>
+								<View style={[a.flex_1, a.justify_center, { paddingRight: 40 }]}>
+									<View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
+										<View style={[a.flex_shrink]}>
+											<Text
+												emoji
+												numberOfLines={1}
+												style={[
+													a.text_md,
+													t.atoms.text,
+													a.font_semi_bold,
+													{ lineHeight: 21 },
+													isDimStyle && t.atoms.text_contrast_medium,
+												]}
+											>
+												{title}
+											</Text>
+										</View>
 
-                    {showProfileBadges && primaryProfile && (
-                      <ProfileBadges
-                        profile={primaryProfile}
-                        size="sm"
-                        style={[a.pl_xs, a.self_center]}
-                      />
-                    )}
+										{showProfileBadges && primaryProfile && (
+											<ProfileBadges profile={primaryProfile} size="sm" style={[a.pl_xs, a.self_center]} />
+										)}
 
-                    {lastMessageSentAt && (
-                      <View style={[a.pl_xs]}>
-                        <TimeElapsed timestamp={lastMessageSentAt}>
-                          {({timeElapsed}) => (
-                            <Text
-                              style={[
-                                a.text_sm,
-                                {lineHeight: 21},
-                                t.atoms.text_contrast_medium,
-                                {whiteSpace: 'preserve nowrap'} as WebTextStyle,
-                              ]}>
-                              &middot; {timeElapsed}
-                            </Text>
-                          )}
-                        </TimeElapsed>
-                      </View>
-                    )}
-                    {(convo.view.muted || isBlockedAccount) && (
-                      <Text
-                        style={[
-                          a.text_sm,
-                          {lineHeight: 21},
-                          t.atoms.text_contrast_medium,
-                          {whiteSpace: 'preserve nowrap'} as WebTextStyle,
-                        ]}>
-                        {' '}
-                        &middot;{' '}
-                        <BellStroke
-                          size="xs"
-                          style={[t.atoms.text_contrast_medium]}
-                        />
-                      </Text>
-                    )}
-                  </View>
+										{lastMessageSentAt && (
+											<View style={[a.pl_xs]}>
+												<TimeElapsed timestamp={lastMessageSentAt}>
+													{({ timeElapsed }) => (
+														<Text
+															style={[
+																a.text_sm,
+																{ lineHeight: 21 },
+																t.atoms.text_contrast_medium,
+																{ whiteSpace: 'preserve nowrap' } as WebTextStyle,
+															]}
+														>
+															&middot; {timeElapsed}
+														</Text>
+													)}
+												</TimeElapsed>
+											</View>
+										)}
+										{(convo.view.muted || isBlockedAccount) && (
+											<Text
+												style={[
+													a.text_sm,
+													{ lineHeight: 21 },
+													t.atoms.text_contrast_medium,
+													{ whiteSpace: 'preserve nowrap' } as WebTextStyle,
+												]}
+											>
+												{' '}
+												&middot; <BellStroke size="xs" style={[t.atoms.text_contrast_medium]} />
+											</Text>
+										)}
+									</View>
 
-                  {subtitle && (
-                    <Text
-                      numberOfLines={1}
-                      style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]}
-                      emoji>
-                      {subtitle}
-                    </Text>
-                  )}
+									{subtitle && (
+										<Text numberOfLines={1} style={[a.text_sm, t.atoms.text_contrast_medium, a.pb_xs]} emoji>
+											{subtitle}
+										</Text>
+									)}
 
-                  {postAlerts}
+									{postAlerts}
 
-                  <View style={[a.flex_row, a.align_center]}>
-                    {LastMessageIcon && (
-                      <LastMessageIcon
-                        size="xs"
-                        style={[a.mr_2xs, t.atoms.text_contrast_medium]}
-                      />
-                    )}
-                    <Text
-                      emoji
-                      numberOfLines={2}
-                      style={[
-                        a.text_sm,
-                        a.leading_snug,
-                        hasUnread
-                          ? a.font_semi_bold
-                          : t.atoms.text_contrast_high,
-                        isDimStyle && t.atoms.text_contrast_medium,
-                      ]}>
-                      {lastMessage}
-                    </Text>
-                  </View>
+									<View style={[a.flex_row, a.align_center]}>
+										{LastMessageIcon && (
+											<LastMessageIcon size="xs" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
+										)}
+										<Text
+											emoji
+											numberOfLines={2}
+											style={[
+												a.text_sm,
+												a.leading_snug,
+												hasUnread ? a.font_semi_bold : t.atoms.text_contrast_high,
+												isDimStyle && t.atoms.text_contrast_medium,
+											]}
+										>
+											{lastMessage}
+										</Text>
+									</View>
 
-                  {children}
-                </View>
+									{children}
+								</View>
 
-                {hasUnread && (
-                  <View
-                    style={[
-                      a.absolute,
-                      a.rounded_full,
-                      {
-                        backgroundColor: isDimStyle
-                          ? t.palette.contrast_200
-                          : t.palette.primary_500,
-                        height: 7,
-                        width: 7,
-                        top: 15,
-                        right: 12,
-                      },
-                    ]}
-                  />
-                )}
-              </View>
-            )}
-          </Link>
+								{hasUnread && (
+									<View
+										style={[
+											a.absolute,
+											a.rounded_full,
+											{
+												backgroundColor: isDimStyle ? t.palette.contrast_200 : t.palette.primary_500,
+												height: 7,
+												width: 7,
+												top: 15,
+												right: 12,
+											},
+										]}
+									/>
+								)}
+							</View>
+						)}
+					</Link>
 
-          <ChatListItemPortal.Outlet />
+					<ChatListItemPortal.Outlet />
 
-          {/* TODO: Allow showing menu for groups where the owner has left! */}
-          {showMenu && primaryProfile && (
-            <ConvoMenu
-              convo={convo.view}
-              profile={primaryProfile}
-              control={menuControl}
-              currentScreen="list"
-              showMarkAsRead={convo.view.unreadCount > 0}
-              hideTrigger={false}
-              blockInfo={blockInfo}
-              style={[
-                a.absolute,
-                a.h_full,
-                a.self_end,
-                a.justify_center,
-                {
-                  right: tokens.space.lg,
-                  opacity:
-                    !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
-                },
-              ]}
-              latestReportableMessage={latestReportableMessage}
-            />
-          )}
+					{/* TODO: Allow showing menu for groups where the owner has left! */}
+					{showMenu && primaryProfile && (
+						<ConvoMenu
+							convo={convo.view}
+							profile={primaryProfile}
+							control={menuControl}
+							currentScreen="list"
+							showMarkAsRead={convo.view.unreadCount > 0}
+							hideTrigger={false}
+							blockInfo={blockInfo}
+							style={[
+								a.absolute,
+								a.h_full,
+								a.self_end,
+								a.justify_center,
+								{
+									right: tokens.space.lg,
+									opacity: !gtMobile || showActions || menuControl.isOpen ? 1 : 0,
+								},
+							]}
+							latestReportableMessage={latestReportableMessage}
+						/>
+					)}
 
-          <LeaveConvoPrompt
-            control={leaveConvoControl}
-            convoId={convo.view.id}
-            currentScreen="list"
-          />
-        </View>
-      </GestureActionView>
-    </ChatListItemPortal.Provider>
-  )
+					<LeaveConvoPrompt control={leaveConvoControl} convoId={convo.view.id} currentScreen="list" />
+				</View>
+			</GestureActionView>
+		</ChatListItemPortal.Provider>
+	);
 }

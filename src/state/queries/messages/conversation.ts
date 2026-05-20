@@ -1,111 +1,91 @@
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import { type ChatBskyConvoDefs } from '@atproto/api';
+import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { DM_SERVICE_HEADERS } from '#/lib/constants';
+import { STALE } from '#/state/queries';
+import { useOnMarkAsRead } from '#/state/queries/messages/list-conversations';
+import { useAgent } from '#/state/session';
 import {
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+	type ConvoListQueryData,
+	getConvoFromQueryData,
+	RQKEY_ROOT as LIST_CONVOS_KEY,
+} from './list-conversations';
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {STALE} from '#/state/queries'
-import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
-import {useAgent} from '#/state/session'
-import {
-  type ConvoListQueryData,
-  getConvoFromQueryData,
-  RQKEY_ROOT as LIST_CONVOS_KEY,
-} from './list-conversations'
+export const RQKEY_ROOT = 'convo';
+export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId];
 
-export const RQKEY_ROOT = 'convo'
-export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
+export function useConvoQuery({ convoId }: { convoId: string }) {
+	const agent = useAgent();
 
-export function useConvoQuery({convoId}: {convoId: string}) {
-  const agent = useAgent()
-
-  return useQuery({
-    queryKey: RQKEY(convoId),
-    queryFn: async () => {
-      const {data} = await agent.chat.bsky.convo.getConvo(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS},
-      )
-      return data.convo
-    },
-    staleTime: STALE.INFINITY,
-  })
+	return useQuery({
+		queryKey: RQKEY(convoId),
+		queryFn: async () => {
+			const { data } = await agent.chat.bsky.convo.getConvo({ convoId }, { headers: DM_SERVICE_HEADERS });
+			return data.convo;
+		},
+		staleTime: STALE.INFINITY,
+	});
 }
 
-export function precacheConvoQuery(
-  queryClient: QueryClient,
-  convo: ChatBskyConvoDefs.ConvoView,
-) {
-  queryClient.setQueryData(RQKEY(convo.id), convo)
+export function precacheConvoQuery(queryClient: QueryClient, convo: ChatBskyConvoDefs.ConvoView) {
+	queryClient.setQueryData(RQKEY(convo.id), convo);
 }
 
 export function useMarkAsReadMutation() {
-  const optimisticUpdate = useOnMarkAsRead()
-  const queryClient = useQueryClient()
-  const agent = useAgent()
+	const optimisticUpdate = useOnMarkAsRead();
+	const queryClient = useQueryClient();
+	const agent = useAgent();
 
-  return useMutation({
-    mutationFn: async ({
-      convoId,
-      messageId,
-    }: {
-      convoId?: string
-      messageId?: string
-    }) => {
-      if (!convoId) throw new Error('No convoId provided')
+	return useMutation({
+		mutationFn: async ({ convoId, messageId }: { convoId?: string; messageId?: string }) => {
+			if (!convoId) throw new Error('No convoId provided');
 
-      await agent.chat.bsky.convo.updateRead(
-        {
-          convoId,
-          messageId,
-        },
-        {
-          encoding: 'application/json',
-          headers: DM_SERVICE_HEADERS,
-        },
-      )
-    },
-    onMutate({convoId}) {
-      if (!convoId) throw new Error('No convoId provided')
-      optimisticUpdate(convoId)
-    },
-    onSuccess(_, {convoId}) {
-      if (!convoId) return
+			await agent.chat.bsky.convo.updateRead(
+				{
+					convoId,
+					messageId,
+				},
+				{
+					encoding: 'application/json',
+					headers: DM_SERVICE_HEADERS,
+				},
+			);
+		},
+		onMutate({ convoId }) {
+			if (!convoId) throw new Error('No convoId provided');
+			optimisticUpdate(convoId);
+		},
+		onSuccess(_, { convoId }) {
+			if (!convoId) return;
 
-      queryClient.setQueriesData(
-        {queryKey: [LIST_CONVOS_KEY]},
-        (old?: ConvoListQueryData) => {
-          if (!old) return old
+			queryClient.setQueriesData({ queryKey: [LIST_CONVOS_KEY] }, (old?: ConvoListQueryData) => {
+				if (!old) return old;
 
-          const existingConvo = getConvoFromQueryData(convoId, old)
+				const existingConvo = getConvoFromQueryData(convoId, old);
 
-          if (existingConvo) {
-            return {
-              ...old,
-              pages: old.pages.map(page => {
-                return {
-                  ...page,
-                  convos: page.convos.map(convo => {
-                    if (convo.id === convoId) {
-                      return {
-                        ...convo,
-                        unreadCount: 0,
-                      }
-                    }
-                    return convo
-                  }),
-                }
-              }),
-            }
-          } else {
-            // If we somehow marked a convo as read that doesn't exist in the
-            // list, then we don't need to do anything.
-          }
-        },
-      )
-    },
-  })
+				if (existingConvo) {
+					return {
+						...old,
+						pages: old.pages.map((page) => {
+							return {
+								...page,
+								convos: page.convos.map((convo) => {
+									if (convo.id === convoId) {
+										return {
+											...convo,
+											unreadCount: 0,
+										};
+									}
+									return convo;
+								}),
+							};
+						}),
+					};
+				} else {
+					// If we somehow marked a convo as read that doesn't exist in the
+					// list, then we don't need to do anything.
+				}
+			});
+		},
+	});
 }

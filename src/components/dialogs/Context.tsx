@@ -1,98 +1,92 @@
-import {createContext, useContext, useMemo, useState} from 'react'
+import { createContext, useContext, useMemo, useState } from 'react';
 
-import {type SessionAccount} from '#/state/session'
-import * as Dialog from '#/components/Dialog'
-import {type ReportSubject} from '#/components/moderation/ReportDialog'
+import { type SessionAccount } from '#/state/session';
+import * as Dialog from '#/components/Dialog';
+import { type ReportSubject } from '#/components/moderation/ReportDialog';
 
-type Control = Dialog.DialogControlProps
+type Control = Dialog.DialogControlProps;
 
 export type StatefulControl<T> = {
-  control: Control
-  open: (value: T) => void
-  clear: () => void
-  value: T | undefined
-}
+	control: Control;
+	open: (value: T) => void;
+	clear: () => void;
+	value: T | undefined;
+};
 
 export type SigninDialogPayload = {
-  requestedAccount?: SessionAccount
-  showStoredAccounts?: boolean
-}
+	requestedAccount?: SessionAccount;
+	showStoredAccounts?: boolean;
+};
 
 type ControlsContext = {
-  mutedWordsDialogControl: Control
-  signinDialogControl: StatefulControl<SigninDialogPayload>
-  inAppBrowserConsentControl: StatefulControl<string>
-  linkWarningDialogControl: StatefulControl<{
-    href: string
-    displayText: string
-    share?: boolean
-  }>
-  reportDialogControl: StatefulControl<{subject: ReportSubject}>
-}
+	mutedWordsDialogControl: Control;
+	signinDialogControl: StatefulControl<SigninDialogPayload>;
+	inAppBrowserConsentControl: StatefulControl<string>;
+	linkWarningDialogControl: StatefulControl<{
+		href: string;
+		displayText: string;
+		share?: boolean;
+	}>;
+	reportDialogControl: StatefulControl<{ subject: ReportSubject }>;
+};
 
-const ControlsContext = createContext<ControlsContext | null>(null)
-ControlsContext.displayName = 'GlobalDialogControlsContext'
+const ControlsContext = createContext<ControlsContext | null>(null);
+ControlsContext.displayName = 'GlobalDialogControlsContext';
 
 export function useGlobalDialogsControlContext() {
-  const ctx = useContext(ControlsContext)
-  if (!ctx) {
-    throw new Error(
-      'useGlobalDialogsControlContext must be used within a Provider',
-    )
-  }
-  return ctx
+	const ctx = useContext(ControlsContext);
+	if (!ctx) {
+		throw new Error('useGlobalDialogsControlContext must be used within a Provider');
+	}
+	return ctx;
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const mutedWordsDialogControl = Dialog.useDialogControl()
-  const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>()
-  const inAppBrowserConsentControl = useStatefulDialogControl<string>()
-  const linkWarningDialogControl = useStatefulDialogControl<{
-    href: string
-    displayText: string
-    share?: boolean
-  }>()
-  const reportDialogControl = useStatefulDialogControl<{
-    subject: ReportSubject
-  }>()
+export function Provider({ children }: React.PropsWithChildren<{}>) {
+	const mutedWordsDialogControl = Dialog.useDialogControl();
+	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();
+	const inAppBrowserConsentControl = useStatefulDialogControl<string>();
+	const linkWarningDialogControl = useStatefulDialogControl<{
+		href: string;
+		displayText: string;
+		share?: boolean;
+	}>();
+	const reportDialogControl = useStatefulDialogControl<{
+		subject: ReportSubject;
+	}>();
 
-  const ctx = useMemo<ControlsContext>(
-    () => ({
-      mutedWordsDialogControl,
-      signinDialogControl,
-      inAppBrowserConsentControl,
-      linkWarningDialogControl,
-      reportDialogControl,
-    }),
-    [
-      mutedWordsDialogControl,
-      signinDialogControl,
-      inAppBrowserConsentControl,
-      linkWarningDialogControl,
-      reportDialogControl,
-    ],
-  )
+	const ctx = useMemo<ControlsContext>(
+		() => ({
+			mutedWordsDialogControl,
+			signinDialogControl,
+			inAppBrowserConsentControl,
+			linkWarningDialogControl,
+			reportDialogControl,
+		}),
+		[
+			mutedWordsDialogControl,
+			signinDialogControl,
+			inAppBrowserConsentControl,
+			linkWarningDialogControl,
+			reportDialogControl,
+		],
+	);
 
-  return (
-    <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>
-  )
+	return <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>;
 }
 
-export function useStatefulDialogControl<T>(
-  initialValue?: T,
-): StatefulControl<T> {
-  const [value, setValue] = useState(initialValue)
-  const control = Dialog.useDialogControl()
-  return useMemo(
-    () => ({
-      control,
-      open: (v: T) => {
-        setValue(v)
-        control.open()
-      },
-      clear: () => setValue(initialValue),
-      value,
-    }),
-    [control, value, initialValue],
-  )
+export function useStatefulDialogControl<T>(initialValue?: T): StatefulControl<T> {
+	const [value, setValue] = useState(initialValue);
+	const control = Dialog.useDialogControl();
+	return useMemo(
+		() => ({
+			control,
+			open: (v: T) => {
+				setValue(v);
+				control.open();
+			},
+			clear: () => setValue(initialValue),
+			value,
+		}),
+		[control, value, initialValue],
+	);
 }

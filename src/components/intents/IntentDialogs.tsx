@@ -1,3 +1,3 @@
-export function Provider({children}: {children: React.ReactNode}) {
-  return children
+export function Provider({ children }: { children: React.ReactNode }) {
+	return children;
 }

@@ -1,62 +1,62 @@
-import {useEffect, useMemo, useState} from 'react'
-import {type EventArg, useNavigation} from '@react-navigation/native'
+import { useEffect, useMemo, useState } from 'react';
+import { type EventArg, useNavigation } from '@react-navigation/native';
 
 if ('scrollRestoration' in history) {
-  // Tell the brower not to mess with the scroll.
-  // We're doing that manually below.
-  history.scrollRestoration = 'manual'
+	// Tell the brower not to mess with the scroll.
+	// We're doing that manually below.
+	history.scrollRestoration = 'manual';
 }
 
 function createInitialScrollState() {
-  return {
-    scrollYs: new Map(),
-    focusedKey: null as string | null,
-  }
+	return {
+		scrollYs: new Map(),
+		focusedKey: null as string | null,
+	};
 }
 
 type UnsafeActionNavigation = {
-  addListener: (event: '__unsafe_action__', listener: () => void) => () => void
-  removeListener: (event: '__unsafe_action__', listener: () => void) => void
-}
+	addListener: (event: '__unsafe_action__', listener: () => void) => () => void;
+	removeListener: (event: '__unsafe_action__', listener: () => void) => void;
+};
 
 export function useWebScrollRestoration() {
-  const [state] = useState(createInitialScrollState)
-  const navigation = useNavigation()
+	const [state] = useState(createInitialScrollState);
+	const navigation = useNavigation();
 
-  useEffect(() => {
-    function onDispatch() {
-      if (state.focusedKey) {
-        // Remember where we were for later.
-        state.scrollYs.set(state.focusedKey, window.scrollY)
-        // TODO: Strictly speaking, this is a leak. We never clean up.
-        // This is because I'm not sure when it's appropriate to clean it up.
-        // It doesn't seem like popstate is enough because it can still Forward-Back again.
-        // Maybe we should use sessionStorage. Or check what Next.js is doing?
-      }
-    }
-    // We want to intercept any push/pop/replace *before* the re-render.
-    // There is no official way to do this yet, but this works okay for now.
-    // https://twitter.com/satya164/status/1737301243519725803
-    const unsafeNavigation = navigation as unknown as UnsafeActionNavigation
-    unsafeNavigation.addListener('__unsafe_action__', onDispatch)
-    return () => {
-      unsafeNavigation.removeListener('__unsafe_action__', onDispatch)
-    }
-  }, [state, navigation])
+	useEffect(() => {
+		function onDispatch() {
+			if (state.focusedKey) {
+				// Remember where we were for later.
+				state.scrollYs.set(state.focusedKey, window.scrollY);
+				// TODO: Strictly speaking, this is a leak. We never clean up.
+				// This is because I'm not sure when it's appropriate to clean it up.
+				// It doesn't seem like popstate is enough because it can still Forward-Back again.
+				// Maybe we should use sessionStorage. Or check what Next.js is doing?
+			}
+		}
+		// We want to intercept any push/pop/replace *before* the re-render.
+		// There is no official way to do this yet, but this works okay for now.
+		// https://twitter.com/satya164/status/1737301243519725803
+		const unsafeNavigation = navigation as unknown as UnsafeActionNavigation;
+		unsafeNavigation.addListener('__unsafe_action__', onDispatch);
+		return () => {
+			unsafeNavigation.removeListener('__unsafe_action__', onDispatch);
+		};
+	}, [state, navigation]);
 
-  const screenListeners = useMemo(
-    () => ({
-      focus(e: EventArg<'focus', boolean | undefined, unknown>) {
-        const scrollY = state.scrollYs.get(e.target) ?? 0
-        // Deferred so that screens re-mounted by LRU eviction have
-        // time to render their content before we scroll.
-        requestAnimationFrame(() => {
-          window.scrollTo(0, scrollY)
-        })
-        state.focusedKey = e.target ?? null
-      },
-    }),
-    [state],
-  )
-  return screenListeners
+	const screenListeners = useMemo(
+		() => ({
+			focus(e: EventArg<'focus', boolean | undefined, unknown>) {
+				const scrollY = state.scrollYs.get(e.target) ?? 0;
+				// Deferred so that screens re-mounted by LRU eviction have
+				// time to render their content before we scroll.
+				requestAnimationFrame(() => {
+					window.scrollTo(0, scrollY);
+				});
+				state.focusedKey = e.target ?? null;
+			},
+		}),
+		[state],
+	);
+	return screenListeners;
 }

@@ -1,76 +1,70 @@
-import {type RichText} from '@atproto/api'
-import {countGraphemes} from 'unicode-segmenter/grapheme'
+import { type RichText } from '@atproto/api';
+import { countGraphemes } from 'unicode-segmenter/grapheme';
 
-import {shortenLinks} from './rich-text-manip'
+import { shortenLinks } from './rich-text-manip';
 
 export function enforceLen(
-  str: string,
-  len: number,
-  ellipsis = false,
-  mode: 'end' | 'middle' = 'end',
+	str: string,
+	len: number,
+	ellipsis = false,
+	mode: 'end' | 'middle' = 'end',
 ): string {
-  str = str || ''
-  if (str.length > len) {
-    if (ellipsis) {
-      if (mode === 'end') {
-        return str.slice(0, len) + '…'
-      } else if (mode === 'middle') {
-        const half = Math.floor(len / 2)
-        return str.slice(0, half) + '…' + str.slice(-half)
-      } else {
-        // fallback
-        return str.slice(0, len)
-      }
-    } else {
-      return str.slice(0, len)
-    }
-  }
-  return str
+	str = str || '';
+	if (str.length > len) {
+		if (ellipsis) {
+			if (mode === 'end') {
+				return str.slice(0, len) + '…';
+			} else if (mode === 'middle') {
+				const half = Math.floor(len / 2);
+				return str.slice(0, half) + '…' + str.slice(-half);
+			} else {
+				// fallback
+				return str.slice(0, len);
+			}
+		} else {
+			return str.slice(0, len);
+		}
+	}
+	return str;
 }
 
-export function isOverMaxGraphemeCount({
-  text,
-  maxCount,
-}: {
-  text: string | RichText
-  maxCount: number
-}) {
-  if (typeof text === 'string') {
-    return countGraphemes(text) > maxCount
-  } else {
-    return shortenLinks(text).graphemeLength > maxCount
-  }
+export function isOverMaxGraphemeCount({ text, maxCount }: { text: string | RichText; maxCount: number }) {
+	if (typeof text === 'string') {
+		return countGraphemes(text) > maxCount;
+	} else {
+		return shortenLinks(text).graphemeLength > maxCount;
+	}
 }
 
 export function countLines(str: string | undefined): number {
-  if (!str) return 0
-  return str.match(/\n/g)?.length ?? 0
+	if (!str) return 0;
+	return str.match(/\n/g)?.length ?? 0;
 }
 
 // Augments search query with additional syntax like `from:me`
-export function augmentSearchQuery(query: string, {did}: {did?: string}) {
-  // Don't do anything if there's no DID
-  if (!did) {
-    return query
-  }
+export function augmentSearchQuery(query: string, { did }: { did?: string }) {
+	// Don't do anything if there's no DID
+	if (!did) {
+		return query;
+	}
 
-  // replace “smart quotes” with normal ones
-  // iOS keyboard will add fancy unicode quotes, but only normal ones work
-  query = query.replaceAll(/[“”]/g, '"')
+	// replace “smart quotes” with normal ones
+	// iOS keyboard will add fancy unicode quotes, but only normal ones work
+	query = query.replaceAll(/[“”]/g, '"');
 
-  // We don't want to replace substrings that are being "quoted" because those
-  // are exact string matches, so what we'll do here is to split them apart
+	// We don't want to replace substrings that are being "quoted" because those
+	// are exact string matches, so what we'll do here is to split them apart
 
-  // Even-indexed strings are unquoted, odd-indexed strings are quoted
-  const splits = query.split(/("(?:[^"\\]|\\.)*")/g)
+	// Even-indexed strings are unquoted, odd-indexed strings are quoted
+	const splits = query.split(/("(?:[^"\\]|\\.)*")/g);
 
-  return splits
-    .map((str, idx) => {
-      if (idx % 2 === 0) {
-        return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`)
-      }
+	return splits
+		.map((str, idx) => {
+			if (idx % 2 === 0) {
+				return str.replaceAll(/(^|\s)from:me(\s|$)/g, `$1${did}$2`);
+			}
 
-      return str
-    })
-    .join('')
+			return str;
+		})
+		.join('');
 }

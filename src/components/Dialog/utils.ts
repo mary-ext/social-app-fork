@@ -1,18 +1,18 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react';
 
-import {type DialogControlProps} from '#/components/Dialog/types'
+import { type DialogControlProps } from '#/components/Dialog/types';
 
 export function useAutoOpen(control: DialogControlProps, showTimeout?: number) {
-  useEffect(() => {
-    if (showTimeout) {
-      const timeout = setTimeout(() => {
-        control.open()
-      }, showTimeout)
-      return () => {
-        clearTimeout(timeout)
-      }
-    } else {
-      control.open()
-    }
-  }, [control, showTimeout])
+	useEffect(() => {
+		if (showTimeout) {
+			const timeout = setTimeout(() => {
+				control.open();
+			}, showTimeout);
+			return () => {
+				clearTimeout(timeout);
+			};
+		} else {
+			control.open();
+		}
+	}, [control, showTimeout]);
 }

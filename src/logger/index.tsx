@@ -1,146 +1,139 @@
-import {nanoid} from 'nanoid/non-secure'
+import { nanoid } from 'nanoid/non-secure';
 
-import {add} from '#/logger/logDump'
-import {consoleTransport} from '#/logger/transports/console'
-import {
-  LogContext,
-  LogLevel,
-  type Metadata,
-  type Transport,
-} from '#/logger/types'
-import {enabledLogLevels} from '#/logger/util'
-import {ENV, LOG_DEBUG, LOG_LEVEL} from '#/env'
+import { add } from '#/logger/logDump';
+import { consoleTransport } from '#/logger/transports/console';
+import { LogContext, LogLevel, type Metadata, type Transport } from '#/logger/types';
+import { enabledLogLevels } from '#/logger/util';
+import { ENV, LOG_DEBUG, LOG_LEVEL } from '#/env';
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
-  switch (ENV) {
-    case 'production': {
-      return [consoleTransport]
-    }
-    case 'test': {
-      return []
-    }
-    default: {
-      return [consoleTransport]
-    }
-  }
-})()
+	switch (ENV) {
+		case 'production': {
+			return [consoleTransport];
+		}
+		case 'test': {
+			return [];
+		}
+		default: {
+			return [consoleTransport];
+		}
+	}
+})();
 
 export class Logger {
-  static Level = LogLevel
-  static Context = LogContext
+	static Level = LogLevel;
+	static Context = LogContext;
 
-  level: LogLevel
-  context: LogContext | undefined = undefined
-  contextFilter: string = ''
-  ambientMetadata: Record<string, unknown> = {}
+	level: LogLevel;
+	context: LogContext | undefined = undefined;
+	contextFilter: string = '';
+	ambientMetadata: Record<string, unknown> = {};
 
-  protected debugContextRegexes: RegExp[] = []
-  protected transports: Transport[] = []
+	protected debugContextRegexes: RegExp[] = [];
+	protected transports: Transport[] = [];
 
-  static create(context?: LogContext, metadata: Record<string, unknown> = {}) {
-    const logger = new Logger({
-      level: LOG_LEVEL as LogLevel,
-      context,
-      contextFilter: LOG_DEBUG,
-      metadata,
-    })
-    for (const transport of TRANSPORTS) {
-      logger.addTransport(transport)
-    }
-    return logger
-  }
+	static create(context?: LogContext, metadata: Record<string, unknown> = {}) {
+		const logger = new Logger({
+			level: LOG_LEVEL as LogLevel,
+			context,
+			contextFilter: LOG_DEBUG,
+			metadata,
+		});
+		for (const transport of TRANSPORTS) {
+			logger.addTransport(transport);
+		}
+		return logger;
+	}
 
-  constructor({
-    level,
-    context,
-    contextFilter,
-    metadata: ambientMetadata = {},
-  }: {
-    level?: LogLevel
-    context?: LogContext
-    contextFilter?: string
-    metadata?: Record<string, unknown>
-  } = {}) {
-    this.context = context
-    this.level = level || LogLevel.Info
-    this.contextFilter = contextFilter || ''
-    this.ambientMetadata = ambientMetadata
-    if (this.contextFilter) {
-      this.level = LogLevel.Debug
-    }
-    this.debugContextRegexes = (this.contextFilter || '')
-      .split(',')
-      .map(filter => {
-        return new RegExp(filter.replace(/[^\w:*-]/, '').replace(/\*/g, '.*'))
-      })
-  }
+	constructor({
+		level,
+		context,
+		contextFilter,
+		metadata: ambientMetadata = {},
+	}: {
+		level?: LogLevel;
+		context?: LogContext;
+		contextFilter?: string;
+		metadata?: Record<string, unknown>;
+	} = {}) {
+		this.context = context;
+		this.level = level || LogLevel.Info;
+		this.contextFilter = contextFilter || '';
+		this.ambientMetadata = ambientMetadata;
+		if (this.contextFilter) {
+			this.level = LogLevel.Debug;
+		}
+		this.debugContextRegexes = (this.contextFilter || '').split(',').map((filter) => {
+			return new RegExp(filter.replace(/[^\w:*-]/, '').replace(/\*/g, '.*'));
+		});
+	}
 
-  debug(message: string, metadata: Metadata = {}) {
-    this.transport({level: LogLevel.Debug, message, metadata})
-  }
+	debug(message: string, metadata: Metadata = {}) {
+		this.transport({ level: LogLevel.Debug, message, metadata });
+	}
 
-  info(message: string, metadata: Metadata = {}) {
-    this.transport({level: LogLevel.Info, message, metadata})
-  }
+	info(message: string, metadata: Metadata = {}) {
+		this.transport({ level: LogLevel.Info, message, metadata });
+	}
 
-  log(message: string, metadata: Metadata = {}) {
-    this.transport({level: LogLevel.Log, message, metadata})
-  }
+	log(message: string, metadata: Metadata = {}) {
+		this.transport({ level: LogLevel.Log, message, metadata });
+	}
 
-  warn(message: string, metadata: Metadata = {}) {
-    this.transport({level: LogLevel.Warn, message, metadata})
-  }
+	warn(message: string, metadata: Metadata = {}) {
+		this.transport({ level: LogLevel.Warn, message, metadata });
+	}
 
-  error(error: Error | string, metadata: Metadata = {}) {
-    this.transport({level: LogLevel.Error, message: error, metadata})
-  }
+	error(error: Error | string, metadata: Metadata = {}) {
+		this.transport({ level: LogLevel.Error, message: error, metadata });
+	}
 
-  addTransport(transport: Transport) {
-    this.transports.push(transport)
-    return () => {
-      this.transports.splice(this.transports.indexOf(transport), 1)
-    }
-  }
+	addTransport(transport: Transport) {
+		this.transports.push(transport);
+		return () => {
+			this.transports.splice(this.transports.indexOf(transport), 1);
+		};
+	}
 
-  protected transport({
-    level,
-    message,
-    metadata = {},
-  }: {
-    level: LogLevel
-    message: string | Error
-    metadata: Metadata
-  }) {
-    if (
-      level === LogLevel.Debug &&
-      !!this.contextFilter &&
-      !!this.context &&
-      !this.debugContextRegexes.find(reg => reg.test(this.context!))
-    )
-      return
+	protected transport({
+		level,
+		message,
+		metadata = {},
+	}: {
+		level: LogLevel;
+		message: string | Error;
+		metadata: Metadata;
+	}) {
+		if (
+			level === LogLevel.Debug &&
+			!!this.contextFilter &&
+			!!this.context &&
+			!this.debugContextRegexes.find((reg) => reg.test(this.context!))
+		)
+			return;
 
-    const timestamp = Date.now()
-    const meta: Metadata = {
-      __metadata__: this.ambientMetadata,
-      ...metadata,
-    }
+		const timestamp = Date.now();
+		const meta: Metadata = {
+			__metadata__: this.ambientMetadata,
+			...metadata,
+		};
 
-    // send every log to syslog
-    add({
-      id: nanoid(),
-      timestamp,
-      level,
-      context: this.context,
-      message,
-      metadata: meta,
-    })
+		// send every log to syslog
+		add({
+			id: nanoid(),
+			timestamp,
+			level,
+			context: this.context,
+			message,
+			metadata: meta,
+		});
 
-    if (!enabledLogLevels[this.level].includes(level)) return
+		if (!enabledLogLevels[this.level].includes(level)) return;
 
-    for (const transport of this.transports) {
-      transport(level, this.context, message, meta, timestamp)
-    }
-  }
+		for (const transport of this.transports) {
+			transport(level, this.context, message, meta, timestamp);
+		}
+	}
 }
 
 /**
@@ -148,10 +141,7 @@ export class Logger {
  *
  * Basic usage:
  *
- *   `logger.debug(message[, metadata])`
- *   `logger.info(message[, metadata])`
- *   `logger.log(message[, metadata])`
- *   `logger.warn(message[, metadata])`
- *   `logger.error(error[, metadata])`
+ * `logger.debug(message[, metadata])` `logger.info(message[, metadata])` `logger.log(message[, metadata])`
+ * `logger.warn(message[, metadata])` `logger.error(error[, metadata])`
  */
-export const logger = Logger.create(Logger.Context.Default)
+export const logger = Logger.create(Logger.Context.Default);

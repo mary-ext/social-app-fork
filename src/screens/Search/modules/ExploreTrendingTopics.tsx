@@ -1,279 +1,225 @@
-import {useMemo} from 'react'
-import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { useMemo } from 'react';
+import { Pressable, View } from 'react-native';
+import { type AppBskyUnspeccedDefs, moderateProfile } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useTrendingSettings} from '#/state/preferences/trending'
-import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
-import {useTrendingConfig} from '#/state/service-config'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf'
-import {AvatarStack} from '#/components/AvatarStack'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from '#/components/icons/Flame'
-import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
-import {Link} from '#/components/Link'
-import {SubtleHover} from '#/components/SubtleHover'
-import {Text} from '#/components/Typography'
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useTrendingSettings } from '#/state/preferences/trending';
+import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
+import { useTrendingConfig } from '#/state/service-config';
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+import { atoms as a, useGutters, useTheme, type ViewStyleProp } from '#/alf';
+import { AvatarStack } from '#/components/AvatarStack';
+import { type Props as SVGIconProps } from '#/components/icons/common';
+import { Flame_Stroke2_Corner1_Rounded as FlameIcon } from '#/components/icons/Flame';
+import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
+import { Link } from '#/components/Link';
+import { SubtleHover } from '#/components/SubtleHover';
+import { Text } from '#/components/Typography';
 
-const TOPIC_COUNT = 5
+const TOPIC_COUNT = 5;
 
 export function ExploreTrendingTopics() {
-  const {enabled} = useTrendingConfig()
-  const {trendingDisabled} = useTrendingSettings()
-  return enabled && !trendingDisabled ? <Inner /> : null
+	const { enabled } = useTrendingConfig();
+	const { trendingDisabled } = useTrendingSettings();
+	return enabled && !trendingDisabled ? <Inner /> : null;
 }
 
 function Inner() {
-  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
-  const noTopics = !isLoading && !error && !trending?.trends?.length
+	const { data: trending, error, isLoading, isRefetching } = useGetTrendsQuery();
+	const noTopics = !isLoading && !error && !trending?.trends?.length;
 
-  return isLoading || isRefetching ? (
-    Array.from({length: TOPIC_COUNT}).map((__, i) => (
-      <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
-    ))
-  ) : error || !trending?.trends || noTopics ? null : (
-    <>
-      {trending.trends.map((trend, index) => (
-        <TrendRow
-          key={trend.link}
-          trend={trend}
-          rank={index + 1}
-          onPress={() => {}}
-        />
-      ))}
-    </>
-  )
+	return isLoading || isRefetching ? (
+		Array.from({ length: TOPIC_COUNT }).map((__, i) => (
+			<TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
+		))
+	) : error || !trending?.trends || noTopics ? null : (
+		<>
+			{trending.trends.map((trend, index) => (
+				<TrendRow key={trend.link} trend={trend} rank={index + 1} onPress={() => {}} />
+			))}
+		</>
+	);
 }
 
 export function TrendRow({
-  trend,
-  rank,
-  children,
-  onPress,
+	trend,
+	rank,
+	children,
+	onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
-  rank: number
-  children?: React.ReactNode
-  onPress?: () => void
+	trend: AppBskyUnspeccedDefs.TrendView;
+	rank: number;
+	children?: React.ReactNode;
+	onPress?: () => void;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const gutters = useGutters([0, 'base'])
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const gutters = useGutters([0, 'base']);
 
-  const category = useCategoryDisplayName(trend?.category || 'other')
-  const age = Math.floor(
-    (Date.now() - new Date(trend.startedAt || Date.now()).getTime()) /
-      (1000 * 60 * 60),
-  )
-  const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age
+	const category = useCategoryDisplayName(trend?.category || 'other');
+	const age = Math.floor((Date.now() - new Date(trend.startedAt || Date.now()).getTime()) / (1000 * 60 * 60));
+	const badgeType = trend.status === 'hot' ? 'hot' : age < 2 ? 'new' : age;
 
-  const actors = useModerateTrendingActors(trend.actors)
+	const actors = useModerateTrendingActors(trend.actors);
 
-  return (
-    <Link
-      testID={trend.link}
-      label={l`Browse topic ${trend.displayName}`}
-      to={trend.link}
-      onPress={onPress}
-      style={[a.border_b, t.atoms.border_contrast_low]}
-      PressableComponent={Pressable}>
-      {({hovered, pressed}) => (
-        <>
-          <SubtleHover hover={hovered || pressed} native />
-          <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
-            <View style={[a.flex_1, a.gap_xs]}>
-              <View style={[a.flex_row]}>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.font_semi_bold,
-                    a.leading_tight,
-                    {width: 20},
-                  ]}>
-                  <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'>
-                    {rank}.
-                  </Trans>
-                </Text>
-                <Text
-                  style={[a.text_md, a.font_semi_bold, a.leading_tight]}
-                  numberOfLines={1}>
-                  {trend.displayName}
-                </Text>
-              </View>
-              <View
-                style={[
-                  a.flex_row,
-                  a.gap_sm,
-                  a.align_center,
-                  {paddingLeft: 20},
-                ]}>
-                {actors.length > 0 && (
-                  <AvatarStack size={20} profiles={actors} />
-                )}
-                <Text
-                  style={[
-                    a.text_sm,
-                    t.atoms.text_contrast_medium,
-                    a.leading_snug,
-                  ]}
-                  numberOfLines={1}>
-                  {category}
-                </Text>
-              </View>
-            </View>
-            <View style={[a.flex_shrink_0]}>
-              <TrendingIndicator type={badgeType} />
-            </View>
-          </View>
+	return (
+		<Link
+			testID={trend.link}
+			label={l`Browse topic ${trend.displayName}`}
+			to={trend.link}
+			onPress={onPress}
+			style={[a.border_b, t.atoms.border_contrast_low]}
+			PressableComponent={Pressable}
+		>
+			{({ hovered, pressed }) => (
+				<>
+					<SubtleHover hover={hovered || pressed} native />
+					<View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
+						<View style={[a.flex_1, a.gap_xs]}>
+							<View style={[a.flex_row]}>
+								<Text style={[a.text_md, a.font_semi_bold, a.leading_tight, { width: 20 }]}>
+									<Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'>
+										{rank}.
+									</Trans>
+								</Text>
+								<Text style={[a.text_md, a.font_semi_bold, a.leading_tight]} numberOfLines={1}>
+									{trend.displayName}
+								</Text>
+							</View>
+							<View style={[a.flex_row, a.gap_sm, a.align_center, { paddingLeft: 20 }]}>
+								{actors.length > 0 && <AvatarStack size={20} profiles={actors} />}
+								<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]} numberOfLines={1}>
+									{category}
+								</Text>
+							</View>
+						</View>
+						<View style={[a.flex_shrink_0]}>
+							<TrendingIndicator type={badgeType} />
+						</View>
+					</View>
 
-          {children}
-        </>
-      )}
-    </Link>
-  )
+					{children}
+				</>
+			)}
+		</Link>
+	);
 }
 
-type TrendingIndicatorType = 'hot' | 'new' | number
+type TrendingIndicatorType = 'hot' | 'new' | number;
 
-function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const pillStyles = [
-    a.flex_row,
-    a.align_center,
-    a.gap_xs,
-    a.rounded_full,
-    {height: 28, paddingHorizontal: 10},
-  ]
+function TrendingIndicator({ type }: { type: TrendingIndicatorType | 'skeleton' }) {
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const pillStyles = [
+		a.flex_row,
+		a.align_center,
+		a.gap_xs,
+		a.rounded_full,
+		{ height: 28, paddingHorizontal: 10 },
+	];
 
-  let Icon: React.ComponentType<SVGIconProps> | null = null
-  let text: string | null = null
-  let color: string | null = null
-  let backgroundColor: string | null = null
+	let Icon: React.ComponentType<SVGIconProps> | null = null;
+	let text: string | null = null;
+	let color: string | null = null;
+	let backgroundColor: string | null = null;
 
-  switch (type) {
-    case 'skeleton': {
-      return (
-        <View
-          style={[
-            pillStyles,
-            {backgroundColor: t.palette.contrast_25, width: 65, height: 28},
-          ]}
-        />
-      )
-    }
-    case 'hot': {
-      Icon = FlameIcon
-      color =
-        t.scheme === 'light' ? t.palette.negative_500 : t.palette.negative_950
-      backgroundColor =
-        t.scheme === 'light' ? t.palette.negative_50 : t.palette.negative_200
-      text = l`Hot`
-      break
-    }
-    case 'new': {
-      Icon = TrendingIcon
-      text = l`New`
-      color = t.palette.positive_600
-      backgroundColor = t.palette.positive_50
-      break
-    }
-    default: {
-      text = l({
-        message: `${type}h ago`,
-        comment:
-          'trending topic time spent trending. should be as short as possible to fit in a pill',
-      })
-      color = t.atoms.text_contrast_medium.color
-      backgroundColor = t.atoms.bg_contrast_25.backgroundColor
-      break
-    }
-  }
+	switch (type) {
+		case 'skeleton': {
+			return <View style={[pillStyles, { backgroundColor: t.palette.contrast_25, width: 65, height: 28 }]} />;
+		}
+		case 'hot': {
+			Icon = FlameIcon;
+			color = t.scheme === 'light' ? t.palette.negative_500 : t.palette.negative_950;
+			backgroundColor = t.scheme === 'light' ? t.palette.negative_50 : t.palette.negative_200;
+			text = l`Hot`;
+			break;
+		}
+		case 'new': {
+			Icon = TrendingIcon;
+			text = l`New`;
+			color = t.palette.positive_600;
+			backgroundColor = t.palette.positive_50;
+			break;
+		}
+		default: {
+			text = l({
+				message: `${type}h ago`,
+				comment: 'trending topic time spent trending. should be as short as possible to fit in a pill',
+			});
+			color = t.atoms.text_contrast_medium.color;
+			backgroundColor = t.atoms.bg_contrast_25.backgroundColor;
+			break;
+		}
+	}
 
-  return (
-    <View style={[pillStyles, {backgroundColor}]}>
-      {Icon && <Icon size="sm" style={{color}} />}
-      <Text style={[a.text_sm, a.font_medium, {color}]}>{text}</Text>
-    </View>
-  )
+	return (
+		<View style={[pillStyles, { backgroundColor }]}>
+			{Icon && <Icon size="sm" style={{ color }} />}
+			<Text style={[a.text_sm, a.font_medium, { color }]}>{text}</Text>
+		</View>
+	);
 }
 
-function useCategoryDisplayName(
-  category: AppBskyUnspeccedDefs.TrendView['category'],
-) {
-  const {t: l} = useLingui()
+function useCategoryDisplayName(category: AppBskyUnspeccedDefs.TrendView['category']) {
+	const { t: l } = useLingui();
 
-  switch (category) {
-    case 'sports':
-      return l`Sports`
-    case 'politics':
-      return l`Politics`
-    case 'video-games':
-      return l`Video Games`
-    case 'pop-culture':
-      return l`Entertainment`
-    case 'news':
-      return l`News`
-    case 'other':
-    default:
-      return null
-  }
+	switch (category) {
+		case 'sports':
+			return l`Sports`;
+		case 'politics':
+			return l`Politics`;
+		case 'video-games':
+			return l`Video Games`;
+		case 'pop-culture':
+			return l`Entertainment`;
+		case 'news':
+			return l`News`;
+		case 'other':
+		default:
+			return null;
+	}
 }
 
-export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
-  const t = useTheme()
-  const gutters = useGutters([0, 'base'])
+export function TrendingTopicRowSkeleton({}: { withPosts: boolean }) {
+	const t = useTheme();
+	const gutters = useGutters([0, 'base']);
 
-  return (
-    <View
-      style={[
-        gutters,
-        a.w_full,
-        a.py_lg,
-        a.flex_row,
-        a.gap_2xs,
-        a.border_b,
-        t.atoms.border_contrast_low,
-      ]}>
-      <View style={[a.flex_1, a.gap_sm]}>
-        <View style={[a.flex_row, a.align_center]}>
-          <View style={[{width: 20}]}>
-            <LoadingPlaceholder
-              width={12}
-              height={12}
-              style={[a.rounded_full]}
-            />
-          </View>
-          <LoadingPlaceholder width={90} height={17} />
-        </View>
-        <View style={[a.flex_row, a.gap_sm, a.align_center, {paddingLeft: 20}]}>
-          <LoadingPlaceholder width={70} height={16} />
-          <LoadingPlaceholder width={40} height={16} />
-          <LoadingPlaceholder width={60} height={16} />
-        </View>
-      </View>
-      <View style={[a.flex_shrink_0]}>
-        <TrendingIndicator type="skeleton" />
-      </View>
-    </View>
-  )
+	return (
+		<View
+			style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs, a.border_b, t.atoms.border_contrast_low]}
+		>
+			<View style={[a.flex_1, a.gap_sm]}>
+				<View style={[a.flex_row, a.align_center]}>
+					<View style={[{ width: 20 }]}>
+						<LoadingPlaceholder width={12} height={12} style={[a.rounded_full]} />
+					</View>
+					<LoadingPlaceholder width={90} height={17} />
+				</View>
+				<View style={[a.flex_row, a.gap_sm, a.align_center, { paddingLeft: 20 }]}>
+					<LoadingPlaceholder width={70} height={16} />
+					<LoadingPlaceholder width={40} height={16} />
+					<LoadingPlaceholder width={60} height={16} />
+				</View>
+			</View>
+			<View style={[a.flex_shrink_0]}>
+				<TrendingIndicator type="skeleton" />
+			</View>
+		</View>
+	);
 }
 
-function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
-) {
-  const moderationOpts = useModerationOpts()
+function useModerateTrendingActors(actors: AppBskyUnspeccedDefs.TrendView['actors']) {
+	const moderationOpts = useModerationOpts();
 
-  return useMemo(() => {
-    if (!moderationOpts) return []
+	return useMemo(() => {
+		if (!moderationOpts) return [];
 
-    return actors
-      .filter(actor => {
-        const decision = moderateProfile(actor, moderationOpts)
-        return !decision.ui('avatar').filter && !decision.ui('avatar').blur
-      })
-      .slice(0, 3)
-  }, [actors, moderationOpts])
+		return actors
+			.filter((actor) => {
+				const decision = moderateProfile(actor, moderationOpts);
+				return !decision.ui('avatar').filter && !decision.ui('avatar').blur;
+			})
+			.slice(0, 3);
+	}, [actors, moderationOpts]);
 }

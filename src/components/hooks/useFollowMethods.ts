@@ -1,65 +1,62 @@
-import {useCallback} from 'react'
-import {useLingui} from '@lingui/react/macro'
+import { useCallback } from 'react';
+import { useLingui } from '@lingui/react/macro';
 
-import {logger} from '#/logger'
-import {type Shadow} from '#/state/cache/types'
+import { logger } from '#/logger';
+import { type Shadow } from '#/state/cache/types';
 import {
-  type ProfileFollowLogContext,
-  type ProfileUnfollowLogContext,
-  useProfileFollowMutationQueue,
-} from '#/state/queries/profile'
-import {useRequireAuth} from '#/state/session'
-import * as Toast from '#/components/Toast'
-import type * as bsky from '#/types/bsky'
+	type ProfileFollowLogContext,
+	type ProfileUnfollowLogContext,
+	useProfileFollowMutationQueue,
+} from '#/state/queries/profile';
+import { useRequireAuth } from '#/state/session';
+import * as Toast from '#/components/Toast';
+import type * as bsky from '#/types/bsky';
 
 export function useFollowMethods({
-  profile,
-  logContext,
+	profile,
+	logContext,
 }: {
-  profile: Shadow<bsky.profile.AnyProfileView>
-  logContext: ProfileFollowLogContext & ProfileUnfollowLogContext
+	profile: Shadow<bsky.profile.AnyProfileView>;
+	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
 }) {
-  const {t: l} = useLingui()
-  const requireAuth = useRequireAuth()
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
-    profile,
-    logContext,
-  )
+	const { t: l } = useLingui();
+	const requireAuth = useRequireAuth();
+	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, logContext);
 
-  const follow = useCallback(() => {
-    requireAuth(async () => {
-      try {
-        await queueFollow()
-      } catch (e) {
-        logger.error(`useFollowMethods: failed to follow`, {message: String(e)})
-        if (!(e instanceof Error && e.name === 'AbortError')) {
-          Toast.show(l`An issue occurred, please try again.`, {
-            type: 'error',
-          })
-        }
-      }
-    })
-  }, [l, queueFollow, requireAuth])
+	const follow = useCallback(() => {
+		requireAuth(async () => {
+			try {
+				await queueFollow();
+			} catch (e) {
+				logger.error(`useFollowMethods: failed to follow`, { message: String(e) });
+				if (!(e instanceof Error && e.name === 'AbortError')) {
+					Toast.show(l`An issue occurred, please try again.`, {
+						type: 'error',
+					});
+				}
+			}
+		});
+	}, [l, queueFollow, requireAuth]);
 
-  const unfollow = useCallback(() => {
-    requireAuth(async () => {
-      try {
-        await queueUnfollow()
-      } catch (e) {
-        logger.error(`useFollowMethods: failed to unfollow`, {
-          message: String(e),
-        })
-        if (!(e instanceof Error && e.name === 'AbortError')) {
-          Toast.show(l`An issue occurred, please try again.`, {
-            type: 'error',
-          })
-        }
-      }
-    })
-  }, [l, queueUnfollow, requireAuth])
+	const unfollow = useCallback(() => {
+		requireAuth(async () => {
+			try {
+				await queueUnfollow();
+			} catch (e) {
+				logger.error(`useFollowMethods: failed to unfollow`, {
+					message: String(e),
+				});
+				if (!(e instanceof Error && e.name === 'AbortError')) {
+					Toast.show(l`An issue occurred, please try again.`, {
+						type: 'error',
+					});
+				}
+			}
+		});
+	}, [l, queueUnfollow, requireAuth]);
 
-  return {
-    follow,
-    unfollow,
-  }
+	return {
+		follow,
+		unfollow,
+	};
 }

@@ -1,84 +1,70 @@
 import {
-  type AccessibilityProps,
-  type Insets,
-  type StyleProp,
-  type TextStyle,
-  type ViewStyle,
-} from 'react-native'
+	type AccessibilityProps,
+	type Insets,
+	type StyleProp,
+	type TextStyle,
+	type ViewStyle,
+} from 'react-native';
 
-import {type TextStyleProp} from '#/alf'
-import {type Props as SVGIconProps} from '#/components/icons/common'
+import { type TextStyleProp } from '#/alf';
+import { type Props as SVGIconProps } from '#/components/icons/common';
 
 export type RootProps = {
-  children?: React.ReactNode
-  value?: string
-  onValueChange?: (value: string) => void
-  disabled?: boolean
-  /**
-   * @platform web
-   */
-  defaultValue?: string
-  /**
-   * @platform web
-   */
-  open?: boolean
-  /**
-   * @platform web
-   */
-  defaultOpen?: boolean
-  /**
-   * @platform web
-   */
-  onOpenChange?(open: boolean): void
-  /**
-   * @platform web
-   */
-  name?: string
-  /**
-   * @platform web
-   */
-  autoComplete?: string
-  /**
-   * @platform web
-   */
-  required?: boolean
-}
+	children?: React.ReactNode;
+	value?: string;
+	onValueChange?: (value: string) => void;
+	disabled?: boolean;
+	/** @platform web */
+	defaultValue?: string;
+	/** @platform web */
+	open?: boolean;
+	/** @platform web */
+	defaultOpen?: boolean;
+	/** @platform web */
+	onOpenChange?(open: boolean): void;
+	/** @platform web */
+	name?: string;
+	/** @platform web */
+	autoComplete?: string;
+	/** @platform web */
+	required?: boolean;
+};
 
 export type RadixPassThroughTriggerProps = {
-  id: string
-  type: 'button'
-  disabled: boolean
-  ['data-disabled']: boolean
-  ['data-state']: string
-  ['aria-controls']?: string
-  ['aria-haspopup']?: boolean
-  ['aria-expanded']?: AccessibilityProps['aria-expanded']
-  onClick: () => void
-  onPointerDown: () => void
-  onKeyDown: () => void
-}
+	id: string;
+	type: 'button';
+	disabled: boolean;
+	['data-disabled']: boolean;
+	['data-state']: string;
+	['aria-controls']?: string;
+	['aria-haspopup']?: boolean;
+	['aria-expanded']?: AccessibilityProps['aria-expanded'];
+	onClick: () => void;
+	onPointerDown: () => void;
+	onKeyDown: () => void;
+};
 
 export type TriggerProps = {
-  children: React.ReactNode | ((props: TriggerChildProps) => React.ReactNode)
-  hitSlop?: number | Insets | null
-  label: string
-}
+	children: React.ReactNode | ((props: TriggerChildProps) => React.ReactNode);
+	hitSlop?: number | Insets | null;
+	label: string;
+};
 
 export type TriggerChildProps = {
-  state: {
-    hovered: boolean
-    focused: boolean
-    pressed: false
-  }
-  props: RadixPassThroughTriggerProps & {
-    onPress: () => void
-    onFocus: () => void
-    onBlur: () => void
-    onMouseEnter: () => void
-    onMouseLeave: () => void
-    accessibilityLabel: string
-  }
-}
+	state: {
+		hovered: boolean;
+		focused: boolean;
+		pressed: false;
+	};
+	props: RadixPassThroughTriggerProps & {
+		onPress: () => void;
+		onFocus: () => void;
+		onBlur: () => void;
+		onMouseEnter: () => void;
+		onMouseLeave: () => void;
+		accessibilityLabel: string;
+	};
+};
 
 /*
  * For use within the `Select.Trigger` component.
@@ -89,17 +75,17 @@ export type TriggerChildProps = {
  * you'll need to pass a function to `children` that extracts the label from an item.
  */
 export type ValueProps = {
-  children?: (value: unknown) => React.ReactNode
-  placeholder?: string
-  style?: StyleProp<TextStyle>
-  /**
-   * By default, web just extracts the component from inside the dropdown and portals it in here.
-   * If you want to override this, pass a value that will then be rendered via `children(value)`
-   *
-   * @platform web
-   */
-  webOverrideValue?: unknown
-}
+	children?: (value: unknown) => React.ReactNode;
+	placeholder?: string;
+	style?: StyleProp<TextStyle>;
+	/**
+	 * By default, web just extracts the component from inside the dropdown and portals it in here. If you want
+	 * to override this, pass a value that will then be rendered via `children(value)`
+	 *
+	 * @platform web
+	 */
+	webOverrideValue?: unknown;
+};
 
 /*
  * Icon for use within the `Select.Trigger` component.
@@ -107,62 +93,58 @@ export type ValueProps = {
  *
  * `style` prop is web only
  */
-export type IconProps = TextStyleProp
+export type IconProps = TextStyleProp;
 
 export type ContentProps<T> = {
-  /**
-   * Label at the top of the sheet on native.
-   *
-   * @default "Select an option"
-   */
-  label?: string
-  /**
-   * Items to render. Recommended to be in the form {value: string, label: string} - if not,
-   * you need to provide a `valueExtractor` function to extract the value from an item and
-   * customise the `Select.ValueText` component.
-   */
-  items: T[]
-  /**
-   * Renders an item. You should probably use the `Select.Item` component.
-   *
-   * @example
-   * ```tsx
-   * renderItem={({label, value}) => (
-   *   <Select.Item value={value} label={label}>
-   *     <Select.ItemIndicator />
-   *     <Select.ItemText>{label}</Select.ItemText>
-   *   </Select.Item>
-   * )}
-   * ```
-   */
-  renderItem: (
-    item: T,
-    index: number,
-    selectedValue?: string | null,
-  ) => React.ReactElement
-  /*
-   * Extracts the value from an item. Defaults to `item => item.value`
-   */
-  valueExtractor?: (item: T) => string
-}
+	/**
+	 * Label at the top of the sheet on native.
+	 *
+	 * @default 'Select an option'
+	 */
+	label?: string;
+	/**
+	 * Items to render. Recommended to be in the form {value: string, label: string} - if not, you need to
+	 * provide a `valueExtractor` function to extract the value from an item and customise the
+	 * `Select.ValueText` component.
+	 */
+	items: T[];
+	/**
+	 * Renders an item. You should probably use the `Select.Item` component.
+	 *
+	 * @example
+	 * 	```tsx
+	 * 	renderItem={({label, value}) => (
+	 * 	<Select.Item value={value} label={label}>
+	 * 	<Select.ItemIndicator />
+	 * 	<Select.ItemText>{label}</Select.ItemText>
+	 * 	</Select.Item>
+	 * 	)}
+	 * 	```;
+	 */
+	renderItem: (item: T, index: number, selectedValue?: string | null) => React.ReactElement;
+	/*
+	 * Extracts the value from an item. Defaults to `item => item.value`
+	 */
+	valueExtractor?: (item: T) => string;
+};
 
 /*
  * An item within the select dropdown
  */
 export type ItemProps = {
-  ref?: React.Ref<HTMLDivElement>
-  value: string
-  label: string
-  children: React.ReactNode
-  style?: StyleProp<ViewStyle>
-}
+	ref?: React.Ref<HTMLDivElement>;
+	value: string;
+	label: string;
+	children: React.ReactNode;
+	style?: StyleProp<ViewStyle>;
+};
 
 export type ItemTextProps = {
-  children: React.ReactNode
-  style?: StyleProp<TextStyle>
-  emoji?: boolean
-}
+	children: React.ReactNode;
+	style?: StyleProp<TextStyle>;
+	emoji?: boolean;
+};
 
 export type ItemIndicatorProps = {
-  icon?: React.ComponentType<SVGIconProps>
-}
+	icon?: React.ComponentType<SVGIconProps>;
+};

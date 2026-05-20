@@ -1,184 +1,153 @@
-import {memo, useCallback} from 'react'
-import {
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {useQueryClient} from '@tanstack/react-query'
+import { memo, useCallback } from 'react';
+import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
+import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
+import { useLingui } from '@lingui/react/macro';
+import { useQueryClient } from '@tanstack/react-query';
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {forceLTR} from '#/lib/strings/bidi'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {niceDate} from '#/lib/strings/time'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {unstableCacheProfileView} from '#/state/queries/profile'
-import {atoms as a, useTheme} from '#/alf'
-import {WebOnlyInlineLinkText} from '#/components/Link'
-import {ProfileBadges} from '#/components/ProfileBadges'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {Text} from '#/components/Typography'
-import {useActorStatus} from '#/features/liveNow'
-import {TimeElapsed} from './TimeElapsed'
-import {PreviewableUserAvatar} from './UserAvatar'
+import { makeProfileLink } from '#/lib/routes/links';
+import { forceLTR } from '#/lib/strings/bidi';
+import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
+import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { sanitizeHandle } from '#/lib/strings/handles';
+import { niceDate } from '#/lib/strings/time';
+import { useProfileShadow } from '#/state/cache/profile-shadow';
+import { unstableCacheProfileView } from '#/state/queries/profile';
+import { atoms as a, useTheme } from '#/alf';
+import { WebOnlyInlineLinkText } from '#/components/Link';
+import { ProfileBadges } from '#/components/ProfileBadges';
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
+import { Text } from '#/components/Typography';
+import { useActorStatus } from '#/features/liveNow';
+import { TimeElapsed } from './TimeElapsed';
+import { PreviewableUserAvatar } from './UserAvatar';
 
 type WebTextStyle = TextStyle & {
-  whiteSpace?: 'nowrap'
-}
+	whiteSpace?: 'nowrap';
+};
 
 const webTextStyle = (style: WebTextStyle): TextStyle => {
-  return style
-}
+	return style;
+};
 
 interface PostMetaOpts {
-  author: AppBskyActorDefs.ProfileViewBasic
-  moderation: ModerationDecision | undefined
-  postHref: string
-  timestamp: string
-  linkDisabled?: boolean
-  showAvatar?: boolean
-  avatarSize?: number
-  onOpenAuthor?: () => void
-  style?: StyleProp<ViewStyle>
+	author: AppBskyActorDefs.ProfileViewBasic;
+	moderation: ModerationDecision | undefined;
+	postHref: string;
+	timestamp: string;
+	linkDisabled?: boolean;
+	showAvatar?: boolean;
+	avatarSize?: number;
+	onOpenAuthor?: () => void;
+	style?: StyleProp<ViewStyle>;
 }
 
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
-  const t = useTheme()
-  const {i18n, t: l} = useLingui()
+	const t = useTheme();
+	const { i18n, t: l } = useLingui();
 
-  const author = useProfileShadow(opts.author)
-  const displayName = author.displayName || author.handle
-  const handle = author.handle
-  const profileLink = makeProfileLink(author)
-  const queryClient = useQueryClient()
-  const onOpenAuthor = opts.onOpenAuthor
-  const onBeforePressAuthor = useCallback(() => {
-    unstableCacheProfileView(queryClient, author)
-    onOpenAuthor?.()
-  }, [queryClient, author, onOpenAuthor])
-  const onBeforePressPost = useCallback(() => {
-    unstableCacheProfileView(queryClient, author)
-  }, [queryClient, author])
+	const author = useProfileShadow(opts.author);
+	const displayName = author.displayName || author.handle;
+	const handle = author.handle;
+	const profileLink = makeProfileLink(author);
+	const queryClient = useQueryClient();
+	const onOpenAuthor = opts.onOpenAuthor;
+	const onBeforePressAuthor = useCallback(() => {
+		unstableCacheProfileView(queryClient, author);
+		onOpenAuthor?.();
+	}, [queryClient, author, onOpenAuthor]);
+	const onBeforePressPost = useCallback(() => {
+		unstableCacheProfileView(queryClient, author);
+	}, [queryClient, author]);
 
-  const timestampLabel = niceDate(i18n, opts.timestamp)
-  const {isActive: live} = useActorStatus(author)
+	const timestampLabel = niceDate(i18n, opts.timestamp);
+	const { isActive: live } = useActorStatus(author);
 
-  const MaybeLinkText = opts.linkDisabled ? Text : WebOnlyInlineLinkText
+	const MaybeLinkText = opts.linkDisabled ? Text : WebOnlyInlineLinkText;
 
-  return (
-    <View
-      style={[
-        a.flex_1,
-        a.flex_row,
-        a.align_center,
-        a.pb_xs,
-        a.gap_xs,
-        a.z_20,
-        opts.style,
-      ]}>
-      {opts.showAvatar && (
-        <View style={[a.self_center, a.mr_2xs]}>
-          <PreviewableUserAvatar
-            size={opts.avatarSize || 16}
-            profile={author}
-            moderation={opts.moderation?.ui('avatar')}
-            type={author.associated?.labeler ? 'labeler' : 'user'}
-            live={live}
-            hideLiveBadge
-            disableNavigation={opts.linkDisabled}
-          />
-        </View>
-      )}
-      <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-        <ProfileHoverCard did={author.did}>
-          <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-            <MaybeLinkText
-              emoji
-              numberOfLines={1}
-              to={profileLink}
-              label={l`View profile`}
-              disableMismatchWarning
-              onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
-              style={[
-                a.text_md,
-                a.font_semi_bold,
-                t.atoms.text,
-                a.leading_tight,
-                a.flex_shrink_0,
-                {maxWidth: '70%'},
-              ]}>
-              {forceLTR(
-                sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                ),
-              )}
-            </MaybeLinkText>
-            <ProfileBadges
-              profile={author}
-              size="sm"
-              style={[a.pl_2xs, a.self_center]}
-            />
-            <MaybeLinkText
-              emoji
-              numberOfLines={1}
-              to={profileLink}
-              label={l`View profile`}
-              disableMismatchWarning
-              disableUnderline
-              onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
-              style={[
-                a.text_md,
-                t.atoms.text_contrast_medium,
-                a.leading_tight,
-                {flexShrink: 10},
-              ]}>
-              {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-            </MaybeLinkText>
-          </View>
-        </ProfileHoverCard>
+	return (
+		<View style={[a.flex_1, a.flex_row, a.align_center, a.pb_xs, a.gap_xs, a.z_20, opts.style]}>
+			{opts.showAvatar && (
+				<View style={[a.self_center, a.mr_2xs]}>
+					<PreviewableUserAvatar
+						size={opts.avatarSize || 16}
+						profile={author}
+						moderation={opts.moderation?.ui('avatar')}
+						type={author.associated?.labeler ? 'labeler' : 'user'}
+						live={live}
+						hideLiveBadge
+						disableNavigation={opts.linkDisabled}
+					/>
+				</View>
+			)}
+			<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+				<ProfileHoverCard did={author.did}>
+					<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+						<MaybeLinkText
+							emoji
+							numberOfLines={1}
+							to={profileLink}
+							label={l`View profile`}
+							disableMismatchWarning
+							onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
+							style={[
+								a.text_md,
+								a.font_semi_bold,
+								t.atoms.text,
+								a.leading_tight,
+								a.flex_shrink_0,
+								{ maxWidth: '70%' },
+							]}
+						>
+							{forceLTR(sanitizeDisplayName(displayName, opts.moderation?.ui('displayName')))}
+						</MaybeLinkText>
+						<ProfileBadges profile={author} size="sm" style={[a.pl_2xs, a.self_center]} />
+						<MaybeLinkText
+							emoji
+							numberOfLines={1}
+							to={profileLink}
+							label={l`View profile`}
+							disableMismatchWarning
+							disableUnderline
+							onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
+							style={[a.text_md, t.atoms.text_contrast_medium, a.leading_tight, { flexShrink: 10 }]}
+						>
+							{NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+						</MaybeLinkText>
+					</View>
+				</ProfileHoverCard>
 
-        <TimeElapsed timestamp={opts.timestamp}>
-          {({timeElapsed}) => (
-            <MaybeLinkText
-              to={opts.postHref}
-              label={timestampLabel}
-              title={timestampLabel}
-              disableMismatchWarning
-              disableUnderline
-              onPress={opts.linkDisabled ? undefined : onBeforePressPost}
-              style={[
-                a.pl_xs,
-                a.text_md,
-                a.leading_tight,
-                a.text_right,
-                t.atoms.text_contrast_medium,
-                webTextStyle({
-                  whiteSpace: 'nowrap',
-                }),
-              ]}>
-              {
-                <Text
-                  style={[
-                    a.text_md,
-                    a.leading_tight,
-                    t.atoms.text_contrast_medium,
-                  ]}
-                  accessible={false}>
-                  ·{' '}
-                </Text>
-              }
-              {timeElapsed}
-            </MaybeLinkText>
-          )}
-        </TimeElapsed>
-      </View>
-    </View>
-  )
-}
-PostMeta = memo(PostMeta)
-export {PostMeta}
+				<TimeElapsed timestamp={opts.timestamp}>
+					{({ timeElapsed }) => (
+						<MaybeLinkText
+							to={opts.postHref}
+							label={timestampLabel}
+							title={timestampLabel}
+							disableMismatchWarning
+							disableUnderline
+							onPress={opts.linkDisabled ? undefined : onBeforePressPost}
+							style={[
+								a.pl_xs,
+								a.text_md,
+								a.leading_tight,
+								a.text_right,
+								t.atoms.text_contrast_medium,
+								webTextStyle({
+									whiteSpace: 'nowrap',
+								}),
+							]}
+						>
+							{
+								<Text style={[a.text_md, a.leading_tight, t.atoms.text_contrast_medium]} accessible={false}>
+									·{' '}
+								</Text>
+							}
+							{timeElapsed}
+						</MaybeLinkText>
+					)}
+				</TimeElapsed>
+			</View>
+		</View>
+	);
+};
+PostMeta = memo(PostMeta);
+export { PostMeta };

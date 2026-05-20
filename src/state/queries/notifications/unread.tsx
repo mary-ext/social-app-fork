@@ -1,245 +1,212 @@
-/**
- * A kind of companion API to ./feed.ts. See that file for more info.
- */
+/** A kind of companion API to ./feed.ts. See that file for more info. */
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {AppState} from 'react-native'
-import {useQueryClient} from '@tanstack/react-query'
-import {EventEmitter} from 'eventemitter3'
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
+import { EventEmitter } from 'eventemitter3';
 
-import BroadcastChannel from '#/lib/broadcast'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {useAgent, useSession} from '#/state/session'
-import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {type CachedFeedPage, type FeedPage} from './types'
-import {fetchPage} from './util'
+import BroadcastChannel from '#/lib/broadcast';
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { truncateAndInvalidate } from '#/state/queries/util';
+import { useAgent, useSession } from '#/state/session';
+import { RQKEY as RQKEY_NOTIFS } from './feed';
+import { type CachedFeedPage, type FeedPage } from './types';
+import { fetchPage } from './util';
 
-const UPDATE_INTERVAL = 30 * 1e3 // 30sec
+const UPDATE_INTERVAL = 30 * 1e3; // 30sec
 
-const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL')
+const broadcast = new BroadcastChannel('NOTIFS_BROADCAST_CHANNEL');
 
-const emitter = new EventEmitter()
+const emitter = new EventEmitter();
 
-type StateContext = string
+type StateContext = string;
 
 interface ApiContext {
-  markAllRead: () => Promise<void>
-  checkUnread: (opts?: {
-    invalidate?: boolean
-    isPoll?: boolean
-  }) => Promise<void>
-  getCachedUnreadPage: () => FeedPage | undefined
+	markAllRead: () => Promise<void>;
+	checkUnread: (opts?: { invalidate?: boolean; isPoll?: boolean }) => Promise<void>;
+	getCachedUnreadPage: () => FeedPage | undefined;
 }
 
-const stateContext = createContext<StateContext>('')
-stateContext.displayName = 'NotificationsUnreadStateContext'
+const stateContext = createContext<StateContext>('');
+stateContext.displayName = 'NotificationsUnreadStateContext';
 
 const apiContext = createContext<ApiContext>({
-  async markAllRead() {},
-  async checkUnread() {},
-  getCachedUnreadPage: () => undefined,
-})
-apiContext.displayName = 'NotificationsUnreadApiContext'
+	async markAllRead() {},
+	async checkUnread() {},
+	getCachedUnreadPage: () => undefined,
+});
+apiContext.displayName = 'NotificationsUnreadApiContext';
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const {hasSession} = useSession()
-  const agent = useAgent()
-  const queryClient = useQueryClient()
-  const moderationOpts = useModerationOpts()
+export function Provider({ children }: React.PropsWithChildren<{}>) {
+	const { hasSession } = useSession();
+	const agent = useAgent();
+	const queryClient = useQueryClient();
+	const moderationOpts = useModerationOpts();
 
-  const [numUnread, setNumUnread] = useState('')
+	const [numUnread, setNumUnread] = useState('');
 
-  const checkUnreadRef = useRef<ApiContext['checkUnread'] | null>(null)
-  const cacheRef = useRef<CachedFeedPage>({
-    usableInFeed: false,
-    syncedAt: new Date(),
-    data: undefined,
-    unreadCount: 0,
-  })
+	const checkUnreadRef = useRef<ApiContext['checkUnread'] | null>(null);
+	const cacheRef = useRef<CachedFeedPage>({
+		usableInFeed: false,
+		syncedAt: new Date(),
+		data: undefined,
+		unreadCount: 0,
+	});
 
-  useEffect(() => {
-    function markAsUnusable() {
-      if (cacheRef.current) {
-        cacheRef.current.usableInFeed = false
-      }
-    }
-    emitter.addListener('invalidate', markAsUnusable)
-    return () => {
-      emitter.removeListener('invalidate', markAsUnusable)
-    }
-  }, [])
+	useEffect(() => {
+		function markAsUnusable() {
+			if (cacheRef.current) {
+				cacheRef.current.usableInFeed = false;
+			}
+		}
+		emitter.addListener('invalidate', markAsUnusable);
+		return () => {
+			emitter.removeListener('invalidate', markAsUnusable);
+		};
+	}, []);
 
-  // periodic sync
-  useEffect(() => {
-    if (!hasSession || !checkUnreadRef.current) {
-      return
-    }
-    checkUnreadRef.current() // fire on init
-    const interval = setInterval(
-      () => checkUnreadRef.current?.({isPoll: true}),
-      UPDATE_INTERVAL,
-    )
-    return () => clearInterval(interval)
-  }, [hasSession])
+	// periodic sync
+	useEffect(() => {
+		if (!hasSession || !checkUnreadRef.current) {
+			return;
+		}
+		checkUnreadRef.current(); // fire on init
+		const interval = setInterval(() => checkUnreadRef.current?.({ isPoll: true }), UPDATE_INTERVAL);
+		return () => clearInterval(interval);
+	}, [hasSession]);
 
-  // listen for broadcasts
-  useEffect(() => {
-    const listener = ({data}: MessageEvent) => {
-      cacheRef.current = {
-        usableInFeed: false,
-        syncedAt: new Date(),
-        data: undefined,
-        unreadCount:
-          data.event === '30+'
-            ? 30
-            : data.event === ''
-              ? 0
-              : parseInt(data.event, 10) || 1,
-      }
-      setNumUnread(data.event)
-    }
-    broadcast.addEventListener('message', listener)
-    return () => {
-      broadcast.removeEventListener('message', listener)
-    }
-  }, [setNumUnread])
+	// listen for broadcasts
+	useEffect(() => {
+		const listener = ({ data }: MessageEvent) => {
+			cacheRef.current = {
+				usableInFeed: false,
+				syncedAt: new Date(),
+				data: undefined,
+				unreadCount: data.event === '30+' ? 30 : data.event === '' ? 0 : parseInt(data.event, 10) || 1,
+			};
+			setNumUnread(data.event);
+		};
+		broadcast.addEventListener('message', listener);
+		return () => {
+			broadcast.removeEventListener('message', listener);
+		};
+	}, [setNumUnread]);
 
-  const isFetchingRef = useRef(false)
+	const isFetchingRef = useRef(false);
 
-  // create API
-  const api = useMemo<ApiContext>(() => {
-    return {
-      async markAllRead() {
-        // update server
-        await agent.updateSeenNotifications(
-          cacheRef.current.syncedAt.toISOString(),
-        )
+	// create API
+	const api = useMemo<ApiContext>(() => {
+		return {
+			async markAllRead() {
+				// update server
+				await agent.updateSeenNotifications(cacheRef.current.syncedAt.toISOString());
 
-        // update & broadcast
-        setNumUnread('')
-        broadcast.postMessage({event: ''})
-      },
+				// update & broadcast
+				setNumUnread('');
+				broadcast.postMessage({ event: '' });
+			},
 
-      async checkUnread({
-        invalidate,
-        isPoll,
-      }: {invalidate?: boolean; isPoll?: boolean} = {}) {
-        try {
-          if (!agent.session) return
-          if (AppState.currentState !== 'active') {
-            return
-          }
+			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
+				try {
+					if (!agent.session) return;
+					if (AppState.currentState !== 'active') {
+						return;
+					}
 
-          // reduce polling if unread count is set
-          if (isPoll && cacheRef.current?.unreadCount !== 0) {
-            // if hit 30+ then don't poll, otherwise reduce polling by 50%
-            if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
-              return
-            }
-          }
+					// reduce polling if unread count is set
+					if (isPoll && cacheRef.current?.unreadCount !== 0) {
+						// if hit 30+ then don't poll, otherwise reduce polling by 50%
+						if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+							return;
+						}
+					}
 
-          if (isFetchingRef.current) {
-            return
-          }
-          // Do not move this without ensuring it gets a symmetrical reset in the finally block.
-          isFetchingRef.current = true
+					if (isFetchingRef.current) {
+						return;
+					}
+					// Do not move this without ensuring it gets a symmetrical reset in the finally block.
+					isFetchingRef.current = true;
 
-          // count
-          const {page, indexedAt: lastIndexed} = await fetchPage({
-            agent,
-            cursor: undefined,
-            limit: 40,
-            queryClient,
-            moderationOpts,
-            reasons: [],
+					// count
+					const { page, indexedAt: lastIndexed } = await fetchPage({
+						agent,
+						cursor: undefined,
+						limit: 40,
+						queryClient,
+						moderationOpts,
+						reasons: [],
 
-            // only fetch subjects when the page is going to be used
-            // in the notifications query, otherwise skip it
-            fetchAdditionalData: !!invalidate,
-          })
-          const unreadCount = countUnread(page)
-          const unreadCountStr =
-            unreadCount >= 30
-              ? '30+'
-              : unreadCount === 0
-                ? ''
-                : String(unreadCount)
+						// only fetch subjects when the page is going to be used
+						// in the notifications query, otherwise skip it
+						fetchAdditionalData: !!invalidate,
+					});
+					const unreadCount = countUnread(page);
+					const unreadCountStr = unreadCount >= 30 ? '30+' : unreadCount === 0 ? '' : String(unreadCount);
 
-          // track last sync
-          const now = new Date()
-          const lastIndexedDate = lastIndexed
-            ? new Date(lastIndexed)
-            : undefined
-          cacheRef.current = {
-            usableInFeed: !!invalidate, // will be used immediately
-            data: page,
-            syncedAt:
-              !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
-            unreadCount,
-          }
+					// track last sync
+					const now = new Date();
+					const lastIndexedDate = lastIndexed ? new Date(lastIndexed) : undefined;
+					cacheRef.current = {
+						usableInFeed: !!invalidate, // will be used immediately
+						data: page,
+						syncedAt: !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
+						unreadCount,
+					};
 
-          // update & broadcast
-          setNumUnread(unreadCountStr)
-          if (invalidate) {
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
-          }
-          broadcast.postMessage({event: unreadCountStr})
-        } finally {
-          isFetchingRef.current = false
-        }
-      },
+					// update & broadcast
+					setNumUnread(unreadCountStr);
+					if (invalidate) {
+						truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
+						truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
+					}
+					broadcast.postMessage({ event: unreadCountStr });
+				} finally {
+					isFetchingRef.current = false;
+				}
+			},
 
-      getCachedUnreadPage() {
-        // return cached page if it's marked as fresh enough
-        if (cacheRef.current.usableInFeed) {
-          return cacheRef.current.data
-        }
-      },
-    }
-  }, [setNumUnread, queryClient, moderationOpts, agent])
-  checkUnreadRef.current = api.checkUnread
+			getCachedUnreadPage() {
+				// return cached page if it's marked as fresh enough
+				if (cacheRef.current.usableInFeed) {
+					return cacheRef.current.data;
+				}
+			},
+		};
+	}, [setNumUnread, queryClient, moderationOpts, agent]);
+	checkUnreadRef.current = api.checkUnread;
 
-  return (
-    <stateContext.Provider value={numUnread}>
-      <apiContext.Provider value={api}>{children}</apiContext.Provider>
-    </stateContext.Provider>
-  )
+	return (
+		<stateContext.Provider value={numUnread}>
+			<apiContext.Provider value={api}>{children}</apiContext.Provider>
+		</stateContext.Provider>
+	);
 }
 
 export function useUnreadNotifications() {
-  return useContext(stateContext)
+	return useContext(stateContext);
 }
 
 export function useUnreadNotificationsApi() {
-  return useContext(apiContext)
+	return useContext(apiContext);
 }
 
 function countUnread(page: FeedPage) {
-  let num = 0
-  for (const item of page.items) {
-    if (!item.notification.isRead) {
-      num++
-    }
-    if (item.additional) {
-      for (const item2 of item.additional) {
-        if (!item2.isRead) {
-          num++
-        }
-      }
-    }
-  }
-  return num
+	let num = 0;
+	for (const item of page.items) {
+		if (!item.notification.isRead) {
+			num++;
+		}
+		if (item.additional) {
+			for (const item2 of item.additional) {
+				if (!item2.isRead) {
+					num++;
+				}
+			}
+		}
+	}
+	return num;
 }
 
 export function invalidateCachedUnreadPage() {
-  emitter.emit('invalidate')
+	emitter.emit('invalidate');
 }

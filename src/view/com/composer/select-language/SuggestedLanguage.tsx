@@ -1,486 +1,447 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
-import {Text as RNText, View} from 'react-native'
-import {RichText} from '@atproto/api'
-import {parseLanguageString} from '@atproto/syntax'
-import {Trans, useLingui} from '@lingui/react/macro'
-import debounce from 'lodash.debounce'
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Text as RNText, View } from 'react-native';
+import { RichText } from '@atproto/api';
+import { parseLanguageString } from '@atproto/syntax';
+import { Trans, useLingui } from '@lingui/react/macro';
+import debounce from 'lodash.debounce';
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useNonReactiveObject} from '#/lib/hooks/useNonReactiveObject'
-import {deviceLanguageCodes} from '#/locale/deviceLocales'
-import {codeToLanguageName} from '#/locale/helpers'
-import {logger} from '#/logger'
-import {useLanguagePrefs} from '#/state/preferences/languages'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
-import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
-import {Text} from '#/components/Typography'
-import {
-  guessLanguageAsync,
-  type LanguageResult,
-} from '#/shims/bsky-guess-language'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useNonReactiveObject } from '#/lib/hooks/useNonReactiveObject';
+import { deviceLanguageCodes } from '#/locale/deviceLocales';
+import { codeToLanguageName } from '#/locale/helpers';
+import { logger } from '#/logger';
+import { useLanguagePrefs } from '#/state/preferences/languages';
+import { atoms as a, useTheme } from '#/alf';
+import { Button, ButtonIcon } from '#/components/Button';
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
+import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
+import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { Text } from '#/components/Typography';
+import { guessLanguageAsync, type LanguageResult } from '#/shims/bsky-guess-language';
 
 type LanguageDetectionPerLanguageConfig = {
-  acceptanceThreshold?: number
-  deviceLocaleAcceptanceThreshold?: number
-}
+	acceptanceThreshold?: number;
+	deviceLocaleAcceptanceThreshold?: number;
+};
 
 type LanguageDetectionConfig = {
-  acceptanceThreshold: number
-  deviceLocaleAcceptanceThreshold: number
-  overrides: Record<string, LanguageDetectionPerLanguageConfig>
-}
+	acceptanceThreshold: number;
+	deviceLocaleAcceptanceThreshold: number;
+	overrides: Record<string, LanguageDetectionPerLanguageConfig>;
+};
 
-const MIN_TEXT_LENGTH = 20
-const NOISE_FLOOR = 0.1
+const MIN_TEXT_LENGTH = 20;
+const NOISE_FLOOR = 0.1;
 
 /**
- * Platform-resolved defaults. Web uses `lande` under the hood, which
- * spreads probability across many candidates — so both the noise floor
- * and the acceptance bar sit higher than on native (MLKit).
+ * Platform-resolved defaults. Web uses `lande` under the hood, which spreads probability across many
+ * candidates — so both the noise floor and the acceptance bar sit higher than on native (MLKit).
  *
- * Per-language carve-outs override the platform-level acceptance
- * threshold.
+ * Per-language carve-outs override the platform-level acceptance threshold.
  */
 const DEFAULT_CONFIG: LanguageDetectionConfig = {
-  acceptanceThreshold: 0.97,
-  /*
-   * Device locales are an independent prior — the OS tells us which
-   * languages the user has installed, separate from what the model sees
-   * in the text. Combining the two lets us accept a candidate at lower
-   * model confidence when the language is one the user actually reads.
-   * It also fails softer: a wrong suggestion for a language the user
-   * knows ("are you writing in Spanish?") is easier to dismiss than one
-   * for a language they don't ("are you writing in Japanese?"), so we
-   * can afford to be more aggressive there.
-   *
-   * Native-only. On web we keep the bar at 0.97 because (a) lande's
-   * confidence is tightly bimodal — a score of 0.85 means the model
-   * doesn't know, not that it's "mostly sure" — and (b) the browser's
-   * locale signal is noisier (navigator.languages usually includes
-   * English regardless of what the user actually reads).
-   */
-  deviceLocaleAcceptanceThreshold: 0.97,
-  /*
-   * Per-language carve-outs for known confusable pairs / clusters. The
-   * acceptance bar is raised above the platform baseline because these
-   * are languages the detector (especially `lande` on web) is known to
-   * misclassify or over-commit on.
-   *
-   * The device-locale bar is also raised for most tightly-confusable
-   * pairs: if the user has both languages in the pair installed (common
-   * for id/ms or nb/da speakers), the device-locale prior no longer
-   * discriminates between them, so we can't afford to drop the bar as
-   * aggressively.
-   *
-   * Web thresholds are stricter than the old native defaults because browser
-   * language detection is less reliable for these tightly-confusable pairs.
-   */
-  overrides: {
-    // Example
-    // id: {
-    //   acceptanceThreshold: 0.99,
-    //   deviceLocaleAcceptanceThreshold: 0.97,
-    // },
-  },
-}
+	acceptanceThreshold: 0.97,
+	/*
+	 * Device locales are an independent prior — the OS tells us which
+	 * languages the user has installed, separate from what the model sees
+	 * in the text. Combining the two lets us accept a candidate at lower
+	 * model confidence when the language is one the user actually reads.
+	 * It also fails softer: a wrong suggestion for a language the user
+	 * knows ("are you writing in Spanish?") is easier to dismiss than one
+	 * for a language they don't ("are you writing in Japanese?"), so we
+	 * can afford to be more aggressive there.
+	 *
+	 * Native-only. On web we keep the bar at 0.97 because (a) lande's
+	 * confidence is tightly bimodal — a score of 0.85 means the model
+	 * doesn't know, not that it's "mostly sure" — and (b) the browser's
+	 * locale signal is noisier (navigator.languages usually includes
+	 * English regardless of what the user actually reads).
+	 */
+	deviceLocaleAcceptanceThreshold: 0.97,
+	/*
+	 * Per-language carve-outs for known confusable pairs / clusters. The
+	 * acceptance bar is raised above the platform baseline because these
+	 * are languages the detector (especially `lande` on web) is known to
+	 * misclassify or over-commit on.
+	 *
+	 * The device-locale bar is also raised for most tightly-confusable
+	 * pairs: if the user has both languages in the pair installed (common
+	 * for id/ms or nb/da speakers), the device-locale prior no longer
+	 * discriminates between them, so we can't afford to drop the bar as
+	 * aggressively.
+	 *
+	 * Web thresholds are stricter than the old native defaults because browser
+	 * language detection is less reliable for these tightly-confusable pairs.
+	 */
+	overrides: {
+		// Example
+		// id: {
+		//   acceptanceThreshold: 0.99,
+		//   deviceLocaleAcceptanceThreshold: 0.97,
+		// },
+	},
+};
 
 export function SuggestedLanguage({
-  text,
-  replyToLanguages: replyToLanguagesProp,
-  currentLanguages,
-  onAcceptSuggestedLanguage,
-  onNudge,
+	text,
+	replyToLanguages: replyToLanguagesProp,
+	currentLanguages,
+	onAcceptSuggestedLanguage,
+	onNudge,
 }: {
-  text: string
-  /**
-   * All languages associated with the post being replied to.
-   */
-  replyToLanguages: string[]
-  /**
-   * All languages currently selected for the post being composed.
-   */
-  currentLanguages: string[]
-  /**
-   * Called when the user accepts a suggested language. We only pass a single
-   * language here. If the post being replied to has multiple languages, we
-   * only suggest the first one.
-   */
-  onAcceptSuggestedLanguage: (language: string | null) => void
-  /**
-   * Fired when detection produced ambiguous results — no strong suggestion
-   * to show, but we want to hint to the user that the detector is unsure.
-   * Expected to be an incrementing counter setter on the parent so the
-   * nudge can re-fire on each detection cycle.
-   */
-  onNudge?: () => void
+	text: string;
+	/** All languages associated with the post being replied to. */
+	replyToLanguages: string[];
+	/** All languages currently selected for the post being composed. */
+	currentLanguages: string[];
+	/**
+	 * Called when the user accepts a suggested language. We only pass a single language here. If the post being
+	 * replied to has multiple languages, we only suggest the first one.
+	 */
+	onAcceptSuggestedLanguage: (language: string | null) => void;
+	/**
+	 * Fired when detection produced ambiguous results — no strong suggestion to show, but we want to hint to
+	 * the user that the detector is unsure. Expected to be an incrementing counter setter on the parent so the
+	 * nudge can re-fire on each detection cycle.
+	 */
+	onNudge?: () => void;
 }) {
-  const [hasInteracted, setHasInteracted] = useState(false)
-  const [suggLang, setSuggLang] = useState<string | undefined>(undefined)
-  const declinedSuggLangsRef = useRef<string[]>([])
+	const [hasInteracted, setHasInteracted] = useState(false);
+	const [suggLang, setSuggLang] = useState<string | undefined>(undefined);
+	const declinedSuggLangsRef = useRef<string[]>([]);
 
-  /*
-   * Shared callbacks
-   */
-  const onAccept = (language: string) => {
-    onAcceptSuggestedLanguage(language)
-    // clear
-    setSuggLang(undefined)
-  }
-  const onDecline = () => {
-    if (suggLang) {
-      declinedSuggLangsRef.current.push(suggLang)
-      // clear
-      setSuggLang(undefined)
-    }
-  }
+	/*
+	 * Shared callbacks
+	 */
+	const onAccept = (language: string) => {
+		onAcceptSuggestedLanguage(language);
+		// clear
+		setSuggLang(undefined);
+	};
+	const onDecline = () => {
+		if (suggLang) {
+			declinedSuggLangsRef.current.push(suggLang);
+			// clear
+			setSuggLang(undefined);
+		}
+	};
 
-  /**
-   * Merge in remote config (eventually)
-   */
-  const config = useMemo(() => DEFAULT_CONFIG, [])
+	/** Merge in remote config (eventually) */
+	const config = useMemo(() => DEFAULT_CONFIG, []);
 
-  /**
-   * Create non-reactive ref for debounced detection method.
-   */
-  const detectionPropsRef = useNonReactiveObject({
-    config,
-    currentLanguages,
-  })
+	/** Create non-reactive ref for debounced detection method. */
+	const detectionPropsRef = useNonReactiveObject({
+		config,
+		currentLanguages,
+	});
 
-  /*
-   * Held in a ref so the debounced detection closure always sees the
-   * latest callback identity without rebuilding the debounce timer.
-   */
-  const handleOnNudge = useNonReactiveCallback(onNudge)
+	/*
+	 * Held in a ref so the debounced detection closure always sees the
+	 * latest callback identity without rebuilding the debounce timer.
+	 */
+	const handleOnNudge = useNonReactiveCallback(onNudge);
 
-  /*
-   * Main language detection effect
-   */
-  const detectLanguage = useMemo(() => {
-    return debounce(async (text: string) => {
-      try {
-        const currLangs = detectionPropsRef.current.currentLanguages
-        const {certain, uncertain} = await guessLanguage(
-          text,
-          detectionPropsRef.current.config,
-        )
-        const topCandidate = certain.at(0)?.language
-        if (
-          certain.length === 1 &&
-          uncertain.length === 0 &&
-          topCandidate !== undefined &&
-          !currLangs.includes(topCandidate) &&
-          !declinedSuggLangsRef.current.includes(topCandidate)
-        ) {
-          // we have a single confident candidate with no competitors — show it!
-          setSuggLang(topCandidate)
-        } else {
-          const nextBestCandidate = uncertain.at(0)?.language
-          // ambiguous results — if the top candidate isn't already
-          // selected or previously declined, nudge the user
-          if (
-            nextBestCandidate !== undefined &&
-            !currLangs.includes(nextBestCandidate) &&
-            !declinedSuggLangsRef.current.includes(nextBestCandidate)
-          ) {
-            handleOnNudge()
-          }
+	/*
+	 * Main language detection effect
+	 */
+	const detectLanguage = useMemo(() => {
+		return debounce(async (text: string) => {
+			try {
+				const currLangs = detectionPropsRef.current.currentLanguages;
+				const { certain, uncertain } = await guessLanguage(text, detectionPropsRef.current.config);
+				const topCandidate = certain.at(0)?.language;
+				if (
+					certain.length === 1 &&
+					uncertain.length === 0 &&
+					topCandidate !== undefined &&
+					!currLangs.includes(topCandidate) &&
+					!declinedSuggLangsRef.current.includes(topCandidate)
+				) {
+					// we have a single confident candidate with no competitors — show it!
+					setSuggLang(topCandidate);
+				} else {
+					const nextBestCandidate = uncertain.at(0)?.language;
+					// ambiguous results — if the top candidate isn't already
+					// selected or previously declined, nudge the user
+					if (
+						nextBestCandidate !== undefined &&
+						!currLangs.includes(nextBestCandidate) &&
+						!declinedSuggLangsRef.current.includes(nextBestCandidate)
+					) {
+						handleOnNudge();
+					}
 
-          setSuggLang(undefined)
-        }
-      } catch (e) {
-        logger.error('Error detecting language', {safeMessage: e})
-      }
-    }, 500)
-  }, [])
+					setSuggLang(undefined);
+				}
+			} catch (e) {
+				logger.error('Error detecting language', { safeMessage: e });
+			}
+		}, 500);
+	}, []);
 
-  useEffect(() => {
-    // show reply prompt if there's not enough text to start using the model
-    if (text.length > 0 && !hasInteracted) {
-      setHasInteracted(true)
-    }
+	useEffect(() => {
+		// show reply prompt if there's not enough text to start using the model
+		if (text.length > 0 && !hasInteracted) {
+			setHasInteracted(true);
+		}
 
-    const textTrimmed = sanitizeTextForDetection(text)
+		const textTrimmed = sanitizeTextForDetection(text);
 
-    /*
-     * If text drops under the min length requirement, reset suggestions state
-     * objects.
-     *
-     * And we don't run the language model on small posts, the results are
-     * likely to be inaccurate.
-     */
-    if (textTrimmed.length < MIN_TEXT_LENGTH) {
-      setSuggLang(undefined)
-      return
-    }
+		/*
+		 * If text drops under the min length requirement, reset suggestions state
+		 * objects.
+		 *
+		 * And we don't run the language model on small posts, the results are
+		 * likely to be inaccurate.
+		 */
+		if (textTrimmed.length < MIN_TEXT_LENGTH) {
+			setSuggLang(undefined);
+			return;
+		}
 
-    void detectLanguage(textTrimmed)
+		void detectLanguage(textTrimmed);
 
-    // Cancel any pending debounced invocation on unmount / re-run so we
-    // don't call setSuggLang after the composer has closed (or after the
-    // user has already accepted a language).
-    return () => {
-      detectLanguage.cancel()
-    }
-  }, [text, hasInteracted, detectLanguage])
+		// Cancel any pending debounced invocation on unmount / re-run so we
+		// don't call setSuggLang after the composer has closed (or after the
+		// user has already accepted a language).
+		return () => {
+			detectLanguage.cancel();
+		};
+	}, [text, hasInteracted, detectLanguage]);
 
-  /*
-   * This is intentionally computed based on a ref. Since we set and clear
-   * `suggLang` this derivation is safe, but be aware of it
-   * when making changes.
-   */
-  const hasDeclined = suggLang
-    ? // eslint-disable-next-line react-hooks/refs
-      declinedSuggLangsRef.current.includes(suggLang)
-    : false
+	/*
+	 * This is intentionally computed based on a ref. Since we set and clear
+	 * `suggLang` this derivation is safe, but be aware of it
+	 * when making changes.
+	 */
+	const hasDeclined = suggLang
+		? // eslint-disable-next-line react-hooks/refs
+			declinedSuggLangsRef.current.includes(suggLang)
+		: false;
 
-  /*
-   * We've detected a language, and the user hasn't already selected it.
-   */
-  const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang)
+	/*
+	 * We've detected a language, and the user hasn't already selected it.
+	 */
+	const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang);
 
-  /*
-   * We have not detected a different language, and the user is not already
-   * using or has not already selected one of the languages of the post they
-   * are replying to.
-   */
-  const replyToLanguages = replyToLanguagesProp
-    .filter(Boolean)
-    .map(lang => parseLanguageString(lang)?.language)
-    .filter(Boolean) as string[]
-  const hasSuggestedReplyLanguage =
-    !hasInteracted &&
-    !suggLang &&
-    replyToLanguages.length &&
-    !replyToLanguages.some(l => currentLanguages.includes(l))
+	/*
+	 * We have not detected a different language, and the user is not already
+	 * using or has not already selected one of the languages of the post they
+	 * are replying to.
+	 */
+	const replyToLanguages = replyToLanguagesProp
+		.filter(Boolean)
+		.map((lang) => parseLanguageString(lang)?.language)
+		.filter(Boolean) as string[];
+	const hasSuggestedReplyLanguage =
+		!hasInteracted &&
+		!suggLang &&
+		replyToLanguages.length &&
+		!replyToLanguages.some((l) => currentLanguages.includes(l));
 
-  if (hasDeclined) {
-    return null
-  } else if (hasLanguageSuggestion) {
-    return (
-      <GuessedLanguage
-        language={suggLang}
-        onAccept={onAccept}
-        onDecline={onDecline}
-      />
-    )
-  } else if (hasSuggestedReplyLanguage) {
-    return (
-      <ReplyLanguageNudge
-        language={replyToLanguages[0]!}
-        onAccept={onAccept}
-        onDecline={onDecline}
-      />
-    )
-  } else {
-    return null
-  }
+	if (hasDeclined) {
+		return null;
+	} else if (hasLanguageSuggestion) {
+		return <GuessedLanguage language={suggLang} onAccept={onAccept} onDecline={onDecline} />;
+	} else if (hasSuggestedReplyLanguage) {
+		return <ReplyLanguageNudge language={replyToLanguages[0]!} onAccept={onAccept} onDecline={onDecline} />;
+	} else {
+		return null;
+	}
 }
 
 function GuessedLanguage({
-  language,
-  onAccept: onAcceptOuter,
-  onDecline: onDeclineOuter,
+	language,
+	onAccept: onAcceptOuter,
+	onDecline: onDeclineOuter,
 }: {
-  language: string
-  onAccept: (language: string) => void
-  onDecline: () => void
+	language: string;
+	onAccept: (language: string) => void;
+	onDecline: () => void;
 }) {
-  const langPrefs = useLanguagePrefs()
-  const suggestedLanguageName = codeToLanguageName(
-    language,
-    langPrefs.appLanguage,
-  )
-  const onAccept = () => {
-    onAcceptOuter(language)
-  }
-  const onDecline = () => {
-    onDeclineOuter()
-  }
+	const langPrefs = useLanguagePrefs();
+	const suggestedLanguageName = codeToLanguageName(language, langPrefs.appLanguage);
+	const onAccept = () => {
+		onAcceptOuter(language);
+	};
+	const onDecline = () => {
+		onDeclineOuter();
+	};
 
-  return (
-    <LanguageSuggestionButton
-      label={
-        <RNText>
-          <Trans>
-            Are you writing in{' '}
-            <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
-          </Trans>
-        </RNText>
-      }
-      value={language}
-      onAccept={onAccept}
-      onDecline={onDecline}
-    />
-  )
+	return (
+		<LanguageSuggestionButton
+			label={
+				<RNText>
+					<Trans>
+						Are you writing in <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
+					</Trans>
+				</RNText>
+			}
+			value={language}
+			onAccept={onAccept}
+			onDecline={onDecline}
+		/>
+	);
 }
 
 function ReplyLanguageNudge({
-  language,
-  onAccept: onAcceptOuter,
-  onDecline: onDeclineOuter,
+	language,
+	onAccept: onAcceptOuter,
+	onDecline: onDeclineOuter,
 }: {
-  language: string
-  onAccept: (language: string) => void
-  onDecline: () => void
+	language: string;
+	onAccept: (language: string) => void;
+	onDecline: () => void;
 }) {
-  const langPrefs = useLanguagePrefs()
-  const suggestedLanguageName = codeToLanguageName(
-    language,
-    langPrefs.appLanguage,
-  )
-  const onAccept = () => {
-    onAcceptOuter(language)
-  }
-  const onDecline = () => {
-    onDeclineOuter()
-  }
+	const langPrefs = useLanguagePrefs();
+	const suggestedLanguageName = codeToLanguageName(language, langPrefs.appLanguage);
+	const onAccept = () => {
+		onAcceptOuter(language);
+	};
+	const onDecline = () => {
+		onDeclineOuter();
+	};
 
-  return (
-    <LanguageSuggestionButton
-      label={
-        <RNText>
-          <Trans>
-            The post you’re replying to was marked as being written in{' '}
-            {suggestedLanguageName} by its author. Would you like to reply in{' '}
-            <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
-          </Trans>
-        </RNText>
-      }
-      value={language}
-      onAccept={onAccept}
-      onDecline={onDecline}
-    />
-  )
+	return (
+		<LanguageSuggestionButton
+			label={
+				<RNText>
+					<Trans>
+						The post you’re replying to was marked as being written in {suggestedLanguageName} by its author.
+						Would you like to reply in <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
+					</Trans>
+				</RNText>
+			}
+			value={language}
+			onAccept={onAccept}
+			onDecline={onDecline}
+		/>
+	);
 }
 
 function LanguageSuggestionButton({
-  label,
-  value,
-  onAccept,
-  onDecline,
+	label,
+	value,
+	onAccept,
+	onDecline,
 }: {
-  label: React.ReactNode
-  value: string
-  onAccept: (language: string | null) => void
-  onDecline: () => void
+	label: React.ReactNode;
+	value: string;
+	onAccept: (language: string | null) => void;
+	onDecline: () => void;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
+	const t = useTheme();
+	const { t: l } = useLingui();
 
-  return (
-    <View style={[a.px_lg, a.py_sm]}>
-      <View
-        style={[
-          a.gap_md,
-          a.border,
-          a.flex_row,
-          a.align_center,
-          a.rounded_sm,
-          a.p_md,
-          a.pl_lg,
-          t.atoms.bg,
-          t.atoms.border_contrast_low,
-        ]}>
-        <EarthIcon />
-        <View style={[a.flex_1]}>
-          <Text
-            style={[
-              a.leading_snug,
-              {
-                maxWidth: 400,
-              },
-            ]}>
-            {label}
-          </Text>
-        </View>
+	return (
+		<View style={[a.px_lg, a.py_sm]}>
+			<View
+				style={[
+					a.gap_md,
+					a.border,
+					a.flex_row,
+					a.align_center,
+					a.rounded_sm,
+					a.p_md,
+					a.pl_lg,
+					t.atoms.bg,
+					t.atoms.border_contrast_low,
+				]}
+			>
+				<EarthIcon />
+				<View style={[a.flex_1]}>
+					<Text
+						style={[
+							a.leading_snug,
+							{
+								maxWidth: 400,
+							},
+						]}
+					>
+						{label}
+					</Text>
+				</View>
 
-        <Button
-          size="small"
-          color="primary_subtle"
-          shape="round"
-          onPress={() => onAccept(value)}
-          label={l`Accept this language suggestion`}>
-          <ButtonIcon icon={CheckIcon} size="sm" />
-        </Button>
+				<Button
+					size="small"
+					color="primary_subtle"
+					shape="round"
+					onPress={() => onAccept(value)}
+					label={l`Accept this language suggestion`}
+				>
+					<ButtonIcon icon={CheckIcon} size="sm" />
+				</Button>
 
-        <Button
-          size="small"
-          color="secondary"
-          shape="round"
-          onPress={() => onDecline()}
-          label={l`Decline this language suggestion`}>
-          <ButtonIcon icon={XIcon} size="sm" />
-        </Button>
-      </View>
-    </View>
-  )
+				<Button
+					size="small"
+					color="secondary"
+					shape="round"
+					onPress={() => onDecline()}
+					label={l`Decline this language suggestion`}
+				>
+					<ButtonIcon icon={XIcon} size="sm" />
+				</Button>
+			</View>
+		</View>
+	);
 }
 
 /**
- * Run detection and partition candidates into "certain" (confident enough
- * to suggest on their own) and "uncertain" (above the noise floor but not
- * confident enough to suggest). Callers decide what to do with the shape:
- * a single certain candidate with no uncertain competitors is a strong
- * suggestion; everything else is ambiguous.
+ * Run detection and partition candidates into "certain" (confident enough to suggest on their own) and
+ * "uncertain" (above the noise floor but not confident enough to suggest). Callers decide what to do with the
+ * shape: a single certain candidate with no uncertain competitors is a strong suggestion; everything else is
+ * ambiguous.
  *
- * The acceptance threshold is resolved per candidate with this precedence:
- *   1. Per-language override (e.g. maybe `id` requires higher confidence)
- *   2. Device-locale bar (lower on native — the user likely writes in a
- *      language they have installed)
- *   3. Platform-level bar
+ * The acceptance threshold is resolved per candidate with this precedence: 1. Per-language override (e.g.
+ * maybe `id` requires higher confidence) 2. Device-locale bar (lower on native — the user likely writes in a
+ * language they have installed) 3. Platform-level bar
  */
 async function guessLanguage(
-  text: string,
-  config: LanguageDetectionConfig,
+	text: string,
+	config: LanguageDetectionConfig,
 ): Promise<{
-  certain: LanguageResult[]
-  uncertain: LanguageResult[]
+	certain: LanguageResult[];
+	uncertain: LanguageResult[];
 }> {
-  const suggestions = await guessLanguageAsync(text)
-  const certain: LanguageResult[] = []
-  const uncertain: LanguageResult[] = []
+	const suggestions = await guessLanguageAsync(text);
+	const certain: LanguageResult[] = [];
+	const uncertain: LanguageResult[] = [];
 
-  for (const suggestion of suggestions) {
-    const isDeviceLocale = deviceLanguageCodes.includes(suggestion.language)
-    const override = config.overrides[suggestion.language]
-    const threshold = isDeviceLocale
-      ? (override?.deviceLocaleAcceptanceThreshold ??
-        config.deviceLocaleAcceptanceThreshold)
-      : (override?.acceptanceThreshold ?? config.acceptanceThreshold)
+	for (const suggestion of suggestions) {
+		const isDeviceLocale = deviceLanguageCodes.includes(suggestion.language);
+		const override = config.overrides[suggestion.language];
+		const threshold = isDeviceLocale
+			? (override?.deviceLocaleAcceptanceThreshold ?? config.deviceLocaleAcceptanceThreshold)
+			: (override?.acceptanceThreshold ?? config.acceptanceThreshold);
 
-    if (suggestion.confidence >= threshold) {
-      certain.push(suggestion)
-    } else if (suggestion.confidence >= NOISE_FLOOR) {
-      uncertain.push(suggestion)
-    }
-  }
+		if (suggestion.confidence >= threshold) {
+			certain.push(suggestion);
+		} else if (suggestion.confidence >= NOISE_FLOOR) {
+			uncertain.push(suggestion);
+		}
+	}
 
-  return {certain, uncertain}
+	return { certain, uncertain };
 }
 
 /**
- * Strip any detected facets from the text to improve language detection
- * accuracy. For example, URLs and mentions.
+ * Strip any detected facets from the text to improve language detection accuracy. For example, URLs and
+ * mentions.
  *
- * Tags are intentionally kept — their word content is usually in the
- * post's language and helps detection; the leading `#` is short enough
- * not to distort results.
+ * Tags are intentionally kept — their word content is usually in the post's language and helps detection; the
+ * leading `#` is short enough not to distort results.
  */
 function sanitizeTextForDetection(text: string): string {
-  const rt = new RichText({text: text.trim()})
-  rt.detectFacetsWithoutResolution()
+	const rt = new RichText({ text: text.trim() });
+	rt.detectFacetsWithoutResolution();
 
-  let sanitized = ''
-  for (const segment of rt.segments()) {
-    if (segment.isLink() || segment.isMention() || segment.isTag()) {
-      continue
-    }
-    sanitized += segment.text
-  }
+	let sanitized = '';
+	for (const segment of rt.segments()) {
+		if (segment.isLink() || segment.isMention() || segment.isTag()) {
+			continue;
+		}
+		sanitized += segment.text;
+	}
 
-  return sanitized.trim()
+	return sanitized.trim();
 }

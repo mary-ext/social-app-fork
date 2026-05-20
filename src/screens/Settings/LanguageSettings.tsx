@@ -1,258 +1,224 @@
-import {useCallback, useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { useCallback, useMemo, useState } from 'react';
+import { View } from 'react-native';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {Button} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
-import * as Toggle from '#/components/forms/Toggle'
-import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
-import * as Layout from '#/components/Layout'
-import * as Select from '#/components/Select'
-import {Text} from '#/components/Typography'
-import * as SettingsList from './components/SettingsList'
+import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
+import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
+import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
+import { atoms as a } from '#/alf';
+import { Admonition } from '#/components/Admonition';
+import { Button } from '#/components/Button';
+import { useDialogControl } from '#/components/Dialog';
+import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
+import * as Toggle from '#/components/forms/Toggle';
+import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+import * as Layout from '#/components/Layout';
+import * as Select from '#/components/Select';
+import { Text } from '#/components/Typography';
+import * as SettingsList from './components/SettingsList';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
-  (lang, i, arr) =>
-    lang.code2 && arr.findIndex(l => l.code2 === lang.code2) === i,
-)
+	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,
+);
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>;
 export function LanguageSettingsScreen({}: Props) {
-  const {t: l} = useLingui()
-  const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useLanguagePrefsApi()
+	const { t: l } = useLingui();
+	const langPrefs = useLanguagePrefs();
+	const setLangPrefs = useLanguagePrefsApi();
 
-  // changing langPrefs causes a slow re-render, so we use a local state copy
-  // and update that first to drive the UI on this screen to keep it snappy
-  const [contentLanguages, _setContentLanguages] = useState(
-    langPrefs.contentLanguages,
-  )
-  const setContentLanguages = useCallback(
-    (languages: string[]) => {
-      _setContentLanguages(languages)
-      // TODO: try using startTransition/useOptimistic when we switch to New Arch
-      // Old arch doesn't support concurrent react features so use rAF instead
-      requestAnimationFrame(() => {
-        setLangPrefs.setContentLanguages(languages)
-      })
-    },
-    [setLangPrefs],
-  )
+	// changing langPrefs causes a slow re-render, so we use a local state copy
+	// and update that first to drive the UI on this screen to keep it snappy
+	const [contentLanguages, _setContentLanguages] = useState(langPrefs.contentLanguages);
+	const setContentLanguages = useCallback(
+		(languages: string[]) => {
+			_setContentLanguages(languages);
+			// TODO: try using startTransition/useOptimistic when we switch to New Arch
+			// Old arch doesn't support concurrent react features so use rAF instead
+			requestAnimationFrame(() => {
+				setLangPrefs.setContentLanguages(languages);
+			});
+		},
+		[setLangPrefs],
+	);
 
-  const contentLanguagePrefsControl = useDialogControl()
+	const contentLanguagePrefsControl = useDialogControl();
 
-  const onChangeAppLanguage = useCallback(
-    (value: string) => {
-      if (!value) {
-        return
-      }
+	const onChangeAppLanguage = useCallback(
+		(value: string) => {
+			if (!value) {
+				return;
+			}
 
-      if (langPrefs.appLanguage !== value) {
-        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
-      }
-    },
-    [langPrefs, setLangPrefs],
-  )
+			if (langPrefs.appLanguage !== value) {
+				setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value));
+			}
+		},
+		[langPrefs, setLangPrefs],
+	);
 
-  const onChangePrimaryLanguage = useCallback(
-    (value: string) => {
-      if (!value) {
-        return
-      }
+	const onChangePrimaryLanguage = useCallback(
+		(value: string) => {
+			if (!value) {
+				return;
+			}
 
-      if (langPrefs.primaryLanguage !== value) {
-        setLangPrefs.setPrimaryLanguage(value)
-      }
-    },
-    [langPrefs, setLangPrefs],
-  )
+			if (langPrefs.primaryLanguage !== value) {
+				setLangPrefs.setPrimaryLanguage(value);
+			}
+		},
+		[langPrefs, setLangPrefs],
+	);
 
-  const [recentLanguages, setRecentLanguages] = useState<string[]>(
-    langPrefs.contentLanguages,
-  )
+	const [recentLanguages, setRecentLanguages] = useState<string[]>(langPrefs.contentLanguages);
 
-  const possibleLanguages = useMemo(() => {
-    return [
-      ...new Set([
-        ...recentLanguages,
-        ...contentLanguages,
-        ...langPrefs.primaryLanguage,
-      ]),
-    ]
-      .map(lang => LANGUAGES.find(l => l.code2 === lang))
-      .filter(x => !!x)
-  }, [recentLanguages, contentLanguages, langPrefs.primaryLanguage])
+	const possibleLanguages = useMemo(() => {
+		return [...new Set([...recentLanguages, ...contentLanguages, ...langPrefs.primaryLanguage])]
+			.map((lang) => LANGUAGES.find((l) => l.code2 === lang))
+			.filter((x) => !!x);
+	}, [recentLanguages, contentLanguages, langPrefs.primaryLanguage]);
 
-  return (
-    <Layout.Screen testID="PreferencesLanguagesScreen">
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>
-            <Trans>Languages</Trans>
-          </Layout.Header.TitleText>
-        </Layout.Header.Content>
-        <Layout.Header.Slot />
-      </Layout.Header.Outer>
-      <Layout.Content>
-        <SettingsList.Container>
-          <SettingsList.Group iconInset={false}>
-            <SettingsList.ItemText>
-              <Trans>App language</Trans>
-            </SettingsList.ItemText>
-            <View style={[a.gap_md, a.w_full]}>
-              <Text style={[a.leading_snug]}>
-                <Trans>
-                  Select which language to use for the app's user interface.
-                </Trans>
-              </Text>
-              <Select.Root
-                value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
-                onValueChange={onChangeAppLanguage}>
-                <Select.Trigger label={l`Select app language`}>
-                  <Select.ValueText />
-                  <Select.Icon />
-                </Select.Trigger>
-                <Select.Content
-                  label={l`App language`}
-                  renderItem={({label, value}) => (
-                    <Select.Item value={value} label={label}>
-                      <Select.ItemIndicator />
-                      <Select.ItemText>{label}</Select.ItemText>
-                    </Select.Item>
-                  )}
-                  items={APP_LANGUAGES.map(language => ({
-                    label: language.name,
-                    value: language.code2,
-                  }))}
-                />
-              </Select.Root>
-            </View>
-          </SettingsList.Group>
-          <SettingsList.Divider />
-          <SettingsList.Group iconInset={false}>
-            <SettingsList.ItemText>
-              <Trans>Primary language</Trans>
-            </SettingsList.ItemText>
-            <View style={[a.gap_md, a.w_full]}>
-              <Text style={[a.leading_snug]}>
-                <Trans>
-                  Select your preferred language for translations in your feed.
-                </Trans>
-              </Text>
-              <Select.Root
-                value={langPrefs.primaryLanguage}
-                onValueChange={onChangePrimaryLanguage}>
-                <Select.Trigger label={l`Select primary language`}>
-                  <Select.ValueText />
-                  <Select.Icon />
-                </Select.Trigger>
-                <Select.Content
-                  label={l`Primary language`}
-                  renderItem={({label, value}) => (
-                    <Select.Item value={value} label={label}>
-                      <Select.ItemIndicator />
-                      <Select.ItemText>{label}</Select.ItemText>
-                    </Select.Item>
-                  )}
-                  items={DEDUPED_LANGUAGES.map(l => ({
-                    label: languageName(l, langPrefs.appLanguage),
-                    value: l.code2,
-                  })).sort((a, b) =>
-                    a.label.localeCompare(b.label, langPrefs.appLanguage),
-                  )}
-                />
-              </Select.Root>
-            </View>
-          </SettingsList.Group>
-          <SettingsList.Divider />
-          <SettingsList.Group iconInset={false}>
-            <SettingsList.ItemText>
-              <Trans>Content languages</Trans>
-            </SettingsList.ItemText>
-            <View style={[a.gap_md]}>
-              <Text style={[a.leading_snug]}>
-                <Trans>
-                  Select which languages you want your subscribed feeds to
-                  include. If none are selected, all languages will be shown.
-                </Trans>
-              </Text>
+	return (
+		<Layout.Screen testID="PreferencesLanguagesScreen">
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<Layout.Header.TitleText>
+						<Trans>Languages</Trans>
+					</Layout.Header.TitleText>
+				</Layout.Header.Content>
+				<Layout.Header.Slot />
+			</Layout.Header.Outer>
+			<Layout.Content>
+				<SettingsList.Container>
+					<SettingsList.Group iconInset={false}>
+						<SettingsList.ItemText>
+							<Trans>App language</Trans>
+						</SettingsList.ItemText>
+						<View style={[a.gap_md, a.w_full]}>
+							<Text style={[a.leading_snug]}>
+								<Trans>Select which language to use for the app's user interface.</Trans>
+							</Text>
+							<Select.Root
+								value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+								onValueChange={onChangeAppLanguage}
+							>
+								<Select.Trigger label={l`Select app language`}>
+									<Select.ValueText />
+									<Select.Icon />
+								</Select.Trigger>
+								<Select.Content
+									label={l`App language`}
+									renderItem={({ label, value }) => (
+										<Select.Item value={value} label={label}>
+											<Select.ItemIndicator />
+											<Select.ItemText>{label}</Select.ItemText>
+										</Select.Item>
+									)}
+									items={APP_LANGUAGES.map((language) => ({
+										label: language.name,
+										value: language.code2,
+									}))}
+								/>
+							</Select.Root>
+						</View>
+					</SettingsList.Group>
+					<SettingsList.Divider />
+					<SettingsList.Group iconInset={false}>
+						<SettingsList.ItemText>
+							<Trans>Primary language</Trans>
+						</SettingsList.ItemText>
+						<View style={[a.gap_md, a.w_full]}>
+							<Text style={[a.leading_snug]}>
+								<Trans>Select your preferred language for translations in your feed.</Trans>
+							</Text>
+							<Select.Root value={langPrefs.primaryLanguage} onValueChange={onChangePrimaryLanguage}>
+								<Select.Trigger label={l`Select primary language`}>
+									<Select.ValueText />
+									<Select.Icon />
+								</Select.Trigger>
+								<Select.Content
+									label={l`Primary language`}
+									renderItem={({ label, value }) => (
+										<Select.Item value={value} label={label}>
+											<Select.ItemIndicator />
+											<Select.ItemText>{label}</Select.ItemText>
+										</Select.Item>
+									)}
+									items={DEDUPED_LANGUAGES.map((l) => ({
+										label: languageName(l, langPrefs.appLanguage),
+										value: l.code2,
+									})).sort((a, b) => a.label.localeCompare(b.label, langPrefs.appLanguage))}
+								/>
+							</Select.Root>
+						</View>
+					</SettingsList.Group>
+					<SettingsList.Divider />
+					<SettingsList.Group iconInset={false}>
+						<SettingsList.ItemText>
+							<Trans>Content languages</Trans>
+						</SettingsList.ItemText>
+						<View style={[a.gap_md]}>
+							<Text style={[a.leading_snug]}>
+								<Trans>
+									Select which languages you want your subscribed feeds to include. If none are selected, all
+									languages will be shown.
+								</Trans>
+							</Text>
 
-              {contentLanguages.length === 0 && (
-                <Admonition type="info">
-                  <Trans>All languages will be shown in your feeds.</Trans>
-                </Admonition>
-              )}
+							{contentLanguages.length === 0 && (
+								<Admonition type="info">
+									<Trans>All languages will be shown in your feeds.</Trans>
+								</Admonition>
+							)}
 
-              <View style={[a.w_full, {maxWidth: 400}]}>
-                <Toggle.Group
-                  label={l`Select content languages`}
-                  values={contentLanguages}
-                  onChange={setContentLanguages}>
-                  <Toggle.PanelGroup>
-                    {possibleLanguages.map((language, index) => {
-                      const name = languageName(language, langPrefs.appLanguage)
-                      return (
-                        <Toggle.Item
-                          key={language.code2}
-                          name={language.code2}
-                          label={name}>
-                          {({selected}) => (
-                            <Toggle.Panel
-                              active={selected}
-                              adjacent={index === 0 ? 'trailing' : 'both'}>
-                              <Toggle.Checkbox />
-                              <Toggle.PanelText>{name}</Toggle.PanelText>
-                            </Toggle.Panel>
-                          )}
-                        </Toggle.Item>
-                      )
-                    })}
-                    <Button
-                      label={l`Add more languages…`}
-                      onPress={contentLanguagePrefsControl.open}>
-                      <Toggle.Panel adjacent="leading">
-                        <Toggle.PanelIcon icon={PlusIcon} />
-                        <Toggle.PanelText>
-                          <Trans>Add more languages…</Trans>
-                        </Toggle.PanelText>
-                      </Toggle.Panel>
-                    </Button>
-                  </Toggle.PanelGroup>
-                </Toggle.Group>
-              </View>
+							<View style={[a.w_full, { maxWidth: 400 }]}>
+								<Toggle.Group
+									label={l`Select content languages`}
+									values={contentLanguages}
+									onChange={setContentLanguages}
+								>
+									<Toggle.PanelGroup>
+										{possibleLanguages.map((language, index) => {
+											const name = languageName(language, langPrefs.appLanguage);
+											return (
+												<Toggle.Item key={language.code2} name={language.code2} label={name}>
+													{({ selected }) => (
+														<Toggle.Panel active={selected} adjacent={index === 0 ? 'trailing' : 'both'}>
+															<Toggle.Checkbox />
+															<Toggle.PanelText>{name}</Toggle.PanelText>
+														</Toggle.Panel>
+													)}
+												</Toggle.Item>
+											);
+										})}
+										<Button label={l`Add more languages…`} onPress={contentLanguagePrefsControl.open}>
+											<Toggle.Panel adjacent="leading">
+												<Toggle.PanelIcon icon={PlusIcon} />
+												<Toggle.PanelText>
+													<Trans>Add more languages…</Trans>
+												</Toggle.PanelText>
+											</Toggle.Panel>
+										</Button>
+									</Toggle.PanelGroup>
+								</Toggle.Group>
+							</View>
 
-              <LanguageSelectDialog
-                control={contentLanguagePrefsControl}
-                titleText={<Trans>Select content languages</Trans>}
-                subtitleText={
-                  <Trans>
-                    If none are selected, all languages will be shown in your
-                    feeds.
-                  </Trans>
-                }
-                currentLanguages={contentLanguages}
-                onSelectLanguages={languages => {
-                  setContentLanguages(languages)
-                  setRecentLanguages(recent => [
-                    ...new Set([...recent, ...languages]),
-                  ])
-                }}
-              />
-            </View>
-          </SettingsList.Group>
-        </SettingsList.Container>
-      </Layout.Content>
-    </Layout.Screen>
-  )
+							<LanguageSelectDialog
+								control={contentLanguagePrefsControl}
+								titleText={<Trans>Select content languages</Trans>}
+								subtitleText={<Trans>If none are selected, all languages will be shown in your feeds.</Trans>}
+								currentLanguages={contentLanguages}
+								onSelectLanguages={(languages) => {
+									setContentLanguages(languages);
+									setRecentLanguages((recent) => [...new Set([...recent, ...languages])]);
+								}}
+							/>
+						</View>
+					</SettingsList.Group>
+				</SettingsList.Container>
+			</Layout.Content>
+		</Layout.Screen>
+	);
 }

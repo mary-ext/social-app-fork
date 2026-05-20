@@ -1,4 +1,7 @@
-a web-only fork of `bluesky-social/social-app`. native code, Expo, Sentry, GrowthBook, analytics, Age Assurance, regional moderation, and the non-English locale matrix have been stripped; the `@bsky.app/*` micro-packages are in-housed under `src/`. the long-form execution plan that got the codebase here lives in `ROADMAP.md` (complete).
+a web-only fork of `bluesky-social/social-app`. native code, Expo, Sentry, GrowthBook, analytics,
+Age Assurance, regional moderation, and the non-English locale matrix have been stripped; the
+`@bsky.app/*` micro-packages are in-housed under `src/`. the long-form execution plan that got the
+codebase here lives in `ROADMAP.md` (complete).
 
 ## development notes
 
@@ -8,9 +11,13 @@ a web-only fork of `bluesky-social/social-app`. native code, Expo, Sentry, Growt
 - `pnpm dev` starts the dev server (rsbuild)
 - `pnpm build-web` runs `pnpm typecheck` then `rsbuild build`
 - `pnpm lint` runs ESLint (flat config plus the in-repo `eslint-plugin-bsky-internal`)
-- `pnpm typecheck` runs `tsgo` against `tsconfig.json`, which spans all of `src/` — not just web-resolved files
-- after editing any file that uses the localization macros (`<Trans>`, `msg`, `t`), run `pnpm intl:build`. `messages.po` records a reference for every macro, so even edits that only shift line numbers leave the catalogs stale until you regenerate them
-- check the in-tree shims under `src/shims/` and the existing dependency list before adding a new package; local web shims for Expo and native APIs already exist for most surfaces
+- `pnpm typecheck` runs `tsgo` against `tsconfig.json`, which spans all of `src/` — not just
+  web-resolved files
+- after editing any file that uses the localization macros (`<Trans>`, `msg`, `t`), run
+  `pnpm intl:build`. `messages.po` records a reference for every macro, so even edits that only
+  shift line numbers leave the catalogs stale until you regenerate them
+- check the in-tree shims under `src/shims/` and the existing dependency list before adding a new
+  package; local web shims for Expo and native APIs already exist for most surfaces
 
 ### code writing
 

@@ -1,92 +1,74 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import * as persisted from '#/state/persisted'
+import * as persisted from '#/state/persisted';
 
 type StateContext = {
-  trendingDisabled: Exclude<persisted.Schema['trendingDisabled'], undefined>
-  trendingVideoDisabled: Exclude<
-    persisted.Schema['trendingVideoDisabled'],
-    undefined
-  >
-}
+	trendingDisabled: Exclude<persisted.Schema['trendingDisabled'], undefined>;
+	trendingVideoDisabled: Exclude<persisted.Schema['trendingVideoDisabled'], undefined>;
+};
 type ApiContext = {
-  setTrendingDisabled(
-    hidden: Exclude<persisted.Schema['trendingDisabled'], undefined>,
-  ): void
-  setTrendingVideoDisabled(
-    hidden: Exclude<persisted.Schema['trendingVideoDisabled'], undefined>,
-  ): void
-}
+	setTrendingDisabled(hidden: Exclude<persisted.Schema['trendingDisabled'], undefined>): void;
+	setTrendingVideoDisabled(hidden: Exclude<persisted.Schema['trendingVideoDisabled'], undefined>): void;
+};
 
 const StateContext = createContext<StateContext>({
-  trendingDisabled: Boolean(persisted.defaults.trendingDisabled),
-  trendingVideoDisabled: Boolean(persisted.defaults.trendingVideoDisabled),
-})
-StateContext.displayName = 'TrendingStateContext'
+	trendingDisabled: Boolean(persisted.defaults.trendingDisabled),
+	trendingVideoDisabled: Boolean(persisted.defaults.trendingVideoDisabled),
+});
+StateContext.displayName = 'TrendingStateContext';
 const ApiContext = createContext<ApiContext>({
-  setTrendingDisabled() {},
-  setTrendingVideoDisabled() {},
-})
-ApiContext.displayName = 'TrendingApiContext'
+	setTrendingDisabled() {},
+	setTrendingVideoDisabled() {},
+});
+ApiContext.displayName = 'TrendingApiContext';
 
 function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
-  const [value, _set] = useState(() => {
-    return Boolean(persisted.get(key))
-  })
-  const set = useCallback<
-    (value: Exclude<persisted.Schema[T], undefined>) => void
-  >(
-    hidden => {
-      _set(Boolean(hidden))
-      persisted.write(key, hidden)
-    },
-    [key, _set],
-  )
-  useEffect(() => {
-    return persisted.onUpdate(key, hidden => {
-      _set(Boolean(hidden))
-    })
-  }, [key, _set])
+	const [value, _set] = useState(() => {
+		return Boolean(persisted.get(key));
+	});
+	const set = useCallback<(value: Exclude<persisted.Schema[T], undefined>) => void>(
+		(hidden) => {
+			_set(Boolean(hidden));
+			persisted.write(key, hidden);
+		},
+		[key, _set],
+	);
+	useEffect(() => {
+		return persisted.onUpdate(key, (hidden) => {
+			_set(Boolean(hidden));
+		});
+	}, [key, _set]);
 
-  return [value, set] as const
+	return [value, set] as const;
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [trendingDisabled, setTrendingDisabled] =
-    usePersistedBooleanValue('trendingDisabled')
-  const [trendingVideoDisabled, setTrendingVideoDisabled] =
-    usePersistedBooleanValue('trendingVideoDisabled')
+export function Provider({ children }: React.PropsWithChildren<{}>) {
+	const [trendingDisabled, setTrendingDisabled] = usePersistedBooleanValue('trendingDisabled');
+	const [trendingVideoDisabled, setTrendingVideoDisabled] = usePersistedBooleanValue('trendingVideoDisabled');
 
-  /*
-   * Context
-   */
-  const state = useMemo(
-    () => ({trendingDisabled, trendingVideoDisabled}),
-    [trendingDisabled, trendingVideoDisabled],
-  )
-  const api = useMemo(
-    () => ({setTrendingDisabled, setTrendingVideoDisabled}),
-    [setTrendingDisabled, setTrendingVideoDisabled],
-  )
+	/*
+	 * Context
+	 */
+	const state = useMemo(
+		() => ({ trendingDisabled, trendingVideoDisabled }),
+		[trendingDisabled, trendingVideoDisabled],
+	);
+	const api = useMemo(
+		() => ({ setTrendingDisabled, setTrendingVideoDisabled }),
+		[setTrendingDisabled, setTrendingVideoDisabled],
+	);
 
-  return (
-    <StateContext.Provider value={state}>
-      <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
-    </StateContext.Provider>
-  )
+	return (
+		<StateContext.Provider value={state}>
+			<ApiContext.Provider value={api}>{children}</ApiContext.Provider>
+		</StateContext.Provider>
+	);
 }
 
 export function useTrendingSettings() {
-  return useContext(StateContext)
+	return useContext(StateContext);
 }
 
 export function useTrendingSettingsApi() {
-  return useContext(ApiContext)
+	return useContext(ApiContext);
 }

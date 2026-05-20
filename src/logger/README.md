@@ -34,12 +34,10 @@ try {
 
 #### Log Levels
 
-Log level defaults to `info`. You can set this via the `PUBLIC_LOG_LEVEL`
-env var in `.env.local`.
+Log level defaults to `info`. You can set this via the `PUBLIC_LOG_LEVEL` env var in `.env.local`.
 
 #### Filtering debugs by context
 
-Debug logs are dev-only, and not enabled by default. Once enabled, they can get
-noisy. So you can filter them by setting the `PUBLIC_LOG_DEBUG` env var
-e.g. `PUBLIC_LOG_DEBUG=notifications`. These values can be comma-separated
-and include wildcards.
+Debug logs are dev-only, and not enabled by default. Once enabled, they can get noisy. So you can
+filter them by setting the `PUBLIC_LOG_DEBUG` env var e.g. `PUBLIC_LOG_DEBUG=notifications`. These
+values can be comma-separated and include wildcards.

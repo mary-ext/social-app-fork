@@ -1,98 +1,91 @@
-import {useMemo} from 'react'
-import {
-  type ChatBskyConvoLeaveConvo,
-  type ChatBskyConvoListConvos,
-} from '@atproto/api'
-import {
-  useMutation,
-  useMutationState,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useMemo } from 'react';
+import { type ChatBskyConvoLeaveConvo, type ChatBskyConvoListConvos } from '@atproto/api';
+import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
-import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
+import { DM_SERVICE_HEADERS } from '#/lib/constants';
+import { logger } from '#/logger';
+import { useAgent } from '#/state/session';
+import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
 
-const RQKEY_ROOT = 'leave-convo'
+const RQKEY_ROOT = 'leave-convo';
 export function RQKEY(convoId: string | undefined) {
-  return [RQKEY_ROOT, convoId]
+	return [RQKEY_ROOT, convoId];
 }
 
 export function useLeaveConvo(
-  convoId: string | undefined,
-  {
-    onSuccess,
-    onMutate,
-    onError,
-  }: {
-    onMutate?: () => void
-    onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void
-    onError?: (error: Error) => void
-  },
+	convoId: string | undefined,
+	{
+		onSuccess,
+		onMutate,
+		onError,
+	}: {
+		onMutate?: () => void;
+		onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void;
+		onError?: (error: Error) => void;
+	},
 ) {
-  const queryClient = useQueryClient()
-  const agent = useAgent()
+	const queryClient = useQueryClient();
+	const agent = useAgent();
 
-  return useMutation({
-    mutationKey: RQKEY(convoId),
-    mutationFn: async () => {
-      if (!convoId) throw new Error('No convoId provided')
+	return useMutation({
+		mutationKey: RQKEY(convoId),
+		mutationFn: async () => {
+			if (!convoId) throw new Error('No convoId provided');
 
-      const {data} = await agent.chat.bsky.convo.leaveConvo(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-      )
+			const { data } = await agent.chat.bsky.convo.leaveConvo(
+				{ convoId },
+				{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+			);
 
-      return data
-    },
-    onMutate: () => {
-      let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
-      queryClient.setQueryData(
-        [CONVO_LIST_KEY],
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          prevPages = old.pages
-          return {
-            ...old,
-            pages: old.pages.map(page => {
-              return {
-                ...page,
-                convos: page.convos.filter(convo => convo.id !== convoId),
-              }
-            }),
-          }
-        },
-      )
-      onMutate?.()
-      return {prevPages}
-    },
-    onSuccess: data => {
-      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      onSuccess?.(data)
-    },
-    onError: (error, _, context) => {
-      logger.error(error)
-      queryClient.setQueryData(
-        [CONVO_LIST_KEY],
-        (old?: {
-          pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
-        }) => {
-          if (!old) return old
-          return {
-            ...old,
-            pages: context?.prevPages || old.pages,
-          }
-        },
-      )
-      void queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
-      onError?.(error)
-    },
-  })
+			return data;
+		},
+		onMutate: () => {
+			let prevPages: ChatBskyConvoListConvos.OutputSchema[] = [];
+			queryClient.setQueryData(
+				[CONVO_LIST_KEY],
+				(old?: {
+					pageParams: Array<string | undefined>;
+					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
+				}) => {
+					if (!old) return old;
+					prevPages = old.pages;
+					return {
+						...old,
+						pages: old.pages.map((page) => {
+							return {
+								...page,
+								convos: page.convos.filter((convo) => convo.id !== convoId),
+							};
+						}),
+					};
+				},
+			);
+			onMutate?.();
+			return { prevPages };
+		},
+		onSuccess: (data) => {
+			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
+			onSuccess?.(data);
+		},
+		onError: (error, _, context) => {
+			logger.error(error);
+			queryClient.setQueryData(
+				[CONVO_LIST_KEY],
+				(old?: {
+					pageParams: Array<string | undefined>;
+					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
+				}) => {
+					if (!old) return old;
+					return {
+						...old,
+						pages: context?.prevPages || old.pages,
+					};
+				},
+			);
+			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
+			onError?.(error);
+		},
+	});
 }
 
 /**
@@ -101,16 +94,13 @@ export function useLeaveConvo(
  * @returns Array of `convoId`
  */
 export function useLeftConvos() {
-  const pending = useMutationState({
-    filters: {mutationKey: [RQKEY_ROOT], status: 'pending'},
-    select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
-  })
-  const success = useMutationState({
-    filters: {mutationKey: [RQKEY_ROOT], status: 'success'},
-    select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
-  })
-  return useMemo(
-    () => [...pending, ...success].filter(id => id !== undefined),
-    [pending, success],
-  )
+	const pending = useMutationState({
+		filters: { mutationKey: [RQKEY_ROOT], status: 'pending' },
+		select: (mutation) => mutation.options.mutationKey?.[1] as string | undefined,
+	});
+	const success = useMutationState({
+		filters: { mutationKey: [RQKEY_ROOT], status: 'success' },
+		select: (mutation) => mutation.options.mutationKey?.[1] as string | undefined,
+	});
+	return useMemo(() => [...pending, ...success].filter((id) => id !== undefined), [pending, success]);
 }

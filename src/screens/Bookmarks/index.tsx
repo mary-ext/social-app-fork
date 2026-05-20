@@ -1,324 +1,286 @@
-import {useCallback, useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyBookmarkDefs,
-  AppBskyFeedDefs,
-} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
-import {
-  type NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from '@react-navigation/native'
+import { useCallback, useMemo, useState } from 'react';
+import { View } from 'react-native';
+import { type $Typed, type AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { type NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 
-import {useCleanError} from '#/lib/hooks/useCleanError'
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
-import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
-import {Post} from '#/view/com/post/Post'
-import {EmptyState} from '#/view/com/util/EmptyState'
-import {List} from '#/view/com/util/List'
-import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {BookmarkDeleteLarge, BookmarkFilled} from '#/components/icons/Bookmark'
-import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/components/icons/CircleQuestion'
-import * as Layout from '#/components/Layout'
-import {ListFooter} from '#/components/Lists'
-import * as Skele from '#/components/Skeleton'
-import * as toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
+import { useCleanError } from '#/lib/hooks/useCleanError';
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
+import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
+import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
+import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';
+import { Post } from '#/view/com/post/Post';
+import { EmptyState } from '#/view/com/util/EmptyState';
+import { List } from '#/view/com/util/List';
+import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+import { atoms as a, useTheme } from '#/alf';
+import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { BookmarkDeleteLarge, BookmarkFilled } from '#/components/icons/Bookmark';
+import { CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon } from '#/components/icons/CircleQuestion';
+import * as Layout from '#/components/Layout';
+import { ListFooter } from '#/components/Lists';
+import * as Skele from '#/components/Skeleton';
+import * as toast from '#/components/Toast';
+import { Text } from '#/components/Typography';
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>;
 
 export function BookmarksScreen({}: Props) {
-  useFocusEffect(useCallback(() => {}, []))
+	useFocusEffect(useCallback(() => {}, []));
 
-  return (
-    <Layout.Screen testID="bookmarksScreen">
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>
-            <Trans>Saved Posts</Trans>
-          </Layout.Header.TitleText>
-        </Layout.Header.Content>
-        <Layout.Header.Slot />
-      </Layout.Header.Outer>
-      <BookmarksInner />
-    </Layout.Screen>
-  )
+	return (
+		<Layout.Screen testID="bookmarksScreen">
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<Layout.Header.TitleText>
+						<Trans>Saved Posts</Trans>
+					</Layout.Header.TitleText>
+				</Layout.Header.Content>
+				<Layout.Header.Slot />
+			</Layout.Header.Outer>
+			<BookmarksInner />
+		</Layout.Screen>
+	);
 }
 
 type ListItem =
-  | {
-      type: 'loading'
-      key: 'loading'
-    }
-  | {
-      type: 'empty'
-      key: 'empty'
-    }
-  | {
-      type: 'bookmark'
-      key: string
-      bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
-        item: $Typed<AppBskyFeedDefs.PostView>
-      }
-    }
-  | {
-      type: 'bookmarkNotFound'
-      key: string
-      bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
-        item: $Typed<AppBskyFeedDefs.NotFoundPost>
-      }
-    }
+	| {
+			type: 'loading';
+			key: 'loading';
+	  }
+	| {
+			type: 'empty';
+			key: 'empty';
+	  }
+	| {
+			type: 'bookmark';
+			key: string;
+			bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
+				item: $Typed<AppBskyFeedDefs.PostView>;
+			};
+	  }
+	| {
+			type: 'bookmarkNotFound';
+			key: string;
+			bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
+				item: $Typed<AppBskyFeedDefs.NotFoundPost>;
+			};
+	  };
 
 function BookmarksInner() {
-  const initialNumToRender = useInitialNumToRender()
-  const cleanError = useCleanError()
-  const [isPTRing, setIsPTRing] = useState(false)
-  const trackPostView = usePostViewTracking('Bookmarks')
-  const {
-    data,
-    isLoading,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-    error,
-    refetch,
-  } = useBookmarksQuery()
-  const cleanedError = useMemo(() => {
-    const {raw, clean} = cleanError(error)
-    return clean || raw
-  }, [error, cleanError])
+	const initialNumToRender = useInitialNumToRender();
+	const cleanError = useCleanError();
+	const [isPTRing, setIsPTRing] = useState(false);
+	const trackPostView = usePostViewTracking('Bookmarks');
+	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error, refetch } =
+		useBookmarksQuery();
+	const cleanedError = useMemo(() => {
+		const { raw, clean } = cleanError(error);
+		return clean || raw;
+	}, [error, cleanError]);
 
-  const onRefresh = useCallback(async () => {
-    setIsPTRing(true)
-    try {
-      await refetch()
-    } finally {
-      setIsPTRing(false)
-    }
-  }, [refetch, setIsPTRing])
+	const onRefresh = useCallback(async () => {
+		setIsPTRing(true);
+		try {
+			await refetch();
+		} finally {
+			setIsPTRing(false);
+		}
+	}, [refetch, setIsPTRing]);
 
-  const onEndReached = useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || error) return
-    try {
-      await fetchNextPage()
-    } catch {}
-  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+	const onEndReached = useCallback(async () => {
+		if (isFetchingNextPage || !hasNextPage || error) return;
+		try {
+			await fetchNextPage();
+		} catch {}
+	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
 
-  const items = useMemo(() => {
-    const i: ListItem[] = []
+	const items = useMemo(() => {
+		const i: ListItem[] = [];
 
-    if (isLoading) {
-      i.push({type: 'loading', key: 'loading'})
-    } else if (error || !data) {
-      // handled in Footer
-    } else {
-      const bookmarks = data.pages.flatMap(p => p.bookmarks)
+		if (isLoading) {
+			i.push({ type: 'loading', key: 'loading' });
+		} else if (error || !data) {
+			// handled in Footer
+		} else {
+			const bookmarks = data.pages.flatMap((p) => p.bookmarks);
 
-      if (bookmarks.length > 0) {
-        for (const bookmark of bookmarks) {
-          if (AppBskyFeedDefs.isNotFoundPost(bookmark.item)) {
-            i.push({
-              type: 'bookmarkNotFound',
-              key: bookmark.item.uri,
-              bookmark: {
-                ...bookmark,
-                item: bookmark.item,
-              },
-            })
-          }
-          if (AppBskyFeedDefs.isPostView(bookmark.item)) {
-            i.push({
-              type: 'bookmark',
-              key: bookmark.item.uri,
-              bookmark: {
-                ...bookmark,
-                item: bookmark.item,
-              },
-            })
-          }
-        }
-      } else {
-        i.push({type: 'empty', key: 'empty'})
-      }
-    }
+			if (bookmarks.length > 0) {
+				for (const bookmark of bookmarks) {
+					if (AppBskyFeedDefs.isNotFoundPost(bookmark.item)) {
+						i.push({
+							type: 'bookmarkNotFound',
+							key: bookmark.item.uri,
+							bookmark: {
+								...bookmark,
+								item: bookmark.item,
+							},
+						});
+					}
+					if (AppBskyFeedDefs.isPostView(bookmark.item)) {
+						i.push({
+							type: 'bookmark',
+							key: bookmark.item.uri,
+							bookmark: {
+								...bookmark,
+								item: bookmark.item,
+							},
+						});
+					}
+				}
+			} else {
+				i.push({ type: 'empty', key: 'empty' });
+			}
+		}
 
-    return i
-  }, [isLoading, error, data])
+		return i;
+	}, [isLoading, error, data]);
 
-  const isEmpty = items.length === 1 && items[0]?.type === 'empty'
+	const isEmpty = items.length === 1 && items[0]?.type === 'empty';
 
-  return (
-    <List
-      data={items}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      refreshing={isPTRing}
-      onRefresh={onRefresh}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={4}
-      onItemSeen={item => {
-        if (item.type === 'bookmark') {
-          trackPostView(item.bookmark.item)
-        }
-      }}
-      ListFooterComponent={
-        <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
-          error={cleanedError}
-          onRetry={fetchNextPage}
-          style={[isEmpty && a.border_t_0]}
-        />
-      }
-      initialNumToRender={initialNumToRender}
-      windowSize={9}
-      maxToRenderPerBatch={1}
-      updateCellsBatchingPeriod={40}
-      sideBorders={false}
-    />
-  )
+	return (
+		<List
+			data={items}
+			renderItem={renderItem}
+			keyExtractor={keyExtractor}
+			refreshing={isPTRing}
+			onRefresh={onRefresh}
+			onEndReached={onEndReached}
+			onEndReachedThreshold={4}
+			onItemSeen={(item) => {
+				if (item.type === 'bookmark') {
+					trackPostView(item.bookmark.item);
+				}
+			}}
+			ListFooterComponent={
+				<ListFooter
+					isFetchingNextPage={isFetchingNextPage}
+					error={cleanedError}
+					onRetry={fetchNextPage}
+					style={[isEmpty && a.border_t_0]}
+				/>
+			}
+			initialNumToRender={initialNumToRender}
+			windowSize={9}
+			maxToRenderPerBatch={1}
+			updateCellsBatchingPeriod={40}
+			sideBorders={false}
+		/>
+	);
 }
 
 function BookmarkNotFound({
-  hideTopBorder,
-  post,
+	hideTopBorder,
+	post,
 }: {
-  hideTopBorder: boolean
-  post: $Typed<AppBskyFeedDefs.NotFoundPost>
+	hideTopBorder: boolean;
+	post: $Typed<AppBskyFeedDefs.NotFoundPost>;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {mutateAsync: bookmark} = useBookmarkMutation()
-  const cleanError = useCleanError()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { mutateAsync: bookmark } = useBookmarkMutation();
+	const cleanError = useCleanError();
 
-  const remove = async () => {
-    try {
-      await bookmark({action: 'delete', uri: post.uri})
-      toast.show(l`Removed from saved posts`, {
-        type: 'info',
-      })
-    } catch (e) {
-      const {raw, clean} = cleanError(e)
-      toast.show(clean || raw || String(e), {
-        type: 'error',
-      })
-    }
-  }
+	const remove = async () => {
+		try {
+			await bookmark({ action: 'delete', uri: post.uri });
+			toast.show(l`Removed from saved posts`, {
+				type: 'info',
+			});
+		} catch (e) {
+			const { raw, clean } = cleanError(e);
+			toast.show(clean || raw || String(e), {
+				type: 'error',
+			});
+		}
+	};
 
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_start,
-        a.px_xl,
-        a.py_lg,
-        a.gap_sm,
-        !hideTopBorder && a.border_t,
-        t.atoms.border_contrast_low,
-      ]}>
-      <Skele.Circle size={42}>
-        <QuestionIcon size="lg" fill={t.atoms.text_contrast_low.color} />
-      </Skele.Circle>
-      <View style={[a.flex_1, a.gap_2xs]}>
-        <View style={[a.flex_row, a.gap_xs]}>
-          <Skele.Text style={[a.text_md, {width: 80}]} />
-          <Skele.Text style={[a.text_md, {width: 100}]} />
-        </View>
+	return (
+		<View
+			style={[
+				a.flex_row,
+				a.align_start,
+				a.px_xl,
+				a.py_lg,
+				a.gap_sm,
+				!hideTopBorder && a.border_t,
+				t.atoms.border_contrast_low,
+			]}
+		>
+			<Skele.Circle size={42}>
+				<QuestionIcon size="lg" fill={t.atoms.text_contrast_low.color} />
+			</Skele.Circle>
+			<View style={[a.flex_1, a.gap_2xs]}>
+				<View style={[a.flex_row, a.gap_xs]}>
+					<Skele.Text style={[a.text_md, { width: 80 }]} />
+					<Skele.Text style={[a.text_md, { width: 100 }]} />
+				</View>
 
-        <Text
-          style={[
-            a.text_md,
-            a.leading_snug,
-            a.italic,
-            t.atoms.text_contrast_medium,
-          ]}>
-          <Trans>This post was deleted by its author</Trans>
-        </Text>
-      </View>
-      <Button
-        label={l`Remove from saved posts`}
-        size="tiny"
-        color="secondary"
-        onPress={remove}>
-        <ButtonIcon icon={BookmarkFilled} />
-        <ButtonText>
-          <Trans>Remove</Trans>
-        </ButtonText>
-      </Button>
-    </View>
-  )
+				<Text style={[a.text_md, a.leading_snug, a.italic, t.atoms.text_contrast_medium]}>
+					<Trans>This post was deleted by its author</Trans>
+				</Text>
+			</View>
+			<Button label={l`Remove from saved posts`} size="tiny" color="secondary" onPress={remove}>
+				<ButtonIcon icon={BookmarkFilled} />
+				<ButtonText>
+					<Trans>Remove</Trans>
+				</ButtonText>
+			</Button>
+		</View>
+	);
 }
 
 function BookmarkItem({
-  item,
-  hideTopBorder,
+	item,
+	hideTopBorder,
 }: {
-  item: Extract<ListItem, {type: 'bookmark'}>
-  hideTopBorder: boolean
+	item: Extract<ListItem, { type: 'bookmark' }>;
+	hideTopBorder: boolean;
 }) {
-  return (
-    <Post
-      post={item.bookmark.item}
-      hideTopBorder={hideTopBorder}
-      onBeforePress={() => {}}
-    />
-  )
+	return <Post post={item.bookmark.item} hideTopBorder={hideTopBorder} onBeforePress={() => {}} />;
 }
 
 function BookmarksEmpty() {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const navigation = useNavigation<NavigationProp<CommonNavigatorParams>>();
 
-  return (
-    <EmptyState
-      icon={BookmarkDeleteLarge}
-      message={l`Nothing saved yet`}
-      textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
-      button={{
-        label: l`Button to go back to the home timeline`,
-        text: l`Go home`,
-        onPress: () => navigation.navigate('Home' as never),
-        size: 'small',
-        color: 'secondary',
-      }}
-      style={[a.pt_3xl]}
-    />
-  )
+	return (
+		<EmptyState
+			icon={BookmarkDeleteLarge}
+			message={l`Nothing saved yet`}
+			textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+			button={{
+				label: l`Button to go back to the home timeline`,
+				text: l`Go home`,
+				onPress: () => navigation.navigate('Home' as never),
+				size: 'small',
+				color: 'secondary',
+			}}
+			style={[a.pt_3xl]}
+		/>
+	);
 }
 
-function renderItem({item, index}: {item: ListItem; index: number}) {
-  switch (item.type) {
-    case 'loading': {
-      return <PostFeedLoadingPlaceholder />
-    }
-    case 'empty': {
-      return <BookmarksEmpty />
-    }
-    case 'bookmark': {
-      return <BookmarkItem item={item} hideTopBorder={index === 0} />
-    }
-    case 'bookmarkNotFound': {
-      return (
-        <BookmarkNotFound
-          post={item.bookmark.item}
-          hideTopBorder={index === 0}
-        />
-      )
-    }
-    default:
-      return null
-  }
+function renderItem({ item, index }: { item: ListItem; index: number }) {
+	switch (item.type) {
+		case 'loading': {
+			return <PostFeedLoadingPlaceholder />;
+		}
+		case 'empty': {
+			return <BookmarksEmpty />;
+		}
+		case 'bookmark': {
+			return <BookmarkItem item={item} hideTopBorder={index === 0} />;
+		}
+		case 'bookmarkNotFound': {
+			return <BookmarkNotFound post={item.bookmark.item} hideTopBorder={index === 0} />;
+		}
+		default:
+			return null;
+	}
 }
 
-const keyExtractor = (item: ListItem) => item.key
+const keyExtractor = (item: ListItem) => item.key;

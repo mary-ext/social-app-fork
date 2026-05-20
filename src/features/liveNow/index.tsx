@@ -1,375 +1,352 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react';
 import {
-  type $Typed,
-  type AppBskyActorDefs,
-  type AppBskyActorStatus,
-  AppBskyEmbedExternal,
-  AtUri,
-  ComAtprotoRepoPutRecord,
-  moderateStatus,
-} from '@atproto/api'
-import {retry} from '@atproto/common-web'
-import {useLingui} from '@lingui/react/macro'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
-import {isAfter, parseISO} from 'date-fns'
+	type $Typed,
+	type AppBskyActorDefs,
+	type AppBskyActorStatus,
+	AppBskyEmbedExternal,
+	AtUri,
+	ComAtprotoRepoPutRecord,
+	moderateStatus,
+} from '@atproto/api';
+import { retry } from '@atproto/common-web';
+import { useLingui } from '@lingui/react/macro';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { isAfter, parseISO } from 'date-fns';
 
-import {uploadBlob} from '#/lib/api'
-import {imageToThumb} from '#/lib/api/resolve'
-import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {logger} from '#/logger'
-import {
-  updateProfileShadow,
-  useMaybeProfileShadow,
-} from '#/state/cache/profile-shadow'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent, useSession} from '#/state/session'
-import {useTickEveryMinute} from '#/state/shell'
-import {useDialogContext} from '#/components/Dialog'
-import * as Toast from '#/components/Toast'
-import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
-import type * as bsky from '#/types/bsky'
+import { uploadBlob } from '#/lib/api';
+import { imageToThumb } from '#/lib/api/resolve';
+import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
+import { logger } from '#/logger';
+import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useAgent, useSession } from '#/state/session';
+import { useTickEveryMinute } from '#/state/shell';
+import { useDialogContext } from '#/components/Dialog';
+import * as Toast from '#/components/Toast';
+import { getLiveNowHost, getLiveServiceNames } from '#/features/liveNow/utils';
+import type * as bsky from '#/types/bsky';
 
-export * from '#/features/liveNow/utils'
+export * from '#/features/liveNow/utils';
 
-export const DEFAULT_ALLOWED_DOMAINS = [
-  'twitch.tv',
-  'stream.place',
-  'bluecast.app',
-]
+export const DEFAULT_ALLOWED_DOMAINS = ['twitch.tv', 'stream.place', 'bluecast.app'];
 
 const DEFAULT_STATE = {
-  status: '',
-  isDisabled: false,
-  isActive: false,
-  record: {},
-} satisfies AppBskyActorDefs.StatusView
+	status: '',
+	isDisabled: false,
+	isActive: false,
+	record: {},
+} satisfies AppBskyActorDefs.StatusView;
 
 const LIVE_NOW_WORKER_CONFIG: {
-  allow: string[]
-  exceptions: {
-    did: string
-    allow: string[]
-  }[]
+	allow: string[];
+	exceptions: {
+		did: string;
+		allow: string[];
+	}[];
 } = {
-  allow: [],
-  exceptions: [],
-}
+	allow: [],
+	exceptions: [],
+};
 
 export type LiveNowConfig = {
-  canGoLive: boolean
-  currentAccountAllowedHosts: Set<string>
-  defaultAllowedHosts: Set<string>
-  allowedHostsExceptionsByDid: Map<string, Set<string>>
-}
+	canGoLive: boolean;
+	currentAccountAllowedHosts: Set<string>;
+	defaultAllowedHosts: Set<string>;
+	allowedHostsExceptionsByDid: Map<string, Set<string>>;
+};
 
 export function useLiveNowConfig(): LiveNowConfig {
-  const {currentAccount} = useSession()
+	const { currentAccount } = useSession();
 
-  return useMemo(() => {
-    const defaultAllowedHosts = new Set(
-      DEFAULT_ALLOWED_DOMAINS.concat(LIVE_NOW_WORKER_CONFIG.allow),
-    )
-    const allowedHostsExceptionsByDid = new Map<string, Set<string>>()
-    for (const ex of LIVE_NOW_WORKER_CONFIG.exceptions) {
-      allowedHostsExceptionsByDid.set(
-        ex.did,
-        new Set(DEFAULT_ALLOWED_DOMAINS.concat(ex.allow)),
-      )
-    }
+	return useMemo(() => {
+		const defaultAllowedHosts = new Set(DEFAULT_ALLOWED_DOMAINS.concat(LIVE_NOW_WORKER_CONFIG.allow));
+		const allowedHostsExceptionsByDid = new Map<string, Set<string>>();
+		for (const ex of LIVE_NOW_WORKER_CONFIG.exceptions) {
+			allowedHostsExceptionsByDid.set(ex.did, new Set(DEFAULT_ALLOWED_DOMAINS.concat(ex.allow)));
+		}
 
-    if (!currentAccount?.did) {
-      return {
-        canGoLive: false,
-        currentAccountAllowedHosts: new Set(),
-        defaultAllowedHosts,
-        allowedHostsExceptionsByDid,
-      }
-    }
+		if (!currentAccount?.did) {
+			return {
+				canGoLive: false,
+				currentAccountAllowedHosts: new Set(),
+				defaultAllowedHosts,
+				allowedHostsExceptionsByDid,
+			};
+		}
 
-    return {
-      canGoLive: true,
-      currentAccountAllowedHosts:
-        allowedHostsExceptionsByDid.get(currentAccount.did) ??
-        defaultAllowedHosts,
-      defaultAllowedHosts,
-      allowedHostsExceptionsByDid,
-    }
-  }, [currentAccount])
+		return {
+			canGoLive: true,
+			currentAccountAllowedHosts: allowedHostsExceptionsByDid.get(currentAccount.did) ?? defaultAllowedHosts,
+			defaultAllowedHosts,
+			allowedHostsExceptionsByDid,
+		};
+	}, [currentAccount]);
 }
 
 export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
-  const shadowed = useMaybeProfileShadow(actor)
-  const tick = useTickEveryMinute()
-  const config = useLiveNowConfig()
-  const moderationOpts = useModerationOpts()
+	const shadowed = useMaybeProfileShadow(actor);
+	const tick = useTickEveryMinute();
+	const config = useLiveNowConfig();
+	const moderationOpts = useModerationOpts();
 
-  const moderation = useMemo(() => {
-    if (!actor || !('status' in actor && actor.status)) return undefined
-    if (!moderationOpts) return undefined
-    return moderateStatus(actor, moderationOpts)
-  }, [actor, moderationOpts])
+	const moderation = useMemo(() => {
+		if (!actor || !('status' in actor && actor.status)) return undefined;
+		if (!moderationOpts) return undefined;
+		return moderateStatus(actor, moderationOpts);
+	}, [actor, moderationOpts]);
 
-  return useMemo(() => {
-    void tick // revalidate every minute
+	return useMemo(() => {
+		void tick; // revalidate every minute
 
-    /*
-     * Do not even allow Live Now to show if filtered for `contentList`.
-     */
-    if (moderation && moderation.ui('contentList').filter) {
-      return DEFAULT_STATE
-    }
+		/*
+		 * Do not even allow Live Now to show if filtered for `contentList`.
+		 */
+		if (moderation && moderation.ui('contentList').filter) {
+			return DEFAULT_STATE;
+		}
 
-    if (shadowed && 'status' in shadowed && shadowed.status) {
-      const isValid = isStatusValidForViewers(shadowed.status, config)
-      const isDisabled = shadowed.status.isDisabled
-      const isActive = isStatusStillActive(shadowed.status.expiresAt)
-      if (isValid && !isDisabled && isActive) {
-        return {
-          uri: shadowed.status.uri,
-          cid: shadowed.status.cid,
-          isDisabled: false,
-          isActive: true,
-          status: 'app.bsky.actor.status#live',
-          embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
-          expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
-          record: shadowed.status.record,
-        } satisfies AppBskyActorDefs.StatusView
-      }
-      return {
-        uri: shadowed.status.uri,
-        cid: shadowed.status.cid,
-        isDisabled,
-        isActive: false,
-        status: 'app.bsky.actor.status#live',
-        embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
-        expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
-        record: shadowed.status.record,
-      } satisfies AppBskyActorDefs.StatusView
-    } else {
-      return DEFAULT_STATE
-    }
-  }, [shadowed, config, tick, moderation])
+		if (shadowed && 'status' in shadowed && shadowed.status) {
+			const isValid = isStatusValidForViewers(shadowed.status, config);
+			const isDisabled = shadowed.status.isDisabled;
+			const isActive = isStatusStillActive(shadowed.status.expiresAt);
+			if (isValid && !isDisabled && isActive) {
+				return {
+					uri: shadowed.status.uri,
+					cid: shadowed.status.cid,
+					isDisabled: false,
+					isActive: true,
+					status: 'app.bsky.actor.status#live',
+					embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+					expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+					record: shadowed.status.record,
+				} satisfies AppBskyActorDefs.StatusView;
+			}
+			return {
+				uri: shadowed.status.uri,
+				cid: shadowed.status.cid,
+				isDisabled,
+				isActive: false,
+				status: 'app.bsky.actor.status#live',
+				embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+				expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
+				record: shadowed.status.record,
+			} satisfies AppBskyActorDefs.StatusView;
+		} else {
+			return DEFAULT_STATE;
+		}
+	}, [shadowed, config, tick, moderation]);
 }
 
 export function isStatusStillActive(timeStr: string | undefined) {
-  if (!timeStr) return false
-  const now = new Date()
-  const expiry = parseISO(timeStr)
+	if (!timeStr) return false;
+	const now = new Date();
+	const expiry = parseISO(timeStr);
 
-  return isAfter(expiry, now)
+	return isAfter(expiry, now);
 }
 
 /**
- * Validates whether the live status is valid for display in the app. Does NOT
- * validate if the status is valid for the acting user e.g. as they go live.
+ * Validates whether the live status is valid for display in the app. Does NOT validate if the status is valid
+ * for the acting user e.g. as they go live.
  */
-export function isStatusValidForViewers(
-  status: AppBskyActorDefs.StatusView,
-  config: LiveNowConfig,
-) {
-  if (status.status !== 'app.bsky.actor.status#live') return false
-  if (!status.uri) return false // should not happen, just backwards compat
-  try {
-    const {host: liveDid} = new AtUri(status.uri)
-    if (AppBskyEmbedExternal.isView(status.embed)) {
-      const host = getLiveNowHost(status.embed.external.uri)
-      const exception = config.allowedHostsExceptionsByDid.get(liveDid)
-      const isValidException = exception ? exception.has(host) : false
-      const isValidForAnyone = config.defaultAllowedHosts.has(host)
-      return isValidException || isValidForAnyone
-    } else {
-      return false
-    }
-  } catch {
-    return false
-  }
+export function isStatusValidForViewers(status: AppBskyActorDefs.StatusView, config: LiveNowConfig) {
+	if (status.status !== 'app.bsky.actor.status#live') return false;
+	if (!status.uri) return false; // should not happen, just backwards compat
+	try {
+		const { host: liveDid } = new AtUri(status.uri);
+		if (AppBskyEmbedExternal.isView(status.embed)) {
+			const host = getLiveNowHost(status.embed.external.uri);
+			const exception = config.allowedHostsExceptionsByDid.get(liveDid);
+			const isValidException = exception ? exception.has(host) : false;
+			const isValidForAnyone = config.defaultAllowedHosts.has(host);
+			return isValidException || isValidForAnyone;
+		} else {
+			return false;
+		}
+	} catch {
+		return false;
+	}
 }
 
 export function useLiveLinkMetaQuery(url: string | null) {
-  const liveNowConfig = useLiveNowConfig()
-  const {t: l} = useLingui()
+	const liveNowConfig = useLiveNowConfig();
+	const { t: l } = useLingui();
 
-  return useQuery({
-    enabled: !!url,
-    queryKey: ['link-meta', url],
-    queryFn: async () => {
-      if (!url) return undefined
-      const host = getLiveNowHost(url)
-      if (!liveNowConfig.currentAccountAllowedHosts.has(host)) {
-        const {formatted} = getLiveServiceNames(
-          liveNowConfig.currentAccountAllowedHosts,
-        )
-        throw new Error(
-          l`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
-        )
-      }
+	return useQuery({
+		enabled: !!url,
+		queryKey: ['link-meta', url],
+		queryFn: async () => {
+			if (!url) return undefined;
+			const host = getLiveNowHost(url);
+			if (!liveNowConfig.currentAccountAllowedHosts.has(host)) {
+				const { formatted } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
+				throw new Error(
+					l`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,
+				);
+			}
 
-      return await getLinkMeta(url)
-    },
-  })
+			return await getLinkMeta(url);
+		},
+	});
 }
 
 export function useUpsertLiveStatusMutation(
-  duration: number,
-  linkMeta: LinkMeta | null | undefined,
-  createdAt?: string,
+	duration: number,
+	linkMeta: LinkMeta | null | undefined,
+	createdAt?: string,
 ) {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
-  const queryClient = useQueryClient()
-  const control = useDialogContext()
-  const {t: l} = useLingui()
+	const { currentAccount } = useSession();
+	const agent = useAgent();
+	const queryClient = useQueryClient();
+	const control = useDialogContext();
+	const { t: l } = useLingui();
 
-  return useMutation({
-    mutationFn: async () => {
-      if (!currentAccount) throw new Error('Not logged in')
+	return useMutation({
+		mutationFn: async () => {
+			if (!currentAccount) throw new Error('Not logged in');
 
-      let embed: $Typed<AppBskyEmbedExternal.Main> | undefined
+			let embed: $Typed<AppBskyEmbedExternal.Main> | undefined;
 
-      if (linkMeta) {
-        let thumb
+			if (linkMeta) {
+				let thumb;
 
-        if (linkMeta.image) {
-          try {
-            const img = await imageToThumb(linkMeta.image)
-            if (img) {
-              const blob = await uploadBlob(
-                agent,
-                img.source.path,
-                img.source.mime,
-              )
-              thumb = blob.data.blob
-            }
-          } catch (e) {
-            logger.error(`Failed to upload thumbnail for live status`, {
-              url: linkMeta.url,
-              image: linkMeta.image,
-              safeMessage: e,
-            })
-          }
-        }
+				if (linkMeta.image) {
+					try {
+						const img = await imageToThumb(linkMeta.image);
+						if (img) {
+							const blob = await uploadBlob(agent, img.source.path, img.source.mime);
+							thumb = blob.data.blob;
+						}
+					} catch (e) {
+						logger.error(`Failed to upload thumbnail for live status`, {
+							url: linkMeta.url,
+							image: linkMeta.image,
+							safeMessage: e,
+						});
+					}
+				}
 
-        embed = {
-          $type: 'app.bsky.embed.external',
-          external: {
-            $type: 'app.bsky.embed.external#external',
-            title: linkMeta.title ?? '',
-            description: linkMeta.description ?? '',
-            uri: linkMeta.url,
-            thumb,
-          },
-        }
-      }
+				embed = {
+					$type: 'app.bsky.embed.external',
+					external: {
+						$type: 'app.bsky.embed.external#external',
+						title: linkMeta.title ?? '',
+						description: linkMeta.description ?? '',
+						uri: linkMeta.url,
+						thumb,
+					},
+				};
+			}
 
-      const record = {
-        $type: 'app.bsky.actor.status',
-        createdAt: createdAt ?? new Date().toISOString(),
-        status: 'app.bsky.actor.status#live',
-        durationMinutes: duration,
-        embed,
-      } satisfies AppBskyActorStatus.Record
+			const record = {
+				$type: 'app.bsky.actor.status',
+				createdAt: createdAt ?? new Date().toISOString(),
+				status: 'app.bsky.actor.status#live',
+				durationMinutes: duration,
+				embed,
+			} satisfies AppBskyActorStatus.Record;
 
-      const upsert = async () => {
-        const repo = currentAccount.did
-        const collection = 'app.bsky.actor.status'
+			const upsert = async () => {
+				const repo = currentAccount.did;
+				const collection = 'app.bsky.actor.status';
 
-        const existing = await agent.com.atproto.repo
-          .getRecord({repo, collection, rkey: 'self'})
-          .catch(_e => undefined)
+				const existing = await agent.com.atproto.repo
+					.getRecord({ repo, collection, rkey: 'self' })
+					.catch((_e) => undefined);
 
-        await agent.com.atproto.repo.putRecord({
-          repo,
-          collection,
-          rkey: 'self',
-          record,
-          swapRecord: existing?.data.cid || null,
-        })
-      }
+				await agent.com.atproto.repo.putRecord({
+					repo,
+					collection,
+					rkey: 'self',
+					record,
+					swapRecord: existing?.data.cid || null,
+				});
+			};
 
-      await retry(upsert, {
-        maxRetries: 5,
-        retryable: e => e instanceof ComAtprotoRepoPutRecord.InvalidSwapError,
-      })
+			await retry(upsert, {
+				maxRetries: 5,
+				retryable: (e) => e instanceof ComAtprotoRepoPutRecord.InvalidSwapError,
+			});
 
-      return {
-        record,
-        image: linkMeta?.image,
-      }
-    },
-    onError: e => {
-      logger.error(`Failed to upsert live status`, {
-        url: linkMeta?.url,
-        image: linkMeta?.image,
-        safeMessage: e,
-      })
-    },
-    onSuccess: ({record, image}) => {
-      if (createdAt) {
-      } else {
-      }
+			return {
+				record,
+				image: linkMeta?.image,
+			};
+		},
+		onError: (e) => {
+			logger.error(`Failed to upsert live status`, {
+				url: linkMeta?.url,
+				image: linkMeta?.image,
+				safeMessage: e,
+			});
+		},
+		onSuccess: ({ record, image }) => {
+			if (createdAt) {
+			} else {
+			}
 
-      Toast.show(l`You are now live!`)
-      control.close(() => {
-        if (!currentAccount) return
+			Toast.show(l`You are now live!`);
+			control.close(() => {
+				if (!currentAccount) return;
 
-        const expiresAt = new Date(record.createdAt)
-        expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes)
+				const expiresAt = new Date(record.createdAt);
+				expiresAt.setMinutes(expiresAt.getMinutes() + record.durationMinutes);
 
-        updateProfileShadow(queryClient, currentAccount.did, {
-          status: {
-            $type: 'app.bsky.actor.defs#statusView',
-            status: 'app.bsky.actor.status#live',
-            isActive: true,
-            expiresAt: expiresAt.toISOString(),
-            embed:
-              record.embed && image
-                ? {
-                    $type: 'app.bsky.embed.external#view',
-                    external: {
-                      ...record.embed.external,
-                      $type: 'app.bsky.embed.external#viewExternal',
-                      thumb: image,
-                    },
-                  }
-                : undefined,
-            record,
-          },
-        })
-      })
-    },
-  })
+				updateProfileShadow(queryClient, currentAccount.did, {
+					status: {
+						$type: 'app.bsky.actor.defs#statusView',
+						status: 'app.bsky.actor.status#live',
+						isActive: true,
+						expiresAt: expiresAt.toISOString(),
+						embed:
+							record.embed && image
+								? {
+										$type: 'app.bsky.embed.external#view',
+										external: {
+											...record.embed.external,
+											$type: 'app.bsky.embed.external#viewExternal',
+											thumb: image,
+										},
+									}
+								: undefined,
+						record,
+					},
+				});
+			});
+		},
+	});
 }
 
 export function useRemoveLiveStatusMutation() {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
-  const queryClient = useQueryClient()
-  const control = useDialogContext()
-  const {t: l} = useLingui()
+	const { currentAccount } = useSession();
+	const agent = useAgent();
+	const queryClient = useQueryClient();
+	const control = useDialogContext();
+	const { t: l } = useLingui();
 
-  return useMutation({
-    mutationFn: async () => {
-      if (!currentAccount) throw new Error('Not logged in')
+	return useMutation({
+		mutationFn: async () => {
+			if (!currentAccount) throw new Error('Not logged in');
 
-      await agent.app.bsky.actor.status.delete({
-        repo: currentAccount.did,
-        rkey: 'self',
-      })
-    },
-    onError: e => {
-      logger.error(`Failed to remove live status`, {
-        safeMessage: e,
-      })
-    },
-    onSuccess: () => {
-      Toast.show(l`You are no longer live`)
-      control.close(() => {
-        if (!currentAccount) return
+			await agent.app.bsky.actor.status.delete({
+				repo: currentAccount.did,
+				rkey: 'self',
+			});
+		},
+		onError: (e) => {
+			logger.error(`Failed to remove live status`, {
+				safeMessage: e,
+			});
+		},
+		onSuccess: () => {
+			Toast.show(l`You are no longer live`);
+			control.close(() => {
+				if (!currentAccount) return;
 
-        updateProfileShadow(queryClient, currentAccount.did, {
-          status: undefined,
-        })
-      })
-    },
-  })
+				updateProfileShadow(queryClient, currentAccount.did, {
+					status: undefined,
+				});
+			});
+		},
+	});
 }

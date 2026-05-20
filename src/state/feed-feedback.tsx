@@ -1,246 +1,207 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
-import {AppState, type AppStateStatus} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
-import throttle from 'lodash.throttle'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { AppState, type AppStateStatus } from 'react-native';
+import { type AppBskyFeedDefs } from '@atproto/api';
+import throttle from 'lodash.throttle';
 
-import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
-import {Logger} from '#/logger'
-import {
-  type FeedSourceFeedInfo,
-  type FeedSourceInfo,
-  isFeedSourceFeedInfo,
-} from '#/state/queries/feed'
-import {
-  type FeedDescriptor,
-  type FeedPostSliceItem,
-} from '#/state/queries/post-feed'
-import * as PostFeed from '#/view/com/posts/PostFeed'
-import {useAgent} from './session'
+import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
+import { Logger } from '#/logger';
+import { type FeedSourceFeedInfo, type FeedSourceInfo, isFeedSourceFeedInfo } from '#/state/queries/feed';
+import { type FeedDescriptor, type FeedPostSliceItem } from '#/state/queries/post-feed';
+import * as PostFeed from '#/view/com/posts/PostFeed';
+import { useAgent } from './session';
 
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
+export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS];
 
-export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
-  AppBskyFeedDefs.Interaction['event']
->([
-  // These are explicit actions and are therefore fine to send.
-  'app.bsky.feed.defs#requestLess',
-  'app.bsky.feed.defs#requestMore',
-  // These can be inferred from the firehose and are therefore fine to send.
-  'app.bsky.feed.defs#interactionLike',
-  'app.bsky.feed.defs#interactionQuote',
-  'app.bsky.feed.defs#interactionReply',
-  'app.bsky.feed.defs#interactionRepost',
-  // This can be inferred from pagination requests for everything except the very last page
-  // so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
-  'app.bsky.feed.defs#interactionSeen',
-])
+export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<AppBskyFeedDefs.Interaction['event']>([
+	// These are explicit actions and are therefore fine to send.
+	'app.bsky.feed.defs#requestLess',
+	'app.bsky.feed.defs#requestMore',
+	// These can be inferred from the firehose and are therefore fine to send.
+	'app.bsky.feed.defs#interactionLike',
+	'app.bsky.feed.defs#interactionQuote',
+	'app.bsky.feed.defs#interactionReply',
+	'app.bsky.feed.defs#interactionRepost',
+	// This can be inferred from pagination requests for everything except the very last page
+	// so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
+	'app.bsky.feed.defs#interactionSeen',
+]);
 
 export type StateContext = {
-  enabled: boolean
-  onItemSeen: (item: PostFeed.FeedRow) => void
-  sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
-  feedDescriptor: FeedDescriptor | undefined
-  feedSourceInfo: FeedSourceInfo | undefined
-}
+	enabled: boolean;
+	onItemSeen: (item: PostFeed.FeedRow) => void;
+	sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void;
+	feedDescriptor: FeedDescriptor | undefined;
+	feedSourceInfo: FeedSourceInfo | undefined;
+};
 
 const stateContext = createContext<StateContext>({
-  enabled: false,
-  onItemSeen: (_item: PostFeed.FeedRow) => {},
-  sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
-  feedDescriptor: undefined,
-  feedSourceInfo: undefined,
-})
-stateContext.displayName = 'FeedFeedbackContext'
+	enabled: false,
+	onItemSeen: (_item: PostFeed.FeedRow) => {},
+	sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
+	feedDescriptor: undefined,
+	feedSourceInfo: undefined,
+});
+stateContext.displayName = 'FeedFeedbackContext';
 
-export function useFeedFeedback(
-  feedSourceInfo: FeedSourceInfo | undefined,
-  hasSession: boolean,
-) {
-  const logger = Logger.create(Logger.Context.FeedFeedback)
-  const agent = useAgent()
+export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasSession: boolean) {
+	const logger = Logger.create(Logger.Context.FeedFeedback);
+	const agent = useAgent();
 
-  const feed =
-    !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
-      ? feedSourceInfo
-      : undefined
+	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
 
-  const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
-  const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
-  const proxyDid = feed?.view?.did
-  const enabled =
-    Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession
+	const isDiscover = isDiscoverFeed(feed?.feedDescriptor);
+	const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions);
+	const proxyDid = feed?.view?.did;
+	const enabled = Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession;
 
-  const queue = useRef<Set<string>>(new Set())
-  const history = useRef<
-    // Use a WeakSet so that we don't need to clear it.
-    // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
-    WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
-  >(new WeakSet())
+	const queue = useRef<Set<string>>(new Set());
+	const history = useRef<
+		// Use a WeakSet so that we don't need to clear it.
+		// This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
+		WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
+	>(new WeakSet());
 
-  const flushEvents = useCallback(
-    (stats: AggregatedStats | null, _feedDescriptor: string) => {
-      if (stats === null) {
-        return
-      }
+	const flushEvents = useCallback((stats: AggregatedStats | null, _feedDescriptor: string) => {
+		if (stats === null) {
+			return;
+		}
 
-      if (stats.clickthroughCount > 0) {
-        stats.clickthroughCount = 0
-      }
+		if (stats.clickthroughCount > 0) {
+			stats.clickthroughCount = 0;
+		}
 
-      if (stats.engagedCount > 0) {
-        stats.engagedCount = 0
-      }
+		if (stats.engagedCount > 0) {
+			stats.engagedCount = 0;
+		}
 
-      if (stats.seenCount > 0) {
-        stats.seenCount = 0
-      }
-    },
-    [],
-  )
+		if (stats.seenCount > 0) {
+			stats.seenCount = 0;
+		}
+	}, []);
 
-  const aggregatedStats = useRef<AggregatedStats | null>(null)
-  const throttledFlushAggregatedStats = useMemo(
-    () =>
-      throttle(
-        () =>
-          flushEvents(
-            aggregatedStats.current,
-            feed?.feedDescriptor ?? 'unknown',
-          ),
-        45e3,
-        {
-          leading: true, // The outer call is already throttled somewhat.
-          trailing: true,
-        },
-      ),
-    [feed?.feedDescriptor, flushEvents],
-  )
+	const aggregatedStats = useRef<AggregatedStats | null>(null);
+	const throttledFlushAggregatedStats = useMemo(
+		() =>
+			throttle(() => flushEvents(aggregatedStats.current, feed?.feedDescriptor ?? 'unknown'), 45e3, {
+				leading: true, // The outer call is already throttled somewhat.
+				trailing: true,
+			}),
+		[feed?.feedDescriptor, flushEvents],
+	);
 
-  const sendToFeedNoDelay = useCallback(() => {
-    const interactions = Array.from(queue.current).map(toInteraction)
-    queue.current.clear()
+	const sendToFeedNoDelay = useCallback(() => {
+		const interactions = Array.from(queue.current).map(toInteraction);
+		queue.current.clear();
 
-    const interactionsToSend = interactions.filter(
-      interaction =>
-        interaction.event &&
-        isInteractionAllowed(enabled, feed, interaction.event),
-    )
+		const interactionsToSend = interactions.filter(
+			(interaction) => interaction.event && isInteractionAllowed(enabled, feed, interaction.event),
+		);
 
-    if (interactionsToSend.length === 0) {
-      return
-    }
+		if (interactionsToSend.length === 0) {
+			return;
+		}
 
-    // Send to the feed
-    agent.app.bsky.feed
-      .sendInteractions(
-        {interactions: interactionsToSend, feed: feed?.uri},
-        {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${proxyDid}#bsky_fg`,
-          },
-        },
-      )
-      .catch(() => {}) // ignore upstream errors
+		// Send to the feed
+		agent.app.bsky.feed
+			.sendInteractions(
+				{ interactions: interactionsToSend, feed: feed?.uri },
+				{
+					encoding: 'application/json',
+					headers: {
+						'atproto-proxy': `${proxyDid}#bsky_fg`,
+					},
+				},
+			)
+			.catch(() => {}); // ignore upstream errors
 
-    if (aggregatedStats.current === null) {
-      aggregatedStats.current = createAggregatedStats()
-    }
-    sendOrAggregateInteractionsForStats(
-      aggregatedStats.current,
-      interactionsToSend,
-    )
-    throttledFlushAggregatedStats()
-    logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
+		if (aggregatedStats.current === null) {
+			aggregatedStats.current = createAggregatedStats();
+		}
+		sendOrAggregateInteractionsForStats(aggregatedStats.current, interactionsToSend);
+		throttledFlushAggregatedStats();
+		logger.debug('flushed');
+	}, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed]);
 
-  const sendToFeed = useMemo(
-    () =>
-      throttle(sendToFeedNoDelay, 10e3, {
-        leading: false,
-        trailing: true,
-      }),
-    [sendToFeedNoDelay],
-  )
+	const sendToFeed = useMemo(
+		() =>
+			throttle(sendToFeedNoDelay, 10e3, {
+				leading: false,
+				trailing: true,
+			}),
+		[sendToFeedNoDelay],
+	);
 
-  useEffect(() => {
-    if (!enabled) {
-      return
-    }
-    const sub = AppState.addEventListener('change', (state: AppStateStatus) => {
-      if (state === 'background') {
-        sendToFeed.flush()
-      }
-    })
-    return () => sub.remove()
-  }, [enabled, sendToFeed])
+	useEffect(() => {
+		if (!enabled) {
+			return;
+		}
+		const sub = AppState.addEventListener('change', (state: AppStateStatus) => {
+			if (state === 'background') {
+				sendToFeed.flush();
+			}
+		});
+		return () => sub.remove();
+	}, [enabled, sendToFeed]);
 
-  const onItemSeen = useCallback(
-    (feedItem: PostFeed.FeedRow) => {
-      if (!enabled) {
-        return
-      }
-      const items = PostFeed.getItemsForFeedback(feedItem)
-      for (const {item: postItem, feedContext, reqId} of items) {
-        if (!history.current.has(postItem)) {
-          history.current.add(postItem)
-          queue.current.add(
-            toString({
-              item: postItem.uri,
-              event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext,
-              reqId,
-            }),
-          )
-          sendToFeed()
-        }
-      }
-    },
-    [enabled, sendToFeed],
-  )
+	const onItemSeen = useCallback(
+		(feedItem: PostFeed.FeedRow) => {
+			if (!enabled) {
+				return;
+			}
+			const items = PostFeed.getItemsForFeedback(feedItem);
+			for (const { item: postItem, feedContext, reqId } of items) {
+				if (!history.current.has(postItem)) {
+					history.current.add(postItem);
+					queue.current.add(
+						toString({
+							item: postItem.uri,
+							event: 'app.bsky.feed.defs#interactionSeen',
+							feedContext,
+							reqId,
+						}),
+					);
+					sendToFeed();
+				}
+			}
+		},
+		[enabled, sendToFeed],
+	);
 
-  const sendInteraction = useCallback(
-    (interaction: AppBskyFeedDefs.Interaction) => {
-      if (!enabled) {
-        return
-      }
-      logger.debug('sendInteraction', {
-        ...interaction,
-      })
-      if (!history.current.has(interaction)) {
-        history.current.add(interaction)
-        queue.current.add(toString(interaction))
-        sendToFeed()
-      }
-    },
-    [enabled, sendToFeed],
-  )
+	const sendInteraction = useCallback(
+		(interaction: AppBskyFeedDefs.Interaction) => {
+			if (!enabled) {
+				return;
+			}
+			logger.debug('sendInteraction', {
+				...interaction,
+			});
+			if (!history.current.has(interaction)) {
+				history.current.add(interaction);
+				queue.current.add(toString(interaction));
+				sendToFeed();
+			}
+		},
+		[enabled, sendToFeed],
+	);
 
-  return useMemo(() => {
-    return {
-      enabled,
-      // pass this method to the <List> onItemSeen
-      onItemSeen,
-      // call on various events
-      // queues the event to be sent with the throttled sendToFeed call
-      sendInteraction,
-      feedDescriptor: feed?.feedDescriptor,
-      feedSourceInfo: typeof feed === 'object' ? feed : undefined,
-    }
-  }, [enabled, onItemSeen, sendInteraction, feed])
+	return useMemo(() => {
+		return {
+			enabled,
+			// pass this method to the <List> onItemSeen
+			onItemSeen,
+			// call on various events
+			// queues the event to be sent with the throttled sendToFeed call
+			sendInteraction,
+			feedDescriptor: feed?.feedDescriptor,
+			feedSourceInfo: typeof feed === 'object' ? feed : undefined,
+		};
+	}, [enabled, onItemSeen, sendInteraction, feed]);
 }
 
-export const FeedFeedbackProvider = stateContext.Provider
+export const FeedFeedbackProvider = stateContext.Provider;
 
 export function useFeedFeedbackContext() {
-  return useContext(stateContext)
+	return useContext(stateContext);
 }
 
 // TODO
@@ -249,72 +210,72 @@ export function useFeedFeedbackContext() {
 // place, we're hardcoding it to the discover feed.
 // -prf
 export function isDiscoverFeed(feed?: FeedDescriptor) {
-  return !!feed && FEEDBACK_FEEDS.includes(feed)
+	return !!feed && FEEDBACK_FEEDS.includes(feed);
 }
 
 function isInteractionAllowed(
-  enabled: boolean,
-  feed: FeedSourceFeedInfo | undefined,
-  interaction: AppBskyFeedDefs.Interaction['event'],
+	enabled: boolean,
+	feed: FeedSourceFeedInfo | undefined,
+	interaction: AppBskyFeedDefs.Interaction['event'],
 ) {
-  if (!enabled || !feed) {
-    return false
-  }
-  const isDiscover = isDiscoverFeed(feed.feedDescriptor)
-  return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
+	if (!enabled || !feed) {
+		return false;
+	}
+	const isDiscover = isDiscoverFeed(feed.feedDescriptor);
+	return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction);
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
-  return `${interaction.item}|${interaction.event}|${
-    interaction.feedContext || ''
-  }|${interaction.reqId || ''}`
+	return `${interaction.item}|${interaction.event}|${
+		interaction.feedContext || ''
+	}|${interaction.reqId || ''}`;
 }
 
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
-  const [item, event, feedContext, reqId] = str.split('|')
-  return {item, event, feedContext, reqId}
+	const [item, event, feedContext, reqId] = str.split('|');
+	return { item, event, feedContext, reqId };
 }
 
 type AggregatedStats = {
-  clickthroughCount: number
-  engagedCount: number
-  seenCount: number
-}
+	clickthroughCount: number;
+	engagedCount: number;
+	seenCount: number;
+};
 
 function createAggregatedStats(): AggregatedStats {
-  return {
-    clickthroughCount: 0,
-    engagedCount: 0,
-    seenCount: 0,
-  }
+	return {
+		clickthroughCount: 0,
+		engagedCount: 0,
+		seenCount: 0,
+	};
 }
 
 function sendOrAggregateInteractionsForStats(
-  stats: AggregatedStats,
-  interactions: AppBskyFeedDefs.Interaction[],
+	stats: AggregatedStats,
+	interactions: AppBskyFeedDefs.Interaction[],
 ) {
-  for (let interaction of interactions) {
-    switch (interaction.event) {
-      // The events are aggregated and sent later in batches.
-      case 'app.bsky.feed.defs#clickthroughAuthor':
-      case 'app.bsky.feed.defs#clickthroughEmbed':
-      case 'app.bsky.feed.defs#clickthroughItem':
-      case 'app.bsky.feed.defs#clickthroughReposter': {
-        stats.clickthroughCount++
-        break
-      }
-      case 'app.bsky.feed.defs#interactionLike':
-      case 'app.bsky.feed.defs#interactionQuote':
-      case 'app.bsky.feed.defs#interactionReply':
-      case 'app.bsky.feed.defs#interactionRepost':
-      case 'app.bsky.feed.defs#interactionShare': {
-        stats.engagedCount++
-        break
-      }
-      case 'app.bsky.feed.defs#interactionSeen': {
-        stats.seenCount++
-        break
-      }
-    }
-  }
+	for (let interaction of interactions) {
+		switch (interaction.event) {
+			// The events are aggregated and sent later in batches.
+			case 'app.bsky.feed.defs#clickthroughAuthor':
+			case 'app.bsky.feed.defs#clickthroughEmbed':
+			case 'app.bsky.feed.defs#clickthroughItem':
+			case 'app.bsky.feed.defs#clickthroughReposter': {
+				stats.clickthroughCount++;
+				break;
+			}
+			case 'app.bsky.feed.defs#interactionLike':
+			case 'app.bsky.feed.defs#interactionQuote':
+			case 'app.bsky.feed.defs#interactionReply':
+			case 'app.bsky.feed.defs#interactionRepost':
+			case 'app.bsky.feed.defs#interactionShare': {
+				stats.engagedCount++;
+				break;
+			}
+			case 'app.bsky.feed.defs#interactionSeen': {
+				stats.seenCount++;
+				break;
+			}
+		}
+	}
 }

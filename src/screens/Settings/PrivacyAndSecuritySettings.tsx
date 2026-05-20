@@ -1,121 +1,107 @@
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { type AppBskyNotificationDeclaration } from '@atproto/api';
+import { useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
+import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
-import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a} from '#/alf'
-import * as Admonition from '#/components/Admonition'
-import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
-import * as Layout from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
-import {PwiOptOut} from './components/PwiOptOut'
-import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
+import { type CommonNavigatorParams } from '#/lib/routes/types';
+import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
+import * as SettingsList from '#/screens/Settings/components/SettingsList';
+import { atoms as a } from '#/alf';
+import * as Admonition from '#/components/Admonition';
+import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
+import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon } from '#/components/icons/EyeSlash';
+import * as Layout from '#/components/Layout';
+import { InlineLinkText } from '#/components/Link';
+import { PwiOptOut } from './components/PwiOptOut';
+import { ItemTextWithSubtitle } from './NotificationSettings/components/ItemTextWithSubtitle';
 
-type Props = NativeStackScreenProps<
-  CommonNavigatorParams,
-  'PrivacyAndSecuritySettings'
->
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'PrivacyAndSecuritySettings'>;
 export function PrivacyAndSecuritySettingsScreen({}: Props) {
-  const {t: l} = useLingui()
-  const {
-    data: notificationDeclaration,
-    isPending,
-    isError,
-  } = useNotificationDeclarationQuery()
+	const { t: l } = useLingui();
+	const { data: notificationDeclaration, isPending, isError } = useNotificationDeclarationQuery();
 
-  return (
-    <Layout.Screen>
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>
-            <Trans>Privacy and Security</Trans>
-          </Layout.Header.TitleText>
-        </Layout.Header.Content>
-        <Layout.Header.Slot />
-      </Layout.Header.Outer>
-      <Layout.Content>
-        <SettingsList.Container>
-          <SettingsList.LinkItem
-            label={l`Settings for allowing others to be notified of your posts`}
-            to={{screen: 'ActivityPrivacySettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={BellRingingIcon} />
-            <ItemTextWithSubtitle
-              titleText={
-                <Trans>Allow others to be notified of your posts</Trans>
-              }
-              subtitleText={
-                <NotificationDeclaration
-                  data={notificationDeclaration}
-                  isError={isError}
-                />
-              }
-              showSkeleton={isPending}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.Divider />
-          <SettingsList.Group>
-            <SettingsList.ItemIcon icon={EyeSlashIcon} />
-            <SettingsList.ItemText>
-              <Trans>Logged-out visibility</Trans>
-            </SettingsList.ItemText>
-            <PwiOptOut />
-          </SettingsList.Group>
-          <SettingsList.Item>
-            <Admonition.Outer type="tip" style={[a.flex_1]}>
-              <Admonition.Row>
-                <Admonition.Icon />
-                <Admonition.Content>
-                  <Admonition.Text>
-                    <Trans>
-                      Note: Bluesky is an open and public network. This setting
-                      only limits the visibility of your content on the Bluesky
-                      app and website, and other apps may not respect this
-                      setting. Your content may still be shown to logged-out
-                      users by other apps and websites.
-                    </Trans>
-                  </Admonition.Text>
-                  <Admonition.Text>
-                    <InlineLinkText
-                      label={l`Learn more about what is public on Bluesky.`}
-                      to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
-                      <Trans>Learn more about what is public on Bluesky.</Trans>
-                    </InlineLinkText>
-                  </Admonition.Text>
-                </Admonition.Content>
-              </Admonition.Row>
-            </Admonition.Outer>
-          </SettingsList.Item>
-        </SettingsList.Container>
-      </Layout.Content>
-    </Layout.Screen>
-  )
+	return (
+		<Layout.Screen>
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<Layout.Header.TitleText>
+						<Trans>Privacy and Security</Trans>
+					</Layout.Header.TitleText>
+				</Layout.Header.Content>
+				<Layout.Header.Slot />
+			</Layout.Header.Outer>
+			<Layout.Content>
+				<SettingsList.Container>
+					<SettingsList.LinkItem
+						label={l`Settings for allowing others to be notified of your posts`}
+						to={{ screen: 'ActivityPrivacySettings' }}
+						contentContainerStyle={[a.align_start]}
+					>
+						<SettingsList.ItemIcon icon={BellRingingIcon} />
+						<ItemTextWithSubtitle
+							titleText={<Trans>Allow others to be notified of your posts</Trans>}
+							subtitleText={<NotificationDeclaration data={notificationDeclaration} isError={isError} />}
+							showSkeleton={isPending}
+						/>
+					</SettingsList.LinkItem>
+					<SettingsList.Divider />
+					<SettingsList.Group>
+						<SettingsList.ItemIcon icon={EyeSlashIcon} />
+						<SettingsList.ItemText>
+							<Trans>Logged-out visibility</Trans>
+						</SettingsList.ItemText>
+						<PwiOptOut />
+					</SettingsList.Group>
+					<SettingsList.Item>
+						<Admonition.Outer type="tip" style={[a.flex_1]}>
+							<Admonition.Row>
+								<Admonition.Icon />
+								<Admonition.Content>
+									<Admonition.Text>
+										<Trans>
+											Note: Bluesky is an open and public network. This setting only limits the visibility of
+											your content on the Bluesky app and website, and other apps may not respect this
+											setting. Your content may still be shown to logged-out users by other apps and websites.
+										</Trans>
+									</Admonition.Text>
+									<Admonition.Text>
+										<InlineLinkText
+											label={l`Learn more about what is public on Bluesky.`}
+											to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
+										>
+											<Trans>Learn more about what is public on Bluesky.</Trans>
+										</InlineLinkText>
+									</Admonition.Text>
+								</Admonition.Content>
+							</Admonition.Row>
+						</Admonition.Outer>
+					</SettingsList.Item>
+				</SettingsList.Container>
+			</Layout.Content>
+		</Layout.Screen>
+	);
 }
 
 function NotificationDeclaration({
-  data,
-  isError,
+	data,
+	isError,
 }: {
-  data?: {
-    value: AppBskyNotificationDeclaration.Record
-  }
-  isError?: boolean
+	data?: {
+		value: AppBskyNotificationDeclaration.Record;
+	};
+	isError?: boolean;
 }) {
-  if (isError) {
-    return <Trans>Error loading preference</Trans>
-  }
-  switch (data?.value?.allowSubscriptions) {
-    case 'mutuals':
-      return <Trans>Only followers who I follow</Trans>
-    case 'none':
-      return <Trans context="enable for">No one</Trans>
-    case 'followers':
-    default:
-      return <Trans>Anyone who follows me</Trans>
-  }
+	if (isError) {
+		return <Trans>Error loading preference</Trans>;
+	}
+	switch (data?.value?.allowSubscriptions) {
+		case 'mutuals':
+			return <Trans>Only followers who I follow</Trans>;
+		case 'none':
+			return <Trans context="enable for">No one</Trans>;
+		case 'followers':
+		default:
+			return <Trans>Anyone who follows me</Trans>;
+	}
 }

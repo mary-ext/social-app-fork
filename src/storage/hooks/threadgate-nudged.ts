@@ -1,9 +1,7 @@
-import {device, useStorage} from '#/storage'
+import { device, useStorage } from '#/storage';
 
 export function useThreadgateNudged() {
-  const [threadgateNudged = false, setThreadgateNudged] = useStorage(device, [
-    'threadgateNudged',
-  ])
+	const [threadgateNudged = false, setThreadgateNudged] = useStorage(device, ['threadgateNudged']);
 
-  return [threadgateNudged, setThreadgateNudged] as const
+	return [threadgateNudged, setThreadgateNudged] as const;
 }

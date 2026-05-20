@@ -1,178 +1,159 @@
-import {useMemo} from 'react'
-import {View} from 'react-native'
-import {type AppBskyNotificationDefs} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { useMemo } from 'react';
+import { View } from 'react-native';
+import { type AppBskyNotificationDefs } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
-import {atoms as a, useTheme} from '#/alf'
-import * as Toggle from '#/components/forms/Toggle'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {Divider} from '../../components/SettingsList'
+import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings';
+import { atoms as a, useTheme } from '#/alf';
+import * as Toggle from '#/components/forms/Toggle';
+import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Typography';
+import { Divider } from '../../components/SettingsList';
 
 export function PreferenceControls({
-  name,
-  syncOthers,
-  preference,
-  allowDisableInApp = true,
+	name,
+	syncOthers,
+	preference,
+	allowDisableInApp = true,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  /**
-   * Keep other prefs in sync with `name`. For use in the "everything else" category
-   * which groups starterpack joins + verified + unverified notifications into a single toggle.
-   */
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference?:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
-  allowDisableInApp?: boolean
+	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
+	/**
+	 * Keep other prefs in sync with `name`. For use in the "everything else" category which groups starterpack
+	 * joins + verified + unverified notifications into a single toggle.
+	 */
+	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
+	preference?: AppBskyNotificationDefs.Preference | AppBskyNotificationDefs.FilterablePreference;
+	allowDisableInApp?: boolean;
 }) {
-  if (!preference)
-    return (
-      <View style={[a.w_full, a.pt_5xl, a.align_center]}>
-        <Loader size="xl" />
-      </View>
-    )
+	if (!preference)
+		return (
+			<View style={[a.w_full, a.pt_5xl, a.align_center]}>
+				<Loader size="xl" />
+			</View>
+		);
 
-  return (
-    <Inner
-      name={name}
-      syncOthers={syncOthers}
-      preference={preference}
-      allowDisableInApp={allowDisableInApp}
-    />
-  )
+	return (
+		<Inner
+			name={name}
+			syncOthers={syncOthers}
+			preference={preference}
+			allowDisableInApp={allowDisableInApp}
+		/>
+	);
 }
 
 export function Inner({
-  name,
-  syncOthers = [],
-  preference,
-  allowDisableInApp,
+	name,
+	syncOthers = [],
+	preference,
+	allowDisableInApp,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
-  allowDisableInApp: boolean
+	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
+	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
+	preference: AppBskyNotificationDefs.Preference | AppBskyNotificationDefs.FilterablePreference;
+	allowDisableInApp: boolean;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {mutate} = useNotificationSettingsUpdateMutation()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { mutate } = useNotificationSettingsUpdateMutation();
 
-  const channels = useMemo(() => {
-    const arr = []
-    if (preference.list) arr.push('list')
-    if (preference.push) arr.push('push')
-    return arr
-  }, [preference])
+	const channels = useMemo(() => {
+		const arr = [];
+		if (preference.list) arr.push('list');
+		if (preference.push) arr.push('push');
+		return arr;
+	}, [preference]);
 
-  const onChangeChannels = (change: string[]) => {
-    const newPreference = {
-      ...preference,
-      list: change.includes('list'),
-      push: change.includes('push'),
-    } satisfies typeof preference
+	const onChangeChannels = (change: string[]) => {
+		const newPreference = {
+			...preference,
+			list: change.includes('list'),
+			push: change.includes('push'),
+		} satisfies typeof preference;
 
-    mutate({
-      [name]: newPreference,
-      ...Object.fromEntries(syncOthers.map(key => [key, newPreference])),
-    })
-  }
+		mutate({
+			[name]: newPreference,
+			...Object.fromEntries(syncOthers.map((key) => [key, newPreference])),
+		});
+	};
 
-  const onChangeFilter = ([change]: string[]) => {
-    if (change !== 'all' && change !== 'follows')
-      throw new Error('Invalid filter')
+	const onChangeFilter = ([change]: string[]) => {
+		if (change !== 'all' && change !== 'follows') throw new Error('Invalid filter');
 
-    const newPreference = {
-      ...preference,
-      include: change,
-    } satisfies typeof preference
+		const newPreference = {
+			...preference,
+			include: change,
+		} satisfies typeof preference;
 
-    mutate({
-      [name]: newPreference,
-      ...Object.fromEntries(syncOthers.map(key => [key, newPreference])),
-    })
-  }
+		mutate({
+			[name]: newPreference,
+			...Object.fromEntries(syncOthers.map((key) => [key, newPreference])),
+		});
+	};
 
-  return (
-    <View style={[a.px_xl, a.pt_md, a.gap_sm]}>
-      <Toggle.Group
-        type="checkbox"
-        label={l`Select your preferred notification channels`}
-        values={channels}
-        onChange={onChangeChannels}>
-        <View style={[a.gap_sm]}>
-          <Toggle.Item
-            label={l`Receive push notifications`}
-            name="push"
-            style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}>
-            <Toggle.LabelText
-              style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-              <Trans>Push notifications</Trans>
-            </Toggle.LabelText>
-            <Toggle.Platform />
-          </Toggle.Item>
-          {allowDisableInApp && (
-            <Toggle.Item
-              label={l`Receive in-app notifications`}
-              name="list"
-              style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}>
-              <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-                <Trans>In-app notifications</Trans>
-              </Toggle.LabelText>
-              <Toggle.Platform />
-            </Toggle.Item>
-          )}
-        </View>
-      </Toggle.Group>
-      {'include' in preference && (
-        <>
-          <Divider />
-          <Text style={[a.font_semi_bold, a.text_md]}>
-            <Trans>From</Trans>
-          </Text>
-          <Toggle.Group
-            type="radio"
-            label={l`Filter who you receive notifications from`}
-            values={[preference.include]}
-            onChange={onChangeFilter}
-            disabled={channels.length === 0}>
-            <View style={[a.gap_sm]}>
-              <Toggle.Item
-                label={l`Everyone`}
-                name="all"
-                style={[a.flex_row, a.py_xs, a.gap_sm]}>
-                <Toggle.Radio />
-                <Toggle.LabelText
-                  style={[
-                    channels.length > 0 && t.atoms.text,
-                    a.font_normal,
-                    a.text_md,
-                  ]}>
-                  <Trans>Everyone</Trans>
-                </Toggle.LabelText>
-              </Toggle.Item>
-              <Toggle.Item
-                label={l`People I follow`}
-                name="follows"
-                style={[a.flex_row, a.py_xs, a.gap_sm]}>
-                <Toggle.Radio />
-                <Toggle.LabelText
-                  style={[
-                    channels.length > 0 && t.atoms.text,
-                    a.font_normal,
-                    a.text_md,
-                  ]}>
-                  <Trans>People I follow</Trans>
-                </Toggle.LabelText>
-              </Toggle.Item>
-            </View>
-          </Toggle.Group>
-        </>
-      )}
-    </View>
-  )
+	return (
+		<View style={[a.px_xl, a.pt_md, a.gap_sm]}>
+			<Toggle.Group
+				type="checkbox"
+				label={l`Select your preferred notification channels`}
+				values={channels}
+				onChange={onChangeChannels}
+			>
+				<View style={[a.gap_sm]}>
+					<Toggle.Item
+						label={l`Receive push notifications`}
+						name="push"
+						style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}
+					>
+						<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
+							<Trans>Push notifications</Trans>
+						</Toggle.LabelText>
+						<Toggle.Platform />
+					</Toggle.Item>
+					{allowDisableInApp && (
+						<Toggle.Item
+							label={l`Receive in-app notifications`}
+							name="list"
+							style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}
+						>
+							<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
+								<Trans>In-app notifications</Trans>
+							</Toggle.LabelText>
+							<Toggle.Platform />
+						</Toggle.Item>
+					)}
+				</View>
+			</Toggle.Group>
+			{'include' in preference && (
+				<>
+					<Divider />
+					<Text style={[a.font_semi_bold, a.text_md]}>
+						<Trans>From</Trans>
+					</Text>
+					<Toggle.Group
+						type="radio"
+						label={l`Filter who you receive notifications from`}
+						values={[preference.include]}
+						onChange={onChangeFilter}
+						disabled={channels.length === 0}
+					>
+						<View style={[a.gap_sm]}>
+							<Toggle.Item label={l`Everyone`} name="all" style={[a.flex_row, a.py_xs, a.gap_sm]}>
+								<Toggle.Radio />
+								<Toggle.LabelText style={[channels.length > 0 && t.atoms.text, a.font_normal, a.text_md]}>
+									<Trans>Everyone</Trans>
+								</Toggle.LabelText>
+							</Toggle.Item>
+							<Toggle.Item label={l`People I follow`} name="follows" style={[a.flex_row, a.py_xs, a.gap_sm]}>
+								<Toggle.Radio />
+								<Toggle.LabelText style={[channels.length > 0 && t.atoms.text, a.font_normal, a.text_md]}>
+									<Trans>People I follow</Trans>
+								</Toggle.LabelText>
+							</Toggle.Item>
+						</View>
+					</Toggle.Group>
+				</>
+			)}
+		</View>
+	);
 }

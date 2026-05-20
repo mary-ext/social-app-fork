@@ -1,40 +1,32 @@
-import {createContext, useContext, useMemo} from 'react'
+import { createContext, useContext, useMemo } from 'react';
 
-import {type ScrollHandlers} from '#/lib/animations/reanimatedCompat'
+import { type ScrollHandlers } from '#/lib/animations/reanimatedCompat';
 
 const ScrollContext = createContext<ScrollHandlers>({
-  onBeginDrag: undefined,
-  onEndDrag: undefined,
-  onScroll: undefined,
-  onMomentumEnd: undefined,
-})
-ScrollContext.displayName = 'ScrollContext'
+	onBeginDrag: undefined,
+	onEndDrag: undefined,
+	onScroll: undefined,
+	onMomentumEnd: undefined,
+});
+ScrollContext.displayName = 'ScrollContext';
 
 export function useScrollHandlers(): ScrollHandlers {
-  return useContext(ScrollContext)
+	return useContext(ScrollContext);
 }
 
-type ProviderProps = {children: React.ReactNode} & ScrollHandlers
+type ProviderProps = { children: React.ReactNode } & ScrollHandlers;
 
 // Note: this completely *overrides* the parent handlers.
 // It's up to you to compose them with the parent ones via useScrollHandlers() if needed.
-export function ScrollProvider({
-  children,
-  onBeginDrag,
-  onEndDrag,
-  onScroll,
-  onMomentumEnd,
-}: ProviderProps) {
-  const handlers = useMemo(
-    () => ({
-      onBeginDrag,
-      onEndDrag,
-      onScroll,
-      onMomentumEnd,
-    }),
-    [onBeginDrag, onEndDrag, onScroll, onMomentumEnd],
-  )
-  return (
-    <ScrollContext.Provider value={handlers}>{children}</ScrollContext.Provider>
-  )
+export function ScrollProvider({ children, onBeginDrag, onEndDrag, onScroll, onMomentumEnd }: ProviderProps) {
+	const handlers = useMemo(
+		() => ({
+			onBeginDrag,
+			onEndDrag,
+			onScroll,
+			onMomentumEnd,
+		}),
+		[onBeginDrag, onEndDrag, onScroll, onMomentumEnd],
+	);
+	return <ScrollContext.Provider value={handlers}>{children}</ScrollContext.Provider>;
 }

@@ -1,7 +1,5 @@
-import {View, type ViewProps} from 'react-native'
+import { View, type ViewProps } from 'react-native';
 
-export function ExpoScrollForwarderView(
-  props: ViewProps & {scrollViewTag?: number | null},
-) {
-  return <View {...props} />
+export function ExpoScrollForwarderView(props: ViewProps & { scrollViewTag?: number | null }) {
+	return <View {...props} />;
 }

@@ -1,32 +1,32 @@
-import {type StyleProp, type ViewStyle} from 'react-native'
+import { type StyleProp, type ViewStyle } from 'react-native';
 
-import {gradients} from '#/alf/tokens'
-import {LinearGradient} from '#/shims/linear-gradient'
+import { gradients } from '#/alf/tokens';
+import { LinearGradient } from '#/shims/linear-gradient';
 
 export function LinearGradientBackground({
-  style,
-  gradient = 'sky',
-  children,
-  start,
-  end,
+	style,
+	gradient = 'sky',
+	children,
+	start,
+	end,
 }: {
-  style?: StyleProp<ViewStyle>
-  gradient?: keyof typeof gradients
-  children?: React.ReactNode
-  start?: [number, number]
-  end?: [number, number]
+	style?: StyleProp<ViewStyle>;
+	gradient?: keyof typeof gradients;
+	children?: React.ReactNode;
+	start?: [number, number];
+	end?: [number, number];
 }) {
-  const colors = gradients[gradient].values.map(([_, color]) => {
-    return color
-  }) as [string, string, ...string[]]
+	const colors = gradients[gradient].values.map(([_, color]) => {
+		return color;
+	}) as [string, string, ...string[]];
 
-  if (gradient.length < 2) {
-    throw new Error('Gradient must have at least 2 colors')
-  }
+	if (gradient.length < 2) {
+		throw new Error('Gradient must have at least 2 colors');
+	}
 
-  return (
-    <LinearGradient colors={colors} style={style} start={start} end={end}>
-      {children}
-    </LinearGradient>
-  )
+	return (
+		<LinearGradient colors={colors} style={style} start={start} end={end}>
+			{children}
+		</LinearGradient>
+	);
 }

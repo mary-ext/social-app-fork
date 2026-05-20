@@ -1,100 +1,89 @@
-import {useCallback, useEffect} from 'react'
+import { useCallback, useEffect } from 'react';
 
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
-import {useSession} from '#/state/session'
-import {useCloseAllActiveElements} from '#/state/util'
-import {Referrer} from '#/shims/bluesky-swiss-army'
-import * as Linking from '#/shims/linking'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { parseLinkingUrl } from '#/lib/parseLinkingUrl';
+import { useSession } from '#/state/session';
+import { useCloseAllActiveElements } from '#/state/util';
+import { Referrer } from '#/shims/bluesky-swiss-army';
+import * as Linking from '#/shims/linking';
 
 // This needs to stay outside of react to persist between account switches
-let previousIntentUrl = ''
+let previousIntentUrl = '';
 
 export function useIntentHandler() {
-  const incomingUrl = Linking.useLinkingURL()
-  const composeIntent = useComposeIntent()
-  const {currentAccount} = useSession()
+	const incomingUrl = Linking.useLinkingURL();
+	const composeIntent = useComposeIntent();
+	const { currentAccount } = useSession();
 
-  useEffect(() => {
-    const handleIncomingURL = async (url: string) => {
-      const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-      }
-      const urlp = parseLinkingUrl(url)
-      const [, intent, intentType] = urlp.pathname.split('/')
+	useEffect(() => {
+		const handleIncomingURL = async (url: string) => {
+			const referrerInfo = Referrer.getReferrerInfo();
+			if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+			}
+			const urlp = parseLinkingUrl(url);
+			const [, intent, intentType] = urlp.pathname.split('/');
 
-      // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
-      // intent check. On web, we have to check the first part of the path since we have an actual hostname
-      const isIntent = intent === 'intent'
-      const params = urlp.searchParams
+			// On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
+			// intent check. On web, we have to check the first part of the path since we have an actual hostname
+			const isIntent = intent === 'intent';
+			const params = urlp.searchParams;
 
-      if (!isIntent) return
+			if (!isIntent) return;
 
-      switch (intentType) {
-        case 'compose': {
-          composeIntent({
-            text: params.get('text'),
-            imageUrisStr: params.get('imageUris'),
-            videoUri: params.get('videoUri'),
-          })
-          return
-        }
-        default: {
-          return
-        }
-      }
-    }
+			switch (intentType) {
+				case 'compose': {
+					composeIntent({
+						text: params.get('text'),
+						imageUrisStr: params.get('imageUris'),
+						videoUri: params.get('videoUri'),
+					});
+					return;
+				}
+				default: {
+					return;
+				}
+			}
+		};
 
-    if (incomingUrl) {
-      if (previousIntentUrl === incomingUrl) {
-        return
-      }
-      handleIncomingURL(incomingUrl)
-      previousIntentUrl = incomingUrl
-    }
-  }, [incomingUrl, composeIntent, currentAccount])
+		if (incomingUrl) {
+			if (previousIntentUrl === incomingUrl) {
+				return;
+			}
+			handleIncomingURL(incomingUrl);
+			previousIntentUrl = incomingUrl;
+		}
+	}, [incomingUrl, composeIntent, currentAccount]);
 }
 
 export function useComposeIntent() {
-  const closeAllActiveElements = useCloseAllActiveElements()
-  const {openComposer} = useOpenComposer()
-  const {hasSession} = useSession()
+	const closeAllActiveElements = useCloseAllActiveElements();
+	const { openComposer } = useOpenComposer();
+	const { hasSession } = useSession();
 
-  return useCallback(
-    ({
-      text,
-      videoUri,
-    }: {
-      text: string | null
-      imageUrisStr: string | null
-      videoUri: string | null
-    }) => {
-      if (!hasSession) return
-      closeAllActiveElements()
+	return useCallback(
+		({ text, videoUri }: { text: string | null; imageUrisStr: string | null; videoUri: string | null }) => {
+			if (!hasSession) return;
+			closeAllActiveElements();
 
-      // Whenever a video URI is present, we don't support adding images right now.
-      if (videoUri) {
-        const [uri, width, height] = videoUri.split('|') as [
-          string,
-          string,
-          string,
-        ]
-        openComposer({
-          text: text ?? undefined,
-          videoUri: {uri, width: Number(width), height: Number(height)},
-          logContext: 'Deeplink',
-        })
-        return
-      }
+			// Whenever a video URI is present, we don't support adding images right now.
+			if (videoUri) {
+				const [uri, width, height] = videoUri.split('|') as [string, string, string];
+				openComposer({
+					text: text ?? undefined,
+					videoUri: { uri, width: Number(width), height: Number(height) },
+					logContext: 'Deeplink',
+				});
+				return;
+			}
 
-      setTimeout(() => {
-        openComposer({
-          text: text ?? undefined,
-          imageUris: undefined,
-          logContext: 'Deeplink',
-        })
-      }, 500)
-    },
-    [hasSession, closeAllActiveElements, openComposer],
-  )
+			setTimeout(() => {
+				openComposer({
+					text: text ?? undefined,
+					imageUris: undefined,
+					logContext: 'Deeplink',
+				});
+			}, 500);
+		},
+		[hasSession, closeAllActiveElements, openComposer],
+	);
 }

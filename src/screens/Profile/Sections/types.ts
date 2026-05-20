@@ -1,3 +1,3 @@
 export interface SectionRef {
-  scrollToTop: () => void
+	scrollToTop: () => void;
 }

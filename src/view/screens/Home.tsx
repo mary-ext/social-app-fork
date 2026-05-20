@@ -1,316 +1,293 @@
-import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { ActivityIndicator, StyleSheet } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
-import {withSpring} from '#/lib/animations/reanimatedCompat'
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import { withSpring } from '#/lib/animations/reanimatedCompat';
+import { PROD_DEFAULT_FEED } from '#/lib/constants';
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import {
-  type HomeTabNavigatorParams,
-  type NativeStackScreenProps,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {emitSoftReset} from '#/state/events'
-import {
-  type SavedFeedSourceInfo,
-  usePinnedFeedsInfos,
-} from '#/state/queries/feed'
-import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {useSession} from '#/state/session'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {FeedPage} from '#/view/com/feeds/FeedPage'
-import {HomeHeader} from '#/view/com/home/HomeHeader'
-import {
-  Pager,
-  type PagerRef,
-  type RenderTabBarFnProps,
-} from '#/view/com/pager/Pager'
-import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
-import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
-import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
-import {
-  HomeHeaderModeProvider,
-  useHomeHeaderMode,
-} from '#/view/com/util/MainScrollProvider'
-import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
-import * as Layout from '#/components/Layout'
-import {useDemoMode} from '#/storage/hooks/demo-mode'
+	type HomeTabNavigatorParams,
+	type NativeStackScreenProps,
+	type NavigationProp,
+} from '#/lib/routes/types';
+import { emitSoftReset } from '#/state/events';
+import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
+import { type FeedDescriptor, type FeedParams } from '#/state/queries/post-feed';
+import { usePreferencesQuery } from '#/state/queries/preferences';
+import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
+import { useSession } from '#/state/session';
+import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
+import { FeedPage } from '#/view/com/feeds/FeedPage';
+import { HomeHeader } from '#/view/com/home/HomeHeader';
+import { Pager, type PagerRef, type RenderTabBarFnProps } from '#/view/com/pager/Pager';
+import { CustomFeedEmptyState } from '#/view/com/posts/CustomFeedEmptyState';
+import { FollowingEmptyState } from '#/view/com/posts/FollowingEmptyState';
+import { FollowingEndOfFeed } from '#/view/com/posts/FollowingEndOfFeed';
+import { HomeHeaderModeProvider, useHomeHeaderMode } from '#/view/com/util/MainScrollProvider';
+import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
+import * as Layout from '#/components/Layout';
+import { useDemoMode } from '#/storage/hooks/demo-mode';
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>;
 export function HomeScreen(props: Props) {
-  const {data: preferences} = usePreferencesQuery()
-  const {currentAccount} = useSession()
-  const navigation = useNavigation<NavigationProp>()
-  const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
-    usePinnedFeedsInfos()
+	const { data: preferences } = usePreferencesQuery();
+	const { currentAccount } = useSession();
+	const navigation = useNavigation<NavigationProp>();
+	const { data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading } = usePinnedFeedsInfos();
 
-  useEffect(() => {
-    const params = props.route.params
-    if (
-      currentAccount &&
-      props.route.name === 'Start' &&
-      params?.name &&
-      params?.rkey
-    ) {
-      navigation.navigate('StarterPack', {
-        rkey: params.rkey,
-        name: params.name,
-      })
-    }
-  }, [currentAccount, navigation, props.route.name, props.route.params])
+	useEffect(() => {
+		const params = props.route.params;
+		if (currentAccount && props.route.name === 'Start' && params?.name && params?.rkey) {
+			navigation.navigate('StarterPack', {
+				rkey: params.rkey,
+				name: params.name,
+			});
+		}
+	}, [currentAccount, navigation, props.route.name, props.route.params]);
 
-  if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
-    return (
-      <Layout.Screen testID="HomeScreen" noInsetTop={false}>
-        <HomeHeaderModeProvider>
-          <HomeScreenReady
-            {...props}
-            preferences={preferences}
-            pinnedFeedInfos={pinnedFeedInfos}
-          />
-        </HomeHeaderModeProvider>
-      </Layout.Screen>
-    )
-  } else {
-    return (
-      <Layout.Screen>
-        <Layout.Center style={styles.loading}>
-          <ActivityIndicator size="large" />
-        </Layout.Center>
-      </Layout.Screen>
-    )
-  }
+	if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
+		return (
+			<Layout.Screen testID="HomeScreen" noInsetTop={false}>
+				<HomeHeaderModeProvider>
+					<HomeScreenReady {...props} preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
+				</HomeHeaderModeProvider>
+			</Layout.Screen>
+		);
+	} else {
+		return (
+			<Layout.Screen>
+				<Layout.Center style={styles.loading}>
+					<ActivityIndicator size="large" />
+				</Layout.Center>
+			</Layout.Screen>
+		);
+	}
 }
 
 function HomeScreenReady({
-  preferences,
-  pinnedFeedInfos,
+	preferences,
+	pinnedFeedInfos,
 }: Props & {
-  preferences: UsePreferencesQueryResponse
-  pinnedFeedInfos: SavedFeedSourceInfo[]
+	preferences: UsePreferencesQueryResponse;
+	pinnedFeedInfos: SavedFeedSourceInfo[];
 }) {
-  const allFeeds = useMemo(
-    () => pinnedFeedInfos.map(f => f.feedDescriptor),
-    [pinnedFeedInfos],
-  )
-  const maybeRawSelectedFeed: FeedDescriptor | undefined =
-    useSelectedFeed() ?? allFeeds[0]!
-  const setSelectedFeed = useSetSelectedFeed()
-  const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed)
-  const selectedIndex = Math.max(0, maybeFoundIndex)
-  const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex]
+	const allFeeds = useMemo(() => pinnedFeedInfos.map((f) => f.feedDescriptor), [pinnedFeedInfos]);
+	const maybeRawSelectedFeed: FeedDescriptor | undefined = useSelectedFeed() ?? allFeeds[0]!;
+	const setSelectedFeed = useSetSelectedFeed();
+	const maybeFoundIndex = allFeeds.indexOf(maybeRawSelectedFeed);
+	const selectedIndex = Math.max(0, maybeFoundIndex);
+	const maybeSelectedFeed: FeedDescriptor | undefined = allFeeds[selectedIndex];
 
-  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
+	useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName);
 
-  const pagerRef = useRef<PagerRef>(null)
-  const lastPagerReportedIndexRef = useRef(selectedIndex)
-  useLayoutEffect(() => {
-    // Since the pager is not a controlled component, adjust it imperatively
-    // if the selected index gets out of sync with what it last reported.
-    // This is supposed to only happen on the web when you use the right nav.
-    if (selectedIndex !== lastPagerReportedIndexRef.current) {
-      lastPagerReportedIndexRef.current = selectedIndex
-      pagerRef.current?.setPage(selectedIndex)
-    }
-  }, [selectedIndex])
+	const pagerRef = useRef<PagerRef>(null);
+	const lastPagerReportedIndexRef = useRef(selectedIndex);
+	useLayoutEffect(() => {
+		// Since the pager is not a controlled component, adjust it imperatively
+		// if the selected index gets out of sync with what it last reported.
+		// This is supposed to only happen on the web when you use the right nav.
+		if (selectedIndex !== lastPagerReportedIndexRef.current) {
+			lastPagerReportedIndexRef.current = selectedIndex;
+			pagerRef.current?.setPage(selectedIndex);
+		}
+	}, [selectedIndex]);
 
-  const {hasSession} = useSession()
-  const headerMode = useHomeHeaderMode()
-  const showHeader = useCallback(() => {
-    'worklet'
-    headerMode.set(() => withSpring(0, {overshootClamping: true}))
-  }, [headerMode])
+	const { hasSession } = useSession();
+	const headerMode = useHomeHeaderMode();
+	const showHeader = useCallback(() => {
+		'worklet';
+		headerMode.set(() => withSpring(0, { overshootClamping: true }));
+	}, [headerMode]);
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => showHeader()
-    }, [showHeader]),
-  )
+	useFocusEffect(
+		useCallback(() => {
+			return () => showHeader();
+		}, [showHeader]),
+	);
 
-  useFocusEffect(
-    useNonReactiveCallback(() => {
-      if (maybeSelectedFeed) {
-      }
-    }),
-  )
+	useFocusEffect(
+		useNonReactiveCallback(() => {
+			if (maybeSelectedFeed) {
+			}
+		}),
+	);
 
-  const onPageSelected = useCallback(
-    (index: number) => {
-      showHeader()
-      const maybeFeed = allFeeds[index]
+	const onPageSelected = useCallback(
+		(index: number) => {
+			showHeader();
+			const maybeFeed = allFeeds[index];
 
-      // Mutate the ref before setting state to avoid the imperative syncing effect
-      // above from starting a loop on Android when swiping back and forth.
-      lastPagerReportedIndexRef.current = index
-      setSelectedFeed(maybeFeed!)
+			// Mutate the ref before setting state to avoid the imperative syncing effect
+			// above from starting a loop on Android when swiping back and forth.
+			lastPagerReportedIndexRef.current = index;
+			setSelectedFeed(maybeFeed!);
 
-      if (maybeFeed) {
-      }
-    },
-    [setSelectedFeed, showHeader, allFeeds],
-  )
+			if (maybeFeed) {
+			}
+		},
+		[setSelectedFeed, showHeader, allFeeds],
+	);
 
-  const onPressSelected = useCallback(() => {
-    emitSoftReset()
-  }, [])
+	const onPressSelected = useCallback(() => {
+		emitSoftReset();
+	}, []);
 
-  const onPageScrollStateChanged = useCallback(
-    (state: 'idle' | 'dragging' | 'settling') => {
-      'worklet'
-      if (state === 'dragging') {
-        showHeader()
-      }
-    },
-    [showHeader],
-  )
+	const onPageScrollStateChanged = useCallback(
+		(state: 'idle' | 'dragging' | 'settling') => {
+			'worklet';
+			if (state === 'dragging') {
+				showHeader();
+			}
+		},
+		[showHeader],
+	);
 
-  const [demoMode] = useDemoMode()
+	const [demoMode] = useDemoMode();
 
-  const renderTabBar = useCallback(
-    (props: RenderTabBarFnProps) => {
-      if (demoMode) {
-        return (
-          <HomeHeader
-            key="FEEDS_TAB_BAR"
-            {...props}
-            testID="homeScreenFeedTabs"
-            onPressSelected={onPressSelected}
-            // @ts-ignore
-            feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
-          />
-        )
-      }
-      return (
-        <HomeHeader
-          key="FEEDS_TAB_BAR"
-          {...props}
-          testID="homeScreenFeedTabs"
-          onPressSelected={onPressSelected}
-          feeds={pinnedFeedInfos}
-        />
-      )
-    },
-    [onPressSelected, pinnedFeedInfos, demoMode],
-  )
+	const renderTabBar = useCallback(
+		(props: RenderTabBarFnProps) => {
+			if (demoMode) {
+				return (
+					<HomeHeader
+						key="FEEDS_TAB_BAR"
+						{...props}
+						testID="homeScreenFeedTabs"
+						onPressSelected={onPressSelected}
+						// @ts-ignore
+						feeds={[{ displayName: 'Following' }, { displayName: 'Discover' }]}
+					/>
+				);
+			}
+			return (
+				<HomeHeader
+					key="FEEDS_TAB_BAR"
+					{...props}
+					testID="homeScreenFeedTabs"
+					onPressSelected={onPressSelected}
+					feeds={pinnedFeedInfos}
+				/>
+			);
+		},
+		[onPressSelected, pinnedFeedInfos, demoMode],
+	);
 
-  const renderFollowingEmptyState = useCallback(() => {
-    return <FollowingEmptyState />
-  }, [])
+	const renderFollowingEmptyState = useCallback(() => {
+		return <FollowingEmptyState />;
+	}, []);
 
-  const renderCustomFeedEmptyState = useCallback(() => {
-    return <CustomFeedEmptyState />
-  }, [])
+	const renderCustomFeedEmptyState = useCallback(() => {
+		return <CustomFeedEmptyState />;
+	}, []);
 
-  const homeFeedParams = useMemo<FeedParams>(() => {
-    return {
-      mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
-      mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-        ? preferences.savedFeeds
-            .filter(f => f.type === 'feed' || f.type === 'list')
-            .map(f => f.value)
-        : [],
-    }
-  }, [preferences])
+	const homeFeedParams = useMemo<FeedParams>(() => {
+		return {
+			mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
+			mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
+				? preferences.savedFeeds.filter((f) => f.type === 'feed' || f.type === 'list').map((f) => f.value)
+				: [],
+		};
+	}, [preferences]);
 
-  if (demoMode) {
-    return (
-      <Pager
-        ref={pagerRef}
-        testID="homeScreen"
-        onPageSelected={onPageSelected}
-        renderTabBar={renderTabBar}
-        initialPage={selectedIndex}>
-        <FeedPage
-          testID="demoFeedPage"
-          isPageFocused
-          isPageAdjacent={false}
-          feed="demo"
-          renderEmptyState={renderCustomFeedEmptyState}
-          feedInfo={pinnedFeedInfos[0]!}
-        />
-        <FeedPage
-          testID="customFeedPage"
-          isPageFocused
-          isPageAdjacent={false}
-          feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
-          renderEmptyState={renderCustomFeedEmptyState}
-          feedInfo={pinnedFeedInfos[0]!}
-        />
-      </Pager>
-    )
-  }
+	if (demoMode) {
+		return (
+			<Pager
+				ref={pagerRef}
+				testID="homeScreen"
+				onPageSelected={onPageSelected}
+				renderTabBar={renderTabBar}
+				initialPage={selectedIndex}
+			>
+				<FeedPage
+					testID="demoFeedPage"
+					isPageFocused
+					isPageAdjacent={false}
+					feed="demo"
+					renderEmptyState={renderCustomFeedEmptyState}
+					feedInfo={pinnedFeedInfos[0]!}
+				/>
+				<FeedPage
+					testID="customFeedPage"
+					isPageFocused
+					isPageAdjacent={false}
+					feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
+					renderEmptyState={renderCustomFeedEmptyState}
+					feedInfo={pinnedFeedInfos[0]!}
+				/>
+			</Pager>
+		);
+	}
 
-  return hasSession ? (
-    <Pager
-      key={allFeeds.join(',')}
-      ref={pagerRef}
-      testID="homeScreen"
-      initialPage={selectedIndex}
-      onPageSelected={onPageSelected}
-      onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}>
-      {pinnedFeedInfos.length ? (
-        pinnedFeedInfos.map((feedInfo, index) => {
-          const feed = feedInfo.feedDescriptor
-          if (feed === 'following') {
-            return (
-              <FeedPage
-                key={feed}
-                testID="followingFeedPage"
-                isPageFocused={maybeSelectedFeed === feed}
-                isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-                feed={feed}
-                feedParams={homeFeedParams}
-                renderEmptyState={renderFollowingEmptyState}
-                renderEndOfFeed={FollowingEndOfFeed}
-                feedInfo={feedInfo}
-              />
-            )
-          }
-          const savedFeedConfig = feedInfo.savedFeed
-          return (
-            <FeedPage
-              key={feed}
-              testID="customFeedPage"
-              isPageFocused={maybeSelectedFeed === feed}
-              isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-              feed={feed}
-              renderEmptyState={renderCustomFeedEmptyState}
-              savedFeedConfig={savedFeedConfig}
-              feedInfo={feedInfo}
-            />
-          )
-        })
-      ) : (
-        <NoFeedsPinned preferences={preferences} />
-      )}
-    </Pager>
-  ) : (
-    <Pager
-      testID="homeScreen"
-      onPageSelected={onPageSelected}
-      onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}>
-      <FeedPage
-        testID="customFeedPage"
-        isPageFocused
-        isPageAdjacent={false}
-        feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
-        renderEmptyState={renderCustomFeedEmptyState}
-        feedInfo={pinnedFeedInfos[0]!}
-      />
-    </Pager>
-  )
+	return hasSession ? (
+		<Pager
+			key={allFeeds.join(',')}
+			ref={pagerRef}
+			testID="homeScreen"
+			initialPage={selectedIndex}
+			onPageSelected={onPageSelected}
+			onPageScrollStateChanged={onPageScrollStateChanged}
+			renderTabBar={renderTabBar}
+		>
+			{pinnedFeedInfos.length ? (
+				pinnedFeedInfos.map((feedInfo, index) => {
+					const feed = feedInfo.feedDescriptor;
+					if (feed === 'following') {
+						return (
+							<FeedPage
+								key={feed}
+								testID="followingFeedPage"
+								isPageFocused={maybeSelectedFeed === feed}
+								isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+								feed={feed}
+								feedParams={homeFeedParams}
+								renderEmptyState={renderFollowingEmptyState}
+								renderEndOfFeed={FollowingEndOfFeed}
+								feedInfo={feedInfo}
+							/>
+						);
+					}
+					const savedFeedConfig = feedInfo.savedFeed;
+					return (
+						<FeedPage
+							key={feed}
+							testID="customFeedPage"
+							isPageFocused={maybeSelectedFeed === feed}
+							isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+							feed={feed}
+							renderEmptyState={renderCustomFeedEmptyState}
+							savedFeedConfig={savedFeedConfig}
+							feedInfo={feedInfo}
+						/>
+					);
+				})
+			) : (
+				<NoFeedsPinned preferences={preferences} />
+			)}
+		</Pager>
+	) : (
+		<Pager
+			testID="homeScreen"
+			onPageSelected={onPageSelected}
+			onPageScrollStateChanged={onPageScrollStateChanged}
+			renderTabBar={renderTabBar}
+		>
+			<FeedPage
+				testID="customFeedPage"
+				isPageFocused
+				isPageAdjacent={false}
+				feed={`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`}
+				renderEmptyState={renderCustomFeedEmptyState}
+				feedInfo={pinnedFeedInfos[0]!}
+			/>
+		</Pager>
+	);
 }
 
 const styles = StyleSheet.create({
-  loading: {
-    height: '100%',
-    alignContent: 'center',
-    justifyContent: 'center',
-    paddingBottom: 100,
-  },
-})
+	loading: {
+		height: '100%',
+		alignContent: 'center',
+		justifyContent: 'center',
+		paddingBottom: 100,
+	},
+});

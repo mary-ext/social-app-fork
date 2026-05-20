@@ -1,3 +1,3 @@
-import {utils} from '#/alf/base'
+import { utils } from '#/alf/base';
 
-export const select = utils.select
+export const select = utils.select;

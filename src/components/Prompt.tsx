@@ -1,263 +1,216 @@
-import {createContext, useCallback, useContext, useId, useMemo} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
+import { createContext, useCallback, useContext, useId, useMemo } from 'react';
+import { type GestureResponderEvent, View } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
 
-import {atoms as a, type TextStyleProp, useTheme} from '#/alf'
-import {
-  Button,
-  type ButtonColor,
-  ButtonIcon,
-  ButtonText,
-} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Text} from '#/components/Typography'
-import {type BottomSheetViewProps} from '#/shims/bottom-sheet'
+import { atoms as a, type TextStyleProp, useTheme } from '#/alf';
+import { Button, type ButtonColor, ButtonIcon, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
+import { type Props as SVGIconProps } from '#/components/icons/common';
+import { Text } from '#/components/Typography';
+import { type BottomSheetViewProps } from '#/shims/bottom-sheet';
 
 export {
-  type DialogControlProps as PromptControlProps,
-  useDialogControl as usePromptControl,
-} from '#/components/Dialog'
+	type DialogControlProps as PromptControlProps,
+	useDialogControl as usePromptControl,
+} from '#/components/Dialog';
 
 const Context = createContext<{
-  titleId: string
-  descriptionId: string
+	titleId: string;
+	descriptionId: string;
 }>({
-  titleId: '',
-  descriptionId: '',
-})
-Context.displayName = 'PromptContext'
+	titleId: '',
+	descriptionId: '',
+});
+Context.displayName = 'PromptContext';
 
 export function Outer({
-  children,
-  control,
-  testID,
-  nativeOptions,
-  webOptions,
-  onClose,
+	children,
+	control,
+	testID,
+	nativeOptions,
+	webOptions,
+	onClose,
 }: React.PropsWithChildren<{
-  control: Dialog.DialogControlProps
-  testID?: string
-  /**
-   * Native-specific options for the prompt. Extends `BottomSheetViewProps`
-   */
-  nativeOptions?: Omit<BottomSheetViewProps, 'children'>
-  /**
-   * Web-specific options for the prompt
-   */
-  webOptions?: {
-    onBackgroundPress?: (e: GestureResponderEvent) => void
-  }
-  onClose?: () => void
+	control: Dialog.DialogControlProps;
+	testID?: string;
+	/** Native-specific options for the prompt. Extends `BottomSheetViewProps` */
+	nativeOptions?: Omit<BottomSheetViewProps, 'children'>;
+	/** Web-specific options for the prompt */
+	webOptions?: {
+		onBackgroundPress?: (e: GestureResponderEvent) => void;
+	};
+	onClose?: () => void;
 }>) {
-  const titleId = useId()
-  const descriptionId = useId()
+	const titleId = useId();
+	const descriptionId = useId();
 
-  const context = useMemo(
-    () => ({titleId, descriptionId}),
-    [titleId, descriptionId],
-  )
+	const context = useMemo(() => ({ titleId, descriptionId }), [titleId, descriptionId]);
 
-  return (
-    <Dialog.Outer
-      control={control}
-      testID={testID}
-      onClose={onClose}
-      webOptions={{alignCenter: true, ...webOptions}}
-      nativeOptions={{preventExpansion: true, ...nativeOptions}}>
-      <Dialog.Handle />
-      <Context.Provider value={context}>
-        <Dialog.ScrollableInner
-          accessibilityLabelledBy={titleId}
-          accessibilityDescribedBy={descriptionId}
-          style={[{maxWidth: 320, borderRadius: 36}]}>
-          {children}
-        </Dialog.ScrollableInner>
-      </Context.Provider>
-    </Dialog.Outer>
-  )
+	return (
+		<Dialog.Outer
+			control={control}
+			testID={testID}
+			onClose={onClose}
+			webOptions={{ alignCenter: true, ...webOptions }}
+			nativeOptions={{ preventExpansion: true, ...nativeOptions }}
+		>
+			<Dialog.Handle />
+			<Context.Provider value={context}>
+				<Dialog.ScrollableInner
+					accessibilityLabelledBy={titleId}
+					accessibilityDescribedBy={descriptionId}
+					style={[{ maxWidth: 320, borderRadius: 36 }]}
+				>
+					{children}
+				</Dialog.ScrollableInner>
+			</Context.Provider>
+		</Dialog.Outer>
+	);
 }
 
-export function TitleText({
-  children,
-  style,
-}: React.PropsWithChildren<TextStyleProp>) {
-  const {titleId} = useContext(Context)
-  return (
-    <Text
-      nativeID={titleId}
-      style={[
-        a.flex_1,
-        a.text_2xl,
-        a.font_semi_bold,
-        a.pb_xs,
-        a.leading_snug,
-        style,
-      ]}>
-      {children}
-    </Text>
-  )
+export function TitleText({ children, style }: React.PropsWithChildren<TextStyleProp>) {
+	const { titleId } = useContext(Context);
+	return (
+		<Text nativeID={titleId} style={[a.flex_1, a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_snug, style]}>
+			{children}
+		</Text>
+	);
 }
 
 export function DescriptionText({
-  children,
-  selectable,
-  style,
-}: React.PropsWithChildren<{selectable?: boolean} & TextStyleProp>) {
-  const t = useTheme()
-  const {descriptionId} = useContext(Context)
-  return (
-    <Text
-      nativeID={descriptionId}
-      selectable={selectable}
-      style={[
-        a.text_md,
-        a.leading_snug,
-        t.atoms.text_contrast_high,
-        a.pb_lg,
-        style,
-      ]}>
-      {children}
-    </Text>
-  )
+	children,
+	selectable,
+	style,
+}: React.PropsWithChildren<{ selectable?: boolean } & TextStyleProp>) {
+	const t = useTheme();
+	const { descriptionId } = useContext(Context);
+	return (
+		<Text
+			nativeID={descriptionId}
+			selectable={selectable}
+			style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg, style]}
+		>
+			{children}
+		</Text>
+	);
 }
 
-export function Actions({children}: {children: React.ReactNode}) {
-  return <View style={[a.w_full, a.gap_sm, a.justify_end]}>{children}</View>
+export function Actions({ children }: { children: React.ReactNode }) {
+	return <View style={[a.w_full, a.gap_sm, a.justify_end]}>{children}</View>;
 }
 
-export function Content({children}: {children: React.ReactNode}) {
-  return <View style={[a.pb_sm]}>{children}</View>
+export function Content({ children }: { children: React.ReactNode }) {
+	return <View style={[a.pb_sm]}>{children}</View>;
 }
 
 export function Cancel({
-  cta,
+	cta,
 }: {
-  /**
-   * Optional i18n string. If undefined, it will default to "Cancel".
-   */
-  cta?: string
+	/** Optional i18n string. If undefined, it will default to "Cancel". */
+	cta?: string;
 }) {
-  const {t: l} = useLingui()
-  const {close} = Dialog.useDialogContext()
-  const onPress = useCallback(() => {
-    close()
-  }, [close])
+	const { t: l } = useLingui();
+	const { close } = Dialog.useDialogContext();
+	const onPress = useCallback(() => {
+		close();
+	}, [close]);
 
-  return (
-    <Button
-      variant="solid"
-      color="secondary"
-      size="large"
-      label={cta || l`Cancel`}
-      onPress={onPress}>
-      <ButtonText>{cta || l`Cancel`}</ButtonText>
-    </Button>
-  )
+	return (
+		<Button variant="solid" color="secondary" size="large" label={cta || l`Cancel`} onPress={onPress}>
+			<ButtonText>{cta || l`Cancel`}</ButtonText>
+		</Button>
+	);
 }
 
 export function Action({
-  onPress,
-  color = 'primary',
-  cta,
-  disabled = false,
-  icon,
-  shouldCloseOnPress = true,
-  testID,
+	onPress,
+	color = 'primary',
+	cta,
+	disabled = false,
+	icon,
+	shouldCloseOnPress = true,
+	testID,
 }: {
-  /**
-   * Callback to run when the action is pressed. The method is called _after_
-   * the dialog closes.
-   *
-   * Note: The dialog will close automatically when the action is pressed, you
-   * should NOT close the dialog as a side effect of this method.
-   */
-  onPress: (e: GestureResponderEvent) => void
-  color?: ButtonColor
-  /**
-   * Optional i18n string. If undefined, it will default to "Confirm".
-   */
-  cta?: string
-  /**
-   * If undefined, it will default to false.
-   */
-  disabled?: boolean
-  icon?: React.ComponentType<SVGIconProps>
-  /**
-   * Optionally close dialog automatically on press. If undefined, it will
-   * default to true.
-   */
-  shouldCloseOnPress?: boolean
-  testID?: string
+	/**
+	 * Callback to run when the action is pressed. The method is called _after_ the dialog closes.
+	 *
+	 * Note: The dialog will close automatically when the action is pressed, you should NOT close the dialog as
+	 * a side effect of this method.
+	 */
+	onPress: (e: GestureResponderEvent) => void;
+	color?: ButtonColor;
+	/** Optional i18n string. If undefined, it will default to "Confirm". */
+	cta?: string;
+	/** If undefined, it will default to false. */
+	disabled?: boolean;
+	icon?: React.ComponentType<SVGIconProps>;
+	/** Optionally close dialog automatically on press. If undefined, it will default to true. */
+	shouldCloseOnPress?: boolean;
+	testID?: string;
 }) {
-  const {t: l} = useLingui()
-  const {close} = Dialog.useDialogContext()
-  const handleOnPress = useCallback(
-    (e: GestureResponderEvent) => {
-      if (shouldCloseOnPress) {
-        close(() => onPress?.(e))
-      } else {
-        onPress?.(e)
-      }
-    },
-    [close, onPress, shouldCloseOnPress],
-  )
+	const { t: l } = useLingui();
+	const { close } = Dialog.useDialogContext();
+	const handleOnPress = useCallback(
+		(e: GestureResponderEvent) => {
+			if (shouldCloseOnPress) {
+				close(() => onPress?.(e));
+			} else {
+				onPress?.(e);
+			}
+		},
+		[close, onPress, shouldCloseOnPress],
+	);
 
-  return (
-    <Button
-      color={color}
-      disabled={disabled}
-      size="large"
-      label={cta || l`Confirm`}
-      onPress={handleOnPress}
-      testID={testID}>
-      <ButtonText>{cta || l`Confirm`}</ButtonText>
-      {icon && <ButtonIcon icon={icon} />}
-    </Button>
-  )
+	return (
+		<Button
+			color={color}
+			disabled={disabled}
+			size="large"
+			label={cta || l`Confirm`}
+			onPress={handleOnPress}
+			testID={testID}
+		>
+			<ButtonText>{cta || l`Confirm`}</ButtonText>
+			{icon && <ButtonIcon icon={icon} />}
+		</Button>
+	);
 }
 
 export function Basic({
-  control,
-  title,
-  description,
-  cancelButtonCta,
-  confirmButtonCta,
-  onConfirm,
-  confirmButtonColor,
-  showCancel = true,
+	control,
+	title,
+	description,
+	cancelButtonCta,
+	confirmButtonCta,
+	onConfirm,
+	confirmButtonColor,
+	showCancel = true,
 }: React.PropsWithChildren<{
-  control: Dialog.DialogOuterProps['control']
-  title: string
-  description?: string
-  cancelButtonCta?: string
-  confirmButtonCta?: string
-  /**
-   * Callback to run when the Confirm button is pressed. The method is called
-   * _after_ the dialog closes.
-   *
-   * Note: The dialog will close automatically when the action is pressed, you
-   * should NOT close the dialog as a side effect of this method.
-   */
-  onConfirm: (e: GestureResponderEvent) => void
-  confirmButtonColor?: ButtonColor
-  showCancel?: boolean
+	control: Dialog.DialogOuterProps['control'];
+	title: string;
+	description?: string;
+	cancelButtonCta?: string;
+	confirmButtonCta?: string;
+	/**
+	 * Callback to run when the Confirm button is pressed. The method is called _after_ the dialog closes.
+	 *
+	 * Note: The dialog will close automatically when the action is pressed, you should NOT close the dialog as
+	 * a side effect of this method.
+	 */
+	onConfirm: (e: GestureResponderEvent) => void;
+	confirmButtonColor?: ButtonColor;
+	showCancel?: boolean;
 }>) {
-  return (
-    <Outer control={control} testID="confirmModal">
-      <Content>
-        <TitleText>{title}</TitleText>
-        {description && <DescriptionText>{description}</DescriptionText>}
-      </Content>
-      <Actions>
-        <Action
-          cta={confirmButtonCta}
-          onPress={onConfirm}
-          color={confirmButtonColor}
-          testID="confirmBtn"
-        />
-        {showCancel && <Cancel cta={cancelButtonCta} />}
-      </Actions>
-    </Outer>
-  )
+	return (
+		<Outer control={control} testID="confirmModal">
+			<Content>
+				<TitleText>{title}</TitleText>
+				{description && <DescriptionText>{description}</DescriptionText>}
+			</Content>
+			<Actions>
+				<Action cta={confirmButtonCta} onPress={onConfirm} color={confirmButtonColor} testID="confirmBtn" />
+				{showCancel && <Cancel cta={cancelButtonCta} />}
+			</Actions>
+		</Outer>
+	);
 }

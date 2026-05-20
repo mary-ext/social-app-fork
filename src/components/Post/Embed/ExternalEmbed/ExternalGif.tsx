@@ -1,139 +1,126 @@
-import {useCallback, useRef, useState} from 'react'
-import {
-  ActivityIndicator,
-  type GestureResponderEvent,
-  Pressable,
-} from 'react-native'
-import {type AppBskyEmbedExternal} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
+import { useCallback, useRef, useState } from 'react';
+import { ActivityIndicator, type GestureResponderEvent, Pressable } from 'react-native';
+import { type AppBskyEmbedExternal } from '@atproto/api';
+import { useLingui } from '@lingui/react/macro';
 
-import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
-import {Fill} from '#/components/Fill'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {Image} from '#/shims/image'
+import { type EmbedPlayerParams } from '#/lib/strings/embed-player';
+import { useExternalEmbedsPrefs } from '#/state/preferences';
+import { atoms as a, useTheme } from '#/alf';
+import { useDialogControl } from '#/components/Dialog';
+import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
+import { Fill } from '#/components/Fill';
+import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
+import { Image } from '#/shims/image';
 
 export function ExternalGif({
-  link,
-  params,
+	link,
+	params,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
-  params: EmbedPlayerParams
+	link: AppBskyEmbedExternal.ViewExternal;
+	params: EmbedPlayerParams;
 }) {
-  const t = useTheme()
-  const externalEmbedsPrefs = useExternalEmbedsPrefs()
-  const {t: l} = useLingui()
-  const consentDialogControl = useDialogControl()
+	const t = useTheme();
+	const externalEmbedsPrefs = useExternalEmbedsPrefs();
+	const { t: l } = useLingui();
+	const consentDialogControl = useDialogControl();
 
-  // Tracking if the placer has been activated
-  const [isPlayerActive, setIsPlayerActive] = useState(false)
-  // Tracking whether the gif has been loaded yet
-  const [isPrefetched, setIsPrefetched] = useState(false)
-  // Tracking whether the image is animating
-  const [isAnimating, setIsAnimating] = useState(true)
+	// Tracking if the placer has been activated
+	const [isPlayerActive, setIsPlayerActive] = useState(false);
+	// Tracking whether the gif has been loaded yet
+	const [isPrefetched, setIsPrefetched] = useState(false);
+	// Tracking whether the image is animating
+	const [isAnimating, setIsAnimating] = useState(true);
 
-  // Used for controlling animation
-  const imageRef = useRef<Image>(null)
+	// Used for controlling animation
+	const imageRef = useRef<Image>(null);
 
-  const load = useCallback(() => {
-    setIsPlayerActive(true)
-    Image.prefetch(params.playerUri).then(() => {
-      // Replace the image once it's fetched
-      setIsPrefetched(true)
-    })
-  }, [params.playerUri])
+	const load = useCallback(() => {
+		setIsPlayerActive(true);
+		Image.prefetch(params.playerUri).then(() => {
+			// Replace the image once it's fetched
+			setIsPrefetched(true);
+		});
+	}, [params.playerUri]);
 
-  const onPlayPress = useCallback(
-    (event: GestureResponderEvent) => {
-      // Don't propagate on web
-      event.preventDefault()
+	const onPlayPress = useCallback(
+		(event: GestureResponderEvent) => {
+			// Don't propagate on web
+			event.preventDefault();
 
-      // Show consent if this is the first load
-      if (externalEmbedsPrefs?.[params.source] === undefined) {
-        consentDialogControl.open()
-        return
-      }
-      // If the player isn't active, we want to activate it and prefetch the gif
-      if (!isPlayerActive) {
-        load()
-        return
-      }
-      // Control animation on native
-      setIsAnimating(prev => {
-        if (prev) {
-          return false
-        } else {
-          return true
-        }
-      })
-    },
-    [
-      consentDialogControl,
-      externalEmbedsPrefs,
-      isPlayerActive,
-      load,
-      params.source,
-    ],
-  )
+			// Show consent if this is the first load
+			if (externalEmbedsPrefs?.[params.source] === undefined) {
+				consentDialogControl.open();
+				return;
+			}
+			// If the player isn't active, we want to activate it and prefetch the gif
+			if (!isPlayerActive) {
+				load();
+				return;
+			}
+			// Control animation on native
+			setIsAnimating((prev) => {
+				if (prev) {
+					return false;
+				} else {
+					return true;
+				}
+			});
+		},
+		[consentDialogControl, externalEmbedsPrefs, isPlayerActive, load, params.source],
+	);
 
-  return (
-    <>
-      <EmbedConsentDialog
-        control={consentDialogControl}
-        source={params.source}
-        onAccept={load}
-      />
-      <Pressable
-        style={[
-          {height: 300},
-          a.w_full,
-          a.overflow_hidden,
-          {
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          },
-        ]}
-        onPress={onPlayPress}
-        accessibilityRole="button"
-        accessibilityHint={l`Plays the GIF`}
-        accessibilityLabel={l`Play ${link.title}`}>
-        <Image
-          source={{
-            uri: !isPrefetched || !isAnimating ? link.thumb : params.playerUri,
-          }} // Web uses the thumb to control playback
-          style={{flex: 1}}
-          ref={imageRef}
-          autoplay={isAnimating}
-          contentFit="contain"
-          accessibilityIgnoresInvertColors
-          accessibilityLabel={link.title}
-          accessibilityHint={link.title}
-          cachePolicy={'memory-disk'} // cant control playback with memory-disk on ios
-        />
+	return (
+		<>
+			<EmbedConsentDialog control={consentDialogControl} source={params.source} onAccept={load} />
+			<Pressable
+				style={[
+					{ height: 300 },
+					a.w_full,
+					a.overflow_hidden,
+					{
+						borderBottomLeftRadius: 0,
+						borderBottomRightRadius: 0,
+					},
+				]}
+				onPress={onPlayPress}
+				accessibilityRole="button"
+				accessibilityHint={l`Plays the GIF`}
+				accessibilityLabel={l`Play ${link.title}`}
+			>
+				<Image
+					source={{
+						uri: !isPrefetched || !isAnimating ? link.thumb : params.playerUri,
+					}} // Web uses the thumb to control playback
+					style={{ flex: 1 }}
+					ref={imageRef}
+					autoplay={isAnimating}
+					contentFit="contain"
+					accessibilityIgnoresInvertColors
+					accessibilityLabel={link.title}
+					accessibilityHint={link.title}
+					cachePolicy={'memory-disk'} // cant control playback with memory-disk on ios
+				/>
 
-        {(!isPrefetched || !isAnimating) && (
-          <Fill style={[a.align_center, a.justify_center]}>
-            <Fill
-              style={[
-                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
-                {
-                  opacity: 0.3,
-                },
-              ]}
-            />
+				{(!isPrefetched || !isAnimating) && (
+					<Fill style={[a.align_center, a.justify_center]}>
+						<Fill
+							style={[
+								t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+								{
+									opacity: 0.3,
+								},
+							]}
+						/>
 
-            {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-              <PlayButtonIcon />
-            ) : (
-              // Activity indicator while gif loads
-              <ActivityIndicator size="large" color="white" />
-            )}
-          </Fill>
-        )}
-      </Pressable>
-    </>
-  )
+						{!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
+							<PlayButtonIcon />
+						) : (
+							// Activity indicator while gif loads
+							<ActivityIndicator size="large" color="white" />
+						)}
+					</Fill>
+				)}
+			</Pressable>
+		</>
+	);
 }

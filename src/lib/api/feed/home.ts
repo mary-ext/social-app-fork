@@ -1,9 +1,9 @@
-import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
+import { type AppBskyFeedDefs, type BskyAgent } from '@atproto/api';
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {CustomFeedAPI} from './custom'
-import {FollowingFeedAPI} from './following'
-import {type FeedAPI, type FeedAPIResponse} from './types'
+import { PROD_DEFAULT_FEED } from '#/lib/constants';
+import { CustomFeedAPI } from './custom';
+import { FollowingFeedAPI } from './following';
+import { type FeedAPI, type FeedAPIResponse } from './types';
 
 // HACK
 // the feed API does not include any facilities for passing down
@@ -14,94 +14,82 @@ import {type FeedAPI, type FeedAPIResponse} from './types'
 // for the usage.
 // -prf
 export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
-  post: {
-    uri: 'fallback-marker-post',
-    cid: 'fake',
-    record: {},
-    author: {
-      did: 'did:fake',
-      handle: 'fake.com',
-    },
-    indexedAt: new Date().toISOString(),
-  },
-}
+	post: {
+		uri: 'fallback-marker-post',
+		cid: 'fake',
+		record: {},
+		author: {
+			did: 'did:fake',
+			handle: 'fake.com',
+		},
+		indexedAt: new Date().toISOString(),
+	},
+};
 
 export class HomeFeedAPI implements FeedAPI {
-  agent: BskyAgent
-  following: FollowingFeedAPI
-  discover: CustomFeedAPI
-  usingDiscover = false
-  itemCursor = 0
-  userInterests?: string
+	agent: BskyAgent;
+	following: FollowingFeedAPI;
+	discover: CustomFeedAPI;
+	usingDiscover = false;
+	itemCursor = 0;
+	userInterests?: string;
 
-  constructor({
-    userInterests,
-    agent,
-  }: {
-    userInterests?: string
-    agent: BskyAgent
-  }) {
-    this.agent = agent
-    this.following = new FollowingFeedAPI({agent})
-    this.discover = new CustomFeedAPI({
-      agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
-    })
-    this.userInterests = userInterests
-  }
+	constructor({ userInterests, agent }: { userInterests?: string; agent: BskyAgent }) {
+		this.agent = agent;
+		this.following = new FollowingFeedAPI({ agent });
+		this.discover = new CustomFeedAPI({
+			agent,
+			feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') },
+		});
+		this.userInterests = userInterests;
+	}
 
-  reset() {
-    this.following = new FollowingFeedAPI({agent: this.agent})
-    this.discover = new CustomFeedAPI({
-      agent: this.agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
-      userInterests: this.userInterests,
-    })
-    this.usingDiscover = false
-    this.itemCursor = 0
-  }
+	reset() {
+		this.following = new FollowingFeedAPI({ agent: this.agent });
+		this.discover = new CustomFeedAPI({
+			agent: this.agent,
+			feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') },
+			userInterests: this.userInterests,
+		});
+		this.usingDiscover = false;
+		this.itemCursor = 0;
+	}
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    if (this.usingDiscover) {
-      return this.discover.peekLatest()
-    }
-    return this.following.peekLatest()
-  }
+	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+		if (this.usingDiscover) {
+			return this.discover.peekLatest();
+		}
+		return this.following.peekLatest();
+	}
 
-  async fetch({
-    cursor,
-    limit,
-  }: {
-    cursor: string | undefined
-    limit: number
-  }): Promise<FeedAPIResponse> {
-    if (!cursor) {
-      this.reset()
-    }
+	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
+		if (!cursor) {
+			this.reset();
+		}
 
-    let returnCursor
-    let posts: AppBskyFeedDefs.FeedViewPost[] = []
+		let returnCursor;
+		let posts: AppBskyFeedDefs.FeedViewPost[] = [];
 
-    if (!this.usingDiscover) {
-      const res = await this.following.fetch({cursor, limit})
-      returnCursor = res.cursor
-      posts = posts.concat(res.feed)
-      if (!returnCursor) {
-        cursor = ''
-        posts.push(FALLBACK_MARKER_POST)
-        this.usingDiscover = true
-      }
-    }
+		if (!this.usingDiscover) {
+			const res = await this.following.fetch({ cursor, limit });
+			returnCursor = res.cursor;
+			posts = posts.concat(res.feed);
+			if (!returnCursor) {
+				cursor = '';
+				posts.push(FALLBACK_MARKER_POST);
+				this.usingDiscover = true;
+			}
+		}
 
-    if (this.usingDiscover && !import.meta.env.DEV) {
-      const res = await this.discover.fetch({cursor, limit})
-      returnCursor = res.cursor
-      posts = posts.concat(res.feed)
-    }
+		if (this.usingDiscover && !import.meta.env.DEV) {
+			const res = await this.discover.fetch({ cursor, limit });
+			returnCursor = res.cursor;
+			posts = posts.concat(res.feed);
+		}
 
-    return {
-      cursor: returnCursor,
-      feed: posts,
-    }
-  }
+		return {
+			cursor: returnCursor,
+			feed: posts,
+		};
+	}
 }

@@ -1,12 +1,12 @@
-import {type Props} from '#/components/icons/common'
-import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
-import {VerifierCheck} from '#/components/icons/VerifierCheck'
+import { type Props } from '#/components/icons/common';
+import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
+import { VerifierCheck } from '#/components/icons/VerifierCheck';
 
 export function VerificationCheck({
-  verifier,
-  ...rest
+	verifier,
+	...rest
 }: Props & {
-  verifier?: boolean
+	verifier?: boolean;
 }) {
-  return verifier ? <VerifierCheck {...rest} /> : <VerifiedCheck {...rest} />
+	return verifier ? <VerifierCheck {...rest} /> : <VerifiedCheck {...rest} />;
 }

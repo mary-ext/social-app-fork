@@ -1,280 +1,240 @@
-import {useMemo, useState} from 'react'
-import {View} from 'react-native'
+import { useMemo, useState } from 'react';
+import { View } from 'react-native';
 import {
-  type AppBskyNotificationDefs,
-  type AppBskyNotificationListActivitySubscriptions,
-  type ModerationOpts,
-  type Un$Typed,
-} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
-import {
-  type InfiniteData,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+	type AppBskyNotificationDefs,
+	type AppBskyNotificationListActivitySubscriptions,
+	type ModerationOpts,
+	type Un$Typed,
+} from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
-import {useAgent} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonProps,
-  ButtonText,
-} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import * as Toggle from '#/components/forms/Toggle'
-import {Loader} from '#/components/Loader'
-import * as ProfileCard from '#/components/ProfileCard'
-import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
+import { cleanError } from '#/lib/strings/errors';
+import { sanitizeHandle } from '#/lib/strings/handles';
+import { logger } from '#/logger';
+import { updateProfileShadow } from '#/state/cache/profile-shadow';
+import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
+import { useAgent } from '#/state/session';
+import { atoms as a, useTheme } from '#/alf';
+import { Admonition } from '#/components/Admonition';
+import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
+import * as Toggle from '#/components/forms/Toggle';
+import { Loader } from '#/components/Loader';
+import * as ProfileCard from '#/components/ProfileCard';
+import * as Toast from '#/components/Toast';
+import { Text } from '#/components/Typography';
+import type * as bsky from '#/types/bsky';
 
 export function SubscribeProfileDialog({
-  control,
-  profile,
-  moderationOpts,
-  includeProfile,
+	control,
+	profile,
+	moderationOpts,
+	includeProfile,
 }: {
-  control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  includeProfile?: boolean
+	control: Dialog.DialogControlProps;
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	includeProfile?: boolean;
 }) {
-  return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
-      <DialogInner
-        profile={profile}
-        moderationOpts={moderationOpts}
-        includeProfile={includeProfile}
-      />
-    </Dialog.Outer>
-  )
+	return (
+		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+			<Dialog.Handle />
+			<DialogInner profile={profile} moderationOpts={moderationOpts} includeProfile={includeProfile} />
+		</Dialog.Outer>
+	);
 }
 
 function DialogInner({
-  profile,
-  moderationOpts,
-  includeProfile,
+	profile,
+	moderationOpts,
+	includeProfile,
 }: {
-  profile: bsky.profile.AnyProfileView
-  moderationOpts: ModerationOpts
-  includeProfile?: boolean
+	profile: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts;
+	includeProfile?: boolean;
 }) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const agent = useAgent()
-  const control = Dialog.useDialogContext()
-  const queryClient = useQueryClient()
-  const initialState = parseActivitySubscription(
-    profile.viewer?.activitySubscription,
-  )
-  const [state, setState] = useState(initialState)
+	const { t: l } = useLingui();
+	const t = useTheme();
+	const agent = useAgent();
+	const control = Dialog.useDialogContext();
+	const queryClient = useQueryClient();
+	const initialState = parseActivitySubscription(profile.viewer?.activitySubscription);
+	const [state, setState] = useState(initialState);
 
-  const values = useMemo(() => {
-    const {post, reply} = state
-    const res = []
-    if (post) res.push('post')
-    if (reply) res.push('reply')
-    return res
-  }, [state])
+	const values = useMemo(() => {
+		const { post, reply } = state;
+		const res = [];
+		if (post) res.push('post');
+		if (reply) res.push('reply');
+		return res;
+	}, [state]);
 
-  const onChange = (newValues: string[]) => {
-    setState(oldValues => {
-      // ensure you can't have reply without post
-      if (!oldValues.reply && newValues.includes('reply')) {
-        return {
-          post: true,
-          reply: true,
-        }
-      }
+	const onChange = (newValues: string[]) => {
+		setState((oldValues) => {
+			// ensure you can't have reply without post
+			if (!oldValues.reply && newValues.includes('reply')) {
+				return {
+					post: true,
+					reply: true,
+				};
+			}
 
-      if (oldValues.post && !newValues.includes('post')) {
-        return {
-          post: false,
-          reply: false,
-        }
-      }
+			if (oldValues.post && !newValues.includes('post')) {
+				return {
+					post: false,
+					reply: false,
+				};
+			}
 
-      return {
-        post: newValues.includes('post'),
-        reply: newValues.includes('reply'),
-      }
-    })
-  }
+			return {
+				post: newValues.includes('post'),
+				reply: newValues.includes('reply'),
+			};
+		});
+	};
 
-  const {
-    mutate: saveChanges,
-    isPending: isSaving,
-    error,
-  } = useMutation({
-    mutationFn: async (
-      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
-    ) => {
-      await agent.app.bsky.notification.putActivitySubscription({
-        subject: profile.did,
-        activitySubscription,
-      })
-    },
-    onSuccess: (_data, activitySubscription) => {
-      control.close(() => {
-        updateProfileShadow(queryClient, profile.did, {
-          activitySubscription,
-        })
+	const {
+		mutate: saveChanges,
+		isPending: isSaving,
+		error,
+	} = useMutation({
+		mutationFn: async (activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>) => {
+			await agent.app.bsky.notification.putActivitySubscription({
+				subject: profile.did,
+				activitySubscription,
+			});
+		},
+		onSuccess: (_data, activitySubscription) => {
+			control.close(() => {
+				updateProfileShadow(queryClient, profile.did, {
+					activitySubscription,
+				});
 
-        if (!activitySubscription.post && !activitySubscription.reply) {
-          Toast.show(
-            l`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
-            {
-              type: 'success',
-            },
-          )
+				if (!activitySubscription.post && !activitySubscription.reply) {
+					Toast.show(l`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`, {
+						type: 'success',
+					});
 
-          // filter out the subscription
-          queryClient.setQueryData(
-            RQKEY_getActivitySubscriptions,
-            (
-              old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>,
-            ) => {
-              if (!old) return old
-              return {
-                ...old,
-                pages: old.pages.map(page => ({
-                  ...page,
-                  subscriptions: page.subscriptions.filter(
-                    item => item.did !== profile.did,
-                  ),
-                })),
-              }
-            },
-          )
-        } else {
-          if (!initialState.post && !initialState.reply) {
-            Toast.show(
-              l`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
-              {
-                type: 'success',
-              },
-            )
-          } else {
-            Toast.show(l`Changes saved`, {
-              type: 'success',
-            })
-          }
-        }
-      })
-    },
-    onError: err => {
-      logger.error('Could not save activity subscription', {message: err})
-    },
-  })
+					// filter out the subscription
+					queryClient.setQueryData(
+						RQKEY_getActivitySubscriptions,
+						(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>) => {
+							if (!old) return old;
+							return {
+								...old,
+								pages: old.pages.map((page) => ({
+									...page,
+									subscriptions: page.subscriptions.filter((item) => item.did !== profile.did),
+								})),
+							};
+						},
+					);
+				} else {
+					if (!initialState.post && !initialState.reply) {
+						Toast.show(l`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`, {
+							type: 'success',
+						});
+					} else {
+						Toast.show(l`Changes saved`, {
+							type: 'success',
+						});
+					}
+				}
+			});
+		},
+		onError: (err) => {
+			logger.error('Could not save activity subscription', { message: err });
+		},
+	});
 
-  const buttonProps: Omit<ButtonProps, 'children'> = useMemo(() => {
-    const isDirty =
-      state.post !== initialState.post || state.reply !== initialState.reply
-    const hasAny = state.post || state.reply
+	const buttonProps: Omit<ButtonProps, 'children'> = useMemo(() => {
+		const isDirty = state.post !== initialState.post || state.reply !== initialState.reply;
+		const hasAny = state.post || state.reply;
 
-    if (isDirty) {
-      return {
-        label: l`Save changes`,
-        color: hasAny ? 'primary' : 'negative',
-        onPress: () => saveChanges(state),
-        disabled: isSaving,
-      }
-    } else {
-      return {
-        label: l`Save changes`,
-        color: 'secondary',
-        disabled: true,
-      }
-    }
-  }, [state, initialState, control, l, isSaving, saveChanges])
+		if (isDirty) {
+			return {
+				label: l`Save changes`,
+				color: hasAny ? 'primary' : 'negative',
+				onPress: () => saveChanges(state),
+				disabled: isSaving,
+			};
+		} else {
+			return {
+				label: l`Save changes`,
+				color: 'secondary',
+				disabled: true,
+			};
+		}
+	}, [state, initialState, control, l, isSaving, saveChanges]);
 
-  const name = createSanitizedDisplayName(profile, false)
+	const name = createSanitizedDisplayName(profile, false);
 
-  return (
-    <Dialog.ScrollableInner
-      style={{maxWidth: 400}}
-      label={l`Get notified of new posts from ${name}`}>
-      <View style={[a.gap_lg]}>
-        <View style={[a.gap_xs]}>
-          <Text style={[a.font_bold, a.text_2xl]}>
-            <Trans>Keep me posted</Trans>
-          </Text>
-          <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            <Trans>Get notified of this account’s activity</Trans>
-          </Text>
-        </View>
+	return (
+		<Dialog.ScrollableInner style={{ maxWidth: 400 }} label={l`Get notified of new posts from ${name}`}>
+			<View style={[a.gap_lg]}>
+				<View style={[a.gap_xs]}>
+					<Text style={[a.font_bold, a.text_2xl]}>
+						<Trans>Keep me posted</Trans>
+					</Text>
+					<Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+						<Trans>Get notified of this account’s activity</Trans>
+					</Text>
+				</View>
 
-        {includeProfile && (
-          <ProfileCard.Header>
-            <ProfileCard.Avatar
-              profile={profile}
-              moderationOpts={moderationOpts}
-              disabledPreview
-            />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-          </ProfileCard.Header>
-        )}
+				{includeProfile && (
+					<ProfileCard.Header>
+						<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
+						<ProfileCard.NameAndHandle profile={profile} moderationOpts={moderationOpts} />
+					</ProfileCard.Header>
+				)}
 
-        <Toggle.Group
-          label={l`Subscribe to account activity`}
-          values={values}
-          onChange={onChange}>
-          <View style={[a.gap_sm]}>
-            <Toggle.Item
-              label={l`Posts`}
-              name="post"
-              style={[a.flex_1, a.py_xs, a.flex_row_reverse, a.gap_sm]}>
-              <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-                <Trans>Posts</Trans>
-              </Toggle.LabelText>
-              <Toggle.Switch />
-            </Toggle.Item>
-            <Toggle.Item
-              label={l`Replies`}
-              name="reply"
-              style={[a.flex_1, a.py_xs, a.flex_row_reverse, a.gap_sm]}>
-              <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-                <Trans>Replies</Trans>
-              </Toggle.LabelText>
-              <Toggle.Switch />
-            </Toggle.Item>
-          </View>
-        </Toggle.Group>
+				<Toggle.Group label={l`Subscribe to account activity`} values={values} onChange={onChange}>
+					<View style={[a.gap_sm]}>
+						<Toggle.Item
+							label={l`Posts`}
+							name="post"
+							style={[a.flex_1, a.py_xs, a.flex_row_reverse, a.gap_sm]}
+						>
+							<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
+								<Trans>Posts</Trans>
+							</Toggle.LabelText>
+							<Toggle.Switch />
+						</Toggle.Item>
+						<Toggle.Item
+							label={l`Replies`}
+							name="reply"
+							style={[a.flex_1, a.py_xs, a.flex_row_reverse, a.gap_sm]}
+						>
+							<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
+								<Trans>Replies</Trans>
+							</Toggle.LabelText>
+							<Toggle.Switch />
+						</Toggle.Item>
+					</View>
+				</Toggle.Group>
 
-        {error && (
-          <Admonition type="error">
-            <Trans>Could not save changes: {cleanError(error)}</Trans>
-          </Admonition>
-        )}
+				{error && (
+					<Admonition type="error">
+						<Trans>Could not save changes: {cleanError(error)}</Trans>
+					</Admonition>
+				)}
 
-        <Button {...buttonProps} size="large" variant="solid">
-          <ButtonText>{buttonProps.label}</ButtonText>
-          {isSaving && <ButtonIcon icon={Loader} />}
-        </Button>
-      </View>
-      <Dialog.Close />
-    </Dialog.ScrollableInner>
-  )
+				<Button {...buttonProps} size="large" variant="solid">
+					<ButtonText>{buttonProps.label}</ButtonText>
+					{isSaving && <ButtonIcon icon={Loader} />}
+				</Button>
+			</View>
+			<Dialog.Close />
+		</Dialog.ScrollableInner>
+	);
 }
 
 function parseActivitySubscription(
-  sub?: AppBskyNotificationDefs.ActivitySubscription,
+	sub?: AppBskyNotificationDefs.ActivitySubscription,
 ): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
-  if (!sub) return {post: false, reply: false}
-  const {post, reply} = sub
-  return {post, reply}
+	if (!sub) return { post: false, reply: false };
+	const { post, reply } = sub;
+	return { post, reply };
 }

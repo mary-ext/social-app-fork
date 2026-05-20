@@ -1,45 +1,44 @@
-import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import { View } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
+import { useNavigation } from '@react-navigation/native';
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import { type NavigationProp } from '#/lib/routes/types';
+import { atoms as a, useTheme } from '#/alf';
+import { Button, ButtonText } from '#/components/Button';
+import { Text } from '#/components/Typography';
 
-export function ErrorScreen({error}: {error: React.ReactNode}) {
-  const t = useTheme()
-  const navigation = useNavigation<NavigationProp>()
-  const {t: l} = useLingui()
-  const onPressBack = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }
+export function ErrorScreen({ error }: { error: React.ReactNode }) {
+	const t = useTheme();
+	const navigation = useNavigation<NavigationProp>();
+	const { t: l } = useLingui();
+	const onPressBack = () => {
+		if (navigation.canGoBack()) {
+			navigation.goBack();
+		} else {
+			navigation.navigate('Home');
+		}
+	};
 
-  return (
-    <View style={[a.px_xl, a.py_md, a.gap_md]}>
-      <Text style={[a.text_4xl, a.font_bold]}>
-        <Trans>Could not load list</Trans>
-      </Text>
-      <Text style={[a.text_md, t.atoms.text_contrast_high, a.leading_snug]}>
-        {error}
-      </Text>
-      <View style={[a.flex_row, a.mt_lg]}>
-        <Button
-          label={l`Go back`}
-          accessibilityHint={l`Returns to previous page`}
-          onPress={onPressBack}
-          size="small"
-          color="secondary">
-          <ButtonText>
-            <Trans>Go back</Trans>
-          </ButtonText>
-        </Button>
-      </View>
-    </View>
-  )
+	return (
+		<View style={[a.px_xl, a.py_md, a.gap_md]}>
+			<Text style={[a.text_4xl, a.font_bold]}>
+				<Trans>Could not load list</Trans>
+			</Text>
+			<Text style={[a.text_md, t.atoms.text_contrast_high, a.leading_snug]}>{error}</Text>
+			<View style={[a.flex_row, a.mt_lg]}>
+				<Button
+					label={l`Go back`}
+					accessibilityHint={l`Returns to previous page`}
+					onPress={onPressBack}
+					size="small"
+					color="secondary"
+				>
+					<ButtonText>
+						<Trans>Go back</Trans>
+					</ButtonText>
+				</Button>
+			</View>
+		</View>
+	);
 }

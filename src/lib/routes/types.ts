@@ -1,156 +1,153 @@
-import {type NavigationState, type PartialState} from '@react-navigation/native'
+import { type NavigationState, type PartialState } from '@react-navigation/native';
 import {
-  type NativeStackNavigationOptions,
-  type NativeStackNavigationProp,
-} from '@react-navigation/native-stack'
+	type NativeStackNavigationOptions,
+	type NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 
-export type {NativeStackScreenProps} from '@react-navigation/native-stack'
+export type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export type NativeStackNavigationOptionsWithAuth =
-  NativeStackNavigationOptions & {
-    requireAuth?: boolean
-  }
+export type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
+	requireAuth?: boolean;
+};
 
 export type CommonNavigatorParams = {
-  NotFound: undefined
-  Lists: undefined
-  Moderation: undefined
-  ModerationModlists: undefined
-  ModerationMutedAccounts: undefined
-  ModerationBlockedAccounts: undefined
-  ModerationInteractionSettings: undefined
-  ModerationVerificationSettings: undefined
-  Settings: undefined
-  Profile: {name: string; hideBackButton?: boolean}
-  ProfileFollowers: {name: string}
-  ProfileFollows: {name: string}
-  ProfileKnownFollowers: {name: string}
-  ProfileSearch: {name: string; q?: string}
-  ProfileList: {name: string; rkey: string}
-  PostThread: {name: string; rkey: string}
-  PostLikedBy: {name: string; rkey: string}
-  PostRepostedBy: {name: string; rkey: string}
-  PostQuotes: {name: string; rkey: string}
-  ProfileFeed: {
-    name: string
-    rkey: string
-    feedCacheKey?: 'discover' | 'explore' | undefined
-  }
-  ProfileFeedLikedBy: {name: string; rkey: string}
-  ProfileLabelerLikedBy: {name: string}
-  Debug: undefined
-  DebugMod: undefined
-  Log: undefined
-  LanguageSettings: undefined
-  SavedFeeds: undefined
-  PreferencesFollowingFeed: undefined
-  PreferencesThreads: undefined
-  PreferencesExternalEmbeds: undefined
-  AccessibilitySettings: undefined
-  AppearanceSettings: undefined
-  AccountSettings: undefined
-  AutomationLabelSettings: undefined
-  PrivacyAndSecuritySettings: undefined
-  ActivityPrivacySettings: undefined
-  ContentAndMediaSettings: undefined
-  NotificationSettings: undefined
-  ReplyNotificationSettings: undefined
-  MentionNotificationSettings: undefined
-  QuoteNotificationSettings: undefined
-  LikeNotificationSettings: undefined
-  RepostNotificationSettings: undefined
-  NewFollowerNotificationSettings: undefined
-  LikesOnRepostsNotificationSettings: undefined
-  RepostsOnRepostsNotificationSettings: undefined
-  ActivityNotificationSettings: undefined
-  MiscellaneousNotificationSettings: undefined
-  InterestsSettings: undefined
-  AboutSettings: undefined
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
-  Hashtag: {tag: string; author?: string}
-  Topic: {topic: string}
-  MessagesConversation: {conversation: string; embed?: string; accept?: true}
-  MessagesConversationSettings: {conversation: string}
-  MessagesSettings: undefined
-  MessagesInbox: undefined
-  NotificationsActivityList: {posts: string}
-  LegacyNotificationSettings: undefined
-  Feeds: undefined
-  Start: {name: string; rkey: string}
-  StarterPack: {name: string; rkey: string; new?: boolean}
-  StarterPackShort: {code: string}
-  StarterPackWizard: {
-    fromDialog?: boolean
-    targetDid?: string
-    onSuccess?: () => void
-  }
-  StarterPackEdit: {rkey?: string}
-  Bookmarks: undefined
-}
+	NotFound: undefined;
+	Lists: undefined;
+	Moderation: undefined;
+	ModerationModlists: undefined;
+	ModerationMutedAccounts: undefined;
+	ModerationBlockedAccounts: undefined;
+	ModerationInteractionSettings: undefined;
+	ModerationVerificationSettings: undefined;
+	Settings: undefined;
+	Profile: { name: string; hideBackButton?: boolean };
+	ProfileFollowers: { name: string };
+	ProfileFollows: { name: string };
+	ProfileKnownFollowers: { name: string };
+	ProfileSearch: { name: string; q?: string };
+	ProfileList: { name: string; rkey: string };
+	PostThread: { name: string; rkey: string };
+	PostLikedBy: { name: string; rkey: string };
+	PostRepostedBy: { name: string; rkey: string };
+	PostQuotes: { name: string; rkey: string };
+	ProfileFeed: {
+		name: string;
+		rkey: string;
+		feedCacheKey?: 'discover' | 'explore' | undefined;
+	};
+	ProfileFeedLikedBy: { name: string; rkey: string };
+	ProfileLabelerLikedBy: { name: string };
+	Debug: undefined;
+	DebugMod: undefined;
+	Log: undefined;
+	LanguageSettings: undefined;
+	SavedFeeds: undefined;
+	PreferencesFollowingFeed: undefined;
+	PreferencesThreads: undefined;
+	PreferencesExternalEmbeds: undefined;
+	AccessibilitySettings: undefined;
+	AppearanceSettings: undefined;
+	AccountSettings: undefined;
+	AutomationLabelSettings: undefined;
+	PrivacyAndSecuritySettings: undefined;
+	ActivityPrivacySettings: undefined;
+	ContentAndMediaSettings: undefined;
+	NotificationSettings: undefined;
+	ReplyNotificationSettings: undefined;
+	MentionNotificationSettings: undefined;
+	QuoteNotificationSettings: undefined;
+	LikeNotificationSettings: undefined;
+	RepostNotificationSettings: undefined;
+	NewFollowerNotificationSettings: undefined;
+	LikesOnRepostsNotificationSettings: undefined;
+	RepostsOnRepostsNotificationSettings: undefined;
+	ActivityNotificationSettings: undefined;
+	MiscellaneousNotificationSettings: undefined;
+	InterestsSettings: undefined;
+	AboutSettings: undefined;
+	Search: { q?: string; tab?: 'user' | 'profile' | 'feed' };
+	Hashtag: { tag: string; author?: string };
+	Topic: { topic: string };
+	MessagesConversation: { conversation: string; embed?: string; accept?: true };
+	MessagesConversationSettings: { conversation: string };
+	MessagesSettings: undefined;
+	MessagesInbox: undefined;
+	NotificationsActivityList: { posts: string };
+	LegacyNotificationSettings: undefined;
+	Feeds: undefined;
+	Start: { name: string; rkey: string };
+	StarterPack: { name: string; rkey: string; new?: boolean };
+	StarterPackShort: { code: string };
+	StarterPackWizard: {
+		fromDialog?: boolean;
+		targetDid?: string;
+		onSuccess?: () => void;
+	};
+	StarterPackEdit: { rkey?: string };
+	Bookmarks: undefined;
+};
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
-  HomeTab: undefined
-  SearchTab: undefined
-  NotificationsTab: undefined
-  MyProfileTab: undefined
-  MessagesTab: undefined
-}
+	HomeTab: undefined;
+	SearchTab: undefined;
+	NotificationsTab: undefined;
+	MyProfileTab: undefined;
+	MessagesTab: undefined;
+};
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
-  Home: undefined
-}
+	Home: undefined;
+};
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
-}
+	Search: { q?: string; tab?: 'user' | 'profile' | 'feed' };
+};
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: undefined
-}
+	Notifications: undefined;
+};
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
-  MyProfile: {name: 'me'; hideBackButton: true}
-}
+	MyProfile: { name: 'me'; hideBackButton: true };
+};
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
-}
+	Messages: { pushToConversation?: string; animation?: 'push' | 'pop' };
+};
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
-  Home: undefined
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
-  Feeds: undefined
-  Notifications: undefined
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
-}
+	Home: undefined;
+	Search: { q?: string; tab?: 'user' | 'profile' | 'feed' };
+	Feeds: undefined;
+	Notifications: undefined;
+	Messages: { pushToConversation?: string; animation?: 'push' | 'pop' };
+};
 
 export type AllNavigatorParams = CommonNavigatorParams & {
-  HomeTab: undefined
-  Home: undefined
-  SearchTab: undefined
-  Search: {q?: string; tab?: 'user' | 'profile' | 'feed'}
-  Feeds: undefined
-  NotificationsTab: undefined
-  Notifications: undefined
-  MyProfileTab: undefined
-  MessagesTab: undefined
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
-}
+	HomeTab: undefined;
+	Home: undefined;
+	SearchTab: undefined;
+	Search: { q?: string; tab?: 'user' | 'profile' | 'feed' };
+	Feeds: undefined;
+	NotificationsTab: undefined;
+	Notifications: undefined;
+	MyProfileTab: undefined;
+	MessagesTab: undefined;
+	Messages: { pushToConversation?: string; animation?: 'push' | 'pop' };
+};
 
 // NOTE
 // this isn't strictly correct but it should be close enough
 // a TS wizard might be able to get this 100%
 // -prf
-export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>
+export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>;
 
-export type State =
-  | NavigationState
-  | Omit<PartialState<NavigationState>, 'stale'>
+export type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
-export type RouteBuildParams = Record<string, unknown>
-export type MatchResult = {params: RouteParams}
-export type RouteParams = Record<string, string>
+export type RouteBuildParams = Record<string, unknown>;
+export type MatchResult = { params: RouteParams };
+export type RouteParams = Record<string, string>;
 export type Route = {
-  match: (path: string) => MatchResult | undefined
-  build: (params?: RouteBuildParams) => string
-}
+	match: (path: string) => MatchResult | undefined;
+	build: (params?: RouteBuildParams) => string;
+};

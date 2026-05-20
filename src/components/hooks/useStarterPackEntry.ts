@@ -1,25 +1,25 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react';
 
-import {httpStarterPackUriToAtUri} from '#/lib/strings/starter-pack'
-import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
+import { httpStarterPackUriToAtUri } from '#/lib/strings/starter-pack';
+import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 export function useStarterPackEntry() {
-  const [ready, setReady] = useState(false)
+	const [ready, setReady] = useState(false);
 
-  const setActiveStarterPack = useSetActiveStarterPack()
+	const setActiveStarterPack = useSetActiveStarterPack();
 
-  useEffect(() => {
-    const href = window.location.href
-    const atUri = httpStarterPackUriToAtUri(href)
+	useEffect(() => {
+		const href = window.location.href;
+		const atUri = httpStarterPackUriToAtUri(href);
 
-    if (atUri) {
-      setActiveStarterPack({
-        uri: atUri,
-      })
-    }
+		if (atUri) {
+			setActiveStarterPack({
+				uri: atUri,
+			});
+		}
 
-    setReady(true)
-  }, [setActiveStarterPack])
+		setReady(true);
+	}, [setActiveStarterPack]);
 
-  return ready
+	return ready;
 }

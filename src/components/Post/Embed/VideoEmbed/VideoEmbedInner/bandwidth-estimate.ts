@@ -1,11 +1,11 @@
-let latestBandwidthEstimate: number | undefined
+let latestBandwidthEstimate: number | undefined;
 
 export function get() {
-  return latestBandwidthEstimate
+	return latestBandwidthEstimate;
 }
 
 export function set(estimate: number) {
-  if (!isNaN(estimate)) {
-    latestBandwidthEstimate = estimate
-  }
+	if (!isNaN(estimate)) {
+		latestBandwidthEstimate = estimate;
+	}
 }

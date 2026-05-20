@@ -1,277 +1,252 @@
-import {memo, useCallback, useEffect, useMemo} from 'react'
-import {Pressable, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import { memo, useCallback, useEffect, useMemo } from 'react';
+import { Pressable, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
+import { useLingui } from '@lingui/react/macro';
+import { useNavigation } from '@react-navigation/native';
 
 import Animated, {
-  type AnimatedRef,
-  type AnimatedView,
-  useAnimatedRef,
-} from '#/lib/animations/reanimatedCompat'
-import {BACK_HITSLOP} from '#/lib/constants'
-import {useHaptics} from '#/lib/haptics'
-import {type NavigationProp} from '#/lib/routes/types'
-import {type Shadow} from '#/state/cache/types'
-import {useSession} from '#/state/session'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a, useTheme, utils} from '#/alf'
-import {Button} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {useLightboxControls} from '#/components/Lightbox/state'
-import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
-import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
-import {useActorStatus} from '#/features/liveNow'
-import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
-import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
-import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
-import {GrowableAvatar} from './GrowableAvatar'
-import {GrowableBanner} from './GrowableBanner'
+	type AnimatedRef,
+	type AnimatedView,
+	useAnimatedRef,
+} from '#/lib/animations/reanimatedCompat';
+import { BACK_HITSLOP } from '#/lib/constants';
+import { useHaptics } from '#/lib/haptics';
+import { type NavigationProp } from '#/lib/routes/types';
+import { type Shadow } from '#/state/cache/types';
+import { useSession } from '#/state/session';
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
+import { UserAvatar } from '#/view/com/util/UserAvatar';
+import { UserBanner } from '#/view/com/util/UserBanner';
+import { atoms as a, useTheme, utils } from '#/alf';
+import { Button } from '#/components/Button';
+import { useDialogControl } from '#/components/Dialog';
+import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
+import { useLightboxControls } from '#/components/Lightbox/state';
+import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
+import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
+import { useActorStatus } from '#/features/liveNow';
+import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
+import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+import { GrowableAvatar } from './GrowableAvatar';
+import { GrowableBanner } from './GrowableBanner';
 
 interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ModerationDecision
-  hideBackButton?: boolean
-  isPlaceholderProfile?: boolean
+	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
+	moderation: ModerationDecision;
+	hideBackButton?: boolean;
+	isPlaceholderProfile?: boolean;
 }
 
 let ProfileHeaderShell = ({
-  children,
-  profile,
-  moderation,
-  hideBackButton = false,
-  isPlaceholderProfile,
+	children,
+	profile,
+	moderation,
+	hideBackButton = false,
+	isPlaceholderProfile,
 }: React.PropsWithChildren<Props>): React.ReactNode => {
-  const t = useTheme()
-  const {currentAccount} = useSession()
-  const {t: l} = useLingui()
-  const {openLightbox} = useLightboxControls()
-  const navigation = useNavigation<NavigationProp>()
-  useSafeAreaInsets()
-  const playHaptic = useHaptics()
-  const liveStatusControl = useDialogControl()
+	const t = useTheme();
+	const { currentAccount } = useSession();
+	const { t: l } = useLingui();
+	const { openLightbox } = useLightboxControls();
+	const navigation = useNavigation<NavigationProp>();
+	useSafeAreaInsets();
+	const playHaptic = useHaptics();
+	const liveStatusControl = useDialogControl();
 
-  const aviRef = useAnimatedRef()
-  const bannerRef = useAnimatedRef<AnimatedView>()
+	const aviRef = useAnimatedRef();
+	const bannerRef = useAnimatedRef<AnimatedView>();
 
-  const onPressBack = useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
+	const onPressBack = useCallback(() => {
+		if (navigation.canGoBack()) {
+			navigation.goBack();
+		} else {
+			navigation.navigate('Home');
+		}
+	}, [navigation]);
 
-  const _openLightbox = useCallback(
-    (
-      uri: string,
-      thumbRef: AnimatedRef<AnimatedView>,
-      type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
-    ) => {
-      openLightbox({
-        images: [
-          {
-            uri,
-            thumbUri: uri,
-            thumbRect: null,
-            thumbRef,
-            dimensions:
-              type === 'circle-avi' || type === 'rect-avi'
-                ? {
-                    // It's fine if it's actually smaller but we know it's 1:1.
-                    height: 1000,
-                    width: 1000,
-                  }
-                : {
-                    // Banner aspect ratio is 3:1
-                    width: 3000,
-                    height: 1000,
-                  },
-            thumbDimensions: null,
-            type,
-          },
-        ],
-        index: 0,
-      })
-    },
-    [openLightbox],
-  )
+	const _openLightbox = useCallback(
+		(
+			uri: string,
+			thumbRef: AnimatedRef<AnimatedView>,
+			type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
+		) => {
+			openLightbox({
+				images: [
+					{
+						uri,
+						thumbUri: uri,
+						thumbRect: null,
+						thumbRef,
+						dimensions:
+							type === 'circle-avi' || type === 'rect-avi'
+								? {
+										// It's fine if it's actually smaller but we know it's 1:1.
+										height: 1000,
+										width: 1000,
+									}
+								: {
+										// Banner aspect ratio is 3:1
+										width: 3000,
+										height: 1000,
+									},
+						thumbDimensions: null,
+						type,
+					},
+				],
+				index: 0,
+			});
+		},
+		[openLightbox],
+	);
 
-  const isMe = useMemo(
-    () => currentAccount?.did === profile.did,
-    [currentAccount, profile],
-  )
+	const isMe = useMemo(() => currentAccount?.did === profile.did, [currentAccount, profile]);
 
-  const live = useActorStatus(profile)
+	const live = useActorStatus(profile);
 
-  useEffect(() => {
-    if (live.isActive) {
-    }
-  }, [live.isActive, profile.did])
+	useEffect(() => {
+		if (live.isActive) {
+		}
+	}, [live.isActive, profile.did]);
 
-  const onPressAvi = useCallback(() => {
-    if (live.isActive) {
-      playHaptic('Light')
-      liveStatusControl.open()
-    } else {
-      const modui = moderation.ui('avatar')
-      const avatar = profile.avatar
-      const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi'
-      if (avatar && !(modui.blur && modui.noOverride)) {
-        _openLightbox(avatar, aviRef, type)
-      }
-    }
-  }, [
-    profile,
-    moderation,
-    _openLightbox,
-    aviRef,
-    liveStatusControl,
-    live,
-    playHaptic,
-  ])
+	const onPressAvi = useCallback(() => {
+		if (live.isActive) {
+			playHaptic('Light');
+			liveStatusControl.open();
+		} else {
+			const modui = moderation.ui('avatar');
+			const avatar = profile.avatar;
+			const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi';
+			if (avatar && !(modui.blur && modui.noOverride)) {
+				_openLightbox(avatar, aviRef, type);
+			}
+		}
+	}, [profile, moderation, _openLightbox, aviRef, liveStatusControl, live, playHaptic]);
 
-  const onPressBanner = useCallback(() => {
-    const modui = moderation.ui('banner')
-    const banner = profile.banner
-    if (banner && !(modui.blur && modui.noOverride)) {
-      _openLightbox(banner, bannerRef, 'image')
-    }
-  }, [profile.banner, moderation, _openLightbox, bannerRef])
+	const onPressBanner = useCallback(() => {
+		const modui = moderation.ui('banner');
+		const banner = profile.banner;
+		if (banner && !(modui.blur && modui.noOverride)) {
+			_openLightbox(banner, bannerRef, 'image');
+		}
+	}, [profile.banner, moderation, _openLightbox, bannerRef]);
 
-  return (
-    <View style={t.atoms.bg} pointerEvents={'box-none'}>
-      <View pointerEvents={'box-none'} style={[a.relative, {height: 150}]}>
-        <GrowableBanner
-          testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
-          label={
-            profile.banner
-              ? l`View profile banner`
-              : l`Profile banner placeholder`
-          }
-          onPress={isPlaceholderProfile ? undefined : onPressBanner}
-          bannerRef={bannerRef}
-          backButton={
-            !hideBackButton && (
-              <Button
-                testID="profileHeaderBackBtn"
-                onPress={onPressBack}
-                hitSlop={BACK_HITSLOP}
-                label={l`Back`}
-                style={[
-                  a.absolute,
-                  a.pointer,
-                  {
-                    top: 10,
-                    left: 18,
-                  },
-                ]}>
-                {({hovered}) => (
-                  <View
-                    style={[
-                      a.align_center,
-                      a.justify_center,
-                      a.rounded_full,
-                      {
-                        width: 31,
-                        height: 31,
-                        backgroundColor: utils.alpha('#000', 0.5),
-                      },
-                      hovered && {
-                        backgroundColor: utils.alpha('#000', 0.75),
-                      },
-                    ]}>
-                    <ArrowLeftIcon size="lg" fill="white" />
-                  </View>
-                )}
-              </Button>
-            )
-          }>
-          {isPlaceholderProfile ? (
-            <LoadingPlaceholder
-              width="100%"
-              height="100%"
-              style={{borderRadius: 0}}
-            />
-          ) : (
-            <UserBanner
-              type={profile.associated?.labeler ? 'labeler' : 'default'}
-              banner={profile.banner}
-              moderation={moderation.ui('banner')}
-            />
-          )}
-        </GrowableBanner>
-      </View>
-      {children}
-      {!isPlaceholderProfile &&
-        (isMe ? (
-          <LabelsOnMe
-            type="account"
-            labels={profile.labels}
-            style={[a.px_lg, a.pt_xs, a.pb_sm, {pointerEvents: 'box-none'}]}
-          />
-        ) : (
-          <ProfileHeaderAlerts
-            moderation={moderation}
-            style={[a.px_lg, a.pt_xs, a.pb_sm, {pointerEvents: 'box-none'}]}
-          />
-        ))}
-      <GrowableAvatar style={[a.absolute, {top: 104, left: 10}]}>
-        <Pressable
-          testID="profileHeaderAviButton"
-          onPress={onPressAvi}
-          accessibilityRole="image"
-          accessibilityLabel={l`View ${profile.handle}'s avatar`}
-          accessibilityHint="">
-          <View
-            style={[
-              t.atoms.bg,
-              a.rounded_full,
-              {
-                width: 94,
-                height: 94,
-                borderWidth: live.isActive ? 3 : 2,
-                borderColor: live.isActive
-                  ? t.palette.negative_500
-                  : t.atoms.bg.backgroundColor,
-              },
-              profile.associated?.labeler && a.rounded_md,
-            ]}>
-            <Animated.View ref={aviRef} collapsable={false}>
-              <UserAvatar
-                type={profile.associated?.labeler ? 'labeler' : 'user'}
-                size={live.isActive ? 88 : 90}
-                avatar={profile.avatar}
-                moderation={moderation.ui('avatar')}
-                noBorder
-              />
-              {live.isActive && <LiveIndicator size="large" />}
-            </Animated.View>
-          </View>
-        </Pressable>
-      </GrowableAvatar>
-      {live.isActive &&
-        (isMe ? (
-          <EditLiveDialog
-            control={liveStatusControl}
-            status={live}
-            embed={live.embed}
-          />
-        ) : (
-          <LiveStatusDialog
-            control={liveStatusControl}
-            status={live}
-            embed={live.embed}
-            profile={profile}
-          />
-        ))}
-    </View>
-  )
-}
+	return (
+		<View style={t.atoms.bg} pointerEvents={'box-none'}>
+			<View pointerEvents={'box-none'} style={[a.relative, { height: 150 }]}>
+				<GrowableBanner
+					testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
+					label={profile.banner ? l`View profile banner` : l`Profile banner placeholder`}
+					onPress={isPlaceholderProfile ? undefined : onPressBanner}
+					bannerRef={bannerRef}
+					backButton={
+						!hideBackButton && (
+							<Button
+								testID="profileHeaderBackBtn"
+								onPress={onPressBack}
+								hitSlop={BACK_HITSLOP}
+								label={l`Back`}
+								style={[
+									a.absolute,
+									a.pointer,
+									{
+										top: 10,
+										left: 18,
+									},
+								]}
+							>
+								{({ hovered }) => (
+									<View
+										style={[
+											a.align_center,
+											a.justify_center,
+											a.rounded_full,
+											{
+												width: 31,
+												height: 31,
+												backgroundColor: utils.alpha('#000', 0.5),
+											},
+											hovered && {
+												backgroundColor: utils.alpha('#000', 0.75),
+											},
+										]}
+									>
+										<ArrowLeftIcon size="lg" fill="white" />
+									</View>
+								)}
+							</Button>
+						)
+					}
+				>
+					{isPlaceholderProfile ? (
+						<LoadingPlaceholder width="100%" height="100%" style={{ borderRadius: 0 }} />
+					) : (
+						<UserBanner
+							type={profile.associated?.labeler ? 'labeler' : 'default'}
+							banner={profile.banner}
+							moderation={moderation.ui('banner')}
+						/>
+					)}
+				</GrowableBanner>
+			</View>
+			{children}
+			{!isPlaceholderProfile &&
+				(isMe ? (
+					<LabelsOnMe
+						type="account"
+						labels={profile.labels}
+						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
+					/>
+				) : (
+					<ProfileHeaderAlerts
+						moderation={moderation}
+						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
+					/>
+				))}
+			<GrowableAvatar style={[a.absolute, { top: 104, left: 10 }]}>
+				<Pressable
+					testID="profileHeaderAviButton"
+					onPress={onPressAvi}
+					accessibilityRole="image"
+					accessibilityLabel={l`View ${profile.handle}'s avatar`}
+					accessibilityHint=""
+				>
+					<View
+						style={[
+							t.atoms.bg,
+							a.rounded_full,
+							{
+								width: 94,
+								height: 94,
+								borderWidth: live.isActive ? 3 : 2,
+								borderColor: live.isActive ? t.palette.negative_500 : t.atoms.bg.backgroundColor,
+							},
+							profile.associated?.labeler && a.rounded_md,
+						]}
+					>
+						<Animated.View ref={aviRef} collapsable={false}>
+							<UserAvatar
+								type={profile.associated?.labeler ? 'labeler' : 'user'}
+								size={live.isActive ? 88 : 90}
+								avatar={profile.avatar}
+								moderation={moderation.ui('avatar')}
+								noBorder
+							/>
+							{live.isActive && <LiveIndicator size="large" />}
+						</Animated.View>
+					</View>
+				</Pressable>
+			</GrowableAvatar>
+			{live.isActive &&
+				(isMe ? (
+					<EditLiveDialog control={liveStatusControl} status={live} embed={live.embed} />
+				) : (
+					<LiveStatusDialog control={liveStatusControl} status={live} embed={live.embed} profile={profile} />
+				))}
+		</View>
+	);
+};
 
-ProfileHeaderShell = memo(ProfileHeaderShell)
-export {ProfileHeaderShell}
+ProfileHeaderShell = memo(ProfileHeaderShell);
+export { ProfileHeaderShell };

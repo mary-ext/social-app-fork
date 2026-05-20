@@ -1,94 +1,83 @@
-import {InteractionManager, View} from 'react-native'
+import { InteractionManager, View } from 'react-native';
 
-import {
-  type AnimatedRef,
-  type AnimatedView,
-} from '#/lib/animations/reanimatedCompat'
-import {atoms as a, tokens} from '#/alf'
-import {AutoSizedImage} from '#/components/images/AutoSizedImage'
-import {Gallery} from '#/components/images/Gallery'
-import {useLightboxControls} from '#/components/Lightbox/state'
-import {type Dimensions} from '#/components/Lightbox/types'
-import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {Image} from '#/shims/image'
-import {type EmbedType} from '#/types/bsky/post'
-import {type CommonProps} from './types'
+import { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
+import { atoms as a, tokens } from '#/alf';
+import { AutoSizedImage } from '#/components/images/AutoSizedImage';
+import { Gallery } from '#/components/images/Gallery';
+import { useLightboxControls } from '#/components/Lightbox/state';
+import { type Dimensions } from '#/components/Lightbox/types';
+import { PostEmbedViewContext } from '#/components/Post/Embed/types';
+import { Image } from '#/shims/image';
+import { type EmbedType } from '#/types/bsky/post';
+import { type CommonProps } from './types';
 
 export function ImageEmbed({
-  embed,
-  ...rest
+	embed,
+	...rest
 }: CommonProps & {
-  embed: EmbedType<'images'>
+	embed: EmbedType<'images'>;
 }) {
-  const {openLightbox} = useLightboxControls()
-  const {images} = embed.view
+	const { openLightbox } = useLightboxControls();
+	const { images } = embed.view;
 
-  if (images.length > 0) {
-    const items = images.map(img => ({
-      uri: img.fullsize,
-      thumbUri: img.thumb,
-      alt: img.alt,
-      dimensions: img.aspectRatio ?? null,
-    }))
-    const onPress = (
-      index: number,
-      refs: AnimatedRef<AnimatedView>[],
-      fetchedDims: (Dimensions | null)[],
-    ) => {
-      openLightbox({
-        images: items.map((item, i) => ({
-          ...item,
-          thumbRect: null,
-          thumbRef: refs[i] ?? null,
-          thumbDimensions: fetchedDims[i] ?? null,
-          thumbBorderRadius: tokens.borderRadius.md,
-          type: 'image',
-        })),
-        index,
-      })
-    }
-    const onPressIn = (_: number) => {
-      InteractionManager.runAfterInteractions(() => {
-        Image.prefetch(
-          items.map(i => i.uri),
-          'memory',
-        )
-      })
-    }
+	if (images.length > 0) {
+		const items = images.map((img) => ({
+			uri: img.fullsize,
+			thumbUri: img.thumb,
+			alt: img.alt,
+			dimensions: img.aspectRatio ?? null,
+		}));
+		const onPress = (
+			index: number,
+			refs: AnimatedRef<AnimatedView>[],
+			fetchedDims: (Dimensions | null)[],
+		) => {
+			openLightbox({
+				images: items.map((item, i) => ({
+					...item,
+					thumbRect: null,
+					thumbRef: refs[i] ?? null,
+					thumbDimensions: fetchedDims[i] ?? null,
+					thumbBorderRadius: tokens.borderRadius.md,
+					type: 'image',
+				})),
+				index,
+			});
+		};
+		const onPressIn = (_: number) => {
+			InteractionManager.runAfterInteractions(() => {
+				Image.prefetch(
+					items.map((i) => i.uri),
+					'memory',
+				);
+			});
+		};
 
-    if (images.length === 1) {
-      const image = images[0]!
-      return (
-        <View style={[a.mt_sm, rest.style]}>
-          <AutoSizedImage
-            crop={
-              rest.viewContext === PostEmbedViewContext.ThreadHighlighted
-                ? 'none'
-                : rest.viewContext ===
-                    PostEmbedViewContext.FeedEmbedRecordWithMedia
-                  ? 'square'
-                  : 'constrained'
-            }
-            image={image}
-            onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}
-            onPressIn={() => onPressIn(0)}
-            hideBadge={
-              rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-            }
-          />
-        </View>
-      )
-    }
+		if (images.length === 1) {
+			const image = images[0]!;
+			return (
+				<View style={[a.mt_sm, rest.style]}>
+					<AutoSizedImage
+						crop={
+							rest.viewContext === PostEmbedViewContext.ThreadHighlighted
+								? 'none'
+								: rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+									? 'square'
+									: 'constrained'
+						}
+						image={image}
+						onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}
+						onPressIn={() => onPressIn(0)}
+						hideBadge={rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
+					/>
+				</View>
+			);
+		}
 
-    return (
-      <View style={[a.mt_sm, rest.style]}>
-        <Gallery
-          images={images}
-          onPress={onPress}
-          onPressIn={onPressIn}
-          viewContext={rest.viewContext}
-        />
-      </View>
-    )
-  }
+		return (
+			<View style={[a.mt_sm, rest.style]}>
+				<Gallery images={images} onPress={onPress} onPressIn={onPressIn} viewContext={rest.viewContext} />
+			</View>
+		);
+	}
 }

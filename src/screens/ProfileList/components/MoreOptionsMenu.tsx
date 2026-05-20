@@ -1,258 +1,236 @@
-import {type AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
+import { type AppBskyActorDefs, AppBskyGraphDefs, AtUri } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { useNavigation } from '@react-navigation/native';
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
-import {toShareUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {
-  useListBlockMutation,
-  useListDeleteMutation,
-  useListMuteMutation,
-} from '#/state/queries/list'
-import {useRemoveFeedMutation} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
-import {Button, ButtonIcon} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLink} from '#/components/icons/ChainLink'
-import {DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
-import {PencilLine_Stroke2_Corner0_Rounded as PencilLineIcon} from '#/components/icons/Pencil'
-import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon} from '#/components/icons/Person'
-import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import * as Menu from '#/components/Menu'
-import {
-  ReportDialog,
-  useReportDialogControl,
-} from '#/components/moderation/ReportDialog'
-import * as Prompt from '#/components/Prompt'
-import * as Toast from '#/components/Toast'
+import { type NavigationProp } from '#/lib/routes/types';
+import { shareUrl } from '#/lib/sharing';
+import { toShareUrl } from '#/lib/strings/url-helpers';
+import { logger } from '#/logger';
+import { useListBlockMutation, useListDeleteMutation, useListMuteMutation } from '#/state/queries/list';
+import { useRemoveFeedMutation } from '#/state/queries/preferences';
+import { useSession } from '#/state/session';
+import { Button, ButtonIcon } from '#/components/Button';
+import { useDialogControl } from '#/components/Dialog';
+import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
+import { ChainLink_Stroke2_Corner0_Rounded as ChainLink } from '#/components/icons/ChainLink';
+import { DotGrid3x1_Stroke2_Corner0_Rounded as DotGridIcon } from '#/components/icons/DotGrid';
+import { PencilLine_Stroke2_Corner0_Rounded as PencilLineIcon } from '#/components/icons/Pencil';
+import { PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon } from '#/components/icons/Person';
+import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker';
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
+import * as Menu from '#/components/Menu';
+import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import * as Prompt from '#/components/Prompt';
+import * as Toast from '#/components/Toast';
 
 export function MoreOptionsMenu({
-  list,
-  savedFeedConfig,
+	list,
+	savedFeedConfig,
 }: {
-  list: AppBskyGraphDefs.ListView
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+	list: AppBskyGraphDefs.ListView;
+	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 }) {
-  const {t: l} = useLingui()
-  const {currentAccount} = useSession()
-  const editListDialogControl = useDialogControl()
-  const deleteListPromptControl = useDialogControl()
-  const reportDialogControl = useReportDialogControl()
-  const navigation = useNavigation<NavigationProp>()
+	const { t: l } = useLingui();
+	const { currentAccount } = useSession();
+	const editListDialogControl = useDialogControl();
+	const deleteListPromptControl = useDialogControl();
+	const reportDialogControl = useReportDialogControl();
+	const navigation = useNavigation<NavigationProp>();
 
-  const {mutateAsync: removeSavedFeed} = useRemoveFeedMutation()
-  const {mutateAsync: deleteList} = useListDeleteMutation()
-  const {mutateAsync: muteList} = useListMuteMutation()
-  const {mutateAsync: blockList} = useListBlockMutation()
+	const { mutateAsync: removeSavedFeed } = useRemoveFeedMutation();
+	const { mutateAsync: deleteList } = useListDeleteMutation();
+	const { mutateAsync: muteList } = useListMuteMutation();
+	const { mutateAsync: blockList } = useListBlockMutation();
 
-  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
-  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
-  const isBlocking = !!list.viewer?.blocked
-  const isMuting = !!list.viewer?.muted
-  const isPinned = Boolean(savedFeedConfig?.pinned)
-  const isOwner = currentAccount?.did === list.creator.did
+	const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST;
+	const isModList = list.purpose === AppBskyGraphDefs.MODLIST;
+	const isBlocking = !!list.viewer?.blocked;
+	const isMuting = !!list.viewer?.muted;
+	const isPinned = Boolean(savedFeedConfig?.pinned);
+	const isOwner = currentAccount?.did === list.creator.did;
 
-  const onPressShare = () => {
-    const {rkey} = new AtUri(list.uri)
-    const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
-    shareUrl(url)
-  }
+	const onPressShare = () => {
+		const { rkey } = new AtUri(list.uri);
+		const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`);
+		shareUrl(url);
+	};
 
-  const onRemoveFromSavedFeeds = async () => {
-    if (!savedFeedConfig) return
-    try {
-      await removeSavedFeed(savedFeedConfig)
-      Toast.show(l`Removed from your feeds`)
-    } catch (e) {
-      Toast.show(l`There was an issue contacting the server`, {
-        type: 'error',
-      })
-      logger.error('Failed to remove pinned list', {message: e})
-    }
-  }
+	const onRemoveFromSavedFeeds = async () => {
+		if (!savedFeedConfig) return;
+		try {
+			await removeSavedFeed(savedFeedConfig);
+			Toast.show(l`Removed from your feeds`);
+		} catch (e) {
+			Toast.show(l`There was an issue contacting the server`, {
+				type: 'error',
+			});
+			logger.error('Failed to remove pinned list', { message: e });
+		}
+	};
 
-  const onPressDelete = async () => {
-    await deleteList({uri: list.uri})
+	const onPressDelete = async () => {
+		await deleteList({ uri: list.uri });
 
-    if (savedFeedConfig) {
-      await removeSavedFeed(savedFeedConfig)
-    }
+		if (savedFeedConfig) {
+			await removeSavedFeed(savedFeedConfig);
+		}
 
-    Toast.show(l({message: 'List deleted', context: 'toast'}))
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }
+		Toast.show(l({ message: 'List deleted', context: 'toast' }));
+		if (navigation.canGoBack()) {
+			navigation.goBack();
+		} else {
+			navigation.navigate('Home');
+		}
+	};
 
-  const onUnpinModList = async () => {
-    try {
-      if (!savedFeedConfig) return
-      await removeSavedFeed(savedFeedConfig)
-      Toast.show(l`Unpinned list`)
-    } catch {
-      Toast.show(l`Failed to unpin list`, {
-        type: 'error',
-      })
-    }
-  }
+	const onUnpinModList = async () => {
+		try {
+			if (!savedFeedConfig) return;
+			await removeSavedFeed(savedFeedConfig);
+			Toast.show(l`Unpinned list`);
+		} catch {
+			Toast.show(l`Failed to unpin list`, {
+				type: 'error',
+			});
+		}
+	};
 
-  const onUnsubscribeMute = async () => {
-    try {
-      await muteList({uri: list.uri, mute: false})
-      Toast.show(l({message: 'List unmuted', context: 'toast'}))
-    } catch {
-      Toast.show(
-        l`There was an issue. Please check your internet connection and try again.`,
-      )
-    }
-  }
+	const onUnsubscribeMute = async () => {
+		try {
+			await muteList({ uri: list.uri, mute: false });
+			Toast.show(l({ message: 'List unmuted', context: 'toast' }));
+		} catch {
+			Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+		}
+	};
 
-  const onUnsubscribeBlock = async () => {
-    try {
-      await blockList({uri: list.uri, block: false})
-      Toast.show(l({message: 'List unblocked', context: 'toast'}))
-    } catch {
-      Toast.show(
-        l`There was an issue. Please check your internet connection and try again.`,
-      )
-    }
-  }
+	const onUnsubscribeBlock = async () => {
+		try {
+			await blockList({ uri: list.uri, block: false });
+			Toast.show(l({ message: 'List unblocked', context: 'toast' }));
+		} catch {
+			Toast.show(l`There was an issue. Please check your internet connection and try again.`);
+		}
+	};
 
-  return (
-    <>
-      <Menu.Root>
-        <Menu.Trigger label={l`More options`}>
-          {({props}) => (
-            <Button
-              label={props.accessibilityLabel}
-              testID="moreOptionsBtn"
-              size="small"
-              color="secondary"
-              shape="round"
-              {...props}>
-              <ButtonIcon icon={DotGridIcon} />
-            </Button>
-          )}
-        </Menu.Trigger>
-        <Menu.Outer showCancel>
-          <Menu.Group>
-            <Menu.Item label={l`Copy link to list`} onPress={onPressShare}>
-              <Menu.ItemText>{<Trans>Copy link to list</Trans>}</Menu.ItemText>
-              <Menu.ItemIcon position="right" icon={ChainLink} />
-            </Menu.Item>
-            {savedFeedConfig && (
-              <Menu.Item
-                label={l`Remove from my feeds`}
-                onPress={onRemoveFromSavedFeeds}>
-                <Menu.ItemText>
-                  <Trans>Remove from my feeds</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon position="right" icon={TrashIcon} />
-              </Menu.Item>
-            )}
-          </Menu.Group>
+	return (
+		<>
+			<Menu.Root>
+				<Menu.Trigger label={l`More options`}>
+					{({ props }) => (
+						<Button
+							label={props.accessibilityLabel}
+							testID="moreOptionsBtn"
+							size="small"
+							color="secondary"
+							shape="round"
+							{...props}
+						>
+							<ButtonIcon icon={DotGridIcon} />
+						</Button>
+					)}
+				</Menu.Trigger>
+				<Menu.Outer showCancel>
+					<Menu.Group>
+						<Menu.Item label={l`Copy link to list`} onPress={onPressShare}>
+							<Menu.ItemText>{<Trans>Copy link to list</Trans>}</Menu.ItemText>
+							<Menu.ItemIcon position="right" icon={ChainLink} />
+						</Menu.Item>
+						{savedFeedConfig && (
+							<Menu.Item label={l`Remove from my feeds`} onPress={onRemoveFromSavedFeeds}>
+								<Menu.ItemText>
+									<Trans>Remove from my feeds</Trans>
+								</Menu.ItemText>
+								<Menu.ItemIcon position="right" icon={TrashIcon} />
+							</Menu.Item>
+						)}
+					</Menu.Group>
 
-          <Menu.Divider />
+					<Menu.Divider />
 
-          {isOwner ? (
-            <Menu.Group>
-              <Menu.Item
-                label={l`Edit list details`}
-                onPress={editListDialogControl.open}>
-                <Menu.ItemText>
-                  <Trans>Edit list details</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon position="right" icon={PencilLineIcon} />
-              </Menu.Item>
-              <Menu.Item
-                label={l`Delete list`}
-                onPress={deleteListPromptControl.open}>
-                <Menu.ItemText>
-                  <Trans>Delete list</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon position="right" icon={TrashIcon} />
-              </Menu.Item>
-            </Menu.Group>
-          ) : (
-            <Menu.Group>
-              <Menu.Item
-                label={l`Report list`}
-                onPress={reportDialogControl.open}>
-                <Menu.ItemText>
-                  <Trans>Report list</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon position="right" icon={WarningIcon} />
-              </Menu.Item>
-            </Menu.Group>
-          )}
+					{isOwner ? (
+						<Menu.Group>
+							<Menu.Item label={l`Edit list details`} onPress={editListDialogControl.open}>
+								<Menu.ItemText>
+									<Trans>Edit list details</Trans>
+								</Menu.ItemText>
+								<Menu.ItemIcon position="right" icon={PencilLineIcon} />
+							</Menu.Item>
+							<Menu.Item label={l`Delete list`} onPress={deleteListPromptControl.open}>
+								<Menu.ItemText>
+									<Trans>Delete list</Trans>
+								</Menu.ItemText>
+								<Menu.ItemIcon position="right" icon={TrashIcon} />
+							</Menu.Item>
+						</Menu.Group>
+					) : (
+						<Menu.Group>
+							<Menu.Item label={l`Report list`} onPress={reportDialogControl.open}>
+								<Menu.ItemText>
+									<Trans>Report list</Trans>
+								</Menu.ItemText>
+								<Menu.ItemIcon position="right" icon={WarningIcon} />
+							</Menu.Item>
+						</Menu.Group>
+					)}
 
-          {isModList && isPinned && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
-                <Menu.Item
-                  label={l`Unpin moderation list`}
-                  onPress={onUnpinModList}>
-                  <Menu.ItemText>
-                    <Trans>Unpin moderation list</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={PinIcon} />
-                </Menu.Item>
-              </Menu.Group>
-            </>
-          )}
+					{isModList && isPinned && (
+						<>
+							<Menu.Divider />
+							<Menu.Group>
+								<Menu.Item label={l`Unpin moderation list`} onPress={onUnpinModList}>
+									<Menu.ItemText>
+										<Trans>Unpin moderation list</Trans>
+									</Menu.ItemText>
+									<Menu.ItemIcon icon={PinIcon} />
+								</Menu.Item>
+							</Menu.Group>
+						</>
+					)}
 
-          {isCurateList && (isBlocking || isMuting) && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
-                {isBlocking && (
-                  <Menu.Item
-                    label={l`Unblock list`}
-                    onPress={onUnsubscribeBlock}>
-                    <Menu.ItemText>
-                      <Trans>Unblock list</Trans>
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={PersonCheckIcon} />
-                  </Menu.Item>
-                )}
-                {isMuting && (
-                  <Menu.Item label={l`Unmute list`} onPress={onUnsubscribeMute}>
-                    <Menu.ItemText>
-                      <Trans>Unmute list</Trans>
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={UnmuteIcon} />
-                  </Menu.Item>
-                )}
-              </Menu.Group>
-            </>
-          )}
-        </Menu.Outer>
-      </Menu.Root>
-      <CreateOrEditListDialog control={editListDialogControl} list={list} />
-      <Prompt.Basic
-        control={deleteListPromptControl}
-        title={l`Delete this list?`}
-        description={l`If you delete this list, you won't be able to recover it.`}
-        onConfirm={onPressDelete}
-        confirmButtonCta={l`Delete`}
-        confirmButtonColor="negative"
-      />
-      <ReportDialog
-        control={reportDialogControl}
-        subject={{
-          ...list,
-          $type: 'app.bsky.graph.defs#listView',
-        }}
-      />
-    </>
-  )
+					{isCurateList && (isBlocking || isMuting) && (
+						<>
+							<Menu.Divider />
+							<Menu.Group>
+								{isBlocking && (
+									<Menu.Item label={l`Unblock list`} onPress={onUnsubscribeBlock}>
+										<Menu.ItemText>
+											<Trans>Unblock list</Trans>
+										</Menu.ItemText>
+										<Menu.ItemIcon icon={PersonCheckIcon} />
+									</Menu.Item>
+								)}
+								{isMuting && (
+									<Menu.Item label={l`Unmute list`} onPress={onUnsubscribeMute}>
+										<Menu.ItemText>
+											<Trans>Unmute list</Trans>
+										</Menu.ItemText>
+										<Menu.ItemIcon icon={UnmuteIcon} />
+									</Menu.Item>
+								)}
+							</Menu.Group>
+						</>
+					)}
+				</Menu.Outer>
+			</Menu.Root>
+			<CreateOrEditListDialog control={editListDialogControl} list={list} />
+			<Prompt.Basic
+				control={deleteListPromptControl}
+				title={l`Delete this list?`}
+				description={l`If you delete this list, you won't be able to recover it.`}
+				onConfirm={onPressDelete}
+				confirmButtonCta={l`Delete`}
+				confirmButtonColor="negative"
+			/>
+			<ReportDialog
+				control={reportDialogControl}
+				subject={{
+					...list,
+					$type: 'app.bsky.graph.defs#listView',
+				}}
+			/>
+		</>
+	);
 }

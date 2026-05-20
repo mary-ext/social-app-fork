@@ -1,74 +1,73 @@
-import {useEffect, useState} from 'react'
-import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react/macro'
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useLingui } from '@lingui/react/macro';
 
-import {useCallOnce} from '#/lib/once'
-import {logger} from '#/logger'
-import {useSessionApi} from '#/state/session'
-import {InactiveAccountError} from '#/state/session/agent'
-import {useEnableMinimalShellMode} from '#/state/shell/minimal-mode'
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, useTheme} from '#/alf'
-import {Loader} from '#/components/Loader'
-import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
+import { useCallOnce } from '#/lib/once';
+import { logger } from '#/logger';
+import { useSessionApi } from '#/state/session';
+import { InactiveAccountError } from '#/state/session/agent';
+import { useEnableMinimalShellMode } from '#/state/shell/minimal-mode';
+import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+import { atoms as a, useTheme } from '#/alf';
+import { Loader } from '#/components/Loader';
+import * as Toast from '#/components/Toast';
+import { Text } from '#/components/Typography';
 
 export function OAuthCallback() {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const insets = useSafeAreaInsets()
-  const {completeOAuthCallback} = useSessionApi()
-  const [error, setError] = useState('')
-  const runOnce = useCallOnce()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const insets = useSafeAreaInsets();
+	const { completeOAuthCallback } = useSessionApi();
+	const [error, setError] = useState('');
+	const runOnce = useCallOnce();
 
-  useEnableMinimalShellMode()
+	useEnableMinimalShellMode();
 
-  useEffect(() => {
-    runOnce(() => {
-      const params = new URLSearchParams(window.location.hash.slice(1))
-      history.replaceState(null, '', window.location.pathname)
+	useEffect(() => {
+		runOnce(() => {
+			const params = new URLSearchParams(window.location.hash.slice(1));
+			history.replaceState(null, '', window.location.pathname);
 
-      completeOAuthCallback(params)
-        .then(() => {
-          history.replaceState(null, '', '/')
-          window.location.reload()
-        })
-        .catch(e => {
-          logger.error('OAuth callback failed', {
-            message: e instanceof Error ? e.message : String(e),
-          })
-          if (e instanceof InactiveAccountError) {
-            Toast.show(l`This account is not active.`, {type: 'warning'})
-          } else {
-            setError(l`Sign in failed. Please try again.`)
-          }
-        })
-    })
-  }, [runOnce, completeOAuthCallback, l])
+			completeOAuthCallback(params)
+				.then(() => {
+					history.replaceState(null, '', '/');
+					window.location.reload();
+				})
+				.catch((e) => {
+					logger.error('OAuth callback failed', {
+						message: e instanceof Error ? e.message : String(e),
+					});
+					if (e instanceof InactiveAccountError) {
+						Toast.show(l`This account is not active.`, { type: 'warning' });
+					} else {
+						setError(l`Sign in failed. Please try again.`);
+					}
+				});
+		});
+	}, [runOnce, completeOAuthCallback, l]);
 
-  return (
-    <View
-      style={[
-        a.util_screen_outer,
-        a.align_center,
-        a.justify_center,
-        a.gap_md,
-        t.atoms.bg,
-        {paddingTop: insets.top, paddingBottom: insets.bottom},
-      ]}>
-      <ErrorBoundary>
-        {error ? (
-          <Text style={[a.text_md, t.atoms.text_contrast_high]}>{error}</Text>
-        ) : (
-          <>
-            <Loader size="xl" />
-            <Text style={[a.text_md, t.atoms.text_contrast_high]}>
-              {l`Signing in...`}
-            </Text>
-          </>
-        )}
-      </ErrorBoundary>
-    </View>
-  )
+	return (
+		<View
+			style={[
+				a.util_screen_outer,
+				a.align_center,
+				a.justify_center,
+				a.gap_md,
+				t.atoms.bg,
+				{ paddingTop: insets.top, paddingBottom: insets.bottom },
+			]}
+		>
+			<ErrorBoundary>
+				{error ? (
+					<Text style={[a.text_md, t.atoms.text_contrast_high]}>{error}</Text>
+				) : (
+					<>
+						<Loader size="xl" />
+						<Text style={[a.text_md, t.atoms.text_contrast_high]}>{l`Signing in...`}</Text>
+					</>
+				)}
+			</ErrorBoundary>
+		</View>
+	);
 }

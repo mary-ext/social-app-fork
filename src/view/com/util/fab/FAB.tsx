@@ -1,14 +1,14 @@
-import {View} from 'react-native'
+import { View } from 'react-native';
 
-import {useBreakpoints} from '#/alf'
-import {FABInner, type FABProps} from './FABInner'
+import { useBreakpoints } from '#/alf';
+import { FABInner, type FABProps } from './FABInner';
 
 export const FAB = (props: FABProps) => {
-  const {gtMobile} = useBreakpoints()
+	const { gtMobile } = useBreakpoints();
 
-  if (!gtMobile) {
-    return <FABInner {...props} />
-  }
+	if (!gtMobile) {
+		return <FABInner {...props} />;
+	}
 
-  return <View />
-}
+	return <View />;
+};

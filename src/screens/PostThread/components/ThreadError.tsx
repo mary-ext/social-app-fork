@@ -1,94 +1,71 @@
-import {useMemo} from 'react'
-import {View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import { useMemo } from 'react';
+import { View } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
-import {useCleanError} from '#/lib/hooks/useCleanError'
-import {OUTER_SPACE} from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
-import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
+import { useCleanError } from '#/lib/hooks/useCleanError';
+import { OUTER_SPACE } from '#/screens/PostThread/const';
+import { atoms as a, useTheme } from '#/alf';
+import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
+import * as Layout from '#/components/Layout';
+import { Text } from '#/components/Typography';
 
-export function ThreadError({
-  error,
-  onRetry,
-}: {
-  error: Error
-  onRetry: () => void
-}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const cleanError = useCleanError()
+export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => void }) {
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const cleanError = useCleanError();
 
-  const {title, message} = useMemo(() => {
-    let title = l`Error loading post`
-    let message = l`Something went wrong. Please try again in a moment.`
+	const { title, message } = useMemo(() => {
+		let title = l`Error loading post`;
+		let message = l`Something went wrong. Please try again in a moment.`;
 
-    const {raw, clean} = cleanError(error)
+		const { raw, clean } = cleanError(error);
 
-    if (error.message.startsWith('Post not found')) {
-      title = l`Post not found`
-      message = clean || raw || message
-    }
+		if (error.message.startsWith('Post not found')) {
+			title = l`Post not found`;
+			message = clean || raw || message;
+		}
 
-    return {title, message}
-  }, [l, error, cleanError])
+		return { title, message };
+	}, [l, error, cleanError]);
 
-  return (
-    <Layout.Center>
-      <View
-        style={[
-          a.w_full,
-          a.align_center,
-          {
-            padding: OUTER_SPACE,
-            paddingTop: OUTER_SPACE * 2,
-          },
-        ]}>
-        <View
-          style={[
-            a.w_full,
-            a.align_center,
-            a.gap_xl,
-            {
-              maxWidth: 260,
-            },
-          ]}>
-          <View style={[a.gap_xs]}>
-            <Text
-              style={[
-                a.text_center,
-                a.text_lg,
-                a.font_semi_bold,
-                a.leading_snug,
-              ]}>
-              {title}
-            </Text>
-            <Text
-              style={[
-                a.text_center,
-                a.text_sm,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
-              {message}
-            </Text>
-          </View>
-          <Button
-            label={l`Retry`}
-            size="small"
-            variant="solid"
-            color="secondary_inverted"
-            onPress={onRetry}>
-            <ButtonText>
-              <Trans>Retry</Trans>
-            </ButtonText>
-            <ButtonIcon icon={RetryIcon} position="right" />
-          </Button>
-        </View>
-      </View>
-    </Layout.Center>
-  )
+	return (
+		<Layout.Center>
+			<View
+				style={[
+					a.w_full,
+					a.align_center,
+					{
+						padding: OUTER_SPACE,
+						paddingTop: OUTER_SPACE * 2,
+					},
+				]}
+			>
+				<View
+					style={[
+						a.w_full,
+						a.align_center,
+						a.gap_xl,
+						{
+							maxWidth: 260,
+						},
+					]}
+				>
+					<View style={[a.gap_xs]}>
+						<Text style={[a.text_center, a.text_lg, a.font_semi_bold, a.leading_snug]}>{title}</Text>
+						<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+							{message}
+						</Text>
+					</View>
+					<Button label={l`Retry`} size="small" variant="solid" color="secondary_inverted" onPress={onRetry}>
+						<ButtonText>
+							<Trans>Retry</Trans>
+						</ButtonText>
+						<ButtonIcon icon={RetryIcon} position="right" />
+					</Button>
+				</View>
+			</View>
+		</Layout.Center>
+	);
 }

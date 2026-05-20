@@ -1,152 +1,144 @@
-import {Pressable, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import { Pressable, View } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a, useTheme} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Button, ButtonText} from '#/components/Button'
-import * as Layout from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+import { useKawaiiMode } from '#/state/preferences/kawaii';
+import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
+import { Logo } from '#/view/icons/Logo';
+import { Logotype } from '#/view/icons/Logotype';
+import { atoms as a, useTheme } from '#/alf';
+import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
+import { Button, ButtonText } from '#/components/Button';
+import * as Layout from '#/components/Layout';
+import { InlineLinkText } from '#/components/Link';
+import { Text } from '#/components/Typography';
 
 export const SplashScreen = ({
-  onDismiss,
-  onPressSignin,
+	onDismiss,
+	onPressSignin,
 }: {
-  onDismiss?: () => void
-  onPressSignin: () => void
+	onDismiss?: () => void;
+	onPressSignin: () => void;
 }) => {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const {isTabletOrMobile: IS_WEB_MOBILE} = useWebMediaQueries()
+	const { t: l } = useLingui();
+	const t = useTheme();
+	const { isTabletOrMobile: IS_WEB_MOBILE } = useWebMediaQueries();
 
-  const kawaii = useKawaiiMode()
+	const kawaii = useKawaiiMode();
 
-  return (
-    <>
-      {onDismiss && (
-        <Pressable
-          accessibilityRole="button"
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            padding: 20,
-            zIndex: 100,
-          }}
-          onPress={onDismiss}>
-          <FontAwesomeIcon
-            icon="x"
-            size={24}
-            style={{
-              color: String(t.atoms.text.color),
-            }}
-          />
-        </Pressable>
-      )}
-      <Layout.Center style={[a.h_full, a.flex_1]} ignoreTabletLayoutOffset>
-        <View
-          testID="noSessionView"
-          style={[
-            a.h_full,
-            a.justify_center,
-            // @ts-expect-error web only
-            {paddingBottom: '20vh'},
-            IS_WEB_MOBILE && a.pb_5xl,
-            t.atoms.border_contrast_medium,
-            a.align_center,
-            a.gap_5xl,
-            a.flex_1,
-          ]}>
-          <ErrorBoundary>
-            <View style={[a.justify_center, a.align_center]}>
-              <Logo width={kawaii ? 300 : 92} fill="sky" />
+	return (
+		<>
+			{onDismiss && (
+				<Pressable
+					accessibilityRole="button"
+					style={{
+						position: 'absolute',
+						top: 20,
+						right: 20,
+						padding: 20,
+						zIndex: 100,
+					}}
+					onPress={onDismiss}
+				>
+					<FontAwesomeIcon
+						icon="x"
+						size={24}
+						style={{
+							color: String(t.atoms.text.color),
+						}}
+					/>
+				</Pressable>
+			)}
+			<Layout.Center style={[a.h_full, a.flex_1]} ignoreTabletLayoutOffset>
+				<View
+					testID="noSessionView"
+					style={[
+						a.h_full,
+						a.justify_center,
+						// @ts-expect-error web only
+						{ paddingBottom: '20vh' },
+						IS_WEB_MOBILE && a.pb_5xl,
+						t.atoms.border_contrast_medium,
+						a.align_center,
+						a.gap_5xl,
+						a.flex_1,
+					]}
+				>
+					<ErrorBoundary>
+						<View style={[a.justify_center, a.align_center]}>
+							<Logo width={kawaii ? 300 : 92} fill="sky" />
 
-              {!kawaii && (
-                <View style={[a.pb_sm, a.pt_5xl]}>
-                  <Logotype width={161} fill={t.atoms.text.color} />
-                </View>
-              )}
+							{!kawaii && (
+								<View style={[a.pb_sm, a.pt_5xl]}>
+									<Logotype width={161} fill={t.atoms.text.color} />
+								</View>
+							)}
 
-              <Text
-                style={[
-                  a.text_md,
-                  a.font_semi_bold,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                <Trans>What's up?</Trans>
-              </Text>
-            </View>
+							<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+								<Trans>What's up?</Trans>
+							</Text>
+						</View>
 
-            <View
-              testID="signinOrCreateAccount"
-              style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
-              <Button
-                testID="signInButton"
-                onPress={onPressSignin}
-                label={l`Sign in`}
-                accessibilityHint={l`Opens flow to sign in to your existing Bluesky account`}
-                size="large"
-                variant="solid"
-                color="secondary">
-                <ButtonText>
-                  <Trans>Sign in</Trans>
-                </ButtonText>
-              </Button>
-            </View>
-          </ErrorBoundary>
-        </View>
-        <Footer />
-      </Layout.Center>
-    </>
-  )
-}
+						<View
+							testID="signinOrCreateAccount"
+							style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, { maxWidth: 320 }]}
+						>
+							<Button
+								testID="signInButton"
+								onPress={onPressSignin}
+								label={l`Sign in`}
+								accessibilityHint={l`Opens flow to sign in to your existing Bluesky account`}
+								size="large"
+								variant="solid"
+								color="secondary"
+							>
+								<ButtonText>
+									<Trans>Sign in</Trans>
+								</ButtonText>
+							</Button>
+						</View>
+					</ErrorBoundary>
+				</View>
+				<Footer />
+			</Layout.Center>
+		</>
+	);
+};
 
 function Footer() {
-  const t = useTheme()
-  const {t: l} = useLingui()
+	const t = useTheme();
+	const { t: l } = useLingui();
 
-  return (
-    <View
-      style={[
-        a.absolute,
-        a.inset_0,
-        {top: 'auto'},
-        a.px_xl,
-        a.py_lg,
-        a.border_t,
-        a.flex_row,
-        a.align_center,
-        a.flex_wrap,
-        a.gap_xl,
-        a.flex_1,
-        t.atoms.border_contrast_medium,
-      ]}>
-      <InlineLinkText
-        label={l`Learn more about Bluesky`}
-        to="https://bsky.social">
-        <Trans>Business</Trans>
-      </InlineLinkText>
-      <InlineLinkText
-        label={l`Read the Bluesky blog`}
-        to="https://bsky.social/about/blog">
-        <Trans>Blog</Trans>
-      </InlineLinkText>
-      <InlineLinkText
-        label={l`See jobs at Bluesky`}
-        to="https://bsky.social/about/join">
-        <Trans comment="Link to a page with job openings at Bluesky">
-          Jobs
-        </Trans>
-      </InlineLinkText>
-      <View style={a.flex_1} />
-      <AppLanguageDropdown />
-    </View>
-  )
+	return (
+		<View
+			style={[
+				a.absolute,
+				a.inset_0,
+				{ top: 'auto' },
+				a.px_xl,
+				a.py_lg,
+				a.border_t,
+				a.flex_row,
+				a.align_center,
+				a.flex_wrap,
+				a.gap_xl,
+				a.flex_1,
+				t.atoms.border_contrast_medium,
+			]}
+		>
+			<InlineLinkText label={l`Learn more about Bluesky`} to="https://bsky.social">
+				<Trans>Business</Trans>
+			</InlineLinkText>
+			<InlineLinkText label={l`Read the Bluesky blog`} to="https://bsky.social/about/blog">
+				<Trans>Blog</Trans>
+			</InlineLinkText>
+			<InlineLinkText label={l`See jobs at Bluesky`} to="https://bsky.social/about/join">
+				<Trans comment="Link to a page with job openings at Bluesky">Jobs</Trans>
+			</InlineLinkText>
+			<View style={a.flex_1} />
+			<AppLanguageDropdown />
+		</View>
+	);
 }

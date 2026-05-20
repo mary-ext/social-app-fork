@@ -1,760 +1,718 @@
-import {Dimensions} from 'react-native'
+import { Dimensions } from 'react-native';
 
-const {height: SCREEN_HEIGHT} = Dimensions.get('window')
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const IFRAME_HOST = // @ts-ignore only for web
-  window.location.host === 'localhost:8100'
-    ? 'http://localhost:8100'
-    : 'https://bsky.app'
+const IFRAME_HOST = window.location.host === 'localhost:8100' ? 'http://localhost:8100' : 'https://bsky.app'; // @ts-ignore only for web
 
 export const embedPlayerSources = [
-  'youtube',
-  'youtubeShorts',
-  'twitch',
-  'spotify',
-  'soundcloud',
-  'appleMusic',
-  'vimeo',
-  'giphy',
-  'tenor',
-  'klipy',
-  'flickr',
-  'bandcamp',
-] as const
+	'youtube',
+	'youtubeShorts',
+	'twitch',
+	'spotify',
+	'soundcloud',
+	'appleMusic',
+	'vimeo',
+	'giphy',
+	'tenor',
+	'klipy',
+	'flickr',
+	'bandcamp',
+] as const;
 
-export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
+export type EmbedPlayerSource = (typeof embedPlayerSources)[number];
 
 export type EmbedPlayerType =
-  | 'youtube_video'
-  | 'youtube_short'
-  | 'twitch_video'
-  | 'spotify_album'
-  | 'spotify_playlist'
-  | 'spotify_song'
-  | 'soundcloud_track'
-  | 'soundcloud_set'
-  | 'apple_music_playlist'
-  | 'apple_music_album'
-  | 'apple_music_song'
-  | 'vimeo_video'
-  | 'giphy_gif'
-  | 'tenor_gif'
-  | 'klipy_gif'
-  | 'flickr_album'
-  | 'bandcamp_album'
-  | 'bandcamp_track'
+	| 'youtube_video'
+	| 'youtube_short'
+	| 'twitch_video'
+	| 'spotify_album'
+	| 'spotify_playlist'
+	| 'spotify_song'
+	| 'soundcloud_track'
+	| 'soundcloud_set'
+	| 'apple_music_playlist'
+	| 'apple_music_album'
+	| 'apple_music_song'
+	| 'vimeo_video'
+	| 'giphy_gif'
+	| 'tenor_gif'
+	| 'klipy_gif'
+	| 'flickr_album'
+	| 'bandcamp_album'
+	| 'bandcamp_track';
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
-  youtube: 'YouTube',
-  youtubeShorts: 'YouTube Shorts',
-  vimeo: 'Vimeo',
-  twitch: 'Twitch',
-  giphy: 'GIPHY',
-  tenor: 'Tenor',
-  klipy: 'KLIPY',
-  spotify: 'Spotify',
-  appleMusic: 'Apple Music',
-  soundcloud: 'SoundCloud',
-  flickr: 'Flickr',
-  bandcamp: 'Bandcamp',
-}
+	youtube: 'YouTube',
+	youtubeShorts: 'YouTube Shorts',
+	vimeo: 'Vimeo',
+	twitch: 'Twitch',
+	giphy: 'GIPHY',
+	tenor: 'Tenor',
+	klipy: 'KLIPY',
+	spotify: 'Spotify',
+	appleMusic: 'Apple Music',
+	soundcloud: 'SoundCloud',
+	flickr: 'Flickr',
+	bandcamp: 'Bandcamp',
+};
 
 /**
- * These sources are proxied through our CDN and do not leak any user data,
- * thus are safe to embed without a warning.
+ * These sources are proxied through our CDN and do not leak any user data, thus are safe to embed without a
+ * warning.
  */
-export const exemptExternalEmbedSources = new Set<EmbedPlayerSource>([
-  'tenor',
-  'klipy',
-])
+export const exemptExternalEmbedSources = new Set<EmbedPlayerSource>(['tenor', 'klipy']);
 
 export interface EmbedPlayerParams {
-  type: EmbedPlayerType
-  playerUri: string
-  /**
-   * Web-only ordered list of `<source>` tags for `<video>` playback. When
-   * present, the browser uses `canPlayType` to pick the first one it supports,
-   * which avoids UA sniffing for codec selection. `playerUri` is used as the
-   * native source and as a fallback `<video src>` when this is empty.
-   */
-  playerSources?: ReadonlyArray<{src: string; type: string}>
-  isGif?: boolean
-  source: EmbedPlayerSource
-  metaUri?: string
-  hideDetails?: boolean
-  dimensions?: {
-    height: number
-    width: number
-  }
+	type: EmbedPlayerType;
+	playerUri: string;
+	/**
+	 * Web-only ordered list of `<source>` tags for `<video>` playback. When present, the browser uses
+	 * `canPlayType` to pick the first one it supports, which avoids UA sniffing for codec selection.
+	 * `playerUri` is used as the native source and as a fallback `<video src>` when this is empty.
+	 */
+	playerSources?: ReadonlyArray<{ src: string; type: string }>;
+	isGif?: boolean;
+	source: EmbedPlayerSource;
+	metaUri?: string;
+	hideDetails?: boolean;
+	dimensions?: {
+		height: number;
+		width: number;
+	};
 }
 
-const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
-const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
+const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i;
+const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i;
 
-export function parseEmbedPlayerFromUrl(
-  url: string,
-): EmbedPlayerParams | undefined {
-  let urlp
-  try {
-    urlp = new URL(url)
-  } catch (e) {
-    return undefined
-  }
+export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefined {
+	let urlp;
+	try {
+		urlp = new URL(url);
+	} catch (e) {
+		return undefined;
+	}
 
-  // youtube
-  if (urlp.hostname === 'youtu.be') {
-    const videoId = urlp.pathname.split('/')[1]
-    const t = urlp.searchParams.get('t') ?? '0'
-    const seek = encodeURIComponent(t.replace(/s$/, ''))
+	// youtube
+	if (urlp.hostname === 'youtu.be') {
+		const videoId = urlp.pathname.split('/')[1];
+		const t = urlp.searchParams.get('t') ?? '0';
+		const seek = encodeURIComponent(t.replace(/s$/, ''));
 
-    if (videoId) {
-      return {
-        type: 'youtube_video',
-        source: 'youtube',
-        playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
-      }
-    }
-  }
-  if (
-    urlp.hostname === 'www.youtube.com' ||
-    urlp.hostname === 'youtube.com' ||
-    urlp.hostname === 'm.youtube.com' ||
-    urlp.hostname === 'music.youtube.com'
-  ) {
-    const [__, page, shortOrLiveVideoId] = urlp.pathname.split('/')
+		if (videoId) {
+			return {
+				type: 'youtube_video',
+				source: 'youtube',
+				playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
+			};
+		}
+	}
+	if (
+		urlp.hostname === 'www.youtube.com' ||
+		urlp.hostname === 'youtube.com' ||
+		urlp.hostname === 'm.youtube.com' ||
+		urlp.hostname === 'music.youtube.com'
+	) {
+		const [__, page, shortOrLiveVideoId] = urlp.pathname.split('/');
 
-    const isShorts = page === 'shorts'
-    const isLive = page === 'live'
-    const videoId =
-      isShorts || isLive
-        ? shortOrLiveVideoId
-        : (urlp.searchParams.get('v') as string)
-    const t = urlp.searchParams.get('t') ?? '0'
-    const seek = encodeURIComponent(t.replace(/s$/, ''))
+		const isShorts = page === 'shorts';
+		const isLive = page === 'live';
+		const videoId = isShorts || isLive ? shortOrLiveVideoId : (urlp.searchParams.get('v') as string);
+		const t = urlp.searchParams.get('t') ?? '0';
+		const seek = encodeURIComponent(t.replace(/s$/, ''));
 
-    if (videoId) {
-      return {
-        type: isShorts ? 'youtube_short' : 'youtube_video',
-        source: isShorts ? 'youtubeShorts' : 'youtube',
-        hideDetails: isShorts ? true : undefined,
-        playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
-      }
-    }
-  }
+		if (videoId) {
+			return {
+				type: isShorts ? 'youtube_short' : 'youtube_video',
+				source: isShorts ? 'youtubeShorts' : 'youtube',
+				hideDetails: isShorts ? true : undefined,
+				playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
+			};
+		}
+	}
 
-  // twitch
-  if (
-    urlp.hostname === 'twitch.tv' ||
-    urlp.hostname === 'www.twitch.tv' ||
-    urlp.hostname === 'm.twitch.tv'
-  ) {
-    const parent = window.location.hostname // @ts-ignore only for web
+	// twitch
+	if (urlp.hostname === 'twitch.tv' || urlp.hostname === 'www.twitch.tv' || urlp.hostname === 'm.twitch.tv') {
+		const parent = window.location.hostname; // @ts-ignore only for web
 
-    const [__, channelOrVideo, clipOrId, id] = urlp.pathname.split('/')
+		const [__, channelOrVideo, clipOrId, id] = urlp.pathname.split('/');
 
-    if (channelOrVideo === 'videos') {
-      return {
-        type: 'twitch_video',
-        source: 'twitch',
-        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=${clipOrId}&parent=${parent}`,
-      }
-    } else if (clipOrId === 'clip') {
-      return {
-        type: 'twitch_video',
-        source: 'twitch',
-        playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=${id}&parent=${parent}`,
-      }
-    } else if (channelOrVideo) {
-      return {
-        type: 'twitch_video',
-        source: 'twitch',
-        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${channelOrVideo}&parent=${parent}`,
-      }
-    }
-  }
+		if (channelOrVideo === 'videos') {
+			return {
+				type: 'twitch_video',
+				source: 'twitch',
+				playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=${clipOrId}&parent=${parent}`,
+			};
+		} else if (clipOrId === 'clip') {
+			return {
+				type: 'twitch_video',
+				source: 'twitch',
+				playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=${id}&parent=${parent}`,
+			};
+		} else if (channelOrVideo) {
+			return {
+				type: 'twitch_video',
+				source: 'twitch',
+				playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${channelOrVideo}&parent=${parent}`,
+			};
+		}
+	}
 
-  // spotify
-  if (urlp.hostname === 'open.spotify.com') {
-    const [__, typeOrLocale, idOrType, id] = urlp.pathname.split('/')
+	// spotify
+	if (urlp.hostname === 'open.spotify.com') {
+		const [__, typeOrLocale, idOrType, id] = urlp.pathname.split('/');
 
-    if (idOrType) {
-      if (typeOrLocale === 'playlist' || idOrType === 'playlist') {
-        return {
-          type: 'spotify_playlist',
-          source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/playlist/${
-            id ?? idOrType
-          }`,
-        }
-      }
-      if (typeOrLocale === 'album' || idOrType === 'album') {
-        return {
-          type: 'spotify_album',
-          source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/album/${id ?? idOrType}`,
-        }
-      }
-      if (typeOrLocale === 'track' || idOrType === 'track') {
-        return {
-          type: 'spotify_song',
-          source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/track/${id ?? idOrType}`,
-        }
-      }
-      if (typeOrLocale === 'episode' || idOrType === 'episode') {
-        return {
-          type: 'spotify_song',
-          source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/episode/${id ?? idOrType}`,
-        }
-      }
-      if (typeOrLocale === 'show' || idOrType === 'show') {
-        return {
-          type: 'spotify_song',
-          source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/show/${id ?? idOrType}`,
-        }
-      }
-    }
-  }
+		if (idOrType) {
+			if (typeOrLocale === 'playlist' || idOrType === 'playlist') {
+				return {
+					type: 'spotify_playlist',
+					source: 'spotify',
+					playerUri: `https://open.spotify.com/embed/playlist/${id ?? idOrType}`,
+				};
+			}
+			if (typeOrLocale === 'album' || idOrType === 'album') {
+				return {
+					type: 'spotify_album',
+					source: 'spotify',
+					playerUri: `https://open.spotify.com/embed/album/${id ?? idOrType}`,
+				};
+			}
+			if (typeOrLocale === 'track' || idOrType === 'track') {
+				return {
+					type: 'spotify_song',
+					source: 'spotify',
+					playerUri: `https://open.spotify.com/embed/track/${id ?? idOrType}`,
+				};
+			}
+			if (typeOrLocale === 'episode' || idOrType === 'episode') {
+				return {
+					type: 'spotify_song',
+					source: 'spotify',
+					playerUri: `https://open.spotify.com/embed/episode/${id ?? idOrType}`,
+				};
+			}
+			if (typeOrLocale === 'show' || idOrType === 'show') {
+				return {
+					type: 'spotify_song',
+					source: 'spotify',
+					playerUri: `https://open.spotify.com/embed/show/${id ?? idOrType}`,
+				};
+			}
+		}
+	}
 
-  // soundcloud
-  if (
-    urlp.hostname === 'soundcloud.com' ||
-    urlp.hostname === 'www.soundcloud.com'
-  ) {
-    const [__, user, trackOrSets, set] = urlp.pathname.split('/')
+	// soundcloud
+	if (urlp.hostname === 'soundcloud.com' || urlp.hostname === 'www.soundcloud.com') {
+		const [__, user, trackOrSets, set] = urlp.pathname.split('/');
 
-    if (user && trackOrSets) {
-      if (trackOrSets === 'sets' && set) {
-        return {
-          type: 'soundcloud_set',
-          source: 'soundcloud',
-          playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
-        }
-      }
+		if (user && trackOrSets) {
+			if (trackOrSets === 'sets' && set) {
+				return {
+					type: 'soundcloud_set',
+					source: 'soundcloud',
+					playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
+				};
+			}
 
-      return {
-        type: 'soundcloud_track',
-        source: 'soundcloud',
-        playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
-      }
-    }
-  }
+			return {
+				type: 'soundcloud_track',
+				source: 'soundcloud',
+				playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
+			};
+		}
+	}
 
-  if (
-    urlp.hostname === 'music.apple.com' ||
-    urlp.hostname === 'music.apple.com'
-  ) {
-    // This should always have: locale, type (playlist or album), name, and id. We won't use spread since we want
-    // to check if the length is correct
-    const pathParams = urlp.pathname.split('/')
-    const type = pathParams[2]
-    const songId = urlp.searchParams.get('i')
+	if (urlp.hostname === 'music.apple.com' || urlp.hostname === 'music.apple.com') {
+		// This should always have: locale, type (playlist or album), name, and id. We won't use spread since we want
+		// to check if the length is correct
+		const pathParams = urlp.pathname.split('/');
+		const type = pathParams[2];
+		const songId = urlp.searchParams.get('i');
 
-    if (
-      pathParams.length === 5 &&
-      (type === 'playlist' || type === 'album' || type === 'song')
-    ) {
-      // We want to append the songId to the end of the url if it exists
-      const embedUri = `https://embed.music.apple.com${urlp.pathname}${
-        songId ? `?i=${songId}` : ''
-      }`
+		if (pathParams.length === 5 && (type === 'playlist' || type === 'album' || type === 'song')) {
+			// We want to append the songId to the end of the url if it exists
+			const embedUri = `https://embed.music.apple.com${urlp.pathname}${songId ? `?i=${songId}` : ''}`;
 
-      if (type === 'playlist') {
-        return {
-          type: 'apple_music_playlist',
-          source: 'appleMusic',
-          playerUri: embedUri,
-        }
-      } else if (type === 'album') {
-        if (songId) {
-          return {
-            type: 'apple_music_song',
-            source: 'appleMusic',
-            playerUri: embedUri,
-          }
-        } else {
-          return {
-            type: 'apple_music_album',
-            source: 'appleMusic',
-            playerUri: embedUri,
-          }
-        }
-      } else if (type === 'song') {
-        return {
-          type: 'apple_music_song',
-          source: 'appleMusic',
-          playerUri: embedUri,
-        }
-      }
-    }
-  }
+			if (type === 'playlist') {
+				return {
+					type: 'apple_music_playlist',
+					source: 'appleMusic',
+					playerUri: embedUri,
+				};
+			} else if (type === 'album') {
+				if (songId) {
+					return {
+						type: 'apple_music_song',
+						source: 'appleMusic',
+						playerUri: embedUri,
+					};
+				} else {
+					return {
+						type: 'apple_music_album',
+						source: 'appleMusic',
+						playerUri: embedUri,
+					};
+				}
+			} else if (type === 'song') {
+				return {
+					type: 'apple_music_song',
+					source: 'appleMusic',
+					playerUri: embedUri,
+				};
+			}
+		}
+	}
 
-  if (urlp.hostname === 'vimeo.com' || urlp.hostname === 'www.vimeo.com') {
-    const [__, videoId] = urlp.pathname.split('/')
-    if (videoId) {
-      return {
-        type: 'vimeo_video',
-        source: 'vimeo',
-        playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
-      }
-    }
-  }
+	if (urlp.hostname === 'vimeo.com' || urlp.hostname === 'www.vimeo.com') {
+		const [__, videoId] = urlp.pathname.split('/');
+		if (videoId) {
+			return {
+				type: 'vimeo_video',
+				source: 'vimeo',
+				playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
+			};
+		}
+	}
 
-  if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
-    const [__, gifs, nameAndId] = urlp.pathname.split('/')
+	if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
+		const [__, gifs, nameAndId] = urlp.pathname.split('/');
 
-    /*
-     * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
-     * We want to get the id of the gif, then direct to media.giphy.com/media/{id}/giphy.webp so we can
-     * use it in an <Image> component
-     */
+		/*
+		 * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
+		 * We want to get the id of the gif, then direct to media.giphy.com/media/{id}/giphy.webp so we can
+		 * use it in an <Image> component
+		 */
 
-    if (gifs === 'gifs' && nameAndId) {
-      const gifId = nameAndId.split('-').pop()
+		if (gifs === 'gifs' && nameAndId) {
+			const gifId = nameAndId.split('-').pop();
 
-      if (gifId) {
-        return {
-          type: 'giphy_gif',
-          source: 'giphy',
-          isGif: true,
-          hideDetails: true,
-          metaUri: `https://giphy.com/gifs/${gifId}`,
-          playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
-        }
-      }
-    }
-  }
+			if (gifId) {
+				return {
+					type: 'giphy_gif',
+					source: 'giphy',
+					isGif: true,
+					hideDetails: true,
+					metaUri: `https://giphy.com/gifs/${gifId}`,
+					playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
+				};
+			}
+		}
+	}
 
-  // There are five possible hostnames that also can be giphy urls: media.giphy.com and media0-4.giphy.com
-  // These can include (presumably) a tracking id in the path name, so we have to check for that as well
-  if (giphyRegex.test(urlp.hostname)) {
-    // We can link directly to the gif, if its a proper link
-    const [__, media, trackingOrId, idOrFilename, filename] =
-      urlp.pathname.split('/')
+	// There are five possible hostnames that also can be giphy urls: media.giphy.com and media0-4.giphy.com
+	// These can include (presumably) a tracking id in the path name, so we have to check for that as well
+	if (giphyRegex.test(urlp.hostname)) {
+		// We can link directly to the gif, if its a proper link
+		const [__, media, trackingOrId, idOrFilename, filename] = urlp.pathname.split('/');
 
-    if (media === 'media') {
-      if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
-        return {
-          type: 'giphy_gif',
-          source: 'giphy',
-          isGif: true,
-          hideDetails: true,
-          metaUri: `https://giphy.com/gifs/${trackingOrId}`,
-          playerUri: `https://i.giphy.com/media/${trackingOrId}/200.webp`,
-        }
-      } else if (filename && gifFilenameRegex.test(filename)) {
-        return {
-          type: 'giphy_gif',
-          source: 'giphy',
-          isGif: true,
-          hideDetails: true,
-          metaUri: `https://giphy.com/gifs/${idOrFilename}`,
-          playerUri: `https://i.giphy.com/media/${idOrFilename}/200.webp`,
-        }
-      }
-    }
-  }
+		if (media === 'media') {
+			if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
+				return {
+					type: 'giphy_gif',
+					source: 'giphy',
+					isGif: true,
+					hideDetails: true,
+					metaUri: `https://giphy.com/gifs/${trackingOrId}`,
+					playerUri: `https://i.giphy.com/media/${trackingOrId}/200.webp`,
+				};
+			} else if (filename && gifFilenameRegex.test(filename)) {
+				return {
+					type: 'giphy_gif',
+					source: 'giphy',
+					isGif: true,
+					hideDetails: true,
+					metaUri: `https://giphy.com/gifs/${idOrFilename}`,
+					playerUri: `https://i.giphy.com/media/${idOrFilename}/200.webp`,
+				};
+			}
+		}
+	}
 
-  // Finally, we should see if it is a link to i.giphy.com. These links don't necessarily end in .gif but can also
-  // be .webp
-  if (urlp.hostname === 'i.giphy.com' || urlp.hostname === 'www.i.giphy.com') {
-    const [__, mediaOrFilename, filename] = urlp.pathname.split('/')
+	// Finally, we should see if it is a link to i.giphy.com. These links don't necessarily end in .gif but can also
+	// be .webp
+	if (urlp.hostname === 'i.giphy.com' || urlp.hostname === 'www.i.giphy.com') {
+		const [__, mediaOrFilename, filename] = urlp.pathname.split('/');
 
-    if (mediaOrFilename === 'media' && filename) {
-      const gifId = filename.split('.')[0]
-      return {
-        type: 'giphy_gif',
-        source: 'giphy',
-        isGif: true,
-        hideDetails: true,
-        metaUri: `https://giphy.com/gifs/${gifId}`,
-        playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
-      }
-    } else if (mediaOrFilename) {
-      const gifId = mediaOrFilename.split('.')[0]
-      return {
-        type: 'giphy_gif',
-        source: 'giphy',
-        isGif: true,
-        hideDetails: true,
-        metaUri: `https://giphy.com/gifs/${gifId}`,
-        playerUri: `https://i.giphy.com/media/${
-          mediaOrFilename.split('.')[0]
-        }/200.webp`,
-      }
-    }
-  }
+		if (mediaOrFilename === 'media' && filename) {
+			const gifId = filename.split('.')[0];
+			return {
+				type: 'giphy_gif',
+				source: 'giphy',
+				isGif: true,
+				hideDetails: true,
+				metaUri: `https://giphy.com/gifs/${gifId}`,
+				playerUri: `https://i.giphy.com/media/${gifId}/200.webp`,
+			};
+		} else if (mediaOrFilename) {
+			const gifId = mediaOrFilename.split('.')[0];
+			return {
+				type: 'giphy_gif',
+				source: 'giphy',
+				isGif: true,
+				hideDetails: true,
+				metaUri: `https://giphy.com/gifs/${gifId}`,
+				playerUri: `https://i.giphy.com/media/${mediaOrFilename.split('.')[0]}/200.webp`,
+			};
+		}
+	}
 
-  const tenorGif = parseTenorGif(urlp)
-  if (tenorGif.success) {
-    const {playerUri, playerSources, dimensions} = tenorGif
+	const tenorGif = parseTenorGif(urlp);
+	if (tenorGif.success) {
+		const { playerUri, playerSources, dimensions } = tenorGif;
 
-    return {
-      type: 'tenor_gif',
-      source: 'tenor',
-      isGif: true,
-      hideDetails: true,
-      playerUri,
-      playerSources,
-      dimensions,
-    }
-  }
+		return {
+			type: 'tenor_gif',
+			source: 'tenor',
+			isGif: true,
+			hideDetails: true,
+			playerUri,
+			playerSources,
+			dimensions,
+		};
+	}
 
-  const klipyGif = parseKlipyGif(urlp)
-  if (klipyGif.success) {
-    const {playerUri, playerSources, dimensions} = klipyGif
+	const klipyGif = parseKlipyGif(urlp);
+	if (klipyGif.success) {
+		const { playerUri, playerSources, dimensions } = klipyGif;
 
-    return {
-      type: 'klipy_gif',
-      source: 'klipy',
-      isGif: true,
-      hideDetails: true,
-      playerUri,
-      playerSources,
-      dimensions,
-    }
-  }
+		return {
+			type: 'klipy_gif',
+			source: 'klipy',
+			isGif: true,
+			hideDetails: true,
+			playerUri,
+			playerSources,
+			dimensions,
+		};
+	}
 
-  // this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
-  if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
-    let i = urlp.pathname.length - 1
-    while (i > 0 && urlp.pathname.charAt(i) === '/') {
-      --i
-    }
+	// this is a standard flickr path! we can use the embedder for albums and groups, so validate the path
+	if (urlp.hostname === 'www.flickr.com' || urlp.hostname === 'flickr.com') {
+		let i = urlp.pathname.length - 1;
+		while (i > 0 && urlp.pathname.charAt(i) === '/') {
+			--i;
+		}
 
-    const path_components = urlp.pathname.slice(1, i + 1).split('/')
-    if (path_components.length === 4) {
-      // discard username - it's not relevant
-      const [photos, __, albums, id] = path_components
-      if (photos === 'photos' && albums === 'albums') {
-        // this at least has the shape of a valid photo-album URL!
-        return {
-          type: 'flickr_album',
-          source: 'flickr',
-          playerUri: `https://embedr.flickr.com/photosets/${id}`,
-        }
-      }
-    }
+		const path_components = urlp.pathname.slice(1, i + 1).split('/');
+		if (path_components.length === 4) {
+			// discard username - it's not relevant
+			const [photos, __, albums, id] = path_components;
+			if (photos === 'photos' && albums === 'albums') {
+				// this at least has the shape of a valid photo-album URL!
+				return {
+					type: 'flickr_album',
+					source: 'flickr',
+					playerUri: `https://embedr.flickr.com/photosets/${id}`,
+				};
+			}
+		}
 
-    if (path_components.length === 3) {
-      const [groups, id, pool] = path_components
-      if (groups === 'groups' && pool === 'pool') {
-        return {
-          type: 'flickr_album',
-          source: 'flickr',
-          playerUri: `https://embedr.flickr.com/groups/${id}`,
-        }
-      }
-    }
-    // not an album or a group pool, don't know what to do with this!
-    return undefined
-  }
+		if (path_components.length === 3) {
+			const [groups, id, pool] = path_components;
+			if (groups === 'groups' && pool === 'pool') {
+				return {
+					type: 'flickr_album',
+					source: 'flickr',
+					playerUri: `https://embedr.flickr.com/groups/${id}`,
+				};
+			}
+		}
+		// not an album or a group pool, don't know what to do with this!
+		return undefined;
+	}
 
-  // link shortened flickr path
-  if (urlp.hostname === 'flic.kr') {
-    const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-    let [__, type, idBase58Enc] = urlp.pathname.split('/') as [
-      string,
-      string,
-      string,
-    ]
-    let id = 0n
-    for (const char of idBase58Enc) {
-      const nextIdx = b58alph.indexOf(char)
-      if (nextIdx >= 0) {
-        id = id * 58n + BigInt(nextIdx)
-      } else {
-        // not b58 encoded, ergo not a valid link to embed
-        return undefined
-      }
-    }
+	// link shortened flickr path
+	if (urlp.hostname === 'flic.kr') {
+		const b58alph = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ';
+		let [__, type, idBase58Enc] = urlp.pathname.split('/') as [string, string, string];
+		let id = 0n;
+		for (const char of idBase58Enc) {
+			const nextIdx = b58alph.indexOf(char);
+			if (nextIdx >= 0) {
+				id = id * 58n + BigInt(nextIdx);
+			} else {
+				// not b58 encoded, ergo not a valid link to embed
+				return undefined;
+			}
+		}
 
-    switch (type) {
-      case 'go':
-        const formattedGroupId = `${id}`
-        return {
-          type: 'flickr_album',
-          source: 'flickr',
-          playerUri: `https://embedr.flickr.com/groups/${formattedGroupId.slice(
-            0,
-            -2,
-          )}@N${formattedGroupId.slice(-2)}`,
-        }
-      case 's':
-        return {
-          type: 'flickr_album',
-          source: 'flickr',
-          playerUri: `https://embedr.flickr.com/photosets/${id}`,
-        }
-      default:
-        // we don't know what this is so we can't embed it
-        return undefined
-    }
-  }
+		switch (type) {
+			case 'go':
+				const formattedGroupId = `${id}`;
+				return {
+					type: 'flickr_album',
+					source: 'flickr',
+					playerUri: `https://embedr.flickr.com/groups/${formattedGroupId.slice(
+						0,
+						-2,
+					)}@N${formattedGroupId.slice(-2)}`,
+				};
+			case 's':
+				return {
+					type: 'flickr_album',
+					source: 'flickr',
+					playerUri: `https://embedr.flickr.com/photosets/${id}`,
+				};
+			default:
+				// we don't know what this is so we can't embed it
+				return undefined;
+		}
+	}
 
-  const bandcampRegex = /^[a-z\d][a-z\d-]{2,}[a-z\d]\.bandcamp\.com$/i
+	const bandcampRegex = /^[a-z\d][a-z\d-]{2,}[a-z\d]\.bandcamp\.com$/i;
 
-  if (bandcampRegex.test(urlp.hostname)) {
-    const pathComponents = urlp.pathname.split('/')
-    switch (pathComponents[1]) {
-      case 'album':
-        return {
-          type: 'bandcamp_album',
-          source: 'bandcamp',
-          playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
-            urlp.href,
-          )}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
-        }
-      case 'track':
-        return {
-          type: 'bandcamp_track',
-          source: 'bandcamp',
-          playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
-            urlp.href,
-          )}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
-        }
-      default:
-        return undefined
-    }
-  }
+	if (bandcampRegex.test(urlp.hostname)) {
+		const pathComponents = urlp.pathname.split('/');
+		switch (pathComponents[1]) {
+			case 'album':
+				return {
+					type: 'bandcamp_album',
+					source: 'bandcamp',
+					playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
+						urlp.href,
+					)}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
+				};
+			case 'track':
+				return {
+					type: 'bandcamp_track',
+					source: 'bandcamp',
+					playerUri: `https://bandcamp.com/EmbeddedPlayer/url=${encodeURIComponent(
+						urlp.href,
+					)}/size=large/bgcol=ffffff/linkcol=0687f5/minimal=true/transparent=true/`,
+				};
+			default:
+				return undefined;
+		}
+	}
 }
 
 export function getPlayerAspect({
-  type,
-  hasThumb,
-  width,
+	type,
+	hasThumb,
+	width,
 }: {
-  type: EmbedPlayerParams['type']
-  hasThumb: boolean
-  width: number
-}): {aspectRatio?: number; height?: number} {
-  if (!hasThumb) return {aspectRatio: 16 / 9}
+	type: EmbedPlayerParams['type'];
+	hasThumb: boolean;
+	width: number;
+}): { aspectRatio?: number; height?: number } {
+	if (!hasThumb) return { aspectRatio: 16 / 9 };
 
-  switch (type) {
-    case 'youtube_video':
-    case 'twitch_video':
-    case 'vimeo_video':
-      return {aspectRatio: 16 / 9}
-    case 'youtube_short':
-      if (SCREEN_HEIGHT < 600) {
-        return {aspectRatio: (9 / 16) * 1.75}
-      } else {
-        return {aspectRatio: (9 / 16) * 1.5}
-      }
-    case 'spotify_album':
-    case 'apple_music_album':
-    case 'apple_music_playlist':
-    case 'spotify_playlist':
-    case 'soundcloud_set':
-      return {height: 380}
-    case 'spotify_song':
-      if (width <= 300) {
-        return {height: 155}
-      }
-      return {height: 232}
-    case 'soundcloud_track':
-      return {height: 165}
-    case 'apple_music_song':
-      return {height: 150}
-    case 'bandcamp_album':
-    case 'bandcamp_track':
-      return {aspectRatio: 1}
-    default:
-      return {aspectRatio: 16 / 9}
-  }
+	switch (type) {
+		case 'youtube_video':
+		case 'twitch_video':
+		case 'vimeo_video':
+			return { aspectRatio: 16 / 9 };
+		case 'youtube_short':
+			if (SCREEN_HEIGHT < 600) {
+				return { aspectRatio: (9 / 16) * 1.75 };
+			} else {
+				return { aspectRatio: (9 / 16) * 1.5 };
+			}
+		case 'spotify_album':
+		case 'apple_music_album':
+		case 'apple_music_playlist':
+		case 'spotify_playlist':
+		case 'soundcloud_set':
+			return { height: 380 };
+		case 'spotify_song':
+			if (width <= 300) {
+				return { height: 155 };
+			}
+			return { height: 232 };
+		case 'soundcloud_track':
+			return { height: 165 };
+		case 'apple_music_song':
+			return { height: 150 };
+		case 'bandcamp_album':
+		case 'bandcamp_track':
+			return { aspectRatio: 1 };
+		default:
+			return { aspectRatio: 16 / 9 };
+	}
 }
 
-export function getGifDims(
-  originalHeight: number,
-  originalWidth: number,
-  viewWidth: number,
-) {
-  const scaledHeight = (originalHeight / originalWidth) * viewWidth
+export function getGifDims(originalHeight: number, originalWidth: number, viewWidth: number) {
+	const scaledHeight = (originalHeight / originalWidth) * viewWidth;
 
-  return {
-    height: scaledHeight > 250 ? 250 : scaledHeight,
-    width: (250 / scaledHeight) * viewWidth,
-  }
+	return {
+		height: scaledHeight > 250 ? 250 : scaledHeight,
+		width: (250 / scaledHeight) * viewWidth,
+	};
 }
 
 export function getGiphyMetaUri(url: URL) {
-  if (giphyRegex.test(url.hostname) || url.hostname === 'i.giphy.com') {
-    const params = parseEmbedPlayerFromUrl(url.toString())
-    if (params && params.type === 'giphy_gif') {
-      return params.metaUri
-    }
-  }
+	if (giphyRegex.test(url.hostname) || url.hostname === 'i.giphy.com') {
+		const params = parseEmbedPlayerFromUrl(url.toString());
+		if (params && params.type === 'giphy_gif') {
+			return params.metaUri;
+		}
+	}
 }
 
 export function parseTenorGif(urlp: URL):
-  | {success: false}
-  | {
-      success: true
-      playerUri: string
-      playerSources?: ReadonlyArray<{src: string; type: string}>
-      dimensions: {height: number; width: number}
-    } {
-  if (urlp.hostname !== 'media.tenor.com') {
-    return {success: false}
-  }
+	| { success: false }
+	| {
+			success: true;
+			playerUri: string;
+			playerSources?: ReadonlyArray<{ src: string; type: string }>;
+			dimensions: { height: number; width: number };
+	  } {
+	if (urlp.hostname !== 'media.tenor.com') {
+		return { success: false };
+	}
 
-  const [__, id, filename] = urlp.pathname.split('/')
+	const [__, id, filename] = urlp.pathname.split('/');
 
-  if (!id || !filename) {
-    return {success: false}
-  }
+	if (!id || !filename) {
+		return { success: false };
+	}
 
-  if (!id.includes('AAAAC')) {
-    return {success: false}
-  }
+	if (!id.includes('AAAAC')) {
+		return { success: false };
+	}
 
-  const h = urlp.searchParams.get('hh')
-  const w = urlp.searchParams.get('ww')
+	const h = urlp.searchParams.get('hh');
+	const w = urlp.searchParams.get('ww');
 
-  if (!h || !w) {
-    return {success: false}
-  }
+	if (!h || !w) {
+		return { success: false };
+	}
 
-  const dimensions = {
-    height: Number(h),
-    width: Number(w),
-  }
+	const dimensions = {
+		height: Number(h),
+		width: Number(w),
+	};
 
-  // Validate dimensions are valid positive numbers
-  if (
-    isNaN(dimensions.height) ||
-    isNaN(dimensions.width) ||
-    dimensions.height <= 0 ||
-    dimensions.width <= 0
-  ) {
-    return {success: false}
-  }
+	// Validate dimensions are valid positive numbers
+	if (
+		isNaN(dimensions.height) ||
+		isNaN(dimensions.width) ||
+		dimensions.height <= 0 ||
+		dimensions.width <= 0
+	) {
+		return { success: false };
+	}
 
-  // Tenor encodes the format in the ID prefix: AAAP3 = webm, AAAP1 = mp4.
-  // Provide both as <source> tags so the browser picks via canPlayType
-  // instead of relying on user-agent sniffing.
-  const webmUrl = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP3')}/${filename.replace('.gif', '.webm')}`
-  const mp4Url = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP1')}/${filename.replace('.gif', '.mp4')}`
-  return {
-    success: true,
-    playerUri: mp4Url,
-    playerSources: [
-      {src: webmUrl, type: 'video/webm'},
-      {src: mp4Url, type: 'video/mp4'},
-    ],
-    dimensions,
-  }
+	// Tenor encodes the format in the ID prefix: AAAP3 = webm, AAAP1 = mp4.
+	// Provide both as <source> tags so the browser picks via canPlayType
+	// instead of relying on user-agent sniffing.
+	const webmUrl = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP3')}/${filename.replace('.gif', '.webm')}`;
+	const mp4Url = `https://t.gifs.bsky.app/${id.replace('AAAAC', 'AAAP1')}/${filename.replace('.gif', '.mp4')}`;
+	return {
+		success: true,
+		playerUri: mp4Url,
+		playerSources: [
+			{ src: webmUrl, type: 'video/webm' },
+			{ src: mp4Url, type: 'video/mp4' },
+		],
+		dimensions,
+	};
 }
 
 export function isTenorGifUri(url: URL | string) {
-  try {
-    return parseTenorGif(typeof url === 'string' ? new URL(url) : url).success
-  } catch {
-    // Invalid URL
-    return false
-  }
+	try {
+		return parseTenorGif(typeof url === 'string' ? new URL(url) : url).success;
+	} catch {
+		// Invalid URL
+		return false;
+	}
 }
 
 export function parseKlipyGif(urlp: URL):
-  | {success: false}
-  | {
-      success: true
-      playerUri: string
-      playerSources?: ReadonlyArray<{src: string; type: string}>
-      dimensions: {height: number; width: number}
-    } {
-  if (urlp.hostname !== 'static.klipy.com') {
-    return {success: false}
-  }
+	| { success: false }
+	| {
+			success: true;
+			playerUri: string;
+			playerSources?: ReadonlyArray<{ src: string; type: string }>;
+			dimensions: { height: number; width: number };
+	  } {
+	if (urlp.hostname !== 'static.klipy.com') {
+		return { success: false };
+	}
 
-  if (!urlp.pathname.startsWith('/ii/')) {
-    return {success: false}
-  }
+	if (!urlp.pathname.startsWith('/ii/')) {
+		return { success: false };
+	}
 
-  const h = urlp.searchParams.get('hh')
-  const w = urlp.searchParams.get('ww')
+	const h = urlp.searchParams.get('hh');
+	const w = urlp.searchParams.get('ww');
 
-  if (!h || !w) {
-    return {success: false}
-  }
+	if (!h || !w) {
+		return { success: false };
+	}
 
-  const dimensions = {
-    height: Number(h),
-    width: Number(w),
-  }
+	const dimensions = {
+		height: Number(h),
+		width: Number(w),
+	};
 
-  // Validate dimensions are valid positive numbers
-  if (
-    isNaN(dimensions.height) ||
-    isNaN(dimensions.width) ||
-    dimensions.height <= 0 ||
-    dimensions.width <= 0
-  ) {
-    return {success: false}
-  }
+	// Validate dimensions are valid positive numbers
+	if (
+		isNaN(dimensions.height) ||
+		isNaN(dimensions.width) ||
+		dimensions.height <= 0 ||
+		dimensions.width <= 0
+	) {
+		return { success: false };
+	}
 
-  const webmSlug = urlp.searchParams.get('webm')
-  const mp4Slug = urlp.searchParams.get('mp4')
+	const webmSlug = urlp.searchParams.get('webm');
+	const mp4Slug = urlp.searchParams.get('mp4');
 
-  const playerUrl = new URL(urlp.href)
-  playerUrl.hostname = 'k.gifs.bsky.app'
+	const playerUrl = new URL(urlp.href);
+	playerUrl.hostname = 'k.gifs.bsky.app';
 
-  // Strip all metadata params — only the path matters for the CDN
-  playerUrl.searchParams.delete('hh')
-  playerUrl.searchParams.delete('ww')
-  playerUrl.searchParams.delete('mp4')
-  playerUrl.searchParams.delete('webm')
+	// Strip all metadata params — only the path matters for the CDN
+	playerUrl.searchParams.delete('hh');
+	playerUrl.searchParams.delete('ww');
+	playerUrl.searchParams.delete('mp4');
+	playerUrl.searchParams.delete('webm');
 
-  // Without any slug we can't produce a playable video URL on web,
-  // so fall back to the link card instead of returning a broken player.
-  if (!webmSlug && !mp4Slug) {
-    return {success: false}
-  }
+	// Without any slug we can't produce a playable video URL on web,
+	// so fall back to the link card instead of returning a broken player.
+	if (!webmSlug && !mp4Slug) {
+		return { success: false };
+	}
 
-  const buildVideoUrl = (slug: string, ext: string) => {
-    const u = new URL(playerUrl.href)
-    const parts = u.pathname.split('/')
-    parts[parts.length - 1] = `${slug}.${ext}`
-    u.pathname = parts.join('/')
-    return u.href
-  }
+	const buildVideoUrl = (slug: string, ext: string) => {
+		const u = new URL(playerUrl.href);
+		const parts = u.pathname.split('/');
+		parts[parts.length - 1] = `${slug}.${ext}`;
+		u.pathname = parts.join('/');
+		return u.href;
+	};
 
-  const sources: {src: string; type: string}[] = []
-  if (webmSlug) {
-    sources.push({
-      src: buildVideoUrl(webmSlug, 'webm'),
-      type: 'video/webm',
-    })
-  }
-  if (mp4Slug) {
-    sources.push({src: buildVideoUrl(mp4Slug, 'mp4'), type: 'video/mp4'})
-  }
+	const sources: { src: string; type: string }[] = [];
+	if (webmSlug) {
+		sources.push({
+			src: buildVideoUrl(webmSlug, 'webm'),
+			type: 'video/webm',
+		});
+	}
+	if (mp4Slug) {
+		sources.push({ src: buildVideoUrl(mp4Slug, 'mp4'), type: 'video/mp4' });
+	}
 
-  // Prefer mp4 as the fallback `playerUri` for `<video src>` since it has
-  // wider codec support across legacy browsers.
-  const fallback = mp4Slug
-    ? buildVideoUrl(mp4Slug, 'mp4')
-    : buildVideoUrl(webmSlug!, 'webm')
+	// Prefer mp4 as the fallback `playerUri` for `<video src>` since it has
+	// wider codec support across legacy browsers.
+	const fallback = mp4Slug ? buildVideoUrl(mp4Slug, 'mp4') : buildVideoUrl(webmSlug!, 'webm');
 
-  return {
-    success: true,
-    playerUri: fallback,
-    playerSources: sources,
-    dimensions,
-  }
+	return {
+		success: true,
+		playerUri: fallback,
+		playerSources: sources,
+		dimensions,
+	};
 }
 
 export function isKlipyGifUri(url: URL | string) {
-  try {
-    return parseKlipyGif(typeof url === 'string' ? new URL(url) : url).success
-  } catch {
-    // Invalid URL
-    return false
-  }
+	try {
+		return parseKlipyGif(typeof url === 'string' ? new URL(url) : url).success;
+	} catch {
+		// Invalid URL
+		return false;
+	}
 }
 
 export function isGifEmbed(url: URL | string) {
-  return isTenorGifUri(url) || isKlipyGifUri(url)
+	return isTenorGifUri(url) || isKlipyGifUri(url);
 }

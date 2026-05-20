@@ -1,14 +1,14 @@
-import {useCallback} from 'react'
+import { useCallback } from 'react';
 
-import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
+import { useHapticsDisabled } from '#/state/preferences/disable-haptics';
 
 export function useHaptics() {
-  const isHapticsDisabled = useHapticsDisabled()
+	const isHapticsDisabled = useHapticsDisabled();
 
-  return useCallback(
-    (_strength: 'Light' | 'Medium' | 'Heavy' = 'Medium') => {
-      return
-    },
-    [isHapticsDisabled],
-  )
+	return useCallback(
+		(_strength: 'Light' | 'Medium' | 'Heavy' = 'Medium') => {
+			return;
+		},
+		[isHapticsDisabled],
+	);
 }

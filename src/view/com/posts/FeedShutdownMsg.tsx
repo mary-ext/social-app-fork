@@ -1,141 +1,124 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { useCallback } from 'react';
+import { View } from 'react-native';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {logger} from '#/logger'
+import { PROD_DEFAULT_FEED } from '#/lib/constants';
+import { logger } from '#/logger';
 import {
-  usePreferencesQuery,
-  useRemoveFeedMutation,
-  useReplaceForYouWithDiscoverFeedMutation,
-} from '#/state/queries/preferences'
-import {useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {InlineLinkText} from '#/components/Link'
-import {Loader} from '#/components/Loader'
-import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
+	usePreferencesQuery,
+	useRemoveFeedMutation,
+	useReplaceForYouWithDiscoverFeedMutation,
+} from '#/state/queries/preferences';
+import { useSetSelectedFeed } from '#/state/shell/selected-feed';
+import { atoms as a, useTheme } from '#/alf';
+import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { InlineLinkText } from '#/components/Link';
+import { Loader } from '#/components/Loader';
+import * as Toast from '#/components/Toast';
+import { Text } from '#/components/Typography';
 
-export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const setSelectedFeed = useSetSelectedFeed()
-  const {data: preferences} = usePreferencesQuery()
-  const {mutateAsync: removeFeed, isPending: isRemovePending} =
-    useRemoveFeedMutation()
-  const {mutateAsync: replaceFeedWithDiscover, isPending: isReplacePending} =
-    useReplaceForYouWithDiscoverFeedMutation()
+export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const setSelectedFeed = useSetSelectedFeed();
+	const { data: preferences } = usePreferencesQuery();
+	const { mutateAsync: removeFeed, isPending: isRemovePending } = useRemoveFeedMutation();
+	const { mutateAsync: replaceFeedWithDiscover, isPending: isReplacePending } =
+		useReplaceForYouWithDiscoverFeedMutation();
 
-  const feedConfig = preferences?.savedFeeds?.find(
-    f => f.value === feedUri && f.pinned,
-  )
-  const discoverFeedConfig = preferences?.savedFeeds?.find(
-    f => f.value === PROD_DEFAULT_FEED('whats-hot'),
-  )
-  const hasFeedPinned = Boolean(feedConfig)
-  const hasDiscoverPinned = Boolean(discoverFeedConfig?.pinned)
+	const feedConfig = preferences?.savedFeeds?.find((f) => f.value === feedUri && f.pinned);
+	const discoverFeedConfig = preferences?.savedFeeds?.find((f) => f.value === PROD_DEFAULT_FEED('whats-hot'));
+	const hasFeedPinned = Boolean(feedConfig);
+	const hasDiscoverPinned = Boolean(discoverFeedConfig?.pinned);
 
-  const onRemoveFeed = useCallback(async () => {
-    try {
-      if (feedConfig) {
-        await removeFeed(feedConfig)
-        Toast.show(l`Removed from your feeds`)
-      }
-      if (hasDiscoverPinned) {
-        setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
-      }
-    } catch (err) {
-      Toast.show(
-        l`There was an issue updating your feeds, please check your internet connection and try again.`,
-        {
-          type: 'warning',
-        },
-      )
-      logger.error('Failed to update feeds', {message: err})
-    }
-  }, [removeFeed, feedConfig, l, hasDiscoverPinned, setSelectedFeed])
+	const onRemoveFeed = useCallback(async () => {
+		try {
+			if (feedConfig) {
+				await removeFeed(feedConfig);
+				Toast.show(l`Removed from your feeds`);
+			}
+			if (hasDiscoverPinned) {
+				setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
+			}
+		} catch (err) {
+			Toast.show(
+				l`There was an issue updating your feeds, please check your internet connection and try again.`,
+				{
+					type: 'warning',
+				},
+			);
+			logger.error('Failed to update feeds', { message: err });
+		}
+	}, [removeFeed, feedConfig, l, hasDiscoverPinned, setSelectedFeed]);
 
-  const onReplaceFeed = useCallback(async () => {
-    try {
-      await replaceFeedWithDiscover({
-        forYouFeedConfig: feedConfig,
-        discoverFeedConfig,
-      })
-      setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`)
-      Toast.show(l`The feed has been replaced with Discover.`)
-    } catch (err) {
-      Toast.show(
-        l`There was an issue updating your feeds, please check your internet connection and try again.`,
-        {
-          type: 'warning',
-        },
-      )
-      logger.error('Failed to update feeds', {message: err})
-    }
-  }, [
-    replaceFeedWithDiscover,
-    discoverFeedConfig,
-    feedConfig,
-    setSelectedFeed,
-    l,
-  ])
+	const onReplaceFeed = useCallback(async () => {
+		try {
+			await replaceFeedWithDiscover({
+				forYouFeedConfig: feedConfig,
+				discoverFeedConfig,
+			});
+			setSelectedFeed(`feedgen|${PROD_DEFAULT_FEED('whats-hot')}`);
+			Toast.show(l`The feed has been replaced with Discover.`);
+		} catch (err) {
+			Toast.show(
+				l`There was an issue updating your feeds, please check your internet connection and try again.`,
+				{
+					type: 'warning',
+				},
+			);
+			logger.error('Failed to update feeds', { message: err });
+		}
+	}, [replaceFeedWithDiscover, discoverFeedConfig, feedConfig, setSelectedFeed, l]);
 
-  const isProcessing = isReplacePending || isRemovePending
-  return (
-    <View
-      style={[
-        a.py_3xl,
-        a.px_2xl,
-        a.gap_xl,
-        t.atoms.border_contrast_low,
-        a.border_t,
-      ]}>
-      <Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>
-        :(
-      </Text>
-      <Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>
-        <Trans>
-          This feed is no longer online. We are showing{' '}
-          <InlineLinkText
-            label={l`The Discover feed`}
-            to="/profile/bsky.app/feed/whats-hot"
-            style={[a.text_md]}>
-            Discover
-          </InlineLinkText>{' '}
-          instead.
-        </Trans>
-      </Text>
-      {hasFeedPinned ? (
-        <View style={[a.flex_row, a.justify_center, a.gap_sm]}>
-          <Button
-            variant="outline"
-            color="primary"
-            size="small"
-            label={l`Remove feed`}
-            disabled={isProcessing}
-            onPress={onRemoveFeed}>
-            <ButtonText>
-              <Trans>Remove feed</Trans>
-            </ButtonText>
-            {isRemovePending && <ButtonIcon icon={Loader} />}
-          </Button>
-          {!hasDiscoverPinned && (
-            <Button
-              variant="solid"
-              color="primary"
-              size="small"
-              label={l`Replace with Discover`}
-              disabled={isProcessing}
-              onPress={onReplaceFeed}>
-              <ButtonText>
-                <Trans>Replace with Discover</Trans>
-              </ButtonText>
-              {isReplacePending && <ButtonIcon icon={Loader} />}
-            </Button>
-          )}
-        </View>
-      ) : undefined}
-    </View>
-  )
+	const isProcessing = isReplacePending || isRemovePending;
+	return (
+		<View style={[a.py_3xl, a.px_2xl, a.gap_xl, t.atoms.border_contrast_low, a.border_t]}>
+			<Text style={[a.text_5xl, a.font_semi_bold, t.atoms.text, a.text_center]}>:(</Text>
+			<Text style={[a.text_md, a.leading_snug, t.atoms.text, a.text_center]}>
+				<Trans>
+					This feed is no longer online. We are showing{' '}
+					<InlineLinkText
+						label={l`The Discover feed`}
+						to="/profile/bsky.app/feed/whats-hot"
+						style={[a.text_md]}
+					>
+						Discover
+					</InlineLinkText>{' '}
+					instead.
+				</Trans>
+			</Text>
+			{hasFeedPinned ? (
+				<View style={[a.flex_row, a.justify_center, a.gap_sm]}>
+					<Button
+						variant="outline"
+						color="primary"
+						size="small"
+						label={l`Remove feed`}
+						disabled={isProcessing}
+						onPress={onRemoveFeed}
+					>
+						<ButtonText>
+							<Trans>Remove feed</Trans>
+						</ButtonText>
+						{isRemovePending && <ButtonIcon icon={Loader} />}
+					</Button>
+					{!hasDiscoverPinned && (
+						<Button
+							variant="solid"
+							color="primary"
+							size="small"
+							label={l`Replace with Discover`}
+							disabled={isProcessing}
+							onPress={onReplaceFeed}
+						>
+							<ButtonText>
+								<Trans>Replace with Discover</Trans>
+							</ButtonText>
+							{isReplacePending && <ButtonIcon icon={Loader} />}
+						</Button>
+					)}
+				</View>
+			) : undefined}
+		</View>
+	);
 }

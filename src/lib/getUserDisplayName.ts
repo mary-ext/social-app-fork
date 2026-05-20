@@ -1,10 +1,6 @@
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
+import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { sanitizeHandle } from '#/lib/strings/handles';
 
-export function getUserDisplayName<
-  T extends {displayName?: string; handle: string},
->(props: T): string {
-  return sanitizeDisplayName(
-    props.displayName || sanitizeHandle(props.handle, '@'),
-  )
+export function getUserDisplayName<T extends { displayName?: string; handle: string }>(props: T): string {
+	return sanitizeDisplayName(props.displayName || sanitizeHandle(props.handle, '@'));
 }

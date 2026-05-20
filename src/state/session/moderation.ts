@@ -1,55 +1,46 @@
-import {Agent, BSKY_LABELER_DID} from '@atproto/api'
+import { Agent, BSKY_LABELER_DID } from '@atproto/api';
 
-import {IS_TEST_USER} from '#/lib/constants'
-import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
-import {type BskyAppAgent} from './agent'
-import {readLabelers} from './agent-config'
-import {type SessionAccount} from './types'
+import { IS_TEST_USER } from '#/lib/constants';
+import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities';
+import { type BskyAppAgent } from './agent';
+import { readLabelers } from './agent-config';
+import { type SessionAccount } from './types';
 
 export function configureModerationForGuest() {
-  // This global mutation is *only* OK because this code is only relevant for testing.
-  // Don't add any other global behavior here!
-  switchToBskyAppLabeler()
-  configureAdditionalModerationAuthorities()
+	// This global mutation is *only* OK because this code is only relevant for testing.
+	// Don't add any other global behavior here!
+	switchToBskyAppLabeler();
+	configureAdditionalModerationAuthorities();
 }
 
-export async function configureModerationForAccount(
-  agent: BskyAppAgent,
-  account: SessionAccount,
-) {
-  // This global mutation is *only* OK because this code is only relevant for testing.
-  // Don't add any other global behavior here!
-  switchToBskyAppLabeler()
-  if (IS_TEST_USER(account.handle)) {
-    await trySwitchToTestAppLabeler(agent)
-  }
+export async function configureModerationForAccount(agent: BskyAppAgent, account: SessionAccount) {
+	// This global mutation is *only* OK because this code is only relevant for testing.
+	// Don't add any other global behavior here!
+	switchToBskyAppLabeler();
+	if (IS_TEST_USER(account.handle)) {
+		await trySwitchToTestAppLabeler(agent);
+	}
 
-  // The code below is actually relevant to production (and isn't global).
-  const labelerDids = await readLabelers(account.did).catch(_ => {})
-  if (labelerDids) {
-    agent.configureLabelersHeader(
-      labelerDids.filter(did => did !== BSKY_LABELER_DID),
-    )
-  } else {
-    // If there are no headers in the storage, we'll not send them on the initial requests.
-    // If we wanted to fix this, we could block on the preferences query here.
-  }
+	// The code below is actually relevant to production (and isn't global).
+	const labelerDids = await readLabelers(account.did).catch((_) => {});
+	if (labelerDids) {
+		agent.configureLabelersHeader(labelerDids.filter((did) => did !== BSKY_LABELER_DID));
+	} else {
+		// If there are no headers in the storage, we'll not send them on the initial requests.
+		// If we wanted to fix this, we could block on the preferences query here.
+	}
 
-  configureAdditionalModerationAuthorities()
+	configureAdditionalModerationAuthorities();
 }
 
 function switchToBskyAppLabeler() {
-  Agent.configure({appLabelers: [BSKY_LABELER_DID]})
+	Agent.configure({ appLabelers: [BSKY_LABELER_DID] });
 }
 
 async function trySwitchToTestAppLabeler(agent: BskyAppAgent) {
-  const did = (
-    await agent
-      .resolveHandle({handle: 'mod-authority.test'})
-      .catch(_ => undefined)
-  )?.data.did
-  if (did) {
-    console.warn('USING TEST ENV MODERATION')
-    Agent.configure({appLabelers: [did]})
-  }
+	const did = (await agent.resolveHandle({ handle: 'mod-authority.test' }).catch((_) => undefined))?.data.did;
+	if (did) {
+		console.warn('USING TEST ENV MODERATION');
+		Agent.configure({ appLabelers: [did] });
+	}
 }

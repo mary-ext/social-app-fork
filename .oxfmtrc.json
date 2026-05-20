@@ -1,28 +1,24 @@
 {
-  "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "semi": false,
-  "arrowParens": "avoid",
-  "bracketSameLine": true,
-  "bracketSpacing": false,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "printWidth": 80,
-  "sortPackageJson": false,
-  "ignorePatterns": [
-    "*",
-    "!**/*.js",
-    "!**/*.jsx",
-    "!**/*.ts",
-    "!**/*.tsx",
-    "!*/",
-    "!**/*.css",
-    ".expo",
-    "android",
-    "ios",
-    "src/locale/locales",
-    "lib/react-compiler-runtime",
-    "bskyweb/static",
-    "coverage",
-    "web-build"
-  ]
+	"$schema": "https://unpkg.com/oxfmt/configuration_schema.json",
+	"trailingComma": "all",
+	"useTabs": true,
+	"tabWidth": 2,
+	"printWidth": 110,
+	"semi": true,
+	"singleQuote": true,
+	"bracketSpacing": true,
+	"jsdoc": {
+		"capitalizeDescriptions": false
+	},
+	"ignorePatterns": ["pnpm-lock.yaml", "src/locale/locales"],
+	"overrides": [
+		{
+			"files": ["tsconfig*.json"],
+			"options": { "parser": "jsonc" }
+		},
+		{
+			"files": ["*.md"],
+			"options": { "printWidth": 100, "proseWrap": "always" }
+		}
+	]
 }

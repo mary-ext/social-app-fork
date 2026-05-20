@@ -1,4 +1,4 @@
-import {useFonts} from '#/shims/font'
+import { useFonts } from '#/shims/font';
 
 /*
  * IMPORTANT: This is unused. Expo statically extracts these fonts.
@@ -8,8 +8,8 @@ import {useFonts} from '#/shims/font'
  * This is used for both web fonts and native fonts.
  */
 export function DO_NOT_USE() {
-  return useFonts({
-    InterVariable: require('../../../assets/fonts/inter/InterVariable.woff2'),
-    'InterVariable-Italic': require('../../../assets/fonts/inter/InterVariable-Italic.woff2'),
-  })
+	return useFonts({
+		InterVariable: require('../../../assets/fonts/inter/InterVariable.woff2'),
+		'InterVariable-Italic': require('../../../assets/fonts/inter/InterVariable-Italic.woff2'),
+	});
 }

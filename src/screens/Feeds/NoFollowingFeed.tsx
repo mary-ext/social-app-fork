@@ -1,48 +1,49 @@
-import {type GestureResponderEvent, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import { type GestureResponderEvent, View } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
-import {TIMELINE_SAVED_FEED} from '#/lib/constants'
-import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { TIMELINE_SAVED_FEED } from '#/lib/constants';
+import { useAddSavedFeedsMutation } from '#/state/queries/preferences';
+import { atoms as a, useTheme } from '#/alf';
+import { InlineLinkText } from '#/components/Link';
+import { Text } from '#/components/Typography';
 
-export function NoFollowingFeed({onAddFeed}: {onAddFeed?: () => void}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
+export function NoFollowingFeed({ onAddFeed }: { onAddFeed?: () => void }) {
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { mutateAsync: addSavedFeeds } = useAddSavedFeedsMutation();
 
-  const addRecommendedFeeds = (e: GestureResponderEvent) => {
-    e.preventDefault()
+	const addRecommendedFeeds = (e: GestureResponderEvent) => {
+		e.preventDefault();
 
-    addSavedFeeds([
-      {
-        ...TIMELINE_SAVED_FEED,
-        pinned: true,
-      },
-    ])
+		addSavedFeeds([
+			{
+				...TIMELINE_SAVED_FEED,
+				pinned: true,
+			},
+		]);
 
-    onAddFeed?.()
+		onAddFeed?.();
 
-    // prevent navigation
-    return false as const
-  }
+		// prevent navigation
+		return false as const;
+	};
 
-  return (
-    <View style={[a.flex_row, a.flex_wrap, a.align_center, a.py_md, a.px_lg]}>
-      <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-        <Trans>
-          Looks like you're missing a following feed.{' '}
-          <InlineLinkText
-            to="#"
-            label={l`Add the default feed of only people you follow`}
-            onPress={addRecommendedFeeds}
-            style={[a.leading_snug]}>
-            Click here to add one.
-          </InlineLinkText>
-        </Trans>
-      </Text>
-    </View>
-  )
+	return (
+		<View style={[a.flex_row, a.flex_wrap, a.align_center, a.py_md, a.px_lg]}>
+			<Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+				<Trans>
+					Looks like you're missing a following feed.{' '}
+					<InlineLinkText
+						to="#"
+						label={l`Add the default feed of only people you follow`}
+						onPress={addRecommendedFeeds}
+						style={[a.leading_snug]}
+					>
+						Click here to add one.
+					</InlineLinkText>
+				</Trans>
+			</Text>
+		</View>
+	);
 }

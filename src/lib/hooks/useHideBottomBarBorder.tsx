@@ -1,53 +1,49 @@
-import {createContext, useCallback, useContext, useState} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
+import { createContext, useCallback, useContext, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
-type HideBottomBarBorderSetter = () => () => void
+type HideBottomBarBorderSetter = () => () => void;
 
-const HideBottomBarBorderContext = createContext<boolean>(false)
-HideBottomBarBorderContext.displayName = 'HideBottomBarBorderContext'
-const HideBottomBarBorderSetterContext =
-  createContext<HideBottomBarBorderSetter | null>(null)
-HideBottomBarBorderSetterContext.displayName =
-  'HideBottomBarBorderSetterContext'
+const HideBottomBarBorderContext = createContext<boolean>(false);
+HideBottomBarBorderContext.displayName = 'HideBottomBarBorderContext';
+const HideBottomBarBorderSetterContext = createContext<HideBottomBarBorderSetter | null>(null);
+HideBottomBarBorderSetterContext.displayName = 'HideBottomBarBorderSetterContext';
 
 export function useHideBottomBarBorderSetter() {
-  const hideBottomBarBorder = useContext(HideBottomBarBorderSetterContext)
-  if (!hideBottomBarBorder) {
-    throw new Error(
-      'useHideBottomBarBorderSetter must be used within a HideBottomBarBorderProvider',
-    )
-  }
-  return hideBottomBarBorder
+	const hideBottomBarBorder = useContext(HideBottomBarBorderSetterContext);
+	if (!hideBottomBarBorder) {
+		throw new Error('useHideBottomBarBorderSetter must be used within a HideBottomBarBorderProvider');
+	}
+	return hideBottomBarBorder;
 }
 
 export function useHideBottomBarBorderForScreen() {
-  const hideBorder = useHideBottomBarBorderSetter()
+	const hideBorder = useHideBottomBarBorderSetter();
 
-  useFocusEffect(
-    useCallback(() => {
-      const cleanup = hideBorder()
-      return () => cleanup()
-    }, [hideBorder]),
-  )
+	useFocusEffect(
+		useCallback(() => {
+			const cleanup = hideBorder();
+			return () => cleanup();
+		}, [hideBorder]),
+	);
 }
 
 export function useHideBottomBarBorder() {
-  return useContext(HideBottomBarBorderContext)
+	return useContext(HideBottomBarBorderContext);
 }
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const [refCount, setRefCount] = useState(0)
+export function Provider({ children }: { children: React.ReactNode }) {
+	const [refCount, setRefCount] = useState(0);
 
-  const setter = useCallback(() => {
-    setRefCount(prev => prev + 1)
-    return () => setRefCount(prev => prev - 1)
-  }, [])
+	const setter = useCallback(() => {
+		setRefCount((prev) => prev + 1);
+		return () => setRefCount((prev) => prev - 1);
+	}, []);
 
-  return (
-    <HideBottomBarBorderSetterContext.Provider value={setter}>
-      <HideBottomBarBorderContext.Provider value={refCount > 0}>
-        {children}
-      </HideBottomBarBorderContext.Provider>
-    </HideBottomBarBorderSetterContext.Provider>
-  )
+	return (
+		<HideBottomBarBorderSetterContext.Provider value={setter}>
+			<HideBottomBarBorderContext.Provider value={refCount > 0}>
+				{children}
+			</HideBottomBarBorderContext.Provider>
+		</HideBottomBarBorderSetterContext.Provider>
+	);
 }

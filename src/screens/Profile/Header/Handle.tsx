@@ -1,70 +1,63 @@
-import {type TextStyle, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { type TextStyle, View } from 'react-native';
+import { type AppBskyActorDefs } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
-import {type Shadow} from '#/state/cache/types'
-import {atoms as a, useTheme} from '#/alf'
-import {NewskieDialog} from '#/components/NewskieDialog'
-import {Text} from '#/components/Typography'
+import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
+import { type Shadow } from '#/state/cache/types';
+import { atoms as a, useTheme } from '#/alf';
+import { NewskieDialog } from '#/components/NewskieDialog';
+import { Text } from '#/components/Typography';
 
 type WebTextStyle = TextStyle & {
-  direction?: 'ltr'
-  unicodeBidi?: 'isolate'
-  wordBreak?: 'break-all'
-}
+	direction?: 'ltr';
+	unicodeBidi?: 'isolate';
+	wordBreak?: 'break-all';
+};
 
 const webTextStyle = (style: WebTextStyle): TextStyle => {
-  return style
-}
+	return style;
+};
 
 export function ProfileHeaderHandle({
-  profile,
-  disableTaps,
+	profile,
+	disableTaps,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  disableTaps?: boolean
+	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
+	disableTaps?: boolean;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const invalidHandle = isInvalidHandle(profile.handle)
-  const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
-  return (
-    <View
-      style={[a.flex_row, a.gap_sm, a.align_center, {maxWidth: '100%'}]}
-      pointerEvents={disableTaps ? 'none' : 'box-none'}>
-      <NewskieDialog profile={profile} disabled={disableTaps} />
-      {profile.viewer?.followedBy && !blockHide ? (
-        <View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
-          <Text style={[t.atoms.text, a.text_sm]}>
-            <Trans>Follows you</Trans>
-          </Text>
-        </View>
-      ) : undefined}
-      <Text
-        emoji
-        numberOfLines={1}
-        style={[
-          invalidHandle
-            ? [
-                a.border,
-                a.text_xs,
-                a.px_sm,
-                a.py_xs,
-                a.rounded_xs,
-                {borderColor: t.palette.contrast_200},
-              ]
-            : [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
-          webTextStyle({
-            wordBreak: 'break-all',
-            direction: 'ltr',
-            unicodeBidi: 'isolate',
-          }),
-        ]}>
-        {invalidHandle
-          ? l`⚠Invalid Handle`
-          : sanitizeHandle(profile.handle, '@', false)}
-      </Text>
-    </View>
-  )
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const invalidHandle = isInvalidHandle(profile.handle);
+	const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy;
+	return (
+		<View
+			style={[a.flex_row, a.gap_sm, a.align_center, { maxWidth: '100%' }]}
+			pointerEvents={disableTaps ? 'none' : 'box-none'}
+		>
+			<NewskieDialog profile={profile} disabled={disableTaps} />
+			{profile.viewer?.followedBy && !blockHide ? (
+				<View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
+					<Text style={[t.atoms.text, a.text_sm]}>
+						<Trans>Follows you</Trans>
+					</Text>
+				</View>
+			) : undefined}
+			<Text
+				emoji
+				numberOfLines={1}
+				style={[
+					invalidHandle
+						? [a.border, a.text_xs, a.px_sm, a.py_xs, a.rounded_xs, { borderColor: t.palette.contrast_200 }]
+						: [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
+					webTextStyle({
+						wordBreak: 'break-all',
+						direction: 'ltr',
+						unicodeBidi: 'isolate',
+					}),
+				]}
+			>
+				{invalidHandle ? l`⚠Invalid Handle` : sanitizeHandle(profile.handle, '@', false)}
+			</Text>
+		</View>
+	);
 }

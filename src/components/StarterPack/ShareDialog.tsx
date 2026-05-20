@@ -1,126 +1,103 @@
-import {View} from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { View } from 'react-native';
+import { type AppBskyGraphDefs } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {shareUrl} from '#/lib/sharing'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {type DialogControlProps} from '#/components/Dialog'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {Image} from '#/shims/image'
+import { shareUrl } from '#/lib/sharing';
+import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
+import { type DialogControlProps } from '#/components/Dialog';
+import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
+import { QrCode_Stroke2_Corner0_Rounded as QrCodeIcon } from '#/components/icons/QrCode';
+import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Typography';
+import { Image } from '#/shims/image';
 
 interface Props {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  link?: string
-  imageLoaded?: boolean
-  qrDialogControl: DialogControlProps
-  control: DialogControlProps
+	starterPack: AppBskyGraphDefs.StarterPackView;
+	link?: string;
+	imageLoaded?: boolean;
+	qrDialogControl: DialogControlProps;
+	control: DialogControlProps;
 }
 
 export function ShareDialog(props: Props) {
-  return (
-    <Dialog.Outer
-      control={props.control}
-      nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
-      <ShareDialogInner {...props} />
-    </Dialog.Outer>
-  )
+	return (
+		<Dialog.Outer control={props.control} nativeOptions={{ preventExpansion: true }}>
+			<Dialog.Handle />
+			<ShareDialogInner {...props} />
+		</Dialog.Outer>
+	);
 }
 
-function ShareDialogInner({
-  starterPack,
-  link,
-  imageLoaded,
-  qrDialogControl,
-  control,
-}: Props) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+function ShareDialogInner({ starterPack, link, imageLoaded, qrDialogControl, control }: Props) {
+	const { t: l } = useLingui();
+	const t = useTheme();
+	const { gtMobile } = useBreakpoints();
 
-  const imageUrl = getStarterPackOgCard(starterPack)
+	const imageUrl = getStarterPackOgCard(starterPack);
 
-  const onShareLink = async () => {
-    if (!link) return
-    shareUrl(link)
-    control.close()
-  }
+	const onShareLink = async () => {
+		if (!link) return;
+		shareUrl(link);
+		control.close();
+	};
 
-  return (
-    <>
-      <Dialog.ScrollableInner label={l`Share link dialog`}>
-        {!imageLoaded || !link ? (
-          <View style={[a.align_center, a.justify_center, {minHeight: 350}]}>
-            <Loader size="xl" />
-          </View>
-        ) : (
-          <View style={[!gtMobile && a.gap_lg]}>
-            <View style={[a.gap_sm, gtMobile && a.pb_lg]}>
-              <Text style={[a.font_semi_bold, a.text_2xl]}>
-                <Trans>Invite people to this starter pack!</Trans>
-              </Text>
-              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                <Trans>
-                  Share this starter pack and help people join your community on
-                  Bluesky.
-                </Trans>
-              </Text>
-            </View>
-            <Image
-              source={{uri: imageUrl}}
-              style={[
-                a.rounded_sm,
-                a.aspect_card,
-                {
-                  transform: [{scale: gtMobile ? 0.85 : 1}],
-                  marginTop: gtMobile ? -20 : 0,
-                },
-              ]}
-              accessibilityIgnoresInvertColors={true}
-            />
-            <View
-              style={[
-                a.gap_md,
-                gtMobile && [
-                  a.gap_sm,
-                  a.justify_center,
-                  a.flex_row,
-                  a.flex_wrap,
-                ],
-              ]}>
-              <Button
-                label={l`Copy link`}
-                color="primary_subtle"
-                size="large"
-                onPress={onShareLink}>
-                <ButtonIcon icon={ChainLinkIcon} />
-                <ButtonText>{<Trans>Copy Link</Trans>}</ButtonText>
-              </Button>
-              <Button
-                label={l`Share QR code`}
-                color="primary_subtle"
-                size="large"
-                onPress={() => {
-                  control.close(() => {
-                    qrDialogControl.open()
-                  })
-                }}>
-                <ButtonIcon icon={QrCodeIcon} />
-                <ButtonText>
-                  <Trans>Share QR code</Trans>
-                </ButtonText>
-              </Button>
-            </View>
-          </View>
-        )}
-        <Dialog.Close />
-      </Dialog.ScrollableInner>
-    </>
-  )
+	return (
+		<>
+			<Dialog.ScrollableInner label={l`Share link dialog`}>
+				{!imageLoaded || !link ? (
+					<View style={[a.align_center, a.justify_center, { minHeight: 350 }]}>
+						<Loader size="xl" />
+					</View>
+				) : (
+					<View style={[!gtMobile && a.gap_lg]}>
+						<View style={[a.gap_sm, gtMobile && a.pb_lg]}>
+							<Text style={[a.font_semi_bold, a.text_2xl]}>
+								<Trans>Invite people to this starter pack!</Trans>
+							</Text>
+							<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+								<Trans>Share this starter pack and help people join your community on Bluesky.</Trans>
+							</Text>
+						</View>
+						<Image
+							source={{ uri: imageUrl }}
+							style={[
+								a.rounded_sm,
+								a.aspect_card,
+								{
+									transform: [{ scale: gtMobile ? 0.85 : 1 }],
+									marginTop: gtMobile ? -20 : 0,
+								},
+							]}
+							accessibilityIgnoresInvertColors={true}
+						/>
+						<View style={[a.gap_md, gtMobile && [a.gap_sm, a.justify_center, a.flex_row, a.flex_wrap]]}>
+							<Button label={l`Copy link`} color="primary_subtle" size="large" onPress={onShareLink}>
+								<ButtonIcon icon={ChainLinkIcon} />
+								<ButtonText>{<Trans>Copy Link</Trans>}</ButtonText>
+							</Button>
+							<Button
+								label={l`Share QR code`}
+								color="primary_subtle"
+								size="large"
+								onPress={() => {
+									control.close(() => {
+										qrDialogControl.open();
+									});
+								}}
+							>
+								<ButtonIcon icon={QrCodeIcon} />
+								<ButtonText>
+									<Trans>Share QR code</Trans>
+								</ButtonText>
+							</Button>
+						</View>
+					</View>
+				)}
+				<Dialog.Close />
+			</Dialog.ScrollableInner>
+		</>
+	);
 }

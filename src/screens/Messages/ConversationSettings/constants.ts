@@ -1,1 +1,1 @@
-export const MEMBER_LIMIT = 50
+export const MEMBER_LIMIT = 50;

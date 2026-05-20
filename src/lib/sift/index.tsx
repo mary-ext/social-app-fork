@@ -1,1 +1,1 @@
-export * from './Sift'
+export * from './Sift';

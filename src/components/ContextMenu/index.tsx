@@ -1,62 +1,56 @@
-import {type StyleProp, type ViewStyle} from 'react-native'
+import { type StyleProp, type ViewStyle } from 'react-native';
 
-import {atoms as a, useTheme} from '#/alf'
-import * as Menu from '#/components/Menu'
-import {Text} from '#/components/Typography'
-import {type AuxiliaryViewProps} from './types'
+import { atoms as a, useTheme } from '#/alf';
+import * as Menu from '#/components/Menu';
+import { Text } from '#/components/Typography';
+import { type AuxiliaryViewProps } from './types';
 
 export {
-  ContainerItem,
-  type MenuControlProps as ContextMenuControlProps,
-  Divider,
-  Group,
-  Item,
-  ItemIcon,
-  ItemRadio,
-  ItemText,
-  LabelText,
-  Root,
-  Trigger,
-  useMenuContext as useContextMenuContext,
-  useMenuControl as useContextMenuControl,
-} from '#/components/Menu'
+	ContainerItem,
+	type MenuControlProps as ContextMenuControlProps,
+	Divider,
+	Group,
+	Item,
+	ItemIcon,
+	ItemRadio,
+	ItemText,
+	LabelText,
+	Root,
+	Trigger,
+	useMenuContext as useContextMenuContext,
+	useMenuControl as useContextMenuControl,
+} from '#/components/Menu';
 
-export function Provider({children}: {children: React.ReactNode}) {
-  return children
+export function Provider({ children }: { children: React.ReactNode }) {
+	return children;
 }
 
 export function AuxiliaryView({}: AuxiliaryViewProps) {
-  return null
+	return null;
 }
 
 export function Outer({
-  children,
-  label,
-  style,
+	children,
+	label,
+	style,
 }: {
-  children: React.ReactNode
-  align?: 'left' | 'right'
-  label?: string
-  style?: StyleProp<ViewStyle>
+	children: React.ReactNode;
+	align?: 'left' | 'right';
+	label?: string;
+	style?: StyleProp<ViewStyle>;
 }) {
-  const t = useTheme()
-  return (
-    <Menu.Outer style={style}>
-      {label ? (
-        <Text
-          numberOfLines={1}
-          style={[
-            a.pl_sm,
-            a.pt_md,
-            a.pr_lg,
-            a.pb_md,
-            a.text_xs,
-            t.atoms.text_contrast_medium,
-          ]}>
-          {label}
-        </Text>
-      ) : null}
-      {children}
-    </Menu.Outer>
-  )
+	const t = useTheme();
+	return (
+		<Menu.Outer style={style}>
+			{label ? (
+				<Text
+					numberOfLines={1}
+					style={[a.pl_sm, a.pt_md, a.pr_lg, a.pb_md, a.text_xs, t.atoms.text_contrast_medium]}
+				>
+					{label}
+				</Text>
+			) : null}
+			{children}
+		</Menu.Outer>
+	);
 }

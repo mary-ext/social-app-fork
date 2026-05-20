@@ -1,77 +1,72 @@
-import {createContext, useContext, useMemo} from 'react'
+import { createContext, useContext, useMemo } from 'react';
 
-import {useLanguagePrefs} from '#/state/preferences/languages'
-import {useServiceConfigQuery} from '#/state/queries/service-config'
-import {device} from '#/storage'
+import { useLanguagePrefs } from '#/state/preferences/languages';
+import { useServiceConfigQuery } from '#/state/queries/service-config';
+import { device } from '#/storage';
 
 type TrendingContext = {
-  enabled: boolean
-}
+	enabled: boolean;
+};
 
 const TrendingContext = createContext<TrendingContext>({
-  enabled: false,
-})
-TrendingContext.displayName = 'TrendingContext'
+	enabled: false,
+});
+TrendingContext.displayName = 'TrendingContext';
 
-const CheckEmailConfirmedContext = createContext<boolean | null>(null)
+const CheckEmailConfirmedContext = createContext<boolean | null>(null);
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const langPrefs = useLanguagePrefs()
-  const {data: config, isLoading: isInitialLoad} = useServiceConfigQuery()
-  const trending = useMemo<TrendingContext>(() => {
-    if (import.meta.env.DEV) {
-      return {enabled: true}
-    }
+export function Provider({ children }: { children: React.ReactNode }) {
+	const langPrefs = useLanguagePrefs();
+	const { data: config, isLoading: isInitialLoad } = useServiceConfigQuery();
+	const trending = useMemo<TrendingContext>(() => {
+		if (import.meta.env.DEV) {
+			return { enabled: true };
+		}
 
-    /*
-     * Only English during beta period
-     */
-    if (
-      !!langPrefs.contentLanguages.length &&
-      !langPrefs.contentLanguages.includes('en')
-    ) {
-      return {enabled: false}
-    }
+		/*
+		 * Only English during beta period
+		 */
+		if (!!langPrefs.contentLanguages.length && !langPrefs.contentLanguages.includes('en')) {
+			return { enabled: false };
+		}
 
-    /*
-     * While loading, use cached value
-     */
-    const cachedEnabled = device.get(['trendingBetaEnabled'])
-    if (isInitialLoad) {
-      return {enabled: Boolean(cachedEnabled)}
-    }
+		/*
+		 * While loading, use cached value
+		 */
+		const cachedEnabled = device.get(['trendingBetaEnabled']);
+		if (isInitialLoad) {
+			return { enabled: Boolean(cachedEnabled) };
+		}
 
-    const enabled = Boolean(config?.topicsEnabled)
+		const enabled = Boolean(config?.topicsEnabled);
 
-    // update cache
-    device.set(['trendingBetaEnabled'], enabled)
+		// update cache
+		device.set(['trendingBetaEnabled'], enabled);
 
-    return {enabled}
-  }, [isInitialLoad, config, langPrefs.contentLanguages])
+		return { enabled };
+	}, [isInitialLoad, config, langPrefs.contentLanguages]);
 
-  // probably true, so default to true when loading
-  // if the call fails, the query will set it to false for us
-  const checkEmailConfirmed = config?.checkEmailConfirmed ?? true
+	// probably true, so default to true when loading
+	// if the call fails, the query will set it to false for us
+	const checkEmailConfirmed = config?.checkEmailConfirmed ?? true;
 
-  return (
-    <TrendingContext.Provider value={trending}>
-      <CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
-        {children}
-      </CheckEmailConfirmedContext.Provider>
-    </TrendingContext.Provider>
-  )
+	return (
+		<TrendingContext.Provider value={trending}>
+			<CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
+				{children}
+			</CheckEmailConfirmedContext.Provider>
+		</TrendingContext.Provider>
+	);
 }
 
 export function useTrendingConfig() {
-  return useContext(TrendingContext)
+	return useContext(TrendingContext);
 }
 
 export function useCheckEmailConfirmed() {
-  const ctx = useContext(CheckEmailConfirmedContext)
-  if (ctx === null) {
-    throw new Error(
-      'useCheckEmailConfirmed must be used within a ServiceConfigManager',
-    )
-  }
-  return ctx
+	const ctx = useContext(CheckEmailConfirmedContext);
+	if (ctx === null) {
+		throw new Error('useCheckEmailConfirmed must be used within a ServiceConfigManager');
+	}
+	return ctx;
 }

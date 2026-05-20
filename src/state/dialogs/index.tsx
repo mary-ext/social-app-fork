@@ -1,122 +1,104 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 
-import {useHotkeysContext} from '#/lib/hotkeys'
-import {type DialogControlRefProps} from '#/components/Dialog'
-import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
+import { useHotkeysContext } from '#/lib/hotkeys';
+import { type DialogControlRefProps } from '#/components/Dialog';
+import { Provider as GlobalDialogsProvider } from '#/components/dialogs/Context';
 
 interface IDialogContext {
-  /**
-   * The currently active `useDialogControl` hooks.
-   */
-  activeDialogs: React.MutableRefObject<
-    Map<string, React.MutableRefObject<DialogControlRefProps>>
-  >
-  /**
-   * The currently open dialogs, referenced by their IDs, generated from
-   * `useId`.
-   */
-  openDialogs: React.MutableRefObject<Set<string>>
+	/** The currently active `useDialogControl` hooks. */
+	activeDialogs: React.MutableRefObject<Map<string, React.MutableRefObject<DialogControlRefProps>>>;
+	/** The currently open dialogs, referenced by their IDs, generated from `useId`. */
+	openDialogs: React.MutableRefObject<Set<string>>;
 }
 
 interface IDialogControlContext {
-  closeAllDialogs(): boolean
-  setDialogIsOpen(id: string, isOpen: boolean): void
-  setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
+	closeAllDialogs(): boolean;
+	setDialogIsOpen(id: string, isOpen: boolean): void;
+	setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const DialogContext = createContext<IDialogContext>({} as IDialogContext)
-DialogContext.displayName = 'DialogContext'
+const DialogContext = createContext<IDialogContext>({} as IDialogContext);
+DialogContext.displayName = 'DialogContext';
 
-const DialogControlContext = createContext<IDialogControlContext>(
-  {} as IDialogControlContext,
-)
-DialogControlContext.displayName = 'DialogControlContext'
+const DialogControlContext = createContext<IDialogControlContext>({} as IDialogControlContext);
+DialogControlContext.displayName = 'DialogControlContext';
 
 /**
- * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
- * on iOS.
+ * The number of dialogs that are fully expanded. This is used to determine the background color of the status
+ * bar on iOS.
  */
-const DialogFullyExpandedCountContext = createContext<number>(0)
-DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext'
+const DialogFullyExpandedCountContext = createContext<number>(0);
+DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext';
 
 export function useDialogStateContext() {
-  return useContext(DialogContext)
+	return useContext(DialogContext);
 }
 
 export function useDialogStateControlContext() {
-  return useContext(DialogControlContext)
+	return useContext(DialogControlContext);
 }
 
 /** The number of dialogs that are fully expanded */
 export function useDialogFullyExpandedCountContext() {
-  return useContext(DialogFullyExpandedCountContext)
+	return useContext(DialogFullyExpandedCountContext);
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [fullyExpandedCount, setFullyExpandedCount] = useState(0)
-  const {disableScope, enableScope} = useHotkeysContext()
+export function Provider({ children }: React.PropsWithChildren<{}>) {
+	const [fullyExpandedCount, setFullyExpandedCount] = useState(0);
+	const { disableScope, enableScope } = useHotkeysContext();
 
-  const activeDialogs = useRef<
-    Map<string, React.MutableRefObject<DialogControlRefProps>>
-  >(new Map())
-  const openDialogs = useRef<Set<string>>(new Set())
+	const activeDialogs = useRef<Map<string, React.MutableRefObject<DialogControlRefProps>>>(new Map());
+	const openDialogs = useRef<Set<string>>(new Set());
 
-  const closeAllDialogs = useCallback(() => {
-    openDialogs.current.forEach(id => {
-      const dialog = activeDialogs.current.get(id)
-      if (dialog) dialog.current.close()
-    })
+	const closeAllDialogs = useCallback(() => {
+		openDialogs.current.forEach((id) => {
+			const dialog = activeDialogs.current.get(id);
+			if (dialog) dialog.current.close();
+		});
 
-    return openDialogs.current.size > 0
-  }, [])
+		return openDialogs.current.size > 0;
+	}, []);
 
-  const setDialogIsOpen = useCallback(
-    (id: string, isOpen: boolean) => {
-      if (isOpen) {
-        openDialogs.current.add(id)
-      } else {
-        openDialogs.current.delete(id)
-      }
-      if (openDialogs.current.size > 0) {
-        disableScope('global')
-      } else {
-        enableScope('global')
-      }
-    },
-    [disableScope, enableScope],
-  )
+	const setDialogIsOpen = useCallback(
+		(id: string, isOpen: boolean) => {
+			if (isOpen) {
+				openDialogs.current.add(id);
+			} else {
+				openDialogs.current.delete(id);
+			}
+			if (openDialogs.current.size > 0) {
+				disableScope('global');
+			} else {
+				enableScope('global');
+			}
+		},
+		[disableScope, enableScope],
+	);
 
-  const context = useMemo<IDialogContext>(
-    () => ({
-      activeDialogs,
-      openDialogs,
-    }),
-    [activeDialogs, openDialogs],
-  )
-  const controls = useMemo(
-    () => ({
-      closeAllDialogs,
-      setDialogIsOpen,
-      setFullyExpandedCount,
-    }),
-    [closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
-  )
+	const context = useMemo<IDialogContext>(
+		() => ({
+			activeDialogs,
+			openDialogs,
+		}),
+		[activeDialogs, openDialogs],
+	);
+	const controls = useMemo(
+		() => ({
+			closeAllDialogs,
+			setDialogIsOpen,
+			setFullyExpandedCount,
+		}),
+		[closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
+	);
 
-  return (
-    <DialogContext.Provider value={context}>
-      <DialogControlContext.Provider value={controls}>
-        <DialogFullyExpandedCountContext.Provider value={fullyExpandedCount}>
-          <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
-        </DialogFullyExpandedCountContext.Provider>
-      </DialogControlContext.Provider>
-    </DialogContext.Provider>
-  )
+	return (
+		<DialogContext.Provider value={context}>
+			<DialogControlContext.Provider value={controls}>
+				<DialogFullyExpandedCountContext.Provider value={fullyExpandedCount}>
+					<GlobalDialogsProvider>{children}</GlobalDialogsProvider>
+				</DialogFullyExpandedCountContext.Provider>
+			</DialogControlContext.Provider>
+		</DialogContext.Provider>
+	);
 }
-Provider.displayName = 'DialogsProvider'
+Provider.displayName = 'DialogsProvider';

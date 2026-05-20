@@ -1,141 +1,121 @@
-import {Text as RNText, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
-import {Trans} from '@lingui/react/macro'
+import { Text as RNText, View } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 
-import {urls} from '#/lib/constants'
-import {getUserDisplayName} from '#/lib/getUserDisplayName'
-import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
-import {VerifierCheck} from '#/components/icons/VerifierCheck'
-import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
-import {type FullVerificationState} from '#/components/verification'
-import {Image} from '#/shims/image'
-import type * as bsky from '#/types/bsky'
+import { urls } from '#/lib/constants';
+import { getUserDisplayName } from '#/lib/getUserDisplayName';
+import { useSession } from '#/state/session';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { Button, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
+import { VerifierCheck } from '#/components/icons/VerifierCheck';
+import { Link } from '#/components/Link';
+import { Text } from '#/components/Typography';
+import { type FullVerificationState } from '#/components/verification';
+import { Image } from '#/shims/image';
+import type * as bsky from '#/types/bsky';
 
-export {useDialogControl} from '#/components/Dialog'
+export { useDialogControl } from '#/components/Dialog';
 
 export function VerifierDialog({
-  control,
-  profile,
-  verificationState,
+	control,
+	profile,
+	verificationState,
 }: {
-  control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
-  verificationState: FullVerificationState
+	control: Dialog.DialogControlProps;
+	profile: bsky.profile.AnyProfileView;
+	verificationState: FullVerificationState;
 }) {
-  return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
-      <Dialog.Handle />
-      <Inner
-        control={control}
-        profile={profile}
-        verificationState={verificationState}
-      />
-      <Dialog.Close />
-    </Dialog.Outer>
-  )
+	return (
+		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+			<Dialog.Handle />
+			<Inner control={control} profile={profile} verificationState={verificationState} />
+			<Dialog.Close />
+		</Dialog.Outer>
+	);
 }
 
 function Inner({
-  profile,
-  control,
+	profile,
+	control,
 }: {
-  control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
-  verificationState: FullVerificationState
+	control: Dialog.DialogControlProps;
+	profile: bsky.profile.AnyProfileView;
+	verificationState: FullVerificationState;
 }) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {gtMobile} = useBreakpoints()
-  const {currentAccount} = useSession()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { gtMobile } = useBreakpoints();
+	const { currentAccount } = useSession();
 
-  const isSelf = profile.did === currentAccount?.did
-  const userName = getUserDisplayName(profile)
-  const label = isSelf
-    ? l`You are a trusted verifier`
-    : l`${userName} is a trusted verifier`
+	const isSelf = profile.did === currentAccount?.did;
+	const userName = getUserDisplayName(profile);
+	const label = isSelf ? l`You are a trusted verifier` : l`${userName} is a trusted verifier`;
 
-  return (
-    <Dialog.ScrollableInner
-      label={label}
-      style={[
-        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
-      ]}>
-      <View style={[a.gap_lg]}>
-        <View
-          style={[
-            a.w_full,
-            a.rounded_md,
-            a.overflow_hidden,
-            t.atoms.bg_contrast_25,
-            {minHeight: 100},
-          ]}>
-          <Image
-            accessibilityIgnoresInvertColors
-            source={require('../../../assets/images/initial_verification_announcement_1.png')}
-            style={[
-              {
-                aspectRatio: 353 / 160,
-              },
-            ]}
-            alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
-          />
-        </View>
+	return (
+		<Dialog.ScrollableInner
+			label={label}
+			style={[gtMobile ? { width: 'auto', maxWidth: 400, minWidth: 200 } : a.w_full]}
+		>
+			<View style={[a.gap_lg]}>
+				<View style={[a.w_full, a.rounded_md, a.overflow_hidden, t.atoms.bg_contrast_25, { minHeight: 100 }]}>
+					<Image
+						accessibilityIgnoresInvertColors
+						source={require('../../../assets/images/initial_verification_announcement_1.png')}
+						style={[
+							{
+								aspectRatio: 353 / 160,
+							},
+						]}
+						alt={l`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`}
+					/>
+				</View>
 
-        <View style={[a.gap_sm]}>
-          <Text
-            style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
-            {label}
-          </Text>
-          <Text style={[a.text_md, a.leading_snug]}>
-            <Trans>
-              Accounts with a scalloped blue check mark{' '}
-              <RNText>
-                <VerifierCheck width={14} />
-              </RNText>{' '}
-              can verify others. These trusted verifiers are selected by
-              Bluesky.
-            </Trans>
-          </Text>
-        </View>
+				<View style={[a.gap_sm]}>
+					<Text style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>{label}</Text>
+					<Text style={[a.text_md, a.leading_snug]}>
+						<Trans>
+							Accounts with a scalloped blue check mark{' '}
+							<RNText>
+								<VerifierCheck width={14} />
+							</RNText>{' '}
+							can verify others. These trusted verifiers are selected by Bluesky.
+						</Trans>
+					</Text>
+				</View>
 
-        <View
-          style={[
-            a.w_full,
-            a.gap_sm,
-            a.justify_end,
-            gtMobile ? [a.flex_row, a.justify_end] : [a.flex_col],
-          ]}>
-          <Link
-            to={urls.website.blog.initialVerificationAnnouncement}
-            label={l({
-              message: `Learn more about verification on Bluesky`,
-              context: `english-only-resource`,
-            })}
-            size="small"
-            color="primary"
-            style={[a.justify_center]}
-            onPress={() => {}}>
-            <ButtonText>
-              <Trans context="english-only-resource">Learn more</Trans>
-            </ButtonText>
-          </Link>
-          <Button
-            label={l`Close dialog`}
-            size="small"
-            color="secondary"
-            onPress={() => {
-              control.close()
-            }}>
-            <ButtonText>
-              <Trans>Close</Trans>
-            </ButtonText>
-          </Button>
-        </View>
-      </View>
-    </Dialog.ScrollableInner>
-  )
+				<View
+					style={[a.w_full, a.gap_sm, a.justify_end, gtMobile ? [a.flex_row, a.justify_end] : [a.flex_col]]}
+				>
+					<Link
+						to={urls.website.blog.initialVerificationAnnouncement}
+						label={l({
+							message: `Learn more about verification on Bluesky`,
+							context: `english-only-resource`,
+						})}
+						size="small"
+						color="primary"
+						style={[a.justify_center]}
+						onPress={() => {}}
+					>
+						<ButtonText>
+							<Trans context="english-only-resource">Learn more</Trans>
+						</ButtonText>
+					</Link>
+					<Button
+						label={l`Close dialog`}
+						size="small"
+						color="secondary"
+						onPress={() => {
+							control.close();
+						}}
+					>
+						<ButtonText>
+							<Trans>Close</Trans>
+						</ButtonText>
+					</Button>
+				</View>
+			</View>
+		</Dialog.ScrollableInner>
+	);
 }

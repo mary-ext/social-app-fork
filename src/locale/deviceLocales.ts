@@ -1,12 +1,9 @@
-import {dedupArray} from '#/lib/functions'
-import {
-  getLocales as defaultGetLocales,
-  type Locale,
-} from '#/shims/localization'
+import { dedupArray } from '#/lib/functions';
+import { getLocales as defaultGetLocales, type Locale } from '#/shims/localization';
 
 type LocalWithLanguageCode = Locale & {
-  languageCode: string
-}
+	languageCode: string;
+};
 
 /**
  * Normalized locales
@@ -23,56 +20,48 @@ type LocalWithLanguageCode = Locale & {
  * {@link https://gist.github.com/amake/0ac7724681ac1c178c6f95a5b09f03ce#new-locales-vs-old-locales-chinese}
  */
 export function getLocales() {
-  const locales = defaultGetLocales?.() ?? []
-  const output: LocalWithLanguageCode[] = []
+	const locales = defaultGetLocales?.() ?? [];
+	const output: LocalWithLanguageCode[] = [];
 
-  for (const locale of locales) {
-    if (typeof locale.languageCode === 'string') {
-      if (locale.languageCode === 'in') {
-        // indonesian
-        locale.languageCode = 'id'
-      }
-      if (locale.languageCode === 'iw') {
-        // hebrew
-        locale.languageCode = 'he'
-      }
-      if (locale.languageCode === 'ji') {
-        // yiddish
-        locale.languageCode = 'yi'
-      }
-    }
+	for (const locale of locales) {
+		if (typeof locale.languageCode === 'string') {
+			if (locale.languageCode === 'in') {
+				// indonesian
+				locale.languageCode = 'id';
+			}
+			if (locale.languageCode === 'iw') {
+				// hebrew
+				locale.languageCode = 'he';
+			}
+			if (locale.languageCode === 'ji') {
+				// yiddish
+				locale.languageCode = 'yi';
+			}
+		}
 
-    if (typeof locale.languageTag === 'string') {
-      if (
-        locale.languageTag.startsWith('zh-Hans') ||
-        locale.languageTag === 'zh-CN'
-      ) {
-        // Simplified Chinese to zh-Hans-CN
-        locale.languageTag = 'zh-Hans-CN'
-      }
-      if (
-        locale.languageTag.startsWith('zh-Hant') ||
-        locale.languageTag === 'zh-TW'
-      ) {
-        // Traditional Chinese to zh-Hant-TW
-        locale.languageTag = 'zh-Hant-TW'
-      }
-    }
+		if (typeof locale.languageTag === 'string') {
+			if (locale.languageTag.startsWith('zh-Hans') || locale.languageTag === 'zh-CN') {
+				// Simplified Chinese to zh-Hans-CN
+				locale.languageTag = 'zh-Hans-CN';
+			}
+			if (locale.languageTag.startsWith('zh-Hant') || locale.languageTag === 'zh-TW') {
+				// Traditional Chinese to zh-Hant-TW
+				locale.languageTag = 'zh-Hant-TW';
+			}
+		}
 
-    // @ts-ignore checked above
-    output.push(locale)
-  }
+		// @ts-ignore checked above
+		output.push(locale);
+	}
 
-  return output
+	return output;
 }
 
-export const deviceLocales = getLocales()
+export const deviceLocales = getLocales();
 
 /**
  * BCP-47 language tag without region e.g. array of 2-char lang codes
  *
  * {@link https://docs.expo.dev/versions/latest/sdk/localization/#locale}
  */
-export const deviceLanguageCodes = dedupArray(
-  deviceLocales.map(l => l.languageCode),
-)
+export const deviceLanguageCodes = dedupArray(deviceLocales.map((l) => l.languageCode));

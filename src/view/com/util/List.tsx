@@ -1,654 +1,609 @@
 import {
-  forwardRef,
-  isValidElement,
-  memo,
-  startTransition,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
+	forwardRef,
+	isValidElement,
+	memo,
+	startTransition,
+	useCallback,
+	useEffect,
+	useImperativeHandle,
+	useRef,
+	useState,
+} from 'react';
 import {
-  type FlatListProps,
-  type ListRenderItemInfo,
-  StyleSheet,
-  View,
-  type ViewProps,
-  type ViewStyle,
-} from 'react-native'
+	type FlatListProps,
+	type ListRenderItemInfo,
+	StyleSheet,
+	View,
+	type ViewProps,
+	type ViewStyle,
+} from 'react-native';
 
-import {type ReanimatedScrollEvent} from '#/lib/animations/reanimatedCompat'
-import {batchedUpdates} from '#/lib/batchedUpdates'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {addStyle} from '#/lib/styles'
-import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
-import {useTheme} from '#/alf'
-import * as Layout from '#/components/Layout'
+import { type ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
+import { batchedUpdates } from '#/lib/batchedUpdates';
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useScrollHandlers } from '#/lib/ScrollContext';
+import { addStyle } from '#/lib/styles';
+import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
+import { useTheme } from '#/alf';
+import * as Layout from '#/components/Layout';
 
 export type ListMethods = {
-  scrollToTop: () => void
-  scrollToOffset: (options: {animated: boolean; offset: number}) => void
-  scrollToEnd: (options?: {animated?: boolean}) => void
-}
+	scrollToTop: () => void;
+	scrollToOffset: (options: { animated: boolean; offset: number }) => void;
+	scrollToEnd: (options?: { animated?: boolean }) => void;
+};
 type WebViewStyle = ViewStyle & {
-  overflowY?: 'scroll'
-  scrollbarColor?: string
-  scrollbarWidth?: 'thin'
-}
+	overflowY?: 'scroll';
+	scrollbarColor?: string;
+	scrollbarWidth?: 'thin';
+};
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-  return style
-}
+	return style;
+};
 
 export type ListProps<ItemT = unknown> = Omit<
-  FlatListProps<ItemT>,
-  | 'onScroll' // Use ScrollContext instead.
-  | 'refreshControl' // Pass refreshing and/or onRefresh instead.
-  | 'contentOffset' // Pass headerOffset instead.
+	FlatListProps<ItemT>,
+	| 'onScroll' // Use ScrollContext instead.
+	| 'refreshControl' // Pass refreshing and/or onRefresh instead.
+	| 'contentOffset' // Pass headerOffset instead.
 > & {
-  onScrolledDownChange?: (isScrolledDown: boolean) => void
-  headerOffset?: number
-  refreshing?: boolean
-  onRefresh?: () => void
-  onItemSeen?: (item: ItemT) => void
-  desktopFixedHeight?: number | boolean
-  // Web only prop to contain the scroll to the container rather than the window
-  disableFullWindowScroll?: boolean
-  /**
-   * @deprecated Should be using Layout components
-   */
-  sideBorders?: boolean
-}
-export type ListRef = React.RefObject<ListMethods | null>
+	onScrolledDownChange?: (isScrolledDown: boolean) => void;
+	headerOffset?: number;
+	refreshing?: boolean;
+	onRefresh?: () => void;
+	onItemSeen?: (item: ItemT) => void;
+	desktopFixedHeight?: number | boolean;
+	// Web only prop to contain the scroll to the container rather than the window
+	disableFullWindowScroll?: boolean;
+	/** @deprecated Should be using Layout components */
+	sideBorders?: boolean;
+};
+export type ListRef = React.RefObject<ListMethods | null>;
 
-const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3 // when we consider post to  be "seen"
+const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3; // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
-  rootMargin: '-200px 0px -200px 0px',
-} // post must be 200px visible to be "seen"
+	rootMargin: '-200px 0px -200px 0px',
+}; // post must be 200px visible to be "seen"
 
 function ListImpl<ItemT>(
-  {
-    ListHeaderComponent,
-    ListFooterComponent,
-    ListEmptyComponent,
-    disableFullWindowScroll: disableFullWindowScrollProp,
-    contentContainerStyle,
-    data,
-    desktopFixedHeight,
-    headerOffset,
-    keyExtractor,
-    refreshing: _unsupportedRefreshing,
-    onStartReached,
-    onStartReachedThreshold = 2,
-    onEndReached,
-    onEndReachedThreshold = 2,
-    onRefresh: _unsupportedOnRefresh,
-    onScrolledDownChange,
-    onContentSizeChange,
-    onItemSeen,
-    renderItem,
-    extraData,
-    style,
-    ...props
-  }: ListProps<ItemT>,
-  ref: React.Ref<ListMethods>,
+	{
+		ListHeaderComponent,
+		ListFooterComponent,
+		ListEmptyComponent,
+		disableFullWindowScroll: disableFullWindowScrollProp,
+		contentContainerStyle,
+		data,
+		desktopFixedHeight,
+		headerOffset,
+		keyExtractor,
+		refreshing: _unsupportedRefreshing,
+		onStartReached,
+		onStartReachedThreshold = 2,
+		onEndReached,
+		onEndReachedThreshold = 2,
+		onRefresh: _unsupportedOnRefresh,
+		onScrolledDownChange,
+		onContentSizeChange,
+		onItemSeen,
+		renderItem,
+		extraData,
+		style,
+		...props
+	}: ListProps<ItemT>,
+	ref: React.Ref<ListMethods>,
 ) {
-  const contextScrollHandlers = useScrollHandlers()
-  const {isWithinSplitView} = useIsWithinSplitView()
-  const t = useTheme()
+	const contextScrollHandlers = useScrollHandlers();
+	const { isWithinSplitView } = useIsWithinSplitView();
+	const t = useTheme();
 
-  // automatically disable full window scroll when within split view
-  const disableFullWindowScroll =
-    disableFullWindowScrollProp ?? isWithinSplitView
+	// automatically disable full window scroll when within split view
+	const disableFullWindowScroll = disableFullWindowScrollProp ?? isWithinSplitView;
 
-  const isEmpty = !data || data.length === 0
+	const isEmpty = !data || data.length === 0;
 
-  let headerComponent: React.JSX.Element | null = null
-  if (ListHeaderComponent != null) {
-    if (isValidElement(ListHeaderComponent)) {
-      headerComponent = ListHeaderComponent
-    } else {
-      // @ts-ignore Nah it's fine.
-      headerComponent = <ListHeaderComponent />
-    }
-  }
+	let headerComponent: React.JSX.Element | null = null;
+	if (ListHeaderComponent != null) {
+		if (isValidElement(ListHeaderComponent)) {
+			headerComponent = ListHeaderComponent;
+		} else {
+			// @ts-ignore Nah it's fine.
+			headerComponent = <ListHeaderComponent />;
+		}
+	}
 
-  let footerComponent: React.JSX.Element | null = null
-  if (ListFooterComponent != null) {
-    if (isValidElement(ListFooterComponent)) {
-      footerComponent = ListFooterComponent
-    } else {
-      // @ts-ignore Nah it's fine.
-      footerComponent = <ListFooterComponent />
-    }
-  }
+	let footerComponent: React.JSX.Element | null = null;
+	if (ListFooterComponent != null) {
+		if (isValidElement(ListFooterComponent)) {
+			footerComponent = ListFooterComponent;
+		} else {
+			// @ts-ignore Nah it's fine.
+			footerComponent = <ListFooterComponent />;
+		}
+	}
 
-  let emptyComponent: React.JSX.Element | null = null
-  if (ListEmptyComponent != null) {
-    if (isValidElement(ListEmptyComponent)) {
-      emptyComponent = ListEmptyComponent
-    } else {
-      // @ts-ignore Nah it's fine.
-      emptyComponent = <ListEmptyComponent />
-    }
-  }
+	let emptyComponent: React.JSX.Element | null = null;
+	if (ListEmptyComponent != null) {
+		if (isValidElement(ListEmptyComponent)) {
+			emptyComponent = ListEmptyComponent;
+		} else {
+			// @ts-ignore Nah it's fine.
+			emptyComponent = <ListEmptyComponent />;
+		}
+	}
 
-  if (headerOffset != null) {
-    style = addStyle(style, {
-      paddingTop: headerOffset,
-    })
-  }
+	if (headerOffset != null) {
+		style = addStyle(style, {
+			paddingTop: headerOffset,
+		});
+	}
 
-  const getScrollableNode = useCallback(() => {
-    if (disableFullWindowScroll) {
-      const element = nativeRef.current
-      if (!element) return
+	const getScrollableNode = useCallback(() => {
+		if (disableFullWindowScroll) {
+			const element = nativeRef.current;
+			if (!element) return;
 
-      return {
-        get scrollWidth() {
-          return element.scrollWidth
-        },
-        get scrollHeight() {
-          return element.scrollHeight
-        },
-        get clientWidth() {
-          return element.clientWidth
-        },
-        get clientHeight() {
-          return element.clientHeight
-        },
-        get scrollY() {
-          return element.scrollTop
-        },
-        get scrollX() {
-          return element.scrollLeft
-        },
-        scrollTo(options?: ScrollToOptions) {
-          element.scrollTo(options)
-        },
-        scrollBy(options: ScrollToOptions) {
-          element.scrollBy(options)
-        },
-        addEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          element.addEventListener(event, handler)
-        },
-        removeEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          element.removeEventListener(event, handler)
-        },
-      }
-    } else {
-      return {
-        get scrollWidth() {
-          return document.documentElement.scrollWidth
-        },
-        get scrollHeight() {
-          return document.documentElement.scrollHeight
-        },
-        get clientWidth() {
-          return window.innerWidth
-        },
-        get clientHeight() {
-          return window.innerHeight
-        },
-        get scrollY() {
-          return window.scrollY
-        },
-        get scrollX() {
-          return window.scrollX
-        },
-        scrollTo(options: ScrollToOptions) {
-          window.scrollTo(options)
-        },
-        scrollBy(options: ScrollToOptions) {
-          window.scrollBy(options)
-        },
-        addEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          window.addEventListener(event, handler)
-        },
-        removeEventListener(
-          event: string,
-          handler: EventListenerOrEventListenerObject,
-        ) {
-          window.removeEventListener(event, handler)
-        },
-      }
-    }
-  }, [disableFullWindowScroll])
+			return {
+				get scrollWidth() {
+					return element.scrollWidth;
+				},
+				get scrollHeight() {
+					return element.scrollHeight;
+				},
+				get clientWidth() {
+					return element.clientWidth;
+				},
+				get clientHeight() {
+					return element.clientHeight;
+				},
+				get scrollY() {
+					return element.scrollTop;
+				},
+				get scrollX() {
+					return element.scrollLeft;
+				},
+				scrollTo(options?: ScrollToOptions) {
+					element.scrollTo(options);
+				},
+				scrollBy(options: ScrollToOptions) {
+					element.scrollBy(options);
+				},
+				addEventListener(event: string, handler: EventListenerOrEventListenerObject) {
+					element.addEventListener(event, handler);
+				},
+				removeEventListener(event: string, handler: EventListenerOrEventListenerObject) {
+					element.removeEventListener(event, handler);
+				},
+			};
+		} else {
+			return {
+				get scrollWidth() {
+					return document.documentElement.scrollWidth;
+				},
+				get scrollHeight() {
+					return document.documentElement.scrollHeight;
+				},
+				get clientWidth() {
+					return window.innerWidth;
+				},
+				get clientHeight() {
+					return window.innerHeight;
+				},
+				get scrollY() {
+					return window.scrollY;
+				},
+				get scrollX() {
+					return window.scrollX;
+				},
+				scrollTo(options: ScrollToOptions) {
+					window.scrollTo(options);
+				},
+				scrollBy(options: ScrollToOptions) {
+					window.scrollBy(options);
+				},
+				addEventListener(event: string, handler: EventListenerOrEventListenerObject) {
+					window.addEventListener(event, handler);
+				},
+				removeEventListener(event: string, handler: EventListenerOrEventListenerObject) {
+					window.removeEventListener(event, handler);
+				},
+			};
+		}
+	}, [disableFullWindowScroll]);
 
-  const nativeRef = useRef<HTMLDivElement>(null)
-  useImperativeHandle(
-    ref,
-    () => ({
-      scrollToTop() {
-        getScrollableNode()?.scrollTo({top: 0})
-      },
+	const nativeRef = useRef<HTMLDivElement>(null);
+	useImperativeHandle(
+		ref,
+		() => ({
+			scrollToTop() {
+				getScrollableNode()?.scrollTo({ top: 0 });
+			},
 
-      scrollToOffset({animated, offset}: {animated: boolean; offset: number}) {
-        getScrollableNode()?.scrollTo({
-          left: 0,
-          top: offset,
-          behavior: animated ? 'smooth' : 'instant',
-        })
-      },
+			scrollToOffset({ animated, offset }: { animated: boolean; offset: number }) {
+				getScrollableNode()?.scrollTo({
+					left: 0,
+					top: offset,
+					behavior: animated ? 'smooth' : 'instant',
+				});
+			},
 
-      scrollToEnd({animated = true} = {}) {
-        const element = getScrollableNode()
-        element?.scrollTo({
-          left: 0,
-          top: element.scrollHeight,
-          behavior: animated ? 'smooth' : 'instant',
-        })
-      },
-    }),
-    [getScrollableNode],
-  )
+			scrollToEnd({ animated = true } = {}) {
+				const element = getScrollableNode();
+				element?.scrollTo({
+					left: 0,
+					top: element.scrollHeight,
+					behavior: animated ? 'smooth' : 'instant',
+				});
+			},
+		}),
+		[getScrollableNode],
+	);
 
-  // --- onContentSizeChange, maintainVisibleContentPosition ---
-  const containerRef = useRef(null)
-  useResizeObserver(containerRef, onContentSizeChange)
+	// --- onContentSizeChange, maintainVisibleContentPosition ---
+	const containerRef = useRef(null);
+	useResizeObserver(containerRef, onContentSizeChange);
 
-  // --- onScroll ---
-  const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false)
-  const handleScroll = useNonReactiveCallback(() => {
-    if (!isInsideVisibleTree) return
+	// --- onScroll ---
+	const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false);
+	const handleScroll = useNonReactiveCallback(() => {
+		if (!isInsideVisibleTree) return;
 
-    const element = getScrollableNode()
-    contextScrollHandlers.onScroll?.(
-      {
-        contentOffset: {
-          x: Math.max(0, element?.scrollX ?? 0),
-          y: Math.max(0, element?.scrollY ?? 0),
-        },
-        layoutMeasurement: {
-          width: element?.clientWidth,
-          height: element?.clientHeight,
-        },
-        contentSize: {
-          width: element?.scrollWidth,
-          height: element?.scrollHeight,
-        },
-      } as Exclude<
-        ReanimatedScrollEvent,
-        | 'velocity'
-        | 'eventName'
-        | 'zoomScale'
-        | 'targetContentOffset'
-        | 'contentInset'
-      >,
-      {},
-    )
-  })
+		const element = getScrollableNode();
+		contextScrollHandlers.onScroll?.(
+			{
+				contentOffset: {
+					x: Math.max(0, element?.scrollX ?? 0),
+					y: Math.max(0, element?.scrollY ?? 0),
+				},
+				layoutMeasurement: {
+					width: element?.clientWidth,
+					height: element?.clientHeight,
+				},
+				contentSize: {
+					width: element?.scrollWidth,
+					height: element?.scrollHeight,
+				},
+			} as Exclude<
+				ReanimatedScrollEvent,
+				'velocity' | 'eventName' | 'zoomScale' | 'targetContentOffset' | 'contentInset'
+			>,
+			{},
+		);
+	});
 
-  useEffect(() => {
-    if (!isInsideVisibleTree) {
-      // Prevents hidden tabs from firing scroll events.
-      // Only one list is expected to be firing these at a time.
-      return
-    }
+	useEffect(() => {
+		if (!isInsideVisibleTree) {
+			// Prevents hidden tabs from firing scroll events.
+			// Only one list is expected to be firing these at a time.
+			return;
+		}
 
-    const element = getScrollableNode()
+		const element = getScrollableNode();
 
-    element?.addEventListener('scroll', handleScroll)
-    return () => {
-      element?.removeEventListener('scroll', handleScroll)
-    }
-  }, [
-    isInsideVisibleTree,
-    handleScroll,
-    disableFullWindowScroll,
-    getScrollableNode,
-  ])
+		element?.addEventListener('scroll', handleScroll);
+		return () => {
+			element?.removeEventListener('scroll', handleScroll);
+		};
+	}, [isInsideVisibleTree, handleScroll, disableFullWindowScroll, getScrollableNode]);
 
-  // --- onScrolledDownChange ---
-  const isScrolledDown = useRef(false)
-  function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
-    const didScrollDown = !isAboveTheFold
-    if (isScrolledDown.current !== didScrollDown) {
-      isScrolledDown.current = didScrollDown
-      startTransition(() => {
-        onScrolledDownChange?.(didScrollDown)
-      })
-    }
-  }
+	// --- onScrolledDownChange ---
+	const isScrolledDown = useRef(false);
+	function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
+		const didScrollDown = !isAboveTheFold;
+		if (isScrolledDown.current !== didScrollDown) {
+			isScrolledDown.current = didScrollDown;
+			startTransition(() => {
+				onScrolledDownChange?.(didScrollDown);
+			});
+		}
+	}
 
-  // --- onStartReached ---
-  const onHeadVisibilityChange = useNonReactiveCallback(
-    (isHeadVisible: boolean) => {
-      if (isHeadVisible) {
-        onStartReached?.({
-          distanceFromStart: onStartReachedThreshold || 0,
-        })
-      }
-    },
-  )
+	// --- onStartReached ---
+	const onHeadVisibilityChange = useNonReactiveCallback((isHeadVisible: boolean) => {
+		if (isHeadVisible) {
+			onStartReached?.({
+				distanceFromStart: onStartReachedThreshold || 0,
+			});
+		}
+	});
 
-  // --- onEndReached ---
-  const onTailVisibilityChange = useNonReactiveCallback(
-    (isTailVisible: boolean) => {
-      if (isTailVisible) {
-        onEndReached?.({
-          distanceFromEnd: onEndReachedThreshold || 0,
-        })
-      }
-    },
-  )
+	// --- onEndReached ---
+	const onTailVisibilityChange = useNonReactiveCallback((isTailVisible: boolean) => {
+		if (isTailVisible) {
+			onEndReached?.({
+				distanceFromEnd: onEndReachedThreshold || 0,
+			});
+		}
+	});
 
-  return (
-    <View
-      {...props}
-      style={[
-        isWithinSplitView &&
-          webViewStyle({
-            scrollbarWidth: 'thin',
-            scrollbarColor: `${t.palette.contrast_100} transparent`,
-          }),
-        style,
-        disableFullWindowScroll &&
-          webViewStyle({
-            flex: 1,
-            overflowY: 'scroll',
-          }),
-      ]}
-      ref={nativeRef as unknown as React.RefObject<View>}>
-      <Visibility
-        onVisibleChange={setIsInsideVisibleTree}
-        style={
-          // This has position: fixed, so it should always report as visible
-          // unless we're within a display: none tree (like a hidden tab).
-          styles.parentTreeVisibilityDetector
-        }
-      />
-      <Layout.Center>
-        <View
-          ref={containerRef}
-          style={[
-            contentContainerStyle,
-            desktopFixedHeight && !disableFullWindowScroll
-              ? styles.minHeightViewport
-              : null,
-          ]}>
-          <Visibility
-            root={disableFullWindowScroll ? nativeRef : null}
-            onVisibleChange={handleAboveTheFoldVisibleChange}
-            style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
-          />
-          {onStartReached && !isEmpty && (
-            <EdgeVisibility
-              root={disableFullWindowScroll ? nativeRef : null}
-              onVisibleChange={onHeadVisibilityChange}
-              topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
-              containerRef={containerRef}
-            />
-          )}
-          {headerComponent}
-          {isEmpty
-            ? emptyComponent
-            : (data as Array<ItemT>)?.map((item, index) => {
-                const key = keyExtractor!(item, index)
-                return (
-                  <Row<ItemT>
-                    key={key}
-                    item={item}
-                    index={index}
-                    renderItem={renderItem}
-                    extraData={extraData}
-                    onItemSeen={onItemSeen}
-                  />
-                )
-              })}
-          {onEndReached && !isEmpty && (
-            <EdgeVisibility
-              root={disableFullWindowScroll ? nativeRef : null}
-              onVisibleChange={onTailVisibilityChange}
-              bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-              containerRef={containerRef}
-            />
-          )}
-          {footerComponent}
-        </View>
-      </Layout.Center>
-    </View>
-  )
+	return (
+		<View
+			{...props}
+			style={[
+				isWithinSplitView &&
+					webViewStyle({
+						scrollbarWidth: 'thin',
+						scrollbarColor: `${t.palette.contrast_100} transparent`,
+					}),
+				style,
+				disableFullWindowScroll &&
+					webViewStyle({
+						flex: 1,
+						overflowY: 'scroll',
+					}),
+			]}
+			ref={nativeRef as unknown as React.RefObject<View>}
+		>
+			<Visibility
+				onVisibleChange={setIsInsideVisibleTree}
+				style={
+					// This has position: fixed, so it should always report as visible
+					// unless we're within a display: none tree (like a hidden tab).
+					styles.parentTreeVisibilityDetector
+				}
+			/>
+			<Layout.Center>
+				<View
+					ref={containerRef}
+					style={[
+						contentContainerStyle,
+						desktopFixedHeight && !disableFullWindowScroll ? styles.minHeightViewport : null,
+					]}
+				>
+					<Visibility
+						root={disableFullWindowScroll ? nativeRef : null}
+						onVisibleChange={handleAboveTheFoldVisibleChange}
+						style={[styles.aboveTheFoldDetector, { height: headerOffset }]}
+					/>
+					{onStartReached && !isEmpty && (
+						<EdgeVisibility
+							root={disableFullWindowScroll ? nativeRef : null}
+							onVisibleChange={onHeadVisibilityChange}
+							topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+							containerRef={containerRef}
+						/>
+					)}
+					{headerComponent}
+					{isEmpty
+						? emptyComponent
+						: (data as Array<ItemT>)?.map((item, index) => {
+								const key = keyExtractor!(item, index);
+								return (
+									<Row<ItemT>
+										key={key}
+										item={item}
+										index={index}
+										renderItem={renderItem}
+										extraData={extraData}
+										onItemSeen={onItemSeen}
+									/>
+								);
+							})}
+					{onEndReached && !isEmpty && (
+						<EdgeVisibility
+							root={disableFullWindowScroll ? nativeRef : null}
+							onVisibleChange={onTailVisibilityChange}
+							bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+							containerRef={containerRef}
+						/>
+					)}
+					{footerComponent}
+				</View>
+			</Layout.Center>
+		</View>
+	);
 }
 
 function EdgeVisibility({
-  root,
-  topMargin,
-  bottomMargin,
-  containerRef,
-  onVisibleChange,
+	root,
+	topMargin,
+	bottomMargin,
+	containerRef,
+	onVisibleChange,
 }: {
-  root?: React.RefObject<HTMLDivElement | null> | null
-  topMargin?: string
-  bottomMargin?: string
-  containerRef: React.RefObject<Element | null>
-  onVisibleChange: (isVisible: boolean) => void
+	root?: React.RefObject<HTMLDivElement | null> | null;
+	topMargin?: string;
+	bottomMargin?: string;
+	containerRef: React.RefObject<Element | null>;
+	onVisibleChange: (isVisible: boolean) => void;
 }) {
-  const [containerHeight, setContainerHeight] = useState(0)
-  useResizeObserver(containerRef, (_w, h) => {
-    setContainerHeight(h)
-  })
-  return (
-    <Visibility
-      key={containerHeight}
-      root={root}
-      topMargin={topMargin}
-      bottomMargin={bottomMargin}
-      onVisibleChange={onVisibleChange}
-    />
-  )
+	const [containerHeight, setContainerHeight] = useState(0);
+	useResizeObserver(containerRef, (_w, h) => {
+		setContainerHeight(h);
+	});
+	return (
+		<Visibility
+			key={containerHeight}
+			root={root}
+			topMargin={topMargin}
+			bottomMargin={bottomMargin}
+			onVisibleChange={onVisibleChange}
+		/>
+	);
 }
 
 function useResizeObserver(
-  ref: React.RefObject<Element | null>,
-  onResize: undefined | ((w: number, h: number) => void),
+	ref: React.RefObject<Element | null>,
+	onResize: undefined | ((w: number, h: number) => void),
 ) {
-  const handleResize = useNonReactiveCallback(onResize ?? (() => {}))
-  const isActive = !!onResize
-  useEffect(() => {
-    if (!isActive) {
-      return
-    }
-    const resizeObserver = new ResizeObserver(entries => {
-      batchedUpdates(() => {
-        for (let entry of entries) {
-          const rect = entry.contentRect
-          handleResize(rect.width, rect.height)
-        }
-      })
-    })
-    const node = ref.current!
-    resizeObserver.observe(node)
-    return () => {
-      resizeObserver.unobserve(node)
-    }
-  }, [handleResize, isActive, ref])
+	const handleResize = useNonReactiveCallback(onResize ?? (() => {}));
+	const isActive = !!onResize;
+	useEffect(() => {
+		if (!isActive) {
+			return;
+		}
+		const resizeObserver = new ResizeObserver((entries) => {
+			batchedUpdates(() => {
+				for (let entry of entries) {
+					const rect = entry.contentRect;
+					handleResize(rect.width, rect.height);
+				}
+			});
+		});
+		const node = ref.current!;
+		resizeObserver.observe(node);
+		return () => {
+			resizeObserver.unobserve(node);
+		};
+	}, [handleResize, isActive, ref]);
 }
 
 let Row = function RowImpl<ItemT>({
-  item,
-  index,
-  renderItem,
-  extraData: _unused,
-  onItemSeen,
+	item,
+	index,
+	renderItem,
+	extraData: _unused,
+	onItemSeen,
 }: {
-  item: ItemT
-  index: number
-  renderItem:
-    | null
-    | undefined
-    | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
-  extraData: unknown
-  onItemSeen: ((item: ItemT) => void) | undefined
+	item: ItemT;
+	index: number;
+	renderItem: null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode);
+	extraData: unknown;
+	onItemSeen: ((item: ItemT) => void) | undefined;
 }): React.ReactNode {
-  const rowRef = useRef(null)
-  const intersectionTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  )
+	const rowRef = useRef(null);
+	const intersectionTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  const handleIntersection = useNonReactiveCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      batchedUpdates(() => {
-        if (!onItemSeen) {
-          return
-        }
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            if (!intersectionTimeout.current) {
-              intersectionTimeout.current = setTimeout(() => {
-                intersectionTimeout.current = undefined
-                onItemSeen(item)
-              }, ON_ITEM_SEEN_WAIT_DURATION)
-            }
-          } else {
-            if (intersectionTimeout.current) {
-              clearTimeout(intersectionTimeout.current)
-              intersectionTimeout.current = undefined
-            }
-          }
-        })
-      })
-    },
-  )
+	const handleIntersection = useNonReactiveCallback((entries: IntersectionObserverEntry[]) => {
+		batchedUpdates(() => {
+			if (!onItemSeen) {
+				return;
+			}
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					if (!intersectionTimeout.current) {
+						intersectionTimeout.current = setTimeout(() => {
+							intersectionTimeout.current = undefined;
+							onItemSeen(item);
+						}, ON_ITEM_SEEN_WAIT_DURATION);
+					}
+				} else {
+					if (intersectionTimeout.current) {
+						clearTimeout(intersectionTimeout.current);
+						intersectionTimeout.current = undefined;
+					}
+				}
+			});
+		});
+	});
 
-  useEffect(() => {
-    if (!onItemSeen) {
-      return
-    }
-    const observer = new IntersectionObserver(
-      handleIntersection,
-      ON_ITEM_SEEN_INTERSECTION_OPTS,
-    )
-    const row: Element | null = rowRef.current
-    if (row) {
-      observer.observe(row)
-    }
-    return () => {
-      if (row) {
-        observer.unobserve(row)
-      }
-    }
-  }, [handleIntersection, onItemSeen])
+	useEffect(() => {
+		if (!onItemSeen) {
+			return;
+		}
+		const observer = new IntersectionObserver(handleIntersection, ON_ITEM_SEEN_INTERSECTION_OPTS);
+		const row: Element | null = rowRef.current;
+		if (row) {
+			observer.observe(row);
+		}
+		return () => {
+			if (row) {
+				observer.unobserve(row);
+			}
+		};
+	}, [handleIntersection, onItemSeen]);
 
-  if (!renderItem) {
-    return null
-  }
+	if (!renderItem) {
+		return null;
+	}
 
-  return (
-    <View ref={rowRef}>
-      {renderItem({
-        item,
-        index,
-        separators: null as unknown as ListRenderItemInfo<ItemT>['separators'],
-      })}
-    </View>
-  )
-}
+	return (
+		<View ref={rowRef}>
+			{renderItem({
+				item,
+				index,
+				separators: null as unknown as ListRenderItemInfo<ItemT>['separators'],
+			})}
+		</View>
+	);
+};
 Row = memo(Row) as <ItemT>(props: {
-  item: ItemT
-  index: number
-  renderItem:
-    | null
-    | undefined
-    | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode)
-  extraData: unknown
-  onItemSeen: ((item: ItemT) => void) | undefined
-}) => React.ReactNode
+	item: ItemT;
+	index: number;
+	renderItem: null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode);
+	extraData: unknown;
+	onItemSeen: ((item: ItemT) => void) | undefined;
+}) => React.ReactNode;
 
 let Visibility = ({
-  root,
-  topMargin = '0px',
-  bottomMargin = '0px',
-  onVisibleChange,
-  style,
+	root,
+	topMargin = '0px',
+	bottomMargin = '0px',
+	onVisibleChange,
+	style,
 }: {
-  root?: React.RefObject<HTMLDivElement | null> | null
-  topMargin?: string
-  bottomMargin?: string
-  onVisibleChange: (isVisible: boolean) => void
-  style?: ViewProps['style']
+	root?: React.RefObject<HTMLDivElement | null> | null;
+	topMargin?: string;
+	bottomMargin?: string;
+	onVisibleChange: (isVisible: boolean) => void;
+	style?: ViewProps['style'];
 }): React.ReactNode => {
-  const tailRef = useRef(null)
-  const isIntersecting = useRef(false)
+	const tailRef = useRef(null);
+	const isIntersecting = useRef(false);
 
-  const handleIntersection = useNonReactiveCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      batchedUpdates(() => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting !== isIntersecting.current) {
-            isIntersecting.current = entry.isIntersecting
-            onVisibleChange(entry.isIntersecting)
-          }
-        })
-      })
-    },
-  )
+	const handleIntersection = useNonReactiveCallback((entries: IntersectionObserverEntry[]) => {
+		batchedUpdates(() => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting !== isIntersecting.current) {
+					isIntersecting.current = entry.isIntersecting;
+					onVisibleChange(entry.isIntersecting);
+				}
+			});
+		});
+	});
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(handleIntersection, {
-      root: root?.current ?? null,
-      rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
-    })
-    const tail: Element | null = tailRef.current
-    if (tail) {
-      observer.observe(tail)
-    }
-    return () => {
-      if (tail) {
-        observer.unobserve(tail)
-      }
-    }
-  }, [bottomMargin, handleIntersection, topMargin, root])
+	useEffect(() => {
+		const observer = new IntersectionObserver(handleIntersection, {
+			root: root?.current ?? null,
+			rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
+		});
+		const tail: Element | null = tailRef.current;
+		if (tail) {
+			observer.observe(tail);
+		}
+		return () => {
+			if (tail) {
+				observer.unobserve(tail);
+			}
+		};
+	}, [bottomMargin, handleIntersection, topMargin, root]);
 
-  return (
-    <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
-  )
-}
-Visibility = memo(Visibility)
+	return <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />;
+};
+Visibility = memo(Visibility);
 
-const MemoizedList = memo(forwardRef(ListImpl))
+const MemoizedList = memo(forwardRef(ListImpl));
 
 export function List<ItemT = unknown>(
-  props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
+	props: ListProps<ItemT> & { ref?: React.Ref<ListMethods> },
 ): React.ReactElement {
-  return <MemoizedList {...(props as ListProps<unknown>)} />
+	return <MemoizedList {...(props as ListProps<unknown>)} />;
 }
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 
 const styles = StyleSheet.create({
-  minHeightViewport: {
-    // @ts-ignore web only
-    minHeight: '100vh',
-  },
-  parentTreeVisibilityDetector: {
-    // @ts-ignore web only
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  aboveTheFoldDetector: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    // Bottom is dynamic.
-  },
-  visibilityDetector: {
-    pointerEvents: 'none',
-    zIndex: -1,
-  },
-})
+	minHeightViewport: {
+		// @ts-ignore web only
+		minHeight: '100vh',
+	},
+	parentTreeVisibilityDetector: {
+		// @ts-ignore web only
+		position: 'fixed',
+		top: 0,
+		left: 0,
+		right: 0,
+		bottom: 0,
+	},
+	aboveTheFoldDetector: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		// Bottom is dynamic.
+	},
+	visibilityDetector: {
+		pointerEvents: 'none',
+		zIndex: -1,
+	},
+});

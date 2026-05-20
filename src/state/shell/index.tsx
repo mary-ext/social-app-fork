@@ -1,34 +1,28 @@
-import {Provider as ColorModeProvider} from './color-mode'
-import {Provider as DrawerOpenProvider} from './drawer-open'
-import {Provider as DrawerSwipableProvider} from './drawer-swipe-disabled'
-import {Provider as MinimalModeProvider} from './minimal-mode'
-import {Provider as ShellLayoutProvder} from './shell-layout'
-import {Provider as TickEveryMinuteProvider} from './tick-every-minute'
+import { Provider as ColorModeProvider } from './color-mode';
+import { Provider as DrawerOpenProvider } from './drawer-open';
+import { Provider as DrawerSwipableProvider } from './drawer-swipe-disabled';
+import { Provider as MinimalModeProvider } from './minimal-mode';
+import { Provider as ShellLayoutProvder } from './shell-layout';
+import { Provider as TickEveryMinuteProvider } from './tick-every-minute';
 
-export {useSetThemePrefs, useThemePrefs} from './color-mode'
-export {useIsDrawerOpen, useSetDrawerOpen} from './drawer-open'
-export {
-  useIsDrawerSwipeDisabled,
-  useSetDrawerSwipeDisabled,
-} from './drawer-swipe-disabled'
-export {
-  useEnableMinimalShellMode,
-  useEnableMinimalShellModeForScreen,
-} from './minimal-mode'
-export {useTickEveryMinute} from './tick-every-minute'
+export { useSetThemePrefs, useThemePrefs } from './color-mode';
+export { useIsDrawerOpen, useSetDrawerOpen } from './drawer-open';
+export { useIsDrawerSwipeDisabled, useSetDrawerSwipeDisabled } from './drawer-swipe-disabled';
+export { useEnableMinimalShellMode, useEnableMinimalShellModeForScreen } from './minimal-mode';
+export { useTickEveryMinute } from './tick-every-minute';
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  return (
-    <ShellLayoutProvder>
-      <DrawerOpenProvider>
-        <DrawerSwipableProvider>
-          <MinimalModeProvider>
-            <ColorModeProvider>
-              <TickEveryMinuteProvider>{children}</TickEveryMinuteProvider>
-            </ColorModeProvider>
-          </MinimalModeProvider>
-        </DrawerSwipableProvider>
-      </DrawerOpenProvider>
-    </ShellLayoutProvder>
-  )
+export function Provider({ children }: React.PropsWithChildren<{}>) {
+	return (
+		<ShellLayoutProvder>
+			<DrawerOpenProvider>
+				<DrawerSwipableProvider>
+					<MinimalModeProvider>
+						<ColorModeProvider>
+							<TickEveryMinuteProvider>{children}</TickEveryMinuteProvider>
+						</ColorModeProvider>
+					</MinimalModeProvider>
+				</DrawerSwipableProvider>
+			</DrawerOpenProvider>
+		</ShellLayoutProvder>
+	);
 }

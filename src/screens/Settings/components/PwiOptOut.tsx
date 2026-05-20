@@ -1,102 +1,91 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
-import {Trans, useLingui} from '@lingui/react/macro'
+import { useCallback } from 'react';
+import { View } from 'react-native';
+import { type $Typed, ComAtprotoLabelDefs } from '@atproto/api';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import {
-  useProfileQuery,
-  useProfileUpdateMutation,
-} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
-import * as Toggle from '#/components/forms/Toggle'
-import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
+import { useSession } from '#/state/session';
+import { atoms as a, useTheme } from '#/alf';
+import * as Toggle from '#/components/forms/Toggle';
+import { Text } from '#/components/Typography';
+import * as bsky from '#/types/bsky';
 
 export function PwiOptOut() {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const {currentAccount} = useSession()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
-  const updateProfile = useProfileUpdateMutation()
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { currentAccount } = useSession();
+	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
+	const updateProfile = useProfileUpdateMutation();
 
-  const isOptedOut = profile?.labels?.some(l => l.val === '!no-unauthenticated')
-  const canToggle = profile && !updateProfile.isPending
+	const isOptedOut = profile?.labels?.some((l) => l.val === '!no-unauthenticated');
+	const canToggle = profile && !updateProfile.isPending;
 
-  const onToggleOptOut = useCallback(() => {
-    if (!profile) {
-      return
-    }
-    let wasAdded = false
-    updateProfile.mutate({
-      profile,
-      updates: existing => {
-        // create labels attr if needed
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
-          existing.labels,
-          ComAtprotoLabelDefs.validateSelfLabels,
-        )
-          ? existing.labels
-          : {
-              $type: 'com.atproto.label.defs#selfLabels',
-              values: [],
-            }
+	const onToggleOptOut = useCallback(() => {
+		if (!profile) {
+			return;
+		}
+		let wasAdded = false;
+		updateProfile.mutate({
+			profile,
+			updates: (existing) => {
+				// create labels attr if needed
+				const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
+					existing.labels,
+					ComAtprotoLabelDefs.validateSelfLabels,
+				)
+					? existing.labels
+					: {
+							$type: 'com.atproto.label.defs#selfLabels',
+							values: [],
+						};
 
-        // toggle the label
-        const hasLabel = labels.values.some(
-          l => l.val === '!no-unauthenticated',
-        )
-        if (hasLabel) {
-          wasAdded = false
-          labels.values = labels.values.filter(
-            l => l.val !== '!no-unauthenticated',
-          )
-        } else {
-          wasAdded = true
-          labels.values.push({val: '!no-unauthenticated'})
-        }
+				// toggle the label
+				const hasLabel = labels.values.some((l) => l.val === '!no-unauthenticated');
+				if (hasLabel) {
+					wasAdded = false;
+					labels.values = labels.values.filter((l) => l.val !== '!no-unauthenticated');
+				} else {
+					wasAdded = true;
+					labels.values.push({ val: '!no-unauthenticated' });
+				}
 
-        // delete if no longer needed
-        if (labels.values.length === 0) {
-          delete existing.labels
-        } else {
-          existing.labels = labels
-        }
+				// delete if no longer needed
+				if (labels.values.length === 0) {
+					delete existing.labels;
+				} else {
+					existing.labels = labels;
+				}
 
-        return existing
-      },
-      checkCommitted: res => {
-        const exists = !!res.data.labels?.some(
-          l => l.val === '!no-unauthenticated',
-        )
-        return exists === wasAdded
-      },
-    })
-  }, [updateProfile, profile])
+				return existing;
+			},
+			checkCommitted: (res) => {
+				const exists = !!res.data.labels?.some((l) => l.val === '!no-unauthenticated');
+				return exists === wasAdded;
+			},
+		});
+	}, [updateProfile, profile]);
 
-  return (
-    <View style={[a.flex_1, a.gap_sm]}>
-      <Toggle.Item
-        name="logged_out_visibility"
-        disabled={!canToggle || updateProfile.isPending}
-        value={isOptedOut}
-        onChange={onToggleOptOut}
-        label={l`Discourage apps from showing my account to logged-out users`}
-        style={[a.w_full]}>
-        <Toggle.LabelText style={[a.flex_1]}>
-          <Trans>
-            Discourage apps from showing my account to logged-out users
-          </Trans>
-        </Toggle.LabelText>
-        <Toggle.Platform />
-      </Toggle.Item>
-      <Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
-        <Trans>
-          Bluesky will not show your profile and posts to logged-out users.
-          Other apps may not honor this request. This does not make your account
-          private.
-        </Trans>
-      </Text>
-    </View>
-  )
+	return (
+		<View style={[a.flex_1, a.gap_sm]}>
+			<Toggle.Item
+				name="logged_out_visibility"
+				disabled={!canToggle || updateProfile.isPending}
+				value={isOptedOut}
+				onChange={onToggleOptOut}
+				label={l`Discourage apps from showing my account to logged-out users`}
+				style={[a.w_full]}
+			>
+				<Toggle.LabelText style={[a.flex_1]}>
+					<Trans>Discourage apps from showing my account to logged-out users</Trans>
+				</Toggle.LabelText>
+				<Toggle.Platform />
+			</Toggle.Item>
+			<Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
+				<Trans>
+					Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this
+					request. This does not make your account private.
+				</Trans>
+			</Text>
+		</View>
+	);
 }

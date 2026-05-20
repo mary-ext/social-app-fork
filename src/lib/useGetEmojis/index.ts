@@ -1,12 +1,12 @@
-import {useCallback} from 'react'
+import { useCallback } from 'react';
 
-import {getEmojis} from './getEmojis'
+import { getEmojis } from './getEmojis';
 
-let emojis: Awaited<ReturnType<typeof getEmojis>> | null = null
+let emojis: Awaited<ReturnType<typeof getEmojis>> | null = null;
 
 export function useGetEmojis() {
-  return useCallback(async () => {
-    emojis ??= await getEmojis()
-    return emojis
-  }, [])
+	return useCallback(async () => {
+		emojis ??= await getEmojis();
+		return emojis;
+	}, []);
 }
