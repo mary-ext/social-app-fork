@@ -52,6 +52,10 @@ import {BottomBarWeb} from '#/view/shell/bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
 import {DesktopRightNav} from '#/view/shell/desktop/RightNav'
 import {RouteLoadingScreen} from '#/view/shell/route-loading-screen'
+import {
+  MessagesRouteLoadingScreen,
+  MessagesSplitViewColumnLoadingScreen,
+} from '#/screens/Messages/components/splitView/messages-route-loading-screen'
 import {atoms as a, type Theme, useLayoutBreakpoints, useTheme} from '#/alf'
 import {router} from '#/routes'
 import {Referrer} from '#/shims/bluesky-swiss-army'
@@ -371,8 +375,12 @@ function renderMessagesSplitViewLayout(
   props: FlatScreenLayoutProps<MessageScreens>,
 ) {
   return (
-    <RouteScreenLayout {...props}>
-      <MessagesSplitViewLayout {...props} />
+    <RouteScreenLayout {...props} fallback={<MessagesRouteLoadingScreen />}>
+      <MessagesSplitViewLayout {...props}>
+        <Suspense fallback={<MessagesSplitViewColumnLoadingScreen />}>
+          {props.children}
+        </Suspense>
+      </MessagesSplitViewLayout>
     </RouteScreenLayout>
   )
 }
@@ -431,14 +439,15 @@ function renderRouteScreenLayout(props: FlatScreenLayoutProps) {
 
 function RouteScreenLayout({
   children,
+  fallback = <RouteLoadingScreen />,
   route,
-}: FlatScreenLayoutProps): React.JSX.Element {
+}: FlatScreenLayoutProps & {fallback?: React.ReactNode}): React.JSX.Element {
   const mountedRouteKeys = useContext(MountedRouteKeysContext)
   if (mountedRouteKeys && !mountedRouteKeys.has(route.key)) {
     return <View />
   }
 
-  return <Suspense fallback={<RouteLoadingScreen />}>{children}</Suspense>
+  return <Suspense fallback={fallback}>{children}</Suspense>
 }
 
 function stringArraysEqual(a: string[], b: string[]) {
@@ -584,12 +593,13 @@ const FlatNavigator = ({
           requireAuth: true,
         }}
       />
-      <Flat.Screen
-        name="Messages"
-        getComponent={() => MessagesScreen}
-        options={{title: title(defineMessage`Messages`), requireAuth: true}}
-        layout={renderMessagesSplitViewLayout}
-      />
+      <Flat.Group screenLayout={renderMessagesSplitViewLayout}>
+        <Flat.Screen
+          name="Messages"
+          getComponent={() => MessagesScreen}
+          options={{title: title(defineMessage`Messages`), requireAuth: true}}
+        />
+      </Flat.Group>
       <Flat.Screen
         name="Start"
         getComponent={() => HomeScreen}

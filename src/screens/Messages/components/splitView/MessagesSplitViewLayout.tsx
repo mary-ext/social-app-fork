@@ -12,17 +12,12 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
-import {SCROLLBAR_OFFSET} from '#/components/Layout'
+import {SCROLLBAR_OFFSET} from '#/components/Layout/const'
 import {LockScroll} from '#/components/LockScroll'
 import {ChatList, Header as ChatListHeader} from '../../ChatList'
 import {SplitViewProvider} from './context'
+import {getMessagesSplitViewLayoutDimensions} from './layout-dimensions'
 import {splitViewLeftScroll} from './leftColumnScroll'
-
-const CENTER_COLUMN_WIDTH = 600
-const LEFT_NAV_FULL_WIDTH = 245
-const LEFT_NAV_MINIMAL_WIDTH = 86
-const RIGHT_NAV_FULL_WIDTH = 330
-const RIGHT_NAV_MINIMAL_WIDTH = 280
 
 type MessageScreens =
   | 'Messages'
@@ -75,25 +70,8 @@ export function MessagesSplitViewLayout({
       ? route.params.conversation
       : undefined
 
-  const rightNavWidth = centerColumnOffset
-    ? RIGHT_NAV_MINIMAL_WIDTH
-    : RIGHT_NAV_FULL_WIDTH
-
-  const leftNavWidth = centerColumnOffset
-    ? LEFT_NAV_MINIMAL_WIDTH
-    : LEFT_NAV_FULL_WIDTH - LEFT_NAV_MINIMAL_WIDTH
-
-  // slight reduce width for smaller breakpoint
-  const centerColumnWidth = centerColumnOffset
-    ? CENTER_COLUMN_WIDTH - 50
-    : CENTER_COLUMN_WIDTH
-
-  // nasty magic numbers here, sorry :(
-  const offset = centerColumnOffset
-    ? LEFT_NAV_MINIMAL_WIDTH - 34
-    : LEFT_NAV_MINIMAL_WIDTH + 5
-
-  const containerWidth = leftNavWidth + centerColumnWidth + rightNavWidth
+  const {centerColumnWidth, containerWidth, leftColumnWidth, offset} =
+    getMessagesSplitViewLayoutDimensions({centerColumnOffset})
 
   return (
     <View
@@ -115,7 +93,7 @@ export function MessagesSplitViewLayout({
           style={[
             a.border_l,
             t.atoms.border_contrast_low,
-            {width: containerWidth - centerColumnWidth},
+            {width: leftColumnWidth},
           ]}>
           <ChatListHeader newChatControl={newChatControl} />
           <ScrollProvider onScroll={onLeftColumnScroll}>
