@@ -1,5 +1,10 @@
 import {useMemo, useRef} from 'react'
-import {type DimensionValue, Pressable, View, type ViewStyle} from 'react-native'
+import {
+  type DimensionValue,
+  Pressable,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type AppBskyEmbedImages} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 

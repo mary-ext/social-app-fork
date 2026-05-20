@@ -44,9 +44,7 @@ export function BirthDateSettingsDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={l`My birthdate`}
-        style={{maxWidth: 400}}>
+      <Dialog.ScrollableInner label={l`My birthdate`} style={{maxWidth: 400}}>
         <View style={[a.gap_md]}>
           <Text style={[a.text_xl, a.font_semi_bold]}>
             <Trans>My birthdate</Trans>

@@ -45,12 +45,7 @@ export function AppLanguageDropdown() {
             variant="ghost"
             color="secondary"
             shape="rectangular"
-            style={[
-              a.pr_xs,
-              a.pl_sm,
-              a.gap_sm,
-              {alignSelf: 'flex-start'},
-            ]}>
+            style={[a.pr_xs, a.pl_sm, a.gap_sm, {alignSelf: 'flex-start'}]}>
             <Select.ValueText
               placeholder={l`Select an app language`}
               style={[t.atoms.text_contrast_medium]}

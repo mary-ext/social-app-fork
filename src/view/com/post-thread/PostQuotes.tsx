@@ -1,9 +1,5 @@
 import {useCallback, useState} from 'react'
-import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  moderatePost,
-} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost, moderatePost} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -27,9 +23,7 @@ function renderItem({
   return <Post post={item.post} hideTopBorder={index === 0} />
 }
 
-function keyExtractor(item: {
-  post: AppBskyFeedDefs.PostView
-}) {
+function keyExtractor(item: {post: AppBskyFeedDefs.PostView}) {
   return item.post.uri
 }
 

@@ -275,12 +275,11 @@ export function ProfileGrid({
             key={i}
             style={[
               a.flex_1,
-              gtMobile &&
-                ([
-                  a.flex_0,
-                  a.flex_grow,
-                  webViewStyle({width: `calc(30% - ${a.gap_md.gap / 2}px)`}),
-                ]),
+              gtMobile && [
+                a.flex_0,
+                a.flex_grow,
+                webViewStyle({width: `calc(30% - ${a.gap_md.gap / 2}px)`}),
+              ],
             ]}>
             <SuggestedFollowPlaceholder />
           </View>
@@ -296,12 +295,11 @@ export function ProfileGrid({
             entering={FadeIn.delay(DISMISS_ANIMATION_DURATION * 2)}
             style={[
               a.flex_1,
-              gtMobile &&
-                ([
-                  a.flex_0,
-                  a.flex_grow,
-                  webViewStyle({width: `calc(30% - ${a.gap_md.gap / 2}px)`}),
-                ]),
+              gtMobile && [
+                a.flex_0,
+                a.flex_grow,
+                webViewStyle({width: `calc(30% - ${a.gap_md.gap / 2}px)`}),
+              ],
             ]}>
             <ProfileCard.Link
               profile={profile.actor}
@@ -432,11 +430,10 @@ export function ProfileGrid({
               style={[
                 a.text_sm,
                 {color: t.palette.primary_500},
-                hovered &&
-                  ({
-                    textDecorationLine: 'underline',
-                    textDecorationColor: t.palette.primary_500,
-                  }),
+                hovered && {
+                  textDecorationLine: 'underline',
+                  textDecorationColor: t.palette.primary_500,
+                },
               ]}>
               <Trans>See more</Trans>
             </Text>

@@ -76,9 +76,7 @@ export async function getLinkMeta(
 
   try {
     const response = await fetch(
-      `${LINK_META_PROXY}${encodeURIComponent(
-        url,
-      )}`,
+      `${LINK_META_PROXY}${encodeURIComponent(url)}`,
       {signal: controller.signal},
     )
 

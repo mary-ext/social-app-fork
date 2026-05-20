@@ -6,7 +6,12 @@ import {
   useRef,
   useState,
 } from 'react'
-import {LayoutAnimation, type TextInput, View, type ViewStyle} from 'react-native'
+import {
+  LayoutAnimation,
+  type TextInput,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 

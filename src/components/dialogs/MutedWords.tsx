@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {type TextStyle,View} from 'react-native'
+import {type TextStyle, View} from 'react-native'
 import {type AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 

@@ -237,7 +237,9 @@ export function createInput(Component: typeof TextInput) {
 
     // should always be defined on `typography`
     if (flattened.fontSize) {
-      flattened.fontSize = Math.round(flattened.fontSize * fonts.scaleMultiplier)
+      flattened.fontSize = Math.round(
+        flattened.fontSize * fonts.scaleMultiplier,
+      )
     }
 
     return (

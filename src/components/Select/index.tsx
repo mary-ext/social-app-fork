@@ -283,22 +283,24 @@ export function Item({ref, value, style, children}: ItemProps) {
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
       onBlur={onBlur}
-      style={flatten([
-        t.atoms.text,
-        a.relative,
-        a.flex,
-        {minHeight: 25, paddingLeft: 30, paddingRight: 8},
-        a.user_select_none,
-        a.align_center,
-        a.rounded_xs,
-        a.py_2xs,
-        a.text_sm,
-        {outline: 0},
-        (hovered || focused) && {backgroundColor: t.palette.primary_50},
-        selected && a.font_semi_bold,
-        a.transition_color,
-        style,
-      ]) as CSSProperties}>
+      style={
+        flatten([
+          t.atoms.text,
+          a.relative,
+          a.flex,
+          {minHeight: 25, paddingLeft: 30, paddingRight: 8},
+          a.user_select_none,
+          a.align_center,
+          a.rounded_xs,
+          a.py_2xs,
+          a.text_sm,
+          {outline: 0},
+          (hovered || focused) && {backgroundColor: t.palette.primary_50},
+          selected && a.font_semi_bold,
+          a.transition_color,
+          style,
+        ]) as CSSProperties
+      }>
       <ItemContext.Provider value={ctx}>{children}</ItemContext.Provider>
     </RadixSelect.Item>
   )
@@ -307,7 +309,8 @@ export function Item({ref, value, style, children}: ItemProps) {
 export const ItemText = function ItemText({children, style}: ItemTextProps) {
   return (
     <RadixSelect.ItemText asChild>
-      <Text style={flatten([style, {pointerEvents: 'inherit'} as WebTextStyle])}>
+      <Text
+        style={flatten([style, {pointerEvents: 'inherit'} as WebTextStyle])}>
         {children}
       </Text>
     </RadixSelect.ItemText>

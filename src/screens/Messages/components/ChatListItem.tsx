@@ -474,12 +474,7 @@ function BaseChatItem({
                 {/* Avatar goes here */}
                 <View style={{width: avatarSize, height: avatarSize}} />
 
-                <View
-                  style={[
-                    a.flex_1,
-                    a.justify_center,
-                    {paddingRight: 40},
-                  ]}>
+                <View style={[a.flex_1, a.justify_center, {paddingRight: 40}]}>
                   <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                     <View style={[a.flex_shrink]}>
                       <Text

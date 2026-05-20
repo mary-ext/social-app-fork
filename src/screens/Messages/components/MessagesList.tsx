@@ -531,10 +531,10 @@ export function MessagesList({
               />
             }
             style={webViewStyle({
-                scrollbarWidth: 'thin',
-                scrollbarColor: `${t.palette.contrast_100} transparent`,
-                scrollbarGutter: 'stable',
-              })}
+              scrollbarWidth: 'thin',
+              scrollbarColor: `${t.palette.contrast_100} transparent`,
+              scrollbarGutter: 'stable',
+            })}
             contentInset={{top: transparentHeaderHeight}}
             scrollIndicatorInsets={{top: transparentHeaderHeight}}
           />

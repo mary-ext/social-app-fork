@@ -36,9 +36,7 @@ export function UserSearchInput({
   }
 
   return (
-    <View
-      {...webProps}
-      style={[a.flex_row, a.align_center, a.gap_sm]}>
+    <View {...webProps} style={[a.flex_row, a.align_center, a.gap_sm]}>
       <SearchIcon
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}

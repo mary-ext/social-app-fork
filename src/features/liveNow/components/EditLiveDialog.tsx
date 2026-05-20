@@ -114,9 +114,7 @@ function DialogInner({
     isRemovingLiveStatus
 
   return (
-    <Dialog.ScrollableInner
-      label={l`You are Live`}
-      style={{maxWidth: 420}}>
+    <Dialog.ScrollableInner label={l`You are Live`} style={{maxWidth: 420}}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_semi_bold, a.text_2xl]}>

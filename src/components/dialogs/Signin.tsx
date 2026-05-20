@@ -6,11 +6,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
-import {
-  type SessionAccount,
-  useSession,
-  useSessionApi,
-} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {LoginForm} from '#/screens/Login/LoginForm'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AccountList} from '#/components/AccountList'
@@ -143,8 +139,7 @@ function SigninDialogInner() {
           <Text style={[a.font_semi_bold, a.text_2xl]}>
             <Trans>Sign in</Trans>
           </Text>
-          <Text
-            style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
+          <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>Sign in to join the conversation.</Trans>
           </Text>
         </View>

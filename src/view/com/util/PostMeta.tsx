@@ -1,5 +1,10 @@
 import {memo, useCallback} from 'react'
-import {type StyleProp, type TextStyle, View, type ViewStyle} from 'react-native'
+import {
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'

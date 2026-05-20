@@ -56,14 +56,11 @@ function createRoute(pattern: string): Route {
       return undefined
     },
     build(params: RouteBuildParams = {}) {
-      const str = pattern.replace(
-        /:([\w]+)/g,
-        (_m, name) => {
-          return (
-            stringifyRouteParam(params[encodeURIComponent(name)]) ?? 'undefined'
-          )
-        },
-      )
+      const str = pattern.replace(/:([\w]+)/g, (_m, name) => {
+        return (
+          stringifyRouteParam(params[encodeURIComponent(name)]) ?? 'undefined'
+        )
+      })
 
       let hasQp = false
       const qp = new URLSearchParams()

@@ -253,7 +253,9 @@ function ContentHiderActive({
                 style={[
                   {color: t.palette.primary_500},
                   a.text_sm,
-                  state.hovered && [{textDecoration: 'underline'} as WebTextStyle],
+                  state.hovered && [
+                    {textDecoration: 'underline'} as WebTextStyle,
+                  ],
                 ]}>
                 <Trans>Learn more.</Trans>
               </Text>
