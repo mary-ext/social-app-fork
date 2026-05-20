@@ -199,8 +199,12 @@ export function TextInput({
       window.setTimeout(() => {
         isPastingRef.current = false
       }, 0)
-      if (event.clipboardData?.items) {
-        handleTransferItems(event.clipboardData.items, onPhotoPasted, onError)
+      const transfer = event.clipboardData
+      if (transfer?.items) {
+        if (hasMediaTransfer(transfer)) {
+          event.preventDefault()
+        }
+        handleTransferItems(transfer.items, onPhotoPasted, onError)
       }
     },
     [onError, onPhotoPasted],
@@ -303,6 +307,19 @@ const styles = StyleSheet.create({
     paddingVertical: 44,
   },
 })
+
+function hasMediaTransfer(transfer: DataTransfer) {
+  const items = transfer.items
+  for (let index = 0; index < items.length; index++) {
+    const type = items[index]!.type
+
+    if (type.startsWith('image/') || type.startsWith('video/')) {
+      return true
+    }
+  }
+
+  return isUriImage(transfer.getData('text/plain'))
+}
 
 function handleTransferItems(
   items: DataTransferItemList,
