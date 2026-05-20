@@ -179,7 +179,7 @@ function createOAuthFetch(oauthAgent: OAuthUserAgent) {
   let dropped = false
   return withNetworkEvents(
     async (input: RequestInfo | URL, init?: RequestInit) => {
-      const request = new Request(input, init)
+      const request = new Request(input, withReadableStreamDuplex(init))
       const response = await oauthAgent.handle(request.url, {
         body: request.body,
         headers: request.headers,
@@ -195,6 +195,26 @@ function createOAuthFetch(oauthAgent: OAuthUserAgent) {
       return response
     },
   )
+}
+
+type ReadableStreamRequestInit = RequestInit & {duplex?: 'half'}
+
+function withReadableStreamDuplex(
+  init: RequestInit | undefined,
+): RequestInit | undefined {
+  if (
+    typeof ReadableStream === 'undefined' ||
+    !(init?.body instanceof ReadableStream)
+  ) {
+    return init
+  }
+
+  const nextInit: ReadableStreamRequestInit = {
+    ...init,
+    duplex: 'half',
+  }
+
+  return nextInit
 }
 
 function isInvalidTokenResponse(response: Response): boolean {
