@@ -18,15 +18,24 @@ type Props = {
 	label: string;
 	onPress?: PressableProps['onPress'];
 	testID?: string;
-};
+} & Omit<
+	PressableProps,
+	| 'accessibilityHint'
+	| 'accessibilityLabel'
+	| 'accessibilityRole'
+	| 'onPress'
+	| 'style'
+	| 'testID'
+>;
 
 const SIZE = 44;
 const RADIUS = 24;
 const ICON = 24;
 
-export function CircleChromeButton({ icon: Icon, iconStyle, label, onPress, testID }: Props) {
+export function CircleChromeButton({ icon: Icon, iconStyle, label, onPress, testID, ...rest }: Props) {
 	return (
 		<Pressable
+			{...rest}
 			accessibilityRole="button"
 			accessibilityLabel={label}
 			accessibilityHint=""

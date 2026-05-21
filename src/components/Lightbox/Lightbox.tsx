@@ -252,13 +252,15 @@ function LightboxGallery({
 			<Menu.Root>
 				<Menu.Trigger label={l`Image options`}>
 					{({ props }) => (
-						<Pressable {...props} accessible={false} style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
+						<View style={[a.absolute, styles.menuBtn, delayedFadeInAnim]}>
 							<CircleChromeButton
+								{...props}
+								accessible={false}
 								icon={EllipsisIcon}
 								iconStyle={{ transform: [{ rotate: '90deg' }] }}
 								label={l`Image options`}
 							/>
-						</Pressable>
+						</View>
 					)}
 				</Menu.Trigger>
 				<Menu.Outer>
