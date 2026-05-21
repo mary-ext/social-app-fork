@@ -3,6 +3,7 @@ import path from 'node:path';
 import { defineConfig } from '@rsbuild/core';
 import { pluginBabel } from '@rsbuild/plugin-babel';
 import { pluginReact } from '@rsbuild/plugin-react';
+import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 
 import oauthMetadata from './public/oauth-client-metadata.json' with { type: 'json' };
 
@@ -136,6 +137,15 @@ export default defineConfig(({ envMode }) => {
 					test: /postMock\.html$/,
 					type: 'asset/resource',
 				});
+				// opt-in bundle analysis: `RSDOCTOR=true pnpm build`
+				if (process.env.RSDOCTOR) {
+					config.plugins ??= [];
+					config.plugins.push(
+						new RsdoctorRspackPlugin({
+							disableClientServer: !process.stdout.isTTY,
+						}),
+					);
+				}
 			},
 		},
 	};
