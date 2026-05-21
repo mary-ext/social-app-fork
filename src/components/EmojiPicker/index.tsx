@@ -1,18 +1,22 @@
-import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
-import EmojiPicker from '@emoji-mart/react';
+import { createContext, lazy, Suspense, useContext, useEffect, useMemo, useRef } from 'react';
+import { View } from 'react-native';
 import { DropdownMenu } from 'radix-ui';
 
 import { useA11y } from '#/state/a11y';
 
 import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
 
-import { atoms as a, flatten } from '#/alf';
+import { atoms as a, flatten, useTheme } from '#/alf';
+
+import { Loader } from '#/components/Loader';
 
 import * as Menu from '../Menu';
 import { useWebPreloadEmoji } from './preload';
 import { type Emoji, type PickerProps, type RootProps, type TriggerProps } from './types';
 
 export * from './types';
+
+const EmojiPicker = lazy(() => import('@emoji-mart/react'));
 
 const EmojiPickerContext = createContext<{
 	onEmojiSelect: (emoji: Emoji) => void;
@@ -56,6 +60,26 @@ export function Root({ children, control, onEmojiSelect, preloadOnMount = true, 
  */
 export function Trigger(props: TriggerProps) {
 	return <Menu.Trigger {...props} />;
+}
+
+/** Sized placeholder shown while the lazily-loaded emoji picker chunk downloads. */
+function PickerPlaceholder() {
+	const t = useTheme();
+	return (
+		<View
+			style={[
+				a.align_center,
+				a.justify_center,
+				a.rounded_md,
+				a.border,
+				t.atoms.bg,
+				t.atoms.border_contrast_low,
+				{ width: 338, height: 435 },
+			]}
+		>
+			<Loader size="3xl" />
+		</View>
+	);
 }
 
 /**
@@ -113,16 +137,18 @@ export function Picker({ keepOpenWhenShiftHeld = true }: PickerProps) {
 					onWheel={(evt) => evt.stopPropagation()}
 					style={flatten([!reduceMotionEnabled && a.zoom_fade_in])}
 				>
-					<EmojiPicker
-						autoFocus
-						onEmojiSelect={(emoji: Emoji) => {
-							onEmojiSelect(emoji);
+					<Suspense fallback={<PickerPlaceholder />}>
+						<EmojiPicker
+							autoFocus
+							onEmojiSelect={(emoji: Emoji) => {
+								onEmojiSelect(emoji);
 
-							if (!keepOpenWhenShiftHeld || !isShiftDown.current) {
-								control.close();
-							}
-						}}
-					/>
+								if (!keepOpenWhenShiftHeld || !isShiftDown.current) {
+									control.close();
+								}
+							}}
+						/>
+					</Suspense>
 				</div>
 			</DropdownMenu.Content>
 		</DropdownMenu.Portal>
