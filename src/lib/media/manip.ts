@@ -1,26 +1,5 @@
-import { type PickerImage } from './picker.shared';
 import { type Dimensions } from './types';
-import { blobToDataUri, convertCdnPreset, getDataUriSize } from './util';
-
-export interface DownloadAndResizeOpts {
-	uri: string;
-	width: number;
-	height: number;
-	mode: 'contain' | 'cover' | 'stretch';
-	maxSize: number;
-	timeout: number;
-}
-
-export async function downloadAndResize(opts: DownloadAndResizeOpts) {
-	const controller = new AbortController();
-	const to = setTimeout(() => controller.abort(), opts.timeout || 5e3);
-	const res = await fetch(opts.uri);
-	const resBody = await res.blob();
-	clearTimeout(to);
-
-	const dataUri = await blobToDataUri(resBody);
-	return await doResize(dataUri, opts);
-}
+import { convertCdnPreset } from './util';
 
 /**
  * Saves an image to the user's device. Uses the CDN's `download` preset which uses the JPEG version with the
@@ -43,96 +22,6 @@ export async function getImageDim(path: string): Promise<Dimensions> {
 	img.src = path;
 	await promise;
 	return { width: img.width, height: img.height };
-}
-
-// internal methods
-// =
-
-interface DoResizeOpts {
-	width: number;
-	height: number;
-	mode: 'contain' | 'cover' | 'stretch';
-	maxSize: number;
-}
-
-async function doResize(dataUri: string, opts: DoResizeOpts): Promise<PickerImage> {
-	let newDataUri;
-
-	let minQualityPercentage = 0;
-	let maxQualityPercentage = 101; //exclusive
-
-	while (maxQualityPercentage - minQualityPercentage > 1) {
-		const qualityPercentage = Math.round((maxQualityPercentage + minQualityPercentage) / 2);
-		const tempDataUri = await createResizedImage(dataUri, {
-			width: opts.width,
-			height: opts.height,
-			quality: qualityPercentage / 100,
-			mode: opts.mode,
-		});
-
-		if (getDataUriSize(tempDataUri) < opts.maxSize) {
-			minQualityPercentage = qualityPercentage;
-			newDataUri = tempDataUri;
-		} else {
-			maxQualityPercentage = qualityPercentage;
-		}
-	}
-
-	if (!newDataUri) {
-		throw new Error('Failed to compress image');
-	}
-	return {
-		path: newDataUri,
-		mime: 'image/jpeg',
-		size: getDataUriSize(newDataUri),
-		width: opts.width,
-		height: opts.height,
-	};
-}
-
-function createResizedImage(
-	dataUri: string,
-	{
-		width,
-		height,
-		quality,
-		mode,
-	}: {
-		width: number;
-		height: number;
-		quality: number;
-		mode: 'contain' | 'cover' | 'stretch';
-	},
-): Promise<string> {
-	return new Promise((resolve, reject) => {
-		const img = document.createElement('img');
-		img.addEventListener('load', () => {
-			const canvas = document.createElement('canvas');
-			const ctx = canvas.getContext('2d');
-			if (!ctx) {
-				return reject(new Error('Failed to resize image'));
-			}
-
-			let scale = 1;
-			if (mode === 'cover') {
-				scale = img.width < img.height ? width / img.width : height / img.height;
-			} else if (mode === 'contain') {
-				scale = img.width > img.height ? width / img.width : height / img.height;
-			}
-			let w = img.width * scale;
-			let h = img.height * scale;
-
-			canvas.width = w;
-			canvas.height = h;
-
-			ctx.drawImage(img, 0, 0, w, h);
-			resolve(canvas.toDataURL('image/jpeg', quality));
-		});
-		img.addEventListener('error', (ev) => {
-			reject(ev.error);
-		});
-		img.src = dataUri;
-	});
 }
 
 export async function saveBytesToDisk(filename: string, bytes: Uint8Array<ArrayBuffer>, type: string) {

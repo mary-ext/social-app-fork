@@ -7,7 +7,7 @@ import { openPicker } from '#/lib/media/picker';
 import { type PickerImage } from '#/lib/media/picker.shared';
 import { isCancelledError } from '#/lib/strings/errors';
 
-import { type ComposerImage, compressImage, createComposerImage } from '#/state/gallery';
+import { type ComposerImage, compressProfileImage, createComposerImage } from '#/state/gallery';
 
 import { logger } from '#/logger';
 
@@ -63,7 +63,7 @@ export function UserBanner({
 
 	const onChangeEditImage = useCallback(
 		async (image: ComposerImage) => {
-			const compressed = await compressImage(image);
+			const compressed = await compressProfileImage(image, 3000, 1000);
 			onSelectNewBanner?.(compressed);
 		},
 		[onSelectNewBanner],

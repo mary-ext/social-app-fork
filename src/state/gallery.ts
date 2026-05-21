@@ -1,9 +1,8 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import { POST_IMG_MAX } from '#/lib/constants';
+import { compressPostImage, compressProfileImage as compressProfileBlob } from '#/lib/media/image';
 import { getImageDim } from '#/lib/media/manip';
 import { type PickerImage } from '#/lib/media/picker.shared';
-import { getDataUriSize } from '#/lib/media/util';
 
 import { type Action, type ActionCrop, manipulateAsync, SaveFormat } from '#/shims/image-manipulator';
 
@@ -120,7 +119,7 @@ export async function manipulateImage(
 		alt: img.alt,
 		source: img.source,
 		transformed: {
-			path: await moveIfNecessary(result.uri),
+			path: result.uri,
 			width: result.width,
 			height: result.height,
 			mime: 'image/png',
@@ -137,76 +136,42 @@ export function resetImageManipulation(img: ComposerImage): ComposerImageWithout
 	return img;
 }
 
-export async function compressImage(
-	img: ComposerImage,
-	options?: {
-		highResolution?: boolean;
-		increasedBlobSizeLimit?: boolean;
-	},
-): Promise<PickerImage> {
+/** Compress an image for use as a post embed, fitting the Bluesky CDN's size budget. */
+export async function compressImage(img: ComposerImage): Promise<PickerImage> {
 	const source = img.transformed || img.source;
-	const highResolution = options?.highResolution ?? false;
+	const { blob, aspectRatio } = await compressPostImage(await uriToBlob(source.path));
 
-	let attempts = 0;
-	let maxDimension = highResolution ? 4000 : POST_IMG_MAX.width;
-	let maxBytes = options?.increasedBlobSizeLimit ? 2000000 : POST_IMG_MAX.size;
-
-	let minQualityPercentage = 0;
-	let maxQualityPercentage = 101; // exclusive
-	let newDataUri;
-
-	while (maxQualityPercentage - minQualityPercentage > 1) {
-		if (attempts >= 4) break;
-
-		const [w, h] = containImageRes(source.width, source.height, maxDimension);
-		const qualityPercentage = Math.round((maxQualityPercentage + minQualityPercentage) / 2);
-
-		/*
-		 * In the event the image doesn't compress well, we want to avoid
-		 * unecessary iterations. In this case, binary search will check 51, 26,
-		 * 13(rounded). We don't want to go below 25, so if we've halved to 13,
-		 * reset the loop and reduce the image dimensions instead.
-		 */
-		if (qualityPercentage <= 13) {
-			minQualityPercentage = 0;
-			maxQualityPercentage = 101;
-			attempts++;
-			// 4000px → 3200px → 2560px → 2048px → ~1638px
-			maxDimension = Math.floor(maxDimension * 0.8);
-			continue;
-		}
-
-		const res = await manipulateAsync(source.path, [{ resize: { width: w, height: h } }], {
-			compress: qualityPercentage / 100,
-			format: SaveFormat.JPEG,
-			base64: true,
-		});
-
-		const base64 = res.base64;
-		const size = base64 ? getDataUriSize(base64) : 0;
-		if (base64 && size <= maxBytes) {
-			minQualityPercentage = qualityPercentage;
-			newDataUri = {
-				path: await moveIfNecessary(res.uri),
-				width: res.width,
-				height: res.height,
-				mime: 'image/jpeg',
-				size,
-			};
-		} else {
-			maxQualityPercentage = qualityPercentage;
-		}
-	}
-
-	if (newDataUri) {
-		return newDataUri;
-	}
-
-	throw new Error(`Unable to compress image`);
+	return {
+		path: await blobToDataUri(blob),
+		width: aspectRatio.width,
+		height: aspectRatio.height,
+		mime: blob.type,
+		size: blob.size,
+	};
 }
 
-async function moveIfNecessary(from: string) {
-	return from;
+/** Compress an image for use as a profile avatar or banner, cropping it to `maxWidth`×`maxHeight`. */
+export async function compressProfileImage(
+	img: ComposerImage,
+	maxWidth: number,
+	maxHeight: number,
+): Promise<PickerImage> {
+	const source = img.transformed || img.source;
+	const { blob, aspectRatio } = await compressProfileBlob(await uriToBlob(source.path), maxWidth, maxHeight);
+
+	return {
+		path: await blobToDataUri(blob),
+		width: aspectRatio.width,
+		height: aspectRatio.height,
+		mime: blob.type,
+		size: blob.size,
+	};
+}
+
+/** Fetch a `data:`, `blob:`, or remote URI into a Blob. */
+async function uriToBlob(uri: string): Promise<Blob> {
+	const response = await fetch(uri);
+	return await response.blob();
 }
 
 /**
@@ -254,15 +219,3 @@ function blobToDataUri(blob: Blob): Promise<string> {
 
 /** Purge files that were created to accomodate image manipulation */
 export async function purgeTemporaryImageFiles() {}
-
-function containImageRes(w: number, h: number, max: number): [width: number, height: number] {
-	let scale = 1;
-
-	if (w > max || h > max) {
-		scale = w > h ? max / w : max / h;
-		w = Math.floor(w * scale);
-		h = Math.floor(h * scale);
-	}
-
-	return [w, h];
-}

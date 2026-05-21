@@ -6,10 +6,10 @@ import {
 } from '@atproto/api';
 import { AtUri } from '@atproto/api';
 
-import { POST_IMG_MAX } from '#/lib/constants';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
-import { downloadAndResize } from '#/lib/media/manip';
+import { compressLinkThumbImage } from '#/lib/media/image';
+import { blobToDataUri } from '#/lib/media/util';
 import { createStarterPackUri, parseStarterPackUri } from '#/lib/strings/starter-pack';
 import {
 	convertBskyAppUrlIfNeeded,
@@ -241,16 +241,23 @@ async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
 
 export async function imageToThumb(imageUri: string): Promise<ComposerImage | undefined> {
 	try {
-		const img = await downloadAndResize({
-			uri: imageUri,
-			width: POST_IMG_MAX.width,
-			height: POST_IMG_MAX.height,
-			mode: 'contain',
-			maxSize: POST_IMG_MAX.size,
-			timeout: 15e3,
-		});
-		if (img) {
-			return await createComposerImage(img);
+		const controller = new AbortController();
+		const timeout = setTimeout(() => controller.abort(), 15e3);
+
+		let source: Blob;
+		try {
+			const res = await fetch(imageUri, { signal: controller.signal });
+			source = await res.blob();
+		} finally {
+			clearTimeout(timeout);
 		}
+
+		const { blob, aspectRatio } = await compressLinkThumbImage(source);
+		return await createComposerImage({
+			path: await blobToDataUri(blob),
+			width: aspectRatio.width,
+			height: aspectRatio.height,
+			mime: blob.type,
+		});
 	} catch {}
 }

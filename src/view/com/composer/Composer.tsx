@@ -718,20 +718,12 @@ export const ComposePost = ({
 		try {
 			logger.info(`composer: posting...`);
 			postUri = (
-				await apilib.post(
-					agent,
-					queryClient,
-					{
-						thread: filteredThread,
-						replyTo: replyTo?.uri,
-						onStateChange: setPublishingStage,
-						langs: currentLanguages,
-					},
-					{
-						highResolutionImages: true,
-						increasedBlobSizeLimit: true,
-					},
-				)
+				await apilib.post(agent, queryClient, {
+					thread: filteredThread,
+					replyTo: replyTo?.uri,
+					onStateChange: setPublishingStage,
+					langs: currentLanguages,
+				})
 			).uris[0];
 
 			/*

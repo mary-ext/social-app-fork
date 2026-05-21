@@ -22,7 +22,7 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isCancelledError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { type ComposerImage, compressImage, createComposerImage } from '#/state/gallery';
+import { type ComposerImage, compressProfileImage, createComposerImage } from '#/state/gallery';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
 import { logger } from '#/logger';
@@ -386,7 +386,7 @@ let EditableUserAvatar = ({
 
 	const onChangeEditImage = useCallback(
 		async (image: ComposerImage) => {
-			const compressed = await compressImage(image);
+			const compressed = await compressProfileImage(image, 1000, 1000);
 			onSelectNewAvatar(compressed);
 		},
 		[onSelectNewAvatar],
