@@ -35,8 +35,8 @@ importers:
         specifier: ^0.19.15
         version: 0.19.18
       '@atproto/syntax':
-        specifier: 0.5.2
-        version: 0.5.2
+        specifier: ^0.5.4
+        version: 0.5.4
       '@braintree/sanitize-url':
         specifier: ^6.0.2
         version: 6.0.4
@@ -385,9 +385,6 @@ packages:
 
   '@atproto/lexicon@0.6.2':
     resolution: {integrity: sha512-p3Ly6hinVZW0ETuAXZMeUGwuMm3g8HvQMQ41yyEE6AL0hAkfeKFaZKos6BdBrr6CjkpbrDZqE8M+5+QOceysMw==}
-
-  '@atproto/syntax@0.5.2':
-    resolution: {integrity: sha512-W41szOnkppoHr0iCUrzL8gy3OD6qmDyp1UvUgmTx2oFQfgbudpz51T/gznesiCcqiUT5obfHdx4PJ+WdlEOE7Q==}
 
   '@atproto/syntax@0.5.4':
     resolution: {integrity: sha512-9XJOpMAgsGFxMEIp8nJ8AIWv+krrY1xQMj+wULbbXhQztQV+9aZ0TbG9Jtn3Op2or8Kr6OqyWR4ga9Z189kKDw==}
@@ -5425,14 +5422,10 @@ snapshots:
   '@atproto/lexicon@0.6.2':
     dependencies:
       '@atproto/common-web': 0.4.21
-      '@atproto/syntax': 0.5.2
+      '@atproto/syntax': 0.5.4
       iso-datestring-validator: 2.2.2
       multiformats: 9.9.0
       zod: 3.25.76
-
-  '@atproto/syntax@0.5.2':
-    dependencies:
-      tslib: 2.8.1
 
   '@atproto/syntax@0.5.4':
     dependencies:
