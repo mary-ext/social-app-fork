@@ -4,10 +4,16 @@ import { compressPostImage, compressProfileImage as compressProfileBlob } from '
 import { getImageDim } from '#/lib/media/manip';
 import { type PickerImage } from '#/lib/media/picker.shared';
 
-import { type Action, type ActionCrop, manipulateAsync, SaveFormat } from '#/shims/image-manipulator';
+/** A pixel-space rectangle to crop an image down to. */
+export type ImageCrop = {
+	height: number;
+	originX: number;
+	originY: number;
+	width: number;
+};
 
 export type ImageTransformation = {
-	crop?: ActionCrop['crop'];
+	crop?: ImageCrop;
 };
 
 export type ImageMeta = {
@@ -90,19 +96,11 @@ export async function pasteImage(uri: string): Promise<ComposerImageWithoutTrans
 	};
 }
 
-export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
-	return img;
-}
-
 export async function manipulateImage(
 	img: ComposerImage,
 	trans: ImageTransformation,
 ): Promise<ComposerImage> {
-	const rawActions: (Action | undefined)[] = [trans.crop && { crop: trans.crop }];
-
-	const actions = rawActions.filter((a): a is Action => a !== undefined);
-
-	if (actions.length === 0) {
+	if (trans.crop === undefined) {
 		if (img.transformed === undefined) {
 			return img;
 		}
@@ -110,21 +108,41 @@ export async function manipulateImage(
 		return { alt: img.alt, source: img.source };
 	}
 
-	const source = img.source;
-	const result = await manipulateAsync(source.path, actions, {
-		format: SaveFormat.PNG,
-	});
+	const cropped = await cropImage(img.source.path, trans.crop);
 
 	return {
 		alt: img.alt,
 		source: img.source,
 		transformed: {
-			path: result.uri,
-			width: result.width,
-			height: result.height,
+			path: cropped.path,
+			width: cropped.width,
+			height: cropped.height,
 			mime: 'image/png',
 		},
 		manips: trans,
+	};
+}
+
+/** Crop an image to a pixel rectangle, re-encoding the result losslessly as a PNG data URI. */
+async function cropImage(uri: string, crop: ImageCrop): Promise<ImageMeta> {
+	const image = new Image();
+	image.src = uri;
+	await image.decode();
+
+	const canvas = new OffscreenCanvas(crop.width, crop.height);
+	const ctx = canvas.getContext('2d');
+	if (!ctx) {
+		throw new Error('Failed to create image cropping canvas');
+	}
+
+	ctx.drawImage(image, crop.originX, crop.originY, crop.width, crop.height, 0, 0, crop.width, crop.height);
+
+	const blob = await canvas.convertToBlob({ type: 'image/png' });
+	return {
+		path: await blobToDataUri(blob),
+		width: crop.width,
+		height: crop.height,
+		mime: 'image/png',
 	};
 }
 
