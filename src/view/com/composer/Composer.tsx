@@ -1198,10 +1198,22 @@ let ComposerPost = memo(function ComposerPost({
 					onSelectVideo(post.id, { blob, width, height, mimeType, duration });
 				}
 			} else {
-				onImageAdd([await createComposerImage(blob)]);
+				let image: ComposerImage;
+				try {
+					image = await createComposerImage(blob);
+				} catch (e) {
+					logger.error(`createComposerImage failed`, {
+						safeMessage: e instanceof Error ? e.message : String(e),
+						mimeType: blob.type,
+						size: blob.size,
+					});
+					onError(l`The pasted image couldn't be added to your post.`);
+					return;
+				}
+				onImageAdd([image]);
 			}
 		},
-		[post.id, onSelectVideo, onImageAdd, l],
+		[post.id, onSelectVideo, onImageAdd, onError, l],
 	);
 
 	useHideKeyboardOnBackground();
@@ -1600,6 +1612,7 @@ function ComposerFooter({
 	post,
 	dispatch,
 	showAddButton,
+	onError,
 	onSelectVideo,
 	onAddPost,
 	currentLanguages,
@@ -1677,16 +1690,36 @@ function ComposerFooter({
 			setSelectedAssetsType(type);
 
 			if (type === 'image' && images.length) {
-				const selectedImages = await Promise.all(images.map((image) => createComposerImage(image))).catch(
-					(e) => {
-						logger.error(`createComposerImage failed`, {
-							safeMessage: e.message,
-						});
-						return [];
-					},
-				);
+				const results = await Promise.allSettled(images.map((image) => createComposerImage(image)));
 
-				onImageAdd(selectedImages);
+				const selectedImages: ComposerImage[] = [];
+				let failed = 0;
+
+				for (const [index, result] of results.entries()) {
+					if (result.status === 'fulfilled') {
+						selectedImages.push(result.value);
+					} else {
+						failed++;
+						const file = images[index]!;
+						logger.error(`createComposerImage failed`, {
+							safeMessage: result.reason instanceof Error ? result.reason.message : String(result.reason),
+							mimeType: file.type,
+							size: file.size,
+						});
+					}
+				}
+
+				if (selectedImages.length) {
+					onImageAdd(selectedImages);
+				}
+				if (failed > 0) {
+					onError(
+						l`${plural(failed, {
+							one: `An image couldn't be added to your post.`,
+							other: `# images couldn't be added to your post.`,
+						})}`,
+					);
+				}
 			} else if ((type === 'video' || type === 'gif') && video) {
 				onSelectVideo(post.id, video);
 			}
@@ -1697,7 +1730,7 @@ function ComposerFooter({
 				});
 			});
 		},
-		[post.id, onSelectVideo, onImageAdd],
+		[post.id, onSelectVideo, onImageAdd, onError, l],
 	);
 
 	return (
