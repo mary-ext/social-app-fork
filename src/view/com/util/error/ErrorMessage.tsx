@@ -1,10 +1,11 @@
 import { type StyleProp, StyleSheet, TouchableOpacity, View, type ViewStyle } from 'react-native';
-import { FontAwesomeIcon, type FontAwesomeIconStyle } from '@fortawesome/react-native-fontawesome';
 import { useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useTheme } from '#/lib/ThemeContext';
 
+import { ArrowRotateClockwise_Stroke2_Corner0_Rounded as ArrowRotateClockwiseIcon } from '#/components/icons/ArrowRotate';
+import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Layout from '#/components/Layout';
 
 import { Text } from '../text/Text';
@@ -27,7 +28,7 @@ export function ErrorMessage({
 		<Layout.Center>
 			<View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
 				<View style={[styles.errorIcon, { backgroundColor: theme.palette.error.icon }]}>
-					<FontAwesomeIcon icon="exclamation" style={pal.text as FontAwesomeIconStyle} size={16} />
+					<WarningIcon width={16} style={pal.text} />
 				</View>
 				<Text type="sm-medium" style={[styles.message, pal.text]} numberOfLines={numberOfLines}>
 					{message}
@@ -41,7 +42,7 @@ export function ErrorMessage({
 						accessibilityLabel={l`Retry`}
 						accessibilityHint={l`Retries the last action, which errored out`}
 					>
-						<FontAwesomeIcon icon="arrows-rotate" style={{ color: theme.palette.error.icon }} size={18} />
+						<ArrowRotateClockwiseIcon width={18} style={{ color: theme.palette.error.icon }} />
 					</TouchableOpacity>
 				)}
 			</View>

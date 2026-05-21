@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
-import { FontAwesomeIcon, type FontAwesomeIconStyle } from '@fortawesome/react-native-fontawesome';
 
 import { usePalette } from '#/lib/hooks/usePalette';
+
+import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
 
 import { Button } from './forms/Button';
 import { Text } from './text/Text';
@@ -10,7 +11,7 @@ export function LoadMoreRetryBtn({ label, onPress }: { label: string; onPress: (
 	const pal = usePalette('default');
 	return (
 		<Button type="default-light" onPress={onPress} style={styles.loadMoreRetry}>
-			<FontAwesomeIcon icon="arrow-rotate-left" style={pal.textLight as FontAwesomeIconStyle} size={18} />
+			<ArrowRotateCounterClockwiseIcon width={18} style={pal.textLight} />
 			<Text style={[pal.textLight, styles.label]}>{label}</Text>
 		</Button>
 	);
