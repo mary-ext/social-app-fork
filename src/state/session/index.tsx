@@ -96,7 +96,7 @@ const ApiContext = createContext<SessionApiContext>({
 ApiContext.displayName = 'SessionApiContext';
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const [boot] = useState(readPersistedSession);
+	const boot = useMemo(() => readPersistedSession(), []);
 	const bootAccount = IS_OAUTH_CALLBACK
 		? undefined
 		: boot.accounts.find((a) => a.did === boot.currentAccountDid);
@@ -296,8 +296,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	);
 
 	// @ts-expect-error window type is not declared, debug only
-	// eslint-disable-next-line react-compiler/react-compiler
-	// eslint-disable-next-line react-hooks/immutability
 	if (import.meta.env.DEV) window.agent = agent;
 
 	return (
