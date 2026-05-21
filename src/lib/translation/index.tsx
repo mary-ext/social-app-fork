@@ -11,7 +11,6 @@ import {
 } from './types';
 
 export * from './types';
-export * from './utils';
 
 const translationState: Record<string, TranslationState> = {};
 const acquireTranslation = (_key: string) => {
