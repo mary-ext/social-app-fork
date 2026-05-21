@@ -120,7 +120,6 @@ export function MessageInput({
 
 	return (
 		<View style={a.p_sm}>
-			{children}
 			<View
 				style={[
 					a.flex_row,
@@ -140,6 +139,7 @@ export function MessageInput({
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
 			>
+				{children}
 				<EmojiPicker.Root onEmojiSelect={onEmojiInserted} nextFocusRef={textAreaRef}>
 					<EmojiPicker.Trigger label={l`Open emoji picker`}>
 						{({ props, state }) => (
