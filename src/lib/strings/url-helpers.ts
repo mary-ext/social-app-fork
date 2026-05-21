@@ -1,5 +1,4 @@
 import { AtUri } from '@atproto/api';
-import { parse as parseDomain } from 'psl';
 import TLDs from 'tlds';
 
 import { BSKY_SERVICE } from '#/lib/constants';
@@ -286,12 +285,24 @@ export function isPossiblyAUrl(str: string): boolean {
 	return isValidDomain(firstWord!);
 }
 
-export function splitApexDomain(hostname: string): [string, string] {
-	const hostnamep = parseDomain(hostname);
-	if (hostnamep.error || !hostnamep.listed || !hostnamep.domain) {
+/**
+ * Splits a hostname into its subdomain prefix and registrable apex domain, e.g. `a.b.example.co.uk` →
+ * `['a.b.', 'example.co.uk']`. Returns `['', hostname]` when the hostname has no recognized ICANN public
+ * suffix.
+ *
+ * The public-suffix dataset is loaded lazily (hence the async signature) to keep it out of the initial
+ * bundle.
+ *
+ * @param hostname hostname to split
+ * @returns a `[subdomainPrefix, apexDomain]` tuple
+ */
+export async function splitApexDomain(hostname: string): Promise<[string, string]> {
+	const { parse } = await import('tldts');
+	const parsed = parse(hostname);
+	if (!parsed.domain || !parsed.isIcann) {
 		return ['', hostname];
 	}
-	return [hostnamep.subdomain ? `${hostnamep.subdomain}.` : '', hostnamep.domain];
+	return [parsed.subdomain ? `${parsed.subdomain}.` : '', parsed.domain];
 }
 
 export function createBskyAppAbsoluteUrl(path: string): string {

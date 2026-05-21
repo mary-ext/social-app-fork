@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -116,21 +116,50 @@ function LinkWarningDialogInner({ link }: { link?: { href: string; displayText: 
 	);
 }
 
+/**
+ * URL display parts with the hostname left unsplit. Used as the fallback shown until the lazy apex-domain
+ * split resolves, and for URLs that fail to parse.
+ */
+function unsplitUrlParts(href: string): [string, string, string] {
+	try {
+		const urlp = new URL(href);
+		return [urlp.protocol + '//', urlp.hostname, urlp.pathname.replace(/\/$/, '') + urlp.search + urlp.hash];
+	} catch {
+		return ['', href, ''];
+	}
+}
+
 function LinkBox({ href }: { href: string }) {
 	const t = useTheme();
-	const [scheme, hostname, rest] = useMemo(() => {
+	/*
+	 * Apex-domain splitting needs the lazily-loaded public-suffix list. Until it
+	 * resolves — and for URLs that fail to parse — the hostname is shown unsplit.
+	 */
+	const [[scheme, hostname, rest], setParts] = useState<[string, string, string]>(() =>
+		unsplitUrlParts(href),
+	);
+
+	useEffect(() => {
+		setParts(unsplitUrlParts(href));
+
+		let urlHostname: string;
 		try {
-			const urlp = new URL(href);
-			const [subdomain, apexdomain] = splitApexDomain(urlp.hostname);
-			return [
-				urlp.protocol + '//' + subdomain,
-				apexdomain,
-				urlp.pathname.replace(/\/$/, '') + urlp.search + urlp.hash,
-			];
+			urlHostname = new URL(href).hostname;
 		} catch {
-			return ['', href, ''];
+			return;
 		}
+
+		let cancelled = false;
+		void splitApexDomain(urlHostname).then(([subdomain, apexdomain]) => {
+			if (!cancelled) {
+				setParts((current) => [current[0] + subdomain, apexdomain, current[2]]);
+			}
+		});
+		return () => {
+			cancelled = true;
+		};
 	}, [href]);
+
 	return (
 		<View
 			style={[
