@@ -130,9 +130,6 @@ importers:
       nanoid:
         specifier: ^5.0.5
         version: 5.1.11
-      psl:
-        specifier: ^1.9.0
-        version: 1.15.0
       radix-ui:
         specifier: ^1.4.3
         version: 1.4.3(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -4370,9 +4367,6 @@ packages:
     resolution: {integrity: sha512-O+D2eU7fO9wVLqrohvt9V/9fwMadnJQ4jxwiK+LeNEqhMx8JYx4xQHkArDCJFAdPPOp/pQq6z5L37eBvAoc8jw==}
     engines: {node: '>=16.0.0'}
     hasBin: true
-
-  psl@1.15.0:
-    resolution: {integrity: sha512-JZd3gMVBAVQkSs6HdNZo9Sdo0LNcQeMNP3CozBJb3JYC/QUYZTnKxP+f8oWRX4rHP5EurWxqAHTSwUCjlNKa1w==}
 
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
@@ -9867,10 +9861,6 @@ snapshots:
   pseudolocale@2.2.0:
     dependencies:
       commander: 10.0.1
-
-  psl@1.15.0:
-    dependencies:
-      punycode: 2.3.1
 
   punycode@2.3.1: {}
 
