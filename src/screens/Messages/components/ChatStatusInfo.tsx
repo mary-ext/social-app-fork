@@ -125,17 +125,11 @@ function InviterHeader({
 			<View style={[a.flex_1]}>
 				<Text style={[a.flex_row, a.align_center]}>
 					<Trans comment="Text identifying the person who added you to a group chat">
-						<Text
-							style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
-							numberOfLines={1}
-						>
+						<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
 							{displayName}
 						</Text>
 						<ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
-						<Text
-							style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
-							numberOfLines={1}
-						>
+						<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
 							{' '}
 							added you
 						</Text>

@@ -190,19 +190,11 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 	);
 }
 
-function Wrapper({
-	heading,
-	settings,
-}: {
-	heading: React.ReactNode;
-	settings: React.ReactNode;
-}) {
+function Wrapper({ heading, settings }: { heading: React.ReactNode; settings: React.ReactNode }) {
 	return (
 		<View style={[a.flex_1]}>
 			<View style={[a.w_full, a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
-				<View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>
-					{heading}
-				</View>
+				<View style={[a.flex_row, a.align_center, a.gap_md, a.flex_1]}>{heading}</View>
 
 				<View style={[{ minHeight: PFP_SIZE }, a.justify_center, a.flex_shrink_0]}>
 					<Layout.Header.Slot>{settings}</Layout.Header.Slot>

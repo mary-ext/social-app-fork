@@ -20,12 +20,7 @@ type Props = {
 	testID?: string;
 } & Omit<
 	PressableProps,
-	| 'accessibilityHint'
-	| 'accessibilityLabel'
-	| 'accessibilityRole'
-	| 'onPress'
-	| 'style'
-	| 'testID'
+	'accessibilityHint' | 'accessibilityLabel' | 'accessibilityRole' | 'onPress' | 'style' | 'testID'
 >;
 
 const SIZE = 44;
