@@ -31,7 +31,6 @@ import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-rep
 
 import I18nProvider from '#/locale/i18nProvider';
 
-import '#/view/icons';
 import { Shell } from '#/view/shell/index';
 
 import { ThemeProvider as Alf } from '#/alf';
