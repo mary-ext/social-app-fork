@@ -100,9 +100,7 @@ export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefi
 
 	// filter down using declared languages
 	if (candidates.length) {
-		langsProbabilityMap = langsProbabilityMap.filter(([lang]) =>
-			candidates.includes(code3ToCode2(lang)),
-		);
+		langsProbabilityMap = langsProbabilityMap.filter(([lang]) => candidates.includes(code3ToCode2(lang)));
 	}
 
 	if (langsProbabilityMap[0]) {

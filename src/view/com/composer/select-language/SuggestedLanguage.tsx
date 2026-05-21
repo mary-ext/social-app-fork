@@ -40,13 +40,13 @@ const MIN_TEXT_LENGTH = 20;
 const NOISE_FLOOR = 0.1;
 
 /**
- * Detection tuning defaults. The noise floor and acceptance bar sit higher than on native (MLKit)
- * because browser-based detection spreads probability across many candidates.
+ * Detection tuning defaults. The noise floor and acceptance bar sit higher than on native (MLKit) because
+ * browser-based detection spreads probability across many candidates.
  *
  * Per-language carve-outs override the platform-level acceptance threshold.
  *
- * Web detection currently runs through a stub (`#/shims/bsky-guess-language`), so these values are
- * inert until a real detector is wired in.
+ * Web detection currently runs through a stub (`#/shims/bsky-guess-language`), so these values are inert
+ * until a real detector is wired in.
  */
 const DEFAULT_CONFIG: LanguageDetectionConfig = {
 	acceptanceThreshold: 0.97,
