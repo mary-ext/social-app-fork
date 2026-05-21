@@ -320,14 +320,14 @@ msgstr "{count}+ requests"
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:126
-msgid "{displayName} added you"
-msgstr "{displayName} added you"
-
 #: src/lib/generate-starterpack.ts:103
 #: src/screens/StarterPack/Wizard/index.tsx:169
 msgid "{displayName}'s Starter Pack"
 msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1717
+msgid "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
+msgstr "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:331
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
@@ -678,6 +678,11 @@ msgstr ""
 msgid "<0>{0}</0> members"
 msgstr ""
 
+#. Text identifying the person who added you to a group chat
+#: src/screens/Messages/components/ChatStatusInfo.tsx:127
+msgid "<0>{displayName}</0><1/><2> added you</2>"
+msgstr "<0>{displayName}</0><1/><2> added you</2>"
+
 #: src/screens/Hashtag.tsx:208
 #: src/screens/Search/SearchResults.tsx:290
 msgid "<0>Sign in</0><1> </1><2>to search for news, sports, politics, and everything else happening on Bluesky.</2>"
@@ -901,7 +906,7 @@ msgstr ""
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1756
+#: src/view/com/composer/Composer.tsx:1789
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1185,7 +1190,7 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:391
+#: src/view/com/composer/state/video.ts:393
 msgid "An error occurred while compressing the video."
 msgstr ""
 
@@ -1210,11 +1215,11 @@ msgstr ""
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:438
+#: src/view/com/composer/state/video.ts:440
 msgid "An error occurred while uploading the video. {message}"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:430
+#: src/view/com/composer/state/video.ts:432
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr ""
 
@@ -1388,7 +1393,7 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1278
+#: src/view/com/composer/Composer.tsx:1290
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1467,7 +1472,7 @@ msgid "Banned user returning"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
-#: src/screens/Messages/components/ChatStatusInfo.tsx:63
+#: src/screens/Messages/components/ChatStatusInfo.tsx:64
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:200
 #: src/screens/Messages/ConversationSettings/prompts.tsx:116
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:188
@@ -1512,7 +1517,7 @@ msgstr ""
 msgid "Block list"
 msgstr ""
 
-#: src/screens/Messages/components/ChatStatusInfo.tsx:63
+#: src/screens/Messages/components/ChatStatusInfo.tsx:64
 msgid "Block or report"
 msgstr ""
 
@@ -1706,8 +1711,8 @@ msgstr ""
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:64
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:72
 #: src/screens/Settings/Settings.tsx:237
-#: src/view/com/composer/Composer.tsx:1347
-#: src/view/com/composer/Composer.tsx:1358
+#: src/view/com/composer/Composer.tsx:1359
+#: src/view/com/composer/Composer.tsx:1370
 #: src/view/com/composer/photos/EditImageDialog.tsx:49
 #: src/view/com/composer/photos/EditImageDialog.tsx:59
 #: src/view/shell/desktop/LeftNav.tsx:214
@@ -1937,10 +1942,6 @@ msgstr ""
 msgid "Click to retry failed message"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:34
-msgid "Clip 🐴 clop 🐴"
-msgstr ""
-
 #. Visible label of the button that dismisses the GIF picker error dialog.
 #: src/components/dialogs/LanguageSelectDialog.tsx:312
 #: src/components/dialogs/SearchablePeopleList.tsx:303
@@ -1985,11 +1986,11 @@ msgid "Close drawer menu"
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.tsx:71
-#: src/components/Lightbox/Lightbox.tsx:313
+#: src/components/Lightbox/Lightbox.tsx:315
 msgid "Close image viewer"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1355
+#: src/view/com/composer/Composer.tsx:1367
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2020,7 +2021,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1243
+#: src/view/com/composer/Composer.tsx:1255
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2028,11 +2029,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2089
+#: src/view/com/composer/Composer.tsx:2122
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2091
+#: src/view/com/composer/Composer.tsx:2124
 msgid "Compressing video..."
 msgstr ""
 
@@ -2455,7 +2456,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:649
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:652
-#: src/view/com/composer/Composer.tsx:1251
+#: src/view/com/composer/Composer.tsx:1263
 msgid "Delete post"
 msgstr ""
 
@@ -2480,7 +2481,7 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:92
+#: src/components/dms/MessagesListHeader.tsx:90
 #: src/screens/Messages/components/ChatListItem.tsx:121
 #: src/screens/Messages/ConversationSettings/Member.tsx:77
 msgid "Deleted Account"
@@ -2573,7 +2574,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
 #: src/view/com/composer/Composer.tsx:1053
 #: src/view/com/composer/Composer.tsx:1091
-#: src/view/com/composer/Composer.tsx:1285
+#: src/view/com/composer/Composer.tsx:1297
 #: src/view/com/composer/drafts/DraftItem.tsx:219
 #: src/view/com/composer/drafts/DraftsButton.tsx:113
 msgid "Discard"
@@ -2591,12 +2592,12 @@ msgid "Discard draft?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1068
-#: src/view/com/composer/Composer.tsx:1277
+#: src/view/com/composer/Composer.tsx:1289
 msgid "Discard post?"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:228
-#: src/screens/Profile/components/GermButton.tsx:236
+#: src/screens/Profile/components/GermButton.tsx:229
+#: src/screens/Profile/components/GermButton.tsx:237
 msgid "Disconnect Germ DM"
 msgstr ""
 
@@ -2618,7 +2619,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2017
+#: src/view/com/composer/Composer.tsx:2050
 msgid "Dismiss error"
 msgstr ""
 
@@ -2696,8 +2697,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/Lightbox/Lightbox.tsx:292
-#: src/components/Lightbox/Lightbox.tsx:305
+#: src/components/Lightbox/Lightbox.tsx:294
+#: src/components/Lightbox/Lightbox.tsx:307
 msgid "Download image"
 msgstr "Download image"
 
@@ -2961,7 +2962,7 @@ msgstr "Enter your handle or DID."
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2109
+#: src/view/com/composer/Composer.tsx:2142
 #: src/view/com/util/error/ErrorScreen.tsx:41
 msgid "Error"
 msgstr ""
@@ -3153,7 +3154,7 @@ msgstr ""
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:281
+#: src/components/Lightbox/Lightbox.tsx:283
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -3194,7 +3195,7 @@ msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
 #. placeholder {0}: error?.message
-#: src/screens/Profile/components/GermButton.tsx:174
+#: src/screens/Profile/components/GermButton.tsx:175
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
@@ -3289,7 +3290,7 @@ msgstr "Failed to mute group chat"
 msgid "Failed to pin post"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:145
+#: src/screens/Profile/components/GermButton.tsx:146
 msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
@@ -3314,7 +3315,7 @@ msgstr ""
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:299
+#: src/components/Lightbox/Lightbox.tsx:301
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -3358,9 +3359,9 @@ msgstr ""
 msgid "Failed to update settings"
 msgstr ""
 
-#: src/lib/media/video/upload.ts:63
-#: src/lib/media/video/upload.ts:67
-#: src/lib/media/video/upload.ts:76
+#: src/lib/media/video/upload.ts:65
+#: src/lib/media/video/upload.ts:69
+#: src/lib/media/video/upload.ts:78
 msgid "Failed to upload video"
 msgstr ""
 
@@ -3676,21 +3677,21 @@ msgstr "Generate new invite link"
 msgid "Generate new link"
 msgstr "Generate new link"
 
-#: src/screens/Profile/components/GermButton.tsx:75
-#: src/screens/Profile/components/GermButton.tsx:196
+#: src/screens/Profile/components/GermButton.tsx:76
+#: src/screens/Profile/components/GermButton.tsx:197
 msgid "Germ DM"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:162
+#: src/screens/Profile/components/GermButton.tsx:163
 msgid "Germ DM disconnected"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:201
-#: src/screens/Profile/components/GermButton.tsx:205
+#: src/screens/Profile/components/GermButton.tsx:202
+#: src/screens/Profile/components/GermButton.tsx:206
 msgid "Germ DM Link"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:142
+#: src/screens/Profile/components/GermButton.tsx:143
 msgid "Germ DM reconnected"
 msgstr ""
 
@@ -3756,7 +3757,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2114
+#: src/view/com/composer/Composer.tsx:2147
 msgid "GIF uploaded"
 msgstr ""
 
@@ -3849,8 +3850,8 @@ msgstr ""
 msgid "Going live is currently disabled for your account"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:218
-#: src/screens/Profile/components/GermButton.tsx:224
+#: src/screens/Profile/components/GermButton.tsx:219
+#: src/screens/Profile/components/GermButton.tsx:225
 msgid "Got it"
 msgstr ""
 
@@ -4092,7 +4093,7 @@ msgstr ""
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:405
+#: src/view/com/composer/state/video.ts:407
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
@@ -4190,11 +4191,11 @@ msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
 #: src/components/Lightbox/Lightbox.tsx:253
-#: src/components/Lightbox/Lightbox.tsx:259
+#: src/components/Lightbox/Lightbox.tsx:261
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/Lightbox/Lightbox.tsx:296
+#: src/components/Lightbox/Lightbox.tsx:298
 msgid "Image saved"
 msgstr ""
 
@@ -4316,7 +4317,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2038
+#: src/view/com/composer/Composer.tsx:2071
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4437,7 +4438,7 @@ msgstr ""
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:188
+#: src/screens/Profile/components/GermButton.tsx:189
 msgid "Learn more about your Germ DM link"
 msgstr ""
 
@@ -4452,7 +4453,7 @@ msgid "Leave"
 msgstr ""
 
 #. Leave a conversation (reject a chat invitation)
-#: src/screens/Messages/components/ChatStatusInfo.tsx:74
+#: src/screens/Messages/components/ChatStatusInfo.tsx:75
 msgctxt "Button"
 msgid "Leave"
 msgstr "Leave"
@@ -4564,7 +4565,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:279
+#: src/components/Lightbox/Lightbox.tsx:281
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -5681,7 +5682,7 @@ msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:107
 #: src/screens/Messages/components/MessageInput.tsx:144
-#: src/view/com/composer/Composer.tsx:1732
+#: src/view/com/composer/Composer.tsx:1765
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5694,11 +5695,12 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:70
+#: src/screens/Profile/components/GermButton.tsx:71
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:163
+#: src/components/dms/MessagesListHeader.tsx:145
+#: src/components/dms/MessagesListHeader.tsx:179
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -6051,7 +6053,7 @@ msgstr ""
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:424
+#: src/view/com/composer/state/video.ts:426
 msgid "Please confirm your email address to upload videos."
 msgstr ""
 
@@ -6094,7 +6096,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1417
+#: src/view/com/composer/Composer.tsx:1429
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -6114,7 +6116,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1415
+#: src/view/com/composer/Composer.tsx:1427
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -6276,11 +6278,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2103
+#: src/view/com/composer/Composer.tsx:2136
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2105
+#: src/view/com/composer/Composer.tsx:2138
 msgid "Processing video..."
 msgstr ""
 
@@ -6324,22 +6326,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1401
+#: src/view/com/composer/Composer.tsx:1413
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1397
+#: src/view/com/composer/Composer.tsx:1409
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1388
+#: src/view/com/composer/Composer.tsx:1400
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1392
+#: src/view/com/composer/Composer.tsx:1404
 msgid "Publish reply"
 msgstr ""
 
@@ -6708,7 +6710,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1413
+#: src/view/com/composer/Composer.tsx:1425
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -7043,7 +7045,6 @@ msgstr ""
 msgid "Saved to your feeds"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:28
 #: src/components/NewskieDialog.tsx:126
 #: src/view/com/notifications/NotificationFeedItem.tsx:773
 #: src/view/com/notifications/NotificationFeedItem.tsx:799
@@ -7360,10 +7361,6 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:33
-msgid "Send a neat website!"
-msgstr ""
-
 #: src/screens/Messages/components/MessageComposer.tsx:195
 #: src/screens/Messages/components/MessageInput.tsx:217
 msgid "Send message"
@@ -7471,20 +7468,12 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:32
-msgid "Share a cool story!"
-msgstr ""
-
-#: src/components/dms/ChatEmptyPill.tsx:31
-msgid "Share a fun fact!"
-msgstr ""
-
 #: src/view/com/profile/ProfileMenu.tsx:488
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:267
-#: src/components/Lightbox/Lightbox.tsx:287
+#: src/components/Lightbox/Lightbox.tsx:269
+#: src/components/Lightbox/Lightbox.tsx:289
 msgid "Share image"
 msgstr "Share image"
 
@@ -7512,10 +7501,6 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:64
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr ""
-
-#: src/components/dms/ChatEmptyPill.tsx:29
-msgid "Share your favorite feed!"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:204
@@ -8064,10 +8049,6 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/components/dms/ChatEmptyPill.tsx:30
-msgid "Tell a joke!"
-msgstr ""
-
 #: src/screens/Profile/Header/EditProfileDialog.tsx:335
 msgid "Tell us a bit about yourself"
 msgstr ""
@@ -8151,12 +8132,16 @@ msgstr ""
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
 msgstr ""
 
+#: src/view/com/composer/Composer.tsx:1210
+msgid "The pasted image couldn't be added to your post."
+msgstr "The pasted image couldn't be added to your post."
+
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:317
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 msgstr "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 
-#: src/view/com/composer/state/video.ts:387
-#: src/view/com/composer/state/video.ts:421
+#: src/view/com/composer/state/video.ts:389
+#: src/view/com/composer/state/video.ts:423
 msgid "The selected video is larger than 100 MB. Please try again with a smaller file."
 msgstr ""
 
@@ -8324,7 +8309,7 @@ msgstr ""
 msgid "This author has chosen to make their posts visible only to people who are signed in."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:210
+#: src/screens/Profile/components/GermButton.tsx:211
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr ""
 
@@ -8748,8 +8733,8 @@ msgstr ""
 msgid "Unblock list"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:165
 #: src/screens/Profile/components/GermButton.tsx:166
+#: src/screens/Profile/components/GermButton.tsx:167
 msgid "Undo"
 msgstr ""
 
@@ -8960,7 +8945,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2096
+#: src/view/com/composer/Composer.tsx:2129
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -8973,7 +8958,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2098
+#: src/view/com/composer/Composer.tsx:2131
 msgid "Uploading video..."
 msgstr ""
 
@@ -9116,7 +9101,7 @@ msgstr ""
 msgid "Version {0}"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:336
+#: src/view/com/composer/state/video.ts:338
 msgid "Video failed to process"
 msgstr ""
 
@@ -9138,7 +9123,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2116
+#: src/view/com/composer/Composer.tsx:2149
 msgid "Video uploaded"
 msgstr ""
 
@@ -9174,7 +9159,7 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
-#: src/components/dms/MessagesListHeader.tsx:105
+#: src/components/dms/MessagesListHeader.tsx:103
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:174
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
@@ -9363,7 +9348,7 @@ msgstr ""
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:409
+#: src/view/com/composer/state/video.ts:411
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
@@ -9494,7 +9479,7 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1242
+#: src/view/com/composer/Composer.tsx:1254
 msgid "Write post"
 msgstr ""
 
@@ -9559,7 +9544,7 @@ msgstr ""
 msgid "You are no longer live"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:402
+#: src/view/com/composer/state/video.ts:404
 msgid "You are not allowed to upload videos."
 msgstr ""
 
@@ -9702,7 +9687,7 @@ msgstr ""
 msgid "You have reached the end"
 msgstr ""
 
-#: src/lib/media/video/upload.shared.ts:57
+#: src/lib/media/video/upload.shared.ts:58
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
@@ -9826,15 +9811,15 @@ msgstr ""
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:412
+#: src/view/com/composer/state/video.ts:414
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:414
+#: src/view/com/composer/state/video.ts:416
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:417
+#: src/view/com/composer/state/video.ts:419
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
