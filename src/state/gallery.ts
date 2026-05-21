@@ -1,8 +1,10 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import { compressPostImage, compressProfileImage as compressProfileBlob } from '#/lib/media/image';
-import { getImageDim } from '#/lib/media/manip';
-import { type PickerImage } from '#/lib/media/picker.shared';
+import {
+	compressPostImage,
+	compressProfileImage as compressProfileBlob,
+	getImageFromBlob,
+} from '#/lib/media/image';
 
 /** A pixel-space rectangle to crop an image down to. */
 export type ImageCrop = {
@@ -17,10 +19,9 @@ export type ImageTransformation = {
 };
 
 export type ImageMeta = {
-	path: string;
+	blob: Blob;
 	width: number;
 	height: number;
-	mime: string;
 };
 
 export type ImageSource = ImageMeta & {
@@ -44,54 +45,23 @@ type ComposerImageWithTransformation = ComposerImageBase & {
 
 export type ComposerImage = ComposerImageWithoutTransformation | ComposerImageWithTransformation;
 
-export async function createComposerImage(raw: ImageMeta): Promise<ComposerImageWithoutTransformation> {
-	return {
-		alt: '',
-		source: {
-			id: nanoid(),
-			// Copy to cache to ensure file survives OS temporary file cleanup
-			path: await copyToCache(raw.path),
-			width: raw.width,
-			height: raw.height,
-			mime: raw.mime,
-		},
-	};
-}
-
-export type InitialImage = {
-	uri: string;
-	width: number;
-	height: number;
-	altText?: string;
-};
-
-export function createInitialImages(uris: InitialImage[] = []): ComposerImageWithoutTransformation[] {
-	return uris.map(({ uri, width, height, altText = '' }) => {
-		return {
-			alt: altText,
-			source: {
-				id: nanoid(),
-				path: uri,
-				width: width,
-				height: height,
-				mime: 'image/jpeg',
-			},
-		};
-	});
-}
-
-export async function pasteImage(uri: string): Promise<ComposerImageWithoutTransformation> {
-	const { width, height } = await getImageDim(uri);
-	const match = /^data:(.+?);/.exec(uri);
+/**
+ * Create a composer image from a raw image blob, decoding it to read its dimensions.
+ *
+ * @param blob source image blob
+ * @returns a composer image with no transformation applied
+ * @throws if the blob could not be decoded as an image
+ */
+export async function createComposerImage(blob: Blob): Promise<ComposerImageWithoutTransformation> {
+	const image = await getImageFromBlob(blob);
 
 	return {
 		alt: '',
 		source: {
 			id: nanoid(),
-			path: uri,
-			width: width,
-			height: height,
-			mime: match ? match[1]! : 'image/jpeg',
+			blob,
+			width: image.naturalWidth,
+			height: image.naturalHeight,
 		},
 	};
 }
@@ -105,29 +75,23 @@ export async function manipulateImage(
 			return img;
 		}
 
-		return { alt: img.alt, source: img.source };
+		return { alt: img.alt, localRefPath: img.localRefPath, source: img.source };
 	}
 
-	const cropped = await cropImage(img.source.path, trans.crop);
+	const transformed = await cropImage(img.source.blob, trans.crop);
 
 	return {
 		alt: img.alt,
+		localRefPath: img.localRefPath,
 		source: img.source,
-		transformed: {
-			path: cropped.path,
-			width: cropped.width,
-			height: cropped.height,
-			mime: 'image/png',
-		},
+		transformed,
 		manips: trans,
 	};
 }
 
-/** Crop an image to a pixel rectangle, re-encoding the result losslessly as a PNG data URI. */
-async function cropImage(uri: string, crop: ImageCrop): Promise<ImageMeta> {
-	const image = new Image();
-	image.src = uri;
-	await image.decode();
+/** Crop an image to a pixel rectangle, re-encoding the result losslessly as a PNG. */
+async function cropImage(blob: Blob, crop: ImageCrop): Promise<ImageMeta> {
+	const image = await getImageFromBlob(blob);
 
 	const canvas = new OffscreenCanvas(crop.width, crop.height);
 	const ctx = canvas.getContext('2d');
@@ -137,34 +101,30 @@ async function cropImage(uri: string, crop: ImageCrop): Promise<ImageMeta> {
 
 	ctx.drawImage(image, crop.originX, crop.originY, crop.width, crop.height, 0, 0, crop.width, crop.height);
 
-	const blob = await canvas.convertToBlob({ type: 'image/png' });
 	return {
-		path: await blobToDataUri(blob),
+		blob: await canvas.convertToBlob({ type: 'image/png' }),
 		width: crop.width,
 		height: crop.height,
-		mime: 'image/png',
 	};
 }
 
 export function resetImageManipulation(img: ComposerImage): ComposerImageWithoutTransformation {
 	if (img.transformed !== undefined) {
-		return { alt: img.alt, source: img.source };
+		return { alt: img.alt, localRefPath: img.localRefPath, source: img.source };
 	}
 
 	return img;
 }
 
 /** Compress an image for use as a post embed, fitting the Bluesky CDN's size budget. */
-export async function compressImage(img: ComposerImage): Promise<PickerImage> {
+export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
 	const source = img.transformed || img.source;
-	const { blob, aspectRatio } = await compressPostImage(await uriToBlob(source.path));
+	const { blob, aspectRatio } = await compressPostImage(source.blob);
 
 	return {
-		path: await blobToDataUri(blob),
+		blob,
 		width: aspectRatio.width,
 		height: aspectRatio.height,
-		mime: blob.type,
-		size: blob.size,
 	};
 }
 
@@ -173,67 +133,13 @@ export async function compressProfileImage(
 	img: ComposerImage,
 	maxWidth: number,
 	maxHeight: number,
-): Promise<PickerImage> {
+): Promise<ImageMeta> {
 	const source = img.transformed || img.source;
-	const { blob, aspectRatio } = await compressProfileBlob(await uriToBlob(source.path), maxWidth, maxHeight);
+	const { blob, aspectRatio } = await compressProfileBlob(source.blob, maxWidth, maxHeight);
 
 	return {
-		path: await blobToDataUri(blob),
+		blob,
 		width: aspectRatio.width,
 		height: aspectRatio.height,
-		mime: blob.type,
-		size: blob.size,
 	};
 }
-
-/** Fetch a `data:`, `blob:`, or remote URI into a Blob. */
-async function uriToBlob(uri: string): Promise<Blob> {
-	const response = await fetch(uri);
-	return await response.blob();
-}
-
-/**
- * Copy a file from a potentially temporary location to our cache directory. This ensures picker files are
- * available for draft saving even if the original temporary files are cleaned up by the OS.
- *
- * On web, converts blob URLs to data URIs immediately to prevent revocation issues.
- */
-async function copyToCache(from: string): Promise<string> {
-	// Data URIs don't need any conversion
-	if (from.startsWith('data:')) {
-		return from;
-	}
-
-	// Web: convert blob URLs to data URIs before they can be revoked
-	if (from.startsWith('blob:')) {
-		try {
-			const response = await fetch(from);
-			const blob = await response.blob();
-			return await blobToDataUri(blob);
-		} catch (e) {
-			// Blob URL was likely revoked, return as-is for downstream error handling
-			return from;
-		}
-	}
-	// Other URLs on web don't need conversion
-	return from;
-}
-
-/** Convert a Blob to a data URI */
-function blobToDataUri(blob: Blob): Promise<string> {
-	return new Promise((resolve, reject) => {
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			if (typeof reader.result === 'string') {
-				resolve(reader.result);
-			} else {
-				reject(new Error('Failed to convert blob to data URI'));
-			}
-		};
-		reader.onerror = () => reject(reader.error);
-		reader.readAsDataURL(blob);
-	});
-}
-
-/** Purge files that were created to accomodate image manipulation */
-export async function purgeTemporaryImageFiles() {}

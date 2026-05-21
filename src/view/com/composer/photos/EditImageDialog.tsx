@@ -6,6 +6,8 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import ReactCrop, { type PercentCrop } from 'react-image-crop';
 
+import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
+
 import {
 	type ComposerImage,
 	type ImageSource,
@@ -126,6 +128,7 @@ function EditImageInner({
 	const control = Dialog.useDialogContext();
 
 	const source = image.source;
+	const sourceUrl = useBlobUrl(source.blob);
 
 	const initialCrop = getInitialCrop(source, image.manips);
 	const [crop, setCrop] = useState(initialCrop);
@@ -183,7 +186,7 @@ function EditImageInner({
 				onDragStart={() => setIsDragging(true)}
 				onDragEnd={() => setIsDragging(false)}
 			>
-				<img alt="" src={source.path} {...sourceDimensions} style={imageStyle} />
+				<img alt="" src={sourceUrl} {...sourceDimensions} style={imageStyle} />
 			</ReactCrop>
 			{/* Eat clicks when dragging, otherwise mousing up over the backdrop
         causes the dialog to close */}

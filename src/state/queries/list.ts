@@ -73,7 +73,7 @@ export function useListCreateMutation() {
 				createdAt: new Date().toISOString(),
 			};
 			if (avatar) {
-				const blobRes = await uploadBlob(agent, avatar.path, avatar.mime);
+				const blobRes = await uploadBlob(agent, avatar.blob);
 				record.avatar = blobRes.data.blob;
 			}
 			const res = await agent.app.bsky.graph.list.create(
@@ -130,7 +130,7 @@ export function useListMetadataMutation() {
 			record.description = description;
 			record.descriptionFacets = descriptionFacets;
 			if (avatar) {
-				const blobRes = await uploadBlob(agent, avatar.path, avatar.mime);
+				const blobRes = await uploadBlob(agent, avatar.blob);
 				record.avatar = blobRes.data.blob;
 			} else if (avatar === null) {
 				record.avatar = undefined;

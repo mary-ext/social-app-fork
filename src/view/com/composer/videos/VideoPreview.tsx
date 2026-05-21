@@ -1,7 +1,8 @@
 import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
-import { type CompressedVideo } from '#/lib/media/video/types';
+import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
+import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
 
 import { useAutoplayDisabled } from '#/state/preferences';
 
@@ -13,14 +14,12 @@ import { ConstrainedImage } from '#/components/images/AutoSizedImage';
 import * as Toast from '#/components/Toast';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
-import { type ImagePickerAsset } from '#/shims/image-picker';
-
 export function VideoPreview({
 	asset,
 	video,
 	clear,
 }: {
-	asset: ImagePickerAsset;
+	asset: VideoAsset;
 	video: CompressedVideo;
 	isActivePost: boolean;
 	clear: () => void;
@@ -29,6 +28,7 @@ export function VideoPreview({
 	// TODO: figure out how to pause a GIF for reduced motion
 	// it's not possible using an img tag -sfn
 	const autoplayDisabled = useAutoplayDisabled();
+	const url = useBlobUrl(video.blob);
 
 	let aspectRatio: number | undefined;
 	if (asset.width && asset.height) {
@@ -49,11 +49,11 @@ export function VideoPreview({
 			<ConstrainedImage aspectRatio={constrained || 1} minMobileAspectRatio={14 / 9}>
 				<View style={[a.flex_1, { backgroundColor: 'black' }]}>
 					{video.mimeType === 'image/gif' ? (
-						<img src={video.uri} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="GIF" />
+						<img src={url} style={{ width: '100%', height: '100%', objectFit: 'contain' }} alt="GIF" />
 					) : (
 						<>
 							<video
-								src={video.uri}
+								src={url}
 								style={{ width: '100%', height: '100%', objectFit: 'contain' }}
 								autoPlay={!autoplayDisabled}
 								loop

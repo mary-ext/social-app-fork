@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
+import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { type Dimensions } from '#/lib/media/types';
 import { colors } from '#/lib/styles';
@@ -148,6 +149,8 @@ const GalleryItem = ({
 	const { t: l } = useLingui();
 	const t = useTheme();
 
+	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
+
 	const altTextControl = Dialog.useDialogControl();
 	const editControl = Dialog.useDialogControl();
 	const [altBtnViewTag] = useState<number>();
@@ -219,9 +222,7 @@ const GalleryItem = ({
 			<Image
 				testID="selectedPhotoImage"
 				style={[styles.image, imageStyle]}
-				source={{
-					uri: (image.transformed ?? image.source).path,
-				}}
+				source={{ uri: imageUrl }}
 				accessible={true}
 				accessibilityIgnoresInvertColors
 				cachePolicy="none"

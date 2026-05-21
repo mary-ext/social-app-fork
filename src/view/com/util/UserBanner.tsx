@@ -3,11 +3,15 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { openPicker } from '#/lib/media/picker';
-import { type PickerImage } from '#/lib/media/picker.shared';
+import { openImagePicker } from '#/lib/media/picker';
 import { isCancelledError } from '#/lib/strings/errors';
 
-import { type ComposerImage, compressProfileImage, createComposerImage } from '#/state/gallery';
+import {
+	type ComposerImage,
+	compressProfileImage,
+	createComposerImage,
+	type ImageMeta,
+} from '#/state/gallery';
 
 import { logger } from '#/logger';
 
@@ -33,7 +37,7 @@ export function UserBanner({
 	type?: 'labeler' | 'default';
 	banner?: string | null;
 	moderation?: ModerationUI;
-	onSelectNewBanner?: (img: PickerImage | null) => void;
+	onSelectNewBanner?: (img: ImageMeta | null) => void;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -41,13 +45,13 @@ export function UserBanner({
 	const editImageDialogControl = useDialogControl();
 
 	const onOpenLibrary = useCallback(async () => {
-		const items = await openPicker();
-		if (!items[0]) {
+		const file = await openImagePicker();
+		if (!file) {
 			return;
 		}
 
 		try {
-			setRawImage(await createComposerImage(items[0]));
+			setRawImage(await createComposerImage(file));
 			editImageDialogControl.open();
 		} catch (e) {
 			// Don't log errors for user-cancelled selection on iOS or Android.

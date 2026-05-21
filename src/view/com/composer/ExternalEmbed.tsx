@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
+import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useResolveGifQuery, useResolveLinkQuery } from '#/state/queries/resolve-link';
@@ -21,15 +22,16 @@ import { type Gif } from '#/features/gifPicker/types';
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const t = useTheme();
 	const { data, error } = useResolveGifQuery(gif);
+	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
 	const linkInfo = useMemo(
 		() =>
 			data && {
 				title: data.title ?? data.uri,
 				uri: data.uri,
 				description: data.description ?? '',
-				thumb: data.thumb?.source.path,
+				thumb: thumbUrl,
 			},
-		[data],
+		[data, thumbUrl],
 	);
 
 	const loadingStyle: ViewStyle = {
@@ -79,6 +81,7 @@ export const ExternalEmbedLink = ({
 }) => {
 	const t = useTheme();
 	const { data, error } = useResolveLinkQuery(uri);
+	const thumbUrl = useBlobUrl(data?.type === 'external' ? data.thumb?.source.blob : undefined);
 	const linkComponent = useMemo(() => {
 		if (data) {
 			if (data.type === 'external') {
@@ -88,7 +91,7 @@ export const ExternalEmbedLink = ({
 							title: data.title || uri,
 							uri,
 							description: data.description,
-							thumb: data.thumb?.source.path,
+							thumb: thumbUrl,
 						}}
 						hideAlt
 					/>
@@ -121,7 +124,7 @@ export const ExternalEmbedLink = ({
 				return <StarterPackEmbed starterPack={data.view} />;
 			}
 		}
-	}, [data, uri]);
+	}, [data, uri, thumbUrl]);
 
 	if (data?.type === 'record' && hasQuote) {
 		// This is not currently supported by the data model so don't preview it.

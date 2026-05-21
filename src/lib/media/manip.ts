@@ -1,4 +1,3 @@
-import { type Dimensions } from './types';
 import { convertCdnPreset } from './util';
 
 /**
@@ -11,17 +10,6 @@ export async function saveImageToMediaLibrary({ uri }: { uri: string }) {
 	const segments = downloadUri.split('/');
 	const filename = `bluesky-${segments.at(-1)}.jpg`;
 	downloadUrl(downloadUri, filename);
-}
-
-export async function getImageDim(path: string): Promise<Dimensions> {
-	var img = document.createElement('img');
-	const promise = new Promise((resolve, reject) => {
-		img.onload = resolve;
-		img.onerror = reject;
-	});
-	img.src = path;
-	await promise;
-	return { width: img.width, height: img.height };
 }
 
 export async function saveBytesToDisk(filename: string, bytes: Uint8Array<ArrayBuffer>, type: string) {

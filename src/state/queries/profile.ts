@@ -150,11 +150,11 @@ export function useProfileUpdateMutation() {
 		mutationFn: async ({ profile, updates, newUserAvatar, newUserBanner, checkCommitted }) => {
 			let newUserAvatarPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
 			if (newUserAvatar) {
-				newUserAvatarPromise = uploadBlob(agent, newUserAvatar.path, newUserAvatar.mime);
+				newUserAvatarPromise = uploadBlob(agent, newUserAvatar.blob);
 			}
 			let newUserBannerPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
 			if (newUserBanner) {
-				newUserBannerPromise = uploadBlob(agent, newUserBanner.path, newUserBanner.mime);
+				newUserBannerPromise = uploadBlob(agent, newUserBanner.blob);
 			}
 			await agent.upsertProfile(async (existing) => {
 				let next: Un$Typed<AppBskyActorProfile.Record> = existing || {};

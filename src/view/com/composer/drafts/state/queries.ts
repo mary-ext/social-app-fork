@@ -43,10 +43,10 @@ export function useDraftsQuery() {
  * re-fetching.
  */
 export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
-	loadedMedia: Map<string, string>;
+	loadedMedia: Map<string, Blob>;
 }> {
 	// Load local media files
-	const loadedMedia = new Map<string, string>();
+	const loadedMedia = new Map<string, Blob>();
 
 	// can't load media from another device
 	if (draft.deviceId && draft.deviceId !== getDeviceId()) {
@@ -58,8 +58,8 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 		if (post.embedImages) {
 			for (const img of post.embedImages) {
 				try {
-					const url = await storage.loadMediaFromLocal(img.localRef.path);
-					loadedMedia.set(img.localRef.path, url);
+					const blob = await storage.loadMediaFromLocal(img.localRef.path);
+					loadedMedia.set(img.localRef.path, blob);
 				} catch (e) {
 					logger.error('Failed to load draft image', {
 						path: img.localRef.path,
@@ -72,8 +72,8 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 		if (post.embedVideos) {
 			for (const vid of post.embedVideos) {
 				try {
-					const url = await storage.loadMediaFromLocal(vid.localRef.path);
-					loadedMedia.set(vid.localRef.path, url);
+					const blob = await storage.loadMediaFromLocal(vid.localRef.path);
+					loadedMedia.set(vid.localRef.path, blob);
 				} catch (e) {
 					logger.error('Failed to load draft video', {
 						path: vid.localRef.path,
@@ -106,7 +106,7 @@ export function useSaveDraftMutation() {
 			existingDraftId?: string;
 		}): Promise<{
 			draftId: string;
-			localRefPaths: Map<string, string>;
+			localRefPaths: Map<string, Blob>;
 			originalLocalRefs: Set<string> | undefined;
 		}> => {
 			// Convert composer state to server draft format
@@ -154,11 +154,11 @@ export function useSaveDraftMutation() {
 			});
 
 			// Save new/changed media files
-			for (const [localRefPath, sourcePath] of localRefPaths) {
+			for (const [localRefPath, blob] of localRefPaths) {
 				// Only save if this media doesn't already exist (reusing localRefPath)
 				if (!storage.mediaExists(localRefPath)) {
 					logger.debug('saving new media file', { localRefPath });
-					await storage.saveMediaToLocal(localRefPath, sourcePath);
+					await storage.saveMediaToLocal(localRefPath, blob);
 				} else {
 					logger.debug('skipping existing media file', { localRefPath });
 				}

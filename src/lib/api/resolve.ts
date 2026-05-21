@@ -9,7 +9,6 @@ import { AtUri } from '@atproto/api';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
 import { compressLinkThumbImage } from '#/lib/media/image';
-import { blobToDataUri } from '#/lib/media/util';
 import { createStarterPackUri, parseStarterPackUri } from '#/lib/strings/starter-pack';
 import {
 	convertBskyAppUrlIfNeeded,
@@ -252,12 +251,7 @@ export async function imageToThumb(imageUri: string): Promise<ComposerImage | un
 			clearTimeout(timeout);
 		}
 
-		const { blob, aspectRatio } = await compressLinkThumbImage(source);
-		return await createComposerImage({
-			path: await blobToDataUri(blob),
-			width: aspectRatio.width,
-			height: aspectRatio.height,
-			mime: blob.type,
-		});
+		const { blob } = await compressLinkThumbImage(source);
+		return await createComposerImage(blob);
 	} catch {}
 }

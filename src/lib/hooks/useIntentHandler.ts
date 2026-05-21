@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { getVideoMetadata } from '#/lib/media/metadata';
 import { parseLinkingUrl } from '#/lib/parseLinkingUrl';
 
 import { useSession } from '#/state/session';
@@ -36,7 +37,6 @@ export function useIntentHandler() {
 				case 'compose': {
 					composeIntent({
 						text: params.get('text'),
-						imageUrisStr: params.get('imageUris'),
 						videoUri: params.get('videoUri'),
 					});
 					return;
@@ -63,25 +63,36 @@ export function useComposeIntent() {
 	const { hasSession } = useSession();
 
 	return useCallback(
-		({ text, videoUri }: { text: string | null; imageUrisStr: string | null; videoUri: string | null }) => {
+		({ text, videoUri }: { text: string | null; videoUri: string | null }) => {
 			if (!hasSession) return;
 			closeAllActiveElements();
 
 			// Whenever a video URI is present, we don't support adding images right now.
 			if (videoUri) {
-				const [uri, width, height] = videoUri.split('|') as [string, string, string];
-				openComposer({
-					text: text ?? undefined,
-					videoUri: { uri, width: Number(width), height: Number(height) },
-					logContext: 'Deeplink',
-				});
+				const [uri] = videoUri.split('|') as [string];
+				void (async () => {
+					try {
+						const blob = await fetch(uri).then((res) => res.blob());
+						const meta = await getVideoMetadata(blob);
+						openComposer({
+							text: text ?? undefined,
+							videoUri: {
+								blob,
+								width: meta.width,
+								height: meta.height,
+								mimeType: blob.type,
+								duration: meta.duration,
+							},
+							logContext: 'Deeplink',
+						});
+					} catch {}
+				})();
 				return;
 			}
 
 			setTimeout(() => {
 				openComposer({
 					text: text ?? undefined,
-					imageUris: undefined,
 					logContext: 'Deeplink',
 				});
 			}, 500);

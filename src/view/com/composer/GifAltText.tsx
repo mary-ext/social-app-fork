@@ -5,6 +5,7 @@ import { Plural, Trans } from '@lingui/react/macro';
 
 import { HITSLOP_10, MAX_ALT_TEXT } from '#/lib/constants';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
+import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { type EmbedPlayerParams, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
 
 import { useResolveGifQuery } from '#/state/queries/resolve-link';
@@ -36,6 +37,7 @@ export function GifAltTextDialog({
 	onSubmit: (alt: string) => void;
 }) {
 	const { data } = useResolveGifQuery(gif);
+	const thumb = useBlobUrl(data?.thumb?.source.blob);
 	const vendorAltText = parseAltFromGIFDescription(data?.description ?? '').alt;
 	const params = data ? parseEmbedPlayerFromUrl(data.uri) : undefined;
 	if (!data || !params) {
@@ -45,7 +47,7 @@ export function GifAltTextDialog({
 		<GifAltTextDialogLoaded
 			altText={altText}
 			vendorAltText={vendorAltText}
-			thumb={data.thumb?.source.path}
+			thumb={thumb}
 			params={params}
 			onSubmit={onSubmit}
 		/>

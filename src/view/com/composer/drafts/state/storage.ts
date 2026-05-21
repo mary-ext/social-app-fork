@@ -16,50 +16,8 @@ type MediaRecord = {
 
 const store = createStore(DB_NAME, STORE_NAME);
 
-/** Convert a path/URL to a Blob */
-async function toBlob(sourcePath: string): Promise<Blob> {
-	// Handle data URIs directly
-	if (sourcePath.startsWith('data:')) {
-		const response = await fetch(sourcePath);
-		return response.blob();
-	}
-
-	// Handle blob URLs
-	if (sourcePath.startsWith('blob:')) {
-		try {
-			const response = await fetch(sourcePath);
-			return response.blob();
-		} catch (e) {
-			logger.error('Failed to fetch blob URL - it may have been revoked', {
-				error: e,
-				sourcePath,
-			});
-			throw e;
-		}
-	}
-
-	// Handle regular URLs
-	const response = await fetch(sourcePath);
-	if (!response.ok) {
-		throw new Error(`Failed to fetch media: ${response.status}`);
-	}
-	return response.blob();
-}
-
-/** Save a media file to IndexedDB by localRefPath key */
-export async function saveMediaToLocal(localRefPath: string, sourcePath: string): Promise<void> {
-	let blob: Blob;
-	try {
-		blob = await toBlob(sourcePath);
-	} catch (error) {
-		logger.error('Failed to convert source to blob', {
-			error,
-			localRefPath,
-			sourcePath,
-		});
-		throw error;
-	}
-
+/** Save a media blob to IndexedDB by localRefPath key. */
+export async function saveMediaToLocal(localRefPath: string, blob: Blob): Promise<void> {
 	try {
 		await set(
 			localRefPath,
@@ -69,7 +27,6 @@ export async function saveMediaToLocal(localRefPath: string, sourcePath: string)
 			},
 			store,
 		);
-		// Update cache
 		mediaExistsCache.set(localRefPath, true);
 	} catch (error) {
 		logger.error('Failed to save media to IndexedDB', { error, localRefPath });
@@ -77,25 +34,21 @@ export async function saveMediaToLocal(localRefPath: string, sourcePath: string)
 	}
 }
 
-/** Track blob URLs created by loadMediaFromLocal for cleanup */
-const createdBlobUrls = new Set<string>();
-
 /**
- * Load a media file from IndexedDB
+ * Load a media blob from IndexedDB.
  *
- * @returns A blob URL for the saved media
+ * @param localRefPath the storage key
+ * @returns the stored blob
+ * @throws if no media is stored under the given key
  */
-export async function loadMediaFromLocal(localRefPath: string): Promise<string> {
+export async function loadMediaFromLocal(localRefPath: string): Promise<Blob> {
 	const record = await get<MediaRecord>(localRefPath, store);
 
 	if (!record) {
 		throw new Error(`Media file not found: ${localRefPath}`);
 	}
 
-	const url = URL.createObjectURL(record.blob);
-	logger.debug('Created blob URL', { url });
-	createdBlobUrls.add(url);
-	return url;
+	return record.blob;
 }
 
 /** Delete a media file from IndexedDB */
@@ -139,32 +92,4 @@ export async function ensureMediaCachePopulated(): Promise<void> {
 		populateCachePromise = populateCacheInternal();
 	}
 	await populateCachePromise;
-}
-
-/** Clear the media exists cache (call when media is added/deleted) */
-export function clearMediaCache(): void {
-	mediaExistsCache.clear();
-	cachePopulated = false;
-	populateCachePromise = null;
-}
-
-/** Revoke a blob URL when done with it (to prevent memory leaks) */
-export function revokeMediaUrl(url: string): void {
-	if (url.startsWith('blob:')) {
-		logger.debug('Revoking blob URL', { url });
-		URL.revokeObjectURL(url);
-		createdBlobUrls.delete(url);
-	}
-}
-
-/**
- * Revoke all blob URLs created by loadMediaFromLocal. Call this when closing the drafts list dialog to
- * prevent memory leaks.
- */
-export function revokeAllMediaUrls(): void {
-	logger.debug(`Revoking ${createdBlobUrls.size} blob URLs`);
-	for (const url of createdBlobUrls) {
-		URL.revokeObjectURL(url);
-	}
-	createdBlobUrls.clear();
 }

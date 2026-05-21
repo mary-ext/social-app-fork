@@ -259,12 +259,16 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 	const [videoThumbnail, setVideoThumbnail] = useState<string | undefined>();
 
 	useEffect(() => {
+		const objectUrls: string[] = [];
+
 		async function loadMedia() {
 			if (post.images && post.images.length > 0) {
 				const loaded: LoadedImage[] = [];
 				for (const image of post.images) {
 					try {
-						const url = await storage.loadMediaFromLocal(image.localPath);
+						const blob = await storage.loadMediaFromLocal(image.localPath);
+						const url = URL.createObjectURL(blob);
+						objectUrls.push(url);
 						loaded.push({ url, alt: image.altText || '' });
 					} catch (e) {
 						// Image doesn't exist locally, skip it
@@ -274,16 +278,18 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 			}
 
 			if (post.video?.exists && post.video.localPath) {
-				try {
-					// can't generate thumbnails on web
-					setVideoThumbnail("yep, there's a video");
-				} catch (e) {
-					// Video doesn't exist locally
-				}
+				// can't generate thumbnails on web
+				setVideoThumbnail("yep, there's a video");
 			}
 		}
 
 		void loadMedia();
+
+		return () => {
+			for (const url of objectUrls) {
+				URL.revokeObjectURL(url);
+			}
+		};
 	}, [post.images, post.video]);
 
 	// Nothing to show

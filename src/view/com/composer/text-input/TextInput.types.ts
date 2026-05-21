@@ -21,7 +21,7 @@ export type TextInputProps = {
 	hasRightPadding: boolean;
 	isActive: boolean;
 	setRichText: (v: RichText) => void;
-	onPhotoPasted: (uri: string) => void;
+	onPhotoPasted: (blob: Blob) => void;
 	onPressPublish: (richtext: RichText) => void;
 	onNewLink: (uri: string) => void;
 	onError: (err: string) => void;

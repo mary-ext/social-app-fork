@@ -217,7 +217,7 @@ export function useUpsertLiveStatusMutation(
 					try {
 						const img = await imageToThumb(linkMeta.image);
 						if (img) {
-							const blob = await uploadBlob(agent, img.source.path, img.source.mime);
+							const blob = await uploadBlob(agent, img.source.blob);
 							thumb = blob.data.blob;
 						}
 					} catch (e) {

@@ -14,15 +14,19 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useHaptics } from '#/lib/haptics';
-import { openPicker } from '#/lib/media/picker';
-import { type PickerImage } from '#/lib/media/picker.shared';
+import { openImagePicker } from '#/lib/media/picker';
 import { convertCdnPreset } from '#/lib/media/util';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isCancelledError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { type ComposerImage, compressProfileImage, createComposerImage } from '#/state/gallery';
+import {
+	type ComposerImage,
+	compressProfileImage,
+	createComposerImage,
+	type ImageMeta,
+} from '#/state/gallery';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
 import { logger } from '#/logger';
@@ -69,7 +73,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
-	onSelectNewAvatar: (img: PickerImage | null) => void;
+	onSelectNewAvatar: (img: ImageMeta | null) => void;
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
@@ -361,16 +365,13 @@ let EditableUserAvatar = ({
 	}, [circular, size]);
 
 	const onOpenLibrary = useCallback(async () => {
-		const items = await openPicker({
-			aspect: [1, 1],
-		});
-		const item = items[0];
-		if (!item) {
+		const file = await openImagePicker();
+		if (!file) {
 			return;
 		}
 
 		try {
-			setRawImage(await createComposerImage(item));
+			setRawImage(await createComposerImage(file));
 			editImageDialogControl.open();
 		} catch (e) {
 			// Don't log errors for user-cancelled selection on iOS or Android.

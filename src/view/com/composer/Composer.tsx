@@ -67,7 +67,8 @@ import {
 } from '#/lib/constants';
 import { useIsKeyboardVisible } from '#/lib/hooks/useIsKeyboardVisible';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { mimeToExt } from '#/lib/media/video/util';
+import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
+import { type VideoAsset } from '#/lib/media/video/types';
 import { useCallOnce } from '#/lib/once';
 import { type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
@@ -75,7 +76,7 @@ import { colors } from '#/lib/styles';
 
 import { useDialogStateControlContext } from '#/state/dialogs';
 import { emitPostCreated } from '#/state/events';
-import { type ComposerImage, createComposerImage, pasteImage } from '#/state/gallery';
+import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { useModalControls } from '#/state/modals';
 import { useRequireAltTextEnabled } from '#/state/preferences';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
@@ -121,7 +122,6 @@ import { Text } from '#/components/Typography';
 
 import { type Gif } from '#/features/gifPicker/types';
 import { BottomSheetPortalProvider } from '#/shims/bottom-sheet';
-import { type ImagePickerAsset } from '#/shims/image-picker';
 
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
 import {
@@ -130,7 +130,6 @@ import {
 	useSaveDraftMutation,
 } from './drafts/state/queries';
 import { type DraftSummary } from './drafts/state/schema';
-import { revokeAllMediaUrls } from './drafts/state/storage';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { type AssetType, SelectMediaButton, type SelectMediaButtonProps } from './SelectMediaButton';
 import {
@@ -145,7 +144,6 @@ import {
 } from './state/composer';
 import { NO_VIDEO, type NoVideoState, processVideo, type VideoState } from './state/video';
 import { type TextInputRef } from './text-input/TextInput.types';
-import { getVideoMetadata } from './videos/pickVideo';
 
 type CancelRef = {
 	onPressCancel: () => void;
@@ -169,7 +167,6 @@ export const ComposePost = ({
 	quote: initQuote,
 	mention: initMention,
 	text: initText,
-	imageUris: initImageUris,
 	videoUri: initVideoUri,
 	openGallery,
 	logContext: _logContext,
@@ -253,7 +250,6 @@ export const ComposePost = ({
 	const [composerState, composerDispatch] = useReducer(
 		composerReducer,
 		{
-			initImageUris,
 			initQuoteUri: initQuote?.uri,
 			initText,
 			initMention,
@@ -284,7 +280,7 @@ export const ComposePost = ({
 	);
 
 	const selectVideo = useCallback(
-		(postId: string, asset: ImagePickerAsset) => {
+		(postId: string, asset: VideoAsset) => {
 			const abortController = new AbortController();
 			composerDispatch({
 				type: 'update_post',
@@ -347,20 +343,18 @@ export const ComposePost = ({
 			try {
 				logger.debug('restoring video from draft', {
 					postId,
-					videoUri: videoInfo.uri,
 					altText: videoInfo.altText,
 					captionCount: videoInfo.captions.length,
 				});
 
-				let asset: ImagePickerAsset;
-
-				// Web: Convert blob URL to a File, then get video metadata (returns data URL)
-				const response = await fetch(videoInfo.uri);
-				const blob = await response.blob();
-				const file = new File([blob], 'restored-video', {
-					type: videoInfo.mimeType,
-				});
-				asset = await getVideoMetadata(file);
+				const meta = await getVideoMetadata(videoInfo.blob);
+				const asset: VideoAsset = {
+					blob: videoInfo.blob,
+					width: meta.width,
+					height: meta.height,
+					mimeType: videoInfo.mimeType,
+					duration: meta.duration,
+				};
 
 				// Start video processing using existing flow
 				const abortController = new AbortController();
@@ -489,7 +483,6 @@ export const ComposePost = ({
 
 	const onClose = useCallback(() => {
 		closeComposer();
-		revokeAllMediaUrls();
 	}, [closeComposer]);
 
 	const getDraftSaveError = useCallback(
@@ -1141,7 +1134,7 @@ let ComposerPost = memo(function ComposerPost({
 	canRemovePost: boolean;
 	canRemoveQuote: boolean;
 	onClearVideo: (postId: string) => void;
-	onSelectVideo: (postId: string, asset: ImagePickerAsset) => void;
+	onSelectVideo: (postId: string, asset: VideoAsset) => void;
 	onError: (error: string) => void;
 	onPublish: (richtext: RichText) => void;
 }) {
@@ -1188,23 +1181,24 @@ let ComposerPost = memo(function ComposerPost({
 	);
 
 	const onPhotoPasted = useCallback(
-		async (uri: string) => {
-			if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
-				const mimeType = uri.slice('data:'.length).split(';')[0]!;
+		async (blob: Blob) => {
+			const mimeType = blob.type;
+			if (mimeType.startsWith('video/') || mimeType === 'image/gif') {
 				if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
 					Toast.show(l`Unsupported video type: ${mimeType}`, {
 						type: 'error',
 					});
 					return;
 				}
-				const name = `pasted.${mimeToExt(mimeType as SupportedMimeTypes)}`;
-				const file = await fetch(uri)
-					.then((res) => res.blob())
-					.then((blob) => new File([blob], name, { type: mimeType }));
-				onSelectVideo(post.id, await getVideoMetadata(file));
+				if (mimeType === 'image/gif') {
+					const { width, height } = await getImageDimensions(blob);
+					onSelectVideo(post.id, { blob, width, height, mimeType, duration: null });
+				} else {
+					const { width, height, duration } = await getVideoMetadata(blob);
+					onSelectVideo(post.id, { blob, width, height, mimeType, duration });
+				}
 			} else {
-				const res = await pasteImage(uri);
-				onImageAdd([res]);
+				onImageAdd([await createComposerImage(blob)]);
 			}
 		},
 		[post.id, onSelectVideo, onImageAdd, l],
@@ -1618,7 +1612,7 @@ function ComposerFooter({
 	dispatch: (action: PostAction) => void;
 	showAddButton: boolean;
 	onError: (error: string) => void;
-	onSelectVideo: (postId: string, asset: ImagePickerAsset) => void;
+	onSelectVideo: (postId: string, asset: VideoAsset) => void;
 	onAddPost: () => void;
 	currentLanguages: string[];
 	onSelectLanguage?: (language: string) => void;
@@ -1679,35 +1673,22 @@ function ComposerFooter({
 	}
 
 	const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
-		async ({ type, assets, errors }) => {
+		async ({ type, images, video, errors }) => {
 			setSelectedAssetsType(type);
 
-			if (assets.length) {
-				if (type === 'image') {
-					const selectedImages: ComposerImage[] = [];
-
-					await Promise.all(
-						assets.map(async (image) => {
-							const composerImage = await createComposerImage({
-								path: image.uri,
-								width: image.width,
-								height: image.height,
-								mime: image.mimeType!,
-							});
-							selectedImages.push(composerImage);
-						}),
-					).catch((e) => {
+			if (type === 'image' && images.length) {
+				const selectedImages = await Promise.all(images.map((image) => createComposerImage(image))).catch(
+					(e) => {
 						logger.error(`createComposerImage failed`, {
 							safeMessage: e.message,
 						});
-					});
+						return [];
+					},
+				);
 
-					onImageAdd(selectedImages);
-				} else if (type === 'video') {
-					onSelectVideo(post.id, assets[0]!);
-				} else if (type === 'gif') {
-					onSelectVideo(post.id, assets[0]!);
-				}
+				onImageAdd(selectedImages);
+			} else if ((type === 'video' || type === 'gif') && video) {
+				onSelectVideo(post.id, video);
 			}
 
 			errors.map((error) => {

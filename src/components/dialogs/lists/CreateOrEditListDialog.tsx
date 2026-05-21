@@ -196,7 +196,7 @@ function DialogInner({
 			}
 			try {
 				setNewListAvatar(img);
-				setListAvatar(img.path);
+				setListAvatar(URL.createObjectURL(img.blob));
 			} catch (e) {
 				setImageError(cleanError(e));
 			}

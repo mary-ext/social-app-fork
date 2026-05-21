@@ -7,21 +7,20 @@ import {
 } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
 
+import { type VideoAsset } from '#/lib/media/video/types';
 import { type SelfLabel } from '#/lib/moderation';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 import { isBskyPostUrl, postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
-import { type ComposerImage, createInitialImages } from '#/state/gallery';
+import { type ComposerImage } from '#/state/gallery';
 import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting } from '#/state/queries/threadgate';
 import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
-import { type ComposerOpts } from '#/state/shell/composer';
 
 import { type LinkFacetMatch, suggestLinkCardUri } from '#/view/com/composer/text-input/text-input-util';
 
 import { type Gif } from '#/features/gifPicker/types';
-import { type ImagePickerAsset } from '#/shims/image-picker';
 
 import { createVideoState, type VideoAction, videoReducer, type VideoState } from './video';
 
@@ -72,7 +71,7 @@ export type PostAction =
 	| { type: 'embed_remove_image'; image: ComposerImage }
 	| {
 			type: 'embed_add_video';
-			asset: ImagePickerAsset;
+			asset: VideoAsset;
 			abortController: AbortController;
 	  }
 	| { type: 'embed_remove_video' }
@@ -102,7 +101,7 @@ export type ComposerState = {
 	 * Map of localId -> loaded media path/URL for the current draft. Used for re-saving without re-copying
 	 * media.
 	 */
-	loadedMediaMap?: Map<string, string>;
+	loadedMediaMap?: Map<string, Blob>;
 	/** Set of original localRef paths from the draft being edited. Used to identify orphaned media on save. */
 	originalLocalRefs?: Set<string>;
 };
@@ -133,8 +132,8 @@ export type ComposerAction =
 			threadgateAllow: AppBskyDraftDefs.Draft['threadgateAllow'];
 			postgateEmbeddingRules: AppBskyDraftDefs.Draft['postgateEmbeddingRules'];
 
-			/** Map of localRefPath -> loaded media path/URL */
-			loadedMedia: Map<string, string>;
+			/** Map of localRefPath -> loaded media blob */
+			loadedMedia: Map<string, Blob>;
 			/** Set of original localRef paths from the draft. Used to identify orphaned media on save. */
 			originalLocalRefs: Set<string>;
 	  }
@@ -276,7 +275,6 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			return createComposerState({
 				initText: undefined,
 				initMention: undefined,
-				initImageUris: [],
 				initQuoteUri: undefined,
 				initInteractionSettings: action.initInteractionSettings,
 			});
@@ -544,23 +542,14 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
 export function createComposerState({
 	initText,
 	initMention,
-	initImageUris,
 	initQuoteUri,
 	initInteractionSettings,
 }: {
 	initText: string | undefined;
 	initMention: string | undefined;
-	initImageUris: ComposerOpts['imageUris'];
 	initQuoteUri: string | undefined;
 	initInteractionSettings: AppBskyActorDefs.PostInteractionSettingsPref | undefined;
 }): ComposerState {
-	let media: ImagesMedia | undefined;
-	if (initImageUris?.length) {
-		media = {
-			type: 'images',
-			images: createInitialImages(initImageUris),
-		};
-	}
 	let quote: Link | undefined;
 	if (initQuoteUri) {
 		// TODO: Consider passing the app url directly.
@@ -645,7 +634,7 @@ export function createComposerState({
 					labels: [],
 					embed: {
 						quote,
-						media,
+						media: undefined,
 						link,
 					},
 				},

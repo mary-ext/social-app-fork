@@ -35,14 +35,6 @@ export async function uploadVideo({
 		name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
 	});
 
-	let bytes = video.bytes;
-	if (!bytes) {
-		if (signal.aborted) {
-			throw new AbortError();
-		}
-		bytes = await fetch(video.uri).then((res) => res.arrayBuffer());
-	}
-
 	if (signal.aborted) {
 		throw new AbortError();
 	}
@@ -77,7 +69,7 @@ export async function uploadVideo({
 		xhr.open('POST', uri);
 		xhr.setRequestHeader('Content-Type', video.mimeType);
 		xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-		xhr.send(bytes);
+		xhr.send(video.blob);
 	});
 
 	if (!res.jobId) {

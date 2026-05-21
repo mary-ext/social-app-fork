@@ -290,9 +290,9 @@ async function resolveMedia(
 		const images: AppBskyEmbedImages.Image[] = await Promise.all(
 			imagesDraft.map(async (image, i) => {
 				logger.debug(`Compressing image #${i}`);
-				const { path, width, height, mime } = await compressImage(image);
+				const { blob, width, height } = await compressImage(image);
 				logger.debug(`Uploading image #${i}`);
-				const res = await uploadBlob(agent, path, mime);
+				const res = await uploadBlob(agent, blob);
 				return {
 					image: res.data.blob,
 					alt: image.alt,
@@ -347,8 +347,7 @@ async function resolveMedia(
 		let blob: BlobRef | undefined;
 		if (resolvedGif.thumb) {
 			onStateChange?.(t`Uploading link thumbnail...`);
-			const { path, mime } = resolvedGif.thumb.source;
-			const response = await uploadBlob(agent, path, mime);
+			const response = await uploadBlob(agent, resolvedGif.thumb.source.blob);
 			blob = response.data.blob;
 		}
 		return {
@@ -367,8 +366,7 @@ async function resolveMedia(
 			let blob: BlobRef | undefined;
 			if (resolvedLink.thumb) {
 				onStateChange?.(t`Uploading link thumbnail...`);
-				const { path, mime } = resolvedLink.thumb.source;
-				const response = await uploadBlob(agent, path, mime);
+				const response = await uploadBlob(agent, resolvedLink.thumb.source.blob);
 				blob = response.data.blob;
 			}
 			return {

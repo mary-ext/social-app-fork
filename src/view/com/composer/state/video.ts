@@ -6,14 +6,12 @@ import { AbortError } from '#/lib/async/cancelable';
 import { LOCAL_DEV_SERVICE } from '#/lib/constants';
 import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
-import { type CompressedVideo } from '#/lib/media/video/types';
+import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { createVideoAgent } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { logger } from '#/logger';
-
-import { type ImagePickerAsset } from '#/shims/image-picker';
 
 type CaptionsTrack = { lang: string; file: File };
 
@@ -72,7 +70,7 @@ type ErrorState = {
 	status: 'error';
 	progress: 100;
 	abortController: AbortController;
-	asset: ImagePickerAsset | null;
+	asset: VideoAsset | null;
 	video: CompressedVideo | null;
 	jobId: string | null;
 	error: string;
@@ -85,7 +83,7 @@ type CompressingState = {
 	status: 'compressing';
 	progress: number;
 	abortController: AbortController;
-	asset: ImagePickerAsset;
+	asset: VideoAsset;
 	video?: undefined;
 	jobId?: undefined;
 	pendingPublish?: undefined;
@@ -97,7 +95,7 @@ type UploadingState = {
 	status: 'uploading';
 	progress: number;
 	abortController: AbortController;
-	asset: ImagePickerAsset;
+	asset: VideoAsset;
 	video: CompressedVideo;
 	jobId?: undefined;
 	pendingPublish?: undefined;
@@ -109,7 +107,7 @@ type ProcessingState = {
 	status: 'processing';
 	progress: number;
 	abortController: AbortController;
-	asset: ImagePickerAsset;
+	asset: VideoAsset;
 	video: CompressedVideo;
 	jobId: string;
 	jobStatus: AppBskyVideoDefs.JobStatus | null;
@@ -122,7 +120,7 @@ type DoneState = {
 	status: 'done';
 	progress: 100;
 	abortController: AbortController;
-	asset: ImagePickerAsset;
+	asset: VideoAsset;
 	video: CompressedVideo;
 	jobId?: undefined;
 	pendingPublish: { blobRef: BlobRef };
@@ -132,10 +130,7 @@ type DoneState = {
 
 export type VideoState = ErrorState | CompressingState | UploadingState | ProcessingState | DoneState;
 
-export function createVideoState(
-	asset: ImagePickerAsset,
-	abortController: AbortController,
-): CompressingState {
+export function createVideoState(asset: VideoAsset, abortController: AbortController): CompressingState {
 	return {
 		status: 'compressing',
 		progress: 0,
@@ -235,12 +230,8 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 	return state;
 }
 
-function trunc2dp(num: number) {
-	return Math.trunc(num * 100) / 100;
-}
-
 export async function processVideo(
-	asset: ImagePickerAsset,
+	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
 	agent: BskyAgent,
 	did: string,
@@ -249,12 +240,7 @@ export async function processVideo(
 ) {
 	let video: CompressedVideo | undefined;
 	try {
-		video = await compressVideo(asset, {
-			onProgress: (num) => {
-				dispatch({ type: 'update_progress', progress: trunc2dp(num), signal });
-			},
-			signal,
-		});
+		video = await compressVideo(asset);
 	} catch (e) {
 		const message = getCompressErrorMessage(e, i18n);
 		if (message !== null) {
@@ -385,25 +371,11 @@ async function uploadVideoBlobDirectly(
 		throw new AbortError();
 	}
 
-	const bytes = await readVideoBytes(video);
-
-	if (signal.aborted) {
-		throw new AbortError();
-	}
-
-	const { data } = await agent.uploadBlob(new Blob([bytes], { type: video.mimeType }), {
+	const { data } = await agent.uploadBlob(video.blob, {
 		encoding: video.mimeType,
 	});
 
 	return data.blob;
-}
-
-async function readVideoBytes(video: CompressedVideo): Promise<ArrayBuffer> {
-	if (video.bytes != null) {
-		return video.bytes;
-	}
-
-	return fetch(video.uri).then((res) => res.arrayBuffer());
 }
 
 function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {

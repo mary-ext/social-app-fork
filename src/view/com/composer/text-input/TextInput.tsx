@@ -4,7 +4,7 @@ import { AppBskyRichtextFacet, RichText } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
-import { blobToDataUri, isUriImage } from '#/lib/media/util';
+import { isUriImage } from '#/lib/media/util';
 
 import { type LinkFacetMatch, suggestLinkCardUri } from '#/view/com/composer/text-input/text-input-util';
 import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
@@ -314,7 +314,7 @@ function hasMediaTransfer(transfer: DataTransfer) {
 
 function handleTransferItems(
 	items: DataTransferItemList,
-	onMedia: (uri: string) => void,
+	onMedia: (blob: Blob) => void,
 	onError: (err: string) => void,
 ) {
 	for (let index = 0; index < items.length; index++) {
@@ -332,9 +332,7 @@ function handleTransferItems(
 					const blob = await response.blob();
 
 					if (blob.type.startsWith('image/') || blob.type.startsWith('video/')) {
-						blobToDataUri(blob).then(onMedia, (err) => {
-							onError(String(err));
-						});
+						onMedia(blob);
 					}
 				} catch (err) {
 					onError(String(err));
@@ -344,9 +342,7 @@ function handleTransferItems(
 			const file = item.getAsFile();
 
 			if (file) {
-				blobToDataUri(file).then(onMedia, (err) => {
-					onError(String(err));
-				});
+				onMedia(file);
 			}
 		}
 	}

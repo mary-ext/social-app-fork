@@ -134,7 +134,7 @@ function DialogInner({
 			}
 			try {
 				setNewUserAvatar(img);
-				setUserAvatar(img.path);
+				setUserAvatar(URL.createObjectURL(img.blob));
 			} catch (e) {
 				setImageError(cleanError(e));
 			}
@@ -152,7 +152,7 @@ function DialogInner({
 			}
 			try {
 				setNewUserBanner(img);
-				setUserBanner(img.path);
+				setUserBanner(URL.createObjectURL(img.blob));
 			} catch (e) {
 				setImageError(cleanError(e));
 			}

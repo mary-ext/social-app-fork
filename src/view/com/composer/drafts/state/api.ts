@@ -5,7 +5,7 @@ import { nanoid } from 'nanoid/non-secure';
 import { resolveLink } from '#/lib/api/resolve';
 import { getDeviceId } from '#/lib/device-id';
 import { getDeviceName } from '#/lib/deviceName';
-import { getImageDim } from '#/lib/media/manip';
+import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/util';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
@@ -26,11 +26,11 @@ const TENOR_HOSTNAME = 'media.tenor.com';
 const KLIPY_HOSTNAME = 'static.klipy.com';
 
 /**
- * Video data from a draft that needs to be restored by re-processing. Contains the local file URI, alt text,
+ * Video data from a draft that needs to be restored by re-processing. Contains the local file blob, alt text,
  * mime type, and captions to restore.
  */
 export type RestoredVideo = {
-	uri: string;
+	blob: Blob;
 	altText: string;
 	mimeType: string;
 	localRefPath: string;
@@ -53,13 +53,13 @@ function parseVideoMimeType(localRefPath: string): string {
 
 /**
  * Convert ComposerState to server Draft format for saving. Returns both the draft and a map of localRef paths
- * to their source paths.
+ * to their media blobs.
  */
 export async function composerStateToDraft(state: ComposerState): Promise<{
 	draft: AppBskyDraftDefs.Draft;
-	localRefPaths: Map<string, string>;
+	localRefPaths: Map<string, Blob>;
 }> {
-	const localRefPaths = new Map<string, string>();
+	const localRefPaths = new Map<string, Blob>();
 
 	const posts: AppBskyDraftDefs.DraftPost[] = await Promise.all(
 		state.thread.posts.map((post) => {
@@ -85,7 +85,7 @@ export async function composerStateToDraft(state: ComposerState): Promise<{
 /** Convert a single PostDraft to server DraftPost format. */
 async function postDraftToServerPost(
 	post: PostDraft,
-	localRefPaths: Map<string, string>,
+	localRefPaths: Map<string, Blob>,
 ): Promise<AppBskyDraftDefs.DraftPost> {
 	const draftPost: AppBskyDraftDefs.DraftPost = {
 		$type: 'app.bsky.draft.defs#draftPost',
@@ -152,19 +152,18 @@ async function postDraftToServerPost(
  */
 function serializeImages(
 	images: ComposerImage[],
-	localRefPaths: Map<string, string>,
+	localRefPaths: Map<string, Blob>,
 ): AppBskyDraftDefs.DraftEmbedImage[] {
 	return images.map((image) => {
-		const sourcePath = image.transformed?.path || image.source.path;
+		const sourceBlob = (image.transformed ?? image.source).blob;
 		// Reuse existing localRefPath if present (editing draft), otherwise generate new
 		const isReusing = !!image.localRefPath;
 		const localRefPath = image.localRefPath || `image:${nanoid()}`;
-		localRefPaths.set(localRefPath, sourcePath);
+		localRefPaths.set(localRefPath, sourceBlob);
 
 		logger.debug('serializing image', {
 			localRefPath,
 			isReusing,
-			sourcePath,
 		});
 
 		return {
@@ -184,7 +183,7 @@ function serializeImages(
  */
 async function serializeVideo(
 	videoState: VideoState,
-	localRefPaths: Map<string, string>,
+	localRefPaths: Map<string, Blob>,
 ): Promise<AppBskyDraftDefs.DraftEmbedVideo | undefined> {
 	// Only save videos that have been compressed (have a video file)
 	if (!videoState.video) {
@@ -195,7 +194,7 @@ async function serializeVideo(
 	const mimeType = videoState.video.mimeType || 'video/mp4';
 	const ext = mimeToExt(mimeType);
 	const localRefPath = `video:${mimeType}:${nanoid()}.${ext}`;
-	localRefPaths.set(localRefPath, videoState.video.uri);
+	localRefPaths.set(localRefPath, videoState.video.blob);
 
 	// Read caption file contents as text
 	const captions: AppBskyDraftDefs.DraftEmbedCaption[] = [];
@@ -392,7 +391,7 @@ function parseGifFromUrl(
  */
 export async function draftToComposerPosts(
 	draft: AppBskyDraftDefs.Draft,
-	loadedMedia: Map<string, string>,
+	loadedMedia: Map<string, Blob>,
 ): Promise<{ posts: PostDraft[]; restoredVideos: Map<number, RestoredVideo> }> {
 	const restoredVideos = new Map<number, RestoredVideo>();
 
@@ -409,28 +408,27 @@ export async function draftToComposerPosts(
 
 			// Restore images
 			if (post.embedImages && post.embedImages.length > 0) {
-				const imagePromises = post.embedImages.map(async (img) => {
-					const path = loadedMedia.get(img.localRef.path);
-					if (!path) {
+				const imagePromises = post.embedImages.map(async (img): Promise<ComposerImage | null> => {
+					const blob = loadedMedia.get(img.localRef.path);
+					if (!blob) {
 						return null;
 					}
 
 					let width = 0;
 					let height = 0;
 					try {
-						const dims = await getImageDim(path);
+						const dims = await getImageDimensions(blob);
 						width = dims.width;
 						height = dims.height;
 					} catch (e) {
 						logger.warn('Failed to get image dimensions', {
-							path,
+							localRefPath: img.localRef.path,
 							error: e,
 						});
 					}
 
 					logger.debug('restoring image with localRefPath', {
 						localRefPath: img.localRef.path,
-						loadedPath: path,
 						width,
 						height,
 					});
@@ -441,12 +439,11 @@ export async function draftToComposerPosts(
 						localRefPath: img.localRef.path,
 						source: {
 							id: nanoid(),
-							path,
+							blob,
 							width,
 							height,
-							mime: 'image/jpeg',
 						},
-					} as ComposerImage;
+					};
 				});
 
 				const images = (await Promise.all(imagePromises)).filter((img): img is ComposerImage => img !== null);
@@ -496,18 +493,17 @@ export async function draftToComposerPosts(
 			// Collect video for restoration (processed async by caller)
 			if (post.embedVideos && post.embedVideos.length > 0) {
 				const vid = post.embedVideos[0]!;
-				const videoUri = loadedMedia.get(vid.localRef.path);
-				if (videoUri) {
+				const videoBlob = loadedMedia.get(vid.localRef.path);
+				if (videoBlob) {
 					const mimeType = parseVideoMimeType(vid.localRef.path);
 					logger.debug('found video to restore', {
 						localRefPath: vid.localRef.path,
-						videoUri,
 						altText: vid.alt,
 						mimeType,
 						captionCount: vid.captions?.length ?? 0,
 					});
 					restoredVideos.set(index, {
-						uri: videoUri,
+						blob: videoBlob,
 						altText: vid.alt || '',
 						mimeType,
 						localRefPath: vid.localRef.path,

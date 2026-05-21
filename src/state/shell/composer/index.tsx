@@ -9,10 +9,10 @@ import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { type VideoAsset } from '#/lib/media/video/types';
 import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
-import { purgeTemporaryImageFiles } from '#/state/gallery';
-import { precacheResolveLinkQuery, RQKEY_GIF_ROOT, RQKEY_LINK_ROOT } from '#/state/queries/resolve-link';
+import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
 import * as Toast from '#/components/Toast';
 
@@ -42,8 +42,7 @@ export interface ComposerOpts {
 	quote?: AppBskyFeedDefs.PostView;
 	mention?: string; // handle of user to mention
 	text?: string;
-	imageUris?: { uri: string; width: number; height: number; altText?: string }[];
-	videoUri?: { uri: string; width: number; height: number };
+	videoUri?: VideoAsset;
 	openGallery?: boolean;
 	logContext?: ComposerLogContext;
 }
@@ -108,13 +107,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		let wasOpen = !!state;
 		if (wasOpen) {
 			setState(undefined);
-			purgeTemporaryImageFiles();
-			// Purging deletes cached thumbnails on disk, so remove the query
-			// caches that may hold references to those now-deleted file paths.
-			// Without this, restoring a draft would serve stale ResolvedLink
-			// data pointing at missing files, causing "Failed to load blob".
-			queryClient.removeQueries({ queryKey: [RQKEY_LINK_ROOT] });
-			queryClient.removeQueries({ queryKey: [RQKEY_GIF_ROOT] });
 		}
 
 		return wasOpen;

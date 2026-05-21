@@ -3,6 +3,7 @@ import { type ImageStyle, useWindowDimensions, View } from 'react-native';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_ALT_TEXT } from '#/lib/constants';
+import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { enforceLen } from '#/lib/strings/helpers';
 
 import { type ComposerImage } from '#/state/gallery';
@@ -62,6 +63,8 @@ const ImageAltTextInner = ({
 	const t = useTheme();
 	const { width: screenWidth } = useWindowDimensions();
 
+	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
+
 	const imageStyle = useMemo<ImageStyle>(() => {
 		const maxWidth = 450;
 		const source = image.transformed ?? image.source;
@@ -95,7 +98,7 @@ const ImageAltTextInner = ({
 				<View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
 					<Image
 						style={imageStyle}
-						source={{ uri: (image.transformed ?? image.source).path }}
+						source={{ uri: imageUrl }}
 						contentFit="contain"
 						accessible={true}
 						accessibilityIgnoresInvertColors

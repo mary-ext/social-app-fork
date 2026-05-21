@@ -93,7 +93,7 @@ function Inner({ state }: { state: ComposerOpts }) {
 						onPostSuccess={state.onPostSuccess}
 						mention={state.mention}
 						text={state.text}
-						imageUris={state.imageUris}
+						videoUri={state.videoUri}
 						openGallery={state.openGallery}
 					/>
 				</View>
