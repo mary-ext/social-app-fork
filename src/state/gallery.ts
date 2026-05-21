@@ -50,7 +50,7 @@ export type ComposerImage = ComposerImageWithoutTransformation | ComposerImageWi
  *
  * @param blob source image blob
  * @returns a composer image with no transformation applied
- * @throws if the blob could not be decoded as an image
+ * @throws if the blob could not be loaded as an image
  */
 export async function createComposerImage(blob: Blob): Promise<ComposerImageWithoutTransformation> {
 	const image = await getImageFromBlob(blob);

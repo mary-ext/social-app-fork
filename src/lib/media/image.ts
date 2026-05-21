@@ -325,19 +325,34 @@ export const stripExif = async (blob: Blob): Promise<Blob> => {
 	return new Blob([stripped as Uint8Array<ArrayBuffer>], { type: blob.type });
 };
 
-export const getImageFromBlob = async (blob: Blob): Promise<HTMLImageElement> => {
-	const image = new Image();
-	const blobUrl = URL.createObjectURL(blob);
+/**
+ * decode an image blob into an `HTMLImageElement`.
+ *
+ * uses the element's `load` event rather than `HTMLImageElement.decode()`: `decode()` forces a full-
+ * resolution bitmap decode up front and rejects with `EncodingError` for otherwise-valid images whose pixel
+ * dimensions exceed a browser/device memory budget — notably high-megapixel photos on mobile. `load` lets the
+ * browser decode lazily and downsample at draw time, which is all the canvas pipeline here needs.
+ *
+ * @param blob source image
+ * @returns the decoded image element
+ * @throws if the blob could not be loaded as an image
+ */
+export const getImageFromBlob = (blob: Blob): Promise<HTMLImageElement> => {
+	return new Promise((resolve, reject) => {
+		const image = new Image();
+		const blobUrl = URL.createObjectURL(blob);
 
-	image.src = blobUrl;
+		image.onload = () => {
+			URL.revokeObjectURL(blobUrl);
+			resolve(image);
+		};
+		image.onerror = () => {
+			URL.revokeObjectURL(blobUrl);
+			reject(new Error('the source image could not be loaded'));
+		};
 
-	try {
-		await image.decode();
-	} finally {
-		URL.revokeObjectURL(blobUrl);
-	}
-
-	return image;
+		image.src = blobUrl;
+	});
 };
 
 const computeFittedDims = (

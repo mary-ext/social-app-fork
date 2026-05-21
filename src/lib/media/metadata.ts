@@ -1,3 +1,4 @@
+import { getImageFromBlob } from './image';
 import { type Dimensions } from './types';
 
 export type VideoMetadata = Dimensions & {
@@ -10,19 +11,10 @@ export type VideoMetadata = Dimensions & {
  *
  * @param blob image blob
  * @returns the image's width and height in pixels
- * @throws if the blob could not be decoded as an image
+ * @throws if the blob could not be loaded as an image
  */
 export async function getImageDimensions(blob: Blob): Promise<Dimensions> {
-	const url = URL.createObjectURL(blob);
-	const image = new Image();
-	image.src = url;
-
-	try {
-		await image.decode();
-	} finally {
-		URL.revokeObjectURL(url);
-	}
-
+	const image = await getImageFromBlob(blob);
 	return { width: image.naturalWidth, height: image.naturalHeight };
 }
 
