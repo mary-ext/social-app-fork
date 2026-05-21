@@ -316,6 +316,7 @@ function BaseChatItem({
 			const info = getSystemMessageInfo(
 				convo.view.lastMessage.data,
 				new Map(convo.view.members.map((m) => [m.did, m])),
+				{ short: true },
 			);
 			if (info) {
 				lastMessage = i18n._(info.message);
@@ -403,6 +404,7 @@ function BaseChatItem({
 			};
 
 	const avatarSize = isWithinSplitView ? 48 : 52;
+	const isGroupConvo = convo.kind === 'group';
 
 	return (
 		<ChatListItemPortal.Provider>
@@ -431,12 +433,15 @@ function BaseChatItem({
 							<View
 								style={[
 									a.flex_row,
-									isDeletedAccount ? a.align_center : a.align_start,
+									isDeletedAccount || isGroupConvo ? a.align_center : a.align_start,
 									a.flex_1,
 									a.px_lg,
 									a.py_md,
 									a.gap_md,
 									isWithinSplitView && a.rounded_sm,
+									{
+										backgroundColor: hasUnread ? t.palette.primary_25 : t.palette.contrast_0,
+									},
 									(hovered || pressed || focused) && t.atoms.bg_contrast_25,
 									selected && t.atoms.bg_contrast_50,
 								]}
@@ -445,7 +450,7 @@ function BaseChatItem({
 								<View style={{ width: avatarSize, height: avatarSize }} />
 
 								<View style={[a.flex_1, a.justify_center, { paddingRight: 40 }]}>
-									<View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
+									<View style={[a.w_full, a.flex_row, a.align_center, a.pb_2xs]}>
 										<View style={[a.flex_shrink]}>
 											<Text
 												emoji
@@ -478,7 +483,7 @@ function BaseChatItem({
 																{ whiteSpace: 'preserve nowrap' } as WebTextStyle,
 															]}
 														>
-															&middot; {timeElapsed}
+															{timeElapsed}
 														</Text>
 													)}
 												</TimeElapsed>
@@ -494,8 +499,21 @@ function BaseChatItem({
 												]}
 											>
 												{' '}
-												&middot; <BellStroke size="xs" style={[t.atoms.text_contrast_medium]} />
+												<BellStroke size="xs" style={[t.atoms.text_contrast_medium]} />
 											</Text>
+										)}
+										{hasUnread && (
+											<View
+												style={[
+													a.rounded_full,
+													{
+														backgroundColor: isDimStyle ? t.palette.contrast_200 : t.palette.primary_500,
+														height: 8,
+														width: 8,
+														marginLeft: 6,
+													},
+												]}
+											/>
 										)}
 									</View>
 
@@ -509,7 +527,13 @@ function BaseChatItem({
 
 									<View style={[a.flex_row, a.align_center]}>
 										{LastMessageIcon && (
-											<LastMessageIcon size="xs" style={[a.mr_2xs, t.atoms.text_contrast_medium]} />
+											<LastMessageIcon
+												size="xs"
+												style={[
+													a.mr_2xs,
+													hasUnread ? t.atoms.text_contrast_high : t.atoms.text_contrast_medium,
+												]}
+											/>
 										)}
 										<Text
 											emoji
@@ -517,7 +541,7 @@ function BaseChatItem({
 											style={[
 												a.text_sm,
 												a.leading_snug,
-												hasUnread ? a.font_semi_bold : t.atoms.text_contrast_high,
+												hasUnread ? a.font_medium : t.atoms.text_contrast_high,
 												isDimStyle && t.atoms.text_contrast_medium,
 											]}
 										>
@@ -527,22 +551,6 @@ function BaseChatItem({
 
 									{children}
 								</View>
-
-								{hasUnread && (
-									<View
-										style={[
-											a.absolute,
-											a.rounded_full,
-											{
-												backgroundColor: isDimStyle ? t.palette.contrast_200 : t.palette.primary_500,
-												height: 7,
-												width: 7,
-												top: 15,
-												right: 12,
-											},
-										]}
-									/>
-								)}
 							</View>
 						)}
 					</Link>
