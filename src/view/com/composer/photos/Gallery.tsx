@@ -8,7 +8,6 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
@@ -21,6 +20,10 @@ import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
 import * as Dialog from '#/components/Dialog';
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
+import { Pencil_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
+import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
 
@@ -176,9 +179,9 @@ const GalleryItem = ({
 				style={[styles.altTextControl, altTextControlStyle]}
 			>
 				{image.alt.length !== 0 ? (
-					<FontAwesomeIcon icon="check" size={10} style={{ color: t.palette.white }} />
+					<CheckIcon width={10} style={{ color: t.palette.white }} />
 				) : (
-					<FontAwesomeIcon icon="plus" size={10} style={{ color: t.palette.white }} />
+					<PlusIcon width={10} style={{ color: t.palette.white }} />
 				)}
 				<Text style={styles.altTextControlLabel} accessible={false}>
 					<Trans>ALT</Trans>
@@ -193,7 +196,7 @@ const GalleryItem = ({
 					onPress={onImageEdit}
 					style={styles.imageControl}
 				>
-					<FontAwesomeIcon icon="pen" size={12} style={{ color: colors.white }} />
+					<PencilIcon width={12} style={{ color: colors.white }} />
 				</TouchableOpacity>
 				<TouchableOpacity
 					testID="removePhotoButton"
@@ -203,7 +206,7 @@ const GalleryItem = ({
 					onPress={onRemove}
 					style={styles.imageControl}
 				>
-					<FontAwesomeIcon icon="xmark" size={16} style={{ color: colors.white }} />
+					<TimesIcon width={16} style={{ color: colors.white }} />
 				</TouchableOpacity>
 			</View>
 			<TouchableOpacity
