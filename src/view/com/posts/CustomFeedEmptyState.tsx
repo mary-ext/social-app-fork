@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { FontAwesomeIcon, type FontAwesomeIconStyle } from '@fortawesome/react-native-fontawesome';
 import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,6 +11,8 @@ import { s } from '#/lib/styles';
 
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useSession } from '#/state/session';
+
+import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
@@ -50,7 +51,7 @@ export function CustomFeedEmptyState() {
 				<Text type="lg-medium" style={palInverted.text}>
 					<Trans>Find accounts to follow</Trans>
 				</Text>
-				<FontAwesomeIcon icon="angle-right" style={palInverted.text as FontAwesomeIconStyle} size={14} />
+				<ChevronRightIcon width={14} style={palInverted.text} />
 			</Button>
 		</View>
 	);
