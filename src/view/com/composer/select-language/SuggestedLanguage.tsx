@@ -40,10 +40,13 @@ const MIN_TEXT_LENGTH = 20;
 const NOISE_FLOOR = 0.1;
 
 /**
- * Platform-resolved defaults. Web uses `lande` under the hood, which spreads probability across many
- * candidates — so both the noise floor and the acceptance bar sit higher than on native (MLKit).
+ * Detection tuning defaults. The noise floor and acceptance bar sit higher than on native (MLKit)
+ * because browser-based detection spreads probability across many candidates.
  *
  * Per-language carve-outs override the platform-level acceptance threshold.
+ *
+ * Web detection currently runs through a stub (`#/shims/bsky-guess-language`), so these values are
+ * inert until a real detector is wired in.
  */
 const DEFAULT_CONFIG: LanguageDetectionConfig = {
 	acceptanceThreshold: 0.97,
@@ -57,7 +60,7 @@ const DEFAULT_CONFIG: LanguageDetectionConfig = {
 	 * for a language they don't ("are you writing in Japanese?"), so we
 	 * can afford to be more aggressive there.
 	 *
-	 * Native-only. On web we keep the bar at 0.97 because (a) lande's
+	 * Native-only. On web we keep the bar at 0.97 because (a) the detector's
 	 * confidence is tightly bimodal — a score of 0.85 means the model
 	 * doesn't know, not that it's "mostly sure" — and (b) the browser's
 	 * locale signal is noisier (navigator.languages usually includes
@@ -67,8 +70,7 @@ const DEFAULT_CONFIG: LanguageDetectionConfig = {
 	/*
 	 * Per-language carve-outs for known confusable pairs / clusters. The
 	 * acceptance bar is raised above the platform baseline because these
-	 * are languages the detector (especially `lande` on web) is known to
-	 * misclassify or over-commit on.
+	 * are languages the detector is known to misclassify or over-commit on.
 	 *
 	 * The device-locale bar is also raised for most tightly-confusable
 	 * pairs: if the user has both languages in the pair installed (common
