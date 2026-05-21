@@ -322,17 +322,11 @@ let MessageItem = ({
 		</LayoutAnimationConfig>
 	);
 
-	const messageInset = isFromSelf ? a.mr_lg : isGroupChat ? a.ml_lg : undefined;
+	const messageInset = a.mx_lg;
 
 	return (
 		<>
-			<LayoutAnimationConfig skipExiting skipEntering>
-				{hasLargeGapFromPrev && (
-					<Animated.View entering={undefined} exiting={undefined}>
-						<DateDivider date={message.sentAt} />
-					</Animated.View>
-				)}
-			</LayoutAnimationConfig>
+			{hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
 			<View style={[messageInset, isFirstInCluster && a.mt_md]}>
 				<View style={[a.relative]}>
 					{showAvatar ? (
@@ -341,8 +335,8 @@ let MessageItem = ({
 								a.absolute,
 								a.bottom_0,
 								a.z_50,
-								{
-									transform: [{ translateY: hasReactions ? -24 : 0 }],
+								hasReactions && {
+									transform: [{ translateY: -27 }],
 								},
 							]}
 						>
@@ -383,24 +377,22 @@ let MessageItem = ({
 								<Animated.View
 									accessibilityHint={l`Double tap or long press the message to add a reaction`}
 									style={[
-										!isFromSelf && a.ml_sm,
-										...(isOnlyEmoji(message.text)
-											? []
-											: [
-													a.rounded_xl,
-													a.py_sm,
-													a.px_md,
-													{
-														marginTop: hasEmbedAndText || !isFirstInCluster ? CLUSTERED_MESSAGE_GAP : 0,
-														backgroundColor: isFromSelf
-															? isPending
-																? pendingColor
-																: t.palette.primary_500
-															: t.palette.contrast_50,
-													},
-													isFromSelf ? a.self_end : a.self_start,
-													borderRadiusStyle,
-												]),
+										!isFromSelf && isGroupChat && a.ml_sm,
+										!isOnlyEmoji(message.text) && [
+											a.rounded_xl,
+											a.py_sm,
+											a.px_md,
+											{
+												marginTop: hasEmbedAndText || !isFirstInCluster ? CLUSTERED_MESSAGE_GAP : 0,
+												backgroundColor: isFromSelf
+													? isPending
+														? pendingColor
+														: t.palette.primary_500
+													: t.palette.contrast_50,
+											},
+											isFromSelf ? a.self_end : a.self_start,
+											borderRadiusStyle,
+										],
 									]}
 								>
 									<RichText
