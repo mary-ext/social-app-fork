@@ -7,7 +7,6 @@ import {
 	type ModerationOpts,
 	RichText as RichTextAPI,
 } from '@atproto/api';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -49,6 +48,7 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/ico
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { Pencil_Stroke2_Corner0_Rounded as Pencil } from '#/components/icons/Pencil';
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
+import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import * as Layout from '#/components/Layout';
 import { ListMaybePlaceholder } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
@@ -447,7 +447,7 @@ function Header({
 					) : null}
 					{joinedAllTimeCount >= 25 ? (
 						<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-							<FontAwesomeIcon icon="arrow-trend-up" size={12} color={t.atoms.text_contrast_medium.color} />
+							<TrendingIcon width={12} style={{ color: t.atoms.text_contrast_medium.color }} />
 							<Text style={[a.font_semi_bold, a.text_sm, t.atoms.text_contrast_medium]}>
 								<Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
 									<Plural value={starterPack.joinedAllTimeCount || 0} other="# people have" /> joined Bluesky
