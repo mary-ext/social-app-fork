@@ -1,8 +1,15 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import { Image as RNImage, Pressable, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import {
+	Image as RNImage,
+	Pressable,
+	type StyleProp,
+	StyleSheet,
+	Text as RNText,
+	View,
+	type ViewStyle,
+} from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { type ModerationUI } from '@atproto/api';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -240,12 +247,35 @@ let UserAvatar = ({
 			return null;
 		}
 		return (
-			<View style={[a.absolute, a.right_0, a.bottom_0, a.rounded_full, { backgroundColor: t.palette.white }]}>
-				<FontAwesomeIcon
-					icon="exclamation-circle"
-					style={{ color: t.palette.negative_400 }}
-					size={Math.floor(size / 3)}
-				/>
+			<View
+				style={[
+					a.absolute,
+					a.right_0,
+					a.bottom_0,
+					a.rounded_full,
+					{ width: 16, height: 16 },
+					a.align_center,
+					a.justify_center,
+					{ backgroundColor: t.palette.pink },
+					{ transform: [{ scale: size / 42 }] },
+				]}
+			>
+				<RNText
+					style={[
+						a.text_sm,
+						a.font_bold,
+						a.text_center,
+						{
+							color: t.palette.white,
+							includeFontPadding: false,
+							textAlignVertical: 'center',
+						},
+					]}
+					minimumFontScale={1}
+					maxFontSizeMultiplier={1}
+				>
+					!
+				</RNText>
 			</View>
 		);
 	}, [moderation?.alert, size, t]);
