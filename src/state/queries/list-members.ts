@@ -1,9 +1,4 @@
-import {
-	type AppBskyActorDefs,
-	type AppBskyGraphDefs,
-	type AppBskyGraphGetList,
-	type BskyAgent,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphDefs, type AppBskyGraphGetList } from '@atproto/api';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -14,6 +9,7 @@ import {
 
 import { STALE } from '#/state/queries';
 import { useAgent } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
@@ -60,7 +56,7 @@ export function useAllListMembersQuery(uri?: string) {
 	});
 }
 
-export async function getAllListMembers(agent: BskyAgent, uri: string) {
+export async function getAllListMembers(agent: BskyAppAgent, uri: string) {
 	let hasMore = true;
 	let cursor: string | undefined;
 	const listItems: AppBskyGraphDefs.ListItemView[] = [];

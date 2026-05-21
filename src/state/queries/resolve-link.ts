@@ -1,10 +1,10 @@
-import { type BskyAgent } from '@atproto/api';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { type ResolvedLink, resolveGif, resolveLink } from '#/lib/api/resolve';
 
 import { STALE } from '#/state/queries/index';
 import { useAgent } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type Gif } from '#/features/gifPicker/types';
 
@@ -25,7 +25,7 @@ export function useResolveLinkQuery(url: string) {
 		},
 	});
 }
-export function fetchResolveLinkQuery(queryClient: QueryClient, agent: BskyAgent, url: string) {
+export function fetchResolveLinkQuery(queryClient: QueryClient, agent: BskyAppAgent, url: string) {
 	return queryClient.fetchQuery({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_LINK(url),

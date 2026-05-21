@@ -7,7 +7,6 @@ import {
 	type AppBskyEmbedVideo,
 	AppBskyFeedPost,
 	BlobRef,
-	type BskyAgent,
 	type ComAtprotoLabelDefs,
 	type ComAtprotoRepoApplyWrites,
 	type ComAtprotoRepoStrongRef,
@@ -30,6 +29,7 @@ import {
 	createThreadgateRecord,
 	threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
@@ -49,7 +49,7 @@ interface PostOpts {
 	langs?: string[];
 }
 
-export async function post(agent: BskyAgent, queryClient: QueryClient, opts: PostOpts) {
+export async function post(agent: BskyAppAgent, queryClient: QueryClient, opts: PostOpts) {
 	const thread = opts.thread;
 	opts.onStateChange?.(t`Processing...`);
 
@@ -174,7 +174,7 @@ export async function post(agent: BskyAgent, queryClient: QueryClient, opts: Pos
 	return { uris };
 }
 
-async function resolveRT(agent: BskyAgent, richtext: RichText) {
+async function resolveRT(agent: BskyAppAgent, richtext: RichText) {
 	const trimmedText = richtext.text
 		// Trim leading whitespace-only lines (but don't break ASCII art).
 		.replace(/^(\s*\n)+/, '')
@@ -194,7 +194,7 @@ export class ReplyDeletedError extends Error {
 	}
 }
 
-async function resolveReply(agent: BskyAgent, replyTo: string) {
+async function resolveReply(agent: BskyAppAgent, replyTo: string) {
 	const { data } = await agent.app.bsky.feed.getPosts({
 		uris: [replyTo],
 	});
@@ -222,7 +222,7 @@ async function resolveReply(agent: BskyAgent, replyTo: string) {
 }
 
 async function resolveEmbed(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	queryClient: QueryClient,
 	draft: PostDraft,
 	onStateChange: ((state: string) => void) | undefined,
@@ -271,7 +271,7 @@ async function resolveEmbed(
 }
 
 async function resolveMedia(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	queryClient: QueryClient,
 	embedDraft: EmbedDraft,
 	onStateChange: ((state: string) => void) | undefined,
@@ -384,7 +384,7 @@ async function resolveMedia(
 }
 
 async function resolveRecord(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	queryClient: QueryClient,
 	uri: string,
 ): Promise<ComAtprotoRepoStrongRef.Main> {

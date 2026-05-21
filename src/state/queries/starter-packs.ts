@@ -5,7 +5,6 @@ import {
 	AppBskyGraphStarterpack,
 	type AppBskyRichtextFacet,
 	AtUri,
-	type BskyAgent,
 	RichText,
 } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,6 +22,7 @@ import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-
 import { STALE } from '#/state/queries/index';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
 import { useAgent } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import * as bsky from '#/types/bsky';
 
@@ -307,7 +307,7 @@ export function useDeleteStarterPackMutation({
 }
 
 async function whenAppViewReady(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	uri: string,
 	fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
 ) {

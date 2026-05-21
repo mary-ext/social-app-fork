@@ -1,6 +1,8 @@
-import { type AppBskyFeedDefs, type BskyAgent } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atproto/api';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { CustomFeedAPI } from './custom';
 import { FollowingFeedAPI } from './following';
@@ -28,14 +30,14 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 };
 
 export class HomeFeedAPI implements FeedAPI {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	following: FollowingFeedAPI;
 	discover: CustomFeedAPI;
 	usingDiscover = false;
 	itemCursor = 0;
 	userInterests?: string;
 
-	constructor({ userInterests, agent }: { userInterests?: string; agent: BskyAgent }) {
+	constructor({ userInterests, agent }: { userInterests?: string; agent: BskyAppAgent }) {
 		this.agent = agent;
 		this.following = new FollowingFeedAPI({ agent });
 		this.discover = new CustomFeedAPI({

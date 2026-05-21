@@ -1,19 +1,19 @@
 import {
 	type $Typed,
 	type AppBskyEmbedRecord,
-	type BskyAgent,
 	type ChatBskyActorDefs,
 	type ChatBskyConvoDefs,
 	type ChatBskyConvoSendMessage,
 } from '@atproto/api';
 
 import { type MessagesEventBus } from '#/state/messages/events/agent';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type ConvoWithDetails } from '#/components/dms/util';
 
 export type ConvoParams = {
 	convoId: string;
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	events: MessagesEventBus;
 	placeholderData?: {
 		convo: ChatBskyConvoDefs.ConvoView;

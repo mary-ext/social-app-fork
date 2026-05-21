@@ -1,8 +1,8 @@
-import type AtpAgent from '@atproto/api';
 import { type AppBskyActorDefs, type ChatBskyActorDeclaration } from '@atproto/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAgent, useSession } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
@@ -93,7 +93,7 @@ export function useDeleteActorDeclaration() {
 	});
 }
 
-export async function fetchActorDeclarationRecord({ agent, did }: { agent: AtpAgent; did?: string }) {
+export async function fetchActorDeclarationRecord({ agent, did }: { agent: BskyAppAgent; did?: string }) {
 	if (!did) return;
 	const res = await agent.com.atproto.repo
 		.getRecord({

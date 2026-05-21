@@ -1,4 +1,6 @@
-import { type BskyAgent, type ComAtprotoRepoUploadBlob } from '@atproto/api';
+import { type ComAtprotoRepoUploadBlob } from '@atproto/api';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 /**
  * Uploads a blob to the user's repo.
@@ -9,7 +11,7 @@ import { type BskyAgent, type ComAtprotoRepoUploadBlob } from '@atproto/api';
  * @returns the upload response carrying the resulting blob ref
  */
 export async function uploadBlob(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	blob: Blob,
 	encoding?: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {

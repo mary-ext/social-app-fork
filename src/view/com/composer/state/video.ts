@@ -1,4 +1,4 @@
-import { type AppBskyVideoDefs, type BlobRef, type BskyAgent } from '@atproto/api';
+import { type AppBskyVideoDefs, type BlobRef } from '@atproto/api';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
@@ -10,6 +10,8 @@ import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { createVideoAgent } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
@@ -233,7 +235,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 export async function processVideo(
 	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	did: string,
 	signal: AbortSignal,
 	i18n: I18n,
@@ -363,7 +365,7 @@ export async function processVideo(
 }
 
 async function uploadVideoBlobDirectly(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	video: CompressedVideo,
 	signal: AbortSignal,
 ): Promise<BlobRef> {

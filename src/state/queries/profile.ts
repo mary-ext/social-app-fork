@@ -5,7 +5,6 @@ import {
 	type AppBskyActorGetProfiles,
 	type AppBskyActorProfile,
 	type AppBskyGraphGetFollows,
-	type AtpAgent,
 	AtUri,
 	type ComAtprotoRepoUploadBlob,
 	type Un$Typed,
@@ -35,6 +34,7 @@ import {
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { useAgent, useSession } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import type * as bsky from '#/types/bsky';
@@ -526,7 +526,7 @@ function useProfileUnblockMutation() {
 }
 
 async function whenAppViewReady(
-	agent: AtpAgent,
+	agent: BskyAppAgent,
 	actor: string,
 	fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {

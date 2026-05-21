@@ -1,9 +1,4 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type BskyAgent,
-	type ComAtprotoRepoStrongRef,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyGraphDefs, type ComAtprotoRepoStrongRef } from '@atproto/api';
 import { AtUri } from '@atproto/api';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
@@ -23,6 +18,7 @@ import {
 
 import { type ComposerImage } from '#/state/gallery';
 import { createComposerImage } from '#/state/gallery';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type Gif } from '#/features/gifPicker/types';
 
@@ -82,7 +78,7 @@ export class EmbeddingDisabledError extends Error {
 	}
 }
 
-export async function resolveLink(agent: BskyAgent, uri: string): Promise<ResolvedLink> {
+export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<ResolvedLink> {
 	if (isShortLink(uri)) {
 		uri = await resolveShortLink(uri);
 	}

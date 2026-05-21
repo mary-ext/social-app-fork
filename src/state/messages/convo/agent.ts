@@ -1,7 +1,6 @@
 import {
 	type $Typed,
 	type AppBskyEmbedRecord,
-	type AtpAgent,
 	type ChatBskyActorDefs,
 	ChatBskyConvoDefs,
 	type ChatBskyConvoGetLog,
@@ -36,6 +35,7 @@ import {
 } from '#/state/messages/convo/types';
 import { type MessagesEventBus } from '#/state/messages/events/agent';
 import { type MessagesEventBusError } from '#/state/messages/events/types';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { Logger } from '#/logger';
 
@@ -71,7 +71,7 @@ function toSystemMessageView(
 export class Convo {
 	private id: string;
 
-	private agent: AtpAgent;
+	private agent: BskyAppAgent;
 	private events: MessagesEventBus;
 	private senderUserDid: string;
 

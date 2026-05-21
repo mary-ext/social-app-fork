@@ -1,7 +1,9 @@
-import { type BskyAgent, type ChatBskyConvoGetLog } from '@atproto/api';
+import { type ChatBskyConvoGetLog } from '@atproto/api';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 export type MessagesEventBusParams = {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 };
 
 export enum MessagesEventBusStatus {

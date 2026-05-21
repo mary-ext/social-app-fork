@@ -1,4 +1,4 @@
-import { type BskyAgent, type ChatBskyConvoGetLog } from '@atproto/api';
+import { type ChatBskyConvoGetLog } from '@atproto/api';
 import { EventEmitter } from 'eventemitter3';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -15,6 +15,7 @@ import {
 	type MessagesEventBusParams,
 	MessagesEventBusStatus,
 } from '#/state/messages/events/types';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { Logger } from '#/logger';
 
@@ -23,7 +24,7 @@ const logger = Logger.create(Logger.Context.DMsAgent);
 export class MessagesEventBus {
 	private id: string;
 
-	private agent: BskyAgent;
+	private agent: BskyAppAgent;
 	private emitter = new EventEmitter<{ event: [MessagesEventBusEvent] }>();
 
 	private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing;

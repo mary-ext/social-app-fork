@@ -1,4 +1,4 @@
-import { type AppBskyVideoDefs, type BskyAgent } from '@atproto/api';
+import { type AppBskyVideoDefs } from '@atproto/api';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 import { nanoid } from 'nanoid/non-secure';
@@ -6,6 +6,8 @@ import { nanoid } from 'nanoid/non-secure';
 import { AbortError } from '#/lib/async/cancelable';
 import { ServerError } from '#/lib/media/video/errors';
 import { type CompressedVideo } from '#/lib/media/video/types';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { getServiceAuthToken, getVideoUploadLimits } from './upload.shared';
 import { createVideoEndpointUrl, mimeToExt } from './util';
@@ -19,7 +21,7 @@ export async function uploadVideo({
 	i18n,
 }: {
 	video: CompressedVideo;
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	did: string;
 	setProgress: (progress: number) => void;
 	signal: AbortSignal;

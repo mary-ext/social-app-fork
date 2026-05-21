@@ -2,7 +2,6 @@ import {
 	type $Typed,
 	type AppBskyGraphFollow,
 	type AppBskyGraphGetFollows,
-	type BskyAgent,
 	type ComAtprotoRepoApplyWrites,
 	type ComAtprotoRepoStrongRef,
 } from '@atproto/api';
@@ -10,6 +9,8 @@ import { TID } from '@atproto/common-web';
 import chunk from 'lodash.chunk';
 
 import { until } from '#/lib/async/until';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 /**
  * creates follow records in chunks and waits until at least one follow indexes.
@@ -20,7 +21,11 @@ import { until } from '#/lib/async/until';
  * @returns a map of followed dids to created follow uris.
  * @throws when the agent has no active session.
  */
-export async function bulkWriteFollows(agent: BskyAgent, dids: string[], via?: ComAtprotoRepoStrongRef.Main) {
+export async function bulkWriteFollows(
+	agent: BskyAppAgent,
+	dids: string[],
+	via?: ComAtprotoRepoStrongRef.Main,
+) {
 	const session = agent.session;
 
 	if (!session) {
@@ -60,7 +65,7 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[], via?: C
 }
 
 async function whenFollowsIndexed(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	actor: string,
 	fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {

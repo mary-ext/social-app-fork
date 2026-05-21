@@ -1,4 +1,4 @@
-import { type AppBskyFeedDefs, type AppBskyFeedGetTimeline, type BskyAgent } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedGetTimeline } from '@atproto/api';
 import shuffle from 'lodash.shuffle';
 
 import { bundleAsync } from '#/lib/async/bundle';
@@ -7,6 +7,7 @@ import { feedUriToHref } from '#/lib/strings/url-helpers';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { type FeedParams } from '#/state/queries/post-feed';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { FeedTuner } from '../feed-manip';
 import { type FeedTunerFn } from '../feed-manip';
@@ -18,7 +19,7 @@ const POST_AGE_CUTOFF = 60e3 * 60 * 24; // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
 	userInterests?: string;
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	params: FeedParams;
 	feedTuners: FeedTunerFn[];
 	following: MergeFeedSource_Following;
@@ -33,7 +34,7 @@ export class MergeFeedAPI implements FeedAPI {
 		feedTuners,
 		userInterests,
 	}: {
-		agent: BskyAgent;
+		agent: BskyAppAgent;
 		feedParams: FeedParams;
 		feedTuners: FeedTunerFn[];
 		userInterests?: string;
@@ -159,14 +160,14 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	feedTuners: FeedTunerFn[];
 	sourceInfo: ReasonFeedSource | undefined;
 	cursor: string | undefined = undefined;
 	queue: AppBskyFeedDefs.FeedViewPost[] = [];
 	hasMore = true;
 
-	constructor({ agent, feedTuners }: { agent: BskyAgent; feedTuners: FeedTunerFn[] }) {
+	constructor({ agent, feedTuners }: { agent: BskyAppAgent; feedTuners: FeedTunerFn[] }) {
 		this.agent = agent;
 		this.feedTuners = feedTuners;
 	}
@@ -228,7 +229,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	minDate: Date;
 	feedUri: string;
 	userInterests?: string;
@@ -239,7 +240,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
 		feedTuners,
 		userInterests,
 	}: {
-		agent: BskyAgent;
+		agent: BskyAppAgent;
 		feedUri: string;
 		feedTuners: FeedTunerFn[];
 		userInterests?: string;

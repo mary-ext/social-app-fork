@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyActorGetProfile, type AtpAgent } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyActorGetProfile } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -8,6 +8,7 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { RQKEY } from '#/state/queries/profile';
 import { useAgent, useSession } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
@@ -279,7 +280,7 @@ function isCustomGermDomain(url: string) {
 }
 
 async function whenAppViewReady(
-	agent: AtpAgent,
+	agent: BskyAppAgent,
 	actor: string,
 	fn: (res: AppBskyActorGetProfile.Response) => boolean,
 ) {

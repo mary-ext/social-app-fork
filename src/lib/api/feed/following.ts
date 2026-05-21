@@ -1,11 +1,13 @@
-import { type AppBskyFeedDefs, type BskyAgent } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atproto/api';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class FollowingFeedAPI implements FeedAPI {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 
-	constructor({ agent }: { agent: BskyAgent }) {
+	constructor({ agent }: { agent: BskyAppAgent }) {
 		this.agent = agent;
 	}
 

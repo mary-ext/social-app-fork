@@ -19,6 +19,7 @@ import {
 	type BskyAppAgent,
 	createAgentAndFinalizeOAuth,
 	createAgentAndResume,
+	createOptimisticOAuthAgent,
 	createPublicAgent,
 	InactiveAccountError,
 } from './agent';
@@ -60,6 +61,18 @@ function signOut({ accounts, clearDids = [] }: { accounts: SessionAccount[]; cle
 	window.location.reload();
 }
 
+/** Extracts a loggable message from an unknown thrown value. */
+function errorMessage(e: unknown): string {
+	return e instanceof Error ? e.message : String(e);
+}
+
+/**
+ * Boot lifecycle of the persisted session: `resuming` builds the agent from the stored token, `validating`
+ * keeps that agent live while the session is checked against the server, `failed` means the stored session
+ * was rejected, and `idle` covers both "no stored session" and a fully-settled resume.
+ */
+type SessionBootStatus = 'failed' | 'idle' | 'resuming' | 'validating';
+
 const StateContext = createContext<SessionStateContext>({
 	accounts: [],
 	currentAccount: undefined,
@@ -90,45 +103,92 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const [accounts, setAccounts] = useState<SessionAccount[]>(boot.accounts);
 	const [agent, setAgent] = useState<BskyAppAgent>(createPublicAgent);
 	const [currentDid, setCurrentDid] = useState<string | undefined>(undefined);
-	const [isSessionResuming, setIsSessionResuming] = useState(() => !!bootAccount);
-	const [sessionResumeFailed, setSessionResumeFailed] = useState(false);
+	const [status, setStatus] = useState<SessionBootStatus>(() => (bootAccount ? 'resuming' : 'idle'));
 
 	// Boot: resume the persisted current account exactly once. This is the only
 	// path that resumes a session — every later account change reloads the page.
+	// The agent is built from the stored token with no network round trip, so the
+	// app renders immediately; the session is then validated in the background.
 	useEffect(() => {
 		if (!bootAccount) {
 			return;
 		}
 		let cancelled = false;
-		createAgentAndResume(bootAccount)
-			.then(({ agent: resumedAgent }) => {
+		// Latches the one-shot exit from resuming/validating, so a dropped session
+		// and a rejected validation can't both act on the same boot.
+		let settled = false;
+
+		// The stored session is unusable: persist a logged-out session so the next
+		// boot doesn't retry it, and drop back to a guest agent in place — no
+		// reload, unlike `signOut`.
+		const failResume = () => {
+			if (settled) {
+				return;
+			}
+			settled = true;
+			writeSession({ accounts: boot.accounts, currentAccountDid: undefined });
+			setAgent(createPublicAgent());
+			setCurrentDid(undefined);
+			setStatus('failed');
+		};
+
+		const resume = async () => {
+			let resumedAgent: BskyAppAgent;
+			try {
+				resumedAgent = await createOptimisticOAuthAgent(bootAccount);
+			} catch (e) {
 				if (cancelled) {
 					return;
 				}
-				setAgent(resumedAgent);
-				setCurrentDid(bootAccount.did);
-			})
-			.catch((e) => {
+				if (!(e instanceof TokenRefreshError)) {
+					logger.error('session: boot resume failed', { message: errorMessage(e) });
+				}
+				failResume();
+				return;
+			}
+			if (cancelled) {
+				return;
+			}
+			// The agent is usable from the stored token — render now and validate
+			// the session against the server in the background.
+			setAgent(resumedAgent);
+			setCurrentDid(bootAccount.did);
+			setStatus('validating');
+
+			// A session dropped by live traffic during validation fails the resume;
+			// the global dropped-session listener stays off until this settles.
+			const unlistenDropped = listenSessionDropped(() => {
+				if (!cancelled) {
+					failResume();
+				}
+			});
+			try {
+				await resumedAgent.validateResumedSession();
+			} catch (e) {
 				if (cancelled) {
 					return;
 				}
 				if (e instanceof TokenRefreshError || e instanceof InactiveAccountError) {
-					setSessionResumeFailed(true);
+					failResume();
 				} else {
-					logger.error('session: boot resume failed', {
-						message: e instanceof Error ? e.message : String(e),
-					});
+					// A transient failure (e.g. network) — keep the optimistic session;
+					// live traffic will surface a genuine failure.
+					logger.error('session: boot validation failed', { message: errorMessage(e) });
 				}
-			})
-			.finally(() => {
-				if (!cancelled) {
-					setIsSessionResuming(false);
-				}
-			});
+			} finally {
+				unlistenDropped();
+			}
+			if (!cancelled && !settled) {
+				settled = true;
+				setStatus('idle');
+			}
+		};
+
+		void resume();
 		return () => {
 			cancelled = true;
 		};
-	}, [bootAccount]);
+	}, [boot, bootAccount]);
 
 	// Another tab changed the session. Reload only when the change affects the
 	// account this tab is signed in as — it's no longer the current account, or
@@ -150,14 +210,14 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	}, [currentDid]);
 
 	// A live session dropped mid-use. Reload so the boot resume re-resolves it
-	// (and surfaces the failure as a logged-out state). Skipped during boot,
-	// where the resume already handles its own failures.
+	// (and surfaces the failure as a logged-out state). Held off while the boot
+	// resume is still settling, where it handles dropped sessions itself.
 	useEffect(() => {
-		if (isSessionResuming) {
+		if (status === 'resuming' || status === 'validating') {
 			return;
 		}
 		return listenSessionDropped(() => window.location.reload());
-	}, [isSessionResuming]);
+	}, [status]);
 
 	const login = useCallback<SessionApiContext['login']>(async ({ identifier }) => {
 		await startOAuthSignIn({ identifier });
@@ -217,10 +277,10 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			accounts,
 			currentAccount: accounts.find((a) => a.did === currentDid),
 			hasSession: !!currentDid,
-			isSessionResuming,
-			sessionResumeFailed,
+			isSessionResuming: status === 'resuming',
+			sessionResumeFailed: status === 'failed',
 		}),
-		[accounts, currentDid, isSessionResuming, sessionResumeFailed],
+		[accounts, currentDid, status],
 	);
 
 	const api = useMemo<SessionApiContext>(

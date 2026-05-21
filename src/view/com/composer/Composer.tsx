@@ -28,7 +28,6 @@ import {
 	AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
 	AtUri,
-	type BskyAgent,
 	type RichText,
 } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
@@ -83,6 +82,7 @@ import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useAgent, useSession } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 import { useComposerControls } from '#/state/shell/composer';
 import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
 
@@ -1931,7 +1931,7 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	uri: string,
 	fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
 ) {

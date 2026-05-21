@@ -4,7 +4,6 @@ import {
 	type AppBskyGraphGetList,
 	type AppBskyGraphList,
 	AtUri,
-	type BskyAgent,
 	type ComAtprotoRepoApplyWrites,
 	type Facet,
 	type Un$Typed,
@@ -18,6 +17,7 @@ import { until } from '#/lib/async/until';
 import { type ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
 import { useAgent, useSession } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { FEED_INFO_RQKEY_ROOT } from './feed';
 import { invalidate as invalidateMyLists } from './my-lists';
@@ -274,7 +274,7 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	uri: string,
 	fn: (res: AppBskyGraphGetList.Response) => boolean,
 ) {

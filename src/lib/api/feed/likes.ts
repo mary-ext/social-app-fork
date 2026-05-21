@@ -1,16 +1,14 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedGetActorLikes as GetActorLikes,
-	type BskyAgent,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedGetActorLikes as GetActorLikes } from '@atproto/api';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class LikesFeedAPI implements FeedAPI {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	params: GetActorLikes.QueryParams;
 
-	constructor({ agent, feedParams }: { agent: BskyAgent; feedParams: GetActorLikes.QueryParams }) {
+	constructor({ agent, feedParams }: { agent: BskyAppAgent; feedParams: GetActorLikes.QueryParams }) {
 		this.agent = agent;
 		this.params = feedParams;
 	}

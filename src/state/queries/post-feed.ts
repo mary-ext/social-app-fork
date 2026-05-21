@@ -5,7 +5,6 @@ import {
 	AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	AtUri,
-	type BskyAgent,
 	moderatePost,
 	type ModerationDecision,
 	type ModerationPrefs,
@@ -29,6 +28,7 @@ import { DISCOVER_FEED_URI } from '#/lib/constants';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
 import { useAgent } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { logger } from '#/logger';
@@ -416,7 +416,7 @@ function createApi({
 	feedParams: FeedParams;
 	feedTuners: FeedTunerFn[];
 	userInterests?: string;
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	enableFollowingToDiscoverFallback: boolean;
 }) {
 	if (feedDesc === 'following') {

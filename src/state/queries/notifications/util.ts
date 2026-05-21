@@ -6,7 +6,6 @@ import {
 	type AppBskyGraphDefs,
 	AppBskyGraphStarterpack,
 	type AppBskyNotificationListNotifications,
-	type BskyAgent,
 	hasMutedWord,
 	moderateNotification,
 	type ModerationOpts,
@@ -15,6 +14,8 @@ import { type QueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
+
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import * as bsky from '#/types/bsky';
 
@@ -44,7 +45,7 @@ export async function fetchPage({
 	fetchAdditionalData,
 	reasons,
 }: {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	cursor: string | undefined;
 	limit: number;
 	queryClient: QueryClient;
@@ -190,7 +191,7 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	groupedNotifs: FeedNotification[],
 ): Promise<{
 	posts: Map<string, AppBskyFeedDefs.PostView>;

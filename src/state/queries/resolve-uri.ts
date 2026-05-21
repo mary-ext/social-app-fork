@@ -1,8 +1,9 @@
-import { AtUri, type BskyAgent } from '@atproto/api';
+import { AtUri } from '@atproto/api';
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
 import { useAgent } from '#/state/session';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { useUnstableProfileViewCache } from './profile';
 
@@ -10,7 +11,7 @@ const RQKEY_ROOT = 'resolved-did';
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle];
 
 const resolvedDidQueryOptions = (
-	agent: BskyAgent,
+	agent: BskyAppAgent,
 	getUnstableProfile: (did: string) => { did: string } | undefined,
 	didOrHandle: string | undefined,
 ) =>

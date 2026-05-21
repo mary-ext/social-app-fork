@@ -6,12 +6,13 @@ import {
 } from '@atproto/api';
 
 import { getAppLanguageAsContentLanguage, getContentLanguages } from '#/state/preferences/languages';
+import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 import { createBskyTopicsHeader, isBlueskyOwnedFeed } from './utils';
 
 export class CustomFeedAPI implements FeedAPI {
-	agent: BskyAgent;
+	agent: BskyAppAgent;
 	params: GetCustomFeed.QueryParams;
 	userInterests?: string;
 
@@ -20,7 +21,7 @@ export class CustomFeedAPI implements FeedAPI {
 		feedParams,
 		userInterests,
 	}: {
-		agent: BskyAgent;
+		agent: BskyAppAgent;
 		feedParams: GetCustomFeed.QueryParams;
 		userInterests?: string;
 	}) {
