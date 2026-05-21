@@ -27,7 +27,7 @@ import { logger } from '#/logger';
 import { useDialogContext } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 
-import { getLiveNowHost, getLiveServiceNames } from '#/features/liveNow/utils';
+import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
 import type * as bsky from '#/types/bsky';
 
 export * from '#/features/liveNow/utils';
@@ -159,10 +159,10 @@ export function isStatusValidForViewers(status: AppBskyActorDefs.StatusView, con
 	try {
 		const { host: liveDid } = new AtUri(status.uri);
 		if (AppBskyEmbedExternal.isView(status.embed)) {
-			const host = getLiveNowHost(status.embed.external.uri);
+			const url = status.embed.external.uri;
 			const exception = config.allowedHostsExceptionsByDid.get(liveDid);
-			const isValidException = exception ? exception.has(host) : false;
-			const isValidForAnyone = config.defaultAllowedHosts.has(host);
+			const isValidException = exception ? isLiveNowUrlAllowed(url, exception) : false;
+			const isValidForAnyone = isLiveNowUrlAllowed(url, config.defaultAllowedHosts);
 			return isValidException || isValidForAnyone;
 		} else {
 			return false;
@@ -181,8 +181,7 @@ export function useLiveLinkMetaQuery(url: string | null) {
 		queryKey: ['link-meta', url],
 		queryFn: async () => {
 			if (!url) return undefined;
-			const host = getLiveNowHost(url);
-			if (!liveNowConfig.currentAccountAllowedHosts.has(host)) {
+			if (!isLiveNowUrlAllowed(url, liveNowConfig.currentAccountAllowedHosts)) {
 				const { formatted } = getLiveServiceNames(liveNowConfig.currentAccountAllowedHosts);
 				throw new Error(
 					l`This service is not supported while the Live feature is in beta. Allowed services: ${formatted}.`,

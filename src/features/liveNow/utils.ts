@@ -1,6 +1,5 @@
 import { type I18n } from '@lingui/core';
 import { plural } from '@lingui/core/macro';
-import { parse as parseDomain } from 'psl';
 
 export function displayDuration(i18n: I18n, durationInMinutes: number) {
 	const roundedDurationInMinutes = Math.round(durationInMinutes);
@@ -23,45 +22,58 @@ export function displayDuration(i18n: I18n, durationInMinutes: number) {
 }
 
 const serviceUrlToNameMap: Record<string, string> = {
-	'twitch.tv': 'Twitch',
-	'youtube.com': 'YouTube',
+	'bluecast.app': 'Bluecast',
+	'espn.com': 'ESPN',
 	'nba.com': 'NBA',
 	'nba.smart.link': 'nba.smart.link',
-	'espn.com': 'ESPN',
-	'stream.place': 'Streamplace',
 	'skylight.social': 'Skylight',
-	'bluecast.app': 'Bluecast',
+	'stream.place': 'Streamplace',
+	'twitch.tv': 'Twitch',
+	'youtube.com': 'YouTube',
 };
 
+/**
+ * Checks whether `hostname` is covered by the allowlist. A host matches an entry when it equals the entry or
+ * is a subdomain of it, so `m.twitch.tv` matches `twitch.tv` while `twitch.tv.evil.com` does not.
+ */
+function hostMatchesAllowlist(hostname: string, allowedHosts: Set<string>): boolean {
+	for (const allowed of allowedHosts) {
+		if (hostname === allowed || hostname.endsWith(`.${allowed}`)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Checks whether `url`'s host is permitted by an allowlist of apex domains. The allowlist holds apex domains,
+ * so matching is a plain equality/subdomain check — no public-suffix lookup needed.
+ *
+ * @param url live status URL to check
+ * @param allowedHosts allowlist of apex domains
+ * @returns whether the URL's host is allowed; false for unparseable URLs
+ */
+export function isLiveNowUrlAllowed(url: string, allowedHosts: Set<string>): boolean {
+	let hostname: string;
+	try {
+		hostname = new URL(url).hostname;
+	} catch {
+		return false;
+	}
+	return hostMatchesAllowlist(hostname, allowedHosts);
+}
+
+/**
+ * Maps a set of allowlisted apex domains to their human-readable service names, falling back to the domain
+ * itself for unrecognized hosts.
+ *
+ * @param domains allowlisted apex domains
+ * @returns the deduplicated service names and a comma-joined string of them
+ */
 export function getLiveServiceNames(domains: Set<string>) {
-	const names = Array.from(
-		new Set(
-			Array.from(domains.values())
-				.map((d) => sanitizeLiveNowHost(d))
-				.map((d) => serviceUrlToNameMap[d] || d),
-		),
-	);
+	const names = Array.from(new Set(Array.from(domains.values()).map((d) => serviceUrlToNameMap[d] || d)));
 	return {
 		names,
 		formatted: names.join(', '),
 	};
-}
-
-export function sanitizeLiveNowHost(hostname: string) {
-	// special case this one
-	if (hostname === 'nba.smart.link') {
-		return hostname;
-	}
-	const parsed = parseDomain(hostname);
-	if (parsed.error || !parsed.listed || !parsed.domain) {
-		// fall back to dumb version
-		return hostname.replace(/^www\./, '');
-	}
-	return parsed.domain;
-}
-
-/** Extracts the apex domain from a given URL, for use when matching allowed Live Now hosts. */
-export function getLiveNowHost(url: string) {
-	const { hostname } = new URL(url);
-	return sanitizeLiveNowHost(hostname);
 }
