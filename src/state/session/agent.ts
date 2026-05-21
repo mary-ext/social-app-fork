@@ -12,9 +12,6 @@ import {
 	type ComAtprotoServerRefreshSession,
 	type Did,
 } from '@atproto/api';
-import { type FetchHandler } from '@atproto/api/dist/agent';
-import { type SessionManager } from '@atproto/api/dist/session-manager';
-import { type FetchHandlerOptions } from '@atproto/xrpc';
 
 import { networkRetry } from '#/lib/async/retry';
 import { BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE } from '#/lib/constants';
@@ -25,6 +22,8 @@ import { configureAppOAuth } from './oauth';
 import { type SessionAccount } from './types';
 
 export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`;
+
+type FetchHandler = (this: void, url: string, init: RequestInit) => Promise<Response>;
 
 export class InactiveAccountError extends Error {
 	account: SessionAccount;
@@ -96,11 +95,8 @@ export async function createOptimisticOAuthAgent(storedAccount: SessionAccount) 
 }
 
 export class Agent extends BaseAgent {
-	constructor(
-		proxyHeader: ProxyHeaderValue | null,
-		options: SessionManager | FetchHandler | FetchHandlerOptions,
-	) {
-		super(options);
+	constructor(proxyHeader: ProxyHeaderValue | null, ...options: ConstructorParameters<typeof BaseAgent>) {
+		super(...options);
 		if (proxyHeader) {
 			this.configureProxy(proxyHeader);
 		}
@@ -133,10 +129,10 @@ const realFetchWithEvents = withNetworkEvents(fetch);
 type BskyAppAgentOptions = { handle: string; oauthAgent: OAuthUserAgent } | { service: string };
 
 /**
- * Bridges an atcute OAuth user-agent to the {@link SessionManager} contract that `@atproto/api`'s
- * {@link BaseAgent} expects, so XRPC requests are routed through OAuth (DPoP) authentication.
+ * Bridges an atcute OAuth user-agent to the session-manager contract that {@link BaseAgent} expects, so XRPC
+ * requests are routed through OAuth (DPoP) authentication.
  */
-class OAuthSessionManager implements SessionManager {
+class OAuthSessionManager {
 	readonly did: string;
 	readonly fetchHandler: FetchHandler;
 
