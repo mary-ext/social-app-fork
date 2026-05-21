@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useLingui } from '@lingui/react/macro';
 
 import { Provider as HotkeysProvider } from '#/lib/hotkeys';
+import { initializeLanguageDetection } from '#/lib/language-detection';
 import { QueryProvider } from '#/lib/react-query';
 import { ThemeProvider } from '#/lib/ThemeContext';
 import { Provider as TranslateOnDeviceProvider } from '#/lib/translation';
@@ -123,6 +124,8 @@ function App() {
 
 	useEffect(() => {
 		void initPersistedState().then(() => setIsReady(true));
+		// prewarm language-detection weights so detection is ready by first use
+		void initializeLanguageDetection();
 	}, []);
 
 	if (!isReady) {

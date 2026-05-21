@@ -1,7 +1,7 @@
 import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atproto/api';
 import * as bcp47Match from 'bcp-47-match';
-import lande from 'lande';
 
+import { detectLanguages } from '#/lib/language-detection';
 import { hasProp } from '#/lib/type-guards';
 
 import { AppLanguage, type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
@@ -96,11 +96,11 @@ export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefi
 	}
 
 	// run the language model
-	let langsProbabilityMap = lande(postText);
+	let langsProbabilityMap = detectLanguages(postText);
 
 	// filter down using declared languages
 	if (candidates.length) {
-		langsProbabilityMap = langsProbabilityMap.filter(([lang, _probability]: [string, number]) =>
+		langsProbabilityMap = langsProbabilityMap.filter(([lang]) =>
 			candidates.includes(code3ToCode2(lang)),
 		);
 	}
