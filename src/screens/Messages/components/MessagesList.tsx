@@ -25,6 +25,7 @@ import { convertBskyAppUrlIfNeeded, isBskyPostUrl } from '#/lib/strings/url-help
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 import { useGetPost } from '#/state/queries/post';
+import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useAgent } from '#/state/session';
 
 import { logger } from '#/logger';
@@ -329,6 +330,7 @@ export function MessagesList({
 			rt.detectFacetsWithoutResolution();
 
 			let embed: $Typed<AppBskyEmbedRecord.Main> | undefined;
+			let embedView: $Typed<AppBskyEmbedRecord.View> | undefined;
 
 			if (embedUri) {
 				try {
@@ -340,6 +342,11 @@ export function MessagesList({
 								uri: post.uri,
 								cid: post.cid,
 							},
+						};
+
+						embedView = {
+							$type: 'app.bsky.embed.record#view',
+							record: createEmbedViewRecordFromPost(post),
 						};
 
 						// look for the embed uri in the facets, so we can remove it from the text
@@ -390,11 +397,14 @@ export function MessagesList({
 				setHasScrolled(true);
 			}
 
-			convoState.sendMessage({
-				text: rt.text,
-				facets: rt.facets,
-				embed,
-			});
+			convoState.sendMessage(
+				{
+					text: rt.text,
+					facets: rt.facets,
+					embed,
+				},
+				embedView,
+			);
 		},
 		[agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
 	);
