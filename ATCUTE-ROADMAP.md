@@ -254,17 +254,15 @@ fixed third-party host. These get a `Client` constructed **at the call site** wi
 `simpleFetchHandler` against the specific URL. Forcing them through the global `pds` / `appview`
 clients silently sends them to the wrong host.
 
-| Use case                                            | Client                                                              |
-| --------------------------------------------------- | ------------------------------------------------------------------- |
-| `describeServer` against an arbitrary service URL   | local `Client` at that `serviceUrl`                                 |
-| `com.atproto.temp.checkHandleAvailability`          | local `Client` at the entryway (`BSKY_SERVICE`)                     |
-| third-party handle resolution / availability checks | local `Client` at `PUBLIC_BSKY_SERVICE`                             |
-| chat (`chat.bsky.*`)                                | `chat` client, scoped to Messages (Phase 4.1)                       |
-| video upload                                        | local token-authed `Client`, no proxy (Phase 4.2)                   |
-| moderation reporting                                | per-report `Client`, proxy `${labeler}#atproto_labeler` (Phase 4.3) |
+| Use case                                          | Client                                                              |
+| -------------------------------------------------- | -------------------------------------------------------------------- |
+| `describeServer` against an arbitrary service URL | local `Client` at that `serviceUrl`                                  |
+| chat (`chat.bsky.*`)                               | `chat` client, scoped to Messages (Phase 4.1)                        |
+| video upload                                       | local token-authed `Client`, no proxy (Phase 4.2)                    |
+| moderation reporting                               | per-report `Client`, proxy `${labeler}#atproto_labeler` (Phase 4.3)  |
 
-Phase 1.3 provides small constructor helpers (`createServiceClient(url)`, `createEntrywayClient()`,
-`createPublicResolverClient()`) so these are not hand-rolled per call site.
+Phase 1.3 provides a small constructor helper (`createServiceClient(url)`) so these are not
+hand-rolled per call site.
 
 ### Why chat / video / reporting are not global
 
@@ -518,9 +516,8 @@ CRUD). Building them here keeps every later phase a clean, isolated diff.
       Also re-export `ModerationOpts` / `ModerationDecision` types. **Do not** convert existing
       callers yet — that happens per-phase as each view type flips. Header comment: classify as a
       long-lived adapter, name Appendix A as the removal point.
-- [ ] Add ad-hoc client constructors (in `clients.ts` or a sibling): `createServiceClient(url)`,
-      `createEntrywayClient()`, `createPublicResolverClient()` — each a `Client` over
-      `simpleFetchHandler` at the relevant host.
+- [ ] Add the ad-hoc client constructor `createServiceClient(url)` (in `clients.ts`) — a `Client`
+      over `simpleFetchHandler` at an arbitrary host.
 - [ ] Add the `asPostRecord` / record-accessor helpers (a small module) for the `record: unknown`
       assertion pattern on view objects.
 - [ ] Create `src/lib/api/records.ts` — typed `com.atproto.repo.*` CRUD helpers generic over the
@@ -679,16 +676,13 @@ tiny objects — no shared view types. It exercises the routing split (`resolveH
 `appview`; own identity → `pds`) and the ad-hoc client helpers before anything structural is at
 stake.
 
-**In scope (re-grep):** `handle.ts`, `handle-availability.ts`, `resolve-uri.ts`, `resolve-link.ts`,
-`resolve-short-link.ts`, `shorten-link.ts`, `service.ts`, `service-config.ts`.
+**In scope (re-grep):** `handle.ts`, `resolve-uri.ts`, `resolve-link.ts`, `resolve-short-link.ts`,
+`shorten-link.ts`, `service.ts`, `service-config.ts`.
 
 **Footguns:**
 
 - `service.ts` (`useServiceQuery`) calls `describeServer` against an **arbitrary** `serviceUrl` —
   use `createServiceClient(serviceUrl)`, not the global `pds`.
-- `handle-availability.ts` checks `com.atproto.temp.checkHandleAvailability` against the entryway
-  (`BSKY_SERVICE`) and does third-party handle resolution against `PUBLIC_BSKY_SERVICE` — use
-  `createEntrywayClient()` and `createPublicResolverClient()` respectively.
 - `resolveHandle` for arbitrary handles → `appview`; the current user's own handle → `pds`.
 - `actor-autocomplete.ts` is **not** here — it returns `ProfileViewBasic` and belongs to the profile
   hub (Phase 2.2).
