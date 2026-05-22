@@ -58,14 +58,3 @@ export function createOAuthClients(oauthAgent: OAuthUserAgent): Clients {
 		pds: new Client({ handler }),
 	};
 }
-
-/**
- * Builds an ad-hoc client targeting an arbitrary service URL — for calls that hit neither the user's
- * PDS nor the Bluesky AppView, e.g. `describeServer` against a custom service.
- *
- * @param url the service base URL.
- * @returns a client for that service.
- */
-export function createServiceClient(url: string): Client {
-	return new Client({ handler: simpleFetchHandler({ service: url }) });
-}

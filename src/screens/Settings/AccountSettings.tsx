@@ -11,12 +11,10 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList';
 
 import { isBotAccount } from '#/components/BotBadge';
 import { useDialogControl } from '#/components/Dialog';
-import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { Bot_Stroke as RobotIcon } from '#/components/icons/Bot';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
 import * as Layout from '#/components/Layout';
 
-import { ChangeHandleDialog } from './components/ChangeHandleDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>;
@@ -24,7 +22,6 @@ export function AccountSettingsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
-	const changeHandleControl = useDialogControl();
 	const exportCarControl = useDialogControl();
 
 	return (
@@ -40,17 +37,6 @@ export function AccountSettingsScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<SettingsList.Container>
-					<SettingsList.PressableItem
-						label={l`Handle`}
-						accessibilityHint={l`Opens change handle dialog`}
-						onPress={() => changeHandleControl.open()}
-					>
-						<SettingsList.ItemIcon icon={AtIcon} />
-						<SettingsList.ItemText>
-							<Trans>Handle</Trans>
-						</SettingsList.ItemText>
-						<SettingsList.Chevron />
-					</SettingsList.PressableItem>
 					<SettingsList.LinkItem to="/settings/automation-label" label={l`Automation label`}>
 						<SettingsList.ItemIcon icon={RobotIcon} />
 						<SettingsList.ItemText>
@@ -70,7 +56,6 @@ export function AccountSettingsScreen({}: Props) {
 					</SettingsList.PressableItem>
 				</SettingsList.Container>
 			</Layout.Content>
-			<ChangeHandleDialog control={changeHandleControl} />
 			<ExportCarDialog control={exportCarControl} />
 		</Layout.Screen>
 	);

@@ -254,15 +254,13 @@ fixed third-party host. These get a `Client` constructed **at the call site** wi
 `simpleFetchHandler` against the specific URL. Forcing them through the global `pds` / `appview`
 clients silently sends them to the wrong host.
 
-| Use case                                          | Client                                                              |
-| -------------------------------------------------- | -------------------------------------------------------------------- |
-| `describeServer` against an arbitrary service URL | local `Client` at that `serviceUrl`                                  |
-| chat (`chat.bsky.*`)                               | `chat` client, scoped to Messages (Phase 4.1)                        |
-| video upload                                       | local token-authed `Client`, no proxy (Phase 4.2)                    |
-| moderation reporting                               | per-report `Client`, proxy `${labeler}#atproto_labeler` (Phase 4.3)  |
+| Use case             | Client                                                              |
+| -------------------- | -------------------------------------------------------------------- |
+| chat (`chat.bsky.*`) | `chat` client, scoped to Messages (Phase 4.1)                        |
+| video upload         | local token-authed `Client`, no proxy (Phase 4.2)                    |
+| moderation reporting | per-report `Client`, proxy `${labeler}#atproto_labeler` (Phase 4.3)  |
 
-Phase 1.3 provides a small constructor helper (`createServiceClient(url)`) so these are not
-hand-rolled per call site.
+Each is constructed at the call site by its own Phase 4 phase; Phase 1.3 adds no shared helper.
 
 ### Why chat / video / reporting are not global
 
@@ -499,14 +497,13 @@ adds event emission and the _terminal_ session-dropped signal.
 `appview` / `pds` clients (verify with a throwaway logged-in and logged-out `getProfile`, then
 remove it).
 
-## Phase 1.3 — Compatibility bridges and ad-hoc client helpers
+## Phase 1.3 — Compatibility bridges and record helpers
 
-**Motivation:** Streams 2 and 3 need four shared seams in place before they start: the moderation
-compat module (so flipping a view type does not break every `moderateProfile` caller), the ad-hoc
-client constructors (so non-global call sites have a sanctioned path), the `record: unknown`
-accessor for view objects, and the typed `com.atproto.repo.*` record helpers (Stream 2 reads —
-`starter-packs.ts`, `list.ts`, `postgate`/`threadgate` — and every Stream 3 record write call repo
-CRUD). Building them here keeps every later phase a clean, isolated diff.
+**Motivation:** Streams 2 and 3 need three shared seams in place before they start: the moderation
+compat module (so flipping a view type does not break every `moderateProfile` caller), the
+`record: unknown` accessor for view objects, and the typed `com.atproto.repo.*` record helpers
+(Stream 2 reads — `starter-packs.ts`, `list.ts`, `postgate`/`threadgate` — and every Stream 3 record
+write call repo CRUD). Building them here keeps every later phase a clean, isolated diff.
 
 **Checklist:**
 
@@ -516,8 +513,6 @@ CRUD). Building them here keeps every later phase a clean, isolated diff.
       Also re-export `ModerationOpts` / `ModerationDecision` types. **Do not** convert existing
       callers yet — that happens per-phase as each view type flips. Header comment: classify as a
       long-lived adapter, name Appendix A as the removal point.
-- [ ] Add the ad-hoc client constructor `createServiceClient(url)` (in `clients.ts`) — a `Client`
-      over `simpleFetchHandler` at an arbitrary host.
 - [ ] Add the `asPostRecord` / record-accessor helpers (a small module) for the `record: unknown`
       assertion pattern on view objects.
 - [ ] Create `src/lib/api/records.ts` — typed `com.atproto.repo.*` CRUD helpers generic over the
@@ -645,7 +640,7 @@ CRUD). Building them here keeps every later phase a clean, isolated diff.
   };
   ```
 
-**Done when:** the four seams compile and are exported; nothing imports them yet;
+**Done when:** the three seams compile and are exported; nothing imports them yet;
 `pnpm lint && pnpm typecheck` pass.
 
 ---
@@ -672,25 +667,30 @@ Six phases, each one type hub. Convert that hub's read queries from `useAgent()`
 ## Phase 2.1 — Identity and resolution
 
 **Motivation:** the safest warm-up. These queries return plain scalars (a DID, a handle, a URL) or
-tiny objects — no shared view types. It exercises the routing split (`resolveHandle` for others →
-`appview`; own identity → `pds`) and the ad-hoc client helpers before anything structural is at
-stake.
+tiny objects — no shared view types. It exercises the `appview` routing before anything structural
+is at stake.
 
-**In scope (re-grep):** `handle.ts`, `resolve-uri.ts`, `resolve-link.ts`, `resolve-short-link.ts`,
-`shorten-link.ts`, `service.ts`, `service-config.ts`.
+**In scope (re-grep):** `handle.ts` (`useFetchHandle` only — `useFetchDid` and
+`useUpdateHandleMutation` were deleted with the ChangeHandleDialog removal), `resolve-uri.ts`,
+`service-config.ts`. `resolve-short-link.ts` and `shorten-link.ts` carry no `@atproto/api` and need
+no change.
+
+`resolve-link.ts` / `src/lib/api/resolve.ts` are **deferred**: `resolveLink` resolves links into
+`PostView` / `GeneratorView` / `ListView` / `StarterPackView`, so it can only migrate alongside
+those hubs (Phases 2.3–2.5). Pick it up there.
 
 **Footguns:**
 
-- `service.ts` (`useServiceQuery`) calls `describeServer` against an **arbitrary** `serviceUrl` —
-  use `createServiceClient(serviceUrl)`, not the global `pds`.
 - `resolveHandle` for arbitrary handles → `appview`; the current user's own handle → `pds`.
+- `resolve-uri.ts` uses `AtUri` from `@atproto/api`; that import stays until Phase 5.1 migrates the
+  syntax helpers. Migrate only the XRPC call here.
 - `actor-autocomplete.ts` is **not** here — it returns `ProfileViewBasic` and belongs to the profile
   hub (Phase 2.2).
 
-**Done when:** identity queries use the correct (global or ad-hoc) clients,
-`rg "@atproto/api" src/state/queries/handle*.ts src/state/queries/resolve*.ts src/state/queries/service*.ts`
-is clean, lint+typecheck pass, and handle resolution / link resolution / a custom-service describe
-all work in `pnpm dev`.
+**Done when:** the migrated identity queries (`handle.ts`, `resolve-uri.ts`, `service-config.ts`)
+run on `appview` and import `@atcute` types, the only remaining `@atproto/api` import across them is
+`AtUri` in `resolve-uri.ts` (deferred to Phase 5.1), lint+typecheck pass, and handle resolution
+works in `pnpm dev`.
 
 ## Phase 2.2 — Profiles and social graph
 
