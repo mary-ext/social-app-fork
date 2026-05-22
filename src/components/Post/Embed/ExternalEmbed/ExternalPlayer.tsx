@@ -79,7 +79,7 @@ function Player({
 	onLoad: () => void;
 }) {
 	// ensures we only load what's requested
-	// when it's a youtube video, we need to allow both bsky.app and youtube.com
+	// youtube videos navigate within www.youtube.com once the player loads
 	const onShouldStartLoadWithRequest = useCallback(
 		(event: ShouldStartLoadRequest) =>
 			event.url === params.playerUri ||

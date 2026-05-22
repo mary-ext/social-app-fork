@@ -2,8 +2,6 @@ import { Dimensions } from 'react-native';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const IFRAME_HOST = window.location.host === 'localhost:8100' ? 'http://localhost:8100' : 'https://bsky.app'; // @ts-ignore only for web
-
 export const embedPlayerSources = [
 	'youtube',
 	'youtubeShorts',
@@ -102,7 +100,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 			return {
 				type: 'youtube_video',
 				source: 'youtube',
-				playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
+				playerUri: `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&playsinline=1&rel=0&start=${seek}`,
 			};
 		}
 	}
@@ -125,7 +123,7 @@ export function parseEmbedPlayerFromUrl(url: string): EmbedPlayerParams | undefi
 				type: isShorts ? 'youtube_short' : 'youtube_video',
 				source: isShorts ? 'youtubeShorts' : 'youtube',
 				hideDetails: isShorts ? true : undefined,
-				playerUri: `${IFRAME_HOST}/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
+				playerUri: `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&playsinline=1&rel=0&start=${seek}`,
 			};
 		}
 	}
