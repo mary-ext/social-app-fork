@@ -16,14 +16,13 @@ import {
 import { networkRetry } from '#/lib/async/retry';
 import { BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE } from '#/lib/constants';
 
-import { emitNetworkConfirmed, emitNetworkLost, emitSessionDropped } from '../events';
+import { createOAuthClients } from './clients';
 import { configureModerationForAccount, configureModerationForGuest } from './moderation';
+import { createOAuthFetchHandler, type FetchHandler, withNetworkEvents } from './network';
 import { configureAppOAuth } from './oauth';
 import { type SessionAccount } from './types';
 
 export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`;
-
-type FetchHandler = (this: void, url: string, init: RequestInit) => Promise<Response>;
 
 export class InactiveAccountError extends Error {
 	account: SessionAccount;
@@ -86,12 +85,10 @@ function tokenExpiringWithin(session: Session, leewayMs: number): boolean {
 export async function createOptimisticOAuthAgent(storedAccount: SessionAccount) {
 	configureAppOAuth();
 	const session = await getSession(storedAccount.did as AtcuteDid, { allowStale: true });
-	const agent = new BskyAppAgent({
-		handle: storedAccount.handle,
-		oauthAgent: new OAuthUserAgent(session),
-	});
+	const oauthAgent = new OAuthUserAgent(session);
+	const agent = new BskyAppAgent({ handle: storedAccount.handle, oauthAgent });
 	await configureOAuthAgent(agent, storedAccount);
-	return agent;
+	return { agent, clients: createOAuthClients(oauthAgent) };
 }
 
 export class Agent extends BaseAgent {
@@ -104,11 +101,12 @@ export class Agent extends BaseAgent {
 }
 
 async function createPreparedOAuthAgent(session: Session) {
+	const oauthAgent = new OAuthUserAgent(session);
 	// handle is seeded empty; refreshSessionData() below replaces the session data.
-	const agent = new BskyAppAgent({ handle: '', oauthAgent: new OAuthUserAgent(session) });
+	const agent = new BskyAppAgent({ handle: '', oauthAgent });
 	const account = await agent.refreshSessionData();
 	await configureOAuthAgent(agent, account);
-	return { account, agent };
+	return { account, agent, clients: createOAuthClients(oauthAgent) };
 }
 
 /**
@@ -236,73 +234,6 @@ class BskyAppAgent extends BaseAgent {
 		}
 		return this.refreshSessionData();
 	}
-}
-
-/**
- * Builds the XRPC fetch handler for an OAuth session: routes each request through the atcute user-agent
- * (which adds DPoP auth and refreshes tokens on its own) and reports an unrecoverable session drop.
- *
- * @param oauthAgent the atcute user-agent to route requests through.
- * @returns a fetch handler for {@link OAuthSessionManager}.
- */
-function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandler {
-	let dropped = false;
-	return withNetworkEvents(async (url: string, init: RequestInit) => {
-		const response = await oauthAgent.handle(url, withReadableStreamDuplex(init));
-		// `handle` refreshes tokens on its own; an invalid-token 401 coming back
-		// out of it means that refresh failed and the session is unusable.
-		if (!dropped && isInvalidTokenResponse(response)) {
-			dropped = true;
-			emitSessionDropped();
-		}
-		return response;
-	});
-}
-
-type ReadableStreamRequestInit = RequestInit & { duplex?: 'half' };
-
-function withReadableStreamDuplex(init: RequestInit | undefined): RequestInit | undefined {
-	if (typeof ReadableStream === 'undefined' || !(init?.body instanceof ReadableStream)) {
-		return init;
-	}
-
-	const nextInit: ReadableStreamRequestInit = {
-		...init,
-		duplex: 'half',
-	};
-
-	return nextInit;
-}
-
-function isInvalidTokenResponse(response: Response): boolean {
-	if (response.status !== 401) {
-		return false;
-	}
-	const auth = response.headers.get('www-authenticate');
-	return (
-		auth != null &&
-		(auth.startsWith('Bearer ') || auth.startsWith('DPoP ')) &&
-		auth.includes('error="invalid_token"')
-	);
-}
-
-/**
- * Wraps a fetch-like function so each call emits a network-confirmed or network-lost event depending on
- * whether the request settled.
- */
-function withNetworkEvents<Args extends unknown[]>(
-	fetchFn: (...args: Args) => Promise<Response>,
-): (...args: Args) => Promise<Response> {
-	return async (...args) => {
-		try {
-			const response = await fetchFn(...args);
-			emitNetworkConfirmed();
-			return response;
-		} catch (e) {
-			emitNetworkLost();
-			throw e;
-		}
-	};
 }
 
 function createSessionData({

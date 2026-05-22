@@ -23,6 +23,7 @@ import {
 	createPublicAgent,
 	InactiveAccountError,
 } from './agent';
+import { type Clients, createPublicClients } from './clients';
 import { IS_OAUTH_CALLBACK, startOAuthSignIn } from './oauth';
 
 export type { SessionAccount } from '#/state/session/types';
@@ -86,6 +87,13 @@ StateContext.displayName = 'SessionStateContext';
 const AgentContext = createContext<BskyAppAgent | null>(null);
 AgentContext.displayName = 'SessionAgentContext';
 
+const ClientsContext = createContext<Clients | null>(null);
+ClientsContext.displayName = 'SessionClientsContext';
+
+// Module-level mirror of the current clients, for the rare non-React caller.
+// Kept in sync by an effect in `Provider` below.
+let currentClients: Clients | null = null;
+
 const ApiContext = createContext<SessionApiContext>({
 	completeOAuthCallback: async () => {},
 	login: async () => {},
@@ -103,6 +111,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		: boot.accounts.find((a) => a.did === boot.currentAccountDid);
 	const [accounts, setAccounts] = useState<SessionAccount[]>(boot.accounts);
 	const [agent, setAgent] = useState<BskyAppAgent>(createPublicAgent);
+	const [clients, setClients] = useState<Clients>(createPublicClients);
 	const [currentDid, setCurrentDid] = useState<string | undefined>(undefined);
 	const [status, setStatus] = useState<SessionBootStatus>(() => (bootAccount ? 'resuming' : 'idle'));
 
@@ -129,14 +138,15 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			settled = true;
 			writeSession({ accounts: boot.accounts, currentAccountDid: undefined });
 			setAgent(createPublicAgent());
+			setClients(createPublicClients());
 			setCurrentDid(undefined);
 			setStatus('failed');
 		};
 
 		const resume = async () => {
-			let resumedAgent: BskyAppAgent;
+			let resumed: { agent: BskyAppAgent; clients: Clients };
 			try {
-				resumedAgent = await createOptimisticOAuthAgent(bootAccount);
+				resumed = await createOptimisticOAuthAgent(bootAccount);
 			} catch (e) {
 				if (cancelled) {
 					return;
@@ -152,7 +162,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			}
 			// The agent is usable from the stored token — render now and validate
 			// the session against the server in the background.
-			setAgent(resumedAgent);
+			setAgent(resumed.agent);
+			setClients(resumed.clients);
 			setCurrentDid(bootAccount.did);
 			setStatus('validating');
 
@@ -164,7 +175,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			});
 			try {
-				await resumedAgent.validateResumedSession();
+				await resumed.agent.validateResumedSession();
 			} catch (e) {
 				if (cancelled) {
 					return;
@@ -296,14 +307,21 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		[completeOAuthCallback, login, logoutCurrentAccount, logoutEveryAccount, removeAccount, switchAccount],
 	);
 
+	// Mirror the current clients to module scope so non-React callers can reach them.
+	useEffect(() => {
+		currentClients = clients;
+	}, [clients]);
+
 	// @ts-expect-error window type is not declared, debug only
 	if (import.meta.env.DEV) window.agent = agent;
 
 	return (
 		<AgentContext.Provider value={agent}>
-			<StateContext.Provider value={stateContext}>
-				<ApiContext.Provider value={api}>{children}</ApiContext.Provider>
-			</StateContext.Provider>
+			<ClientsContext.Provider value={clients}>
+				<StateContext.Provider value={stateContext}>
+					<ApiContext.Provider value={api}>{children}</ApiContext.Provider>
+				</StateContext.Provider>
+			</ClientsContext.Provider>
 		</AgentContext.Provider>
 	);
 }
@@ -361,4 +379,32 @@ export function useAgent(): BskyAppAgent {
 		throw Error('useAgent() must be below <SessionProvider>.');
 	}
 	return agent;
+}
+
+/**
+ * The `@atcute/client` clients for the current session. `pds` is `null` while logged out.
+ *
+ * @returns the session's clients.
+ * @throws if called outside `<SessionProvider>`.
+ */
+export function useClients(): Clients {
+	const clients = useContext(ClientsContext);
+	if (!clients) {
+		throw Error('useClients() must be below <SessionProvider>.');
+	}
+	return clients;
+}
+
+/**
+ * The `@atcute/client` clients for the current session, for non-React callers. Prefer
+ * {@link useClients} inside components.
+ *
+ * @returns the session's clients.
+ * @throws if called before `<SessionProvider>` has mounted.
+ */
+export function getClients(): Clients {
+	if (!currentClients) {
+		throw Error('getClients() called before <SessionProvider> mounted.');
+	}
+	return currentClients;
 }

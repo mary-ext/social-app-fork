@@ -5,6 +5,7 @@ import { IS_TEST_USER } from '#/lib/constants';
 import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities';
 import { type BskyAppAgent } from './agent';
 import { readLabelers } from './agent-config';
+import { setAppLabelers, setSubscribedLabelers } from './labelers';
 import { type SessionAccount } from './types';
 
 export function configureModerationForGuest() {
@@ -25,7 +26,9 @@ export async function configureModerationForAccount(agent: BskyAppAgent, account
 	// The code below is actually relevant to production (and isn't global).
 	const labelerDids = await readLabelers(account.did).catch((_) => {});
 	if (labelerDids) {
-		agent.configureLabelersHeader(labelerDids.filter((did) => did !== BSKY_LABELER_DID));
+		const subscribed = labelerDids.filter((did) => did !== BSKY_LABELER_DID);
+		agent.configureLabelersHeader(subscribed);
+		setSubscribedLabelers(subscribed);
 	} else {
 		// If there are no headers in the storage, we'll not send them on the initial requests.
 		// If we wanted to fix this, we could block on the preferences query here.
@@ -36,6 +39,7 @@ export async function configureModerationForAccount(agent: BskyAppAgent, account
 
 function switchToBskyAppLabeler() {
 	Agent.configure({ appLabelers: [BSKY_LABELER_DID] });
+	setAppLabelers([BSKY_LABELER_DID]);
 }
 
 async function trySwitchToTestAppLabeler(agent: BskyAppAgent) {
@@ -43,5 +47,6 @@ async function trySwitchToTestAppLabeler(agent: BskyAppAgent) {
 	if (did) {
 		console.warn('USING TEST ENV MODERATION');
 		Agent.configure({ appLabelers: [did] });
+		setAppLabelers([did]);
 	}
 }

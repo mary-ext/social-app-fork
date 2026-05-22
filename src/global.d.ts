@@ -10,6 +10,7 @@ declare module 'react-native-web' {
 declare const _WORKLET: boolean | undefined;
 
 interface ImportMetaEnv {
+	PUBLIC_APPVIEW_PROXY_AUDIENCE: string;
 	PUBLIC_BLUESKY_PROXY_DID?: string;
 	PUBLIC_BUNDLE_DATE?: string;
 	PUBLIC_BUNDLE_IDENTIFIER?: string;

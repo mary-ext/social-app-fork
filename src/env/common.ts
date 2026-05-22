@@ -1,3 +1,4 @@
+import { type AtprotoAudience } from '@atcute/lexicons/syntax';
 import { type Did } from '@atproto/api';
 
 import packageJson from '#/../package.json';
@@ -56,3 +57,6 @@ export const BLUESKY_PROXY_DID: Did = (import.meta.env.PUBLIC_BLUESKY_PROXY_DID 
 
 /** The DID of the chat service to proxy to */
 export const CHAT_PROXY_DID: Did = (import.meta.env.PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat') as Did;
+
+/** The full proxy audience (`did#service`) of the Bluesky AppView, for the `@atcute/client` clients. */
+export const APPVIEW_PROXY_AUDIENCE = import.meta.env.PUBLIC_APPVIEW_PROXY_AUDIENCE as AtprotoAudience;
