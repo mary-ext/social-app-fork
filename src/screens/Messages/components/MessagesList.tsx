@@ -56,6 +56,7 @@ import { ChatStatusInfo } from './ChatStatusInfo';
 import { groupSystemMessages, type RenderItem } from './groupSystemMessages';
 import { InviteLinkDialogProvider } from './InviteLinkDialogProvider';
 import { MessageInputEmbed, useMessageEmbed } from './MessageInputEmbed';
+import { MessagesListGroupInfoPanel } from './MessagesListGroupInfoPanel';
 import { MessagesListInfoPanel } from './MessagesListInfoPanel';
 import { KeyboardStickyView } from './vendor/KeyboardStickyView';
 
@@ -498,8 +499,12 @@ export function MessagesList({
 						ListHeaderComponent={
 							<>
 								<MaybeLoader isLoading={convoState.isFetchingHistory} />
-								{convoState.convo?.kind === 'group' && convoState.hasAllHistory ? (
-									<MessagesListInfoPanel convo={convoState.convo} />
+								{convoState.hasAllHistory ? (
+									convoState.convo?.kind === 'group' ? (
+										<MessagesListGroupInfoPanel convo={convoState.convo} />
+									) : convoState.convo?.kind === 'direct' ? (
+										<MessagesListInfoPanel convo={convoState.convo} />
+									) : null
 								) : null}
 							</>
 						}
