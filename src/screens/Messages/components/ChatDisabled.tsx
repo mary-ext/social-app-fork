@@ -1,12 +1,13 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { ToolsOzoneReportDefs } from '@atproto/api';
+import { ok } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
-import { BLUESKY_MOD_SERVICE_HEADERS } from '#/lib/constants';
+import { OzoneReason } from '#/lib/moderation/report-reasons';
 
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -18,6 +19,8 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
+import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 
 export function ChatDisabled() {
 	const t = useTheme();
@@ -80,25 +83,25 @@ function DialogInner() {
 	const control = Dialog.useDialogContext();
 	const [details, setDetails] = useState('');
 	const { gtMobile } = useBreakpoints();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const { currentAccount } = useSession();
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: async () => {
 			if (!currentAccount) throw new Error('No current account, should be unreachable');
-			await agent.createModerationReport(
-				{
-					reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
-					subject: {
-						$type: 'com.atproto.admin.defs#repoRef',
-						did: currentAccount.did,
+			if (!pds) throw new Error('Not logged in');
+			// appeals to the default Bluesky labeler funnel through the atproto-proxy header
+			await ok(
+				pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('com.atproto.moderation.createReport', {
+					input: {
+						reasonType: OzoneReason.REASONAPPEAL,
+						subject: {
+							$type: 'com.atproto.admin.defs#repoRef',
+							did: currentAccount.did as Did,
+						},
+						reason: details,
 					},
-					reason: details,
-				},
-				{
-					encoding: 'application/json',
-					headers: BLUESKY_MOD_SERVICE_HEADERS,
-				},
+				}),
 			);
 		},
 		onError: (err) => {

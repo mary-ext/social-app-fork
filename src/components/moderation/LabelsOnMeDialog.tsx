@@ -1,17 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type ComAtprotoLabelDefs, ToolsOzoneReportDefs } from '@atproto/api';
-import { XRPCError } from '@atproto/api';
+import type { ComAtprotoModerationCreateReport } from '@atcute/atproto';
+import { ClientResponseError, ok } from '@atcute/client';
+import type { AtprotoAudience } from '@atcute/lexicons/syntax';
+import { type ComAtprotoLabelDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useLabelSubject } from '#/lib/moderation';
+import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -192,32 +195,31 @@ function AppealForm({
 	const [details, setDetails] = useState('');
 	const { subject } = useLabelSubject({ label });
 	const isAccountReport = 'did' in subject;
-	const agent = useAgent();
+	const { pds } = useClients();
 	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
 	const [error, setError] = useState<string | null>(null);
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: async () => {
+			if (!pds) throw new Error('Not logged in');
 			const $type = !isAccountReport ? 'com.atproto.repo.strongRef' : 'com.atproto.admin.defs#repoRef';
-			await agent.createModerationReport(
-				{
-					reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
-					subject: {
-						$type,
-						...subject,
-					},
-					reason: details,
-				},
-				{
-					encoding: 'application/json',
-					headers: {
-						'atproto-proxy': `${label.src}#atproto_labeler`,
-					},
-				},
+			// the appeal is funnelled to the labeler that applied the label
+			const reportClient = pds.clone({ proxy: `${label.src}#atproto_labeler` as AtprotoAudience });
+			await ok(
+				reportClient.post('com.atproto.moderation.createReport', {
+					input: {
+						reasonType: OzoneReason.REASONAPPEAL,
+						subject: {
+							$type,
+							...subject,
+						},
+						reason: details,
+					} as ComAtprotoModerationCreateReport.$input,
+				}),
 			);
 		},
 		onError: (err) => {
-			if (err instanceof XRPCError && err.error === 'AlreadyAppealed') {
+			if (err instanceof ClientResponseError && err.error === 'AlreadyAppealed') {
 				setError(l`You've already appealed this label and it's being reviewed by our moderation team.`);
 			} else {
 				setError(l`Failed to submit appeal, please try again.`);

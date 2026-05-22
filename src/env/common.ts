@@ -60,3 +60,7 @@ export const CHAT_PROXY_DID: Did = (import.meta.env.PUBLIC_CHAT_PROXY_DID || 'di
 
 /** The full proxy audience (`did#service`) of the Bluesky AppView, for the `@atcute/client` clients. */
 export const APPVIEW_PROXY_AUDIENCE = import.meta.env.PUBLIC_APPVIEW_PROXY_AUDIENCE as AtprotoAudience;
+
+/** The full proxy audience (`did#service`) of the default Bluesky moderation service (labeler). */
+export const BSKY_LABELER_PROXY_AUDIENCE = import.meta.env
+	.PUBLIC_BSKY_LABELER_PROXY_AUDIENCE as AtprotoAudience;

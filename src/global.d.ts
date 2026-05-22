@@ -12,6 +12,7 @@ declare const _WORKLET: boolean | undefined;
 interface ImportMetaEnv {
 	PUBLIC_APPVIEW_PROXY_AUDIENCE: string;
 	PUBLIC_BLUESKY_PROXY_DID?: string;
+	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: string;
 	PUBLIC_BUNDLE_DATE?: string;
 	PUBLIC_BUNDLE_IDENTIFIER?: string;
 	PUBLIC_CHAT_PROXY_DID?: string;
