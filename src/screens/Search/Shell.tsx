@@ -235,18 +235,26 @@ export function SearchScreenShell({
 	);
 
 	const onSoftReset = useCallback(() => {
-		// Empty params resets the URL to be /search rather than /search?q=
-		// Also clear the tab parameter when soft resetting
-		const {
-			q: _q,
-			tab: _tab,
-			...parameters
-		} = (route.params ?? {}) as {
-			[key: string]: string;
-		};
-		// @ts-expect-error route is not typesafe
-		navigation.replace(route.name, parameters);
-	}, [navigation, route.name, route.params, updateSearchText]);
+		if (showAutocomplete) {
+			// the recent searches / autocomplete panel is open — close it, returning to explore
+			onPressCancelSearch();
+		} else if (queryWithParams) {
+			// viewing search results — navigate to /search rather than /search?q=,
+			// also dropping the tab parameter
+			const {
+				q: _q,
+				tab: _tab,
+				...parameters
+			} = (route.params ?? {}) as {
+				[key: string]: string;
+			};
+			// @ts-expect-error route is not typesafe
+			navigation.push(route.name, parameters);
+		} else {
+			// already on the explore page — focus the search input
+			textInput.current?.focus();
+		}
+	}, [navigation, onPressCancelSearch, queryWithParams, route.name, route.params, showAutocomplete]);
 
 	useFocusEffect(
 		useCallback(() => {
