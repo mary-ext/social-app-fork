@@ -172,10 +172,12 @@ export function Trigger({ children, label, role = 'button', hint }: TriggerProps
 
 export function Outer({
 	children,
+	onCloseAutoFocus,
 	style,
 }: React.PropsWithChildren<{
 	showCancel?: boolean;
 	align?: 'start' | 'center' | 'end' | string;
+	onCloseAutoFocus?: React.ComponentProps<typeof DropdownMenu.Content>['onCloseAutoFocus'];
 	style?: StyleProp<ViewStyle>;
 }>) {
 	const t = useTheme();
@@ -188,6 +190,7 @@ export function Outer({
 				collisionPadding={{ left: 5, right: 5, bottom: 5 }}
 				loop
 				aria-label="Test"
+				onCloseAutoFocus={onCloseAutoFocus}
 				className="dropdown-menu-transform-origin dropdown-menu-constrain-size"
 			>
 				<View

@@ -68,7 +68,15 @@ function MenuInner({
 	return expanded ? (
 		<EmojiPicker.Picker keepOpenWhenShiftHeld={false} />
 	) : (
-		<Menu.Outer style={[a.rounded_full]}>
+		<Menu.Outer
+			style={[a.rounded_full]}
+			onCloseAutoFocus={(evt) => {
+				// keep focus in emoji-mart's search field when swapping from the quick reactions menu.
+				if (document.activeElement && document.activeElement !== document.body) {
+					evt.preventDefault();
+				}
+			}}
+		>
 			<View style={[a.flex_row, a.gap_xs]}>
 				{['❤️', '👍', '😆', '👀', '😢'].map((emoji) => {
 					const alreadyReacted = hasAlreadyReacted(message, currentAccount?.did, emoji);
