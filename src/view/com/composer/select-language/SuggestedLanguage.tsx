@@ -126,12 +126,11 @@ export function SuggestedLanguage({
 		// clear
 		setSuggLang(undefined);
 	};
-	const onDecline = () => {
-		if (suggLang) {
-			declinedSuggLangsRef.current.push(suggLang);
-			// clear
-			setSuggLang(undefined);
-		}
+	const onDecline = (language: string) => {
+		declinedSuggLangsRef.current.push(language);
+		// clear
+		setSuggLang(undefined);
+		setHasInteracted(true);
 	};
 
 	/** Merge in remote config (eventually) */
@@ -218,17 +217,9 @@ export function SuggestedLanguage({
 	}, [text, hasInteracted, detectLanguage]);
 
 	/*
-	 * This is intentionally computed based on a ref. Since we set and clear
-	 * `suggLang` this derivation is safe, but be aware of it
-	 * when making changes.
-	 */
-	const hasDeclined = suggLang
-		? // eslint-disable-next-line react-hooks/refs
-			declinedSuggLangsRef.current.includes(suggLang)
-		: false;
-
-	/*
 	 * We've detected a language, and the user hasn't already selected it.
+	 * Note: suggLang is only set if it's not in declinedSuggLangsRef (checked
+	 * in detectLanguage), so we don't need to filter it here.
 	 */
 	const hasLanguageSuggestion = suggLang && !currentLanguages.includes(suggLang);
 
@@ -241,18 +232,17 @@ export function SuggestedLanguage({
 		.filter(Boolean)
 		.map((lang) => parseLanguageString(lang)?.language)
 		.filter(Boolean) as string[];
+	const [replyToLanguage] = replyToLanguages;
 	const hasSuggestedReplyLanguage =
 		!hasInteracted &&
 		!suggLang &&
-		replyToLanguages.length &&
-		!replyToLanguages.some((l) => currentLanguages.includes(l));
+		replyToLanguage &&
+		!currentLanguages.includes(replyToLanguage);
 
-	if (hasDeclined) {
-		return null;
-	} else if (hasLanguageSuggestion) {
-		return <GuessedLanguage language={suggLang} onAccept={onAccept} onDecline={onDecline} />;
+	if (hasLanguageSuggestion) {
+		return <GuessedLanguage language={suggLang} onAccept={onAccept} onDecline={() => onDecline(suggLang)} />;
 	} else if (hasSuggestedReplyLanguage) {
-		return <ReplyLanguageNudge language={replyToLanguages[0]!} onAccept={onAccept} onDecline={onDecline} />;
+		return <ReplyLanguageNudge language={replyToLanguage} onAccept={onAccept} onDecline={() => onDecline(replyToLanguage)} />;
 	} else {
 		return null;
 	}
