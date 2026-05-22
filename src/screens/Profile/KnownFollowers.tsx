@@ -3,10 +3,12 @@ import { type AppBskyActorDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
+import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useProfileKnownFollowersQuery } from '#/state/queries/known-followers';
+import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 
 import { logger } from '#/logger';
@@ -48,6 +50,9 @@ export const ProfileKnownFollowersScreen = ({ route }: Props) => {
 		error,
 		refetch,
 	} = useProfileKnownFollowersQuery(resolvedDid);
+	const { data: profile } = useProfileQuery({ did: resolvedDid });
+
+	useSetTitle(profile ? l`Followers of @${profile.handle} that you know` : undefined);
 
 	const onRefresh = async () => {
 		setIsPTRing(true);

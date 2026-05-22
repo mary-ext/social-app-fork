@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
+import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useProfileQuery } from '#/state/queries/profile';
@@ -17,6 +18,8 @@ export const ProfileSearchScreen = ({ route }: Props) => {
 
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({ did: resolvedDid });
+
+	useSetTitle(profile ? l`Search @${profile.handle}'s posts` : undefined);
 
 	const fixedParams = useMemo(
 		() => ({

@@ -1,5 +1,6 @@
-import { Plural, Trans } from '@lingui/react/macro';
+import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
+import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
@@ -12,8 +13,11 @@ import * as Layout from '#/components/Layout';
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>;
 export const PostRepostedByScreen = ({ route }: Props) => {
 	const { name, rkey } = route.params;
+	const { t: l } = useLingui();
 	const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey);
 	const { data: post } = usePostQuery(uri);
+
+	useSetTitle(post ? l`Post by @${post.author.handle}` : undefined);
 
 	let quoteCount;
 	if (post) {

@@ -1,5 +1,6 @@
-import { Plural } from '@lingui/react/macro';
+import { Plural, useLingui } from '@lingui/react/macro';
 
+import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -13,11 +14,14 @@ import * as Layout from '#/components/Layout';
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollows'>;
 export const ProfileFollowsScreen = ({ route }: Props) => {
 	const { name } = route.params;
+	const { t: l } = useLingui();
 
 	const { data: resolvedDid } = useResolveDidQuery(name);
 	const { data: profile } = useProfileQuery({
 		did: resolvedDid,
 	});
+
+	useSetTitle(profile ? l`People followed by @${profile.handle}` : undefined);
 
 	return (
 		<Layout.Screen testID="profileFollowsScreen">

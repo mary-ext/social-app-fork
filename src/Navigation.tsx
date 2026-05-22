@@ -635,30 +635,22 @@ const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Na
 			<Flat.Screen
 				name="Profile"
 				getComponent={() => ProfileScreen}
-				options={({ route }) => ({
-					title: bskyTitle(`@${route.params.name}`, numUnread),
-				})}
+				options={{ title: title(defineMessage`Profile`) }}
 			/>
 			<Flat.Screen
 				name="ProfileFollowers"
 				getComponent={() => ProfileFollowersScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`People following @${route.params.name}`),
-				})}
+				options={{ title: title(defineMessage`Followers`) }}
 			/>
 			<Flat.Screen
 				name="ProfileFollows"
 				getComponent={() => ProfileFollowsScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`People followed by @${route.params.name}`),
-				})}
+				options={{ title: title(defineMessage`Following`) }}
 			/>
 			<Flat.Screen
 				name="ProfileKnownFollowers"
 				getComponent={() => ProfileKnownFollowersScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`Followers of @${route.params.name} that you know`),
-				})}
+				options={{ title: title(defineMessage`Followers you know`) }}
 			/>
 			<Flat.Screen
 				name="ProfileList"
@@ -668,37 +660,27 @@ const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Na
 			<Flat.Screen
 				name="ProfileSearch"
 				getComponent={() => ProfileSearchScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`Search @${route.params.name}'s posts`),
-				})}
+				options={{ title: title(defineMessage`Search`) }}
 			/>
 			<Flat.Screen
 				name="PostThread"
 				getComponent={() => PostThreadScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`Post by @${route.params.name}`),
-				})}
+				options={{ title: title(defineMessage`Post`) }}
 			/>
 			<Flat.Screen
 				name="PostLikedBy"
 				getComponent={() => PostLikedByScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`Post by @${route.params.name}`),
-				})}
+				options={{ title: title(defineMessage`Post`) }}
 			/>
 			<Flat.Screen
 				name="PostRepostedBy"
 				getComponent={() => PostRepostedByScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`Post by @${route.params.name}`),
-				})}
+				options={{ title: title(defineMessage`Post`) }}
 			/>
 			<Flat.Screen
 				name="PostQuotes"
 				getComponent={() => PostQuotesScreen}
-				options={({ route }) => ({
-					title: title(defineMessage`Post by @${route.params.name}`),
-				})}
+				options={{ title: title(defineMessage`Post`) }}
 			/>
 			<Flat.Screen
 				name="ProfileFeed"
