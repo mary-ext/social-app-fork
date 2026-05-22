@@ -4,7 +4,7 @@
 		"target": "es2023",
 		"lib": ["ESNext", "DOM"],
 		"module": "esnext",
-		"types": [],
+		"types": ["@atcute/atproto", "@atcute/bluesky", "@atcute/germ", "@atcute/microcosm", "@atcute/ozone"],
 		"skipLibCheck": true,
 
 		/* Bundler mode */

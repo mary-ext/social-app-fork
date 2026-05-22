@@ -19,10 +19,14 @@
 		"nuke": "rm -rf ./node_modules ./web-build"
 	},
 	"dependencies": {
+		"@atcute/atproto": "4.0.0",
+		"@atcute/bluesky": "4.0.2",
 		"@atcute/client": "^5.0.0",
+		"@atcute/germ": "1.0.0",
 		"@atcute/identity-resolver": "^2.0.0",
 		"@atcute/microcosm": "^2.0.0",
 		"@atcute/oauth-browser-client": "^4.0.0",
+		"@atcute/ozone": "4.0.1",
 		"@atproto/api": "^0.20.6",
 		"@atproto/syntax": "^0.6.1",
 		"@braintree/sanitize-url": "^6.0.2",
