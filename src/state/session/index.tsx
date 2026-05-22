@@ -52,12 +52,13 @@ function prependAccount(accounts: SessionAccount[], account: SessionAccount): Se
 	return [account, ...accounts.filter((a) => a.did !== account.did)];
 }
 
-/** Persists a logged-out session, clears the given dids' caches, and reloads. */
+/** Persists a logged-out session, clears the given dids' caches, and reloads at the root route. */
 function signOut({ accounts, clearDids = [] }: { accounts: SessionAccount[]; clearDids?: string[] }) {
 	for (const did of clearDids) {
 		void clearPersistedQueryStorage(did);
 	}
 	writeSession({ accounts, currentAccountDid: undefined });
+	history.pushState(null, '', '/');
 	window.location.reload();
 }
 
