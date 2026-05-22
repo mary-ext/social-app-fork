@@ -80,10 +80,21 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 			<View style={[a.align_center, a.justify_center]}>
 				<AvatarBubbles animate={true} profiles={convo.members} />
 				{convo.details.name ? (
-					<Text style={[a.text_2xl, a.font_bold, a.mt_lg, t.atoms.text]}>{convo.details.name}</Text>
+					<Text style={[a.text_2xl, a.font_bold, a.mt_lg, a.px_lg, t.atoms.text]}>
+						{convo.details.name}
+					</Text>
 				) : null}
 				{names ? (
-					<Text style={[a.text_sm, a.mt_xs, t.atoms.text_contrast_high, showButtons ? null : a.mb_4xl]}>
+					<Text
+						style={[
+							a.px_lg,
+							a.mt_xs,
+							a.text_center,
+							a.text_sm,
+							t.atoms.text_contrast_high,
+							showButtons ? null : a.mb_4xl,
+						]}
+					>
 						{names}
 					</Text>
 				) : null}
