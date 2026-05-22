@@ -8,20 +8,19 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 
 import { MessageContextProvider } from './MessageContext';
 
-const CLUSTERED_MESSAGE_GAP = 2;
 const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
 
 let MessageItemEmbed = ({
 	embed,
-	isFirstInCluster,
 	isFromSelf,
+	isGroupChat,
 	squaredTopCorner,
 	squaredBottomCorner,
 }: {
 	embed: $Typed<AppBskyEmbedRecord.View>;
-	isFirstInCluster: boolean;
 	isFromSelf: boolean;
+	isGroupChat: boolean;
 	squaredTopCorner: boolean;
 	squaredBottomCorner: boolean;
 }): React.ReactNode => {
@@ -31,15 +30,14 @@ let MessageItemEmbed = ({
 		<MessageContextProvider>
 			<View
 				style={[
-					!isFromSelf && a.ml_sm,
+					!isFromSelf && isGroupChat && a.ml_sm,
 					{
 						width: '100%',
 						minWidth: 280,
 						maxWidth: 360,
 					},
-					{
-						marginTop: isFirstInCluster ? 0 : CLUSTERED_MESSAGE_GAP,
-					},
+					// Cancel the embed's internal top margin so clustered message spacing owns the gap.
+					{ marginTop: -a.mt_sm.marginTop },
 				]}
 			>
 				<View>
