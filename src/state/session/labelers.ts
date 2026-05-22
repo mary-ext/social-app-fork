@@ -1,10 +1,9 @@
 import { BSKY_LABELER_DID } from '@atproto/api';
 
 /**
- * The labelers the AppView client advertises via the `atproto-accept-labelers` header. Kept as
- * module-level mutable state so a subscription change is reflected on the next request without
- * rebuilding the client — mirroring how `@atproto/api`'s `Agent` merges app and instance labelers
- * into every request.
+ * The labelers the AppView client advertises via the `atproto-accept-labelers` header. Kept as module-level
+ * mutable state so a subscription change is reflected on the next request without rebuilding the client —
+ * mirroring how `@atproto/api`'s `Agent` merges app and instance labelers into every request.
  */
 
 // App labelers are sent with `;redact`; subscribed labelers are sent plain.

@@ -396,8 +396,8 @@ export function useClients(): Clients {
 }
 
 /**
- * The `@atcute/client` clients for the current session, for non-React callers. Prefer
- * {@link useClients} inside components.
+ * The `@atcute/client` clients for the current session, for non-React callers. Prefer {@link useClients}
+ * inside components.
  *
  * @returns the session's clients.
  * @throws if called before `<SessionProvider>` has mounted.

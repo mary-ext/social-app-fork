@@ -3,8 +3,8 @@ import { type OAuthUserAgent } from '@atcute/oauth-browser-client';
 import { emitNetworkConfirmed, emitNetworkLost, emitSessionDropped } from '#/state/events';
 
 /**
- * A fetch handler shape compatible with both `@atproto/api`'s session manager and `@atcute/client`'s
- * `Client` — both call it with a URL/pathname and a `RequestInit`.
+ * A fetch handler shape compatible with both `@atproto/api`'s session manager and `@atcute/client`'s `Client`
+ * — both call it with a URL/pathname and a `RequestInit`.
  */
 export type FetchHandler = (this: void, url: string, init: RequestInit) => Promise<Response>;
 
@@ -32,8 +32,8 @@ export function withNetworkEvents<Args extends unknown[]>(
 
 /**
  * Builds the XRPC fetch handler for an OAuth session: routes each request through the atcute user-agent
- * (which adds DPoP auth and refreshes tokens on its own), adds network-event instrumentation, and reports
- * an unrecoverable session drop.
+ * (which adds DPoP auth and refreshes tokens on its own), adds network-event instrumentation, and reports an
+ * unrecoverable session drop.
  *
  * @param oauthAgent the atcute user-agent to route requests through.
  * @returns a fetch handler usable by both `BskyAppAgent` and the `@atcute/client` clients.

@@ -6,9 +6,9 @@ import type { Records } from '@atcute/lexicons/ambient';
 /**
  * Typed `com.atproto.repo.*` record helpers.
  *
- * `@atcute/client`'s generic `get`/`post` type `getRecord`'s `value` and `putRecord`'s `record` as
- * `unknown`. These helpers re-type them via the ambient `Records` map so each call infers its record
- * value from the `collection` NSID, and centralize the casts the `repo.*` wire shape needs.
+ * `@atcute/client`'s generic `get`/`post` type `getRecord`'s `value` and `putRecord`'s `record` as `unknown`.
+ * These helpers re-type them via the ambient `Records` map so each call infers its record value from the
+ * `collection` NSID, and centralize the casts the `repo.*` wire shape needs.
  */
 
 /** An NSID for which a record type is registered in the ambient `Records` map. */
@@ -30,10 +30,7 @@ export interface CreateRecordOptions<K extends RecordType> {
  * @param options the record to create.
  * @returns the create-record response.
  */
-export const createRecord = async <K extends RecordType>(
-	client: Client,
-	options: CreateRecordOptions<K>,
-) => {
+export const createRecord = async <K extends RecordType>(client: Client, options: CreateRecordOptions<K>) => {
 	return await ok(client.post('com.atproto.repo.createRecord', { input: options }));
 };
 
@@ -72,10 +69,7 @@ export interface DeleteRecordOptions<K extends RecordType> {
  * @param client the client to issue the call on — the `pds` client for own-repo writes.
  * @param options the record to delete.
  */
-export const deleteRecord = async <K extends RecordType>(
-	client: Client,
-	options: DeleteRecordOptions<K>,
-) => {
+export const deleteRecord = async <K extends RecordType>(client: Client, options: DeleteRecordOptions<K>) => {
 	await ok(client.post('com.atproto.repo.deleteRecord', { input: options }));
 };
 

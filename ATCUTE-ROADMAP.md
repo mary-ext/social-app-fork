@@ -59,11 +59,11 @@ symptom of a finished migration, never as the goal. The goal is the call running
 client with `@atcute` lexicon types. Two facts must hold for a phase to be done:
 
 - The call site reaches its client through `useClients()` (`appview` / `pds`) or a named ad-hoc
-  client — never `useAgent()` / `BskyAgent` — and imports its lexicon types from `@atcute/bluesky`
-  / `@atcute/atproto` / `@atcute/ozone`.
-- No new local type describes a wire shape. The definition packages registered in Phase 1.1
-  already export every view, record, and union type, and `@atcute`'s discriminated `$type` unions
-  already narrow without a guard.
+  client — never `useAgent()` / `BskyAgent` — and imports its lexicon types from `@atcute/bluesky` /
+  `@atcute/atproto` / `@atcute/ozone`.
+- No new local type describes a wire shape. The definition packages registered in Phase 1.1 already
+  export every view, record, and union type, and `@atcute`'s discriminated `$type` unions already
+  narrow without a guard.
 
 **The disallowed shortcut.** Deleting an `@atproto/api` import and replacing it with a hand-rolled
 local `interface`, `type` alias, `is*` guard, or structural parameter type that re-describes the
@@ -157,16 +157,16 @@ Six streams plus a deferred appendix, executed in this canonical order:
   and fails only against the live server. Every Stream 2–4 phase must end with a manual smoke test
   of the affected screens via `pnpm dev` (the `/run` and `/verify` skills help). State in the commit
   message what was exercised.
-- **A clean `@atproto/api` grep is necessary but not sufficient** — the same caveat as the
-  typecheck above. The import vanishing proves only that the import vanished. Pair every
-  `rg "@atproto/api"` "done when" check with its positive twin — `rg "@atcute" <the same files>` —
-  confirming the call site actually landed on an `@atcute` client and `@atcute` types. Import gone
-  with no `@atcute` import added means the phase was faked; redo it. See "What 'migrated' means".
+- **A clean `@atproto/api` grep is necessary but not sufficient** — the same caveat as the typecheck
+  above. The import vanishing proves only that the import vanished. Pair every `rg "@atproto/api"`
+  "done when" check with its positive twin — `rg "@atcute" <the same files>` — confirming the call
+  site actually landed on an `@atcute` client and `@atcute` types. Import gone with no `@atcute`
+  import added means the phase was faked; redo it. See "What 'migrated' means".
 - Work directly on `main`, one commit per phase (per the fork's commit workflow). Large phases may
   split into several atomic commits — keep the build green at each.
-- **Every commit maps to a numbered phase in this document.** The phases _are_ the unit of work —
-  do not invent a private decomposition ("video blob types", "draft server types", "composer
-  guards"). Commit subjects name the `@atcute` package the call site moved onto (e.g.
+- **Every commit maps to a numbered phase in this document.** The phases _are_ the unit of work — do
+  not invent a private decomposition ("video blob types", "draft server types", "composer guards").
+  Commit subjects name the `@atcute` package the call site moved onto (e.g.
   `refactor: move feed reads to @atcute/bluesky`), so a faked or off-script phase is visible in
   `git log` at a glance.
 - **Conventional commit type:** these are `refactor:` commits (behavior-preserving SDK swap). The
@@ -255,10 +255,10 @@ fixed third-party host. These get a `Client` constructed **at the call site** wi
 clients silently sends them to the wrong host.
 
 | Use case             | Client                                                              |
-| -------------------- | -------------------------------------------------------------------- |
-| chat (`chat.bsky.*`) | `chat` client, scoped to Messages (Phase 4.1)                        |
-| video upload         | local token-authed `Client`, no proxy (Phase 4.2)                    |
-| moderation reporting | per-report `Client`, proxy `${labeler}#atproto_labeler` (Phase 4.3)  |
+| -------------------- | ------------------------------------------------------------------- |
+| chat (`chat.bsky.*`) | `chat` client, scoped to Messages (Phase 4.1)                       |
+| video upload         | local token-authed `Client`, no proxy (Phase 4.2)                   |
+| moderation reporting | per-report `Client`, proxy `${labeler}#atproto_labeler` (Phase 4.3) |
 
 Each is constructed at the call site by its own Phase 4 phase; Phase 1.3 adds no shared helper.
 
