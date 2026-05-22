@@ -51,7 +51,11 @@ function createRoute(pattern: string): Route {
 
 			const res = matcherRe.exec(pathname);
 			if (res) {
-				return { params: Object.assign(addedParams, res.groups || {}) };
+				const pathParams: RouteParams = {};
+				for (const [name, value] of Object.entries(res.groups ?? {})) {
+					pathParams[name] = decodeRouteParam(value);
+				}
+				return { params: Object.assign(addedParams, pathParams) };
 			}
 			return undefined;
 		},
@@ -76,6 +80,24 @@ function createRoute(pattern: string): Route {
 			return str + (hasQp ? `?${qp.toString()}` : '');
 		},
 	};
+}
+
+/**
+ * Decodes a percent-encoded path parameter so screens receive it unescaped.
+ *
+ * a path parameter can reach us percent-encoded — e.g. some static hosts redirect to the escaped form of a
+ * url before any application code runs — which decoding here centralizes so individual screens don't each
+ * unescape.
+ *
+ * @param value raw path segment captured by the route matcher
+ * @returns the decoded value, or the input unchanged when it is not valid percent-encoding
+ */
+function decodeRouteParam(value: string): string {
+	try {
+		return decodeURIComponent(value);
+	} catch {
+		return value;
+	}
 }
 
 function stringifyRouteParam(value: unknown): string | undefined {

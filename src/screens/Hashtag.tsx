@@ -45,16 +45,12 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 	const { tag, author } = route.params;
 	const { t: l } = useLingui();
 
-	const decodedTag = useMemo(() => {
-		return decodeURIComponent(tag);
-	}, [tag]);
-
-	const isCashtag = decodedTag.startsWith('$');
+	const isCashtag = tag.startsWith('$');
 
 	const fullTag = useMemo(() => {
 		// Cashtags already include the $ prefix, hashtags need # added
-		return isCashtag ? decodedTag : `#${decodedTag}`;
-	}, [decodedTag, isCashtag]);
+		return isCashtag ? tag : `#${tag}`;
+	}, [tag, isCashtag]);
 
 	const headerTitle = useMemo(() => {
 		// Keep cashtags uppercase, lowercase hashtags
@@ -69,7 +65,7 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 
 	const onShare = useCallback(() => {
 		const url = new URL('https://bsky.app');
-		url.pathname = `/hashtag/${decodeURIComponent(tag)}`;
+		url.pathname = `/hashtag/${tag}`;
 		if (author) {
 			url.searchParams.set('author', author);
 		}

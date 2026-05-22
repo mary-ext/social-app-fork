@@ -17,7 +17,6 @@ export function NotificationsActivityListScreen({
 		params: { posts },
 	},
 }: Props) {
-	const uris = decodeURIComponent(posts);
 	const { t: l } = useLingui();
 
 	return (
@@ -32,7 +31,7 @@ export function NotificationsActivityListScreen({
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<PostFeed
-				feed={`posts|${uris}`}
+				feed={`posts|${posts}`}
 				disablePoll
 				renderEmptyState={() => <EmptyState icon={EditIcon} iconSize="2xl" message={l`No posts here`} />}
 				renderEndOfFeed={() => <ListFooter />}

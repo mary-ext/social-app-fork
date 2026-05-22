@@ -71,7 +71,7 @@ export function RichTextTag({
 					<InlineLinkText
 						to={{
 							screen: 'Hashtag',
-							params: { tag: encodeURIComponent(tag) },
+							params: { tag },
 						}}
 						{...menuProps}
 						onPress={(e) => {
@@ -95,7 +95,7 @@ export function RichTextTag({
 						label={l`See ${isCashtag ? tag : `#${tag}`} posts`}
 						onPress={() => {
 							navigation.push('Hashtag', {
-								tag: encodeURIComponent(tag),
+								tag,
 							});
 						}}
 					>
@@ -109,7 +109,7 @@ export function RichTextTag({
 							label={l`See ${isCashtag ? tag : `#${tag}`} posts by user`}
 							onPress={() => {
 								navigation.push('Hashtag', {
-									tag: encodeURIComponent(tag),
+									tag,
 									author: authorHandle,
 								});
 							}}

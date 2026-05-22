@@ -39,7 +39,7 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 	const { t: l } = useLingui();
 
 	const headerTitle = useMemo(() => {
-		return enforceLen(decodeURIComponent(topic), 24, true, 'middle');
+		return enforceLen(topic, 24, true, 'middle');
 	}, [topic]);
 
 	const onShare = useCallback(() => {
@@ -123,7 +123,7 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 		fetchNextPage,
 		hasNextPage,
 	} = useSearchPostsQuery({
-		query: decodeURIComponent(topic),
+		query: topic,
 		sort,
 		enabled: active,
 	});
