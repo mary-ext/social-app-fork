@@ -131,6 +131,5 @@ export function TitleAndByline({
 
 export function createProfileListHref({ list }: { list: AppBskyGraphDefs.ListView }) {
 	const urip = new AtUri(list.uri);
-	const handleOrDid = list.creator.handle || list.creator.did;
-	return `/profile/${handleOrDid}/lists/${urip.rkey}`;
+	return `/profile/${list.creator.did}/lists/${urip.rkey}`;
 }

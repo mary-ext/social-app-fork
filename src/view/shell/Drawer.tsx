@@ -133,7 +133,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
 			setDrawerOpen(false);
 			// hack because we have flat navigator for web and MyProfile does not exist on the web navigator -ansh
 			if (tab === 'MyProfile') {
-				navigation.navigate('Profile', { name: currentAccount!.handle });
+				navigation.navigate('Profile', { name: currentAccount!.did });
 			} else {
 				// @ts-expect-error struggles with string unions, apparently
 				navigation.navigate(tab);
@@ -512,7 +512,7 @@ function ExtraLinks() {
 						Logo by{' '}
 						<InlineLinkText
 							style={[a.text_md]}
-							to="/profile/sawaratsuki.bsky.social"
+							to="/profile/did:plc:du3w3sxieoct4kidddf6rpby"
 							label="@sawaratsuki.bsky.social"
 						>
 							@sawaratsuki.bsky.social

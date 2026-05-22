@@ -102,7 +102,10 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 				<Text style={[t.atoms.text_contrast_medium, { marginTop: 12 }]}>
 					<Trans>
 						Logo by{' '}
-						<InlineLinkText label={l`Logo by @sawaratsuki.bsky.social`} to="/profile/sawaratsuki.bsky.social">
+						<InlineLinkText
+							label={l`Logo by @sawaratsuki.bsky.social`}
+							to="/profile/did:plc:du3w3sxieoct4kidddf6rpby"
+						>
 							@sawaratsuki.bsky.social
 						</InlineLinkText>
 					</Trans>

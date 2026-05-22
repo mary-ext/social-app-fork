@@ -2,7 +2,6 @@ import { AtUri } from '@atproto/api';
 import TLDs from 'tlds';
 
 import { BSKY_SERVICE } from '#/lib/constants';
-import { isInvalidHandle } from '#/lib/strings/handles';
 import { startUriToStarterPackUri } from '#/lib/strings/starter-pack';
 
 import { logger } from '#/logger';
@@ -207,11 +206,10 @@ export function feedUriToHref(url: string): string {
 	}
 }
 
-export function postUriToRelativePath(uri: string, options?: { handle?: string }): string | undefined {
+export function postUriToRelativePath(uri: string): string | undefined {
 	try {
 		const { hostname, rkey } = new AtUri(uri);
-		const handleOrDid = options?.handle && !isInvalidHandle(options.handle) ? options.handle : hostname;
-		return `/profile/${handleOrDid}/post/${rkey}`;
+		return `/profile/${hostname}/post/${rkey}`;
 	} catch {
 		return undefined;
 	}

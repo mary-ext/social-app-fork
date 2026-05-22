@@ -52,7 +52,7 @@ export function DesktopSearch() {
 		if (item.type === 'profile') {
 			onClearText();
 			sift.elements.input.blur();
-			navigation.navigate('Profile', { name: item.profile.handle });
+			navigation.navigate('Profile', { name: item.profile.did });
 		} else if (item.type === 'search') {
 			onClearText();
 			sift.elements.input.blur();

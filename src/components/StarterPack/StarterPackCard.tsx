@@ -92,10 +92,9 @@ export function Card({
 export function useStarterPackLink({ view }: { view: bsky.starterPack.AnyStarterPackView }) {
 	const { t: l } = useLingui();
 	const qc = useQueryClient();
-	const { rkey, handleOrDid } = useMemo(() => {
+	const { rkey, did } = useMemo(() => {
 		const rkey = new AtUri(view.uri).rkey;
-		const { creator } = view;
-		return { rkey, handleOrDid: creator.handle || creator.did };
+		return { rkey, did: view.creator.did };
 	}, [view]);
 	const precache = () => {
 		precacheResolvedUri(qc, view.creator.handle, view.creator.did);
@@ -103,7 +102,7 @@ export function useStarterPackLink({ view }: { view: bsky.starterPack.AnyStarter
 	};
 
 	return {
-		to: `/starter-pack/${handleOrDid}/${rkey}`,
+		to: `/starter-pack/${did}/${rkey}`,
 		label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(view.record, AppBskyGraphStarterpack.isRecord)
 			? l`Navigate to ${view.record.name}`
 			: l`Navigate to starter pack`,
@@ -122,10 +121,9 @@ export function Link({
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { record } = starterPack;
-	const { rkey, handleOrDid } = useMemo(() => {
+	const { rkey, did } = useMemo(() => {
 		const rkey = new AtUri(starterPack.uri).rkey;
-		const { creator } = starterPack;
-		return { rkey, handleOrDid: creator.handle || creator.did };
+		return { rkey, did: starterPack.creator.did };
 	}, [starterPack]);
 
 	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
@@ -134,7 +132,7 @@ export function Link({
 
 	return (
 		<BaseLink
-			to={`/starter-pack/${handleOrDid}/${rkey}`}
+			to={`/starter-pack/${did}/${rkey}`}
 			label={l`Navigate to ${record.name}`}
 			onPress={() => {
 				precacheResolvedUri(queryClient, starterPack.creator.handle, starterPack.creator.did);

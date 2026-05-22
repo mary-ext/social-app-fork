@@ -59,5 +59,8 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
 }
 
 export function precacheResolvedUri(queryClient: QueryClient, handle: string, did: string) {
+	// seed both keys so navigation by either identifier resolves from cache;
+	// links default to DID, but handle-based entry points still benefit
 	queryClient.setQueryData<string>(RQKEY(handle), did);
+	queryClient.setQueryData<string>(RQKEY(did), did);
 }

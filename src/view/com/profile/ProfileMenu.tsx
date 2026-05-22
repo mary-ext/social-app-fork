@@ -223,8 +223,8 @@ let ProfileMenu = ({
 	}, [profile.did]);
 
 	const onPressSearch = useCallback(() => {
-		navigation.navigate('ProfileSearch', { name: profile.handle });
-	}, [navigation, profile.handle]);
+		navigation.navigate('ProfileSearch', { name: profile.did });
+	}, [navigation, profile.did]);
 
 	const verificationCreatePromptControl = Prompt.usePromptControl();
 	const verificationRemovePromptControl = Prompt.usePromptControl();

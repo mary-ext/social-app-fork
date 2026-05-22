@@ -353,7 +353,7 @@ let Card = ({
 		if (!status.isActive || !data) return;
 		hide();
 		navigation.push('Profile', {
-			name: data.handle,
+			name: data.did,
 		});
 	}, [hide, navigation, status, data]);
 
@@ -424,10 +424,7 @@ function Inner({
 		one: 'following',
 		other: 'following',
 	});
-	const profileURL = makeProfileLink({
-		did: profile.did,
-		handle: profile.handle,
-	});
+	const profileURL = makeProfileLink({ did: profile.did });
 	const isMe = useMemo(() => currentAccount?.did === profile.did, [currentAccount, profile]);
 	const isLabeler = profile.associated?.labeler;
 

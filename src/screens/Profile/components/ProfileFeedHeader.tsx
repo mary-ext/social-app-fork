@@ -405,10 +405,7 @@ function DialogInner({
 							By{' '}
 							<InlineLinkText
 								label={l`View ${info.creatorHandle}'s profile`}
-								to={makeProfileLink({
-									did: info.creatorDid,
-									handle: info.creatorHandle,
-								})}
+								to={makeProfileLink({ did: info.creatorDid })}
 								style={[a.text_sm, a.underline, t.atoms.text_contrast_medium]}
 								numberOfLines={1}
 								onPress={() => control.close()}

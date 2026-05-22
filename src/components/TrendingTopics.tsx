@@ -206,7 +206,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
             label: l`View ${displayName}'s profile`,
             displayName,
             uri: urip,
-            url: makeProfileLink({did: urip.host, handle: urip.host}),
+            url: makeProfileLink({did: urip.host}),
           }
         }
         case 'app.bsky.feed.generator': {

@@ -180,10 +180,7 @@ let MessageItem = ({
 			<Link
 				label={l`${createSanitizedDisplayName(profile)}’s avatar`}
 				accessibilityHint={l`Opens this profile`}
-				to={makeProfileLink({
-					did: profile.did,
-					handle: profile.handle,
-				})}
+				to={makeProfileLink({ did: profile.did })}
 				onPress={() => unstableCacheProfileView(queryClient, profile)}
 			>
 				<ProfileCard.Avatar

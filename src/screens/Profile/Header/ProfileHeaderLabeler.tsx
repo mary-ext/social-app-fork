@@ -159,7 +159,7 @@ let ProfileHeaderLabeler = ({
 										to={{
 											screen: 'ProfileLabelerLikedBy',
 											params: {
-												name: labeler.creator.handle || labeler.creator.did,
+												name: labeler.creator.did,
 											},
 										}}
 										size="tiny"

@@ -156,7 +156,7 @@ function Label({
 								Source:{' '}
 								<InlineLinkText
 									label={sourceName}
-									to={makeProfileLink(labeler ? labeler.creator : { did: label.src, handle: '' })}
+									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 									onPress={() => control.close()}
 								>
 									{sourceName}
@@ -243,7 +243,7 @@ function AppealForm({
 						This appeal will be sent to{' '}
 						<InlineLinkText
 							label={sourceName}
-							to={makeProfileLink(labeler ? labeler.creator : { did: label.src, handle: '' })}
+							to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 							onPress={() => control.close()}
 							style={[a.text_md, a.leading_snug]}
 						>

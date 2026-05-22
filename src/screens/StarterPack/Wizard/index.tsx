@@ -195,7 +195,7 @@ function WizardInner({
 			onSuccess?.();
 		} else {
 			navigation.replace('StarterPack', {
-				name: profile.handle,
+				name: profile.did,
 				rkey,
 				new: true,
 			});
@@ -207,7 +207,7 @@ function WizardInner({
 			navigation.goBack();
 		} else {
 			navigation.replace('StarterPack', {
-				name: currentAccount!.handle,
+				name: currentAccount!.did,
 				rkey: parsed!.rkey,
 			});
 		}

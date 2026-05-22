@@ -314,6 +314,5 @@ function SaveButtonInner({
 
 export function createProfileFeedHref({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
 	const urip = new AtUri(feed.uri);
-	const handleOrDid = feed.creator.handle || feed.creator.did;
-	return `/profile/${handleOrDid}/feed/${urip.rkey}`;
+	return `/profile/${feed.creator.did}/feed/${urip.rkey}`;
 }

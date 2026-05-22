@@ -900,10 +900,7 @@ function ExpandedAuthorCard({ author }: { author: Author }) {
 			key={author.profile.did}
 			label={author.profile.displayName || author.profile.handle}
 			accessibilityHint={l`Opens this profile`}
-			to={makeProfileLink({
-				did: author.profile.did,
-				handle: author.profile.handle,
-			})}
+			to={makeProfileLink({ did: author.profile.did })}
 			style={styles.expandedAuthor}
 		>
 			<View style={[a.mr_sm]}>

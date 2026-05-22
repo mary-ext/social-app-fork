@@ -120,7 +120,7 @@ export function Header({
 	return (
 		<>
 			<ProfileSubpageHeader
-				href={makeListLink(list.creator.handle || list.creator.did || '', rkey)}
+				href={makeListLink(list.creator.did, rkey)}
 				title={list.name}
 				avatar={list.avatar}
 				isOwner={list.creator.did === currentAccount?.did}

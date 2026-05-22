@@ -516,10 +516,7 @@ let PreviewableUserAvatar = ({
 				<Link
 					label={l`${sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle))}'s avatar`}
 					accessibilityHint={l`Opens this profile`}
-					to={makeProfileLink({
-						did: profile.did,
-						handle: profile.handle,
-					})}
+					to={makeProfileLink({ did: profile.did })}
 					onPress={onPress}
 					style={linkStyle}
 				>

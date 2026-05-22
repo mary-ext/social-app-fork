@@ -1,19 +1,7 @@
 import { type AppBskyGraphDefs, AtUri } from '@atproto/api';
 
-import { isInvalidHandle } from '#/lib/strings/handles';
-
-export function makeProfileLink(
-	info: {
-		did: string;
-		handle: string;
-	},
-	...segments: string[]
-) {
-	let handleSegment = info.did;
-	if (info.handle && !isInvalidHandle(info.handle)) {
-		handleSegment = info.handle;
-	}
-	return [`/profile`, handleSegment, ...segments].join('/');
+export function makeProfileLink(info: { did: string }, ...segments: string[]) {
+	return [`/profile`, info.did, ...segments].join('/');
 }
 
 export function makeCustomFeedLink(
@@ -48,6 +36,6 @@ export function makeStarterPackLink(
 		return `https://bsky.app/start/${starterPackOrName}/${rkey}`;
 	} else {
 		const uriRkey = new AtUri(starterPackOrName.uri).rkey;
-		return `https://bsky.app/start/${starterPackOrName.creator.handle}/${uriRkey}`;
+		return `https://bsky.app/start/${starterPackOrName.creator.did}/${uriRkey}`;
 	}
 }

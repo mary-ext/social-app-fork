@@ -153,14 +153,7 @@ export function BottomBarWeb() {
 								</NavItem>
 								<NavItem
 									routeName="Profile"
-									href={
-										currentAccount
-											? makeProfileLink({
-													did: currentAccount.did,
-													handle: currentAccount.handle,
-												})
-											: '/'
-									}
+									href={currentAccount ? makeProfileLink({ did: currentAccount.did }) : '/'}
 									onLongPress={onLongPressProfile}
 								>
 									{({ isActive }) => (

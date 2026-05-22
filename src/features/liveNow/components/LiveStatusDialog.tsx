@@ -68,10 +68,10 @@ function DialogInner({
 	const onPressOpenProfile = useCallback(() => {
 		control.close(() => {
 			navigation.push('Profile', {
-				name: profile.handle,
+				name: profile.did,
 			});
 		});
-	}, [navigation, profile.handle, control]);
+	}, [navigation, profile.did, control]);
 
 	return (
 		<Dialog.ScrollableInner

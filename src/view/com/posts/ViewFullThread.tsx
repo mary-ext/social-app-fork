@@ -16,7 +16,7 @@ export function ViewFullThread({ uri }: { uri: string }) {
 	const t = useTheme();
 	const itemHref = useMemo(() => {
 		const urip = new AtUri(uri);
-		return makeProfileLink({ did: urip.hostname, handle: '' }, 'post', urip.rkey);
+		return makeProfileLink({ did: urip.hostname }, 'post', urip.rkey);
 	}, [uri]);
 	const { t: l } = useLingui();
 

@@ -123,10 +123,7 @@ export function Link({
 } & Omit<LinkProps, 'to' | 'label'>) {
 	const { t: l } = useLingui();
 
-	const profileURL = makeProfileLink({
-		did: profile.did,
-		handle: profile.handle,
-	});
+	const profileURL = makeProfileLink({ did: profile.did });
 
 	return (
 		<InternalLink

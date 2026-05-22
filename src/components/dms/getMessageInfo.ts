@@ -64,9 +64,7 @@ export function getMessageInfo({
 
 			if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
 				const record = embed.record;
-				const path = postUriToRelativePath(record.uri, {
-					handle: record.author.handle,
-				});
+				const path = postUriToRelativePath(record.uri);
 				const href = path ? toBskyAppUrl(path) : undefined;
 				const short = href ? toShortUrl(href) : defaultEmbeddedContentMessage;
 				message = prefix(short);

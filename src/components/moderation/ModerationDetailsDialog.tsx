@@ -168,10 +168,7 @@ function ModerationDetailsDialogInner({
 										Source:{' '}
 										<InlineLinkText
 											label={sourceName}
-											to={makeProfileLink({
-												did: modcause.label.src,
-												handle: '',
-											})}
+											to={makeProfileLink({ did: modcause.label.src })}
 											onPress={() => control.close()}
 										>
 											{sourceName}
