@@ -17,6 +17,7 @@ import * as EmojiPicker from '#/components/EmojiPicker';
 import { useSharedInputStyles } from '#/components/forms/TextField';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile } from '#/components/icons/Emoji';
 import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlane } from '#/components/icons/PaperPlane';
+import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 
 import { IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE } from '#/env';
@@ -28,12 +29,14 @@ export function MessageInput({
 	hasEmbed,
 	setEmbed,
 	children,
+	loading = false,
 }: {
 	onSendMessage: (message: string) => void;
 	hasEmbed: boolean;
 	setEmbed: (embedUrl: string | undefined) => void;
 	textInputId?: string;
 	children?: React.ReactNode;
+	loading?: boolean;
 }) {
 	const { isMobile } = useWebMediaQueries();
 	const { t: l } = useLingui();
@@ -47,8 +50,12 @@ export function MessageInput({
 	const [isHovered, setIsHovered] = useState(false);
 	const [textAreaHeight, setTextAreaHeight] = useState(38);
 	const textAreaRef = useRef<HTMLTextAreaElement>(null);
+	const submitDisabled = loading || (!hasEmbed && message.trim().length === 0);
 
 	const onSubmit = useCallback(() => {
+		if (loading) {
+			return;
+		}
 		if (!hasEmbed && message.trim() === '') {
 			return;
 		}
@@ -62,27 +69,12 @@ export function MessageInput({
 		onSendMessage(message);
 		setMessage('');
 		setEmbed(undefined);
-	}, [message, onSendMessage, l, clearDraft, hasEmbed, setEmbed]);
+	}, [message, onSendMessage, l, clearDraft, hasEmbed, setEmbed, loading]);
 
 	const onKeyDown = useCallback(
 		(e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-			// Don't submit the form when the Japanese or any other IME is composing
 			if (isComposing.current) return;
 
-			// see https://github.com/bluesky-social/social-app/issues/4178
-			// see https://www.stum.de/2016/06/24/handling-ime-events-in-javascript/
-			// see https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
-			//
-			// On Safari, the final keydown event to dismiss the IME - which is the enter key - is also "Enter" below.
-			// Obviously, this causes problems because the final dismissal should _not_ submit the text, but should just
-			// stop the IME editing. This is the behavior of Chrome and Firefox, but not Safari.
-			//
-			// Keycode is deprecated, however the alternative seems to only be to compare the timestamp from the
-			// onCompositionEnd event to the timestamp of the keydown event, which is not reliable. For example, this hack
-			// uses that method: https://github.com/ProseMirror/prosemirror-view/pull/44. However, from my 500ms resulted in
-			// far too long of a delay, and a subsequent enter press would often just end up doing nothing. A shorter time
-			// frame was also not great, since it was too short to be reliable (i.e. an older system might have a larger
-			// time gap between the two events firing.
 			if (IS_WEB_SAFARI && e.key === 'Enter' && e.keyCode === 229) {
 				return;
 			}
@@ -193,10 +185,15 @@ export function MessageInput({
 						},
 					])}
 					maxRows={12}
-					placeholder={l`Message`}
+					placeholder={
+						loading
+							? l({ message: 'Loading chat...', context: 'placeholder' })
+							: l({ message: 'Message', context: 'action' })
+					}
 					defaultValue=""
 					value={message}
 					dirName="ltr"
+					disabled={loading}
 					autoFocus={true}
 					onFocus={() => setIsFocused(true)}
 					onBlur={() => setIsFocused(false)}
@@ -208,8 +205,6 @@ export function MessageInput({
 					}}
 					onHeightChange={(height) => setTextAreaHeight(height)}
 					onChange={onChange}
-					// On mobile web phones, we want to keep the same behavior as the native app. Do not submit the message
-					// in these cases.
 					onKeyDown={IS_WEB_TOUCH_DEVICE && isMobile ? undefined : onKeyDown}
 				/>
 				<Pressable
@@ -224,12 +219,17 @@ export function MessageInput({
 							height: 30,
 							width: 30,
 							marginTop: 5,
-							backgroundColor: t.palette.primary_500,
+							backgroundColor: submitDisabled ? t.palette.contrast_100 : t.palette.primary_500,
 						},
 					]}
 					onPress={onSubmit}
+					disabled={submitDisabled}
 				>
-					<PaperPlane fill={t.palette.white} style={[a.relative, { left: 1 }]} />
+					{loading ? (
+						<Loader size="md" fill={t.palette.white} style={[a.relative, { left: 1 }]} />
+					) : (
+						<PaperPlane fill={t.palette.white} style={[a.relative, { left: 1 }]} />
+					)}
 				</Pressable>
 			</View>
 		</View>

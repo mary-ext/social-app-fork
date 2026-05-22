@@ -17,6 +17,7 @@ import * as EmojiPicker from '#/components/EmojiPicker';
 import { GlassView } from '#/components/GlassView';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
+import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 
 import { GlassContainer } from '#/shims/glass-effect';
@@ -31,12 +32,14 @@ export function MessageComposer({
 	hasEmbed,
 	setEmbed,
 	children,
+	loading = false,
 }: {
 	textInputId?: string;
 	onSendMessage: (message: string) => void;
 	hasEmbed: boolean;
 	setEmbed: (embedUrl: string | undefined) => void;
 	children?: React.ReactNode;
+	loading?: boolean;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -47,17 +50,16 @@ export function MessageComposer({
 	const [text, setText] = useState(getDraft);
 	useSaveMessageDraft(text);
 
-	// Android interactive dismiss sometimes doesn't blur the input
-
 	useKeyboardHandler({
 		onEnd: () => {
 			'worklet';
 		},
 	});
 
-	const submitDisabled = !hasEmbed && text.trim().length === 0;
+	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
 	const onSubmit = (message: string) => {
+		if (loading) return;
 		if (!hasEmbed && message.trim() === '') return;
 		const graphemeCount = countGraphemes(message);
 		if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
@@ -72,7 +74,6 @@ export function MessageComposer({
 
 		composerInternalApiRef.current?.input?.focus();
 
-		// defer send by a frame so that the textinput resizes before we send the message
 		requestAnimationFrame(() => {
 			onSendMessage(message);
 		});
@@ -99,52 +100,54 @@ export function MessageComposer({
 					>
 						{children}
 						<View style={[a.flex_1]}>
-							{
-								<EmojiPicker.Root
-									onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
-									nextFocusRef={() => composerInternalApiRef.current?.input?.element}
-								>
-									<EmojiPicker.Trigger label={l`Open emoji picker`}>
-										{({ props, state, control }) => (
-											<Pressable
-												{...props}
-												style={[
-													a.overflow_hidden,
-													a.absolute,
-													a.rounded_full,
-													a.align_center,
-													a.justify_center,
-													a.z_30,
-													{
-														height: 20,
-														width: 20,
-														top: 10,
-														right: 10,
-													},
-												]}
-											>
-												<EmojiSmileIcon
-													size="md"
-													style={
-														state.hovered || state.focused || state.pressed || control.isOpen
-															? { color: t.palette.primary_500 }
-															: t.atoms.text_contrast_high
-													}
-												/>
-											</Pressable>
-										)}
-									</EmojiPicker.Trigger>
-									<EmojiPicker.Picker />
-								</EmojiPicker.Root>
-							}
-
+							<EmojiPicker.Root
+								onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
+								nextFocusRef={() => composerInternalApiRef.current?.input?.element}
+							>
+								<EmojiPicker.Trigger label={l`Open emoji picker`}>
+									{({ props, state, control }) => (
+										<Pressable
+											{...props}
+											style={[
+												a.overflow_hidden,
+												a.absolute,
+												a.rounded_full,
+												a.align_center,
+												a.justify_center,
+												a.z_30,
+												{
+													height: 20,
+													width: 20,
+													top: 10,
+													right: 10,
+												},
+											]}
+										>
+											<EmojiSmileIcon
+												size="md"
+												style={
+													state.hovered || state.focused || state.pressed || control.isOpen
+														? { color: t.palette.primary_500 }
+														: t.atoms.text_contrast_high
+												}
+											/>
+										</Pressable>
+									)}
+								</EmojiPicker.Trigger>
+								<EmojiPicker.Picker />
+							</EmojiPicker.Root>
 							<Composer
 								nativeID={textInputId}
 								label={l`Message input field`}
-								placeholder={l`Message`}
+								placeholder={
+									loading
+										? l({ message: 'Loading chat...', context: 'placeholder' })
+										: l({ message: 'Message', context: 'action' })
+								}
 								autocompletePlacement="top-start"
 								internalApiRef={composerInternalApiRef}
 								defaultValue={text}
+								editable={!loading}
 								autoFocus={true}
 								maxRows={12}
 								outerStyle={[a.flex_1]}
@@ -169,14 +172,14 @@ export function MessageComposer({
 							/>
 						</View>
 					</GlassView>
-					<SubmitButton onPress={handleSubmit} disabled={submitDisabled} />
+					<SubmitButton onPress={handleSubmit} disabled={submitDisabled} loading={loading} />
 				</GlassContainer>
 			</View>
 		</ComposerContainer>
 	);
 }
 
-function SubmitButton({ onPress, disabled }: { onPress: () => void; disabled: boolean }) {
+function SubmitButton({ onPress, disabled, loading }: { onPress: () => void; disabled: boolean; loading: boolean }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
 
@@ -199,7 +202,11 @@ function SubmitButton({ onPress, disabled }: { onPress: () => void; disabled: bo
 				onPress={onPress}
 				disabled={disabled}
 			>
-				<PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+				{loading ? (
+					<Loader size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+				) : (
+					<PaperPlaneIcon size="md" fill={t.palette.white} style={[a.mb_2xs]} />
+				)}
 			</Pressable>
 		</GlassView>
 	);
