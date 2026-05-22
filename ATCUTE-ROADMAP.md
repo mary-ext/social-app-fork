@@ -140,6 +140,19 @@ Six streams plus a deferred appendix, executed in this canonical order:
   moderation through the compat module; Phase 5.3 consolidates the engine, its configuration, and
   that module into the bounded `src/lib/moderation/**` island that Stream 6 leaves behind.
 
+## Progress
+
+Tracked loosely — `git log` is the source of truth, since each commit subject names its phase.
+
+- **Stream 1 — done.** Phases 1.1, 1.2, 1.3 landed.
+- **Phase 2.1 — done.** Identity/resolution reads.
+- **Phase 4.3 — done.** Moderation reporting, pulled forward (Stream 4 only depends on Stream 1).
+- Next in canonical order: **Phase 2.2** (profiles and social graph).
+
+Two dead-code removals happened alongside the migration rather than migrating the code: the
+`handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
+not possible through an OAuth client). Both are already reflected in the phase text above.
+
 ## Conventions
 
 - Each phase starts with motivation and ends with a verifiable "done when".
@@ -291,6 +304,12 @@ Each is constructed at the call site by its own Phase 4 phase; Phase 1.3 adds no
   the `repo.*` input/output casts inside `src/lib/api/records.ts` (Phase 1.3) are the only
   sanctioned `as`es in the migration — add a tiny typed helper if a cast recurs (e.g.
   `asPostRecord(view)`), don't scatter raw casts.
+- **XRPC params and id fields are branded.** `@atcute`'s param/input types use branded strings
+  (`ActorIdentifier`, `Handle`, `Did`, `ResourceUri`, `Cid`) where the fork carries plain `string`.
+  Cast at the call boundary — `actor: handleOrDid as ActorIdentifier`, `proxy: \`${did}#…\` as
+  AtprotoAudience`. This is a sanctioned boundary cast like the `record` assertion above: the value
+  genuinely is that shape at runtime, the fork just types its identifiers loosely. (Surfaced while
+  executing Phases 2.1 and 4.3 — it recurs in every Stream 2–4 phase.)
 
 ---
 
