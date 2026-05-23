@@ -1,4 +1,6 @@
-import { type AppBskyVideoDefs, type BlobRef } from '@atproto/api';
+import { type AppBskyVideoDefs } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type BlobRef } from '@atproto/api';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
@@ -8,12 +10,15 @@ import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
-import { createVideoAgent } from '#/lib/media/video/util';
+import { getServiceAuthToken } from '#/lib/media/video/upload.shared';
+import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { type BskyAppAgent } from '#/state/session/agent';
 
 import { logger } from '#/logger';
+
+import { VIDEO_PROXY_DID } from '#/env';
 
 type CaptionsTrack = { lang: string; file: File };
 
@@ -236,6 +241,7 @@ export async function processVideo(
 	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
 	agent: BskyAppAgent,
+	pds: Client,
 	did: string,
 	signal: AbortSignal,
 	i18n: I18n,
@@ -274,7 +280,8 @@ export async function processVideo(
 
 		uploadResponse = await uploadVideo({
 			video,
-			agent,
+			pds,
+			dispatchUrl: agent.dispatchUrl.toString(),
 			did,
 			signal,
 			i18n,
@@ -301,22 +308,30 @@ export async function processVideo(
 		signal,
 	});
 
+	// Job-status polling needs its own service-auth token. Mint once, reuse for the polling loop.
+	const jobStatusToken = await getServiceAuthToken({
+		pds,
+		dispatchUrl: agent.dispatchUrl.toString(),
+		lxm: 'app.bsky.video.getJobStatus',
+		aud: VIDEO_PROXY_DID,
+	});
+	const videoClient = createVideoClient(jobStatusToken);
+
 	let pollFailures = 0;
 	while (true) {
 		if (signal.aborted) {
 			return; // Exit async loop
 		}
 
-		const videoAgent = createVideoAgent();
 		let status: AppBskyVideoDefs.JobStatus | undefined;
 		let blob: BlobRef | undefined;
 		try {
-			const response = await videoAgent.app.bsky.video.getJobStatus({ jobId });
-			status = response.data.jobStatus;
+			const response = await ok(videoClient.get('app.bsky.video.getJobStatus', { params: { jobId } }));
+			status = response.jobStatus;
 			pollFailures = 0;
 
 			if (status.state === 'JOB_STATE_COMPLETED') {
-				blob = status.blob;
+				blob = status.blob as unknown as BlobRef;
 				if (!blob) {
 					throw new Error('Job completed, but did not return a blob');
 				}

@@ -1,4 +1,5 @@
-import { type AppBskyVideoDefs } from '@atproto/api';
+import { type AppBskyVideoDefs } from '@atcute/bluesky';
+import { type Client } from '@atcute/client';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 import { nanoid } from 'nanoid/non-secure';
@@ -7,21 +8,21 @@ import { AbortError } from '#/lib/async/cancelable';
 import { ServerError } from '#/lib/media/video/errors';
 import { type CompressedVideo } from '#/lib/media/video/types';
 
-import { type BskyAppAgent } from '#/state/session/agent';
-
 import { getServiceAuthToken, getVideoUploadLimits } from './upload.shared';
 import { createVideoEndpointUrl, mimeToExt } from './util';
 
 export async function uploadVideo({
 	video,
-	agent,
+	pds,
+	dispatchUrl,
 	did,
 	setProgress,
 	signal,
 	i18n,
 }: {
 	video: CompressedVideo;
-	agent: BskyAppAgent;
+	pds: Client;
+	dispatchUrl: string;
 	did: string;
 	setProgress: (progress: number) => void;
 	signal: AbortSignal;
@@ -30,7 +31,7 @@ export async function uploadVideo({
 	if (signal.aborted) {
 		throw new AbortError();
 	}
-	await getVideoUploadLimits(agent, i18n);
+	await getVideoUploadLimits({ pds, dispatchUrl, i18n });
 
 	const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
 		did,
@@ -41,7 +42,8 @@ export async function uploadVideo({
 		throw new AbortError();
 	}
 	const token = await getServiceAuthToken({
-		agent,
+		pds,
+		dispatchUrl,
 		lxm: 'com.atproto.repo.uploadBlob',
 		exp: Date.now() / 1000 + 60 * 30, // 30 minutes
 	});

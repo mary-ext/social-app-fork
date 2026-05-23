@@ -25,4 +25,5 @@ interface ImportMetaEnv {
 	PUBLIC_RELEASE_VERSION?: string;
 	PUBLIC_SLINGSHOT_SERVICE_URL: string;
 	PUBLIC_SOURCE_CODE_URL: string;
+	PUBLIC_VIDEO_PROXY_DID: string;
 }

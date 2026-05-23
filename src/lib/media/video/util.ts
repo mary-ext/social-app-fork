@@ -1,4 +1,4 @@
-import { AtpAgent } from '@atproto/api';
+import { Client } from '@atcute/client';
 
 import { type SupportedMimeTypes, VIDEO_SERVICE } from '#/lib/constants';
 
@@ -13,9 +13,21 @@ export const createVideoEndpointUrl = (route: string, params?: Record<string, st
 	return url.href;
 };
 
-export function createVideoAgent() {
-	return new AtpAgent({
-		service: VIDEO_SERVICE,
+/**
+ * Builds an XRPC client that talks directly to the video service, authenticating with a short-lived
+ * service-auth token. The token is minted upstream via `com.atproto.server.getServiceAuth` on the user's
+ * PDS.
+ *
+ * @param token the service-auth bearer token.
+ * @returns a `Client` rooted at `VIDEO_SERVICE` that carries the bearer credential on every request.
+ */
+export function createVideoClient(token: string): Client {
+	return new Client({
+		handler: (pathname, init) =>
+			fetch(new URL(pathname, VIDEO_SERVICE), {
+				...init,
+				headers: { ...init.headers, Authorization: `Bearer ${token}` },
+			}),
 	});
 }
 
