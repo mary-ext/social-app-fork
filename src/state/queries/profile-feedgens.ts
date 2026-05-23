@@ -1,7 +1,10 @@
-import { type AppBskyFeedGetActorFeeds, moderateFeedGenerator } from '@atproto/api';
+import { type AppBskyFeedGetActorFeeds } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
+import { moderateFeedGenerator } from '@atproto/api';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 
@@ -15,25 +18,25 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 export function useProfileFeedgensQuery(did: string, opts?: { enabled?: boolean }) {
 	const moderationOpts = useModerationOpts();
 	const enabled = opts?.enabled !== false && Boolean(moderationOpts);
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyFeedGetActorFeeds.OutputSchema,
+		AppBskyFeedGetActorFeeds.$output,
 		Error,
-		InfiniteData<AppBskyFeedGetActorFeeds.OutputSchema>,
+		InfiniteData<AppBskyFeedGetActorFeeds.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		queryKey: RQKEY(did),
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.app.bsky.feed.getActorFeeds({
-				actor: did,
-				limit: PAGE_SIZE,
-				cursor: pageParam,
-			});
-			res.data.feeds.sort((a, b) => {
+			const data = await ok(
+				appview.get('app.bsky.feed.getActorFeeds', {
+					params: { actor: did as ActorIdentifier, cursor: pageParam, limit: PAGE_SIZE },
+				}),
+			);
+			data.feeds.sort((a, b) => {
 				return (b.likeCount || 0) - (a.likeCount || 0);
 			});
-			return res.data;
+			return data;
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
@@ -47,7 +50,11 @@ export function useProfileFeedgensQuery(did: string, opts?: { enabled?: boolean 
 						feeds: page.feeds
 							// filter by labels
 							.filter((list) => {
-								const decision = moderateFeedGenerator(list, moderationOpts!);
+								// TODO(atcute Phase 2.4): drop cast once moderateFeedGenerator flips to @atcute
+								const decision = moderateFeedGenerator(
+									list as unknown as Parameters<typeof moderateFeedGenerator>[0],
+									moderationOpts!,
+								);
 								return !decision.ui('contentList').filters.some((cause) => cause.type !== 'muted');
 							}),
 					};

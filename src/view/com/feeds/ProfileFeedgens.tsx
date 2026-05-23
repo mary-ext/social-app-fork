@@ -6,7 +6,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -189,7 +189,8 @@ export function ProfileFeedgens({
 			if (preferences) {
 				return (
 					<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
-						<FeedCard.Default view={item} />
+						{/* TODO(atcute Phase 2.4): drop cast once FeedCard flips to @atcute */}
+						<FeedCard.Default view={item as unknown as Parameters<typeof FeedCard.Default>[0]['view']} />
 					</View>
 				);
 			}
