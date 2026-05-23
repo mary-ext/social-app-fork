@@ -20,6 +20,7 @@ import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackC
 import { Text } from '#/components/Typography';
 
 import { type Gif } from '#/features/gifPicker/types';
+import type * as bsky from '#/types/bsky';
 
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const t = useTheme();
@@ -137,7 +138,8 @@ export const ExternalEmbedLink = ({
 					/>
 				);
 			} else if (data.kind === 'starter-pack') {
-				return <StarterPackEmbed starterPack={data.view} />;
+				// TODO(atcute Phase 2.1/5.1): drop cast once resolveLink flips to @atcute types
+				return <StarterPackEmbed starterPack={data.view as unknown as bsky.starterPack.AnyStarterPackView} />;
 			}
 		}
 	}, [data, uri, thumbUrl]);

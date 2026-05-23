@@ -188,7 +188,11 @@ function StarterPackList({
 
 	return (
 		<Dialog.InnerFlatList
-			data={isLoading ? [{ type: 'starter_pack_dialog_loader' }] : membershipItems}
+			data={
+				isLoading
+					? [{ type: 'starter_pack_dialog_loader' } as StarterPackDialogItem]
+					: (membershipItems as StarterPackDialogItem[])
+			}
 			renderItem={renderItem}
 			keyExtractor={(item) => ('type' in item ? item.type : item.starterPack.uri)}
 			onEndReached={onEndReached}

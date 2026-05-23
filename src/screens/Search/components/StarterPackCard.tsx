@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { type AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { AppBskyGraphStarterpack } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile } from '#/lib/moderation/compat';

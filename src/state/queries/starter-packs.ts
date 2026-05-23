@@ -1,7 +1,8 @@
+import { type AppBskyFeedDefs, AppBskyGraphDefs, type AppBskyGraphGetStarterPack } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import {
-	AppBskyFeedDefs,
-	AppBskyGraphDefs,
-	type AppBskyGraphGetStarterPack,
+	AppBskyFeedDefs as ApiAppBskyFeedDefs,
 	AppBskyGraphStarterpack,
 	type AppBskyRichtextFacet,
 	AtUri,
@@ -21,7 +22,7 @@ import {
 import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { STALE } from '#/state/queries/index';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
-import { useAgent } from '#/state/session';
+import { useAgent, useClients } from '#/state/session';
 import { type BskyAppAgent } from '#/state/session/agent';
 
 import * as bsky from '#/types/bsky';
@@ -37,7 +38,7 @@ const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }
 };
 
 export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useQuery<AppBskyGraphDefs.StarterPackView>({
 		queryKey: RQKEY(uri ? { uri } : { did, rkey }),
@@ -48,10 +49,12 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 				uri = httpStarterPackUriToAtUri(uri) as string;
 			}
 
-			const res = await agent.app.bsky.graph.getStarterPack({
-				starterPack: uri,
-			});
-			return res.data.starterPack;
+			const data = await ok(
+				appview.get('app.bsky.graph.getStarterPack', {
+					params: { starterPack: uri as ResourceUri },
+				}),
+			);
+			return data.starterPack;
 		},
 		enabled: Boolean(uri) || Boolean(did && rkey),
 		staleTime: STALE.MINUTES.FIVE,
@@ -309,13 +312,17 @@ export function useDeleteStarterPackMutation({
 async function whenAppViewReady(
 	agent: BskyAppAgent,
 	uri: string,
-	fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
+	fn: (res?: { success: boolean; data: AppBskyGraphGetStarterPack.$output }) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => agent.app.bsky.graph.getStarterPack({ starterPack: uri }),
+		() =>
+			agent.app.bsky.graph.getStarterPack({ starterPack: uri }) as unknown as Promise<{
+				success: boolean;
+				data: AppBskyGraphGetStarterPack.$output;
+			}>,
 	);
 }
 
@@ -323,15 +330,17 @@ export function precacheStarterPack(
 	queryClient: QueryClient,
 	starterPack: AppBskyGraphDefs.StarterPackViewBasic | AppBskyGraphDefs.StarterPackView,
 ) {
+	// TODO(atcute Phase 5.2): bsky.validate uses @atproto/api validators; the validate calls below assume
+	// @atproto/api-shaped records, which are structurally compatible with @atcute records at runtime.
 	if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
 		return;
 	}
 
 	let starterPackView: AppBskyGraphDefs.StarterPackView | undefined;
-	if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
-		starterPackView = starterPack;
+	if (starterPack.$type === 'app.bsky.graph.defs#starterPackView') {
+		starterPackView = starterPack as AppBskyGraphDefs.StarterPackView;
 	} else if (
-		AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
+		starterPack.$type === 'app.bsky.graph.defs#starterPackViewBasic' &&
 		bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
 	) {
 		let feeds: AppBskyFeedDefs.GeneratorView[] | undefined;
@@ -340,14 +349,14 @@ export function precacheStarterPack(
 			for (const feed of starterPack.record.feeds) {
 				// note: types are wrong? claims to be `FeedItem`, but we actually
 				// get un$typed `GeneratorView` objects here -sfn
-				if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
-					feeds.push(feed);
+				if (bsky.validate(feed, ApiAppBskyFeedDefs.validateGeneratorView as never)) {
+					feeds.push(feed as unknown as AppBskyFeedDefs.GeneratorView);
 				}
 			}
 		}
 
 		const listView: AppBskyGraphDefs.ListViewBasic = {
-			uri: starterPack.record.list,
+			uri: starterPack.record.list as ResourceUri,
 			// This will be populated once the data from server is fetched
 			cid: '',
 			name: starterPack.record.name,

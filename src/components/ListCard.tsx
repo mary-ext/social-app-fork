@@ -1,10 +1,12 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, AtUri, moderateUserList, type ModerationUI } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { AtUri, type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { moderateUserList } from '#/lib/moderation/compat';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -55,11 +57,13 @@ export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'childre
 					<Avatar src={view.avatar} />
 					<TitleAndByline
 						title={view.name}
-						creator={view.creator as bsky.profile.AnyProfileView}
+						creator={view.creator}
 						purpose={view.purpose}
 						modUi={moderation?.ui('contentView')}
 					/>
-					{showPinButton && view.purpose === CURATELIST && <SaveButton view={view} pin />}
+					{showPinButton && view.purpose === CURATELIST && (
+						<SaveButton view={view as unknown as Parameters<typeof SaveButton>[0]['view']} pin />
+					)}
 				</Header>
 				<Description description={view.description} />
 			</Outer>
@@ -75,7 +79,7 @@ export function Link({ view, children, ...props }: Props & Omit<LinkProps, 'to' 
 	}, [view]);
 
 	useEffect(() => {
-		precacheList(queryClient, view);
+		precacheList(queryClient, view as unknown as Parameters<typeof precacheList>[1]);
 	}, [view, queryClient]);
 
 	return (

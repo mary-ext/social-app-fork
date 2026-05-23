@@ -143,7 +143,8 @@ function RecordEmbed({
 		case 'starter_pack': {
 			return (
 				<View style={a.mt_sm}>
-					<StarterPackCard starterPack={embed.view} />
+					{/* TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute */}
+					<StarterPackCard starterPack={embed.view as unknown as bsky.starterPack.AnyStarterPackView} />
 				</View>
 			);
 		}

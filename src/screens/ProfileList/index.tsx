@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { AppBskyGraphDefs, AtUri, moderateUserList, type ModerationOpts } from '@atproto/api';
+import { AppBskyGraphDefs } from '@atcute/bluesky';
+import { AtUri } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,6 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
+import { moderateUserList, type ModerationOpts } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -143,7 +145,7 @@ function ProfileListScreenLoaded({
 	const { rkey } = route.params;
 	const feedSectionRef = useRef<SectionRef>(null);
 	const aboutSectionRef = useRef<SectionRef>(null);
-	const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST;
+	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isScreenFocused = useIsFocused();
 	const isHidden = list.labels?.findIndex((l) => l.val === '!hide') !== -1;
 	const isOwner = currentAccount?.did === list.creator.did;

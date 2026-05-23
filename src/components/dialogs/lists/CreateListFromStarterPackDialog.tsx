@@ -1,5 +1,6 @@
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, type AppBskyGraphStarterpack, AtUri } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AppBskyGraphStarterpack, AtUri } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';

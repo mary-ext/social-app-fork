@@ -1,5 +1,6 @@
 import { createContext, useContext, useReducer } from 'react';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { AppBskyGraphStarterpack } from '@atproto/api';
 import { defineMessage, plural } from '@lingui/core/macro';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';

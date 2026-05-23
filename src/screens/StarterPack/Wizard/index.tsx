@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Keyboard, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs, AtUri } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { AtUri } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';

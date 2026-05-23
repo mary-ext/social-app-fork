@@ -1,4 +1,6 @@
-import { type AppBskyActorDefs, type AppBskyGraphDefs, type AppBskyGraphGetList } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -8,8 +10,7 @@ import {
 } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
@@ -20,24 +21,26 @@ export const RQKEY = (uri: string) => [RQKEY_ROOT, uri];
 export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri];
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyGraphGetList.OutputSchema,
+		AppBskyGraphGetList.$output,
 		Error,
-		InfiniteData<AppBskyGraphGetList.OutputSchema>,
+		InfiniteData<AppBskyGraphGetList.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri ?? ''),
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.app.bsky.graph.getList({
-				list: uri!, // the enabled flag will prevent this from running until uri is set
-				limit,
-				cursor: pageParam,
-			});
-			return res.data;
-		},
+		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
+			ok(
+				appview.get('app.bsky.graph.getList', {
+					params: {
+						cursor: pageParam,
+						limit,
+						list: uri! as ResourceUri, // the enabled flag will prevent this from running until uri is set
+					},
+				}),
+			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		enabled: Boolean(uri),
@@ -45,32 +48,30 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
 }
 
 export function useAllListMembersQuery(uri?: string) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY_ALL(uri ?? ''),
-		queryFn: async () => {
-			return getAllListMembers(agent, uri!);
-		},
+		queryFn: () => getAllListMembers(appview, uri!),
 		enabled: Boolean(uri),
 	});
 }
 
-export async function getAllListMembers(agent: BskyAppAgent, uri: string) {
+export async function getAllListMembers(client: Client, uri: string) {
 	let hasMore = true;
 	let cursor: string | undefined;
 	const listItems: AppBskyGraphDefs.ListItemView[] = [];
 	// We want to cap this at 6 pages, just for anything weird happening with the api
 	let i = 0;
 	while (hasMore && i < 6) {
-		const res = await agent.app.bsky.graph.getList({
-			list: uri,
-			limit: 50,
-			cursor,
-		});
-		listItems.push(...res.data.items);
-		hasMore = Boolean(res.data.cursor);
-		cursor = res.data.cursor;
+		const data = await ok(
+			client.get('app.bsky.graph.getList', {
+				params: { cursor, limit: 50, list: uri as ResourceUri },
+			}),
+		);
+		listItems.push(...data.items);
+		hasMore = Boolean(data.cursor);
+		cursor = data.cursor;
 		i++;
 	}
 	return listItems;
@@ -90,7 +91,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetList.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetList.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

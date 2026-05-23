@@ -1,7 +1,8 @@
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import {
 	type $Typed,
-	type AppBskyGraphDefs,
-	type AppBskyGraphGetList,
 	type AppBskyGraphList,
 	AtUri,
 	type ComAtprotoRepoApplyWrites,
@@ -16,7 +17,7 @@ import { until } from '#/lib/async/until';
 
 import { type ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
-import { useAgent, useSession } from '#/state/session';
+import { useAgent, useClients, useSession } from '#/state/session';
 import { type BskyAppAgent } from '#/state/session/agent';
 
 import { FEED_INFO_RQKEY_ROOT } from './feed';
@@ -27,19 +28,20 @@ export const RQKEY_ROOT = 'list';
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri];
 
 export function useListQuery(uri?: string) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery<AppBskyGraphDefs.ListView, Error>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri || ''),
-		async queryFn() {
+		queryFn: async () => {
 			if (!uri) {
 				throw new Error('URI not provided');
 			}
-			const res = await agent.app.bsky.graph.getList({
-				list: uri,
-				limit: 1,
-			});
-			return res.data.list;
+			const data = await ok(
+				appview.get('app.bsky.graph.getList', {
+					params: { limit: 1, list: uri as ResourceUri },
+				}),
+			);
+			return data.list;
 		},
 		enabled: !!uri,
 	});
@@ -84,7 +86,7 @@ export function useListCreateMutation() {
 			);
 
 			// wait for the appview to update
-			await whenAppViewReady(agent, res.uri, (v: AppBskyGraphGetList.Response) => {
+			await whenAppViewReady(agent, res.uri, (v) => {
 				return typeof v?.data?.list.uri === 'string';
 			});
 			return res;
@@ -145,7 +147,7 @@ export function useListMetadataMutation() {
 			).data;
 
 			// wait for the appview to update
-			await whenAppViewReady(agent, res.uri, (v: AppBskyGraphGetList.Response) => {
+			await whenAppViewReady(agent, res.uri, (v) => {
 				const list = v.data.list;
 				return list.name === record.name && list.description === record.description;
 			});
@@ -213,7 +215,7 @@ export function useListDeleteMutation() {
 			}
 
 			// wait for the appview to update
-			await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+			await whenAppViewReady(agent, uri, (v) => {
 				return !v?.success;
 			});
 		},
@@ -238,7 +240,7 @@ export function useListMuteMutation() {
 				await agent.unmuteModList(uri);
 			}
 
-			await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+			await whenAppViewReady(agent, uri, (v) => {
 				return Boolean(v?.data.list.viewer?.muted) === mute;
 			});
 		},
@@ -261,7 +263,7 @@ export function useListBlockMutation() {
 				await agent.unblockModList(uri);
 			}
 
-			await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+			await whenAppViewReady(agent, uri, (v) => {
 				return block ? typeof v?.data.list.viewer?.blocked === 'string' : !v?.data.list.viewer?.blocked;
 			});
 		},
@@ -276,7 +278,7 @@ export function useListBlockMutation() {
 async function whenAppViewReady(
 	agent: BskyAppAgent,
 	uri: string,
-	fn: (res: AppBskyGraphGetList.Response) => boolean,
+	fn: (res: { success: boolean; data: { list: AppBskyGraphDefs.ListView } }) => boolean,
 ) {
 	await until(
 		5, // 5 tries
@@ -286,6 +288,6 @@ async function whenAppViewReady(
 			agent.app.bsky.graph.getList({
 				list: uri,
 				limit: 1,
-			}),
+			}) as unknown as Promise<{ success: boolean; data: { list: AppBskyGraphDefs.ListView } }>,
 	);
 }

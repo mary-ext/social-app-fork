@@ -1,8 +1,7 @@
 import { useRef } from 'react';
 import { type ListRenderItemInfo } from 'react-native';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';

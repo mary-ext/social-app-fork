@@ -1,6 +1,7 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyGraphGetList, AtUri } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
+import { AtUri } from '@atproto/api';
 import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
@@ -28,7 +29,7 @@ function keyExtractor(item: { did: string }, index: number) {
 
 interface ProfilesListProps {
 	listUri: string;
-	listMembersQuery: UseInfiniteQueryResult<InfiniteData<AppBskyGraphGetList.OutputSchema>>;
+	listMembersQuery: UseInfiniteQueryResult<InfiniteData<AppBskyGraphGetList.$output>>;
 	moderationOpts: ModerationOpts;
 	headerHeight: number;
 	scrollElRef: ListRef;

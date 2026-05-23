@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { type AppBskyGraphDefs as GraphDefs } from '@atproto/api';
+import { type AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';

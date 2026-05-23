@@ -630,7 +630,10 @@ let NotificationFeedItem = ({
 						{item.type === 'starterpack-joined' ? (
 							<View>
 								<View style={[a.border, a.p_sm, a.rounded_sm, a.mt_sm, t.atoms.border_contrast_low]}>
-									<StarterPackCard starterPack={item.subject} />
+									{/* TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute */}
+									<StarterPackCard
+										starterPack={item.subject as unknown as bsky.starterPack.AnyStarterPackView}
+									/>
 								</View>
 							</View>
 						) : null}

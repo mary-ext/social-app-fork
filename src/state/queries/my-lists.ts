@@ -1,10 +1,12 @@
-import { type AppBskyGraphDefs } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { accumulate } from '#/lib/async/accumulate';
 
 import { STALE } from '#/state/queries';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 export type MyListsFilter = 'all' | 'curate' | 'mod' | 'all-including-subscribed';
 
@@ -13,51 +15,37 @@ export const RQKEY = (filter: MyListsFilter) => [RQKEY_ROOT, filter];
 
 export function useMyListsQuery(filter: MyListsFilter) {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery<AppBskyGraphDefs.ListView[]>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(filter),
 		async queryFn() {
 			let lists: AppBskyGraphDefs.ListView[] = [];
-			const promises = [
+			const promises: Promise<AppBskyGraphDefs.ListView[]>[] = [
 				accumulate((cursor) =>
-					agent.app.bsky.graph
-						.getLists({
-							actor: currentAccount!.did,
-							cursor,
-							limit: 50,
-						})
-						.then((res) => ({
-							cursor: res.data.cursor,
-							items: res.data.lists,
-						})),
+					ok(
+						appview.get('app.bsky.graph.getLists', {
+							params: { actor: currentAccount!.did as ActorIdentifier, cursor, limit: 50 },
+						}),
+					).then((data) => ({ cursor: data.cursor, items: data.lists })),
 				),
 			];
 			if (filter === 'all-including-subscribed' || filter === 'mod') {
 				promises.push(
 					accumulate((cursor) =>
-						agent.app.bsky.graph
-							.getListMutes({
-								cursor,
-								limit: 50,
-							})
-							.then((res) => ({
-								cursor: res.data.cursor,
-								items: res.data.lists,
-							})),
+						ok(appview.get('app.bsky.graph.getListMutes', { params: { cursor, limit: 50 } })).then(
+							(data) => ({
+								cursor: data.cursor,
+								items: data.lists,
+							}),
+						),
 					),
 				);
 				promises.push(
 					accumulate((cursor) =>
-						agent.app.bsky.graph
-							.getListBlocks({
-								cursor,
-								limit: 50,
-							})
-							.then((res) => ({
-								cursor: res.data.cursor,
-								items: res.data.lists,
-							})),
+						ok(appview.get('app.bsky.graph.getListBlocks', { params: { cursor, limit: 50 } })).then(
+							(data) => ({ cursor: data.cursor, items: data.lists }),
+						),
 					),
 				);
 			}

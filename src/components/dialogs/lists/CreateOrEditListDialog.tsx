@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, RichText as RichTextAPI } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';

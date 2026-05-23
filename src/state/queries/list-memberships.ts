@@ -13,7 +13,8 @@
  * -prf
  */
 
-import { type AppBskyActorDefs, type AppBskyGraphGetStarterPacksWithMembership, AtUri } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphGetStarterPacksWithMembership } from '@atcute/bluesky';
+import { AtUri } from '@atproto/api';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
@@ -148,7 +149,8 @@ export function useListMembershipAddMutation({
 			// update WITH_MEMBERSHIPS query
 
 			if (subject) {
-				queryClient.setQueryData<InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>>(
+				type StarterPacksWithMembership = AppBskyGraphGetStarterPacksWithMembership.$output;
+				queryClient.setQueryData<InfiniteData<StarterPacksWithMembership>>(
 					STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid),
 					(old) => {
 						if (!old) return old;
@@ -169,7 +171,7 @@ export function useListMembershipAddMutation({
 												listItemsSample: [
 													{
 														uri: data.uri,
-														subject: subject as AppBskyActorDefs.ProfileView,
+														subject: subject as AppBskyActorDefs.ProfileViewBasic,
 													},
 													...(spWithMembership.starterPack.listItemsSample?.filter(
 														(item) => item.subject.did !== variables.actorDid,
@@ -182,7 +184,7 @@ export function useListMembershipAddMutation({
 											},
 											listItem: {
 												uri: data.uri,
-												subject: subject as AppBskyActorDefs.ProfileView,
+												subject: subject as AppBskyActorDefs.ProfileViewBasic,
 											},
 										};
 									}
@@ -190,7 +192,7 @@ export function useListMembershipAddMutation({
 									return spWithMembership;
 								}),
 							})),
-						};
+						} as InfiniteData<StarterPacksWithMembership>;
 					},
 				);
 			}
@@ -243,7 +245,7 @@ export function useListMembershipRemoveMutation({
 				});
 			}, 1e3);
 
-			queryClient.setQueryData<InfiniteData<AppBskyGraphGetStarterPacksWithMembership.OutputSchema>>(
+			queryClient.setQueryData<InfiniteData<AppBskyGraphGetStarterPacksWithMembership.$output>>(
 				STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid),
 				(old) => {
 					if (!old) return old;

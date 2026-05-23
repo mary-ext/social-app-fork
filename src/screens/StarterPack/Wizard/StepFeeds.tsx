@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs, type ModerationOpts } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useA11y } from '#/state/a11y';
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
@@ -50,10 +51,14 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOpts }
 
 	// If we have saved feeds already loaded, display them immediately
 	// Then, when popular feeds have loaded we can concat them to the saved feeds
-	const suggestedFeeds =
+	const suggestedFeeds: AppBskyFeedDefs.GeneratorView[] | undefined =
 		savedFeeds || isFetchedSavedFeeds
 			? popularFeeds
-				? savedFeeds.concat(popularFeeds.filter((f) => !savedFeeds.some((sf) => sf.uri === f.uri)))
+				? savedFeeds.concat(
+						popularFeeds.filter(
+							(f) => !savedFeeds.some((sf) => sf.uri === f.uri),
+						) as unknown as AppBskyFeedDefs.GeneratorView[],
+					)
 				: savedFeeds
 			: undefined;
 
@@ -83,7 +88,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOpts }
 				</View>
 			</View>
 			<List
-				data={query ? searchedFeeds : suggestedFeeds}
+				data={(query ? searchedFeeds : suggestedFeeds) as unknown as AppBskyFeedDefs.GeneratorView[]}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 				onEndReached={!query && !screenReaderEnabled ? () => fetchNextPage() : undefined}

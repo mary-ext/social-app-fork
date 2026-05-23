@@ -581,7 +581,10 @@ function SavedFeed({ savedFeed }: { savedFeed: SavedFeedItem & { type: 'feed' | 
 			)}
 		</FeedCard.Link>
 	) : (
-		<ListCard.Link testID={`saved-feed-${savedFeed.view.name}`} {...savedFeed}>
+		<ListCard.Link
+			testID={`saved-feed-${savedFeed.view.name}`}
+			{...(savedFeed as unknown as React.ComponentProps<typeof ListCard.Link>)}
+		>
 			{({ hovered, pressed }) => (
 				<View style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
 					<ListCard.Header>

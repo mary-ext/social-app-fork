@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import {
-	AppBskyGraphDefs,
+	AppBskyGraphDefs as ApiAppBskyGraphDefs,
 	AppBskyGraphStarterpack,
 	AtUri,
-	type ModerationOpts,
 	RichText as RichTextAPI,
 } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -16,6 +16,7 @@ import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
@@ -28,7 +29,7 @@ import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-l
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
-import { useAgent, useSession } from '#/state/session';
+import { useAgent, useClients, useSession } from '#/state/session';
 import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 import { logger } from '#/logger';
@@ -127,7 +128,7 @@ export function StarterPackScreenInner({
 	const isValid =
 		starterPack &&
 		(starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-		AppBskyGraphDefs.validateStarterPackView(starterPack) &&
+		ApiAppBskyGraphDefs.validateStarterPackView(starterPack) &&
 		AppBskyGraphStarterpack.validateRecord(starterPack.record);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
@@ -275,6 +276,7 @@ function Header({
 	const t = useTheme();
 	const { currentAccount, hasSession } = useSession();
 	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const setActiveStarterPack = useSetActiveStarterPack();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
@@ -315,7 +317,7 @@ function Header({
 
 		let listItems: AppBskyGraphDefs.ListItemView[] = [];
 		try {
-			listItems = await getAllListMembers(agent, starterPack.list.uri);
+			listItems = await getAllListMembers(appview, starterPack.list.uri);
 		} catch (e) {
 			setIsProcessing(false);
 			Toast.show(l`An error occurred while trying to follow all`, {
@@ -601,10 +603,12 @@ function OverflowMenu({
 			{starterPack.list && (
 				<ReportDialog
 					control={reportDialogControl}
-					subject={{
-						...starterPack,
-						$type: 'app.bsky.graph.defs#starterPackView',
-					}}
+					subject={
+						{
+							...starterPack,
+							$type: 'app.bsky.graph.defs#starterPackView',
+						} as unknown as Parameters<typeof ReportDialog>[0]['subject']
+					}
 				/>
 			)}
 			<Prompt.Outer control={deleteDialogControl}>
