@@ -78,6 +78,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
+import type * as bsky from '#/types/bsky';
 
 let PostMenuItems = ({
 	post,
@@ -133,7 +134,8 @@ let PostMenuItems = ({
 
 	const postUri = post.uri;
 	const postCid = post.cid;
-	const postAuthor = useProfileShadow(post.author);
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const postAuthor = useProfileShadow(post.author as bsky.profile.AnyProfileView);
 	const quoteEmbed = useMemo(() => {
 		if (!currentAccount || !post.embed) return;
 		return getMaybeDetachedQuoteEmbed({

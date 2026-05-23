@@ -1,4 +1,5 @@
-import { type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsersForSeeMore } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsersForSeeMore } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
@@ -6,7 +7,7 @@ import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/u
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -23,7 +24,7 @@ export const createGetSuggestedUsersForSeeMoreQueryKey = (props: {
 }) => [getSuggestedUsersForSeeMoreQueryKeyRoot, props.category, props.limit];
 
 export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 
 	return useQuery({
@@ -37,17 +38,17 @@ export function useGetSuggestedUsersForSeeMoreQuery(props: QueryProps = {}) {
 			const contentLangs = getContentLanguages().join(',');
 			const userInterests = aggregateUserInterests(preferences);
 
-			const { data } = await agent.app.bsky.unspecced.getSuggestedUsersForSeeMore(
-				{
-					category: props.category ?? undefined,
-					limit: props.limit || 50,
-				},
-				{
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getSuggestedUsersForSeeMore', {
+					params: {
+						category: props.category ?? undefined,
+						limit: props.limit || 50,
+					},
 					headers: {
 						...createBskyTopicsHeader(userInterests),
 						'Accept-Language': contentLangs,
 					},
-				},
+				}),
 			);
 
 			if (!data.recIdStr) {
@@ -62,7 +63,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	const responses = queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForSeeMore.OutputSchema>({
+	const responses = queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForSeeMore.$output>({
 		queryKey: [getSuggestedUsersForSeeMoreQueryKeyRoot],
 	});
 	for (const [_key, response] of responses) {

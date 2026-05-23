@@ -55,7 +55,7 @@ export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'childre
 					<Avatar src={view.avatar} />
 					<TitleAndByline
 						title={view.name}
-						creator={view.creator}
+						creator={view.creator as bsky.profile.AnyProfileView}
 						purpose={view.purpose}
 						modUi={moderation?.ui('contentView')}
 					/>

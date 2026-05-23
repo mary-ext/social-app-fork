@@ -1,12 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import {
-	type AppBskyActorDefs,
-	type AppBskyLabelerDefs,
-	moderateProfile,
-	type ModerationOpts,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyLabelerDefs, type RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
@@ -14,6 +9,7 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { MAX_LABELERS } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { isAppLabeler } from '#/lib/moderation';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type Shadow } from '#/state/cache/types';

@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
-import { moderateProfile, type ModerationOpts, type ModerationUI } from '@atproto/api';
+import { type ModerationUI } from '@atproto/api';
 
 import Animated, {
 	Easing,
@@ -10,6 +10,7 @@ import Animated, {
 	withDelay,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useSession } from '#/state/session';
 

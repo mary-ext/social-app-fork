@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
 	type ModerationDecision,

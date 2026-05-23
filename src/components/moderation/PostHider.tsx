@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { LayoutAnimation, Pressable, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs, type ModerationCause, type ModerationUI } from '@atproto/api';
+import { type ModerationCause, type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -21,12 +21,14 @@ import {
 } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
 
+import type * as bsky from '#/types/bsky';
+
 interface Props extends React.ComponentProps<typeof Link> {
 	disabled: boolean;
 	iconSize: number;
 	iconStyles: StyleProp<ViewStyle>;
 	modui: ModerationUI;
-	profile: AppBskyActorDefs.ProfileViewBasic;
+	profile: bsky.profile.AnyProfileView;
 	interpretFilterAsBlur?: boolean;
 	hiderStyle?: StyleProp<ViewStyle>;
 }

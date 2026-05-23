@@ -44,7 +44,8 @@ export function usePinnedPostMutation() {
 				}
 
 				await profileUpdateMutate({
-					profile,
+					// TODO(atcute Phase 3.3): drop cast once upsertProfile flips to @atcute
+					profile: profile as unknown as Parameters<typeof profileUpdateMutate>[0]['profile'],
 					updates: (existing) => {
 						existing.pinnedPost = pinCurrentPost ? { uri: postUri, cid: postCid } : undefined;
 						return existing;

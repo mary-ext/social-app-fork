@@ -1,5 +1,6 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	type AppBskyFeedDefs,
 	type AppBskyFeedThreadgate,
@@ -44,6 +45,7 @@ import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
 
 import { useActorStatus } from '#/features/liveNow';
+import type * as bsky from '#/types/bsky';
 
 export type ThreadItemPostProps = {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
@@ -211,7 +213,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text,
-				author: post.author,
+				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
+				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
 				embed: post.embed,
 				moderation,
 				langs: post.record.langs,
@@ -225,7 +228,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 		setLimitLines(false);
 	}, [setLimitLines]);
 
-	const { isActive: live } = useActorStatus(post.author);
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
 
 	return (
 		<SubtleHoverWrapper>
@@ -238,7 +242,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
 					iconSize={LINEAR_AVI_WIDTH}
 					iconStyles={[a.mr_xs]}
-					profile={post.author}
+					profile={post.author as bsky.profile.AnyProfileView}
 					interpretFilterAsBlur
 				>
 					<ThreadItemPostParentReplyLine item={item} />
@@ -247,7 +251,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 						<View>
 							<PreviewableUserAvatar
 								size={LINEAR_AVI_WIDTH}
-								profile={post.author}
+								profile={post.author as bsky.profile.AnyProfileView}
 								moderation={moderation.ui('avatar')}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
@@ -270,7 +274,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author}
+								author={post.author as bsky.profile.AnyProfileView}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}

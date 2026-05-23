@@ -146,8 +146,10 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
 
 - **Stream 1 — done.** Phases 1.1, 1.2, 1.3 landed.
 - **Phase 2.1 — done.** Identity/resolution reads.
+- **Phase 2.2 — done.** Profiles and social graph (plus the suggested-users trending queries that
+  produce profile views, pulled forward as part of the same hub).
 - **Phase 4.3 — done.** Moderation reporting, pulled forward (Stream 4 only depends on Stream 1).
-- Next in canonical order: **Phase 2.2** (profiles and social graph).
+- Next in canonical order: **Phase 2.3** (lists and starter packs).
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are

@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-	type AppBskyActorDefs,
-	moderateProfile,
-	type ModerationOpts,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import {
 	type CommonNavigatorParams,
 	type NativeStackScreenProps,

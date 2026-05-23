@@ -1,8 +1,8 @@
 import { Pressable, ScrollView, View } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createHitslop, HITSLOP_10 } from '#/lib/constants';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';

@@ -10,7 +10,8 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AppBskyActorDefs, AppBskyEmbedVideo, type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { AppBskyEmbedVideo, type AppBskyFeedDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -677,7 +678,7 @@ let PostFeed = ({
 						feedContext={slice.feedContext}
 						reqId={slice.reqId}
 						moderation={item.moderation}
-						parentAuthor={item.parentAuthor}
+						parentAuthor={item.parentAuthor as unknown as AppBskyActorDefs.ProfileViewBasic | undefined}
 						showReplyTo={row.showReplyTo}
 						isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
 						isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
@@ -793,7 +794,8 @@ let PostFeed = ({
 				const actor = post.author;
 				if (
 					actor.status &&
-					isStatusValidForViewers(actor.status, liveNowConfig) &&
+					// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+					isStatusValidForViewers(actor.status as AppBskyActorDefs.StatusView, liveNowConfig) &&
 					isStatusStillActive(actor.status.expiresAt)
 				) {
 					if (!seenActorWithStatusRef.current.has(actor.did)) {

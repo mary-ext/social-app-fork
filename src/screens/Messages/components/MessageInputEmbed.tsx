@@ -160,7 +160,7 @@ export function MessageInputEmbed({
 					<View style={[a.flex_1, a.flex_row, a.gap_sm]}>
 						<PostMeta
 							showAvatar
-							author={post.author}
+							author={post.author as bsky.profile.AnyProfileView}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={itemHref}

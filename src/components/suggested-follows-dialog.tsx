@@ -1,10 +1,10 @@
 import { type ComponentProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View, type ViewToken } from 'react-native';
-import { type ModerationOpts } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorSearch } from '#/state/queries/actor-search';

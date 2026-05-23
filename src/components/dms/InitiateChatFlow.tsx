@@ -1,8 +1,8 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 

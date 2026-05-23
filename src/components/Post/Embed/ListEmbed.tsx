@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { moderateUserList } from '@atproto/api';
+import { type AppBskyGraphDefs, moderateUserList } from '@atproto/api';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -20,7 +20,7 @@ export function ListEmbed({
 	const t = useTheme();
 	return (
 		<ListCard.Default
-			view={embed.view}
+			view={embed.view as AppBskyGraphDefs.ListView}
 			style={[a.border, t.atoms.border_contrast_low, a.p_md, a.rounded_sm]}
 		/>
 	);

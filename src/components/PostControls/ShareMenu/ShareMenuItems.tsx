@@ -20,6 +20,7 @@ import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/P
 import * as Menu from '#/components/Menu';
 
 import { useDevMode } from '#/storage/hooks/dev-mode';
+import type * as bsky from '#/types/bsky';
 
 import { type ShareMenuItemsProps } from './ShareMenuItems.types';
 
@@ -31,7 +32,8 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	const [devModeEnabled] = useDevMode();
 
 	const postUri = post.uri;
-	const postAuthor = useProfileShadow(post.author);
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const postAuthor = useProfileShadow(post.author as bsky.profile.AnyProfileView);
 
 	const href = useMemo(() => {
 		const urip = new AtUri(postUri);

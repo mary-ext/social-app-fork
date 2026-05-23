@@ -1,12 +1,16 @@
 import { useCallback } from 'react';
 import {
 	type AppBskyActorDefs,
-	type AppBskyActorGetProfile,
 	type AppBskyActorGetProfiles,
-	type AppBskyActorProfile,
 	type AppBskyGraphGetFollows,
-	AtUri,
+} from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
+import {
+	type AppBskyActorGetProfile,
+	type AppBskyActorProfile,
 	type ComAtprotoRepoUploadBlob,
+	AtUri,
 	type Un$Typed,
 } from '@atproto/api';
 import {
@@ -33,7 +37,7 @@ import {
 	useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { useAgent, useSession } from '#/state/session';
+import { useAgent, useClients, useSession } from '#/state/session';
 import { type BskyAppAgent } from '#/state/session/agent';
 import * as userActionHistory from '#/state/userActionHistory';
 
@@ -78,7 +82,7 @@ export function useProfileQuery({
 	did: string | undefined;
 	staleTime?: number;
 }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 	return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
 		// WARNING
@@ -88,10 +92,12 @@ export function useProfileQuery({
 		staleTime,
 		refetchOnWindowFocus: true,
 		queryKey: RQKEY(did ?? ''),
-		queryFn: async () => {
-			const res = await agent.getProfile({ actor: did ?? '' });
-			return res.data;
-		},
+		queryFn: () =>
+			ok(
+				appview.get('app.bsky.actor.getProfile', {
+					params: { actor: (did ?? '') as ActorIdentifier },
+				}),
+			),
 		placeholderData: () => {
 			if (!did) return;
 			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
@@ -101,34 +107,38 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({ handles, maintainData }: { handles: string[]; maintainData?: boolean }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: handles.length > 0,
 		staleTime: STALE.MINUTES.FIVE,
 		queryKey: profilesQueryKey(handles),
-		queryFn: async () => {
-			const res = await agent.getProfiles({ actors: handles });
-			return res.data;
-		},
+		queryFn: () =>
+			ok(
+				appview.get('app.bsky.actor.getProfiles', {
+					params: { actors: handles as ActorIdentifier[] },
+				}),
+			),
 		placeholderData: maintainData ? keepPreviousData : undefined,
 	});
 }
 
 export function usePrefetchProfileQuery() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const prefetchProfileQuery = useCallback(
 		async (did: string) => {
 			await queryClient.prefetchQuery({
 				staleTime: STALE.SECONDS.THIRTY,
 				queryKey: RQKEY(did),
-				queryFn: async () => {
-					const res = await agent.getProfile({ actor: did || '' });
-					return res.data;
-				},
+				queryFn: () =>
+					ok(
+						appview.get('app.bsky.actor.getProfile', {
+							params: { actor: (did || '') as ActorIdentifier },
+						}),
+					),
 			});
 		},
-		[queryClient, agent],
+		[queryClient, appview],
 	);
 	return prefetchProfileQuery;
 }
@@ -232,7 +242,7 @@ export function useProfileFollowMutationQueue(
 	position?: number,
 	contextProfileDid?: string,
 ) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 	const did = profile.did;
@@ -268,7 +278,7 @@ export function useProfileFollowMutationQueue(
 
 			// Optimistically update profile follows cache for avatar displays
 			if (currentAccount?.did) {
-				type FollowsQueryData = InfiniteData<AppBskyGraphGetFollows.OutputSchema>;
+				type FollowsQueryData = InfiniteData<AppBskyGraphGetFollows.$output>;
 				queryClient.setQueryData<FollowsQueryData>(PROFILE_FOLLOWS_RQKEY(currentAccount.did), (old) => {
 					if (!old?.pages?.[0]) return old;
 					if (finalFollowingUri) {
@@ -299,17 +309,17 @@ export function useProfileFollowMutationQueue(
 			}
 
 			if (finalFollowingUri) {
-				void agent.app.bsky.graph
-					.getSuggestedFollowsByActor({
-						actor: did,
-					})
-					.then((res) => {
-						const dids = res.data.suggestions
-							.filter((a) => !a.viewer?.following)
-							.map((a) => a.did)
-							.slice(0, 8);
-						userActionHistory.followSuggestion(dids);
-					});
+				void ok(
+					appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
+						params: { actor: did as ActorIdentifier },
+					}),
+				).then((data) => {
+					const dids = data.suggestions
+						.filter((a) => !a.viewer?.following)
+						.map((a) => a.did)
+						.slice(0, 8);
+					userActionHistory.followSuggestion(dids);
+				});
 			}
 		},
 	});
@@ -553,7 +563,7 @@ export function* findAllProfilesInQueryData(
 			yield queryData;
 		}
 	}
-	const profilesQueryDatas = queryClient.getQueriesData<AppBskyActorGetProfiles.OutputSchema>({
+	const profilesQueryDatas = queryClient.getQueriesData<AppBskyActorGetProfiles.$output>({
 		queryKey: [profilesQueryKeyRoot],
 	});
 	for (const [_queryKey, queryData] of profilesQueryDatas) {

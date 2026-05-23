@@ -15,8 +15,16 @@ import { List } from '#/view/com/util/List';
 
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 
+import type * as bsky from '#/types/bsky';
+
 function renderItem({ item, index }: { item: GetLikes.Like; index: number }) {
-	return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} noBorder={index === 0} />;
+	return (
+		<ProfileCardWithFollowBtn
+			key={item.actor.did}
+			profile={item.actor as bsky.profile.AnyProfileView}
+			noBorder={index === 0}
+		/>
+	);
 }
 
 function keyExtractor(item: GetLikes.Like) {

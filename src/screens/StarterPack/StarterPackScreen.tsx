@@ -331,8 +331,9 @@ function Header({
 			.filter(
 				(li) =>
 					li.subject.did !== currentAccount?.did &&
-					!isBlockedOrBlocking(li.subject) &&
-					!isMuted(li.subject) &&
+					// TODO(atcute Phase 2.3): drop casts once ListItemView flips to @atcute
+					!isBlockedOrBlocking(li.subject as bsky.profile.AnyProfileView) &&
+					!isMuted(li.subject as bsky.profile.AnyProfileView) &&
 					!li.subject.viewer?.following,
 			)
 			.map((li) => li.subject.did);

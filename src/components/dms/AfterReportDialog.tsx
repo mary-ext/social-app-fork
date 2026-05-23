@@ -1,6 +1,7 @@
 import { memo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type ChatBskyConvoDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type ChatBskyConvoDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 

@@ -1,5 +1,6 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type ModerationDecision } from '@atproto/api';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';

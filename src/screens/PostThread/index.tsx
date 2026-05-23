@@ -1,5 +1,6 @@
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions, View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import Animated, { useAnimatedStyle } from '#/lib/animations/reanimatedCompat';
@@ -97,7 +98,8 @@ export function PostThread({ uri }: { uri: string }) {
 				uri: anchor.uri,
 				cid: post.cid,
 				text: post.record.text,
-				author: post.author,
+				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
+				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
 				embed: post.embed,
 				moderation: anchor.moderation,
 				langs: post.record.langs,

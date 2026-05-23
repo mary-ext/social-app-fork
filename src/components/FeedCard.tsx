@@ -45,7 +45,7 @@ export function Default(props: Props) {
 			<Outer>
 				<Header>
 					<Avatar src={view.avatar} />
-					<TitleAndByline title={view.displayName} creator={view.creator} />
+					<TitleAndByline title={view.displayName} creator={view.creator as bsky.profile.AnyProfileView} />
 					<SaveButton view={view} pin />
 				</Header>
 				<Description description={view.description} />

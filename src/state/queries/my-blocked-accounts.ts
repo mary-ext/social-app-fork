@@ -1,28 +1,29 @@
-import { type AppBskyActorDefs, type AppBskyGraphGetBlocks } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphGetBlocks } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 const RQKEY_ROOT = 'my-blocked-accounts';
 export const RQKEY = () => [RQKEY_ROOT];
 type RQPageParam = string | undefined;
 
 export function useMyBlockedAccountsQuery() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyGraphGetBlocks.OutputSchema,
+		AppBskyGraphGetBlocks.$output,
 		Error,
-		InfiniteData<AppBskyGraphGetBlocks.OutputSchema>,
+		InfiniteData<AppBskyGraphGetBlocks.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		queryKey: RQKEY(),
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.app.bsky.graph.getBlocks({
-				limit: 30,
-				cursor: pageParam,
-			});
-			return res.data;
+			return await ok(
+				appview.get('app.bsky.graph.getBlocks', {
+					params: { cursor: pageParam, limit: 30 },
+				}),
+			);
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
@@ -33,7 +34,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetBlocks.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetBlocks.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { LayoutAnimation, Pressable, View } from 'react-native';
-import { type AppBskyActorDefs, moderateProfile } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
+import { moderateProfile } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';

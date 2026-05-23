@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type AppBskyActorDefs, type AppBskyNotificationDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyNotificationDefs } from '@atcute/bluesky';
 import { type QueryClient } from '@tanstack/react-query';
 import { EventEmitter } from 'eventemitter3';
 
@@ -219,12 +219,15 @@ function* findProfilesInCache(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<bsky.profile.AnyProfileView, void> {
-	yield* findAllProfilesInListMembersQueryData(queryClient, did);
+	// Generators sourced from yet-to-be-migrated query files yield `@atproto/api`-typed profiles. They are
+	// structurally compatible with the atcute-typed `AnyProfileView` at runtime; the cast is the boundary.
+	const cast = <T>(g: Generator<T, void>) => g as unknown as Generator<bsky.profile.AnyProfileView, void>;
+	yield* cast(findAllProfilesInListMembersQueryData(queryClient, did));
 	yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did);
 	yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did);
-	yield* findAllProfilesInPostLikedByQueryData(queryClient, did);
-	yield* findAllProfilesInPostRepostedByQueryData(queryClient, did);
-	yield* findAllProfilesInPostQuotesQueryData(queryClient, did);
+	yield* cast(findAllProfilesInPostLikedByQueryData(queryClient, did));
+	yield* cast(findAllProfilesInPostRepostedByQueryData(queryClient, did));
+	yield* cast(findAllProfilesInPostQuotesQueryData(queryClient, did));
 	yield* findAllProfilesInProfileQueryData(queryClient, did);
 	yield* findAllProfilesInProfileFollowersQueryData(queryClient, did);
 	yield* findAllProfilesInProfileFollowsQueryData(queryClient, did);
@@ -233,13 +236,13 @@ function* findProfilesInCache(
 	yield* findAllProfilesInSuggestedUsersForSeeMoreQueryData(queryClient, did);
 	yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did);
 	yield* findAllProfilesInActorSearchQueryData(queryClient, did);
-	yield* findAllProfilesInListConvosQueryData(queryClient, did);
-	yield* findAllProfilesInFeedsQueryData(queryClient, did);
-	yield* findAllProfilesInPostThreadV2QueryData(queryClient, did);
+	yield* cast(findAllProfilesInListConvosQueryData(queryClient, did));
+	yield* cast(findAllProfilesInFeedsQueryData(queryClient, did));
+	yield* cast(findAllProfilesInPostThreadV2QueryData(queryClient, did));
 	yield* findAllProfilesInKnownFollowersQueryData(queryClient, did);
-	yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did);
+	yield* cast(findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did));
 	yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did);
-	yield* findAllProfilesInNotifsQueryData(queryClient, did);
-	yield* findAllProfilesInMessagesQueryData(queryClient, did);
-	yield* findAllProfilesInGetConvoQueryData(queryClient, did);
+	yield* cast(findAllProfilesInNotifsQueryData(queryClient, did));
+	yield* cast(findAllProfilesInMessagesQueryData(queryClient, did));
+	yield* cast(findAllProfilesInGetConvoQueryData(queryClient, did));
 }

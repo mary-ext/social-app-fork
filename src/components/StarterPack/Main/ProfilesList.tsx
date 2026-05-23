@@ -1,11 +1,12 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyGraphGetList, AtUri, type ModerationOpts } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphGetList, AtUri } from '@atproto/api';
 import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
@@ -18,6 +19,8 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Default as ProfileCard } from '#/components/ProfileCard';
+
+import type * as bsky from '#/types/bsky';
 
 function keyExtractor(item: { did: string }, index: number) {
 	return `${item.did}-${index}`;
@@ -49,7 +52,9 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 		?.map((p) => p.subject)
 		.filter(
 			(profile): profile is AppBskyActorDefs.ProfileView =>
-				profile !== undefined && !isBlockedOrBlocking(profile) && !profile.associated?.labeler,
+				profile !== undefined &&
+				!isBlockedOrBlocking(profile as bsky.profile.AnyProfileView) &&
+				!profile.associated?.labeler,
 		)
 		.reverse();
 	const isOwn = new AtUri(listUri).host === currentAccount?.did;
@@ -78,7 +83,12 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
 		return (
 			<View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
-				<ProfileCard profile={item} moderationOpts={moderationOpts} logContext="StarterPackProfilesList" />
+				{/* TODO(atcute Phase 2.3): drop cast once ListView flips to @atcute */}
+				<ProfileCard
+					profile={item as bsky.profile.AnyProfileView}
+					moderationOpts={moderationOpts}
+					logContext="StarterPackProfilesList"
+				/>
 			</View>
 		);
 	};

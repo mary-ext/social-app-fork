@@ -169,7 +169,8 @@ export function ListMembers({
 				return renderEmptyState();
 			}
 
-			const profile = item.subject;
+			// TODO(atcute Phase 2.3): drop cast once ListItemView flips to @atcute
+			const profile = item.subject as bsky.profile.AnyProfileView;
 			if (!moderationOpts) return null;
 
 			return (

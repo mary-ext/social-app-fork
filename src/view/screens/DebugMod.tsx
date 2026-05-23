@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	type ComAtprotoLabelDefs,
@@ -9,15 +9,17 @@ import {
 	type LabelPreference,
 	LABELS,
 	mock,
-	moderatePost,
-	moderateProfile,
 	type ModerationBehavior,
-	type ModerationDecision,
-	type ModerationOpts,
 	RichText,
 } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
+import {
+	moderatePost,
+	moderateProfile,
+	type ModerationDecision,
+	type ModerationOpts,
+} from '#/lib/moderation/compat';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 
@@ -47,6 +49,8 @@ import {
 import * as Layout from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
 import { H1, H3, P, Text } from '#/components/Typography';
+
+import type * as bsky from '#/types/bsky';
 
 import { ScreenHider } from '../../components/moderation/ScreenHider';
 import { NotificationFeedItem } from '../com/notifications/NotificationFeedItem';
@@ -241,10 +245,11 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 	}, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef]);
 
 	const profileModeration = useMemo(() => {
-		return moderateProfile(profile, modOpts);
+		return moderateProfile(profile as unknown as bsky.profile.AnyProfileView, modOpts);
 	}, [profile, modOpts]);
 	const postModeration = useMemo(() => {
-		return moderatePost(post, modOpts);
+		// `post` is a `mock(...)` $Typed result and the compat takes an atcute PostView; structurally compatible.
+		return moderatePost(post as unknown as Parameters<typeof moderatePost>[0], modOpts);
 	}, [post, modOpts]);
 
 	return (
@@ -461,11 +466,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 							{view[0] === 'account' && (
 								<>
 									<Heading title="Account" subtitle="in listing" />
-									<MockAccountCard profile={profile} moderation={profileModeration} />
+									<MockAccountCard
+										profile={profile as unknown as AppBskyActorDefs.ProfileViewBasic}
+										moderation={profileModeration}
+									/>
 
 									<Heading title="Account" subtitle="viewing directly" />
 									<MockAccountScreen
-										profile={profile}
+										profile={profile as unknown as AppBskyActorDefs.ProfileViewBasic}
 										moderation={profileModeration}
 										moderationOpts={modOpts}
 									/>

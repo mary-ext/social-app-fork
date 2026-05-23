@@ -1,6 +1,6 @@
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	type $Typed,
-	type AppBskyActorDefs,
 	type AppBskyGraphGetStarterPack,
 	type ComAtprotoRepoApplyWrites,
 	type Facet,
@@ -70,19 +70,21 @@ export function useGenerateStarterPackMutation({
 
 			await Promise.all([
 				(async () => {
+					// TODO(atcute Stream 3): migrate to pds.get('com.atproto.repo.getRecord') or appview client
 					profile = (
 						await agent.app.bsky.actor.getProfile({
 							actor: agent.session!.did,
 						})
-					).data;
+					).data as unknown as AppBskyActorDefs.ProfileViewDetailed;
 				})(),
 				(async () => {
+					// TODO(atcute Phase 2.6): migrate to appview client search
 					profiles = (
 						await agent.app.bsky.actor.searchActors({
 							q: encodeURIComponent('*'),
 							limit: 49,
 						})
-					).data.actors.filter((p) => p.viewer?.following);
+					).data.actors.filter((p) => p.viewer?.following) as unknown as AppBskyActorDefs.ProfileView[];
 				})(),
 			]);
 

@@ -1,7 +1,8 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyEmbedExternal, type ComAtprotoLabelDefs, type ModerationDecision } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -201,7 +202,7 @@ let ProfileHeaderShell = ({
 				(isMe ? (
 					<LabelsOnMe
 						type="account"
-						labels={profile.labels}
+						labels={profile.labels as ComAtprotoLabelDefs.Label[] | undefined}
 						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
 					/>
 				) : (
@@ -246,9 +247,18 @@ let ProfileHeaderShell = ({
 			</GrowableAvatar>
 			{live.isActive &&
 				(isMe ? (
-					<EditLiveDialog control={liveStatusControl} status={live} embed={live.embed} />
+					<EditLiveDialog
+						control={liveStatusControl}
+						status={live}
+						embed={live.embed as AppBskyEmbedExternal.View}
+					/>
 				) : (
-					<LiveStatusDialog control={liveStatusControl} status={live} embed={live.embed} profile={profile} />
+					<LiveStatusDialog
+						control={liveStatusControl}
+						status={live}
+						embed={live.embed as AppBskyEmbedExternal.View}
+						profile={profile}
+					/>
 				))}
 		</View>
 	);

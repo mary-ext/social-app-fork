@@ -1,8 +1,6 @@
-import {
-	type AppBskyActorDefs,
-	type AppBskyNotificationDeclaration,
-	type AppBskyNotificationListActivitySubscriptions,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyNotificationListActivitySubscriptions } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type AppBskyNotificationDeclaration } from '@atproto/api';
 import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
@@ -13,7 +11,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { useAgent, useSession } from '#/state/session';
+import { useAgent, useClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
 
@@ -21,16 +19,16 @@ export const RQKEY_getActivitySubscriptions = ['activity-subscriptions'];
 export const RQKEY_getNotificationDeclaration = ['notification-declaration'];
 
 export function useActivitySubscriptionsQuery() {
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useInfiniteQuery({
 		queryKey: RQKEY_getActivitySubscriptions,
-		queryFn: async ({ pageParam }) => {
-			const response = await agent.app.bsky.notification.listActivitySubscriptions({
-				cursor: pageParam,
-			});
-			return response.data;
-		},
+		queryFn: ({ pageParam }) =>
+			ok(
+				appview.get('app.bsky.notification.listActivitySubscriptions', {
+					params: { cursor: pageParam },
+				}),
+			),
 		initialPageParam: undefined as string | undefined,
 		getNextPageParam: (prev) => prev.cursor,
 	});
@@ -104,7 +102,7 @@ export function* findAllProfilesInQueryData(
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
 	const queryDatas = queryClient.getQueriesData<
-		InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>
+		InfiniteData<AppBskyNotificationListActivitySubscriptions.$output>
 	>({
 		queryKey: RQKEY_getActivitySubscriptions,
 	});

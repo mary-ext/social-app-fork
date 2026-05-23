@@ -292,14 +292,14 @@ export function* findAllProfilesInQueryData(
 					(item.type === 'follow' || item.type === 'contact-match') &&
 					item.notification.author.did === did
 				) {
-					yield item.notification.author;
+					yield item.notification.author as bsky.profile.AnyProfileView;
 				} else if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
-					yield item.subject.author;
+					yield item.subject.author as bsky.profile.AnyProfileView;
 				}
 				if (AppBskyFeedDefs.isPostView(item.subject)) {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost?.author.did === did) {
-						yield quotedPost.author;
+						yield quotedPost.author as bsky.profile.AnyProfileView;
 					}
 				}
 			}

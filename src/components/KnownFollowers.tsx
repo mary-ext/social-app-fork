@@ -1,8 +1,9 @@
 import { useRef } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -52,7 +53,8 @@ export function KnownFollowers({
 	 * displayed.
 	 */
 	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
-		cache.current.set(profile.did, profile.viewer.knownFollowers);
+		// TODO(atcute Phase 4.1): drop cast once chat profile type flips to @atcute
+		cache.current.set(profile.did, profile.viewer.knownFollowers as AppBskyActorDefs.KnownFollowers);
 	}
 
 	const cachedKnownFollowers = cache.current.get(profile.did);

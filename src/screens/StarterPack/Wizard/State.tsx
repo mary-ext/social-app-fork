@@ -132,7 +132,8 @@ export function Provider({
 				currentStep: 'Details',
 				name: starterPack.record.name,
 				description: starterPack.record.description,
-				profiles: listItems?.map((i) => i.subject) ?? [],
+				// TODO(atcute Phase 2.3): drop cast once ListItemView flips to @atcute
+				profiles: (listItems?.map((i) => i.subject) as bsky.profile.AnyProfileView[]) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,
 				transitionDirection: 'Forward',

@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { ChatBskyConvoDefs, moderateProfile } from '@atproto/api';
+import { ChatBskyConvoDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
+import { moderateProfile } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 

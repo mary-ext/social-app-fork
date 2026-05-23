@@ -245,7 +245,8 @@ export function QuoteEmbed({
 	}, [quote.record]);
 
 	const onBeforePress = useCallback(() => {
-		unstableCacheProfileView(queryClient, quote.author);
+		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+		unstableCacheProfileView(queryClient, quote.author as bsky.profile.AnyProfileView);
 		onOpen?.();
 	}, [queryClient, quote.author, onOpen]);
 
@@ -255,7 +256,7 @@ export function QuoteEmbed({
 	const contents = (
 		<>
 			<PostMeta
-				author={quote.author}
+				author={quote.author as bsky.profile.AnyProfileView}
 				moderation={moderation}
 				showAvatar
 				postHref={itemHref}

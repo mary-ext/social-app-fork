@@ -499,7 +499,10 @@ export function SuggestedFeeds() {
 							<FeedCard.Outer>
 								<FeedCard.Header>
 									<FeedCard.Avatar src={feed.avatar} />
-									<FeedCard.TitleAndByline title={feed.displayName} creator={feed.creator} />
+									<FeedCard.TitleAndByline
+										title={feed.displayName}
+										creator={feed.creator as bsky.profile.AnyProfileView}
+									/>
 								</FeedCard.Header>
 								<FeedCard.Description description={feed.description} numberOfLines={3} />
 							</FeedCard.Outer>

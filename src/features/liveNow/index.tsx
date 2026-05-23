@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	type $Typed,
-	type AppBskyActorDefs,
 	type AppBskyActorStatus,
 	AppBskyEmbedExternal,
 	AtUri,
 	ComAtprotoRepoPutRecord,
-	moderateStatus,
 } from '@atproto/api';
 import { retry } from '@atproto/common-web';
 import { useLingui } from '@lingui/react/macro';
@@ -16,6 +15,7 @@ import { isAfter, parseISO } from 'date-fns';
 import { uploadBlob } from '#/lib/api';
 import { imageToThumb } from '#/lib/api/resolve';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
+import { moderateStatus } from '#/lib/moderation/compat';
 
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -120,7 +120,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
 					isDisabled: false,
 					isActive: true,
 					status: 'app.bsky.actor.status#live',
-					embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+					embed: shadowed.status.embed as AppBskyActorDefs.StatusView['embed'], // temp_isStatusValid asserts this
 					expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
 					record: shadowed.status.record,
 				} satisfies AppBskyActorDefs.StatusView;
@@ -131,7 +131,7 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
 				isDisabled,
 				isActive: false,
 				status: 'app.bsky.actor.status#live',
-				embed: shadowed.status.embed as $Typed<AppBskyEmbedExternal.View>, // temp_isStatusValid asserts this
+				embed: shadowed.status.embed as AppBskyActorDefs.StatusView['embed'], // temp_isStatusValid asserts this
 				expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
 				record: shadowed.status.record,
 			} satisfies AppBskyActorDefs.StatusView;
@@ -303,14 +303,14 @@ export function useUpsertLiveStatusMutation(
 						expiresAt: expiresAt.toISOString(),
 						embed:
 							record.embed && image
-								? {
+								? ({
 										$type: 'app.bsky.embed.external#view',
 										external: {
 											...record.embed.external,
 											$type: 'app.bsky.embed.external#viewExternal',
 											thumb: image,
 										},
-									}
+									} as AppBskyActorDefs.StatusView['embed'])
 								: undefined,
 						record,
 					},

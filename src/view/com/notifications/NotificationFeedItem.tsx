@@ -7,14 +7,12 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyGraphFollow,
-	moderateProfile,
 	type ModerationDecision,
-	type ModerationOpts,
 } from '@atproto/api';
 import { AtUri } from '@atproto/api';
 import { TID } from '@atproto/common-web';
@@ -25,6 +23,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS, MAX_POST_LINES } from '#/lib/constants';
 import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
@@ -152,20 +151,22 @@ let NotificationFeedItem = ({
 	};
 
 	const onBeforePress = useCallback(() => {
-		unstableCacheProfileView(queryClient, item.notification.author);
+		// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
+		unstableCacheProfileView(queryClient, item.notification.author as bsky.profile.AnyProfileView);
 	}, [queryClient, item.notification.author]);
 
 	const authors: Author[] = useMemo(() => {
+		// TODO(atcute Phase 2.6): drop casts once notification feed flips to @atcute
 		return [
 			{
-				profile: item.notification.author,
+				profile: item.notification.author as AppBskyActorDefs.ProfileView,
 				href: makeProfileLink(item.notification.author),
-				moderation: moderateProfile(item.notification.author, moderationOpts),
+				moderation: moderateProfile(item.notification.author as bsky.profile.AnyProfileView, moderationOpts),
 			},
 			...(item.additional?.map(({ author }) => ({
-				profile: author,
+				profile: author as AppBskyActorDefs.ProfileView,
 				href: makeProfileLink(author),
-				moderation: moderateProfile(author, moderationOpts),
+				moderation: moderateProfile(author as bsky.profile.AnyProfileView, moderationOpts),
 			})) || []),
 		].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
 	}, [item, moderationOpts]);
@@ -607,7 +608,7 @@ let NotificationFeedItem = ({
 						</ExpandListPressable>
 						{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
 						(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
-							<FollowBackButton profile={item.notification.author} />
+							<FollowBackButton profile={item.notification.author as AppBskyActorDefs.ProfileView} />
 						) : null}
 						{item.type === 'post-like' ||
 						item.type === 'repost' ||

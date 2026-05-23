@@ -6,10 +6,11 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { moderateProfile, type ModerationOpts, RichText as RichTextApi } from '@atproto/api';
+import { RichText as RichTextApi } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { getModerationCauseKey } from '#/lib/moderation';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';

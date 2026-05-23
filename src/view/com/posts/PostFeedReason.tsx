@@ -17,6 +17,8 @@ import { Link } from '#/components/Link';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
 
+import type * as bsky from '#/types/bsky';
+
 import { FeedNameText } from '../util/FeedInfoText';
 
 export function PostFeedReason({
@@ -60,7 +62,12 @@ export function PostFeedReason({
 
 	if (AppBskyFeedDefs.isReasonRepost(reason)) {
 		const isOwner = reason.by.did === currentAccount?.did;
-		const reposter = createSanitizedDisplayName(reason.by, false, moderation?.ui('displayName'));
+		// TODO(atcute Phase 2.4): drop cast once FeedViewPost.reason flips to @atcute
+		const reposter = createSanitizedDisplayName(
+			reason.by as bsky.profile.AnyProfileView,
+			false,
+			moderation?.ui('displayName'),
+		);
 		return (
 			<Link
 				style={styles.includeReason}

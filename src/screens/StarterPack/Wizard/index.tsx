@@ -1,18 +1,14 @@
 import { useEffect } from 'react';
 import { Keyboard, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	AtUri,
-	type ModerationOpts,
-} from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyFeedDefs, type AppBskyGraphDefs, AtUri } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';

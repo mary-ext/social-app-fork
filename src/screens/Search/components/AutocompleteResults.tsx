@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { ActivityIndicator, TouchableOpacity, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';

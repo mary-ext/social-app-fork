@@ -1,12 +1,7 @@
-import {
-	type $Typed,
-	ChatBskyActorDefs,
-	ChatBskyConvoDefs,
-	moderateProfile,
-	type ModerationOpts,
-} from '@atproto/api';
+import { type $Typed, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atproto/api';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 
 import { logger } from '#/logger';
 import { type Shadow } from '#/state/cache/profile-shadow';

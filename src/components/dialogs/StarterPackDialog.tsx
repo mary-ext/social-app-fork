@@ -285,7 +285,11 @@ function StarterPackItem({
 						<>
 							<AvatarStack
 								size={24}
-								profiles={starterPack.listItemsSample?.slice(0, 4).map((p) => p.subject)}
+								profiles={
+									starterPack.listItemsSample
+										?.slice(0, 4)
+										.map((p) => p.subject as bsky.profile.AnyProfileView) ?? []
+								}
 							/>
 
 							{starterPack.list?.listItemCount && starterPack.list.listItemCount > 4 && (

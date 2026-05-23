@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
@@ -184,7 +184,8 @@ let FeedItemInner = ({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text || '',
-				author: post.author,
+				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
+				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
 				embed: post.embed,
 				moderation,
 				langs: record.langs,
@@ -227,7 +228,8 @@ let FeedItemInner = ({
 			feedContext,
 			reqId,
 		});
-		unstableCacheProfileView(queryClient, post.author);
+		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
+		unstableCacheProfileView(queryClient, post.author as bsky.profile.AnyProfileView);
 		setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
 			feedSourceInfo,
 			post: {
@@ -259,7 +261,7 @@ let FeedItemInner = ({
 		? rootPost.threadgate.record
 		: undefined;
 
-	const { isActive: live } = useActorStatus(post.author);
+	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
 
 	const viaRepost = useMemo(() => {
 		if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
@@ -338,7 +340,7 @@ let FeedItemInner = ({
 					<View style={styles.layoutAvi}>
 						<PreviewableUserAvatar
 							size={42}
-							profile={post.author}
+							profile={post.author as bsky.profile.AnyProfileView}
 							moderation={moderation.ui('avatar')}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 							onBeforePress={onOpenAuthor}
@@ -371,7 +373,7 @@ let FeedItemInner = ({
 						]}
 					>
 						<PostMeta
-							author={post.author}
+							author={post.author as unknown as AppBskyActorDefs.ProfileViewBasic}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={href}
@@ -379,7 +381,7 @@ let FeedItemInner = ({
 						/>
 						{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
 							<PostRepliedTo
-								parentAuthor={parentAuthor}
+								parentAuthor={parentAuthor as bsky.profile.AnyProfileView | undefined}
 								isParentBlocked={isParentBlocked}
 								isParentNotFound={isParentNotFound}
 							/>

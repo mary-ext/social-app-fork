@@ -1,13 +1,16 @@
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import {
 	moderatePost as moderatePostEngine,
 	moderateProfile as moderateProfileEngine,
+	moderateStatus as moderateStatusEngine,
 	moderateUserList as moderateUserListEngine,
 	type ModerationOpts,
 	type ModerationSubjectPost,
 	type ModerationSubjectProfile,
 	type ModerationSubjectUserList,
 } from '@atproto/api';
+
+import type * as bsky from '#/types/bsky';
 
 /**
  * Moderation compatibility adapter.
@@ -23,20 +26,14 @@ import {
 
 export type { ModerationDecision, ModerationOpts } from '@atproto/api';
 
-/** An `@atcute`-typed profile view, at any of the detail levels moderation accepts. */
-export type ProfileSubject =
-	| AppBskyActorDefs.ProfileView
-	| AppBskyActorDefs.ProfileViewBasic
-	| AppBskyActorDefs.ProfileViewDetailed;
-
 /**
  * Runs the moderation engine against a profile view.
  *
- * @param subject the `@atcute`-typed profile view.
+ * @param subject the profile view.
  * @param opts the moderation options.
  * @returns the moderation decision.
  */
-export const moderateProfile = (subject: ProfileSubject, opts: ModerationOpts) => {
+export const moderateProfile = (subject: bsky.profile.AnyProfileView, opts: ModerationOpts) => {
 	return moderateProfileEngine(subject as unknown as ModerationSubjectProfile, opts);
 };
 
@@ -63,4 +60,15 @@ export const moderateUserList = (
 	opts: ModerationOpts,
 ) => {
 	return moderateUserListEngine(subject as unknown as ModerationSubjectUserList, opts);
+};
+
+/**
+ * Runs the moderation engine against a profile carrying a status view.
+ *
+ * @param subject the `@atcute`-typed profile view (must include `status`).
+ * @param opts the moderation options.
+ * @returns the moderation decision.
+ */
+export const moderateStatus = (subject: bsky.profile.AnyProfileView, opts: ModerationOpts) => {
+	return moderateStatusEngine(subject as unknown as ModerationSubjectProfile, opts);
 };

@@ -1,12 +1,14 @@
 import { memo, useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyEmbedExternal } from '@atproto/api';
 import { flip, offset, shift, size, useFloating } from '@floating-ui/react-dom';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { getModerationCauseKey } from '#/lib/moderation';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -376,7 +378,7 @@ let Card = ({
 					<LiveStatus
 						status={status}
 						profile={data}
-						embed={status.embed}
+						embed={status.embed as AppBskyEmbedExternal.View}
 						padding="lg"
 						onPressOpenProfile={onPressOpenProfile}
 					/>

@@ -10,7 +10,7 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
-import { type ModerationUI } from '@atproto/api';
+import { type AppBskyEmbedExternal, type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -514,7 +514,12 @@ let PreviewableUserAvatar = ({
 					>
 						{avatarEl}
 					</Button>
-					<LiveStatusDialog control={liveControl} profile={profile} status={status} embed={status.embed} />
+					<LiveStatusDialog
+						control={liveControl}
+						profile={profile}
+						status={status}
+						embed={status.embed as AppBskyEmbedExternal.View}
+					/>
 				</>
 			) : (
 				<Link

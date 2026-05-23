@@ -1,8 +1,8 @@
 import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 

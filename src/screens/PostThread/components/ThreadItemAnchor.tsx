@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
@@ -175,8 +176,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const post = postShadow;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	const authorShadow = useProfileShadow(post.author);
-	const { isActive: live } = useActorStatus(post.author);
+	// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute types
+	const authorShadow = useProfileShadow(post.author as bsky.profile.AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
 	const richText = useMemo(
 		() =>
 			new RichTextAPI({
@@ -241,7 +243,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text,
-				author: post.author,
+				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
+				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
 				embed: post.embed,
 				moderation,
 				langs: record.langs,
@@ -299,7 +302,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						<View collapsable={false}>
 							<PreviewableUserAvatar
 								size={42}
-								profile={post.author}
+								profile={post.author as bsky.profile.AnyProfileView}
 								moderation={moderation.ui('avatar')}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}

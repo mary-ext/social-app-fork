@@ -81,7 +81,8 @@ export async function fetchPage({
 				} else {
 					notif.subject = subjects.posts.get(notif.subjectUri);
 					if (notif.subject) {
-						precacheProfile(queryClient, notif.subject.author);
+						// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+						precacheProfile(queryClient, notif.subject.author as bsky.profile.AnyProfileView);
 					}
 				}
 			}

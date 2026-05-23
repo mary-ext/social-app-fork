@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { type ComAtprotoLabelDefs } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -11,7 +10,7 @@ import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 
 import type * as bsky from '#/types/bsky';
 
-export function isBotAccount(profile: { did: string; labels?: ComAtprotoLabelDefs.Label[] }): boolean {
+export function isBotAccount(profile: { did: string; labels?: { src: string; val: string }[] }): boolean {
 	return profile.labels?.some((l) => l.val === 'bot' && l.src === profile.did) ?? false;
 }
 

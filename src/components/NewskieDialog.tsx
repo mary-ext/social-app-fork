@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, moderateProfile } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
+import { moderateProfile } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -19,6 +20,8 @@ import { useDialogControl } from '#/components/Dialog';
 import { Newskie } from '#/components/icons/Newskie';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Typography';
+
+import type * as bsky from '#/types/bsky';
 
 export function NewskieDialog({
 	profile,
@@ -128,9 +131,15 @@ function DialogInner({
 				</View>
 				<Text style={[a.text_md, a.text_center, a.leading_snug]}>{getJoinMessage()}</Text>
 				{profile.joinedViaStarterPack ? (
-					<StarterPackCard.Link starterPack={profile.joinedViaStarterPack} onPress={() => control.close()}>
+					// TODO(atcute Phase 2.3): drop casts once StarterPackView flips to @atcute
+					<StarterPackCard.Link
+						starterPack={profile.joinedViaStarterPack as unknown as bsky.starterPack.AnyStarterPackView}
+						onPress={() => control.close()}
+					>
 						<View style={[a.w_full, a.mt_sm, a.p_lg, a.border, a.rounded_sm, t.atoms.border_contrast_low]}>
-							<StarterPackCard.Card starterPack={profile.joinedViaStarterPack} />
+							<StarterPackCard.Card
+								starterPack={profile.joinedViaStarterPack as unknown as bsky.starterPack.AnyStarterPackView}
+							/>
 						</View>
 					</StarterPackCard.Link>
 				) : null}
