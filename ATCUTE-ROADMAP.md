@@ -150,8 +150,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   produce profile views, pulled forward as part of the same hub).
 - **Phase 2.3 — done.** Lists and starter packs (incl. `post-reposted-by`, pulled forward as a
   profile-producing read).
-- **Phase 4.3 — done.** Moderation reporting, pulled forward (Stream 4 only depends on Stream 1).
-- Next in canonical order: **Phase 2.4** (feeds).
+- **Phase 2.4 (partial) — done.** Generator-view slice; `PostView`/`FeedViewPost` flip still
+  pending.
+- **Phase 4.2 — done.** Video upload client, pulled forward (Stream 4 only depends on Stream 1).
+- **Phase 4.3 — done.** Moderation reporting, pulled forward.
+- Next in canonical order: finish **Phase 2.4** (`PostView`/`FeedViewPost`).
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
