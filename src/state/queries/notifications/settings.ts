@@ -1,8 +1,9 @@
+import { ok } from '@atcute/client';
 import { type AppBskyNotificationDefs } from '@atproto/api';
 import { t } from '@lingui/core/macro';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useAgent, useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -12,13 +13,13 @@ const RQKEY_ROOT = 'notification-settings';
 const RQKEY = [RQKEY_ROOT];
 
 export function useNotificationSettingsQuery({ enabled }: { enabled?: boolean } = {}) {
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useQuery({
 		queryKey: RQKEY,
 		queryFn: async () => {
-			const response = await agent.app.bsky.notification.getPreferences();
-			return response.data.preferences;
+			const data = await ok(appview.get('app.bsky.notification.getPreferences', { params: {} }));
+			return data.preferences;
 		},
 		enabled,
 	});

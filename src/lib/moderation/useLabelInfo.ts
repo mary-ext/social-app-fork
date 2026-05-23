@@ -1,5 +1,5 @@
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
-	type AppBskyLabelerDefs,
 	type ComAtprotoLabelDefs,
 	type InterpretedLabelValueDefinition,
 	interpretLabelValueDefinition,

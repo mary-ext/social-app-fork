@@ -43,7 +43,10 @@ export function useLabelDefinitionsQuery() {
 			labelDefs: Object.fromEntries(
 				(labelers.data || []).map((labeler) => [
 					labeler.creator.did,
-					interpretLabelValueDefinitions(labeler),
+					// TODO(atcute Phase 5.3): drop cast once interpretLabelValueDefinitions migrates to @atcute
+					interpretLabelValueDefinitions(
+						labeler as unknown as Parameters<typeof interpretLabelValueDefinitions>[0],
+					),
 				]),
 			),
 			labelers: labelers.data || [],

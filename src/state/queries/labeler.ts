@@ -1,4 +1,6 @@
-import { type AppBskyLabelerDefs } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -7,7 +9,7 @@ import { MAX_LABELERS } from '#/lib/constants';
 import { GCTIME, STALE } from '#/state/queries';
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { createQueryKey } from '#/state/queries/util';
-import { useAgent } from '#/state/session';
+import { useAgent, useClients } from '#/state/session';
 
 const labelerInfoQueryKeyRoot = 'labeler-info';
 export const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
@@ -19,45 +21,51 @@ const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
 
 export function useLabelerInfoQuery({ did, enabled }: { did?: string; enabled?: boolean }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: !!did && enabled !== false,
 		queryKey: labelerInfoQueryKey(did as string),
 		queryFn: async () => {
-			const res = await agent.app.bsky.labeler.getServices({
-				dids: [did!],
-				detailed: true,
-			});
-			return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
+			const data = await ok(
+				appview.get('app.bsky.labeler.getServices', {
+					params: { detailed: true, dids: [did! as Did] },
+				}),
+			);
+			return data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
 		},
 	});
 }
 
 export function useLabelersInfoQuery({ dids }: { dids: string[] }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: !!dids.length,
 		queryKey: labelersInfoQueryKey(dids),
 		queryFn: async () => {
-			const res = await agent.app.bsky.labeler.getServices({ dids });
-			return res.data.views as AppBskyLabelerDefs.LabelerView[];
+			const data = await ok(
+				appview.get('app.bsky.labeler.getServices', {
+					params: { dids: dids as Did[] },
+				}),
+			);
+			return data.views as AppBskyLabelerDefs.LabelerView[];
 		},
 	});
 }
 
 export function useLabelersDetailedInfoQuery({ dids }: { dids: string[] }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: !!dids.length,
 		queryKey: createLabelersDetailedInfoQueryKey(dids),
 		gcTime: GCTIME.INFINITY,
 		staleTime: STALE.MINUTES.ONE,
 		queryFn: async () => {
-			const res = await agent.app.bsky.labeler.getServices({
-				dids,
-				detailed: true,
-			});
-			return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[];
+			const data = await ok(
+				appview.get('app.bsky.labeler.getServices', {
+					params: { detailed: true, dids: dids as Did[] },
+				}),
+			);
+			return data.views as AppBskyLabelerDefs.LabelerViewDetailed[];
 		},
 	});
 }

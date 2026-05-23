@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
-	type AppBskyLabelerDefs,
 	BskyAgent,
 	type ComAtprotoLabelDefs,
 	type InterpretedLabelValueDefinition,

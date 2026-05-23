@@ -123,9 +123,10 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 
 	const subscribedDids = preferences.moderationPrefs.labelers.map((l) => l.did);
 	const returnedDids = new Set(labelers?.map((l) => l.creator.did));
-	const unavailableDids = subscribedDids.filter(
-		(did) => !returnedDids.has(did) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did),
-	);
+	const unavailableDids = subscribedDids.filter((did) => {
+		const branded = did as `did:${string}:${string}`;
+		return !returnedDids.has(branded) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did);
+	});
 
 	const handleCleanup = async () => {
 		try {

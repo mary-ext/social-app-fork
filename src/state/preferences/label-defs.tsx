@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
-import { type AppBskyLabelerDefs, type InterpretedLabelValueDefinition } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { type InterpretedLabelValueDefinition } from '@atproto/api';
 
 import { useLabelDefinitionsQuery } from '../queries/preferences';
 

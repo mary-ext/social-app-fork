@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AppBskyLabelerDefs } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 

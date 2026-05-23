@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import {
-	type AppBskyLabelerDefs,
-	type InterpretedLabelValueDefinition,
-	interpretLabelValueDefinitions,
-	type ModerationOpts,
-} from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { type InterpretedLabelValueDefinition, interpretLabelValueDefinitions } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { List, type ListRef } from '#/view/com/util/List';
 
@@ -66,7 +63,10 @@ export function ProfileLabelsSection({
 
 	const labelValues = useMemo(() => {
 		if (isLabelerLoading || !labelerInfo || labelerError) return [];
-		const customDefs = interpretLabelValueDefinitions(labelerInfo);
+		// TODO(atcute Phase 5.3): drop cast once interpretLabelValueDefinitions migrates to @atcute
+		const customDefs = interpretLabelValueDefinitions(
+			labelerInfo as unknown as Parameters<typeof interpretLabelValueDefinitions>[0],
+		);
 		return labelerInfo.policies.labelValues
 			.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
 			.map((val) => lookupLabelValueDefinition(val, customDefs))

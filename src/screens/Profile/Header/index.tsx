@@ -2,7 +2,8 @@ import { memo, useMemo, useState } from 'react';
 import { type LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyLabelerDefs, type RichText as RichTextAPI } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { type RichText as RichTextAPI } from '@atproto/api';
 import { useIsFocused } from '@react-navigation/native';
 
 import Animated, {

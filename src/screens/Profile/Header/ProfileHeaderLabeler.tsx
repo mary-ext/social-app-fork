@@ -1,7 +1,8 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyLabelerDefs, type RichText as RichTextAPI } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { type RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
