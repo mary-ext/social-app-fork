@@ -179,7 +179,15 @@ export function MessageComposer({
 	);
 }
 
-function SubmitButton({ onPress, disabled, loading }: { onPress: () => void; disabled: boolean; loading: boolean }) {
+function SubmitButton({
+	onPress,
+	disabled,
+	loading,
+}: {
+	onPress: () => void;
+	disabled: boolean;
+	loading: boolean;
+}) {
 	const { t: l } = useLingui();
 	const t = useTheme();
 

@@ -234,15 +234,18 @@ export function SuggestedLanguage({
 		.filter(Boolean) as string[];
 	const [replyToLanguage] = replyToLanguages;
 	const hasSuggestedReplyLanguage =
-		!hasInteracted &&
-		!suggLang &&
-		replyToLanguage &&
-		!currentLanguages.includes(replyToLanguage);
+		!hasInteracted && !suggLang && replyToLanguage && !currentLanguages.includes(replyToLanguage);
 
 	if (hasLanguageSuggestion) {
 		return <GuessedLanguage language={suggLang} onAccept={onAccept} onDecline={() => onDecline(suggLang)} />;
 	} else if (hasSuggestedReplyLanguage) {
-		return <ReplyLanguageNudge language={replyToLanguage} onAccept={onAccept} onDecline={() => onDecline(replyToLanguage)} />;
+		return (
+			<ReplyLanguageNudge
+				language={replyToLanguage}
+				onAccept={onAccept}
+				onDecline={() => onDecline(replyToLanguage)}
+			/>
+		);
 	} else {
 		return null;
 	}
