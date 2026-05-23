@@ -64,6 +64,7 @@ a fork of Bluesky app, gutted down to only support web platform, with some featu
 
 we use conventional commits with these rules:
 
+- a commit represents one logical work
 - accepted types: `feat`, `fix`, `refactor`, `docs`, `chore`
   - feat
     - new additions to public API surface
@@ -71,17 +72,13 @@ we use conventional commits with these rules:
     - Markdown document changes (README.md and similar)
   - chore
     - build/tooling/dependency changes
-    - code comment-only changes (incl. JSDoc)
-    - test-only changes
+    - tests, code comments, or JSDoc changes
     - mass-autofixes from linters and formatters
+- commit type describes the substance of the change as a whole, not a category to split it by. tests
+  written for a feature ship in the `feat` commit; `chore` applies when test, comment, or JSDoc work
+  is the entire change
 - no scopes; write `feat: ...` / `refactor: ...`, never `feat(runtime): ...`
 - append `!` after the type to mark breaking changes, e.g. `feat!:` or `refactor!:`
-
-granularity — each commit represents one logical change:
-
-- split distinct changes into separate commits rather than bundling them
-- pair each README update with the commit it documents, rather than batching doc updates across
-  multiple changes
 
 ### documentation
 
