@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
-import { type AppBskyUnspeccedDefs } from '@atproto/api';
+import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile } from '#/lib/moderation/compat';

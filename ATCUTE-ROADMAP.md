@@ -156,8 +156,8 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   depends on `PostView`.
 - **Phase 4.2 — done.** Video upload client, pulled forward (Stream 4 only depends on Stream 1).
 - **Phase 4.3 — done.** Moderation reporting, pulled forward.
-- Next: finish **Phase 2.4** (`PostView`/`FeedViewPost`), or pick another PostView-independent
-  slice — e.g. Phase 5.1 (`AtUri` swap).
+- Next: finish **Phase 2.4** (`PostView`/`FeedViewPost`), or pick another PostView-independent slice
+  — e.g. Phase 5.1 (`AtUri` swap).
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are

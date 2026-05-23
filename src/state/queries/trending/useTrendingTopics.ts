@@ -1,10 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyUnspeccedDefs, hasMutedWord } from '@atproto/api';
+import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { hasMutedWord } from '@atproto/api';
 import { useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic;
 
@@ -27,7 +29,7 @@ function dedup(topics: TrendingTopic[]): TrendingTopic[] {
 export const trendingTopicsQueryKey = ['trending-topics'];
 
 export function useTrendingTopics() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const mutedWords = useMemo(
 		() => preferences?.moderationPrefs?.mutedWords ?? [],
@@ -39,9 +41,11 @@ export function useTrendingTopics() {
 		staleTime: STALE.MINUTES.THREE,
 		queryKey: trendingTopicsQueryKey,
 		async queryFn() {
-			const { data } = await agent.app.bsky.unspecced.getTrendingTopics({
-				limit: DEFAULT_LIMIT,
-			});
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getTrendingTopics', {
+					params: { limit: DEFAULT_LIMIT },
+				}),
+			);
 			return {
 				topics: data.topics ?? [],
 				suggested: data.suggested ?? [],
