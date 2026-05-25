@@ -27,7 +27,7 @@ import { logger } from '#/logger';
 
 import { List } from '#/view/com/util/List';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, type ButtonColor, ButtonIcon } from '#/components/Button';
@@ -75,15 +75,13 @@ type Item =
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesConversationSettings'>;
 
 export function MessagesConversationSettingsScreen({ route }: Props) {
-	const { gtTablet } = useBreakpoints();
-
 	const convoId = route.params.conversation;
 
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
-				<Layout.Header.Content align={gtTablet ? 'left' : 'platform'}>
+				<Layout.Header.Content>
 					<Layout.Header.TitleText>
 						<Trans>Group chat settings</Trans>
 					</Layout.Header.TitleText>

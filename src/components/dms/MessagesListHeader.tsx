@@ -12,6 +12,8 @@ import { useSession } from '#/state/session';
 
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
+import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
+
 import { atoms as a, useTheme } from '#/alf';
 
 import { AvatarBubbles } from '#/components/AvatarBubbles';
@@ -31,13 +33,16 @@ const PFP_SIZE = 40;
 export function MessagesListHeader({ convo }: { convo?: ConvoWithDetails | null }) {
 	const t = useTheme();
 	const moderationOpts = useModerationOpts();
+	const { isWithinSplitView } = useIsWithinSplitView();
 
 	return (
 		<Layout.Header.Outer noBottomBorder={false}>
 			<View style={[a.w_full, a.flex_row, a.gap_xs, a.align_start]}>
-				<View style={[{ minHeight: PFP_SIZE }, a.justify_center]}>
-					<Layout.Header.BackButton />
-				</View>
+				{!isWithinSplitView && (
+					<View style={[{ minHeight: PFP_SIZE }, a.justify_center]}>
+						<Layout.Header.BackButton />
+					</View>
+				)}
 				{convo && moderationOpts ? (
 					convo.kind === 'direct' ? (
 						<ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />

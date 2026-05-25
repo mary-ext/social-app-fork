@@ -52,7 +52,7 @@ export function Outer({
 	const { gtMobile } = useBreakpoints();
 	const { isWithinOffsetView } = useContext(ScrollbarOffsetContext);
 	const { centerColumnOffset } = useLayoutBreakpoints();
-	const { isWithinSplitView } = useIsWithinSplitView();
+	const { isWithinLeftPanel, isWithinSplitView } = useIsWithinSplitView();
 
 	return (
 		<View
@@ -64,7 +64,7 @@ export function Outer({
 				a.align_center,
 				a.gap_sm,
 				sticky && [webViewStyle(a.sticky), { top: 0 }, a.z_10, t.atoms.bg],
-				gutters,
+				isWithinLeftPanel ? a.px_lg : gutters,
 				a.py_xs,
 				{ minHeight: 52 },
 				t.atoms.border_contrast_low,
@@ -107,7 +107,6 @@ export function Slot({ children }: { children?: React.ReactNode }) {
 export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
-	const { isWithinRightPanel } = useIsWithinSplitView();
 
 	const onPressBack = useCallback(
 		(evt: GestureResponderEvent) => {
@@ -121,10 +120,6 @@ export function BackButton({ onPress, style, ...props }: Partial<ButtonProps>) {
 		},
 		[onPress, navigation],
 	);
-
-	if (isWithinRightPanel) {
-		return null;
-	}
 
 	return (
 		<Slot>
@@ -175,9 +170,15 @@ export function MenuButton() {
 
 export function TitleText({ children, style }: { children: React.ReactNode } & TextStyleProp) {
 	const { gtMobile } = useBreakpoints();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
 	return (
 		<Text
-			style={[a.text_lg, a.font_semi_bold, a.leading_tight, gtMobile && a.text_xl, style]}
+			style={[
+				isWithinLeftPanel ? [a.text_xl, a.font_bold] : [a.text_lg, a.font_semi_bold],
+				a.leading_tight,
+				gtMobile && a.text_xl,
+				style,
+			]}
 			numberOfLines={2}
 			emoji
 			maxFontSizeMultiplier={2}
