@@ -62,6 +62,8 @@ a fork of Bluesky app, gutted down to only support web platform, with some featu
 
 ### commit workflow
 
+- run `pnpm intl:build` before committing
+
 we use conventional commits with these rules:
 
 - a commit represents one logical work
