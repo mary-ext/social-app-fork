@@ -105,6 +105,28 @@ export class HLSUnsupportedError extends Error {
 	}
 }
 
+// Bluesky serves HLS as MPEG-TS with H.264 + AAC. `Hls.isSupported()` is loose
+// and can pass on systems that are missing the codecs needed for Bluesky video.
+function canPlayBskyVideoCodecs(): boolean {
+	if (typeof self === 'undefined') {
+		return false;
+	}
+
+	const globalSelf = self as typeof self & {
+		ManagedMediaSource?: typeof MediaSource;
+		WebKitMediaSource?: typeof MediaSource;
+	};
+	const mediaSource = globalSelf.ManagedMediaSource || globalSelf.MediaSource || globalSelf.WebKitMediaSource;
+	if (!mediaSource || typeof mediaSource.isTypeSupported !== 'function') {
+		return false;
+	}
+
+	return (
+		mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"') &&
+		mediaSource.isTypeSupported('audio/mp4; codecs="mp4a.40.2"')
+	);
+}
+
 export class VideoNotFoundError extends Error {
 	constructor() {
 		super('Video not found');
@@ -223,7 +245,7 @@ function useHLS({
 	useEffect(() => {
 		if (!videoRef.current) return;
 		if (!Hls) return;
-		if (!Hls.isSupported()) {
+		if (!Hls.isSupported() || !canPlayBskyVideoCodecs()) {
 			throw new HLSUnsupportedError();
 		}
 
