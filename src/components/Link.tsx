@@ -1,5 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { type GestureResponderEvent, Linking, type TextStyle } from 'react-native';
+import {
+	type GestureResponderEvent,
+	Linking,
+	type NativeSyntheticEvent,
+	type TargetedEvent,
+	type TextStyle,
+} from 'react-native';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { type LinkProps as RNLinkProps, StackActions } from '@react-navigation/native';
 
@@ -42,6 +48,8 @@ type LinkWebProps = {
 		rel?: string;
 		target?: string;
 	};
+	onBlur?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
+	onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
 };
@@ -50,12 +58,16 @@ const webLinkProps = ({
 	download,
 	href,
 	isExternal,
+	onBlur,
+	onFocus,
 	onMouseEnter,
 	onMouseLeave,
 }: {
 	download?: string;
 	href: string;
 	isExternal: boolean;
+	onBlur?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
+	onFocus?: (e: NativeSyntheticEvent<TargetedEvent>) => void;
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
 }): LinkWebProps => {
@@ -70,6 +82,8 @@ const webLinkProps = ({
 			// default to no underline, apply this ourselves
 			noUnderline: '1',
 		},
+		onBlur,
+		onFocus,
 		onMouseEnter,
 		onMouseLeave,
 	};
@@ -277,6 +291,8 @@ export function Link({
 	onLongPress: outerOnLongPress,
 	download,
 	shouldProxy,
+	onMouseEnter,
+	onMouseLeave,
 	...rest
 }: LinkProps) {
 	const { href, isExternal, onPress, onLongPress } = useLink({
@@ -296,7 +312,7 @@ export function Link({
 			accessibilityRole="link"
 			onPress={download ? undefined : onPress}
 			onLongPress={onLongPress}
-			{...webLinkProps({ download, href, isExternal })}
+			{...webLinkProps({ download, href, isExternal, onMouseEnter, onMouseLeave })}
 		>
 			{children}
 		</Button>
@@ -307,7 +323,7 @@ export type InlineLinkProps = React.PropsWithChildren<
 	BaseLinkProps &
 		TextStyleProp &
 		Pick<TextProps, 'selectable' | 'numberOfLines' | 'emoji'> &
-		Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
+		Pick<ButtonProps, 'label' | 'accessibilityHint' | 'onFocus' | 'onBlur'> & {
 			disableUnderline?: boolean;
 			title?: TextProps['title'];
 		}
@@ -339,7 +355,7 @@ export function InlineLinkText({
 		onLongPress: outerOnLongPress,
 		shareOnLongPress,
 	});
-	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
+	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
 	const flattenedStyle = flatten(style) || {};
 
 	return (
@@ -350,7 +366,7 @@ export function InlineLinkText({
 			{...rest}
 			style={[
 				{ color: t.palette.primary_500 },
-				hovered && !disableUnderline && underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
+				interacted && !disableUnderline && underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
 				flattenedStyle,
 			]}
 			role="link"
@@ -363,11 +379,19 @@ export function InlineLinkText({
 				isExternal,
 				onMouseEnter: () => {
 					rest.onMouseEnter?.();
-					onHoverIn();
+					onInteract();
 				},
 				onMouseLeave: () => {
 					rest.onMouseLeave?.();
-					onHoverOut();
+					onInteractOut();
+				},
+				onFocus: (e: NativeSyntheticEvent<TargetedEvent>) => {
+					rest.onFocus?.(e);
+					onInteract();
+				},
+				onBlur: (e: NativeSyntheticEvent<TargetedEvent>) => {
+					rest.onBlur?.(e);
+					onInteractOut();
 				},
 			})}
 		>
@@ -391,7 +415,7 @@ export function SimpleInlineLinkText({
 	to: string;
 }) {
 	const t = useTheme();
-	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
+	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
 	const flattenedStyle = flatten(style) || {};
 	const isExternal = isExternalUrl(to);
 
@@ -411,7 +435,7 @@ export function SimpleInlineLinkText({
 			{...rest}
 			style={[
 				{ color: t.palette.primary_500 },
-				hovered && !disableUnderline && underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
+				interacted && !disableUnderline && underlineStyle(flattenedStyle.color ?? t.palette.primary_500),
 				flattenedStyle,
 			]}
 			role="link"
@@ -423,11 +447,19 @@ export function SimpleInlineLinkText({
 				isExternal,
 				onMouseEnter: () => {
 					rest.onMouseEnter?.();
-					onHoverIn();
+					onInteract();
 				},
 				onMouseLeave: () => {
 					rest.onMouseLeave?.();
-					onHoverOut();
+					onInteractOut();
+				},
+				onFocus: (e: NativeSyntheticEvent<TargetedEvent>) => {
+					rest.onFocus?.(e);
+					onInteract();
+				},
+				onBlur: (e: NativeSyntheticEvent<TargetedEvent>) => {
+					rest.onBlur?.(e);
+					onInteractOut();
 				},
 			})}
 		>

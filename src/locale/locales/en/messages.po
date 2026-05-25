@@ -100,7 +100,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:174
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:163
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -1696,7 +1696,7 @@ msgid "By <0>{0}</0>"
 msgstr ""
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:70
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:66
 msgid "by <0>@{0}</0>"
 msgstr "by <0>@{0}</0>"
 
@@ -5727,7 +5727,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:77
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:117
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:107
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -7964,9 +7964,15 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:345
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:312
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:316
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
+
+#. placeholder {0}: highlightedPublisher.name
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:311
+msgid "Subscribe to {publicationTitle} on {0}"
+msgstr "Subscribe to {publicationTitle} on {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
 #: src/screens/Profile/Sections/Labels.tsx:196
@@ -9176,6 +9182,12 @@ msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
 
+#. placeholder {0}: view.source.title
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:235
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:420
+msgid "View {0}"
+msgstr "View {0}"
+
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/Header/Shell.tsx:218
 msgid "View {0}'s avatar"
@@ -9200,8 +9212,12 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:314
+msgid "View {publicationTitle}"
+msgstr "View {publicationTitle}"
+
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:73
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:69
 msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
@@ -9258,9 +9274,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:250
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:345
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:478
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:235
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:315
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:316
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:420
 msgid "View publication"
 msgstr "View publication"
 
