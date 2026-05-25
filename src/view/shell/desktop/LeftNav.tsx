@@ -429,6 +429,7 @@ function NavItem({ count, hasNew, href, icon, iconFilled, label, minimal }: NavI
 				style={[
 					a.align_center,
 					a.justify_center,
+					a.z_10,
 					{
 						width: 24,
 						height: 24,
