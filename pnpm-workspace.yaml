@@ -1,6 +1,8 @@
 nodeLinker: 'hoisted'
 autoInstallPeers: true
 strictPeerDependencies: false
+trustPolicy: 'no-downgrade'
+trustPolicyIgnoreAfter: 10080
 overrides:
   '@react-native/normalize-colors': '0.81.5'
   '@types/estree': '1.0.6'
