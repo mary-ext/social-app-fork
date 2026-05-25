@@ -18,14 +18,13 @@ import { useSession } from '#/state/session';
 
 import { MessagesList } from '#/screens/Messages/components/MessagesList';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { MessagesListBlockedFooter } from '#/components/dms/MessagesListBlockedFooter';
 import { MessagesListHeader } from '#/components/dms/MessagesListHeader';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
 
 import { ScrollEdgeEffectProvider } from '#/shims/bsky-scroll-edge-effect';
 
@@ -65,7 +64,6 @@ export function MessagesConversationScreenInner({ route }: Props) {
 }
 
 function Inner({ convoId }: { convoId: string }) {
-	const t = useTheme();
 	const convoState = useConvo();
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
@@ -76,13 +74,7 @@ function Inner({ convoId }: { convoId: string }) {
 
 	const convo = convoData ? parseConvoView(convoData, currentAccount?.did) : null;
 
-	// Because we want to give the list a chance to asynchronously scroll to the end before it is visible to the user,
-	// we use `hasScrolled` to determine when to render. With that said however, there is a chance that the chat will be
-	// empty. So, we also check for that possible state as well and render once we can.
 	const [hasScrolled, setHasScrolled] = useState(false);
-	const readyToShow =
-		hasScrolled ||
-		(isConvoActive(convoState) && !convoState.isFetchingHistory && convoState.items.length === 0);
 
 	// Any time that we re-render the `Initializing` state, we have to reset `hasScrolled` to false. After entering this
 	// state, we know that we're resetting the list of messages and need to re-scroll to the bottom when they get added.
@@ -112,11 +104,6 @@ function Inner({ convoId }: { convoId: string }) {
 
 	return (
 		<Layout.Center style={[a.flex_1]}>
-			{!readyToShow && (
-				<View>
-					<MessagesListHeader convo={convo} />
-				</View>
-			)}
 			<View style={[a.flex_1]}>
 				<InnerReady
 					convo={convo}
@@ -125,15 +112,6 @@ function Inner({ convoId }: { convoId: string }) {
 					isActive={isConvoActive(convoState)}
 					isDisabled={convoState.status === ConvoStatus.Disabled}
 				/>
-				{!readyToShow && (
-					<View
-						style={[a.absolute, a.z_10, a.w_full, a.h_full, a.justify_center, a.align_center, t.atoms.bg]}
-					>
-						<View style={[{ marginBottom: 75 }]}>
-							<Loader size="xl" />
-						</View>
-					</View>
-				)}
 			</View>
 		</Layout.Center>
 	);

@@ -100,42 +100,44 @@ export function MessageComposer({
 					>
 						{children}
 						<View style={[a.flex_1]}>
-							<EmojiPicker.Root
-								onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
-								nextFocusRef={() => composerInternalApiRef.current?.input?.element}
-							>
-								<EmojiPicker.Trigger label={l`Open emoji picker`}>
-									{({ props, state, control }) => (
-										<Pressable
-											{...props}
-											style={[
-												a.overflow_hidden,
-												a.absolute,
-												a.rounded_full,
-												a.align_center,
-												a.justify_center,
-												a.z_30,
-												{
-													height: 20,
-													width: 20,
-													top: 10,
-													right: 10,
-												},
-											]}
-										>
-											<EmojiSmileIcon
-												size="md"
-												style={
-													state.hovered || state.focused || state.pressed || control.isOpen
-														? { color: t.palette.primary_500 }
-														: t.atoms.text_contrast_high
-												}
-											/>
-										</Pressable>
-									)}
-								</EmojiPicker.Trigger>
-								<EmojiPicker.Picker />
-							</EmojiPicker.Root>
+							{loading ? null : (
+								<EmojiPicker.Root
+									onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
+									nextFocusRef={() => composerInternalApiRef.current?.input?.element}
+								>
+									<EmojiPicker.Trigger label={l`Open emoji picker`}>
+										{({ props, state, control }) => (
+											<Pressable
+												{...props}
+												style={[
+													a.overflow_hidden,
+													a.absolute,
+													a.rounded_full,
+													a.align_center,
+													a.justify_center,
+													a.z_30,
+													{
+														height: 20,
+														width: 20,
+														top: 10,
+														right: 10,
+													},
+												]}
+											>
+												<EmojiSmileIcon
+													size="md"
+													style={
+														state.hovered || state.focused || state.pressed || control.isOpen
+															? { color: t.palette.primary_500 }
+															: t.atoms.text_contrast_high
+													}
+												/>
+											</Pressable>
+										)}
+									</EmojiPicker.Trigger>
+									<EmojiPicker.Picker />
+								</EmojiPicker.Root>
+							)}
 							<Composer
 								nativeID={textInputId}
 								label={l`Message input field`}

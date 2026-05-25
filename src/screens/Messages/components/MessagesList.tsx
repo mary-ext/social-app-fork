@@ -10,12 +10,15 @@ import {
 } from '@atproto/api';
 
 import {
+	default as Animated,
 	runOnJS,
 	type ScrollEvent,
 	type SharedValue,
 	useAnimatedRef,
+	useAnimatedStyle,
 	useDerivedValue,
 	useSharedValue,
+	withTiming,
 } from '#/lib/animations/reanimatedCompat';
 import { mergeRefs } from '#/lib/merge-refs';
 import { ScrollProvider } from '#/lib/ScrollContext';
@@ -155,6 +158,15 @@ export function MessagesList({
 		show: false,
 		startContentOffset: 0,
 	});
+
+	const listOpacity = useSharedValue(0);
+	useEffect(() => {
+		if (hasScrolled) {
+			listOpacity.set(withTiming(1, { duration: 200 }));
+		} else {
+			listOpacity.set(0);
+		}
+	}, [hasScrolled, listOpacity]);
 
 	const inputHeightUI = useSharedValue(0);
 	const [inputHeightJS, setInputHeightJS] = useState(0);
@@ -464,6 +476,10 @@ export function MessagesList({
 		[inputHeightUI],
 	);
 
+	const animatedListStyle = useAnimatedStyle(() => ({
+		opacity: listOpacity.get(),
+	}));
+
 	return (
 		<InviteLinkDialogProvider convo={convoState.convo}>
 			<KeyboardGestureArea
@@ -475,56 +491,59 @@ export function MessagesList({
 				style={[a.flex_1]}
 			>
 				{/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-				<ScrollProvider onScroll={onScroll}>
-					<List
-						ref={flatListRef}
-						data={renderItems}
-						renderItem={renderItem}
-						keyExtractor={keyExtractor}
-						disableFullWindowScroll={true}
-						disableVirtualization={true}
-						// The extra two items account for the header and the footer components
-						initialNumToRender={62}
-						maxToRenderPerBatch={32}
-						keyboardDismissMode="interactive"
-						keyboardShouldPersistTaps="handled"
-						maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
-						removeClippedSubviews={false}
-						sideBorders={false}
-						onContentSizeChange={onContentSizeChange}
-						onStartReached={onStartReached}
-						onScrollToIndexFailed={onScrollToIndexFailed}
-						showsVerticalScrollIndicator={true}
-						scrollEventThrottle={100}
-						ListHeaderComponent={
-							<>
-								<MaybeLoader isLoading={convoState.isFetchingHistory} />
-								{convoState.hasAllHistory ? (
-									convoState.convo?.kind === 'group' ? (
-										<MessagesListGroupInfoPanel convo={convoState.convo} />
-									) : convoState.convo?.kind === 'direct' ? (
-										<MessagesListInfoPanel convo={convoState.convo} />
-									) : null
-								) : null}
-							</>
-						}
-						// native only (prop is not supported on web)
-						renderScrollComponent={renderScrollComponent}
-						contentContainerStyle={{
-							paddingBottom: 0,
-						}}
-						ListFooterComponent={
-							<View style={{ height: tokens.space.md + inputHeightJS }} onLayout={onFooterLayout} />
-						}
-						style={webViewStyle({
-							scrollbarWidth: 'thin',
-							scrollbarColor: `${t.palette.contrast_100} transparent`,
-							scrollbarGutter: 'stable',
-						})}
-						contentInset={{ top: transparentHeaderHeight }}
-						scrollIndicatorInsets={{ top: transparentHeaderHeight }}
-					/>
-				</ScrollProvider>
+				<Animated.View style={[a.flex_1, animatedListStyle]}>
+					<ScrollProvider onScroll={onScroll}>
+						<List
+							ref={flatListRef}
+							data={renderItems}
+							renderItem={renderItem}
+							keyExtractor={keyExtractor}
+							disableFullWindowScroll={true}
+							disableVirtualization={true}
+							// The extra two items account for the header and the footer components
+							initialNumToRender={62}
+							maxToRenderPerBatch={32}
+							keyboardDismissMode="interactive"
+							keyboardShouldPersistTaps="handled"
+							maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
+							removeClippedSubviews={false}
+							sideBorders={false}
+							onContentSizeChange={onContentSizeChange}
+							onStartReached={onStartReached}
+							onScrollToIndexFailed={onScrollToIndexFailed}
+							showsVerticalScrollIndicator={true}
+							scrollEventThrottle={100}
+							ListHeaderComponent={
+								<>
+									<MaybeLoader isLoading={convoState.isFetchingHistory} />
+									{convoState.hasAllHistory ? (
+										convoState.convo?.kind === 'group' ? (
+											<MessagesListGroupInfoPanel convo={convoState.convo} />
+										) : convoState.convo?.kind === 'direct' ? (
+											<MessagesListInfoPanel convo={convoState.convo} />
+										) : null
+									) : null}
+								</>
+							}
+							// native only (prop is not supported on web)
+							renderScrollComponent={renderScrollComponent}
+							contentContainerStyle={{
+								paddingBottom: 0,
+							}}
+							ListFooterComponent={
+								<View style={{ height: tokens.space.md + inputHeightJS }} onLayout={onFooterLayout} />
+							}
+							style={webViewStyle({
+								scrollbarWidth: 'thin',
+								scrollbarColor: `${t.palette.contrast_100} transparent`,
+								scrollbarGutter: 'stable',
+							})}
+							pointerEvents={hasScrolled ? 'auto' : 'none'}
+							contentInset={{ top: transparentHeaderHeight }}
+							scrollIndicatorInsets={{ top: transparentHeaderHeight }}
+						/>
+					</ScrollProvider>
+				</Animated.View>
 				<KeyboardStickyView
 					style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
 					onLayout={onInputLayout}
@@ -536,14 +555,17 @@ export function MessagesList({
 				>
 					{footer ?? (
 						<ConversationFooter convoState={convoState} hasAcceptOverride={hasAcceptOverride}>
-							<MessageComposer
-								textInputId={textInputId}
-								onSendMessage={(message: string) => void onSendMessage(message)}
-								hasEmbed={!!embedUri}
-								setEmbed={setEmbed}
-							>
-								<MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-							</MessageComposer>
+							{({ loading }) => (
+								<MessageComposer
+									textInputId={textInputId}
+									onSendMessage={(message: string) => void onSendMessage(message)}
+									hasEmbed={!!embedUri}
+									setEmbed={setEmbed}
+									loading={loading}
+								>
+									<MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+								</MessageComposer>
+							)}
 						</ConversationFooter>
 					)}
 				</KeyboardStickyView>
@@ -609,22 +631,24 @@ function ConversationFooter({
 }: {
 	convoState: ConvoState;
 	hasAcceptOverride?: boolean;
-	children?: React.ReactNode; // message input
+	children?: ((props: { loading?: boolean }) => React.ReactNode) | React.ReactNode;
 }) {
 	if (!isConvoActive(convoState)) {
 		return null;
 	}
 
 	const footerState = getFooterState(convoState, hasAcceptOverride);
+	const renderChildren = (loading?: boolean) =>
+		typeof children === 'function' ? children({ loading }) : children;
 
 	switch (footerState) {
 		case 'loading':
-			return null;
+			return renderChildren(true);
 		case 'new-chat':
-			return children;
+			return renderChildren();
 		case 'request':
 			return <ChatStatusInfo convoState={convoState} />;
 		case 'standard':
-			return children;
+			return renderChildren();
 	}
 }

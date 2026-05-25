@@ -132,45 +132,47 @@ export function MessageInput({
 				onMouseLeave={() => setIsHovered(false)}
 			>
 				{children}
-				<EmojiPicker.Root onEmojiSelect={onEmojiInserted} nextFocusRef={textAreaRef}>
-					<EmojiPicker.Trigger label={l`Open emoji picker`}>
-						{({ props, state }) => (
-							<Button
-								style={[
-									a.rounded_full,
-									a.overflow_hidden,
-									a.align_center,
-									a.justify_center,
-									{
-										marginTop: 5,
-										height: 30,
-										width: 30,
-									},
-								]}
-								label={props.accessibilityLabel}
-								{...props}
-							>
-								<View
+				{loading ? null : (
+					<EmojiPicker.Root onEmojiSelect={onEmojiInserted} nextFocusRef={textAreaRef}>
+						<EmojiPicker.Trigger label={l`Open emoji picker`}>
+							{({ props, state }) => (
+								<Button
 									style={[
-										a.absolute,
-										a.inset_0,
+										a.rounded_full,
+										a.overflow_hidden,
 										a.align_center,
 										a.justify_center,
 										{
-											backgroundColor:
-												state.hovered || state.focused || state.pressed
-													? t.atoms.bg.backgroundColor
-													: undefined,
+											marginTop: 5,
+											height: 30,
+											width: 30,
 										},
 									]}
+									label={props.accessibilityLabel}
+									{...props}
 								>
-									<EmojiSmile size="lg" />
-								</View>
-							</Button>
-						)}
-					</EmojiPicker.Trigger>
-					<EmojiPicker.Picker />
-				</EmojiPicker.Root>
+									<View
+										style={[
+											a.absolute,
+											a.inset_0,
+											a.align_center,
+											a.justify_center,
+											{
+												backgroundColor:
+													state.hovered || state.focused || state.pressed
+														? t.atoms.bg.backgroundColor
+														: undefined,
+											},
+										]}
+									>
+										<EmojiSmile size="lg" />
+									</View>
+								</Button>
+							)}
+						</EmojiPicker.Trigger>
+						<EmojiPicker.Picker />
+					</EmojiPicker.Root>
+				)}
 				<TextareaAutosize
 					ref={textAreaRef}
 					style={flatten([
