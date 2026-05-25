@@ -1,4 +1,9 @@
-import { type AppBskyFeedDefs, type AppBskyGraphDefs, type ComAtprotoRepoStrongRef } from '@atproto/api';
+import {
+	type AppBskyEmbedExternal,
+	type AppBskyFeedDefs,
+	type AppBskyGraphDefs,
+	type ComAtprotoRepoStrongRef,
+} from '@atproto/api';
 import { AtUri } from '@atproto/api';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
@@ -34,7 +39,8 @@ type ResolvedExternalLink = {
 	 * The AT-URI of the Atmosphere record representing this external content, if it exists. Example: a
 	 * site.standard.document record.
 	 */
-	associatedRecord?: LinkMeta['associatedRecord'];
+	associatedRefs?: LinkMeta['associatedRefs'];
+	view?: AppBskyEmbedExternal.View;
 };
 
 type ResolvedPostRecord = {
@@ -230,7 +236,8 @@ async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
 		title: result.title ?? '',
 		description: result.description ?? '',
 		thumb: result.image ? await imageToThumb(result.image) : undefined,
-		associatedRecord: result.associatedRecord,
+		associatedRefs: result.associatedRefs,
+		view: result.view,
 	};
 }
 

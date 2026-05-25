@@ -1,3 +1,5 @@
+import { type AppBskyEmbedExternal } from '@atproto/api';
+
 import { LINK_META_PROXY } from '#/lib/constants';
 import { getGiphyMetaUri } from '#/lib/strings/embed-player';
 import { parseStarterPackUri } from '#/lib/strings/starter-pack';
@@ -25,7 +27,8 @@ export interface LinkMeta {
 	 * The AT-URI of the Atmosphere record representing this external content, if it exists. Example: a
 	 * site.standard.document record.
 	 */
-	associatedRecord?: string;
+	associatedRefs?: AppBskyEmbedExternal.External['associatedRefs'];
+	view?: AppBskyEmbedExternal.View;
 }
 
 export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta> {
@@ -86,7 +89,8 @@ export async function getLinkMeta(url: string, timeout = 15e3): Promise<LinkMeta
 		meta.description = body.description;
 		meta.image = body.image;
 		meta.title = body.title;
-		meta.associatedRecord = body.associated_record;
+		meta.associatedRefs = body.associated_refs;
+		meta.view = body.view || body.external_view;
 		if (shouldFollowRedirect) {
 			meta.url = body.url;
 		}

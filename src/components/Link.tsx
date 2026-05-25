@@ -120,6 +120,15 @@ type BaseLinkProps = {
 
 	/** Native-only attribute. If true, will open the share sheet on long press. */
 	shareOnLongPress?: boolean;
+
+	/** Whether the link should be opened through the redirect proxy. */
+	shouldProxy?: boolean;
+
+	/** Web only */
+	onMouseEnter?: () => void;
+
+	/** Web only */
+	onMouseLeave?: () => void;
 };
 
 export function useLink({
@@ -267,6 +276,7 @@ export function Link({
 	onPress: outerOnPress,
 	onLongPress: outerOnLongPress,
 	download,
+	shouldProxy,
 	...rest
 }: LinkProps) {
 	const { href, isExternal, onPress, onLongPress } = useLink({
@@ -275,6 +285,7 @@ export function Link({
 		action,
 		onPress: outerOnPress,
 		onLongPress: outerOnLongPress,
+		shouldProxy,
 	});
 
 	return (
@@ -350,8 +361,14 @@ export function InlineLinkText({
 				download,
 				href,
 				isExternal,
-				onMouseEnter: onHoverIn,
-				onMouseLeave: onHoverOut,
+				onMouseEnter: () => {
+					rest.onMouseEnter?.();
+					onHoverIn();
+				},
+				onMouseLeave: () => {
+					rest.onMouseLeave?.();
+					onHoverOut();
+				},
 			})}
 		>
 			{children}
@@ -404,8 +421,14 @@ export function SimpleInlineLinkText({
 				download,
 				href,
 				isExternal,
-				onMouseEnter: onHoverIn,
-				onMouseLeave: onHoverOut,
+				onMouseEnter: () => {
+					rest.onMouseEnter?.();
+					onHoverIn();
+				},
+				onMouseLeave: () => {
+					rest.onMouseLeave?.();
+					onHoverOut();
+				},
 			})}
 		>
 			{children}

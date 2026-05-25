@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
-import { type Theme, type ThemeName } from '#/alf/base';
+import { type Theme, type ThemeName, utils as baseUtils } from '#/alf/base';
 import {
 	computeFontScaleMultiplier,
 	getFontFamily,
@@ -9,17 +9,24 @@ import {
 	setFontScale as persistFontScale,
 } from '#/alf/fonts';
 import { themes } from '#/alf/themes';
+import { darken, lighten, rgbToHex } from '#/alf/util/colorGeneration';
 
 import { type Device } from '#/storage';
 
 export { atoms } from '#/alf/atoms';
-export { type TextStyleProp, type Theme, type ThemeName, utils, type ViewStyleProp } from '#/alf/base';
+export { type TextStyleProp, type Theme, type ThemeName, type ViewStyleProp } from '#/alf/base';
 export * from '#/alf/breakpoints';
 export * from '#/alf/fonts';
 export * as tokens from '#/alf/tokens';
 export * from '#/alf/util/flatten';
 export * from '#/alf/util/themeSelector';
 export * from '#/alf/util/useGutters';
+export const utils = {
+	...baseUtils,
+	darken,
+	lighten,
+	rgbToHex,
+};
 
 export type Alf = {
 	themeName: ThemeName;
@@ -54,7 +61,11 @@ export const Context = createContext<Alf>({
 });
 Context.displayName = 'AlfContext';
 
-export function ThemeProvider({ children, theme: themeName }: React.PropsWithChildren<{ theme: ThemeName }>) {
+export function ThemeProvider({
+	children,
+	theme: themeName,
+	themesOverride,
+}: React.PropsWithChildren<{ theme: ThemeName; themesOverride?: Partial<typeof themes> }>) {
 	const [fontScale, setFontScale] = useState<Alf['fonts']['scale']>(() => getFontScale());
 	const [fontScaleMultiplier, setFontScaleMultiplier] = useState(() => computeFontScaleMultiplier(fontScale));
 	const setFontScaleAndPersist = useCallback<Alf['fonts']['setFontScale']>(
@@ -74,11 +85,16 @@ export function ThemeProvider({ children, theme: themeName }: React.PropsWithChi
 		[setFontFamily],
 	);
 
-	const value = useMemo<Alf>(
-		() => ({
-			themes,
+	const value = useMemo<Alf>(() => {
+		const nextThemes = {
+			...themes,
+			...themesOverride,
+		};
+
+		return {
+			themes: nextThemes,
 			themeName: themeName,
-			theme: themes[themeName],
+			theme: nextThemes[themeName],
 			fonts: {
 				scale: fontScale,
 				scaleMultiplier: fontScaleMultiplier,
@@ -87,9 +103,16 @@ export function ThemeProvider({ children, theme: themeName }: React.PropsWithChi
 				setFontFamily: setFontFamilyAndPersist,
 			},
 			flags: {},
-		}),
-		[themeName, fontScale, setFontScaleAndPersist, fontFamily, setFontFamilyAndPersist, fontScaleMultiplier],
-	);
+		};
+	}, [
+		themeName,
+		themesOverride,
+		fontScale,
+		setFontScaleAndPersist,
+		fontFamily,
+		setFontFamilyAndPersist,
+		fontScaleMultiplier,
+	]);
 
 	return <Context.Provider value={value}>{children}</Context.Provider>;
 }

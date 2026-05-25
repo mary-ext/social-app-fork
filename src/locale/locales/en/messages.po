@@ -98,6 +98,12 @@ msgstr ""
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
+#. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
+#. placeholder {0}: view.readingTime
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:174
+msgid "{0, plural, one {#m} other {#m}}"
+msgstr "{0, plural, one {#m} other {#m}}"
+
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:169
@@ -137,9 +143,9 @@ msgstr ""
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
-#. placeholder {0}: i18n.date(d, { timeStyle: 'short' })
+#. placeholder {0}: i18n.date(d, { timeStyle: ts })
 #. placeholder {1}: i18n.date(d, { dateStyle: 'medium' })
-#: src/lib/strings/time.ts:13
+#: src/lib/strings/time.ts:15
 msgctxt "date and time formatted like this: [time] · [date]"
 msgid "{0} · {1}"
 msgstr ""
@@ -260,8 +266,8 @@ msgid "{0}, a list by {1}"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle))
-#: src/view/com/util/UserAvatar.tsx:507
-#: src/view/com/util/UserAvatar.tsx:517
+#: src/view/com/util/UserAvatar.tsx:511
+#: src/view/com/util/UserAvatar.tsx:521
 msgid "{0}'s avatar"
 msgstr ""
 
@@ -1538,7 +1544,7 @@ msgstr ""
 msgid "Block user and/or delete this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:170
+#: src/components/Post/Embed/index.tsx:179
 msgid "Blocked"
 msgstr ""
 
@@ -1688,6 +1694,11 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:404
 msgid "By <0>{0}</0>"
 msgstr ""
+
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:70
+msgid "by <0>@{0}</0>"
+msgstr "by <0>@{0}</0>"
 
 #: src/screens/Search/components/StarterPackCard.tsx:95
 msgid "By you"
@@ -2477,7 +2488,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:163
+#: src/components/Post/Embed/index.tsx:172
 msgid "Deleted"
 msgstr ""
 
@@ -2774,7 +2785,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:399
+#: src/view/com/util/UserAvatar.tsx:403
 #: src/view/com/util/UserBanner.tsx:81
 msgid "Edit avatar"
 msgstr ""
@@ -3044,7 +3055,7 @@ msgstr ""
 msgid "Expand post text"
 msgstr ""
 
-#: src/lib/api/index.ts:393
+#: src/lib/api/index.ts:394
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -5716,6 +5727,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:77
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:117
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -5813,7 +5825,7 @@ msgstr ""
 msgid "Opens link {0}"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:508
+#: src/view/com/util/UserAvatar.tsx:512
 msgid "Opens live status dialog"
 msgstr ""
 
@@ -5840,7 +5852,7 @@ msgstr ""
 
 #: src/components/dms/MessageItem.tsx:184
 #: src/view/com/notifications/NotificationFeedItem.tsx:902
-#: src/view/com/util/UserAvatar.tsx:518
+#: src/view/com/util/UserAvatar.tsx:522
 msgid "Opens this profile"
 msgstr ""
 
@@ -6536,8 +6548,8 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:436
-#: src/view/com/util/UserAvatar.tsx:438
+#: src/view/com/util/UserAvatar.tsx:440
+#: src/view/com/util/UserAvatar.tsx:442
 msgid "Remove Avatar"
 msgstr ""
 
@@ -6635,11 +6647,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:189
+#: src/components/Post/Embed/index.tsx:198
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:189
+#: src/components/Post/Embed/index.tsx:198
 msgid "Removed by you"
 msgstr ""
 
@@ -7951,6 +7963,11 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
+#. placeholder {0}: highlightedPublisher.name
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:345
+msgid "Subscribe on {0}"
+msgstr "Subscribe on {0}"
+
 #. placeholder {0}: labelerInfo.creator.handle
 #: src/screens/Profile/Sections/Labels.tsx:196
 msgid "Subscribe to @{0} to use these labels:"
@@ -8954,12 +8971,12 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:428
+#: src/view/com/util/UserAvatar.tsx:432
 #: src/view/com/util/UserBanner.tsx:115
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:427
+#: src/view/com/util/UserAvatar.tsx:431
 #: src/view/com/util/UserBanner.tsx:112
 msgid "Upload from Library"
 msgstr ""
@@ -9183,6 +9200,11 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
+#. placeholder {0}: authorProfile.handle
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:73
+msgid "View @{0}'s profile"
+msgstr "View @{0}'s profile"
+
 #: src/components/ProfileHoverCard/index.tsx:448
 msgid "View blocked user's profile"
 msgstr ""
@@ -9235,6 +9257,12 @@ msgstr ""
 #: src/screens/Profile/Header/Shell.tsx:146
 msgid "View profile banner"
 msgstr "View profile banner"
+
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:250
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:345
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:478
+msgid "View publication"
+msgstr "View publication"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:106
 msgid "View the avatar"
