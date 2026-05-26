@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
-import { type ChatBskyConvoDefs, RichText } from '@atproto/api';
+import { type ChatBskyConvoDefs, type ModerationOpts, RichText } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -32,10 +32,12 @@ import type * as bsky from '#/types/bsky';
 export let MessageContextMenu = ({
 	message,
 	senderProfile,
+	moderationOpts: _moderationOpts,
 	children,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
 	senderProfile?: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts | undefined;
 	children: (props: TriggerChildProps) => React.ReactNode;
 }): React.ReactNode => {
 	const { t: l, i18n } = useLingui();

@@ -362,6 +362,7 @@ let MessageItem = ({
 							isFromSelf={isFromSelf}
 							message={message}
 							senderProfile={profile}
+							moderationOpts={moderationOpts}
 						>
 							{AppBskyEmbedRecord.isView(message.embed) && (
 								<MessageItemEmbed

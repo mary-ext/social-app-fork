@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyConvoDefs, type ModerationOpts } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
+import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
 
@@ -16,19 +17,21 @@ import * as Toast from '#/components/Toast';
 import type * as bsky from '#/types/bsky';
 
 import { EmojiReactionPicker } from './EmojiReactionPicker';
-import { hasReachedReactionLimit } from './util';
+import { canReact, hasReachedReactionLimit } from './util';
 
 export function ActionsWrapper({
 	message,
 	hasReactions,
 	isFromSelf,
 	senderProfile,
+	moderationOpts,
 	children,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
 	hasReactions?: boolean;
 	isFromSelf: boolean;
 	senderProfile?: bsky.profile.AnyProfileView;
+	moderationOpts: ModerationOpts | undefined;
 	children: React.ReactNode;
 }) {
 	const viewRef = useRef(null);
@@ -36,6 +39,12 @@ export function ActionsWrapper({
 	const { t: l } = useLingui();
 	const convo = useConvoActive();
 	const { currentAccount } = useSession();
+	const primaryMember = useMaybeProfileShadow(convo.convo.primaryMember);
+	const reactionsAvailable = canReact({
+		convoState: convo,
+		primaryMember,
+		moderationOpts,
+	});
 
 	const [showActions, setShowActions] = useState(false);
 
@@ -95,25 +104,27 @@ export function ActionsWrapper({
 					hasReactions ? [a.mb_2xl] : undefined,
 				]}
 			>
-				<EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
-					{({ props, state, control }) => {
-						const showMenuTrigger = showActions || control.isOpen ? 1 : 0;
-						return (
-							<Pressable
-								{...props}
-								style={[
-									{ opacity: showMenuTrigger },
-									a.p_xs,
-									a.rounded_full,
-									(state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-								]}
-							>
-								<EmojiSmileIcon size="md" style={t.atoms.text_contrast_medium} />
-							</Pressable>
-						);
-					}}
-				</EmojiReactionPicker>
-				<MessageContextMenu message={message} senderProfile={senderProfile}>
+				{reactionsAvailable && (
+					<EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
+						{({ props, state, control }) => {
+							const showMenuTrigger = showActions || control.isOpen ? 1 : 0;
+							return (
+								<Pressable
+									{...props}
+									style={[
+										{ opacity: showMenuTrigger },
+										a.p_xs,
+										a.rounded_full,
+										(state.hovered || state.pressed) && t.atoms.bg_contrast_25,
+									]}
+								>
+									<EmojiSmileIcon size="md" style={t.atoms.text_contrast_medium} />
+								</Pressable>
+							);
+						}}
+					</EmojiReactionPicker>
+				)}
+				<MessageContextMenu message={message} senderProfile={senderProfile} moderationOpts={moderationOpts}>
 					{({ props, state, control }) => {
 						const showMenuTrigger = showActions || control.isOpen ? 1 : 0;
 						return (
