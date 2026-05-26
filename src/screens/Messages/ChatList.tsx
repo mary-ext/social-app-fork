@@ -308,8 +308,8 @@ export function ChatList({
 							/>
 						) : (
 							<EmptyState
-								message={l`No chats yet`}
-								icon={InboxLargeIcon}
+								message={l`Say hi to someone`}
+								icon={BubbleSmileIcon}
 								iconSize="4xl"
 								textStyle={t.atoms.text}
 								iconColor={t.atoms.text.color}
