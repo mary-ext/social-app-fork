@@ -47,7 +47,7 @@ export function MessagesListHeader({ convo }: { convo?: ConvoWithDetails | null 
 					convo.kind === 'direct' ? (
 						<ProfileHeaderReady convo={convo} moderationOpts={moderationOpts} />
 					) : (
-						<GroupHeaderReady convo={convo} />
+						<GroupHeaderReady convo={convo} moderationOpts={moderationOpts} />
 					)
 				) : (
 					<>
@@ -137,7 +137,13 @@ function ProfileHeaderReady({
 	);
 }
 
-function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'group' }> }) {
+function GroupHeaderReady({
+	convo,
+	moderationOpts,
+}: {
+	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
+	moderationOpts: ModerationOpts;
+}) {
 	const { t: l } = useLingui();
 
 	const disabled = convo.details.lockStatus === 'locked-permanently';
@@ -160,7 +166,7 @@ function GroupHeaderReady({ convo }: { convo: Extract<ConvoWithDetails, { kind: 
 								}
 					}
 				>
-					<AvatarBubbles size={40} profiles={convo.members} />
+					<AvatarBubbles size={40} profiles={convo.members} moderationOpts={moderationOpts} />
 					<View style={[a.flex_row, a.flex_1, a.align_center]}>
 						<Text style={[a.text_md, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
 							{convo.details.name}

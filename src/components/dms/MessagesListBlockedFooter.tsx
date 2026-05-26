@@ -25,10 +25,12 @@ export function MessagesListBlockedFooter({
 	recipient: initialRecipient,
 	convoId,
 	moderation,
+	isGroup,
 }: {
 	recipient: bsky.profile.AnyProfileView;
 	convoId: string;
 	moderation: ModerationDecision;
+	isGroup: boolean;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -74,7 +76,11 @@ export function MessagesListBlockedFooter({
 			>
 				<PersonXIcon fill={t.atoms.text.color} size="lg" style={[a.mb_xs]} />
 				<Text style={[a.mb_xs, a.text_center, a.text_md, a.font_semi_bold, t.atoms.text]}>
-					{isBlocking ? l`You are blocking this person` : l`This person is blocking you`}
+					{isGroup
+						? l`You are blocking the chat owner`
+						: isBlocking
+							? l`You are blocking this person`
+							: l`This person is blocking you`}
 				</Text>
 				<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
 					<Trans>You can read chat history but can't send new messages.</Trans>

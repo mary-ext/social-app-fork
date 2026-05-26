@@ -1,4 +1,4 @@
-import { type ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyActorDefs, type ChatBskyConvoDefs, type ChatBskyConvoGetConvo } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DM_SERVICE_HEADERS } from '#/lib/constants';
@@ -90,4 +90,21 @@ export function useMarkAsReadMutation() {
 			});
 		},
 	});
+}
+
+export function* findAllProfilesInQueryData(
+	queryClient: QueryClient,
+	did: string,
+): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
+	const queryDatas = queryClient.getQueriesData<ChatBskyConvoGetConvo.OutputSchema['convo']>({
+		queryKey: [RQKEY_ROOT],
+	});
+	for (const [_queryKey, queryData] of queryDatas) {
+		if (!queryData) continue;
+		for (const member of queryData.members) {
+			if (member.did === did) {
+				yield member;
+			}
+		}
+	}
 }
