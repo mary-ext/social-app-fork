@@ -386,7 +386,7 @@ function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {
 	}
 	if (e instanceof VideoTooLargeError) {
 		return i18n._(
-			defineMessage`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+			defineMessage`The selected video is larger than 300 MB. Please try again with a smaller file.`,
 		);
 	}
 	logger.error('Error compressing video', { safeMessage: e });
@@ -418,9 +418,9 @@ function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
 				return i18n._(
 					defineMessage`Your account is not yet old enough to upload videos. Please try again later.`,
 				);
-			case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
+			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
 				return i18n._(
-					defineMessage`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+					defineMessage`The selected video is larger than 300 MB. Please try again with a smaller file.`,
 				);
 			case 'Confirm your email address to upload videos':
 				return i18n._(defineMessage`Please confirm your email address to upload videos.`);
