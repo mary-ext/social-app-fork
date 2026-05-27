@@ -3,10 +3,15 @@ import type { $type } from '@atcute/lexicons';
 
 import type * as Dialog from '#/components/Dialog';
 
-export type ReportSubjectConvo = {
+export type ReportSubjectConvoMessage = {
 	view: 'convo' | 'message';
 	convoId: string;
 	message: ChatBskyConvoDefs.MessageView;
+};
+
+export type ReportSubjectConvo = {
+	convoId: string;
+	did: string;
 };
 
 export type ReportSubject =
@@ -18,6 +23,7 @@ export type ReportSubject =
 	| $type.enforce<AppBskyFeedDefs.GeneratorView>
 	| $type.enforce<AppBskyGraphDefs.StarterPackView>
 	| $type.enforce<AppBskyFeedDefs.PostView>
+	| ReportSubjectConvoMessage
 	| ReportSubjectConvo;
 
 export type ParsedReportSubject =
@@ -65,6 +71,9 @@ export type ParsedReportSubject =
 	  }
 	| ({
 			type: 'convoMessage';
+	  } & ReportSubjectConvoMessage)
+	| ({
+			type: 'convo';
 	  } & ReportSubjectConvo);
 
 export type ReportDialogProps = {

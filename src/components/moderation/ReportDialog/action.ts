@@ -91,6 +91,20 @@ export function useSubmitReportMutation() {
 					};
 					break;
 				}
+				case 'convo': {
+					report = {
+						reasonType,
+						reason: state.details,
+						// chat.bsky.convo.defs#convoRef is not in the createReport lexicon's
+						// subject union, but the chat moderation service accepts it
+						subject: {
+							$type: 'chat.bsky.convo.defs#convoRef',
+							convoId: subject.convoId,
+							did: subject.did,
+						} as unknown as ComAtprotoModerationCreateReport.$input['subject'],
+					};
+					break;
+				}
 			}
 
 			if (import.meta.env.DEV) {

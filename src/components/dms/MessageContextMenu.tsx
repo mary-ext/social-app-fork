@@ -154,7 +154,7 @@ export let MessageContextMenu = ({
 				currentScreen="conversation"
 				params={{
 					convoId: convo.convo.view.id,
-					message,
+					did: message.sender.did,
 				}}
 			/>
 			<Prompt.Basic

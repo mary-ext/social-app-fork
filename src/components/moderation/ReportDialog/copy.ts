@@ -43,6 +43,12 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
 					subtitle: l`Why should this starter pack be reviewed?`,
 				};
 			}
+			case 'convo': {
+				return {
+					title: l`Report this conversation`,
+					subtitle: l`Why should this conversation be reviewed?`,
+				};
+			}
 			case 'convoMessage': {
 				switch (subject.view) {
 					case 'convo': {

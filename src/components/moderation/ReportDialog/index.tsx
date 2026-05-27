@@ -136,7 +136,7 @@ function Inner(props: ReportDialogProps) {
 				if (subjectTypes === undefined) return true;
 				if (props.subject.type === 'account') {
 					return subjectTypes.includes('account');
-				} else if (props.subject.type === 'convoMessage') {
+				} else if (props.subject.type === 'convoMessage' || props.subject.type === 'convo') {
 					return subjectTypes.includes('chat');
 				} else {
 					return subjectTypes.includes('record');
@@ -146,7 +146,7 @@ function Inner(props: ReportDialogProps) {
 				const collections: string[] | undefined = l.subjectCollections;
 				if (collections === undefined) return true;
 				// all chat collections accepted, since only Bluesky handles chats
-				if (props.subject.type === 'convoMessage') return true;
+				if (props.subject.type === 'convoMessage' || props.subject.type === 'convo') return true;
 				return collections.includes(props.subject.nsid);
 			})
 			.filter((l) => {

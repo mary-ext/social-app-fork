@@ -89,6 +89,7 @@ export const BSKY_LABELER_ONLY_REPORT_REASONS: Set<ToolsOzoneReportDefs.ReasonTy
 
 /** Set of _parsed_ subject types that should only be sent to Bluesky's moderation service. */
 export const BSKY_LABELER_ONLY_SUBJECT_TYPES: Set<ParsedReportSubject['type']> = new Set([
+	'convo',
 	'convoMessage',
 	'status',
 ]);

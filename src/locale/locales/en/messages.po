@@ -1513,8 +1513,8 @@ msgstr ""
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:254
-#: src/components/dms/ConvoMenu.tsx:258
+#: src/components/dms/ConvoMenu.tsx:271
+#: src/components/dms/ConvoMenu.tsx:275
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:609
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:612
 #: src/screens/Messages/components/RequestButtons.tsx:136
@@ -1542,6 +1542,12 @@ msgstr ""
 msgid "Block and Delete"
 msgstr ""
 
+#. After-report action for a conversation
+#: src/components/dms/AfterReportConversationDialog.tsx:149
+msgctxt "button"
+msgid "Block and leave"
+msgstr "Block and leave"
+
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:98
 msgid "Block list"
 msgstr ""
@@ -1554,10 +1560,18 @@ msgstr ""
 msgid "Block these accounts?"
 msgstr ""
 
+#: src/components/dms/AfterReportConversationDialog.tsx:204
+#: src/components/dms/AfterReportConversationDialog.tsx:207
 #: src/components/dms/AfterReportDialog.tsx:175
 #: src/components/dms/AfterReportDialog.tsx:178
 msgid "Block user"
 msgstr ""
+
+#. After-report action for a conversation
+#: src/components/dms/AfterReportConversationDialog.tsx:164
+msgctxt "button"
+msgid "Block user"
+msgstr "Block user"
 
 #: src/components/dms/AfterReportDialog.tsx:139
 msgid "Block User"
@@ -1566,6 +1580,10 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:170
 msgid "Block user and/or delete this conversation"
 msgstr ""
+
+#: src/components/dms/AfterReportConversationDialog.tsx:199
+msgid "Block user and/or leave this conversation"
+msgstr "Block user and/or leave this conversation"
 
 #: src/components/Post/Embed/index.tsx:200
 msgid "Blocked"
@@ -1831,7 +1849,7 @@ msgstr "Chat ended"
 msgid "Chat locked"
 msgstr "Chat locked"
 
-#: src/components/dms/ConvoMenu.tsx:189
+#: src/components/dms/ConvoMenu.tsx:206
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
@@ -1848,7 +1866,7 @@ msgstr ""
 msgid "Chat requests"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:78
+#: src/components/dms/ConvoMenu.tsx:80
 #: src/Navigation.tsx:807
 #: src/screens/Messages/ChatList.tsx:437
 #: src/screens/Messages/ChatList.tsx:470
@@ -1872,7 +1890,7 @@ msgstr "Chat title changed to {0}"
 msgid "Chat unlocked"
 msgstr "Chat unlocked"
 
-#: src/components/dms/ConvoMenu.tsx:191
+#: src/components/dms/ConvoMenu.tsx:208
 msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
@@ -1974,6 +1992,10 @@ msgstr ""
 #: src/components/dialogs/SearchablePeopleList.tsx:307
 #: src/components/dialogs/StarterPackDialog.tsx:156
 #: src/components/dms/AddMembersFlow.tsx:312
+#: src/components/dms/AfterReportConversationDialog.tsx:82
+#: src/components/dms/AfterReportConversationDialog.tsx:84
+#: src/components/dms/AfterReportConversationDialog.tsx:227
+#: src/components/dms/AfterReportConversationDialog.tsx:229
 #: src/components/dms/AfterReportDialog.tsx:88
 #: src/components/dms/AfterReportDialog.tsx:90
 #: src/components/dms/AfterReportDialog.tsx:198
@@ -2153,6 +2175,12 @@ msgctxt "toast"
 msgid "Conversation deleted"
 msgstr ""
 
+#: src/components/dms/AfterReportConversationDialog.tsx:154
+#: src/components/dms/AfterReportConversationDialog.tsx:161
+msgctxt "toast"
+msgid "Conversation left"
+msgstr "Conversation left"
+
 #: src/screens/Settings/AboutSettings.tsx:67
 msgid "Copied build version to clipboard"
 msgstr ""
@@ -2248,6 +2276,7 @@ msgstr "Could not fetch post"
 msgid "Could not find profile"
 msgstr ""
 
+#: src/components/dms/AfterReportConversationDialog.tsx:140
 #: src/components/dms/AfterReportDialog.tsx:124
 #: src/components/dms/LeaveConvoPrompt.tsx:33
 msgid "Could not leave chat"
@@ -2263,7 +2292,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:195
+#: src/components/dms/ConvoMenu.tsx:212
 msgid "Could not mute chat"
 msgstr ""
 
@@ -2665,6 +2694,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:288
 #: src/components/dialogs/ServerInput.tsx:213
 #: src/components/dialogs/ServerInput.tsx:216
+#: src/components/dms/AfterReportConversationDialog.tsx:146
 #: src/components/dms/AfterReportDialog.tsx:130
 #: src/view/com/composer/labels/LabelsBtn.tsx:181
 #: src/view/com/composer/labels/LabelsBtn.tsx:189
@@ -3805,7 +3835,7 @@ msgstr ""
 msgid "Go to feed"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:238
+#: src/components/dms/ConvoMenu.tsx:255
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:71
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:180
 #: src/view/shell/desktop/LeftNav.tsx:318
@@ -3817,7 +3847,7 @@ msgstr ""
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
-#: src/components/dms/ConvoMenu.tsx:235
+#: src/components/dms/ConvoMenu.tsx:252
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:64
 msgid "Go to user's profile"
 msgstr ""
@@ -4071,7 +4101,6 @@ msgid "Human trafficking"
 msgstr ""
 
 #: src/components/dms/BlockedByListDialog.tsx:53
-#: src/components/dms/ReportConversationPrompt.tsx:14
 msgid "I understand"
 msgstr ""
 
@@ -4403,13 +4432,21 @@ msgstr "Leave"
 msgid "Leave chat"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:217
-#: src/components/dms/ConvoMenu.tsx:220
-#: src/components/dms/ConvoMenu.tsx:270
-#: src/components/dms/ConvoMenu.tsx:273
+#: src/components/dms/AfterReportConversationDialog.tsx:210
+#: src/components/dms/AfterReportConversationDialog.tsx:213
+#: src/components/dms/ConvoMenu.tsx:234
+#: src/components/dms/ConvoMenu.tsx:237
+#: src/components/dms/ConvoMenu.tsx:287
+#: src/components/dms/ConvoMenu.tsx:290
 #: src/components/dms/LeaveConvoPrompt.tsx:42
 msgid "Leave conversation"
 msgstr ""
+
+#. After-report action for a conversation
+#: src/components/dms/AfterReportConversationDialog.tsx:156
+msgctxt "button"
+msgid "Leave conversation"
+msgstr "Leave conversation"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:93
 msgid "Leave group chat"
@@ -4733,8 +4770,8 @@ msgstr ""
 msgid "Mark all as read"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:227
-#: src/components/dms/ConvoMenu.tsx:230
+#: src/components/dms/ConvoMenu.tsx:244
+#: src/components/dms/ConvoMenu.tsx:247
 msgid "Mark as read"
 msgstr ""
 
@@ -4986,8 +5023,8 @@ msgstr ""
 msgid "Mute accounts"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:242
-#: src/components/dms/ConvoMenu.tsx:245
+#: src/components/dms/ConvoMenu.tsx:259
+#: src/components/dms/ConvoMenu.tsx:262
 msgid "Mute conversation"
 msgstr ""
 
@@ -5776,6 +5813,8 @@ msgstr ""
 msgid "Other violent content"
 msgstr ""
 
+#: src/components/dms/AfterReportConversationDialog.tsx:78
+#: src/components/dms/AfterReportConversationDialog.tsx:195
 #: src/components/dms/AfterReportDialog.tsx:84
 #: src/components/dms/AfterReportDialog.tsx:166
 msgid "Our moderation team has received your report."
@@ -6649,9 +6688,8 @@ msgstr ""
 msgid "Report account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:261
-#: src/components/dms/ConvoMenu.tsx:264
-#: src/components/dms/ReportConversationPrompt.tsx:12
+#: src/components/dms/ConvoMenu.tsx:278
+#: src/components/dms/ConvoMenu.tsx:281
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/screens/Messages/components/RequestButtons.tsx:148
 msgid "Report conversation"
@@ -6686,12 +6724,15 @@ msgstr ""
 msgid "Report starter pack"
 msgstr ""
 
+#: src/components/dms/AfterReportConversationDialog.tsx:75
+#: src/components/dms/AfterReportConversationDialog.tsx:192
 #: src/components/dms/AfterReportDialog.tsx:81
 #: src/components/dms/AfterReportDialog.tsx:163
 msgid "Report submitted"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:50
+#: src/components/moderation/ReportDialog/copy.ts:48
+#: src/components/moderation/ReportDialog/copy.ts:56
 msgid "Report this conversation"
 msgstr ""
 
@@ -6712,7 +6753,7 @@ msgstr ""
 msgid "Report this livestream"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:56
+#: src/components/moderation/ReportDialog/copy.ts:62
 msgid "Report this message"
 msgstr ""
 
@@ -8460,10 +8501,6 @@ msgstr ""
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
-#: src/components/dms/ReportConversationPrompt.tsx:13
-msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr ""
-
 #: src/components/dms/DateDivider.tsx:29
 msgid "Today"
 msgstr ""
@@ -8607,8 +8644,8 @@ msgstr ""
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
-#: src/components/dms/ConvoMenu.tsx:254
-#: src/components/dms/ConvoMenu.tsx:258
+#: src/components/dms/ConvoMenu.tsx:271
+#: src/components/dms/ConvoMenu.tsx:275
 #: src/view/com/profile/ProfileMenu.tsx:404
 #: src/view/com/profile/ProfileMenu.tsx:409
 msgid "Unblock account"
@@ -8715,7 +8752,7 @@ msgstr "Unmute {0}"
 msgid "Unmute account"
 msgstr ""
 
-#: src/components/dms/ConvoMenu.tsx:245
+#: src/components/dms/ConvoMenu.tsx:262
 msgid "Unmute conversation"
 msgstr ""
 
@@ -8853,6 +8890,7 @@ msgstr ""
 msgid "user"
 msgstr "user"
 
+#: src/components/dms/AfterReportConversationDialog.tsx:169
 #: src/components/dms/AfterReportDialog.tsx:140
 msgctxt "toast"
 msgid "User blocked"
@@ -9317,7 +9355,8 @@ msgstr ""
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:51
+#: src/components/moderation/ReportDialog/copy.ts:49
+#: src/components/moderation/ReportDialog/copy.ts:57
 msgid "Why should this conversation be reviewed?"
 msgstr ""
 
@@ -9333,7 +9372,7 @@ msgstr ""
 msgid "Why should this livestream be reviewed?"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/copy.ts:57
+#: src/components/moderation/ReportDialog/copy.ts:63
 msgid "Why should this message be reviewed?"
 msgstr ""
 
@@ -9352,6 +9391,10 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:45
 msgid "Would you like to block this user and/or delete this conversation?"
 msgstr ""
+
+#: src/components/dms/AfterReportConversationDialog.tsx:45
+msgid "Would you like to block this user and/or leave this conversation?"
+msgstr "Would you like to block this user and/or leave this conversation?"
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Would you like to save this as a draft before viewing your drafts?"

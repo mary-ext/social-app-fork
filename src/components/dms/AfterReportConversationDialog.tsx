@@ -28,7 +28,7 @@ type ReportDialogParams = {
  * Dialog shown after a report is submitted, allowing the user to block the reporter and/or leave the
  * conversation.
  */
-export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
+export const AfterReportConversationDialog = memo(function BlockOrLeaveDialogInner({
 	control,
 	params,
 	currentScreen,
@@ -39,10 +39,10 @@ export const AfterReportDialog = memo(function BlockOrDeleteDialogInner({
 }): React.ReactNode {
 	const { t: l } = useLingui();
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
+		<Dialog.Outer control={control}>
 			<Dialog.Handle />
 			<Dialog.ScrollableInner
-				label={l`Would you like to block this user and/or delete this conversation?`}
+				label={l`Would you like to block this user and/or leave this conversation?`}
 				style={[{ maxWidth: 400 }]}
 			>
 				<DialogInner params={params} currentScreen={currentScreen} />
@@ -62,13 +62,7 @@ function DialogInner({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const control = Dialog.useDialogContext();
-	const {
-		data: profile,
-		isPending,
-		isError,
-	} = useProfileQuery({
-		did: params.did,
-	});
+	const { data: profile, isPending, isError } = useProfileQuery({ did: params.did });
 
 	return isPending ? (
 		<View style={[a.w_full, a.py_5xl, a.align_center]}>
@@ -85,7 +79,7 @@ function DialogInner({
 				</Text>
 			</View>
 
-			<Button label={l`Close`} onPress={() => control.close()} size={'large'} color="secondary">
+			<Button label={l`Close`} onPress={() => control.close()} size="large" color="secondary">
 				<ButtonText>
 					<Trans>Close</Trans>
 				</ButtonText>
@@ -114,6 +108,28 @@ function DoneStep({
 	const shadow = useProfileShadow(profile);
 	const [queueBlock] = useProfileBlockMutationQueue(shadow);
 
+	const handleActionsChange = (newActions: string[]) => {
+		const hadBlock = actions.includes('block');
+		const hasBlock = newActions.includes('block');
+
+		// if block was just checked, ensure leave is also checked
+		if (!hadBlock && hasBlock) {
+			if (!newActions.includes('leave')) {
+				setActions([...newActions, 'leave']);
+			} else {
+				setActions(newActions);
+			}
+		}
+		// if block was just unchecked, also uncheck leave
+		else if (hadBlock && !hasBlock) {
+			setActions(newActions.filter((action) => action !== 'leave'));
+		}
+		// otherwise, use the new actions as-is (user can toggle leave independently)
+		else {
+			setActions(newActions);
+		}
+	};
+
 	const { mutate: leaveConvo } = useLeaveConvo(convoId, {
 		onMutate: () => {
 			if (currentScreen === 'conversation') {
@@ -130,20 +146,33 @@ function DoneStep({
 	let btnText = l`Done`;
 	let toastMsg: string | undefined;
 	if (actions.includes('leave') && actions.includes('block')) {
-		btnText = l`Block and Delete`;
-		toastMsg = l({ message: 'Conversation deleted', context: 'toast' });
+		btnText = l({
+			message: 'Block and leave',
+			context: 'button',
+			comment: 'After-report action for a conversation',
+		});
+		toastMsg = l({ message: 'Conversation left', context: 'toast' });
 	} else if (actions.includes('leave')) {
-		btnText = l`Delete Conversation`;
-		toastMsg = l({ message: 'Conversation deleted', context: 'toast' });
+		btnText = l({
+			message: 'Leave conversation',
+			context: 'button',
+			comment: 'After-report action for a conversation',
+		});
+		toastMsg = l({ message: 'Conversation left', context: 'toast' });
 	} else if (actions.includes('block')) {
-		btnText = l`Block User`;
+		// shouldn't be able to reach this, but here for completeness
+		btnText = l({
+			message: 'Block user',
+			context: 'button',
+			comment: 'After-report action for a conversation',
+		});
 		toastMsg = l({ message: 'User blocked', context: 'toast' });
 	}
 
 	const onPressPrimaryAction = () => {
 		control.close(() => {
 			if (actions.includes('block')) {
-				queueBlock();
+				void queueBlock();
 			}
 			if (actions.includes('leave')) {
 				leaveConvo();
@@ -167,9 +196,9 @@ function DoneStep({
 				</Text>
 			</View>
 			<Toggle.Group
-				label={l`Block user and/or delete this conversation`}
+				label={l`Block user and/or leave this conversation`}
 				values={actions}
-				onChange={setActions}
+				onChange={handleActionsChange}
 			>
 				<View style={[a.gap_md]}>
 					<Toggle.Item name="block" label={l`Block user`}>
@@ -178,10 +207,10 @@ function DoneStep({
 							<Trans>Block user</Trans>
 						</Toggle.LabelText>
 					</Toggle.Item>
-					<Toggle.Item name="leave" label={l`Delete conversation`}>
+					<Toggle.Item name="leave" label={l`Leave conversation`} disabled={actions.includes('block')}>
 						<Toggle.Checkbox />
 						<Toggle.LabelText style={[a.text_md]}>
-							<Trans>Delete conversation</Trans>
+							<Trans>Leave conversation</Trans>
 						</Toggle.LabelText>
 					</Toggle.Item>
 				</View>
