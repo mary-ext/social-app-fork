@@ -23,7 +23,7 @@
 		"@atcute/identity-resolver": "^2.0.0",
 		"@atcute/microcosm": "^2.0.0",
 		"@atcute/oauth-browser-client": "^4.0.0",
-		"@atproto/api": "^0.20.5",
+		"@atproto/api": "^0.20.6",
 		"@atproto/syntax": "^0.6.1",
 		"@braintree/sanitize-url": "^6.0.2",
 		"@emoji-mart/data": "^1.2.1",

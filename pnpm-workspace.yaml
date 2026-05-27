@@ -17,3 +17,5 @@ allowBuilds:
   'dtrace-provider': true
   'esbuild': true
   'unrs-resolver': true
+minimumReleaseAgeExclude:
+  - '@atproto/*'
