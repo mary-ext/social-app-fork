@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { ChatBskyConvoDefs, moderateProfile, type ModerationOpts } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
 
@@ -96,7 +96,7 @@ function ProfileHeaderReady({
 		: createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
 
 	const latestReportableMessage =
-		ChatBskyConvoDefs.isMessageView(convo.view.lastMessage) &&
+		convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
 		convo.view.lastMessage.sender?.did !== currentAccount?.did
 			? convo.view.lastMessage
 			: undefined;

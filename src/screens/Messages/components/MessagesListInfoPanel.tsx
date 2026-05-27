@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import { moderateProfile } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
+import { moderateProfile } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { type NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';

@@ -7,12 +7,8 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import {
-	AppBskyEmbedRecord,
-	type ChatBskyActorDefs,
-	ChatBskyConvoDefs,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AppBskyRichtextFacet, RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -73,7 +69,7 @@ function isWithinClusterBoundary({
 	direction: 'prev' | 'next';
 }): boolean {
 	if (!isFromSameSender) return true;
-	if (ChatBskyConvoDefs.isMessageView(adjacentMessage)) {
+	if (adjacentMessage?.$type === 'chat.bsky.convo.defs#messageView') {
 		const thisDate = new Date(currentSentAt);
 		const adjDate = new Date(adjacentMessage.sentAt);
 		const diff =
@@ -115,8 +111,8 @@ let MessageItem = ({
 
 	const isFromSelf = message.sender?.did != null && message.sender.did === currentAccount?.did;
 
-	const prevIsMessage = ChatBskyConvoDefs.isMessageView(prevMessage);
-	const nextIsMessage = ChatBskyConvoDefs.isMessageView(nextMessage);
+	const prevIsMessage = prevMessage?.$type === 'chat.bsky.convo.defs#messageView';
+	const nextIsMessage = nextMessage?.$type === 'chat.bsky.convo.defs#messageView';
 
 	const isPrevFromSameSender =
 		prevIsMessage && prevMessage.sender?.did === message.sender?.did && message.sender?.did != null;
@@ -140,7 +136,7 @@ let MessageItem = ({
 	});
 
 	const hasLargeGapFromPrev =
-		!ChatBskyConvoDefs.isMessageView(prevMessage) ||
+		prevMessage?.$type !== 'chat.bsky.convo.defs#messageView' ||
 		new Date(message.sentAt).getTime() - new Date(prevMessage.sentAt).getTime() > MESSAGE_GAP_THRESHOLD_MS;
 
 	const isInCluster = !(isFirstInCluster && isLastInCluster);
@@ -157,9 +153,13 @@ let MessageItem = ({
 
 	const pendingColor = t.palette.primary_300;
 
-	const rt = new RichTextAPI({ text: message.text, facets: message.facets });
+	// TODO(atcute Phase 3.0): drop the facets cast once RichText is migrated to @atcute
+	const rt = new RichTextAPI({
+		text: message.text,
+		facets: message.facets as AppBskyRichtextFacet.Main[] | undefined,
+	});
 
-	const hasEmbedAndText = AppBskyEmbedRecord.isView(message.embed) && rt.text.length > 0;
+	const hasEmbedAndText = message.embed?.$type === 'app.bsky.embed.record#view' && rt.text.length > 0;
 
 	const targetBottomRadius = squaredBottomCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
 	const targetTopRadius = squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
@@ -381,7 +381,7 @@ let MessageItem = ({
 								senderProfile={profile}
 								moderationOpts={moderationOpts}
 							>
-								{AppBskyEmbedRecord.isView(message.embed) && (
+								{message.embed?.$type === 'app.bsky.embed.record#view' && (
 									<MessageItemEmbed
 										embed={message.embed}
 										isFromSelf={isFromSelf}

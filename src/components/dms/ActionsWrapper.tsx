@@ -1,7 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { type ChatBskyConvoDefs, type ModerationOpts } from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
+
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';

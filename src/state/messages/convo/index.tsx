@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore } from 'react';
-import { ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type Client } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -19,7 +21,7 @@ import { useMessagesEventBus } from '#/state/messages/events';
 import { RQKEY as getConvoKey, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations';
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
-import { useAgent } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { type GroupConvoMember } from '#/components/dms/util';
 
@@ -68,14 +70,37 @@ export function ConvoProvider({
 	children,
 	convoId,
 }: Pick<ConvoParams, 'convoId'> & { children: React.ReactNode }) {
+	const { chat } = useClients();
+	const { currentAccount } = useSession();
+	if (!chat || !currentAccount) {
+		throw new Error('ConvoProvider must be rendered while signed in');
+	}
+	return (
+		<ConvoProviderInner chat={chat} convoId={convoId} currentDid={currentAccount.did as Did}>
+			{children}
+		</ConvoProviderInner>
+	);
+}
+
+function ConvoProviderInner({
+	children,
+	chat,
+	convoId,
+	currentDid,
+}: {
+	children: React.ReactNode;
+	chat: Client;
+	convoId: string;
+	currentDid: Did;
+}) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
 	const events = useMessagesEventBus();
 	const [convo] = useState(() => {
 		const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(getConvoKey(convoId));
 		return new Convo({
 			convoId,
-			agent,
+			chat,
+			currentDid,
 			events,
 			placeholderData: placeholder ? { convo: placeholder } : undefined,
 		});
@@ -125,7 +150,7 @@ export function ConvoProvider({
 				if (data && convo.convo && data.muted !== convo.convo.view.muted) {
 					convo.updateMuted(data.muted);
 				}
-				if (data && ChatBskyConvoDefs.isGroupConvo(data.kind) && convo.convo?.kind === 'group') {
+				if (data && data.kind?.$type === 'chat.bsky.convo.defs#groupConvo' && convo.convo?.kind === 'group') {
 					if (data.kind.name !== convo.convo.details.name) {
 						convo.updateGroupName(data.kind.name);
 					}
@@ -138,7 +163,7 @@ export function ConvoProvider({
 				}
 				if (
 					data &&
-					ChatBskyConvoDefs.isGroupConvo(data.kind) &&
+					data.kind?.$type === 'chat.bsky.convo.defs#groupConvo' &&
 					convo.convo?.kind === 'group' &&
 					(membersChanged(data.members, convo.convo.members) ||
 						data.kind.memberCount !== convo.convo.details.memberCount)

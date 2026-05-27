@@ -154,8 +154,10 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   flip still pending.
 - **Phase 2.6 (partial) — done.** Labeler reads + notification-settings read; the rest of 2.6 still
   depends on `PostView`.
-- **Phase 4.2 — done.** Video upload client, pulled forward (Stream 4 only depends on Stream 1).
-- **Phase 4.3 — done.** Moderation reporting, pulled forward.
+- **Stream 4 — done.** Phases 4.1 (chat client), 4.2 (video upload), 4.3 (moderation reporting) all
+  landed. Chat exposes a third `chat` field on `useClients()` (built as `pds.clone({ proxy:
+  CHAT_PROXY_AUDIENCE })`-equivalent over the OAuth handler), departing from the roadmap's "non-
+  global accessor" wording to avoid per-render `clone` allocations.
 - **Phase 5.1 — done.** `AtUri` swapped for `@atcute/lexicons/syntax` (`parseResourceUri` /
   `parseCanonicalResourceUri`); pulled forward as a PostView-independent slice. Server-derived
   URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;

@@ -1,4 +1,4 @@
-import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atproto/api';
+import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { type InfiniteData, type QueryClient, type QueryKey } from '@tanstack/react-query';
 
 import { RQKEY as CONVO_KEY } from '../conversation';
@@ -8,7 +8,7 @@ type ConvoUpdater = (prev: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.Con
 
 export type ConvoCacheSnapshot = {
 	prevConvo: ChatBskyConvoDefs.ConvoView | undefined;
-	prevListEntries: Array<[QueryKey, InfiniteData<ChatBskyConvoListConvos.OutputSchema> | undefined]>;
+	prevListEntries: Array<[QueryKey, InfiniteData<ChatBskyConvoListConvos.$output> | undefined]>;
 };
 
 /**
@@ -23,7 +23,7 @@ export function updateConvoOptimistic(
 	updater: ConvoUpdater,
 ): ConvoCacheSnapshot {
 	const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId));
-	const prevListEntries = queryClient.getQueriesData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>({
+	const prevListEntries = queryClient.getQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>({
 		queryKey: [CONVO_LIST_KEY],
 	});
 
@@ -33,7 +33,7 @@ export function updateConvoOptimistic(
 		return next ?? prev;
 	});
 
-	queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>(
+	queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>(
 		{ queryKey: [CONVO_LIST_KEY] },
 		(prev) => {
 			if (!prev?.pages) return;

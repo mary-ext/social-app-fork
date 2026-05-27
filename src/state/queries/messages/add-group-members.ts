@@ -1,15 +1,14 @@
 import {
 	type ChatBskyActorDefs,
-	ChatBskyConvoDefs,
+	type ChatBskyConvoDefs,
 	type ChatBskyConvoListConvos,
 	type ChatBskyGroupAddMembers,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
 import { useProfileQuery } from '#/state/queries/profile';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -25,21 +24,23 @@ export function useAddGroupMembers(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyGroupAddMembers.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyGroupAddMembers.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 	const { currentAccount } = useSession();
 	const { data: myProfile } = useProfileQuery({ did: currentAccount?.did });
 
 	return useMutation({
 		mutationFn: async ({ members }: { members: string[]; profiles: bsky.profile.AnyProfileView[] }) => {
 			if (!convoId) throw new Error('No convoId provided');
-			const { data } = await agent.chat.bsky.group.addMembers(
-				{ convoId, members },
-				{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.post('chat.bsky.group.addMembers', {
+					input: { convoId, members: members as ChatBskyGroupAddMembers.$input['members'] },
+				}),
 			);
 			return data;
 		},
@@ -47,14 +48,13 @@ export function useAddGroupMembers(
 			if (!convoId) return;
 
 			const prevConvo = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId));
-			const prevListEntries = queryClient.getQueriesData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>({
+			const prevListEntries = queryClient.getQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>({
 				queryKey: [CONVO_LIST_KEY],
 			});
 			const prevMemberList = queryClient.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
 				listConvoMembersQueryKey(convoId),
 			);
 
-			// TODO(atcute Phase 4.1): drop casts once chat profile types flip to @atcute
 			const addedBy: ChatBskyActorDefs.ProfileViewBasic | undefined = myProfile
 				? ({
 						...myProfile,
@@ -77,7 +77,7 @@ export function useAddGroupMembers(
 
 			queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (prev) => {
 				if (!prev) return;
-				if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return prev;
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return prev;
 				return {
 					...prev,
 					members: [...prev.members, ...optimisticMembers],
@@ -88,7 +88,7 @@ export function useAddGroupMembers(
 				};
 			});
 
-			queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>(
+			queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>(
 				{ queryKey: [CONVO_LIST_KEY] },
 				(prev) => {
 					if (!prev?.pages) return;
@@ -98,7 +98,7 @@ export function useAddGroupMembers(
 							...page,
 							convos: page.convos.map((convo) => {
 								if (convo.id !== convoId) return convo;
-								if (!ChatBskyConvoDefs.isGroupConvo(convo.kind)) return convo;
+								if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return convo;
 								return {
 									...convo,
 									members: [...convo.members, ...optimisticMembers],
@@ -127,7 +127,7 @@ export function useAddGroupMembers(
 			if (convoId) {
 				queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), data.convo);
 
-				queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.OutputSchema>>(
+				queryClient.setQueriesData<InfiniteData<ChatBskyConvoListConvos.$output>>(
 					{ queryKey: [CONVO_LIST_KEY] },
 					(prev) => {
 						if (!prev?.pages) return;

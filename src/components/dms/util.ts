@@ -1,11 +1,13 @@
-import { type $Typed, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type $Typed } from '@atproto/api';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 
-import { logger } from '#/logger';
 import { type Shadow } from '#/state/cache/profile-shadow';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
+
+import { logger } from '#/logger';
 
 import * as bsky from '#/types/bsky';
 
@@ -76,12 +78,9 @@ export function hasReachedReactionLimit(
 }
 
 /**
- * Whether the active conversation accepts emoji reactions. Reactions are
- * unavailable when:
- * - the convo is in the disabled state
- * - a group convo is locked or permanently locked
- * - 1-1: the other user is blocked or is blocking us
- * - group: we are blocking the primary member (the owner)
+ * Whether the active conversation accepts emoji reactions. Reactions are unavailable when: - the convo is in
+ * the disabled state - a group convo is locked or permanently locked - 1-1: the other user is blocked or is
+ * blocking us - group: we are blocking the primary member (the owner)
  */
 export function canReact({
 	convoState,
@@ -156,16 +155,11 @@ export function parseConvoView(
 	convoView: ChatBskyConvoDefs.ConvoView,
 	ownDid: string | undefined,
 ): ConvoWithDetails | null {
-	if (bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(convoView.kind, ChatBskyConvoDefs.isGroupConvo)) {
+	if (convoView.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
 		let owner: GroupConvoMember | undefined = undefined;
 
 		for (const member of convoView.members) {
-			if (
-				bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-					member.kind,
-					ChatBskyActorDefs.isGroupConvoMember,
-				)
-			) {
+			if (member.kind?.$type === 'chat.bsky.actor.defs#groupConvoMember') {
 				if (member.kind.role === 'owner') {
 					// have to do a type assertion here
 					// this works: {...member, kind: member.kind}
@@ -185,9 +179,7 @@ export function parseConvoView(
 			primaryMember: owner,
 			members: convoView.members as Array<GroupConvoMember>,
 		};
-	} else if (
-		bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(convoView.kind, ChatBskyConvoDefs.isDirectConvo)
-	) {
+	} else if (convoView.kind?.$type === 'chat.bsky.convo.defs#directConvo') {
 		const otherUser = convoView.members.find((m) => m.did !== ownDid);
 
 		if (!otherUser) {

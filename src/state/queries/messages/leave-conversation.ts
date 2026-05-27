@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { type ChatBskyConvoLeaveConvo, type ChatBskyConvoListConvos } from '@atproto/api';
+import { type ChatBskyConvoLeaveConvo, type ChatBskyConvoListConvos } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -23,33 +22,32 @@ export function useLeaveConvo(
 		onError,
 	}: {
 		onMutate?: () => void;
-		onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyConvoLeaveConvo.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationKey: RQKEY(convoId),
 		mutationFn: async () => {
 			if (!convoId) throw new Error('No convoId provided');
+			if (!chat) throw new Error('Not signed in');
 
-			const { data } = await agent.chat.bsky.convo.leaveConvo(
-				{ convoId },
-				{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+			const data = await ok(
+				chat.post('chat.bsky.convo.leaveConvo', {
+					input: { convoId },
+				}),
 			);
 
 			return data;
 		},
 		onMutate: () => {
-			let prevPages: ChatBskyConvoListConvos.OutputSchema[] = [];
+			let prevPages: ChatBskyConvoListConvos.$output[] = [];
 			queryClient.setQueryData(
 				[CONVO_LIST_KEY],
-				(old?: {
-					pageParams: Array<string | undefined>;
-					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
-				}) => {
+				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
 					if (!old) return old;
 					prevPages = old.pages;
 					return {
@@ -74,10 +72,7 @@ export function useLeaveConvo(
 			logger.error(error);
 			queryClient.setQueryData(
 				[CONVO_LIST_KEY],
-				(old?: {
-					pageParams: Array<string | undefined>;
-					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
-				}) => {
+				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
 					if (!old) return old;
 					return {
 						...old,

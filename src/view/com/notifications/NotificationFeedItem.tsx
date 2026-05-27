@@ -8,6 +8,8 @@ import {
 	View,
 } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyFeedDefs,
@@ -21,7 +23,7 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS, MAX_POST_LINES } from '#/lib/constants';
+import { MAX_POST_LINES } from '#/lib/constants';
 import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -36,7 +38,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type FeedNotification } from '#/state/queries/notifications/feed';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -761,7 +763,8 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	const { t: l } = useLingui();
-	const agent = useAgent();
+	const { chat } = useClients();
+	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -781,16 +784,16 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			style={[a.self_center, { marginLeft: 'auto' }]}
 			disabled={isLoading}
 			onPress={async () => {
+				if (!chat || !currentAccount) return;
 				try {
 					setIsLoading(true);
-					const res = await agent.api.chat.bsky.convo.getConvoForMembers(
-						{
-							members: [profile.did, agent.session!.did],
-						},
-						{ headers: DM_SERVICE_HEADERS },
+					const data = await ok(
+						chat.get('chat.bsky.convo.getConvoForMembers', {
+							params: { members: [profile.did, currentAccount.did as Did] },
+						}),
 					);
 					navigation.navigate('MessagesConversation', {
-						conversation: res.data.convo.id,
+						conversation: data.convo.id,
 					});
 				} catch (e) {
 					logger.error('Failed to get conversation', { safeMessage: e });

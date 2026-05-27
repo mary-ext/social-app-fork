@@ -1,4 +1,4 @@
-import { ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
@@ -18,7 +18,7 @@ export function getReactionInfo({
 	currentAccountDid: string | undefined;
 	i18n: I18n;
 }): UserReactionInfo | null {
-	if (!ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+	if (convo.lastReaction?.$type !== 'chat.bsky.convo.defs#messageAndReactionView') {
 		return null;
 	}
 

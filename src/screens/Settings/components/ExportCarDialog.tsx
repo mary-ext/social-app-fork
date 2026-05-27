@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
+import { ok } from '@atcute/client';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
 import { saveBytesToDisk } from '#/lib/media/manip';
 
-import { useAgent } from '#/state/session';
+import { useAgent, useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -23,6 +23,7 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const agent = useAgent();
+	const { chat } = useClients();
 	const [loading, setLoading] = useState<'repo' | 'chat' | false>(false);
 
 	const download = useCallback(async () => {
@@ -51,24 +52,16 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 	}, [l, agent]);
 
 	const downloadChatData = useCallback(async () => {
-		if (!agent.session) {
+		if (!chat) {
 			return;
 		}
 		try {
 			setLoading('chat');
-			// Using raw fetch because the XRPC client incorrectly tries to JSON-parse
-			// application/jsonl responses (substring match on application/json).
-			const res = await agent.sessionManager.fetchHandler('/xrpc/chat.bsky.actor.exportAccountData', {
-				headers: DM_SERVICE_HEADERS,
-			});
-			if (!res.ok) {
-				throw new Error(`HTTP ${res.status}`);
-			}
-			const data = new Uint8Array(await res.arrayBuffer());
+			const res = await ok(chat.get('chat.bsky.actor.exportAccountData', { as: 'bytes' }));
 			const saveRes = await saveBytesToDisk(
 				'chat.jsonl',
-				data,
-				res.headers.get('content-type') || 'application/jsonl',
+				res as Uint8Array<ArrayBuffer>,
+				'application/jsonl',
 			);
 
 			if (saveRes) {
@@ -80,7 +73,7 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 		} finally {
 			setLoading(false);
 		}
-	}, [l, agent]);
+	}, [l, chat]);
 
 	return (
 		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>

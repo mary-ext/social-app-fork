@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { shareUrl } from '#/lib/sharing';
 

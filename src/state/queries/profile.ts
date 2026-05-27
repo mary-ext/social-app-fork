@@ -5,7 +5,7 @@ import {
 	type AppBskyGraphGetFollows,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import { type ActorIdentifier, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorGetProfile,
@@ -258,7 +258,7 @@ export function useProfileFollowMutationQueue(
 					did,
 				});
 				userActionHistory.follow([did]);
-				return uri;
+				return uri as ResourceUri;
 			} else {
 				if (prevFollowingUri) {
 					await unfollowMutation.mutateAsync({
@@ -454,7 +454,7 @@ export function useProfileBlockMutationQueue(profile: Shadow<bsky.profile.AnyPro
 				const { uri } = await blockMutation.mutateAsync({
 					did,
 				});
-				return uri;
+				return uri as ResourceUri;
 			} else {
 				if (prevBlockUri) {
 					await unblockMutation.mutateAsync({

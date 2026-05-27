@@ -3,7 +3,7 @@ import { type AppBskyActorDefs } from '@atproto/api';
 
 import { type ProxyHeaderValue } from '#/state/session/agent';
 
-import { BLUESKY_PROXY_DID, CHAT_PROXY_DID } from '#/env';
+import { BLUESKY_PROXY_DID } from '#/env';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';
@@ -148,8 +148,4 @@ export const BLUESKY_PROXY_HEADER = {
 	set(value: string) {
 		this.value = value;
 	},
-};
-
-export const DM_SERVICE_HEADERS = {
-	'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
 };

@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { ChatBskyConvoDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile } from '#/lib/moderation/compat';
@@ -40,9 +39,10 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 	// if we ever allow someone other than the owner to invite people, this will need to change
 	const otherUser = convoState.convo.primaryMember;
 
-	const lastMessage = ChatBskyConvoDefs.isMessageView(convoState.convo.view.lastMessage)
-		? convoState.convo.view.lastMessage
-		: null;
+	const lastMessage =
+		convoState.convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView'
+			? convoState.convo.view.lastMessage
+			: null;
 
 	if (!moderationOpts) {
 		return null;

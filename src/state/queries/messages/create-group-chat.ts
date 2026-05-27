@@ -1,9 +1,8 @@
-import { type ChatBskyGroupCreateGroup } from '@atproto/api';
+import { type ChatBskyGroupCreateGroup } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -13,17 +12,19 @@ export function useCreateGroupChat({
 	onSuccess,
 	onError,
 }: {
-	onSuccess?: (data: ChatBskyGroupCreateGroup.OutputSchema) => void;
+	onSuccess?: (data: ChatBskyGroupCreateGroup.$output) => void;
 	onError?: (error: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async ({ name, members }: { name: string; members: string[] }) => {
-			const { data } = await agent.chat.bsky.group.createGroup(
-				{ name, members },
-				{ headers: DM_SERVICE_HEADERS },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.post('chat.bsky.group.createGroup', {
+					input: { name, members: members as ChatBskyGroupCreateGroup.$input['members'] },
+				}),
 			);
 
 			return data;

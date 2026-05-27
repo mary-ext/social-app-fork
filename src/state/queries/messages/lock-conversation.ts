@@ -1,9 +1,8 @@
-import { ChatBskyConvoDefs, type ChatBskyConvoLockConvo } from '@atproto/api';
+import { type ChatBskyConvoLockConvo } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
@@ -13,26 +12,29 @@ export function useLockConvo(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyConvoLockConvo.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyConvoLockConvo.$output) => void;
 		onError?: (error: Error, variables: { lock: boolean }) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async ({ lock }: { lock: boolean }) => {
 			if (!convoId) throw new Error('No convoId provided');
+			if (!chat) throw new Error('Not signed in');
 			if (lock) {
-				const { data } = await agent.chat.bsky.convo.lockConvo(
-					{ convoId },
-					{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+				const data = await ok(
+					chat.post('chat.bsky.convo.lockConvo', {
+						input: { convoId },
+					}),
 				);
 				return data;
 			} else {
-				const { data } = await agent.chat.bsky.convo.unlockConvo(
-					{ convoId },
-					{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+				const data = await ok(
+					chat.post('chat.bsky.convo.unlockConvo', {
+						input: { convoId },
+					}),
 				);
 				return data;
 			}
@@ -40,7 +42,7 @@ export function useLockConvo(
 		onMutate: ({ lock }) => {
 			if (!convoId) return;
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
-				if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined;
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
 				return {
 					...prev,
 					kind: {

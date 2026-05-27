@@ -1,16 +1,12 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
-import {
-	ChatBskyConvoDefs,
-	moderateProfile,
-	type ModerationDecision,
-	type ModerationOpts,
-} from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
 import { useHaptics } from '#/lib/haptics';
+import { moderateProfile, type ModerationDecision, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -284,14 +280,14 @@ function BaseChatItem({
 		let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined;
 
 		// Deleted message
-		if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView') {
 			lastMessageSentAt = convo.view.lastMessage.sentAt;
 
 			lastMessage = isDeletedAccount ? l`Conversation deleted` : l`Message deleted`;
 		}
 
 		// Message
-		if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
+		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView') {
 			const info = getMessageInfo({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
@@ -305,7 +301,7 @@ function BaseChatItem({
 		}
 
 		// Reaction
-		if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
+		if (convo.view.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView') {
 			const info = getReactionInfo({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
@@ -318,7 +314,7 @@ function BaseChatItem({
 		}
 
 		// System message
-		if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
+		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#systemMessageView') {
 			const info = getSystemMessageInfo(
 				convo.view.lastMessage.data,
 				new Map(convo.view.members.map((m) => [m.did, m])),

@@ -55,11 +55,11 @@ export const SOURCE_CODE_URL: string = import.meta.env.PUBLIC_SOURCE_CODE_URL;
 export const BLUESKY_PROXY_DID: Did = (import.meta.env.PUBLIC_BLUESKY_PROXY_DID ||
 	'did:web:api.bsky.app') as Did;
 
-/** The DID of the chat service to proxy to */
-export const CHAT_PROXY_DID: Did = (import.meta.env.PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat') as Did;
-
 /** The full proxy audience (`did#service`) of the Bluesky AppView, for the `@atcute/client` clients. */
 export const APPVIEW_PROXY_AUDIENCE = import.meta.env.PUBLIC_APPVIEW_PROXY_AUDIENCE as AtprotoAudience;
+
+/** The full proxy audience (`did#service`) of the Bluesky chat service, for the chat `@atcute/client` client. */
+export const CHAT_PROXY_AUDIENCE = import.meta.env.PUBLIC_CHAT_PROXY_AUDIENCE as AtprotoAudience;
 
 /** The full proxy audience (`did#service`) of the default Bluesky moderation service (labeler). */
 export const BSKY_LABELER_PROXY_AUDIENCE = import.meta.env

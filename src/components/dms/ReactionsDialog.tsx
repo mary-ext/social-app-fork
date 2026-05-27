@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, useWindowDimensions, View } from 'react-native';
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';

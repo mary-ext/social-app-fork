@@ -15,7 +15,7 @@ interface ImportMetaEnv {
 	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: string;
 	PUBLIC_BUNDLE_DATE?: string;
 	PUBLIC_BUNDLE_IDENTIFIER?: string;
-	PUBLIC_CHAT_PROXY_DID?: string;
+	PUBLIC_CHAT_PROXY_AUDIENCE: string;
 	PUBLIC_ENV?: string;
 	PUBLIC_LOG_DEBUG?: string;
 	PUBLIC_LOG_LEVEL?: string;

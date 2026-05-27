@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { ChatBskyActorDefs, ChatBskyConvoDefs, type ModerationOpts } from '@atproto/api';
+import { type ChatBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 import {
 	type CommonNavigatorParams,
 	type NativeStackScreenProps,
@@ -49,8 +50,6 @@ import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 import { InviteLinkDialog } from '../components/InviteLinkDialog';
 import { AddMembersLink } from './AddMembersLink';
@@ -151,13 +150,7 @@ function keyExtractor(item: Item) {
 
 function isGroupMember(member: ChatBskyActorDefs.ProfileViewBasic): member is GroupConvoMember {
 	// Kind is missing when the account has been deleted.
-	return (
-		member.kind === undefined ||
-		bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-			member.kind,
-			ChatBskyActorDefs.isGroupConvoMember,
-		)
-	);
+	return member.kind === undefined || member.kind.$type === 'chat.bsky.actor.defs#groupConvoMember';
 }
 
 function GroupSettings({
@@ -342,7 +335,7 @@ function SettingsHeader({
 
 	const { mutate: lockConvo, isPending: isLocking } = useLockConvo(convo.view.id, {
 		onSuccess: (data) => {
-			if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return;
+			if (data.convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return;
 			if (data.convo.kind.lockStatus === 'locked') {
 				Toast.show(l({ message: 'Group chat locked', context: 'toast' }));
 			} else {

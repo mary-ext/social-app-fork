@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atproto/api';
+import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
@@ -103,7 +103,7 @@ function RequestList({
 	conversations,
 	hasUnreadConvos,
 }: {
-	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvos.OutputSchema>, Error>;
+	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvos.$output>, Error>;
 	conversations: ChatBskyConvoDefs.ConvoView[];
 	hasUnreadConvos: boolean;
 }) {

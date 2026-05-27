@@ -1,10 +1,11 @@
 import { memo, useCallback } from 'react';
 import { Keyboard, View } from 'react-native';
-import { ChatBskyConvoDefs, type ModerationCause } from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { type ModerationCause } from '#/lib/moderation/compat';
 import { type NavigationProp } from '#/lib/routes/types';
 
 import { type Shadow } from '#/state/cache/types';
@@ -176,7 +177,7 @@ function MenuContent({
 	const { listBlocks, userBlock } = blockInfo;
 	const isBlocking = userBlock || !!listBlocks.length;
 	const isDeletedAccount = profile.handle === 'missing.invalid';
-	const isGroupConvo = ChatBskyConvoDefs.isGroupConvo(initialConvo.kind);
+	const isGroupConvo = initialConvo.kind?.$type === 'chat.bsky.convo.defs#groupConvo';
 
 	const convoId = initialConvo.id;
 	const { data: convo } = useConvoQuery({ convoId });

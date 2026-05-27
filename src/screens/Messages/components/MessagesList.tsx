@@ -1,13 +1,8 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-	type $Typed,
-	type AppBskyEmbedRecord,
-	AppBskyRichtextFacet,
-	ChatBskyConvoDefs,
-	RichText,
-} from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type $Typed, type AppBskyEmbedRecord, AppBskyRichtextFacet, RichText } from '@atproto/api';
 
 import {
 	default as Animated,
@@ -104,8 +99,8 @@ function getNeighborMessage(
 		neighbor.type === 'deleted-message'
 	) {
 		if (
-			ChatBskyConvoDefs.isMessageView(neighbor.message) ||
-			ChatBskyConvoDefs.isDeletedMessageView(neighbor.message)
+			neighbor.message.$type === 'chat.bsky.convo.defs#messageView' ||
+			neighbor.message.$type === 'chat.bsky.convo.defs#deletedMessageView'
 		) {
 			return neighbor.message;
 		}
@@ -410,10 +405,11 @@ export function MessagesList({
 			}
 
 			convoState.sendMessage(
+				// TODO(atcute Phase 3.0 / 2.4): drop casts once RichText and embed types migrate to @atcute
 				{
 					text: rt.text,
-					facets: rt.facets,
-					embed,
+					facets: rt.facets as unknown as ChatBskyConvoDefs.MessageInput['facets'],
+					embed: embed as unknown as ChatBskyConvoDefs.MessageInput['embed'],
 				},
 				embedView,
 			);

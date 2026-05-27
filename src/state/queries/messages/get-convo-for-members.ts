@@ -1,9 +1,9 @@
-import { type ChatBskyConvoGetConvoForMembers } from '@atproto/api';
+import { type ChatBskyConvoGetConvoForMembers } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -13,17 +13,19 @@ export function useGetConvoForMembers({
 	onSuccess,
 	onError,
 }: {
-	onSuccess?: (data: ChatBskyConvoGetConvoForMembers.OutputSchema) => void;
+	onSuccess?: (data: ChatBskyConvoGetConvoForMembers.$output) => void;
 	onError?: (error: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async (members: string[]) => {
-			const { data } = await agent.chat.bsky.convo.getConvoForMembers(
-				{ members: members },
-				{ headers: DM_SERVICE_HEADERS },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.get('chat.bsky.convo.getConvoForMembers', {
+					params: { members: members as Did[] },
+				}),
 			);
 
 			return data;

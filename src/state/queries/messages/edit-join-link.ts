@@ -1,9 +1,8 @@
-import { ChatBskyConvoDefs, type ChatBskyGroupDefs, type ChatBskyGroupEditJoinLink } from '@atproto/api';
+import { type ChatBskyGroupDefs, type ChatBskyGroupEditJoinLink } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -15,12 +14,12 @@ export function useEditJoinLink(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyGroupEditJoinLink.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyGroupEditJoinLink.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async ({
@@ -31,16 +30,18 @@ export function useEditJoinLink(
 			requireApproval: boolean;
 		}) => {
 			if (!convoId) throw new Error('No convoId provided');
-			const { data } = await agent.chat.bsky.group.editJoinLink(
-				{ convoId, joinRule, requireApproval },
-				{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.post('chat.bsky.group.editJoinLink', {
+					input: { convoId, joinRule, requireApproval },
+				}),
 			);
 			return data;
 		},
 		onMutate: ({ joinRule, requireApproval }) => {
 			if (!convoId) return;
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
-				if (!ChatBskyConvoDefs.isGroupConvo(prev.kind) || !prev.kind.joinLink) {
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo' || !prev.kind.joinLink) {
 					return undefined;
 				}
 				return {
@@ -55,7 +56,7 @@ export function useEditJoinLink(
 		onSuccess: (data) => {
 			if (convoId) {
 				updateConvoOptimistic(queryClient, convoId, (prev) => {
-					if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined;
+					if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
 					return {
 						...prev,
 						kind: { ...prev.kind, joinLink: data.joinLink },

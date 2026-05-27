@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import { View } from 'react-native';
-import { type ModerationCause } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
+import { type ModerationCause } from '#/lib/moderation/compat';
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { atoms as a, useTheme } from '#/alf';

@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { moderateProfile } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { type RouteProp, useFocusEffect, useIsFocused, useRoute } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
+import { moderateProfile } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
