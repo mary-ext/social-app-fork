@@ -184,7 +184,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:548
+#: src/components/dms/MessageItem.tsx:549
 msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
@@ -4855,11 +4855,11 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:555
+#: src/components/dms/MessageItem.tsx:556
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Messages from this person are hidden while they are blocking you."
 
-#: src/components/dms/MessageItem.tsx:553
+#: src/components/dms/MessageItem.tsx:554
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Messages from this person are hidden while you are blocking them."
 
@@ -5533,7 +5533,7 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:53
 #: src/components/BotAccountAlert.tsx:55
-#: src/components/dms/MessageItem.tsx:559
+#: src/components/dms/MessageItem.tsx:560
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:571
 msgid "Okay"
 msgstr ""
@@ -8369,12 +8369,12 @@ msgid "This list is empty."
 msgstr ""
 
 #: src/components/dms/MessageItem.tsx:515
-#: src/components/dms/MessageItem.tsx:537
+#: src/components/dms/MessageItem.tsx:538
 msgid "This message is hidden because this user is blocking you."
 msgstr "This message is hidden because this user is blocking you."
 
 #: src/components/dms/MessageItem.tsx:514
-#: src/components/dms/MessageItem.tsx:535
+#: src/components/dms/MessageItem.tsx:536
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
@@ -8650,7 +8650,7 @@ msgstr "Unable to start sign in. Please try again."
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:561
+#: src/components/dms/MessageItem.tsx:562
 #: src/components/dms/MessagesListBlockedFooter.tsx:94
 #: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
@@ -9479,7 +9479,7 @@ msgid "You are a trusted verifier"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:546
+#: src/components/dms/MessageItem.tsx:547
 msgid "You are blocking {0}"
 msgstr "You are blocking {0}"
 

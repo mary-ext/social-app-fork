@@ -527,10 +527,11 @@ function BlockedPlaceholder({
 						a.self_start,
 						a.border,
 						t.atoms.border_contrast_high,
+						a.flex_shrink,
 						style,
 					]}
 				>
-					<Text style={[a.text_md, a.leading_snug, a.italic, t.atoms.text_contrast_medium]}>
+					<Text style={[a.text_sm, a.leading_snug, a.italic, t.atoms.text_contrast_medium]}>
 						{profile.viewer?.blocking ? (
 							<Trans>This message is hidden because you are blocking this user.</Trans>
 						) : (
