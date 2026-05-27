@@ -2,8 +2,6 @@ import { useCallback } from 'react';
 import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
-import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
-
 import { atoms as a } from '#/alf';
 
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
@@ -58,11 +56,7 @@ export function VolumeControl({
 	return (
 		<View onPointerEnter={onHover} onPointerLeave={onEndHover} style={[a.relative]}>
 			{hovered && !IS_WEB_TOUCH_DEVICE && (
-				<Animated.View
-					entering={FadeIn.duration(100)}
-					exiting={FadeOut.duration(100)}
-					style={[a.absolute, a.w_full, { height: 100, bottom: '100%' }]}
-				>
+				<View style={[a.absolute, a.w_full, { height: 100, bottom: '100%' }]}>
 					<View
 						style={[
 							a.flex_1,
@@ -89,7 +83,7 @@ export function VolumeControl({
 							orient="vertical"
 						/>
 					</View>
-				</Animated.View>
+				</View>
 			)}
 			<ControlButton
 				active={muted || volume === 0}

@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import Animated, { LayoutAnimationConfig } from '#/lib/animations/reanimatedCompat';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
@@ -56,105 +55,99 @@ export function AppearanceSettingsScreen({}: Props) {
 	);
 
 	return (
-		<LayoutAnimationConfig skipExiting skipEntering>
-			<Layout.Screen testID="preferencesThreadsScreen">
-				<Layout.Header.Outer>
-					<Layout.Header.BackButton />
-					<Layout.Header.Content>
-						<Layout.Header.TitleText>
-							<Trans>Appearance</Trans>
-						</Layout.Header.TitleText>
-					</Layout.Header.Content>
-					<Layout.Header.Slot />
-				</Layout.Header.Outer>
-				<Layout.Content>
-					<SettingsList.Container>
+		<Layout.Screen testID="preferencesThreadsScreen">
+			<Layout.Header.Outer>
+				<Layout.Header.BackButton />
+				<Layout.Header.Content>
+					<Layout.Header.TitleText>
+						<Trans>Appearance</Trans>
+					</Layout.Header.TitleText>
+				</Layout.Header.Content>
+				<Layout.Header.Slot />
+			</Layout.Header.Outer>
+			<Layout.Content>
+				<SettingsList.Container>
+					<AppearanceToggleButtonGroup
+						title={l`Color mode`}
+						icon={PhoneIcon}
+						items={[
+							{
+								label: l`System`,
+								name: 'system',
+							},
+							{
+								label: l`Light`,
+								name: 'light',
+							},
+							{
+								label: l`Dark`,
+								name: 'dark',
+							},
+						]}
+						value={colorMode}
+						onChange={onChangeAppearance}
+					/>
+
+					{colorMode !== 'light' && (
 						<AppearanceToggleButtonGroup
-							title={l`Color mode`}
-							icon={PhoneIcon}
+							title={l`Dark theme`}
+							icon={MoonIcon}
 							items={[
 								{
-									label: l`System`,
-									name: 'system',
-								},
-								{
-									label: l`Light`,
-									name: 'light',
+									label: l`Dim`,
+									name: 'dim',
 								},
 								{
 									label: l`Dark`,
 									name: 'dark',
 								},
 							]}
-							value={colorMode}
-							onChange={onChangeAppearance}
+							value={darkTheme ?? 'dim'}
+							onChange={onChangeDarkTheme}
 						/>
+					)}
 
-						{colorMode !== 'light' && (
-							<Animated.View entering={undefined} exiting={undefined}>
-								<AppearanceToggleButtonGroup
-									title={l`Dark theme`}
-									icon={MoonIcon}
-									items={[
-										{
-											label: l`Dim`,
-											name: 'dim',
-										},
-										{
-											label: l`Dark`,
-											name: 'dark',
-										},
-									]}
-									value={darkTheme ?? 'dim'}
-									onChange={onChangeDarkTheme}
-								/>
-							</Animated.View>
-						)}
-
-						<Animated.View layout={undefined}>
-							<SettingsList.Divider />
-							<AppearanceToggleButtonGroup
-								title={l`Font`}
-								description={l`For the best experience, we recommend using the theme font.`}
-								icon={Aa}
-								items={[
-									{
-										label: l`System`,
-										name: 'system',
-									},
-									{
-										label: l`Theme`,
-										name: 'theme',
-									},
-								]}
-								value={fonts.family}
-								onChange={onChangeFontFamily}
-							/>
-							<AppearanceToggleButtonGroup
-								title={l`Font size`}
-								icon={TextSize}
-								items={[
-									{
-										label: l`Smaller`,
-										name: '-1',
-									},
-									{
-										label: l`Default`,
-										name: '0',
-									},
-									{
-										label: l`Larger`,
-										name: '1',
-									},
-								]}
-								value={fonts.scale}
-								onChange={onChangeFontScale}
-							/>
-						</Animated.View>
-					</SettingsList.Container>
-				</Layout.Content>
-			</Layout.Screen>
-		</LayoutAnimationConfig>
+					<SettingsList.Divider />
+					<AppearanceToggleButtonGroup
+						title={l`Font`}
+						description={l`For the best experience, we recommend using the theme font.`}
+						icon={Aa}
+						items={[
+							{
+								label: l`System`,
+								name: 'system',
+							},
+							{
+								label: l`Theme`,
+								name: 'theme',
+							},
+						]}
+						value={fonts.family}
+						onChange={onChangeFontFamily}
+					/>
+					<AppearanceToggleButtonGroup
+						title={l`Font size`}
+						icon={TextSize}
+						items={[
+							{
+								label: l`Smaller`,
+								name: '-1',
+							},
+							{
+								label: l`Default`,
+								name: '0',
+							},
+							{
+								label: l`Larger`,
+								name: '1',
+							},
+						]}
+						value={fonts.scale}
+						onChange={onChangeFontScale}
+					/>
+				</SettingsList.Container>
+			</Layout.Content>
+		</Layout.Screen>
 	);
 }
 

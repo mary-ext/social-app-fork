@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
-import Animated from '#/lib/animations/reanimatedCompat';
 import { useHaptics } from '#/lib/haptics';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
@@ -215,8 +214,7 @@ function Slider({ x, width }: { x: number; width: number }) {
 	const t = useTheme();
 
 	return (
-		<Animated.View
-			layout={undefined}
+		<View
 			style={[
 				a.absolute,
 				a.curve_continuous,

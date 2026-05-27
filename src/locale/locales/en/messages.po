@@ -1349,7 +1349,7 @@ msgid "Appeal this decision"
 msgstr ""
 
 #: src/Navigation.tsx:762
-#: src/screens/Settings/AppearanceSettings.tsx:65
+#: src/screens/Settings/AppearanceSettings.tsx:63
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
 msgid "Appearance"
@@ -2013,7 +2013,7 @@ msgstr ""
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:73
+#: src/screens/Settings/AppearanceSettings.tsx:71
 msgid "Color mode"
 msgstr ""
 
@@ -2394,12 +2394,12 @@ msgstr ""
 msgid "Dangerous substances or drug abuse"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/AppearanceSettings.tsx:104
+#: src/screens/Settings/AppearanceSettings.tsx:83
+#: src/screens/Settings/AppearanceSettings.tsx:101
 msgid "Dark"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:96
+#: src/screens/Settings/AppearanceSettings.tsx:93
 msgid "Dark theme"
 msgstr ""
 
@@ -2415,7 +2415,7 @@ msgstr "Decline this language suggestion"
 msgid "Deepfake adult content"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:142
+#: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Default"
 msgstr ""
 
@@ -2544,7 +2544,7 @@ msgstr ""
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:100
+#: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Dim"
 msgstr ""
 
@@ -3636,11 +3636,11 @@ msgstr ""
 msgid "Follows You"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:117
+#: src/screens/Settings/AppearanceSettings.tsx:112
 msgid "Font"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:134
+#: src/screens/Settings/AppearanceSettings.tsx:129
 msgid "Font size"
 msgstr ""
 
@@ -3648,7 +3648,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:118
+#: src/screens/Settings/AppearanceSettings.tsx:113
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
@@ -4404,7 +4404,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:146
+#: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Larger"
 msgstr ""
 
@@ -4509,7 +4509,7 @@ msgstr ""
 msgid "Let me choose"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:81
+#: src/screens/Settings/AppearanceSettings.tsx:79
 msgid "Light"
 msgstr ""
 
@@ -5052,7 +5052,7 @@ msgstr ""
 msgid "Mute"
 msgstr "Mute"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:97
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:91
 msgctxt "video"
 msgid "Mute"
 msgstr ""
@@ -7735,7 +7735,7 @@ msgstr "Skip empty posts?"
 msgid "slide"
 msgstr "slide"
 
-#: src/screens/Settings/AppearanceSettings.tsx:138
+#: src/screens/Settings/AppearanceSettings.tsx:133
 msgid "Smaller"
 msgstr ""
 
@@ -8035,8 +8035,8 @@ msgstr ""
 msgid "Switch to {0}"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:77
-#: src/screens/Settings/AppearanceSettings.tsx:122
+#: src/screens/Settings/AppearanceSettings.tsx:75
+#: src/screens/Settings/AppearanceSettings.tsx:117
 msgid "System"
 msgstr ""
 
@@ -8194,7 +8194,7 @@ msgstr ""
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:126
+#: src/screens/Settings/AppearanceSettings.tsx:121
 msgid "Theme"
 msgstr ""
 
@@ -8847,7 +8847,7 @@ msgstr "Unlock this group chat"
 msgid "Unmute"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:90
 msgctxt "video"
 msgid "Unmute"
 msgstr ""
@@ -9357,7 +9357,7 @@ msgstr ""
 msgid "Visit your notification settings"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:82
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:76
 msgid "Volume"
 msgstr ""
 
