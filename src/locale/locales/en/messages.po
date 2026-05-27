@@ -540,8 +540,8 @@ msgstr ""
 
 #. The number of group chat members out of the total number of permitted users.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:33
-msgid "{memberCount}/{MEMBER_LIMIT}"
-msgstr "{memberCount}/{MEMBER_LIMIT}"
+msgid "{memberCount}/{memberLimit}"
+msgstr "{memberCount}/{memberLimit}"
 
 #: src/features/liveNow/utils.ts:8
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
@@ -2337,7 +2337,7 @@ msgstr ""
 msgid "Create moderation list"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:426
+#: src/screens/Messages/ConversationSettings/index.tsx:427
 msgid "Create or modify an invite link for this group chat"
 msgstr "Create or modify an invite link for this group chat"
 
@@ -2360,7 +2360,7 @@ msgstr ""
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
 #: src/screens/Messages/components/InviteLinkDialog.tsx:286
-#: src/screens/Messages/ConversationSettings/index.tsx:393
+#: src/screens/Messages/ConversationSettings/index.tsx:394
 msgid "Created {0}"
 msgstr ""
 
@@ -2807,7 +2807,7 @@ msgstr ""
 msgid "Edit My Feeds"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:416
+#: src/screens/Messages/ConversationSettings/index.tsx:417
 msgid "Edit name"
 msgstr "Edit name"
 
@@ -2841,7 +2841,7 @@ msgstr ""
 msgid "Edit starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:415
+#: src/screens/Messages/ConversationSettings/index.tsx:416
 msgid "Edit this group chat’s name"
 msgstr "Edit this group chat’s name"
 
@@ -3176,7 +3176,7 @@ msgstr "Failed to disable invite link"
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:304
+#: src/screens/Messages/ConversationSettings/index.tsx:305
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
@@ -3190,7 +3190,7 @@ msgstr "Failed to enable invite link"
 
 #: src/screens/Messages/components/ChatEnded.tsx:43
 #: src/screens/Messages/components/ChatLocked.tsx:54
-#: src/screens/Messages/ConversationSettings/index.tsx:328
+#: src/screens/Messages/ConversationSettings/index.tsx:329
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
@@ -3250,7 +3250,7 @@ msgstr ""
 msgid "Failed to load suggested follows"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:344
+#: src/screens/Messages/ConversationSettings/index.tsx:345
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
@@ -3259,7 +3259,7 @@ msgstr "Failed to lock group chat"
 msgid "Failed to mark all requests as read"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:318
+#: src/screens/Messages/ConversationSettings/index.tsx:319
 msgid "Failed to mute group chat"
 msgstr "Failed to mute group chat"
 
@@ -3316,7 +3316,7 @@ msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:43
-#: src/screens/Messages/ConversationSettings/index.tsx:347
+#: src/screens/Messages/ConversationSettings/index.tsx:348
 msgid "Failed to unlock group chat"
 msgstr "Failed to unlock group chat"
 
@@ -3852,17 +3852,17 @@ msgstr ""
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:336
+#: src/screens/Messages/ConversationSettings/index.tsx:337
 msgctxt "toast"
 msgid "Group chat locked"
 msgstr "Group chat locked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:311
+#: src/screens/Messages/ConversationSettings/index.tsx:312
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "Group chat muted"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:299
+#: src/screens/Messages/ConversationSettings/index.tsx:300
 msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
@@ -3873,12 +3873,12 @@ msgid "Group chat settings"
 msgstr "Group chat settings"
 
 #: src/screens/Messages/components/ChatLocked.tsx:39
-#: src/screens/Messages/ConversationSettings/index.tsx:338
+#: src/screens/Messages/ConversationSettings/index.tsx:339
 msgctxt "toast"
 msgid "Group chat unlocked"
 msgstr "Group chat unlocked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:313
+#: src/screens/Messages/ConversationSettings/index.tsx:314
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
@@ -4213,7 +4213,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:270
 #: src/screens/Messages/components/InviteLinkDialog.tsx:438
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:131
-#: src/screens/Messages/ConversationSettings/index.tsx:429
+#: src/screens/Messages/ConversationSettings/index.tsx:430
 msgid "Invite link"
 msgstr "Invite link"
 
@@ -4389,7 +4389,7 @@ msgid "Learn more."
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
-#: src/screens/Messages/ConversationSettings/index.tsx:457
+#: src/screens/Messages/ConversationSettings/index.tsx:458
 msgid "Leave"
 msgstr ""
 
@@ -4418,7 +4418,7 @@ msgstr ""
 msgid "Leave group chat"
 msgstr "Leave group chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:456
+#: src/screens/Messages/ConversationSettings/index.tsx:457
 msgid "Leave this group chat"
 msgstr "Leave this group chat"
 
@@ -4663,7 +4663,7 @@ msgstr ""
 msgid "Loading post interaction settings..."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:439
+#: src/screens/Messages/ConversationSettings/index.tsx:440
 msgid "Lock"
 msgstr "Lock"
 
@@ -4675,11 +4675,11 @@ msgstr "Lock group chat"
 msgid "Lock group chat?"
 msgstr "Lock group chat?"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:438
+#: src/screens/Messages/ConversationSettings/index.tsx:439
 msgid "Lock this group chat"
 msgstr "Lock this group chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:439
+#: src/screens/Messages/ConversationSettings/index.tsx:440
 msgid "Locked"
 msgstr "Locked"
 
@@ -4978,7 +4978,7 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:408
+#: src/screens/Messages/ConversationSettings/index.tsx:409
 msgid "Mute"
 msgstr "Mute"
 
@@ -5022,7 +5022,7 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:407
+#: src/screens/Messages/ConversationSettings/index.tsx:408
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
 
@@ -5060,7 +5060,7 @@ msgstr ""
 msgid "Mute words & tags"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:408
+#: src/screens/Messages/ConversationSettings/index.tsx:409
 msgid "Muted"
 msgstr "Muted"
 
@@ -6697,7 +6697,7 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:133
 #: src/features/liveNow/components/LiveStatusDialog.tsx:215
-#: src/screens/Messages/ConversationSettings/index.tsx:448
+#: src/screens/Messages/ConversationSettings/index.tsx:449
 msgid "Report"
 msgstr ""
 
@@ -6756,7 +6756,7 @@ msgstr ""
 msgid "Report this feed"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:447
+#: src/screens/Messages/ConversationSettings/index.tsx:448
 msgid "Report this group chat"
 msgstr "Report this group chat"
 
@@ -8753,7 +8753,7 @@ msgstr ""
 msgid "Unlock chat"
 msgstr "Unlock chat"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:438
+#: src/screens/Messages/ConversationSettings/index.tsx:439
 msgid "Unlock this group chat"
 msgstr "Unlock this group chat"
 
@@ -8789,7 +8789,7 @@ msgstr ""
 msgid "Unmute list"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:407
+#: src/screens/Messages/ConversationSettings/index.tsx:408
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
@@ -9173,7 +9173,7 @@ msgstr "View publication"
 msgid "View the avatar"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:427
+#: src/screens/Messages/ConversationSettings/index.tsx:428
 msgid "View the invite link for this group chat"
 msgstr "View the invite link for this group chat"
 
