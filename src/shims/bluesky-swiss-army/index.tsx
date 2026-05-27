@@ -1,3 +1,6 @@
+// adapter: web implementation of the @bsky.app/swiss-army surface — matchMedia reduced-motion,
+// document.referrer info, in-memory SharedPrefs Map. final state for the fork.
+
 import { type ReactNode } from 'react';
 
 type GooglePlayReferrerInfo = {

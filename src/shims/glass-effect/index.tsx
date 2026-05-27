@@ -1,3 +1,8 @@
+// scaffold: availability flags false, GlassView/GlassContainer render plain <View>. inline at
+// both callers (src/components/GlassView.tsx,
+// src/screens/Messages/components/MessageComposer.tsx) once GlassView is collapsed to its View
+// fallback.
+
 import { View, type ViewProps } from 'react-native';
 
 export type GlassViewProps = ViewProps & {

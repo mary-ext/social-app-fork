@@ -1,3 +1,6 @@
+// scaffold: echoes input back as the translation. inline at the single caller
+// (src/lib/translation/types.ts) once native on-device translation is removed from the web bundle.
+
 export type TranslationTaskResult = {
 	translatedTexts: string | string[];
 	sourceLanguage?: string | null;

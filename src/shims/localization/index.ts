@@ -1,3 +1,5 @@
+// adapter: navigator.languages + Intl.Locale-backed getLocales. final state for the fork.
+
 export type Locale = {
 	languageTag: string;
 	languageCode: string | null;

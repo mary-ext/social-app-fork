@@ -1,3 +1,6 @@
+// adapter: window.location + popstate/hashchange-backed Linking surface. final state for the
+// fork.
+
 import { useSyncExternalStore } from 'react';
 
 type Subscription = {

@@ -1,3 +1,6 @@
+// scaffold: no-op pass-through for the native BottomSheet surface. fold into the Dialog system
+// once it drops the native-shaped BottomSheet types it shares with iOS.
+
 import {
 	forwardRef,
 	type ForwardRefExoticComponent,

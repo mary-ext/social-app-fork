@@ -1,3 +1,7 @@
+// scaffold: returns 'en' for any non-empty input. inline at the single caller
+// (src/view/com/composer/select-language/SuggestedLanguage.tsx) once SuggestedLanguage goes away
+// with the English-only catalog sweep.
+
 export type LanguageResult = {
 	language: string;
 	confidence: number;

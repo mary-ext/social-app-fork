@@ -1,3 +1,6 @@
+// adapter: emits CSS linear-gradient on a <View>, with start/end point→angle math. final state
+// for the fork.
+
 import { View, type ViewProps } from 'react-native';
 
 type Point = {

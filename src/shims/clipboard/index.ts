@@ -1,3 +1,6 @@
+// adapter: thin wrapper around the Clipboard API with an execCommand fallback. final state for
+// the fork.
+
 export async function setStringAsync(value: string): Promise<boolean> {
 	if (navigator.clipboard?.writeText) {
 		await navigator.clipboard.writeText(value);

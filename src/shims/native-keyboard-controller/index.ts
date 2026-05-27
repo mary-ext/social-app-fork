@@ -1,3 +1,6 @@
+// adapter: web has no native soft-keyboard controller; this is the permanent zero-value / no-op
+// surface that lets shared keyboard-aware components compile and behave on web.
+
 import { createElement, forwardRef, Fragment, type ReactNode, useMemo } from 'react';
 import {
 	type KeyboardAvoidingViewProps,

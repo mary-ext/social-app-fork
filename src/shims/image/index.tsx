@@ -1,3 +1,6 @@
+// adapter: sized <Image> + contentFit→resizeMode mapping, prefetch/cache no-ops, ImageBackground,
+// expo-image-shape onLoad event. final state for the fork.
+
 import { type ComponentRef, forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react';
 import {
 	Image as RNImage,
