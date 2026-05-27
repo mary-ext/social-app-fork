@@ -8424,7 +8424,7 @@ msgstr ""
 msgid "This screen is only available for group conversations."
 msgstr "This screen is only available for group conversations."
 
-#: src/features/liveNow/index.tsx:188
+#: src/features/liveNow/index.tsx:195
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -9500,7 +9500,7 @@ msgstr ""
 msgid "You are Live"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:341
+#: src/features/liveNow/index.tsx:348
 msgid "You are no longer live"
 msgstr ""
 
@@ -9512,7 +9512,7 @@ msgstr ""
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:286
+#: src/features/liveNow/index.tsx:293
 msgid "You are now live!"
 msgstr ""
 

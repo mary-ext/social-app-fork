@@ -33,7 +33,14 @@ import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/uti
 
 export * from '#/features/liveNow/utils';
 
-export const DEFAULT_ALLOWED_DOMAINS = ['twitch.tv', 'stream.place', 'bluecast.app'];
+export const DEFAULT_ALLOWED_DOMAINS = [
+	'beehiiv.com',
+	'bluecast.app',
+	'stream.place',
+	'substack.com',
+	'twitch.tv',
+	'youtube.com',
+];
 
 const DEFAULT_STATE = {
 	status: '',

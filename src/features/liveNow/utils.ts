@@ -22,12 +22,14 @@ export function displayDuration(i18n: I18n, durationInMinutes: number) {
 }
 
 const serviceUrlToNameMap: Record<string, string> = {
+	'beehiiv.com': 'Beehiiv',
 	'bluecast.app': 'Bluecast',
 	'espn.com': 'ESPN',
 	'nba.com': 'NBA',
 	'nba.smart.link': 'nba.smart.link',
 	'skylight.social': 'Skylight',
 	'stream.place': 'Streamplace',
+	'substack.com': 'Substack',
 	'twitch.tv': 'Twitch',
 	'youtube.com': 'YouTube',
 };
