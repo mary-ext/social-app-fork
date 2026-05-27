@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View, type ViewabilityConfig } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import * as bcp47Match from 'bcp-47-match';

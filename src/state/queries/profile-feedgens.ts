@@ -1,8 +1,9 @@
 import { type AppBskyFeedGetActorFeeds } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier } from '@atcute/lexicons';
-import { moderateFeedGenerator } from '@atproto/api';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+
+import { moderateFeedGenerator } from '#/lib/moderation/compat';
 
 import { useClients } from '#/state/session';
 
@@ -50,11 +51,7 @@ export function useProfileFeedgensQuery(did: string, opts?: { enabled?: boolean 
 						feeds: page.feeds
 							// filter by labels
 							.filter((list) => {
-								// TODO(atcute Phase 2.4): drop cast once moderateFeedGenerator flips to @atcute
-								const decision = moderateFeedGenerator(
-									list as unknown as Parameters<typeof moderateFeedGenerator>[0],
-									moderationOpts!,
-								);
+								const decision = moderateFeedGenerator(list, moderationOpts!);
 								return !decision.ui('contentList').filters.some((cause) => cause.type !== 'muted');
 							}),
 					};

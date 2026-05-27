@@ -495,10 +495,13 @@ function DialogInner({
 						{info.view && (
 							<ReportDialog
 								control={reportDialogControl}
-								subject={{
-									...info.view,
-									$type: 'app.bsky.feed.defs#generatorView',
-								}}
+								// TODO(atcute Phase 5.2): drop cast once ReportDialog flips to @atcute
+								subject={
+									{
+										...info.view,
+										$type: 'app.bsky.feed.defs#generatorView',
+									} as unknown as React.ComponentProps<typeof ReportDialog>['subject']
+								}
 							/>
 						)}
 					</View>

@@ -1,5 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
 import { type AppBskyFeedDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -466,12 +467,12 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 			{results.length ? (
 				<List
 					data={results}
-					renderItem={({ item, index }: { item: AppBskyFeedDefs.GeneratorView; index: number }) => (
+					renderItem={({ item, index }: { item: AtcAppBskyFeedDefs.GeneratorView; index: number }) => (
 						<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
 							<SearchFeedCard position={index} view={item} />
 						</View>
 					)}
-					keyExtractor={(item: AppBskyFeedDefs.GeneratorView) => item.uri}
+					keyExtractor={(item: AtcAppBskyFeedDefs.GeneratorView) => item.uri}
 					desktopFixedHeight
 					ListFooterComponent={<ListFooter />}
 				/>
@@ -490,7 +491,7 @@ function SearchFeedCard({
 	view,
 }: {
 	position: number;
-	view: AppBskyFeedDefs.GeneratorView;
+	view: AtcAppBskyFeedDefs.GeneratorView;
 }) {
 	const handleOnPress = () => {};
 

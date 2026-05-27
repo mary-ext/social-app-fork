@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react';
+import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
 import { type AppBskyActorDefs, AppBskyFeedDefs, AtUri, moderatePost } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
@@ -69,7 +70,7 @@ export type FeedPreviewItem =
 	| {
 			type: 'preview:header';
 			key: string;
-			feed: AppBskyFeedDefs.GeneratorView;
+			feed: AtcAppBskyFeedDefs.GeneratorView;
 	  }
 	| {
 			type: 'preview:footer';
@@ -81,7 +82,7 @@ export type FeedPreviewItem =
 			key: string;
 			slice: FeedPostSlice;
 			indexInSlice: number;
-			feed: AppBskyFeedDefs.GeneratorView;
+			feed: AtcAppBskyFeedDefs.GeneratorView;
 			showReplyTo: boolean;
 			hideTopBorder: boolean;
 	  }
@@ -92,7 +93,7 @@ export type FeedPreviewItem =
 	  };
 
 export function useFeedPreviews(
-	feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+	feedsMaybeWithDuplicates: AtcAppBskyFeedDefs.GeneratorView[],
 	isEnabled: boolean = true,
 ) {
 	const feeds = useMemo(
@@ -111,7 +112,7 @@ export function useFeedPreviews(
 	const processedPageCache = useRef(
 		new Map<
 			{
-				feed: AppBskyFeedDefs.GeneratorView;
+				feed: AtcAppBskyFeedDefs.GeneratorView;
 				posts: AppBskyFeedDefs.FeedViewPost[];
 			},
 			FeedPreviewItem[]
@@ -322,7 +323,7 @@ export function* findAllPostsInQueryData(
 
 	const queryDatas = queryClient.getQueriesData<
 		InfiniteData<{
-			feed: AppBskyFeedDefs.GeneratorView;
+			feed: AtcAppBskyFeedDefs.GeneratorView;
 			posts: AppBskyFeedDefs.FeedViewPost[];
 		}>
 	>({
@@ -375,7 +376,7 @@ export function* findAllProfilesInQueryData(
 ): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
 	const queryDatas = queryClient.getQueriesData<
 		InfiniteData<{
-			feed: AppBskyFeedDefs.GeneratorView;
+			feed: AtcAppBskyFeedDefs.GeneratorView;
 			posts: AppBskyFeedDefs.FeedViewPost[];
 		}>
 	>({

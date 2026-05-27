@@ -150,8 +150,8 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   produce profile views, pulled forward as part of the same hub).
 - **Phase 2.3 — done.** Lists and starter packs (incl. `post-reposted-by`, pulled forward as a
   profile-producing read).
-- **Phase 2.4 (partial) — done.** Generator-view slice; `PostView`/`FeedViewPost` flip still
-  pending.
+- **Phase 2.4 (partial) — done.** Generator-view slice (both commits); `PostView`/`FeedViewPost`
+  flip still pending.
 - **Phase 2.6 (partial) — done.** Labeler reads + notification-settings read; the rest of 2.6 still
   depends on `PostView`.
 - **Phase 4.2 — done.** Video upload client, pulled forward (Stream 4 only depends on Stream 1).

@@ -1,3 +1,4 @@
+import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
@@ -5,14 +6,14 @@ import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/u
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 export const DEFAULT_LIMIT = 15;
 
 export const createGetSuggestedFeedsQueryKey = () => ['suggested-feeds'];
 
 export function useGetSuggestedFeedsQuery({ enabled }: { enabled?: boolean }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const savedFeeds = preferences?.savedFeeds;
 
@@ -22,16 +23,14 @@ export function useGetSuggestedFeedsQuery({ enabled }: { enabled?: boolean }) {
 		queryKey: createGetSuggestedFeedsQueryKey(),
 		queryFn: async () => {
 			const contentLangs = getContentLanguages().join(',');
-			const { data } = await agent.app.bsky.unspecced.getSuggestedFeeds(
-				{
-					limit: DEFAULT_LIMIT,
-				},
-				{
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getSuggestedFeeds', {
+					params: { limit: DEFAULT_LIMIT },
 					headers: {
 						...createBskyTopicsHeader(aggregateUserInterests(preferences)),
 						'Accept-Language': contentLangs,
 					},
-				},
+				}),
 			);
 
 			return {

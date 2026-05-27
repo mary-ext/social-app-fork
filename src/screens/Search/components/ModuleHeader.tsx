@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyFeedDefs, AtUri } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { AtUri } from '@atproto/api';
 
 import { makeCustomFeedLink } from '#/lib/routes/links';
 

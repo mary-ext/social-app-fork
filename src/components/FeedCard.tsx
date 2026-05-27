@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs, AtUri, RichText as RichTextApi } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { AtUri, RichText as RichTextApi } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 

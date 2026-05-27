@@ -1,10 +1,12 @@
 import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import {
+	moderateFeedGenerator as moderateFeedGeneratorEngine,
 	moderatePost as moderatePostEngine,
 	moderateProfile as moderateProfileEngine,
 	moderateStatus as moderateStatusEngine,
 	moderateUserList as moderateUserListEngine,
 	type ModerationOpts,
+	type ModerationSubjectFeedGenerator,
 	type ModerationSubjectPost,
 	type ModerationSubjectProfile,
 	type ModerationSubjectUserList,
@@ -60,6 +62,17 @@ export const moderateUserList = (
 	opts: ModerationOpts,
 ) => {
 	return moderateUserListEngine(subject as unknown as ModerationSubjectUserList, opts);
+};
+
+/**
+ * Runs the moderation engine against a feed generator view.
+ *
+ * @param subject the `@atcute`-typed feed generator view.
+ * @param opts the moderation options.
+ * @returns the moderation decision.
+ */
+export const moderateFeedGenerator = (subject: AppBskyFeedDefs.GeneratorView, opts: ModerationOpts) => {
+	return moderateFeedGeneratorEngine(subject as unknown as ModerationSubjectFeedGenerator, opts);
 };
 
 /**

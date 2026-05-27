@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 

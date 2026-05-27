@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 

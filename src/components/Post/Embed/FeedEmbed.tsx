@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
-import { type AppBskyFeedDefs, moderateFeedGenerator } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+
+import { moderateFeedGenerator } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -19,7 +21,8 @@ export function FeedEmbed({
 	embed: EmbedType<'feed'>;
 }) {
 	const t = useTheme();
-	const view = embed.view as AppBskyFeedDefs.GeneratorView;
+	// TODO(atcute Phase 5.2): drop cast once #/types/bsky/post flips to @atcute
+	const view = embed.view as unknown as AppBskyFeedDefs.GeneratorView;
 	return (
 		<FeedCard.Link view={view} style={[a.border, t.atoms.border_contrast_low, a.p_sm, a.rounded_md]}>
 			<FeedCard.Outer>
@@ -42,7 +45,10 @@ export function ModeratedFeedEmbed({
 }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = useMemo(() => {
-		return moderationOpts ? moderateFeedGenerator(embed.view, moderationOpts) : undefined;
+		return moderationOpts
+			? // TODO(atcute Phase 5.2): drop cast once #/types/bsky/post flips to @atcute
+				moderateFeedGenerator(embed.view as unknown as AppBskyFeedDefs.GeneratorView, moderationOpts)
+			: undefined;
 	}, [embed.view, moderationOpts]);
 	return (
 		<ContentHider modui={moderation?.ui('contentList')} childContainerStyle={[a.pt_xs]}>

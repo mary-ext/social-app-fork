@@ -1,11 +1,11 @@
 import { Keyboard, View } from 'react-native';
 import { type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
-import { moderateFeedGenerator, type ModerationUI } from '@atproto/api';
+import { type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import { moderateFeedGenerator, moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -169,11 +169,7 @@ export function WizardFeedCard({
 	const isDiscover = generator.uri === DISCOVER_FEED_URI;
 	const included = isDiscover || state.feeds.some((f) => f.uri === generator.uri);
 	const disabled = isDiscover || (!included && state.feeds.length >= 3);
-	// TODO(atcute Phase 2.4): drop cast once GeneratorView flips to @atcute moderation
-	const moderationUi = moderateFeedGenerator(
-		generator as unknown as Parameters<typeof moderateFeedGenerator>[0],
-		moderationOpts,
-	).ui('avatar');
+	const moderationUi = moderateFeedGenerator(generator, moderationOpts).ui('avatar');
 
 	const onPress = () => {
 		if (disabled) return;
