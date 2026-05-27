@@ -5348,10 +5348,6 @@ msgstr ""
 msgid "Next image"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:311
-msgid "No chats yet"
-msgstr "No chats yet"
-
 #: src/view/com/feeds/ProfileFeedgens.tsx:173
 msgid "No custom feeds yet"
 msgstr ""
@@ -7095,6 +7091,7 @@ msgid "Say hello!"
 msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:120
+#: src/screens/Messages/ChatList.tsx:311
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
