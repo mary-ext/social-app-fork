@@ -497,7 +497,7 @@ msgid "{following} following"
 msgstr ""
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:54
-#: src/components/dms/InitiateChatFlow.tsx:744
+#: src/components/dms/InitiateChatFlow.tsx:749
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
@@ -505,7 +505,7 @@ msgstr "{handle} can’t be added"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:712
+#: src/components/dms/InitiateChatFlow.tsx:717
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -730,6 +730,15 @@ msgstr ""
 #: src/components/dms/getReactionInfo.ts:33
 msgid "a message"
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:42
+#: src/components/dms/dialogs/NewChatDialog.tsx:81
+msgid "A network error occurred. Please check your internet connection."
+msgstr "A network error occurred. Please check your internet connection."
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:97
+msgid "A selected recipient is not followed by the sender."
+msgstr "A selected recipient is not followed by the sender."
 
 #: src/Navigation.tsx:905
 #: src/screens/Settings/AboutSettings.tsx:32
@@ -1244,13 +1253,13 @@ msgstr "An invite link lets people join this group chat without being added dire
 msgid "An issue not included in these options"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:49
-msgid "An issue occurred creating the group chat, please try again"
-msgstr "An issue occurred creating the group chat, please try again"
+#: src/components/dms/dialogs/NewChatDialog.tsx:79
+msgid "An issue occurred creating the group chat, please try again."
+msgstr "An issue occurred creating the group chat, please try again."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:37
-msgid "An issue occurred starting the chat, please try again"
-msgstr "An issue occurred starting the chat, please try again"
+#: src/components/dms/dialogs/NewChatDialog.tsx:40
+msgid "An issue occurred starting the chat, please try again."
+msgstr "An issue occurred starting the chat, please try again."
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:44
 msgid "An issue occurred while trying to open the chat"
@@ -1815,6 +1824,10 @@ msgstr "Chat locked"
 msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:58
+msgid "Chat recipient is not followed by the sender."
+msgstr "Chat recipient is not followed by the sender."
 
 #: src/Navigation.tsx:945
 msgid "Chat request inbox"
@@ -5131,8 +5144,8 @@ msgstr ""
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:83
-#: src/components/dms/dialogs/NewChatDialog.tsx:89
+#: src/components/dms/dialogs/NewChatDialog.tsx:144
+#: src/components/dms/dialogs/NewChatDialog.tsx:150
 #: src/screens/Messages/ChatList.tsx:126
 #: src/screens/Messages/ChatList.tsx:127
 #: src/screens/Messages/ChatList.tsx:317
@@ -5168,8 +5181,14 @@ msgid "New followers"
 msgstr ""
 
 #: src/components/dms/InitiateChatFlow.tsx:230
-#: src/components/dms/InitiateChatFlow.tsx:631
-#: src/components/dms/InitiateChatFlow.tsx:660
+msgid "New group chat"
+msgstr "New group chat"
+
+#. Button used to create a new group chat.
+#. Button used to create a new group chat.
+#: src/components/dms/InitiateChatFlow.tsx:628
+#: src/components/dms/InitiateChatFlow.tsx:663
+msgctxt "action"
 msgid "New group chat"
 msgstr "New group chat"
 
@@ -5533,6 +5552,14 @@ msgstr "On"
 #: src/components/StarterPack/QrCode.tsx:57
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:105
+msgid "One of the selected recipients does not allow group chats."
+msgstr "One of the selected recipients does not allow group chats."
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:89
+msgid "One of the selected recipients has blocked you and cannot be messaged."
+msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
 #: src/view/com/composer/Composer.tsx:630
 msgid "One or more GIFs is missing alt text."
@@ -7765,7 +7792,7 @@ msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:376
-#: src/components/dms/InitiateChatFlow.tsx:694
+#: src/components/dms/InitiateChatFlow.tsx:699
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -7891,6 +7918,14 @@ msgstr ""
 #: src/view/com/composer/labels/LabelsBtn.tsx:117
 msgid "Suggestive"
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:85
+msgid "Suspended accounts cannot participate in a group chat."
+msgstr "Suspended accounts cannot participate in a group chat."
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:46
+msgid "Suspended accounts cannot participate in chat."
+msgstr "Suspended accounts cannot participate in chat."
 
 #: src/components/dialogs/SwitchAccount.tsx:45
 #: src/components/dialogs/SwitchAccount.tsx:48
@@ -8401,10 +8436,18 @@ msgstr ""
 msgid "This user doesn't have any followers."
 msgstr ""
 
+#: src/components/dms/dialogs/NewChatDialog.tsx:50
+msgid "This user has blocked you and cannot be messaged."
+msgstr "This user has blocked you and cannot be messaged."
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
 #: src/lib/moderation/useModerationCauseDescription.ts:82
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:54
+msgid "This user has disabled chat and cannot be messaged."
+msgstr "This user has disabled chat and cannot be messaged."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:26
 msgid "This user has requested that their content only be shown to signed-in users."
@@ -8586,6 +8629,14 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:621
 msgid "Unable to delete"
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:101
+msgid "Unable to find a selected recipient."
+msgstr "Unable to find a selected recipient."
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:62
+msgid "Unable to find the selected recipient."
+msgstr "Unable to find the selected recipient."
 
 #: src/lib/strings/errors.ts:39
 msgid "Unable to resolve handle"
@@ -9517,6 +9568,10 @@ msgstr ""
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
 msgid "You can update this later from your settings."
 msgstr ""
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:93
+msgid "You cannot create a group chat yet."
+msgstr "You cannot create a group chat yet."
 
 #: src/lib/hooks/useCleanError.ts:48
 #: src/lib/strings/errors.ts:24

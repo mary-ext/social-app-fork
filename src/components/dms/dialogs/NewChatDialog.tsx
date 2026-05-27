@@ -1,5 +1,8 @@
 import { useCallback } from 'react';
+import { ClientResponseError } from '@atcute/client';
 import { useLingui } from '@lingui/react/macro';
+
+import { isNetworkError } from '#/lib/strings/errors';
 
 import { useCreateGroupChat } from '#/state/queries/messages/create-group-chat';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
@@ -34,7 +37,34 @@ export function NewChat({
 		},
 		onError: (error) => {
 			logger.error('Failed to create chat', { safeMessage: error });
-			Toast.show(l`An issue occurred starting the chat, please try again`, {
+			let errorMessage = l`An issue occurred starting the chat, please try again.`;
+			if (isNetworkError(error)) {
+				errorMessage = l`A network error occurred. Please check your internet connection.`;
+			} else if (error instanceof ClientResponseError) {
+				switch (error.error) {
+					case 'AccountSuspended': {
+						errorMessage = l`Suspended accounts cannot participate in chat.`;
+						break;
+					}
+					case 'BlockedActor': {
+						errorMessage = l`This user has blocked you and cannot be messaged.`;
+						break;
+					}
+					case 'MessagesDisabled': {
+						errorMessage = l`This user has disabled chat and cannot be messaged.`;
+						break;
+					}
+					case 'NotFollowedBySender': {
+						errorMessage = l`Chat recipient is not followed by the sender.`;
+						break;
+					}
+					case 'RecipientNotFound': {
+						errorMessage = l`Unable to find the selected recipient.`;
+						break;
+					}
+				}
+			}
+			Toast.show(errorMessage, {
 				type: 'error',
 			});
 		},
@@ -46,7 +76,38 @@ export function NewChat({
 		},
 		onError: (error) => {
 			logger.error('Failed to create groupchat', { safeMessage: error });
-			Toast.show(l`An issue occurred creating the group chat, please try again`, {
+			let errorMessage = l`An issue occurred creating the group chat, please try again.`;
+			if (isNetworkError(error)) {
+				errorMessage = l`A network error occurred. Please check your internet connection.`;
+			} else if (error instanceof ClientResponseError) {
+				switch (error.error) {
+					case 'AccountSuspended': {
+						errorMessage = l`Suspended accounts cannot participate in a group chat.`;
+						break;
+					}
+					case 'BlockedActor': {
+						errorMessage = l`One of the selected recipients has blocked you and cannot be messaged.`;
+						break;
+					}
+					case 'NewAccountCannotCreateGroup': {
+						errorMessage = l`You cannot create a group chat yet.`;
+						break;
+					}
+					case 'NotFollowedBySender': {
+						errorMessage = l`A selected recipient is not followed by the sender.`;
+						break;
+					}
+					case 'RecipientNotFound': {
+						errorMessage = l`Unable to find a selected recipient.`;
+						break;
+					}
+					case 'UserForbidsGroups': {
+						errorMessage = l`One of the selected recipients does not allow group chats.`;
+						break;
+					}
+				}
+			}
+			Toast.show(errorMessage, {
 				type: 'error',
 			});
 		},
