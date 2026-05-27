@@ -58,6 +58,21 @@ export function useListConvoMembersQuery({
 						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataRemoveMember') {
 							mutateList((list) => list.filter((m) => m.did !== data.member.did));
 						}
+					} else if (log.$type === 'chat.bsky.convo.defs#logMemberJoin') {
+						const data = log.message.data;
+						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataMemberJoin') {
+							const newMember = log.relatedProfiles.find((r) => r.did === data.member.did);
+							if (newMember) {
+								mutateList((list) =>
+									list.some((m) => m.did === newMember.did) ? list : list.concat(newMember),
+								);
+							}
+						}
+					} else if (log.$type === 'chat.bsky.convo.defs#logMemberLeave') {
+						const data = log.message.data;
+						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataMemberLeave') {
+							mutateList((list) => list.filter((m) => m.did !== data.member.did));
+						}
 					}
 				}
 			},

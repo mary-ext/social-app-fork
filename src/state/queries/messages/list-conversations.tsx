@@ -255,6 +255,17 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							);
 							break;
 						}
+						case 'chat.bsky.convo.defs#logReadConvo': {
+							const logRef: ChatBskyConvoDefs.LogReadConvo = log;
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								optimisticUpdate(logRef.convoId, old, (convo) => ({
+									...convo,
+									unreadCount: 0,
+									rev: logRef.rev,
+								})),
+							);
+							break;
+						}
 						case 'chat.bsky.convo.defs#logAcceptConvo': {
 							const logRef: ChatBskyConvoDefs.LogAcceptConvo = log;
 							const requests = queryClient.getQueryData<ConvoListQueryData>(RQKEY('request'));
@@ -310,6 +321,87 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 									rev: logRef.rev,
 								})),
 							);
+							break;
+						}
+						case 'chat.bsky.convo.defs#logLockConvo': {
+							const logRef: ChatBskyConvoDefs.LogLockConvo = log;
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								optimisticUpdate(logRef.convoId, old, (convo) => {
+									if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
+										return {
+											...convo,
+											kind: {
+												...convo.kind,
+												lockStatus: 'locked',
+											},
+											rev: logRef.rev,
+										};
+									}
+									return {
+										...convo,
+										rev: logRef.rev,
+									};
+								}),
+							);
+							break;
+						}
+						case 'chat.bsky.convo.defs#logUnlockConvo': {
+							const logRef: ChatBskyConvoDefs.LogUnlockConvo = log;
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								optimisticUpdate(logRef.convoId, old, (convo) => {
+									if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
+										return {
+											...convo,
+											kind: {
+												...convo.kind,
+												lockStatus: 'unlocked',
+											},
+											rev: logRef.rev,
+										};
+									}
+									return {
+										...convo,
+										rev: logRef.rev,
+									};
+								}),
+							);
+							break;
+						}
+						case 'chat.bsky.convo.defs#logLockConvoPermanently': {
+							const logRef: ChatBskyConvoDefs.LogLockConvoPermanently = log;
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								optimisticUpdate(logRef.convoId, old, (convo) => {
+									if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
+										return {
+											...convo,
+											kind: {
+												...convo.kind,
+												lockStatus: 'locked-permanently',
+											},
+											rev: logRef.rev,
+										};
+									}
+									return {
+										...convo,
+										rev: logRef.rev,
+									};
+								}),
+							);
+							break;
+						}
+						case 'chat.bsky.convo.defs#logCreateJoinLink':
+						case 'chat.bsky.convo.defs#logEditJoinLink':
+						case 'chat.bsky.convo.defs#logEnableJoinLink':
+						case 'chat.bsky.convo.defs#logDisableJoinLink': {
+							// join link data is not included in the log event, refetch to get it
+							debouncedRefetch();
+							break;
+						}
+						case 'chat.bsky.convo.defs#logIncomingJoinRequest':
+						case 'chat.bsky.convo.defs#logApproveJoinRequest':
+						case 'chat.bsky.convo.defs#logRejectJoinRequest':
+						case 'chat.bsky.convo.defs#logOutgoingJoinRequest': {
+							// TODO update join request count here when available
 							break;
 						}
 						case 'chat.bsky.convo.defs#logAddReaction': {
