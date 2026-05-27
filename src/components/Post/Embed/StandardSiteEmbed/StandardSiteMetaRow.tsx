@@ -9,7 +9,6 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { StandardSite } from '#/components/icons/community/StandardSite';
 import { InlineLinkText } from '#/components/Link';
 import {
 	matchStandardSitePublisher,
@@ -22,9 +21,11 @@ import {
 import { Text } from '#/components/Typography';
 
 export function StandardSiteMetaRow({
+	preview,
 	type = 'document',
 	view,
 }: {
+	preview?: boolean;
 	type?: 'document' | 'publication';
 	view: AppBskyEmbedExternal.ViewExternal;
 }) {
@@ -40,7 +41,7 @@ export function StandardSiteMetaRow({
 	const authorProfile = authorDid ? view.associatedProfiles?.find((p) => p.did === authorDid) : undefined;
 	const articleDomain = toNiceDomain(view.uri);
 	const articlePublisher = matchStandardSitePublisherByUri(view.uri);
-	const DomainIcon = articlePublisher?.Icon ?? StandardSite;
+	const DomainIcon = articlePublisher?.Icon;
 	const metaTextStyle = [a.text_xs, a.leading_snug, t.atoms.text_contrast_medium];
 
 	const items: { key: string; node: ReactNode }[] = [];
@@ -50,7 +51,7 @@ export function StandardSiteMetaRow({
 			key: 'domain',
 			node: (
 				<View style={[a.flex_row, a.align_center]}>
-					<DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />
+					{DomainIcon && <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />}
 					<Text numberOfLines={1} style={metaTextStyle}>
 						{articleDomain}
 					</Text>
@@ -69,7 +70,7 @@ export function StandardSiteMetaRow({
 						<InlineLinkText
 							label={l`View @${authorProfile.handle}'s profile`}
 							to={makeProfileLink(authorProfile)}
-							style={[metaTextStyle, a.pointer_events_auto]}
+							style={[metaTextStyle, preview ? a.pointer_events_none : a.pointer_events_auto]}
 						>
 							@{authorProfile.handle}
 						</InlineLinkText>

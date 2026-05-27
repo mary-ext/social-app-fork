@@ -14,6 +14,7 @@ import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
 import { ButtonIcon, ButtonText } from '#/components/Button';
 import { Divider } from '#/components/Divider';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
+import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
@@ -36,15 +37,15 @@ const PUBLICATION_AVATAR_STYLE = {
 };
 
 export const StandardSiteEmbed = ({
-	view,
 	onOpen,
+	preview,
 	style,
-	hideSubscribe,
+	view,
 }: {
-	view: AppBskyEmbedExternal.ViewExternal;
 	onOpen?: () => void;
+	preview?: boolean;
 	style?: StyleProp<ViewStyle>;
-	hideSubscribe?: boolean;
+	view: AppBskyEmbedExternal.ViewExternal;
 }) => {
 	const { t: l, i18n } = useLingui();
 	const t = useTheme();
@@ -78,7 +79,7 @@ export const StandardSiteEmbed = ({
 	if (isStandardPublication) {
 		return (
 			<PublicationCard
-				hideSubscribe={hideSubscribe}
+				preview={preview}
 				view={view}
 				onPress={onPress}
 				style={style}
@@ -95,7 +96,9 @@ export const StandardSiteEmbed = ({
 				a.overflow_hidden,
 				a.w_full,
 				a.border,
+				t.atoms.bg,
 				interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+				preview && a.pointer_events_none,
 				style,
 			]}
 		>
@@ -113,7 +116,7 @@ export const StandardSiteEmbed = ({
 				<></>
 			</Link>
 
-			<View style={[a.w_full, a.z_10, a.pointer_events_none]}>
+			<View style={[a.w_full, a.z_10, a.pointer_events_none, interacted && [t.atoms.bg_contrast_25]]}>
 				{imageUri ? (
 					<Image
 						style={[a.aspect_card]}
@@ -172,38 +175,42 @@ export const StandardSiteEmbed = ({
 						)}
 					</View>
 				</View>
-			</View>
 
-			<View style={[a.z_20]}>
-				<View style={[a.px_md]}>
-					<Divider />
-				</View>
-				{view.source ? (
-					<PublicationFooter
-						view={view}
-						onPress={onPress}
-						themeColors={themeColors}
-						hideSubscribe={hideSubscribe}
-					/>
-				) : (
-					<View style={[a.px_md, a.py_sm, a.pointer_events_none]}>
-						<StandardSiteMetaRow view={view} />
+				{!view.source && (
+					<View style={[a.px_md]}>
+						<Divider />
+						<View style={[a.py_sm]}>
+							<StandardSiteMetaRow preview={preview} view={view} />
+						</View>
 					</View>
 				)}
 			</View>
+
+			{view.source && (
+				<View style={[a.z_20]}>
+					<Divider />
+					<PublicationFooter
+						preview={preview}
+						view={view}
+						onPress={onPress}
+						themeColors={themeColors}
+						interactedOuter={interacted}
+					/>
+				</View>
+			)}
 		</View>
 	);
 };
 
 export function PublicationCard({
+	preview,
 	view,
-	hideSubscribe,
 	onPress,
 	themeColors,
 	style,
 }: {
+	preview?: boolean;
 	view: AppBskyEmbedExternal.ViewExternal;
-	hideSubscribe?: boolean;
 	onPress?: () => void;
 	themeColors: ThemeColors;
 	style?: StyleProp<ViewStyle>;
@@ -223,7 +230,9 @@ export function PublicationCard({
 				a.w_full,
 				a.border,
 				a.p_md,
-				interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
+				interacted
+					? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
+					: [t.atoms.bg, t.atoms.border_contrast_low],
 				style,
 			]}
 		>
@@ -257,12 +266,17 @@ export function PublicationCard({
 						<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
 							{view.source?.title}
 						</Text>
-						<StandardSiteMetaRow type="publication" view={view} />
+						<StandardSiteMetaRow preview={preview} type="publication" view={view} />
 					</View>
 				</View>
 
-				{!hideSubscribe && gtPhone && (
-					<SubscribeButton view={view} style={[!gtPhone && [a.w_full, a.justify_center]]} onPress={onPress} />
+				{gtPhone && (
+					<SubscribeButton
+						preview={preview}
+						view={view}
+						style={[!gtPhone && [a.w_full, a.justify_center]]}
+						onPress={onPress}
+					/>
 				)}
 			</View>
 
@@ -275,9 +289,10 @@ export function PublicationCard({
 					</View>
 				)}
 
-				{!hideSubscribe && !gtPhone && (
+				{!gtPhone && (
 					<View style={[view.description && a.pt_sm]}>
 						<SubscribeButton
+							preview={preview}
 							view={view}
 							style={[!gtPhone && [a.w_full, a.justify_center]]}
 							onPress={onPress}
@@ -290,10 +305,12 @@ export function PublicationCard({
 }
 
 export function SubscribeButton({
+	preview,
 	view,
 	onPress,
 	style,
 }: {
+	preview?: boolean;
 	view: AppBskyEmbedExternal.ViewExternal;
 	onPress?: () => void;
 	style?: StyleProp<ViewStyle>;
@@ -321,19 +338,21 @@ export function SubscribeButton({
 				label={label}
 				size="small"
 				color="secondary_inverted"
-				style={[style, a.gap_sm, a.pointer_events_auto]}
+				style={[style, a.gap_sm, preview ? a.pointer_events_none : a.pointer_events_auto]}
 				onPress={onPress}
 			>
 				{highlightedPublisher ? (
 					<>
 						<View style={[a.flex_row, a.align_center, { gap: 7 }]}>
-							<ButtonIcon icon={highlightedPublisher.Icon} size="lg" />
-							{/*<ButtonText>|</ButtonText>*/}
+							<ButtonIcon icon={highlightedPublisher.Icon} size="md" />
 						</View>
 						<ButtonText>{cta}</ButtonText>
 					</>
 				) : (
-					<ButtonText>{cta}</ButtonText>
+					<>
+						<ButtonText>{cta}</ButtonText>
+						<ButtonIcon icon={ArrowTopRightIcon} />
+					</>
 				)}
 			</Link>
 		</StandardSiteThemeProvider>
@@ -383,15 +402,17 @@ function PublicationIcon({
 }
 
 export function PublicationFooter({
+	preview,
 	view,
-	hideSubscribe,
-	onPress,
 	themeColors,
+	onPress,
+	interactedOuter,
 }: {
+	preview?: boolean;
 	view: AppBskyEmbedExternal.ViewExternal;
-	hideSubscribe?: boolean;
 	themeColors: ThemeColors;
 	onPress?: () => void;
+	interactedOuter?: boolean;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -409,8 +430,9 @@ export function PublicationFooter({
 				a.p_md,
 				a.gap_md,
 				gtPhone && [a.flex_row, a.gap_sm],
+				interactedOuter && t.atoms.bg_contrast_25,
+				preview && a.pointer_events_none,
 			]}
-			testID="publication-embed-footer"
 		>
 			<Link
 				shouldProxy
@@ -434,17 +456,16 @@ export function PublicationFooter({
 					<Text numberOfLines={1} style={[a.text_sm, a.font_medium, t.atoms.text, interacted && a.underline]}>
 						{view.source?.title}
 					</Text>
-					<StandardSiteMetaRow type="publication" view={view} />
+					<StandardSiteMetaRow preview={preview} type="publication" view={view} />
 				</View>
 			</View>
 
-			{!hideSubscribe && (
-				<SubscribeButton
-					view={view}
-					style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
-					onPress={onPress}
-				/>
-			)}
+			<SubscribeButton
+				preview={preview}
+				view={view}
+				style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
+				onPress={onPress}
+			/>
 		</View>
 	);
 }

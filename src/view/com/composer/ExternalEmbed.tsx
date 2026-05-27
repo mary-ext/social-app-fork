@@ -93,7 +93,7 @@ export const ExternalEmbedLink = ({
 				if (external && isStandardSiteEmbed(external)) {
 					return (
 						<StandardSiteEmbed
-							hideSubscribe
+							preview
 							view={
 								{
 									...external,
