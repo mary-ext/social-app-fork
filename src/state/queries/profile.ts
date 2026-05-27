@@ -416,10 +416,15 @@ export function useProfileMuteMutationQueue(profile: Shadow<bsky.profile.AnyProf
 
 function useProfileMuteMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<void, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
-			await agent.mute(did);
+			await ok(
+				appview.post('app.bsky.graph.muteActor', {
+					as: null,
+					input: { actor: did as ActorIdentifier },
+				}),
+			);
 		},
 		onSuccess() {
 			void queryClient.invalidateQueries({ queryKey: RQKEY_MY_MUTED() });
@@ -429,10 +434,15 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<void, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
-			await agent.unmute(did);
+			await ok(
+				appview.post('app.bsky.graph.unmuteActor', {
+					as: null,
+					input: { actor: did as ActorIdentifier },
+				}),
+			);
 		},
 		onSuccess() {
 			void queryClient.invalidateQueries({ queryKey: RQKEY_MY_MUTED() });

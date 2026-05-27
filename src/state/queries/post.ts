@@ -1,4 +1,6 @@
 import { useCallback } from 'react';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type AppBskyFeedDefs } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -7,7 +9,7 @@ import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { type Shadow } from '#/state/cache/types';
-import { useAgent } from '#/state/session';
+import { useAgent, useClients } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
@@ -347,23 +349,33 @@ export function useThreadMuteMutationQueue(post: Shadow<AppBskyFeedDefs.PostView
 }
 
 function useThreadMuteMutation() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<
-		{},
+		void,
 		Error,
 		{ uri: string } // the root post's uri
 	>({
-		mutationFn: ({ uri }) => {
-			return agent.api.app.bsky.graph.muteThread({ root: uri });
+		mutationFn: async ({ uri }) => {
+			await ok(
+				appview.post('app.bsky.graph.muteThread', {
+					as: null,
+					input: { root: uri as ResourceUri },
+				}),
+			);
 		},
 	});
 }
 
 function useThreadUnmuteMutation() {
-	const agent = useAgent();
-	return useMutation<{}, Error, { uri: string }>({
-		mutationFn: ({ uri }) => {
-			return agent.api.app.bsky.graph.unmuteThread({ root: uri });
+	const { appview } = useClients();
+	return useMutation<void, Error, { uri: string }>({
+		mutationFn: async ({ uri }) => {
+			await ok(
+				appview.post('app.bsky.graph.unmuteThread', {
+					as: null,
+					input: { root: uri as ResourceUri },
+				}),
+			);
 		},
 	});
 }

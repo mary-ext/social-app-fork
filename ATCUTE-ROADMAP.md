@@ -163,6 +163,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
   call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
   stay on `parseResourceUri`.
+- **Phase 3.1 (partial) — done.** Mutes slice landed: `agent.mute` / `unmute`,
+  `agent.muteModList` / `unmuteModList`, and `agent.api.app.bsky.graph.muteThread` / `unmuteThread`
+  now go through `appview.post(...)` (server-side procedures, not records — routed to `appview`
+  per the routing table). Void-output procedures require `as: null`. Toggle helpers, composer, and
+  Germ declaration still pending.
 - Next: finish **Phase 2.4** (`PostView`/`FeedViewPost`).
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the

@@ -2219,7 +2219,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:139
+#: src/screens/Messages/components/MessageInputEmbed.tsx:144
 msgid "Could not fetch post"
 msgstr "Could not fetch post"
 
@@ -6077,8 +6077,8 @@ msgid "Post failed to upload. Please check your Internet connection and try agai
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:124
-#: src/screens/PostThread/components/ThreadItemPost.tsx:95
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:100
+#: src/screens/PostThread/components/ThreadItemPost.tsx:99
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:104
 msgid "Post has been deleted"
 msgstr ""
 
@@ -6458,8 +6458,8 @@ msgstr ""
 msgid "Remove caption file"
 msgstr "Remove caption file"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:165
-#: src/screens/Messages/components/MessageInputEmbed.tsx:212
+#: src/screens/Messages/components/MessageInputEmbed.tsx:170
+#: src/screens/Messages/components/MessageInputEmbed.tsx:217
 msgid "Remove embed"
 msgstr ""
 

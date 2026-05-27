@@ -1,8 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 
 import * as persisted from '#/state/persisted';
 
-import { useAgent, useSession } from '../session';
+import { useClients, useSession } from '../session';
 
 type StateContext = Map<string, boolean>;
 type SetStateContext = (uri: string, value: boolean) => void;
@@ -49,7 +51,7 @@ export function useSetThreadMute() {
 }
 
 function useMigrateMutes(setThreadMute: SetStateContext) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { currentAccount } = useSession();
 
 	useEffect(() => {
@@ -75,8 +77,12 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 
 					setThreadMute(root, true);
 
-					await agent.api.app.bsky.graph
-						.muteThread({ root })
+					await ok(
+						appview.post('app.bsky.graph.muteThread', {
+							as: null,
+							input: { root: root as ResourceUri },
+						}),
+					)
 						// not a big deal if this fails, since the post might have been deleted
 						.catch(console.error);
 				}
@@ -88,5 +94,5 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 				cancelled = true;
 			};
 		}
-	}, [agent, currentAccount, setThreadMute]);
+	}, [appview, currentAccount, setThreadMute]);
 }

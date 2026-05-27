@@ -232,13 +232,15 @@ export function useListDeleteMutation() {
 export function useListMuteMutation() {
 	const queryClient = useQueryClient();
 	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<void, Error, { uri: string; mute: boolean }>({
 		mutationFn: async ({ uri, mute }) => {
-			if (mute) {
-				await agent.muteModList(uri);
-			} else {
-				await agent.unmuteModList(uri);
-			}
+			await ok(
+				appview.post(mute ? 'app.bsky.graph.muteActorList' : 'app.bsky.graph.unmuteActorList', {
+					as: null,
+					input: { list: uri as ResourceUri },
+				}),
+			);
 
 			await whenAppViewReady(agent, uri, (v) => {
 				return Boolean(v?.data.list.viewer?.muted) === mute;
