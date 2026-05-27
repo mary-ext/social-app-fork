@@ -1,5 +1,5 @@
 import { type AppBskyActorDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -56,7 +56,7 @@ export function MoreOptionsMenu({
 	const isOwner = currentAccount?.did === list.creator.did;
 
 	const onPressShare = () => {
-		const { rkey } = new AtUri(list.uri);
+		const { rkey } = parseCanonicalResourceUri(list.uri);
 		const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`);
 		shareUrl(url);
 	};

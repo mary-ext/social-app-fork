@@ -1,10 +1,10 @@
+import { type ParsedResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorDefs,
 	AppBskyEmbedRecord,
 	AppBskyEmbedRecordWithMedia,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
-	type AtUri,
 } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey } from '@tanstack/react-query';
 
@@ -69,21 +69,23 @@ export async function truncateAndInvalidate<T = unknown>(queryClient: QueryClien
 	return queryClient.invalidateQueries({ queryKey });
 }
 
-// Given an AtUri, this function will check if the AtUri matches a
-// hit regardless of whether the AtUri uses a DID or handle as a host.
+// Given a parsed at:// URI, this function will check if it matches a
+// hit regardless of whether the URI uses a DID or handle as the repo.
 //
-// AtUri should be the URI that is being searched for, while currentUri
-// is the URI that is being checked. currentAuthor is the author
-// of the currentUri that is being checked.
+// atUri should be the URI that is being searched for, while record.uri
+// is the URI that is being checked. record.author is the author of the
+// URI that is being checked.
 export function didOrHandleUriMatches(
-	atUri: AtUri,
+	atUri: ParsedResourceUri,
 	record: { uri: string; author: AppBskyActorDefs.ProfileViewBasic },
 ) {
-	if (atUri.host.startsWith('did:')) {
-		return atUri.href === record.uri;
+	if (atUri.rkey === undefined) {
+		return false;
 	}
-
-	return atUri.host === record.author.handle && record.uri.endsWith(atUri.rkey);
+	if (atUri.repo.startsWith('did:')) {
+		return `at://${atUri.repo}/${atUri.collection}/${atUri.rkey}` === record.uri;
+	}
+	return atUri.repo === record.author.handle && record.uri.endsWith(atUri.rkey);
 }
 
 export function getEmbeddedPost(v: unknown): AppBskyEmbedRecord.ViewRecord | undefined {

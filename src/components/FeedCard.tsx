@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
 import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { AtUri, RichText as RichTextApi } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { RichText as RichTextApi } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -314,6 +315,6 @@ function SaveButtonInner({
 }
 
 export function createProfileFeedHref({ feed }: { feed: AppBskyFeedDefs.GeneratorView }) {
-	const urip = new AtUri(feed.uri);
+	const urip = parseCanonicalResourceUri(feed.uri);
 	return `/profile/${feed.creator.did}/feed/${urip.rkey}`;
 }

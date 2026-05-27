@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
 	type AppBskyActorStatus,
 	AppBskyEmbedExternal,
-	AtUri,
 	ComAtprotoRepoPutRecord,
 } from '@atproto/api';
 import { retry } from '@atproto/common-web';
@@ -157,7 +157,7 @@ export function isStatusValidForViewers(status: AppBskyActorDefs.StatusView, con
 	if (status.status !== 'app.bsky.actor.status#live') return false;
 	if (!status.uri) return false; // should not happen, just backwards compat
 	try {
-		const { host: liveDid } = new AtUri(status.uri);
+		const { repo: liveDid } = parseCanonicalResourceUri(status.uri);
 		if (AppBskyEmbedExternal.isView(status.embed)) {
 			const url = status.embed.external.uri;
 			const exception = config.allowedHostsExceptionsByDid.get(liveDid);

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AtUri } from '@atproto/api';
+import { type ParsedCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 
 // import {makeProfileLink} from '#/lib/routes/links'
@@ -159,7 +159,7 @@ type ParsedTrendingTopic =
 			label: string;
 			displayName: string;
 			url: string;
-			uri: AtUri;
+			uri: ParsedCanonicalResourceUri;
 	  };
 
 export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {

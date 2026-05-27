@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useRef } from 'react';
 import { Platform, type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, AppBskyFeedPost, type AppBskyGraphDefs, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyFeedDefs, AppBskyFeedPost, type AppBskyGraphDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -280,12 +281,12 @@ function Rule({
 	if (rule.type === 'list') {
 		const list = lists?.find((l) => l.uri === rule.list);
 		if (list) {
-			const listUrip = new AtUri(list.uri);
+			const listUrip = parseCanonicalResourceUri(list.uri);
 			return (
 				<Trans>
 					<InlineLinkText
 						label={list.name}
-						to={makeListLink(listUrip.hostname, listUrip.rkey)}
+						to={makeListLink(listUrip.repo, listUrip.rkey)}
 						style={[a.text_sm, a.leading_snug]}
 					>
 						{list.name}

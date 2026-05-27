@@ -1,7 +1,7 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { type $type } from '@atcute/lexicons';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
@@ -156,7 +156,7 @@ export function FeedSourceCardLoaded({
 				}
 				to={{
 					screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
-					params: { name: feed.creatorDid, rkey: new AtUri(feed.uri).rkey },
+					params: { name: feed.creatorDid, rkey: parseCanonicalResourceUri(feed.uri).rkey },
 				}}
 				style={[
 					a.flex_1,

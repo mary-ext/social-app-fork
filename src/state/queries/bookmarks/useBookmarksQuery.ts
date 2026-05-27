@@ -1,4 +1,5 @@
-import { type $Typed, type AppBskyBookmarkGetBookmarks, AppBskyFeedDefs, AtUri } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { type $Typed, type AppBskyBookmarkGetBookmarks, AppBskyFeedDefs } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
@@ -108,7 +109,7 @@ export function* findAllPostsInQueryData(
 	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.OutputSchema>>({
 		queryKey: [bookmarksQueryKeyRoot],
 	});
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {

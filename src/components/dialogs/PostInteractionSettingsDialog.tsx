@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Text as NestedText, View } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPostgate, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -150,7 +151,7 @@ export function PostInteractionSettingsDialogControlledInner(props: PostInteract
 	const isLoading = isLoadingThreadgate || isLoadingPostgate;
 	const threadgateView = threadgateViewLoaded || props.initialThreadgateView;
 	const isThreadgateOwnedByViewer = useMemo(() => {
-		return currentAccount?.did === new AtUri(props.rootPostUri).host;
+		return currentAccount?.did === parseCanonicalResourceUri(props.rootPostUri).repo;
 	}, [props.rootPostUri, currentAccount?.did]);
 
 	const postgateValue = useMemo(() => {

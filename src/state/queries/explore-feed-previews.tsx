@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react';
 import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
-import { type AppBskyActorDefs, AppBskyFeedDefs, AtUri, moderatePost } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyActorDefs, AppBskyFeedDefs, moderatePost } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -319,7 +320,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<
 		InfiniteData<{

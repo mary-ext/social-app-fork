@@ -6,11 +6,11 @@ import {
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorGetProfile,
 	type AppBskyActorProfile,
 	type ComAtprotoRepoUploadBlob,
-	AtUri,
 	type Un$Typed,
 } from '@atproto/api';
 import {
@@ -523,7 +523,7 @@ function useProfileUnblockMutation() {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			const { rkey } = new AtUri(blockUri);
+			const { rkey } = parseCanonicalResourceUri(blockUri);
 			await agent.app.bsky.graph.block.delete({
 				repo: currentAccount.did,
 				rkey,

@@ -1,4 +1,5 @@
-import { type AppBskyFeedDefs, AppBskyFeedThreadgate, AtUri } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atproto/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { networkRetry, retry } from '#/lib/async/retry';
@@ -81,14 +82,14 @@ export async function getThreadgateRecord({
 	agent: BskyAppAgent;
 	postUri: string;
 }): Promise<AppBskyFeedThreadgate.Record | null> {
-	const urip = new AtUri(postUri);
+	const urip = parseResourceUri(postUri);
 
-	if (!urip.host.startsWith('did:')) {
+	let repo: string = urip.repo;
+	if (!repo.startsWith('did:')) {
 		const res = await agent.resolveHandle({
-			handle: urip.host,
+			handle: repo,
 		});
-		// @ts-expect-error TODO new-sdk-migration
-		urip.host = res.data.did;
+		repo = res.data.did;
 	}
 
 	try {
@@ -107,9 +108,9 @@ export async function getThreadgateRecord({
 			},
 			() =>
 				agent.api.com.atproto.repo.getRecord({
-					repo: urip.host,
+					repo,
 					collection: 'app.bsky.feed.threadgate',
-					rkey: urip.rkey,
+					rkey: urip.rkey!,
 				}),
 		);
 
@@ -141,7 +142,7 @@ export async function writeThreadgateRecord({
 	postUri: string;
 	threadgate: AppBskyFeedThreadgate.Record;
 }) {
-	const postUrip = new AtUri(postUri);
+	const postUrip = parseResourceUri(postUri);
 	const record = createThreadgateRecord({
 		post: postUri,
 		allow: threadgate.allow, // can/should be undefined!
@@ -152,7 +153,7 @@ export async function writeThreadgateRecord({
 		agent.api.com.atproto.repo.putRecord({
 			repo: agent.session!.did,
 			collection: 'app.bsky.feed.threadgate',
-			rkey: postUrip.rkey,
+			rkey: postUrip.rkey!,
 			record,
 		}),
 	);

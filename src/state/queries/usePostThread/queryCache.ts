@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
 	type AppBskyActorDefs,
@@ -6,7 +7,6 @@ import {
 	AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadOtherV2,
 	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
 } from '@atproto/api';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 
@@ -98,7 +98,7 @@ export function createCacheMutator({
 						optimisticReplyCount: currentReplyCount,
 					});
 
-					const opDid = getRootPostAtUri(parent.value.post)?.host;
+					const opDid = getRootPostAtUri(parent.value.post)?.repo;
 					const nextPreexistingItem = thread.at(i + 1);
 					const isEndOfReplyChain = !nextPreexistingItem || nextPreexistingItem.depth <= parent.depth;
 					const isParentRoot = parent.depth === 0;
@@ -248,7 +248,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 	const queryDatas = queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
 		queryKey: [postThreadQueryKeyRoot],
 	});

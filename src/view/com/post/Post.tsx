@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
-	AtUri,
 	moderatePost,
 	type ModerationDecision,
 	RichText as RichTextAPI,
@@ -116,12 +116,12 @@ function PostInner({
 	const t = useTheme();
 	const { openComposer } = useOpenComposer();
 	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
-	const itemUrip = new AtUri(post.uri);
+	const itemUrip = parseCanonicalResourceUri(post.uri);
 	const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
 	let replyAuthorDid = '';
 	if (record.reply) {
-		const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri);
-		replyAuthorDid = urip.hostname;
+		const urip = parseCanonicalResourceUri(record.reply.parent?.uri || record.reply.root.uri);
+		replyAuthorDid = urip.repo;
 	}
 
 	const onPressReply = useCallback(() => {

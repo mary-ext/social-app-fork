@@ -1,10 +1,10 @@
 import { useRef } from 'react';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyEmbedRecord,
 	AppBskyEmbedRecordWithMedia,
 	type AppBskyFeedDefs,
 	AppBskyFeedPostgate,
-	AtUri,
 } from '@atproto/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -33,14 +33,14 @@ export async function getPostgateRecord({
 	agent: BskyAppAgent;
 	postUri: string;
 }): Promise<AppBskyFeedPostgate.Record | undefined> {
-	const urip = new AtUri(postUri);
+	const urip = parseResourceUri(postUri);
 
-	if (!urip.host.startsWith('did:')) {
+	let repo: string = urip.repo;
+	if (!repo.startsWith('did:')) {
 		const res = await agent.resolveHandle({
-			handle: urip.host,
+			handle: repo,
 		});
-		// @ts-expect-error TODO new-sdk-migration
-		urip.host = res.data.did;
+		repo = res.data.did;
 	}
 
 	try {
@@ -59,9 +59,9 @@ export async function getPostgateRecord({
 			},
 			() =>
 				agent.api.com.atproto.repo.getRecord({
-					repo: urip.host,
+					repo,
 					collection: POSTGATE_COLLECTION,
-					rkey: urip.rkey,
+					rkey: urip.rkey!,
 				}),
 		);
 
@@ -93,13 +93,13 @@ export async function writePostgateRecord({
 	postUri: string;
 	postgate: AppBskyFeedPostgate.Record;
 }) {
-	const postUrip = new AtUri(postUri);
+	const postUrip = parseResourceUri(postUri);
 
 	await networkRetry(2, () =>
 		agent.api.com.atproto.repo.putRecord({
 			repo: agent.session!.did,
 			collection: POSTGATE_COLLECTION,
-			rkey: postUrip.rkey,
+			rkey: postUrip.rkey!,
 			record: postgate,
 		}),
 	);

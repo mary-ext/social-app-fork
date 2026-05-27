@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { AppBskyGraphStarterpack, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { AppBskyGraphStarterpack } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -93,7 +94,7 @@ export function useStarterPackLink({ view }: { view: bsky.starterPack.AnyStarter
 	const { t: l } = useLingui();
 	const qc = useQueryClient();
 	const { rkey, did } = useMemo(() => {
-		const rkey = new AtUri(view.uri).rkey;
+		const rkey = parseCanonicalResourceUri(view.uri).rkey;
 		return { rkey, did: view.creator.did };
 	}, [view]);
 	const precache = () => {
@@ -122,7 +123,7 @@ export function Link({
 	const queryClient = useQueryClient();
 	const { record } = starterPack;
 	const { rkey, did } = useMemo(() => {
-		const rkey = new AtUri(starterPack.uri).rkey;
+		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 		return { rkey, did: starterPack.creator.did };
 	}, [starterPack]);
 

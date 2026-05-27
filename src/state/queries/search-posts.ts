@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useRef } from 'react';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedSearchPosts,
-	AtUri,
 	moderatePost,
 } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
@@ -134,7 +134,7 @@ export function* findAllPostsInQueryData(
 	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.OutputSchema>>({
 		queryKey: [searchPostsQueryKeyRoot],
 	});
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {

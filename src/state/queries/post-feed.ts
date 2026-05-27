@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { AppState } from 'react-native';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	type AppBskyFeedPost,
-	AtUri,
 	moderatePost,
 	type ModerationDecision,
 	type ModerationPrefs,
@@ -465,7 +465,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPageUnselected>>({
 		queryKey: [RQKEY_ROOT],

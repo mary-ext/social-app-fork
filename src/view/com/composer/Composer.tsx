@@ -23,11 +23,11 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyDraftCreateDraft,
 	AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
 	type RichText,
 } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
@@ -828,7 +828,7 @@ export const ComposePost = ({
 						<Toast.Action
 							label={l`View post`}
 							onPress={() => {
-								const { host: name, rkey } = new AtUri(postUri);
+								const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
 								navigation.navigate('PostThread', { name, rkey });
 							}}
 						>

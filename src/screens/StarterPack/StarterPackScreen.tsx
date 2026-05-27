@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyGraphDefs as ApiAppBskyGraphDefs,
 	AppBskyGraphStarterpack,
-	AtUri,
 	RichText as RichTextAPI,
 } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -185,7 +185,7 @@ function StarterPackScreenLoaded({
 	useEffect(() => {}, [starterPack.uri]);
 
 	const onOpenShareDialog = useCallback(() => {
-		const rkey = new AtUri(starterPack.uri).rkey;
+		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 		shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then((res) => {
 			setLink(res.url);
 		});

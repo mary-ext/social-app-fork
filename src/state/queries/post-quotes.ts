@@ -1,9 +1,9 @@
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorDefs,
 	AppBskyEmbedRecord,
 	type AppBskyFeedDefs,
 	type AppBskyFeedGetQuotes,
-	AtUri,
 } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -91,7 +91,7 @@ export function* findAllPostsInQueryData(
 	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetQuotes.OutputSchema>>({
 		queryKey: [RQKEY_ROOT],
 	});
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {
 			continue;

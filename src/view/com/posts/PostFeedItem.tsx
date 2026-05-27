@@ -1,11 +1,11 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
-	AtUri,
 	type ModerationDecision,
 	RichText as RichTextAPI,
 } from '@atproto/api';
@@ -167,7 +167,7 @@ let FeedItemInner = ({
 	const [hover, setHover] = useState(false);
 
 	const [href] = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey];
 	}, [post.uri, post.author]);
 	const { sendInteraction, feedSourceInfo, feedDescriptor: _feedDescriptor } = useFeedFeedbackContext();
@@ -280,7 +280,7 @@ let FeedItemInner = ({
 		const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
 			? post.record?.reply?.root?.uri || post.uri
 			: undefined;
-		const isControlledByViewer = rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did;
+		const isControlledByViewer = rootPostUri && parseCanonicalResourceUri(rootPostUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{

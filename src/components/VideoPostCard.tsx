@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorDefs,
 	AppBskyEmbedVideo,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
-	AtUri,
 	type ModerationDecision,
 } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
@@ -106,7 +106,7 @@ export function VideoPostCard({
 		<Link
 			accessibilityHint={l`Views video in immersive mode`}
 			label={l`Video from ${author.handle}: ${text}`}
-			to={makeProfileLink(author, 'post', new AtUri(post.uri).rkey)}
+			to={makeProfileLink(author, 'post', parseCanonicalResourceUri(post.uri).rkey)}
 			onPress={() => {
 				onInteract?.();
 			}}
@@ -358,7 +358,7 @@ export function CompactVideoPostCard({
 	return (
 		<Link
 			label={l`View video`}
-			to={makeProfileLink(post.author, 'post', new AtUri(post.uri).rkey)}
+			to={makeProfileLink(post.author, 'post', parseCanonicalResourceUri(post.uri).rkey)}
 			onPress={() => {
 				onInteract?.();
 			}}

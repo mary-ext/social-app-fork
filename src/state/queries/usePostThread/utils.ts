@@ -1,10 +1,10 @@
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
 	AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
 } from '@atproto/api';
 
 import {
@@ -26,10 +26,10 @@ export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
 	if (bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)) {
 		/** If the record has no `reply` field, it is a root post. */
 		if (!post.record.reply) {
-			return new AtUri(post.uri);
+			return parseCanonicalResourceUri(post.uri);
 		}
 		if (post.record.reply?.root?.uri) {
-			return new AtUri(post.record.reply.root.uri);
+			return parseCanonicalResourceUri(post.record.reply.root.uri);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { type AppBskyFeedDefs } from '@atcute/bluesky';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeCustomFeedLink } from '#/lib/routes/links';
 
@@ -52,7 +52,7 @@ export function FeedLink({
 	children?: React.ReactNode;
 }) {
 	const t = useTheme();
-	const { host: did, rkey } = useMemo(() => new AtUri(feed.uri), [feed.uri]);
+	const { repo: did, rkey } = useMemo(() => parseCanonicalResourceUri(feed.uri), [feed.uri]);
 	return (
 		<Link to={makeCustomFeedLink(did, rkey)} label={feed.displayName} style={[a.flex_1]}>
 			{({ focused, hovered, pressed }) => (

@@ -14,7 +14,7 @@
  */
 
 import { type AppBskyActorDefs, type AppBskyGraphGetStarterPacksWithMembership } from '@atcute/bluesky';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
@@ -218,7 +218,7 @@ export function useListMembershipRemoveMutation({
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			const membershipUrip = new AtUri(membershipUri);
+			const membershipUrip = parseCanonicalResourceUri(membershipUri);
 			await agent.app.bsky.graph.listitem.delete({
 				repo: currentAccount.did,
 				rkey: membershipUrip.rkey,

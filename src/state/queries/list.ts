@@ -1,10 +1,10 @@
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
 	type AppBskyGraphList,
-	AtUri,
 	type ComAtprotoRepoApplyWrites,
 	type Facet,
 	type Un$Typed,
@@ -113,11 +113,11 @@ export function useListMetadataMutation() {
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: string; cid: string }, Error, ListMetadataMutateParams>({
 		async mutationFn({ uri, name, description, descriptionFacets, avatar }) {
-			const { hostname, rkey } = new AtUri(uri);
+			const { repo, rkey } = parseCanonicalResourceUri(uri);
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			if (currentAccount.did !== hostname) {
+			if (currentAccount.did !== repo) {
 				throw new Error('You do not own this list');
 			}
 
@@ -197,7 +197,7 @@ export function useListDeleteMutation() {
 
 			// batch delete the list and listitem records
 			const createDel = (uri: string): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
-				const urip = new AtUri(uri);
+				const urip = parseCanonicalResourceUri(uri);
 				return {
 					$type: 'com.atproto.repo.applyWrites#delete',
 					collection: urip.collection,

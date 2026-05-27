@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { Platform, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	AtUri,
 	type RichText as RichTextAPI,
 } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
@@ -149,7 +149,7 @@ let PostMenuItems = ({
 	const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(post, rootUri);
 	const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri);
 	const isAuthor = postAuthor.did === currentAccount?.did;
-	const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did;
+	const isRootPostAuthor = parseCanonicalResourceUri(rootUri).repo === currentAccount?.did;
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
@@ -168,7 +168,7 @@ let PostMenuItems = ({
 	});
 
 	const href = useMemo(() => {
-		const urip = new AtUri(postUri);
+		const urip = parseCanonicalResourceUri(postUri);
 		return makeProfileLink(postAuthor, 'post', urip.rkey);
 	}, [postUri, postAuthor]);
 

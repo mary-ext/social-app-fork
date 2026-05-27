@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
-	AtUri,
 	moderatePost,
 	RichText as RichTextAPI,
 } from '@atproto/api';
@@ -234,7 +234,7 @@ export function QuoteEmbed({
 
 	const t = useTheme();
 	const queryClient = useQueryClient();
-	const itemUrip = new AtUri(quote.uri);
+	const itemUrip = parseCanonicalResourceUri(quote.uri);
 	const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey);
 	const itemTitle = `Post by ${quote.author.handle}`;
 

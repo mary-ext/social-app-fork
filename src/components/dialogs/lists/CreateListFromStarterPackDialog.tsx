@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { type AppBskyGraphStarterpack, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyGraphStarterpack } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -45,9 +46,9 @@ export function CreateListFromStarterPackDialog({
 
 	const addMembersAndNavigate = async (listUri: string) => {
 		const navigateToList = () => {
-			const urip = new AtUri(listUri);
+			const urip = parseCanonicalResourceUri(listUri);
 			navigation.navigate('ProfileList', {
-				name: urip.hostname,
+				name: urip.repo,
 				rkey: urip.rkey,
 			});
 		};

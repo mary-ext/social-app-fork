@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { AppBskyGraphDefs } from '@atcute/bluesky';
-import { AtUri } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -58,7 +57,7 @@ function ProfileListScreenInner(props: Props) {
 	const { t: l } = useLingui();
 	const { name: handleOrDid, rkey } = props.route.params;
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(
-		AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+		`at://${handleOrDid}/app.bsky.graph.list/${rkey}`,
 	);
 	const { data: preferences } = usePreferencesQuery();
 	const { data: list, error: listError } = useListQuery(resolvedUri?.uri);

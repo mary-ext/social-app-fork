@@ -1,11 +1,11 @@
 import { type AppBskyFeedDefs, AppBskyGraphDefs, type AppBskyGraphGetStarterPack } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyFeedDefs as ApiAppBskyFeedDefs,
 	AppBskyGraphStarterpack,
 	type AppBskyRichtextFacet,
-	AtUri,
 	RichText,
 } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -180,7 +180,7 @@ export function useEditStarterPackMutation({
 						writes: chunk.map((i) => ({
 							$type: 'com.atproto.repo.applyWrites#delete',
 							collection: 'app.bsky.graph.listitem',
-							rkey: new AtUri(i.uri).rkey,
+							rkey: parseCanonicalResourceUri(i.uri).rkey,
 						})),
 					});
 				}
@@ -269,7 +269,7 @@ export function useDeleteStarterPackMutation({
 			if (listUri) {
 				await agent.app.bsky.graph.list.delete({
 					repo: agent.session.did,
-					rkey: new AtUri(listUri).rkey,
+					rkey: parseCanonicalResourceUri(listUri).rkey,
 				});
 			}
 			await agent.app.bsky.graph.starterpack.delete({

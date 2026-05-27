@@ -7,7 +7,8 @@ import {
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
-import { AtUri, RichText } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { RichText } from '@atproto/api';
 import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
@@ -92,9 +93,9 @@ const feedSourceNSIDs = {
 };
 
 export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedSourceInfo {
-	const urip = new AtUri(view.uri);
+	const urip = parseCanonicalResourceUri(view.uri);
 	const collection = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists';
-	const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`;
+	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
 	const route = router.matchPath(href);
 
 	return {
@@ -127,9 +128,9 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 }
 
 export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
-	const urip = new AtUri(view.uri);
+	const urip = parseCanonicalResourceUri(view.uri);
 	const collection = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists';
-	const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`;
+	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
 	const route = router.matchPath(href);
 
 	return {
@@ -159,8 +160,8 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 }
 
 export function getFeedTypeFromUri(uri: string) {
-	const { pathname } = new AtUri(uri);
-	return pathname.includes(feedSourceNSIDs.feed) ? 'feed' : 'list';
+	const { collection } = parseCanonicalResourceUri(uri);
+	return collection === feedSourceNSIDs.feed ? 'feed' : 'list';
 }
 
 export function getAvatarTypeFromUri(uri: string) {

@@ -156,8 +156,12 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   depends on `PostView`.
 - **Phase 4.2 — done.** Video upload client, pulled forward (Stream 4 only depends on Stream 1).
 - **Phase 4.3 — done.** Moderation reporting, pulled forward.
-- Next: finish **Phase 2.4** (`PostView`/`FeedViewPost`), or pick another PostView-independent slice
-  — e.g. Phase 5.1 (`AtUri` swap).
+- **Phase 5.1 — done.** `AtUri` swapped for `@atcute/lexicons/syntax` (`parseResourceUri` /
+  `parseCanonicalResourceUri`); pulled forward as a PostView-independent slice. Server-derived
+  URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
+  call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
+  stay on `parseResourceUri`.
+- Next: finish **Phase 2.4** (`PostView`/`FeedViewPost`).
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are

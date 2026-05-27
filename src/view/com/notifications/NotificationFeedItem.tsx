@@ -8,13 +8,13 @@ import {
 	View,
 } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyGraphFollow,
 	type ModerationDecision,
 } from '@atproto/api';
-import { AtUri } from '@atproto/api';
 import { TID } from '@atproto/common-web';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -105,8 +105,8 @@ let NotificationFeedItem = ({
 			case 'like-via-repost':
 			case 'repost-via-repost': {
 				if (item.subjectUri) {
-					const urip = new AtUri(item.subjectUri);
-					return `/profile/${urip.host}/post/${urip.rkey}`;
+					const urip = parseCanonicalResourceUri(item.subjectUri);
+					return `/profile/${urip.repo}/post/${urip.rkey}`;
 				}
 				break;
 			}
@@ -119,14 +119,14 @@ let NotificationFeedItem = ({
 			case 'reply':
 			case 'mention':
 			case 'quote': {
-				const uripReply = new AtUri(item.notification.uri);
-				return `/profile/${uripReply.host}/post/${uripReply.rkey}`;
+				const uripReply = parseCanonicalResourceUri(item.notification.uri);
+				return `/profile/${uripReply.repo}/post/${uripReply.rkey}`;
 			}
 			case 'feedgen-like':
 			case 'starterpack-joined': {
 				if (item.subjectUri) {
-					const urip = new AtUri(item.subjectUri);
-					return `/profile/${urip.host}/feed/${urip.rkey}`;
+					const urip = parseCanonicalResourceUri(item.subjectUri);
+					return `/profile/${urip.repo}/feed/${urip.rkey}`;
 				}
 				break;
 			}
@@ -184,7 +184,7 @@ let NotificationFeedItem = ({
 		) {
 			let followingTimestamp;
 			try {
-				const rkey = new AtUri(item.notification.author.viewer.following).rkey;
+				const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
 				followingTimestamp = TID.fromStr(rkey).timestamp();
 			} catch (e) {
 				return false;

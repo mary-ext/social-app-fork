@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { AtUri, type ModerationUI } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -134,6 +135,6 @@ export function TitleAndByline({
 }
 
 export function createProfileListHref({ list }: { list: AppBskyGraphDefs.ListView }) {
-	const urip = new AtUri(list.uri);
+	const urip = parseCanonicalResourceUri(list.uri);
 	return `/profile/${list.creator.did}/lists/${urip.rkey}`;
 }

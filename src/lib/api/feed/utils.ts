@@ -1,4 +1,4 @@
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { BSKY_FEED_OWNER_DIDS } from '#/lib/constants';
 
@@ -21,6 +21,6 @@ export function aggregateUserInterests(preferences?: UsePreferencesQueryResponse
 }
 
 export function isBlueskyOwnedFeed(feedUri: string) {
-	const uri = new AtUri(feedUri);
-	return BSKY_FEED_OWNER_DIDS.includes(uri.host);
+	const uri = parseCanonicalResourceUri(feedUri);
+	return BSKY_FEED_OWNER_DIDS.includes(uri.repo);
 }

@@ -1,4 +1,5 @@
-import { type AppBskyActorDefs, type AppBskyActorGetProfile, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyActorDefs, type AppBskyActorGetProfile } from '@atproto/api';
 import { useMutation } from '@tanstack/react-query';
 
 import { until } from '#/lib/async/until';
@@ -31,7 +32,7 @@ export function useVerificationsRemoveMutation() {
 				uris.map((uri) => {
 					return agent.app.bsky.graph.verification.delete({
 						repo: currentAccount.did,
-						rkey: new AtUri(uri).rkey,
+						rkey: parseCanonicalResourceUri(uri).rkey,
 					});
 				}),
 			);

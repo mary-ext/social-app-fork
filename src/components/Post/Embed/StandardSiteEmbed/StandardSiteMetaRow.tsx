@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { type AppBskyEmbedExternal, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyEmbedExternal } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -33,7 +34,7 @@ export function StandardSiteMetaRow({
 	const didsFromRecords =
 		view.associatedRefs
 			?.filter(type === 'document' ? isStandardSiteDocumentUri : isStandardSitePublicationUri)
-			.map((ref) => new AtUri(ref.uri).host) || [];
+			.map((ref) => parseCanonicalResourceUri(ref.uri).repo) || [];
 	// atm should only be one docment
 	const authorDid = didsFromRecords.at(0);
 	const authorProfile = authorDid ? view.associatedProfiles?.find((p) => p.did === authorDid) : undefined;

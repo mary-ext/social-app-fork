@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyFeedPost,
 	AppBskyRichtextFacet,
-	AtUri,
 	moderatePost,
 	RichText as RichTextAPI,
 } from '@atproto/api';
@@ -146,7 +146,7 @@ export function MessageInputEmbed({
 				</SimpleContainer>
 			);
 		case 'success':
-			const itemUrip = new AtUri(post.uri);
+			const itemUrip = parseCanonicalResourceUri(post.uri);
 			const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
 
 			if (!post || !moderation || !rt || !record) {

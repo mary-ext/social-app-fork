@@ -16,7 +16,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AppBskyFeedDefs, AppBskyFeedPost, AtUri, moderatePost } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { AppBskyFeedDefs, AppBskyFeedPost, moderatePost } from '@atproto/api';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -246,7 +247,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
 		queryKey: [RQKEY_ROOT],

@@ -1,10 +1,10 @@
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	type AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
 	moderatePost,
 	type ModerationOpts,
 } from '@atproto/api';
@@ -109,8 +109,8 @@ export function readMore({
 	skippedIndentIndices,
 	postData,
 }: TraversalMetadata): Extract<ThreadItem, { type: 'readMore' }> {
-	const urip = new AtUri(postData.uri);
-	const href = makeProfileLink({ did: urip.host }, 'post', urip.rkey);
+	const urip = parseCanonicalResourceUri(postData.uri);
+	const href = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
 	return {
 		type: 'readMore' as const,
 		key: `readMore:${postData.uri}`,
@@ -122,8 +122,8 @@ export function readMore({
 }
 
 export function readMoreUp({ postData }: TraversalMetadata): Extract<ThreadItem, { type: 'readMoreUp' }> {
-	const urip = new AtUri(postData.uri);
-	const href = makeProfileLink({ did: urip.host }, 'post', urip.rkey);
+	const urip = parseCanonicalResourceUri(postData.uri);
+	const href = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
 	return {
 		type: 'readMoreUp' as const,
 		key: `readMoreUp:${postData.uri}`,

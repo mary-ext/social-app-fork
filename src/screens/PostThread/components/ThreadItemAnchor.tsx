@@ -1,11 +1,11 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	AtUri,
 	RichText as RichTextAPI,
 } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -193,15 +193,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did;
 
 	const likesHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by');
 	}, [post.uri, post.author]);
 	const repostsHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by');
 	}, [post.uri, post.author]);
 	const quotesHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey, 'quotes');
 	}, [post.uri, post.author]);
 
@@ -210,7 +210,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	});
 	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const isControlledByViewer = new AtUri(threadRootUri).host === currentAccount?.did;
+		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{
@@ -581,7 +581,7 @@ function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost
 		return post.author.did;
 	}
 	try {
-		return new AtUri(record.reply.root.uri).host;
+		return parseCanonicalResourceUri(record.reply.root.uri).repo;
 	} catch {
 		return '';
 	}

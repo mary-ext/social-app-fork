@@ -1,10 +1,10 @@
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyEmbedExternal,
 	type AppBskyFeedDefs,
 	type AppBskyGraphDefs,
 	type ComAtprotoRepoStrongRef,
 } from '@atproto/api';
-import { AtUri } from '@atproto/api';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
@@ -159,16 +159,16 @@ export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<Res
 
 	// Forked from useGetPost. TODO: move into RQ.
 	async function getPost({ uri }: { uri: string }) {
-		const urip = new AtUri(uri);
-		if (!urip.host.startsWith('did:')) {
+		const urip = parseResourceUri(uri);
+		let repo: string = urip.repo;
+		if (!repo.startsWith('did:')) {
 			const res = await agent.resolveHandle({
-				handle: urip.host,
+				handle: repo,
 			});
-			// @ts-expect-error TODO new-sdk-migration
-			urip.host = res.data.did;
+			repo = res.data.did;
 		}
 		const res = await agent.getPosts({
-			uris: [urip.toString()],
+			uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
 		});
 		if (res.success && res.data.posts[0]) {
 			return res.data.posts[0];

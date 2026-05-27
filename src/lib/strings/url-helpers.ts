@@ -1,4 +1,4 @@
-import { AtUri } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import TLDs from 'tlds';
 
 import { BSKY_SERVICE } from '#/lib/constants';
@@ -34,12 +34,7 @@ export function isValidDomain(str: string): boolean {
 }
 
 export function makeRecordUri(didOrName: string, collection: string, rkey: string) {
-	const urip = new AtUri('at://placeholder.placeholder/');
-	// @ts-expect-error TODO new-sdk-migration
-	urip.host = didOrName;
-	urip.collection = collection;
-	urip.rkey = rkey;
-	return urip.toString();
+	return `at://${didOrName}/${collection}/${rkey}`;
 }
 
 export function toNiceDomain(url: string): string {
@@ -190,8 +185,8 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
 
 export function listUriToHref(url: string): string {
 	try {
-		const { hostname, rkey } = new AtUri(url);
-		return `/profile/${hostname}/lists/${rkey}`;
+		const { repo, rkey } = parseResourceUri(url);
+		return `/profile/${repo}/lists/${rkey}`;
 	} catch {
 		return '';
 	}
@@ -199,8 +194,8 @@ export function listUriToHref(url: string): string {
 
 export function feedUriToHref(url: string): string {
 	try {
-		const { hostname, rkey } = new AtUri(url);
-		return `/profile/${hostname}/feed/${rkey}`;
+		const { repo, rkey } = parseResourceUri(url);
+		return `/profile/${repo}/feed/${rkey}`;
 	} catch {
 		return '';
 	}
@@ -208,8 +203,8 @@ export function feedUriToHref(url: string): string {
 
 export function postUriToRelativePath(uri: string): string | undefined {
 	try {
-		const { hostname, rkey } = new AtUri(uri);
-		return `/profile/${hostname}/post/${rkey}`;
+		const { repo, rkey } = parseResourceUri(uri);
+		return `/profile/${repo}/post/${rkey}`;
 	} catch {
 		return undefined;
 	}

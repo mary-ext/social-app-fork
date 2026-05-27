@@ -1,4 +1,4 @@
-import { AtUri } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import type * as bsky from '#/types/bsky';
 
@@ -32,11 +32,11 @@ export function parseStarterPackUri(uri?: string): {
 
 	try {
 		if (uri.startsWith('at://')) {
-			const atUri = new AtUri(uri);
+			const atUri = parseResourceUri(uri);
 			if (atUri.collection !== 'app.bsky.graph.starterpack') return null;
 			if (atUri.rkey) {
 				return {
-					name: atUri.hostname,
+					name: atUri.repo,
 					rkey: atUri.rkey,
 				};
 			}
@@ -82,13 +82,13 @@ export function getStarterPackOgCard(
 	if (typeof didOrStarterPack === 'string') {
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`;
 	} else {
-		const rkey = new AtUri(didOrStarterPack.uri).rkey;
+		const rkey = parseResourceUri(didOrStarterPack.uri).rkey;
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`;
 	}
 }
 
 export function createStarterPackUri({ did, rkey }: { did: string; rkey: string }): string {
-	return new AtUri(`at://${did}/app.bsky.graph.starterpack/${rkey}`).toString();
+	return `at://${did}/app.bsky.graph.starterpack/${rkey}`;
 }
 
 export function startUriToStarterPackUri(uri: string) {

@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import { type AppBskyActorDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
@@ -58,7 +58,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 				!profile.associated?.labeler,
 		)
 		.reverse();
-	const isOwn = new AtUri(listUri).host === currentAccount?.did;
+	const isOwn = parseCanonicalResourceUri(listUri).repo === currentAccount?.did;
 
 	const getSortedProfiles = () => {
 		if (!profiles) return;

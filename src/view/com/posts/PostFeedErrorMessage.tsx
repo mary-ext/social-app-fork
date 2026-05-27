@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, AppBskyFeedGetAuthorFeed, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyActorDefs, AppBskyFeedGetAuthorFeed } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -192,8 +193,8 @@ function FeedgenErrorMessage({
 
 function safeParseFeedgenUri(uri: string): [string, string] {
 	try {
-		const urip = new AtUri(uri);
-		return [urip.hostname, urip.rkey];
+		const urip = parseCanonicalResourceUri(uri);
+		return [urip.repo, urip.rkey];
 	} catch {
 		return ['', ''];
 	}

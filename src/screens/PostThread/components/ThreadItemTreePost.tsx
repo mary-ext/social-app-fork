@@ -1,10 +1,10 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyFeedDefs,
 	type AppBskyFeedThreadgate,
-	AtUri,
 	RichText as RichTextAPI,
 } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
@@ -252,7 +252,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const postHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey);
 	}, [post.uri, post.author]);
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
@@ -260,7 +260,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 	});
 	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const isControlledByViewer = new AtUri(threadRootUri).host === currentAccount?.did;
+		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{

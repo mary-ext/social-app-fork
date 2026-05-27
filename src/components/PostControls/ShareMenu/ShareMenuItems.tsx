@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -36,7 +36,7 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	const postAuthor = useProfileShadow(post.author as bsky.profile.AnyProfileView);
 
 	const href = useMemo(() => {
-		const urip = new AtUri(postUri);
+		const urip = parseCanonicalResourceUri(postUri);
 		return makeProfileLink(postAuthor, 'post', urip.rkey);
 	}, [postUri, postAuthor]);
 

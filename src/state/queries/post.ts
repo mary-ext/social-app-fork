@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import { type AppBskyFeedDefs, AtUri } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyFeedDefs } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
@@ -23,17 +24,19 @@ export function usePostQuery(uri: string | undefined) {
 		queryFn: async () => {
 			if (!uri) throw new Error('[unreachable] No URI provided');
 
-			const urip = new AtUri(uri);
+			const urip = parseResourceUri(uri);
 
-			if (!urip.host.startsWith('did:')) {
-				const res = await agent.resolveHandle({
-					handle: urip.host,
+			let repo: string = urip.repo;
+			if (!repo.startsWith('did:')) {
+				const resolved = await agent.resolveHandle({
+					handle: repo,
 				});
-				// @ts-expect-error TODO new-sdk-migration
-				urip.host = res.data.did;
+				repo = resolved.data.did;
 			}
 
-			const res = await agent.getPosts({ uris: [urip.toString()] });
+			const res = await agent.getPosts({
+				uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
+			});
 			if (res.success && res.data.posts[0]) {
 				return res.data.posts[0];
 			}
@@ -56,18 +59,18 @@ export function useGetPost() {
 			return queryClient.fetchQuery({
 				queryKey: RQKEY(uri || ''),
 				async queryFn() {
-					const urip = new AtUri(uri);
+					const urip = parseResourceUri(uri);
 
-					if (!urip.host.startsWith('did:')) {
-						const res = await agent.resolveHandle({
-							handle: urip.host,
+					let repo: string = urip.repo;
+					if (!repo.startsWith('did:')) {
+						const resolved = await agent.resolveHandle({
+							handle: repo,
 						});
-						// @ts-expect-error TODO new-sdk-migration
-						urip.host = res.data.did;
+						repo = resolved.data.did;
 					}
 
 					const res = await agent.getPosts({
-						uris: [urip.toString()],
+						uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
 					});
 
 					if (res.success && res.data.posts[0]) {

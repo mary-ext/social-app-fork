@@ -1,5 +1,6 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
-import { type AppBskyDraftDefs, AtUri, RichText } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { type AppBskyDraftDefs, RichText } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
 
 import { resolveLink } from '#/lib/api/resolve';
@@ -515,8 +516,8 @@ export async function draftToComposerPosts(
 			// Restore quote embed
 			if (post.embedRecords && post.embedRecords.length > 0) {
 				const record = post.embedRecords[0]!;
-				const urip = new AtUri(record.record.uri);
-				const url = `https://bsky.app/profile/${urip.host}/post/${urip.rkey}`;
+				const urip = parseCanonicalResourceUri(record.record.uri);
+				const url = `https://bsky.app/profile/${urip.repo}/post/${urip.rkey}`;
 				embed.quote = { type: 'link', uri: url };
 			}
 

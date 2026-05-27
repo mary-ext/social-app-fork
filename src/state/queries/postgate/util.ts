@@ -1,10 +1,10 @@
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
 	AppBskyEmbedRecord,
 	AppBskyEmbedRecordWithMedia,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPostgate,
-	AtUri,
 } from '@atproto/api';
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate';
@@ -140,44 +140,44 @@ export function getMaybeDetachedQuoteEmbed({
 	if (AppBskyEmbedRecord.isView(post.embed)) {
 		// detached
 		if (AppBskyEmbedRecord.isViewDetached(post.embed.record)) {
-			const urip = new AtUri(post.embed.record.uri);
+			const uri = post.embed.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: true,
 			};
 		}
 
 		// post
 		if (AppBskyEmbedRecord.isViewRecord(post.embed.record)) {
-			const urip = new AtUri(post.embed.record.uri);
+			const uri = post.embed.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: false,
 			};
 		}
 	} else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
 		// detached
 		if (AppBskyEmbedRecord.isViewDetached(post.embed.record.record)) {
-			const urip = new AtUri(post.embed.record.record.uri);
+			const uri = post.embed.record.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: true,
 			};
 		}
 
 		// post
 		if (AppBskyEmbedRecord.isViewRecord(post.embed.record.record)) {
-			const urip = new AtUri(post.embed.record.record.uri);
+			const uri = post.embed.record.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: false,
 			};
 		}

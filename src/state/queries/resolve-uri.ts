@@ -1,6 +1,6 @@
 import { type Client, ok } from '@atcute/client';
 import { type Handle } from '@atcute/lexicons';
-import { AtUri } from '@atproto/api';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
@@ -41,8 +41,8 @@ const resolvedDidQueryOptions = (
 	});
 
 export function useResolveUriQuery(uri: string | undefined) {
-	const urip = new AtUri(uri || '');
-	const host = urip.host;
+	const urip = parseResourceUri(uri || '');
+	const host = urip.repo;
 
 	const { appview } = useClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
@@ -51,7 +51,7 @@ export function useResolveUriQuery(uri: string | undefined) {
 		...resolvedDidQueryOptions(appview, getUnstableProfile, host),
 		select: (did) => ({
 			did,
-			uri: AtUri.make(did, urip.collection, urip.rkey).toString(),
+			uri: `at://${did}/${urip.collection}/${urip.rkey}`,
 		}),
 	});
 }
