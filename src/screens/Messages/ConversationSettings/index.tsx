@@ -194,7 +194,9 @@ function GroupSettings({
 			type: 'MEMBERS_AND_REQUESTS',
 			key: 'members-and-requests',
 		},
-		...(isOwner ? [{ type: 'ADD_MEMBERS_LINK', key: 'add-members-link' } as const] : []),
+		...(isOwner && convo.details.lockStatus === 'unlocked'
+			? [{ type: 'ADD_MEMBERS_LINK', key: 'add-members-link' } as const]
+			: []),
 	];
 	items.push(
 		...groupMembers.map(
@@ -403,7 +405,7 @@ function SettingsHeader({
 				<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_2xl, a.pt_2xl]}>
 					<SettingsButton
 						color={convo.view.muted ? 'negative_subtle' : 'secondary'}
-						disabled={!isReady || isMuting}
+						disabled={!isReady || isMuting || lockStatus !== 'unlocked'}
 						icon={convo.view.muted ? BellOffIcon : BellIcon}
 						label={convo.view.muted ? l`Unmute this group chat` : l`Mute this group chat`}
 						text={convo.view.muted ? l`Muted` : l`Mute`}
@@ -411,7 +413,7 @@ function SettingsHeader({
 					/>
 					{isOwner ? (
 						<SettingsButton
-							disabled={!isReady || isEditingName}
+							disabled={!isReady || isEditingName || lockStatus !== 'unlocked'}
 							icon={EditIcon}
 							label={l`Edit this group chat’s name`}
 							text={l`Edit name`}

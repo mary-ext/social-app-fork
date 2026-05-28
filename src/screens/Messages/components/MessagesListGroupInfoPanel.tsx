@@ -77,7 +77,9 @@ export function MessagesListGroupInfoPanel({
 		);
 	}
 
-	const showButtons = isOwner || isJoinLinkEnabled;
+	const isLocked = convo.details.lockStatus !== 'unlocked';
+
+	const showButtons = !isLocked && (isOwner || isJoinLinkEnabled);
 
 	return (
 		<>
