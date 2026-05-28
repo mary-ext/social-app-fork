@@ -10,15 +10,12 @@ import {
 } from '@atproto/api';
 
 import {
-	default as Animated,
 	runOnJS,
 	type ScrollEvent,
 	type SharedValue,
 	useAnimatedRef,
-	useAnimatedStyle,
 	useDerivedValue,
 	useSharedValue,
-	withTiming,
 } from '#/lib/animations/reanimatedCompat';
 import { mergeRefs } from '#/lib/merge-refs';
 import { ScrollProvider } from '#/lib/ScrollContext';
@@ -67,6 +64,7 @@ type WebViewStyle = ViewStyle & {
 	scrollbarColor?: string;
 	scrollbarGutter?: 'stable';
 	scrollbarWidth?: 'thin';
+	transition?: string;
 };
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
@@ -158,15 +156,6 @@ export function MessagesList({
 		show: false,
 		startContentOffset: 0,
 	});
-
-	const listOpacity = useSharedValue(0);
-	useEffect(() => {
-		if (hasScrolled) {
-			listOpacity.set(withTiming(1, { duration: 200 }));
-		} else {
-			listOpacity.set(0);
-		}
-	}, [hasScrolled, listOpacity]);
 
 	const inputHeightUI = useSharedValue(0);
 	const [inputHeightJS, setInputHeightJS] = useState(0);
@@ -476,10 +465,6 @@ export function MessagesList({
 		[inputHeightUI],
 	);
 
-	const animatedListStyle = useAnimatedStyle(() => ({
-		opacity: listOpacity.get(),
-	}));
-
 	return (
 		<InviteLinkDialogProvider convo={convoState.convo}>
 			<KeyboardGestureArea
@@ -491,7 +476,13 @@ export function MessagesList({
 				style={[a.flex_1]}
 			>
 				{/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
-				<Animated.View style={[a.flex_1, animatedListStyle]}>
+				<View
+					style={[
+						a.flex_1,
+						{ opacity: hasScrolled ? 1 : 0 },
+						webViewStyle({ transition: 'opacity 0.2s ease-in-out' }),
+					]}
+				>
 					<ScrollProvider onScroll={onScroll}>
 						<List
 							ref={flatListRef}
@@ -543,7 +534,7 @@ export function MessagesList({
 							scrollIndicatorInsets={{ top: transparentHeaderHeight }}
 						/>
 					</ScrollProvider>
-				</Animated.View>
+				</View>
 				<KeyboardStickyView
 					style={[a.absolute, a.bottom_0, a.left_0, a.right_0]}
 					onLayout={onInputLayout}
