@@ -263,7 +263,7 @@ export function PublicationCard({
 				<View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm, gtPhone && a.flex_1]}>
 					<PublicationIcon view={view} size={40} themeColors={themeColors} />
 					<View style={[a.flex_1, a.gap_2xs]}>
-						<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+						<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, a.leading_snug, t.atoms.text]}>
 							{view.source?.title}
 						</Text>
 						<StandardSiteMetaRow preview={preview} type="publication" view={view} />
@@ -453,7 +453,10 @@ export function PublicationFooter({
 			>
 				<PublicationIcon view={view} size={32} themeColors={themeColors} />
 				<View style={[a.flex_1, a.gap_2xs]}>
-					<Text numberOfLines={1} style={[a.text_sm, a.font_medium, t.atoms.text, interacted && a.underline]}>
+					<Text
+						numberOfLines={1}
+						style={[a.text_sm, a.font_medium, a.leading_tight, t.atoms.text, interacted && a.underline]}
+					>
 						{view.source?.title}
 					</Text>
 					<StandardSiteMetaRow preview={preview} type="publication" view={view} />

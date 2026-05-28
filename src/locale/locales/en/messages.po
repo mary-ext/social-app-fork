@@ -1699,7 +1699,7 @@ msgid "By <0>{0}</0>"
 msgstr ""
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:68
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:69
 msgid "by <0>@{0}</0>"
 msgstr "by <0>@{0}</0>"
 
@@ -9054,7 +9054,7 @@ msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:71
+#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:72
 msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 

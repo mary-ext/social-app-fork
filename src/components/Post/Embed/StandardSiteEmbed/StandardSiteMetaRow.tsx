@@ -9,6 +9,7 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { atoms as a, useTheme } from '#/alf';
 
+import { StandardSite } from '#/components/icons/community/StandardSite';
 import { InlineLinkText } from '#/components/Link';
 import {
 	matchStandardSitePublisher,
@@ -41,8 +42,8 @@ export function StandardSiteMetaRow({
 	const authorProfile = authorDid ? view.associatedProfiles?.find((p) => p.did === authorDid) : undefined;
 	const articleDomain = toNiceDomain(view.uri);
 	const articlePublisher = matchStandardSitePublisherByUri(view.uri);
-	const DomainIcon = articlePublisher?.Icon;
-	const metaTextStyle = [a.text_xs, a.leading_snug, t.atoms.text_contrast_medium];
+	const DomainIcon = articlePublisher?.Icon || StandardSite;
+	const metaTextStyle = [a.text_xs, a.leading_tight, t.atoms.text_contrast_medium];
 
 	const items: { key: string; node: ReactNode }[] = [];
 
@@ -50,9 +51,9 @@ export function StandardSiteMetaRow({
 		items.push({
 			key: 'domain',
 			node: (
-				<View style={[a.flex_row, a.align_center]}>
-					{DomainIcon && <DomainIcon size="sm" fill={t.atoms.text_contrast_medium.color} />}
-					<Text numberOfLines={1} style={metaTextStyle}>
+				<View style={[a.flex_shrink, a.flex_row, a.align_center, a.gap_2xs]}>
+					{DomainIcon && <DomainIcon size="xs" fill={t.atoms.text_contrast_medium.color} />}
+					<Text numberOfLines={1} style={[metaTextStyle, a.flex_shrink]}>
 						{articleDomain}
 					</Text>
 				</View>
@@ -71,6 +72,10 @@ export function StandardSiteMetaRow({
 							label={l`View @${authorProfile.handle}'s profile`}
 							to={makeProfileLink(authorProfile)}
 							style={[metaTextStyle, preview ? a.pointer_events_none : a.pointer_events_auto]}
+							onPress={(e) => {
+								e.stopPropagation();
+								e.preventDefault();
+							}}
 						>
 							@{authorProfile.handle}
 						</InlineLinkText>
