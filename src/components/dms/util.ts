@@ -8,9 +8,10 @@ import {
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 
-import { logger } from '#/logger';
 import { type Shadow } from '#/state/cache/profile-shadow';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
+
+import { logger } from '#/logger';
 
 import * as bsky from '#/types/bsky';
 
@@ -81,12 +82,9 @@ export function hasReachedReactionLimit(
 }
 
 /**
- * Whether the active conversation accepts emoji reactions. Reactions are
- * unavailable when:
- * - the convo is in the disabled state
- * - a group convo is locked or permanently locked
- * - 1-1: the other user is blocked or is blocking us
- * - group: we are blocking the primary member (the owner)
+ * Whether the active conversation accepts emoji reactions. Reactions are unavailable when: - the convo is in
+ * the disabled state - a group convo is locked or permanently locked - 1-1: the other user is blocked or is
+ * blocking us - group: we are blocking the primary member (the owner)
  */
 export function canReact({
 	convoState,
