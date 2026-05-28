@@ -12,6 +12,7 @@ import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
+import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -80,6 +81,7 @@ function ProfileHeaderReady({
 	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
 	moderationOpts: ModerationOptions;
 }) {
+	const t = useTheme();
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const profile = useProfileShadow(convo.primaryMember);
@@ -106,6 +108,7 @@ function ProfileHeaderReady({
 				true,
 				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 			);
+	const handle = isDeletedAccount ? null : sanitizeHandle(profile.handle, '@');
 
 	const latestReportableMessage =
 		convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
@@ -129,12 +132,19 @@ function ProfileHeaderReady({
 							(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
 						)}
 					/>
-					<View style={[a.flex_row, a.align_center, a.flex_1]}>
-						<Text style={[a.text_md, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
-							{displayName}
-						</Text>
-						<ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
-						<MuteStatus muted={convo.view.muted} />
+					<View style={[a.flex_1]}>
+						<View style={[a.flex_row, a.align_center, a.flex_1, a.mb_2xs]}>
+							<Text style={[a.text_lg, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
+								{displayName}
+							</Text>
+							<ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+							<MuteStatus muted={convo.view.muted} />
+						</View>
+						{handle ? (
+							<Text style={[a.text_xs, t.atoms.text_contrast_high]} numberOfLines={1}>
+								{handle}
+							</Text>
+						) : null}
 					</View>
 				</Link>
 			}
@@ -182,7 +192,7 @@ function GroupHeaderReady({
 				>
 					<AvatarBubbles size={40} profiles={convo.members} moderationOpts={moderationOpts} />
 					<View style={[a.flex_row, a.flex_1, a.align_center]}>
-						<Text style={[a.text_md, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
+						<Text style={[a.text_lg, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
 							{convo.details.name}
 						</Text>
 						<MuteStatus muted={convo.view.muted} />

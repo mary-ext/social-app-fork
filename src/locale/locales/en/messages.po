@@ -2483,7 +2483,7 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:103
+#: src/components/dms/MessagesListHeader.tsx:105
 #: src/screens/Messages/components/ChatListItem.tsx:122
 #: src/screens/Messages/ConversationSettings/Member.tsx:77
 msgid "Deleted Account"
@@ -5642,8 +5642,8 @@ msgstr ""
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/dms/MessagesListHeader.tsx:170
-#: src/components/dms/MessagesListHeader.tsx:204
+#: src/components/dms/MessagesListHeader.tsx:180
+#: src/components/dms/MessagesListHeader.tsx:214
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -9095,7 +9095,7 @@ msgstr ""
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
-#: src/components/dms/MessagesListHeader.tsx:120
+#: src/components/dms/MessagesListHeader.tsx:123
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:173
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
