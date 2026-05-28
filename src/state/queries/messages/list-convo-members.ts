@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
 import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useQuery } from '@tanstack/react-query';
 
-import { useMessagesEventBus } from '#/state/messages/events';
 import { STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
 import { useClients } from '#/state/session';
@@ -11,7 +9,7 @@ import { useClients } from '#/state/session';
 const RQKEY_ROOT = 'listConvoMembers';
 export const listConvoMembersQueryKey = (convoId: string) => createQueryKey(RQKEY_ROOT, { convoId });
 
-// group chat size is 50, so should fetch the whole list in one go
+// group chat size is at least 50, so should fetch the whole list in one go
 const LIMIT = 50;
 
 export function useListConvoMembersQuery({
@@ -22,64 +20,6 @@ export function useListConvoMembersQuery({
 	placeholderData?: ChatBskyActorDefs.ProfileViewBasic[];
 }) {
 	const { chat } = useClients();
-	const queryClient = useQueryClient();
-	const messagesBus = useMessagesEventBus();
-
-	useEffect(() => {
-		const unsub = messagesBus.on(
-			(ev) => {
-				if (ev.type !== 'logs') return;
-
-				function mutateList(
-					fn: (update: ChatBskyActorDefs.ProfileViewBasic[]) => ChatBskyActorDefs.ProfileViewBasic[],
-				) {
-					queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
-						listConvoMembersQueryKey(convoId),
-						(old) => {
-							if (!old) return; // query doesn't exist yet, skip
-							return fn(old);
-						},
-					);
-				}
-
-				for (const log of ev.logs) {
-					if (log.$type === 'chat.bsky.convo.defs#logAddMember') {
-						const data = log.message.data;
-						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataAddMember') {
-							const newMember = log.relatedProfiles.find((r) => r.did === data.member.did);
-							if (newMember) {
-								mutateList((list) =>
-									list.some((m) => m.did === newMember.did) ? list : list.concat(newMember),
-								);
-							}
-						}
-					} else if (log.$type === 'chat.bsky.convo.defs#logRemoveMember') {
-						const data = log.message.data;
-						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataRemoveMember') {
-							mutateList((list) => list.filter((m) => m.did !== data.member.did));
-						}
-					} else if (log.$type === 'chat.bsky.convo.defs#logMemberJoin') {
-						const data = log.message.data;
-						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataMemberJoin') {
-							const newMember = log.relatedProfiles.find((r) => r.did === data.member.did);
-							if (newMember) {
-								mutateList((list) =>
-									list.some((m) => m.did === newMember.did) ? list : list.concat(newMember),
-								);
-							}
-						}
-					} else if (log.$type === 'chat.bsky.convo.defs#logMemberLeave') {
-						const data = log.message.data;
-						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataMemberLeave') {
-							mutateList((list) => list.filter((m) => m.did !== data.member.did));
-						}
-					}
-				}
-			},
-			{ convoId },
-		);
-		return () => unsub();
-	}, [convoId, messagesBus, queryClient]);
 
 	return useQuery({
 		queryKey: listConvoMembersQueryKey(convoId),

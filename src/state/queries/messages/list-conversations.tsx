@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
-import type { ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyActorDefs, ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { moderateProfile, ModerationCauseType, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
@@ -12,7 +12,9 @@ import { useClients, useSession } from '#/state/session';
 
 import { parseConvoView } from '#/components/dms/util';
 
+import { RQKEY as CONVO_KEY } from './conversation';
 import { useLeftConvos } from './leave-conversation';
+import { listConvoMembersQueryKey } from './list-convo-members';
 
 const DEFAULT_LIMIT = 10;
 export const UNREAD_LIMIT = 20;
@@ -120,6 +122,62 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 		const unsub = messagesBus.on(
 			(events) => {
 				if (events.type !== 'logs') return;
+
+				function mutateMembers(
+					convoId: string,
+					fn: (members: ChatBskyActorDefs.ProfileViewBasic[]) => ChatBskyActorDefs.ProfileViewBasic[],
+				) {
+					queryClient.setQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(
+						listConvoMembersQueryKey(convoId),
+						(old) => {
+							if (!old) return; // query doesn't exist yet, skip
+							return fn(old);
+						},
+					);
+				}
+
+				function mutateConvoView(
+					convoId: string,
+					fn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
+				) {
+					queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (old) =>
+						old ? fn(old) : old,
+					);
+					queryClient.setQueriesData<ConvoListQueryData>({ queryKey: [RQKEY_ROOT] }, (old) =>
+						optimisticUpdate(convoId, old, fn),
+					);
+				}
+
+				function handleMemberAdded(
+					convoId: string,
+					did: string,
+					relatedProfiles: ChatBskyActorDefs.ProfileViewBasic[],
+					rev: string,
+				) {
+					const newMember = relatedProfiles.find((r) => r.did === did);
+					if (!newMember) return;
+					// if the optimistic add already added them, skip the memberCount bump to avoid double-counting
+					const alreadyKnownMember =
+						queryClient
+							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
+							?.some((m) => m.did === did) ?? false;
+					mutateMembers(convoId, (list) => (list.some((m) => m.did === did) ? list : list.concat(newMember)));
+					mutateConvoView(convoId, (convo) =>
+						addMemberToConvoView(convo, newMember, rev, alreadyKnownMember),
+					);
+				}
+
+				function handleMemberRemoved(convoId: string, did: string, rev: string) {
+					// if the optimistic remove already dropped them, skip the memberCount decrement to avoid double-counting
+					const alreadyRemovedMember =
+						queryClient
+							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
+							?.some((m) => m.did === did) === false;
+					mutateMembers(convoId, (list) => list.filter((m) => m.did !== did));
+					mutateConvoView(convoId, (convo) =>
+						removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember),
+					);
+				}
 
 				for (const log of events.logs) {
 					switch (log.$type) {
@@ -421,6 +479,44 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							);
 							break;
 						}
+						case 'chat.bsky.convo.defs#logAddMember': {
+							const data = log.message.data;
+							if (data.$type === 'chat.bsky.convo.defs#systemMessageDataAddMember') {
+								handleMemberAdded(log.convoId, data.member.did, log.relatedProfiles, log.rev);
+							}
+							// refetch so the server can refresh the curated members list
+							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(log.convoId) });
+							debouncedRefetch();
+							break;
+						}
+						case 'chat.bsky.convo.defs#logRemoveMember': {
+							const data = log.message.data;
+							if (data.$type === 'chat.bsky.convo.defs#systemMessageDataRemoveMember') {
+								handleMemberRemoved(log.convoId, data.member.did, log.rev);
+							}
+							// refetch so the server can refill the curated members list
+							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(log.convoId) });
+							debouncedRefetch();
+							break;
+						}
+						case 'chat.bsky.convo.defs#logMemberJoin': {
+							const data = log.message.data;
+							if (data.$type === 'chat.bsky.convo.defs#systemMessageDataMemberJoin') {
+								handleMemberAdded(log.convoId, data.member.did, log.relatedProfiles, log.rev);
+							}
+							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(log.convoId) });
+							debouncedRefetch();
+							break;
+						}
+						case 'chat.bsky.convo.defs#logMemberLeave': {
+							const data = log.message.data;
+							if (data.$type === 'chat.bsky.convo.defs#systemMessageDataMemberLeave') {
+								handleMemberRemoved(log.convoId, data.member.did, log.rev);
+							}
+							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(log.convoId) });
+							debouncedRefetch();
+							break;
+						}
 						case 'chat.bsky.convo.defs#logRemoveReaction': {
 							const logRef: ChatBskyConvoDefs.LogRemoveReaction = log;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
@@ -574,6 +670,47 @@ function optimisticUpdate(
 			...page,
 			convos: page.convos.map((convo) => (chatId === convo.id ? updateFn(convo) : convo)),
 		})),
+	};
+}
+
+function removeMemberFromConvoView(
+	convo: ChatBskyConvoDefs.ConvoView,
+	did: string,
+	rev: string,
+	alreadyRemovedMember: boolean,
+): ChatBskyConvoDefs.ConvoView {
+	// member add/remove/join/leave events are only meaningful for group convos
+	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return convo;
+	const nextMembers = convo.members.filter((m) => m.did !== did);
+	return {
+		...convo,
+		rev,
+		members: nextMembers,
+		kind: {
+			...convo.kind,
+			memberCount: alreadyRemovedMember ? convo.kind.memberCount : Math.max(0, convo.kind.memberCount - 1),
+		},
+	};
+}
+
+function addMemberToConvoView(
+	convo: ChatBskyConvoDefs.ConvoView,
+	member: ChatBskyActorDefs.ProfileViewBasic,
+	rev: string,
+	alreadyKnownMember: boolean,
+): ChatBskyConvoDefs.ConvoView {
+	// member add/remove/join/leave events are only meaningful for group convos
+	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return convo;
+	const alreadyInCuratedList = convo.members.some((m) => m.did === member.did);
+	const nextMembers = alreadyInCuratedList ? convo.members : convo.members.concat(member);
+	return {
+		...convo,
+		rev,
+		members: nextMembers,
+		kind: {
+			...convo.kind,
+			memberCount: alreadyKnownMember ? convo.kind.memberCount : convo.kind.memberCount + 1,
+		},
 	};
 }
 
