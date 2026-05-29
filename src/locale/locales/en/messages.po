@@ -3751,7 +3751,9 @@ msgstr ""
 #: src/view/com/auth/LoggedOut.tsx:68
 #: src/view/com/profile/ProfileFollowers.tsx:153
 #: src/view/com/profile/ProfileFollowers.tsx:154
-#: src/view/screens/NotFound.tsx:44
+#: src/view/screens/NotFound.tsx:51
+#: src/view/screens/NotFound.tsx:52
+#: src/view/screens/NotFound.tsx:56
 msgid "Go back"
 msgstr ""
 
@@ -3760,17 +3762,14 @@ msgstr ""
 #: src/screens/Profile/ErrorState.tsx:47
 #: src/screens/Profile/ErrorState.tsx:52
 #: src/screens/StarterPack/StarterPackScreen.tsx:728
-#: src/view/screens/NotFound.tsx:43
 msgid "Go Back"
 msgstr ""
 
 #: src/screens/Bookmarks/index.tsx:262
-#: src/view/screens/NotFound.tsx:44
+#: src/view/screens/NotFound.tsx:51
+#: src/view/screens/NotFound.tsx:52
+#: src/view/screens/NotFound.tsx:56
 msgid "Go home"
-msgstr ""
-
-#: src/view/screens/NotFound.tsx:43
-msgid "Go Home"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:336
@@ -5831,11 +5830,8 @@ msgstr "Owner"
 #: src/components/Lists.tsx:173
 #: src/components/Lists.tsx:183
 #: src/view/screens/NotFound.tsx:36
+#: src/view/screens/NotFound.tsx:43
 msgid "Page not found"
-msgstr ""
-
-#: src/view/screens/NotFound.tsx:33
-msgid "Page Not Found"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.
@@ -6885,12 +6881,12 @@ msgstr ""
 msgid "Return to previous page"
 msgstr ""
 
-#: src/view/screens/NotFound.tsx:45
+#: src/view/screens/NotFound.tsx:53
 msgid "Returns to home page"
 msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:33
-#: src/view/screens/NotFound.tsx:45
+#: src/view/screens/NotFound.tsx:53
 msgid "Returns to previous page"
 msgstr ""
 
@@ -9336,7 +9332,7 @@ msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
 #: src/components/Lists.tsx:184
-#: src/view/screens/NotFound.tsx:39
+#: src/view/screens/NotFound.tsx:46
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
 
