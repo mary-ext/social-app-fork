@@ -731,12 +731,12 @@ msgstr ""
 msgid "a message"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:42
-#: src/components/dms/dialogs/NewChatDialog.tsx:81
+#: src/components/dms/dialogs/NewChatDialog.tsx:45
+#: src/components/dms/dialogs/NewChatDialog.tsx:84
 msgid "A network error occurred. Please check your internet connection."
 msgstr "A network error occurred. Please check your internet connection."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:97
+#: src/components/dms/dialogs/NewChatDialog.tsx:100
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
@@ -1253,11 +1253,11 @@ msgstr "An invite link lets people join this group chat without being added dire
 msgid "An issue not included in these options"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:79
+#: src/components/dms/dialogs/NewChatDialog.tsx:82
 msgid "An issue occurred creating the group chat, please try again."
 msgstr "An issue occurred creating the group chat, please try again."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:40
+#: src/components/dms/dialogs/NewChatDialog.tsx:43
 msgid "An issue occurred starting the chat, please try again."
 msgstr "An issue occurred starting the chat, please try again."
 
@@ -1348,15 +1348,15 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:230
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:88
-#: src/screens/Messages/components/ChatDisabled.tsx:115
+#: src/screens/Messages/components/ChatDisabled.tsx:121
 msgctxt "toast"
 msgid "Appeal submitted"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:66
-#: src/screens/Messages/components/ChatDisabled.tsx:70
-#: src/screens/Messages/components/ChatDisabled.tsx:123
-#: src/screens/Messages/components/ChatDisabled.tsx:125
+#: src/screens/Messages/components/ChatDisabled.tsx:72
+#: src/screens/Messages/components/ChatDisabled.tsx:76
+#: src/screens/Messages/components/ChatDisabled.tsx:129
+#: src/screens/Messages/components/ChatDisabled.tsx:131
 msgid "Appeal this decision"
 msgstr ""
 
@@ -1462,8 +1462,8 @@ msgstr ""
 #: src/components/dms/InitiateChatFlow.tsx:600
 #: src/components/moderation/LabelsOnMeDialog.tsx:285
 #: src/components/moderation/LabelsOnMeDialog.tsx:287
-#: src/screens/Messages/components/ChatDisabled.tsx:149
-#: src/screens/Messages/components/ChatDisabled.tsx:152
+#: src/screens/Messages/components/ChatDisabled.tsx:155
+#: src/screens/Messages/components/ChatDisabled.tsx:158
 #: src/screens/Messages/Inbox.tsx:207
 #: src/screens/Profile/Header/Shell.tsx:120
 #: src/screens/StarterPack/Wizard/index.tsx:281
@@ -1825,7 +1825,7 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:58
+#: src/components/dms/dialogs/NewChatDialog.tsx:61
 msgid "Chat recipient is not followed by the sender."
 msgstr "Chat recipient is not followed by the sender."
 
@@ -1839,8 +1839,8 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:78
 #: src/Navigation.tsx:937
-#: src/screens/Messages/ChatList.tsx:411
-#: src/screens/Messages/ChatList.tsx:442
+#: src/screens/Messages/ChatList.tsx:437
+#: src/screens/Messages/ChatList.tsx:470
 msgid "Chat settings"
 msgstr ""
 
@@ -1866,8 +1866,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:403
-#: src/screens/Messages/ChatList.tsx:435
+#: src/screens/Messages/ChatList.tsx:429
+#: src/screens/Messages/ChatList.tsx:463
 msgid "Chats"
 msgstr ""
 
@@ -3195,7 +3195,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
 
-#: src/screens/Messages/ChatList.tsx:284
+#: src/screens/Messages/ChatList.tsx:295
 #: src/screens/Messages/Inbox.tsx:176
 msgid "Failed to load conversations"
 msgstr ""
@@ -3307,7 +3307,7 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:224
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
-#: src/screens/Messages/components/ChatDisabled.tsx:109
+#: src/screens/Messages/components/ChatDisabled.tsx:115
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
@@ -4181,7 +4181,7 @@ msgstr ""
 msgid "In-app, Push, People you follow"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:302
+#: src/screens/Messages/ChatList.tsx:313
 msgid "Inbox empty"
 msgstr "Inbox empty"
 
@@ -5143,13 +5143,13 @@ msgstr ""
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:144
-#: src/components/dms/dialogs/NewChatDialog.tsx:150
-#: src/screens/Messages/ChatList.tsx:126
-#: src/screens/Messages/ChatList.tsx:127
-#: src/screens/Messages/ChatList.tsx:317
-#: src/screens/Messages/ChatList.tsx:318
-#: src/screens/Messages/ChatList.tsx:420
+#: src/components/dms/dialogs/NewChatDialog.tsx:148
+#: src/components/dms/dialogs/NewChatDialog.tsx:155
+#: src/screens/Messages/ChatList.tsx:134
+#: src/screens/Messages/ChatList.tsx:135
+#: src/screens/Messages/ChatList.tsx:331
+#: src/screens/Messages/ChatList.tsx:332
+#: src/screens/Messages/ChatList.tsx:447
 msgid "New chat"
 msgstr ""
 
@@ -5552,11 +5552,11 @@ msgstr "On"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:105
+#: src/components/dms/dialogs/NewChatDialog.tsx:108
 msgid "One of the selected recipients does not allow group chats."
 msgstr "One of the selected recipients does not allow group chats."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:89
+#: src/components/dms/dialogs/NewChatDialog.tsx:92
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
@@ -5819,7 +5819,7 @@ msgstr ""
 msgid "Our moderation team has received your report."
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:45
+#: src/screens/Messages/components/ChatDisabled.tsx:51
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr ""
 
@@ -6001,7 +6001,7 @@ msgstr ""
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:133
+#: src/screens/Messages/components/ChatDisabled.tsx:139
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr ""
 
@@ -6411,7 +6411,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:288
+#: src/screens/Messages/ChatList.tsx:299
 #: src/screens/Messages/Inbox.tsx:180
 msgid "Reload conversations"
 msgstr ""
@@ -6859,7 +6859,7 @@ msgstr ""
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:47
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:50
 #: src/components/StarterPack/ProfileStarterPacks.tsx:321
-#: src/screens/Messages/ChatList.tsx:294
+#: src/screens/Messages/ChatList.tsx:305
 #: src/screens/Messages/components/MessageListError.tsx:26
 #: src/screens/Messages/Inbox.tsx:186
 #: src/screens/PostThread/components/ThreadError.tsx:63
@@ -6978,8 +6978,8 @@ msgstr ""
 msgid "Say hello!"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:120
-#: src/screens/Messages/ChatList.tsx:311
+#: src/screens/Messages/ChatList.tsx:125
+#: src/screens/Messages/ChatList.tsx:322
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
@@ -7846,8 +7846,8 @@ msgstr ""
 #: src/components/moderation/LabelsOnMeDialog.tsx:297
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:131
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:133
-#: src/screens/Messages/components/ChatDisabled.tsx:161
-#: src/screens/Messages/components/ChatDisabled.tsx:164
+#: src/screens/Messages/components/ChatDisabled.tsx:167
+#: src/screens/Messages/components/ChatDisabled.tsx:170
 msgid "Submit"
 msgstr ""
 
@@ -7915,11 +7915,11 @@ msgstr ""
 msgid "Suggestive"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:85
+#: src/components/dms/dialogs/NewChatDialog.tsx:88
 msgid "Suspended accounts cannot participate in a group chat."
 msgstr "Suspended accounts cannot participate in a group chat."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:46
+#: src/components/dms/dialogs/NewChatDialog.tsx:49
 msgid "Suspended accounts cannot participate in chat."
 msgstr "Suspended accounts cannot participate in chat."
 
@@ -8018,7 +8018,7 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:264
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:116
-#: src/screens/Messages/components/ChatDisabled.tsx:132
+#: src/screens/Messages/components/ChatDisabled.tsx:138
 msgid "Text input field"
 msgstr ""
 
@@ -8241,7 +8241,7 @@ msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:110
-#: src/screens/Messages/components/ChatDisabled.tsx:128
+#: src/screens/Messages/components/ChatDisabled.tsx:134
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr ""
 
@@ -8432,7 +8432,7 @@ msgstr ""
 msgid "This user doesn't have any followers."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:50
+#: src/components/dms/dialogs/NewChatDialog.tsx:53
 msgid "This user has blocked you and cannot be messaged."
 msgstr "This user has blocked you and cannot be messaged."
 
@@ -8441,7 +8441,7 @@ msgstr "This user has blocked you and cannot be messaged."
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:54
+#: src/components/dms/dialogs/NewChatDialog.tsx:57
 msgid "This user has disabled chat and cannot be messaged."
 msgstr "This user has disabled chat and cannot be messaged."
 
@@ -8626,11 +8626,11 @@ msgstr ""
 msgid "Unable to delete"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:101
+#: src/components/dms/dialogs/NewChatDialog.tsx:104
 msgid "Unable to find a selected recipient."
 msgstr "Unable to find a selected recipient."
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:62
+#: src/components/dms/dialogs/NewChatDialog.tsx:65
 msgid "Unable to find the selected recipient."
 msgstr "Unable to find the selected recipient."
 
@@ -9368,7 +9368,7 @@ msgid "Who can reply"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:77
-#: src/screens/Messages/ChatList.tsx:272
+#: src/screens/Messages/ChatList.tsx:283
 #: src/screens/Messages/Inbox.tsx:164
 msgid "Whoops!"
 msgstr ""
@@ -9565,7 +9565,7 @@ msgstr ""
 msgid "You can update this later from your settings."
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:93
+#: src/components/dms/dialogs/NewChatDialog.tsx:96
 msgid "You cannot create a group chat yet."
 msgstr "You cannot create a group chat yet."
 
@@ -9787,7 +9787,7 @@ msgstr ""
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:42
+#: src/screens/Messages/components/ChatDisabled.tsx:48
 msgid "Your chats have been disabled"
 msgstr ""
 

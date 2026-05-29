@@ -6,6 +6,7 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { useCreateGroupChat } from '#/state/queries/messages/create-group-chat';
 import { useGetConvoForMembers } from '#/state/queries/messages/get-convo-for-members';
+import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 
 import { logger } from '#/logger';
 
@@ -27,6 +28,8 @@ export function NewChat({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
+	const { data: chatStatus } = useChatActorStatusQuery();
+	const chatDisabled = !!chatStatus?.chatDisabled;
 
 	const { mutate: createChat } = useGetConvoForMembers({
 		onSuccess: (data) => {
@@ -136,14 +139,16 @@ export function NewChat({
 
 	return (
 		<>
-			<FAB
-				testID="newChatFAB"
-				onPress={wrappedOnPress}
-				icon={<NewChatIcon size="lg" fill={t.palette.white} />}
-				accessibilityRole="button"
-				accessibilityLabel={l`New chat`}
-				accessibilityHint=""
-			/>
+			{!chatDisabled && (
+				<FAB
+					testID="newChatFAB"
+					onPress={wrappedOnPress}
+					icon={<NewChatIcon size="lg" fill={t.palette.white} />}
+					accessibilityRole="button"
+					accessibilityLabel={l`New chat`}
+					accessibilityHint=""
+				/>
+			)}
 			<Dialog.Outer control={control} testID="newChatDialog" nativeOptions={{ fullHeight: true }}>
 				<Dialog.Handle />
 				<InitiateChatFlow

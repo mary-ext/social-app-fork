@@ -7,6 +7,8 @@ import type { ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
 import type { FlatNavigatorParams, NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
 import { ScrollProvider } from '#/lib/ScrollContext';
 
+import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
+
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 
 import { useDialogControl } from '#/components/Dialog';
@@ -36,20 +38,27 @@ export function renderMessagesSplitViewLayout(props: LayoutProps) {
 	return <MessagesSplitViewLayout {...props} />;
 }
 
-export function MessagesSplitViewLayout({ children, navigation, route }: LayoutProps) {
-	const { rightNavVisible, centerColumnOffset } = useLayoutBreakpoints();
+export function MessagesSplitViewLayout({ children, ...props }: LayoutProps) {
+	const { rightNavVisible } = useLayoutBreakpoints();
+
+	if (!rightNavVisible) {
+		return children;
+	}
+
+	return <MessagesSplitViewLayoutInner {...props}>{children}</MessagesSplitViewLayoutInner>;
+}
+
+function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutProps) {
+	const { centerColumnOffset } = useLayoutBreakpoints();
 	const newChatControl = useDialogControl();
 	const t = useTheme();
 	const isFocused = useIsFocused();
+	const { data: chatStatus } = useChatActorStatusQuery();
 
 	const onLeftColumnScroll = useCallback((e: ReanimatedScrollEvent) => {
 		'worklet';
 		splitViewLeftScroll.current = e.contentOffset.y;
 	}, []);
-
-	if (!rightNavVisible) {
-		return children;
-	}
 
 	const onNewChat = (conversation: string) => navigation.navigate('MessagesConversation', { conversation });
 
@@ -79,9 +88,9 @@ export function MessagesSplitViewLayout({ children, navigation, route }: LayoutP
 			{isFocused && <LockScroll />}
 			<SplitViewProvider side="left">
 				<View style={[a.border_l, t.atoms.border_contrast_low, { width: leftColumnWidth }]}>
-					<ChatListHeader newChatControl={newChatControl} />
+					<ChatListHeader newChatControl={newChatControl} chatStatus={chatStatus} />
 					<ScrollProvider onScroll={onLeftColumnScroll}>
-						<ChatList newChatControl={newChatControl} selectedChat={selectedChat} />
+						<ChatList newChatControl={newChatControl} selectedChat={selectedChat} chatStatus={chatStatus} />
 					</ScrollProvider>
 					<NewChat onNewChat={onNewChat} control={newChatControl} />
 				</View>
