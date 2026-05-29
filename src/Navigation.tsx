@@ -81,11 +81,6 @@ const AccountSettingsScreen = lazy(() =>
 		default: m.AccountSettingsScreen,
 	})),
 );
-const ActivityNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/ActivityNotificationSettings').then((m) => ({
-		default: m.ActivityNotificationSettingsScreen,
-	})),
-);
 const ActivityPrivacySettingsScreen = lazy(() =>
 	import('#/screens/Settings/ActivityPrivacySettings').then((m) => ({
 		default: m.ActivityPrivacySettingsScreen,
@@ -140,23 +135,8 @@ const LegacyNotificationSettingsScreen = lazy(() =>
 		default: m.LegacyNotificationSettingsScreen,
 	})),
 );
-const LikeNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/LikeNotificationSettings').then((m) => ({
-		default: m.LikeNotificationSettingsScreen,
-	})),
-);
-const LikesOnRepostsNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings').then((m) => ({
-		default: m.LikesOnRepostsNotificationSettingsScreen,
-	})),
-);
 const ListsScreen = lazy(() => import('#/view/screens/Lists').then((m) => ({ default: m.ListsScreen })));
 const LogScreen = lazy(() => import('#/screens/Log').then((m) => ({ default: m.LogScreen })));
-const MentionNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/MentionNotificationSettings').then((m) => ({
-		default: m.MentionNotificationSettingsScreen,
-	})),
-);
 const MessagesConversationScreen = lazy(() =>
 	import('#/screens/Messages/Conversation').then((m) => ({
 		default: m.MessagesConversationScreen,
@@ -187,11 +167,6 @@ const MessagesSplitViewLayout = lazy(() =>
 		default: m.MessagesSplitViewLayout,
 	})),
 );
-const MiscellaneousNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings').then((m) => ({
-		default: m.MiscellaneousNotificationSettingsScreen,
-	})),
-);
 const ModerationBlockedAccounts = lazy(() =>
 	import('#/view/screens/ModerationBlockedAccounts').then((m) => ({
 		default: m.ModerationBlockedAccounts,
@@ -218,11 +193,6 @@ const ModerationScreen = lazy(() =>
 const ModerationVerificationSettings = lazy(() =>
 	import('#/screens/Moderation/VerificationSettings').then((m) => ({
 		default: m.Screen,
-	})),
-);
-const NewFollowerNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings').then((m) => ({
-		default: m.NewFollowerNotificationSettingsScreen,
 	})),
 );
 const NotFoundScreen = lazy(() =>
@@ -307,26 +277,6 @@ const ProfileScreen = lazy(() =>
 const ProfileSearchScreen = lazy(() =>
 	import('#/screens/Profile/ProfileSearch').then((m) => ({
 		default: m.ProfileSearchScreen,
-	})),
-);
-const QuoteNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/QuoteNotificationSettings').then((m) => ({
-		default: m.QuoteNotificationSettingsScreen,
-	})),
-);
-const ReplyNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/ReplyNotificationSettings').then((m) => ({
-		default: m.ReplyNotificationSettingsScreen,
-	})),
-);
-const RepostNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/RepostNotificationSettings').then((m) => ({
-		default: m.RepostNotificationSettingsScreen,
-	})),
-);
-const RepostsOnRepostsNotificationSettingsScreen = lazy(() =>
-	import('#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings').then((m) => ({
-		default: m.RepostsOnRepostsNotificationSettingsScreen,
 	})),
 );
 const SavedFeeds = lazy(() => import('#/screens/SavedFeeds').then((m) => ({ default: m.SavedFeeds })));
@@ -799,86 +749,6 @@ const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Na
 				getComponent={() => NotificationSettingsScreen}
 				options={{
 					title: title(defineMessage`Notification settings`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="ReplyNotificationSettings"
-				getComponent={() => ReplyNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Reply notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="MentionNotificationSettings"
-				getComponent={() => MentionNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Mention notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="QuoteNotificationSettings"
-				getComponent={() => QuoteNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Quote notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="LikeNotificationSettings"
-				getComponent={() => LikeNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Like notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="RepostNotificationSettings"
-				getComponent={() => RepostNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Repost notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="NewFollowerNotificationSettings"
-				getComponent={() => NewFollowerNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`New follower notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="LikesOnRepostsNotificationSettings"
-				getComponent={() => LikesOnRepostsNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Likes of your reposts notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="RepostsOnRepostsNotificationSettings"
-				getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Reposts of your reposts notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="ActivityNotificationSettings"
-				getComponent={() => ActivityNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Activity notifications`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="MiscellaneousNotificationSettings"
-				getComponent={() => MiscellaneousNotificationSettingsScreen}
-				options={{
-					title: title(defineMessage`Miscellaneous notifications`),
 					requireAuth: true,
 				}}
 			/>

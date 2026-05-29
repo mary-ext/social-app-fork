@@ -25,7 +25,10 @@ export function PreferenceControls({
 	 * joins + verified + unverified notifications into a single toggle.
 	 */
 	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
-	preference?: AppBskyNotificationDefs.Preference | AppBskyNotificationDefs.FilterablePreference;
+	preference?:
+		| AppBskyNotificationDefs.ChatPreference
+		| AppBskyNotificationDefs.FilterablePreference
+		| AppBskyNotificationDefs.Preference;
 	allowDisableInApp?: boolean;
 }) {
 	if (!preference)
@@ -53,7 +56,10 @@ export function Inner({
 }: {
 	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
 	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
-	preference: AppBskyNotificationDefs.Preference | AppBskyNotificationDefs.FilterablePreference;
+	preference:
+		| AppBskyNotificationDefs.ChatPreference
+		| AppBskyNotificationDefs.FilterablePreference
+		| AppBskyNotificationDefs.Preference;
 	allowDisableInApp: boolean;
 }) {
 	const t = useTheme();
@@ -62,7 +68,7 @@ export function Inner({
 
 	const channels = useMemo(() => {
 		const arr = [];
-		if (preference.list) arr.push('list');
+		if ('list' in preference && preference.list) arr.push('list');
 		if (preference.push) arr.push('push');
 		return arr;
 	}, [preference]);
@@ -70,9 +76,9 @@ export function Inner({
 	const onChangeChannels = (change: string[]) => {
 		const newPreference = {
 			...preference,
-			list: change.includes('list'),
+			...('list' in preference ? { list: change.includes('list') } : {}),
 			push: change.includes('push'),
-		} satisfies typeof preference;
+		} as typeof preference;
 
 		mutate({
 			[name]: newPreference,
@@ -81,7 +87,7 @@ export function Inner({
 	};
 
 	const onChangeFilter = ([change]: string[]) => {
-		if (change !== 'all' && change !== 'follows') throw new Error('Invalid filter');
+		if (change !== 'all' && change !== 'follows' && change !== 'accepted') throw new Error('Invalid filter');
 
 		const newPreference = {
 			...preference,
@@ -95,7 +101,7 @@ export function Inner({
 	};
 
 	return (
-		<View style={[a.px_xl, a.pt_md, a.gap_sm]}>
+		<View style={[a.gap_sm]}>
 			<Toggle.Group
 				type="checkbox"
 				label={l`Select your preferred notification channels`}
@@ -141,18 +147,20 @@ export function Inner({
 						disabled={channels.length === 0}
 					>
 						<View style={[a.gap_sm]}>
-							<Toggle.Item label={l`Everyone`} name="all" style={[a.flex_row, a.py_xs, a.gap_sm]}>
-								<Toggle.Radio />
-								<Toggle.LabelText style={[channels.length > 0 && t.atoms.text, a.font_normal, a.text_md]}>
-									<Trans>Everyone</Trans>
-								</Toggle.LabelText>
+							<Toggle.Item highlightRow label={l`Everyone`} name="all">
+								{({ selected }) => <Toggle.RadioWithLabel label={l`Everyone`} selected={selected} />}
 							</Toggle.Item>
-							<Toggle.Item label={l`People I follow`} name="follows" style={[a.flex_row, a.py_xs, a.gap_sm]}>
-								<Toggle.Radio />
-								<Toggle.LabelText style={[channels.length > 0 && t.atoms.text, a.font_normal, a.text_md]}>
-									<Trans>People I follow</Trans>
-								</Toggle.LabelText>
-							</Toggle.Item>
+							{name === 'chat' ? (
+								<Toggle.Item highlightRow label={l`Accepted conversations`} name="accepted">
+									{({ selected }) => (
+										<Toggle.RadioWithLabel label={l`Accepted conversations`} selected={selected} />
+									)}
+								</Toggle.Item>
+							) : (
+								<Toggle.Item highlightRow label={l`People I follow`} name="follows">
+									{({ selected }) => <Toggle.RadioWithLabel label={l`People I follow`} selected={selected} />}
+								</Toggle.Item>
+							)}
 						</View>
 					</Toggle.Group>
 				</>

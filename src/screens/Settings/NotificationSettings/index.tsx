@@ -9,6 +9,8 @@ import { useNotificationSettingsQuery } from '#/state/queries/notifications/sett
 import { atoms as a } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
+import * as Dialog from '#/components/Dialog';
+import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
 import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
 import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble';
@@ -33,6 +35,17 @@ export function NotificationSettingsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const { data: settings, isError } = useNotificationSettingsQuery();
 
+	const likeDialogControl = Dialog.useDialogControl();
+	const followDialogControl = Dialog.useDialogControl();
+	const replyDialogControl = Dialog.useDialogControl();
+	const mentionDialogControl = Dialog.useDialogControl();
+	const quoteDialogControl = Dialog.useDialogControl();
+	const repostDialogControl = Dialog.useDialogControl();
+	const activityDialogControl = Dialog.useDialogControl();
+	const likeRepostDialogControl = Dialog.useDialogControl();
+	const repostRepostDialogControl = Dialog.useDialogControl();
+	const miscDialogControl = Dialog.useDialogControl();
+
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>
@@ -54,9 +67,9 @@ export function NotificationSettingsScreen({}: Props) {
 						</View>
 					)}
 					<View style={[a.gap_sm]}>
-						<SettingsList.LinkItem
+						<SettingsList.PressableItem
 							label={l`Settings for like notifications`}
-							to={{ screen: 'LikeNotificationSettings' }}
+							onPress={likeDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={HeartIcon} />
@@ -65,10 +78,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.like} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for new follower notifications`}
-							to={{ screen: 'NewFollowerNotificationSettings' }}
+							onPress={followDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={PersonPlusIcon} />
@@ -77,10 +90,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.follow} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for reply notifications`}
-							to={{ screen: 'ReplyNotificationSettings' }}
+							onPress={replyDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={BubbleIcon} />
@@ -89,10 +102,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.reply} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for mention notifications`}
-							to={{ screen: 'MentionNotificationSettings' }}
+							onPress={mentionDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={AtIcon} />
@@ -101,10 +114,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.mention} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for quote notifications`}
-							to={{ screen: 'QuoteNotificationSettings' }}
+							onPress={quoteDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={CloseQuoteIcon} />
@@ -113,10 +126,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.quote} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for repost notifications`}
-							to={{ screen: 'RepostNotificationSettings' }}
+							onPress={repostDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={RepostIcon} />
@@ -125,10 +138,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.repost} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for activity from others`}
-							to={{ screen: 'ActivityNotificationSettings' }}
+							onPress={activityDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={BellRingingIcon} />
@@ -137,10 +150,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for notifications for likes of your reposts`}
-							to={{ screen: 'LikesOnRepostsNotificationSettings' }}
+							onPress={likeRepostDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={LikeRepostIcon} />
@@ -149,10 +162,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.likeViaRepost} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for notifications for reposts of your reposts`}
-							to={{ screen: 'RepostsOnRepostsNotificationSettings' }}
+							onPress={repostRepostDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={RepostRepostIcon} />
@@ -161,10 +174,10 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.repostViaRepost} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
-						<SettingsList.LinkItem
+						</SettingsList.PressableItem>
+						<SettingsList.PressableItem
 							label={l`Settings for notifications for everything else`}
-							to={{ screen: 'MiscellaneousNotificationSettings' }}
+							onPress={miscDialogControl.open}
 							contentContainerStyle={[a.align_start]}
 						>
 							<SettingsList.ItemIcon icon={ShapesIcon} />
@@ -175,10 +188,85 @@ export function NotificationSettingsScreen({}: Props) {
 								subtitleText={<SettingPreview preference={settings?.starterpackJoined} />}
 								showSkeleton={!settings}
 							/>
-						</SettingsList.LinkItem>
+						</SettingsList.PressableItem>
 					</View>
 				</SettingsList.Container>
 			</Layout.Content>
+			<NotificationSettingsDialog
+				control={likeDialogControl}
+				name="like"
+				icon={HeartIcon}
+				titleText={<Trans>Likes</Trans>}
+				subtitleText={<Trans>Get notifications when people like your posts.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={followDialogControl}
+				name="follow"
+				icon={PersonPlusIcon}
+				titleText={<Trans>New followers</Trans>}
+				subtitleText={<Trans>Get notifications when people follow you.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={replyDialogControl}
+				name="reply"
+				icon={BubbleIcon}
+				titleText={<Trans>Replies</Trans>}
+				subtitleText={<Trans>Get notifications when people reply to your posts.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={mentionDialogControl}
+				name="mention"
+				icon={AtIcon}
+				titleText={<Trans>Mentions</Trans>}
+				subtitleText={<Trans>Get notifications when people mention you.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={quoteDialogControl}
+				name="quote"
+				icon={CloseQuoteIcon}
+				titleText={<Trans>Quotes</Trans>}
+				subtitleText={<Trans>Get notifications when people quote your posts.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={repostDialogControl}
+				name="repost"
+				icon={RepostIcon}
+				titleText={<Trans>Reposts</Trans>}
+				subtitleText={<Trans>Get notifications when people repost your posts.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={activityDialogControl}
+				name="subscribedPost"
+				icon={BellRingingIcon}
+				titleText={<Trans>Activity from others</Trans>}
+				subtitleText={<Trans>Get notifications when there's activity on posts you're subscribed to.</Trans>}
+				allowDisableInApp={false}
+			/>
+			<NotificationSettingsDialog
+				control={likeRepostDialogControl}
+				name="likeViaRepost"
+				icon={LikeRepostIcon}
+				titleText={<Trans>Likes of your reposts</Trans>}
+				subtitleText={<Trans>Get notifications when people like your reposts.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={repostRepostDialogControl}
+				name="repostViaRepost"
+				icon={RepostRepostIcon}
+				titleText={<Trans>Reposts of your reposts</Trans>}
+				subtitleText={<Trans>Get notifications when people repost your reposts.</Trans>}
+			/>
+			<NotificationSettingsDialog
+				control={miscDialogControl}
+				name="starterpackJoined"
+				syncOthers={['verified', 'unverified']}
+				icon={ShapesIcon}
+				titleText={<Trans>Everything else</Trans>}
+				subtitleText={
+					<Trans>Get notifications for starter pack joins, verification, and other activity.</Trans>
+				}
+				allowDisableInApp={false}
+			/>
 		</Layout.Screen>
 	);
 }

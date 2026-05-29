@@ -160,14 +160,14 @@ export function MessagesSettingsScreenInner({}: Props) {
 
 					<View style={[a.px_xl]}>
 						<Toggle.Item
-							label={l`Export chat data`}
+							label={l`Export my chat data`}
 							name="exportChatData"
 							style={[a.flex_row, a.align_center, a.justify_between]}
 							onChange={() => {
 								exportCarControl.open();
 							}}
 						>
-							<CarIcon style={[a.mr_2xs, t.atoms.text]} size="md" />
+							<CarIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
 							<Text style={[a.flex_1, a.text_md, a.font_semi_bold, t.atoms.text]}>
 								<Trans>Export chat data</Trans>
 							</Text>
