@@ -1,18 +1,18 @@
 import { type AppBskyFeedDefs, AppBskyGraphDefs, type AppBskyGraphGetStarterPack } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyFeedDefs as ApiAppBskyFeedDefs,
 	AppBskyGraphStarterpack,
 	type AppBskyRichtextFacet,
-	RichText,
 } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
 import { until } from '#/lib/async/until';
 import { createStarterPackList } from '#/lib/generate-starterpack';
+import { detectFacets } from '#/lib/strings/rich-text-facets';
 import {
 	createStarterPackUri,
 	httpStarterPackUriToAtUri,
@@ -26,6 +26,22 @@ import { useAgent, useClients } from '#/state/session';
 import { type BskyAppAgent } from '#/state/session/agent';
 
 import * as bsky from '#/types/bsky';
+
+async function detectDescriptionFacets(
+	agent: BskyAppAgent,
+	description: string,
+): Promise<AppBskyRichtextFacet.Main[] | undefined> {
+	const rt = await detectFacets(description, async (handle) => {
+		try {
+			const res = await agent.resolveHandle({ handle });
+			return res.data.did as Did;
+		} catch {
+			return undefined;
+		}
+	});
+	// TODO(atcute Phase 3.1): the starter pack record is still built with @atproto types
+	return rt.facets as unknown as AppBskyRichtextFacet.Main[];
+}
 
 const RQKEY_ROOT = 'starter-pack';
 const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) => {
@@ -94,9 +110,7 @@ export function useCreateStarterPackMutation({
 		mutationFn: async ({ name, description, feeds, profiles }) => {
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 			if (description) {
-				const rt = new RichText({ text: description });
-				await rt.detectFacets(agent);
-				descriptionFacets = rt.facets;
+				descriptionFacets = await detectDescriptionFacets(agent, description);
 			}
 
 			let listRes;
@@ -159,9 +173,7 @@ export function useEditStarterPackMutation({
 		mutationFn: async ({ name, description, feeds, profiles, currentStarterPack, currentListItems }) => {
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 			if (description) {
-				const rt = new RichText({ text: description });
-				await rt.detectFacets(agent);
-				descriptionFacets = rt.facets;
+				descriptionFacets = await detectDescriptionFacets(agent, description);
 			}
 
 			if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {

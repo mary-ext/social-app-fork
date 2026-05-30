@@ -10,9 +10,9 @@ import {
 	type ComAtprotoLabelDefs,
 	type ComAtprotoRepoApplyWrites,
 	type ComAtprotoRepoStrongRef,
-	RichText,
 } from '@atproto/api';
 import { TID } from '@atproto/common-web';
+import { type Did } from '@atcute/lexicons';
 import * as dcbor from '@ipld/dag-cbor';
 import { t } from '@lingui/core/macro';
 import { type QueryClient } from '@tanstack/react-query';
@@ -21,7 +21,8 @@ import { CID } from 'multiformats/cid';
 import * as Hasher from 'multiformats/hashes/hasher';
 
 import { isNetworkError } from '#/lib/strings/errors';
-import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip';
+import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
+import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import { compressImage } from '#/state/gallery';
 import { fetchResolveGifQuery, fetchResolveLinkQuery } from '#/state/queries/resolve-link';
@@ -76,7 +77,7 @@ export async function post(agent: BskyAppAgent, queryClient: QueryClient, opts: 
 		const draft = thread.posts[i]!;
 
 		// Not awaited to avoid waterfalls.
-		const rtPromise = resolveRT(agent, draft.richtext);
+		const rtPromise = resolveRT(agent, draft.text);
 		const embedPromise = resolveEmbed(agent, queryClient, draft, opts.onStateChange);
 		let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined;
 		if (draft.labels.length) {
@@ -103,7 +104,8 @@ export async function post(agent: BskyAppAgent, queryClient: QueryClient, opts: 
 			$type: 'app.bsky.feed.post',
 			createdAt: now.toISOString(),
 			text: rt.text,
-			facets: rt.facets,
+			// TODO(atcute Phase 3.1): the post record is still built with @atproto types
+			facets: rt.facets as unknown as AppBskyFeedPost.Record['facets'],
 			reply,
 			embed,
 			langs,
@@ -174,18 +176,27 @@ export async function post(agent: BskyAppAgent, queryClient: QueryClient, opts: 
 	return { uris };
 }
 
-async function resolveRT(agent: BskyAppAgent, richtext: RichText) {
-	const trimmedText = richtext.text
-		// Trim leading whitespace-only lines (but don't break ASCII art).
-		.replace(/^(\s*\n)+/, '')
-		// Trim any trailing whitespace.
-		.trimEnd();
-	let rt = new RichText({ text: trimmedText }, { cleanNewlines: true });
-	await rt.detectFacets(agent);
+async function resolveRT(agent: BskyAppAgent, text: string) {
+	const trimmedText = cleanNewlines(
+		text
+			// Trim leading whitespace-only lines (but don't break ASCII art).
+			.replace(/^(\s*\n)+/, '')
+			// Trim any trailing whitespace.
+			.trimEnd(),
+	);
 
-	rt = shortenLinks(rt);
-	rt = stripInvalidMentions(rt);
-	return rt;
+	// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
+	// mentions left to strip.
+	const rt = await detectFacets(trimmedText, async (handle) => {
+		try {
+			const res = await agent.resolveHandle({ handle });
+			return res.data.did as Did;
+		} catch {
+			return undefined;
+		}
+	});
+
+	return shortenLinks(rt);
 }
 
 export class ReplyDeletedError extends Error {

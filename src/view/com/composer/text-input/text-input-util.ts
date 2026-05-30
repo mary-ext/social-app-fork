@@ -1,9 +1,29 @@
-import { type AppBskyRichtextFacet, type RichText } from '@atproto/api';
+import { tokenize } from '@atcute/bluesky-richtext-parser';
 
 export type LinkFacetMatch = {
-	rt: RichText;
-	facet: AppBskyRichtextFacet.Main;
+	uri: string;
+	/** The source text that follows the link, used to decide when the user has finished typing it. */
+	textAfter: string;
 };
+
+/**
+ * Detects scheme-prefixed link URLs in `text`, mapping each URL to the text that follows it. Works in
+ * plain JS-string space — no facets or byte offsets, since detection is a purely visual concern.
+ *
+ * @param text the compose-input text.
+ * @returns a map of detected URL to its match metadata.
+ */
+export function detectLinks(text: string): Map<string, LinkFacetMatch> {
+	const matches = new Map<string, LinkFacetMatch>();
+	let cursor = 0;
+	for (const token of tokenize(text)) {
+		if (token.type === 'autolink') {
+			matches.set(token.url, { uri: token.url, textAfter: text.slice(cursor + token.raw.length) });
+		}
+		cursor += token.raw.length;
+	}
+	return matches;
+}
 
 export function suggestLinkCardUri(
 	suggestLinkImmediately: boolean,
@@ -13,9 +33,6 @@ export function suggestLinkCardUri(
 ): string | undefined {
 	const suggestedUris = new Set<string>();
 	for (const [uri, nextMatch] of nextDetectedUris) {
-		if (!isValidUrlAndDomain(uri)) {
-			continue;
-		}
 		if (pastSuggestedUris.has(uri)) {
 			// Don't suggest already added or already dismissed link cards.
 			continue;
@@ -31,8 +48,8 @@ export function suggestLinkCardUri(
 			// it means you're probably still typing it. Disregard until it stabilizes.
 			continue;
 		}
-		const prevTextAfterUri = prevMatch.rt.unicodeText.slice(prevMatch.facet.index.byteEnd);
-		const nextTextAfterUri = nextMatch.rt.unicodeText.slice(nextMatch.facet.index.byteEnd);
+		const prevTextAfterUri = prevMatch.textAfter;
+		const nextTextAfterUri = nextMatch.textAfter;
 		if (prevTextAfterUri === nextTextAfterUri) {
 			// The text you're editing is before the link, e.g.
 			// "abc google.com" -> "abcd google.com".
@@ -73,13 +90,4 @@ export function suggestLinkCardUri(
 	}
 
 	return suggestedUri;
-}
-
-// https://stackoverflow.com/questions/8667070/javascript-regular-expression-to-validate-url
-// question credit Muhammad Imran Tariq https://stackoverflow.com/users/420613/muhammad-imran-tariq
-// answer credit Christian David https://stackoverflow.com/users/967956/christian-david
-function isValidUrlAndDomain(value: string) {
-	return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
-		value,
-	);
 }

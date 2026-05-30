@@ -13,7 +13,6 @@ import {
 	LABELS,
 	mock,
 	type ModerationBehavior,
-	RichText,
 } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
@@ -784,7 +783,7 @@ function MockAccountScreen({
 					profile={profile}
 					moderationOpts={moderationOpts}
 					// @ts-ignore ProfileViewBasic is close enough -esb
-					descriptionRT={new RichText({ text: profile.description as string })}
+					descriptionRT={{ text: profile.description as string }}
 				/>
 			</ScreenHider>
 		</View>

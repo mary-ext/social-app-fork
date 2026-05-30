@@ -28,8 +28,8 @@ import {
 	AppBskyDraftCreateDraft,
 	AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	type RichText,
 } from '@atproto/api';
+import { countGraphemes } from 'unicode-segmenter/grapheme';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -264,7 +264,7 @@ export const ComposePost = ({
 	// Clear error when composer content changes, but only if all posts are
 	// back within the character limit.
 	const allPostsWithinLimit = thread.posts.every(
-		(post) => post.richtext.graphemeLength <= MAX_DRAFT_GRAPHEME_LENGTH,
+		(post) => countGraphemes(post.text) <= MAX_DRAFT_GRAPHEME_LENGTH,
 	);
 
 	const activePost = thread.posts[composerState.activePostIndex]!;
@@ -502,7 +502,7 @@ export const ComposePost = ({
 
 	const validateDraftTextOrError = useCallback((): boolean => {
 		const tooLong = composerState.thread.posts.some(
-			(post) => post.richtext.graphemeLength > MAX_DRAFT_GRAPHEME_LENGTH,
+			(post) => countGraphemes(post.text) > MAX_DRAFT_GRAPHEME_LENGTH,
 		);
 		if (tooLong) {
 			setError(
@@ -565,7 +565,7 @@ export const ComposePost = ({
 
 		const firstPost = thread.posts[0]!;
 		// Has text
-		if (firstPost.richtext.text.trim().length > 0) return false;
+		if (firstPost.text.trim().length > 0) return false;
 		// Has media
 		if (firstPost.embed.media) return false;
 		// Has quote
@@ -935,7 +935,7 @@ export const ComposePost = ({
 	const footer = (
 		<>
 			<SuggestedLanguage
-				text={activePost.richtext.text}
+				text={activePost.text}
 				replyToLanguages={replyToLanguages}
 				currentLanguages={currentLanguages}
 				onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
@@ -995,7 +995,7 @@ export const ComposePost = ({
 						isDirty={composerState.isDirty}
 						isEditingDraft={!!composerState.draftId}
 						canSaveDraft={allPostsWithinLimit}
-						textLength={thread.posts[0]!.richtext.text.length}
+						textLength={thread.posts[0]!.text.length}
 					>
 						{missingAltError && <AltTextReminder error={missingAltError} />}
 						<ErrorBanner
@@ -1141,13 +1141,13 @@ let ComposerPost = memo(function ComposerPost({
 	onClearVideo: (postId: string) => void;
 	onSelectVideo: (postId: string, asset: VideoAsset) => void;
 	onError: (error: string) => void;
-	onPublish: (richtext: RichText) => void;
+	onPublish: (text: string) => void;
 }) {
 	const { currentAccount } = useSession();
 	const currentDid = currentAccount!.did;
 	const { t: l } = useLingui();
 	const { data: currentProfile } = useProfileQuery({ did: currentDid });
-	const richtext = post.richtext;
+	const text = post.text;
 	const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media;
 	const forceMinHeight = isTextOnly && isActive;
 	const selectTextInputPlaceholder = isReply
@@ -1235,15 +1235,15 @@ let ComposerPost = memo(function ComposerPost({
 				<TextInput
 					ref={textInputRef}
 					style={[a.pt_xs]}
-					richtext={richtext}
+					text={text}
 					placeholder={selectTextInputPlaceholder}
 					autoFocus={isLastPost}
 					webForceMinHeight={forceMinHeight}
 					// To avoid overlap with the close button:
 					hasRightPadding={isPartOfThread}
 					isActive={isActive}
-					setRichText={(rt) => {
-						dispatchPost({ type: 'update_richtext', richtext: rt });
+					setText={(text) => {
+						dispatchPost({ type: 'update_text', text });
 					}}
 					onFocus={() => {
 						dispatch({
@@ -1955,7 +1955,7 @@ async function whenAppViewReady(
 }
 
 function isEmptyPost(post: PostDraft) {
-	return post.richtext.text.trim().length === 0 && !post.embed.media && !post.embed.link && !post.embed.quote;
+	return post.text.trim().length === 0 && !post.embed.media && !post.embed.link && !post.embed.quote;
 }
 
 function useHideKeyboardOnBackground() {

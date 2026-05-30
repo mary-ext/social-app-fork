@@ -1,6 +1,6 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyDraftDefs, RichText } from '@atproto/api';
+import { type AppBskyDraftDefs } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
 
 import { resolveLink } from '#/lib/api/resolve';
@@ -8,7 +8,7 @@ import { getDeviceId } from '#/lib/device-id';
 import { getDeviceName } from '#/lib/deviceName';
 import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/util';
-import { shortenLinks } from '#/lib/strings/rich-text-manip';
+import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 
 import { type ComposerImage } from '#/state/gallery';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
@@ -90,7 +90,7 @@ async function postDraftToServerPost(
 ): Promise<AppBskyDraftDefs.DraftPost> {
 	const draftPost: AppBskyDraftDefs.DraftPost = {
 		$type: 'app.bsky.draft.defs#draftPost',
-		text: post.richtext.text,
+		text: post.text,
 	};
 
 	// Add labels if present
@@ -398,8 +398,7 @@ export async function draftToComposerPosts(
 
 	const posts = await Promise.all(
 		draft.posts.map(async (post, index) => {
-			const richtext = new RichText({ text: post.text || '' });
-			richtext.detectFacetsWithoutResolution();
+			const text = post.text || '';
 
 			const embed: EmbedDraft = {
 				quote: undefined,
@@ -542,8 +541,8 @@ export async function draftToComposerPosts(
 
 			return {
 				id: `draft-post-${index}`,
-				richtext,
-				shortenedGraphemeLength: shortenLinks(richtext).graphemeLength,
+				text,
+				shortenedGraphemeLength: getShortenedLength(text),
 				labels,
 				embed,
 			} as PostDraft;

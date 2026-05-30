@@ -2,7 +2,9 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from
 import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type $Typed, type AppBskyEmbedRecord, AppBskyRichtextFacet, RichText } from '@atproto/api';
+import { tokenize } from '@atcute/bluesky-richtext-parser';
+import { type Did } from '@atcute/lexicons';
+import { type $Typed, type AppBskyEmbedRecord } from '@atproto/api';
 
 import {
 	default as Animated,
@@ -17,7 +19,8 @@ import {
 } from '#/lib/animations/reanimatedCompat';
 import { mergeRefs } from '#/lib/merge-refs';
 import { ScrollProvider } from '#/lib/ScrollContext';
-import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip';
+import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
+import { shortenLinks } from '#/lib/strings/rich-text-manip';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
@@ -329,12 +332,7 @@ export function MessagesList({
 	// -- Message sending
 	const onSendMessage = useCallback(
 		async (text: string) => {
-			let rt = new RichText({ text: text.trimEnd() }, { cleanNewlines: true });
-
-			// detect facets without resolution first - this is used to see if there's
-			// any post links in the text that we can embed. We do this first because
-			// we want to remove the post link from the text, re-trim, then detect facets
-			rt.detectFacetsWithoutResolution();
+			let trimmedText = cleanNewlines(text.trimEnd());
 
 			let embed: $Typed<AppBskyEmbedRecord.Main> | undefined;
 			let embedView: $Typed<AppBskyEmbedRecord.View> | undefined;
@@ -356,38 +354,23 @@ export function MessagesList({
 							record: createEmbedViewRecordFromPost(post),
 						};
 
-						// look for the embed uri in the facets, so we can remove it from the text
-						const postLinkFacet = rt.facets?.find((facet) => {
-							return facet.features.find((feature) => {
-								if (AppBskyRichtextFacet.isLink(feature)) {
-									if (isBskyPostUrl(feature.uri)) {
-										const url = convertBskyAppUrlIfNeeded(feature.uri);
-										const [_0, _1, _2, rkey] = url.split('/').filter(Boolean) as [
-											string,
-											string,
-											string,
-											string,
-										];
-
-										// this might have a handle instead of a DID
-										// so just compare the rkey - not particularly dangerous
-										return post.uri.endsWith(rkey);
-									}
-								}
-								return false;
-							});
-						});
-
-						if (postLinkFacet) {
-							const isAtStart = postLinkFacet.index.byteStart === 0;
-							const isAtEnd = postLinkFacet.index.byteEnd === rt.unicodeText.graphemeLength;
-
-							// remove the post link from the text
-							if (isAtStart || isAtEnd) {
-								rt.delete(postLinkFacet.index.byteStart, postLinkFacet.index.byteEnd);
+						// If the embedded post's own link sits at the start or end of the message text,
+						// strip it — it shows as the quote embed instead.
+						for (const token of tokenize(trimmedText)) {
+							if (token.type !== 'autolink' || !isBskyPostUrl(token.url)) {
+								continue;
 							}
-
-							rt = new RichText({ text: rt.text.trim() }, { cleanNewlines: true });
+							const url = convertBskyAppUrlIfNeeded(token.url);
+							// this might have a handle instead of a DID, so just compare the rkey
+							const rkey = url.split('/').filter(Boolean).at(-1);
+							if (rkey && post.uri.endsWith(rkey)) {
+								if (trimmedText.startsWith(token.raw)) {
+									trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
+								} else if (trimmedText.endsWith(token.raw)) {
+									trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
+								}
+								break;
+							}
 						}
 					}
 				} catch (error) {
@@ -395,20 +378,28 @@ export function MessagesList({
 				}
 			}
 
-			await rt.detectFacets(agent);
-
-			rt = shortenLinks(rt);
-			rt = stripInvalidMentions(rt);
+			// `detectFacets` only emits mention facets for handles that resolve, so there are no
+			// invalid mentions left to strip.
+			const rt = shortenLinks(
+				await detectFacets(trimmedText, async (handle) => {
+					try {
+						const res = await agent.resolveHandle({ handle });
+						return res.data.did as Did;
+					} catch {
+						return undefined;
+					}
+				}),
+			);
 
 			if (!hasScrolled) {
 				setHasScrolled(true);
 			}
 
 			convoState.sendMessage(
-				// TODO(atcute Phase 3.0 / 2.4): drop casts once RichText and embed types migrate to @atcute
 				{
 					text: rt.text,
-					facets: rt.facets as unknown as ChatBskyConvoDefs.MessageInput['facets'],
+					facets: rt.facets,
+					// TODO(atcute Phase 2.4): drop cast once the embed view types migrate to @atcute
 					embed: embed as unknown as ChatBskyConvoDefs.MessageInput['embed'],
 				},
 				embedView,

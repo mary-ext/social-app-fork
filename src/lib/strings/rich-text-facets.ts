@@ -2,6 +2,9 @@ import { type AppBskyRichtextFacet } from '@atcute/bluesky';
 import RichtextBuilder from '@atcute/bluesky-richtext-builder';
 import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
 import { type Did, type GenericUri } from '@atcute/lexicons';
+import { countGraphemes } from 'unicode-segmenter/grapheme';
+
+import { toShortUrl } from './url-helpers';
 
 export type RichtextFacet = AppBskyRichtextFacet.Main;
 
@@ -10,6 +13,36 @@ export type Richtext = {
 	text: string;
 	facets?: RichtextFacet[];
 };
+
+// Collapses runs of 3+ newlines (allowing zero-width separators between them) down to a blank line.
+// eslint-disable-next-line no-misleading-character-class
+const EXCESS_NEWLINES_RE = /[\r\n]([\u00AD\u2060\u200D\u200C\u200B\s]*[\r\n]){2,}/g;
+
+/**
+ * Collapses runs of three or more newlines down to a single blank line, matching `@atproto/api`'s
+ * `RichText` `cleanNewlines` option.
+ *
+ * @param text the text to sanitize.
+ * @returns the text with excess blank lines removed.
+ */
+export function cleanNewlines(text: string): string {
+	return text.replace(EXCESS_NEWLINES_RE, '\n\n');
+}
+
+/**
+ * Counts the graphemes of `text` as it will be displayed, with link URLs replaced by their shortened
+ * form — the value a composer's character counter shows.
+ *
+ * @param text the compose-input text.
+ * @returns the shortened grapheme length.
+ */
+export function getShortenedLength(text: string): number {
+	let shortened = '';
+	for (const token of tokenize(text)) {
+		shortened += token.type === 'autolink' ? toShortUrl(token.url) : token.raw;
+	}
+	return countGraphemes(shortened);
+}
 
 /**
  * Appends a parser token to a richtext builder, preserving `@atproto/api` parity: only mentions,

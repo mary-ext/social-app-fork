@@ -1,51 +1,34 @@
-import { AppBskyRichtextFacet, type RichText, UnicodeString } from '@atproto/api';
+import { type AppBskyRichtextFacet } from '@atcute/bluesky';
+import RichtextBuilder from '@atcute/bluesky-richtext-builder';
+import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
+import { type Richtext } from './rich-text-facets';
 import { toShortUrl } from './url-helpers';
 
-export function shortenLinks(rt: RichText): RichText {
-	if (!rt.facets?.length) {
-		return rt;
+type Feature = AppBskyRichtextFacet.Main['features'][number];
+
+/**
+ * Replaces each link facet's display text with its shortened form, rebuilding the facets so their byte
+ * offsets stay correct. The builder owns all UTF-8 offset math, so there is no manual byte stitching.
+ *
+ * @param richtext the text and facets to shorten.
+ * @returns the rewritten text and facets.
+ */
+export function shortenLinks({ text, facets }: Richtext): Richtext {
+	if (!facets?.length) {
+		return { text, facets };
 	}
-	rt = rt.clone();
-	// enumerate the link facets
-	if (rt.facets) {
-		for (const facet of rt.facets) {
-			const isLink = !!facet.features.find(AppBskyRichtextFacet.isLink);
-			if (!isLink) {
-				continue;
-			}
 
-			// extract and shorten the URL
-			const { byteStart, byteEnd } = facet.index;
-			const url = rt.unicodeText.slice(byteStart, byteEnd);
-			const shortened = new UnicodeString(toShortUrl(url));
-
-			// insert the shorten URL
-			rt.insert(byteStart, shortened.utf16);
-			// update the facet to cover the new shortened URL
-			facet.index.byteStart = byteStart;
-			facet.index.byteEnd = byteStart + shortened.length;
-			// remove the old URL
-			rt.delete(byteStart + shortened.length, byteEnd + shortened.length);
+	const builder = new RichtextBuilder();
+	for (const segment of segmentize<Feature>(text, facets)) {
+		const feature = segment.features?.[0];
+		if (feature?.$type === 'app.bsky.richtext.facet#link') {
+			builder.addLink(toShortUrl(segment.text), feature.uri);
+		} else if (feature) {
+			builder.addDecoratedText(segment.text, feature);
+		} else {
+			builder.addText(segment.text);
 		}
 	}
-	return rt;
-}
-
-// filter out any mention facets that didn't map to a user
-export function stripInvalidMentions(rt: RichText): RichText {
-	if (!rt.facets?.length) {
-		return rt;
-	}
-	rt = rt.clone();
-	if (rt.facets) {
-		rt.facets = rt.facets?.filter((facet) => {
-			const mention = facet.features.find(AppBskyRichtextFacet.isMention);
-			if (mention && !mention.did) {
-				return false;
-			}
-			return true;
-		});
-	}
-	return rt;
+	return builder.build();
 }

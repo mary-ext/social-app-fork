@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text as RNText, View } from 'react-native';
-import { RichText } from '@atproto/api';
+import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { parseLanguageString } from '@atproto/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
@@ -433,16 +433,24 @@ async function guessLanguage(
  * leading `#` is short enough not to distort results.
  */
 function sanitizeTextForDetection(text: string): string {
-	const rt = new RichText({ text: text.trim() });
-	rt.detectFacetsWithoutResolution();
-
 	let sanitized = '';
-	for (const segment of rt.segments()) {
-		if (segment.isLink() || segment.isMention() || segment.isTag()) {
-			continue;
+	for (const token of tokenize(text.trim())) {
+		switch (token.type) {
+			case 'mention':
+			case 'autolink':
+			case 'link':
+				// Drop links and mentions — they aren't in the post's language.
+				break;
+			case 'topic':
+				// Keep the hashtag's word content (the leading `#` is dropped).
+				sanitized += token.name;
+				break;
+			case 'text':
+				sanitized += token.content;
+				break;
+			default:
+				sanitized += token.raw;
 		}
-		sanitized += segment.text;
 	}
-
 	return sanitized.trim();
 }
