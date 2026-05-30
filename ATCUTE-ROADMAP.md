@@ -199,11 +199,29 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   now go through `appview.post(...)` (server-side procedures, not records — routed to `appview`
   per the routing table). Void-output procedures require `as: null`. Toggle helpers, composer, and
   Germ declaration still pending.
-- Next: **Stream 3** (write-path migration), opening with **Phase 3.0** (RichText) — `@atproto/api`'s
-  `RichText` class splits into `@atcute/bluesky-richtext-{parser,segmenter,builder}`. This is an API
-  redesign, not a drop-in, and it unblocks the composer write path (3.1). Render-time
-  `richText.segments()` → segmenter first (central renderer, then leaf callers); compose-time
-  `detectFacets` → parser + builder with `appview` handle resolution.
+- **Phase 3.0 — done.** `@atproto/api`'s `RichText` class + `UnicodeString` are fully removed.
+  Rendering goes through `@atcute`'s `segmentize`; a new `src/lib/strings/rich-text-facets.ts`
+  (`detectFacets` / `detectFacetsWithoutResolution` / `cleanNewlines` / `getShortenedLength`) wraps
+  the parser + builder. Segment decoration takes the **first supported feature in array order** (no
+  mention>link>tag precedence). The composer no longer keeps a parsed RichText in state — it stores
+  the plain text string and builds `{text, facets}` (UTF-8 offsets via the builder) **once at
+  publish**; link-card detection runs in JS-string space via the tokenizer (the brittle
+  `UnicodeString` byte-stitching in `shortenLinks` / `suggestLinkCardUri` is gone). The publish
+  record building (`lib/api/index.ts`) and the starter-pack/DM write paths keep an `as unknown as`
+  facet cast at the `@atproto`-typed record boundary (3.1). **Accepted regression:** protocol-less
+  URLs (`bsky.app` without a scheme) no longer auto-facet — the parser's autolink requires `https?://`.
+- **Tapper editor — done (bonus, alongside 3.0).** The in-house composer editor (`src/lib/tapper/`)
+  now reuses the same `tokenize` parser instead of its own regex bank, so its highlighting exactly
+  matches the published facets (protocol-less URLs stop lighting up). The cursor trigger-splice +
+  `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
+  completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
+  `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
+- Next: **Phase 3.1** (record writes + the composer publish path). Re-home the `BskyAgent` toggle
+  helpers (`agent.like`/`repost`/`follow`/`block`/`deletePost`…) onto `createRecord`/`deleteRecord`
+  via the `pds` client + `src/lib/api/records.ts` (Phase 1.3); migrate the composer publish
+  (`lib/api/index.ts` `applyWrites`) so the 3.0 facet-cast boundary drops; Germ declaration → repo
+  record CRUD. Mutes already landed. Verify writes with reversible self-actions (like/unlike,
+  repost/unrepost, follow/unfollow), never new posts.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
