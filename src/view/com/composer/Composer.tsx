@@ -23,13 +23,10 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ClientResponseError } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	AppBskyDraftCreateDraft,
-	AppBskyUnspeccedDefs,
-	type AppBskyUnspeccedGetPostThreadV2,
-} from '@atproto/api';
+import { AppBskyUnspeccedDefs, type AppBskyUnspeccedGetPostThreadV2 } from '@atproto/api';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -493,7 +490,7 @@ export const ComposePost = ({
 
 	const getDraftSaveError = useCallback(
 		(e: unknown): string => {
-			if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+			if (e instanceof ClientResponseError && e.error === 'DraftLimitReached') {
 				return l`You've reached the maximum number of drafts`;
 			}
 			return l`Failed to save draft`;

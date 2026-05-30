@@ -1,5 +1,5 @@
-/** Types for draft display and local media tracking. Server draft types come from @atproto/api. */
-import { type AppBskyDraftDefs } from '@atproto/api';
+/** Types for draft display and local media tracking. Server draft types come from @atcute/bluesky. */
+import { type AppBskyDraftDefs } from '@atcute/bluesky';
 
 /** Reference to locally cached media file for display */
 export type LocalMediaDisplay = {

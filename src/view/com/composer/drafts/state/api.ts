@@ -1,6 +1,7 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
+import { type AppBskyDraftDefs } from '@atcute/bluesky';
+import { type GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyDraftDefs } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
 
 import { resolveLink } from '#/lib/api/resolve';
@@ -139,7 +140,7 @@ async function postDraftToServerPost(
 		draftPost.embedExternals = [
 			{
 				$type: 'app.bsky.draft.defs#draftEmbedExternal',
-				uri: post.embed.link.uri,
+				uri: post.embed.link.uri as GenericUri,
 			},
 		];
 	}
@@ -250,7 +251,7 @@ function serializeGif(gifMedia: {
 
 	return {
 		$type: 'app.bsky.draft.defs#draftEmbedExternal',
-		uri: url.toString(),
+		uri: url.toString() as GenericUri,
 	};
 }
 
