@@ -1,15 +1,17 @@
-import { type AppBskyActorGetProfile } from '@atproto/api';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier, type Did, type Handle } from '@atcute/lexicons';
 import { useMutation } from '@tanstack/react-query';
 
+import { createRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import type * as bsky from '#/types/bsky';
 
 export function useVerificationCreateMutation() {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const { currentAccount } = useSession();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 
@@ -19,28 +21,33 @@ export function useVerificationCreateMutation() {
 				throw new Error('User not logged in');
 			}
 
-			const { uri } = await agent.app.bsky.graph.verification.create(
-				{ repo: currentAccount.did },
-				{
-					subject: profile.did,
+			const { uri } = await createRecord(pds!, {
+				collection: 'app.bsky.graph.verification',
+				record: {
+					$type: 'app.bsky.graph.verification',
 					createdAt: new Date().toISOString(),
-					handle: profile.handle,
 					displayName: profile.displayName || '',
+					handle: profile.handle as Handle,
+					subject: profile.did as Did,
 				},
-			);
+				repo: currentAccount.did as Did,
+			});
 
 			await until(
 				5,
 				1e3,
-				({ data: profile }: AppBskyActorGetProfile.Response) => {
-					if (profile.verification && profile.verification.verifications.find((v) => v.uri === uri)) {
+				(prof) => {
+					if (prof?.verification && prof.verification.verifications.find((v) => v.uri === uri)) {
 						return true;
 					}
 					return false;
 				},
-				() => {
-					return agent.getProfile({ actor: profile.did ?? '' });
-				},
+				() =>
+					ok(
+						appview.get('app.bsky.actor.getProfile', {
+							params: { actor: (profile.did ?? '') as ActorIdentifier },
+						}),
+					),
 			);
 		},
 		async onSuccess(_, { profile }) {

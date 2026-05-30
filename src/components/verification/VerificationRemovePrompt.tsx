@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { useVerificationsRemoveMutation } from '#/state/queries/verification/useVerificationsRemoveMutation';

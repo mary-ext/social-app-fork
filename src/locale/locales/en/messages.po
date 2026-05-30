@@ -3318,7 +3318,7 @@ msgstr ""
 msgid "Failed to update feeds"
 msgstr ""
 
-#: src/state/queries/activity-subscriptions.ts:92
+#: src/state/queries/activity-subscriptions.ts:96
 msgid "Failed to update notification declaration"
 msgstr ""
 
@@ -8411,7 +8411,7 @@ msgstr ""
 msgid "This screen is only available for group conversations."
 msgstr "This screen is only available for group conversations."
 
-#: src/features/liveNow/index.tsx:186
+#: src/features/liveNow/index.tsx:184
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
 msgstr ""
 
@@ -9471,7 +9471,7 @@ msgstr ""
 msgid "You are Live"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:346
+#: src/features/liveNow/index.tsx:340
 msgid "You are no longer live"
 msgstr ""
 
@@ -9483,7 +9483,7 @@ msgstr ""
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:292
+#: src/features/liveNow/index.tsx:285
 msgid "You are now live!"
 msgstr ""
 

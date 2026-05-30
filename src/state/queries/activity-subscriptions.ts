@@ -1,6 +1,10 @@
-import { type AppBskyActorDefs, type AppBskyNotificationListActivitySubscriptions } from '@atcute/bluesky';
+import {
+	type AppBskyActorDefs,
+	type AppBskyNotificationDeclaration,
+	type AppBskyNotificationListActivitySubscriptions,
+} from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type AppBskyNotificationDeclaration } from '@atproto/api';
+import { type Did } from '@atcute/lexicons';
 import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
@@ -11,7 +15,9 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { useAgent, useClients, useSession } from '#/state/session';
+import { getRecord, putRecord } from '#/lib/api/records';
+
+import { useClients, useSession } from '#/state/session';
 
 import * as Toast from '#/components/Toast';
 
@@ -35,24 +41,24 @@ export function useActivitySubscriptionsQuery() {
 }
 
 export function useNotificationDeclarationQuery() {
-	const agent = useAgent();
+	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	return useQuery({
 		queryKey: RQKEY_getNotificationDeclaration,
 		queryFn: async () => {
 			try {
-				const response = await agent.app.bsky.notification.declaration.get({
-					repo: currentAccount!.did,
+				return await getRecord(pds!, {
+					collection: 'app.bsky.notification.declaration',
+					repo: currentAccount!.did as Did,
 					rkey: 'self',
 				});
-				return response;
 			} catch (err) {
-				if (err instanceof Error && err.message.startsWith('Could not locate record')) {
+				if (err instanceof Error && err.message.includes('Could not locate record')) {
 					return {
 						value: {
 							$type: 'app.bsky.notification.declaration',
 							allowSubscriptions: 'followers',
-						} satisfies AppBskyNotificationDeclaration.Record,
+						} satisfies AppBskyNotificationDeclaration.Main,
 					};
 				} else {
 					throw err;
@@ -63,24 +69,22 @@ export function useNotificationDeclarationQuery() {
 }
 
 export function useNotificationDeclarationMutation() {
-	const agent = useAgent();
+	const { pds } = useClients();
 	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: async (record: AppBskyNotificationDeclaration.Record) => {
-			const response = await agent.app.bsky.notification.declaration.put(
-				{
-					repo: currentAccount!.did,
-					rkey: 'self',
-				},
+		mutationFn: async (record: AppBskyNotificationDeclaration.Main) => {
+			return await putRecord(pds!, {
+				collection: 'app.bsky.notification.declaration',
 				record,
-			);
-			return response;
+				repo: currentAccount!.did as Did,
+				rkey: 'self',
+			});
 		},
 		onMutate: (value) => {
 			queryClient.setQueryData(
 				RQKEY_getNotificationDeclaration,
-				(old?: { uri: string; cid: string; value: AppBskyNotificationDeclaration.Record }) => {
+				(old?: { uri: string; cid: string; value: AppBskyNotificationDeclaration.Main }) => {
 					if (!old) return old;
 					return {
 						value,

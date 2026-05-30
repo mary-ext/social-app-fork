@@ -1,16 +1,19 @@
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyActorDefs, type AppBskyActorGetProfile } from '@atproto/api';
 import { useMutation } from '@tanstack/react-query';
 
+import { deleteRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import type * as bsky from '#/types/bsky';
 
 export function useVerificationsRemoveMutation() {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const { currentAccount } = useSession();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 
@@ -30,8 +33,9 @@ export function useVerificationsRemoveMutation() {
 
 			await Promise.all(
 				uris.map((uri) => {
-					return agent.app.bsky.graph.verification.delete({
-						repo: currentAccount.did,
+					return deleteRecord(pds!, {
+						collection: 'app.bsky.graph.verification',
+						repo: currentAccount.did as Did,
 						rkey: parseCanonicalResourceUri(uri).rkey,
 					});
 				}),
@@ -40,15 +44,18 @@ export function useVerificationsRemoveMutation() {
 			await until(
 				5,
 				1e3,
-				({ data: profile }: AppBskyActorGetProfile.Response) => {
-					if (!profile.verification?.verifications.some((v) => uris.includes(v.uri))) {
+				(prof) => {
+					if (!prof?.verification?.verifications.some((v) => uris.includes(v.uri))) {
 						return true;
 					}
 					return false;
 				},
-				() => {
-					return agent.getProfile({ actor: profile.did ?? '' });
-				},
+				() =>
+					ok(
+						appview.get('app.bsky.actor.getProfile', {
+							params: { actor: (profile.did ?? '') as ActorIdentifier },
+						}),
+					),
 			);
 		},
 		async onSuccess(_, { profile }) {
