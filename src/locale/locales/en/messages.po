@@ -921,7 +921,7 @@ msgstr ""
 msgid "Add another post to thread"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:148
+#: src/screens/Settings/AutomationLabelSettings.tsx:135
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
@@ -1436,7 +1436,7 @@ msgid "Automation label"
 msgstr "Automation label"
 
 #: src/Navigation.tsx:778
-#: src/screens/Settings/AutomationLabelSettings.tsx:97
+#: src/screens/Settings/AutomationLabelSettings.tsx:84
 msgid "Automation Label"
 msgstr "Automation Label"
 
@@ -1605,7 +1605,7 @@ msgstr ""
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
-#: src/screens/Settings/components/PwiOptOut.tsx:87
+#: src/screens/Settings/components/PwiOptOut.tsx:71
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr ""
 
@@ -2593,8 +2593,8 @@ msgstr ""
 msgid "Disconnect Germ DM"
 msgstr ""
 
-#: src/screens/Settings/components/PwiOptOut.tsx:78
-#: src/screens/Settings/components/PwiOptOut.tsx:82
+#: src/screens/Settings/components/PwiOptOut.tsx:62
+#: src/screens/Settings/components/PwiOptOut.tsx:66
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
@@ -3253,7 +3253,7 @@ msgstr ""
 msgid "Failed to mute group chat"
 msgstr "Failed to mute group chat"
 
-#: src/state/queries/pinned-post.ts:70
+#: src/state/queries/pinned-post.ts:72
 msgid "Failed to pin post"
 msgstr ""
 
@@ -6116,7 +6116,7 @@ msgstr "Post link"
 msgid "Post not found"
 msgstr ""
 
-#: src/state/queries/pinned-post.ts:58
+#: src/state/queries/pinned-post.ts:60
 msgctxt "toast"
 msgid "Post pinned"
 msgstr ""
@@ -6125,7 +6125,7 @@ msgstr ""
 msgid "Post saved"
 msgstr ""
 
-#: src/state/queries/pinned-post.ts:60
+#: src/state/queries/pinned-post.ts:62
 msgctxt "toast"
 msgid "Post unpinned"
 msgstr ""
@@ -7441,8 +7441,8 @@ msgstr ""
 msgid "Show anyway"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:163
-#: src/screens/Settings/AutomationLabelSettings.tsx:177
+#: src/screens/Settings/AutomationLabelSettings.tsx:150
+#: src/screens/Settings/AutomationLabelSettings.tsx:164
 msgid "Show automation label"
 msgstr "Show automation label"
 
@@ -8322,7 +8322,7 @@ msgstr ""
 msgid "This is not a valid link"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:151
+#: src/screens/Settings/AutomationLabelSettings.tsx:138
 msgid "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 msgstr "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 

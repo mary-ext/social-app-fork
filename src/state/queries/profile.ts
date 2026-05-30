@@ -2,17 +2,12 @@ import { useCallback } from 'react';
 import {
 	type AppBskyActorDefs,
 	type AppBskyActorGetProfiles,
+	type AppBskyActorProfile,
 	type AppBskyGraphGetFollows,
 } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
+import { type Client, ClientResponseError, ok } from '@atcute/client';
 import { type ActorIdentifier, type Did, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyActorGetProfile,
-	type AppBskyActorProfile,
-	type ComAtprotoRepoUploadBlob,
-	type Un$Typed,
-} from '@atproto/api';
 import {
 	type InfiniteData,
 	keepPreviousData,
@@ -22,7 +17,9 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { createRecord, deleteRecord } from '#/lib/api/records';
+import { createRecord, deleteRecord, getRecord, putRecord } from '#/lib/api/records';
+import { uploadBlob } from '#/lib/api/upload-blob';
+import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
@@ -37,8 +34,7 @@ import {
 	useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { useAgent, useClients, useSession } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import type * as bsky from '#/types/bsky';
@@ -143,35 +139,37 @@ export function usePrefetchProfileQuery() {
 	return prefetchProfileQuery;
 }
 
+/**
+ * A writable `app.bsky.actor.profile` record without its `$type` — the shape the profile mutators read,
+ * mutate, and return. `$type` is reattached when the record is written.
+ */
+export type ProfileRecordWrite = {
+	-readonly [K in keyof Omit<AppBskyActorProfile.Main, '$type'>]: Omit<AppBskyActorProfile.Main, '$type'>[K];
+};
+
 interface ProfileUpdateParams {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	updates:
-		| Un$Typed<AppBskyActorProfile.Record>
-		| ((existing: Un$Typed<AppBskyActorProfile.Record>) => Un$Typed<AppBskyActorProfile.Record>);
+	updates: ProfileRecordWrite | ((existing: ProfileRecordWrite) => ProfileRecordWrite);
 	newUserAvatar?: ImageMeta | undefined | null;
 	newUserBanner?: ImageMeta | undefined | null;
-	checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean;
+	checkCommitted?: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean;
 }
 export function useProfileUpdateMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 	return useMutation<void, Error, ProfileUpdateParams>({
 		mutationFn: async ({ profile, updates, newUserAvatar, newUserBanner, checkCommitted }) => {
-			let newUserAvatarPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
+			let newUserAvatarPromise: ReturnType<typeof uploadBlob> | undefined;
 			if (newUserAvatar) {
-				newUserAvatarPromise = agent.uploadBlob(newUserAvatar.blob, {
-					encoding: newUserAvatar.blob.type,
-				});
+				newUserAvatarPromise = uploadBlob(pds!, newUserAvatar.blob, newUserAvatar.blob.type);
 			}
-			let newUserBannerPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
+			let newUserBannerPromise: ReturnType<typeof uploadBlob> | undefined;
 			if (newUserBanner) {
-				newUserBannerPromise = agent.uploadBlob(newUserBanner.blob, {
-					encoding: newUserBanner.blob.type,
-				});
+				newUserBannerPromise = uploadBlob(pds!, newUserBanner.blob, newUserBanner.blob.type);
 			}
-			await agent.upsertProfile(async (existing) => {
-				let next: Un$Typed<AppBskyActorProfile.Record> = existing || {};
+			await upsertProfile(pds!, profile.did as Did, async (existing) => {
+				let next: ProfileRecordWrite = existing || {};
 				if (typeof updates === 'function') {
 					next = updates(next);
 				} else {
@@ -182,38 +180,36 @@ export function useProfileUpdateMutation() {
 					}
 				}
 				if (newUserAvatarPromise) {
-					const res = await newUserAvatarPromise;
-					next.avatar = res.data.blob;
+					next.avatar = await newUserAvatarPromise;
 				} else if (newUserAvatar === null) {
 					next.avatar = undefined;
 				}
 				if (newUserBannerPromise) {
-					const res = await newUserBannerPromise;
-					next.banner = res.data.blob;
+					next.banner = await newUserBannerPromise;
 				} else if (newUserBanner === null) {
 					next.banner = undefined;
 				}
 				return next;
 			});
 			await whenAppViewReady(
-				agent,
+				appview,
 				profile.did,
 				checkCommitted ||
 					((res) => {
 						if (typeof newUserAvatar !== 'undefined') {
-							if (newUserAvatar === null && res.data.avatar) {
+							if (newUserAvatar === null && res.avatar) {
 								// url hasn't cleared yet
 								return false;
-							} else if (res.data.avatar === profile.avatar) {
+							} else if (res.avatar === profile.avatar) {
 								// url hasn't changed yet
 								return false;
 							}
 						}
 						if (typeof newUserBanner !== 'undefined') {
-							if (newUserBanner === null && res.data.banner) {
+							if (newUserBanner === null && res.banner) {
 								// url hasn't cleared yet
 								return false;
-							} else if (res.data.banner === profile.banner) {
+							} else if (res.banner === profile.banner) {
 								// url hasn't changed yet
 								return false;
 							}
@@ -221,9 +217,7 @@ export function useProfileUpdateMutation() {
 						if (typeof updates === 'function') {
 							return true;
 						}
-						return (
-							res.data.displayName === updates.displayName && res.data.description === updates.description
-						);
+						return res.displayName === updates.displayName && res.description === updates.description;
 					}),
 			);
 		},
@@ -568,16 +562,58 @@ function useProfileUnblockMutation() {
 	});
 }
 
+/**
+ * Reads, merges, and writes the signed-in user's own `app.bsky.actor.profile` record, retrying on a swap
+ * conflict (a concurrent profile edit). Mirrors `@atproto/api`'s `BskyAgent.upsertProfile`.
+ *
+ * @param pds the PDS client.
+ * @param did the user's repo DID.
+ * @param updateFn maps the existing record (or undefined when none exists) to the record to write.
+ */
+async function upsertProfile(
+	pds: Client,
+	did: Did,
+	updateFn: (existing: ProfileRecordWrite | undefined) => ProfileRecordWrite | Promise<ProfileRecordWrite>,
+): Promise<void> {
+	await retry(
+		5,
+		(e) => e instanceof ClientResponseError && e.error === 'InvalidSwap',
+		async () => {
+			const existing = await getRecord(pds, {
+				collection: 'app.bsky.actor.profile',
+				repo: did,
+				rkey: 'self',
+			}).catch((e) => {
+				// a missing record means a brand-new profile; anything else should propagate
+				if (e instanceof Error && e.message.includes('Could not locate record:')) {
+					return undefined;
+				}
+				throw e;
+			});
+
+			const updated = await updateFn(existing?.value);
+
+			await putRecord(pds, {
+				collection: 'app.bsky.actor.profile',
+				record: { ...updated, $type: 'app.bsky.actor.profile' },
+				repo: did,
+				rkey: 'self',
+				swapRecord: existing?.cid ?? null,
+			});
+		},
+	);
+}
+
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	actor: string,
-	fn: (res: AppBskyActorGetProfile.Response) => boolean,
+	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => agent.app.bsky.actor.getProfile({ actor }),
+		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor: actor as ActorIdentifier } })),
 	);
 }
 

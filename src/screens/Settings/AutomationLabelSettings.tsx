@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { type $Typed, ComAtprotoLabelDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -23,8 +22,6 @@ import { Text } from '#/components/Typography';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 
-import * as bsky from '#/types/bsky';
-
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AutomationLabelSettings'>;
 export function AutomationLabelSettingsScreen({}: Props) {
 	const t = useTheme();
@@ -42,41 +39,31 @@ export function AutomationLabelSettingsScreen({}: Props) {
 		if (!profile) {
 			return;
 		}
-		let wasAdded = false;
+		// capture the intended final state up front so a getRecord re-read on an InvalidSwap retry
+		// can't invert the user's action
+		const shouldAdd = !isBotLabeled;
 		updateProfile.mutate(
 			{
 				profile,
 				updates: (existing) => {
-					const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
-						existing.labels,
-						ComAtprotoLabelDefs.validateSelfLabels,
-					)
-						? existing.labels
-						: {
-								$type: 'com.atproto.label.defs#selfLabels',
-								values: [],
-							};
+					const values =
+						existing.labels?.$type === 'com.atproto.label.defs#selfLabels' ? [...existing.labels.values] : [];
 
-					const hasLabel = labels.values.some((l) => l.val === 'bot');
-					if (hasLabel) {
-						wasAdded = false;
-						labels.values = labels.values.filter((l) => l.val !== 'bot');
-					} else {
-						wasAdded = true;
-						labels.values.push({ val: 'bot' });
-					}
+					const nextValues: { val: string }[] = shouldAdd
+						? values.some((l) => l.val === 'bot')
+							? values
+							: [...values, { val: 'bot' }]
+						: values.filter((l) => l.val !== 'bot');
 
-					if (labels.values.length === 0) {
-						delete existing.labels;
-					} else {
-						existing.labels = labels;
-					}
+					existing.labels = nextValues.length
+						? { $type: 'com.atproto.label.defs#selfLabels', values: nextValues }
+						: undefined;
 
 					return existing;
 				},
 				checkCommitted: (res) => {
-					const exists = !!res.data.labels?.some((l) => l.val === 'bot');
-					return exists === wasAdded;
+					const exists = !!res.labels?.some((l) => l.val === 'bot');
+					return exists === shouldAdd;
 				},
 			},
 			{

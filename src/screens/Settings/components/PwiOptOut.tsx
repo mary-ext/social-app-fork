@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { type $Typed, ComAtprotoLabelDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
@@ -10,8 +9,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import * as Toggle from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 export function PwiOptOut() {
 	const t = useTheme();
@@ -27,46 +24,33 @@ export function PwiOptOut() {
 		if (!profile) {
 			return;
 		}
-		let wasAdded = false;
+		// capture the intended final state up front so a getRecord re-read on an InvalidSwap retry
+		// can't invert the user's logged-out visibility preference
+		const shouldAdd = !isOptedOut;
 		updateProfile.mutate({
 			profile,
 			updates: (existing) => {
-				// create labels attr if needed
-				const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
-					existing.labels,
-					ComAtprotoLabelDefs.validateSelfLabels,
-				)
-					? existing.labels
-					: {
-							$type: 'com.atproto.label.defs#selfLabels',
-							values: [],
-						};
+				const values =
+					existing.labels?.$type === 'com.atproto.label.defs#selfLabels' ? [...existing.labels.values] : [];
 
-				// toggle the label
-				const hasLabel = labels.values.some((l) => l.val === '!no-unauthenticated');
-				if (hasLabel) {
-					wasAdded = false;
-					labels.values = labels.values.filter((l) => l.val !== '!no-unauthenticated');
-				} else {
-					wasAdded = true;
-					labels.values.push({ val: '!no-unauthenticated' });
-				}
+				const nextValues: { val: string }[] = shouldAdd
+					? values.some((l) => l.val === '!no-unauthenticated')
+						? values
+						: [...values, { val: '!no-unauthenticated' }]
+					: values.filter((l) => l.val !== '!no-unauthenticated');
 
-				// delete if no longer needed
-				if (labels.values.length === 0) {
-					delete existing.labels;
-				} else {
-					existing.labels = labels;
-				}
+				existing.labels = nextValues.length
+					? { $type: 'com.atproto.label.defs#selfLabels', values: nextValues }
+					: undefined;
 
 				return existing;
 			},
 			checkCommitted: (res) => {
-				const exists = !!res.data.labels?.some((l) => l.val === '!no-unauthenticated');
-				return exists === wasAdded;
+				const exists = !!res.labels?.some((l) => l.val === '!no-unauthenticated');
+				return exists === shouldAdd;
 			},
 		});
-	}, [updateProfile, profile]);
+	}, [updateProfile, profile, isOptedOut]);
 
 	return (
 		<View style={[a.flex_1, a.gap_sm]}>
