@@ -756,7 +756,7 @@ msgstr ""
 msgid "Accept Request"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:371
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:382
 msgid "Accept this language suggestion"
 msgstr ""
 
@@ -1408,7 +1408,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:276
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:287
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
@@ -2388,7 +2388,7 @@ msgstr ""
 msgid "Debug Moderation"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:381
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:392
 msgid "Decline this language suggestion"
 msgstr "Decline this language suggestion"
 
@@ -8067,7 +8067,7 @@ msgstr ""
 msgid "The pasted image couldn't be added to your post."
 msgstr "The pasted image couldn't be added to your post."
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:310
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:321
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 msgstr "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
 

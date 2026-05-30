@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text as RNText, View } from 'react-native';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
-import { parseLanguageString } from '@atproto/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
@@ -24,6 +23,18 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Text } from '#/components/Typography';
 
 import { guessLanguageAsync, type LanguageResult } from '#/shims/bsky-guess-language';
+
+/**
+ * Extracts the primary language subtag from a BCP-47 language tag (e.g. `en-US` → `en`), or `undefined` if
+ * the tag can't be parsed.
+ */
+function getPrimaryLanguageSubtag(lang: string): string | undefined {
+	try {
+		return new Intl.Locale(lang).language;
+	} catch {
+		return undefined;
+	}
+}
 
 type LanguageDetectionPerLanguageConfig = {
 	acceptanceThreshold?: number;
@@ -230,7 +241,7 @@ export function SuggestedLanguage({
 	 */
 	const replyToLanguages = replyToLanguagesProp
 		.filter(Boolean)
-		.map((lang) => parseLanguageString(lang)?.language)
+		.map((lang) => getPrimaryLanguageSubtag(lang))
 		.filter(Boolean) as string[];
 	const [replyToLanguage] = replyToLanguages;
 	const hasSuggestedReplyLanguage =
