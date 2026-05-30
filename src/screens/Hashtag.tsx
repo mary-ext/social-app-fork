@@ -227,8 +227,7 @@ function HashtagScreenTab({
 				/>
 			) : (
 				<List
-					// TODO(atcute Phase 2.6): drop cast once search-posts query flips to @atcute
-					data={posts as unknown as AppBskyFeedDefs.PostView[]}
+					data={posts}
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					refreshing={isPTR}

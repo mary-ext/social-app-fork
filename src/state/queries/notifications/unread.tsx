@@ -9,7 +9,7 @@ import BroadcastChannel from '#/lib/broadcast';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
-import { useAgent, useSession } from '#/state/session';
+import { useAgent, useClients, useSession } from '#/state/session';
 
 import { RQKEY as RQKEY_NOTIFS } from './feed';
 import { type CachedFeedPage, type FeedPage } from './types';
@@ -42,6 +42,7 @@ apiContext.displayName = 'NotificationsUnreadApiContext';
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const { hasSession } = useSession();
 	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 
@@ -131,7 +132,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 					// count
 					const { page, indexedAt: lastIndexed } = await fetchPage({
-						agent,
+						appview,
 						cursor: undefined,
 						limit: 40,
 						queryClient,
@@ -174,7 +175,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			},
 		};
-	}, [setNumUnread, queryClient, moderationOpts, agent]);
+	}, [setNumUnread, queryClient, moderationOpts, agent, appview]);
 	checkUnreadRef.current = api.checkUnread;
 
 	return (

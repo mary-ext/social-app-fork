@@ -1,4 +1,4 @@
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';

@@ -2,7 +2,7 @@ import {
 	type AppBskyFeedDefs,
 	type AppBskyGraphDefs,
 	type AppBskyNotificationListNotifications,
-} from '@atproto/api';
+} from '@atcute/bluesky';
 
 export type NotificationType = StarterPackNotificationType | OtherNotificationType;
 

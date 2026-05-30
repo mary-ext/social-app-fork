@@ -173,8 +173,18 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   (`lib/api/index.ts`, 3.1), so the appview-client signature change rides with 3.1, not 2.5.
   `post-interaction-settings.ts` (a `setPostInteractionSettings` write) and the threadgate/postgate
   record-write helpers stay on `@atproto/api` until Stream 3.
-- **Phase 2.6 (partial) — done.** Labeler reads + notification-settings read; the rest of 2.6 still
-  depends on `PostView`.
+- **Phase 2.6 — done.** Notifications (feed + unread/count via `fetchPage`, now threading the
+  `appview` client; `getPreferences` / `putPreferencesV2`), search (`search-posts`), bookmarks reads
+  (`getBookmarks`), and trending (`getTrends` / `getTrendingTopics`) all moved to `appview`; labeler
+  + notification-settings reads were already done. `moderateNotification` and `hasMutedWord` were
+  added to `src/lib/moderation/compat.ts` (the engine stays on `@atproto/api`). Notification/search/
+  bookmark record discrimination is now `$type`-based; removed every `TODO(atcute Phase 2.6)` seam
+  cast in the thread placeholder fan-out, post-shadow, and the search/notification/bookmark view
+  consumers. **Deferred (still `@atproto/api`):** `useBookmarkMutation` create/delete and the
+  notification `declaration.get/put` record CRUD (Stream 3); `feed.ts` / `list.ts` / `profile.ts` /
+  `starter-packs.ts` retain `@atproto` only for write paths (Stream 3) and the `RichText` class
+  (Phase 3.0); `preferences/**` is Phase 3.2. `DebugMod.tsx` casts the `@atproto/api` `mock` factory
+  output at its dev-screen boundary.
 - **Stream 4 — done.** Phases 4.1 (chat client), 4.2 (video upload), 4.3 (moderation reporting) all
   landed. Chat exposes a third `chat` field on `useClients()` (built as `pds.clone({ proxy:
   CHAT_PROXY_AUDIENCE })`-equivalent over the OAuth handler), departing from the roadmap's "non-
@@ -189,11 +199,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   now go through `appview.post(...)` (server-side procedures, not records — routed to `appview`
   per the routing table). Void-output procedures require `as: null`. Toggle helpers, composer, and
   Germ declaration still pending.
-- Next: **Phase 2.6** (notifications, activity subscriptions, and search) — the last read hubs.
-  Re-grep scope: `notifications/`, `activity-subscriptions.ts`, `actor-search.ts`, `search-posts.ts`,
-  `labeler.ts`, `bookmarks/` reads. The `TODO(atcute Phase 2.6)` markers in `Hashtag` / `Topic` /
-  `SearchResults` (search-posts) and the thread placeholder fan-out (notifs / search / bookmarks)
-  drop once those sources flip.
+- Next: **Stream 3** (write-path migration), opening with **Phase 3.0** (RichText) — `@atproto/api`'s
+  `RichText` class splits into `@atcute/bluesky-richtext-{parser,segmenter,builder}`. This is an API
+  redesign, not a drop-in, and it unblocks the composer write path (3.1). Render-time
+  `richText.segments()` → segmenter first (central renderer, then leaf callers); compose-time
+  `detectFacets` → parser + builder with `appview` handle resolution.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are

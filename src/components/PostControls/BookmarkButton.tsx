@@ -48,8 +48,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 		try {
 			await bookmark({
 				action: 'create',
-				// TODO(atcute Phase 2.6): bookmark mutation still @atproto-typed
-				post: post as unknown as import('@atproto/api').AppBskyFeedDefs.PostView,
+				post,
 			});
 
 			toast.show(

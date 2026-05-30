@@ -16,9 +16,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { type AppBskyFeedDefs as AppBskyFeedDefsAtcute } from '@atcute/bluesky';
+import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import { AppBskyFeedDefs, AppBskyFeedPost } from '@atproto/api';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -31,7 +30,7 @@ import { moderatePost } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 import type * as bsky from '#/types/bsky';
@@ -53,7 +52,7 @@ export function RQKEY(filter: 'all' | 'mentions') {
 }
 
 export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all' | 'mentions' }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 	const unreads = useUnreadNotificationsApi();
@@ -93,7 +92,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 					];
 				}
 				const { page: fetchedPage } = await fetchPage({
-					agent,
+					appview,
 					limit: PAGE_SIZE,
 					cursor: pageParam,
 					queryClient,
@@ -173,12 +172,9 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 											 * a `$type` field on the `subject`. But if the nested
 											 * `record` is a post, we know it's a post view.
 											 */
-											if (AppBskyFeedPost.isRecord(item.subject?.record)) {
-												// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
-												const mod = moderatePost(
-													item.subject as unknown as AppBskyFeedDefsAtcute.PostView,
-													moderationOpts!,
-												);
+											const record = item.subject?.record as AppBskyFeedPost.Main | undefined;
+											if (record?.$type === 'app.bsky.feed.post') {
+												const mod = moderatePost(item.subject as AppBskyFeedDefs.PostView, moderationOpts!);
 												if (mod.ui('contentList').filter) {
 													return false;
 												}
@@ -267,20 +263,15 @@ export function* findAllPostsInQueryData(
 		for (const page of queryData?.pages) {
 			for (const item of page.items) {
 				if (item.type !== 'starterpack-joined') {
-					// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
-					if (
-						item.subject &&
-						didOrHandleUriMatches(atUri, item.subject as unknown as AppBskyFeedDefsAtcute.PostView)
-					) {
+					if (item.subject && didOrHandleUriMatches(atUri, item.subject)) {
 						yield item.subject;
 					}
 				}
 
-				if (AppBskyFeedDefs.isPostView(item.subject)) {
+				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-						// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
-						yield embedViewRecordToPostView(quotedPost) as unknown as AppBskyFeedDefs.PostView;
+						yield embedViewRecordToPostView(quotedPost);
 					}
 				}
 			}
@@ -309,7 +300,7 @@ export function* findAllProfilesInQueryData(
 				} else if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
 					yield item.subject.author as bsky.profile.AnyProfileView;
 				}
-				if (AppBskyFeedDefs.isPostView(item.subject)) {
+				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost?.author.did === did) {
 						yield quotedPost.author as bsky.profile.AnyProfileView;

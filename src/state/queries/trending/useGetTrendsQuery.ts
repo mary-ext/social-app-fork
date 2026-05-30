@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { type AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { hasMutedWord } from '@atproto/api';
 import { useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
+import { hasMutedWord } from '#/lib/moderation/compat';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';

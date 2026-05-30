@@ -223,8 +223,7 @@ export function* getThreadPlaceholderCandidates(
 	 * avoid a notification->post scroll jump.
 	 */
 	for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-		// TODO(atcute Phase 2.6): drop cast once notifications flip to @atcute
-		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
+		yield postViewToThreadPlaceholder(post);
 	}
 	for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
 		yield postViewToThreadPlaceholder(post);
@@ -233,12 +232,10 @@ export function* getThreadPlaceholderCandidates(
 		yield postViewToThreadPlaceholder(post);
 	}
 	for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
-		// TODO(atcute Phase 2.6): drop cast once search flips to @atcute
-		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
+		yield postViewToThreadPlaceholder(post);
 	}
 	for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-		// TODO(atcute Phase 2.6): drop cast once bookmarks flip to @atcute
-		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
+		yield postViewToThreadPlaceholder(post);
 	}
 	for (let post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {
 		yield postViewToThreadPlaceholder(post);

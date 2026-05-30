@@ -1,8 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { hasMutedWord } from '@atproto/api';
 import { useQuery } from '@tanstack/react-query';
+
+import { hasMutedWord } from '#/lib/moderation/compat';
 
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';

@@ -152,17 +152,15 @@ let NotificationFeedItem = ({
 	};
 
 	const onBeforePress = useCallback(() => {
-		// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
-		unstableCacheProfileView(queryClient, item.notification.author as bsky.profile.AnyProfileView);
+		unstableCacheProfileView(queryClient, item.notification.author);
 	}, [queryClient, item.notification.author]);
 
 	const authors: Author[] = useMemo(() => {
-		// TODO(atcute Phase 2.6): drop casts once notification feed flips to @atcute
 		return [
 			{
 				profile: item.notification.author as AppBskyActorDefs.ProfileView,
 				href: makeProfileLink(item.notification.author),
-				moderation: moderateProfile(item.notification.author as bsky.profile.AnyProfileView, moderationOpts),
+				moderation: moderateProfile(item.notification.author, moderationOpts),
 			},
 			...(item.additional?.map(({ author }) => ({
 				profile: author as AppBskyActorDefs.ProfileView,
@@ -209,8 +207,7 @@ let NotificationFeedItem = ({
 		return (
 			<View testID={`feedItem-by-${item.notification.author.handle}`}>
 				<Post
-					// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
-					post={item.subject as unknown as AppBskyFeedDefs.PostView}
+					post={item.subject as AppBskyFeedDefs.PostView}
 					style={
 						isHighlighted && {
 							backgroundColor: t.palette.primary_25,
@@ -616,8 +613,7 @@ let NotificationFeedItem = ({
 						item.type === 'repost-via-repost' ||
 						item.type === 'subscribed-post' ? (
 							<View style={[a.pt_2xs]}>
-								{/* TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute */}
-								<AdditionalPostText post={item.subject as unknown as AppBskyFeedDefs.PostView} />
+								<AdditionalPostText post={item.subject as AppBskyFeedDefs.PostView} />
 							</View>
 						) : null}
 						{item.type === 'feedgen-like' && item.subjectUri ? (
@@ -631,10 +627,7 @@ let NotificationFeedItem = ({
 						{item.type === 'starterpack-joined' ? (
 							<View>
 								<View style={[a.border, a.p_sm, a.rounded_sm, a.mt_sm, t.atoms.border_contrast_low]}>
-									{/* TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute */}
-									<StarterPackCard
-										starterPack={item.subject as unknown as bsky.starterPack.AnyStarterPackView}
-									/>
+									<StarterPackCard starterPack={item.subject as bsky.starterPack.AnyStarterPackView} />
 								</View>
 							</View>
 						) : null}

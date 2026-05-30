@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, type ListRenderItemInfo, StyleSheet, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -186,8 +185,7 @@ export function NotificationFeed({
 						return;
 					}
 					if ((item.type === 'reply' || item.type === 'mention' || item.type === 'quote') && item.subject) {
-						// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
-						trackPostView(item.subject as unknown as AppBskyFeedDefs.PostView);
+						trackPostView(item.subject);
 					}
 				}}
 				contentContainerStyle={s.contentContainer}

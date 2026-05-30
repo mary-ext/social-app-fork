@@ -252,8 +252,7 @@ let SearchScreenPostResults = ({
 			temp.push({
 				type: 'post',
 				key: post.uri,
-				// TODO(atcute Phase 2.6): drop cast once search-posts query flips to @atcute
-				post: post as unknown as AtcAppBskyFeedDefs.PostView,
+				post: post,
 			});
 			seenUris.add(post.uri);
 		}

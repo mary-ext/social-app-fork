@@ -1,9 +1,9 @@
+import { type AppBskyNotificationDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type AppBskyNotificationDefs } from '@atproto/api';
 import { t } from '@lingui/core/macro';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { useAgent, useClients } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -25,13 +25,13 @@ export function useNotificationSettingsQuery({ enabled }: { enabled?: boolean } 
 	});
 }
 export function useNotificationSettingsUpdateMutation() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: async (update: Partial<AppBskyNotificationDefs.Preferences>) => {
-			const response = await agent.app.bsky.notification.putPreferencesV2(update);
-			return response.data.preferences;
+			const data = await ok(appview.post('app.bsky.notification.putPreferencesV2', { input: update }));
+			return data.preferences;
 		},
 		onMutate: (update) => {
 			optimisticUpdateNotificationSettings(queryClient, update);

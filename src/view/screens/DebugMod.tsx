@@ -1,6 +1,11 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import {
+	type AppBskyActorDefs,
+	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
+	type AppBskyNotificationListNotifications,
+} from '@atcute/bluesky';
 import {
 	type ComAtprotoLabelDefs,
 	interpretLabelValueDefinition,
@@ -201,12 +206,15 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 						]
 					: undefined,
 		});
-		const [item] = groupNotifications([notif]);
+		// TODO(atcute): @atproto/api `mock` factory yields @atproto views; cast at this dev-screen boundary
+		const [item] = groupNotifications([
+			notif as unknown as AppBskyNotificationListNotifications.Notification,
+		]);
 		item!.subject = mock.postView({
 			record: notif.record as AppBskyFeedPost.Main,
 			author: profile,
 			labels: notif.labels,
-		});
+		}) as unknown as AppBskyFeedDefs.PostView;
 		return item!;
 	}, [scenario, label, target, profile, isSelfLabel, did]);
 
@@ -215,7 +223,10 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 			author: profile,
 			subjectDid: currentAccount?.did || '',
 		});
-		const [item] = groupNotifications([notif]);
+		// TODO(atcute): @atproto/api `mock` factory yields @atproto views; cast at this dev-screen boundary
+		const [item] = groupNotifications([
+			notif as unknown as AppBskyNotificationListNotifications.Notification,
+		]);
 		return item!;
 	}, [profile, currentAccount]);
 
