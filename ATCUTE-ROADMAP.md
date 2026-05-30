@@ -194,11 +194,32 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
   call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
   stay on `parseResourceUri`.
-- **Phase 3.1 (partial) — done.** Mutes slice landed: `agent.mute` / `unmute`,
-  `agent.muteModList` / `unmuteModList`, and `agent.api.app.bsky.graph.muteThread` / `unmuteThread`
-  now go through `appview.post(...)` (server-side procedures, not records — routed to `appview`
-  per the routing table). Void-output procedures require `as: null`. Toggle helpers, composer, and
-  Germ declaration still pending.
+- **Phase 3.1 — done.** Record writes + the composer publish path, across nine commits (mutes had
+  already landed). Toggle helpers (`like`/`repost`/`follow`/`block`/`deletePost`), threadgate/postgate
+  CRUD, bookmarks, the Germ declaration, list/list-item writes, starter-pack + bulk-follow writes,
+  composer drafts CRUD, and verification/notification-declaration/live-status writes all route
+  through `src/lib/api/records.ts` (`createRecord`/`deleteRecord`/`getRecord`/`putRecord`/
+  `listRecords`) on the `pds` client, or `appview.post(...)` for `app.bsky.*` procedures (bookmarks,
+  drafts). `whenAppViewReady`-style readiness checks and handle resolution moved to `appview`. The
+  composer publish (`lib/api/index.ts`) builds `@atcute` records and `applyWrites` on `pds`; record
+  CIDs for self-thread reply chaining come from a new `src/lib/api/cid.ts` (`serializeRecordCid` over
+  `@atcute/cbor` + `@atcute/cid`), replacing the `BlobRef`/`@ipld/dag-cbor`/`multiformats`/`js-sha256`
+  machinery. `uploadBlob` (`lib/api/upload-blob.ts`) re-homed onto `pds` returning an `@atcute` Blob;
+  `resolve.ts`/`resolve-link.ts`/`link-meta.ts`/`video.ts` `BlobRef` flipped; the 3.0 facet-cast and
+  the gate/record seam casts dropped. Added `@atcute/cbor` + `@atcute/cid`; bumped `@atcute/bluesky`
+  to 4.0.3 (adds the external-embed `associatedRefs` field) and `@atcute/atproto`. `is*`/`validate*`
+  narrowing swapped to `$type` checks; fixed `ListRecordsOutput` in the 1.3 helper to `Omit` the
+  `$output` records field (first real `listRecords` consumer). **Verified:** `serializeRecordCid`
+  reproduces the stored CID for 30/30 live posts across every embed type; an intercepted publish
+  produced correct records (UTF-8 facet offsets, mention resolution, link shortening, external
+  embed); like/unlike and bookmark add/remove round-trips confirmed live against a real account.
+  **Deferred by design:** `post-interaction-settings.ts` `setPostInteractionSettings` (built on the
+  preferences cache → 3.2); `profile.ts` `upsertProfile` + avatar/banner uploads (→ 3.3). **Composer
+  residual `@atproto/api`:** the Phase 2.5 `getPostThreadV2` thread-context read and the video-service
+  routing (`agent.serviceUrl`/`dispatchUrl`) keep `useAgent` in `Composer.tsx`/`video.ts` — separate
+  concerns, not record writes. The `ExternalEmbed`/composer-quote/`StandardSiteEmbed` preview
+  consumers keep relabeled `TODO(5.x)` seam casts where they remain `@atproto`-typed (validation
+  layer / composer-internal state).
 - **Phase 3.0 — done.** `@atproto/api`'s `RichText` class + `UnicodeString` are fully removed.
   Rendering goes through `@atcute`'s `segmentize`; a new `src/lib/strings/rich-text-facets.ts`
   (`detectFacets` / `detectFacetsWithoutResolution` / `cleanNewlines` / `getShortenedLength`) wraps
@@ -216,12 +237,12 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
   completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
-- Next: **Phase 3.1** (record writes + the composer publish path). Re-home the `BskyAgent` toggle
-  helpers (`agent.like`/`repost`/`follow`/`block`/`deletePost`…) onto `createRecord`/`deleteRecord`
-  via the `pds` client + `src/lib/api/records.ts` (Phase 1.3); migrate the composer publish
-  (`lib/api/index.ts` `applyWrites`) so the 3.0 facet-cast boundary drops; Germ declaration → repo
-  record CRUD. Mutes already landed. Verify writes with reversible self-actions (like/unlike,
-  repost/unrepost, follow/unfollow), never new posts.
+- Next: **Phase 3.2** (preferences subsystem). Re-home `BskyAgent`'s stateful in-memory preferences
+  cache (`getPreferences` / `updatePreferences` and its ~20 mutators, incl.
+  `setPostInteractionSettings`) onto the `pds` client (`app.bsky.actor.getPreferences` /
+  `putPreferences`). Then 3.3 (profile/account writes — `upsertProfile`, avatar/banner, pinned-post),
+  then Stream 5 (off-SDK utilities + validation-layer retirement) and Stream 6 (partial
+  `@atproto/api` removal).
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
