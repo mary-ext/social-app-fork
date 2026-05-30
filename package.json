@@ -21,6 +21,9 @@
 	"dependencies": {
 		"@atcute/atproto": "4.0.0",
 		"@atcute/bluesky": "4.0.2",
+		"@atcute/bluesky-richtext-builder": "^4.0.0",
+		"@atcute/bluesky-richtext-parser": "^2.1.1",
+		"@atcute/bluesky-richtext-segmenter": "^3.0.0",
 		"@atcute/client": "^5.0.0",
 		"@atcute/germ": "1.0.0",
 		"@atcute/identity-resolver": "^2.0.0",
