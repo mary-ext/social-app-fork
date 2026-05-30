@@ -14,12 +14,15 @@
  */
 
 import { type AppBskyActorDefs, type AppBskyGraphGetStarterPacksWithMembership } from '@atcute/bluesky';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { createRecord, deleteRecord, listRecords } from '#/lib/api/records';
+
 import { STALE } from '#/state/queries';
 import { RQKEY as LIST_MEMBERS_RQKEY } from '#/state/queries/list-members';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import type * as bsky from '#/types/bsky';
 
@@ -42,7 +45,7 @@ export interface ListMembersip {
 /** This API is dangerous! Read the note above! */
 export function useDangerousListMembershipsQuery() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	return useQuery<ListMembersip[]>({
 		staleTime: STALE.MINUTES.FIVE,
 		queryKey: RQKEY(),
@@ -50,13 +53,14 @@ export function useDangerousListMembershipsQuery() {
 			if (!currentAccount) {
 				return [];
 			}
-			let cursor;
+			let cursor: string | undefined;
 			let arr: ListMembersip[] = [];
 			for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
-				const res = await agent.app.bsky.graph.listitem.list({
-					repo: currentAccount.did,
-					limit: PAGE_SIZE,
+				const res = await listRecords(pds!, {
+					collection: 'app.bsky.graph.listitem',
 					cursor,
+					limit: PAGE_SIZE,
+					repo: currentAccount.did as Did,
 				});
 				arr = arr.concat(
 					res.records.map((r) => ({
@@ -102,21 +106,23 @@ export function useListMembershipAddMutation({
 	onError?: (error: Error) => void;
 } = {}) {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: string; cid: string }, Error, { listUri: string; actorDid: string }>({
 		mutationFn: async ({ listUri, actorDid }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			const res = await agent.app.bsky.graph.listitem.create(
-				{ repo: currentAccount.did },
-				{
-					subject: actorDid,
-					list: listUri,
+			const res = await createRecord(pds!, {
+				collection: 'app.bsky.graph.listitem',
+				record: {
+					$type: 'app.bsky.graph.listitem',
 					createdAt: new Date().toISOString(),
+					list: listUri as ResourceUri,
+					subject: actorDid as Did,
 				},
-			);
+				repo: currentAccount.did as Did,
+			});
 			// TODO
 			// we need to wait for appview to update, but there's not an efficient
 			// query for that, so we use a timeout below
@@ -211,7 +217,7 @@ export function useListMembershipRemoveMutation({
 	onError?: (error: Error) => void;
 } = {}) {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { listUri: string; actorDid: string; membershipUri: string }>({
 		mutationFn: async ({ membershipUri }) => {
@@ -219,8 +225,9 @@ export function useListMembershipRemoveMutation({
 				throw new Error('Not signed in');
 			}
 			const membershipUrip = parseCanonicalResourceUri(membershipUri);
-			await agent.app.bsky.graph.listitem.delete({
-				repo: currentAccount.did,
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.graph.listitem',
+				repo: currentAccount.did as Did,
 				rkey: membershipUrip.rkey,
 			});
 			// TODO

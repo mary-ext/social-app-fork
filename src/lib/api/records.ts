@@ -117,7 +117,7 @@ export interface ListRecordsOptions<K extends RecordType> {
 	signal?: AbortSignal;
 }
 
-export type ListRecordsOutput<T> = ComAtprotoRepoListRecords.$output & {
+export type ListRecordsOutput<T> = Omit<ComAtprotoRepoListRecords.$output, 'records'> & {
 	cursor?: string;
 	records: { cid: Cid; uri: ResourceUri; value: T }[];
 };
