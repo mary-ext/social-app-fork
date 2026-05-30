@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { type TextStyle, View } from 'react-native';
-import { type AppBskyActorDefs, sanitizeMutedWordValue } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import {
@@ -9,6 +9,7 @@ import {
 	useUpdateMutedWordMutation,
 	useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences';
+import { sanitizeMutedWordValue } from '#/state/queries/preferences/agent';
 
 import { logger } from '#/logger';
 

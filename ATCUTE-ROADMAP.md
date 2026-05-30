@@ -194,6 +194,33 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
   call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
   stay on `parseResourceUri`.
+- **Phase 3.2 — done.** The preferences subsystem is re-homed onto a fork-owned module,
+  `src/state/queries/preferences/agent.ts`, built directly on `app.bsky.actor.getPreferences` /
+  `putPreferences` over the **`pds`** client (the AppView-namespaced, PDS-implemented exception).
+  `getPreferences` ports the full `@atproto/api` derivation — narrowing the raw `@atcute` preference
+  union by `$type` (a `prefGuard` `Extract` factory) instead of `predicate.isValid*`, with the legacy
+  saved-feed V1→V2 migration and legacy-label remap kept verbatim. `updatePreferences` is a
+  read-modify-write serialized by a promise-chain mutex (`withPrefsLock`, replacing `@atproto`'s
+  `AwaitLock`); mutators rebuild the pref array immutably (`upsertPref` spreads rather than
+  `Array.concat`, which mis-resolves on the union element type) and route every entry through `pds`.
+  Ported mutators: content-label (+ legacy `graphic-media`/`porn`/`sexual` double-write),
+  adult-content, saved-feeds (overwrite/add/remove/update with the V1↔V2 double-write), muted words
+  (`upsertMutedWords` batched into one write; update/remove splice the **first** match per target),
+  feed/thread-view, interests, personal details, `setPostInteractionSettings` (deferred from 3.1),
+  verification, and clear. Consumers migrated to `useClients().pds`: `preferences/index.ts` hooks,
+  `state/birthdate.ts`, `post-interaction-settings.ts`, `InterestsSettings.tsx`, and
+  `MutedWords.tsx`'s `sanitizeMutedWordValue` import. The compat `BskyPreferences` shape is kept
+  `@atproto`-typed (the moderation island consumes it; → 5.3), with branded-type casts at the
+  read/write boundaries. The labeler-config side effect `agent.getPreferences()` did internally
+  (`configureLabelers`) is preserved explicitly in the query hook. **Pruned:** the two nudge mutators
+  / `useQueueNudgesMutation` / `useDismissNudgesMutation` — dead in this fork (zero callers,
+  `bskyAppState` read nowhere). **Reviewed:** an oracle adversarial pass flagged batched muted-word
+  removal dropping all value-duplicates (fixed to splice-first-per-target, matching upstream) and the
+  saved-feed migration "stale read" race (kept — faithful to upstream, not a regression).
+  **Verified live** against a real account: saved feeds, content filters, adult-content/age-gating,
+  verification prefs, and the empty muted-words list all render correctly; a muted-word add→reload→
+  remove→reload round-trip persisted and reverted cleanly (the only write path exercised — fully
+  reversible). lint + typecheck pass.
 - **Phase 3.1 — done.** Record writes + the composer publish path, across nine commits (mutes had
   already landed). Toggle helpers (`like`/`repost`/`follow`/`block`/`deletePost`), threadgate/postgate
   CRUD, bookmarks, the Germ declaration, list/list-item writes, starter-pack + bulk-follow writes,
@@ -237,12 +264,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
   completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
-- Next: **Phase 3.2** (preferences subsystem). Re-home `BskyAgent`'s stateful in-memory preferences
-  cache (`getPreferences` / `updatePreferences` and its ~20 mutators, incl.
-  `setPostInteractionSettings`) onto the `pds` client (`app.bsky.actor.getPreferences` /
-  `putPreferences`). Then 3.3 (profile/account writes — `upsertProfile`, avatar/banner, pinned-post),
-  then Stream 5 (off-SDK utilities + validation-layer retirement) and Stream 6 (partial
-  `@atproto/api` removal).
+- Next: **Phase 3.3** (profile/account writes). In-house `profile.ts` `upsertProfile` with the
+  `src/lib/api/records.ts` helpers (`getRecord` the own `app.bsky.actor.profile` record on `pds`,
+  merge, `putRecord`), plus avatar/banner uploads and pinned-post, and the remaining
+  `agent.updateHandle` / account-settings writes. Then Stream 5 (off-SDK utilities + validation-layer
+  retirement) and Stream 6 (partial `@atproto/api` removal); moderation island deferred to 5.3.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are

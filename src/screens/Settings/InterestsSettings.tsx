@@ -10,13 +10,14 @@ import { type Interest, interests as allInterests, useInterestsDisplayNames } fr
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
+import { setInterestsPref } from '#/state/queries/preferences/agent';
 import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { createGetSuggestedFeedsQueryKey } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
 import { createGetSuggestedUsersForDiscoverQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';
 import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { createSuggestedStarterPacksQueryKey } from '#/state/queries/useSuggestedStarterPacksQuery';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';
 
@@ -75,7 +76,7 @@ function Inner({
 	setIsSaving: (isSaving: boolean) => void;
 }) {
 	const { t: l } = useLingui();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const qc = useQueryClient();
 	const interestsDisplayNames = useInterestsDisplayNames();
 	const preselectedInterests = useMemo(() => preferences.interests.tags || [], [preferences.interests.tags]);
@@ -94,7 +95,7 @@ function Inner({
 			setIsSaving(true);
 
 			try {
-				await agent.setInterestsPref({ tags: interests });
+				await setInterestsPref(pds!, { tags: interests });
 				qc.setQueriesData({ queryKey: preferencesQueryKey }, (old?: UsePreferencesQueryResponse) => {
 					if (!old) return old;
 					old.interests.tags = interests;
@@ -134,7 +135,7 @@ function Inner({
 				setIsSaving(false);
 			}
 		}, 1500);
-	}, [l, agent, setIsSaving, qc, preselectedInterests]);
+	}, [l, pds, setIsSaving, qc, preselectedInterests]);
 
 	const onChangeInterests = async (interests: string[]) => {
 		setInterests(interests);

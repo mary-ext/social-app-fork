@@ -157,13 +157,13 @@ msgstr ""
 
 #. Pattern: {wordValue} in tags
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:392
+#: src/components/dialogs/MutedWords.tsx:393
 msgid "{0} <0>in <1>tags</1></0>"
 msgstr ""
 
 #. Pattern: {wordValue} in text, tags
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:385
+#: src/components/dialogs/MutedWords.tsx:386
 msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr ""
 
@@ -708,21 +708,21 @@ msgstr ""
 msgid "⚠Invalid Handle"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:172
-#: src/components/dialogs/MutedWords.tsx:432
-#: src/components/dialogs/MutedWords.tsx:434
+#: src/components/dialogs/MutedWords.tsx:173
+#: src/components/dialogs/MutedWords.tsx:433
+#: src/components/dialogs/MutedWords.tsx:435
 msgid "24 hours"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:196
-#: src/components/dialogs/MutedWords.tsx:442
-#: src/components/dialogs/MutedWords.tsx:444
+#: src/components/dialogs/MutedWords.tsx:197
+#: src/components/dialogs/MutedWords.tsx:443
+#: src/components/dialogs/MutedWords.tsx:445
 msgid "30 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:185
-#: src/components/dialogs/MutedWords.tsx:437
-#: src/components/dialogs/MutedWords.tsx:439
+#: src/components/dialogs/MutedWords.tsx:186
+#: src/components/dialogs/MutedWords.tsx:438
+#: src/components/dialogs/MutedWords.tsx:440
 msgid "7 days"
 msgstr ""
 
@@ -858,7 +858,7 @@ msgid "Activity notifications"
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:156
-#: src/components/dialogs/MutedWords.tsx:274
+#: src/components/dialogs/MutedWords.tsx:275
 #: src/components/dialogs/StarterPackDialog.tsx:311
 #: src/components/dialogs/StarterPackDialog.tsx:319
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
@@ -958,11 +958,11 @@ msgstr ""
 msgid "Add more languages…"
 msgstr "Add more languages…"
 
-#: src/components/dialogs/MutedWords.tsx:267
+#: src/components/dialogs/MutedWords.tsx:268
 msgid "Add mute word with chosen settings"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:117
+#: src/components/dialogs/MutedWords.tsx:118
 msgid "Add muted words and tags"
 msgstr ""
 
@@ -1404,7 +1404,7 @@ msgstr ""
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:364
+#: src/components/dialogs/MutedWords.tsx:365
 msgid "Are you sure?"
 msgstr ""
 
@@ -2633,7 +2633,7 @@ msgstr ""
 msgid "Display name"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:247
+#: src/components/dialogs/MutedWords.tsx:248
 msgid "Do not apply this mute word to users you follow"
 msgstr ""
 
@@ -2699,7 +2699,7 @@ msgstr ""
 msgid "Drop to add images"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:151
+#: src/components/dialogs/MutedWords.tsx:152
 msgid "Duration:"
 msgstr ""
 
@@ -2916,8 +2916,8 @@ msgstr ""
 msgid "Ensure you have selected a language for each caption file."
 msgstr "Ensure you have selected a language for each caption file."
 
-#: src/components/dialogs/MutedWords.tsx:131
 #: src/components/dialogs/MutedWords.tsx:132
+#: src/components/dialogs/MutedWords.tsx:133
 msgid "Enter a word or tag"
 msgstr ""
 
@@ -2987,11 +2987,11 @@ msgstr "Everyone"
 msgid "Everything else"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:257
+#: src/components/dialogs/MutedWords.tsx:258
 msgid "Exclude users you follow"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:469
+#: src/components/dialogs/MutedWords.tsx:470
 msgid "Excludes users you follow"
 msgstr ""
 
@@ -3023,12 +3023,12 @@ msgstr ""
 msgid "Experimental"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:408
+#: src/components/dialogs/MutedWords.tsx:409
 msgid "Expired"
 msgstr ""
 
 #. placeholder {0}: formatDistance(expiryDate, new Date(), { addSuffix: true, })
-#: src/components/dialogs/MutedWords.tsx:458
+#: src/components/dialogs/MutedWords.tsx:459
 msgid "Expires {0}"
 msgstr ""
 
@@ -3290,7 +3290,7 @@ msgstr "Failed to save image"
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:125
+#: src/screens/Settings/InterestsSettings.tsx:126
 msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
@@ -3609,9 +3609,9 @@ msgstr ""
 msgid "For You"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:161
-#: src/components/dialogs/MutedWords.tsx:447
-#: src/components/dialogs/MutedWords.tsx:449
+#: src/components/dialogs/MutedWords.tsx:162
+#: src/components/dialogs/MutedWords.tsx:448
+#: src/components/dialogs/MutedWords.tsx:450
 msgid "Forever"
 msgstr ""
 
@@ -4727,7 +4727,7 @@ msgstr ""
 msgid "Manage verification settings"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:114
+#: src/components/dialogs/MutedWords.tsx:115
 msgid "Manage your muted words and tags"
 msgstr ""
 
@@ -5003,7 +5003,7 @@ msgstr ""
 msgid "Mute conversation"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:212
+#: src/components/dialogs/MutedWords.tsx:213
 msgid "Mute in:"
 msgstr ""
 
@@ -5019,27 +5019,27 @@ msgstr ""
 msgid "Mute this group chat"
 msgstr "Mute this group chat"
 
-#: src/components/dialogs/MutedWords.tsx:167
+#: src/components/dialogs/MutedWords.tsx:168
 msgid "Mute this word for 24 hours"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:191
+#: src/components/dialogs/MutedWords.tsx:192
 msgid "Mute this word for 30 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:180
+#: src/components/dialogs/MutedWords.tsx:181
 msgid "Mute this word for 7 days"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:216
+#: src/components/dialogs/MutedWords.tsx:217
 msgid "Mute this word in post text and tags"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:228
+#: src/components/dialogs/MutedWords.tsx:229
 msgid "Mute this word in tags only"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:156
+#: src/components/dialogs/MutedWords.tsx:157
 msgid "Mute this word until you unmute it"
 msgstr ""
 
@@ -5756,7 +5756,7 @@ msgstr ""
 msgid "Opens this profile"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:244
+#: src/components/dialogs/MutedWords.tsx:245
 msgid "Options:"
 msgstr ""
 
@@ -5980,7 +5980,7 @@ msgstr ""
 msgid "Please confirm your email address to upload videos."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:91
+#: src/components/dialogs/MutedWords.tsx:92
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
@@ -6139,7 +6139,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:120
+#: src/components/dialogs/MutedWords.tsx:121
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr ""
 
@@ -6405,7 +6405,7 @@ msgid "Reload conversations"
 msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:156
-#: src/components/dialogs/MutedWords.tsx:367
+#: src/components/dialogs/MutedWords.tsx:368
 #: src/components/dialogs/StarterPackDialog.tsx:311
 #: src/components/dialogs/StarterPackDialog.tsx:319
 #: src/components/FeedCard.tsx:303
@@ -6512,7 +6512,7 @@ msgstr ""
 msgid "Remove live status"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:477
+#: src/components/dialogs/MutedWords.tsx:478
 msgid "Remove mute word from your list"
 msgstr ""
 
@@ -6583,15 +6583,15 @@ msgstr ""
 msgid "Removed verification"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:423
+#: src/components/dialogs/MutedWords.tsx:424
 msgid "Renew"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:429
+#: src/components/dialogs/MutedWords.tsx:430
 msgid "Renew duration"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:412
+#: src/components/dialogs/MutedWords.tsx:413
 msgid "Renew mute word"
 msgstr ""
 
@@ -7212,7 +7212,7 @@ msgstr ""
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
-#: src/components/dialogs/MutedWords.tsx:145
+#: src/components/dialogs/MutedWords.tsx:146
 msgid "Select how long to mute this word for."
 msgstr ""
 
@@ -7249,7 +7249,7 @@ msgstr "Select the source language"
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:206
+#: src/components/dialogs/MutedWords.tsx:207
 msgid "Select what content this mute word should apply to."
 msgstr ""
 
@@ -7261,7 +7261,7 @@ msgstr "Select which language to use for the app's user interface."
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:154
+#: src/screens/Settings/InterestsSettings.tsx:155
 msgid "Select your interests from the options below"
 msgstr ""
 
@@ -7938,7 +7938,7 @@ msgstr ""
 msgid "System log"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:233
+#: src/components/dialogs/MutedWords.tsx:234
 msgid "Tags only"
 msgstr ""
 
@@ -7997,7 +7997,7 @@ msgstr ""
 msgid "Terms of Service"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:221
+#: src/components/dialogs/MutedWords.tsx:222
 msgid "Text & tags"
 msgstr ""
 
@@ -8459,7 +8459,7 @@ msgid "This will create a new list with the same name, description, and members 
 msgstr ""
 
 #. placeholder {0}: word.value
-#: src/components/dialogs/MutedWords.tsx:365
+#: src/components/dialogs/MutedWords.tsx:366
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
@@ -9267,7 +9267,7 @@ msgstr "We couldn’t load this conversation’s settings"
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:148
+#: src/screens/Settings/InterestsSettings.tsx:149
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
@@ -9293,7 +9293,7 @@ msgstr "We’re having network issues, try again"
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:309
+#: src/components/dialogs/MutedWords.tsx:310
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
@@ -9638,7 +9638,7 @@ msgstr ""
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:327
+#: src/components/dialogs/MutedWords.tsx:328
 msgid "You haven't muted any words or tags yet"
 msgstr ""
 
@@ -9781,16 +9781,16 @@ msgstr ""
 #: src/Navigation.tsx:898
 #: src/screens/Settings/ContentAndMediaSettings.tsx:68
 #: src/screens/Settings/ContentAndMediaSettings.tsx:71
-#: src/screens/Settings/InterestsSettings.tsx:44
+#: src/screens/Settings/InterestsSettings.tsx:45
 msgid "Your interests"
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:118
+#: src/screens/Settings/InterestsSettings.tsx:119
 msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""
 
-#: src/components/dialogs/MutedWords.tsx:301
+#: src/components/dialogs/MutedWords.tsx:302
 msgid "Your muted words"
 msgstr ""
 
@@ -9815,7 +9815,7 @@ msgstr ""
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:52
+#: src/screens/Settings/InterestsSettings.tsx:53
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
