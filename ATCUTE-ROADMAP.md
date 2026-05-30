@@ -194,6 +194,27 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
   call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
   stay on `parseResourceUri`.
+- **Phase 3.3 — done.** Profile writes are off `@atproto/api`'s `BskyAgent` and onto the `pds` client.
+  `profile.ts` gains a fork-owned `upsertProfile(pds, did, updateFn)` mirroring `BskyAgent.upsertProfile`:
+  `getRecord` the own `app.bsky.actor.profile` record (rkey `self`) → merge → `putRecord` with
+  `swapRecord: existing?.cid ?? null`, retrying up to 5× on a `ClientResponseError` with
+  `error === 'InvalidSwap'`. The `getRecord` not-found catch is narrowed (only a `Could not locate
+  record:` error → "new profile"; everything else rethrows — safer than upstream's catch-all, and
+  consistent with the fork's other record reads). Avatar/banner upload via `uploadBlob(pds, …)` (the 3.1
+  helper, returning an `@atcute` Blob assigned straight onto the record); `whenAppViewReady` polls
+  `appview.get('app.bsky.actor.getProfile')`. The write type is a new `ProfileRecordWrite` (a writable,
+  `$type`-less view of `AppBskyActorProfile.Main`); `$type` is reattached at write. Consumers migrated:
+  `pinned-post.ts` (pinned-post strongRef, getProfile → `appview`), `EditProfileDialog` (display name /
+  description), and the two self-label screens (`AutomationLabelSettings` `bot`, `PwiOptOut`
+  `!no-unauthenticated`) — the latter rewritten from `bsky.validate()` to a `$type` discriminant narrow
+  with an immutable values rebuild, and (per an oracle review) made **idempotent**: the intended final
+  state is captured up front so an `InvalidSwap` re-read can't invert the user's action. `profile.ts` is
+  now `@atproto/api`-free. `agent.updateHandle` / account-settings writes had **no call sites** (the
+  change-handle flow was already stripped), so the profile record was the whole surface. **Verified
+  live** against a real account: a bio edit→reload→revert round-trip persisted then restored
+  byte-for-byte, and a description-only edit **preserved** display name + avatar (no partial clobber);
+  display name and handle were never touched (Bluesky verification hardcodes them). lint + typecheck
+  pass.
 - **Phase 3.2 — done.** The preferences subsystem is re-homed onto a fork-owned module,
   `src/state/queries/preferences/agent.ts`, built directly on `app.bsky.actor.getPreferences` /
   `putPreferences` over the **`pds`** client (the AppView-namespaced, PDS-implemented exception).
@@ -266,11 +287,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
   completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
-- Next: **Phase 3.3** (profile/account writes). In-house `profile.ts` `upsertProfile` with the
-  `src/lib/api/records.ts` helpers (`getRecord` the own `app.bsky.actor.profile` record on `pds`,
-  merge, `putRecord`), plus avatar/banner uploads and pinned-post, and the remaining
-  `agent.updateHandle` / account-settings writes. Then Stream 5 (off-SDK utilities + validation-layer
-  retirement) and Stream 6 (partial `@atproto/api` removal); moderation island deferred to 5.3.
+- Next: **Stream 4** ancillary clients — `4.2` video-upload client and `4.3` labeler/moderation-service
+  proxy (`4.1` chat already landed); these are locally-scoped clients, harder to exercise safely. Then
+  **Stream 5** (off-SDK utilities: `5.1` AtUri/syntax, `5.2` retire the validation layer, `5.3`
+  consolidate the moderation island) and **Stream 6** (`6.1` partial `@atproto/api` removal). The
+  moderation engine (Appendix A) stays deferred.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
