@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react';
-import { type AppBskyFeedDefs, AppBskyFeedPost, moderatePost } from '@atproto/api';
+import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
+import { moderatePost } from '#/lib/moderation/compat';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -51,11 +52,12 @@ export function PostQuotes({ uri }: { uri: string }) {
 		data?.pages
 			.flatMap((page) =>
 				page.posts.map((post) => {
-					if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+					if (!moderationOpts) {
 						return null;
 					}
-					const moderation = moderatePost(post, moderationOpts);
-					return { post, record: post.record, moderation };
+					// TODO(atcute Phase 2.5): drop cast once quotes flip to @atcute
+					const moderation = moderatePost(post as unknown as AppBskyFeedDefs.PostView, moderationOpts);
+					return { post, record: post.record as AppBskyFeedPost.Main, moderation };
 				}),
 			)
 			.filter((item) => item !== null) ?? [];
@@ -97,7 +99,8 @@ export function PostQuotes({ uri }: { uri: string }) {
 	// =
 	return (
 		<List
-			data={quotes}
+			// TODO(atcute Phase 2.5): drop cast once quotes flip to @atcute
+			data={quotes as unknown as { post: AppBskyFeedDefs.PostView }[]}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}

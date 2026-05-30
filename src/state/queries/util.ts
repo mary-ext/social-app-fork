@@ -1,14 +1,6 @@
+import { type AppBskyActorDefs, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { type ParsedResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyActorDefs,
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-} from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey } from '@tanstack/react-query';
-
-import * as bsky from '#/types/bsky';
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
 	string,
@@ -89,14 +81,14 @@ export function didOrHandleUriMatches(
 }
 
 export function getEmbeddedPost(v: unknown): AppBskyEmbedRecord.ViewRecord | undefined {
-	if (bsky.dangerousIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)) {
-		if (AppBskyEmbedRecord.isViewRecord(v.record) && AppBskyFeedPost.isRecord(v.record.value)) {
-			return v.record;
+	const embed = v as AppBskyFeedDefs.PostView['embed'];
+	if (embed?.$type === 'app.bsky.embed.record#view') {
+		if (embed.record.$type === 'app.bsky.embed.record#viewRecord') {
+			return embed.record;
 		}
-	}
-	if (bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.View>(v, AppBskyEmbedRecordWithMedia.isView)) {
-		if (AppBskyEmbedRecord.isViewRecord(v.record.record) && AppBskyFeedPost.isRecord(v.record.record.value)) {
-			return v.record.record;
+	} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
+		if (embed.record.record.$type === 'app.bsky.embed.record#viewRecord') {
+			return embed.record.record;
 		}
 	}
 }

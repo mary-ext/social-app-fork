@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { type Insets } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
@@ -48,7 +48,8 @@ export const BookmarkButton = memo(function BookmarkButton({
 		try {
 			await bookmark({
 				action: 'create',
-				post,
+				// TODO(atcute Phase 2.6): bookmark mutation still @atproto-typed
+				post: post as unknown as import('@atproto/api').AppBskyFeedDefs.PostView,
 			});
 
 			toast.show(

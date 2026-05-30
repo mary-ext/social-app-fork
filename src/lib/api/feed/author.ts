@@ -1,15 +1,14 @@
-import { AppBskyFeedDefs, type AppBskyFeedGetAuthorFeed as GetAuthorFeed } from '@atproto/api';
-
-import { type BskyAppAgent } from '#/state/session/agent';
+import { type AppBskyFeedDefs, type AppBskyFeedGetAuthorFeed } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class AuthorFeedAPI implements FeedAPI {
-	agent: BskyAppAgent;
-	_params: GetAuthorFeed.QueryParams;
+	appview: Client;
+	_params: AppBskyFeedGetAuthorFeed.$params;
 
-	constructor({ agent, feedParams }: { agent: BskyAppAgent; feedParams: GetAuthorFeed.QueryParams }) {
-		this.agent = agent;
+	constructor({ appview, feedParams }: { appview: Client; feedParams: AppBskyFeedGetAuthorFeed.$params }) {
+		this.appview = appview;
 		this._params = feedParams;
 	}
 
@@ -20,27 +19,23 @@ export class AuthorFeedAPI implements FeedAPI {
 	}
 
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-		const res = await this.agent.getAuthorFeed({
-			...this.params,
-			limit: 1,
-		});
-		return res.data.feed[0]!;
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getAuthorFeed', {
+				params: { ...this.params, limit: 1 },
+			}),
+		);
+		return data.feed[0]!;
 	}
 
 	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
-		const res = await this.agent.getAuthorFeed({
-			...this.params,
-			cursor,
-			limit,
-		});
-		if (res.success) {
-			return {
-				cursor: res.data.cursor,
-				feed: this._filter(res.data.feed),
-			};
-		}
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getAuthorFeed', {
+				params: { ...this.params, cursor, limit },
+			}),
+		);
 		return {
-			feed: [],
+			cursor: data.cursor,
+			feed: this._filter(data.feed),
 		};
 	}
 
@@ -48,8 +43,8 @@ export class AuthorFeedAPI implements FeedAPI {
 		if (this.params.filter === 'posts_and_author_threads') {
 			return feed.filter((post) => {
 				const isReply = post.reply;
-				const isRepost = AppBskyFeedDefs.isReasonRepost(post.reason);
-				const isPin = AppBskyFeedDefs.isReasonPin(post.reason);
+				const isRepost = post.reason?.$type === 'app.bsky.feed.defs#reasonRepost';
+				const isPin = post.reason?.$type === 'app.bsky.feed.defs#reasonPin';
 				if (!isReply) return true;
 				if (isRepost || isPin) return true;
 				return isReply && isAuthorReplyChain(this.params.actor, post, feed);
@@ -70,7 +65,7 @@ function isAuthorReplyChain(
 
 	const replyParent = post.reply?.parent;
 
-	if (AppBskyFeedDefs.isPostView(replyParent)) {
+	if (replyParent?.$type === 'app.bsky.feed.defs#postView') {
 		// reply parent is by a different user
 		if (replyParent.author.did !== actor) return false;
 

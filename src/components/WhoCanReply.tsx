@@ -1,7 +1,8 @@
 import { Fragment, useMemo, useRef } from 'react';
 import { Platform, type StyleProp, View, type ViewStyle } from 'react-native';
+import { type AppBskyFeedDefs, AppBskyFeedPost, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyFeedDefs, AppBskyFeedPost, type AppBskyGraphDefs } from '@atproto/api';
+import { type AppBskyFeedDefs as AppBskyFeedDefsAtproto } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -25,8 +26,6 @@ import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
-import * as bsky from '#/types/bsky';
-
 interface WhoCanReplyProps {
 	post: AppBskyFeedDefs.PostView;
 	isThreadAuthor: boolean;
@@ -43,13 +42,12 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 	 * `WhoCanReply` is only used for root posts atm, in case this changes
 	 * unexpectedly, we should check to make sure it's for sure the root URI.
 	 */
-	const rootUri =
-		bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord) &&
-		post.record.reply?.root
-			? post.record.reply.root.uri
-			: post.uri;
+	const rootUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri ?? post.uri;
 	const settings = useMemo(() => {
-		return threadgateViewToAllowUISetting(post.threadgate);
+		// TODO(atcute Phase 2.6): drop cast once threadgate util flips to @atcute types
+		return threadgateViewToAllowUISetting(
+			post.threadgate as unknown as AppBskyFeedDefsAtproto.ThreadgateView | undefined,
+		);
 	}, [post.threadgate]);
 
 	const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({

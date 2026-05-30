@@ -1,15 +1,10 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyActorDefs,
-	AppBskyEmbedVideo,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	type ModerationDecision,
-} from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
+import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -31,7 +26,6 @@ import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
 import { LinearGradient } from '#/shims/linear-gradient';
-import * as bsky from '#/types/bsky';
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
 	return select(t.name, {
@@ -72,12 +66,10 @@ export function VideoPostCard({
 	 * Filtering should be done at a higher level, such as `PostFeed` or `PostFeedVideoGridRow`, but we need to
 	 * protect here as well.
 	 */
-	if (!AppBskyEmbedVideo.isView(embed)) return null;
+	if (!(embed?.$type === 'app.bsky.embed.video#view')) return null;
 
 	const author = post.author;
-	const text = bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
-		? post.record?.text
-		: '';
+	const text = (post.record as AppBskyFeedPost.Main).text;
 	const likeCount = post?.likeCount ?? 0;
 	const repostCount = post?.repostCount ?? 0;
 	const { thumbnail } = embed;
@@ -348,7 +340,7 @@ export function CompactVideoPostCard({
 	 * Filtering should be done at a higher level, such as `PostFeed` or `PostFeedVideoGridRow`, but we need to
 	 * protect here as well.
 	 */
-	if (!AppBskyEmbedVideo.isView(embed)) return null;
+	if (!(embed?.$type === 'app.bsky.embed.video#view')) return null;
 
 	const likeCount = post?.likeCount ?? 0;
 	const showLikeCount = false;

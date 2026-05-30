@@ -1,8 +1,9 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { type ComAtprotoLabelDefs } from '@atcute/atproto';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyEmbedExternal, type ComAtprotoLabelDefs, type ModerationDecision } from '@atproto/api';
+import { type AppBskyEmbedExternal } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -13,6 +14,7 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import { BACK_HITSLOP } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
+import { type ModerationDecision } from '#/lib/moderation/compat';
 import { type NavigationProp } from '#/lib/routes/types';
 
 import { type Shadow } from '#/state/cache/types';

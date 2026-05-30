@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useRef } from 'react';
+import { type AppBskyFeedDefs as AppBskyFeedDefsAtcute } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyFeedSearchPosts,
-	moderatePost,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedSearchPosts } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
+
+import { moderatePost } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useAgent } from '#/state/session';
@@ -110,7 +108,11 @@ export function useSearchPostsQuery({
 							return {
 								...page,
 								posts: page.posts.filter((post) => {
-									const mod = moderatePost(post, moderationOpts!);
+									// TODO(atcute Phase 2.6): drop cast once search flips to @atcute
+									const mod = moderatePost(
+										post as unknown as AppBskyFeedDefsAtcute.PostView,
+										moderationOpts!,
+									);
 									return !mod.ui('contentList').filter;
 								}),
 							};
@@ -142,13 +144,14 @@ export function* findAllPostsInQueryData(
 		}
 		for (const page of queryData?.pages) {
 			for (const post of page.posts) {
-				if (didOrHandleUriMatches(atUri, post)) {
+				// TODO(atcute Phase 2.6): drop casts once search flips to @atcute
+				if (didOrHandleUriMatches(atUri, post as unknown as AppBskyFeedDefsAtcute.PostView)) {
 					yield post;
 				}
 
 				const quotedPost = getEmbeddedPost(post.embed);
 				if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-					yield embedViewRecordToPostView(quotedPost);
+					yield embedViewRecordToPostView(quotedPost) as unknown as AppBskyFeedDefs.PostView;
 				}
 			}
 		}
@@ -173,7 +176,8 @@ export function* findAllProfilesInQueryData(
 				}
 				const quotedPost = getEmbeddedPost(post.embed);
 				if (quotedPost?.author.did === did) {
-					yield quotedPost.author;
+					// TODO(atcute Phase 2.6): drop cast once search flips to @atcute
+					yield quotedPost.author as unknown as AppBskyActorDefs.ProfileViewBasic;
 				}
 			}
 		}

@@ -1,16 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
+import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import { type $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type $Typed,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	moderatePost,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { moderatePost } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -219,13 +216,15 @@ export function QuoteEmbed({
 	linkDisabled?: boolean;
 }) {
 	const moderationOpts = useModerationOpts();
-	const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
-		() => ({
-			...embed.view,
-			$type: 'app.bsky.feed.defs#postView',
-			record: embed.view.value,
-			embed: embed.view.embeds?.[0],
-		}),
+	const quote = useMemo<$type.enforce<AppBskyFeedDefs.PostView>>(
+		// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
+		() =>
+			({
+				...embed.view,
+				$type: 'app.bsky.feed.defs#postView',
+				record: embed.view.value,
+				embed: embed.view.embeds?.[0],
+			}) as unknown as $type.enforce<AppBskyFeedDefs.PostView>,
 		[embed],
 	);
 	const moderation = useMemo(() => {
@@ -239,10 +238,11 @@ export function QuoteEmbed({
 	const itemTitle = `Post by ${quote.author.handle}`;
 
 	const richText = useMemo(() => {
-		if (!bsky.dangerousIsType<AppBskyFeedPost.Record>(quote.record, AppBskyFeedPost.isRecord))
-			return undefined;
-		const { text, facets } = quote.record;
-		return text.trim() ? new RichTextAPI({ text: text, facets: facets }) : undefined;
+		const { text, facets } = quote.record as AppBskyFeedPost.Main;
+		// TODO(atcute Phase 3.0): drop facet cast once RichText flips to @atcute
+		return text.trim()
+			? new RichTextAPI({ text, facets: facets as unknown as RichTextAPI['facets'] })
+			: undefined;
 	}, [quote.record]);
 
 	const onBeforePress = useCallback(() => {

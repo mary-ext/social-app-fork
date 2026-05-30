@@ -1,13 +1,13 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
+	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -66,10 +66,11 @@ export function ThreadItemAnchor({
 }: {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
-	const postShadow = usePostShadow(item.value.post);
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const postShadow = usePostShadow(item.value.post as unknown as AppBskyFeedDefs.PostView);
 	const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri;
 	const isRoot = threadRootUri === item.uri;
 
@@ -163,7 +164,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	isRoot: boolean;
 	postShadow: Shadow<AppBskyFeedDefs.PostView>;
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
 	const t = useTheme();
@@ -190,7 +191,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const authorHref = makeProfileLink(post.author);
-	const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did;
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const isThreadAuthor =
+		getThreadAuthor(post, record as unknown as AppBskyFeedPost.Main) === currentAccount?.did;
 
 	const likesHref = useMemo(() => {
 		const urip = parseCanonicalResourceUri(post.uri);
@@ -229,7 +232,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const viaRepost = useMemo(() => {
 		const reason = postSource?.post.reason;
 
-		if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
 			return {
 				uri: reason.uri,
 				cid: reason.cid,
@@ -460,7 +463,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								<PostControls
 									big
 									post={postShadow}
-									record={record}
+									// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+									record={record as unknown as AppBskyFeedPost.Main}
 									richText={richText}
 									onPressReply={onPressReply}
 									logContext="PostThreadItem"
@@ -492,12 +496,16 @@ function ExpandedPostDetails({
 
 	return (
 		<View style={[a.gap_md, a.pt_md, a.align_start]}>
-			<BackdatedPostIndicator post={post} />
+			{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
+			<BackdatedPostIndicator post={post as unknown as AppBskyFeedDefs.PostView} />
 			<View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
 				<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
 					{niceDate(i18n, post.indexedAt, 'dot separated')}
 				</Text>
-				{isRootPost && <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />}
+				{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
+				{isRootPost && (
+					<WhoCanReply post={post as unknown as AppBskyFeedDefs.PostView} isThreadAuthor={isThreadAuthor} />
+				)}
 			</View>
 		</View>
 	);
@@ -509,9 +517,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	const control = Prompt.usePromptControl();
 
 	const indexedAt = new Date(post.indexedAt);
-	const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
-		? new Date(post.record.createdAt)
-		: new Date(post.indexedAt);
+	const createdAt = new Date((post.record as AppBskyFeedPost.Main).createdAt);
 
 	// backdated if createdAt is 24 hours or more before indexedAt
 	const isBackdated = indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000;
@@ -576,7 +582,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	);
 }
 
-function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost.Record): string {
+function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost.Main): string {
 	if (!record.reply) {
 		return post.author.did;
 	}

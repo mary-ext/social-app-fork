@@ -1,16 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
+import { type AppBskyFeedPost } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	AppBskyFeedPost,
-	AppBskyRichtextFacet,
-	moderatePost,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { HITSLOP_20 } from '#/lib/constants';
+import { moderatePost } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl, makeRecordUri } from '#/lib/strings/url-helpers';
@@ -75,8 +72,11 @@ export function useExtractEmbedFromFacets(message: string, setEmbed: (embedUrl: 
 
 	for (const facet of rt.facets ?? []) {
 		for (const feature of facet.features) {
-			if (AppBskyRichtextFacet.isLink(feature) && isBskyPostUrl(feature.uri)) {
-				uriFromFacet = feature.uri;
+			if (
+				feature?.$type === 'app.bsky.richtext.facet#link' &&
+				isBskyPostUrl((feature as { uri: string }).uri)
+			) {
+				uriFromFacet = (feature as { uri: string }).uri;
 				break;
 			}
 		}
@@ -108,13 +108,14 @@ export function MessageInputEmbed({
 	);
 
 	const { rt, record } = useMemo(() => {
-		if (post && bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)) {
+		if (post) {
+			const postRecord = post.record as AppBskyFeedPost.Main;
 			return {
 				rt: new RichTextAPI({
-					text: post.record.text,
-					facets: post.record.facets,
+					text: postRecord.text,
+					facets: postRecord.facets,
 				}),
-				record: post.record,
+				record: postRecord,
 			};
 		}
 

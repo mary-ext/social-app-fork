@@ -1,5 +1,7 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, type ComAtprotoLabelDefs } from '@atproto/api';
+import { type ComAtprotoLabelDefs } from '@atcute/atproto';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type ComAtprotoLabelDefs as ComAtprotoLabelDefsAtproto } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
@@ -36,7 +38,12 @@ export function LabelsOnMe({
 
 	return (
 		<View style={[a.flex_row, style]}>
-			<LabelsOnMeDialog control={control} labels={labels} type={type} />
+			{/* TODO(atcute Phase 3.1): drop cast once LabelsOnMeDialog flips to @atcute types */}
+			<LabelsOnMeDialog
+				control={control}
+				labels={labels as unknown as ComAtprotoLabelDefsAtproto.Label[]}
+				type={type}
+			/>
 			<Button
 				variant="solid"
 				color="secondary"

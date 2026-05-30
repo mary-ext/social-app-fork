@@ -1,12 +1,8 @@
 import { memo, useMemo } from 'react';
 import { Platform, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
+import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+import { type RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -95,13 +91,13 @@ let PostMenuItems = ({
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
-	record: AppBskyFeedPost.Record;
+	record: AppBskyFeedPost.Main;
 	richText: RichTextAPI;
 	style?: StyleProp<ViewStyle>;
 	hitSlop?: PressableProps['hitSlop'];
 	size?: 'lg' | 'md' | 'sm';
 	timestamp: string;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
 	forceGoogleTranslate: boolean;

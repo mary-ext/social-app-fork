@@ -1,12 +1,13 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
+	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
@@ -60,9 +61,10 @@ export function ThreadItemTreePost({
 		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 }) {
-	const postShadow = usePostShadow(item.value.post);
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const postShadow = usePostShadow(item.value.post as unknown as AppBskyFeedDefs.PostView);
 
 	if (postShadow === POST_TOMBSTONE) {
 		return <ThreadItemTreePostDeleted item={item} />;
@@ -233,7 +235,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 }): React.ReactNode {
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
@@ -320,7 +322,8 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 							<View style={[a.flex_row]}>
 								<ThreadItemTreeReplyChildReplyLine item={item} />
 								<View style={[a.flex_1, a.pl_2xs]}>
-									<LabelsOnMyPost post={post} style={[a.pb_2xs]} />
+									{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
+									<LabelsOnMyPost post={post as unknown as AppBskyFeedDefs.PostView} style={[a.pb_2xs]} />
 									<PostAlerts
 										modui={moderation.ui('contentList')}
 										style={[a.pb_2xs]}
@@ -338,11 +341,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 											{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 										</View>
 									) : null}
-									<TranslatedPost hideTranslateLink post={post} />
+									{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
+									<TranslatedPost hideTranslateLink post={post as unknown as AppBskyFeedDefs.PostView} />
 									{post.embed && (
 										<View style={[a.pb_xs]}>
 											<Embed
-												embed={post.embed}
+												// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
+												embed={post.embed as unknown as AppBskyFeedDefs.PostView['embed']}
 												moderation={moderation}
 												viewContext={PostEmbedViewContext.Feed}
 											/>
@@ -351,7 +356,8 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 									<PostControls
 										variant="compact"
 										post={postShadow}
-										record={record}
+										// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+										record={record as unknown as AppBskyFeedPost.Main}
 										richText={richText}
 										onPressReply={onPressReply}
 										logContext="PostThreadItem"

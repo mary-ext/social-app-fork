@@ -98,10 +98,6 @@ export function getContentLanguages() {
 	return persisted.get('languagePrefs').contentLanguages;
 }
 
-export function getAppLanguageAsContentLanguage() {
-	return persisted.get('languagePrefs').appLanguage.split('-')[0] ?? 'en';
-}
-
 export function toPostLanguages(postLanguage: string): string[] {
 	// filter out empty strings if exist
 	return postLanguage.split(',').filter(Boolean);

@@ -1,11 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import {
-	AppBskyEmbedImages,
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	AppBskyFeedPost,
-} from '@atproto/api';
+import { type AppBskyEmbedImages, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -36,7 +31,8 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { embed } = replyTo;
+	// TODO(atcute Phase 3.1): replyTo (composer state) is @atproto-typed; the embed shape matches
+	const embed = replyTo.embed as unknown as AppBskyFeedDefs.PostView['embed'];
 
 	const [showFull, setShowFull] = useState(false);
 
@@ -50,15 +46,15 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 
 	const quoteEmbed = useMemo(() => {
 		if (
-			AppBskyEmbedRecord.isView(embed) &&
-			AppBskyEmbedRecord.isViewRecord(embed.record) &&
-			AppBskyFeedPost.isRecord(embed.record.value)
+			embed?.$type === 'app.bsky.embed.record#view' &&
+			embed.record?.$type === 'app.bsky.embed.record#viewRecord' &&
+			embed.record.value?.$type === 'app.bsky.feed.post'
 		) {
 			return embed;
 		} else if (
-			AppBskyEmbedRecordWithMedia.isView(embed) &&
-			AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-			AppBskyFeedPost.isRecord(embed.record.record.value)
+			embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
+			embed.record.record?.$type === 'app.bsky.embed.record#viewRecord' &&
+			embed.record.record.value?.$type === 'app.bsky.feed.post'
 		) {
 			return embed.record;
 		}
@@ -68,13 +64,16 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		? parseEmbed({
 				$type: 'app.bsky.embed.record#view',
 				...quoteEmbed,
-			})
+			} as Parameters<typeof parseEmbed>[0])
 		: null;
 
 	const images = useMemo(() => {
-		if (AppBskyEmbedImages.isView(embed)) {
+		if (embed?.$type === 'app.bsky.embed.images#view') {
 			return embed.images;
-		} else if (AppBskyEmbedRecordWithMedia.isView(embed) && AppBskyEmbedImages.isView(embed.media)) {
+		} else if (
+			embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
+			embed.media?.$type === 'app.bsky.embed.images#view'
+		) {
 			return embed.media.images;
 		}
 	}, [embed]);

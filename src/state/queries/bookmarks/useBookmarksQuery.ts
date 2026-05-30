@@ -1,3 +1,4 @@
+import { type AppBskyFeedDefs as AppBskyFeedDefsAtcute } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type $Typed, type AppBskyBookmarkGetBookmarks, AppBskyFeedDefs } from '@atproto/api';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
@@ -120,13 +121,14 @@ export function* findAllPostsInQueryData(
 				if (!bsky.dangerousIsType<AppBskyFeedDefs.PostView>(bookmark.item, AppBskyFeedDefs.isPostView))
 					continue;
 
-				if (didOrHandleUriMatches(atUri, bookmark.item)) {
+				// TODO(atcute Phase 2.5): drop casts once bookmarks flip to @atcute
+				if (didOrHandleUriMatches(atUri, bookmark.item as unknown as AppBskyFeedDefsAtcute.PostView)) {
 					yield bookmark.item;
 				}
 
 				const quotedPost = getEmbeddedPost(bookmark.item.embed);
 				if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-					yield embedViewRecordToPostView(quotedPost);
+					yield embedViewRecordToPostView(quotedPost) as unknown as AppBskyFeedDefs.PostView;
 				}
 			}
 		}

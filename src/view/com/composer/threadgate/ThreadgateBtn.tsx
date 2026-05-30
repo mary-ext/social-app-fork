@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { type StyleProp, type ViewStyle } from 'react-native';
-import { type AppBskyFeedPostgate } from '@atproto/api';
+import { type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
@@ -35,8 +36,8 @@ export function ThreadgateBtn({
 	threadgateAllowUISettings,
 	onChangeThreadgateAllowUISettings,
 }: {
-	postgate: AppBskyFeedPostgate.Record;
-	onChangePostgate: (v: AppBskyFeedPostgate.Record) => void;
+	postgate: AppBskyFeedPostgate.Main;
+	onChangePostgate: (v: AppBskyFeedPostgate.Main) => void;
 
 	threadgateAllowUISettings: ThreadgateAllowUISetting[];
 	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
@@ -81,8 +82,9 @@ export function ThreadgateBtn({
 		allow: preferences?.postInteractionSettings.threadgateAllowRules,
 	});
 	const prefPostgate = createPostgateRecord({
-		post: '',
-		embeddingRules: preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
+		post: '' as ResourceUri,
+		embeddingRules: (preferences?.postInteractionSettings?.postgateEmbeddingRules ||
+			[]) as AppBskyFeedPostgate.Main['embeddingRules'],
 	});
 
 	const isDirty = useMemo(() => {

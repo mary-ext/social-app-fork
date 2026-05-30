@@ -1,3 +1,4 @@
+import { type AppBskyFeedDefs as AppBskyFeedDefsAtcute } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorDefs,
@@ -77,7 +78,8 @@ export function* findAllProfilesInQueryData(
 				}
 				const quotedPost = getEmbeddedPost(item.embed);
 				if (quotedPost?.author.did === did) {
-					yield quotedPost.author;
+					// TODO(atcute Phase 2.5): drop cast once quotes flip to @atcute
+					yield quotedPost.author as unknown as AppBskyActorDefs.ProfileViewBasic;
 				}
 			}
 		}
@@ -98,13 +100,14 @@ export function* findAllPostsInQueryData(
 		}
 		for (const page of queryData?.pages) {
 			for (const post of page.posts) {
-				if (didOrHandleUriMatches(atUri, post)) {
+				// TODO(atcute Phase 2.5): drop casts once quotes flip to @atcute
+				if (didOrHandleUriMatches(atUri, post as unknown as AppBskyFeedDefsAtcute.PostView)) {
 					yield post;
 				}
 
 				const quotedPost = getEmbeddedPost(post.embed);
 				if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-					yield embedViewRecordToPostView(quotedPost);
+					yield embedViewRecordToPostView(quotedPost) as unknown as AppBskyFeedDefs.PostView;
 				}
 			}
 		}

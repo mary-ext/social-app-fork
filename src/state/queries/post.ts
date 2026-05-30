@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyFeedDefs } from '@atproto/api';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
@@ -40,7 +40,7 @@ export function usePostQuery(uri: string | undefined) {
 				uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
 			});
 			if (res.success && res.data.posts[0]) {
-				return res.data.posts[0];
+				return res.data.posts[0] as unknown as AppBskyFeedDefs.PostView;
 			}
 
 			throw new Error('No data');
@@ -76,7 +76,7 @@ export function useGetPost() {
 					});
 
 					if (res.success && res.data.posts[0]) {
-						return res.data.posts[0];
+						return res.data.posts[0] as unknown as AppBskyFeedDefs.PostView;
 					}
 
 					throw new Error('useGetPost: post not found');
@@ -134,7 +134,7 @@ export function usePostLikeMutationQueue(
 					via: viaRepost,
 				});
 				userActionHistory.like([postUri]);
-				return likeUri;
+				return likeUri as ResourceUri;
 			} else {
 				if (prevLikeUri) {
 					await unlikeMutation.mutateAsync({
@@ -225,7 +225,7 @@ export function usePostRepostMutationQueue(
 					cid: postCid,
 					via: viaRepost,
 				});
-				return repostUri;
+				return repostUri as ResourceUri;
 			} else {
 				if (prevRepostUri) {
 					await unrepostMutation.mutateAsync({

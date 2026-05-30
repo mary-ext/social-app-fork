@@ -1,20 +1,20 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
+	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
-	type ModerationDecision,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { type ReasonFeedSource } from '#/lib/api/feed/types';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { usePalette } from '#/lib/hooks/usePalette';
+import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
 
@@ -52,13 +52,8 @@ import * as bsky from '#/types/bsky';
 import { PostFeedReason } from './PostFeedReason';
 
 interface FeedItemProps {
-	record: AppBskyFeedPost.Record;
-	reason:
-		| AppBskyFeedDefs.ReasonRepost
-		| AppBskyFeedDefs.ReasonPin
-		| ReasonFeedSource
-		| { [k: string]: unknown; $type: string }
-		| undefined;
+	record: AppBskyFeedPost.Main;
+	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | ReasonFeedSource | undefined;
 	moderation: ModerationDecision;
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 	showReplyTo: boolean;
@@ -234,7 +229,9 @@ let FeedItemInner = ({
 			feedSourceInfo,
 			post: {
 				post,
-				reason: AppBskyFeedDefs.isReasonRepost(reason) ? reason : undefined,
+				reason: (reason?.$type === 'app.bsky.feed.defs#reasonRepost'
+					? reason
+					: undefined) as AppBskyFeedDefs.FeedViewPost['reason'],
 				feedContext,
 				reqId,
 			},
@@ -254,17 +251,14 @@ let FeedItemInner = ({
 	 * If `post[0]` in this slice is the actual root post (not an orphan thread), then we may have a threadgate
 	 * record to reference
 	 */
-	const threadgateRecord = bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
-		rootPost.threadgate?.record,
-		AppBskyFeedThreadgate.isRecord,
-	)
-		? rootPost.threadgate.record
+	const threadgateRecord = rootPost.threadgate
+		? (rootPost.threadgate.record as AppBskyFeedThreadgate.Main)
 		: undefined;
 
 	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
 
 	const viaRepost = useMemo(() => {
-		if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
 			return {
 				uri: reason.uri,
 				cid: reason.cid,
@@ -277,10 +271,9 @@ let FeedItemInner = ({
 	});
 	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
-			? post.record?.reply?.root?.uri || post.uri
-			: undefined;
-		const isControlledByViewer = rootPostUri && parseCanonicalResourceUri(rootPostUri).repo === currentAccount?.did;
+		const rootPostUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri || post.uri;
+		const isControlledByViewer =
+			rootPostUri && parseCanonicalResourceUri(rootPostUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{
@@ -437,10 +430,7 @@ let PostContent = ({
 }): React.ReactNode => {
 	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
 
-	const record = useMemo<AppBskyFeedPost.Record | undefined>(
-		() => (bsky.validate(post.record, AppBskyFeedPost.validateRecord) ? post.record : undefined),
-		[post],
-	);
+	const record = post.record as AppBskyFeedPost.Main;
 
 	const onPressShowMore = useCallback(() => {
 		setLimitLines(false);

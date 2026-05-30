@@ -10,8 +10,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { AppBskyEmbedVideo, type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -397,7 +396,7 @@ let PostFeed = ({
 							const item = slice.items.find((item) => item.uri === slice.feedPostUri);
 							if (
 								item &&
-								AppBskyEmbedVideo.isView(item.post.embed) &&
+								item.post.embed?.$type === 'app.bsky.embed.video#view' &&
 								!blockedOrMutedAuthors.includes(item.post.author.did)
 							) {
 								videos.push({

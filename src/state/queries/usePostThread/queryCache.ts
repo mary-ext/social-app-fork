@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type $Typed,
@@ -78,7 +79,7 @@ export function createCacheMutator({
 					/*
 					 * Update parent data
 					 */
-					const shadow = dangerousGetPostShadow(parent.value.post);
+					const shadow = dangerousGetPostShadow(parent.value.post as unknown as AtcAppBskyFeedDefs.PostView);
 					const prevOptimisticCount = shadow?.optimisticReplyCount;
 					const prevReplyCount = parent.value.post.replyCount;
 					// prefer optimistic count, if we already have some
@@ -215,7 +216,8 @@ export function* getThreadPlaceholderCandidates(
 	 * Check post thread queries first
 	 */
 	for (const post of findAllPostsInQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 
 	/*
@@ -225,22 +227,28 @@ export function* getThreadPlaceholderCandidates(
 	 * avoid a notification->post scroll jump.
 	 */
 	for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 	for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 	for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 	for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 	for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 	for (let post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {
-		yield postViewToThreadPlaceholder(post);
+		// TODO(atcute Phase 2.5): drop cast once these finder queries flip to @atcute
+		yield postViewToThreadPlaceholder(post as unknown as AppBskyFeedDefs.PostView);
 	}
 }
 
@@ -260,13 +268,15 @@ export function* findAllPostsInQueryData(
 
 		for (const item of thread) {
 			if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
-				if (didOrHandleUriMatches(atUri, item.value.post)) {
+				// TODO(atcute Phase 2.5): drop cast once the thread query flips to @atcute
+				if (didOrHandleUriMatches(atUri, item.value.post as unknown as AtcAppBskyFeedDefs.PostView)) {
 					yield item.value.post;
 				}
 
 				const qp = getEmbeddedPost(item.value.post.embed);
 				if (qp && didOrHandleUriMatches(atUri, qp)) {
-					yield embedViewRecordToPostView(qp);
+					// TODO(atcute Phase 2.5): drop cast once this generator flips to @atcute
+					yield embedViewRecordToPostView(qp) as unknown as AppBskyFeedDefs.PostView;
 				}
 			}
 		}
@@ -294,7 +304,8 @@ export function* findAllProfilesInQueryData(
 
 				const qp = getEmbeddedPost(item.value.post.embed);
 				if (qp && qp.author.did === did) {
-					yield qp.author;
+					// TODO(atcute Phase 2.5): drop cast once this generator flips to @atcute
+					yield qp.author as unknown as AppBskyActorDefs.ProfileViewBasic;
 				}
 			}
 		}

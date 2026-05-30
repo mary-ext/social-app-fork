@@ -1,12 +1,13 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
+	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
@@ -54,11 +55,12 @@ export type ThreadItemPostProps = {
 		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 };
 
 export function ThreadItemPost({ item, overrides, onPostSuccess, threadgateRecord }: ThreadItemPostProps) {
-	const postShadow = usePostShadow(item.value.post);
+	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+	const postShadow = usePostShadow(item.value.post as unknown as AppBskyFeedDefs.PostView);
 
 	if (postShadow === POST_TOMBSTONE) {
 		return <ThreadItemPostDeleted item={item} overrides={overrides} />;
@@ -281,13 +283,15 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 								style={[
 									a.pb_xs,
 									maybeApplyGalleryOffsetStyles('meta', {
-										post,
+										// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+										post: post as unknown as AppBskyFeedDefs.PostView,
 										modui: moderation.ui('contentList'),
 										additionalCauses: additionalPostAlerts,
 									}),
 								]}
 							/>
-							<LabelsOnMyPost post={post} style={[a.pb_xs]} />
+							{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
+							<LabelsOnMyPost post={post as unknown as AppBskyFeedDefs.PostView} style={[a.pb_xs]} />
 							<PostAlerts
 								modui={moderation.ui('contentList')}
 								style={[a.pb_2xs]}
@@ -305,24 +309,32 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 								</View>
 							) : undefined}
-							<TranslatedPost hideTranslateLink post={post} />
+							{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
+							<TranslatedPost hideTranslateLink post={post as unknown as AppBskyFeedDefs.PostView} />
 							{post.embed && (
 								<View
 									style={[
 										maybeApplyGalleryOffsetStyles('embed', {
-											post,
+											// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+											post: post as unknown as AppBskyFeedDefs.PostView,
 											modui: moderation.ui('contentList'),
 											additionalCauses: additionalPostAlerts,
 										}),
 										a.pb_xs,
 									]}
 								>
-									<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
+									<Embed
+										// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
+										embed={post.embed as unknown as AppBskyFeedDefs.PostView['embed']}
+										moderation={moderation}
+										viewContext={PostEmbedViewContext.Feed}
+									/>
 								</View>
 							)}
 							<PostControls
 								post={postShadow}
-								record={record}
+								// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
+								record={record as unknown as AppBskyFeedPost.Main}
 								richText={richText}
 								onPressReply={onPressReply}
 								logContext="PostThreadItem"

@@ -1,18 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	moderatePost,
-	type ModerationDecision,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { RichText as RichTextAPI } from '@atproto/api';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { moderatePost, type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
 
@@ -54,10 +49,7 @@ export function Post({
 	onBeforePress?: () => void;
 }) {
 	const moderationOpts = useModerationOpts();
-	const record = useMemo<AppBskyFeedPost.Record | undefined>(
-		() => (bsky.validate(post.record, AppBskyFeedPost.validateRecord) ? post.record : undefined),
-		[post],
-	);
+	const record = post.record as AppBskyFeedPost.Main;
 	const postShadowed = usePostShadow(post);
 	const richText = useMemo(
 		() =>
@@ -104,7 +96,7 @@ function PostInner({
 	onBeforePress: outerOnBeforePress,
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
-	record: AppBskyFeedPost.Record;
+	record: AppBskyFeedPost.Main;
 	richText: RichTextAPI;
 	moderation: ModerationDecision;
 	showReplyLine?: boolean;

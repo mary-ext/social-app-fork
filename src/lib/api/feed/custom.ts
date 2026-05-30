@@ -1,140 +1,64 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedGetFeed as GetCustomFeed,
-	BskyAgent,
-	jsonStringToLex,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedGetFeed } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
 
-import { getAppLanguageAsContentLanguage, getContentLanguages } from '#/state/preferences/languages';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { getContentLanguages } from '#/state/preferences/languages';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 import { createBskyTopicsHeader, isBlueskyOwnedFeed } from './utils';
 
 export class CustomFeedAPI implements FeedAPI {
-	agent: BskyAppAgent;
-	params: GetCustomFeed.QueryParams;
+	appview: Client;
+	params: AppBskyFeedGetFeed.$params;
 	userInterests?: string;
 
 	constructor({
-		agent,
+		appview,
 		feedParams,
 		userInterests,
 	}: {
-		agent: BskyAppAgent;
-		feedParams: GetCustomFeed.QueryParams;
+		appview: Client;
+		feedParams: AppBskyFeedGetFeed.$params;
 		userInterests?: string;
 	}) {
-		this.agent = agent;
+		this.appview = appview;
 		this.params = feedParams;
 		this.userInterests = userInterests;
 	}
 
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
 		const contentLangs = getContentLanguages().join(',');
-		const res = await this.agent.app.bsky.feed.getFeed(
-			{
-				...this.params,
-				limit: 1,
-			},
-			{ headers: { 'Accept-Language': contentLangs } },
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getFeed', {
+				params: { ...this.params, limit: 1 },
+				headers: { 'Accept-Language': contentLangs },
+			}),
 		);
-		return res.data.feed[0]!;
+		return data.feed[0]!;
 	}
 
 	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
 		const contentLangs = getContentLanguages().join(',');
-		const agent = this.agent;
 		const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed);
-
-		const res = agent.did
-			? await this.agent.app.bsky.feed.getFeed(
-					{
-						...this.params,
-						cursor,
-						limit,
-					},
-					{
-						headers: {
-							...(isBlueskyOwned ? createBskyTopicsHeader(this.userInterests) : {}),
-							'Accept-Language': contentLangs,
-						},
-					},
-				)
-			: await loggedOutFetch({ ...this.params, cursor, limit });
-		if (res.success) {
-			// NOTE
-			// some custom feeds fail to enforce the pagination limit
-			// so we manually truncate here
-			// -prf
-			if (res.data.feed.length > limit) {
-				res.data.feed = res.data.feed.slice(0, limit);
-			}
-			return {
-				cursor: res.data.feed.length ? res.data.cursor : undefined,
-				feed: res.data.feed,
-			};
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getFeed', {
+				params: { ...this.params, cursor, limit },
+				headers: {
+					...(isBlueskyOwned ? createBskyTopicsHeader(this.userInterests) : {}),
+					'Accept-Language': contentLangs,
+				},
+			}),
+		);
+		let feed = data.feed;
+		// NOTE
+		// some custom feeds fail to enforce the pagination limit
+		// so we manually truncate here
+		// -prf
+		if (feed.length > limit) {
+			feed = feed.slice(0, limit);
 		}
 		return {
-			feed: [],
+			cursor: feed.length ? data.cursor : undefined,
+			feed,
 		};
 	}
-}
-
-// HACK
-// we want feeds to give language-specific results immediately when a
-// logged-out user changes their language. this comes with two problems:
-// 1. not all languages have content, and
-// 2. our public caching layer isnt correctly busting against the accept-language header
-// for now we handle both of these with a manual workaround
-// -prf
-async function loggedOutFetch({ feed, limit, cursor }: { feed: string; limit: number; cursor?: string }) {
-	let contentLangs = getAppLanguageAsContentLanguage();
-
-	/**
-	 * Copied from our root `Agent` class
-	 *
-	 * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
-	 */
-	const labelersHeader = {
-		'atproto-accept-labelers': BskyAgent.appLabelers.map((l) => `${l};redact`).join(', '),
-	};
-
-	// manually construct fetch call so we can add the `lang` cache-busting param
-	let res = await fetch(
-		`https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
-			cursor ? `&cursor=${cursor}` : ''
-		}&limit=${limit}&lang=${contentLangs}`,
-		{
-			method: 'GET',
-			headers: { 'Accept-Language': contentLangs, ...labelersHeader },
-		},
-	);
-	let data = res.ok ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema) : null;
-	if (data?.feed?.length) {
-		return {
-			success: true,
-			data,
-		};
-	}
-
-	// no data, try again with language headers removed
-	res = await fetch(
-		`https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
-			cursor ? `&cursor=${cursor}` : ''
-		}&limit=${limit}`,
-		{ method: 'GET', headers: { 'Accept-Language': '', ...labelersHeader } },
-	);
-	data = res.ok ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema) : null;
-	if (data?.feed?.length) {
-		return {
-			success: true,
-			data,
-		};
-	}
-
-	return {
-		success: false,
-		data: { feed: [] },
-	};
 }

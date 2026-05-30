@@ -26,7 +26,13 @@ import type * as bsky from '#/types/bsky';
  * engine itself migrates (Appendix A), at which point only files in this directory change.
  */
 
-export type { ModerationCause, ModerationDecision, ModerationOpts } from '@atproto/api';
+export type {
+	ModerationCause,
+	ModerationDecision,
+	ModerationOpts,
+	ModerationPrefs,
+	ModerationUI,
+} from '@atproto/api';
 
 /**
  * Runs the moderation engine against a profile view.

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 import throttle from 'lodash.throttle';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
@@ -158,7 +159,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 					history.current.add(postItem);
 					queue.current.add(
 						toString({
-							item: postItem.uri,
+							item: postItem.uri as ResourceUri,
 							event: 'app.bsky.feed.defs#interactionSeen',
 							feedContext,
 							reqId,
@@ -237,7 +238,7 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
 
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
 	const [item, event, feedContext, reqId] = str.split('|');
-	return { item, event, feedContext, reqId };
+	return { item, event, feedContext, reqId } as AppBskyFeedDefs.Interaction;
 }
 
 type AggregatedStats = {

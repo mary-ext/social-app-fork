@@ -1,12 +1,4 @@
-import {
-	type AppBskyActorDefs,
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	AppBskyFeedDefs,
-	AppBskyFeedPost,
-} from '@atproto/api';
-
-import * as bsky from '#/types/bsky';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 
 import { isPostInLanguage } from '../../locale/helpers';
 import { FALLBACK_MARKER_POST } from './feed/home';
@@ -22,7 +14,7 @@ export type FeedTunerFn = (
 
 type FeedSliceItem = {
 	post: AppBskyFeedDefs.PostView;
-	record: AppBskyFeedPost.Record;
+	record: AppBskyFeedPost.Main;
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 	isParentBlocked: boolean;
 	isParentNotFound: boolean;
@@ -54,7 +46,7 @@ export class FeedViewPostsSlice {
 		this.isOrphan = false;
 		this.isThreadMuted = post.viewer?.threadMuted ?? false;
 		this.feedPostUri = post.uri;
-		if (AppBskyFeedDefs.isPostView(reply?.root)) {
+		if (reply?.root?.$type === 'app.bsky.feed.defs#postView') {
 			this.rootUri = reply.root.uri;
 		} else {
 			this.rootUri = post.uri;
@@ -67,28 +59,23 @@ export class FeedViewPostsSlice {
 			this.isFallbackMarker = true;
 			return;
 		}
-		if (
-			!AppBskyFeedPost.isRecord(post.record) ||
-			!bsky.validate(post.record, AppBskyFeedPost.validateRecord)
-		) {
-			return;
-		}
+		const record = post.record as AppBskyFeedPost.Main;
 		const parent = reply?.parent;
-		const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent);
-		const isParentNotFound = AppBskyFeedDefs.isNotFoundPost(parent);
+		const isParentBlocked = parent?.$type === 'app.bsky.feed.defs#blockedPost';
+		const isParentNotFound = parent?.$type === 'app.bsky.feed.defs#notFoundPost';
 		let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
-		if (AppBskyFeedDefs.isPostView(parent)) {
+		if (parent?.$type === 'app.bsky.feed.defs#postView') {
 			parentAuthor = parent.author;
 		}
 		this.items.push({
 			post,
-			record: post.record,
+			record,
 			parentAuthor,
 			isParentBlocked,
 			isParentNotFound,
 		});
 		if (!reply) {
-			if (post.record.reply) {
+			if (record.reply) {
 				// This reply wasn't properly hydrated by the AppView.
 				this.isOrphan = true;
 				this.items[0]!.isParentNotFound = true;
@@ -98,32 +85,33 @@ export class FeedViewPostsSlice {
 		if (reason) {
 			return;
 		}
-		if (
-			!AppBskyFeedDefs.isPostView(parent) ||
-			!AppBskyFeedPost.isRecord(parent.record) ||
-			!bsky.validate(parent.record, AppBskyFeedPost.validateRecord)
-		) {
+		if (parent?.$type !== 'app.bsky.feed.defs#postView') {
 			this.isOrphan = true;
 			return;
 		}
+		const parentRecord = parent.record as AppBskyFeedPost.Main;
 		const root = reply.root;
 		const rootIsView =
-			AppBskyFeedDefs.isPostView(root) ||
-			AppBskyFeedDefs.isBlockedPost(root) ||
-			AppBskyFeedDefs.isNotFoundPost(root);
+			root?.$type === 'app.bsky.feed.defs#postView' ||
+			root?.$type === 'app.bsky.feed.defs#blockedPost' ||
+			root?.$type === 'app.bsky.feed.defs#notFoundPost';
 		/*
 		 * If the parent is also the root, we just so happen to have the data we
 		 * need to compute if the parent's parent (grandparent) is blocked. This
 		 * doesn't always happen, of course, but we can take advantage of it when
 		 * it does.
 		 */
-		const grandparent = rootIsView && parent.record.reply?.parent.uri === root.uri ? root : undefined;
+		const grandparent = rootIsView && parentRecord.reply?.parent.uri === root.uri ? root : undefined;
 		const grandparentAuthor = reply.grandparentAuthor;
-		const isGrandparentBlocked = Boolean(grandparent && AppBskyFeedDefs.isBlockedPost(grandparent));
-		const isGrandparentNotFound = Boolean(grandparent && AppBskyFeedDefs.isNotFoundPost(grandparent));
+		const isGrandparentBlocked = Boolean(
+			grandparent && grandparent.$type === 'app.bsky.feed.defs#blockedPost',
+		);
+		const isGrandparentNotFound = Boolean(
+			grandparent && grandparent.$type === 'app.bsky.feed.defs#notFoundPost',
+		);
 		this.items.unshift({
 			post: parent,
-			record: parent.record,
+			record: parentRecord,
 			parentAuthor: grandparentAuthor,
 			isParentBlocked: isGrandparentBlocked,
 			isParentNotFound: isGrandparentNotFound,
@@ -133,11 +121,7 @@ export class FeedViewPostsSlice {
 			// Keep going, it might still have a root, and we need this for thread
 			// de-deduping
 		}
-		if (
-			!AppBskyFeedDefs.isPostView(root) ||
-			!AppBskyFeedPost.isRecord(root.record) ||
-			!bsky.validate(root.record, AppBskyFeedPost.validateRecord)
-		) {
+		if (root?.$type !== 'app.bsky.feed.defs#postView') {
 			this.isOrphan = true;
 			return;
 		}
@@ -146,23 +130,25 @@ export class FeedViewPostsSlice {
 		}
 		this.items.unshift({
 			post: root,
-			record: root.record,
+			record: root.record as AppBskyFeedPost.Main,
 			isParentBlocked: false,
 			isParentNotFound: false,
 			parentAuthor: undefined,
 		});
-		if (parent.record.reply?.parent.uri !== root.uri) {
+		if (parentRecord.reply?.parent.uri !== root.uri) {
 			this.isIncompleteThread = true;
 		}
 	}
 
 	get isQuotePost() {
 		const embed = this._feedPost.post.embed;
-		return AppBskyEmbedRecord.isView(embed) || AppBskyEmbedRecordWithMedia.isView(embed);
+		return (
+			embed?.$type === 'app.bsky.embed.record#view' || embed?.$type === 'app.bsky.embed.recordWithMedia#view'
+		);
 	}
 
 	get isReply() {
-		return AppBskyFeedPost.isRecord(this._feedPost.post.record) && !!this._feedPost.post.record.reply;
+		return !!(this._feedPost.post.record as AppBskyFeedPost.Main).reply;
 	}
 
 	get reason() {
@@ -181,7 +167,7 @@ export class FeedViewPostsSlice {
 
 	get isRepost() {
 		const reason = this._feedPost.reason;
-		return AppBskyFeedDefs.isReasonRepost(reason);
+		return reason?.$type === 'app.bsky.feed.defs#reasonRepost';
 	}
 
 	get likeCount() {
@@ -199,13 +185,13 @@ export class FeedViewPostsSlice {
 		let grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 		let rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 		if (feedPost.reply) {
-			if (AppBskyFeedDefs.isPostView(feedPost.reply.parent)) {
+			if (feedPost.reply.parent?.$type === 'app.bsky.feed.defs#postView') {
 				parentAuthor = feedPost.reply.parent.author;
 			}
 			if (feedPost.reply.grandparentAuthor) {
 				grandparentAuthor = feedPost.reply.grandparentAuthor;
 			}
-			if (AppBskyFeedDefs.isPostView(feedPost.reply.root)) {
+			if (feedPost.reply.root?.$type === 'app.bsky.feed.defs#postView') {
 				rootAuthor = feedPost.reply.root.author;
 			}
 		}

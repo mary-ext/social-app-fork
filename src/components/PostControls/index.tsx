@@ -1,11 +1,7 @@
 import { memo, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
@@ -51,7 +47,7 @@ let PostControls = ({
 }: {
 	big?: boolean;
 	post: Shadow<AppBskyFeedDefs.PostView>;
-	record: AppBskyFeedPost.Record;
+	record: AppBskyFeedPost.Main;
 	richText: RichTextAPI;
 	feedContext?: string | undefined;
 	reqId?: string | undefined;
@@ -59,7 +55,7 @@ let PostControls = ({
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	viaRepost?: { uri: string; cid: string };
 	variant?: 'compact' | 'normal' | 'large';
@@ -161,7 +157,8 @@ let PostControls = ({
 			reqId,
 		});
 		openComposer({
-			quote: post,
+			// TODO(atcute Phase 3.1): composer still @atproto-typed
+			quote: post as unknown as import('@atproto/api').AppBskyFeedDefs.PostView,
 			onPost: onPostReply,
 			logContext: 'QuotePost',
 		});

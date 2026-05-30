@@ -1,5 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AppBskyEmbedRecord, AppBskyEmbedRecordWithMedia, type AppBskyFeedDefs } from '@atproto/api';
+import {
+	type AppBskyEmbedRecord,
+	type AppBskyEmbedRecordWithMedia,
+	type AppBskyFeedDefs,
+} from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 import { type QueryClient } from '@tanstack/react-query';
 import { EventEmitter } from 'eventemitter3';
 
@@ -117,14 +122,16 @@ function mergeShadow(
 	let embed: typeof post.embed;
 	if ('embed' in shadow) {
 		if (
-			(AppBskyEmbedRecord.isView(post.embed) && AppBskyEmbedRecord.isView(shadow.embed)) ||
-			(AppBskyEmbedRecordWithMedia.isView(post.embed) && AppBskyEmbedRecordWithMedia.isView(shadow.embed))
+			(post.embed?.$type === 'app.bsky.embed.record#view' &&
+				shadow.embed?.$type === 'app.bsky.embed.record#view') ||
+			(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
+				shadow.embed?.$type === 'app.bsky.embed.recordWithMedia#view')
 		) {
-			embed = shadow.embed;
+			embed = shadow.embed as typeof post.embed;
 		}
 	}
 
-	return castAsShadow({
+	return castAsShadow<AppBskyFeedDefs.PostView>({
 		...post,
 		embed: embed || post.embed,
 		likeCount: likeCount,
@@ -133,8 +140,8 @@ function mergeShadow(
 		bookmarkCount: bookmarkCount,
 		viewer: {
 			...(post.viewer || {}),
-			like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
-			repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
+			like: 'likeUri' in shadow ? (shadow.likeUri as ResourceUri | undefined) : post.viewer?.like,
+			repost: 'repostUri' in shadow ? (shadow.repostUri as ResourceUri | undefined) : post.viewer?.repost,
 			pinned: 'pinned' in shadow ? shadow.pinned : post.viewer?.pinned,
 			bookmarked: 'bookmarked' in shadow ? shadow.bookmarked : post.viewer?.bookmarked,
 		},
@@ -156,21 +163,26 @@ function* findPostsInCache(queryClient: QueryClient, uri: string): Generator<App
 		yield post;
 	}
 	for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-		yield post;
+		// TODO(atcute Phase 2.6): generator still yields @atproto PostView until its phase migrates
+		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 	for (let post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
-		yield post;
+		// TODO(atcute Phase 2.5): generator still yields @atproto PostView until its phase migrates
+		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 	for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
-		yield post;
+		// TODO(atcute Phase 2.6): generator still yields @atproto PostView until its phase migrates
+		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 	for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-		yield post;
+		// TODO(atcute Phase 2.5): generator still yields @atproto PostView until its phase migrates
+		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 	for (let post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {
 		yield post;
 	}
 	for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-		yield post;
+		// TODO(atcute Phase 2.6): generator still yields @atproto PostView until its phase migrates
+		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 }

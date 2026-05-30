@@ -7,16 +7,15 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
+	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyGraphFollow,
-	type ModerationDecision,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { TID } from '@atproto/common-web';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -25,7 +24,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import { moderateProfile, type ModerationOpts, type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
@@ -180,10 +179,8 @@ let NotificationFeedItem = ({
 	// Calculate if this is a follow-back notification
 	const isFollowBack = useMemo(() => {
 		if (item.type !== 'follow') return false;
-		if (
-			item.notification.author.viewer?.following &&
-			bsky.dangerousIsType<AppBskyGraphFollow.Record>(item.notification.record, AppBskyGraphFollow.isRecord)
-		) {
+		if (item.notification.author.viewer?.following) {
+			const record = item.notification.record as AppBskyGraphFollow.Main;
 			let followingTimestamp;
 			try {
 				const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
@@ -192,7 +189,7 @@ let NotificationFeedItem = ({
 				return false;
 			}
 			if (followingTimestamp) {
-				const followedTimestamp = new Date(item.notification.record.createdAt).getTime() * 1000;
+				const followedTimestamp = new Date(record.createdAt).getTime() * 1000;
 				return followedTimestamp > followingTimestamp;
 			}
 		}
@@ -212,7 +209,8 @@ let NotificationFeedItem = ({
 		return (
 			<View testID={`feedItem-by-${item.notification.author.handle}`}>
 				<Post
-					post={item.subject}
+					// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
+					post={item.subject as unknown as AppBskyFeedDefs.PostView}
 					style={
 						isHighlighted && {
 							backgroundColor: t.palette.primary_25,
@@ -618,7 +616,8 @@ let NotificationFeedItem = ({
 						item.type === 'repost-via-repost' ||
 						item.type === 'subscribed-post' ? (
 							<View style={[a.pt_2xs]}>
-								<AdditionalPostText post={item.subject} />
+								{/* TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute */}
+								<AdditionalPostText post={item.subject as unknown as AppBskyFeedDefs.PostView} />
 							</View>
 						) : null}
 						{item.type === 'feedgen-like' && item.subjectUri ? (
@@ -944,8 +943,9 @@ function ExpandedAuthorCard({ author }: { author: Author }) {
 
 function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
 	const t = useTheme();
-	if (post && bsky.dangerousIsType<AppBskyFeedPost.Record>(post?.record, AppBskyFeedPost.isRecord)) {
-		const text = post.record.text;
+	if (post) {
+		const record = post.record as AppBskyFeedPost.Main;
+		const text = record.text;
 
 		return (
 			<>

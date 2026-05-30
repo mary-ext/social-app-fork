@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
 	type ComAtprotoLabelDefs,
 	interpretLabelValueDefinition,
 	type LabelPreference,
@@ -205,7 +203,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 		});
 		const [item] = groupNotifications([notif]);
 		item!.subject = mock.postView({
-			record: notif.record as AppBskyFeedPost.Record,
+			record: notif.record as AppBskyFeedPost.Main,
 			author: profile,
 			labels: notif.labels,
 		});
@@ -443,13 +441,17 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 							{view[0] === 'post' && (
 								<>
 									<Heading title="Post" subtitle="in feed" />
-									<MockPostFeedItem post={post} moderation={postModeration} />
+									<MockPostFeedItem post={post as AppBskyFeedDefs.PostView} moderation={postModeration} />
 
 									<Heading title="Post" subtitle="viewed directly" />
-									<MockPostThreadItem post={post} moderationOpts={modOpts} />
+									<MockPostThreadItem post={post as AppBskyFeedDefs.PostView} moderationOpts={modOpts} />
 
 									<Heading title="Post" subtitle="reply in thread" />
-									<MockPostThreadItem post={post} moderationOpts={modOpts} isReply />
+									<MockPostThreadItem
+										post={post as AppBskyFeedDefs.PostView}
+										moderationOpts={modOpts}
+										isReply
+									/>
 								</>
 							)}
 
@@ -678,7 +680,7 @@ function MockPostFeedItem({
 	return (
 		<PostFeedItem
 			post={post}
-			record={post.record as AppBskyFeedPost.Record}
+			record={post.record as AppBskyFeedPost.Main}
 			moderation={moderation}
 			parentAuthor={undefined}
 			showReplyTo={false}
@@ -704,7 +706,8 @@ function MockPostThreadItem({
 		depth: isReply ? 1 : 0,
 		value: {
 			$type: 'app.bsky.unspecced.defs#threadItemPost',
-			post,
+			// TODO(atcute Phase 3.1): drop cast once usePostThread views flip to @atcute
+			post: post as unknown as Parameters<typeof threadPost>[0]['value']['post'],
 			moreParents: false,
 			moreReplies: 0,
 			opThread: false,

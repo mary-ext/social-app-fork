@@ -16,8 +16,9 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { type AppBskyFeedDefs as AppBskyFeedDefsAtcute } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import { AppBskyFeedDefs, AppBskyFeedPost, moderatePost } from '@atproto/api';
+import { AppBskyFeedDefs, AppBskyFeedPost } from '@atproto/api';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -25,6 +26,8 @@ import {
 	useInfiniteQuery,
 	useQueryClient,
 } from '@tanstack/react-query';
+
+import { moderatePost } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
@@ -171,7 +174,11 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 											 * `record` is a post, we know it's a post view.
 											 */
 											if (AppBskyFeedPost.isRecord(item.subject?.record)) {
-												const mod = moderatePost(item.subject, moderationOpts!);
+												// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
+												const mod = moderatePost(
+													item.subject as unknown as AppBskyFeedDefsAtcute.PostView,
+													moderationOpts!,
+												);
 												if (mod.ui('contentList').filter) {
 													return false;
 												}
@@ -260,7 +267,11 @@ export function* findAllPostsInQueryData(
 		for (const page of queryData?.pages) {
 			for (const item of page.items) {
 				if (item.type !== 'starterpack-joined') {
-					if (item.subject && didOrHandleUriMatches(atUri, item.subject)) {
+					// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
+					if (
+						item.subject &&
+						didOrHandleUriMatches(atUri, item.subject as unknown as AppBskyFeedDefsAtcute.PostView)
+					) {
 						yield item.subject;
 					}
 				}
@@ -268,7 +279,8 @@ export function* findAllPostsInQueryData(
 				if (AppBskyFeedDefs.isPostView(item.subject)) {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
-						yield embedViewRecordToPostView(quotedPost);
+						// TODO(atcute Phase 2.6): drop cast once notification feed flips to @atcute
+						yield embedViewRecordToPostView(quotedPost) as unknown as AppBskyFeedDefs.PostView;
 					}
 				}
 			}

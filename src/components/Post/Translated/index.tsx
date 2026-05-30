@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { type StyleProp, type TextStyle, View } from 'react-native';
-import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atproto/api';
+import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_30 } from '#/lib/constants';
@@ -23,8 +23,6 @@ import { Loader } from '#/components/Loader';
 import * as Select from '#/components/Select';
 import { Text } from '#/components/Typography';
 
-import * as bsky from '#/types/bsky';
-
 const X_ICON_OFFSET = 16;
 
 export function TranslatedPost({
@@ -41,11 +39,7 @@ export function TranslatedPost({
 		key: post.uri,
 	});
 
-	const record = useMemo<AppBskyFeedPost.Record | undefined>(() => {
-		return bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
-			? post.record
-			: undefined;
-	}, [post]);
+	const record = post.record as AppBskyFeedPost.Main;
 	const initialTranslationParams = useMemo<TranslationFunctionParams>(() => {
 		return {
 			text: record?.text || '',

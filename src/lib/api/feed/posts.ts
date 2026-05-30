@@ -1,16 +1,17 @@
-import { type Agent, type AppBskyFeedDefs, type AppBskyFeedGetPosts } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedGetPosts } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
 
 import { logger } from '#/logger';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class PostListFeedAPI implements FeedAPI {
-	agent: Agent;
-	params: AppBskyFeedGetPosts.QueryParams;
+	appview: Client;
+	params: AppBskyFeedGetPosts.$params;
 	peek: AppBskyFeedDefs.FeedViewPost | null = null;
 
-	constructor({ agent, feedParams }: { agent: Agent; feedParams: AppBskyFeedGetPosts.QueryParams }) {
-		this.agent = agent;
+	constructor({ appview, feedParams }: { appview: Client; feedParams: AppBskyFeedGetPosts.$params }) {
+		this.appview = appview;
 		if (feedParams.uris.length > 25) {
 			logger.warn(`Too many URIs provided - expected 25, got ${feedParams.uris.length}`);
 		}
@@ -25,17 +26,14 @@ export class PostListFeedAPI implements FeedAPI {
 	}
 
 	async fetch({}: {}): Promise<FeedAPIResponse> {
-		const res = await this.agent.app.bsky.feed.getPosts({
-			...this.params,
-		});
-		if (res.success) {
-			this.peek = { post: res.data.posts[0]! };
-			return {
-				feed: res.data.posts.map((post) => ({ post })),
-			};
-		}
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getPosts', {
+				params: { ...this.params },
+			}),
+		);
+		this.peek = { post: data.posts[0]! };
 		return {
-			feed: [],
+			feed: data.posts.map((post) => ({ post })),
 		};
 	}
 }

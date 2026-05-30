@@ -1,17 +1,10 @@
-import {
-	AppBskyEmbedImages,
-	AppBskyEmbedRecordWithMedia,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	type ModerationCause,
-	type ModerationUI,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 
 import { unique } from '#/lib/moderation';
+import { type ModerationUI } from '#/lib/moderation/compat';
+import { type ModerationCause } from '#/lib/moderation/compat';
 
 import { type AppModerationCause } from '#/components/Pills';
-
-import * as bsky from '#/types/bsky';
 
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 10 };
 export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };
@@ -28,19 +21,14 @@ export function maybeApplyGalleryOffsetStyles(
 		additionalCauses?: ModerationCause[] | AppModerationCause[];
 	},
 ) {
-	if (!bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)) {
-		return;
-	}
+	const record = post.record as AppBskyFeedPost.Main;
 
 	/*
 	 * First check if we even have images
 	 */
-	const embed = post.record.embed;
-	const isImageEmbed =
-		embed && bsky.dangerousIsType<AppBskyEmbedImages.Main>(embed, AppBskyEmbedImages.isMain);
-	const isRecordWithMedia =
-		embed &&
-		bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.Main>(embed, AppBskyEmbedRecordWithMedia.isMain);
+	const embed = record.embed;
+	const isImageEmbed = embed?.$type === 'app.bsky.embed.images';
+	const isRecordWithMedia = embed?.$type === 'app.bsky.embed.recordWithMedia';
 	let hasImages = false;
 	if (isImageEmbed) {
 		// one image, not a gallery
@@ -48,7 +36,7 @@ export function maybeApplyGalleryOffsetStyles(
 		hasImages = true;
 	}
 	if (isRecordWithMedia) {
-		if (bsky.dangerousIsType<AppBskyEmbedImages.Main>(embed.media, AppBskyEmbedImages.isMain)) {
+		if (embed.media.$type === 'app.bsky.embed.images') {
 			// one image, not a gallery
 			if (embed.media.images.length === 1) return;
 		}
@@ -73,7 +61,7 @@ export function maybeApplyGalleryOffsetStyles(
 	/*
 	 * If no text or labels, then we need a lil bump
 	 */
-	const shouldApplyOffset = !post.record.text && !hasLabels;
+	const shouldApplyOffset = !record.text && !hasLabels;
 
 	return shouldApplyOffset
 		? placement === 'meta'

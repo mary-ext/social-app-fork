@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Text as NestedText, View } from 'react-native';
+import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -56,8 +57,8 @@ export type PostInteractionSettingsFormProps = {
 	persist?: boolean;
 	onChangePersist?: (v: boolean) => void;
 
-	postgate: AppBskyFeedPostgate.Record;
-	onChangePostgate: (v: AppBskyFeedPostgate.Record) => void;
+	postgate: AppBskyFeedPostgate.Main;
+	onChangePostgate: (v: AppBskyFeedPostgate.Main) => void;
 
 	threadgateAllowUISettings: ThreadgateAllowUISetting[];
 	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
@@ -145,7 +146,7 @@ export function PostInteractionSettingsDialogControlledInner(props: PostInteract
 	const { mutateAsync: writePostgateRecord } = useWritePostgateMutation();
 	const { mutateAsync: setThreadgateAllow } = useSetThreadgateAllowMutation();
 
-	const [editedPostgate, setEditedPostgate] = useState<AppBskyFeedPostgate.Record>();
+	const [editedPostgate, setEditedPostgate] = useState<AppBskyFeedPostgate.Main>();
 	const [editedAllowUISettings, setEditedAllowUISettings] = useState<ThreadgateAllowUISetting[]>();
 
 	const isLoading = isLoadingThreadgate || isLoadingPostgate;
@@ -155,10 +156,16 @@ export function PostInteractionSettingsDialogControlledInner(props: PostInteract
 	}, [props.rootPostUri, currentAccount?.did]);
 
 	const postgateValue = useMemo(() => {
-		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri });
+		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri as ResourceUri });
 	}, [postgate, editedPostgate, props.postUri]);
 	const allowUIValue = useMemo(() => {
-		return editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView);
+		return (
+			editedAllowUISettings ||
+			// TODO(atcute Phase 2.6): threadgate util is still @atproto-typed
+			threadgateViewToAllowUISetting(
+				threadgateView as unknown as Parameters<typeof threadgateViewToAllowUISetting>[0],
+			)
+		);
 	}, [threadgateView, editedAllowUISettings]);
 
 	const onSave = useCallback(async () => {
@@ -276,7 +283,9 @@ export function PostInteractionSettingsForm({
 			onChangePostgate(
 				createPostgateRecord({
 					...postgate,
-					embeddingRules: enabled ? [] : [embeddingRules.disableRule],
+					embeddingRules: (enabled
+						? []
+						: [embeddingRules.disableRule]) as AppBskyFeedPostgate.Main['embeddingRules'],
 				}),
 			);
 		},

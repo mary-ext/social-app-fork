@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
-import { type AppBskyFeedDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
@@ -192,7 +191,7 @@ type SearchResultSlice =
 	| {
 			type: 'post';
 			key: string;
-			post: AppBskyFeedDefs.PostView;
+			post: AtcAppBskyFeedDefs.PostView;
 	  }
 	| {
 			type: 'loadingMore';
@@ -253,7 +252,8 @@ let SearchScreenPostResults = ({
 			temp.push({
 				type: 'post',
 				key: post.uri,
-				post,
+				// TODO(atcute Phase 2.5): drop cast once search-posts query flips to @atcute
+				post: post as unknown as AtcAppBskyFeedDefs.PostView,
 			});
 			seenUris.add(post.uri);
 		}
@@ -356,7 +356,7 @@ function SearchPost({
 }: {
 	from: SearchResultPressTab;
 	position: number;
-	post: AppBskyFeedDefs.PostView;
+	post: AtcAppBskyFeedDefs.PostView;
 }) {
 	const onBeforePress = useCallback(() => {}, [from, position, post]);
 

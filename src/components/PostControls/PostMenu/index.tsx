@@ -1,11 +1,7 @@
 import { memo, useMemo, useState } from 'react';
 import { type Insets } from 'react-native';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type RichText as RichTextAPI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { type Shadow } from '#/state/cache/post-shadow';
@@ -39,10 +35,10 @@ let PostMenuButton = ({
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
 	big?: boolean;
-	record: AppBskyFeedPost.Record;
+	record: AppBskyFeedPost.Main;
 	richText: RichTextAPI;
 	timestamp: string;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	hitSlop?: Insets;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';

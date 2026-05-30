@@ -1,4 +1,4 @@
-import { type AppBskyFeedGetFeed } from '@atproto/api';
+import { type AppBskyFeedGetFeed } from '@atcute/bluesky';
 import { subDays, subMinutes } from 'date-fns';
 
 const DID = `did:plc:z72i7hdynmk6r22z27h6tvur`;
@@ -197,6 +197,6 @@ export const DEMO_FEED = {
 			},
 		},
 	],
-} satisfies AppBskyFeedGetFeed.OutputSchema;
+} satisfies AppBskyFeedGetFeed.$output;
 
 export const BOTTOM_BAR_AVI = 'https://bsky.social/about/adi/user_avi.jpg';

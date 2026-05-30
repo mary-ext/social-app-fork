@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -155,7 +155,8 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 				/>
 			) : (
 				<List
-					data={posts}
+					// TODO(atcute Phase 2.5): drop cast once search-posts query flips to @atcute
+					data={posts as unknown as AppBskyFeedDefs.PostView[]}
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					refreshing={isPTR}

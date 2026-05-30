@@ -1,38 +1,35 @@
-import { type Agent, type AppBskyFeedDefs, type AppBskyFeedGetListFeed as GetListFeed } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedGetListFeed } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class ListFeedAPI implements FeedAPI {
-	agent: Agent;
-	params: GetListFeed.QueryParams;
+	appview: Client;
+	params: AppBskyFeedGetListFeed.$params;
 
-	constructor({ agent, feedParams }: { agent: Agent; feedParams: GetListFeed.QueryParams }) {
-		this.agent = agent;
+	constructor({ appview, feedParams }: { appview: Client; feedParams: AppBskyFeedGetListFeed.$params }) {
+		this.appview = appview;
 		this.params = feedParams;
 	}
 
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-		const res = await this.agent.app.bsky.feed.getListFeed({
-			...this.params,
-			limit: 1,
-		});
-		return res.data.feed[0]!;
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getListFeed', {
+				params: { ...this.params, limit: 1 },
+			}),
+		);
+		return data.feed[0]!;
 	}
 
 	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
-		const res = await this.agent.app.bsky.feed.getListFeed({
-			...this.params,
-			cursor,
-			limit,
-		});
-		if (res.success) {
-			return {
-				cursor: res.data.cursor,
-				feed: res.data.feed,
-			};
-		}
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getListFeed', {
+				params: { ...this.params, cursor, limit },
+			}),
+		);
 		return {
-			feed: [],
+			cursor: data.cursor,
+			feed: data.feed,
 		};
 	}
 }

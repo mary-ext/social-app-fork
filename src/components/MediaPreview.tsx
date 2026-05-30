@@ -1,5 +1,5 @@
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { isGifEmbed } from '#/lib/strings/embed-player';
@@ -58,7 +58,8 @@ export function Embed({
 		// ignore any unknowns
 		e.media.view !== null
 	) {
-		return <Embed embed={e.media.view} style={style} />;
+		// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
+		return <Embed embed={e.media.view as unknown as AppBskyFeedDefs.PostView['embed']} style={style} />;
 	}
 
 	return null;

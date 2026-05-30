@@ -1,20 +1,20 @@
 import { useMemo, useRef } from 'react';
-import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
+import { type AppBskyFeedDefs as AtcAppBskyFeedDefs, type AppBskyActorDefs } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyActorDefs, AppBskyFeedDefs, moderatePost } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { FeedTuner } from '#/lib/api/feed-manip';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
+import { moderatePost } from '#/lib/moderation/compat';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { type FeedPostSlice, type FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 const RQKEY_ROOT = 'feed-previews';
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds];
@@ -104,7 +104,7 @@ export function useFeedPreviews(
 
 	const uris = feeds.map((feed) => feed.uri);
 	const { t: l } = useLingui();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const userInterests = aggregateUserInterests(preferences);
 	const moderationOpts = useModerationOpts();
@@ -114,7 +114,7 @@ export function useFeedPreviews(
 		new Map<
 			{
 				feed: AtcAppBskyFeedDefs.GeneratorView;
-				posts: AppBskyFeedDefs.FeedViewPost[];
+				posts: AtcAppBskyFeedDefs.FeedViewPost[];
 			},
 			FeedPreviewItem[]
 		>(),
@@ -126,7 +126,7 @@ export function useFeedPreviews(
 		queryFn: async ({ pageParam }) => {
 			const feed = feeds[pageParam]!;
 			const api = new CustomFeedAPI({
-				agent,
+				appview,
 				feedParams: { feed: feed.uri },
 				userInterests,
 			});
@@ -319,13 +319,13 @@ export function useFeedPreviews(
 export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<AtcAppBskyFeedDefs.PostView, undefined> {
 	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<
 		InfiniteData<{
 			feed: AtcAppBskyFeedDefs.GeneratorView;
-			posts: AppBskyFeedDefs.FeedViewPost[];
+			posts: AtcAppBskyFeedDefs.FeedViewPost[];
 		}>
 	>({
 		queryKey: [RQKEY_ROOT],
@@ -345,7 +345,7 @@ export function* findAllPostsInQueryData(
 					yield embedViewRecordToPostView(quotedPost);
 				}
 
-				if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+				if (item.reply?.parent?.$type === 'app.bsky.feed.defs#postView') {
 					if (didOrHandleUriMatches(atUri, item.reply.parent)) {
 						yield item.reply.parent;
 					}
@@ -356,7 +356,7 @@ export function* findAllPostsInQueryData(
 					}
 				}
 
-				if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+				if (item.reply?.root?.$type === 'app.bsky.feed.defs#postView') {
 					if (didOrHandleUriMatches(atUri, item.reply.root)) {
 						yield item.reply.root;
 					}
@@ -378,7 +378,7 @@ export function* findAllProfilesInQueryData(
 	const queryDatas = queryClient.getQueriesData<
 		InfiniteData<{
 			feed: AtcAppBskyFeedDefs.GeneratorView;
-			posts: AppBskyFeedDefs.FeedViewPost[];
+			posts: AtcAppBskyFeedDefs.FeedViewPost[];
 		}>
 	>({
 		queryKey: [RQKEY_ROOT],
@@ -396,10 +396,16 @@ export function* findAllProfilesInQueryData(
 				if (quotedPost?.author.did === did) {
 					yield quotedPost.author;
 				}
-				if (AppBskyFeedDefs.isPostView(item.reply?.parent) && item.reply?.parent?.author.did === did) {
+				if (
+					item.reply?.parent?.$type === 'app.bsky.feed.defs#postView' &&
+					item.reply?.parent?.author.did === did
+				) {
 					yield item.reply.parent.author;
 				}
-				if (AppBskyFeedDefs.isPostView(item.reply?.root) && item.reply?.root?.author.did === did) {
+				if (
+					item.reply?.root?.$type === 'app.bsky.feed.defs#postView' &&
+					item.reply?.root?.author.did === did
+				) {
 					yield item.reply.root.author;
 				}
 			}

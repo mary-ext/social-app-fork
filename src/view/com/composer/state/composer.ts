@@ -1,10 +1,6 @@
-import {
-	type AppBskyActorDefs,
-	type AppBskyDraftDefs,
-	type AppBskyFeedPostgate,
-	AppBskyRichtextFacet,
-	RichText,
-} from '@atproto/api';
+import { type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
+import { type AppBskyActorDefs, type AppBskyDraftDefs, AppBskyRichtextFacet, RichText } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
 
 import { type VideoAsset } from '#/lib/media/video/types';
@@ -85,7 +81,7 @@ export type PostAction =
 
 export type ThreadDraft = {
 	posts: PostDraft[];
-	postgate: AppBskyFeedPostgate.Record;
+	postgate: AppBskyFeedPostgate.Main;
 	threadgate: ThreadgateAllowUISetting[];
 };
 
@@ -107,7 +103,7 @@ export type ComposerState = {
 };
 
 export type ComposerAction =
-	| { type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record }
+	| { type: 'update_postgate'; postgate: AppBskyFeedPostgate.Main }
 	| { type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[] }
 	| {
 			type: 'update_post';
@@ -259,8 +255,8 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				thread: {
 					posts,
 					postgate: createPostgateRecord({
-						post: '',
-						embeddingRules: postgateEmbeddingRules,
+						post: '' as ResourceUri,
+						embeddingRules: postgateEmbeddingRules as AppBskyFeedPostgate.Main['embeddingRules'],
 					}),
 					threadgate: threadgateRecordToAllowUISetting({
 						$type: 'app.bsky.feed.threadgate',
@@ -640,8 +636,9 @@ export function createComposerState({
 				},
 			],
 			postgate: createPostgateRecord({
-				post: '',
-				embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
+				post: '' as ResourceUri,
+				embeddingRules: (initInteractionSettings?.postgateEmbeddingRules ||
+					[]) as AppBskyFeedPostgate.Main['embeddingRules'],
 			}),
 			threadgate: threadgateRecordToAllowUISetting({
 				$type: 'app.bsky.feed.threadgate',

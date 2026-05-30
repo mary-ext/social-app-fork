@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
 import { type $Typed, type AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -155,7 +156,8 @@ function BookmarksInner() {
 			onEndReachedThreshold={4}
 			onItemSeen={(item) => {
 				if (item.type === 'bookmark') {
-					trackPostView(item.bookmark.item);
+					// TODO(atcute Phase 2.6): drop cast once the bookmarks query flips to @atcute
+					trackPostView(item.bookmark.item as unknown as AtcAppBskyFeedDefs.PostView);
 				}
 			}}
 			ListFooterComponent={
@@ -243,7 +245,14 @@ function BookmarkItem({
 	item: Extract<ListItem, { type: 'bookmark' }>;
 	hideTopBorder: boolean;
 }) {
-	return <Post post={item.bookmark.item} hideTopBorder={hideTopBorder} onBeforePress={() => {}} />;
+	return (
+		// TODO(atcute Phase 2.6): drop cast once the bookmarks query flips to @atcute
+		<Post
+			post={item.bookmark.item as unknown as AtcAppBskyFeedDefs.PostView}
+			hideTopBorder={hideTopBorder}
+			onBeforePress={() => {}}
+		/>
+	);
 }
 
 function BookmarksEmpty() {
