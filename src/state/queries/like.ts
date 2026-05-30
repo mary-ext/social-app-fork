@@ -1,22 +1,40 @@
+import { type Cid, type Did, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { createRecord, deleteRecord } from '#/lib/api/records';
+
+import { useClients, useSession } from '#/state/session';
 
 export function useLikeMutation() {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation({
 		mutationFn: async ({ uri, cid }: { uri: string; cid: string }) => {
-			const res = await agent.like(uri, cid);
+			const res = await createRecord(pds!, {
+				collection: 'app.bsky.feed.like',
+				record: {
+					$type: 'app.bsky.feed.like',
+					createdAt: new Date().toISOString(),
+					subject: { cid: cid as Cid, uri: uri as ResourceUri },
+				},
+				repo: currentAccount!.did as Did,
+			});
 			return { uri: res.uri };
 		},
 	});
 }
 
 export function useUnlikeMutation() {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation({
 		mutationFn: async ({ uri }: { uri: string }) => {
-			await agent.deleteLike(uri);
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.feed.like',
+				repo: currentAccount!.did as Did,
+				rkey: parseCanonicalResourceUri(uri).rkey,
+			});
 		},
 	});
 }

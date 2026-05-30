@@ -5,7 +5,7 @@ import {
 	type AppBskyGraphGetFollows,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier, type ResourceUri } from '@atcute/lexicons';
+import { type ActorIdentifier, type Did, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type AppBskyActorGetProfile,
@@ -23,6 +23,7 @@ import {
 } from '@tanstack/react-query';
 
 import { uploadBlob } from '#/lib/api';
+import { createRecord, deleteRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
@@ -349,20 +350,34 @@ function useProfileFollowMutation(
 	_position?: number,
 	_contextProfileDid?: string,
 ) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 
 	return useMutation<{ uri: string; cid: string }, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
-			return await agent.follow(did);
+			return await createRecord(pds!, {
+				collection: 'app.bsky.graph.follow',
+				record: {
+					$type: 'app.bsky.graph.follow',
+					createdAt: new Date().toISOString(),
+					subject: did as Did,
+				},
+				repo: currentAccount!.did as Did,
+			});
 		},
 	});
 }
 
 function useProfileUnfollowMutation(_logContext: ProfileUnfollowLogContext) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<void, Error, { did: string; followUri: string }>({
 		mutationFn: async ({ followUri }) => {
-			return await agent.deleteFollow(followUri);
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.graph.follow',
+				repo: currentAccount!.did as Did,
+				rkey: parseCanonicalResourceUri(followUri).rkey,
+			});
 		},
 	});
 }
@@ -505,17 +520,22 @@ export function useProfileBlockMutationQueue(profile: Shadow<bsky.profile.AnyPro
 
 function useProfileBlockMutation() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: string; cid: string }, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			return await agent.app.bsky.graph.block.create(
-				{ repo: currentAccount.did },
-				{ subject: did, createdAt: new Date().toISOString() },
-			);
+			return await createRecord(pds!, {
+				collection: 'app.bsky.graph.block',
+				record: {
+					$type: 'app.bsky.graph.block',
+					createdAt: new Date().toISOString(),
+					subject: did as Did,
+				},
+				repo: currentAccount.did as Did,
+			});
 		},
 		onSuccess(_, { did }) {
 			void queryClient.invalidateQueries({ queryKey: RQKEY_MY_BLOCKED() });
@@ -526,17 +546,17 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { did: string; blockUri: string }>({
 		mutationFn: async ({ blockUri }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			const { rkey } = parseCanonicalResourceUri(blockUri);
-			await agent.app.bsky.graph.block.delete({
-				repo: currentAccount.did,
-				rkey,
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.graph.block',
+				repo: currentAccount.did as Did,
+				rkey: parseCanonicalResourceUri(blockUri).rkey,
 			});
 		},
 		onSuccess(_, { did }) {

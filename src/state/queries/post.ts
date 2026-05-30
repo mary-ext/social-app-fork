@@ -1,15 +1,16 @@
 import { useCallback } from 'react';
 import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { type Cid, type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { createRecord, deleteRecord } from '#/lib/api/records';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
 import { type Shadow } from '#/state/cache/types';
-import { useAgent, useClients } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
@@ -20,7 +21,6 @@ export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
 export type PostActionLogContext = 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
 
 export function usePostQuery(uri: string | undefined) {
-	const agent = useAgent();
 	const { appview } = useClients();
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
@@ -31,10 +31,12 @@ export function usePostQuery(uri: string | undefined) {
 
 			let repo: string = urip.repo;
 			if (!repo.startsWith('did:')) {
-				const resolved = await agent.resolveHandle({
-					handle: repo,
-				});
-				repo = resolved.data.did;
+				const resolved = await ok(
+					appview.get('com.atproto.identity.resolveHandle', {
+						params: { handle: repo as Handle },
+					}),
+				);
+				repo = resolved.did;
 			}
 
 			const { posts } = await ok(
@@ -58,7 +60,6 @@ export function precachePost(queryClient: QueryClient, uri: string, post: AppBsk
 
 export function useGetPost() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
 	const { appview } = useClients();
 	return useCallback(
 		async ({ uri }: { uri: string }) => {
@@ -69,10 +70,12 @@ export function useGetPost() {
 
 					let repo: string = urip.repo;
 					if (!repo.startsWith('did:')) {
-						const resolved = await agent.resolveHandle({
-							handle: repo,
-						});
-						repo = resolved.data.did;
+						const resolved = await ok(
+							appview.get('com.atproto.identity.resolveHandle', {
+								params: { handle: repo as Handle },
+							}),
+						);
+						repo = resolved.did;
 					}
 
 					const { posts } = await ok(
@@ -89,7 +92,7 @@ export function useGetPost() {
 				},
 			});
 		},
-		[queryClient, agent, appview],
+		[queryClient, appview],
 	);
 }
 
@@ -181,14 +184,24 @@ function usePostLikeMutation(
 	_logContext: PostActionLogContext,
 	_post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<
 		{ uri: string }, // responds with the uri of the like
 		Error,
 		{ uri: string; cid: string; via?: { uri: string; cid: string } } // the post's uri and cid, and the repost uri/cid if present
 	>({
 		mutationFn: ({ uri, cid, via }) => {
-			return agent.like(uri, cid, via);
+			return createRecord(pds!, {
+				collection: 'app.bsky.feed.like',
+				record: {
+					$type: 'app.bsky.feed.like',
+					createdAt: new Date().toISOString(),
+					subject: { cid: cid as Cid, uri: uri as ResourceUri },
+					via: via && { cid: via.cid as Cid, uri: via.uri as ResourceUri },
+				},
+				repo: currentAccount!.did as Did,
+			});
 		},
 	});
 }
@@ -198,10 +211,15 @@ function usePostUnlikeMutation(
 	_logContext: PostActionLogContext,
 	_post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<void, Error, { postUri: string; likeUri: string }>({
 		mutationFn: ({ postUri: _postUri, likeUri }) => {
-			return agent.deleteLike(likeUri);
+			return deleteRecord(pds!, {
+				collection: 'app.bsky.feed.like',
+				repo: currentAccount!.did as Did,
+				rkey: parseCanonicalResourceUri(likeUri).rkey,
+			});
 		},
 	});
 }
@@ -271,14 +289,24 @@ function usePostRepostMutation(
 	_logContext: PostActionLogContext,
 	_post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<
 		{ uri: string }, // responds with the uri of the repost
 		Error,
 		{ uri: string; cid: string; via?: { uri: string; cid: string } } // the post's uri and cid, and the repost uri/cid if present
 	>({
 		mutationFn: ({ uri, cid, via }) => {
-			return agent.repost(uri, cid, via);
+			return createRecord(pds!, {
+				collection: 'app.bsky.feed.repost',
+				record: {
+					$type: 'app.bsky.feed.repost',
+					createdAt: new Date().toISOString(),
+					subject: { cid: cid as Cid, uri: uri as ResourceUri },
+					via: via && { cid: via.cid as Cid, uri: via.uri as ResourceUri },
+				},
+				repo: currentAccount!.did as Did,
+			});
 		},
 	});
 }
@@ -288,20 +316,30 @@ function usePostUnrepostMutation(
 	_logContext: PostActionLogContext,
 	_post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<void, Error, { postUri: string; repostUri: string }>({
 		mutationFn: ({ postUri: _postUri, repostUri }) => {
-			return agent.deleteRepost(repostUri);
+			return deleteRecord(pds!, {
+				collection: 'app.bsky.feed.repost',
+				repo: currentAccount!.did as Did,
+				rkey: parseCanonicalResourceUri(repostUri).rkey,
+			});
 		},
 	});
 }
 
 export function usePostDeleteMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<void, Error, { uri: string }>({
 		mutationFn: async ({ uri }) => {
-			await agent.deletePost(uri);
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.feed.post',
+				repo: currentAccount!.did as Did,
+				rkey: parseCanonicalResourceUri(uri).rkey,
+			});
 		},
 		onSuccess(_, variables) {
 			updatePostShadow(queryClient, variables.uri, { isDeleted: true });
