@@ -331,7 +331,7 @@ msgstr "{count}+ requests"
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/lib/generate-starterpack.ts:105
+#: src/lib/generate-starterpack.ts:106
 #: src/screens/StarterPack/Wizard/index.tsx:165
 msgid "{displayName}'s Starter Pack"
 msgstr ""
@@ -3383,7 +3383,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:107
 #: src/screens/SavedFeeds.tsx:285
 #: src/screens/Search/SearchResults.tsx:72
-#: src/screens/StarterPack/StarterPackScreen.tsx:171
+#: src/screens/StarterPack/StarterPackScreen.tsx:172
 #: src/view/screens/Feeds.tsx:478
 #: src/view/screens/Profile.tsx:234
 #: src/view/shell/desktop/LeftNav.tsx:657
@@ -5840,7 +5840,7 @@ msgstr ""
 
 #: src/screens/ProfileList/index.tsx:153
 #: src/screens/Search/SearchResults.tsx:68
-#: src/screens/StarterPack/StarterPackScreen.tsx:170
+#: src/screens/StarterPack/StarterPackScreen.tsx:171
 msgid "People"
 msgstr ""
 
@@ -6134,7 +6134,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
 #: src/screens/ProfileList/index.tsx:153
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:196
-#: src/screens/StarterPack/StarterPackScreen.tsx:172
+#: src/screens/StarterPack/StarterPackScreen.tsx:173
 #: src/view/screens/Profile.tsx:229
 msgid "Posts"
 msgstr ""
@@ -8011,10 +8011,10 @@ msgstr ""
 msgid "Thank you for your feedback! It has been sent to the feed operator."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:95
 #: src/screens/StarterPack/StarterPackScreen.tsx:96
-#: src/screens/StarterPack/StarterPackScreen.tsx:136
+#: src/screens/StarterPack/StarterPackScreen.tsx:97
 #: src/screens/StarterPack/StarterPackScreen.tsx:137
+#: src/screens/StarterPack/StarterPackScreen.tsx:138
 #: src/screens/StarterPack/Wizard/index.tsx:99
 #: src/screens/StarterPack/Wizard/index.tsx:109
 msgid "That starter pack could not be found."

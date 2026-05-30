@@ -1,78 +1,57 @@
-import {
-	type $Typed,
-	type AppBskyGraphFollow,
-	type AppBskyGraphGetFollows,
-	type ComAtprotoRepoApplyWrites,
-	type ComAtprotoRepoStrongRef,
-} from '@atproto/api';
+import { type ComAtprotoRepoApplyWrites, type ComAtprotoRepoStrongRef } from '@atcute/atproto';
+import { type Client, ok } from '@atcute/client';
+import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { TID } from '@atproto/common-web';
 import chunk from 'lodash.chunk';
 
 import { until } from '#/lib/async/until';
 
-import { type BskyAppAgent } from '#/state/session/agent';
-
 /**
- * creates follow records in chunks and waits until at least one follow indexes.
+ * Creates follow records in chunks and waits until at least one follow indexes.
  *
- * @param agent authenticated agent used to write follow records.
+ * @param clients the appview and pds clients plus the repo did.
  * @param dids actor dids to follow.
  * @param via optional starter-pack reference attached to each follow.
  * @returns a map of followed dids to created follow uris.
- * @throws when the agent has no active session.
  */
 export async function bulkWriteFollows(
-	agent: BskyAppAgent,
+	{ appview, did, pds }: { appview: Client; did: Did; pds: Client },
 	dids: string[],
 	via?: ComAtprotoRepoStrongRef.Main,
 ) {
-	const session = agent.session;
+	const items = dids.map((d) => ({ did: d as Did, rkey: TID.nextStr() }));
 
-	if (!session) {
-		throw new Error(`bulkWriteFollows failed: no session`);
-	}
-
-	const followRecords: $Typed<AppBskyGraphFollow.Record>[] = dids.map((did) => {
-		return {
-			$type: 'app.bsky.graph.follow',
-			subject: did,
-			createdAt: new Date().toISOString(),
-			via,
-		};
-	});
-
-	const followWrites: $Typed<ComAtprotoRepoApplyWrites.Create>[] = followRecords.map((r) => ({
+	const followWrites: ComAtprotoRepoApplyWrites.$input['writes'] = items.map((item) => ({
 		$type: 'com.atproto.repo.applyWrites#create',
 		collection: 'app.bsky.graph.follow',
-		rkey: TID.nextStr(),
-		value: r,
+		rkey: item.rkey,
+		value: {
+			$type: 'app.bsky.graph.follow',
+			createdAt: new Date().toISOString(),
+			subject: item.did,
+			via,
+		},
 	}));
 
 	const chunks = chunk(followWrites, 50);
 	for (const chunk of chunks) {
-		await agent.com.atproto.repo.applyWrites({
-			repo: session.did,
-			writes: chunk,
-		});
+		await ok(pds.post('com.atproto.repo.applyWrites', { input: { repo: did, writes: chunk } }));
 	}
-	await whenFollowsIndexed(agent, session.did, (res) => !!res.data.follows.length);
+	await whenFollowsIndexed(appview, did, (res) => !!res.follows.length);
 
 	const followUris = new Map<string, string>();
-	for (const r of followWrites) {
-		followUris.set(r.value.subject as string, `at://${session.did}/app.bsky.graph.follow/${r.rkey}`);
+	for (const item of items) {
+		followUris.set(item.did, `at://${did}/app.bsky.graph.follow/${item.rkey}`);
 	}
 	return followUris;
 }
 
-async function whenFollowsIndexed(
-	agent: BskyAppAgent,
-	actor: string,
-	fn: (res: AppBskyGraphGetFollows.Response) => boolean,
-) {
+async function whenFollowsIndexed(appview: Client, actor: string, fn: (res: { follows: unknown[] }) => boolean) {
 	await until(5, 1e3, fn, () =>
-		agent.app.bsky.graph.getFollows({
-			actor,
-			limit: 1,
-		}),
+		ok(
+			appview.get('app.bsky.graph.getFollows', {
+				params: { actor: actor as ActorIdentifier, limit: 1 },
+			}),
+		),
 	);
 }

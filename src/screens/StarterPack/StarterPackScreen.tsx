@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { AppBskyGraphDefs as ApiAppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -26,7 +27,7 @@ import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-l
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
-import { useAgent, useClients, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 import { logger } from '#/logger';
@@ -272,8 +273,7 @@ function Header({
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount, hasSession } = useSession();
-	const agent = useAgent();
-	const { appview } = useClients();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 	const setActiveStarterPack = useSetActiveStarterPack();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
@@ -339,9 +339,9 @@ function Header({
 
 		let followUris: Map<string, string>;
 		try {
-			followUris = await bulkWriteFollows(agent, dids, {
-				uri: starterPack.uri,
+			followUris = await bulkWriteFollows({ appview, did: currentAccount!.did as Did, pds: pds! }, dids, {
 				cid: starterPack.cid,
+				uri: starterPack.uri,
 			});
 		} catch (e) {
 			setIsProcessing(false);
