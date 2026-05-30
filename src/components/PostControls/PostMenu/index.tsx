@@ -1,8 +1,9 @@
 import { memo, useMemo, useState } from 'react';
 import { type Insets } from 'react-native';
 import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
-import { type RichText as RichTextAPI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
+
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow } from '#/state/cache/post-shadow';
 
@@ -36,7 +37,7 @@ let PostMenuButton = ({
 	postReqId: string | undefined;
 	big?: boolean;
 	record: AppBskyFeedPost.Main;
-	richText: RichTextAPI;
+	richText: Richtext;
 	timestamp: string;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;

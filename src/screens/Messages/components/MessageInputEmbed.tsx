@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
 import { type AppBskyFeedPost } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
@@ -10,6 +9,7 @@ import { HITSLOP_20 } from '#/lib/constants';
 import { moderatePost } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl, makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -65,18 +65,14 @@ export function useMessageEmbed() {
 }
 
 export function useExtractEmbedFromFacets(message: string, setEmbed: (embedUrl: string | undefined) => void) {
-	const rt = new RichTextAPI({ text: message });
-	rt.detectFacetsWithoutResolution();
+	const rt = detectFacetsWithoutResolution(message);
 
 	let uriFromFacet: string | undefined;
 
 	for (const facet of rt.facets ?? []) {
 		for (const feature of facet.features) {
-			if (
-				feature?.$type === 'app.bsky.richtext.facet#link' &&
-				isBskyPostUrl((feature as { uri: string }).uri)
-			) {
-				uriFromFacet = (feature as { uri: string }).uri;
+			if (feature.$type === 'app.bsky.richtext.facet#link' && isBskyPostUrl(feature.uri)) {
+				uriFromFacet = feature.uri;
 				break;
 			}
 		}
@@ -111,10 +107,7 @@ export function MessageInputEmbed({
 		if (post) {
 			const postRecord = post.record as AppBskyFeedPost.Main;
 			return {
-				rt: new RichTextAPI({
-					text: postRecord.text,
-					facets: postRecord.facets,
-				}),
+				rt: { text: postRecord.text, facets: postRecord.facets ?? [] },
 				record: postRecord,
 			};
 		}

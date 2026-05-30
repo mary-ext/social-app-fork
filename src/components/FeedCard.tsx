@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
 import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextApi } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -155,14 +154,8 @@ export function TitleAndBylinePlaceholder({ creator }: { creator?: boolean }) {
 }
 
 export function Description({ description, ...rest }: { description?: string } & Partial<RichTextProps>) {
-	const rt = useMemo(() => {
-		if (!description) return;
-		const rt = new RichTextApi({ text: description || '' });
-		rt.detectFacetsWithoutResolution();
-		return rt;
-	}, [description]);
-	if (!rt) return null;
-	return <RichText value={rt} disableLinks {...rest} />;
+	if (!description) return null;
+	return <RichText value={description} disableLinks {...rest} />;
 }
 
 export function DescriptionPlaceholder() {

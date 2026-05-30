@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -110,10 +109,10 @@ export function Header({
 	const descriptionRT = useMemo(
 		() =>
 			list.description
-				? new RichTextAPI({
+				? {
 						text: list.description,
-						facets: list.descriptionFacets,
-					})
+						facets: list.descriptionFacets ?? [],
+					}
 				: undefined,
 		[list],
 	);

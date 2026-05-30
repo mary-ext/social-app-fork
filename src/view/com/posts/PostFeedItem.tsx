@@ -7,7 +7,6 @@ import {
 	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { type ReasonFeedSource } from '#/lib/api/feed/types';
@@ -17,6 +16,7 @@ import { usePalette } from '#/lib/hooks/usePalette';
 import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -91,11 +91,10 @@ export function PostFeedItem({
 }): React.ReactNode {
 	const postShadowed = usePostShadow(post);
 	const richText = useMemo(
-		() =>
-			new RichTextAPI({
-				text: record.text,
-				facets: record.facets,
-			}),
+		(): Richtext => ({
+			text: record.text,
+			facets: record.facets,
+		}),
 		[record],
 	);
 	if (postShadowed === POST_TOMBSTONE) {
@@ -148,7 +147,7 @@ let FeedItemInner = ({
 	rootPost,
 	onShowLess,
 }: FeedItemProps & {
-	richText: RichTextAPI;
+	richText: Richtext;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	rootPost: AppBskyFeedDefs.PostView;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
@@ -421,7 +420,7 @@ let PostContent = ({
 	additionalPostAlerts,
 }: {
 	moderation: ModerationDecision;
-	richText: RichTextAPI;
+	richText: Richtext;
 	postEmbed: AppBskyFeedDefs.PostView['embed'];
 	postAuthor: AppBskyFeedDefs.PostView['author'];
 	onOpenEmbed: () => void;

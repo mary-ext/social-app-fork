@@ -162,7 +162,7 @@ function DialogInner({
 
 		// We want to be working with a blank state here, so let's get the
 		// serialized version and turn it back into a RichText
-		const serialized = richTextToString(new RichTextAPI({ text, facets }), false);
+		const serialized = richTextToString({ text, facets }, false);
 
 		const richText = new RichTextAPI({ text: serialized });
 		richText.detectFacetsWithoutResolution();

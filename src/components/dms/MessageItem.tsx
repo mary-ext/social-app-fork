@@ -8,7 +8,6 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type AppBskyRichtextFacet, RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -153,11 +152,7 @@ let MessageItem = ({
 
 	const pendingColor = t.palette.primary_300;
 
-	// TODO(atcute Phase 3.0): drop the facets cast once RichText is migrated to @atcute
-	const rt = new RichTextAPI({
-		text: message.text,
-		facets: message.facets as AppBskyRichtextFacet.Main[] | undefined,
-	});
+	const rt = { text: message.text, facets: message.facets ?? [] };
 
 	const hasEmbedAndText = message.embed?.$type === 'app.bsky.embed.record#view' && rt.text.length > 0;
 

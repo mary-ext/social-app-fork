@@ -8,7 +8,6 @@ import {
 import { ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText } from '@atproto/api';
 import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
@@ -24,6 +23,7 @@ import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { moderateFeedGenerator } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
@@ -50,7 +50,7 @@ export type FeedSourceFeedInfo = {
 	cid: string;
 	avatar: string | undefined;
 	displayName: string;
-	description: RichText;
+	description: Richtext;
 	creatorDid: string;
 	creatorHandle: string;
 	likeCount: number | undefined;
@@ -72,7 +72,7 @@ export type FeedSourceListInfo = {
 	cid: string;
 	avatar: string | undefined;
 	displayName: string;
-	description: RichText;
+	description: Richtext;
 	creatorDid: string;
 	creatorHandle: string;
 	contentMode: undefined;
@@ -113,11 +113,10 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
 			: t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
-		description: new RichText({
+		description: {
 			text: view.description || '',
-			// TODO(atcute Phase 3.0): drop facet cast once RichText flips to @atcute
-			facets: (view.descriptionFacets || [])?.slice() as unknown as RichText['facets'],
-		}),
+			facets: (view.descriptionFacets || []).slice(),
+		},
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
 		likeCount: view.likeCount,
@@ -145,11 +144,10 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		},
 		cid: view.cid,
 		avatar: view.avatar,
-		description: new RichText({
+		description: {
 			text: view.description || '',
-			// TODO(atcute Phase 3.0): drop facet cast once RichText flips to @atcute
-			facets: (view.descriptionFacets || [])?.slice() as unknown as RichText['facets'],
-		}),
+			facets: (view.descriptionFacets || []).slice(),
+		},
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
 		displayName: view.name
@@ -383,7 +381,7 @@ const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
 	},
 	cid: '',
 	avatar: '',
-	description: new RichText({ text: '' }),
+	description: { text: '', facets: [] },
 	creatorDid: '',
 	creatorHandle: '',
 	likeCount: 0,
@@ -485,7 +483,7 @@ export function usePinnedFeedsInfos() {
 						},
 						cid: '',
 						avatar: '',
-						description: new RichText({ text: '' }),
+						description: { text: '', facets: [] },
 						creatorDid: '',
 						creatorHandle: '',
 						likeCount: 0,

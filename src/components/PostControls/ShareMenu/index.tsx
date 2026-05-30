@@ -1,8 +1,9 @@
 import { memo, useMemo, useState } from 'react';
 import { type Insets } from 'react-native';
 import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
-import { type RichText as RichTextAPI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
+
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -32,7 +33,7 @@ let ShareMenuButton = ({
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	big?: boolean;
 	record: AppBskyFeedPost.Main;
-	richText: RichTextAPI;
+	richText: Richtext;
 	timestamp: string;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShare: () => void;

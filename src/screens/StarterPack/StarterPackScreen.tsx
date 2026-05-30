@@ -2,11 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import {
-	AppBskyGraphDefs as ApiAppBskyGraphDefs,
-	AppBskyGraphStarterpack,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { AppBskyGraphDefs as ApiAppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -20,6 +16,7 @@ import { type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
+import { type RichtextFacet } from '#/lib/strings/rich-text-facets';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
@@ -370,10 +367,11 @@ function Header({
 	}
 
 	const richText = record.description
-		? new RichTextAPI({
+		? {
 				text: record.description,
-				facets: record.descriptionFacets,
-			})
+				// TODO(atcute Phase 5.2): starter pack record is still @atproto-validated above
+				facets: (record.descriptionFacets ?? []) as unknown as RichtextFacet[],
+			}
 		: undefined;
 
 	return (

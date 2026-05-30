@@ -1,7 +1,6 @@
 import { memo, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type AppBskyRichtextFacet, RichText } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -55,14 +54,7 @@ export let MessageContextMenu = ({
 	const isFromSelf = message.sender?.did === currentAccount?.did;
 
 	const onCopyMessage = useCallback(() => {
-		// TODO(atcute Phase 3.0): drop the facets cast once RichText is migrated to @atcute
-		const str = richTextToString(
-			new RichText({
-				text: message.text,
-				facets: message.facets as AppBskyRichtextFacet.Main[] | undefined,
-			}),
-			true,
-		);
+		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
 
 		void Clipboard.setStringAsync(str);
 		Toast.show(l`Copied to clipboard`, {

@@ -2,7 +2,6 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
-import { type RichText as RichTextAPI } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
@@ -11,6 +10,7 @@ import { MAX_LABELERS } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { isAppLabeler } from '#/lib/moderation';
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type Shadow } from '#/state/cache/types';
@@ -46,7 +46,7 @@ import { ProfileHeaderShell } from './Shell';
 interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed;
-	descriptionRT: RichTextAPI | null;
+	descriptionRT: Richtext | null;
 	moderationOpts: ModerationOpts;
 	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;

@@ -2,7 +2,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import { type AppBskyActorDefs, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
@@ -10,6 +9,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { moderatePost, type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -54,10 +54,10 @@ export function Post({
 	const richText = useMemo(
 		() =>
 			record
-				? new RichTextAPI({
+				? {
 						text: record.text,
 						facets: record.facets,
-					})
+					}
 				: undefined,
 		[record],
 	);
@@ -97,7 +97,7 @@ function PostInner({
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	record: AppBskyFeedPost.Main;
-	richText: RichTextAPI;
+	richText: Richtext;
 	moderation: ModerationDecision;
 	showReplyLine?: boolean;
 	hideTopBorder?: boolean;

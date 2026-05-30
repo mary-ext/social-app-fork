@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { type $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -239,10 +238,7 @@ export function QuoteEmbed({
 
 	const richText = useMemo(() => {
 		const { text, facets } = quote.record as AppBskyFeedPost.Main;
-		// TODO(atcute Phase 3.0): drop facet cast once RichText flips to @atcute
-		return text.trim()
-			? new RichTextAPI({ text, facets: facets as unknown as RichTextAPI['facets'] })
-			: undefined;
+		return text.trim() ? { text, facets } : undefined;
 	}, [quote.record]);
 
 	const onBeforePress = useCallback(() => {

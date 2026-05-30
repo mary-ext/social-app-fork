@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import {
 	type GestureResponderEvent,
 	type StyleProp,
@@ -6,7 +5,6 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { RichText as RichTextApi } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import { getModerationCauseKey } from '#/lib/moderation';
@@ -353,13 +351,7 @@ export function Description({
 	numberOfLines?: number;
 } & TextStyleProp) {
 	const profile = useProfileShadow(profileUnshadowed);
-	const rt = useMemo(() => {
-		if (!('description' in profile)) return;
-		const rt = new RichTextApi({ text: profile.description || '' });
-		rt.detectFacetsWithoutResolution();
-		return rt;
-	}, [profile]);
-	if (!rt) return null;
+	if (!('description' in profile) || !profile.description) return null;
 	if (
 		profile.viewer &&
 		(profile.viewer.blockedBy || profile.viewer.blocking || profile.viewer.blockingByList)
@@ -367,7 +359,7 @@ export function Description({
 		return null;
 	return (
 		<View style={[a.pt_xs]}>
-			<RichText value={rt} style={style} numberOfLines={numberOfLines} disableLinks />
+			<RichText value={profile.description} style={style} numberOfLines={numberOfLines} disableLinks />
 		</View>
 	);
 }

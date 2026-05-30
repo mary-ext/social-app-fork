@@ -7,13 +7,13 @@ import {
 	type AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { type ThreadItem } from '#/state/queries/usePostThread/types';
@@ -178,12 +178,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	const post = item.value.post;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	const richText = useMemo(
-		() =>
-			new RichTextAPI({
-				text: record.text,
-				facets: record.facets,
-			}),
+	const richText: Richtext = useMemo(
+		() => ({
+			text: record.text,
+			facets: record.facets,
+		}),
 		[record],
 	);
 	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);

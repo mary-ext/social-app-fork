@@ -74,7 +74,7 @@ msgstr ""
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map((g) => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:262
+#: src/components/dms/MessageItem.tsx:257
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
@@ -134,7 +134,7 @@ msgstr ""
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:455
+#: src/screens/StarterPack/StarterPackScreen.tsx:453
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr ""
 
@@ -184,7 +184,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:553
+#: src/components/dms/MessageItem.tsx:548
 msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
@@ -227,7 +227,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:257
+#: src/components/dms/MessageItem.tsx:252
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -277,7 +277,7 @@ msgid "{0}'s avatar"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(profile)
-#: src/components/dms/MessageItem.tsx:197
+#: src/components/dms/MessageItem.tsx:192
 msgid "{0}’s avatar"
 msgstr "{0}’s avatar"
 
@@ -646,28 +646,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:432
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:431
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:420
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:419
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:408
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:407
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:443
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:442
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -989,7 +989,7 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/components/FeedCard.tsx:273
+#: src/components/FeedCard.tsx:266
 msgid "Add this feed to your feeds"
 msgstr ""
 
@@ -1091,7 +1091,7 @@ msgstr ""
 msgid "All {0}"
 msgstr "All {0}"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:365
+#: src/screens/StarterPack/StarterPackScreen.tsx:362
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -1217,8 +1217,8 @@ msgstr ""
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:323
-#: src/screens/StarterPack/StarterPackScreen.tsx:351
+#: src/screens/StarterPack/StarterPackScreen.tsx:320
+#: src/screens/StarterPack/StarterPackScreen.tsx:348
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -1256,8 +1256,8 @@ msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:36
 #: src/components/hooks/useFollowMethods.ts:53
-#: src/components/ProfileCard.tsx:452
-#: src/components/ProfileCard.tsx:474
+#: src/components/ProfileCard.tsx:444
+#: src/components/ProfileCard.tsx:466
 #: src/view/com/notifications/NotificationFeedItem.tsx:683
 #: src/view/com/notifications/NotificationFeedItem.tsx:699
 msgid "An issue occurred, please try again."
@@ -1362,20 +1362,20 @@ msgid "Apply default recommended feeds"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:555
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:554
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:530
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:564
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:529
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:563
 msgid "Archived post"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:172
+#: src/components/dms/MessageContextMenu.tsx:164
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:617
 msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
@@ -1396,7 +1396,7 @@ msgstr ""
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr ""
 
-#: src/components/FeedCard.tsx:308
+#: src/components/FeedCard.tsx:301
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
@@ -1545,7 +1545,7 @@ msgstr ""
 msgid "Block user and/or delete this conversation"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:177
+#: src/components/Post/Embed/index.tsx:176
 msgid "Blocked"
 msgstr ""
 
@@ -1589,7 +1589,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:574
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:573
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1939,7 +1939,7 @@ msgstr "Click here to view the invite link for this group chat"
 msgid "Click to open tag menu for {0}"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:482
+#: src/components/dms/MessageItem.tsx:477
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -2136,7 +2136,7 @@ msgstr ""
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:68
+#: src/components/dms/MessageContextMenu.tsx:60
 #: src/components/PostControls/DiscoverDebug.tsx:28
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:228
 #: src/lib/sharing.ts:17
@@ -2169,7 +2169,7 @@ msgid "Copy DID"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:80
-#: src/screens/StarterPack/StarterPackScreen.tsx:588
+#: src/screens/StarterPack/StarterPackScreen.tsx:586
 msgid "Copy link"
 msgstr ""
 
@@ -2192,12 +2192,12 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:584
+#: src/screens/StarterPack/StarterPackScreen.tsx:582
 msgid "Copy link to starter pack"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:117
-#: src/components/dms/MessageContextMenu.tsx:121
+#: src/components/dms/MessageContextMenu.tsx:109
+#: src/components/dms/MessageContextMenu.tsx:113
 msgid "Copy message text"
 msgstr ""
 
@@ -2219,7 +2219,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:145
+#: src/screens/Messages/components/MessageInputEmbed.tsx:138
 msgid "Could not fetch post"
 msgstr "Could not fetch post"
 
@@ -2278,7 +2278,7 @@ msgstr ""
 msgid "Create a list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:568
+#: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Create a list from this starter pack"
 msgstr ""
 
@@ -2314,7 +2314,7 @@ msgstr "Create group chat"
 msgid "Create list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Create list from members"
 msgstr ""
 
@@ -2400,12 +2400,12 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:173
+#: src/components/dms/MessageContextMenu.tsx:165
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:664
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:228
-#: src/screens/StarterPack/StarterPackScreen.tsx:563
-#: src/screens/StarterPack/StarterPackScreen.tsx:652
-#: src/screens/StarterPack/StarterPackScreen.tsx:729
+#: src/screens/StarterPack/StarterPackScreen.tsx:561
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
+#: src/screens/StarterPack/StarterPackScreen.tsx:727
 msgid "Delete"
 msgstr ""
 
@@ -2429,7 +2429,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:132
+#: src/components/dms/MessageContextMenu.tsx:124
 msgid "Delete for me"
 msgstr ""
 
@@ -2438,11 +2438,11 @@ msgstr ""
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:171
+#: src/components/dms/MessageContextMenu.tsx:163
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:128
+#: src/components/dms/MessageContextMenu.tsx:120
 msgid "Delete message for me"
 msgstr ""
 
@@ -2452,12 +2452,12 @@ msgstr ""
 msgid "Delete post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:556
-#: src/screens/StarterPack/StarterPackScreen.tsx:719
+#: src/screens/StarterPack/StarterPackScreen.tsx:554
+#: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:616
+#: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -2469,7 +2469,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:170
+#: src/components/Post/Embed/index.tsx:169
 msgid "Deleted"
 msgstr ""
 
@@ -2658,7 +2658,7 @@ msgctxt "action"
 msgid "Done"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:395
+#: src/components/dms/MessageItem.tsx:390
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -2737,7 +2737,7 @@ msgstr ""
 
 #: src/screens/Messages/components/EditTextButton.tsx:40
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:220
-#: src/screens/StarterPack/StarterPackScreen.tsx:551
+#: src/screens/StarterPack/StarterPackScreen.tsx:549
 #: src/screens/StarterPack/Wizard/index.tsx:295
 #: src/screens/StarterPack/Wizard/index.tsx:297
 msgid "Edit"
@@ -2827,7 +2827,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:542
+#: src/screens/StarterPack/StarterPackScreen.tsx:540
 msgid "Edit starter pack"
 msgstr ""
 
@@ -3145,7 +3145,7 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:82
+#: src/components/dms/MessageContextMenu.tsx:74
 msgid "Failed to delete message"
 msgstr ""
 
@@ -3153,7 +3153,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:687
+#: src/screens/StarterPack/StarterPackScreen.tsx:685
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -3314,7 +3314,7 @@ msgstr "Failed to unlock group chat"
 msgid "Failed to unpin list"
 msgstr ""
 
-#: src/components/FeedCard.tsx:251
+#: src/components/FeedCard.tsx:244
 msgid "Failed to update feeds"
 msgstr ""
 
@@ -3347,7 +3347,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
-#: src/components/FeedCard.tsx:118
+#: src/components/FeedCard.tsx:117
 #: src/state/queries/feed.ts:115
 #: src/view/com/feeds/FeedSourceCard.tsx:124
 msgid "Feed by {0}"
@@ -3383,7 +3383,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:107
 #: src/screens/SavedFeeds.tsx:285
 #: src/screens/Search/SearchResults.tsx:72
-#: src/screens/StarterPack/StarterPackScreen.tsx:174
+#: src/screens/StarterPack/StarterPackScreen.tsx:171
 #: src/view/screens/Feeds.tsx:478
 #: src/view/screens/Profile.tsx:234
 #: src/view/shell/desktop/LeftNav.tsx:657
@@ -3396,7 +3396,7 @@ msgstr ""
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0>See this guide</0> for more information."
 msgstr ""
 
-#: src/components/FeedCard.tsx:245
+#: src/components/FeedCard.tsx:238
 #: src/screens/SavedFeeds.tsx:87
 #: src/screens/SavedFeeds.tsx:253
 msgctxt "toast"
@@ -3459,7 +3459,7 @@ msgid "Focus the search field"
 msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:490
+#: src/components/ProfileCard.tsx:482
 #: src/components/ProfileHoverCard/index.tsx:464
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/screens/Messages/ConversationSettings/Member.tsx:128
@@ -3485,13 +3485,13 @@ msgstr "Follow {displayName}"
 msgid "Follow account"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:408
-#: src/screens/StarterPack/StarterPackScreen.tsx:417
+#: src/screens/StarterPack/StarterPackScreen.tsx:406
+#: src/screens/StarterPack/StarterPackScreen.tsx:415
 msgid "Follow all"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:486
+#: src/components/ProfileCard.tsx:478
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
 #: src/view/com/notifications/NotificationFeedItem.tsx:742
@@ -3540,7 +3540,7 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:481
+#: src/components/ProfileCard.tsx:473
 #: src/components/ProfileHoverCard/index.tsx:464
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/Navigation.tsx:648
@@ -3560,7 +3560,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:442
+#: src/components/ProfileCard.tsx:434
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
 #: src/view/com/notifications/NotificationFeedItem.tsx:680
 msgid "Following {0}"
@@ -3752,7 +3752,7 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:197
 #: src/screens/Profile/ErrorState.tsx:48
 #: src/screens/Profile/ErrorState.tsx:53
-#: src/screens/StarterPack/StarterPackScreen.tsx:743
+#: src/screens/StarterPack/StarterPackScreen.tsx:741
 #: src/view/screens/NotFound.tsx:44
 msgid "Go Back"
 msgstr ""
@@ -4463,7 +4463,7 @@ msgstr ""
 
 #. placeholder {0}: count || 0
 #. placeholder {0}: feed.likeCount || 0
-#: src/components/FeedCard.tsx:183
+#: src/components/FeedCard.tsx:176
 #: src/view/com/feeds/FeedSourceCard.tsx:140
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
@@ -4490,7 +4490,7 @@ msgstr ""
 msgid "Likes of your reposts notifications"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:430
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:429
 msgid "Likes on this post"
 msgstr ""
 
@@ -4577,13 +4577,13 @@ msgstr ""
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
-#: src/screens/ProfileList/components/Header.tsx:104
+#: src/screens/ProfileList/components/Header.tsx:103
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:116
 msgctxt "toast"
 msgid "List unblocked"
 msgstr ""
 
-#: src/screens/ProfileList/components/Header.tsx:95
+#: src/screens/ProfileList/components/Header.tsx:94
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:107
 msgctxt "toast"
 msgid "List unmuted"
@@ -4808,18 +4808,18 @@ msgstr "Message {displayName}"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:81
+#: src/components/dms/MessageContextMenu.tsx:73
 msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:476
+#: src/components/dms/MessageItem.tsx:471
 msgid "Message failed to send."
 msgstr "Message failed to send."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:92
+#: src/components/dms/MessageContextMenu.tsx:84
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -4840,7 +4840,7 @@ msgstr ""
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
-#: src/components/dms/MessageContextMenu.tsx:91
+#: src/components/dms/MessageContextMenu.tsx:83
 msgid "Message options"
 msgstr ""
 
@@ -4848,11 +4848,11 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:560
+#: src/components/dms/MessageItem.tsx:555
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Messages from this person are hidden while they are blocking you."
 
-#: src/components/dms/MessageItem.tsx:558
+#: src/components/dms/MessageItem.tsx:553
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Messages from this person are hidden while you are blocking them."
 
@@ -5295,7 +5295,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:465
+#: src/components/ProfileCard.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:257
 #: src/view/com/notifications/NotificationFeedItem.tsx:696
 msgid "No longer following {0}"
@@ -5524,8 +5524,8 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:53
 #: src/components/BotAccountAlert.tsx:55
-#: src/components/dms/MessageItem.tsx:564
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:578
+#: src/components/dms/MessageItem.tsx:559
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:577
 msgid "Okay"
 msgstr ""
 
@@ -5647,7 +5647,7 @@ msgstr ""
 msgid "Open pack"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/index.tsx:66
+#: src/components/PostControls/PostMenu/index.tsx:67
 msgid "Open post options menu"
 msgstr ""
 
@@ -5661,11 +5661,11 @@ msgstr ""
 msgid "Open settings"
 msgstr "Open settings"
 
-#: src/components/PostControls/ShareMenu/index.tsx:63
+#: src/components/PostControls/ShareMenu/index.tsx:64
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:527
+#: src/screens/StarterPack/StarterPackScreen.tsx:525
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -5750,7 +5750,7 @@ msgstr ""
 msgid "Opens this draft in the composer"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:198
+#: src/components/dms/MessageItem.tsx:193
 #: src/view/com/notifications/NotificationFeedItem.tsx:901
 #: src/view/com/util/UserAvatar.tsx:527
 msgid "Opens this profile"
@@ -5840,7 +5840,7 @@ msgstr ""
 
 #: src/screens/ProfileList/index.tsx:153
 #: src/screens/Search/SearchResults.tsx:68
-#: src/screens/StarterPack/StarterPackScreen.tsx:173
+#: src/screens/StarterPack/StarterPackScreen.tsx:170
 msgid "People"
 msgstr ""
 
@@ -5899,15 +5899,15 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr ""
 
-#: src/components/FeedCard.tsx:298
+#: src/components/FeedCard.tsx:291
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:462
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:468
 #: src/screens/SavedFeeds.tsx:518
 msgid "Pin feed"
 msgstr ""
 
-#: src/screens/ProfileList/components/Header.tsx:136
-#: src/screens/ProfileList/components/Header.tsx:143
+#: src/screens/ProfileList/components/Header.tsx:135
+#: src/screens/ProfileList/components/Header.tsx:142
 msgid "Pin to home"
 msgstr ""
 
@@ -5935,7 +5935,7 @@ msgstr ""
 msgid "Pinned Feeds"
 msgstr ""
 
-#: src/screens/ProfileList/components/Header.tsx:73
+#: src/screens/ProfileList/components/Header.tsx:72
 msgid "Pinned to your feeds"
 msgstr ""
 
@@ -6134,7 +6134,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
 #: src/screens/ProfileList/index.tsx:153
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:196
-#: src/screens/StarterPack/StarterPackScreen.tsx:175
+#: src/screens/StarterPack/StarterPackScreen.tsx:172
 #: src/view/screens/Profile.tsx:229
 msgid "Posts"
 msgstr ""
@@ -6321,7 +6321,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:418
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:417
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6408,7 +6408,7 @@ msgstr ""
 #: src/components/dialogs/MutedWords.tsx:367
 #: src/components/dialogs/StarterPackDialog.tsx:311
 #: src/components/dialogs/StarterPackDialog.tsx:319
-#: src/components/FeedCard.tsx:310
+#: src/components/FeedCard.tsx:303
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:87
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:95
 #: src/screens/Bookmarks/index.tsx:233
@@ -6458,8 +6458,8 @@ msgstr ""
 msgid "Remove caption file"
 msgstr "Remove caption file"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:171
-#: src/screens/Messages/components/MessageInputEmbed.tsx:218
+#: src/screens/Messages/components/MessageInputEmbed.tsx:164
+#: src/screens/Messages/components/MessageInputEmbed.tsx:211
 msgid "Remove embed"
 msgstr ""
 
@@ -6499,7 +6499,7 @@ msgstr ""
 msgid "Remove from saved posts"
 msgstr ""
 
-#: src/components/FeedCard.tsx:307
+#: src/components/FeedCard.tsx:300
 msgid "Remove from your feeds?"
 msgstr ""
 
@@ -6543,11 +6543,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:196
+#: src/components/Post/Embed/index.tsx:195
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:196
+#: src/components/Post/Embed/index.tsx:195
 msgid "Removed by you"
 msgstr ""
 
@@ -6679,7 +6679,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:142
+#: src/components/dms/MessageContextMenu.tsx:134
 #: src/features/liveNow/components/LiveStatusDialog.tsx:217
 #: src/screens/Messages/ConversationSettings/index.tsx:452
 msgid "Report"
@@ -6713,7 +6713,7 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:138
+#: src/components/dms/MessageContextMenu.tsx:130
 msgid "Report message"
 msgstr ""
 
@@ -6722,8 +6722,8 @@ msgstr ""
 msgid "Report post"
 msgstr ""
 
+#: src/screens/StarterPack/StarterPackScreen.tsx:591
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
-#: src/screens/StarterPack/StarterPackScreen.tsx:595
 msgid "Report starter pack"
 msgstr ""
 
@@ -6781,7 +6781,7 @@ msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:42
 #: src/components/PostControls/RepostButton.tsx:91
-#: src/screens/StarterPack/StarterPackScreen.tsx:522
+#: src/screens/StarterPack/StarterPackScreen.tsx:520
 msgid "Repost or quote post"
 msgstr ""
 
@@ -6804,7 +6804,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:406
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:405
 msgid "Reposts of this post"
 msgstr ""
 
@@ -6865,7 +6865,7 @@ msgstr ""
 
 #: src/components/Error.tsx:72
 #: src/screens/List/ListHiddenScreen.tsx:191
-#: src/screens/StarterPack/StarterPackScreen.tsx:736
+#: src/screens/StarterPack/StarterPackScreen.tsx:734
 msgid "Return to previous page"
 msgstr ""
 
@@ -6960,7 +6960,7 @@ msgid "Saved Posts"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:122
-#: src/screens/ProfileList/components/Header.tsx:82
+#: src/screens/ProfileList/components/Header.tsx:81
 msgid "Saved to your feeds"
 msgstr ""
 
@@ -7300,7 +7300,7 @@ msgid "Send via direct message"
 msgstr ""
 
 #. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:100
+#: src/components/dms/MessageContextMenu.tsx:92
 msgid "Sent at {0}"
 msgstr "Sent at {0}"
 
@@ -7383,7 +7383,7 @@ msgstr ""
 #: src/screens/Hashtag.tsx:112
 #: src/screens/Messages/components/InviteLinkDialog.tsx:342
 #: src/screens/Messages/components/InviteLinkDialog.tsx:350
-#: src/screens/StarterPack/StarterPackScreen.tsx:403
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 #: src/screens/Topic.tsx:83
 msgid "Share"
 msgstr ""
@@ -7415,7 +7415,7 @@ msgstr ""
 msgid "Share this feed"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:395
+#: src/screens/StarterPack/StarterPackScreen.tsx:393
 msgid "Share this starter pack"
 msgstr ""
 
@@ -7531,7 +7531,7 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:531
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:530
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7550,8 +7550,8 @@ msgstr ""
 #: src/components/dialogs/Signin.tsx:193
 #: src/screens/Hashtag.tsx:205
 #: src/screens/Search/SearchResults.tsx:291
-#: src/screens/StarterPack/StarterPackScreen.tsx:435
-#: src/screens/StarterPack/StarterPackScreen.tsx:447
+#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:445
 #: src/view/com/auth/SplashScreen.tsx:89
 #: src/view/com/auth/SplashScreen.tsx:96
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
@@ -7671,7 +7671,7 @@ msgid "Someone left the group"
 msgstr "Someone left the group"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:259
+#: src/components/dms/MessageItem.tsx:254
 msgid "Someone reacted {0}"
 msgstr ""
 
@@ -7805,7 +7805,7 @@ msgstr ""
 msgid "Starter pack by you"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:698
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -7942,7 +7942,7 @@ msgstr ""
 msgid "Tags only"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:522
+#: src/components/dms/MessageItem.tsx:517
 msgid "Tap for details"
 msgstr "Tap for details"
 
@@ -7959,7 +7959,7 @@ msgstr "Tap to remove"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
-#: src/components/dms/MessageItem.tsx:487
+#: src/components/dms/MessageItem.tsx:482
 msgid "Tap to retry"
 msgstr "Tap to retry"
 
@@ -7972,7 +7972,7 @@ msgstr "Tap to show {0} reactions"
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
-#: src/components/dms/MessageItem.tsx:277
+#: src/components/dms/MessageItem.tsx:272
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
@@ -8011,10 +8011,10 @@ msgstr ""
 msgid "Thank you for your feedback! It has been sent to the feed operator."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:99
-#: src/screens/StarterPack/StarterPackScreen.tsx:139
-#: src/screens/StarterPack/StarterPackScreen.tsx:140
+#: src/screens/StarterPack/StarterPackScreen.tsx:95
+#: src/screens/StarterPack/StarterPackScreen.tsx:96
+#: src/screens/StarterPack/StarterPackScreen.tsx:136
+#: src/screens/StarterPack/StarterPackScreen.tsx:137
 #: src/screens/StarterPack/Wizard/index.tsx:99
 #: src/screens/StarterPack/Wizard/index.tsx:109
 msgid "That starter pack could not be found."
@@ -8081,7 +8081,7 @@ msgstr "The selected video is larger than 300 MB. Please try again with a small
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:709
+#: src/screens/StarterPack/StarterPackScreen.tsx:707
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -8099,7 +8099,7 @@ msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "There was a problem loading GIFs. Check your connection and try again."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:164
-#: src/screens/ProfileList/components/Header.tsx:85
+#: src/screens/ProfileList/components/Header.tsx:84
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:70
 #: src/screens/SavedFeeds.tsx:94
 #: src/screens/SavedFeeds.tsx:260
@@ -8166,8 +8166,8 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:62
 #: src/screens/List/ListHiddenScreen.tsx:72
 #: src/screens/List/ListHiddenScreen.tsx:90
-#: src/screens/ProfileList/components/Header.tsx:97
-#: src/screens/ProfileList/components/Header.tsx:106
+#: src/screens/ProfileList/components/Header.tsx:96
+#: src/screens/ProfileList/components/Header.tsx:105
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:109
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:118
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:32
@@ -8355,13 +8355,13 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:520
-#: src/components/dms/MessageItem.tsx:542
+#: src/components/dms/MessageItem.tsx:515
+#: src/components/dms/MessageItem.tsx:537
 msgid "This message is hidden because this user is blocking you."
 msgstr "This message is hidden because this user is blocking you."
 
-#: src/components/dms/MessageItem.tsx:519
-#: src/components/dms/MessageItem.tsx:540
+#: src/components/dms/MessageItem.tsx:514
+#: src/components/dms/MessageItem.tsx:535
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
@@ -8379,7 +8379,7 @@ msgstr "This person is blocking you"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:567
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:566
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -8533,8 +8533,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:109
-#: src/components/dms/MessageContextMenu.tsx:113
+#: src/components/dms/MessageContextMenu.tsx:101
+#: src/components/dms/MessageContextMenu.tsx:105
 #: src/components/Post/Translated/index.tsx:125
 #: src/components/Post/Translated/index.tsx:131
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
@@ -8605,7 +8605,7 @@ msgstr ""
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:636
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Unable to delete"
 msgstr ""
 
@@ -8621,15 +8621,15 @@ msgstr "Unable to start sign in. Please try again."
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:566
+#: src/components/dms/MessageItem.tsx:561
 #: src/components/dms/MessagesListBlockedFooter.tsx:91
 #: src/components/dms/MessagesListBlockedFooter.tsx:99
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:200
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:327
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:382
-#: src/screens/ProfileList/components/Header.tsx:150
-#: src/screens/ProfileList/components/Header.tsx:158
+#: src/screens/ProfileList/components/Header.tsx:149
+#: src/screens/ProfileList/components/Header.tsx:157
 #: src/view/com/profile/ProfileMenu.tsx:483
 msgid "Unblock"
 msgstr ""
@@ -8728,8 +8728,8 @@ msgstr "Unlock chat"
 msgid "Unlock this group chat"
 msgstr "Unlock this group chat"
 
-#: src/screens/ProfileList/components/Header.tsx:165
-#: src/screens/ProfileList/components/Header.tsx:173
+#: src/screens/ProfileList/components/Header.tsx:164
+#: src/screens/ProfileList/components/Header.tsx:172
 msgid "Unmute"
 msgstr ""
 
@@ -8773,12 +8773,12 @@ msgstr ""
 msgid "Unmute video"
 msgstr ""
 
-#: src/screens/ProfileList/components/Header.tsx:136
-#: src/screens/ProfileList/components/Header.tsx:143
+#: src/screens/ProfileList/components/Header.tsx:135
+#: src/screens/ProfileList/components/Header.tsx:142
 msgid "Unpin"
 msgstr ""
 
-#: src/components/FeedCard.tsx:289
+#: src/components/FeedCard.tsx:282
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:462
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:468
 #: src/screens/SavedFeeds.tsx:432
@@ -8805,7 +8805,7 @@ msgstr ""
 msgid "Unpinned {0} from Home"
 msgstr ""
 
-#: src/screens/ProfileList/components/Header.tsx:73
+#: src/screens/ProfileList/components/Header.tsx:72
 msgid "Unpinned from your feeds"
 msgstr ""
 
@@ -8926,7 +8926,7 @@ msgid "User list by {0}"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
-#: src/state/queries/feed.ts:157
+#: src/state/queries/feed.ts:155
 msgid "User List by {0}"
 msgstr ""
 
@@ -9062,7 +9062,7 @@ msgid "View {0}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
-#: src/components/ProfileCard.tsx:132
+#: src/components/ProfileCard.tsx:130
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
@@ -9429,7 +9429,7 @@ msgstr ""
 msgid "Yes GIFs"
 msgstr "Yes GIFs"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:648
+#: src/screens/StarterPack/StarterPackScreen.tsx:646
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -9450,7 +9450,7 @@ msgid "You are a trusted verifier"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:551
+#: src/components/dms/MessageItem.tsx:546
 msgid "You are blocking {0}"
 msgstr "You are blocking {0}"
 
@@ -9680,7 +9680,7 @@ msgid "You must be signed in to submit a report"
 msgstr "You must be signed in to submit a report"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:252
+#: src/components/dms/MessageItem.tsx:247
 msgid "You reacted {0}"
 msgstr ""
 

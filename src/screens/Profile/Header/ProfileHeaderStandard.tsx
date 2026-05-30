@@ -1,13 +1,13 @@
 import { memo, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type RichText as RichTextAPI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useHaptics } from '#/lib/haptics';
 import { moderateProfile, type ModerationDecision, type ModerationOpts } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -43,7 +43,7 @@ import { ProfileHeaderSuggestedFollows } from './SuggestedFollows';
 
 interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	descriptionRT: RichTextAPI | null;
+	descriptionRT: Richtext | null;
 	moderationOpts: ModerationOpts;
 	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;

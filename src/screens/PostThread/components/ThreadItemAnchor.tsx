@@ -7,7 +7,6 @@ import {
 	type AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { RichText as RichTextAPI } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -15,6 +14,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 import { niceDate } from '#/lib/strings/time';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -180,12 +180,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute types
 	const authorShadow = useProfileShadow(post.author as bsky.profile.AnyProfileView);
 	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
-	const richText = useMemo(
-		() =>
-			new RichTextAPI({
-				text: record.text,
-				facets: record.facets,
-			}),
+	const richText: Richtext = useMemo(
+		() => ({
+			text: record.text,
+			facets: record.facets,
+		}),
 		[record],
 	);
 
