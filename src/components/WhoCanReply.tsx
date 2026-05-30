@@ -2,7 +2,6 @@ import { Fragment, useMemo, useRef } from 'react';
 import { Platform, type StyleProp, View, type ViewStyle } from 'react-native';
 import { type AppBskyFeedDefs, AppBskyFeedPost, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyFeedDefs as AppBskyFeedDefsAtproto } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -44,10 +43,7 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 	 */
 	const rootUri = (post.record as AppBskyFeedPost.Main).reply?.root?.uri ?? post.uri;
 	const settings = useMemo(() => {
-		// TODO(atcute Phase 2.6): drop cast once threadgate util flips to @atcute types
-		return threadgateViewToAllowUISetting(
-			post.threadgate as unknown as AppBskyFeedDefsAtproto.ThreadgateView | undefined,
-		);
+		return threadgateViewToAllowUISetting(post.threadgate);
 	}, [post.threadgate]);
 
 	const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({

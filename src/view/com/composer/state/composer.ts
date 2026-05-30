@@ -1,4 +1,4 @@
-import { type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { type ResourceUri } from '@atcute/lexicons';
 import { type AppBskyActorDefs, type AppBskyDraftDefs } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
@@ -264,9 +264,10 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 					}),
 					threadgate: threadgateRecordToAllowUISetting({
 						$type: 'app.bsky.feed.threadgate',
-						post: '',
+						post: '' as ResourceUri,
 						createdAt: new Date().toString(),
-						allow: threadgateAllow,
+						// TODO(atcute Phase 3.2): threadgateAllow comes from @atproto-typed preferences
+						allow: threadgateAllow as AppBskyFeedThreadgate.Main['allow'],
 					}),
 				},
 			};
@@ -634,9 +635,10 @@ export function createComposerState({
 			}),
 			threadgate: threadgateRecordToAllowUISetting({
 				$type: 'app.bsky.feed.threadgate',
-				post: '',
+				post: '' as ResourceUri,
 				createdAt: new Date().toString(),
-				allow: initInteractionSettings?.threadgateAllowRules,
+				// TODO(atcute Phase 3.2): threadgateAllowRules comes from @atproto-typed preferences
+				allow: initInteractionSettings?.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 			}),
 		},
 	};

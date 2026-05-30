@@ -12,7 +12,7 @@ import {
 	type ComAtprotoRepoStrongRef,
 } from '@atproto/api';
 import { TID } from '@atproto/common-web';
-import { type Did } from '@atcute/lexicons';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
 import * as dcbor from '@ipld/dag-cbor';
 import { t } from '@lingui/core/macro';
 import { type QueryClient } from '@tanstack/react-query';
@@ -125,7 +125,7 @@ export async function post(agent: BskyAppAgent, queryClient: QueryClient, opts: 
 				rkey: rkey,
 				value: createThreadgateRecord({
 					createdAt: now.toISOString(),
-					post: uri,
+					post: uri as ResourceUri,
 					allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
 				}),
 			});

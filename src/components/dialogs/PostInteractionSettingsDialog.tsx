@@ -27,7 +27,7 @@ import {
 	useThreadgateViewQuery,
 } from '#/state/queries/threadgate';
 import { PostThreadContextProvider, usePostThreadContext } from '#/state/queries/usePostThread';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -160,11 +160,7 @@ export function PostInteractionSettingsDialogControlledInner(props: PostInteract
 	}, [postgate, editedPostgate, props.postUri]);
 	const allowUIValue = useMemo(() => {
 		return (
-			editedAllowUISettings ||
-			// TODO(atcute Phase 2.6): threadgate util is still @atproto-typed
-			threadgateViewToAllowUISetting(
-				threadgateView as unknown as Parameters<typeof threadgateViewToAllowUISetting>[0],
-			)
+			editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView)
 		);
 	}, [threadgateView, editedAllowUISettings]);
 
@@ -608,7 +604,7 @@ export function usePrefetchPostInteractionSettings({
 	rootPostUri: string;
 }) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const getPost = useGetPost();
 
 	return useCallback(async () => {
@@ -616,7 +612,7 @@ export function usePrefetchPostInteractionSettings({
 			await Promise.all([
 				queryClient.prefetchQuery({
 					queryKey: createPostgateQueryKey(postUri),
-					queryFn: () => getPostgateRecord({ agent, postUri }).then((res) => res ?? null),
+					queryFn: () => getPostgateRecord({ appview, pds: pds!, postUri }).then((res) => res ?? null),
 					staleTime: STALE.SECONDS.THIRTY,
 				}),
 				queryClient.prefetchQuery({
@@ -633,5 +629,5 @@ export function usePrefetchPostInteractionSettings({
 				safeMessage: e instanceof Error ? e.message : String(e),
 			});
 		}
-	}, [queryClient, agent, postUri, rootPostUri, getPost]);
+	}, [queryClient, appview, pds, postUri, rootPostUri, getPost]);
 }

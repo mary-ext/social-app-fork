@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { type StyleProp, type ViewStyle } from 'react-native';
-import { type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { type ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
@@ -77,9 +77,10 @@ export function ThreadgateBtn({
 
 	const prefThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
 		$type: 'app.bsky.feed.threadgate',
-		post: '',
+		post: '' as ResourceUri,
 		createdAt: new Date().toISOString(),
-		allow: preferences?.postInteractionSettings.threadgateAllowRules,
+		// TODO(atcute Phase 3.2): threadgateAllowRules comes from @atproto-typed preferences
+		allow: preferences?.postInteractionSettings.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 	});
 	const prefPostgate = createPostgateRecord({
 		post: '' as ResourceUri,
