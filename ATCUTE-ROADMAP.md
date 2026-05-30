@@ -198,13 +198,15 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `src/state/queries/preferences/agent.ts`, built directly on `app.bsky.actor.getPreferences` /
   `putPreferences` over the **`pds`** client (the AppView-namespaced, PDS-implemented exception).
   `getPreferences` ports the full `@atproto/api` derivation — narrowing the raw `@atcute` preference
-  union by `$type` (a `prefGuard` `Extract` factory) instead of `predicate.isValid*`, with the legacy
-  saved-feed V1→V2 migration and legacy-label remap kept verbatim. `updatePreferences` is a
+  union by `$type` (a `prefGuard` `Extract` factory) instead of `predicate.isValid*`, with the
+  legacy-label remap kept verbatim. The saved-feed V1→V2 migration and V1 double-write are dropped
+  (this fork assumes a `savedFeedsPrefV2` already exists), which also removed the read-path write
+  behind the oracle's stale-read finding. `updatePreferences` is a
   read-modify-write serialized by a promise-chain mutex (`withPrefsLock`, replacing `@atproto`'s
   `AwaitLock`); mutators rebuild the pref array immutably (`upsertPref` spreads rather than
   `Array.concat`, which mis-resolves on the union element type) and route every entry through `pds`.
   Ported mutators: content-label (+ legacy `graphic-media`/`porn`/`sexual` double-write),
-  adult-content, saved-feeds (overwrite/add/remove/update with the V1↔V2 double-write), muted words
+  adult-content, saved-feeds (overwrite/add/remove/update, V2-only), muted words
   (`upsertMutedWords` batched into one write; update/remove splice the **first** match per target),
   feed/thread-view, interests, personal details, `setPostInteractionSettings` (deferred from 3.1),
   verification, and clear. Consumers migrated to `useClients().pds`: `preferences/index.ts` hooks,
@@ -215,8 +217,8 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   (`configureLabelers`) is preserved explicitly in the query hook. **Pruned:** the two nudge mutators
   / `useQueueNudgesMutation` / `useDismissNudgesMutation` — dead in this fork (zero callers,
   `bskyAppState` read nowhere). **Reviewed:** an oracle adversarial pass flagged batched muted-word
-  removal dropping all value-duplicates (fixed to splice-first-per-target, matching upstream) and the
-  saved-feed migration "stale read" race (kept — faithful to upstream, not a regression).
+  removal dropping all value-duplicates (fixed to splice-first-per-target, matching upstream) and a
+  saved-feed migration "stale read" race (mooted — the migration was subsequently dropped).
   **Verified live** against a real account: saved feeds, content filters, adult-content/age-gating,
   verification prefs, and the empty muted-words list all render correctly; a muted-word add→reload→
   remove→reload round-trip persisted and reverted cleanly (the only write path exercised — fully
