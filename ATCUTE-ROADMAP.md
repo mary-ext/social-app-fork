@@ -194,6 +194,14 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
   call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
   stay on `parseResourceUri`.
+- **Phase 5.1 — done.** `@atproto/syntax` is fully removed from `src`. The `AtUri` call sites had
+  already moved to `@atcute/lexicons/syntax` in an earlier commit; the last holdout was
+  `parseLanguageString` in the composer's reply-language suggestion, now a local
+  `getPrimaryLanguageSubtag` over `Intl.Locale(...).language` (BCP-47 primary subtag, `undefined` on
+  parse failure). `TID` stays on `@atproto/common-web` — `@atcute/tid` isn't installed, and the
+  roadmap only migrates it "if it exists". One residual `new AtUri` remains in a **commented-out**
+  block in `TrendingTopics.tsx` (the disabled at:// profile/feed-topic path; its live union type already
+  uses the migrated `ParsedCanonicalResourceUri`) — left intact as intentionally-disabled code.
 - **Phase 3.3 — done.** Profile writes are off `@atproto/api`'s `BskyAgent` and onto the `pds` client.
   `profile.ts` gains a fork-owned `upsertProfile(pds, did, updateFn)` mirroring `BskyAgent.upsertProfile`:
   `getRecord` the own `app.bsky.actor.profile` record (rkey `self`) → merge → `putRecord` with
