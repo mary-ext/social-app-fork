@@ -263,9 +263,7 @@ export function useSetThreadgateAllowMutation() {
 				1e3, // 1s delay between tries
 			).catch(() => {});
 
-			// TODO(atcute Phase 2.5): thread query cache still @atproto-typed
-			if (data)
-				updatePostThreadThreadgate(data as unknown as import('@atproto/api').AppBskyFeedDefs.ThreadgateView);
+			if (data) updatePostThreadThreadgate(data);
 
 			queryClient.invalidateQueries({
 				queryKey: [threadgateRecordQueryKeyRoot],

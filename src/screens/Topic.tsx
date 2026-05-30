@@ -155,7 +155,7 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 				/>
 			) : (
 				<List
-					// TODO(atcute Phase 2.5): drop cast once search-posts query flips to @atcute
+					// TODO(atcute Phase 2.6): drop cast once search-posts query flips to @atcute
 					data={posts as unknown as AppBskyFeedDefs.PostView[]}
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}

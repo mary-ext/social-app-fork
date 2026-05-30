@@ -5347,7 +5347,7 @@ msgstr ""
 msgid "No posts yet"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:90
+#: src/view/com/post-thread/PostQuotes.tsx:89
 msgid "No quotes yet"
 msgstr ""
 
@@ -5415,7 +5415,7 @@ msgstr ""
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:91
+#: src/view/com/post-thread/PostQuotes.tsx:90
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr ""
 
@@ -6031,7 +6031,7 @@ msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:475
+#: src/screens/PostThread/index.tsx:467
 msgctxt "description"
 msgid "Post"
 msgstr ""
@@ -8020,7 +8020,7 @@ msgstr ""
 msgid "That starter pack could not be found."
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:117
+#: src/view/com/post-thread/PostQuotes.tsx:115
 msgid "That's all, folks!"
 msgstr ""
 

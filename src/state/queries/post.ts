@@ -21,6 +21,7 @@ export type PostActionLogContext = 'FeedItem' | 'PostThreadItem' | 'Post' | 'Imm
 
 export function usePostQuery(uri: string | undefined) {
 	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery<AppBskyFeedDefs.PostView>({
 		queryKey: RQKEY(uri || ''),
 		queryFn: async () => {
@@ -36,11 +37,13 @@ export function usePostQuery(uri: string | undefined) {
 				repo = resolved.data.did;
 			}
 
-			const res = await agent.getPosts({
-				uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
-			});
-			if (res.success && res.data.posts[0]) {
-				return res.data.posts[0] as unknown as AppBskyFeedDefs.PostView;
+			const { posts } = await ok(
+				appview.get('app.bsky.feed.getPosts', {
+					params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}` as ResourceUri] },
+				}),
+			);
+			if (posts[0]) {
+				return posts[0];
 			}
 
 			throw new Error('No data');
@@ -56,6 +59,7 @@ export function precachePost(queryClient: QueryClient, uri: string, post: AppBsk
 export function useGetPost() {
 	const queryClient = useQueryClient();
 	const agent = useAgent();
+	const { appview } = useClients();
 	return useCallback(
 		async ({ uri }: { uri: string }) => {
 			return queryClient.fetchQuery({
@@ -71,43 +75,42 @@ export function useGetPost() {
 						repo = resolved.data.did;
 					}
 
-					const res = await agent.getPosts({
-						uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
-					});
+					const { posts } = await ok(
+						appview.get('app.bsky.feed.getPosts', {
+							params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}` as ResourceUri] },
+						}),
+					);
 
-					if (res.success && res.data.posts[0]) {
-						return res.data.posts[0] as unknown as AppBskyFeedDefs.PostView;
+					if (posts[0]) {
+						return posts[0];
 					}
 
 					throw new Error('useGetPost: post not found');
 				},
 			});
 		},
-		[queryClient, agent],
+		[queryClient, agent, appview],
 	);
 }
 
 export function useGetPosts() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useCallback(
 		async ({ uris }: { uris: string[] }) => {
 			return queryClient.fetchQuery({
 				queryKey: RQKEY(uris.join(',') || ''),
 				async queryFn() {
-					const res = await agent.getPosts({
-						uris,
-					});
-
-					if (res.success) {
-						return res.data.posts;
-					} else {
-						throw new Error('useGetPosts failed');
-					}
+					const { posts } = await ok(
+						appview.get('app.bsky.feed.getPosts', {
+							params: { uris: uris as ResourceUri[] },
+						}),
+					);
+					return posts;
 				},
 			});
 		},
-		[queryClient, agent],
+		[queryClient, appview],
 	);
 }
 

@@ -17,7 +17,7 @@ export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisable
 
 	const view = useMemo(() => {
 		if (!data || data.type !== 'record' || data.kind !== 'post') return;
-		// TODO(atcute Phase 2.5): drop cast once resolve-link flips to @atcute types
+		// TODO(atcute Phase 3.1): drop cast once resolve-link flips to @atcute types (entangled with composer publish path)
 		return createEmbedViewRecordFromPost(data.view as unknown as AppBskyFeedDefs.PostView);
 	}, [data]);
 

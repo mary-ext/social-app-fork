@@ -55,8 +55,7 @@ export function PostQuotes({ uri }: { uri: string }) {
 					if (!moderationOpts) {
 						return null;
 					}
-					// TODO(atcute Phase 2.5): drop cast once quotes flip to @atcute
-					const moderation = moderatePost(post as unknown as AppBskyFeedDefs.PostView, moderationOpts);
+					const moderation = moderatePost(post, moderationOpts);
 					return { post, record: post.record as AppBskyFeedPost.Main, moderation };
 				}),
 			)
@@ -99,8 +98,7 @@ export function PostQuotes({ uri }: { uri: string }) {
 	// =
 	return (
 		<List
-			// TODO(atcute Phase 2.5): drop cast once quotes flip to @atcute
-			data={quotes as unknown as { post: AppBskyFeedDefs.PostView }[]}
+			data={quotes}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}

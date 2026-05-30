@@ -1,14 +1,13 @@
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
-	type $Typed,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	type AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	moderatePost,
-	type ModerationOpts,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type $type } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
+import { moderatePost, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 
 import {
@@ -70,7 +69,7 @@ export function threadPost({
 }: {
 	uri: string;
 	depth: number;
-	value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>;
+	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
 	moderationOpts: ModerationOpts;
 	threadgateHiddenReplies: Set<string>;
 }): Extract<ThreadItem, { type: 'threadPost' }> {
@@ -93,7 +92,7 @@ export function threadPost({
 			 * equality reference checks.
 			 */
 			post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
-				record: AppBskyFeedPost.Record;
+				record: AppBskyFeedPost.Main;
 			},
 		},
 		isBlurred,
@@ -142,9 +141,9 @@ export function skeleton({
 	};
 }
 
-export function postViewToThreadPlaceholder(post: AppBskyFeedDefs.PostView): $Typed<
+export function postViewToThreadPlaceholder(post: AppBskyFeedDefs.PostView): $type.enforce<
 	Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-		value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>;
+		value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
 	}
 > {
 	return {

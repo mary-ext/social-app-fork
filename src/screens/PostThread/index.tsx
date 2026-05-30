@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions, View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type AppBskyActorDefs, type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type ResourceUri } from '@atcute/lexicons';
 import { Trans } from '@lingui/react/macro';
 
@@ -85,7 +85,11 @@ export function PostThread({ uri }: { uri: string }) {
 		if (payload) {
 			const { replyToUri, posts } = payload;
 			if (replyToUri && posts.length) {
-				thread.actions.insertReplies(replyToUri, posts);
+				// TODO(atcute Phase 3.1): composer still yields @atproto thread items
+				thread.actions.insertReplies(
+					replyToUri,
+					posts as unknown as AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
+				);
 			}
 		}
 	});
@@ -354,10 +358,7 @@ export function PostThread({ uri }: { uri: string }) {
 					return (
 						<ThreadItemPost
 							item={item}
-							// TODO(atcute Phase 2.5): drop cast once the thread query flips to @atcute
-							threadgateRecord={
-								thread.data.threadgate?.record as unknown as AppBskyFeedThreadgate.Main | undefined
-							}
+							threadgateRecord={thread.data.threadgate?.record}
 							overrides={{
 								topBorder: index === 0,
 							}}
@@ -388,10 +389,7 @@ export function PostThread({ uri }: { uri: string }) {
 							/>
 							<ThreadItemAnchor
 								item={item}
-								// TODO(atcute Phase 2.5): drop cast once the thread query flips to @atcute
-								threadgateRecord={
-									thread.data.threadgate?.record as unknown as AppBskyFeedThreadgate.Main | undefined
-								}
+								threadgateRecord={thread.data.threadgate?.record}
 								onPostSuccess={optimisticOnPostReply}
 								postSource={anchorPostSource}
 							/>
@@ -402,10 +400,7 @@ export function PostThread({ uri }: { uri: string }) {
 						return (
 							<ThreadItemTreePost
 								item={item}
-								// TODO(atcute Phase 2.5): drop cast once the thread query flips to @atcute
-								threadgateRecord={
-									thread.data.threadgate?.record as unknown as AppBskyFeedThreadgate.Main | undefined
-								}
+								threadgateRecord={thread.data.threadgate?.record}
 								overrides={{
 									moderation: thread.state.otherItemsVisible && item.depth > 0,
 								}}
@@ -416,10 +411,7 @@ export function PostThread({ uri }: { uri: string }) {
 						return (
 							<ThreadItemPost
 								item={item}
-								// TODO(atcute Phase 2.5): drop cast once the thread query flips to @atcute
-								threadgateRecord={
-									thread.data.threadgate?.record as unknown as AppBskyFeedThreadgate.Main | undefined
-								}
+								threadgateRecord={thread.data.threadgate?.record}
 								overrides={{
 									moderation: thread.state.otherItemsVisible && item.depth > 0,
 								}}
@@ -500,8 +492,7 @@ export function PostThread({ uri }: { uri: string }) {
 					onItemSeen={(item) => {
 						// Track post:view for parent posts and replies (non-anchor posts)
 						if (item.type === 'threadPost' && item.depth !== 0) {
-							// TODO(atcute Phase 2.5): drop cast once the thread query flips to @atcute
-							trackThreadItemView(item.value.post as unknown as AppBskyFeedDefs.PostView);
+							trackThreadItemView(item.value.post);
 						}
 					}}
 					/** NATIVE ONLY {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition} */

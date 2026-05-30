@@ -5,8 +5,9 @@ import {
 	type AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadOtherV2,
 	type AppBskyUnspeccedGetPostThreadV2,
-	type ModerationDecision,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+
+import { type ModerationDecision } from '#/lib/moderation/compat';
 
 export type ApiThreadItem =
 	| AppBskyUnspeccedGetPostThreadV2.ThreadItem
@@ -17,12 +18,12 @@ export const postThreadQueryKeyRoot = 'post-thread-v2' as const;
 export const createPostThreadQueryKey = (props: PostThreadParams) => [postThreadQueryKeyRoot, props] as const;
 
 export const createPostThreadOtherQueryKey = (
-	props: Omit<AppBskyUnspeccedGetPostThreadOtherV2.QueryParams, 'anchor'> & {
+	props: Omit<AppBskyUnspeccedGetPostThreadOtherV2.$params, 'anchor'> & {
 		anchor?: string;
 	},
 ) => [postThreadQueryKeyRoot, 'other', props] as const;
 
-export type PostThreadParams = Pick<AppBskyUnspeccedGetPostThreadV2.QueryParams, 'sort'> & {
+export type PostThreadParams = Pick<AppBskyUnspeccedGetPostThreadV2.$params, 'sort'> & {
 	anchor?: string;
 	view: 'tree' | 'linear';
 };
@@ -31,7 +32,7 @@ export type UsePostThreadQueryResult = {
 	hasOtherReplies: boolean;
 	thread: AppBskyUnspeccedGetPostThreadV2.ThreadItem[];
 	threadgate?: Omit<AppBskyFeedDefs.ThreadgateView, 'record'> & {
-		record: AppBskyFeedThreadgate.Record;
+		record: AppBskyFeedThreadgate.Main;
 	};
 };
 
@@ -43,7 +44,7 @@ export type ThreadItem =
 			depth: number;
 			value: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
 				post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
-					record: AppBskyFeedPost.Record;
+					record: AppBskyFeedPost.Main;
 				};
 			};
 			isBlurred: boolean;

@@ -121,7 +121,7 @@ export function* findAllPostsInQueryData(
 				if (!bsky.dangerousIsType<AppBskyFeedDefs.PostView>(bookmark.item, AppBskyFeedDefs.isPostView))
 					continue;
 
-				// TODO(atcute Phase 2.5): drop casts once bookmarks flip to @atcute
+				// TODO(atcute Phase 2.6): drop casts once bookmarks flip to @atcute
 				if (didOrHandleUriMatches(atUri, bookmark.item as unknown as AppBskyFeedDefsAtcute.PostView)) {
 					yield bookmark.item;
 				}

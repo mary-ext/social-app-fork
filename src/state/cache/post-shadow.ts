@@ -167,16 +167,14 @@ function* findPostsInCache(queryClient: QueryClient, uri: string): Generator<App
 		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 	for (let post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
-		// TODO(atcute Phase 2.5): generator still yields @atproto PostView until its phase migrates
-		yield post as unknown as AppBskyFeedDefs.PostView;
+		yield post;
 	}
 	for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
 		// TODO(atcute Phase 2.6): generator still yields @atproto PostView until its phase migrates
 		yield post as unknown as AppBskyFeedDefs.PostView;
 	}
 	for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-		// TODO(atcute Phase 2.5): generator still yields @atproto PostView until its phase migrates
-		yield post as unknown as AppBskyFeedDefs.PostView;
+		yield post;
 	}
 	for (let post of findAllPostsInExploreFeedPreviewsQueryData(queryClient, uri)) {
 		yield post;

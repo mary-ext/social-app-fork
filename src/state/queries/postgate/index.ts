@@ -208,8 +208,7 @@ export function useToggleQuoteDetachmentMutation() {
 					updatePostShadow(queryClient, post.uri, {
 						embed: createMaybeDetachedQuoteEmbed({
 							post,
-							// TODO(atcute Phase 2.5): useGetPosts not yet migrated
-							quote: quote! as unknown as AppBskyFeedDefs.PostView,
+							quote: quote!,
 							quoteUri: undefined,
 							detached: false,
 						}),

@@ -160,6 +160,19 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `loggedOutFetch` lang cache-bust (accepted regression) and the dead `asPostRecord` helper.
   Deferred (still on `@atproto/api`): `resolveLink`, the composer publish path (`lib/api/index`),
   bookmarks reads, and the `src/types/bsky` validation layer.
+- **Phase 2.5 — done.** Posts and threads. The thread hub
+  (`app.bsky.unspecced.getPostThreadV2` / `getPostThreadOtherV2` + its node union) and the post
+  reads (`post.ts` `getPosts`, `post-quotes`) moved to the `appview` client. Thread node narrowing
+  is now `$type`-based (`AppBskyUnspeccedDefs.is*ThreadItem*` → `value.$type === '...'`); `$Typed` →
+  `$type.enforce`; record reads inline-cast to `.Main` (no `dangerousIsType`/`validate`). Removed the
+  `TODO(atcute Phase 2.5)` seam casts in the thread query cache, thread components, post-shadow,
+  quotes, and postgate. Markers whose true data source migrates later were relabeled: search-posts
+  consumers (`Hashtag` / `Topic` / `SearchResults`) and bookmarks → 2.6; `resolveLink` /
+  `LazyQuoteEmbed` → 3.1. **Deferred:** `resolveLink` (`src/lib/api/resolve.ts`) stays on
+  `@atproto/api` — its `fetchResolveLinkQuery` consumer is the composer publish path
+  (`lib/api/index.ts`, 3.1), so the appview-client signature change rides with 3.1, not 2.5.
+  `post-interaction-settings.ts` (a `setPostInteractionSettings` write) and the threadgate/postgate
+  record-write helpers stay on `@atproto/api` until Stream 3.
 - **Phase 2.6 (partial) — done.** Labeler reads + notification-settings read; the rest of 2.6 still
   depends on `PostView`.
 - **Stream 4 — done.** Phases 4.1 (chat client), 4.2 (video upload), 4.3 (moderation reporting) all
@@ -176,8 +189,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   now go through `appview.post(...)` (server-side procedures, not records — routed to `appview`
   per the routing table). Void-output procedures require `as: null`. Toggle helpers, composer, and
   Germ declaration still pending.
-- Next: **Phase 2.5** (posts and threads) — begin by removing the `TODO(atcute Phase 2.5)` seam
-  casts the 2.4 flip left in the thread query cache and thread components.
+- Next: **Phase 2.6** (notifications, activity subscriptions, and search) — the last read hubs.
+  Re-grep scope: `notifications/`, `activity-subscriptions.ts`, `actor-search.ts`, `search-posts.ts`,
+  `labeler.ts`, `bookmarks/` reads. The `TODO(atcute Phase 2.6)` markers in `Hashtag` / `Topic` /
+  `SearchResults` (search-posts) and the thread placeholder fan-out (notifs / search / bookmarks)
+  drop once those sources flip.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
