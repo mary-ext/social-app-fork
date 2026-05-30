@@ -150,8 +150,16 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   produce profile views, pulled forward as part of the same hub).
 - **Phase 2.3 — done.** Lists and starter packs (incl. `post-reposted-by`, pulled forward as a
   profile-producing read).
-- **Phase 2.4 (partial) — done.** Generator-view slice (both commits); `PostView`/`FeedViewPost`
-  flip still pending.
+- **Phase 2.4 — done.** Generator-view slice plus the `PostView`/`FeedViewPost` flip (one large
+  commit). Because `PostView` is shared through the post-shadow cache and the shared render
+  components, the flip can't stay inside 2.4's file set; it uses a seam-cast approach — 2.5/2.6/3.1
+  consumer files (thread, notifications, search, quotes, bookmarks, composer) keep their
+  `@atproto` data path and are bridged with `as unknown as` casts marked
+  `TODO(atcute Phase 2.5/2.6/3.1)`, removed when each phase migrates. The nine `src/lib/api/feed/**`
+  classes moved off `BskyAppAgent` onto the `appview` client. Dropped the custom-feed
+  `loggedOutFetch` lang cache-bust (accepted regression) and the dead `asPostRecord` helper.
+  Deferred (still on `@atproto/api`): `resolveLink`, the composer publish path (`lib/api/index`),
+  bookmarks reads, and the `src/types/bsky` validation layer.
 - **Phase 2.6 (partial) — done.** Labeler reads + notification-settings read; the rest of 2.6 still
   depends on `PostView`.
 - **Stream 4 — done.** Phases 4.1 (chat client), 4.2 (video upload), 4.3 (moderation reporting) all
@@ -168,11 +176,17 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   now go through `appview.post(...)` (server-side procedures, not records — routed to `appview`
   per the routing table). Void-output procedures require `as: null`. Toggle helpers, composer, and
   Germ declaration still pending.
-- Next: finish **Phase 2.4** (`PostView`/`FeedViewPost`).
+- Next: **Phase 2.5** (posts and threads) — begin by removing the `TODO(atcute Phase 2.5)` seam
+  casts the 2.4 flip left in the thread query cache and thread components.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
 not possible through an OAuth client). Both are already reflected in the phase text above.
+
+The `*_PROXY_AUDIENCE` envs must be **quoted** in `.env` (`"did:web:…#service"`): dotenv strips an
+unquoted inline `#…` as a comment, which silently dropped the service id from the `atproto-proxy`
+header until `fix: quote proxy-audience env values…`. Any future `#service` audience env needs the
+same quoting.
 
 ## Conventions
 
