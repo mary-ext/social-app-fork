@@ -2588,8 +2588,8 @@ msgstr ""
 msgid "Discard post?"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:229
-#: src/screens/Profile/components/GermButton.tsx:237
+#: src/screens/Profile/components/GermButton.tsx:231
+#: src/screens/Profile/components/GermButton.tsx:239
 msgid "Disconnect Germ DM"
 msgstr ""
 
@@ -3162,7 +3162,7 @@ msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
 #. placeholder {0}: error?.message
-#: src/screens/Profile/components/GermButton.tsx:175
+#: src/screens/Profile/components/GermButton.tsx:177
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
@@ -3257,7 +3257,7 @@ msgstr "Failed to mute group chat"
 msgid "Failed to pin post"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:146
+#: src/screens/Profile/components/GermButton.tsx:148
 msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
@@ -3646,21 +3646,21 @@ msgstr "Generate new invite link"
 msgid "Generate new link"
 msgstr "Generate new link"
 
-#: src/screens/Profile/components/GermButton.tsx:76
-#: src/screens/Profile/components/GermButton.tsx:197
+#: src/screens/Profile/components/GermButton.tsx:78
+#: src/screens/Profile/components/GermButton.tsx:199
 msgid "Germ DM"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:163
+#: src/screens/Profile/components/GermButton.tsx:165
 msgid "Germ DM disconnected"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:202
-#: src/screens/Profile/components/GermButton.tsx:206
+#: src/screens/Profile/components/GermButton.tsx:204
+#: src/screens/Profile/components/GermButton.tsx:208
 msgid "Germ DM Link"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:143
+#: src/screens/Profile/components/GermButton.tsx:145
 msgid "Germ DM reconnected"
 msgstr ""
 
@@ -3821,8 +3821,8 @@ msgstr ""
 msgid "Going live is currently disabled for your account"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:219
-#: src/screens/Profile/components/GermButton.tsx:225
+#: src/screens/Profile/components/GermButton.tsx:221
+#: src/screens/Profile/components/GermButton.tsx:227
 msgid "Got it"
 msgstr ""
 
@@ -4372,7 +4372,7 @@ msgstr ""
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:189
+#: src/screens/Profile/components/GermButton.tsx:191
 msgid "Learn more about your Germ DM link"
 msgstr ""
 
@@ -5621,7 +5621,7 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:71
+#: src/screens/Profile/components/GermButton.tsx:73
 msgid "Open Germ DM"
 msgstr ""
 
@@ -8236,7 +8236,7 @@ msgstr ""
 msgid "This author has chosen to make their posts visible only to people who are signed in."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:211
+#: src/screens/Profile/components/GermButton.tsx:213
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr ""
 
@@ -8661,8 +8661,8 @@ msgstr ""
 msgid "Unblock list"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:166
-#: src/screens/Profile/components/GermButton.tsx:167
+#: src/screens/Profile/components/GermButton.tsx:168
+#: src/screens/Profile/components/GermButton.tsx:169
 msgid "Undo"
 msgstr ""
 
