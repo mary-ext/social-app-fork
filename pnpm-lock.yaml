@@ -19,11 +19,11 @@ importers:
   .:
     dependencies:
       '@atcute/atproto':
-        specifier: 4.0.0
-        version: 4.0.0(@atcute/lexicons@2.0.0)
+        specifier: 4.0.1
+        version: 4.0.1(@atcute/lexicons@2.0.0)
       '@atcute/bluesky':
-        specifier: 4.0.2
-        version: 4.0.2(@atcute/lexicons@2.0.0)
+        specifier: 4.0.3
+        version: 4.0.3(@atcute/lexicons@2.0.0)
       '@atcute/bluesky-richtext-builder':
         specifier: ^4.0.0
         version: 4.0.0(@atcute/lexicons@2.0.0)
@@ -33,6 +33,12 @@ importers:
       '@atcute/bluesky-richtext-segmenter':
         specifier: ^3.0.0
         version: 3.0.0
+      '@atcute/cbor':
+        specifier: ^2.3.3
+        version: 2.3.3(@atcute/cid@2.4.1)
+      '@atcute/cid':
+        specifier: ^2.4.1
+        version: 2.4.1
       '@atcute/client':
         specifier: ^5.0.0
         version: 5.0.0(@atcute/lexicons@2.0.0)(typescript@6.0.3)
@@ -351,6 +357,11 @@ packages:
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
+  '@atcute/atproto@4.0.1':
+    resolution: {integrity: sha512-Ys6SPfsWkSw8+txpF/Ei2r2gUSBtGbo9IVtkgic5skP7cW8+DwMq3DXmGqtNvbr+w2GQU3+J5NG73f82lNcbww==}
+    peerDependencies:
+      '@atcute/lexicons': ^2.0.0
+
   '@atcute/bluesky-richtext-builder@4.0.0':
     resolution: {integrity: sha512-iUcbnbjQd1POHbDMDXS2dD14YVgl8cSjm+o/MCYORCKcF9nzL4rpEu4g5sr5uNiZc3aJ4hvvOKHvzOqzoB1KyQ==}
     peerDependencies:
@@ -366,6 +377,19 @@ packages:
     resolution: {integrity: sha512-CWe4P/FYfY1CQ4GUYyOVGDqDJ/VvtaG6T4Jtaep0ur8IwUpUTVWoiwM9qDp1EA8NWsb4y+KcdcOm8CZD0tMMwg==}
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
+
+  '@atcute/bluesky@4.0.3':
+    resolution: {integrity: sha512-82DKs9Htf9my/QCNmnxODYnK9xYn/6iHBJcy8CeSgKA3LmIQpeqdjnCjrwcchUUFRw3kbUal8RdycaTqjUs/kQ==}
+    peerDependencies:
+      '@atcute/lexicons': ^2.0.0
+
+  '@atcute/cbor@2.3.3':
+    resolution: {integrity: sha512-zZ4nHOK837zTMWJtta35YD7pcukrTzDc8jkpIGlSgoDYzu3l4BX3WVgpPJtRn3K6h2v97uyiWfiVjSpM7JSFzQ==}
+    peerDependencies:
+      '@atcute/cid': ^2.0.0
+
+  '@atcute/cid@2.4.1':
+    resolution: {integrity: sha512-bwhna69RCv7yetXudtj+2qrMPYvhhIQqvJz6YUpUS98v7OdF3X2dnye9Nig2NDrklZcuyOsu7sQo7GOykJXRLQ==}
 
   '@atcute/client@5.0.0':
     resolution: {integrity: sha512-Dtrc1no1oAtpUTmkBxH0xKSgy8qcnk8orPf/PkEATW+MB3k8FPHtPH2fshiKd55rioZkb+xaN+7A29WtqPQHRA==}
@@ -5374,6 +5398,10 @@ snapshots:
     dependencies:
       '@atcute/lexicons': 2.0.0
 
+  '@atcute/atproto@4.0.1(@atcute/lexicons@2.0.0)':
+    dependencies:
+      '@atcute/lexicons': 2.0.0
+
   '@atcute/bluesky-richtext-builder@4.0.0(@atcute/lexicons@2.0.0)':
     dependencies:
       '@atcute/bluesky': 4.0.2(@atcute/lexicons@2.0.0)
@@ -5388,6 +5416,22 @@ snapshots:
     dependencies:
       '@atcute/atproto': 4.0.0(@atcute/lexicons@2.0.0)
       '@atcute/lexicons': 2.0.0
+
+  '@atcute/bluesky@4.0.3(@atcute/lexicons@2.0.0)':
+    dependencies:
+      '@atcute/atproto': 4.0.0(@atcute/lexicons@2.0.0)
+      '@atcute/lexicons': 2.0.0
+
+  '@atcute/cbor@2.3.3(@atcute/cid@2.4.1)':
+    dependencies:
+      '@atcute/cid': 2.4.1
+      '@atcute/multibase': 1.2.0
+      '@atcute/uint8array': 1.1.2
+
+  '@atcute/cid@2.4.1':
+    dependencies:
+      '@atcute/multibase': 1.2.0
+      '@atcute/uint8array': 1.1.2
 
   '@atcute/client@5.0.0(@atcute/lexicons@2.0.0)(typescript@6.0.3)':
     dependencies:

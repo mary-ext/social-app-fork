@@ -12,7 +12,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
-import { uploadBlob } from '#/lib/api';
 import { until } from '#/lib/async/until';
 
 import { type ImageMeta } from '#/state/gallery';
@@ -75,7 +74,7 @@ export function useListCreateMutation() {
 				createdAt: new Date().toISOString(),
 			};
 			if (avatar) {
-				const blobRes = await uploadBlob(agent, avatar.blob);
+				const blobRes = await agent.uploadBlob(avatar.blob, { encoding: avatar.blob.type });
 				record.avatar = blobRes.data.blob;
 			}
 			const res = await agent.app.bsky.graph.list.create(
@@ -132,7 +131,7 @@ export function useListMetadataMutation() {
 			record.description = description;
 			record.descriptionFacets = descriptionFacets;
 			if (avatar) {
-				const blobRes = await uploadBlob(agent, avatar.blob);
+				const blobRes = await agent.uploadBlob(avatar.blob, { encoding: avatar.blob.type });
 				record.avatar = blobRes.data.blob;
 			} else if (avatar === null) {
 				record.avatar = undefined;

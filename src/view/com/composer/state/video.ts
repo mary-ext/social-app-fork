@@ -1,9 +1,10 @@
 import { type AppBskyVideoDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type BlobRef } from '@atproto/api';
+import { type Blob as AtpBlob } from '@atcute/lexicons';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
+import { uploadBlob } from '#/lib/api/upload-blob';
 import { AbortError } from '#/lib/async/cancelable';
 import { LOCAL_DEV_SERVICE } from '#/lib/constants';
 import { compressVideo } from '#/lib/media/video/compress';
@@ -36,7 +37,7 @@ export type VideoAction =
 	| { type: 'to_error'; error: string; signal: AbortSignal }
 	| {
 			type: 'to_done';
-			blobRef: BlobRef;
+			blobRef: AtpBlob;
 			signal: AbortSignal;
 	  }
 	| { type: 'update_progress'; progress: number; signal: AbortSignal }
@@ -130,7 +131,7 @@ type DoneState = {
 	asset: VideoAsset;
 	video: CompressedVideo;
 	jobId?: undefined;
-	pendingPublish: { blobRef: BlobRef };
+	pendingPublish: { blobRef: AtpBlob };
 	altText: string;
 	captions: CaptionsTrack[];
 };
@@ -269,7 +270,7 @@ export async function processVideo(
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
 		if (agent.serviceUrl.toString().startsWith(LOCAL_DEV_SERVICE)) {
-			const blobRef = await uploadVideoBlobDirectly(agent, video, signal);
+			const blobRef = await uploadVideoBlobDirectly(pds, video, signal);
 			dispatch({
 				type: 'to_done',
 				blobRef,
@@ -324,14 +325,15 @@ export async function processVideo(
 		}
 
 		let status: AppBskyVideoDefs.JobStatus | undefined;
-		let blob: BlobRef | undefined;
+		let blob: AtpBlob | undefined;
 		try {
 			const response = await ok(videoClient.get('app.bsky.video.getJobStatus', { params: { jobId } }));
 			status = response.jobStatus;
 			pollFailures = 0;
 
 			if (status.state === 'JOB_STATE_COMPLETED') {
-				blob = status.blob as unknown as BlobRef;
+				// The video service returns a modern blob ref; legacy blobs don't occur here.
+				blob = status.blob as AtpBlob | undefined;
 				if (!blob) {
 					throw new Error('Job completed, but did not return a blob');
 				}
@@ -380,19 +382,15 @@ export async function processVideo(
 }
 
 async function uploadVideoBlobDirectly(
-	agent: BskyAppAgent,
+	pds: Client,
 	video: CompressedVideo,
 	signal: AbortSignal,
-): Promise<BlobRef> {
+): Promise<AtpBlob> {
 	if (signal.aborted) {
 		throw new AbortError();
 	}
 
-	const { data } = await agent.uploadBlob(video.blob, {
-		encoding: video.mimeType,
-	});
-
-	return data.blob;
+	return uploadBlob(pds, video.blob, video.mimeType);
 }
 
 function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {

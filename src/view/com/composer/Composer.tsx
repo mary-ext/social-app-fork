@@ -23,6 +23,7 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	AppBskyDraftCreateDraft,
@@ -177,7 +178,7 @@ export const ComposePost = ({
 	const { currentAccount } = useSession();
 	const t = useTheme();
 	const agent = useAgent();
-	const { pds } = useClients();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const { closeComposer } = useComposerControls();
@@ -716,7 +717,7 @@ export const ComposePost = ({
 		try {
 			logger.info(`composer: posting...`);
 			postUri = (
-				await apilib.post(agent, queryClient, {
+				await apilib.post({ appview, did: currentDid as Did, pds: pds! }, queryClient, {
 					thread: filteredThread,
 					replyTo: replyTo?.uri,
 					onStateChange: setPublishingStage,

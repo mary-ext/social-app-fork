@@ -12,7 +12,7 @@ import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 
 import { type ComposerImage } from '#/state/gallery';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
-import { createPublicAgent } from '#/state/session/agent';
+import { getClients } from '#/state/session';
 
 import { type ComposerState, type EmbedDraft, type PostDraft } from '#/view/com/composer/state/composer';
 import { type VideoState } from '#/view/com/composer/state/video';
@@ -120,7 +120,7 @@ async function postDraftToServerPost(
 
 	// Add quote record embed
 	if (post.embed.quote) {
-		const resolved = await resolveLink(createPublicAgent(), post.embed.quote.uri);
+		const resolved = await resolveLink(getClients().appview, post.embed.quote.uri);
 		if (resolved && resolved.type === 'record') {
 			draftPost.embedRecords = [
 				{

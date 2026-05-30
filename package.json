@@ -19,11 +19,13 @@
 		"nuke": "rm -rf ./node_modules ./web-build"
 	},
 	"dependencies": {
-		"@atcute/atproto": "4.0.0",
-		"@atcute/bluesky": "4.0.2",
+		"@atcute/atproto": "4.0.1",
+		"@atcute/bluesky": "4.0.3",
 		"@atcute/bluesky-richtext-builder": "^4.0.0",
 		"@atcute/bluesky-richtext-parser": "^2.1.1",
 		"@atcute/bluesky-richtext-segmenter": "^3.0.0",
+		"@atcute/cbor": "^2.3.3",
+		"@atcute/cid": "^2.4.1",
 		"@atcute/client": "^5.0.0",
 		"@atcute/germ": "1.0.0",
 		"@atcute/identity-resolver": "^2.0.0",

@@ -1,10 +1,10 @@
+import { type Client } from '@atcute/client';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { type ResolvedLink, resolveGif, resolveLink } from '#/lib/api/resolve';
 
 import { STALE } from '#/state/queries/index';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients } from '#/state/session';
 
 import { type Gif } from '#/features/gifPicker/types';
 
@@ -15,22 +15,22 @@ export const RQKEY_GIF_ROOT = 'resolve-gif';
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url];
 
 export function useResolveLinkQuery(url: string) {
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useQuery({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_LINK(url),
 		queryFn: async () => {
-			return await resolveLink(agent, url);
+			return await resolveLink(appview, url);
 		},
 	});
 }
-export function fetchResolveLinkQuery(queryClient: QueryClient, agent: BskyAppAgent, url: string) {
+export function fetchResolveLinkQuery(queryClient: QueryClient, appview: Client, url: string) {
 	return queryClient.fetchQuery({
 		staleTime: STALE.HOURS.ONE,
 		queryKey: RQKEY_LINK(url),
 		queryFn: async () => {
-			return await resolveLink(agent, url);
+			return await resolveLink(appview, url);
 		},
 	});
 }

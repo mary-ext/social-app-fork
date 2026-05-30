@@ -1,10 +1,8 @@
+import { type ComAtprotoRepoStrongRef } from '@atcute/atproto';
+import { type AppBskyEmbedExternal, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type Handle, type ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import {
-	type AppBskyEmbedExternal,
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type ComAtprotoRepoStrongRef,
-} from '@atproto/api';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link';
@@ -23,7 +21,6 @@ import {
 
 import { type ComposerImage } from '#/state/gallery';
 import { createComposerImage } from '#/state/gallery';
-import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type Gif } from '#/features/gifPicker/types';
 
@@ -84,7 +81,7 @@ export class EmbeddingDisabledError extends Error {
 	}
 }
 
-export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<ResolvedLink> {
+export async function resolveLink(appview: Client, uri: string): Promise<ResolvedLink> {
 	if (isShortLink(uri)) {
 		uri = await resolveShortLink(uri);
 	}
@@ -111,15 +108,17 @@ export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<Res
 		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [string, string, string, string];
 		const did = await fetchDid(handleOrDid);
 		const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey);
-		const res = await agent.app.bsky.feed.getFeedGenerator({ feed });
+		const res = await ok(
+			appview.get('app.bsky.feed.getFeedGenerator', { params: { feed: feed as ResourceUri } }),
+		);
 		return {
 			type: 'record',
 			record: {
-				uri: res.data.view.uri,
-				cid: res.data.view.cid,
+				uri: res.view.uri,
+				cid: res.view.cid,
 			},
 			kind: 'feed',
-			view: res.data.view,
+			view: res.view,
 		};
 	}
 	if (isBskyListUrl(uri)) {
@@ -127,15 +126,15 @@ export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<Res
 		const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean) as [string, string, string, string];
 		const did = await fetchDid(handleOrDid);
 		const list = makeRecordUri(did, 'app.bsky.graph.list', rkey);
-		const res = await agent.app.bsky.graph.getList({ list });
+		const res = await ok(appview.get('app.bsky.graph.getList', { params: { list: list as ResourceUri } }));
 		return {
 			type: 'record',
 			record: {
-				uri: res.data.list.uri,
-				cid: res.data.list.cid,
+				uri: res.list.uri,
+				cid: res.list.cid,
 			},
 			kind: 'list',
-			view: res.data.list,
+			view: res.list,
 		};
 	}
 	if (isBskyStartUrl(uri) || isBskyStarterPackUrl(uri)) {
@@ -145,15 +144,19 @@ export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<Res
 		}
 		const did = await fetchDid(parsed.name);
 		const starterPack = createStarterPackUri({ did, rkey: parsed.rkey });
-		const res = await agent.app.bsky.graph.getStarterPack({ starterPack });
+		const res = await ok(
+			appview.get('app.bsky.graph.getStarterPack', {
+				params: { starterPack: starterPack as ResourceUri },
+			}),
+		);
 		return {
 			type: 'record',
 			record: {
-				uri: res.data.starterPack.uri,
-				cid: res.data.starterPack.cid,
+				uri: res.starterPack.uri,
+				cid: res.starterPack.cid,
 			},
 			kind: 'starter-pack',
-			view: res.data.starterPack,
+			view: res.starterPack,
 		};
 	}
 
@@ -162,16 +165,18 @@ export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<Res
 		const urip = parseResourceUri(uri);
 		let repo: string = urip.repo;
 		if (!repo.startsWith('did:')) {
-			const res = await agent.resolveHandle({
-				handle: repo,
-			});
-			repo = res.data.did;
+			const res = await ok(
+				appview.get('com.atproto.identity.resolveHandle', { params: { handle: repo as Handle } }),
+			);
+			repo = res.did;
 		}
-		const res = await agent.getPosts({
-			uris: [`at://${repo}/${urip.collection}/${urip.rkey}`],
-		});
-		if (res.success && res.data.posts[0]) {
-			return res.data.posts[0];
+		const res = await ok(
+			appview.get('app.bsky.feed.getPosts', {
+				params: { uris: [`at://${repo}/${urip.collection}/${urip.rkey}` as ResourceUri] },
+			}),
+		);
+		if (res.posts[0]) {
+			return res.posts[0];
 		}
 		throw new Error('getPost: post not found');
 	}
@@ -180,8 +185,10 @@ export async function resolveLink(agent: BskyAppAgent, uri: string): Promise<Res
 	async function fetchDid(handleOrDid: string) {
 		let identifier = handleOrDid;
 		if (!identifier.startsWith('did:')) {
-			const res = await agent.resolveHandle({ handle: identifier });
-			identifier = res.data.did;
+			const res = await ok(
+				appview.get('com.atproto.identity.resolveHandle', { params: { handle: identifier as Handle } }),
+			);
+			identifier = res.did;
 		}
 		return identifier;
 	}

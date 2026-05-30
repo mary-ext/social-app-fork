@@ -12,6 +12,8 @@ import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { type VideoAsset } from '#/lib/media/video/types';
 import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
+import { type ResolvedLink } from '#/lib/api/resolve';
+
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
 import * as Toast from '#/components/Toast';
@@ -80,8 +82,9 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 						cid: opts.quote.cid,
 						uri: opts.quote.uri,
 					},
+					// TODO(atcute Phase 5.x): the composer quote ref is still @atproto-typed
 					view: opts.quote,
-				});
+				} as unknown as ResolvedLink);
 			}
 		}
 		const author = opts.replyTo?.author || opts.quote?.author;

@@ -88,16 +88,18 @@ export const ExternalEmbedLink = ({
 	const linkComponent = useMemo(() => {
 		if (data) {
 			if (data.type === 'external') {
-				if (data.view && isStandardSiteEmbed(data.view.external)) {
+				// TODO(atcute Phase 5.x): StandardSiteEmbed is still @atproto-typed
+				const external = data.view?.external as unknown as Parameters<typeof isStandardSiteEmbed>[0];
+				if (external && isStandardSiteEmbed(external)) {
 					return (
 						<StandardSiteEmbed
 							hideSubscribe
 							view={{
-								...data.view.external,
-								title: data.view.external.title || data.title || uri,
+								...external,
+								title: external.title || data.title || uri,
 								uri,
-								description: data.view.external.description || data.description,
-								thumb: data.view.external.thumb || thumbUrl,
+								description: external.description || data.description,
+								thumb: external.thumb || thumbUrl,
 							}}
 						/>
 					);
@@ -118,10 +120,11 @@ export const ExternalEmbedLink = ({
 					<ModeratedFeedEmbed
 						embed={{
 							type: 'feed',
+							// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
 							view: {
 								$type: 'app.bsky.feed.defs#generatorView',
 								...data.view,
-							},
+							} as unknown as bsky.post.EmbedType<'feed'>['view'],
 						}}
 					/>
 				);
@@ -130,15 +133,16 @@ export const ExternalEmbedLink = ({
 					<ModeratedListEmbed
 						embed={{
 							type: 'list',
+							// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
 							view: {
 								$type: 'app.bsky.graph.defs#listView',
 								...data.view,
-							},
+							} as unknown as bsky.post.EmbedType<'list'>['view'],
 						}}
 					/>
 				);
 			} else if (data.kind === 'starter-pack') {
-				// TODO(atcute Phase 2.1/5.1): drop cast once resolveLink flips to @atcute types
+				// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
 				return <StarterPackEmbed starterPack={data.view as unknown as bsky.starterPack.AnyStarterPackView} />;
 			}
 		}

@@ -22,7 +22,6 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { uploadBlob } from '#/lib/api';
 import { createRecord, deleteRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
@@ -161,11 +160,15 @@ export function useProfileUpdateMutation() {
 		mutationFn: async ({ profile, updates, newUserAvatar, newUserBanner, checkCommitted }) => {
 			let newUserAvatarPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
 			if (newUserAvatar) {
-				newUserAvatarPromise = uploadBlob(agent, newUserAvatar.blob);
+				newUserAvatarPromise = agent.uploadBlob(newUserAvatar.blob, {
+					encoding: newUserAvatar.blob.type,
+				});
 			}
 			let newUserBannerPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
 			if (newUserBanner) {
-				newUserBannerPromise = uploadBlob(agent, newUserBanner.blob);
+				newUserBannerPromise = agent.uploadBlob(newUserBanner.blob, {
+					encoding: newUserBanner.blob.type,
+				});
 			}
 			await agent.upsertProfile(async (existing) => {
 				let next: Un$Typed<AppBskyActorProfile.Record> = existing || {};

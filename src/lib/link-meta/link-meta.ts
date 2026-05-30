@@ -1,4 +1,4 @@
-import { type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { LINK_META_PROXY } from '#/lib/constants';
 import { getGiphyMetaUri } from '#/lib/strings/embed-player';

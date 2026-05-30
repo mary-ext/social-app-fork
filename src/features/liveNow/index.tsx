@@ -12,7 +12,6 @@ import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAfter, parseISO } from 'date-fns';
 
-import { uploadBlob } from '#/lib/api';
 import { imageToThumb } from '#/lib/api/resolve';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 import { moderateStatus } from '#/lib/moderation/compat';
@@ -217,7 +216,9 @@ export function useUpsertLiveStatusMutation(
 					try {
 						const img = await imageToThumb(linkMeta.image);
 						if (img) {
-							const blob = await uploadBlob(agent, img.source.blob);
+							const blob = await agent.uploadBlob(img.source.blob, {
+								encoding: img.source.blob.type,
+							});
 							thumb = blob.data.blob;
 						}
 					} catch (e) {
