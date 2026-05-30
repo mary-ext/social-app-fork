@@ -3,29 +3,23 @@
 import { useCallback, useRef, useState, useSyncExternalStore } from 'react';
 import { type TextInput } from 'react-native';
 
-import * as defaultFacets from './facets';
 import {
 	type TapperActiveFacet,
 	type TapperConfig,
 	type TapperEvents,
+	type TapperFacetType,
 	type TapperNode,
 	type TapperSelection,
 	type TapperSnapshot,
 } from './types';
-import {
-	type CompiledFacetRegexes,
-	compileFacetRegexes,
-	deriveTriggers,
-	detectActiveFacet,
-	nodeToFacet,
-	parseNodesFromText,
-} from './util';
+import { buildTriggers, detectActiveFacet, nodeToFacet, parseNodesFromText } from './util';
 
-export * as facets from './facets';
 export * from './types';
 
+const ALL_FACETS: TapperFacetType[] = ['emoji', 'mention', 'tag', 'url'];
+
 export class Tapper {
-	private facetRegexes: CompiledFacetRegexes;
+	private enabledFacets: Set<TapperFacetType>;
 	private triggers: Map<string, string>;
 
 	// Event emitters
@@ -46,9 +40,8 @@ export class Tapper {
 	private snapshot: TapperSnapshot;
 
 	constructor(config?: TapperConfig) {
-		const facets = config?.facets || defaultFacets;
-		this.facetRegexes = compileFacetRegexes(facets);
-		this.triggers = deriveTriggers(facets);
+		this.enabledFacets = new Set(config?.facets ?? ALL_FACETS);
+		this.triggers = buildTriggers(this.enabledFacets);
 		this.snapshot = {
 			text: this.text,
 			selection: this.selection,
@@ -116,7 +109,7 @@ export class Tapper {
 		const nodes =
 			newText === this.text
 				? this.nodes
-				: parseNodesFromText(newText, this.facetRegexes, this.nodes, cursor, this.triggers);
+				: parseNodesFromText(newText, this.enabledFacets, this.nodes, cursor, this.triggers);
 		const prev = this.activeFacet;
 		const detected = isRange || commitAll ? null : detectActiveFacet(nodes, newText, cursor, this.triggers);
 
@@ -238,7 +231,7 @@ export class Tapper {
 
 	replaceText = (text: string, cursor?: number) => {
 		const prevActive = this.activeFacet;
-		const nodes = parseNodesFromText(text, this.facetRegexes);
+		const nodes = parseNodesFromText(text, this.enabledFacets);
 		// Mark all non-text nodes as committed (pre-existing facets)
 		const newlyCommitted: TapperNode[] = [];
 		for (const node of nodes) {
