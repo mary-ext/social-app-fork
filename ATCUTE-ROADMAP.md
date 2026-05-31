@@ -343,18 +343,32 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
   completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
-- Next: Stream 4, Phases 5.1, 5.2, and 5.3 (moderation island) are all done — `@atproto/api` is down to
-  11 importers: the bounded `src/lib/moderation/**` island, `src/state/session/agent.ts`, and three
-  composer thread-context files. Two threads remain before **Stream 6** (`6.1` partial `@atproto/api`
-  removal: delete the `BskyAgent` compat layer):
-  1. **Migrate the composer's thread-context read** — `app.bsky.unspecced.getPostThreadV2` in
-     `Composer.tsx` (and its `shell/composer` / `PostControls` consumers) still goes through `useAgent`;
-     moving it to the `appview` client clears the last three non-island `@atproto/api` importers and
-     finishes Phase 2.5/3.1's deferred composer read.
-  2. **Decouple moderation from `BskyAppAgent`** — `session/moderation.ts` / `preferences/index.ts`
-     still call `agent.configureLabelersHeader` / `agent.configureLabelers` / `agent.resolveHandle`; these
-     get rewritten onto clients as part of Stream 6 (which deletes the agent).
-  The moderation engine (Appendix A) stays deferred — `@atproto/api` survives in the island until then.
+- **Composer thread-context read — done (finishes Phase 2.5/3.1's deferred read).** The composer's
+  `app.bsky.unspecced.getPostThreadV2` post-publish polling — the "wait for the AppView" retry in
+  `Composer.tsx` and the `whenAppViewReady` quote-count poll — moved off `useAgent`/`BskyAppAgent` onto
+  the `appview` client (`ok(appview.get(...))` returning `$output` directly, so the `.data.thread`
+  unwrap is gone and `whenAppViewReady` is typed `(res: …$output)`; anchor branded `as ResourceUri`).
+  Thread-node narrowing is `$type`-based (`AppBskyUnspeccedDefs.isThreadItemPost(x.value)` →
+  `x.value.$type === 'app.bsky.unspecced.defs#threadItemPost'`). `ComposerOpts.quote` /
+  `OnPostSuccessData` flipped to `@atcute/bluesky`; `ModerationDecision` re-pointed at the island. Three
+  seam casts collapsed as a result: `PostControls`' `quote as unknown as @atproto PostView`,
+  `PostThread`'s `posts as unknown as ThreadItem[]` (its `AppBskyUnspeccedGetPostThreadV2` import then
+  dropped), and `shell/composer`'s `precacheResolveLinkQuery({…}) as unknown as ResolvedLink` — the
+  `@atcute`-typed quote now matches `ResolvedPostRecord` structurally (branded `cid`/`uri` align), so the
+  whole object literal type-checks against `ResolvedLink` with no cast. `agent` (`useAgent`) **stays** in
+  `Composer.tsx` for the out-of-scope video-service routing (`agent.serviceUrl`/`dispatchUrl` → Stream 6).
+  Session-wide `@atproto/api` importers fell 11 → 8. lint + typecheck pass; an adversarial 3-lens review
+  found only the now-stale `ResolvedLink` cast (removed). **Not yet live-verified** — the touched path is
+  post-publish AppView confirmation polling; smoke-test compose / reply / quote-post.
+- Next: `@atproto/api` is down to **8 importers** — the bounded seven-file `src/lib/moderation/**` island
+  and `src/state/session/agent.ts`. One thread remains, folded into **Stream 6** (`6.1` partial
+  `@atproto/api` removal: delete the `BskyAgent` compat layer):
+  - **Decouple moderation from `BskyAppAgent`** — `session/moderation.ts` / `preferences/index.ts` still
+    call `agent.configureLabelersHeader` / `agent.configureLabelers` / `agent.resolveHandle`; these get
+    rewritten onto clients as part of Stream 6 (which deletes the agent). `Composer.tsx` / `video.ts`
+    also still use `useAgent` for video-service routing — the same Stream 6 cleanup, not the thread read.
+  After Stream 6 the only remaining `@atproto/api` importer is the moderation island; the moderation
+  engine (Appendix A) stays deferred until the owner chooses to run it.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
