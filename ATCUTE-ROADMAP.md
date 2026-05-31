@@ -221,7 +221,35 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   boundary cast for atcute's branded URI fields). **Not browser-verified** — the hydrator cross-check
   makes the `$type` mapping exhaustive without it. **Follow-up:** `CreateListFromStarterPackDialog.tsx`
   still casts `starterPack.record as AppBskyGraphStarterpack.Record` from `@atproto/api` (an inline
-  lexicon cast, not a validation guard — outside 5.2's scope; Stream 6 sweeps it).
+  lexicon cast, not a validation guard — outside 5.2's scope; swept by 5.3-A below).
+- **Phase 5.3 — done (moderation island consolidated; the engine itself stays deferred to Appendix A).**
+  `@atproto/api` is now confined to three places: the bounded `src/lib/moderation/**` island,
+  `src/state/session/agent.ts` (Stream 6's job), and three composer thread-context files. Session-wide
+  `@atproto/api` importers fell 108 → 11. Across five commits:
+  - **5.3-A** flipped the 44-file non-moderation lexicon-annotation tail (leftover Streams 2-4) to
+    `@atcute`: `AppBsky*`/`ComAtproto*`/`Did` → the right `@atcute` package, `$Typed<X>` →
+    `$type.enforce<X>`, `XRPCError` / `AppBskyFeedGetAuthorFeed.Blocked*Error` → `ClientResponseError`
+    + `.error` checks (`'BlockedActor'` / `'BlockedByActor'`), `AppBskyActorStatus.isRecord` /
+    `validateRecord` → an inline `.Main` cast (EditLiveDialog), and the `@atcute` member renames
+    (`.Record`→`.Main`, `.OutputSchema`→`.$output`, `.QueryParams`→`.$params`). Five composer/prefs
+    files were reverted here and finished in 5.3-B once the island offered the @atproto-shaped types.
+  - **5.3-B** consolidated moderation: `compat.ts` re-exports the full `@atproto/api` moderation surface
+    (types + values); ~28 consumers and the config files (`session/moderation.ts`,
+    `additional-moderation-authorities.ts`, `labelers.ts`, `moderation-opts.tsx`,
+    `preferences/moderation.ts`, `label-defs.tsx`, `lib/moderation.ts`) now import moderation from the
+    island. New `app-labelers.ts` fronts the `Agent.appLabelers` / `Agent.configure` statics; new
+    `preferences-types.ts` re-exports the `@atproto`-shaped `BskyPreferences` bridge (which feeds the
+    deferred engine via `moderationPrefs` → `ModerationOpts`), so the preferences cache
+    (`preferences/{agent,index,types}.ts`) and the prefs-bound `MutedWords` / composer-state files are
+    `@atproto/api`-free too. `Un$Typed<X>` → `Omit<X, '$type'>`.
+  - **Residual (not done):** three composer files — `Composer.tsx`, `state/shell/composer/index.tsx`,
+    `PostControls/index.tsx` — still import `@atproto/api` for `app.bsky.unspecced.getPostThreadV2` /
+    the `openComposer` quote type, because the composer's thread-context read still flows through
+    `useAgent` (a read migration Phase 2.5/3.1 left for later — not moderation). Migrating that read is
+    what clears the literal done-when grep. The **`BskyAppAgent` coupling** in `session/moderation.ts`
+    and `preferences/index.ts` (`configureLabelersHeader` / `configureLabelers` / `resolveHandle`) is
+    left for Stream 6, which deletes the agent. **Not yet live-verified** (content filtering / labeler
+    badges / appeal flows) — recommended before relying on it.
 - **Phase 3.3 — done.** Profile writes are off `@atproto/api`'s `BskyAgent` and onto the `pds` client.
   `profile.ts` gains a fork-owned `upsertProfile(pds, did, updateFn)` mirroring `BskyAgent.upsertProfile`:
   `getRecord` the own `app.bsky.actor.profile` record (rkey `self`) → merge → `putRecord` with
@@ -315,13 +343,18 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
   completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
-- Next: **Stream 4** (chat / video / reporting clients), **Phase 5.1** (AtUri / syntax) and **Phase
-  5.2** (validation layer) are all done. Remaining is **Phase 5.3** — consolidate the moderation
-  island under `src/lib/moderation/**`, decoupled from `BskyAppAgent` — which is the prerequisite for
-  **Stream 6** (`6.1` partial `@atproto/api` removal: delete the `BskyAgent` compat layer and shrink
-  `@atproto/api` to the bounded moderation island). `@atproto/api` still has ~90 importers — the
-  moderation surface, the `BskyAppAgent` session plumbing, and scattered lexicon-type annotations that
-  5.3 / Stream 6 retire. The moderation engine (Appendix A) stays deferred.
+- Next: Stream 4, Phases 5.1, 5.2, and 5.3 (moderation island) are all done — `@atproto/api` is down to
+  11 importers: the bounded `src/lib/moderation/**` island, `src/state/session/agent.ts`, and three
+  composer thread-context files. Two threads remain before **Stream 6** (`6.1` partial `@atproto/api`
+  removal: delete the `BskyAgent` compat layer):
+  1. **Migrate the composer's thread-context read** — `app.bsky.unspecced.getPostThreadV2` in
+     `Composer.tsx` (and its `shell/composer` / `PostControls` consumers) still goes through `useAgent`;
+     moving it to the `appview` client clears the last three non-island `@atproto/api` importers and
+     finishes Phase 2.5/3.1's deferred composer read.
+  2. **Decouple moderation from `BskyAppAgent`** — `session/moderation.ts` / `preferences/index.ts`
+     still call `agent.configureLabelersHeader` / `agent.configureLabelers` / `agent.resolveHandle`; these
+     get rewritten onto clients as part of Stream 6 (which deletes the agent).
+  The moderation engine (Appendix A) stays deferred — `@atproto/api` survives in the island until then.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
