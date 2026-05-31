@@ -3,7 +3,8 @@ import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } fr
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type AppBskyEmbedRecord, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
-import { type $type, type Did } from '@atcute/lexicons';
+import { ok } from '@atcute/client';
+import { type $type, type Did, type Handle } from '@atcute/lexicons';
 
 import {
 	default as Animated,
@@ -26,7 +27,7 @@ import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/m
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 import { useGetPost } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -128,7 +129,7 @@ export function MessagesList({
 	transparentHeaderHeight?: number;
 }) {
 	const convoState = useConvoActive();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const getPost = useGetPost();
 	const { embedUri, setEmbed } = useMessageEmbed();
 	const t = useTheme();
@@ -382,8 +383,12 @@ export function MessagesList({
 			const rt = shortenLinks(
 				await detectFacets(trimmedText, async (handle) => {
 					try {
-						const res = await agent.resolveHandle({ handle });
-						return res.data.did as Did;
+						const res = await ok(
+							appview.get('com.atproto.identity.resolveHandle', {
+								params: { handle: handle as Handle },
+							}),
+						);
+						return res.did as Did;
 					} catch {
 						return undefined;
 					}
@@ -404,7 +409,7 @@ export function MessagesList({
 				embedView,
 			);
 		},
-		[agent, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
+		[appview, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
 	);
 
 	const scrollToEndOnPress = useCallback(() => {

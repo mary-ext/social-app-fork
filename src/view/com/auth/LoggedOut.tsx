@@ -1,12 +1,14 @@
 import { useCallback, useEffect } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
 import { profilesQueryKey } from '#/state/queries/profile';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import { useEnableMinimalShellMode } from '#/state/shell/minimal-mode';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
@@ -28,7 +30,7 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 
 	const queryClient = useQueryClient();
 	const { accounts } = useSession();
-	const agent = useAgent();
+	const { appview } = useClients();
 	useEffect(() => {
 		const actors = accounts.map((acc) => acc.did);
 		if (actors.length === 0) return;
@@ -36,11 +38,14 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 			queryKey: profilesQueryKey(actors),
 			staleTime: STALE.MINUTES.FIVE,
 			queryFn: async () => {
-				const res = await agent.getProfiles({ actors });
-				return res.data;
+				return await ok(
+					appview.get('app.bsky.actor.getProfiles', {
+						params: { actors: actors as ActorIdentifier[] },
+					}),
+				);
 			},
 		});
-	}, [accounts, agent, queryClient]);
+	}, [accounts, appview, queryClient]);
 
 	const onPressDismiss = useCallback(() => {
 		if (onDismiss) {

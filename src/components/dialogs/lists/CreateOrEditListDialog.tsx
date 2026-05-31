@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { type Did } from '@atcute/lexicons';
+import { ok } from '@atcute/client';
+import { type Did, type Handle } from '@atcute/lexicons';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -12,7 +13,7 @@ import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import { type ImageMeta } from '#/state/gallery';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -134,7 +135,7 @@ function DialogInner({
 
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const control = Dialog.useDialogContext();
 	const {
 		mutateAsync: createListMutation,
@@ -214,8 +215,12 @@ function DialogInner({
 			const richText = shortenLinks(
 				await detectFacets(cleanNewlines(descriptionText.trimEnd()), async (handle) => {
 					try {
-						const res = await agent.resolveHandle({ handle });
-						return res.data.did as Did;
+						const res = await ok(
+							appview.get('com.atproto.identity.resolveHandle', {
+								params: { handle: handle as Handle },
+							}),
+						);
+						return res.did as Did;
 					} catch {
 						return undefined;
 					}
@@ -266,7 +271,7 @@ function DialogInner({
 		setImageError,
 		activePurpose,
 		isCurateList,
-		agent,
+		appview,
 		l,
 	]);
 

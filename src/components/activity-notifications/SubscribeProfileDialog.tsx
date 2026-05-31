@@ -5,6 +5,7 @@ import {
 	type AppBskyNotificationDefs,
 	type AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -15,7 +16,7 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
 import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -60,7 +61,7 @@ function DialogInner({
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const control = Dialog.useDialogContext();
 	const queryClient = useQueryClient();
 	const initialState = parseActivitySubscription(profile.viewer?.activitySubscription);
@@ -104,10 +105,14 @@ function DialogInner({
 		error,
 	} = useMutation({
 		mutationFn: async (activitySubscription: Omit<AppBskyNotificationDefs.ActivitySubscription, '$type'>) => {
-			await agent.app.bsky.notification.putActivitySubscription({
-				subject: profile.did,
-				activitySubscription,
-			});
+			await ok(
+				appview.post('app.bsky.notification.putActivitySubscription', {
+					input: {
+						subject: profile.did,
+						activitySubscription,
+					},
+				}),
+			);
 		},
 		onSuccess: (_data, activitySubscription) => {
 			control.close(() => {
