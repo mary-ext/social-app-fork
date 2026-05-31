@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyStarterPackView } from '@atcute/bluesky';
+import { type AnyStarterPackView, type AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { AppBskyGraphStarterpack } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -21,8 +20,6 @@ import { Link as BaseLink, type LinkProps as BaseLinkProps } from '#/components/
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import * as bsky from '#/types/bsky';
-
 export function Default({ starterPack }: { starterPack?: AnyStarterPackView }) {
 	if (!starterPack) return null;
 	return (
@@ -50,15 +47,12 @@ export function Card({
 	noIcon?: boolean;
 	noDescription?: boolean;
 }) {
-	const { record, creator, joinedAllTimeCount } = starterPack;
+	const { creator, joinedAllTimeCount } = starterPack;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount } = useSession();
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
 
 	return (
 		<View style={[a.w_full, a.gap_md]}>
@@ -105,9 +99,7 @@ export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 
 	return {
 		to: `/starter-pack/${did}/${rkey}`,
-		label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(view.record, AppBskyGraphStarterpack.isRecord)
-			? l`Navigate to ${view.record.name}`
-			: l`Navigate to starter pack`,
+		label: l`Navigate to ${(view.record as AppBskyGraphStarterpack.Main).name}`,
 		precache,
 	};
 }
@@ -122,15 +114,11 @@ export function Link({
 }) {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
-	const { record } = starterPack;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 	const { rkey, did } = useMemo(() => {
 		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 		return { rkey, did: starterPack.creator.did };
 	}, [starterPack]);
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
 
 	return (
 		<BaseLink

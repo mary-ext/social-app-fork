@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { AppBskyGraphDefs as ApiAppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -17,7 +16,6 @@ import { type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
-import { type RichtextFacet } from '#/lib/strings/rich-text-facets';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
@@ -64,8 +62,6 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import * as bsky from '#/types/bsky';
-
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
 type StarterPackScreenShortProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPackShort'>;
 
@@ -123,11 +119,7 @@ export function StarterPackScreenInner({
 		isError: isErrorStarterPack,
 	} = useStarterPackQuery({ did, rkey });
 
-	const isValid =
-		starterPack &&
-		(starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-		ApiAppBskyGraphDefs.validateStarterPackView(starterPack) &&
-		AppBskyGraphStarterpack.validateRecord(starterPack.record);
+	const isValid = starterPack && (starterPack.list || starterPack?.creator?.did === currentAccount?.did);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
 		return (
@@ -280,7 +272,8 @@ function Header({
 
 	const [isProcessing, setIsProcessing] = useState(false);
 
-	const { record, creator } = starterPack;
+	const { creator } = starterPack;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 	const isOwn = creator?.did === currentAccount?.did;
 	const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0;
 
@@ -362,15 +355,10 @@ function Header({
 		Toast.show(l`All accounts have been followed!`);
 	};
 
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
-
 	const richText = record.description
 		? {
 				text: record.description,
-				// TODO(atcute Phase 5.2): starter pack record is still @atproto-validated above
-				facets: (record.descriptionFacets ?? []) as unknown as RichtextFacet[],
+				facets: record.descriptionFacets ?? [],
 			}
 		: undefined;
 

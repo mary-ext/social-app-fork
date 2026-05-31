@@ -1,7 +1,10 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type AppBskyGraphGetStarterPacksWithMembership, AppBskyGraphStarterpack } from '@atproto/api';
+import {
+	type AnyProfileView,
+	type AppBskyGraphGetStarterPacksWithMembership,
+	type AppBskyGraphStarterpack,
+} from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -30,8 +33,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
 type StarterPackDialogItem = StarterPackWithMembership | { type: 'starter_pack_dialog_loader' };
@@ -272,11 +273,7 @@ function StarterPackItem({
 		}
 	};
 
-	const { record } = starterPack;
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	return (
 		<View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>

@@ -1,13 +1,15 @@
 import { createContext, useContext, useReducer } from 'react';
-import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { AppBskyGraphStarterpack } from '@atproto/api';
+import {
+	type AnyProfileView,
+	type AppBskyFeedDefs,
+	type AppBskyGraphDefs,
+	type AppBskyGraphStarterpack,
+} from '@atcute/bluesky';
 import { defineMessage, plural } from '@lingui/core/macro';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 
 import * as Toast from '#/components/Toast';
-
-import * as bsky from '#/types/bsky';
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const;
 type Step = (typeof steps)[number];
@@ -127,12 +129,13 @@ export function Provider({
 	const createInitialState = (): State => {
 		const targetDid = targetProfile?.did;
 
-		if (starterPack && bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)) {
+		if (starterPack) {
+			const record = starterPack.record as AppBskyGraphStarterpack.Main;
 			return {
 				canNext: true,
 				currentStep: 'Details',
-				name: starterPack.record.name,
-				description: starterPack.record.description,
+				name: record.name,
+				description: record.description,
 				// TODO(atcute Phase 2.3): drop cast once ListItemView flips to @atcute
 				profiles: (listItems?.map((i) => i.subject) as AnyProfileView[]) ?? [],
 				feeds: starterPack.feeds ?? [],
