@@ -202,6 +202,26 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   roadmap only migrates it "if it exists". One residual `new AtUri` remains in a **commented-out**
   block in `TrendingTopics.tsx` (the disabled at:// profile/feed-topic path; its live union type already
   uses the migrated `ParsedCanonicalResourceUri`) — left intact as intentionally-disabled code.
+- **Phase 5.2 — done.** The `#/types/bsky` validation layer is fully retired and the directory
+  deleted, across three commits. (1) `AnyProfileView` / `AnyStarterPackView` already ship from
+  `@atcute/bluesky` byte-identical, so the local `profile.ts` / `starterPack.ts` aliases were dropped
+  and their 96 consumers re-pointed at the package. (2) The six `dangerousIsType` + one `validate`
+  starter-pack-record guards became inline `as AppBskyGraphStarterpack.Main` casts (trust-the-server,
+  no runtime validation); `StarterPackScreen`'s `isValid` shed its `validateStarterPackView` /
+  `validateRecord` clauses — both no-op truthy `ValidationResult`s in a boolean `&&`, so
+  behavior-preserving — which removed the last `@atproto/lexicon` import from `src`. (3) The `Embed`
+  tagged union + `parseEmbed` / `parseEmbedRecordView` moved to a new `src/types/embed.ts` on
+  `@atcute/bluesky`, the `is*` chains rewritten as `$type` switches **verified case-for-case against
+  bsky's AppView hydrator** (`packages/bsky/src/views/index.ts`: 5 top-level embed views + 8
+  record-embed variants, `unknown` fallback kept since atcute unions are runtime-open); every embed
+  render component (`ImageEmbed` / `FeedEmbed` / `ListEmbed` / `VideoEmbed` / `ExternalEmbed` /
+  `StandardSiteEmbed`) and consumer flipped its lexicon annotations to `@atcute`, `moderateUserList`
+  routed through the compat island, and the cross-SDK `TODO(atcute Phase 2.4/5.x)` seam casts dropped
+  (the composer's plain-string external-link previews keep one `as AppBskyEmbedExternal.ViewExternal`
+  boundary cast for atcute's branded URI fields). **Not browser-verified** — the hydrator cross-check
+  makes the `$type` mapping exhaustive without it. **Follow-up:** `CreateListFromStarterPackDialog.tsx`
+  still casts `starterPack.record as AppBskyGraphStarterpack.Record` from `@atproto/api` (an inline
+  lexicon cast, not a validation guard — outside 5.2's scope; Stream 6 sweeps it).
 - **Phase 3.3 — done.** Profile writes are off `@atproto/api`'s `BskyAgent` and onto the `pds` client.
   `profile.ts` gains a fork-owned `upsertProfile(pds, did, updateFn)` mirroring `BskyAgent.upsertProfile`:
   `getRecord` the own `app.bsky.actor.profile` record (rkey `self`) → merge → `putRecord` with
@@ -295,11 +315,13 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `detectActiveFacet` backward-scan are kept verbatim (they synthesize the in-progress facet the
   completed-token parser can't, preserving autocomplete); emotes are boundary-gated in the builder.
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
-- Next: **Stream 4** ancillary clients — `4.2` video-upload client and `4.3` labeler/moderation-service
-  proxy (`4.1` chat already landed); these are locally-scoped clients, harder to exercise safely. Then
-  **Stream 5** (off-SDK utilities: `5.1` AtUri/syntax, `5.2` retire the validation layer, `5.3`
-  consolidate the moderation island) and **Stream 6** (`6.1` partial `@atproto/api` removal). The
-  moderation engine (Appendix A) stays deferred.
+- Next: **Stream 4** (chat / video / reporting clients), **Phase 5.1** (AtUri / syntax) and **Phase
+  5.2** (validation layer) are all done. Remaining is **Phase 5.3** — consolidate the moderation
+  island under `src/lib/moderation/**`, decoupled from `BskyAppAgent` — which is the prerequisite for
+  **Stream 6** (`6.1` partial `@atproto/api` removal: delete the `BskyAgent` compat layer and shrink
+  `@atproto/api` to the bounded moderation island). `@atproto/api` still has ~90 importers — the
+  moderation surface, the `BskyAppAgent` session plumbing, and scattered lexicon-type annotations that
+  5.3 / Stream 6 retire. The moderation engine (Appendix A) stays deferred.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
