@@ -10,10 +10,11 @@ import { createOAuthFetchHandler, type FetchHandler, withNetworkEvents } from '.
 
 /**
  * The XRPC clients backing every network call. `appview` reaches the Bluesky AppView; `pds` reaches the
- * signed-in user's PDS; `chat` reaches the Bluesky chat service via the PDS. `pds` and `chat` are `null`
- * while logged out (no session, no PDS).
+ * signed-in user's PDS; `chat` reaches the Bluesky chat service via the PDS. `pdsUrl` is the PDS service URL
+ * the video pipeline needs (the clients don't expose it). `pds`, `chat`, and `pdsUrl` are `null` while logged
+ * out (no session, no PDS).
  */
-export type Clients = { appview: Client; chat: Client | null; pds: Client | null };
+export type Clients = { appview: Client; chat: Client | null; pds: Client | null; pdsUrl: string | null };
 
 /**
  * Wraps a fetch handler so AppView requests carry the `atproto-accept-labelers` header. The value is read
@@ -40,7 +41,7 @@ function withLabelersHeader(handler: FetchHandler): FetchHandler {
  */
 export function createPublicClients(): Clients {
 	const handler = withLabelersHeader(withNetworkEvents(simpleFetchHandler({ service: PUBLIC_BSKY_SERVICE })));
-	return { appview: new Client({ handler }), chat: null, pds: null };
+	return { appview: new Client({ handler }), chat: null, pds: null, pdsUrl: null };
 }
 
 /**
@@ -57,5 +58,6 @@ export function createOAuthClients(oauthAgent: OAuthUserAgent): Clients {
 		appview: new Client({ handler: withLabelersHeader(handler), proxy: APPVIEW_PROXY_AUDIENCE }),
 		chat: new Client({ handler, proxy: CHAT_PROXY_AUDIENCE }),
 		pds: new Client({ handler }),
+		pdsUrl: oauthAgent.session.info.aud,
 	};
 }

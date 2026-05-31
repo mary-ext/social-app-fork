@@ -79,7 +79,7 @@ import { useRequireAltTextEnabled } from '#/state/preferences';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
-import { useAgent, useClients, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import { useComposerControls } from '#/state/shell/composer';
 import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
 
@@ -173,8 +173,7 @@ export const ComposePost = ({
 }) => {
 	const { currentAccount } = useSession();
 	const t = useTheme();
-	const agent = useAgent();
-	const { appview, pds } = useClients();
+	const { appview, pds, pdsUrl } = useClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const { closeComposer } = useComposerControls();
@@ -289,7 +288,7 @@ export const ComposePost = ({
 					abortController,
 				},
 			});
-			if (!pds) return;
+			if (!pds || !pdsUrl) return;
 			void processVideo(
 				asset,
 				(videoAction) => {
@@ -302,14 +301,14 @@ export const ComposePost = ({
 						},
 					});
 				},
-				agent,
+				pdsUrl,
 				pds,
 				currentDid,
 				abortController.signal,
 				i18n,
 			);
 		},
-		[i18n, agent, pds, currentDid, composerDispatch],
+		[i18n, pds, pdsUrl, currentDid, composerDispatch],
 	);
 
 	const onInitVideo = useNonReactiveCallback(() => {
@@ -407,7 +406,7 @@ export const ComposePost = ({
 				}
 
 				// Start video compression and upload
-				if (!pds) return;
+				if (!pds || !pdsUrl) return;
 				void processVideo(
 					asset,
 					(videoAction) => {
@@ -420,7 +419,7 @@ export const ComposePost = ({
 							},
 						});
 					},
-					agent,
+					pdsUrl,
 					pds,
 					currentDid,
 					abortController.signal,
@@ -433,7 +432,7 @@ export const ComposePost = ({
 				});
 			}
 		},
-		[i18n, agent, pds, currentDid, composerDispatch],
+		[i18n, pds, pdsUrl, currentDid, composerDispatch],
 	);
 
 	const handleSelectDraft = useCallback(
@@ -842,7 +841,6 @@ export const ComposePost = ({
 		}, 500);
 	}, [
 		l,
-		agent,
 		thread,
 		canPost,
 		isPublishing,

@@ -15,8 +15,6 @@ import { getServiceAuthToken } from '#/lib/media/video/upload.shared';
 import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
 
-import { type BskyAppAgent } from '#/state/session/agent';
-
 import { logger } from '#/logger';
 
 import { VIDEO_PROXY_DID } from '#/env';
@@ -241,7 +239,7 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 export async function processVideo(
 	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
-	agent: BskyAppAgent,
+	pdsUrl: string,
 	pds: Client,
 	did: string,
 	signal: AbortSignal,
@@ -269,7 +267,7 @@ export async function processVideo(
 
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
-		if (agent.serviceUrl.toString().startsWith(LOCAL_DEV_SERVICE)) {
+		if (pdsUrl.startsWith(LOCAL_DEV_SERVICE)) {
 			const blobRef = await uploadVideoBlobDirectly(pds, video, signal);
 			dispatch({
 				type: 'to_done',
@@ -282,7 +280,7 @@ export async function processVideo(
 		uploadResponse = await uploadVideo({
 			video,
 			pds,
-			dispatchUrl: agent.dispatchUrl.toString(),
+			dispatchUrl: pdsUrl,
 			did,
 			signal,
 			i18n,
@@ -312,7 +310,7 @@ export async function processVideo(
 	// Job-status polling needs its own service-auth token. Mint once, reuse for the polling loop.
 	const jobStatusToken = await getServiceAuthToken({
 		pds,
-		dispatchUrl: agent.dispatchUrl.toString(),
+		dispatchUrl: pdsUrl,
 		lxm: 'app.bsky.video.getJobStatus',
 		aud: VIDEO_PROXY_DID,
 	});
