@@ -19,4 +19,3 @@ allowBuilds:
   'unrs-resolver': true
 minimumReleaseAgeExclude:
   - '@atcute/*'
-  - '@atproto/*'

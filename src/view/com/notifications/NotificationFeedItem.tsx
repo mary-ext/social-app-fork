@@ -25,7 +25,7 @@ import {
 import { ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { TID } from '@atproto/common-web';
+import * as TID from '@atcute/tid';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -188,7 +188,7 @@ let NotificationFeedItem = ({
 			let followingTimestamp;
 			try {
 				const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
-				followingTimestamp = TID.fromStr(rkey).timestamp();
+				followingTimestamp = TID.parse(rkey).timestamp;
 			} catch (e) {
 				return false;
 			}

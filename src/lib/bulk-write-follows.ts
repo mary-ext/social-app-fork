@@ -1,7 +1,7 @@
 import { type ComAtprotoRepoApplyWrites, type ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import { type Client, ok } from '@atcute/client';
 import { type ActorIdentifier, type Did } from '@atcute/lexicons';
-import { TID } from '@atproto/common-web';
+import * as TID from '@atcute/tid';
 import chunk from 'lodash.chunk';
 
 import { until } from '#/lib/async/until';
@@ -19,7 +19,7 @@ export async function bulkWriteFollows(
 	dids: string[],
 	via?: ComAtprotoRepoStrongRef.Main,
 ) {
-	const items = dids.map((d) => ({ did: d as Did, rkey: TID.nextStr() }));
+	const items = dids.map((d) => ({ did: d as Did, rkey: TID.now() }));
 
 	const followWrites: ComAtprotoRepoApplyWrites.$input['writes'] = items.map((item) => ({
 		$type: 'com.atproto.repo.applyWrites#create',
@@ -46,7 +46,11 @@ export async function bulkWriteFollows(
 	return followUris;
 }
 
-async function whenFollowsIndexed(appview: Client, actor: string, fn: (res: { follows: unknown[] }) => boolean) {
+async function whenFollowsIndexed(
+	appview: Client,
+	actor: string,
+	fn: (res: { follows: unknown[] }) => boolean,
+) {
 	await until(5, 1e3, fn, () =>
 		ok(
 			appview.get('app.bsky.graph.getFollows', {

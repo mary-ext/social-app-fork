@@ -3012,7 +3012,7 @@ msgstr ""
 msgid "Expand post text"
 msgstr ""
 
-#: src/lib/api/index.ts:408
+#: src/lib/api/index.ts:407
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -6065,7 +6065,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
 
-#: src/lib/api/index.ts:179
+#: src/lib/api/index.ts:178
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
@@ -8856,12 +8856,12 @@ msgstr ""
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:309
+#: src/lib/api/index.ts:308
 msgid "Uploading images..."
 msgstr ""
 
-#: src/lib/api/index.ts:365
-#: src/lib/api/index.ts:383
+#: src/lib/api/index.ts:364
+#: src/lib/api/index.ts:382
 msgid "Uploading link thumbnail..."
 msgstr ""
 
@@ -9459,7 +9459,7 @@ msgstr ""
 msgid "You are Live"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:344
+#: src/features/liveNow/index.tsx:341
 msgid "You are no longer live"
 msgstr ""
 
@@ -9471,7 +9471,7 @@ msgstr ""
 msgid "You are not following anyone yet"
 msgstr ""
 
-#: src/features/liveNow/index.tsx:289
+#: src/features/liveNow/index.tsx:286
 msgid "You are now live!"
 msgstr ""
 

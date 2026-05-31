@@ -1,9 +1,8 @@
 import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type LabelPreference } from '@atcute/bluesky-moderation';
 import { type Client, ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import { TID } from '@atproto/common-web';
+import * as TID from '@atcute/tid';
 
 import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
 import {
@@ -12,6 +11,7 @@ import {
 	type BskyInterestsPreference,
 	type BskyPreferences,
 	type BskyThreadViewPreference,
+	type LabelVisibility,
 } from '#/lib/moderation/preferences-types';
 
 /**
@@ -19,8 +19,8 @@ import {
  * `@atcute/client` `pds` client directly. `app.bsky.actor.getPreferences` / `putPreferences` are
  * AppView-namespaced but PDS-implemented, so every call here routes through `pds`, never `appview`.
  *
- * The read path still produces the `@atproto`-shaped {@link BskyPreferences} that the (not-yet-migrated)
- * moderation island consumes; only the network calls and pref-array manipulation moved to `@atcute`.
+ * The read path derives the fork-owned {@link BskyPreferences} aggregate; its `moderationPrefs` is converted
+ * to the engine's `ModerationPreferences` at the boundary (see `#/lib/moderation/prefs`).
  */
 
 // #region helpers
@@ -121,7 +121,7 @@ function validateSavedFeed(savedFeed: AppBskyActorDefs.SavedFeed): void {
 function migrateLegacyMutedWordsItems(
 	items: readonly AppBskyActorDefs.MutedWord[],
 ): AppBskyActorDefs.MutedWord[] {
-	return items.map((item) => ({ ...item, id: item.id || TID.nextStr() }));
+	return items.map((item) => ({ ...item, id: item.id || TID.now() }));
 }
 
 /** Matches a stored muted word against an incoming one, preferring `id` and falling back to value (legacy). */
@@ -325,9 +325,9 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 		if (pref.labelerDid) {
 			const labeler = prefs.moderationPrefs.labelers.find((labeler) => labeler.did === pref.labelerDid);
 			if (!labeler) continue;
-			labeler.labels[pref.label] = pref.visibility as LabelPreference;
+			labeler.labels[pref.label] = pref.visibility as LabelVisibility;
 		} else {
-			prefs.moderationPrefs.labels[pref.label] = pref.visibility as LabelPreference;
+			prefs.moderationPrefs.labels[pref.label] = pref.visibility as LabelVisibility;
 		}
 	}
 
@@ -432,7 +432,7 @@ export async function addSavedFeeds(
 	pds: Client,
 	savedFeeds: Pick<AtpActorDefs.SavedFeed, 'pinned' | 'type' | 'value'>[],
 ): Promise<void> {
-	const toSave: AppBskyActorDefs.SavedFeed[] = savedFeeds.map((f) => ({ ...f, id: TID.nextStr() }));
+	const toSave: AppBskyActorDefs.SavedFeed[] = savedFeeds.map((f) => ({ ...f, id: TID.now() }));
 	toSave.forEach(validateSavedFeed);
 	await updateSavedFeedsV2Preferences(pds, (savedFeeds) => [...savedFeeds, ...toSave]);
 }
@@ -481,7 +481,7 @@ export async function setAdultContentEnabled(pds: Client, enabled: boolean): Pro
 export async function setContentLabelPref(
 	pds: Client,
 	key: string,
-	value: LabelPreference,
+	value: LabelVisibility,
 	labelerDid?: string,
 ): Promise<void> {
 	await updatePreferences(pds, (prefs) => {
@@ -549,7 +549,7 @@ export async function upsertMutedWords(
 		newWords.push({
 			actorTarget: mutedWord.actorTarget || 'all',
 			expiresAt: mutedWord.expiresAt as AppBskyActorDefs.MutedWord['expiresAt'],
-			id: TID.nextStr(),
+			id: TID.now(),
 			targets: (mutedWord.targets || []) as AppBskyActorDefs.MutedWord['targets'],
 			value: sanitizedValue,
 		});
@@ -587,7 +587,7 @@ export async function updateMutedWord(pds: Client, mutedWord: AtpActorDefs.Muted
 			return {
 				actorTarget: updated.actorTarget || 'all',
 				expiresAt: updated.expiresAt || undefined,
-				id: existingItem.id || TID.nextStr(),
+				id: existingItem.id || TID.now(),
 				targets: updated.targets || [],
 				value: sanitizeMutedWordValue(updated.value) || existingItem.value,
 			} as AppBskyActorDefs.MutedWord;

@@ -19,7 +19,7 @@ import {
 	type Handle,
 	type ResourceUri,
 } from '@atcute/lexicons';
-import { TID } from '@atproto/common-web';
+import * as TID from '@atcute/tid';
 import { t } from '@lingui/core/macro';
 import { type QueryClient } from '@tanstack/react-query';
 
@@ -78,7 +78,6 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 	const uris: string[] = [];
 
 	let now = new Date();
-	let tid: TID | undefined;
 
 	for (let i = 0; i < thread.posts.length; i++) {
 		const draft = thread.posts[i]!;
@@ -97,8 +96,8 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 		// The sorting behavior for multiple posts sharing the same createdAt time is
 		// undefined, so what we'll do here is increment the time by 1 for every post
 		now.setMilliseconds(now.getMilliseconds() + 1);
-		tid = TID.next(tid);
-		const rkey = tid.toString();
+		// @atcute/tid's now() is monotonic — repeated calls in the same ms increment to avoid collision
+		const rkey = TID.now();
 		const uri = `at://${did}/app.bsky.feed.post/${rkey}`;
 		uris.push(uri);
 

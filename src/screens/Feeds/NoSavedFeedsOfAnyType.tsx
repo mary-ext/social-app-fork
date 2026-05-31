@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { TID } from '@atproto/common-web';
+import * as TID from '@atcute/tid';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -27,7 +27,7 @@ export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommen
 		await overwriteSavedFeeds(
 			RECOMMENDED_SAVED_FEEDS.map((f) => ({
 				...f,
-				id: TID.nextStr(),
+				id: TID.now(),
 			})),
 		);
 	};

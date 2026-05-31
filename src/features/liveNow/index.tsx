@@ -9,7 +9,6 @@ import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/
 import { ClientResponseError } from '@atcute/client';
 import { type $type, type Did, type GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { retry } from '@atproto/common-web';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAfter, parseISO } from 'date-fns';
@@ -17,6 +16,7 @@ import { isAfter, parseISO } from 'date-fns';
 import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { imageToThumb } from '#/lib/api/resolve';
 import { uploadBlob } from '#/lib/api/upload-blob';
+import { retry } from '#/lib/async/retry';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
 
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -264,10 +264,7 @@ export function useUpsertLiveStatusMutation(
 				});
 			};
 
-			await retry(upsert, {
-				maxRetries: 5,
-				retryable: (e) => e instanceof ClientResponseError && e.error === 'InvalidSwap',
-			});
+			await retry(5, (e) => e instanceof ClientResponseError && e.error === 'InvalidSwap', upsert);
 
 			return {
 				record,
