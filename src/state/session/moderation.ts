@@ -1,6 +1,6 @@
-import { Agent, BSKY_LABELER_DID } from '@atproto/api';
-
 import { IS_TEST_USER } from '#/lib/constants';
+import { configureAppLabelers } from '#/lib/moderation/app-labelers';
+import { BSKY_LABELER_DID } from '#/lib/moderation/compat';
 
 import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities';
 import { type BskyAppAgent } from './agent';
@@ -38,7 +38,7 @@ export async function configureModerationForAccount(agent: BskyAppAgent, account
 }
 
 function switchToBskyAppLabeler() {
-	Agent.configure({ appLabelers: [BSKY_LABELER_DID] });
+	configureAppLabelers([BSKY_LABELER_DID]);
 	setAppLabelers([BSKY_LABELER_DID]);
 }
 
@@ -46,7 +46,7 @@ async function trySwitchToTestAppLabeler(agent: BskyAppAgent) {
 	const did = (await agent.resolveHandle({ handle: 'mod-authority.test' }).catch((_) => undefined))?.data.did;
 	if (did) {
 		console.warn('USING TEST ENV MODERATION');
-		Agent.configure({ appLabelers: [did] });
+		configureAppLabelers([did]);
 		setAppLabelers([did]);
 	}
 }

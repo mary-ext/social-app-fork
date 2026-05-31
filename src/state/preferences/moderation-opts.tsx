@@ -1,5 +1,7 @@
 import { createContext, useContext, useMemo } from 'react';
-import { BskyAgent, type ModerationOpts } from '@atproto/api';
+
+import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useHiddenPosts, useLabelDefinitions } from '#/state/preferences';
 import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';
@@ -40,7 +42,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				...moderationPrefs,
 				labelers: moderationPrefs.labelers.length
 					? moderationPrefs.labelers
-					: BskyAgent.appLabelers.map((did) => ({
+					: getAppLabelers().map((did) => ({
 							did,
 							labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
 						})),

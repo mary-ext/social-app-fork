@@ -5,7 +5,6 @@ import {
 	type AppBskyNotificationDefs,
 	type AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
-import { type Un$Typed } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -104,7 +103,7 @@ function DialogInner({
 		isPending: isSaving,
 		error,
 	} = useMutation({
-		mutationFn: async (activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>) => {
+		mutationFn: async (activitySubscription: Omit<AppBskyNotificationDefs.ActivitySubscription, '$type'>) => {
 			await agent.app.bsky.notification.putActivitySubscription({
 				subject: profile.did,
 				activitySubscription,
@@ -237,7 +236,7 @@ function DialogInner({
 
 function parseActivitySubscription(
 	sub?: AppBskyNotificationDefs.ActivitySubscription,
-): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
+): Omit<AppBskyNotificationDefs.ActivitySubscription, '$type'> {
 	if (!sub) return { post: false, reply: false };
 	const { post, reply } = sub;
 	return { post, reply };

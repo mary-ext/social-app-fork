@@ -1,4 +1,4 @@
-import { BskyAgent } from '@atproto/api';
+import { configureAppLabelers, getAppLabelers } from '#/lib/moderation/app-labelers';
 
 import { logger } from '#/logger';
 
@@ -9,12 +9,12 @@ export function isNonConfigurableModerationAuthority(_did: string) {
 export function configureAdditionalModerationAuthorities() {
 	const additionalLabelers: string[] = [];
 
-	const appLabelers = Array.from(new Set([...BskyAgent.appLabelers, ...additionalLabelers]));
+	const appLabelers = Array.from(new Set([...getAppLabelers(), ...additionalLabelers]));
 
 	logger.info(`applying mod authorities`, {
 		additionalLabelers,
 		appLabelers,
 	});
 
-	BskyAgent.configure({ appLabelers });
+	configureAppLabelers(appLabelers);
 }

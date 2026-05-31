@@ -1,4 +1,4 @@
-import { BSKY_LABELER_DID } from '@atproto/api';
+import { BSKY_LABELER_DID } from '#/lib/moderation/compat';
 
 /**
  * The labelers the AppView client advertises via the `atproto-accept-labelers` header. Kept as module-level

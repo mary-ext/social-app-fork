@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
-import { BskyAgent, DEFAULT_LABEL_SETTINGS, interpretLabelValueDefinitions } from '@atproto/api';
+
+import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { DEFAULT_LABEL_SETTINGS, interpretLabelValueDefinitions } from '#/lib/moderation/compat';
 
 import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
 
@@ -18,7 +20,7 @@ export function useMyLabelersQuery({
 } = {}) {
 	const prefs = usePreferencesQuery();
 	let dids = Array.from(
-		new Set(BskyAgent.appLabelers.concat(prefs.data?.moderationPrefs.labelers.map((l) => l.did) || [])),
+		new Set(getAppLabelers().concat(prefs.data?.moderationPrefs.labelers.map((l) => l.did) || [])),
 	);
 	if (excludeNonConfigurableLabelers) {
 		dids = dids.filter((did) => !isNonConfigurableModerationAuthority(did));

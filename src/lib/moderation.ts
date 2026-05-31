@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+
+import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import {
-	BskyAgent,
 	type ComAtprotoLabelDefs,
 	type InterpretedLabelValueDefinition,
 	LABELS,
 	type ModerationCause,
 	type ModerationOpts,
 	type ModerationUI,
-} from '@atproto/api';
-
+} from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -74,9 +74,9 @@ export function isAppLabeler(
 	labeler: string | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
 	if (typeof labeler === 'string') {
-		return BskyAgent.appLabelers.includes(labeler);
+		return getAppLabelers().includes(labeler);
 	}
-	return BskyAgent.appLabelers.includes(labeler.creator.did);
+	return getAppLabelers().includes(labeler.creator.did);
 }
 
 export function isLabelerSubscribed(
