@@ -45,7 +45,7 @@ export async function uploadVideo({
 		pds,
 		dispatchUrl,
 		lxm: 'com.atproto.repo.uploadBlob',
-		exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+		exp: Math.floor(Date.now() / 1000) + 60 * 30, // 30 minutes; must be an integer (unix seconds)
 	});
 
 	if (signal.aborted) {
