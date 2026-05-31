@@ -18,4 +18,5 @@ allowBuilds:
   'esbuild': true
   'unrs-resolver': true
 minimumReleaseAgeExclude:
+  - '@atcute/*'
   - '@atproto/*'
