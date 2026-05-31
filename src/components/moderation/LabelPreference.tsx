@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import { type InterpretedLabelValueDefinition, type LabelPreference } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
+import { type InterpretedLabelValueDefinition, type LabelPreference } from '#/lib/moderation/compat';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { useLabelBehaviorDescription } from '#/lib/moderation/useLabelBehaviorDescription';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';

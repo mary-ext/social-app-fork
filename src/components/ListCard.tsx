@@ -2,12 +2,11 @@ import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { moderateUserList } from '#/lib/moderation/compat';
+import { moderateUserList, type ModerationUI } from '#/lib/moderation/compat';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

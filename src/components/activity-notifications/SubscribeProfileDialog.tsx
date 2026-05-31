@@ -5,10 +5,11 @@ import {
 	type AppBskyNotificationDefs,
 	type AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
-import { type ModerationOpts, type Un$Typed } from '@atproto/api';
+import { type Un$Typed } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';

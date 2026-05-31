@@ -1,4 +1,4 @@
-import { type ModerationUI } from '@atproto/api';
+import { type ModerationUI } from '#/lib/moderation/compat';
 
 // \u2705 = ✅
 // \u2713 = ✓

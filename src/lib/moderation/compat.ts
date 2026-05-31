@@ -35,11 +35,24 @@ import {
  */
 
 export type {
+	ComAtprotoLabelDefs,
+	InterpretedLabelValueDefinition,
+	LabelPreference,
+	ModerationBehavior,
 	ModerationCause,
 	ModerationDecision,
 	ModerationOpts,
 	ModerationPrefs,
 	ModerationUI,
+} from '@atproto/api';
+
+export {
+	BSKY_LABELER_DID,
+	DEFAULT_LABEL_SETTINGS,
+	interpretLabelValueDefinition,
+	interpretLabelValueDefinitions,
+	LABELS,
+	mock,
 } from '@atproto/api';
 
 /**

@@ -1,7 +1,7 @@
 import { type StyleProp, type ViewStyle } from 'react-native';
-import { type ModerationCause, type ModerationUI } from '@atproto/api';
 
 import { getModerationCauseKey, unique } from '#/lib/moderation';
+import { type ModerationCause, type ModerationUI } from '#/lib/moderation/compat';
 
 import * as Pills from '#/components/Pills';
 

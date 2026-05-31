@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationUI } from '@atproto/api';
 
 import Animated, {
 	Easing,
@@ -11,7 +10,7 @@ import Animated, {
 	withDelay,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import { moderateProfile, type ModerationOpts, type ModerationUI } from '#/lib/moderation/compat';
 
 import { useSession } from '#/state/session';
 

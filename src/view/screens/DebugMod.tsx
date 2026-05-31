@@ -7,19 +7,17 @@ import {
 	type AppBskyFeedPost,
 	type AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
-import {
-	type ComAtprotoLabelDefs,
-	interpretLabelValueDefinition,
-	type LabelPreference,
-	LABELS,
-	mock,
-	type ModerationBehavior,
-} from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 
 import {
+	type ComAtprotoLabelDefs,
+	interpretLabelValueDefinition,
+	LABELS,
+	type LabelPreference,
+	mock,
 	moderatePost,
 	moderateProfile,
+	type ModerationBehavior,
 	type ModerationDecision,
 	type ModerationOpts,
 } from '#/lib/moderation/compat';

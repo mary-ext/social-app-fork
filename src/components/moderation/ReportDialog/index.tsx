@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Pressable, type ScrollView, View } from 'react-native';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
-import { BSKY_LABELER_DID } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { wait } from '#/lib/async/wait';
 import { getLabelingServiceTitle } from '#/lib/moderation';
+import { BSKY_LABELER_DID } from '#/lib/moderation/compat';
 import { useCallOnce } from '#/lib/once';
 import { sanitizeHandle } from '#/lib/strings/handles';
 

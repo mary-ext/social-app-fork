@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
-import { type ModerationUI } from '@atproto/api';
 
+import { type ModerationUI } from '#/lib/moderation/compat';
 import {
 	type ModerationCauseDescription,
 	useModerationCauseDescription,

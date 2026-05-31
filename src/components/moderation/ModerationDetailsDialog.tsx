@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import { type ModerationCause } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
+import { type ModerationCause } from '#/lib/moderation/compat';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';

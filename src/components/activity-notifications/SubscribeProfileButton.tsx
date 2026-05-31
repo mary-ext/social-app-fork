@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationOpts } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
+import { type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { Button, ButtonIcon } from '#/components/Button';

@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { LayoutAnimation, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
-import { type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { ADULT_CONTENT_LABELS, type AdultSelfLabel, isJustAMute } from '#/lib/moderation';
+import { type ModerationUI } from '#/lib/moderation/compat';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from '#/lib/moderation/useLabelInfo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { type StyleProp, type TextStyle, TouchableWithoutFeedback, View, type ViewStyle } from 'react-native';
-import { type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
+import { type ModerationUI } from '#/lib/moderation/compat';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { type NavigationProp } from '#/lib/routes/types';
 

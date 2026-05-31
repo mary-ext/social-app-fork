@@ -11,13 +11,13 @@ import {
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { type AnyProfileView, type AppBskyEmbedExternal } from '@atcute/bluesky';
-import { type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useHaptics } from '#/lib/haptics';
 import { openImagePicker } from '#/lib/media/picker';
 import { convertCdnPreset } from '#/lib/media/util';
+import { type ModerationUI } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isCancelledError } from '#/lib/strings/errors';

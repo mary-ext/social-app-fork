@@ -1,11 +1,11 @@
 import { memo, useEffect } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyActorSearchActors } from '@atcute/bluesky';
-import { type ModerationOpts } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData } from '@tanstack/react-query';
 
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 

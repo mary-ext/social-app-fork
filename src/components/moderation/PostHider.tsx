@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { LayoutAnimation, Pressable, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationCause, type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { type ModerationCause, type ModerationUI } from '#/lib/moderation/compat';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { addStyle } from '#/lib/styles';
 

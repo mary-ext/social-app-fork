@@ -1,11 +1,15 @@
 import { Keyboard, View } from 'react-native';
 import { type AnyProfileView, type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
-import { type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { moderateFeedGenerator, moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import {
+	moderateFeedGenerator,
+	moderateProfile,
+	type ModerationOpts,
+	type ModerationUI,
+} from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 

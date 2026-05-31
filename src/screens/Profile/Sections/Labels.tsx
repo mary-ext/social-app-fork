@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
-import { type InterpretedLabelValueDefinition, interpretLabelValueDefinitions } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
-import { type ModerationOpts } from '#/lib/moderation/compat';
+import {
+	type InterpretedLabelValueDefinition,
+	interpretLabelValueDefinitions,
+	type ModerationOpts,
+} from '#/lib/moderation/compat';
 
 import { List, type ListRef } from '#/view/com/util/List';
 

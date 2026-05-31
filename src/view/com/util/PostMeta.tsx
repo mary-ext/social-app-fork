@@ -1,10 +1,10 @@
 import { memo, useCallback } from 'react';
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationDecision } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';

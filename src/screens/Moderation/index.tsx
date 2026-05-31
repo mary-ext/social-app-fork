@@ -1,9 +1,9 @@
 import { Fragment, useCallback } from 'react';
 import { Linking, View } from 'react-native';
-import { LABELS } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
+import { LABELS } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';

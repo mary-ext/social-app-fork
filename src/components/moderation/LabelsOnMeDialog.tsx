@@ -3,12 +3,12 @@ import { View } from 'react-native';
 import type { ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import { ClientResponseError, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
-import { type ComAtprotoLabelDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { useLabelSubject } from '#/lib/moderation';
+import { type ComAtprotoLabelDefs } from '#/lib/moderation/compat';
 import { OzoneReason } from '#/lib/moderation/report-reasons';
 import { useLabelInfo } from '#/lib/moderation/useLabelInfo';
 import { makeProfileLink } from '#/lib/routes/links';

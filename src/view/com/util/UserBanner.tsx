@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { openImagePicker } from '#/lib/media/picker';
+import { type ModerationUI } from '#/lib/moderation/compat';
 import { isCancelledError } from '#/lib/strings/errors';
 
 import {
