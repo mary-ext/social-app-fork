@@ -47,7 +47,11 @@ export const hasMutedWord = ({
 		if (filter.flags & KeywordFilterFlags.NoFollowing && isFollowing) {
 			continue;
 		}
-		if (filter.flags & KeywordFilterFlags.ApplyTopic && tags.some((tag) => filter.pattern.test(tag))) {
+		// a content-targeted filter applies to tags too, not just tag-targeted filters
+		if (
+			filter.flags & (KeywordFilterFlags.ApplyContent | KeywordFilterFlags.ApplyTopic) &&
+			tags.some((tag) => filter.pattern.test(tag))
+		) {
 			return true;
 		}
 		if (filter.flags & KeywordFilterFlags.ApplyContent && filter.pattern.test(text)) {
