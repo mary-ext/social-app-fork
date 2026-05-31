@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { moderateUserList } from '@atproto/api';
+
+import { moderateUserList } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -9,7 +9,7 @@ import { atoms as a, useTheme } from '#/alf';
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import { type EmbedType } from '#/types/bsky/post';
+import { type EmbedType } from '#/types/embed';
 
 import { type CommonProps } from './types';
 
@@ -21,7 +21,7 @@ export function ListEmbed({
 	const t = useTheme();
 	return (
 		<ListCard.Default
-			view={embed.view as unknown as AppBskyGraphDefs.ListView}
+			view={embed.view}
 			style={[a.border, t.atoms.border_contrast_low, a.p_md, a.rounded_sm]}
 		/>
 	);

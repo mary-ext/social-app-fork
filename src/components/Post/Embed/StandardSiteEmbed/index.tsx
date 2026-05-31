@@ -1,6 +1,6 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyEmbedExternal } from '@atproto/api';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 

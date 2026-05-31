@@ -1,7 +1,7 @@
 import { Fragment, type ReactNode } from 'react';
 import { View } from 'react-native';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyEmbedExternal } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';

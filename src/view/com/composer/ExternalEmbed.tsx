@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AnyStarterPackView } from '@atcute/bluesky';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
@@ -21,7 +21,6 @@ import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackC
 import { Text } from '#/components/Typography';
 
 import { type Gif } from '#/features/gifPicker/types';
-import type * as bsky from '#/types/bsky';
 
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const t = useTheme();
@@ -29,12 +28,13 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
 	const linkInfo = useMemo(
 		() =>
-			data && {
+			data &&
+			({
 				title: data.title ?? data.uri,
 				uri: data.uri,
 				description: data.description ?? '',
 				thumb: thumbUrl,
-			},
+			} as AppBskyEmbedExternal.ViewExternal),
 		[data, thumbUrl],
 	);
 
@@ -89,30 +89,33 @@ export const ExternalEmbedLink = ({
 	const linkComponent = useMemo(() => {
 		if (data) {
 			if (data.type === 'external') {
-				// TODO(atcute Phase 5.x): StandardSiteEmbed is still @atproto-typed
-				const external = data.view?.external as unknown as Parameters<typeof isStandardSiteEmbed>[0];
+				const external = data.view?.external;
 				if (external && isStandardSiteEmbed(external)) {
 					return (
 						<StandardSiteEmbed
 							hideSubscribe
-							view={{
-								...external,
-								title: external.title || data.title || uri,
-								uri,
-								description: external.description || data.description,
-								thumb: external.thumb || thumbUrl,
-							}}
+							view={
+								{
+									...external,
+									title: external.title || data.title || uri,
+									uri,
+									description: external.description || data.description,
+									thumb: external.thumb || thumbUrl,
+								} as AppBskyEmbedExternal.ViewExternal
+							}
 						/>
 					);
 				}
 				return (
 					<ExternalEmbed
-						link={{
-							title: data.title || uri,
-							uri,
-							description: data.description,
-							thumb: thumbUrl,
-						}}
+						link={
+							{
+								title: data.title || uri,
+								uri,
+								description: data.description,
+								thumb: thumbUrl,
+							} as AppBskyEmbedExternal.ViewExternal
+						}
 						hideAlt
 					/>
 				);
@@ -121,11 +124,10 @@ export const ExternalEmbedLink = ({
 					<ModeratedFeedEmbed
 						embed={{
 							type: 'feed',
-							// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
 							view: {
 								$type: 'app.bsky.feed.defs#generatorView',
 								...data.view,
-							} as unknown as bsky.post.EmbedType<'feed'>['view'],
+							},
 						}}
 					/>
 				);
@@ -134,17 +136,15 @@ export const ExternalEmbedLink = ({
 					<ModeratedListEmbed
 						embed={{
 							type: 'list',
-							// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
 							view: {
 								$type: 'app.bsky.graph.defs#listView',
 								...data.view,
-							} as unknown as bsky.post.EmbedType<'list'>['view'],
+							},
 						}}
 					/>
 				);
 			} else if (data.kind === 'starter-pack') {
-				// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
-				return <StarterPackEmbed starterPack={data.view as unknown as AnyStarterPackView} />;
+				return <StarterPackEmbed starterPack={data.view} />;
 			}
 		}
 	}, [data, uri, thumbUrl]);

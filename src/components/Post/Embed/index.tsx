@@ -33,7 +33,7 @@ import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 
-import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/bsky/post';
+import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ExternalEmbed } from './ExternalEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';

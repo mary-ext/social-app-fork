@@ -17,7 +17,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import { parseEmbed } from '#/types/bsky/post';
+import { parseEmbed } from '#/types/embed';
 
 type WebViewStyle = ViewStyle & {
 	userSelect?: 'text';

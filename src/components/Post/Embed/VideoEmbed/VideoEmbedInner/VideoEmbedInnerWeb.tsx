@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyEmbedVideo } from '@atproto/api';
+import { type AppBskyEmbedVideo } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import type * as HlsTypes from 'hls.js';
 
