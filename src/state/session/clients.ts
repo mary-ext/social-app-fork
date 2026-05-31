@@ -17,8 +17,8 @@ import { createOAuthFetchHandler, type FetchHandler, withNetworkEvents } from '.
 export type Clients = { appview: Client; chat: Client | null; pds: Client | null; pdsUrl: string | null };
 
 /**
- * Wraps a fetch handler so AppView requests carry the `atproto-accept-labelers` header. The value is read
- * fresh on every call so it tracks labeler-subscription changes without rebuilding the client.
+ * Wraps a fetch handler so its client's requests carry the `atproto-accept-labelers` header. The value is
+ * read fresh on every call so it tracks labeler-subscription changes without rebuilding the client.
  *
  * @param handler the handler to wrap.
  * @returns a handler that injects the labelers header when one is not already present.
@@ -47,16 +47,20 @@ export function createPublicClients(): Clients {
 /**
  * Builds the logged-in client set. All three clients share the OAuth handler targeting the user's PDS;
  * `appview` and `chat` carry the `#bsky_appview` / `#bsky_chat` proxy headers so the PDS forwards to the
- * respective services.
+ * respective services, plus the `atproto-accept-labelers` header so labeler-filtered views honor the user's
+ * subscriptions.
  *
  * @param oauthAgent the session's atcute user-agent.
  * @returns clients with a working `appview`, `pds`, and `chat`.
  */
 export function createOAuthClients(oauthAgent: OAuthUserAgent): Clients {
 	const handler = createOAuthFetchHandler(oauthAgent);
+	// appview and chat both hydrate labeler-filtered views, so both advertise the user's labelers; the
+	// pds talks to the repo directly and needs no labeler header.
+	const labeled = withLabelersHeader(handler);
 	return {
-		appview: new Client({ handler: withLabelersHeader(handler), proxy: APPVIEW_PROXY_AUDIENCE }),
-		chat: new Client({ handler, proxy: CHAT_PROXY_AUDIENCE }),
+		appview: new Client({ handler: labeled, proxy: APPVIEW_PROXY_AUDIENCE }),
+		chat: new Client({ handler: labeled, proxy: CHAT_PROXY_AUDIENCE }),
 		pds: new Client({ handler }),
 		pdsUrl: oauthAgent.session.info.aud,
 	};
