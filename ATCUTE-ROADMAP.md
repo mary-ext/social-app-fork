@@ -358,8 +358,13 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   whole object literal type-checks against `ResolvedLink` with no cast. `agent` (`useAgent`) **stays** in
   `Composer.tsx` for the out-of-scope video-service routing (`agent.serviceUrl`/`dispatchUrl` → Stream 6).
   Session-wide `@atproto/api` importers fell 11 → 8. lint + typecheck pass; an adversarial 3-lens review
-  found only the now-stale `ResolvedLink` cast (removed). **Not yet live-verified** — the touched path is
-  post-publish AppView confirmation polling; smoke-test compose / reply / quote-post.
+  found only the now-stale `ResolvedLink` cast (removed). **Live-verified (2026-05-31)** against a real
+  account via `/playwriter --direct`: composed and published a real post through the migrated path — the
+  composer closed cleanly with no error, the post landed on the profile, and a delete round-trip confirmed
+  it gone after reload. This exercises the inline `getPostThreadV2` AppView-confirmation retry on the live
+  `appview` client. The quote-post `whenAppViewReady` consumed-result branch (quote-count refresh) was not
+  directly driven (the repost/quote menu resisted automation), but it issues the byte-identical migrated
+  call as the verified retry and the already-live `usePostThread` read.
 - Next: `@atproto/api` is down to **8 importers** — the bounded seven-file `src/lib/moderation/**` island
   and `src/state/session/agent.ts`. One thread remains, folded into **Stream 6** (`6.1` partial
   `@atproto/api` removal: delete the `BskyAgent` compat layer):
