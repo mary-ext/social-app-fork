@@ -14,20 +14,22 @@ export const createVideoEndpointUrl = (route: string, params?: Record<string, st
 };
 
 /**
- * Builds an XRPC client that talks directly to the video service, authenticating with a short-lived
- * service-auth token. The token is minted upstream via `com.atproto.server.getServiceAuth` on the user's
- * PDS.
+ * Builds an XRPC client that talks directly to the video service. When a service-auth token is given (minted
+ * upstream via `com.atproto.server.getServiceAuth` on the user's PDS) it is sent as a bearer credential on
+ * every request; omit it to send requests unauthenticated (the job-status poll runs that way).
  *
- * @param token the service-auth bearer token.
- * @returns a `Client` rooted at `VIDEO_SERVICE` that carries the bearer credential on every request.
+ * @param token the service-auth bearer token, or undefined to send requests unauthenticated.
+ * @returns a `Client` rooted at `VIDEO_SERVICE`.
  */
-export function createVideoClient(token: string): Client {
+export function createVideoClient(token?: string): Client {
 	return new Client({
-		handler: (pathname, init) =>
-			fetch(new URL(pathname, VIDEO_SERVICE), {
-				...init,
-				headers: { ...init.headers, Authorization: `Bearer ${token}` },
-			}),
+		handler: (pathname, init) => {
+			const headers = new Headers(init.headers);
+			if (token) {
+				headers.set('Authorization', `Bearer ${token}`);
+			}
+			return fetch(new URL(pathname, VIDEO_SERVICE), { ...init, headers });
+		},
 	});
 }
 

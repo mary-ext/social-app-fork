@@ -11,13 +11,10 @@ import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
-import { getServiceAuthToken } from '#/lib/media/video/upload.shared';
 import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { logger } from '#/logger';
-
-import { VIDEO_PROXY_DID } from '#/env';
 
 type CaptionsTrack = { lang: string; file: File };
 
@@ -307,14 +304,9 @@ export async function processVideo(
 		signal,
 	});
 
-	// Job-status polling needs its own service-auth token. Mint once, reuse for the polling loop.
-	const jobStatusToken = await getServiceAuthToken({
-		pds,
-		dispatchUrl: pdsUrl,
-		lxm: 'app.bsky.video.getJobStatus',
-		aud: VIDEO_PROXY_DID,
-	});
-	const videoClient = createVideoClient(jobStatusToken);
+	// Job-status polling runs unauthenticated, matching upstream — the service does not require auth here,
+	// which also avoids a minted token expiring mid-poll on a long upload.
+	const videoClient = createVideoClient();
 
 	let pollFailures = 0;
 	while (true) {
