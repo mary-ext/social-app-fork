@@ -63,9 +63,6 @@ importers:
       '@atproto/api':
         specifier: ^0.20.6
         version: 0.20.6
-      '@atproto/syntax':
-        specifier: ^0.6.1
-        version: 0.6.1
       '@braintree/sanitize-url':
         specifier: ^6.0.2
         version: 6.0.4
