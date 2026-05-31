@@ -157,8 +157,7 @@ let PostControls = ({
 			reqId,
 		});
 		openComposer({
-			// TODO(atcute Phase 3.1): composer still @atproto-typed
-			quote: post as unknown as import('@atproto/api').AppBskyFeedDefs.PostView,
+			quote: post,
 			onPost: onPostReply,
 			logContext: 'QuotePost',
 		});

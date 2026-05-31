@@ -1,18 +1,16 @@
 import { createContext, useContext, useMemo, useState } from 'react';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
+	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	type ModerationDecision,
-} from '@atproto/api';
+} from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { type VideoAsset } from '#/lib/media/video/types';
+import { type ModerationDecision } from '#/lib/moderation/compat';
 import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
-
-import { type ResolvedLink } from '#/lib/api/resolve';
 
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
@@ -82,9 +80,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 						cid: opts.quote.cid,
 						uri: opts.quote.uri,
 					},
-					// TODO(atcute Phase 5.x): the composer quote ref is still @atproto-typed
 					view: opts.quote,
-				} as unknown as ResolvedLink);
+				});
 			}
 		}
 		const author = opts.replyTo?.author || opts.quote?.author;

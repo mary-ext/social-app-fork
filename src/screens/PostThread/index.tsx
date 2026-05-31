@@ -1,6 +1,6 @@
 import { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useWindowDimensions, View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { type ResourceUri } from '@atcute/lexicons';
 import { Trans } from '@lingui/react/macro';
 
@@ -85,11 +85,7 @@ export function PostThread({ uri }: { uri: string }) {
 		if (payload) {
 			const { replyToUri, posts } = payload;
 			if (replyToUri && posts.length) {
-				// TODO(atcute Phase 3.1): composer still yields @atproto thread items
-				thread.actions.insertReplies(
-					replyToUri,
-					posts as unknown as AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
-				);
+				thread.actions.insertReplies(replyToUri, posts);
 			}
 		}
 	});

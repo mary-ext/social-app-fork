@@ -23,15 +23,15 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ClientResponseError } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
+import { type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+import { type Client, ClientResponseError, ok } from '@atcute/client';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { AppBskyUnspeccedDefs, type AppBskyUnspeccedGetPostThreadV2 } from '@atproto/api';
-import { countGraphemes } from 'unicode-segmenter/grapheme';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
+import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import Animated, {
 	type AnimatedRef,
@@ -80,7 +80,6 @@ import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useAgent, useClients, useSession } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
 import { useComposerControls } from '#/state/shell/composer';
 import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
 
@@ -734,19 +733,23 @@ export const ComposePost = ({
 						5,
 						(_e) => true,
 						async () => {
-							const res = await agent.app.bsky.unspecced.getPostThreadV2({
-								anchor: postUri!,
-								above: false,
-								below: filteredThread.posts.length - 1,
-								branchingFactor: 1,
-							});
-							if (res.data.thread.length !== filteredThread.posts.length) {
+							const data = await ok(
+								appview.get('app.bsky.unspecced.getPostThreadV2', {
+									params: {
+										anchor: postUri! as ResourceUri,
+										above: false,
+										below: filteredThread.posts.length - 1,
+										branchingFactor: 1,
+									},
+								}),
+							);
+							if (data.thread.length !== filteredThread.posts.length) {
 								throw new Error(`composer: app view is not ready`);
 							}
-							if (!res.data.thread.every((p) => AppBskyUnspeccedDefs.isThreadItemPost(p.value))) {
+							if (!data.thread.every((p) => p.value.$type === 'app.bsky.unspecced.defs#threadItemPost')) {
 								throw new Error(`composer: app view returned non-post items`);
 							}
-							return res.data.thread;
+							return data.thread;
 						},
 						1e3,
 					);
@@ -794,10 +797,10 @@ export const ComposePost = ({
 		setLangPrefs.savePostLanguageToHistory();
 		if (initQuote) {
 			// We want to wait for the quote count to update before we call `onPost`, which will refetch data
-			whenAppViewReady(agent, initQuote.uri, (res) => {
-				const anchor = res.data.thread.at(0);
+			whenAppViewReady(appview, initQuote.uri, (res) => {
+				const anchor = res.thread.at(0);
 				if (
-					AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+					anchor?.value.$type === 'app.bsky.unspecced.defs#threadItemPost' &&
 					anchor.value.post.quoteCount !== initQuote.quoteCount
 				) {
 					onPost?.(postUri);
@@ -1934,21 +1937,25 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	uri: string,
-	fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
+	fn: (res: AppBskyUnspeccedGetPostThreadV2.$output) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
 		() =>
-			agent.app.bsky.unspecced.getPostThreadV2({
-				anchor: uri,
-				above: false,
-				below: 0,
-				branchingFactor: 0,
-			}),
+			ok(
+				appview.get('app.bsky.unspecced.getPostThreadV2', {
+					params: {
+						anchor: uri as ResourceUri,
+						above: false,
+						below: 0,
+						branchingFactor: 0,
+					},
+				}),
+			),
 	);
 }
 
