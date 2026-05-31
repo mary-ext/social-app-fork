@@ -1,10 +1,14 @@
 import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationUI } from '@atproto/api';
+import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-export function createSanitizedDisplayName(profile: AnyProfileView, noAt = false, moderation?: ModerationUI) {
+export function createSanitizedDisplayName(
+	profile: AnyProfileView,
+	noAt = false,
+	moderation?: DisplayRestrictions,
+) {
 	if (profile.displayName != null && profile.displayName !== '') {
 		return sanitizeDisplayName(profile.displayName, moderation);
 	} else {

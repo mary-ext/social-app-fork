@@ -1,11 +1,11 @@
 import { useCallback, useEffect } from 'react';
 import { type ScrollView, View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import Animated, { useAnimatedRef, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
-import { moderateProfile } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -92,7 +92,7 @@ function Tab({
 	const moderation = moderateProfile(profile, moderationOpts!);
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 	);
 
 	const onPressItem = useCallback(

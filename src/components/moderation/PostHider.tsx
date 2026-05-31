@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
 import { LayoutAnimation, Pressable, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import { type DisplayRestrictions, type ModerationCause } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type ModerationCause, type ModerationUI } from '#/lib/moderation/compat';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { addStyle } from '#/lib/styles';
 
@@ -26,7 +26,7 @@ interface Props extends React.ComponentProps<typeof Link> {
 	disabled: boolean;
 	iconSize: number;
 	iconStyles: StyleProp<ViewStyle>;
-	modui: ModerationUI;
+	modui: DisplayRestrictions;
 	profile: AnyProfileView;
 	interpretFilterAsBlur?: boolean;
 	hiderStyle?: StyleProp<ViewStyle>;
@@ -139,7 +139,7 @@ export function PostHider({
 	);
 }
 
-function getBlurrableFilter(modui: ModerationUI): ModerationCause | undefined {
+function getBlurrableFilter(modui: DisplayRestrictions): ModerationCause | undefined {
 	// moderation causes get "downgraded" when they originate from embedded content
 	// a downgraded cause should *only* drive filtering in feeds, so we want to look
 	// for filters that arent downgraded

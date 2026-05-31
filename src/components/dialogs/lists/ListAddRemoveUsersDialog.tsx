@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -82,7 +82,7 @@ function UserResult({
 	list: AppBskyGraphDefs.ListView;
 	memberships: ListMembersip[] | undefined;
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
-	moderationOpts?: ModerationOpts;
+	moderationOpts?: ModerationOptions;
 }) {
 	const { t: l } = useLingui();
 	const membership = useMemo(

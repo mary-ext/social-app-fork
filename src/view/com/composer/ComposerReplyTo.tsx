@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
 import { type AnyProfileView, type AppBskyEmbedImages, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -99,7 +100,11 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 				size={42}
 				// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute
 				profile={replyTo.author as AnyProfileView}
-				moderation={replyTo.moderation?.ui('avatar')}
+				moderation={
+					replyTo.moderation
+						? getDisplayRestrictions(replyTo.moderation, DisplayContext.ProfileMedia)
+						: undefined
+				}
 				type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
 				disableNavigation={true}
 			/>
@@ -120,9 +125,11 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 							{replyTo.text}
 						</Text>
 					</View>
-					{images && !replyTo.moderation?.ui('contentMedia').blur && (
-						<ComposerReplyToImages images={images} showFull={showFull} />
-					)}
+					{images &&
+						!(
+							replyTo.moderation &&
+							getDisplayRestrictions(replyTo.moderation, DisplayContext.ContentMedia).blurs.length > 0
+						) && <ComposerReplyToImages images={images} showFull={showFull} />}
 				</View>
 				{showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
 					<QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />

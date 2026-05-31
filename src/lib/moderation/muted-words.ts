@@ -1,30 +1,30 @@
 import { type AppBskyActorDefs, type AppBskyRichtextFacet } from '@atcute/bluesky';
-import { interpretMutedWordPreference, KeywordFilterFlags } from '@atcute/bluesky-moderation';
+import { type KeywordFilter, KeywordFilterFlags } from '@atcute/bluesky-moderation';
 
 /**
- * Checks whether text (with optional facets/tags/languages and an author) matches any muted word.
+ * Checks whether text (with optional facets/tags and an author) matches any keyword filter.
  *
- * Each muted word is interpreted into an @atcute keyword filter (a case-insensitive, whole-word regex plus
- * target/expiry flags) and tested against the post's content and tags.
+ * Each filter is a case-insensitive, whole-word regex with target/expiry flags (see
+ * `interpretMutedWordPreference`), tested against the post's content and tags.
  *
  * @param params the muted-word check inputs.
- * @param params.mutedWords the user's muted words.
+ * @param params.keywordFilters the interpreted keyword filters (e.g. `moderationOpts.prefs.keywordFilters`).
  * @param params.text the post text to test against content-targeted filters.
  * @param params.facets richtext facets whose tag features contribute to the tag set.
  * @param params.outlineTags additional tags carried outside the richtext facets.
  * @param params.actor the post author, used to honor the `exclude-following` target.
- * @returns whether any muted word matched.
+ * @returns whether any keyword filter matched.
  */
 export const hasMutedWord = ({
 	actor,
 	facets,
-	mutedWords,
+	keywordFilters,
 	outlineTags,
 	text,
 }: {
 	actor?: AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewBasic;
 	facets?: AppBskyRichtextFacet.Main[];
-	mutedWords: AppBskyActorDefs.MutedWord[];
+	keywordFilters: KeywordFilter[];
 	outlineTags?: string[];
 	text: string;
 }): boolean => {
@@ -40,8 +40,7 @@ export const hasMutedWord = ({
 	const isFollowing = Boolean(actor?.viewer?.following);
 	const now = Date.now();
 
-	for (const mutedWord of mutedWords) {
-		const filter = interpretMutedWordPreference(mutedWord);
+	for (const filter of keywordFilters) {
 		if (filter.expiresAt !== undefined && filter.expiresAt < now) {
 			continue;
 		}

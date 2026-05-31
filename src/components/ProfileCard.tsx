@@ -6,10 +6,15 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { getModerationCauseKey } from '#/lib/moderation';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
@@ -50,7 +55,7 @@ export function Default({
 	onPress,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
 	testID?: string;
 	position?: number;
@@ -78,7 +83,7 @@ export function Card({
 	contextProfileDid,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
 	position?: number;
 	contextProfileDid?: string;
@@ -146,7 +151,7 @@ export function Avatar({
 	size = 40,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress?: () => void;
 	disabledPreview?: boolean;
 	liveOverride?: boolean;
@@ -161,14 +166,14 @@ export function Avatar({
 			size={size}
 			avatar={profile.avatar}
 			type={profile.associated?.labeler ? 'labeler' : 'user'}
-			moderation={moderation.ui('avatar')}
+			moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 			live={liveOverride ?? live}
 		/>
 	) : (
 		<PreviewableUserAvatar
 			size={size}
 			profile={profile}
-			moderation={moderation.ui('avatar')}
+			moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 			onBeforePress={onPress}
 			live={liveOverride ?? live}
 		/>
@@ -197,7 +202,7 @@ export function NameAndHandle({
 	inline = false,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	inline?: boolean;
 }) {
 	if (inline) {
@@ -217,13 +222,13 @@ function InlineNameAndHandle({
 	moderationOpts,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 	);
 	const handle = sanitizeHandle(profile.handle, '@');
 	return (
@@ -254,14 +259,14 @@ export function Name({
 	textStyle,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	style?: StyleProp<ViewStyle>;
 	textStyle?: StyleProp<TextStyle>;
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 	);
 	return (
 		<View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
@@ -387,7 +392,7 @@ export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: 
 
 export type FollowButtonProps = {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
 	colorInverted?: boolean;
 	onFollow?: () => void;
@@ -433,7 +438,7 @@ export function FollowButtonInner({
 			Toast.show(
 				l`Following ${sanitizeDisplayName(
 					profile.displayName || profile.handle,
-					moderation.ui('displayName'),
+					getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 				)}`,
 			);
 			onPressProp?.(e);
@@ -456,7 +461,7 @@ export function FollowButtonInner({
 			Toast.show(
 				l`No longer following ${sanitizeDisplayName(
 					profile.displayName || profile.handle,
-					moderation.ui('displayName'),
+					getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 				)}`,
 			);
 			onPressProp?.(e);
@@ -545,13 +550,13 @@ export function Labels({
 	moderationOpts,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
-	const modui = moderation.ui('profileList');
+	const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileList);
 	const followedBy = profile.viewer?.followedBy;
 
-	if (!followedBy && !modui.inform && !modui.alert) {
+	if (!followedBy && modui.informs.length === 0 && modui.alerts.length === 0) {
 		return null;
 	}
 

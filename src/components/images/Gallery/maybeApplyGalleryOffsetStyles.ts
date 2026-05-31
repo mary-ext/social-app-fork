@@ -1,8 +1,7 @@
 import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { type DisplayRestrictions, type ModerationCause } from '@atcute/bluesky-moderation';
 
 import { unique } from '#/lib/moderation';
-import { type ModerationUI } from '#/lib/moderation/compat';
-import { type ModerationCause } from '#/lib/moderation/compat';
 
 import { type AppModerationCause } from '#/components/Pills';
 
@@ -17,7 +16,7 @@ export function maybeApplyGalleryOffsetStyles(
 		additionalCauses,
 	}: {
 		post: AppBskyFeedDefs.PostView;
-		modui: ModerationUI;
+		modui: DisplayRestrictions;
 		additionalCauses?: ModerationCause[] | AppModerationCause[];
 	},
 ) {
@@ -48,10 +47,10 @@ export function maybeApplyGalleryOffsetStyles(
 	 * Then check if we have any text
 	 */
 	let hasLabels = false;
-	if (modui.alert) {
+	if (modui.alerts.length > 0) {
 		hasLabels = modui.alerts.filter(unique).length > 0;
 	}
-	if (modui.inform) {
+	if (modui.informs.length > 0) {
 		hasLabels = hasLabels || modui.informs.filter(unique).length > 0;
 	}
 	if (additionalCauses?.length) {

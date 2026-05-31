@@ -1,9 +1,14 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -668,7 +673,7 @@ function DefaultProfileCard({
 	onPress,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress: (did: string) => void;
 }) {
 	const t = useTheme();
@@ -678,7 +683,7 @@ function DefaultProfileCard({
 	const handle = sanitizeHandle(profile.handle, '@');
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 	);
 
 	const handleOnPress = useCallback(() => {
@@ -720,7 +725,7 @@ function GroupChatMemberProfileCard({
 	moderationOpts,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	const enabled = canBeAddedToGroup(profile);

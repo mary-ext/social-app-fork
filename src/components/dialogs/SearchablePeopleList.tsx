@@ -1,9 +1,14 @@
 import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -349,7 +354,7 @@ function DefaultProfileCard({
 	onPress,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress: (did: string) => void;
 }) {
 	const t = useTheme();
@@ -357,7 +362,11 @@ function DefaultProfileCard({
 	const enabled = canBeMessaged(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const handle = sanitizeHandle(profile.handle, '@');
-	const displayName = createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+	const displayName = createSanitizedDisplayName(
+		profile,
+		true,
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+	);
 
 	const handleOnPress = useCallback(() => {
 		onPress(profile.did);
@@ -399,7 +408,7 @@ function ExistingChatCard({
 	onPress,
 }: {
 	convo: ConvoWithDetails;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress: (convoId: string) => void;
 }) {
 	const t = useTheme();
@@ -411,7 +420,10 @@ function ExistingChatCard({
 			: createSanitizedDisplayName(
 					convo.primaryMember,
 					true,
-					moderateProfile(convo.primaryMember, moderationOpts).ui('displayName'),
+					getDisplayRestrictions(
+						moderateProfile(convo.primaryMember, moderationOpts),
+						DisplayContext.ProfileView,
+					),
 				);
 
 	const handleOnPress = useCallback(() => {

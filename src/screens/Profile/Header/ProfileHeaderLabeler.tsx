@@ -2,6 +2,12 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
@@ -9,7 +15,6 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { MAX_LABELERS } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { isAppLabeler } from '#/lib/moderation';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -47,7 +52,7 @@ interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed;
 	descriptionRT: Richtext | null;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 }
@@ -121,7 +126,8 @@ let ProfileHeaderLabeler = ({
 				{!isPlaceholderProfile && (
 					<>
 						{isSelf && <ProfileHeaderMetrics profile={profile} />}
-						{descriptionRT && !moderation.ui('profileView').blur ? (
+						{descriptionRT &&
+						getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 							<View pointerEvents="auto">
 								<RichText
 									testID="profileHeaderDescription"

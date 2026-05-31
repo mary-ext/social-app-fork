@@ -4,10 +4,16 @@ import {
 	type AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderatePost,
+	ModerationCauseType,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { type $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import { moderatePost, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 
 import {
@@ -70,15 +76,15 @@ export function threadPost({
 	uri: string;
 	depth: number;
 	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	threadgateHiddenReplies: Set<string>;
 }): Extract<ThreadItem, { type: 'threadPost' }> {
 	const moderation = moderatePost(value.post, moderationOpts);
-	const modui = moderation.ui('contentList');
-	const blurred = modui.blur || modui.filter;
-	const muted = (modui.blurs[0] || modui.filters[0])?.type === 'muted';
+	const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+	const blurred = modui.blurs.length > 0 || modui.filters.length > 0;
+	const muted = (modui.blurs[0] || modui.filters[0])?.type === ModerationCauseType.MutedPermanent;
 	const hiddenByThreadgate = threadgateHiddenReplies.has(uri);
-	const isOwnPost = value.post.author.did === moderationOpts.userDid;
+	const isOwnPost = value.post.author.did === moderationOpts.viewerDid;
 	const isBlurred = (hiddenByThreadgate || blurred || muted) && !isOwnPost;
 	return {
 		type: 'threadPost',

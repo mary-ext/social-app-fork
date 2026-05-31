@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
+import { type ModerationCause } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
-import { BSKY_LABELER_DID, type ModerationCause } from '#/lib/moderation/compat';
+import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 
 import { UserAvatar } from '#/view/com/util/UserAvatar';

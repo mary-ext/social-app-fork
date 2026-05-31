@@ -1,9 +1,13 @@
 import { type AppBskyGraphGetLists } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateList,
+	ModerationCauseType,
+} from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
-
-import { moderateUserList } from '#/lib/moderation/compat';
 
 import { useClients } from '#/state/session';
 
@@ -43,8 +47,10 @@ export function useProfileListsQuery(did: string, opts?: { enabled?: boolean }) 
 					return {
 						...page,
 						lists: page.lists.filter((list) => {
-							const decision = moderateUserList(list, moderationOpts!);
-							return !decision.ui('contentList').filters.some((cause) => cause.type !== 'muted');
+							const decision = moderateList(list, moderationOpts!);
+							return !getDisplayRestrictions(decision, DisplayContext.ContentList).filters.some(
+								(cause) => cause.type !== ModerationCauseType.MutedPermanent,
+							);
 						}),
 					};
 				}),

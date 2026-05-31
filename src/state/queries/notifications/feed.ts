@@ -17,6 +17,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type InfiniteData,
@@ -25,8 +26,6 @@ import {
 	useInfiniteQuery,
 	useQueryClient,
 } from '@tanstack/react-query';
-
-import { moderatePost } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
@@ -173,7 +172,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 											const record = item.subject?.record as AppBskyFeedPost.Main | undefined;
 											if (record?.$type === 'app.bsky.feed.post') {
 												const mod = moderatePost(item.subject as AppBskyFeedDefs.PostView, moderationOpts!);
-												if (mod.ui('contentList').filter) {
+												if (getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length > 0) {
 													return false;
 												}
 											}

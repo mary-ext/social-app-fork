@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { type ChatBskyActorDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import {
 	type CommonNavigatorParams,
 	type NativeStackScreenProps,
@@ -159,7 +159,7 @@ function GroupSettings({
 	isReady,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	isReady: boolean;
 }) {
 	const [isPTRing, setIsPTRing] = useState(false);
@@ -279,7 +279,7 @@ function SettingsHeader({
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	isOwner: boolean;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	isReady: boolean;
 }) {
 	const t = useTheme();

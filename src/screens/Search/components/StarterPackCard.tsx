@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { moderateProfile } from '#/lib/moderation/compat';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -179,7 +179,7 @@ export function AvatarStack({
 									size={size}
 									avatar={item.profile.avatar}
 									type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-									moderation={item.moderation.ui('avatar')}
+									moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
 									style={[a.absolute, a.inset_0]}
 								/>
 							) : (

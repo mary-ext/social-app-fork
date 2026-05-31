@@ -1,9 +1,10 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { type AppBskyActorDefs, type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
 
-import { hasMutedWord } from '#/lib/moderation/compat';
+import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
@@ -32,8 +33,11 @@ export const trendingTopicsQueryKey = ['trending-topics'];
 export function useTrendingTopics() {
 	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
-	const mutedWords = useMemo(
-		() => preferences?.moderationPrefs?.mutedWords ?? [],
+	const keywordFilters = useMemo(
+		() =>
+			(preferences?.moderationPrefs?.mutedWords ?? []).map((word) =>
+				interpretMutedWordPreference(word as unknown as AppBskyActorDefs.MutedWord),
+			),
 		[preferences?.moderationPrefs?.mutedWords],
 	);
 
@@ -58,7 +62,7 @@ export function useTrendingTopics() {
 					topics: dedup(
 						data.topics.filter((t) => {
 							return !hasMutedWord({
-								mutedWords,
+								keywordFilters,
 								text: `${t.topic} ${t.displayName ?? ''} ${t.description ?? ''}`,
 							});
 						}),
@@ -66,14 +70,14 @@ export function useTrendingTopics() {
 					suggested: dedup(
 						data.suggested.filter((t) => {
 							return !hasMutedWord({
-								mutedWords,
+								keywordFilters,
 								text: `${t.topic} ${t.displayName ?? ''} ${t.description ?? ''}`,
 							});
 						}),
 					),
 				};
 			},
-			[mutedWords],
+			[keywordFilters],
 		),
 	});
 }

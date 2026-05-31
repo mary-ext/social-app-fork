@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useA11y } from '#/state/a11y';
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
@@ -28,7 +28,7 @@ function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
 
-export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOpts }) {
+export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOptions }) {
 	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');

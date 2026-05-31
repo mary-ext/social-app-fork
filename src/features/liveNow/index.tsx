@@ -5,6 +5,7 @@ import {
 	type AppBskyActorStatus,
 	type AppBskyEmbedExternal,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
 import { type $type, type Did, type GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -17,7 +18,6 @@ import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { imageToThumb } from '#/lib/api/resolve';
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
-import { moderateStatus } from '#/lib/moderation/compat';
 
 import { updateProfileShadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -106,7 +106,7 @@ export function useActorStatus(actor?: AnyProfileView) {
 		/*
 		 * Do not even allow Live Now to show if filtered for `contentList`.
 		 */
-		if (moderation && moderation.ui('contentList').filter) {
+		if (moderation && getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length > 0) {
 			return DEFAULT_STATE;
 		}
 

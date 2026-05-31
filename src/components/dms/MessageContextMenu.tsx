@@ -1,11 +1,11 @@
 import { memo, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 
 import { useConvoActive } from '#/state/messages/convo';
@@ -37,7 +37,7 @@ export let MessageContextMenu = ({
 }: {
 	message: ChatBskyConvoDefs.MessageView;
 	senderProfile?: AnyProfileView;
-	moderationOpts: ModerationOpts | undefined;
+	moderationOpts: ModerationOptions | undefined;
 	children: (props: TriggerChildProps) => React.ReactNode;
 }): React.ReactNode => {
 	const { t: l, i18n } = useLingui();

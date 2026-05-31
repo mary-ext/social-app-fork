@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native';
 import { type AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
 import { isReasonFeedSource, type ReasonFeedSource } from '#/lib/api/feed/types';
-import { type ModerationDecision } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
 
@@ -58,7 +58,11 @@ export function PostFeedReason({
 	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
 		const by = reason.by;
 		const isOwner = by.did === currentAccount?.did;
-		const reposter = createSanitizedDisplayName(by as AnyProfileView, false, moderation?.ui('displayName'));
+		const reposter = createSanitizedDisplayName(
+			by as AnyProfileView,
+			false,
+			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		);
 		return (
 			<Link
 				style={styles.includeReason}

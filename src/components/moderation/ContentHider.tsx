@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { LayoutAnimation, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
+import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { ADULT_CONTENT_LABELS, type AdultSelfLabel, isJustAMute } from '#/lib/moderation';
-import { type ModerationUI } from '#/lib/moderation/compat';
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from '#/lib/moderation/useLabelInfo';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
@@ -34,7 +34,7 @@ export function ContentHider({
 	children,
 }: {
 	testID?: string;
-	modui: ModerationUI | undefined;
+	modui: DisplayRestrictions | undefined;
 	ignoreMute?: boolean;
 	style?: StyleProp<ViewStyle>;
 	activeStyle?: StyleProp<ViewStyle>;
@@ -69,7 +69,7 @@ function ContentHiderActive({
 	children,
 }: {
 	testID?: string;
-	modui: ModerationUI;
+	modui: DisplayRestrictions;
 	style?: StyleProp<ViewStyle>;
 	childContainerStyle?: StyleProp<ViewStyle>;
 	children?: React.ReactNode;
@@ -89,7 +89,7 @@ function ContentHiderActive({
 		if (!modui?.blurs || !blur) {
 			return undefined;
 		}
-		if (blur.type !== 'label' || (blur.type === 'label' && blur.source.type !== 'user')) {
+		if (blur.type !== ModerationCauseType.Label || blur.source !== null) {
 			if (desc.isSubjectAccount) {
 				return l`${desc.name} (Account)`;
 			} else {
@@ -100,10 +100,10 @@ function ContentHiderActive({
 		let hasAdultContentLabel = false;
 		const selfBlurNames = modui.blurs
 			.filter((cause) => {
-				if (cause.type !== 'label') {
+				if (cause.type !== ModerationCauseType.Label) {
 					return false;
 				}
-				if (cause.source.type !== 'user') {
+				if (cause.source !== null) {
 					return false;
 				}
 				if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
@@ -116,7 +116,7 @@ function ContentHiderActive({
 			})
 			.slice(0, 2)
 			.map((cause) => {
-				if (cause.type !== 'label') {
+				if (cause.type !== ModerationCauseType.Label) {
 					return;
 				}
 
@@ -207,7 +207,7 @@ function ContentHiderActive({
 					</View>
 				)}
 			</Button>
-			{desc.source && blur.type === 'label' && !override && (
+			{desc.source && blur.type === ModerationCauseType.Label && !override && (
 				<Button
 					onPress={(e) => {
 						e.preventDefault();

@@ -3,6 +3,7 @@ import { type LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { moderateProfile, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useIsFocused } from '@react-navigation/native';
 
 import Animated, {
@@ -11,7 +12,6 @@ import Animated, {
 	useAnimatedStyle,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -53,7 +53,7 @@ interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined;
 	descriptionRT: Richtext | null;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 	setMinimumHeight: (height: number) => void;

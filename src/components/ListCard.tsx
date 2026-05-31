@@ -1,12 +1,17 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	type DisplayRestrictions,
+	getDisplayRestrictions,
+	moderateList,
+} from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { moderateUserList, type ModerationUI } from '#/lib/moderation/compat';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -46,7 +51,7 @@ type Props = {
 export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'children'>) {
 	const { view, showPinButton } = props;
 	const moderationOpts = useModerationOpts();
-	const moderation = moderationOpts ? moderateUserList(view, moderationOpts) : undefined;
+	const moderation = moderationOpts ? moderateList(view, moderationOpts) : undefined;
 
 	return (
 		<Link {...props}>
@@ -57,7 +62,7 @@ export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'childre
 						title={view.name}
 						creator={view.creator}
 						purpose={view.purpose}
-						modUi={moderation?.ui('contentView')}
+						modUi={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : undefined}
 					/>
 					{showPinButton && view.purpose === CURATELIST && (
 						<SaveButton view={view as unknown as Parameters<typeof SaveButton>[0]['view']} pin />
@@ -96,7 +101,7 @@ export function TitleAndByline({
 	title: string;
 	creator?: AnyProfileView;
 	purpose?: AppBskyGraphDefs.ListView['purpose'];
-	modUi?: ModerationUI;
+	modUi?: DisplayRestrictions;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();

@@ -1,9 +1,9 @@
+import { type LabelPreference } from '@atcute/bluesky-moderation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { replaceEqualDeep } from '#/lib/functions';
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
-import { type LabelPreference } from '#/lib/moderation/compat';
 import { type AppBskyActorDefs, type BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
 import { getAge } from '#/lib/strings/time';
 

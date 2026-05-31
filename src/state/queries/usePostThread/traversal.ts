@@ -1,4 +1,4 @@
-import { type ModerationOpts } from '#/lib/moderation/compat';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 
 import {
 	type ApiThreadItem,
@@ -24,7 +24,7 @@ export function sortAndAnnotateThreadItems(
 		skipModerationHandling,
 	}: {
 		threadgateHiddenReplies: Set<string>;
-		moderationOpts: ModerationOpts;
+		moderationOpts: ModerationOptions;
 		view: PostThreadParams['view'];
 		/**
 		 * Set to `true` in cases where we already know the moderation state of the post e.g. when fetching

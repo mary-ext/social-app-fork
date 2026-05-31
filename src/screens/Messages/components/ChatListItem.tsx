@@ -1,12 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
 import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import {
+	type BlockingModerationCause,
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	ModerationCauseType,
+	type ModerationDecision,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
 import { useHaptics } from '#/lib/haptics';
-import { moderateProfile, type ModerationDecision, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -99,7 +107,7 @@ function DirectChatItem({
 	children,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	showMenu?: boolean;
 	selected?: boolean;
 	children?: React.ReactNode;
@@ -113,7 +121,11 @@ function DirectChatItem({
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
 		? l`Deleted Account`
-		: createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+		: createSanitizedDisplayName(
+				profile,
+				true,
+				getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+			);
 
 	return (
 		<BaseChatItem
@@ -122,7 +134,7 @@ function DirectChatItem({
 				<PreviewableUserAvatar
 					profile={profile}
 					size={isWithinSplitView ? 48 : 52}
-					moderation={moderation.ui('avatar')}
+					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				/>
 			}
 			primaryProfile={profile}
@@ -137,12 +149,14 @@ function DirectChatItem({
 			showMenu={showMenu}
 			selected={selected}
 			isDeletedAccount={isDeletedAccount}
-			isBlockedAccount={moderation.blocked}
+			isBlockedAccount={moderation.causes.some(
+				(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+			)}
 			showProfileBadges
 			postAlerts={
 				isWithinSplitView ? null : (
 					<PostAlerts
-						modui={moderation.ui('contentList')}
+						modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 						size="sm"
 						style={[a.pb_2xs, a.max_w_full, a.overflow_hidden]}
 					/>
@@ -162,7 +176,7 @@ function GroupChatItem({
 	children,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	showMenu?: boolean;
 	selected?: boolean;
 	children?: React.ReactNode;
@@ -252,10 +266,11 @@ function BaseChatItem({
 
 	const blockInfo = useMemo(() => {
 		if (!primaryProfileModeration) return { listBlocks: [], userBlock: undefined };
-		const modui = primaryProfileModeration.ui('profileView');
-		const blocks = modui.alerts.filter((alert) => alert.type === 'blocking');
-		const listBlocks = blocks.filter((alert) => alert.source.type === 'list');
-		const userBlock = blocks.find((alert) => alert.source.type === 'user');
+		const blocks = primaryProfileModeration.causes.filter(
+			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
+		);
+		const listBlocks = blocks.filter((block) => block.source !== null);
+		const userBlock = blocks.find((block) => block.source === null);
 		return {
 			listBlocks,
 			userBlock,

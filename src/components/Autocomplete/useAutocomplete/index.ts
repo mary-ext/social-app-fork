@@ -1,9 +1,15 @@
 import { useCallback, useMemo } from 'react';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
@@ -20,8 +26,8 @@ import {
 import { useEmojiSearch } from './useEmojiSearch';
 
 const DEFAULT_MOD_OPTS = {
-	userDid: undefined,
-	prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+	viewerDid: undefined,
+	prefs: toModerationPreferences(DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs),
 };
 
 export function useAutocomplete({
@@ -133,12 +139,19 @@ function moderateProfileItem({
 }: {
 	query: string;
 	item: AutocompleteProfile;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
-	const modui = moderateProfile(item.profile, moderationOpts).ui('profileList');
+	const modui = getDisplayRestrictions(
+		moderateProfile(item.profile, moderationOpts),
+		DisplayContext.ProfileList,
+	);
 	const isExactMatch = query && item.profile.handle.toLowerCase() === query;
 
-	if ((isExactMatch && !moduiContainsHideableOffense(modui)) || !modui.filter || isJustAMute(modui)) {
+	if (
+		(isExactMatch && !moduiContainsHideableOffense(modui)) ||
+		modui.filters.length === 0 ||
+		isJustAMute(modui)
+	) {
 		return item;
 	}
 

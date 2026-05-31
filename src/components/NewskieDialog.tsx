@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { type AnyStarterPackView, type AppBskyActorDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
-import { moderateProfile } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -88,7 +88,10 @@ function DialogInner({
 	const profileName = useMemo(() => {
 		if (!moderationOpts) return profile.displayName || profile.handle;
 		const moderation = moderateProfile(profile, moderationOpts);
-		return sanitizeDisplayName(profile.displayName || profile.handle, moderation.ui('displayName'));
+		return sanitizeDisplayName(
+			profile.displayName || profile.handle,
+			getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		);
 	}, [moderationOpts, profile]);
 
 	const getJoinMessage = () => {

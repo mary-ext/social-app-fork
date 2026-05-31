@@ -1,8 +1,8 @@
 import { View } from 'react-native';
+import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
-import { type ModerationCause } from '#/lib/moderation/compat';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import { makeProfileLink } from '#/lib/routes/links';
 import { listUriToHref } from '#/lib/strings/url-helpers';
@@ -51,9 +51,13 @@ function ModerationDetailsDialogInner({
 	if (!modcause) {
 		name = l`Content Warning`;
 		description = l`Moderator has chosen to set a general warning on the content.`;
-	} else if (modcause.type === 'blocking') {
-		if (modcause.source.type === 'list') {
-			const list = modcause.source.list;
+	} else if (modcause.type === 'reply-hidden') {
+		const isYou = currentAccount?.did === modcause.source.did;
+		name = isYou ? l`Reply Hidden by You` : l`Reply Hidden by Thread Author`;
+		description = isYou ? l`You hid this reply.` : l`The author of this thread has hidden this reply.`;
+	} else if (modcause.type === ModerationCauseType.Blocking) {
+		if (modcause.source) {
+			const list = modcause.source;
 			name = l`User Blocked by List`;
 			description = (
 				<Trans>
@@ -68,15 +72,12 @@ function ModerationDetailsDialogInner({
 			name = l`User Blocked`;
 			description = l`You have blocked this user. You cannot view their content.`;
 		}
-	} else if (modcause.type === 'blocked-by') {
+	} else if (modcause.type === ModerationCauseType.BlockedBy) {
 		name = l`User Blocks You`;
 		description = l`This user has blocked you. You cannot view their content.`;
-	} else if (modcause.type === 'block-other') {
-		name = l`Content Not Available`;
-		description = l`This content is not available because one of the users involved has blocked the other.`;
-	} else if (modcause.type === 'muted') {
-		if (modcause.source.type === 'list') {
-			const list = modcause.source.list;
+	} else if (modcause.type === ModerationCauseType.MutedPermanent) {
+		if (modcause.source) {
+			const list = modcause.source;
 			name = l`Account Muted by List`;
 			description = (
 				<Trans>
@@ -91,17 +92,16 @@ function ModerationDetailsDialogInner({
 			name = l`Account Muted`;
 			description = l`You have muted this account.`;
 		}
-	} else if (modcause.type === 'mute-word') {
+	} else if (modcause.type === ModerationCauseType.MutedTemporary) {
+		name = l`Account Muted`;
+		description = l`You have muted this account.`;
+	} else if (modcause.type === ModerationCauseType.MutedKeyword) {
 		name = l`Post Hidden by Muted Word`;
 		description = l`You've chosen to hide a word or tag within this post.`;
-	} else if (modcause.type === 'hidden') {
+	} else if (modcause.type === ModerationCauseType.Hidden) {
 		name = l`Post Hidden by You`;
 		description = l`You have hidden this post.`;
-	} else if (modcause.type === 'reply-hidden') {
-		const isYou = currentAccount?.did === modcause.source.did;
-		name = isYou ? l`Reply Hidden by You` : l`Reply Hidden by Thread Author`;
-		description = isYou ? l`You hid this reply.` : l`The author of this thread has hidden this reply.`;
-	} else if (modcause.type === 'label') {
+	} else if (modcause.type === ModerationCauseType.Label) {
 		name = desc.name;
 		description = (
 			<Text emoji style={[t.atoms.text, a.text_md, a.leading_snug]}>
@@ -142,7 +142,7 @@ function ModerationDetailsDialogInner({
 					</Admonition>
 				)}
 			</View>
-			{modcause?.type === 'label' && (
+			{modcause?.type === ModerationCauseType.Label && (
 				<View
 					style={[
 						xGutters,
@@ -156,7 +156,7 @@ function ModerationDetailsDialogInner({
 						},
 					]}
 				>
-					{modcause.source.type === 'user' ? (
+					{modcause.source === null ? (
 						<Text style={[t.atoms.text, a.text_md, a.leading_snug]}>
 							<Trans>This label was applied by the author.</Trans>
 						</Text>

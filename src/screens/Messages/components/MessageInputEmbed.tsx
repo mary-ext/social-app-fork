@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
 import { type AnyProfileView, type AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { HITSLOP_20 } from '#/lib/constants';
-import { moderatePost } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';
@@ -167,8 +167,12 @@ export function MessageInputEmbed({
 							<XIcon size="xs" style={t.atoms.text_contrast_high} />
 						</Button>
 					</View>
-					<ContentHider modui={moderation.ui('contentView')}>
-						<PostAlerts modui={moderation.ui('contentView')} style={a.py_xs} size="sm" />
+					<ContentHider modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}>
+						<PostAlerts
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+							style={a.py_xs}
+							size="sm"
+						/>
 						{rt.text && (
 							<RichText
 								enableTags

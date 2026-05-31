@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
-import { moderateStatus } from '#/lib/moderation/compat';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
@@ -113,7 +113,7 @@ export function LiveStatus({
 	return (
 		<>
 			{embed.external.thumb && (
-				<Hider.Outer modui={moderation?.ui('contentMedia')}>
+				<Hider.Outer modui={moderation && getDisplayRestrictions(moderation, DisplayContext.ContentMedia)}>
 					<Hider.Mask>
 						<ModeratedImage />
 					</Hider.Mask>

@@ -5,6 +5,7 @@ import {
 	type AppBskyGraphDefs,
 	type AppBskyUnspeccedGetPopularFeedGenerators,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -20,7 +21,6 @@ import {
 } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
-import { moderateFeedGenerator } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
@@ -276,7 +276,10 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 									}),
 								);
 								const decision = moderateFeedGenerator(feed, moderationOpts!);
-								return !alreadySaved && !decision.ui('contentList').filter;
+								return (
+									!alreadySaved &&
+									getDisplayRestrictions(decision, DisplayContext.ContentList).filters.length === 0
+								);
 							}),
 						};
 					}),
@@ -326,7 +329,7 @@ export function useSearchPopularFeedsMutation() {
 			if (moderationOpts) {
 				return data.feeds.filter((feed) => {
 					const decision = moderateFeedGenerator(feed, moderationOpts);
-					return !decision.ui('contentMedia').blur;
+					return getDisplayRestrictions(decision, DisplayContext.ContentMedia).blurs.length === 0;
 				});
 			}
 
@@ -359,7 +362,7 @@ export function usePopularFeedsSearch({ query, enabled }: { query: string; enabl
 		select(data) {
 			return data.filter((feed) => {
 				const decision = moderateFeedGenerator(feed, moderationOpts!);
-				return !decision.ui('contentMedia').blur;
+				return getDisplayRestrictions(decision, DisplayContext.ContentMedia).blurs.length === 0;
 			});
 		},
 	});

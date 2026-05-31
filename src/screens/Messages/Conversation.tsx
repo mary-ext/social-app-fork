@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { type RouteProp, useFocusEffect, useIsFocused, useRoute } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
-import { moderateProfile } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -148,8 +148,10 @@ function InnerReady({
 		primaryMember &&
 		primaryMemberModeration &&
 		(convo.kind === 'group'
-			? primaryMemberModeration?.blockCause?.type === 'blocking'
-			: primaryMemberModeration?.blocked)
+			? primaryMemberModeration?.causes.some((c) => c.type === ModerationCauseType.Blocking)
+			: primaryMemberModeration?.causes.some(
+					(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+				))
 	) {
 		footer = (
 			<MessagesListBlockedFooter

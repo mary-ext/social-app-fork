@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
-
-import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useA11y } from '#/state/a11y';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
@@ -27,7 +26,7 @@ function keyExtractor(item: AnyProfileView) {
 	return item?.did ?? '';
 }
 
-export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpts }) {
+export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOptions }) {
 	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');

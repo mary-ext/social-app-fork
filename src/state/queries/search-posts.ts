@@ -1,10 +1,9 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedSearchPosts } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
-
-import { moderatePost } from '#/lib/moderation/compat';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useClients } from '#/state/session';
@@ -111,7 +110,7 @@ export function useSearchPostsQuery({
 								...page,
 								posts: page.posts.filter((post) => {
 									const mod = moderatePost(post, moderationOpts!);
-									return !mod.ui('contentList').filter;
+									return getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length === 0;
 								}),
 							};
 						}),

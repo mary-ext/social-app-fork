@@ -7,13 +7,19 @@ import {
 	type AppBskyGraphDefs,
 	type AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateNotification,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { type Client, ok } from '@atcute/client';
 import { type ResourceUri } from '@atcute/lexicons';
 import { type QueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
-import { hasMutedWord, moderateNotification, type ModerationOpts } from '#/lib/moderation/compat';
+import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { precacheProfile } from '../profile';
 import { type FeedNotification, type FeedPage, type NotificationType } from './types';
@@ -45,7 +51,7 @@ export async function fetchPage({
 	cursor: string | undefined;
 	limit: number;
 	queryClient: QueryClient;
-	moderationOpts: ModerationOpts | undefined;
+	moderationOpts: ModerationOptions | undefined;
 	fetchAdditionalData: boolean;
 	reasons: string[];
 }): Promise<{
@@ -110,7 +116,7 @@ export async function fetchPage({
 
 export function shouldFilterNotif(
 	notif: AppBskyNotificationListNotifications.Notification,
-	moderationOpts: ModerationOpts | undefined,
+	moderationOpts: ModerationOptions | undefined,
 ): boolean {
 	const containsImperative = !!notif.author.labels?.some((label) =>
 		labelIsHideableOffense(label as unknown as Parameters<typeof labelIsHideableOffense>[0]),
@@ -125,11 +131,10 @@ export function shouldFilterNotif(
 		const record = notif.record as AppBskyFeedPost.Main;
 		if (
 			hasMutedWord({
-				mutedWords: moderationOpts.prefs.mutedWords,
+				keywordFilters: moderationOpts.prefs.keywordFilters ?? [],
 				text: record.text,
 				facets: record.facets,
 				outlineTags: record.tags,
-				languages: record.langs,
 				actor: notif.author,
 			})
 		) {
@@ -139,7 +144,10 @@ export function shouldFilterNotif(
 	if (notif.author.viewer?.following) {
 		return false;
 	}
-	return moderateNotification(notif, moderationOpts).ui('contentList').filter;
+	return (
+		getDisplayRestrictions(moderateNotification(notif, moderationOpts), DisplayContext.ContentList).filters
+			.length > 0
+	);
 }
 
 export function groupNotifications(

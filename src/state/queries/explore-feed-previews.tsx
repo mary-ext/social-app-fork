@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { type AppBskyFeedDefs as AtcAppBskyFeedDefs, type AppBskyActorDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
@@ -7,7 +8,6 @@ import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack
 import { FeedTuner } from '#/lib/api/feed-manip';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
-import { moderatePost } from '#/lib/moderation/compat';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -191,7 +191,9 @@ export function useFeedPreviews(
 
 							// apply moderation filters
 							item.items = item.items.filter((_, i) => {
-								return !moderations[i]?.ui('contentList').filter;
+								const modui =
+									moderations[i] && getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList);
+								return !modui || modui.filters.length === 0;
 							});
 
 							const slice = {

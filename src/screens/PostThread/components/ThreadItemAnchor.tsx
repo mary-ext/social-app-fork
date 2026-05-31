@@ -7,6 +7,7 @@ import {
 	AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
@@ -305,7 +306,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 							<PreviewableUserAvatar
 								size={42}
 								profile={post.author as AnyProfileView}
-								moderation={moderation.ui('avatar')}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
 								onBeforePress={onOpenAuthor}
@@ -316,7 +317,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 							style={[a.flex_1]}
 							label={sanitizeDisplayName(
 								post.author.displayName || sanitizeHandle(post.author.handle),
-								moderation.ui('displayName'),
+								getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 							)}
 							onPress={onOpenAuthor}
 						>
@@ -330,7 +331,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										>
 											{sanitizeDisplayName(
 												post.author.displayName || sanitizeHandle(post.author.handle),
-												moderation.ui('displayName'),
+												getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 											)}
 										</Text>
 
@@ -350,9 +351,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 					</View>
 					<View style={[a.pb_sm]}>
 						<LabelsOnMyPost post={post} style={[a.pb_sm]} />
-						<ContentHider modui={moderation.ui('contentView')} ignoreMute childContainerStyle={[a.pt_sm]}>
+						<ContentHider
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+							ignoreMute
+							childContainerStyle={[a.pt_sm]}
+						>
 							<PostAlerts
-								modui={moderation.ui('contentView')}
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 								size="lg"
 								includeMute
 								style={[a.pb_sm]}

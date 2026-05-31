@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
-import { BSKY_LABELER_DID, type ModerationCause, type ModerationCauseSource } from '@atproto/api';
+import { type ModerationCause, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
+import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useLabelDefinitions } from '#/state/preferences';
@@ -17,13 +18,16 @@ import { type AppModerationCause } from '#/components/Pills';
 import { useGlobalLabelStrings } from './useGlobalLabelStrings';
 import { getDefinition, getLabelStrings } from './useLabelInfo';
 
+/** Provenance of a moderation cause, replacing `@atproto/api`'s `ModerationCauseSource['type']`. */
+export type ModerationCauseSourceType = 'labeler' | 'list' | 'user';
+
 export interface ModerationCauseDescription {
 	icon: React.ComponentType<SVGIconProps>;
 	name: string;
 	description: string;
 	source?: string;
 	sourceDisplayName?: string;
-	sourceType?: ModerationCauseSource['type'];
+	sourceType?: ModerationCauseSourceType;
 	sourceAvi?: string;
 	sourceDid?: string;
 	isSubjectAccount?: boolean;
@@ -45,64 +49,8 @@ export function useModerationCauseDescription(
 				description: l`Moderator has chosen to set a general warning on the content.`,
 			};
 		}
-		if (cause.type === 'blocking') {
-			if (cause.source.type === 'list') {
-				return {
-					icon: CircleBanSign,
-					name: l`User Blocked by "${cause.source.list.name}"`,
-					description: l`You have blocked this user. You cannot view their content.`,
-				};
-			} else {
-				return {
-					icon: CircleBanSign,
-					name: l`User Blocked`,
-					description: l`You have blocked this user. You cannot view their content.`,
-				};
-			}
-		}
-		if (cause.type === 'blocked-by') {
-			return {
-				icon: CircleBanSign,
-				name: l`User Blocking You`,
-				description: l`This user has blocked you. You cannot view their content.`,
-			};
-		}
-		if (cause.type === 'block-other') {
-			return {
-				icon: CircleBanSign,
-				name: l`Content Not Available`,
-				description: l`This content is not available because one of the users involved has blocked the other.`,
-			};
-		}
-		if (cause.type === 'muted') {
-			if (cause.source.type === 'list') {
-				return {
-					icon: EyeSlash,
-					name: l`Muted by "${cause.source.list.name}"`,
-					description: l`You have muted this user`,
-				};
-			} else {
-				return {
-					icon: EyeSlash,
-					name: l`Account Muted`,
-					description: l`You have muted this account.`,
-				};
-			}
-		}
-		if (cause.type === 'mute-word') {
-			return {
-				icon: EyeSlash,
-				name: l`Post Hidden by Muted Word`,
-				description: l`You've chosen to hide a word or tag within this post.`,
-			};
-		}
-		if (cause.type === 'hidden') {
-			return {
-				icon: EyeSlash,
-				name: l`Post Hidden by You`,
-				description: l`You have hidden this post`,
-			};
-		}
+
+		// fork-synthetic cause for replies hidden by the thread author (no @atcute equivalent)
 		if (cause.type === 'reply-hidden') {
 			const isMe = currentAccount?.did === cause.source.did;
 			return {
@@ -111,46 +59,107 @@ export function useModerationCauseDescription(
 				description: isMe ? l`You hid this reply.` : l`The author of this thread has hidden this reply.`,
 			};
 		}
-		if (cause.type === 'label') {
-			const def = cause.labelDef || getDefinition(labelDefs, cause.label);
-			const strings = getLabelStrings(i18n.locale, globalLabelStrings, def);
-			const labeler = labelers.find((l) => l.creator.did === cause.label.src);
-			let source = labeler ? sanitizeHandle(labeler.creator.handle, '@') : undefined;
-			let sourceDisplayName = labeler?.creator.displayName;
-			if (!source) {
-				if (cause.label.src === BSKY_LABELER_DID) {
-					source = 'moderation.bsky.app';
-					sourceDisplayName = 'Bluesky Moderation Service';
-				} else {
-					source = l`an unknown labeler`;
-				}
-			}
-			if (def.identifier === 'porn' || def.identifier === 'sexual') {
-				strings.name = l`Adult Content`;
-			}
 
-			return {
-				icon:
-					def.identifier === '!no-unauthenticated'
-						? EyeSlash
-						: def.severity === 'alert'
-							? Warning
-							: CircleInfo,
-				name: strings.name,
-				description: strings.description,
-				source,
-				sourceDisplayName,
-				sourceType: cause.source.type,
-				sourceAvi: labeler?.creator.avatar,
-				sourceDid: cause.label.src,
-				isSubjectAccount: cause.label.uri.startsWith('did:'),
-			};
+		switch (cause.type) {
+			case ModerationCauseType.Blocking: {
+				if (cause.source) {
+					return {
+						icon: CircleBanSign,
+						name: l`User Blocked by "${cause.source.name}"`,
+						description: l`You have blocked this user. You cannot view their content.`,
+					};
+				}
+				return {
+					icon: CircleBanSign,
+					name: l`User Blocked`,
+					description: l`You have blocked this user. You cannot view their content.`,
+				};
+			}
+			case ModerationCauseType.BlockedBy: {
+				return {
+					icon: CircleBanSign,
+					name: l`User Blocking You`,
+					description: l`This user has blocked you. You cannot view their content.`,
+				};
+			}
+			case ModerationCauseType.MutedPermanent: {
+				if (cause.source) {
+					return {
+						icon: EyeSlash,
+						name: l`Muted by "${cause.source.name}"`,
+						description: l`You have muted this user`,
+					};
+				}
+				return {
+					icon: EyeSlash,
+					name: l`Account Muted`,
+					description: l`You have muted this account.`,
+				};
+			}
+			case ModerationCauseType.MutedTemporary: {
+				return {
+					icon: EyeSlash,
+					name: l`Account Muted`,
+					description: l`You have muted this account.`,
+				};
+			}
+			case ModerationCauseType.MutedKeyword: {
+				return {
+					icon: EyeSlash,
+					name: l`Post Hidden by Muted Word`,
+					description: l`You've chosen to hide a word or tag within this post.`,
+				};
+			}
+			case ModerationCauseType.Hidden: {
+				return {
+					icon: EyeSlash,
+					name: l`Post Hidden by You`,
+					description: l`You have hidden this post`,
+				};
+			}
+			case ModerationCauseType.Label: {
+				const def = cause.labelDef || getDefinition(labelDefs, cause.label);
+				const strings = getLabelStrings(i18n.locale, globalLabelStrings, def);
+				const labeler = labelers.find((l) => l.creator.did === cause.label.src);
+				let source = labeler ? sanitizeHandle(labeler.creator.handle, '@') : undefined;
+				let sourceDisplayName = labeler?.creator.displayName;
+				if (!source) {
+					if (cause.label.src === BSKY_LABELER_DID) {
+						source = 'moderation.bsky.app';
+						sourceDisplayName = 'Bluesky Moderation Service';
+					} else {
+						source = l`an unknown labeler`;
+					}
+				}
+				if (def.identifier === 'porn' || def.identifier === 'sexual') {
+					strings.name = l`Adult Content`;
+				}
+
+				return {
+					icon:
+						def.identifier === '!no-unauthenticated'
+							? EyeSlash
+							: def.severity === 'alert'
+								? Warning
+								: CircleInfo,
+					name: strings.name,
+					description: strings.description,
+					source,
+					sourceDisplayName,
+					sourceType: cause.source === null ? 'user' : 'labeler',
+					sourceAvi: labeler?.creator.avatar,
+					sourceDid: cause.label.src,
+					isSubjectAccount: cause.label.uri.startsWith('did:'),
+				};
+			}
+			default: {
+				// should never happen
+				return {
+					icon: CircleInfo,
+					name: '',
+					description: ``,
+				};
+			}
 		}
-		// should never happen
-		return {
-			icon: CircleInfo,
-			name: '',
-			description: ``,
-		};
 	}, [labelDefs, labelers, globalLabelStrings, cause, l, i18n.locale, currentAccount?.did]);
 }

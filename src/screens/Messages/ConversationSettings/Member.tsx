@@ -1,8 +1,8 @@
 import { View } from 'react-native';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import { moderateProfile } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -75,7 +75,11 @@ export function Member({
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
 		? l`Deleted Account`
-		: createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+		: createSanitizedDisplayName(
+				profile,
+				true,
+				getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+			);
 	const isProfileOwner = profile.did === convo.primaryMember?.did;
 	const isSelf = currentAccount?.did === profile.did;
 	let statusBadge: React.ReactNode | null = null;
@@ -93,7 +97,10 @@ export function Member({
 		? l`Added by ${createSanitizedDisplayName(
 				profile.kind.addedBy,
 				true,
-				moderateProfile(profile.kind.addedBy, moderationOpts).ui('displayName'),
+				getDisplayRestrictions(
+					moderateProfile(profile.kind.addedBy, moderationOpts),
+					DisplayContext.ProfileView,
+				),
 			)}`
 		: l`Added by invite link`;
 

@@ -1,13 +1,13 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import { type AnyProfileView, type AppBskyActorDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
@@ -28,7 +28,7 @@ function keyExtractor(item: { did: string }, index: number) {
 interface ProfilesListProps {
 	listUri: string;
 	listMembersQuery: UseInfiniteQueryResult<InfiniteData<AppBskyGraphGetList.$output>>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	headerHeight: number;
 	scrollElRef: ListRef;
 }

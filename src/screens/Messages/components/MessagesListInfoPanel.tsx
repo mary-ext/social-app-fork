@@ -1,8 +1,8 @@
 import { View } from 'react-native';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { moderateProfile } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { type NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
@@ -36,7 +36,11 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 
 	const handle = sanitizeHandle(profile.handle, '@');
 	const displayName = moderationOpts
-		? createSanitizedDisplayName(profile, true, moderateProfile(profile, moderationOpts).ui('displayName'))
+		? createSanitizedDisplayName(
+				profile,
+				true,
+				getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileView),
+			)
 		: handle;
 	const profileLink = profile.handle && !isInvalidHandle(profile.handle) ? profile.handle : profile.did;
 

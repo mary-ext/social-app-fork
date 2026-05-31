@@ -7,13 +7,13 @@ import {
 	type AppBskyFeedDefs,
 	type AppBskyGraphDefs,
 } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -143,7 +143,7 @@ function WizardInner({
 	currentStarterPack?: AppBskyGraphDefs.StarterPackView;
 	currentListItems?: AppBskyGraphDefs.ListItemView[];
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	fromDialog?: boolean;
 	onSuccess?: () => void;
 }) {

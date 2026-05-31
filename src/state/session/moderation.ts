@@ -1,5 +1,5 @@
 import { configureAppLabelers } from '#/lib/moderation/app-labelers';
-import { BSKY_LABELER_DID } from '#/lib/moderation/compat';
+import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 
 import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities';
 import { readLabelers } from './agent-config';

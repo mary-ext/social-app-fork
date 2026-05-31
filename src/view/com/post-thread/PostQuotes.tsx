@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import { moderatePost } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
-import { moderatePost } from '#/lib/moderation/compat';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

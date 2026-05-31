@@ -7,6 +7,7 @@ import {
 	type AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 
@@ -239,7 +240,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					testID={`postThreadItem-by-${post.author.handle}`}
 					href={postHref}
 					disabled={overrides?.moderation === true}
-					modui={moderation.ui('contentList')}
+					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
 					iconSize={LINEAR_AVI_WIDTH}
 					iconStyles={[a.mr_xs]}
@@ -253,7 +254,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 							<PreviewableUserAvatar
 								size={LINEAR_AVI_WIDTH}
 								profile={post.author as AnyProfileView}
-								moderation={moderation.ui('avatar')}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
 							/>
@@ -284,7 +285,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									maybeApplyGalleryOffsetStyles('meta', {
 										// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 										post: post as unknown as AppBskyFeedDefs.PostView,
-										modui: moderation.ui('contentList'),
+										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 										additionalCauses: additionalPostAlerts,
 									}),
 								]}
@@ -292,7 +293,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 							{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
 							<LabelsOnMyPost post={post as unknown as AppBskyFeedDefs.PostView} style={[a.pb_xs]} />
 							<PostAlerts
-								modui={moderation.ui('contentList')}
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 								style={[a.pb_2xs]}
 								additionalCauses={additionalPostAlerts}
 							/>
@@ -316,7 +317,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 										maybeApplyGalleryOffsetStyles('embed', {
 											// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 											post: post as unknown as AppBskyFeedDefs.PostView,
-											modui: moderation.ui('contentList'),
+											modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 											additionalCauses: additionalPostAlerts,
 										}),
 										a.pb_xs,

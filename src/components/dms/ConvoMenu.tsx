@@ -1,11 +1,11 @@
 import { memo, useCallback } from 'react';
 import { Keyboard, View } from 'react-native';
 import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type BlockingModerationCause } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type ModerationCause } from '#/lib/moderation/compat';
 import { type NavigationProp } from '#/lib/routes/types';
 
 import { type Shadow } from '#/state/cache/types';
@@ -55,8 +55,8 @@ let ConvoMenu = ({
 	showMarkAsRead?: boolean;
 	hideTrigger?: boolean;
 	blockInfo: {
-		listBlocks: ModerationCause[];
-		userBlock?: ModerationCause;
+		listBlocks: BlockingModerationCause[];
+		userBlock?: BlockingModerationCause;
 	};
 	latestReportableMessage?: ChatBskyConvoDefs.MessageView;
 	style?: ViewStyleProp['style'];
@@ -161,8 +161,8 @@ function MenuContent({
 	profile: Shadow<AnyProfileView>;
 	showMarkAsRead?: boolean;
 	blockInfo: {
-		listBlocks: ModerationCause[];
-		userBlock?: ModerationCause;
+		listBlocks: BlockingModerationCause[];
+		userBlock?: BlockingModerationCause;
 	};
 	leaveConvoControl: Prompt.PromptControlProps;
 	reportControl: Prompt.PromptControlProps;

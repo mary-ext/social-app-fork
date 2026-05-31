@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { type AnyProfileView } from '@atcute/bluesky';
-
-import { moderateFeedGenerator } from '#/lib/moderation/compat';
+import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -43,7 +42,10 @@ export function ModeratedFeedEmbed({
 		return moderationOpts ? moderateFeedGenerator(embed.view, moderationOpts) : undefined;
 	}, [embed.view, moderationOpts]);
 	return (
-		<ContentHider modui={moderation?.ui('contentList')} childContainerStyle={[a.pt_xs]}>
+		<ContentHider
+			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
+			childContainerStyle={[a.pt_xs]}
+		>
 			<FeedEmbed embed={embed} />
 		</ContentHider>
 	);

@@ -1,11 +1,11 @@
 import { memo, useEffect } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyActorSearchActors } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData } from '@tanstack/react-query';
 
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 
@@ -99,7 +99,7 @@ let SuggestedProfileCard = ({
 	position: _position,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	recId?: string;
 	position: number;
 }): React.ReactNode => {

@@ -1,9 +1,14 @@
 import { useRef } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
@@ -36,7 +41,7 @@ export function KnownFollowers({
 	showIfEmpty,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
 	showIfEmpty?: boolean;
@@ -82,7 +87,7 @@ function KnownFollowersInner({
 	showIfEmpty,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	cachedKnownFollowers: AppBskyActorDefs.KnownFollowers;
 	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
@@ -98,7 +103,10 @@ function KnownFollowersInner({
 		return {
 			profile: {
 				...f,
-				displayName: sanitizeDisplayName(f.displayName || f.handle, moderation.ui('displayName')),
+				displayName: sanitizeDisplayName(
+					f.displayName || f.handle,
+					getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+				),
 			},
 			moderation,
 		};
@@ -159,7 +167,7 @@ function KnownFollowersInner({
 								<UserAvatar
 									size={SIZE}
 									avatar={prof.avatar}
-									moderation={moderation.ui('avatar')}
+									moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 									type={prof.associated?.labeler ? 'labeler' : 'user'}
 									noBorder
 								/>

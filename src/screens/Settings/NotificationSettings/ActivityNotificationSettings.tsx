@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { type ListRenderItemInfo, Text as RNText, View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { type AllNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
@@ -180,7 +180,7 @@ function ActivitySubscriptionCard({
 	moderationOpts,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const profile = useProfileShadow(profileUnshadowed);
 	const control = useDialogControl();

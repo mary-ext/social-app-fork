@@ -1,8 +1,13 @@
 import { View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -18,7 +23,7 @@ export function GroupChatProfileCard({
 	moderationOpts,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	const enabled = canBeAddedToGroup(profile);
@@ -26,7 +31,7 @@ export function GroupChatProfileCard({
 	const handle = sanitizeHandle(profile.handle, '@');
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 	);
 
 	return (

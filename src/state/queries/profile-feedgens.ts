@@ -1,9 +1,13 @@
 import { type AppBskyFeedGetActorFeeds } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateFeedGenerator,
+	ModerationCauseType,
+} from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
-
-import { moderateFeedGenerator } from '#/lib/moderation/compat';
 
 import { useClients } from '#/state/session';
 
@@ -52,7 +56,9 @@ export function useProfileFeedgensQuery(did: string, opts?: { enabled?: boolean 
 							// filter by labels
 							.filter((list) => {
 								const decision = moderateFeedGenerator(list, moderationOpts!);
-								return !decision.ui('contentList').filters.some((cause) => cause.type !== 'muted');
+								return !getDisplayRestrictions(decision, DisplayContext.ContentList).filters.some(
+									(cause) => cause.type !== ModerationCauseType.MutedPermanent,
+								);
 							}),
 					};
 				}),

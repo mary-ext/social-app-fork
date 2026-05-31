@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
-
-import { moderateUserList } from '#/lib/moderation/compat';
+import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -34,10 +33,13 @@ export function ModeratedListEmbed({
 }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = useMemo(() => {
-		return moderationOpts ? moderateUserList(embed.view, moderationOpts) : undefined;
+		return moderationOpts ? moderateList(embed.view, moderationOpts) : undefined;
 	}, [embed.view, moderationOpts]);
 	return (
-		<ContentHider modui={moderation?.ui('contentList')} childContainerStyle={[a.pt_xs]}>
+		<ContentHider
+			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
+			childContainerStyle={[a.pt_xs]}
+		>
 			<ListEmbed embed={embed} />
 		</ContentHider>
 	);

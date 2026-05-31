@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
 import { View } from 'react-native';
+import { type BlockingModerationCause } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
-import { type ModerationCause } from '#/lib/moderation/compat';
 import { listUriToHref } from '#/lib/strings/url-helpers';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -18,7 +18,7 @@ export function BlockedByListDialog({
 	listBlocks,
 }: {
 	control: DialogControlProps;
-	listBlocks: ModerationCause[];
+	listBlocks: BlockingModerationCause[];
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
@@ -34,15 +34,15 @@ export function BlockedByListDialog({
 				<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
 					{l`Lists blocking this user:`}{' '}
 					{listBlocks.map((block, i) =>
-						block.source.type === 'list' ? (
-							<Fragment key={block.source.list.uri}>
+						block.source ? (
+							<Fragment key={block.source.uri}>
 								{i === 0 ? null : ', '}
 								<InlineLinkText
-									label={block.source.list.name}
-									to={listUriToHref(block.source.list.uri)}
+									label={block.source.name}
+									to={listUriToHref(block.source.uri)}
 									style={[a.text_md, a.leading_snug]}
 								>
-									{block.source.list.name}
+									{block.source.name}
 								</InlineLinkText>
 							</Fragment>
 						) : null,

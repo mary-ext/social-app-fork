@@ -1,13 +1,18 @@
 import { memo, useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { flip, offset, shift, size, useFloating } from '@floating-ui/react-dom';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { getModerationCauseKey } from '#/lib/moderation';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -400,7 +405,7 @@ function Inner({
 	hide,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	hide: () => void;
 }) {
 	const t = useTheme();
@@ -437,7 +442,7 @@ function Inner({
 						size={64}
 						avatar={profile.avatar}
 						type={isLabeler ? 'labeler' : 'user'}
-						moderation={moderation.ui('avatar')}
+						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 					/>
 				</Link>
 
@@ -475,7 +480,7 @@ function Inner({
 						<Text numberOfLines={1} style={[a.text_lg, a.leading_snug, a.font_semi_bold, a.self_start]}>
 							{sanitizeDisplayName(
 								profile.displayName || sanitizeHandle(profile.handle),
-								moderation.ui('displayName'),
+								getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 							)}
 						</Text>
 						<ProfileBadges
@@ -495,7 +500,7 @@ function Inner({
 			</Link>
 			{isBlockedUser && (
 				<View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
-					{moderation.ui('profileView').alerts.map((cause) => (
+					{getDisplayRestrictions(moderation, DisplayContext.ProfileView).alerts.map((cause) => (
 						<Pills.Label key={getModerationCauseKey(cause)} size="lg" cause={cause} disableDetailsDialog />
 					))}
 				</View>
@@ -523,7 +528,8 @@ function Inner({
 						</InlineLinkText>
 					</View>
 
-					{profile.description?.trim() && !moderation.ui('profileView').blur ? (
+					{profile.description?.trim() &&
+					getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 						<View style={[a.pt_md]}>
 							<RichText numberOfLines={8} value={descriptionRT} onLinkPress={hide} />
 						</View>

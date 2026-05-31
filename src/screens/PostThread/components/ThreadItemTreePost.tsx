@@ -7,6 +7,7 @@ import {
 	type AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 
@@ -300,7 +301,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 					testID={`postThreadItem-by-${post.author.handle}`}
 					href={postHref}
 					disabled={overrides?.moderation === true}
-					modui={moderation.ui('contentList')}
+					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					iconSize={42}
 					iconStyles={{ marginLeft: 2, marginRight: 2 }}
 					profile={post.author as AnyProfileView}
@@ -323,7 +324,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 									{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
 									<LabelsOnMyPost post={post as unknown as AppBskyFeedDefs.PostView} style={[a.pb_2xs]} />
 									<PostAlerts
-										modui={moderation.ui('contentList')}
+										modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 										style={[a.pb_2xs]}
 										additionalCauses={additionalPostAlerts}
 									/>

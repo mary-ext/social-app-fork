@@ -5,11 +5,11 @@ import {
 	type AppBskyNotificationDefs,
 	type AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { cleanError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -39,7 +39,7 @@ export function SubscribeProfileDialog({
 }: {
 	control: Dialog.DialogControlProps;
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
 	return (
@@ -56,7 +56,7 @@ function DialogInner({
 	includeProfile,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	includeProfile?: boolean;
 }) {
 	const { t: l } = useLingui();

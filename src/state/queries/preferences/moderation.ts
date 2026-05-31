@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
+import { interpretLabelerDefinition } from '@atcute/bluesky-moderation';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
-import { DEFAULT_LABEL_SETTINGS, interpretLabelValueDefinitions } from '#/lib/moderation/compat';
+import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
 
 import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
 
@@ -43,13 +44,7 @@ export function useLabelDefinitionsQuery() {
 	return useMemo(() => {
 		return {
 			labelDefs: Object.fromEntries(
-				(labelers.data || []).map((labeler) => [
-					labeler.creator.did,
-					// TODO(atcute Phase 5.3): drop cast once interpretLabelValueDefinitions migrates to @atcute
-					interpretLabelValueDefinitions(
-						labeler as unknown as Parameters<typeof interpretLabelValueDefinitions>[0],
-					),
-				]),
+				(labelers.data || []).map((labeler) => [labeler.creator.did, interpretLabelerDefinition(labeler)]),
 			),
 			labelers: labelers.data || [],
 		};

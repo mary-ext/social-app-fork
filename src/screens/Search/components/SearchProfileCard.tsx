@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
@@ -20,7 +20,7 @@ export function SearchProfileCard({
 	onPress: onPressInner,
 }: {
 	profile: AppBskyActorDefs.ProfileViewBasic;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress?: () => void;
 }) {
 	const t = useTheme();

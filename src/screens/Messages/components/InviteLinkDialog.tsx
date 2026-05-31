@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { shareUrl } from '#/lib/sharing';
 
@@ -47,7 +52,7 @@ export function InviteLinkDialog({
 	control: Dialog.DialogOuterProps['control'];
 	owner: GroupConvoMember;
 	isOwner: boolean;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	const { t: l, i18n } = useLingui();
@@ -55,7 +60,7 @@ export function InviteLinkDialog({
 	const ownerName = createSanitizedDisplayName(
 		owner,
 		false,
-		moderateProfile(owner, moderationOpts).ui('displayName'),
+		getDisplayRestrictions(moderateProfile(owner, moderationOpts), DisplayContext.ProfileView),
 	);
 
 	const { joinLink } = convo.details;

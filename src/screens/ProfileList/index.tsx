@@ -1,6 +1,12 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { AppBskyGraphDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateList,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,7 +14,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import { moderateUserList, type ModerationOpts } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
@@ -133,7 +138,7 @@ function ProfileListScreenLoaded({
 }: Props & {
 	uri: string;
 	list: AppBskyGraphDefs.ListView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	preferences: UsePreferencesQueryResponse;
 }) {
 	const t = useTheme();
@@ -155,7 +160,7 @@ function ProfileListScreenLoaded({
 	const [headerHeight, setHeaderHeight] = useState<number | null>(null);
 
 	const moderation = useMemo(() => {
-		return moderateUserList(list, moderationOpts);
+		return moderateList(list, moderationOpts);
 	}, [list, moderationOpts]);
 
 	useSetTitle(isHidden ? l`List Hidden` : list.name);
@@ -183,7 +188,10 @@ function ProfileListScreenLoaded({
 
 	if (isCurateList) {
 		return (
-			<Hider.Outer modui={moderation.ui('contentView')} allowOverride={isOwner}>
+			<Hider.Outer
+				modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+				allowOverride={isOwner}
+			>
 				<Hider.Mask>
 					<ListHiddenScreen list={list} preferences={preferences} />
 				</Hider.Mask>
@@ -231,7 +239,10 @@ function ProfileListScreenLoaded({
 		);
 	}
 	return (
-		<Hider.Outer modui={moderation.ui('contentView')} allowOverride={isOwner}>
+		<Hider.Outer
+			modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+			allowOverride={isOwner}
+		>
 			<Hider.Mask>
 				<ListHiddenScreen list={list} preferences={preferences} />
 			</Hider.Mask>

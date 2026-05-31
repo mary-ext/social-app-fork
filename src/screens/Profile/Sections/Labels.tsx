@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import {
+	type InterpretedLabelDefinition,
+	interpretLabelerDefinition,
+	LabelFlags,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
-import {
-	type InterpretedLabelValueDefinition,
-	interpretLabelValueDefinitions,
-	type ModerationOpts,
-} from '#/lib/moderation/compat';
 
 import { List, type ListRef } from '#/view/com/util/List';
 
@@ -29,7 +30,7 @@ interface LabelsSectionProps {
 	isLabelerLoading: boolean;
 	labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined;
 	labelerError: Error | null;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	scrollElRef: ListRef;
 	headerHeight: number;
 	isFocused: boolean;
@@ -66,20 +67,17 @@ export function ProfileLabelsSection({
 
 	const labelValues = useMemo(() => {
 		if (isLabelerLoading || !labelerInfo || labelerError) return [];
-		// TODO(atcute Phase 5.3): drop cast once interpretLabelValueDefinitions migrates to @atcute
-		const customDefs = interpretLabelValueDefinitions(
-			labelerInfo as unknown as Parameters<typeof interpretLabelValueDefinitions>[0],
-		);
+		const customDefs = Object.values(interpretLabelerDefinition(labelerInfo));
 		return labelerInfo.policies.labelValues
 			.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
 			.map((val) => lookupLabelValueDefinition(val, customDefs))
-			.filter((def) => def && def?.configurable) as InterpretedLabelValueDefinition[];
+			.filter((def) => def && !(def.flags & LabelFlags.NoConfigurable)) as InterpretedLabelDefinition[];
 	}, [labelerInfo, labelerError, isLabelerLoading]);
 
 	const numItems = labelValues.length;
 
 	const renderItem = useCallback(
-		({ item, index }: ListRenderItemInfo<InterpretedLabelValueDefinition>) => {
+		({ item, index }: ListRenderItemInfo<InterpretedLabelDefinition>) => {
 			if (!labelerInfo) return null;
 			return (
 				<View
@@ -138,7 +136,7 @@ export function ProfileLabelsSection({
 	);
 }
 
-function keyExtractor(item: InterpretedLabelValueDefinition) {
+function keyExtractor(item: InterpretedLabelDefinition) {
 	return item.identifier;
 }
 

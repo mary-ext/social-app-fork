@@ -6,12 +6,12 @@ import {
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { type $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { moderatePost } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -87,7 +87,12 @@ function MediaEmbed({
 	switch (embed.type) {
 		case 'images': {
 			return (
-				<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+				<ContentHider
+					modui={
+						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
+					}
+					activeStyle={[a.mt_sm]}
+				>
 					<ImageEmbed embed={embed} {...rest} />
 				</ContentHider>
 			);
@@ -95,20 +100,37 @@ function MediaEmbed({
 		case 'link': {
 			if (isStandardSiteEmbed(embed.view.external)) {
 				return (
-					<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+					<ContentHider
+						modui={
+							rest.moderation
+								? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
+								: undefined
+						}
+						activeStyle={[a.mt_sm]}
+					>
 						<StandardSiteEmbed view={embed.view.external} style={[a.mt_sm, rest.style]} />
 					</ContentHider>
 				);
 			}
 			return (
-				<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+				<ContentHider
+					modui={
+						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
+					}
+					activeStyle={[a.mt_sm]}
+				>
 					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} style={[a.mt_sm, rest.style]} />
 				</ContentHider>
 			);
 		}
 		case 'video': {
 			return (
-				<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+				<ContentHider
+					modui={
+						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
+					}
+					activeStyle={[a.mt_sm]}
+				>
 					<VideoEmbed embed={embed.view} />
 				</ContentHider>
 			);
@@ -264,7 +286,12 @@ export function QuoteEmbed({
 				timestamp={quote.indexedAt}
 				linkDisabled
 			/>
-			{moderation ? <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} /> : null}
+			{moderation ? (
+				<PostAlerts
+					modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+					style={[a.py_xs]}
+				/>
+			) : null}
 			{richText ? <RichText value={richText} style={a.text_md} numberOfLines={20} disableLinks /> : null}
 			{quote.embed && (
 				<Embed
@@ -287,7 +314,7 @@ export function QuoteEmbed({
 				onPointerLeave={linkDisabled ? undefined : onPointerLeave}
 			>
 				<ContentHider
-					modui={moderation?.ui('contentList')}
+					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
 					style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
 					activeStyle={[a.p_md, a.pt_sm]}
 					childContainerStyle={[a.pt_sm]}

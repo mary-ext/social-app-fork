@@ -6,8 +6,7 @@ import {
 	type AppBskyUnspeccedGetPostThreadOtherV2,
 	type AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
-
-import { type ModerationDecision } from '#/lib/moderation/compat';
+import { type ModerationDecision } from '@atcute/bluesky-moderation';
 
 export type ApiThreadItem =
 	| AppBskyUnspeccedGetPostThreadV2.ThreadItem

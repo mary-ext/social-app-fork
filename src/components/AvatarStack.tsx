@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
-
-import { moderateProfile } from '#/lib/moderation/compat';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfilesQuery } from '#/state/queries/profile';
@@ -72,7 +71,7 @@ export function AvatarStack({
 							size={size - 2}
 							avatar={item.profile.avatar}
 							type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-							moderation={item.moderation.ui('avatar')}
+							moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
 						/>
 					)}
 				</View>

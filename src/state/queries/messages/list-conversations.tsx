@@ -1,10 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atcute/bluesky';
+import { moderateProfile, ModerationCauseType, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import throttle from 'lodash.throttle';
-
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useMessagesEventBus } from '#/state/messages/events';
@@ -423,7 +422,7 @@ function calculateCount(
 	convos: ChatBskyConvoDefs.ConvoView[],
 	currentAccountDid: string | undefined,
 	currentConvoId: string | undefined,
-	moderationOpts: ModerationOpts | undefined,
+	moderationOpts: ModerationOptions | undefined,
 ) {
 	return (
 		convos
@@ -436,7 +435,9 @@ function calculateCount(
 				const shouldIgnore =
 					convo.view.muted ||
 					!convo.primaryMember ||
-					moderateProfile(convo.primaryMember, moderationOpts).blocked ||
+					moderateProfile(convo.primaryMember, moderationOpts).causes.some(
+						(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+					) ||
 					convo.primaryMember.handle === 'missing.invalid' ||
 					(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
 				const unreadCount = !shouldIgnore && convo.view.unreadCount > 0 ? 1 : 0;

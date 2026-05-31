@@ -10,6 +10,13 @@ import {
 	type AppBskyFeedGetPosts,
 	type AppBskyFeedPost,
 } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderatePost,
+	ModerationCauseType,
+	type ModerationDecision,
+} from '@atcute/bluesky-moderation';
 import { type Client } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
@@ -27,8 +34,8 @@ import { PostListFeedAPI } from '#/lib/api/feed/posts';
 import { type FeedAPI, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
-import { type ModerationPrefs } from '#/lib/moderation/compat';
-import { moderatePost, type ModerationDecision } from '#/lib/moderation/compat';
+import { type BskyPreferences } from '#/lib/moderation/preferences-types';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
@@ -271,10 +278,16 @@ export function usePostFeedQuery(
 										if (ignoreFilter) {
 											// remove mutes to avoid confused UIs
 											moderations[i]!.causes = moderations[i]!.causes.filter(
-												(cause) => cause.type !== 'muted',
+												(cause) =>
+													cause.type !== ModerationCauseType.MutedPermanent &&
+													cause.type !== ModerationCauseType.MutedTemporary,
 											);
 										}
-										if (!ignoreFilter && moderations[i]?.ui('contentList').filter) {
+										if (
+											!ignoreFilter &&
+											moderations[i] &&
+											getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
+										) {
 											return undefined;
 										}
 									}
@@ -554,7 +567,7 @@ export function* findAllProfilesInQueryData(
 
 function assertSomePostsPassModeration(
 	feed: AppBskyFeedDefs.FeedViewPost[],
-	moderationPrefs: ModerationPrefs,
+	moderationPrefs: BskyPreferences['moderationPrefs'],
 ) {
 	// no posts in this feed
 	if (feed.length === 0) return true;
@@ -564,11 +577,11 @@ function assertSomePostsPassModeration(
 
 	for (const item of feed) {
 		const moderation = moderatePost(item.post, {
-			userDid: undefined,
-			prefs: moderationPrefs,
+			viewerDid: undefined,
+			prefs: toModerationPreferences(moderationPrefs),
 		});
 
-		if (!moderation.ui('contentList').filter) {
+		if (getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length === 0) {
 			// we have a sfw post
 			somePostsPassModeration = true;
 		}

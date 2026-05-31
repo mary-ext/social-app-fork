@@ -11,13 +11,13 @@ import {
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { type AnyProfileView, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useHaptics } from '#/lib/haptics';
 import { openImagePicker } from '#/lib/media/picker';
 import { convertCdnPreset } from '#/lib/media/util';
-import { type ModerationUI } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isCancelledError } from '#/lib/strings/errors';
@@ -66,7 +66,7 @@ interface BaseUserAvatarProps {
 
 interface UserAvatarProps extends BaseUserAvatarProps {
 	type: UserAvatarType;
-	moderation?: ModerationUI;
+	moderation?: DisplayRestrictions;
 	usePlainRNImage?: boolean;
 	noBorder?: boolean;
 	onLoad?: () => void;
@@ -79,7 +79,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
-	moderation?: ModerationUI;
+	moderation?: DisplayRestrictions;
 	profile: AnyProfileView;
 	disableHoverCard?: boolean;
 	disableNavigation?: boolean;
@@ -251,7 +251,7 @@ let UserAvatar = ({
 	}, [aviStyle.borderRadius, live, t, size]);
 
 	const alert = useMemo(() => {
-		if (!moderation?.alert) {
+		if (!moderation?.alerts.length) {
 			return null;
 		}
 		return (
@@ -286,7 +286,7 @@ let UserAvatar = ({
 				</RNText>
 			</View>
 		);
-	}, [moderation?.alert, size, t]);
+	}, [moderation?.alerts, size, t]);
 
 	const containerStyle = useMemo(() => {
 		return [
@@ -309,7 +309,7 @@ let UserAvatar = ({
 					source={{
 						uri: hackModifyThumbnailPath(avatar, size < 90),
 					}}
-					blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+					blurRadius={moderation?.blurs.length ? BLUR_AMOUNT : 0}
 					onLoad={onLoad}
 				/>
 			) : (
@@ -320,7 +320,7 @@ let UserAvatar = ({
 					source={{
 						uri: hackModifyThumbnailPath(avatar, size < 90),
 					}}
-					blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+					blurRadius={moderation?.blurs.length ? BLUR_AMOUNT : 0}
 					onLoad={onLoad}
 				/>
 			)}

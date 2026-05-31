@@ -1,9 +1,14 @@
 import { Pressable, ScrollView, View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createHitslop, HITSLOP_10 } from '#/lib/constants';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -117,7 +122,7 @@ function RecentProfileItem({
 	onRemove,
 }: {
 	profile: AnyProfileView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress: () => void;
 	onRemove: () => void;
 }) {
@@ -127,7 +132,7 @@ function RecentProfileItem({
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
 	);
 
 	return (
@@ -149,7 +154,7 @@ function RecentProfileItem({
 					avatar={profile.avatar}
 					type={profile.associated?.labeler ? 'labeler' : 'user'}
 					size={width - 8}
-					moderation={moderation.ui('avatar')}
+					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				/>
 				<View style={[a.flex_row, a.align_center, a.justify_center, a.w_full]}>
 					<Text emoji style={[a.text_xs, a.leading_snug]} numberOfLines={1}>

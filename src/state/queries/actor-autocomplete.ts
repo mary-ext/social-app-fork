@@ -1,10 +1,16 @@
 import { useCallback } from 'react';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
@@ -15,8 +21,8 @@ import { useModerationOpts } from '../preferences/moderation-opts';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from './preferences';
 
 const DEFAULT_MOD_OPTS = {
-	userDid: undefined,
-	prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+	viewerDid: undefined,
+	prefs: toModerationPreferences(DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs),
 };
 
 const RQKEY_ROOT = 'actor-autocomplete';
@@ -104,7 +110,7 @@ function computeSuggestions({
 }: {
 	q?: string;
 	searched?: AppBskyActorDefs.ProfileViewBasic[];
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	let items: AppBskyActorDefs.ProfileViewBasic[] = [];
 	for (const item of searched) {
@@ -113,8 +119,15 @@ function computeSuggestions({
 		}
 	}
 	return items.filter((profile) => {
-		const modui = moderateProfile(profile, moderationOpts).ui('profileList');
+		const modui = getDisplayRestrictions(
+			moderateProfile(profile, moderationOpts),
+			DisplayContext.ProfileList,
+		);
 		const isExactMatch = q && profile.handle.toLowerCase() === q;
-		return (isExactMatch && !moduiContainsHideableOffense(modui)) || !modui.filter || isJustAMute(modui);
+		return (
+			(isExactMatch && !moduiContainsHideableOffense(modui)) ||
+			modui.filters.length === 0 ||
+			isJustAMute(modui)
+		);
 	});
 }

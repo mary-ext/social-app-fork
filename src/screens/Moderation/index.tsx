@@ -1,9 +1,9 @@
 import { Fragment, useCallback } from 'react';
 import { Linking, View } from 'react-native';
+import { BUILTIN_LABELS } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
-import { LABELS } from '#/lib/moderation/compat';
 import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
@@ -305,13 +305,13 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 					{adultContentEnabled && (
 						<>
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS.porn} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS.porn!} />
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS.sexual} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS.sexual!} />
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS['graphic-media']} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS['graphic-media']!} />
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS.nudity} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS.nudity!} />
 						</>
 					)}
 				</View>

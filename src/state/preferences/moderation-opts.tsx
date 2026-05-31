@@ -1,7 +1,9 @@
 import { createContext, useContext, useMemo } from 'react';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import { type Did } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
-import { type ModerationOpts } from '#/lib/moderation/compat';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { useHiddenPosts, useLabelDefinitions } from '#/state/preferences';
 import { DEFAULT_LOGGED_OUT_LABEL_PREFERENCES } from '#/state/queries/preferences/moderation';
@@ -9,11 +11,11 @@ import { useSession } from '#/state/session';
 
 import { usePreferencesQuery } from '../queries/preferences';
 
-export const moderationOptsContext = createContext<ModerationOpts | undefined>(undefined);
+export const moderationOptsContext = createContext<ModerationOptions | undefined>(undefined);
 moderationOptsContext.displayName = 'ModerationOptsContext';
 
 // used in the moderation state devtool
-export const moderationOptsOverrideContext = createContext<ModerationOpts | undefined>(undefined);
+export const moderationOptsOverrideContext = createContext<ModerationOptions | undefined>(undefined);
 moderationOptsOverrideContext.displayName = 'ModerationOptsOverrideContext';
 
 export function useModerationOpts() {
@@ -29,25 +31,22 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const userDid = currentAccount?.did;
 	const moderationPrefs = prefs.data?.moderationPrefs;
-	const value = useMemo<ModerationOpts | undefined>(() => {
+	const value = useMemo<ModerationOptions | undefined>(() => {
 		if (override) {
 			return override;
 		}
 		if (!moderationPrefs) {
 			return undefined;
 		}
+		const labelers = moderationPrefs.labelers.length
+			? moderationPrefs.labelers
+			: getAppLabelers().map((did) => ({
+					did,
+					labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
+				}));
 		return {
-			userDid,
-			prefs: {
-				...moderationPrefs,
-				labelers: moderationPrefs.labelers.length
-					? moderationPrefs.labelers
-					: getAppLabelers().map((did) => ({
-							did,
-							labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
-						})),
-				hiddenPosts: hiddenPosts || [],
-			},
+			viewerDid: userDid as Did | undefined,
+			prefs: toModerationPreferences({ ...moderationPrefs, labelers }, hiddenPosts || []),
 			labelDefs,
 		};
 	}, [override, userDid, labelDefs, moderationPrefs, hiddenPosts]);

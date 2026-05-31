@@ -1,4 +1,4 @@
-import { type ModerationUI } from '#/lib/moderation/compat';
+import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 // \u2705 = ✅
 // \u2713 = ✓
@@ -8,8 +8,8 @@ const CHECK_MARKS_RE = /[\u2705\u2713\u2714\u2611]/gu;
 const CONTROL_CHARS_RE = /[\u0000-\u001F\u007F-\u009F\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g;
 const MULTIPLE_SPACES_RE = /[\s][\s\u200B]+/g;
 
-export function sanitizeDisplayName(str: string, moderation?: ModerationUI): string {
-	if (moderation?.blur) {
+export function sanitizeDisplayName(str: string, moderation?: DisplayRestrictions): string {
+	if (moderation && moderation.blurs.length > 0) {
 		return '';
 	}
 	if (typeof str === 'string') {

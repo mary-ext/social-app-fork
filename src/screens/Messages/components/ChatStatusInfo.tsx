@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { moderateProfile } from '#/lib/moderation/compat';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -118,11 +118,19 @@ function InviterHeader({
 	const t = useTheme();
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
-	const displayName = createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+	const displayName = createSanitizedDisplayName(
+		profile,
+		true,
+		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+	);
 
 	return (
 		<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-			<PreviewableUserAvatar profile={profile} size={42} moderation={moderation.ui('avatar')} />
+			<PreviewableUserAvatar
+				profile={profile}
+				size={42}
+				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+			/>
 			<View style={[a.flex_1]}>
 				<Text style={[a.flex_row, a.align_center]}>
 					<Trans comment="Text identifying the person who added you to a group chat">

@@ -1,9 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
-
-import { type ModerationOpts } from '#/lib/moderation/compat';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';
@@ -31,7 +30,7 @@ export function ActionsWrapper({
 	hasReactions?: boolean;
 	isFromSelf: boolean;
 	senderProfile?: AnyProfileView;
-	moderationOpts: ModerationOpts | undefined;
+	moderationOpts: ModerationOptions | undefined;
 	children: React.ReactNode;
 }) {
 	const viewRef = useRef(null);

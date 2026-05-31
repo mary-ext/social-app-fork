@@ -1,10 +1,11 @@
 import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type LabelPreference } from '@atcute/bluesky-moderation';
 import { type Client, ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { TID } from '@atproto/common-web';
 
-import { DEFAULT_LABEL_SETTINGS, type LabelPreference } from '#/lib/moderation/compat';
+import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
 import {
 	type AppBskyActorDefs as AtpActorDefs,
 	type BskyFeedViewPreference,

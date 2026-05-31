@@ -4,8 +4,6 @@ import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
-import { type ComAtprotoLabelDefs as ComAtprotoLabelDefsAtproto } from '#/lib/moderation/compat';
-
 import { useSession } from '#/state/session';
 
 import { atoms as a } from '#/alf';
@@ -39,12 +37,7 @@ export function LabelsOnMe({
 
 	return (
 		<View style={[a.flex_row, style]}>
-			{/* TODO(atcute Phase 3.1): drop cast once LabelsOnMeDialog flips to @atcute types */}
-			<LabelsOnMeDialog
-				control={control}
-				labels={labels as unknown as ComAtprotoLabelDefsAtproto.Label[]}
-				type={type}
-			/>
+			<LabelsOnMeDialog control={control} labels={labels} type={type} />
 			<Button
 				variant="solid"
 				color="secondary"

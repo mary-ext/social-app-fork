@@ -1,8 +1,14 @@
 import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	ModerationCauseType,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { type $type } from '@atcute/lexicons';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
-import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
 
 import { type Shadow } from '#/state/cache/profile-shadow';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
@@ -87,7 +93,7 @@ export function canReact({
 }: {
 	convoState: ConvoState;
 	primaryMember: Shadow<AnyProfileView> | undefined;
-	moderationOpts: ModerationOpts | undefined;
+	moderationOpts: ModerationOptions | undefined;
 }): boolean {
 	if (convoState.status === ConvoStatus.Disabled) {
 		return false;
@@ -108,12 +114,16 @@ export function canReact({
 		const moderation = moderateProfile(primaryMember, moderationOpts);
 		if (convoState.convo.kind === 'direct') {
 			// either direction (blocking or blocked-by) hides reactions in 1-1s
-			if (moderation.blocked) return false;
+			const isBlocked = moderation.causes.some(
+				(cause) =>
+					cause.type === ModerationCauseType.Blocking || cause.type === ModerationCauseType.BlockedBy,
+			);
+			if (isBlocked) return false;
 		} else {
 			// in groups, only "we are blocking" the owner hides reactions
-			const isBlockingPrimary = moderation
-				.ui('profileView')
-				.alerts.some((alert) => alert.type === 'blocking');
+			const isBlockingPrimary = getDisplayRestrictions(moderation, DisplayContext.ProfileView).alerts.some(
+				(cause) => cause.type === ModerationCauseType.Blocking,
+			);
 			if (isBlockingPrimary) return false;
 		}
 	}

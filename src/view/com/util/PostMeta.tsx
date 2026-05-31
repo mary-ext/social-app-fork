@@ -1,10 +1,10 @@
 import { memo, useCallback } from 'react';
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
@@ -77,7 +77,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 					<PreviewableUserAvatar
 						size={opts.avatarSize || 16}
 						profile={author}
-						moderation={opts.moderation?.ui('avatar')}
+						moderation={
+							opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileMedia)
+						}
 						type={author.associated?.labeler ? 'labeler' : 'user'}
 						live={live}
 						hideLiveBadge
@@ -104,7 +106,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 								{ maxWidth: '70%' },
 							]}
 						>
-							{forceLTR(sanitizeDisplayName(displayName, opts.moderation?.ui('displayName')))}
+							{forceLTR(
+								sanitizeDisplayName(
+									displayName,
+									opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileView),
+								),
+							)}
 						</MaybeLinkText>
 						<ProfileBadges profile={author} size="sm" style={[a.pl_2xs, a.self_center]} />
 						<MaybeLinkText

@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
+import { type AppBskyActorDefs, type AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
+import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
-import { hasMutedWord } from '#/lib/moderation/compat';
+import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
@@ -18,8 +19,10 @@ export const createGetTrendsQueryKey = () => ['trends'];
 export function useGetTrendsQuery() {
 	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
-	const mutedWords = useMemo(() => {
-		return preferences?.moderationPrefs?.mutedWords || [];
+	const keywordFilters = useMemo(() => {
+		return (preferences?.moderationPrefs?.mutedWords || []).map((word) =>
+			interpretMutedWordPreference(word as unknown as AppBskyActorDefs.MutedWord),
+		);
 	}, [preferences?.moderationPrefs]);
 
 	return useQuery({
@@ -43,13 +46,13 @@ export function useGetTrendsQuery() {
 				return {
 					trends: (data.trends ?? []).filter((t) => {
 						return !hasMutedWord({
-							mutedWords,
+							keywordFilters,
 							text: t.topic + ' ' + t.displayName + ' ' + t.category,
 						});
 					}),
 				};
 			},
-			[mutedWords],
+			[keywordFilters],
 		),
 	});
 }

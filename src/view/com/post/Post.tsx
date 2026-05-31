@@ -6,12 +6,17 @@ import {
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderatePost,
+	type ModerationDecision,
+} from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { moderatePost, type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
@@ -180,7 +185,7 @@ function PostInner({
 						<PreviewableUserAvatar
 							size={42}
 							profile={post.author as AnyProfileView}
-							moderation={moderation.ui('avatar')}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 						/>
 					</View>
@@ -189,7 +194,7 @@ function PostInner({
 							styles.layoutContent,
 							maybeApplyGalleryOffsetStyles('meta', {
 								post,
-								modui: moderation.ui('contentList'),
+								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 								additionalCauses: [],
 							}),
 						]}
@@ -203,11 +208,14 @@ function PostInner({
 						{replyAuthorDid !== '' && <PostRepliedTo parentAuthor={replyAuthorDid} />}
 						<LabelsOnMyPost post={post} />
 						<ContentHider
-							modui={moderation.ui('contentView')}
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 							style={styles.contentHider}
 							childContainerStyle={styles.contentHiderChild}
 						>
-							<PostAlerts modui={moderation.ui('contentView')} style={[a.pb_xs]} />
+							<PostAlerts
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+								style={[a.pb_xs]}
+							/>
 							{richText.text ? (
 								<View style={[a.mb_2xs]}>
 									<RichText
@@ -226,7 +234,7 @@ function PostInner({
 								<View
 									style={maybeApplyGalleryOffsetStyles('embed', {
 										post,
-										modui: moderation.ui('contentList'),
+										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 										additionalCauses: [],
 									})}
 								>

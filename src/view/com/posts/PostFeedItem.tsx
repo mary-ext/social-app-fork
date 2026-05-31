@@ -7,6 +7,7 @@ import {
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -14,7 +15,6 @@ import { type ReasonFeedSource } from '#/lib/api/feed/types';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { usePalette } from '#/lib/hooks/usePalette';
-import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
@@ -333,7 +333,7 @@ let FeedItemInner = ({
 						<PreviewableUserAvatar
 							size={42}
 							profile={post.author as AnyProfileView}
-							moderation={moderation.ui('avatar')}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 							onBeforePress={onOpenAuthor}
 							live={live}
@@ -359,7 +359,7 @@ let FeedItemInner = ({
 							styles.layoutContent,
 							maybeApplyGalleryOffsetStyles('meta', {
 								post,
-								modui: moderation.ui('contentList'),
+								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 								additionalCauses: additionalPostAlerts,
 							}),
 						]}
@@ -438,12 +438,12 @@ let PostContent = ({
 	return (
 		<ContentHider
 			testID="contentHider-post"
-			modui={moderation.ui('contentList')}
+			modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 			ignoreMute
 			childContainerStyle={styles.contentHiderChild}
 		>
 			<PostAlerts
-				modui={moderation.ui('contentList')}
+				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 				style={[a.pb_xs]}
 				additionalCauses={additionalPostAlerts}
 			/>
@@ -467,7 +467,7 @@ let PostContent = ({
 						a.pb_xs,
 						maybeApplyGalleryOffsetStyles('embed', {
 							post,
-							modui: moderation.ui('contentList'),
+							modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 							additionalCauses: additionalPostAlerts,
 						}),
 					]}

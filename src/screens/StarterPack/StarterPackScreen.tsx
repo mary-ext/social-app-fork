@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
@@ -12,7 +13,6 @@ import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
-import { type ModerationOpts } from '#/lib/moderation/compat';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
@@ -152,7 +152,7 @@ function StarterPackScreenLoaded({
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
 	routeParams: StarterPackScreeProps['route']['params'];
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const showPeopleTab = Boolean(starterPack.list);
 	const showFeedsTab = Boolean(starterPack.feeds?.length);

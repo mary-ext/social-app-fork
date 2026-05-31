@@ -15,6 +15,13 @@ import {
 	AppBskyFeedPost,
 	AppBskyGraphFollow,
 } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationDecision,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -26,7 +33,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
-import { moderateProfile, type ModerationOpts, type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
@@ -91,7 +97,7 @@ let NotificationFeedItem = ({
 	hideTopBorder,
 }: {
 	item: FeedNotification;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	highlightUnread: boolean;
 	hideTopBorder?: boolean;
 }): React.ReactNode => {
@@ -839,7 +845,7 @@ function CondensedAuthorsList({
 				<PreviewableUserAvatar
 					size={35}
 					profile={authors[0]!.profile}
-					moderation={authors[0]!.moderation.ui('avatar')}
+					moderation={getDisplayRestrictions(authors[0]!.moderation, DisplayContext.ProfileMedia)}
 					type={authors[0]!.profile.associated?.labeler ? 'labeler' : 'user'}
 				/>
 				{showDmButton ? <SayHelloBtn profile={authors[0]!.profile} /> : null}
@@ -854,7 +860,7 @@ function CondensedAuthorsList({
 						<PreviewableUserAvatar
 							size={35}
 							profile={author.profile}
-							moderation={author.moderation.ui('avatar')}
+							moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
 							type={author.profile.associated?.labeler ? 'labeler' : 'user'}
 						/>
 					</View>
@@ -907,7 +913,7 @@ function ExpandedAuthorCard({ author }: { author: Author }) {
 					<UserAvatar
 						size={35}
 						avatar={author.profile.avatar}
-						moderation={author.moderation.ui('avatar')}
+						moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
 						type={author.profile.associated?.labeler ? 'labeler' : 'user'}
 					/>
 				</ProfileHoverCard>

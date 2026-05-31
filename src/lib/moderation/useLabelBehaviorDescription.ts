@@ -1,15 +1,15 @@
-import { type InterpretedLabelValueDefinition, type LabelPreference } from '@atproto/api';
+import { type InterpretedLabelDefinition, type LabelPreference } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 export function useLabelBehaviorDescription(
-	labelValueDef: InterpretedLabelValueDefinition,
+	labelValueDef: InterpretedLabelDefinition,
 	pref: LabelPreference,
 ) {
 	const { t: l } = useLingui();
 	if (pref === 'ignore') {
 		return l`Off`;
 	}
-	if (labelValueDef.blurs === 'content' || labelValueDef.blurs === 'media') {
+	if (labelValueDef.blur === 'content' || labelValueDef.blur === 'media' || labelValueDef.blur === 'forced') {
 		if (pref === 'hide') {
 			return l`Hide`;
 		}
@@ -33,19 +33,19 @@ export function useLabelBehaviorDescription(
 }
 
 export function useLabelLongBehaviorDescription(
-	labelValueDef: InterpretedLabelValueDefinition,
+	labelValueDef: InterpretedLabelDefinition,
 	pref: LabelPreference,
 ) {
 	const { t: l } = useLingui();
 	if (pref === 'ignore') {
 		return l`Disabled`;
 	}
-	if (labelValueDef.blurs === 'content') {
+	if (labelValueDef.blur === 'content' || labelValueDef.blur === 'forced') {
 		if (pref === 'hide') {
 			return l`Warn content and filter from feeds`;
 		}
 		return l`Warn content`;
-	} else if (labelValueDef.blurs === 'media') {
+	} else if (labelValueDef.blur === 'media') {
 		if (pref === 'hide') {
 			return l`Blur images and filter from feeds`;
 		}

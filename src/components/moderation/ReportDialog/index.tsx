@@ -5,7 +5,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { wait } from '#/lib/async/wait';
 import { getLabelingServiceTitle } from '#/lib/moderation';
-import { BSKY_LABELER_DID } from '#/lib/moderation/compat';
+import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { useCallOnce } from '#/lib/once';
 import { sanitizeHandle } from '#/lib/strings/handles';
 

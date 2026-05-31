@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 
-import { type ModerationDecision } from '#/lib/moderation/compat';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -50,11 +50,11 @@ export function VideoPostCard({
 	const embed = post.embed;
 	const { state: pressed, onIn: onPressIn, onOut: onPressOut } = useInteractionState();
 
-	const listModUi = moderation.ui('contentList');
+	const listModUi = getDisplayRestrictions(moderation, DisplayContext.ContentList);
 
 	const mergedModui = useMemo(() => {
-		const modui = moderation.ui('contentList');
-		const mediaModui = moderation.ui('contentMedia');
+		const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+		const mediaModui = getDisplayRestrictions(moderation, DisplayContext.ContentMedia);
 		modui.alerts = [...modui.alerts, ...mediaModui.alerts];
 		modui.blurs = [...modui.blurs, ...mediaModui.blurs];
 		modui.filters = [...modui.filters, ...mediaModui.filters];
@@ -151,7 +151,7 @@ export function VideoPostCard({
 							</View>
 						</View>
 					</View>
-					{listModUi.blur ? <VideoPostCardTextPlaceholder author={post.author} /> : textAndAuthor}
+					{listModUi.blurs.length > 0 ? <VideoPostCardTextPlaceholder author={post.author} /> : textAndAuthor}
 				</Hider.Mask>
 				<Hider.Content>
 					<View
@@ -327,8 +327,8 @@ export function CompactVideoPostCard({
 	const { state: pressed, onIn: onPressIn, onOut: onPressOut } = useInteractionState();
 
 	const mergedModui = useMemo(() => {
-		const modui = moderation.ui('contentList');
-		const mediaModui = moderation.ui('contentMedia');
+		const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+		const mediaModui = getDisplayRestrictions(moderation, DisplayContext.ContentMedia);
 		modui.alerts = [...modui.alerts, ...mediaModui.alerts];
 		modui.blurs = [...modui.blurs, ...mediaModui.blurs];
 		modui.filters = [...modui.filters, ...mediaModui.filters];

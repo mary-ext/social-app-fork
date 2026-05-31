@@ -1,6 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	type DisplayRestrictions,
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 
 import Animated, {
 	Easing,
@@ -10,7 +17,6 @@ import Animated, {
 	withDelay,
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
-import { moderateProfile, type ModerationOpts, type ModerationUI } from '#/lib/moderation/compat';
 
 import { useSession } from '#/state/session';
 
@@ -32,7 +38,7 @@ type Props = {
 	animate?: boolean;
 	profiles: AnyProfileView[];
 	size?: number;
-	moderationOpts?: ModerationOpts;
+	moderationOpts?: ModerationOptions;
 };
 
 export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 120, moderationOpts }: Props) {
@@ -96,7 +102,9 @@ export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 1
 						y={layout.y}
 						zIndex={layout.zIndex}
 						includeProfileBorder={layout.border}
-						moderation={moderations[i]?.ui('avatar')}
+						moderation={
+							moderations[i] ? getDisplayRestrictions(moderations[i], DisplayContext.ProfileMedia) : undefined
+						}
 					/>
 				))}
 			</View>
@@ -121,7 +129,7 @@ function AvatarBubble({
 	y: number;
 	zIndex?: number;
 	includeProfileBorder?: boolean;
-	moderation?: ModerationUI;
+	moderation?: DisplayRestrictions;
 }) {
 	const t = useTheme();
 

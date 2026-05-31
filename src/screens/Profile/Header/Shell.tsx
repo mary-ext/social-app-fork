@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type ComAtprotoLabelDefs } from '@atcute/atproto';
 import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -13,7 +14,6 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import { BACK_HITSLOP } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
-import { type ModerationDecision } from '#/lib/moderation/compat';
 import { type NavigationProp } from '#/lib/routes/types';
 
 import { type Shadow } from '#/state/cache/types';
@@ -123,19 +123,19 @@ let ProfileHeaderShell = ({
 			playHaptic('Light');
 			liveStatusControl.open();
 		} else {
-			const modui = moderation.ui('avatar');
+			const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 			const avatar = profile.avatar;
 			const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi';
-			if (avatar && !(modui.blur && modui.noOverride)) {
+			if (avatar && !(modui.blurs.length > 0 && modui.noOverride)) {
 				_openLightbox(avatar, aviRef, type);
 			}
 		}
 	}, [profile, moderation, _openLightbox, aviRef, liveStatusControl, live, playHaptic]);
 
 	const onPressBanner = useCallback(() => {
-		const modui = moderation.ui('banner');
+		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 		const banner = profile.banner;
-		if (banner && !(modui.blur && modui.noOverride)) {
+		if (banner && !(modui.blurs.length > 0 && modui.noOverride)) {
 			_openLightbox(banner, bannerRef, 'image');
 		}
 	}, [profile.banner, moderation, _openLightbox, bannerRef]);
@@ -193,7 +193,7 @@ let ProfileHeaderShell = ({
 						<UserBanner
 							type={profile.associated?.labeler ? 'labeler' : 'default'}
 							banner={profile.banner}
-							moderation={moderation.ui('banner')}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 						/>
 					)}
 				</GrowableBanner>
@@ -238,7 +238,7 @@ let ProfileHeaderShell = ({
 								type={profile.associated?.labeler ? 'labeler' : 'user'}
 								size={live.isActive ? 88 : 90}
 								avatar={profile.avatar}
-								moderation={moderation.ui('avatar')}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								noBorder
 							/>
 							{live.isActive && <LiveIndicator size="large" />}
