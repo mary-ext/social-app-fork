@@ -57,7 +57,9 @@ function appendToken(
 ): void {
 	switch (token.type) {
 		case 'text':
-			builder.addText(token.content);
+			// the tokenizer merges adjacent text runs into `raw` only, leaving `content` holding just the
+			// first run; use `raw` so failed-facet text (`$5`, `16:9`, a stray `:`) isn't truncated.
+			builder.addText(token.raw);
 			break;
 		case 'mention': {
 			const did = resolveDid(token.handle);
