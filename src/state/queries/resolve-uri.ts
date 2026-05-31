@@ -1,6 +1,6 @@
 import { type Client, ok } from '@atcute/client';
 import { type Handle } from '@atcute/lexicons';
-import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { isResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
@@ -41,8 +41,8 @@ const resolvedDidQueryOptions = (
 	});
 
 export function useResolveUriQuery(uri: string | undefined) {
-	const urip = parseResourceUri(uri || '');
-	const host = urip.repo;
+	const urip = uri && isResourceUri(uri) ? parseResourceUri(uri) : undefined;
+	const host = urip?.repo;
 
 	const { appview } = useClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
@@ -51,7 +51,7 @@ export function useResolveUriQuery(uri: string | undefined) {
 		...resolvedDidQueryOptions(appview, getUnstableProfile, host),
 		select: (did) => ({
 			did,
-			uri: `at://${did}/${urip.collection}/${urip.rkey}`,
+			uri: urip ? `at://${did}/${urip.collection}/${urip.rkey}` : '',
 		}),
 	});
 }

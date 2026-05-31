@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import Svg, { Circle, Line } from 'react-native-svg';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import { isCanonicalResourceUri, parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -14,11 +14,14 @@ import { Text } from '#/components/Typography';
 
 export function ViewFullThread({ uri }: { uri: string }) {
 	const t = useTheme();
+	const { t: l } = useLingui();
 	const itemHref = useMemo(() => {
+		if (!isCanonicalResourceUri(uri)) return undefined;
 		const urip = parseCanonicalResourceUri(uri);
 		return makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
 	}, [uri]);
-	const { t: l } = useLingui();
+
+	if (!itemHref) return null;
 
 	return (
 		<Link
