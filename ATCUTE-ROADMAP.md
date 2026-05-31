@@ -380,10 +380,27 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   **`@atproto/api` is now imported only by the seven-file `src/lib/moderation/**` island.** lint + typecheck
   + `pnpm build` pass; **live-verified (2026-05-31)** — reloading the app resumes the stored session
   (account confirmed `mary.my.id`, following feed loads) through the rewritten boot/validate path.
-- Next: **Appendix A (deferred)** is all that remains — migrate the moderation engine to
-  `@atcute/bluesky-moderation` and drop `@atproto/api` entirely. The island is self-contained (no call site
-  outside it changes), with `decision-baseline.json` as the regression reference. Deferred by the owner; not
-  on the immediate path.
+- **Appendix A — done (2026-05-31). The migration is complete; `@atproto/api` is fully removed.** The
+  "self-contained island" framing turned out wrong: moderation _rendering_ reads cause/label **shapes**
+  directly (string `cause.type`, rich `cause.source`, `labelDef` fields), so the swap was a ~100-file
+  big-bang, not a re-export flip. Landed in two committable parts plus a prep commit:
+  - _Prep (63411d894):_ fork-native `const.ts` (BSKY_LABELER_DID, DEFAULT_LABEL_SETTINGS) + `muted-words.ts`
+    (hasMutedWord over @atcute keyword filters); `app-labelers.ts` off `Agent`.
+  - _Part 1 (26e3bf0a6):_ engine → `@atcute/bluesky-moderation`. `.ui(ctx)` →
+    `getDisplayRestrictions(decision, DisplayContext.X)` (cause arrays, no boolean shortcuts); numeric
+    `ModerationCauseType`; bare `source` (Did|null for labels, ListViewBasic|null for blocks/mutes);
+    labelDefs as `Record<did, InterpretedLabelMapping>`. The 87 mechanical leaf consumers were converted by a
+    multi-agent Workflow against a hand-written contract; deep-logic/shared files + DebugMod fixtures by hand.
+    `compat.ts` deleted. Dropped @atproto cause types with no @atcute equivalent (block-other; reply-hidden as
+    an engine cause — kept as a synthetic UI cause). Account-level adult labels intentionally diverge from
+    @atproto's newer stricter behavior.
+  - _Part 2 (d5034f535):_ `preferences-types.ts` defines fork-OWNED types (BskyPreferences, Bsky*Preference,
+    and the app's own moderation interface LabelVisibility/LabelerPreference/ModerationPrefs) backing on
+    @atcute/bluesky lexicon records, NOT on the engine's interpreted types; `toModerationPreferences` is the
+    storage→engine adapter. TID → `@atcute/tid`, retry → fork `#/lib/async/retry`. `pnpm remove @atproto/api`.
+    Stored shape unchanged → no cache bump.
+  - Live-verified via `/playwriter`: DebugMod decision JSON, home feed, moderation settings, and the
+    muted-words dialog all render correctly with no runtime errors.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
