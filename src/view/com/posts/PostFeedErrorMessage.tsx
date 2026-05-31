@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { ClientResponseError } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyActorDefs, AppBskyFeedGetAuthorFeed } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -205,8 +206,8 @@ function detectKnownError(feedDesc: FeedDescriptor, error: unknown): KnownError 
 		return undefined;
 	}
 	if (
-		error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
-		error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+		error instanceof ClientResponseError &&
+		(error.error === 'BlockedActor' || error.error === 'BlockedByActor')
 	) {
 		return KnownError.Block;
 	}

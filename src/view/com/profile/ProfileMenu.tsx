@@ -1,6 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';

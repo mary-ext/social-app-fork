@@ -1,5 +1,5 @@
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyGraphDefs } from '@atproto/api';
 
 export function makeProfileLink(info: { did: string }, ...segments: string[]) {
 	return [`/profile`, info.did, ...segments].join('/');

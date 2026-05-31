@@ -1,5 +1,5 @@
 import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type $Typed } from '@atproto/api';
+import { type $type } from '@atcute/lexicons';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
@@ -123,23 +123,23 @@ export function canReact({
 
 export type GroupConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
 	// can be missing if account deleted
-	kind?: $Typed<ChatBskyActorDefs.GroupConvoMember>;
+	kind?: $type.enforce<ChatBskyActorDefs.GroupConvoMember>;
 };
 
 export type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
-	kind: $Typed<ChatBskyActorDefs.DirectConvoMember>;
+	kind: $type.enforce<ChatBskyActorDefs.DirectConvoMember>;
 };
 
 export type ConvoWithDetails = { view: ChatBskyConvoDefs.ConvoView } & (
 	| {
 			kind: 'group';
-			details: $Typed<ChatBskyConvoDefs.GroupConvo>;
+			details: $type.enforce<ChatBskyConvoDefs.GroupConvo>;
 			primaryMember?: GroupConvoMember; // the owner - may have left, thus optional
 			members: Array<GroupConvoMember>;
 	  }
 	| {
 			kind: 'direct';
-			details: $Typed<ChatBskyConvoDefs.DirectConvo>;
+			details: $type.enforce<ChatBskyConvoDefs.DirectConvo>;
 			primaryMember: DirectConvoMember; // the other user
 			members: Array<DirectConvoMember>;
 	  }

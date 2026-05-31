@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AppBskyNotificationDefs } from '@atproto/api';
+import { type AppBskyNotificationDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type AllNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';

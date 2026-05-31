@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { flip, offset, shift, size, useFloating } from '@floating-ui/react-dom';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';

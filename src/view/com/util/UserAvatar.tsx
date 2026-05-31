@@ -10,8 +10,8 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type AppBskyEmbedExternal, type ModerationUI } from '@atproto/api';
+import { type AnyProfileView, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 

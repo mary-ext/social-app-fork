@@ -116,13 +116,13 @@ msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
-#: src/components/ProfileHoverCard/index.tsx:421
+#: src/components/ProfileHoverCard/index.tsx:420
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/components/ProfileHoverCard/index.tsx:425
+#: src/components/ProfileHoverCard/index.tsx:424
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -189,7 +189,7 @@ msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
-#: src/features/liveNow/components/LiveStatusDialog.tsx:79
+#: src/features/liveNow/components/LiveStatusDialog.tsx:78
 msgid "{0} is live"
 msgstr ""
 
@@ -492,7 +492,7 @@ msgstr ""
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:518
+#: src/components/ProfileHoverCard/index.tsx:517
 msgid "{following} following"
 msgstr ""
 
@@ -780,12 +780,12 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:358
 #: src/screens/Messages/components/RequestButtons.tsx:86
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:108
-#: src/view/com/profile/ProfileMenu.tsx:174
+#: src/view/com/profile/ProfileMenu.tsx:173
 msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:189
+#: src/view/com/profile/ProfileMenu.tsx:188
 msgctxt "toast"
 msgid "Account followed"
 msgstr ""
@@ -799,7 +799,7 @@ msgid "Account is deactivated"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:389
-#: src/view/com/profile/ProfileMenu.tsx:146
+#: src/view/com/profile/ProfileMenu.tsx:145
 msgctxt "toast"
 msgid "Account muted"
 msgstr ""
@@ -828,18 +828,18 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:95
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:75
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:278
-#: src/view/com/profile/ProfileMenu.tsx:162
+#: src/view/com/profile/ProfileMenu.tsx:161
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:203
+#: src/view/com/profile/ProfileMenu.tsx:202
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:375
-#: src/view/com/profile/ProfileMenu.tsx:134
+#: src/view/com/profile/ProfileMenu.tsx:133
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
@@ -993,8 +993,8 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:321
-#: src/view/com/profile/ProfileMenu.tsx:325
+#: src/view/com/profile/ProfileMenu.tsx:320
+#: src/view/com/profile/ProfileMenu.tsx:324
 msgid "Add to lists"
 msgstr ""
 
@@ -1003,8 +1003,8 @@ msgid "Add to saved posts"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:153
-#: src/view/com/profile/ProfileMenu.tsx:311
-#: src/view/com/profile/ProfileMenu.tsx:315
+#: src/view/com/profile/ProfileMenu.tsx:310
+#: src/view/com/profile/ProfileMenu.tsx:314
 msgid "Add to starter packs"
 msgstr ""
 
@@ -1030,8 +1030,8 @@ msgstr ""
 msgid "Added to starter pack"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:135
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:139
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:134
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:138
 msgid "Adding members to list..."
 msgstr ""
 
@@ -1454,7 +1454,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:149
 #: src/screens/Messages/components/ChatDisabled.tsx:152
 #: src/screens/Messages/Inbox.tsx:211
-#: src/screens/Profile/Header/Shell.tsx:158
+#: src/screens/Profile/Header/Shell.tsx:157
 #: src/screens/StarterPack/Wizard/index.tsx:286
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:72
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
@@ -1483,7 +1483,7 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 #: src/screens/Messages/ConversationSettings/prompts.tsx:116
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
-#: src/view/com/profile/ProfileMenu.tsx:483
+#: src/view/com/profile/ProfileMenu.tsx:482
 msgid "Block"
 msgstr ""
 
@@ -1497,8 +1497,8 @@ msgstr "Block {displayName}"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:613
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/screens/Messages/components/RequestButtons.tsx:138
-#: src/view/com/profile/ProfileMenu.tsx:405
-#: src/view/com/profile/ProfileMenu.tsx:412
+#: src/view/com/profile/ProfileMenu.tsx:404
+#: src/view/com/profile/ProfileMenu.tsx:411
 msgid "Block account"
 msgstr ""
 
@@ -1507,7 +1507,7 @@ msgid "Block account?"
 msgstr "Block account?"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:708
-#: src/view/com/profile/ProfileMenu.tsx:474
+#: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Block Account?"
 msgstr ""
 
@@ -1560,7 +1560,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
 #: src/screens/Messages/ConversationSettings/prompts.tsx:114
-#: src/view/com/profile/ProfileMenu.tsx:480
+#: src/view/com/profile/ProfileMenu.tsx:479
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -1576,7 +1576,7 @@ msgstr ""
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:479
+#: src/view/com/profile/ProfileMenu.tsx:478
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr ""
 
@@ -1705,8 +1705,8 @@ msgstr "by <0>@{0}</0>"
 msgid "By you"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:113
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:115
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:112
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:114
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:282
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:291
 #: src/components/Prompt.tsx:121
@@ -1781,11 +1781,11 @@ msgstr ""
 msgid "Change the source language"
 msgstr "Change the source language"
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:144
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:143
 msgid "Changes saved"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:101
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:100
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr ""
 
@@ -1960,8 +1960,8 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:124
 #: src/components/verification/VerifierDialog.tsx:118
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:47
+#: src/features/liveNow/components/EditLiveDialog.tsx:185
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
-#: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/screens/Messages/components/InviteLinkDialog.tsx:442
 #: src/screens/Messages/components/InviteLinkDialog.tsx:444
 msgid "Close"
@@ -2153,8 +2153,8 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:439
-#: src/view/com/profile/ProfileMenu.tsx:443
+#: src/view/com/profile/ProfileMenu.tsx:438
+#: src/view/com/profile/ProfileMenu.tsx:442
 msgid "Copy at:// URI"
 msgstr ""
 
@@ -2163,8 +2163,8 @@ msgstr ""
 msgid "Copy author DID"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:449
-#: src/view/com/profile/ProfileMenu.tsx:453
+#: src/view/com/profile/ProfileMenu.tsx:448
+#: src/view/com/profile/ProfileMenu.tsx:452
 msgid "Copy DID"
 msgstr ""
 
@@ -2187,8 +2187,8 @@ msgstr ""
 msgid "Copy link to post"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:265
-#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:264
+#: src/view/com/profile/ProfileMenu.tsx:273
 msgid "Copy link to profile"
 msgstr ""
 
@@ -2251,7 +2251,7 @@ msgid "Could not process your video"
 msgstr ""
 
 #. placeholder {0}: cleanError(error)
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:224
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Could not save changes: {0}"
 msgstr ""
 
@@ -2309,8 +2309,8 @@ msgstr ""
 msgid "Create group chat"
 msgstr "Create group chat"
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:108
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:110
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:107
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:109
 msgid "Create list"
 msgstr ""
 
@@ -2318,8 +2318,8 @@ msgstr ""
 msgid "Create list from members"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:88
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:91
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:87
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:90
 msgid "Create list from starter pack"
 msgstr ""
 
@@ -2615,7 +2615,7 @@ msgstr ""
 msgid "Dismiss error"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:80
+#: src/components/interstitials/TrendingVideos.tsx:79
 msgid "Dismiss this section"
 msgstr ""
 
@@ -2783,8 +2783,8 @@ msgstr "Edit link settings"
 msgid "Edit list details"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/profile/ProfileMenu.tsx:351
+#: src/view/com/profile/ProfileMenu.tsx:335
+#: src/view/com/profile/ProfileMenu.tsx:350
 msgid "Edit live status"
 msgstr ""
 
@@ -3041,7 +3041,7 @@ msgstr ""
 
 #. placeholder {0}: displayDuration(i18n, minutesUntilExpiry)
 #. placeholder {1}: i18n.date(expiryDateTime, { hour: 'numeric', minute: '2-digit', hour12: true, })
-#: src/features/liveNow/components/EditLiveDialog.tsx:120
+#: src/features/liveNow/components/EditLiveDialog.tsx:113
 msgid "Expires in {0} at {1}"
 msgstr ""
 
@@ -3460,8 +3460,8 @@ msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:482
-#: src/components/ProfileHoverCard/index.tsx:464
-#: src/components/ProfileHoverCard/index.tsx:469
+#: src/components/ProfileHoverCard/index.tsx:463
+#: src/components/ProfileHoverCard/index.tsx:468
 #: src/screens/Messages/ConversationSettings/Member.tsx:128
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:367
@@ -3480,8 +3480,8 @@ msgstr ""
 msgid "Follow {displayName}"
 msgstr "Follow {displayName}"
 
-#: src/view/com/profile/ProfileMenu.tsx:298
-#: src/view/com/profile/ProfileMenu.tsx:302
+#: src/view/com/profile/ProfileMenu.tsx:297
+#: src/view/com/profile/ProfileMenu.tsx:301
 msgid "Follow account"
 msgstr ""
 
@@ -3541,8 +3541,8 @@ msgstr ""
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:473
-#: src/components/ProfileHoverCard/index.tsx:464
-#: src/components/ProfileHoverCard/index.tsx:469
+#: src/components/ProfileHoverCard/index.tsx:463
+#: src/components/ProfileHoverCard/index.tsx:468
 #: src/Navigation.tsx:648
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:363
@@ -3704,11 +3704,11 @@ msgstr ""
 msgid "Get notified about posts and replies from accounts you choose."
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:179
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:178
 msgid "Get notified of new posts from {name}"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:186
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:185
 msgid "Get notified of this account’s activity"
 msgstr ""
 
@@ -3766,8 +3766,8 @@ msgstr ""
 msgid "Go Home"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:337
-#: src/view/com/profile/ProfileMenu.tsx:353
+#: src/view/com/profile/ProfileMenu.tsx:336
+#: src/view/com/profile/ProfileMenu.tsx:352
 msgid "Go live"
 msgstr ""
 
@@ -3778,8 +3778,8 @@ msgstr ""
 msgid "Go Live"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:334
-#: src/view/com/profile/ProfileMenu.tsx:349
+#: src/view/com/profile/ProfileMenu.tsx:333
+#: src/view/com/profile/ProfileMenu.tsx:348
 msgid "Go live (disabled)"
 msgstr ""
 
@@ -3934,7 +3934,7 @@ msgid "Hidden list"
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:88
-#: src/components/interstitials/TrendingVideos.tsx:130
+#: src/components/interstitials/TrendingVideos.tsx:129
 #: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:121
 #: src/components/moderation/PostHider.tsx:131
@@ -4000,7 +4000,7 @@ msgstr ""
 msgid "Hide trending topics?"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:128
+#: src/components/interstitials/TrendingVideos.tsx:127
 msgid "Hide trending videos?"
 msgstr ""
 
@@ -4018,23 +4018,23 @@ msgstr ""
 msgid "Hides the content"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:105
+#: src/view/com/posts/PostFeedErrorMessage.tsx:106
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:101
+#: src/view/com/posts/PostFeedErrorMessage.tsx:102
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:103
+#: src/view/com/posts/PostFeedErrorMessage.tsx:104
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:102
+#: src/view/com/posts/PostFeedErrorMessage.tsx:103
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:100
+#: src/view/com/posts/PostFeedErrorMessage.tsx:101
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
@@ -4121,12 +4121,12 @@ msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
 #. Image has been moderated and user has the option of showing it temporarily
-#: src/features/liveNow/components/LiveStatusDialog.tsx:237
+#: src/features/liveNow/components/LiveStatusDialog.tsx:236
 msgid "Image is hidden due to your moderation settings."
 msgstr "Image is hidden due to your moderation settings."
 
 #. Image has been moderated and is not visible to the user
-#: src/features/liveNow/components/LiveStatusDialog.tsx:247
+#: src/features/liveNow/components/LiveStatusDialog.tsx:246
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
@@ -4277,7 +4277,7 @@ msgstr ""
 msgid "Keep editing"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:183
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:182
 msgid "Keep me posted"
 msgstr ""
 
@@ -4531,7 +4531,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:67
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:66
 msgid "List created, but failed to add some members"
 msgstr ""
 
@@ -4611,12 +4611,12 @@ msgstr ""
 msgid "LIVE"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:193
+#: src/features/liveNow/components/LiveStatusDialog.tsx:192
 msgid "Live feature is in beta"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:137
-#: src/features/liveNow/components/EditLiveDialog.tsx:141
+#: src/features/liveNow/components/EditLiveDialog.tsx:130
+#: src/features/liveNow/components/EditLiveDialog.tsx:134
 #: src/features/liveNow/components/GoLiveDialog.tsx:127
 #: src/features/liveNow/components/GoLiveDialog.tsx:131
 msgid "Live link"
@@ -4824,7 +4824,7 @@ msgid "Message from @{0}: {1}"
 msgstr ""
 
 #. placeholder {0}: rawError.message
-#: src/view/com/posts/PostFeedErrorMessage.tsx:176
+#: src/view/com/posts/PostFeedErrorMessage.tsx:177
 msgid "Message from server: {0}"
 msgstr ""
 
@@ -4950,8 +4950,8 @@ msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:125
 #: src/view/com/composer/drafts/DraftItem.tsx:171
-#: src/view/com/profile/ProfileMenu.tsx:240
-#: src/view/com/profile/ProfileMenu.tsx:247
+#: src/view/com/profile/ProfileMenu.tsx:239
+#: src/view/com/profile/ProfileMenu.tsx:246
 msgid "More options"
 msgstr ""
 
@@ -4988,8 +4988,8 @@ msgstr "Mute {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:598
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:602
-#: src/view/com/profile/ProfileMenu.tsx:389
-#: src/view/com/profile/ProfileMenu.tsx:396
+#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/profile/ProfileMenu.tsx:395
 msgid "Mute account"
 msgstr ""
 
@@ -5252,7 +5252,7 @@ msgstr ""
 msgid "No drafts yet"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:129
+#: src/features/liveNow/components/EditLiveDialog.tsx:122
 msgid "No expiry set"
 msgstr ""
 
@@ -5444,7 +5444,7 @@ msgstr "Not followed by anyone you’re following"
 msgid "Not Found"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:488
+#: src/view/com/profile/ProfileMenu.tsx:487
 msgid "Note about sharing"
 msgstr ""
 
@@ -5647,8 +5647,8 @@ msgstr ""
 msgid "Open post options menu"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:174
-#: src/features/liveNow/components/LiveStatusDialog.tsx:184
+#: src/features/liveNow/components/LiveStatusDialog.tsx:173
+#: src/features/liveNow/components/LiveStatusDialog.tsx:183
 msgid "Open profile"
 msgstr ""
 
@@ -6126,8 +6126,8 @@ msgctxt "toast"
 msgid "Post unpinned"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:200
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:205
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:199
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:204
 #: src/screens/ProfileList/index.tsx:153
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:195
 #: src/screens/StarterPack/StarterPackScreen.tsx:165
@@ -6139,7 +6139,7 @@ msgstr ""
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:72
+#: src/view/com/posts/PostFeedErrorMessage.tsx:73
 msgid "Posts hidden"
 msgstr ""
 
@@ -6227,7 +6227,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:149
+#: src/screens/Profile/Header/Shell.tsx:148
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
@@ -6411,7 +6411,7 @@ msgstr ""
 #: src/screens/Moderation/index.tsx:338
 #: src/screens/Settings/Settings.tsx:478
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
-#: src/view/com/posts/PostFeedErrorMessage.tsx:187
+#: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
 msgstr ""
 
@@ -6461,11 +6461,11 @@ msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:101
 #: src/view/com/posts/FeedShutdownMsg.tsx:106
-#: src/view/com/posts/PostFeedErrorMessage.tsx:149
+#: src/view/com/posts/PostFeedErrorMessage.tsx:150
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:184
+#: src/view/com/posts/PostFeedErrorMessage.tsx:185
 msgid "Remove feed?"
 msgstr ""
 
@@ -6503,8 +6503,8 @@ msgstr ""
 msgid "Remove image"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:204
-#: src/features/liveNow/components/EditLiveDialog.tsx:212
+#: src/features/liveNow/components/EditLiveDialog.tsx:197
+#: src/features/liveNow/components/EditLiveDialog.tsx:205
 msgid "Remove live status"
 msgstr ""
 
@@ -6516,7 +6516,7 @@ msgstr ""
 msgid "Remove profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:185
+#: src/view/com/posts/PostFeedErrorMessage.tsx:186
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
@@ -6530,8 +6530,8 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:208
-#: src/view/com/profile/ProfileMenu.tsx:364
-#: src/view/com/profile/ProfileMenu.tsx:368
+#: src/view/com/profile/ProfileMenu.tsx:363
+#: src/view/com/profile/ProfileMenu.tsx:367
 msgid "Remove verification"
 msgstr ""
 
@@ -6616,8 +6616,8 @@ msgctxt "description"
 msgid "Replied to you"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:210
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:215
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:209
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:214
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:197
 #: src/screens/Settings/NotificationSettings/index.tsx:88
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:39
@@ -6676,13 +6676,13 @@ msgid "Reply was successfully hidden"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:133
-#: src/features/liveNow/components/LiveStatusDialog.tsx:217
+#: src/features/liveNow/components/LiveStatusDialog.tsx:216
 #: src/screens/Messages/ConversationSettings/index.tsx:452
 msgid "Report"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:420
-#: src/view/com/profile/ProfileMenu.tsx:424
+#: src/view/com/profile/ProfileMenu.tsx:419
+#: src/view/com/profile/ProfileMenu.tsx:423
 msgid "Report account"
 msgstr ""
 
@@ -6745,7 +6745,7 @@ msgid "Report this list"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:18
-#: src/features/liveNow/components/LiveStatusDialog.tsx:198
+#: src/features/liveNow/components/LiveStatusDialog.tsx:197
 msgid "Report this livestream"
 msgstr ""
 
@@ -6887,8 +6887,8 @@ msgstr "Sad GIFs"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:311
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:579
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:581
-#: src/features/liveNow/components/EditLiveDialog.tsx:178
-#: src/features/liveNow/components/EditLiveDialog.tsx:186
+#: src/features/liveNow/components/EditLiveDialog.tsx:171
+#: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:48
 #: src/screens/Profile/Header/EditProfileDialog.tsx:224
 #: src/screens/Profile/Header/EditProfileDialog.tsx:234
@@ -6903,8 +6903,8 @@ msgstr "Sad GIFs"
 msgid "Save"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:162
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:161
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:168
 #: src/screens/SavedFeeds.tsx:115
 #: src/screens/SavedFeeds.tsx:119
 #: src/screens/SavedFeeds.tsx:293
@@ -7072,8 +7072,8 @@ msgstr ""
 msgid "Search my posts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:279
-#: src/view/com/profile/ProfileMenu.tsx:283
+#: src/view/com/profile/ProfileMenu.tsx:278
+#: src/view/com/profile/ProfileMenu.tsx:282
 msgid "Search posts"
 msgstr ""
 
@@ -7384,7 +7384,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:491
+#: src/view/com/profile/ProfileMenu.tsx:490
 msgid "Share anyway"
 msgstr ""
 
@@ -7431,8 +7431,8 @@ msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:156
 #: src/components/moderation/ScreenHider.tsx:160
-#: src/features/liveNow/components/LiveStatusDialog.tsx:255
-#: src/features/liveNow/components/LiveStatusDialog.tsx:260
+#: src/features/liveNow/components/LiveStatusDialog.tsx:254
+#: src/features/liveNow/components/LiveStatusDialog.tsx:259
 #: src/screens/List/ListHiddenScreen.tsx:163
 msgid "Show anyway"
 msgstr ""
@@ -7866,7 +7866,7 @@ msgstr "Subscribe to {publicationTitle} on {0}"
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:197
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:196
 msgid "Subscribe to account activity"
 msgstr ""
 
@@ -8022,7 +8022,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:180
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:378
-#: src/view/com/profile/ProfileMenu.tsx:477
+#: src/view/com/profile/ProfileMenu.tsx:476
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
 
@@ -8125,7 +8125,7 @@ msgstr ""
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:129
+#: src/view/com/posts/PostFeedErrorMessage.tsx:130
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr ""
 
@@ -8149,12 +8149,12 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:267
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
-#: src/view/com/profile/ProfileMenu.tsx:138
-#: src/view/com/profile/ProfileMenu.tsx:150
-#: src/view/com/profile/ProfileMenu.tsx:166
-#: src/view/com/profile/ProfileMenu.tsx:178
-#: src/view/com/profile/ProfileMenu.tsx:193
-#: src/view/com/profile/ProfileMenu.tsx:207
+#: src/view/com/profile/ProfileMenu.tsx:137
+#: src/view/com/profile/ProfileMenu.tsx:149
+#: src/view/com/profile/ProfileMenu.tsx:165
+#: src/view/com/profile/ProfileMenu.tsx:177
+#: src/view/com/profile/ProfileMenu.tsx:192
+#: src/view/com/profile/ProfileMenu.tsx:206
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -8267,7 +8267,7 @@ msgstr ""
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:104
+#: src/view/com/posts/PostFeedErrorMessage.tsx:105
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
@@ -8295,7 +8295,7 @@ msgstr ""
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:106
+#: src/view/com/posts/PostFeedErrorMessage.tsx:107
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
@@ -8313,7 +8313,7 @@ msgstr ""
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:165
+#: src/features/liveNow/components/EditLiveDialog.tsx:158
 #: src/features/liveNow/components/GoLiveDialog.tsx:150
 msgid "This is not a valid link"
 msgstr ""
@@ -8395,7 +8395,7 @@ msgstr ""
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:489
+#: src/view/com/profile/ProfileMenu.tsx:488
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -8450,7 +8450,7 @@ msgstr ""
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:95
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:94
 msgid "This will create a new list with the same name, description, and members as this starter pack."
 msgstr ""
 
@@ -8569,7 +8569,7 @@ msgstr "Trending GIFs"
 msgid "Trending options"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:77
+#: src/components/interstitials/TrendingVideos.tsx:76
 msgid "Trending Videos"
 msgstr ""
 
@@ -8626,7 +8626,7 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:382
 #: src/screens/ProfileList/components/Header.tsx:149
 #: src/screens/ProfileList/components/Header.tsx:157
-#: src/view/com/profile/ProfileMenu.tsx:483
+#: src/view/com/profile/ProfileMenu.tsx:482
 msgid "Unblock"
 msgstr ""
 
@@ -8641,14 +8641,14 @@ msgstr "Unblock {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:255
 #: src/components/dms/ConvoMenu.tsx:259
-#: src/view/com/profile/ProfileMenu.tsx:405
-#: src/view/com/profile/ProfileMenu.tsx:410
+#: src/view/com/profile/ProfileMenu.tsx:404
+#: src/view/com/profile/ProfileMenu.tsx:409
 msgid "Unblock account"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:377
-#: src/view/com/profile/ProfileMenu.tsx:474
+#: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Unblock Account?"
 msgstr ""
 
@@ -8677,8 +8677,8 @@ msgstr ""
 msgid "Unfollow {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:298
-#: src/view/com/profile/ProfileMenu.tsx:302
+#: src/view/com/profile/ProfileMenu.tsx:297
+#: src/view/com/profile/ProfileMenu.tsx:301
 msgid "Unfollow account"
 msgstr ""
 
@@ -8742,8 +8742,8 @@ msgstr "Unmute {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:598
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:602
-#: src/view/com/profile/ProfileMenu.tsx:389
-#: src/view/com/profile/ProfileMenu.tsx:394
+#: src/view/com/profile/ProfileMenu.tsx:388
+#: src/view/com/profile/ProfileMenu.tsx:393
 msgid "Unmute account"
 msgstr ""
 
@@ -8983,8 +8983,8 @@ msgstr ""
 
 #: src/components/verification/VerificationCreatePrompt.tsx:74
 #: src/components/verification/VerificationCreatePrompt.tsx:77
-#: src/view/com/profile/ProfileMenu.tsx:375
-#: src/view/com/profile/ProfileMenu.tsx:379
+#: src/view/com/profile/ProfileMenu.tsx:374
+#: src/view/com/profile/ProfileMenu.tsx:378
 msgid "Verify account"
 msgstr ""
 
@@ -9044,7 +9044,7 @@ msgid "View {0}"
 msgstr "View {0}"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/Shell.tsx:221
+#: src/screens/Profile/Header/Shell.tsx:220
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -9076,7 +9076,7 @@ msgstr "View {publicationTitle}"
 msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
-#: src/components/ProfileHoverCard/index.tsx:450
+#: src/components/ProfileHoverCard/index.tsx:449
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -9101,14 +9101,14 @@ msgstr "View incoming group chat requests"
 msgid "View information about these labels"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:172
-#: src/components/interstitials/TrendingVideos.tsx:196
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:174
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:189
+#: src/components/interstitials/TrendingVideos.tsx:171
+#: src/components/interstitials/TrendingVideos.tsx:195
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:173
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:188
 msgid "View more"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:198
+#: src/components/interstitials/TrendingVideos.tsx:197
 msgid "View more trending videos"
 msgstr ""
 
@@ -9116,16 +9116,16 @@ msgstr ""
 msgid "View post"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:436
-#: src/components/ProfileHoverCard/index.tsx:457
-#: src/components/ProfileHoverCard/index.tsx:473
-#: src/view/com/posts/PostFeedErrorMessage.tsx:151
+#: src/components/ProfileHoverCard/index.tsx:435
+#: src/components/ProfileHoverCard/index.tsx:456
+#: src/components/ProfileHoverCard/index.tsx:472
+#: src/view/com/posts/PostFeedErrorMessage.tsx:152
 #: src/view/com/util/PostMeta.tsx:95
 #: src/view/com/util/PostMeta.tsx:114
 msgid "View profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:149
+#: src/screens/Profile/Header/Shell.tsx:148
 msgid "View profile banner"
 msgstr "View profile banner"
 
@@ -9230,8 +9230,8 @@ msgstr ""
 msgid "Warn content and filter from feeds"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatusDialog.tsx:152
-#: src/features/liveNow/components/LiveStatusDialog.tsx:161
+#: src/features/liveNow/components/LiveStatusDialog.tsx:151
+#: src/features/liveNow/components/LiveStatusDialog.tsx:160
 msgid "Watch now"
 msgstr ""
 
@@ -9344,8 +9344,8 @@ msgstr ""
 msgid "Whoops!"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:118
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:108
+#: src/components/interstitials/TrendingVideos.tsx:117
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:107
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
 
@@ -9415,7 +9415,7 @@ msgstr ""
 msgid "Wrong kind of conversation"
 msgstr "Wrong kind of conversation"
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:142
+#: src/features/liveNow/components/EditLiveDialog.tsx:135
 #: src/features/liveNow/components/GoLiveDialog.tsx:132
 msgid "www.mylivestream.tv"
 msgstr ""
@@ -9462,8 +9462,8 @@ msgstr "You are blocking this person"
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:110
-#: src/features/liveNow/components/EditLiveDialog.tsx:114
+#: src/features/liveNow/components/EditLiveDialog.tsx:103
+#: src/features/liveNow/components/EditLiveDialog.tsx:107
 msgid "You are Live"
 msgstr ""
 
@@ -9531,7 +9531,7 @@ msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:87
-#: src/components/interstitials/TrendingVideos.tsx:129
+#: src/components/interstitials/TrendingVideos.tsx:128
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
 msgid "You can update this later from your settings."
 msgstr ""
@@ -9691,7 +9691,7 @@ msgid "You will be signed out of all your accounts."
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:120
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:119
 msgid "You will no longer receive notifications for {0}"
 msgstr ""
 
@@ -9713,7 +9713,7 @@ msgid "You: {message}"
 msgstr "You: {message}"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/activity-notifications/SubscribeProfileDialog.tsx:140
+#: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You'll start receiving notifications for {0}!"
 msgstr ""
 

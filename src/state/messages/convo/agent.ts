@@ -1,4 +1,5 @@
 import {
+	type AppBskyEmbedRecord,
 	type ChatBskyActorDefs,
 	type ChatBskyConvoDefs,
 	type ChatBskyConvoGetLog,
@@ -6,9 +7,7 @@ import {
 	type ChatBskyGroupDefs,
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
-// TODO(atcute Phase 2.4): switch AppBskyEmbedRecord to @atcute/bluesky once the embed types flip
-import { type $Typed, type AppBskyEmbedRecord } from '@atproto/api';
+import { type $type, type Did } from '@atcute/lexicons';
 import { EventEmitter } from 'eventemitter3';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -95,7 +94,7 @@ export class Convo {
 		{
 			id: string;
 			message: ChatBskyConvoSendMessage.$input['message'];
-			optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>;
+			optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>;
 		}
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
@@ -911,7 +910,7 @@ export class Convo {
 
 	sendMessage(
 		message: ChatBskyConvoSendMessage.$input['message'],
-		optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>,
+		optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>,
 	) {
 		// Ignore empty messages for now since they have no other purpose atm
 		if (!message.text.trim() && !message.embed) return;

@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { type DimensionValue, Pressable, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedImages } from '@atproto/api';
+import { type AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import Animated, {

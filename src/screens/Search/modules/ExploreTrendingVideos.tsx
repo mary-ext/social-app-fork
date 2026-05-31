@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { AppBskyEmbedVideo } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useFocusEffect } from '@react-navigation/native';
@@ -153,7 +152,7 @@ function VideoCards({ data }: { data: Exclude<ReturnType<typeof usePostFeedQuery
 			.flatMap((page) => page.slices)
 			.map((slice) => slice.items[0])
 			.filter((item): item is NonNullable<typeof item> => Boolean(item))
-			.filter((item) => AppBskyEmbedVideo.isView(item.post.embed))
+			.filter((item) => item.post.embed?.$type === 'app.bsky.embed.video#view')
 			.slice(0, 8);
 	}, [data]);
 	const href = useMemo(() => {

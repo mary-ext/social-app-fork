@@ -2,8 +2,7 @@ import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type ComAtprotoLabelDefs } from '@atcute/atproto';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 

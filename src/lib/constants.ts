@@ -1,5 +1,5 @@
 import { type Insets } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 
 import { type ProxyHeaderValue } from '#/state/session/agent';
 

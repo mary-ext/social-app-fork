@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AppBskyEmbedRecord, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
-import { type Did } from '@atcute/lexicons';
-import { type $Typed, type AppBskyEmbedRecord } from '@atproto/api';
+import { type $type, type Did } from '@atcute/lexicons';
 
 import {
 	default as Animated,
@@ -334,8 +333,8 @@ export function MessagesList({
 		async (text: string) => {
 			let trimmedText = cleanNewlines(text.trimEnd());
 
-			let embed: $Typed<AppBskyEmbedRecord.Main> | undefined;
-			let embedView: $Typed<AppBskyEmbedRecord.View> | undefined;
+			let embed: $type.enforce<AppBskyEmbedRecord.Main> | undefined;
+			let embedView: $type.enforce<AppBskyEmbedRecord.View> | undefined;
 
 			if (embedUri) {
 				try {

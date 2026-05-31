@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';

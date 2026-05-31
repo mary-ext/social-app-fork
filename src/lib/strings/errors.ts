@@ -1,4 +1,4 @@
-import { XRPCError } from '@atproto/api';
+import { ClientResponseError } from '@atcute/client';
 import { t } from '@lingui/core/macro';
 
 export function cleanError(error: unknown): string {
@@ -64,7 +64,7 @@ export function isNetworkError(e: unknown) {
 }
 
 export function isErrorMaybeAppPasswordPermissions(e: unknown) {
-	if (e instanceof XRPCError && e.error === 'TokenInvalid') {
+	if (e instanceof ClientResponseError && e.error === 'TokenInvalid') {
 		return true;
 	}
 	const str = String(e);

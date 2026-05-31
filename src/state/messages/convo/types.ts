@@ -1,12 +1,11 @@
 import {
+	type AppBskyEmbedRecord,
 	type ChatBskyActorDefs,
 	type ChatBskyConvoDefs,
 	type ChatBskyConvoSendMessage,
 } from '@atcute/bluesky';
 import { type Client } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
-// TODO(atcute Phase 2.4): switch AppBskyEmbedRecord to @atcute/bluesky once the embed types flip
-import { type $Typed, type AppBskyEmbedRecord } from '@atproto/api';
+import { type $type, type Did } from '@atcute/lexicons';
 
 import { type MessagesEventBus } from '#/state/messages/events/agent';
 
@@ -103,7 +102,7 @@ export type ConvoItem =
 type DeleteMessage = (messageId: string) => Promise<void>;
 type SendMessage = (
 	message: ChatBskyConvoSendMessage.$input['message'],
-	optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>,
+	optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>,
 ) => void;
 type FetchMessageHistory = () => Promise<void>;
 type MarkConvoAccepted = () => void;

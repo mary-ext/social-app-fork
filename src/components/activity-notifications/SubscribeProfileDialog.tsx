@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
 import {
+	type AnyProfileView,
 	type AppBskyNotificationDefs,
 	type AppBskyNotificationListActivitySubscriptions,
-	type ModerationOpts,
-	type Un$Typed,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type ModerationOpts, type Un$Typed } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -124,7 +123,7 @@ function DialogInner({
 					// filter out the subscription
 					queryClient.setQueryData(
 						RQKEY_getActivitySubscriptions,
-						(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>) => {
+						(old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.$output>) => {
 							if (!old) return old;
 							return {
 								...old,

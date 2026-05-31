@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { type AppBskyGraphStarterpack } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -38,7 +37,7 @@ export function CreateListFromStarterPackDialog({
 	const createDialogControl = Dialog.useDialogControl();
 	const loadingDialogControl = Dialog.useDialogControl();
 
-	const record = starterPack.record as AppBskyGraphStarterpack.Record;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	const onPressCreate = () => {
 		control.close(() => createDialogControl.open());

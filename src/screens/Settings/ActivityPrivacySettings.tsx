@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AppBskyNotificationDeclaration } from '@atproto/api';
+import { type AppBskyNotificationDeclaration } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -76,7 +76,7 @@ export function Inner({
 	notificationDeclaration: {
 		uri?: string;
 		cid?: string;
-		value: AppBskyNotificationDeclaration.Record;
+		value: AppBskyNotificationDeclaration.Main;
 	};
 }) {
 	const t = useTheme();
