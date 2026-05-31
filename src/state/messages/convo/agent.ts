@@ -1094,10 +1094,14 @@ export class Convo {
 						break;
 				}
 			}
+		} else if (isNetworkError(e)) {
+			// @atcute lets transport failures (offline/DNS/timeout) propagate as a plain TypeError rather
+			// than a ClientResponseError, so they must be caught here to stay retryable.
+			this.pendingMessageFailure = 'recoverable';
 		} else {
 			this.pendingMessageFailure = 'unrecoverable';
 
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
+			if (!isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error(`handleSendMessageFailure received unknown error`, {
 					safeMessage: e.message,
 				});
