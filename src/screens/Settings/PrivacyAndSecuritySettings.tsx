@@ -1,4 +1,4 @@
-import { type AppBskyNotificationDeclaration } from '@atproto/api';
+import { type AppBskyNotificationDeclaration } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -93,7 +93,7 @@ function NotificationDeclaration({
 	isError,
 }: {
 	data?: {
-		value: AppBskyNotificationDeclaration.Record;
+		value: AppBskyNotificationDeclaration.Main;
 	};
 	isError?: boolean;
 }) {

@@ -10,7 +10,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AppBskyActorDefs, AppBskyEmbedVideo, type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -396,7 +396,7 @@ let PostFeed = ({
 							const item = slice.items.find((item) => item.uri === slice.feedPostUri);
 							if (
 								item &&
-								AppBskyEmbedVideo.isView(item.post.embed) &&
+								item.post.embed?.$type === 'app.bsky.embed.video#view' &&
 								!blockedOrMutedAuthors.includes(item.post.author.did)
 							) {
 								videos.push({
@@ -793,7 +793,7 @@ let PostFeed = ({
 				const actor = post.author;
 				if (
 					actor.status &&
-					isStatusValidForViewers(actor.status, liveNowConfig) &&
+					isStatusValidForViewers(actor.status as AppBskyActorDefs.StatusView, liveNowConfig) &&
 					isStatusStillActive(actor.status.expiresAt)
 				) {
 					if (!seenActorWithStatusRef.current.has(actor.did)) {

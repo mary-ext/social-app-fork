@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs, type ModerationOpts } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
@@ -27,7 +28,7 @@ function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
 
-export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOpts }) {
+export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOptions }) {
 	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
@@ -50,7 +51,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOpts }
 
 	// If we have saved feeds already loaded, display them immediately
 	// Then, when popular feeds have loaded we can concat them to the saved feeds
-	const suggestedFeeds =
+	const suggestedFeeds: AppBskyFeedDefs.GeneratorView[] | undefined =
 		savedFeeds || isFetchedSavedFeeds
 			? popularFeeds
 				? savedFeeds.concat(popularFeeds.filter((f) => !savedFeeds.some((sf) => sf.uri === f.uri)))

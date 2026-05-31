@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { type Shadow } from '#/state/cache/types';
@@ -12,8 +13,6 @@ import { type FullVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import { VerificationsDialog } from '#/components/verification/VerificationsDialog';
 import { VerifierDialog } from '#/components/verification/VerifierDialog';
-
-import type * as bsky from '#/types/bsky';
 
 export function shouldShowVerificationCheckButton(state: FullVerificationState) {
 	let ok = false;
@@ -49,7 +48,7 @@ export function VerificationCheckButton({
 	profile,
 	width,
 }: {
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	width: number;
 }) {
 	const state = useFullVerificationState({
@@ -68,7 +67,7 @@ function Badge({
 	verificationState: state,
 	width,
 }: {
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	verificationState: FullVerificationState;
 	width: number;
 }) {

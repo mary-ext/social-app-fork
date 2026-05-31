@@ -1,4 +1,6 @@
-import { type AppBskyFeedDefs, type AppBskyFeedGetTimeline } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import shuffle from 'lodash.shuffle';
 
 import { bundleAsync } from '#/lib/async/bundle';
@@ -7,7 +9,6 @@ import { feedUriToHref } from '#/lib/strings/url-helpers';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 import { type FeedParams } from '#/state/queries/post-feed';
-import { type BskyAppAgent } from '#/state/session/agent';
 
 import { FeedTuner } from '../feed-manip';
 import { type FeedTunerFn } from '../feed-manip';
@@ -17,9 +18,11 @@ import { createBskyTopicsHeader, isBlueskyOwnedFeed } from './utils';
 const REQUEST_WAIT_MS = 500; // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24; // 24hours
 
+type FeedResult = { cursor?: string; feed: AppBskyFeedDefs.FeedViewPost[] };
+
 export class MergeFeedAPI implements FeedAPI {
 	userInterests?: string;
-	agent: BskyAppAgent;
+	appview: Client;
 	params: FeedParams;
 	feedTuners: FeedTunerFn[];
 	following: MergeFeedSource_Following;
@@ -29,29 +32,29 @@ export class MergeFeedAPI implements FeedAPI {
 	sampleCursor = 0;
 
 	constructor({
-		agent,
+		appview,
 		feedParams,
 		feedTuners,
 		userInterests,
 	}: {
-		agent: BskyAppAgent;
+		appview: Client;
 		feedParams: FeedParams;
 		feedTuners: FeedTunerFn[];
 		userInterests?: string;
 	}) {
-		this.agent = agent;
+		this.appview = appview;
 		this.params = feedParams;
 		this.feedTuners = feedTuners;
 		this.userInterests = userInterests;
 		this.following = new MergeFeedSource_Following({
-			agent: this.agent,
+			appview: this.appview,
 			feedTuners: this.feedTuners,
 		});
 	}
 
 	reset() {
 		this.following = new MergeFeedSource_Following({
-			agent: this.agent,
+			appview: this.appview,
 			feedTuners: this.feedTuners,
 		});
 		this.customFeeds = [];
@@ -63,7 +66,7 @@ export class MergeFeedAPI implements FeedAPI {
 				this.params.mergeFeedSources.map(
 					(feedUri) =>
 						new MergeFeedSource_Custom({
-							agent: this.agent,
+							appview: this.appview,
 							feedUri,
 							feedTuners: this.feedTuners,
 							userInterests: this.userInterests,
@@ -76,10 +79,12 @@ export class MergeFeedAPI implements FeedAPI {
 	}
 
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-		const res = await this.agent.getTimeline({
-			limit: 1,
-		});
-		return res.data.feed[0]!;
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getTimeline', {
+				params: { limit: 1 },
+			}),
+		);
+		return data.feed[0]!;
 	}
 
 	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
@@ -160,15 +165,15 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
-	agent: BskyAppAgent;
+	appview: Client;
 	feedTuners: FeedTunerFn[];
 	sourceInfo: ReasonFeedSource | undefined;
 	cursor: string | undefined = undefined;
 	queue: AppBskyFeedDefs.FeedViewPost[] = [];
 	hasMore = true;
 
-	constructor({ agent, feedTuners }: { agent: BskyAppAgent; feedTuners: FeedTunerFn[] }) {
-		this.agent = agent;
+	constructor({ appview, feedTuners }: { appview: Client; feedTuners: FeedTunerFn[] }) {
+		this.appview = appview;
 		this.feedTuners = feedTuners;
 	}
 
@@ -189,20 +194,17 @@ class MergeFeedSource {
 	}
 
 	_fetchNextInner = bundleAsync(async (n: number) => {
+		// Following lets errors propagate (ok() throws); Custom swallows them in its own _getFeed.
 		const res = await this._getFeed(this.cursor, n);
-		if (res.success) {
-			this.cursor = res.data.cursor;
-			if (res.data.feed.length) {
-				this.queue = this.queue.concat(res.data.feed);
-			} else {
-				this.hasMore = false;
-			}
+		this.cursor = res.cursor;
+		if (res.feed.length) {
+			this.queue = this.queue.concat(res.feed);
 		} else {
 			this.hasMore = false;
 		}
 	});
 
-	protected _getFeed(_cursor: string | undefined, _limit: number): Promise<AppBskyFeedGetTimeline.Response> {
+	protected _getFeed(_cursor: string | undefined, _limit: number): Promise<FeedResult> {
 		throw new Error('Must be overridden');
 	}
 }
@@ -214,42 +216,42 @@ class MergeFeedSource_Following extends MergeFeedSource {
 		return this._fetchNextInner(n);
 	}
 
-	protected async _getFeed(
-		cursor: string | undefined,
-		limit: number,
-	): Promise<AppBskyFeedGetTimeline.Response> {
-		const res = await this.agent.getTimeline({ cursor, limit });
+	protected async _getFeed(cursor: string | undefined, limit: number): Promise<FeedResult> {
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getTimeline', {
+				params: { cursor, limit },
+			}),
+		);
 		// run the tuner pre-emptively to ensure better mixing
-		const slices = this.tuner.tune(res.data.feed, {
+		const slices = this.tuner.tune(data.feed, {
 			dryRun: false,
 		});
-		res.data.feed = slices.map((slice) => slice._feedPost);
-		return res;
+		return { cursor: data.cursor, feed: slices.map((slice) => slice._feedPost) };
 	}
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
-	agent: BskyAppAgent;
+	appview: Client;
 	minDate: Date;
 	feedUri: string;
 	userInterests?: string;
 
 	constructor({
-		agent,
+		appview,
 		feedUri,
 		feedTuners,
 		userInterests,
 	}: {
-		agent: BskyAppAgent;
+		appview: Client;
 		feedUri: string;
 		feedTuners: FeedTunerFn[];
 		userInterests?: string;
 	}) {
 		super({
-			agent,
+			appview,
 			feedTuners,
 		});
-		this.agent = agent;
+		this.appview = appview;
 		this.feedUri = feedUri;
 		this.userInterests = userInterests;
 		this.sourceInfo = {
@@ -260,44 +262,42 @@ class MergeFeedSource_Custom extends MergeFeedSource {
 		this.minDate = new Date(Date.now() - POST_AGE_CUTOFF);
 	}
 
-	protected async _getFeed(
-		cursor: string | undefined,
-		limit: number,
-	): Promise<AppBskyFeedGetTimeline.Response> {
+	protected async _getFeed(cursor: string | undefined, limit: number): Promise<FeedResult> {
 		try {
 			const contentLangs = getContentLanguages().join(',');
 			const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri);
-			const res = await this.agent.app.bsky.feed.getFeed(
-				{
-					cursor,
-					limit,
-					feed: this.feedUri,
-				},
-				{
+			const data = await ok(
+				this.appview.get('app.bsky.feed.getFeed', {
+					params: {
+						cursor,
+						limit,
+						feed: this.feedUri as ResourceUri,
+					},
 					headers: {
 						...(isBlueskyOwned ? createBskyTopicsHeader(this.userInterests) : {}),
 						'Accept-Language': contentLangs,
 					},
-				},
+				}),
 			);
+			let feed = data.feed;
 			// NOTE
 			// some custom feeds fail to enforce the pagination limit
 			// so we manually truncate here
 			// -prf
-			if (limit && res.data.feed.length > limit) {
-				res.data.feed = res.data.feed.slice(0, limit);
+			if (limit && feed.length > limit) {
+				feed = feed.slice(0, limit);
 			}
 			// filter out older posts
-			res.data.feed = res.data.feed.filter((post) => new Date(post.post.indexedAt) > this.minDate);
+			feed = feed.filter((post) => new Date(post.post.indexedAt) > this.minDate);
 			// attach source info
-			for (const post of res.data.feed) {
+			for (const post of feed) {
 				// @ts-ignore
 				post.__source = this.sourceInfo;
 			}
-			return res;
+			return { cursor: data.cursor, feed };
 		} catch {
 			// dont bubble custom-feed errors
-			return { success: false, headers: {}, data: { feed: [] } };
+			return { feed: [] };
 		}
 	}
 }

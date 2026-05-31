@@ -8,6 +8,8 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { QuoteEmbed } from '#/components/Post/Embed';
 
+import { type EmbedType } from '#/types/embed';
+
 export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisabled?: boolean }) {
 	const t = useTheme();
 	const { data } = useResolveLinkQuery(uri);
@@ -21,7 +23,7 @@ export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisable
 		<QuoteEmbed
 			embed={{
 				type: 'post',
-				view,
+				view: view as unknown as EmbedType<'post'>['view'],
 			}}
 			linkDisabled={linkDisabled}
 		/>

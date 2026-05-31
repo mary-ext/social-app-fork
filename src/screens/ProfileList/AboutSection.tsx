@@ -1,6 +1,6 @@
 import { useCallback, useImperativeHandle, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';

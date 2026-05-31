@@ -1,11 +1,19 @@
 import { useCallback } from 'react';
-import { type AppBskyActorDefs, moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -13,8 +21,8 @@ import { useModerationOpts } from '../preferences/moderation-opts';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from './preferences';
 
 const DEFAULT_MOD_OPTS = {
-	userDid: undefined,
-	prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+	viewerDid: undefined,
+	prefs: toModerationPreferences(DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs),
 };
 
 const RQKEY_ROOT = 'actor-autocomplete';
@@ -22,7 +30,7 @@ export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix];
 
 export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean, limit?: number) {
 	const moderationOpts = useModerationOpts();
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	prefix = prefix.toLowerCase().trim();
 	if (prefix.endsWith('.')) {
@@ -34,13 +42,13 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(prefix || ''),
 		async queryFn() {
-			const res = prefix
-				? await agent.searchActorsTypeahead({
-						q: prefix,
-						limit: limit || 8,
-					})
-				: undefined;
-			return res?.data.actors || [];
+			if (!prefix) return [];
+			const data = await ok(
+				appview.get('app.bsky.actor.searchActorsTypeahead', {
+					params: { limit: limit || 8, q: prefix },
+				}),
+			);
+			return data.actors;
 		},
 		select: useCallback(
 			(data: AppBskyActorDefs.ProfileViewBasic[]) => {
@@ -60,7 +68,7 @@ export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>;
 export function useActorAutocompleteFn() {
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useCallback(
 		async ({ query, limit = 8 }: { query: string; limit?: number }) => {
@@ -72,10 +80,11 @@ export function useActorAutocompleteFn() {
 						staleTime: STALE.MINUTES.ONE,
 						queryKey: RQKEY(query || ''),
 						queryFn: () =>
-							agent.searchActorsTypeahead({
-								q: query,
-								limit,
-							}),
+							ok(
+								appview.get('app.bsky.actor.searchActorsTypeahead', {
+									params: { limit, q: query },
+								}),
+							),
 					});
 				} catch (e) {
 					logger.error('useActorSearch: searchActorsTypeahead failed', {
@@ -86,11 +95,11 @@ export function useActorAutocompleteFn() {
 
 			return computeSuggestions({
 				q: query,
-				searched: res?.data.actors,
+				searched: res?.actors,
 				moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
 			});
 		},
-		[queryClient, moderationOpts, agent],
+		[queryClient, moderationOpts, appview],
 	);
 }
 
@@ -101,7 +110,7 @@ function computeSuggestions({
 }: {
 	q?: string;
 	searched?: AppBskyActorDefs.ProfileViewBasic[];
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	let items: AppBskyActorDefs.ProfileViewBasic[] = [];
 	for (const item of searched) {
@@ -110,8 +119,15 @@ function computeSuggestions({
 		}
 	}
 	return items.filter((profile) => {
-		const modui = moderateProfile(profile, moderationOpts).ui('profileList');
+		const modui = getDisplayRestrictions(
+			moderateProfile(profile, moderationOpts),
+			DisplayContext.ProfileList,
+		);
 		const isExactMatch = q && profile.handle.toLowerCase() === q;
-		return (isExactMatch && !moduiContainsHideableOffense(modui)) || !modui.filter || isJustAMute(modui);
+		return (
+			(isExactMatch && !moduiContainsHideableOffense(modui)) ||
+			modui.filters.length === 0 ||
+			isJustAMute(modui)
+		);
 	});
 }

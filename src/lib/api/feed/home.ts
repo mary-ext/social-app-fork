@@ -1,8 +1,8 @@
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type Client } from '@atcute/client';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
-
-import { type BskyAppAgent } from '#/state/session/agent';
 
 import { CustomFeedAPI } from './custom';
 import { FollowingFeedAPI } from './following';
@@ -18,11 +18,11 @@ import { type FeedAPI, type FeedAPIResponse } from './types';
 // -prf
 export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 	post: {
-		uri: 'fallback-marker-post',
+		uri: 'fallback-marker-post' as ResourceUri,
 		cid: 'fake',
 		record: {},
 		author: {
-			did: 'did:fake',
+			did: 'did:fake' as Did,
 			handle: 'fake.com',
 		},
 		indexedAt: new Date().toISOString(),
@@ -30,28 +30,28 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 };
 
 export class HomeFeedAPI implements FeedAPI {
-	agent: BskyAppAgent;
+	appview: Client;
 	following: FollowingFeedAPI;
 	discover: CustomFeedAPI;
 	usingDiscover = false;
 	itemCursor = 0;
 	userInterests?: string;
 
-	constructor({ userInterests, agent }: { userInterests?: string; agent: BskyAppAgent }) {
-		this.agent = agent;
-		this.following = new FollowingFeedAPI({ agent });
+	constructor({ userInterests, appview }: { userInterests?: string; appview: Client }) {
+		this.appview = appview;
+		this.following = new FollowingFeedAPI({ appview });
 		this.discover = new CustomFeedAPI({
-			agent,
-			feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') },
+			appview,
+			feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') as ResourceUri },
 		});
 		this.userInterests = userInterests;
 	}
 
 	reset() {
-		this.following = new FollowingFeedAPI({ agent: this.agent });
+		this.following = new FollowingFeedAPI({ appview: this.appview });
 		this.discover = new CustomFeedAPI({
-			agent: this.agent,
-			feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') },
+			appview: this.appview,
+			feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') as ResourceUri },
 			userInterests: this.userInterests,
 		});
 		this.usingDiscover = false;

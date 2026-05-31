@@ -1,17 +1,15 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedThreadgate,
-	AtUri,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { type ThreadItem } from '#/state/queries/usePostThread/types';
@@ -57,7 +55,7 @@ export function ThreadItemTreePost({
 		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 }) {
 	const postShadow = usePostShadow(item.value.post);
 
@@ -230,7 +228,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 }): React.ReactNode {
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
@@ -238,18 +236,17 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 	const post = item.value.post;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	const richText = useMemo(
-		() =>
-			new RichTextAPI({
-				text: record.text,
-				facets: record.facets,
-			}),
+	const richText: Richtext = useMemo(
+		() => ({
+			text: record.text,
+			facets: record.facets,
+		}),
 		[record],
 	);
 	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const postHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey);
 	}, [post.uri, post.author]);
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
@@ -257,7 +254,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 	});
 	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const isControlledByViewer = new AtUri(threadRootUri).host === currentAccount?.did;
+		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{
@@ -296,16 +293,16 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 					testID={`postThreadItem-by-${post.author.handle}`}
 					href={postHref}
 					disabled={overrides?.moderation === true}
-					modui={moderation.ui('contentList')}
+					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					iconSize={42}
 					iconStyles={{ marginLeft: 2, marginRight: 2 }}
-					profile={post.author}
+					profile={post.author as AnyProfileView}
 					interpretFilterAsBlur
 				>
 					<ThreadItemTreePostInnerWrapper item={item}>
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author}
+								author={post.author as AnyProfileView}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}
@@ -318,7 +315,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 								<View style={[a.flex_1, a.pl_2xs]}>
 									<LabelsOnMyPost post={post} style={[a.pb_2xs]} />
 									<PostAlerts
-										modui={moderation.ui('contentList')}
+										modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 										style={[a.pb_2xs]}
 										additionalCauses={additionalPostAlerts}
 									/>

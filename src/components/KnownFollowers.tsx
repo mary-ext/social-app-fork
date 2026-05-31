@@ -1,6 +1,12 @@
 import { useRef } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -12,8 +18,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Link, type LinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 const AVI_SIZE = 30;
 const AVI_SIZE_SMALL = 20;
@@ -36,8 +40,8 @@ export function KnownFollowers({
 	minimal,
 	showIfEmpty,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
 	showIfEmpty?: boolean;
@@ -52,7 +56,7 @@ export function KnownFollowers({
 	 * displayed.
 	 */
 	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
-		cache.current.set(profile.did, profile.viewer.knownFollowers);
+		cache.current.set(profile.did, profile.viewer.knownFollowers as AppBskyActorDefs.KnownFollowers);
 	}
 
 	const cachedKnownFollowers = cache.current.get(profile.did);
@@ -81,8 +85,8 @@ function KnownFollowersInner({
 	minimal,
 	showIfEmpty,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 	cachedKnownFollowers: AppBskyActorDefs.KnownFollowers;
 	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
@@ -98,7 +102,10 @@ function KnownFollowersInner({
 		return {
 			profile: {
 				...f,
-				displayName: sanitizeDisplayName(f.displayName || f.handle, moderation.ui('displayName')),
+				displayName: sanitizeDisplayName(
+					f.displayName || f.handle,
+					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+				),
 			},
 			moderation,
 		};
@@ -159,7 +166,7 @@ function KnownFollowersInner({
 								<UserAvatar
 									size={SIZE}
 									avatar={prof.avatar}
-									moderation={moderation.ui('avatar')}
+									moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 									type={prof.associated?.labeler ? 'labeler' : 'user'}
 									noBorder
 								/>

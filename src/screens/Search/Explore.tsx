@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View, type ViewabilityConfig } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import * as bcp47Match from 'bcp-47-match';
@@ -875,7 +875,7 @@ export function Explore({
 							feedContext={slice.feedContext}
 							reqId={slice.reqId}
 							moderation={subItem.moderation}
-							parentAuthor={subItem.parentAuthor}
+							parentAuthor={subItem.parentAuthor as AppBskyActorDefs.ProfileViewBasic | undefined}
 							showReplyTo={item.showReplyTo}
 							isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
 							isThreadChild={isThreadChildAt(slice.items, indexInSlice)}

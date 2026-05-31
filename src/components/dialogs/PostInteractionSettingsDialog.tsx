@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Text as NestedText, View } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPostgate, AtUri } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -25,7 +27,7 @@ import {
 	useThreadgateViewQuery,
 } from '#/state/queries/threadgate';
 import { PostThreadContextProvider, usePostThreadContext } from '#/state/queries/usePostThread';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -55,8 +57,8 @@ export type PostInteractionSettingsFormProps = {
 	persist?: boolean;
 	onChangePersist?: (v: boolean) => void;
 
-	postgate: AppBskyFeedPostgate.Record;
-	onChangePostgate: (v: AppBskyFeedPostgate.Record) => void;
+	postgate: AppBskyFeedPostgate.Main;
+	onChangePostgate: (v: AppBskyFeedPostgate.Main) => void;
 
 	threadgateAllowUISettings: ThreadgateAllowUISetting[];
 	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
@@ -144,20 +146,22 @@ export function PostInteractionSettingsDialogControlledInner(props: PostInteract
 	const { mutateAsync: writePostgateRecord } = useWritePostgateMutation();
 	const { mutateAsync: setThreadgateAllow } = useSetThreadgateAllowMutation();
 
-	const [editedPostgate, setEditedPostgate] = useState<AppBskyFeedPostgate.Record>();
+	const [editedPostgate, setEditedPostgate] = useState<AppBskyFeedPostgate.Main>();
 	const [editedAllowUISettings, setEditedAllowUISettings] = useState<ThreadgateAllowUISetting[]>();
 
 	const isLoading = isLoadingThreadgate || isLoadingPostgate;
 	const threadgateView = threadgateViewLoaded || props.initialThreadgateView;
 	const isThreadgateOwnedByViewer = useMemo(() => {
-		return currentAccount?.did === new AtUri(props.rootPostUri).host;
+		return currentAccount?.did === parseCanonicalResourceUri(props.rootPostUri).repo;
 	}, [props.rootPostUri, currentAccount?.did]);
 
 	const postgateValue = useMemo(() => {
-		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri });
+		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri as ResourceUri });
 	}, [postgate, editedPostgate, props.postUri]);
 	const allowUIValue = useMemo(() => {
-		return editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView);
+		return (
+			editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView)
+		);
 	}, [threadgateView, editedAllowUISettings]);
 
 	const onSave = useCallback(async () => {
@@ -275,7 +279,9 @@ export function PostInteractionSettingsForm({
 			onChangePostgate(
 				createPostgateRecord({
 					...postgate,
-					embeddingRules: enabled ? [] : [embeddingRules.disableRule],
+					embeddingRules: (enabled
+						? []
+						: [embeddingRules.disableRule]) as AppBskyFeedPostgate.Main['embeddingRules'],
 				}),
 			);
 		},
@@ -598,7 +604,7 @@ export function usePrefetchPostInteractionSettings({
 	rootPostUri: string;
 }) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const getPost = useGetPost();
 
 	return useCallback(async () => {
@@ -606,7 +612,7 @@ export function usePrefetchPostInteractionSettings({
 			await Promise.all([
 				queryClient.prefetchQuery({
 					queryKey: createPostgateQueryKey(postUri),
-					queryFn: () => getPostgateRecord({ agent, postUri }).then((res) => res ?? null),
+					queryFn: () => getPostgateRecord({ appview, pds: pds!, postUri }).then((res) => res ?? null),
 					staleTime: STALE.SECONDS.THIRTY,
 				}),
 				queryClient.prefetchQuery({
@@ -623,5 +629,5 @@ export function usePrefetchPostInteractionSettings({
 				safeMessage: e instanceof Error ? e.message : String(e),
 			});
 		}
-	}, [queryClient, agent, postUri, rootPostUri, getPost]);
+	}, [queryClient, appview, pds, postUri, rootPostUri, getPost]);
 }

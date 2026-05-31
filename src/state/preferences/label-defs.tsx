@@ -1,10 +1,11 @@
 import { createContext, useContext } from 'react';
-import { type AppBskyLabelerDefs, type InterpretedLabelValueDefinition } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { type InterpretedLabelMapping } from '@atcute/bluesky-moderation';
 
 import { useLabelDefinitionsQuery } from '../queries/preferences';
 
 interface StateContext {
-	labelDefs: Record<string, InterpretedLabelValueDefinition[]>;
+	labelDefs: Record<string, InterpretedLabelMapping>;
 	labelers: AppBskyLabelerDefs.LabelerViewDetailed[];
 }
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';

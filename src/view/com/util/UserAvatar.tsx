@@ -10,7 +10,8 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
-import { type ModerationUI } from '@atproto/api';
+import { type AnyProfileView, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -51,7 +52,6 @@ import { useActorStatus } from '#/features/liveNow';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
 import { Image as ExpoImage } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler';
 
@@ -66,7 +66,7 @@ interface BaseUserAvatarProps {
 
 interface UserAvatarProps extends BaseUserAvatarProps {
 	type: UserAvatarType;
-	moderation?: ModerationUI;
+	moderation?: DisplayRestrictions;
 	usePlainRNImage?: boolean;
 	noBorder?: boolean;
 	onLoad?: () => void;
@@ -79,8 +79,8 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 }
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
-	moderation?: ModerationUI;
-	profile: bsky.profile.AnyProfileView;
+	moderation?: DisplayRestrictions;
+	profile: AnyProfileView;
 	disableHoverCard?: boolean;
 	disableNavigation?: boolean;
 	onBeforePress?: () => void;
@@ -251,7 +251,7 @@ let UserAvatar = ({
 	}, [aviStyle.borderRadius, live, t, size]);
 
 	const alert = useMemo(() => {
-		if (!moderation?.alert) {
+		if (!moderation?.alerts.length) {
 			return null;
 		}
 		return (
@@ -286,7 +286,7 @@ let UserAvatar = ({
 				</RNText>
 			</View>
 		);
-	}, [moderation?.alert, size, t]);
+	}, [moderation?.alerts, size, t]);
 
 	const containerStyle = useMemo(() => {
 		return [
@@ -309,7 +309,7 @@ let UserAvatar = ({
 					source={{
 						uri: hackModifyThumbnailPath(avatar, size < 90),
 					}}
-					blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+					blurRadius={moderation?.blurs.length ? BLUR_AMOUNT : 0}
 					onLoad={onLoad}
 				/>
 			) : (
@@ -320,7 +320,7 @@ let UserAvatar = ({
 					source={{
 						uri: hackModifyThumbnailPath(avatar, size < 90),
 					}}
-					blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+					blurRadius={moderation?.blurs.length ? BLUR_AMOUNT : 0}
 					onLoad={onLoad}
 				/>
 			)}
@@ -514,7 +514,12 @@ let PreviewableUserAvatar = ({
 					>
 						{avatarEl}
 					</Button>
-					<LiveStatusDialog control={liveControl} profile={profile} status={status} embed={status.embed} />
+					<LiveStatusDialog
+						control={liveControl}
+						profile={profile}
+						status={status}
+						embed={status.embed as AppBskyEmbedExternal.View}
+					/>
 				</>
 			) : (
 				<Link

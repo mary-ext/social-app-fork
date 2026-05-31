@@ -1,19 +1,19 @@
 import {
-	type $Typed,
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
+	type AppBskyEmbedRecord,
+	type AppBskyEmbedRecordWithMedia,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPostgate,
-	AtUri,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type $type, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate';
 
 export function createPostgateRecord(
-	postgate: Partial<AppBskyFeedPostgate.Record> & {
-		post: AppBskyFeedPostgate.Record['post'];
+	postgate: Partial<AppBskyFeedPostgate.Main> & {
+		post: AppBskyFeedPostgate.Main['post'];
 	},
-): AppBskyFeedPostgate.Record {
+): AppBskyFeedPostgate.Main {
 	return {
 		$type: POSTGATE_COLLECTION,
 		createdAt: new Date().toISOString(),
@@ -24,8 +24,8 @@ export function createPostgateRecord(
 }
 
 export function mergePostgateRecords(
-	prev: AppBskyFeedPostgate.Record,
-	next: Partial<AppBskyFeedPostgate.Record>,
+	prev: AppBskyFeedPostgate.Main,
+	next: Partial<AppBskyFeedPostgate.Main>,
 ) {
 	const detachedEmbeddingUris = Array.from(
 		new Set([...(prev.detachedEmbeddingUris || []), ...(next.detachedEmbeddingUris || [])]),
@@ -40,10 +40,14 @@ export function mergePostgateRecords(
 	});
 }
 
-export function createEmbedViewDetachedRecord({ uri }: { uri: string }): $Typed<AppBskyEmbedRecord.View> {
-	const record: $Typed<AppBskyEmbedRecord.ViewDetached> = {
+export function createEmbedViewDetachedRecord({
+	uri,
+}: {
+	uri: string;
+}): $type.enforce<AppBskyEmbedRecord.View> {
+	const record: $type.enforce<AppBskyEmbedRecord.ViewDetached> = {
 		$type: 'app.bsky.embed.record#viewDetached',
-		uri,
+		uri: uri as ResourceUri,
 		detached: true,
 	};
 	return {
@@ -70,13 +74,13 @@ export function createMaybeDetachedQuoteEmbed({
 			quoteUri: string;
 			detached: true;
 	  }): AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined {
-	if (AppBskyEmbedRecord.isView(post.embed)) {
+	if (post.embed?.$type === 'app.bsky.embed.record#view') {
 		if (detached) {
 			return createEmbedViewDetachedRecord({ uri: quoteUri });
 		} else {
 			return createEmbedRecordView({ post: quote });
 		}
-	} else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+	} else if (post.embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
 		if (detached) {
 			return {
 				...post.embed,
@@ -90,7 +94,7 @@ export function createMaybeDetachedQuoteEmbed({
 
 export function createEmbedViewRecordFromPost(
 	post: AppBskyFeedDefs.PostView,
-): $Typed<AppBskyEmbedRecord.ViewRecord> {
+): $type.enforce<AppBskyEmbedRecord.ViewRecord> {
 	return {
 		$type: 'app.bsky.embed.record#viewRecord',
 		uri: post.uri,
@@ -121,7 +125,7 @@ export function createEmbedRecordWithMediaView({
 	post: AppBskyFeedDefs.PostView;
 	quote: AppBskyFeedDefs.PostView;
 }): AppBskyEmbedRecordWithMedia.View | undefined {
-	if (!AppBskyEmbedRecordWithMedia.isView(post.embed)) return;
+	if (!(post.embed?.$type === 'app.bsky.embed.recordWithMedia#view')) return;
 	return {
 		...(post.embed || {}),
 		record: {
@@ -137,47 +141,47 @@ export function getMaybeDetachedQuoteEmbed({
 	viewerDid: string;
 	post: AppBskyFeedDefs.PostView;
 }) {
-	if (AppBskyEmbedRecord.isView(post.embed)) {
+	if (post.embed?.$type === 'app.bsky.embed.record#view') {
 		// detached
-		if (AppBskyEmbedRecord.isViewDetached(post.embed.record)) {
-			const urip = new AtUri(post.embed.record.uri);
+		if (post.embed.record?.$type === 'app.bsky.embed.record#viewDetached') {
+			const uri = post.embed.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: true,
 			};
 		}
 
 		// post
-		if (AppBskyEmbedRecord.isViewRecord(post.embed.record)) {
-			const urip = new AtUri(post.embed.record.uri);
+		if (post.embed.record?.$type === 'app.bsky.embed.record#viewRecord') {
+			const uri = post.embed.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: false,
 			};
 		}
-	} else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+	} else if (post.embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
 		// detached
-		if (AppBskyEmbedRecord.isViewDetached(post.embed.record.record)) {
-			const urip = new AtUri(post.embed.record.record.uri);
+		if (post.embed.record.record?.$type === 'app.bsky.embed.record#viewDetached') {
+			const uri = post.embed.record.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: true,
 			};
 		}
 
 		// post
-		if (AppBskyEmbedRecord.isViewRecord(post.embed.record.record)) {
-			const urip = new AtUri(post.embed.record.record.uri);
+		if (post.embed.record.record?.$type === 'app.bsky.embed.record#viewRecord') {
+			const uri = post.embed.record.record.uri;
 			return {
 				embed: post.embed,
-				uri: urip.toString(),
-				isOwnedByViewer: urip.host === viewerDid,
+				uri,
+				isOwnedByViewer: parseCanonicalResourceUri(uri).repo === viewerDid,
 				isDetached: false,
 			};
 		}

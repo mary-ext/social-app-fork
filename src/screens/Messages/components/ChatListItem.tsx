@@ -1,11 +1,15 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
-	ChatBskyConvoDefs,
+	type BlockingModerationCause,
+	DisplayContext,
+	getDisplayRestrictions,
 	moderateProfile,
+	ModerationCauseType,
 	type ModerationDecision,
-	type ModerationOpts,
-} from '@atproto/api';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -45,8 +49,6 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 import { useIsWithinSplitView } from './splitView/context';
 
@@ -105,7 +107,7 @@ function DirectChatItem({
 	children,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	showMenu?: boolean;
 	selected?: boolean;
 	children?: React.ReactNode;
@@ -119,7 +121,11 @@ function DirectChatItem({
 	const isDeletedAccount = profile.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
 		? l`Deleted Account`
-		: createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+		: createSanitizedDisplayName(
+				profile,
+				true,
+				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+			);
 
 	return (
 		<BaseChatItem
@@ -128,7 +134,7 @@ function DirectChatItem({
 				<PreviewableUserAvatar
 					profile={profile}
 					size={isWithinSplitView ? 48 : 52}
-					moderation={moderation.ui('avatar')}
+					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				/>
 			}
 			primaryProfile={profile}
@@ -143,12 +149,14 @@ function DirectChatItem({
 			showMenu={showMenu}
 			selected={selected}
 			isDeletedAccount={isDeletedAccount}
-			isBlockedAccount={moderation.blocked}
+			isBlockedAccount={moderation.causes.some(
+				(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+			)}
 			showProfileBadges
 			postAlerts={
 				isWithinSplitView ? null : (
 					<PostAlerts
-						modui={moderation.ui('contentList')}
+						modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 						size="sm"
 						style={[a.pb_2xs, a.max_w_full, a.overflow_hidden]}
 					/>
@@ -168,7 +176,7 @@ function GroupChatItem({
 	children,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	showMenu?: boolean;
 	selected?: boolean;
 	children?: React.ReactNode;
@@ -232,7 +240,7 @@ function BaseChatItem({
 	accessibilityHint: string;
 	isDeletedAccount: boolean;
 	isBlockedAccount: boolean;
-	primaryProfile?: Shadow<bsky.profile.AnyProfileView>;
+	primaryProfile?: Shadow<AnyProfileView>;
 	primaryProfileModeration?: ModerationDecision;
 	showMenu?: boolean;
 	selected?: boolean;
@@ -258,10 +266,11 @@ function BaseChatItem({
 
 	const blockInfo = useMemo(() => {
 		if (!primaryProfileModeration) return { listBlocks: [], userBlock: undefined };
-		const modui = primaryProfileModeration.ui('profileView');
-		const blocks = modui.alerts.filter((alert) => alert.type === 'blocking');
-		const listBlocks = blocks.filter((alert) => alert.source.type === 'list');
-		const userBlock = blocks.find((alert) => alert.source.type === 'user');
+		const blocks = primaryProfileModeration.causes.filter(
+			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
+		);
+		const listBlocks = blocks.filter((block) => block.source !== null);
+		const userBlock = blocks.find((block) => block.source === null);
 		return {
 			listBlocks,
 			userBlock,
@@ -284,14 +293,14 @@ function BaseChatItem({
 		let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined;
 
 		// Deleted message
-		if (ChatBskyConvoDefs.isDeletedMessageView(convo.view.lastMessage)) {
+		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView') {
 			lastMessageSentAt = convo.view.lastMessage.sentAt;
 
 			lastMessage = isDeletedAccount ? l`Conversation deleted` : l`Message deleted`;
 		}
 
 		// Message
-		if (ChatBskyConvoDefs.isMessageView(convo.view.lastMessage)) {
+		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView') {
 			const info = getMessageInfo({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
@@ -305,7 +314,7 @@ function BaseChatItem({
 		}
 
 		// Reaction
-		if (ChatBskyConvoDefs.isMessageAndReactionView(convo.view.lastReaction)) {
+		if (convo.view.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView') {
 			const info = getReactionInfo({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
@@ -318,7 +327,7 @@ function BaseChatItem({
 		}
 
 		// System message
-		if (ChatBskyConvoDefs.isSystemMessageView(convo.view.lastMessage)) {
+		if (convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#systemMessageView') {
 			const info = getSystemMessageInfo(
 				convo.view.lastMessage.data,
 				new Map(convo.view.members.map((m) => [m.did, m])),

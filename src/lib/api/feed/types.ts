@@ -1,4 +1,4 @@
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 
 export interface FeedAPIResponse {
 	cursor?: string;

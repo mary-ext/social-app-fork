@@ -1,5 +1,5 @@
 import { type StyleProp, type TextStyle } from 'react-native';
-import { type AppBskyActorGetProfile } from '@atproto/api';
+import { type AppBskyActorGetProfile } from '@atcute/bluesky';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -23,7 +23,7 @@ export function UserInfoText({
 	style,
 }: {
 	did: string;
-	attr?: keyof AppBskyActorGetProfile.OutputSchema;
+	attr?: keyof AppBskyActorGetProfile.$output;
 	loading?: string;
 	failed?: string;
 	prefix?: string;

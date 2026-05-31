@@ -1,7 +1,4 @@
-import { type RichText } from '@atproto/api';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
-
-import { shortenLinks } from './rich-text-manip';
 
 export function enforceLen(
 	str: string,
@@ -28,12 +25,8 @@ export function enforceLen(
 	return str;
 }
 
-export function isOverMaxGraphemeCount({ text, maxCount }: { text: string | RichText; maxCount: number }) {
-	if (typeof text === 'string') {
-		return countGraphemes(text) > maxCount;
-	} else {
-		return shortenLinks(text).graphemeLength > maxCount;
-	}
+export function isOverMaxGraphemeCount({ text, maxCount }: { text: string; maxCount: number }) {
+	return countGraphemes(text) > maxCount;
 }
 
 export function countLines(str: string | undefined): number {

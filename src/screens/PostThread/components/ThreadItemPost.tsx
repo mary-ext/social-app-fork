@@ -1,17 +1,15 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedThreadgate,
-	AtUri,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { type ThreadItem } from '#/state/queries/usePostThread/types';
@@ -52,7 +50,7 @@ export type ThreadItemPostProps = {
 		topBorder?: boolean;
 	};
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 };
 
 export function ThreadItemPost({ item, overrides, onPostSuccess, threadgateRecord }: ThreadItemPostProps) {
@@ -174,18 +172,17 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	const post = item.value.post;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	const richText = useMemo(
-		() =>
-			new RichTextAPI({
-				text: record.text,
-				facets: record.facets,
-			}),
+	const richText: Richtext = useMemo(
+		() => ({
+			text: record.text,
+			facets: record.facets,
+		}),
 		[record],
 	);
 	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const postHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey);
 	}, [post.uri, post.author]);
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
@@ -193,7 +190,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	});
 	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const isControlledByViewer = new AtUri(threadRootUri).host === currentAccount?.did;
+		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{
@@ -225,7 +222,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 		setLimitLines(false);
 	}, [setLimitLines]);
 
-	const { isActive: live } = useActorStatus(post.author);
+	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
 
 	return (
 		<SubtleHoverWrapper>
@@ -234,11 +231,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					testID={`postThreadItem-by-${post.author.handle}`}
 					href={postHref}
 					disabled={overrides?.moderation === true}
-					modui={moderation.ui('contentList')}
+					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
 					iconSize={LINEAR_AVI_WIDTH}
 					iconStyles={[a.mr_xs]}
-					profile={post.author}
+					profile={post.author as AnyProfileView}
 					interpretFilterAsBlur
 				>
 					<ThreadItemPostParentReplyLine item={item} />
@@ -247,8 +244,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 						<View>
 							<PreviewableUserAvatar
 								size={LINEAR_AVI_WIDTH}
-								profile={post.author}
-								moderation={moderation.ui('avatar')}
+								profile={post.author as AnyProfileView}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
 							/>
@@ -270,22 +267,22 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author}
+								author={post.author as AnyProfileView}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}
 								style={[
 									a.pb_xs,
 									maybeApplyGalleryOffsetStyles('meta', {
-										post,
-										modui: moderation.ui('contentList'),
+										post: post,
+										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 										additionalCauses: additionalPostAlerts,
 									}),
 								]}
 							/>
 							<LabelsOnMyPost post={post} style={[a.pb_xs]} />
 							<PostAlerts
-								modui={moderation.ui('contentList')}
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 								style={[a.pb_2xs]}
 								additionalCauses={additionalPostAlerts}
 							/>
@@ -306,8 +303,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 								<View
 									style={[
 										maybeApplyGalleryOffsetStyles('embed', {
-											post,
-											modui: moderation.ui('contentList'),
+											post: post,
+											modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 											additionalCauses: additionalPostAlerts,
 										}),
 										a.pb_xs,

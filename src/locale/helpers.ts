@@ -1,8 +1,7 @@
-import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 import * as bcp47Match from 'bcp-47-match';
 
 import { detectLanguages } from '#/lib/language-detection';
-import { hasProp } from '#/lib/type-guards';
 
 import { AppLanguage, type Language, LANGUAGES_MAP_CODE2, LANGUAGES_MAP_CODE3 } from './languages';
 
@@ -55,11 +54,8 @@ function getLocalizedLanguage(langCode: string, appLang: string): string | undef
 }
 
 export function getPostLanguageTags(post: AppBskyFeedDefs.PostView) {
-	return AppBskyFeedPost.isRecord(post.record) &&
-		hasProp(post.record, 'langs') &&
-		Array.isArray(post.record.langs)
-		? post.record.langs
-		: [];
+	const langs = (post.record as AppBskyFeedPost.Main).langs;
+	return Array.isArray(langs) ? langs : [];
 }
 
 export function languageName(language: Language, appLang: string): string {
@@ -81,8 +77,9 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 export function getPostLanguage(post: AppBskyFeedDefs.PostView): string | undefined {
 	let candidates: string[] = getPostLanguageTags(post);
 	let postText: string = '';
-	if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
-		postText = post.record.text;
+	const recordText = (post.record as AppBskyFeedPost.Main).text;
+	if (typeof recordText === 'string') {
+		postText = recordText;
 	}
 
 	// if there's only one declared language, use that

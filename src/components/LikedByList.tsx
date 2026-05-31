@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { type AppBskyFeedGetLikes as GetLikes } from '@atproto/api';
+import { type AppBskyFeedGetLikes as GetLikes } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';

@@ -1,15 +1,12 @@
 import { useCallback, useMemo, useRef } from 'react';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyFeedSearchPosts,
-	AtUri,
-	moderatePost,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedSearchPosts } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
@@ -29,7 +26,7 @@ export function useSearchPostsQuery({
 	sort?: 'top' | 'latest';
 	enabled?: boolean;
 }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const moderationOpts = useModerationOpts();
 	const selectArgs = useMemo(
 		() => ({
@@ -39,33 +36,35 @@ export function useSearchPostsQuery({
 		[query, moderationOpts],
 	);
 	const lastRun = useRef<{
-		data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>;
+		data: InfiniteData<AppBskyFeedSearchPosts.$output>;
 		args: typeof selectArgs;
-		result: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>;
+		result: InfiniteData<AppBskyFeedSearchPosts.$output>;
 	} | null>(null);
 
 	return useInfiniteQuery<
-		AppBskyFeedSearchPosts.OutputSchema,
+		AppBskyFeedSearchPosts.$output,
 		Error,
-		InfiniteData<AppBskyFeedSearchPosts.OutputSchema>,
+		InfiniteData<AppBskyFeedSearchPosts.$output>,
 		QueryKey,
 		string | undefined
 	>({
 		queryKey: searchPostsQueryKey({ query, sort }),
-		queryFn: async ({ pageParam }) => {
-			const res = await agent.app.bsky.feed.searchPosts({
-				q: query,
-				limit: 25,
-				cursor: pageParam,
-				sort,
-			});
-			return res.data;
-		},
+		queryFn: ({ pageParam }) =>
+			ok(
+				appview.get('app.bsky.feed.searchPosts', {
+					params: {
+						q: query,
+						limit: 25,
+						cursor: pageParam,
+						sort,
+					},
+				}),
+			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		enabled: enabled ?? !!moderationOpts,
 		select: useCallback(
-			(data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>) => {
+			(data: InfiniteData<AppBskyFeedSearchPosts.$output>) => {
 				const { moderationOpts, isSearchingSpecificUser } = selectArgs;
 
 				/*
@@ -79,7 +78,7 @@ export function useSearchPostsQuery({
 
 				// Keep track of the last run and whether we can reuse
 				// some already selected pages from there.
-				let reusedPages: AppBskyFeedSearchPosts.OutputSchema[] = [];
+				let reusedPages: AppBskyFeedSearchPosts.$output[] = [];
 				if (lastRun.current) {
 					const { data: lastData, args: lastArgs, result: lastResult } = lastRun.current;
 					let canReuse = true;
@@ -111,7 +110,7 @@ export function useSearchPostsQuery({
 								...page,
 								posts: page.posts.filter((post) => {
 									const mod = moderatePost(post, moderationOpts!);
-									return !mod.ui('contentList').filter;
+									return getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length === 0;
 								}),
 							};
 						}),
@@ -131,10 +130,10 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.$output>>({
 		queryKey: [searchPostsQueryKeyRoot],
 	});
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {
@@ -159,7 +158,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.$output>>({
 		queryKey: [searchPostsQueryKeyRoot],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

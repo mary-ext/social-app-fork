@@ -1,4 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -21,7 +23,7 @@ import {
 } from '#/state/queries/usePostThread/types';
 import { getThreadgateRecord } from '#/state/queries/usePostThread/utils';
 import * as views from '#/state/queries/usePostThread/views';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import { useMergeThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 import { useBreakpoints } from '#/alf';
@@ -32,7 +34,7 @@ export * from '#/state/queries/usePostThread/types';
 
 export function usePostThread({ anchor }: { anchor?: string }) {
 	const qc = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { hasSession } = useSession();
 	const { gtPhone } = useBreakpoints();
 	const moderationOpts = useModerationOpts();
@@ -61,12 +63,16 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 		enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
 		queryKey: postThreadQueryKey,
 		async queryFn(ctx) {
-			const { data } = await agent.app.bsky.unspecced.getPostThreadV2({
-				anchor: anchor!,
-				branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
-				below,
-				sort: sort,
-			});
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getPostThreadV2', {
+					params: {
+						anchor: anchor! as ResourceUri,
+						branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
+						below,
+						sort,
+					},
+				}),
+			);
 
 			/*
 			 * Initialize `ctx.meta` to track if we know we have additional replies
@@ -145,9 +151,11 @@ export function usePostThread({ anchor }: { anchor?: string }) {
 		enabled: additionalQueryEnabled,
 		queryKey: postThreadOtherQueryKey,
 		async queryFn() {
-			const { data } = await agent.app.bsky.unspecced.getPostThreadOtherV2({
-				anchor: anchor!,
-			});
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getPostThreadOtherV2', {
+					params: { anchor: anchor! as ResourceUri },
+				}),
+			);
 			return data;
 		},
 	});

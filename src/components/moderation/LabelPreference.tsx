@@ -1,5 +1,10 @@
 import { View } from 'react-native';
-import { type InterpretedLabelValueDefinition, type LabelPreference } from '@atproto/api';
+import {
+	type InterpretedLabelDefinition,
+	isCustomLabelValue,
+	LabelFlags,
+	type LabelPreference,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -100,7 +105,7 @@ export function GlobalLabelPreference({
 	labelDefinition,
 	disabled,
 }: {
-	labelDefinition: InterpretedLabelValueDefinition;
+	labelDefinition: InterpretedLabelDefinition;
 	disabled?: boolean;
 }) {
 	const { t: l } = useLingui();
@@ -151,7 +156,7 @@ export function LabelerLabelPreference({
 	disabled,
 	labelerDid,
 }: {
-	labelDefinition: InterpretedLabelValueDefinition;
+	labelDefinition: InterpretedLabelDefinition;
 	disabled?: boolean;
 	labelerDid?: string;
 }) {
@@ -159,7 +164,7 @@ export function LabelerLabelPreference({
 	const t = useTheme();
 	const { gtPhone } = useBreakpoints();
 
-	const isGlobalLabel = !labelDefinition.definedBy;
+	const isGlobalLabel = !isCustomLabelValue(labelDefinition.identifier);
 	const { identifier } = labelDefinition;
 	const { data: preferences } = usePreferencesQuery();
 	const { mutate, variables } = usePreferencesSetContentLabelMutation();
@@ -167,12 +172,12 @@ export function LabelerLabelPreference({
 		labelerDid && !isGlobalLabel
 			? preferences?.moderationPrefs.labelers.find((l) => l.did === labelerDid)?.labels[identifier]
 			: preferences?.moderationPrefs.labels[identifier];
-	const pref = variables?.visibility ?? savedPref ?? labelDefinition.defaultSetting ?? 'warn';
+	const pref = variables?.visibility ?? savedPref ?? labelDefinition.defaultPref ?? 'warn';
 
 	// does the 'warn' setting make sense for this label?
-	const canWarn = !(labelDefinition.blurs === 'none' && labelDefinition.severity === 'none');
+	const canWarn = !(labelDefinition.blur === 'none' && labelDefinition.severity === 'none');
 	// is this label adult only?
-	const adultOnly = labelDefinition.flags.includes('adult');
+	const adultOnly = Boolean(labelDefinition.flags & LabelFlags.AdultOnly);
 	// is this label disabled because it's adult only?
 	const adultDisabled = adultOnly && !preferences?.moderationPrefs.adultContentEnabled;
 	// are there any reasons we cant configure this label here?

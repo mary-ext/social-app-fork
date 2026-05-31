@@ -1,9 +1,8 @@
-import { ChatBskyConvoDefs, type ChatBskyGroupEditGroup } from '@atproto/api';
+import { type ChatBskyGroupEditGroup } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -15,26 +14,28 @@ export function useEditGroupChatName(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyGroupEditGroup.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyGroupEditGroup.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async ({ name: groupName }: { name: string }) => {
 			if (!convoId) throw new Error('No convoId provided');
-			const { data } = await agent.chat.bsky.group.editGroup(
-				{ convoId, name: groupName },
-				{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.post('chat.bsky.group.editGroup', {
+					input: { convoId, name: groupName },
+				}),
 			);
 			return data;
 		},
 		onMutate: ({ name: groupName }) => {
 			if (!convoId) return;
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
-				if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined;
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
 				return {
 					...prev,
 					kind: { ...prev.kind, name: groupName },

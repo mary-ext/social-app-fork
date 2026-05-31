@@ -1,14 +1,13 @@
-import { type ModerationUI } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import type * as bsky from '#/types/bsky';
-
 export function createSanitizedDisplayName(
-	profile: bsky.profile.AnyProfileView,
+	profile: AnyProfileView,
 	noAt = false,
-	moderation?: ModerationUI,
+	moderation?: DisplayRestrictions,
 ) {
 	if (profile.displayName != null && profile.displayName !== '') {
 		return sanitizeDisplayName(profile.displayName, moderation);

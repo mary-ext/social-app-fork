@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, AppBskyFeedGetAuthorFeed, AtUri } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { ClientResponseError } from '@atcute/client';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -192,8 +194,8 @@ function FeedgenErrorMessage({
 
 function safeParseFeedgenUri(uri: string): [string, string] {
 	try {
-		const urip = new AtUri(uri);
-		return [urip.hostname, urip.rkey];
+		const urip = parseCanonicalResourceUri(uri);
+		return [urip.repo, urip.rkey];
 	} catch {
 		return ['', ''];
 	}
@@ -204,8 +206,8 @@ function detectKnownError(feedDesc: FeedDescriptor, error: unknown): KnownError 
 		return undefined;
 	}
 	if (
-		error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
-		error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+		error instanceof ClientResponseError &&
+		(error.error === 'BlockedActor' || error.error === 'BlockedByActor')
 	) {
 		return KnownError.Block;
 	}

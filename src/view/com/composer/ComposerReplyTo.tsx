@@ -1,11 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import {
-	AppBskyEmbedImages,
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	AppBskyFeedPost,
-} from '@atproto/api';
+import { type AnyProfileView, type AppBskyEmbedImages } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -22,7 +18,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import { parseEmbed } from '#/types/bsky/post';
+import { parseEmbed } from '#/types/embed';
 
 type WebViewStyle = ViewStyle & {
 	userSelect?: 'text';
@@ -35,7 +31,7 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { embed } = replyTo;
+	const embed = replyTo.embed;
 
 	const [showFull, setShowFull] = useState(false);
 
@@ -49,15 +45,15 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 
 	const quoteEmbed = useMemo(() => {
 		if (
-			AppBskyEmbedRecord.isView(embed) &&
-			AppBskyEmbedRecord.isViewRecord(embed.record) &&
-			AppBskyFeedPost.isRecord(embed.record.value)
+			embed?.$type === 'app.bsky.embed.record#view' &&
+			embed.record?.$type === 'app.bsky.embed.record#viewRecord' &&
+			embed.record.value?.$type === 'app.bsky.feed.post'
 		) {
 			return embed;
 		} else if (
-			AppBskyEmbedRecordWithMedia.isView(embed) &&
-			AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-			AppBskyFeedPost.isRecord(embed.record.record.value)
+			embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
+			embed.record.record?.$type === 'app.bsky.embed.record#viewRecord' &&
+			embed.record.record.value?.$type === 'app.bsky.feed.post'
 		) {
 			return embed.record;
 		}
@@ -67,13 +63,16 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		? parseEmbed({
 				$type: 'app.bsky.embed.record#view',
 				...quoteEmbed,
-			})
+			} as Parameters<typeof parseEmbed>[0])
 		: null;
 
 	const images = useMemo(() => {
-		if (AppBskyEmbedImages.isView(embed)) {
+		if (embed?.$type === 'app.bsky.embed.images#view') {
 			return embed.images;
-		} else if (AppBskyEmbedRecordWithMedia.isView(embed) && AppBskyEmbedImages.isView(embed.media)) {
+		} else if (
+			embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
+			embed.media?.$type === 'app.bsky.embed.images#view'
+		) {
 			return embed.media.images;
 		}
 	}, [embed]);
@@ -98,8 +97,12 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		>
 			<PreviewableUserAvatar
 				size={42}
-				profile={replyTo.author}
-				moderation={replyTo.moderation?.ui('avatar')}
+				profile={replyTo.author as AnyProfileView}
+				moderation={
+					replyTo.moderation
+						? getDisplayRestrictions(replyTo.moderation, DisplayContext.ProfileMedia)
+						: undefined
+				}
 				type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
 				disableNavigation={true}
 			/>
@@ -108,7 +111,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 					<Text style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]} numberOfLines={1} emoji>
 						{sanitizeDisplayName(replyTo.author.displayName || sanitizeHandle(replyTo.author.handle))}
 					</Text>
-					<ProfileBadges profile={replyTo.author} size="sm" style={[a.pl_xs]} />
+					<ProfileBadges profile={replyTo.author as AnyProfileView} size="sm" style={[a.pl_xs]} />
 				</View>
 				<View style={[a.flex_row, a.gap_md]}>
 					<View style={[a.flex_1, a.flex_grow]}>
@@ -120,9 +123,11 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 							{replyTo.text}
 						</Text>
 					</View>
-					{images && !replyTo.moderation?.ui('contentMedia').blur && (
-						<ComposerReplyToImages images={images} showFull={showFull} />
-					)}
+					{images &&
+						!(
+							replyTo.moderation &&
+							getDisplayRestrictions(replyTo.moderation, DisplayContext.ContentMedia).blurs.length > 0
+						) && <ComposerReplyToImages images={images} showFull={showFull} />}
 				</View>
 				{showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
 					<QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />

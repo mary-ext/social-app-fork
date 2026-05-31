@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react';
-import { type AppBskyFeedDefs, AtUri } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { type FeedSourceInfo } from '#/state/queries/feed';
 
@@ -74,17 +75,15 @@ export function useUnstablePostSource(key: string) {
 
 /** Builds a post source key. This (atm) is a URI where the `host` is the post author's handle, not DID. */
 export function buildPostSourceKey(key: string, handle: string) {
-	const urip = new AtUri(key);
-	// @ts-expect-error TODO new-sdk-migration
-	urip.host = handle;
-	return urip.toString();
+	const urip = parseResourceUri(key);
+	return `at://${handle}/${urip.collection}/${urip.rkey}`;
 }
 
 /** Just a lil dev helper */
 function assertValidDevOnly(key: string, message: string, beChill = false) {
 	if (import.meta.env.DEV) {
-		const urip = new AtUri(key);
-		if (urip.host.startsWith('did:')) {
+		const urip = parseResourceUri(key);
+		if (urip.repo.startsWith('did:')) {
 			if (beChill) {
 				logger.warn(message);
 			} else {

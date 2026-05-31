@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, AppBskyActorStatus, type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyActorDefs, AppBskyActorStatus, type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInMinutes } from 'date-fns';
 
@@ -56,7 +56,7 @@ function DialogInner({
 	const { t: l, i18n } = useLingui();
 	const t = useTheme();
 
-	const [liveLink, setLiveLink] = useState(embed.external.uri);
+	const [liveLink, setLiveLink] = useState<string>(embed.external.uri);
 	const [liveLinkError, setLiveLinkError] = useState('');
 	const tick = useTickEveryMinute();
 
@@ -72,14 +72,7 @@ function DialogInner({
 		error: linkMetaError,
 	} = useLiveLinkMetaQuery(debouncedUrl);
 
-	const record = useMemo(() => {
-		if (!AppBskyActorStatus.isRecord(status.record)) return null;
-		const validation = AppBskyActorStatus.validateRecord(status.record);
-		if (validation.success) {
-			return validation.value;
-		}
-		return null;
-	}, [status]);
+	const record = useMemo(() => status.record as AppBskyActorStatus.Main, [status]);
 
 	const {
 		mutate: goLive,

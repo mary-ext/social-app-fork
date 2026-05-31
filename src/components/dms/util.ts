@@ -1,10 +1,12 @@
+import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
-	type $Typed,
-	ChatBskyActorDefs,
-	ChatBskyConvoDefs,
+	DisplayContext,
+	getDisplayRestrictions,
 	moderateProfile,
-	type ModerationOpts,
-} from '@atproto/api';
+	ModerationCauseType,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { type $type } from '@atcute/lexicons';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 
@@ -13,12 +15,10 @@ import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 
 import { logger } from '#/logger';
 
-import * as bsky from '#/types/bsky';
-
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000;
 export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000;
 
-export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
+export function canBeMessaged(profile: AnyProfileView) {
 	switch (profile.associated?.chat?.allowIncoming) {
 		case 'none':
 			return false;
@@ -35,7 +35,7 @@ export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
 	}
 }
 
-export function canBeAddedToGroup(profile: bsky.profile.AnyProfileView) {
+export function canBeAddedToGroup(profile: AnyProfileView) {
 	switch (profile.associated?.chat?.allowGroupInvites) {
 		case 'none':
 			return false;
@@ -92,8 +92,8 @@ export function canReact({
 	moderationOpts,
 }: {
 	convoState: ConvoState;
-	primaryMember: Shadow<bsky.profile.AnyProfileView> | undefined;
-	moderationOpts: ModerationOpts | undefined;
+	primaryMember: Shadow<AnyProfileView> | undefined;
+	moderationOpts: ModerationOptions | undefined;
 }): boolean {
 	if (convoState.status === ConvoStatus.Disabled) {
 		return false;
@@ -114,12 +114,16 @@ export function canReact({
 		const moderation = moderateProfile(primaryMember, moderationOpts);
 		if (convoState.convo.kind === 'direct') {
 			// either direction (blocking or blocked-by) hides reactions in 1-1s
-			if (moderation.blocked) return false;
+			const isBlocked = moderation.causes.some(
+				(cause) =>
+					cause.type === ModerationCauseType.Blocking || cause.type === ModerationCauseType.BlockedBy,
+			);
+			if (isBlocked) return false;
 		} else {
 			// in groups, only "we are blocking" the owner hides reactions
-			const isBlockingPrimary = moderation
-				.ui('profileView')
-				.alerts.some((alert) => alert.type === 'blocking');
+			const isBlockingPrimary = getDisplayRestrictions(moderation, DisplayContext.ProfileView).alerts.some(
+				(cause) => cause.type === ModerationCauseType.Blocking,
+			);
 			if (isBlockingPrimary) return false;
 		}
 	}
@@ -129,23 +133,23 @@ export function canReact({
 
 export type GroupConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
 	// can be missing if account deleted
-	kind?: $Typed<ChatBskyActorDefs.GroupConvoMember>;
+	kind?: $type.enforce<ChatBskyActorDefs.GroupConvoMember>;
 };
 
 export type DirectConvoMember = ChatBskyActorDefs.ProfileViewBasic & {
-	kind: $Typed<ChatBskyActorDefs.DirectConvoMember>;
+	kind: $type.enforce<ChatBskyActorDefs.DirectConvoMember>;
 };
 
 export type ConvoWithDetails = { view: ChatBskyConvoDefs.ConvoView } & (
 	| {
 			kind: 'group';
-			details: $Typed<ChatBskyConvoDefs.GroupConvo>;
+			details: $type.enforce<ChatBskyConvoDefs.GroupConvo>;
 			primaryMember?: GroupConvoMember; // the owner - may have left, thus optional
 			members: Array<GroupConvoMember>;
 	  }
 	| {
 			kind: 'direct';
-			details: $Typed<ChatBskyConvoDefs.DirectConvo>;
+			details: $type.enforce<ChatBskyConvoDefs.DirectConvo>;
 			primaryMember: DirectConvoMember; // the other user
 			members: Array<DirectConvoMember>;
 	  }
@@ -159,16 +163,11 @@ export function parseConvoView(
 	convoView: ChatBskyConvoDefs.ConvoView,
 	ownDid: string | undefined,
 ): ConvoWithDetails | null {
-	if (bsky.dangerousIsType<ChatBskyConvoDefs.GroupConvo>(convoView.kind, ChatBskyConvoDefs.isGroupConvo)) {
+	if (convoView.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
 		let owner: GroupConvoMember | undefined = undefined;
 
 		for (const member of convoView.members) {
-			if (
-				bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-					member.kind,
-					ChatBskyActorDefs.isGroupConvoMember,
-				)
-			) {
+			if (member.kind?.$type === 'chat.bsky.actor.defs#groupConvoMember') {
 				if (member.kind.role === 'owner') {
 					// have to do a type assertion here
 					// this works: {...member, kind: member.kind}
@@ -188,9 +187,7 @@ export function parseConvoView(
 			primaryMember: owner,
 			members: convoView.members as Array<GroupConvoMember>,
 		};
-	} else if (
-		bsky.dangerousIsType<ChatBskyConvoDefs.DirectConvo>(convoView.kind, ChatBskyConvoDefs.isDirectConvo)
-	) {
+	} else if (convoView.kind?.$type === 'chat.bsky.convo.defs#directConvo') {
 		const otherUser = convoView.members.find((m) => m.did !== ownDid);
 
 		if (!otherUser) {

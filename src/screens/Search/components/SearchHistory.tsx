@@ -1,5 +1,11 @@
 import { Pressable, ScrollView, View } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createHitslop, HITSLOP_10 } from '#/lib/constants';
@@ -21,8 +27,6 @@ import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function SearchHistory({
 	searchHistory,
 	selectedProfiles,
@@ -32,11 +36,11 @@ export function SearchHistory({
 	onRemoveProfileClick,
 }: {
 	searchHistory: string[];
-	selectedProfiles: bsky.profile.AnyProfileView[];
+	selectedProfiles: AnyProfileView[];
 	onItemClick: (item: string) => void;
-	onProfileClick: (profile: bsky.profile.AnyProfileView) => void;
+	onProfileClick: (profile: AnyProfileView) => void;
 	onRemoveItemClick: (item: string) => void;
-	onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void;
+	onRemoveProfileClick: (profile: AnyProfileView) => void;
 }) {
 	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
@@ -117,8 +121,8 @@ function RecentProfileItem({
 	onPress,
 	onRemove,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 	onPress: () => void;
 	onRemove: () => void;
 }) {
@@ -128,7 +132,7 @@ function RecentProfileItem({
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	return (
@@ -150,7 +154,7 @@ function RecentProfileItem({
 					avatar={profile.avatar}
 					type={profile.associated?.labeler ? 'labeler' : 'user'}
 					size={width - 8}
-					moderation={moderation.ui('avatar')}
+					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				/>
 				<View style={[a.flex_row, a.align_center, a.justify_center, a.w_full]}>
 					<Text emoji style={[a.text_xs, a.leading_snug]} numberOfLines={1}>

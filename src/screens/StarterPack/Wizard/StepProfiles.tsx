@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
 import { useA11y } from '#/state/a11y';
@@ -20,13 +21,12 @@ import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCar
 import { Text } from '#/components/Typography';
 
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
-import type * as bsky from '#/types/bsky';
 
-function keyExtractor(item: bsky.profile.AnyProfileView) {
+function keyExtractor(item: AnyProfileView) {
 	return item?.did ?? '';
 }
 
-export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpts }) {
+export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOptions }) {
 	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
@@ -50,7 +50,7 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 
 	const isLoading = isLoadingTopPages || isFetchingResults;
 
-	const renderItem = ({ item }: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
+	const renderItem = ({ item }: ListRenderItemInfo<AnyProfileView>) => {
 		return (
 			<WizardProfileCard
 				profile={item}

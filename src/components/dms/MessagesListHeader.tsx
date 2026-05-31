@@ -1,6 +1,13 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { ChatBskyConvoDefs, moderateProfile, type ModerationOpts } from '@atproto/api';
+import {
+	type BlockingModerationCause,
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	ModerationCauseType,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -71,7 +78,7 @@ function ProfileHeaderReady({
 	moderationOpts,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'direct' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
@@ -80,10 +87,11 @@ function ProfileHeaderReady({
 	const moderation = moderateProfile(profile, moderationOpts);
 
 	const blockInfo = useMemo(() => {
-		const modui = moderation.ui('profileView');
-		const blocks = modui.alerts.filter((alert) => alert.type === 'blocking');
-		const listBlocks = blocks.filter((alert) => alert.source.type === 'list');
-		const userBlock = blocks.find((alert) => alert.source.type === 'user');
+		const blocks = moderation.causes.filter(
+			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
+		);
+		const listBlocks = blocks.filter((block) => block.source !== null);
+		const userBlock = blocks.find((block) => block.source === null);
 		return {
 			listBlocks,
 			userBlock,
@@ -93,10 +101,14 @@ function ProfileHeaderReady({
 	const isDeletedAccount = profile?.handle === 'missing.invalid';
 	const displayName = isDeletedAccount
 		? l`Deleted Account`
-		: createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+		: createSanitizedDisplayName(
+				profile,
+				true,
+				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+			);
 
 	const latestReportableMessage =
-		ChatBskyConvoDefs.isMessageView(convo.view.lastMessage) &&
+		convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
 		convo.view.lastMessage.sender?.did !== currentAccount?.did
 			? convo.view.lastMessage
 			: undefined;
@@ -112,8 +124,10 @@ function ProfileHeaderReady({
 					<PreviewableUserAvatar
 						size={PFP_SIZE}
 						profile={profile}
-						moderation={moderation.ui('avatar')}
-						disableHoverCard={moderation.blocked}
+						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+						disableHoverCard={moderation.causes.some(
+							(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
+						)}
 					/>
 					<View style={[a.flex_row, a.align_center, a.flex_1]}>
 						<Text style={[a.text_md, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
@@ -142,7 +156,7 @@ function GroupHeaderReady({
 	moderationOpts,
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const { t: l } = useLingui();
 

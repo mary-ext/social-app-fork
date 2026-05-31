@@ -1,12 +1,13 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
 import {
+	type AnyProfileView,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	AtUri,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -14,6 +15,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 import { niceDate } from '#/lib/strings/time';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -55,7 +57,6 @@ import { Text } from '#/components/Typography';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';
-import * as bsky from '#/types/bsky';
 
 export function ThreadItemAnchor({
 	item,
@@ -65,7 +66,7 @@ export function ThreadItemAnchor({
 }: {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
 	const postShadow = usePostShadow(item.value.post);
@@ -162,7 +163,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	isRoot: boolean;
 	postShadow: Shadow<AppBskyFeedDefs.PostView>;
 	onPostSuccess?: (data: OnPostSuccessData) => void;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
 	const t = useTheme();
@@ -175,14 +176,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const post = postShadow;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	const authorShadow = useProfileShadow(post.author);
-	const { isActive: live } = useActorStatus(post.author);
-	const richText = useMemo(
-		() =>
-			new RichTextAPI({
-				text: record.text,
-				facets: record.facets,
-			}),
+	const authorShadow = useProfileShadow(post.author as AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
+	const richText: Richtext = useMemo(
+		() => ({
+			text: record.text,
+			facets: record.facets,
+		}),
 		[record],
 	);
 
@@ -191,15 +191,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did;
 
 	const likesHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by');
 	}, [post.uri, post.author]);
 	const repostsHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by');
 	}, [post.uri, post.author]);
 	const quotesHref = useMemo(() => {
-		const urip = new AtUri(post.uri);
+		const urip = parseCanonicalResourceUri(post.uri);
 		return makeProfileLink(post.author, 'post', urip.rkey, 'quotes');
 	}, [post.uri, post.author]);
 
@@ -208,7 +208,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	});
 	const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
 		const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri);
-		const isControlledByViewer = new AtUri(threadRootUri).host === currentAccount?.did;
+		const isControlledByViewer = parseCanonicalResourceUri(threadRootUri).repo === currentAccount?.did;
 		return isControlledByViewer && isPostHiddenByThreadgate
 			? [
 					{
@@ -227,7 +227,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const viaRepost = useMemo(() => {
 		const reason = postSource?.post.reason;
 
-		if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
 			return {
 				uri: reason.uri,
 				cid: reason.cid,
@@ -299,8 +299,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						<View collapsable={false}>
 							<PreviewableUserAvatar
 								size={42}
-								profile={post.author}
-								moderation={moderation.ui('avatar')}
+								profile={post.author as AnyProfileView}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
 								onBeforePress={onOpenAuthor}
@@ -311,7 +311,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 							style={[a.flex_1]}
 							label={sanitizeDisplayName(
 								post.author.displayName || sanitizeHandle(post.author.handle),
-								moderation.ui('displayName'),
+								getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 							)}
 							onPress={onOpenAuthor}
 						>
@@ -325,7 +325,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										>
 											{sanitizeDisplayName(
 												post.author.displayName || sanitizeHandle(post.author.handle),
-												moderation.ui('displayName'),
+												getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 											)}
 										</Text>
 
@@ -345,9 +345,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 					</View>
 					<View style={[a.pb_sm]}>
 						<LabelsOnMyPost post={post} style={[a.pb_sm]} />
-						<ContentHider modui={moderation.ui('contentView')} ignoreMute childContainerStyle={[a.pt_sm]}>
+						<ContentHider
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+							ignoreMute
+							childContainerStyle={[a.pt_sm]}
+						>
 							<PostAlerts
-								modui={moderation.ui('contentView')}
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 								size="lg"
 								includeMute
 								style={[a.pb_sm]}
@@ -506,9 +510,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	const control = Prompt.usePromptControl();
 
 	const indexedAt = new Date(post.indexedAt);
-	const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
-		? new Date(post.record.createdAt)
-		: new Date(post.indexedAt);
+	const createdAt = new Date((post.record as AppBskyFeedPost.Main).createdAt);
 
 	// backdated if createdAt is 24 hours or more before indexedAt
 	const isBackdated = indexedAt.getTime() - createdAt.getTime() > 24 * 60 * 60 * 1000;
@@ -573,12 +575,12 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 	);
 }
 
-function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost.Record): string {
+function getThreadAuthor(post: AppBskyFeedDefs.PostView, record: AppBskyFeedPost.Main): string {
 	if (!record.reply) {
 		return post.author.did;
 	}
 	try {
-		return new AtUri(record.reply.root.uri).host;
+		return parseCanonicalResourceUri(record.reply.root.uri).repo;
 	} catch {
 		return '';
 	}

@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
-import { ChatBskyConvoDefs } from '@atproto/api';
+import { ok } from '@atcute/client';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
 
 import { useMessagesEventBus } from '#/state/messages/events';
 import { createQueryKey } from '#/state/queries/util';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { STALE } from '..';
 
@@ -22,7 +20,7 @@ export function useListJoinRequestsQuery({
 	convoId: string | undefined;
 	enabled?: boolean;
 }) {
-	const agent = useAgent();
+	const { chat } = useClients();
 	const queryClient = useQueryClient();
 	const messagesBus = useMessagesEventBus();
 	const isEnabled = enabled !== false && !!convoId;
@@ -35,9 +33,9 @@ export function useListJoinRequestsQuery({
 				if (event.type !== 'logs') return;
 				for (const log of event.logs) {
 					if (
-						ChatBskyConvoDefs.isLogIncomingJoinRequest(log) ||
-						ChatBskyConvoDefs.isLogApproveJoinRequest(log) ||
-						ChatBskyConvoDefs.isLogRejectJoinRequest(log)
+						log.$type === 'chat.bsky.convo.defs#logIncomingJoinRequest' ||
+						log.$type === 'chat.bsky.convo.defs#logApproveJoinRequest' ||
+						log.$type === 'chat.bsky.convo.defs#logRejectJoinRequest'
 					) {
 						void queryClient.invalidateQueries({
 							queryKey: createListJoinRequestsQueryKey({ convoId }),
@@ -54,9 +52,11 @@ export function useListJoinRequestsQuery({
 		enabled: isEnabled,
 		queryKey: createListJoinRequestsQueryKey({ convoId: convoId ?? '' }),
 		queryFn: async ({ pageParam }) => {
-			const { data } = await agent.chat.bsky.group.listJoinRequests(
-				{ convoId: convoId!, cursor: pageParam, limit: 20 },
-				{ headers: DM_SERVICE_HEADERS },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.get('chat.bsky.group.listJoinRequests', {
+					params: { convoId: convoId!, cursor: pageParam, limit: 20 },
+				}),
 			);
 			return data;
 		},

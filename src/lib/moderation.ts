@@ -1,15 +1,17 @@
 import { useMemo } from 'react';
+import { type ComAtprotoLabelDefs } from '@atcute/atproto';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
-	type AppBskyLabelerDefs,
-	BskyAgent,
-	type ComAtprotoLabelDefs,
-	type InterpretedLabelValueDefinition,
-	LABELS,
+	BUILTIN_LABELS,
+	type DisplayRestrictions,
+	type InterpretedLabelDefinition,
 	type ModerationCause,
-	type ModerationOpts,
-	type ModerationUI,
-} from '@atproto/api';
+	ModerationCauseType,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { type Did } from '@atcute/lexicons';
 
+import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -23,27 +25,42 @@ export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number];
 export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number];
 export type SelfLabel = (typeof SELF_LABELS)[number];
 
+function getModerationCauseSourceKey(cause: ModerationCause | AppModerationCause): string {
+	switch (cause.type) {
+		case 'reply-hidden':
+			return cause.source.did;
+		case ModerationCauseType.Label:
+			return cause.source ?? 'user';
+		case ModerationCauseType.Blocking:
+		case ModerationCauseType.MutedPermanent:
+			return cause.source?.uri ?? 'user';
+		case ModerationCauseType.MutedKeyword:
+			return cause.source.id ?? 'mute-word';
+		default:
+			return 'user';
+	}
+}
+
 export function getModerationCauseKey(cause: ModerationCause | AppModerationCause): string {
-	const source =
-		cause.source.type === 'labeler'
-			? cause.source.did
-			: cause.source.type === 'list'
-				? cause.source.list.uri
-				: 'user';
-	if (cause.type === 'label') {
+	const source = getModerationCauseSourceKey(cause);
+	if (cause.type === ModerationCauseType.Label) {
 		return `label:${cause.label.val}:${source}`;
 	}
 	return `${cause.type}:${source}`;
 }
 
-export function isJustAMute(modui: ModerationUI): boolean {
-	return modui.filters.length === 1 && modui.filters[0]!.type === 'muted';
+export function isJustAMute(modui: DisplayRestrictions): boolean {
+	return (
+		modui.filters.length === 1 &&
+		(modui.filters[0]!.type === ModerationCauseType.MutedPermanent ||
+			modui.filters[0]!.type === ModerationCauseType.MutedTemporary)
+	);
 }
 
-export function moduiContainsHideableOffense(modui: ModerationUI): boolean {
-	const label = modui.filters.at(0);
-	if (label && label.type === 'label') {
-		return labelIsHideableOffense(label.label);
+export function moduiContainsHideableOffense(modui: DisplayRestrictions): boolean {
+	const cause = modui.filters.at(0);
+	if (cause && cause.type === ModerationCauseType.Label) {
+		return labelIsHideableOffense(cause.label);
 	}
 	return false;
 }
@@ -58,14 +75,14 @@ export function getLabelingServiceTitle({ displayName, handle }: { displayName?:
 
 export function lookupLabelValueDefinition(
 	labelValue: string,
-	customDefs: InterpretedLabelValueDefinition[] | undefined,
-): InterpretedLabelValueDefinition | undefined {
+	customDefs: InterpretedLabelDefinition[] | undefined,
+): InterpretedLabelDefinition | undefined {
 	let def;
 	if (!labelValue.startsWith('!') && customDefs) {
 		def = customDefs.find((d) => d.identifier === labelValue);
 	}
 	if (!def) {
-		def = LABELS[labelValue as keyof typeof LABELS];
+		def = BUILTIN_LABELS[labelValue];
 	}
 	return def;
 }
@@ -74,20 +91,20 @@ export function isAppLabeler(
 	labeler: string | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
 	if (typeof labeler === 'string') {
-		return BskyAgent.appLabelers.includes(labeler);
+		return getAppLabelers().includes(labeler);
 	}
-	return BskyAgent.appLabelers.includes(labeler.creator.did);
+	return getAppLabelers().includes(labeler.creator.did);
 }
 
 export function isLabelerSubscribed(
 	labeler: string | AppBskyLabelerDefs.LabelerView | AppBskyLabelerDefs.LabelerViewDetailed,
-	modOpts: ModerationOpts,
+	modOpts: ModerationOptions,
 ) {
 	labeler = typeof labeler === 'string' ? labeler : labeler.creator.did;
 	if (isAppLabeler(labeler)) {
 		return true;
 	}
-	return modOpts.prefs.labelers.find((l) => l.did === labeler);
+	return Boolean(modOpts.prefs.prefsByLabelers?.[labeler as Did]);
 }
 
 export type Subject =

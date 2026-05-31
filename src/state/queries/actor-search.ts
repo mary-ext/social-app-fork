@@ -1,4 +1,5 @@
-import { type AppBskyActorSearchActors } from '@atproto/api';
+import { type AppBskyActorSearchActors } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import {
 	type InfiniteData,
 	keepPreviousData,
@@ -8,7 +9,7 @@ import {
 } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 export const RQKEY_ROOT = 'actor-search';
 export const RQKEY = (query: string, limit?: number) => [RQKEY_ROOT, query, limit];
@@ -24,24 +25,22 @@ export function useActorSearch({
 	maintainData?: boolean;
 	limit?: number;
 }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyActorSearchActors.OutputSchema,
+		AppBskyActorSearchActors.$output,
 		Error,
-		InfiniteData<AppBskyActorSearchActors.OutputSchema>,
+		InfiniteData<AppBskyActorSearchActors.$output>,
 		QueryKey,
 		string | undefined
 	>({
 		staleTime: STALE.MINUTES.FIVE,
 		queryKey: RQKEY(query, limit),
-		queryFn: async ({ pageParam }) => {
-			const res = await agent.searchActors({
-				q: query,
-				limit,
-				cursor: pageParam,
-			});
-			return res.data;
-		},
+		queryFn: ({ pageParam }) =>
+			ok(
+				appview.get('app.bsky.actor.searchActors', {
+					params: { cursor: pageParam, limit, q: query },
+				}),
+			),
 		enabled: enabled && !!query,
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
@@ -50,7 +49,7 @@ export function useActorSearch({
 	});
 }
 
-function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
+function select(data: InfiniteData<AppBskyActorSearchActors.$output>) {
 	// enforce uniqueness
 	const dids = new Set();
 
@@ -69,7 +68,7 @@ function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
 }
 
 export function* findAllProfilesInQueryData(queryClient: QueryClient, did: string) {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyActorSearchActors.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyActorSearchActors.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

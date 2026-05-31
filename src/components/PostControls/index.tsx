@@ -1,11 +1,6 @@
 import { memo, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
@@ -13,6 +8,7 @@ import { CountWheel } from '#/lib/custom-animations/CountWheel';
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 import { useHaptics } from '#/lib/haptics';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -51,15 +47,15 @@ let PostControls = ({
 }: {
 	big?: boolean;
 	post: Shadow<AppBskyFeedDefs.PostView>;
-	record: AppBskyFeedPost.Record;
-	richText: RichTextAPI;
+	record: AppBskyFeedPost.Main;
+	richText: Richtext;
 	feedContext?: string | undefined;
 	reqId?: string | undefined;
 	style?: StyleProp<ViewStyle>;
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	viaRepost?: { uri: string; cid: string };
 	variant?: 'compact' | 'normal' | 'large';

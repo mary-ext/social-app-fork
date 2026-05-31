@@ -1,17 +1,18 @@
-import { type AppBskyVideoDefs, type BlobRef } from '@atproto/api';
+import { type AppBskyVideoDefs } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type Blob as AtpBlob } from '@atcute/lexicons';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
+import { uploadBlob } from '#/lib/api/upload-blob';
 import { AbortError } from '#/lib/async/cancelable';
 import { LOCAL_DEV_SERVICE } from '#/lib/constants';
 import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
-import { createVideoAgent } from '#/lib/media/video/util';
+import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';
-
-import { type BskyAppAgent } from '#/state/session/agent';
 
 import { logger } from '#/logger';
 
@@ -31,7 +32,7 @@ export type VideoAction =
 	| { type: 'to_error'; error: string; signal: AbortSignal }
 	| {
 			type: 'to_done';
-			blobRef: BlobRef;
+			blobRef: AtpBlob;
 			signal: AbortSignal;
 	  }
 	| { type: 'update_progress'; progress: number; signal: AbortSignal }
@@ -125,7 +126,7 @@ type DoneState = {
 	asset: VideoAsset;
 	video: CompressedVideo;
 	jobId?: undefined;
-	pendingPublish: { blobRef: BlobRef };
+	pendingPublish: { blobRef: AtpBlob };
 	altText: string;
 	captions: CaptionsTrack[];
 };
@@ -235,7 +236,8 @@ export function videoReducer(state: VideoState, action: VideoAction): VideoState
 export async function processVideo(
 	asset: VideoAsset,
 	dispatch: (action: VideoAction) => void,
-	agent: BskyAppAgent,
+	pdsUrl: string,
+	pds: Client,
 	did: string,
 	signal: AbortSignal,
 	i18n: I18n,
@@ -262,8 +264,8 @@ export async function processVideo(
 
 	let uploadResponse: AppBskyVideoDefs.JobStatus | undefined;
 	try {
-		if (agent.serviceUrl.toString().startsWith(LOCAL_DEV_SERVICE)) {
-			const blobRef = await uploadVideoBlobDirectly(agent, video, signal);
+		if (pdsUrl.startsWith(LOCAL_DEV_SERVICE)) {
+			const blobRef = await uploadVideoBlobDirectly(pds, video, signal);
 			dispatch({
 				type: 'to_done',
 				blobRef,
@@ -274,7 +276,8 @@ export async function processVideo(
 
 		uploadResponse = await uploadVideo({
 			video,
-			agent,
+			pds,
+			dispatchUrl: pdsUrl,
 			did,
 			signal,
 			i18n,
@@ -301,22 +304,26 @@ export async function processVideo(
 		signal,
 	});
 
+	// Job-status polling runs unauthenticated, matching upstream — the service does not require auth here,
+	// which also avoids a minted token expiring mid-poll on a long upload.
+	const videoClient = createVideoClient();
+
 	let pollFailures = 0;
 	while (true) {
 		if (signal.aborted) {
 			return; // Exit async loop
 		}
 
-		const videoAgent = createVideoAgent();
 		let status: AppBskyVideoDefs.JobStatus | undefined;
-		let blob: BlobRef | undefined;
+		let blob: AtpBlob | undefined;
 		try {
-			const response = await videoAgent.app.bsky.video.getJobStatus({ jobId });
-			status = response.data.jobStatus;
+			const response = await ok(videoClient.get('app.bsky.video.getJobStatus', { params: { jobId } }));
+			status = response.jobStatus;
 			pollFailures = 0;
 
 			if (status.state === 'JOB_STATE_COMPLETED') {
-				blob = status.blob;
+				// The video service returns a modern blob ref; legacy blobs don't occur here.
+				blob = status.blob as AtpBlob | undefined;
 				if (!blob) {
 					throw new Error('Job completed, but did not return a blob');
 				}
@@ -365,19 +372,15 @@ export async function processVideo(
 }
 
 async function uploadVideoBlobDirectly(
-	agent: BskyAppAgent,
+	pds: Client,
 	video: CompressedVideo,
 	signal: AbortSignal,
-): Promise<BlobRef> {
+): Promise<AtpBlob> {
 	if (signal.aborted) {
 		throw new AbortError();
 	}
 
-	const { data } = await agent.uploadBlob(video.blob, {
-		encoding: video.mimeType,
-	});
-
-	return data.blob;
+	return uploadBlob(pds, video.blob, video.mimeType);
 }
 
 function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {

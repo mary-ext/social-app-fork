@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { type ListRenderItemInfo, Text as RNText, View } from 'react-native';
-import { type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -34,8 +35,6 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 import * as SettingsList from '../components/SettingsList';
 import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle';
 import { PreferenceControls } from './components/PreferenceControls';
@@ -63,7 +62,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
 	}, [subscriptions]);
 
 	const renderItem = useCallback(
-		({ item }: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
+		({ item }: ListRenderItemInfo<AnyProfileView>) => {
 			if (!moderationOpts) return null;
 			return <ActivitySubscriptionCard profile={item} moderationOpts={moderationOpts} />;
 		},
@@ -172,7 +171,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
 	);
 }
 
-function keyExtractor(item: bsky.profile.AnyProfileView) {
+function keyExtractor(item: AnyProfileView) {
 	return item.did;
 }
 
@@ -180,8 +179,8 @@ function ActivitySubscriptionCard({
 	profile: profileUnshadowed,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 }) {
 	const profile = useProfileShadow(profileUnshadowed);
 	const control = useDialogControl();

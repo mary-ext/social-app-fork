@@ -1,5 +1,4 @@
 import { type TextInput } from 'react-native';
-import { type RichText } from '@atproto/api';
 
 export type TextInputRef = {
 	focus: () => void;
@@ -16,13 +15,13 @@ export type TextInputRef = {
 
 export type TextInputProps = {
 	ref: React.Ref<TextInputRef>;
-	richtext: RichText;
+	text: string;
 	webForceMinHeight: boolean;
 	hasRightPadding: boolean;
 	isActive: boolean;
-	setRichText: (v: RichText) => void;
+	setText: (v: string) => void;
 	onPhotoPasted: (blob: Blob) => void;
-	onPressPublish: (richtext: RichText) => void;
+	onPressPublish: (text: string) => void;
 	onNewLink: (uri: string) => void;
 	onError: (err: string) => void;
 	onFocus: () => void;

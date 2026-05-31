@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { type ListRenderItemInfo } from 'react-native';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -17,9 +18,7 @@ import * as Dialog from '#/components/Dialog';
 import { WizardFeedCard, WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
-type ListItem = bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView;
+type ListItem = AnyProfileView | AppBskyFeedDefs.GeneratorView;
 
 function keyExtractor(item: ListItem, index: number) {
 	return `${item.did}-${index}`;
@@ -35,7 +34,7 @@ export function WizardEditListDialog({
 	control: Dialog.DialogControlProps;
 	state: WizardState;
 	dispatch: (action: WizardAction) => void;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const { t: l } = useLingui();

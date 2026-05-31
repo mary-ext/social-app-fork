@@ -1,7 +1,9 @@
-import { type AppBskyActorDefs, type AppBskyFeedGetLikes } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedGetLikes } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
@@ -11,23 +13,25 @@ const RQKEY_ROOT = 'liked-by';
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
 
 export function useLikedByQuery(resolvedUri: string | undefined) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyFeedGetLikes.OutputSchema,
+		AppBskyFeedGetLikes.$output,
 		Error,
-		InfiniteData<AppBskyFeedGetLikes.OutputSchema>,
+		InfiniteData<AppBskyFeedGetLikes.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		queryKey: RQKEY(resolvedUri || ''),
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.getLikes({
-				uri: resolvedUri || '',
-				limit: PAGE_SIZE,
-				cursor: pageParam,
-			});
-			return res.data;
-		},
+		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
+			ok(
+				appview.get('app.bsky.feed.getLikes', {
+					params: {
+						cursor: pageParam,
+						limit: PAGE_SIZE,
+						uri: (resolvedUri || '') as ResourceUri,
+					},
+				}),
+			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		enabled: !!resolvedUri,
@@ -38,7 +42,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetLikes.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetLikes.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

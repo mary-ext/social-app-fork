@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 

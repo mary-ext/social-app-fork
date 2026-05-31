@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
@@ -581,7 +581,10 @@ function SavedFeed({ savedFeed }: { savedFeed: SavedFeedItem & { type: 'feed' | 
 			)}
 		</FeedCard.Link>
 	) : (
-		<ListCard.Link testID={`saved-feed-${savedFeed.view.name}`} {...savedFeed}>
+		<ListCard.Link
+			testID={`saved-feed-${savedFeed.view.name}`}
+			{...(savedFeed as unknown as React.ComponentProps<typeof ListCard.Link>)}
+		>
 			{({ hovered, pressed }) => (
 				<View style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
 					<ListCard.Header>

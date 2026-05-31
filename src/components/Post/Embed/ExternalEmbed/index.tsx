@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';

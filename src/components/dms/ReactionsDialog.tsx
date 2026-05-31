@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, useWindowDimensions, View } from 'react-native';
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atproto/api';
+import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -19,8 +19,6 @@ import { atoms as a, useTheme } from '#/alf';
 import * as Dialog from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 type Reaction = {
 	key: string;
@@ -133,7 +131,7 @@ function ReactionRow({
 	convo: ActiveConvoStates;
 	currentAccount?: SessionAccount;
 	message: ChatBskyConvoDefs.MessageView;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	reaction: ChatBskyConvoDefs.ReactionView;
 	allReactions: ChatBskyConvoDefs.ReactionView[];
 	selected: string;

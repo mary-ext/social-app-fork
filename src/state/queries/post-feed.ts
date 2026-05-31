@@ -3,12 +3,22 @@ import { AppState } from 'react-native';
 import {
 	type AppBskyActorDefs,
 	AppBskyFeedDefs,
+	type AppBskyFeedGetActorLikes,
+	type AppBskyFeedGetAuthorFeed,
+	type AppBskyFeedGetFeed,
+	type AppBskyFeedGetListFeed,
+	type AppBskyFeedGetPosts,
 	type AppBskyFeedPost,
-	AtUri,
+} from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
 	moderatePost,
+	ModerationCauseType,
 	type ModerationDecision,
-	type ModerationPrefs,
-} from '@atproto/api';
+} from '@atcute/bluesky-moderation';
+import { type Client } from '@atcute/client';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { FeedTuner, type FeedTunerFn } from '#/lib/api/feed-manip';
@@ -24,11 +34,12 @@ import { PostListFeedAPI } from '#/lib/api/feed/posts';
 import { type FeedAPI, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
+import { type BskyPreferences } from '#/lib/moderation/preferences-types';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences/const';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 
 import { logger } from '#/logger';
@@ -76,7 +87,7 @@ export interface FeedPostSliceItem {
 	_reactKey: string;
 	uri: string;
 	post: AppBskyFeedDefs.PostView;
-	record: AppBskyFeedPost.Record;
+	record: AppBskyFeedPost.Main;
 	moderation: ModerationDecision;
 	parentAuthor?: AppBskyActorDefs.ProfileViewBasic;
 	isParentBlocked?: boolean;
@@ -92,11 +103,7 @@ export interface FeedPostSlice {
 	feedContext: string | undefined;
 	reqId: string | undefined;
 	feedPostUri: string;
-	reason?:
-		| AppBskyFeedDefs.ReasonRepost
-		| AppBskyFeedDefs.ReasonPin
-		| ReasonFeedSource
-		| { [k: string]: unknown; $type: string };
+	reason?: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | ReasonFeedSource;
 }
 
 export interface FeedPageUnselected {
@@ -138,7 +145,8 @@ export function usePostFeedQuery(
 	const followingPinnedIndex =
 		preferences?.savedFeeds?.findIndex((f) => f.pinned && f.value === 'following') ?? -1;
 	const enableFollowingToDiscoverFallback = followingPinnedIndex === 0;
-	const agent = useAgent();
+	const { appview } = useClients();
+	const { hasSession } = useSession();
 	const lastRun = useRef<{
 		data: InfiniteData<FeedPageUnselected>;
 		args: typeof selectArgs;
@@ -176,7 +184,7 @@ export function usePostFeedQuery(
 							feedDesc,
 							feedParams: params || {},
 							feedTuners,
-							agent,
+							appview,
 							// Not in the query key because they don't change:
 							userInterests,
 							// Not in the query key. Reacting to it switching isn't important:
@@ -193,7 +201,7 @@ export function usePostFeedQuery(
 			 * moderations happen later, which results in some posts being shown and
 			 * some not.
 			 */
-			if (!agent.session) {
+			if (!hasSession) {
 				assertSomePostsPassModeration(
 					res.feed,
 					preferences?.moderationPrefs || DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
@@ -270,10 +278,16 @@ export function usePostFeedQuery(
 										if (ignoreFilter) {
 											// remove mutes to avoid confused UIs
 											moderations[i]!.causes = moderations[i]!.causes.filter(
-												(cause) => cause.type !== 'muted',
+												(cause) =>
+													cause.type !== ModerationCauseType.MutedPermanent &&
+													cause.type !== ModerationCauseType.MutedTemporary,
 											);
 										}
-										if (!ignoreFilter && moderations[i]?.ui('contentList').filter) {
+										if (
+											!ignoreFilter &&
+											moderations[i] &&
+											getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList).filters.length > 0
+										) {
 											return undefined;
 										}
 									}
@@ -409,55 +423,58 @@ function createApi({
 	feedParams,
 	feedTuners,
 	userInterests,
-	agent,
+	appview,
 	enableFollowingToDiscoverFallback,
 }: {
 	feedDesc: FeedDescriptor;
 	feedParams: FeedParams;
 	feedTuners: FeedTunerFn[];
 	userInterests?: string;
-	agent: BskyAppAgent;
+	appview: Client;
 	enableFollowingToDiscoverFallback: boolean;
 }) {
 	if (feedDesc === 'following') {
 		if (feedParams.mergeFeedEnabled) {
 			return new MergeFeedAPI({
-				agent,
+				appview,
 				feedParams,
 				feedTuners,
 				userInterests,
 			});
 		} else {
 			if (enableFollowingToDiscoverFallback) {
-				return new HomeFeedAPI({ agent, userInterests });
+				return new HomeFeedAPI({ appview, userInterests });
 			} else {
-				return new FollowingFeedAPI({ agent });
+				return new FollowingFeedAPI({ appview });
 			}
 		}
 	} else if (feedDesc.startsWith('author')) {
 		const [__, actor, filter] = feedDesc.split('|') as [string, string, string];
-		return new AuthorFeedAPI({ agent, feedParams: { actor, filter } });
+		return new AuthorFeedAPI({ appview, feedParams: { actor, filter } as AppBskyFeedGetAuthorFeed.$params });
 	} else if (feedDesc.startsWith('likes')) {
 		const [__, actor] = feedDesc.split('|') as [string, string];
-		return new LikesFeedAPI({ agent, feedParams: { actor } });
+		return new LikesFeedAPI({ appview, feedParams: { actor } as AppBskyFeedGetActorLikes.$params });
 	} else if (feedDesc.startsWith('feedgen')) {
 		const [__, feed] = feedDesc.split('|') as [string, string];
 		return new CustomFeedAPI({
-			agent,
-			feedParams: { feed },
+			appview,
+			feedParams: { feed } as AppBskyFeedGetFeed.$params,
 			userInterests,
 		});
 	} else if (feedDesc.startsWith('list')) {
 		const [__, list] = feedDesc.split('|') as [string, string];
-		return new ListFeedAPI({ agent, feedParams: { list } });
+		return new ListFeedAPI({ appview, feedParams: { list } as AppBskyFeedGetListFeed.$params });
 	} else if (feedDesc.startsWith('posts')) {
 		const [__, uriList] = feedDesc.split('|') as [string, string];
-		return new PostListFeedAPI({ agent, feedParams: { uris: uriList.split(',') } });
+		return new PostListFeedAPI({
+			appview,
+			feedParams: { uris: uriList.split(',') } as AppBskyFeedGetPosts.$params,
+		});
 	} else if (feedDesc === 'demo') {
-		return new DemoFeedAPI({ agent });
+		return new DemoFeedAPI();
 	} else {
 		// shouldnt happen
-		return new FollowingFeedAPI({ agent });
+		return new FollowingFeedAPI({ appview });
 	}
 }
 
@@ -465,7 +482,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPageUnselected>>({
 		queryKey: [RQKEY_ROOT],
@@ -485,7 +502,7 @@ export function* findAllPostsInQueryData(
 					yield embedViewRecordToPostView(quotedPost);
 				}
 
-				if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+				if (item.reply?.parent?.$type === 'app.bsky.feed.defs#postView') {
 					if (didOrHandleUriMatches(atUri, item.reply.parent)) {
 						yield item.reply.parent;
 					}
@@ -496,7 +513,7 @@ export function* findAllPostsInQueryData(
 					}
 				}
 
-				if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+				if (item.reply?.root?.$type === 'app.bsky.feed.defs#postView') {
 					if (didOrHandleUriMatches(atUri, item.reply.root)) {
 						yield item.reply.root;
 					}
@@ -531,10 +548,16 @@ export function* findAllProfilesInQueryData(
 				if (quotedPost?.author.did === did) {
 					yield quotedPost.author;
 				}
-				if (AppBskyFeedDefs.isPostView(item.reply?.parent) && item.reply?.parent?.author.did === did) {
+				if (
+					item.reply?.parent?.$type === 'app.bsky.feed.defs#postView' &&
+					item.reply?.parent?.author.did === did
+				) {
 					yield item.reply.parent.author;
 				}
-				if (AppBskyFeedDefs.isPostView(item.reply?.root) && item.reply?.root?.author.did === did) {
+				if (
+					item.reply?.root?.$type === 'app.bsky.feed.defs#postView' &&
+					item.reply?.root?.author.did === did
+				) {
 					yield item.reply.root.author;
 				}
 			}
@@ -544,7 +567,7 @@ export function* findAllProfilesInQueryData(
 
 function assertSomePostsPassModeration(
 	feed: AppBskyFeedDefs.FeedViewPost[],
-	moderationPrefs: ModerationPrefs,
+	moderationPrefs: BskyPreferences['moderationPrefs'],
 ) {
 	// no posts in this feed
 	if (feed.length === 0) return true;
@@ -554,11 +577,11 @@ function assertSomePostsPassModeration(
 
 	for (const item of feed) {
 		const moderation = moderatePost(item.post, {
-			userDid: undefined,
-			prefs: moderationPrefs,
+			viewerDid: undefined,
+			prefs: toModerationPreferences(moderationPrefs),
 		});
 
-		if (!moderation.ui('contentList').filter) {
+		if (getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length === 0) {
 			// we have a sfw post
 			somePostsPassModeration = true;
 		}

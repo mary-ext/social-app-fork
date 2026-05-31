@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
+	DisplayContext,
+	getDisplayRestrictions,
 	moderateProfile,
-	type ModerationOpts,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -30,7 +31,7 @@ import { useLabelerInfoQuery } from '#/state/queries/labeler';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
-import { useAgent, useSession } from '#/state/session';
+import { useSession } from '#/state/session';
 
 import { ProfileFeedgens } from '#/view/com/feeds/ProfileFeedgens';
 import { ProfileLists } from '#/view/com/lists/ProfileLists';
@@ -45,6 +46,7 @@ import { ProfileLabelsSection } from '#/screens/Profile/Sections/Labels';
 
 import { atoms as a, useTheme } from '#/alf';
 
+import { useRichText } from '#/components/hooks/useRichText';
 import { Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon } from '#/components/icons/CircleAndSquare';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { Heart2_Stroke1_Corner0_Rounded as HeartIcon } from '#/components/icons/Heart2';
@@ -170,7 +172,7 @@ function ProfileScreenLoaded({
 	hideBackButton,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	hideBackButton: boolean;
 	isPlaceholderProfile: boolean;
 }) {
@@ -368,7 +370,7 @@ function ProfileScreenLoaded({
 			testID="profileView"
 			style={styles.container}
 			screenDescription={l`user`}
-			modui={moderation.ui('profileView')}
+			modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 		>
 			<PagerWithHeader
 				testID="profilePager"
@@ -580,36 +582,6 @@ function ProfileScreenLoaded({
 			)}
 		</ScreenHider>
 	);
-}
-
-function useRichText(text: string): [RichTextAPI, boolean] {
-	const agent = useAgent();
-	const [prevText, setPrevText] = useState(text);
-	const [rawRT, setRawRT] = useState(() => new RichTextAPI({ text }));
-	const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null);
-	if (text !== prevText) {
-		setPrevText(text);
-		setRawRT(new RichTextAPI({ text }));
-		setResolvedRT(null);
-		// This will queue an immediate re-render
-	}
-	useEffect(() => {
-		let ignore = false;
-		async function resolveRTFacets() {
-			// new each time
-			const resolvedRT = new RichTextAPI({ text });
-			await resolvedRT.detectFacets(agent);
-			if (!ignore) {
-				setResolvedRT(resolvedRT);
-			}
-		}
-		void resolveRTFacets();
-		return () => {
-			ignore = true;
-		};
-	}, [text, agent]);
-	const isResolving = resolvedRT === null;
-	return [resolvedRT ?? rawRT, isResolving];
 }
 
 const styles = StyleSheet.create({

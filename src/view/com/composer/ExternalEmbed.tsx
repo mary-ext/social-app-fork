@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
@@ -27,12 +28,13 @@ export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif:
 	const thumbUrl = useBlobUrl(data?.thumb?.source.blob);
 	const linkInfo = useMemo(
 		() =>
-			data && {
+			data &&
+			({
 				title: data.title ?? data.uri,
 				uri: data.uri,
 				description: data.description ?? '',
 				thumb: thumbUrl,
-			},
+			} as AppBskyEmbedExternal.ViewExternal),
 		[data, thumbUrl],
 	);
 
@@ -87,28 +89,33 @@ export const ExternalEmbedLink = ({
 	const linkComponent = useMemo(() => {
 		if (data) {
 			if (data.type === 'external') {
-				if (data.view && isStandardSiteEmbed(data.view.external)) {
+				const external = data.view?.external;
+				if (external && isStandardSiteEmbed(external)) {
 					return (
 						<StandardSiteEmbed
 							hideSubscribe
-							view={{
-								...data.view.external,
-								title: data.view.external.title || data.title || uri,
-								uri,
-								description: data.view.external.description || data.description,
-								thumb: data.view.external.thumb || thumbUrl,
-							}}
+							view={
+								{
+									...external,
+									title: external.title || data.title || uri,
+									uri,
+									description: external.description || data.description,
+									thumb: external.thumb || thumbUrl,
+								} as AppBskyEmbedExternal.ViewExternal
+							}
 						/>
 					);
 				}
 				return (
 					<ExternalEmbed
-						link={{
-							title: data.title || uri,
-							uri,
-							description: data.description,
-							thumb: thumbUrl,
-						}}
+						link={
+							{
+								title: data.title || uri,
+								uri,
+								description: data.description,
+								thumb: thumbUrl,
+							} as AppBskyEmbedExternal.ViewExternal
+						}
 						hideAlt
 					/>
 				);

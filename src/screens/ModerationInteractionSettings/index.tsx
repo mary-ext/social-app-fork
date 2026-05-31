@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
@@ -64,15 +66,16 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const allowUI = useMemo(() => {
 		return threadgateRecordToAllowUISetting({
 			$type: 'app.bsky.feed.threadgate',
-			post: '',
-			createdAt: new Date().toString(),
-			allow: preferences.postInteractionSettings.threadgateAllowRules,
+			post: '' as ResourceUri,
+			createdAt: new Date().toISOString(),
+			allow: preferences.postInteractionSettings.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 		});
 	}, [preferences.postInteractionSettings.threadgateAllowRules]);
 	const postgate = useMemo(() => {
 		return createPostgateRecord({
-			post: '',
-			embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules,
+			post: '' as ResourceUri,
+			embeddingRules: preferences.postInteractionSettings
+				.postgateEmbeddingRules as AppBskyFeedPostgate.Main['embeddingRules'],
 		});
 	}, [preferences.postInteractionSettings.postgateEmbeddingRules]);
 

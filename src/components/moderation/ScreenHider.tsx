@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { type StyleProp, type TextStyle, TouchableWithoutFeedback, View, type ViewStyle } from 'react-native';
-import { type ModerationUI } from '@atproto/api';
+import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -33,7 +33,7 @@ export function ScreenHider({
 }: React.PropsWithChildren<{
 	testID?: string;
 	screenDescription: string;
-	modui: ModerationUI;
+	modui: DisplayRestrictions;
 	style?: StyleProp<ViewStyle>;
 	containerStyle?: StyleProp<ViewStyle>;
 }>) {
@@ -55,7 +55,8 @@ export function ScreenHider({
 	}
 
 	const isNoPwi = !!modui.blurs.find(
-		(cause) => cause.type === 'label' && cause.labelDef.identifier === '!no-unauthenticated',
+		(cause) =>
+			cause.type === ModerationCauseType.Label && cause.labelDef.identifier === '!no-unauthenticated',
 	);
 	return (
 		<CenteredView

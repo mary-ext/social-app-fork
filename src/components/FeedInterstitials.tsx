@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AnyProfileView, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -30,8 +30,6 @@ import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 const DISMISS_ANIMATION_DURATION = 200;
 
@@ -145,7 +143,7 @@ export function SuggestedFollowsHome() {
 
 	const allProfiles = useMemo(() => {
 		const result: Array<{
-			actor: bsky.profile.AnyProfileView;
+			actor: AnyProfileView;
 			recId?: string;
 		}> = [];
 
@@ -185,7 +183,7 @@ export function ProfileGrid({
 	onRequestHide,
 }: {
 	isSuggestionsLoading: boolean;
-	profiles: { actor: bsky.profile.AnyProfileView; recId?: string }[];
+	profiles: { actor: AnyProfileView; recId?: string }[];
 	recId?: string;
 	totalProfileCount?: number;
 	error: Error | null;
@@ -499,7 +497,10 @@ export function SuggestedFeeds() {
 							<FeedCard.Outer>
 								<FeedCard.Header>
 									<FeedCard.Avatar src={feed.avatar} />
-									<FeedCard.TitleAndByline title={feed.displayName} creator={feed.creator} />
+									<FeedCard.TitleAndByline
+										title={feed.displayName}
+										creator={feed.creator as AnyProfileView}
+									/>
 								</FeedCard.Header>
 								<FeedCard.Description description={feed.description} numberOfLines={3} />
 							</FeedCard.Outer>

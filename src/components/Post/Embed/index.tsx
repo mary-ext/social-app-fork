@@ -1,13 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import {
-	type $Typed,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AtUri,
-	moderatePost,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AnyProfileView, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
+import { type $type } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -32,8 +28,7 @@ import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 
-import * as bsky from '#/types/bsky';
-import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/bsky/post';
+import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ExternalEmbed } from './ExternalEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
@@ -87,7 +82,12 @@ function MediaEmbed({
 	switch (embed.type) {
 		case 'images': {
 			return (
-				<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+				<ContentHider
+					modui={
+						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
+					}
+					activeStyle={[a.mt_sm]}
+				>
 					<ImageEmbed embed={embed} {...rest} />
 				</ContentHider>
 			);
@@ -95,20 +95,37 @@ function MediaEmbed({
 		case 'link': {
 			if (isStandardSiteEmbed(embed.view.external)) {
 				return (
-					<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+					<ContentHider
+						modui={
+							rest.moderation
+								? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
+								: undefined
+						}
+						activeStyle={[a.mt_sm]}
+					>
 						<StandardSiteEmbed view={embed.view.external} style={[a.mt_sm, rest.style]} />
 					</ContentHider>
 				);
 			}
 			return (
-				<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+				<ContentHider
+					modui={
+						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
+					}
+					activeStyle={[a.mt_sm]}
+				>
 					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} style={[a.mt_sm, rest.style]} />
 				</ContentHider>
 			);
 		}
 		case 'video': {
 			return (
-				<ContentHider modui={rest.moderation?.ui('contentMedia')} activeStyle={[a.mt_sm]}>
+				<ContentHider
+					modui={
+						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
+					}
+					activeStyle={[a.mt_sm]}
+				>
 					<VideoEmbed embed={embed.view} />
 				</ContentHider>
 			);
@@ -218,13 +235,14 @@ export function QuoteEmbed({
 	linkDisabled?: boolean;
 }) {
 	const moderationOpts = useModerationOpts();
-	const quote = useMemo<$Typed<AppBskyFeedDefs.PostView>>(
-		() => ({
-			...embed.view,
-			$type: 'app.bsky.feed.defs#postView',
-			record: embed.view.value,
-			embed: embed.view.embeds?.[0],
-		}),
+	const quote = useMemo<$type.enforce<AppBskyFeedDefs.PostView>>(
+		() =>
+			({
+				...embed.view,
+				$type: 'app.bsky.feed.defs#postView',
+				record: embed.view.value,
+				embed: embed.view.embeds?.[0],
+			}) as unknown as $type.enforce<AppBskyFeedDefs.PostView>,
 		[embed],
 	);
 	const moderation = useMemo(() => {
@@ -233,19 +251,17 @@ export function QuoteEmbed({
 
 	const t = useTheme();
 	const queryClient = useQueryClient();
-	const itemUrip = new AtUri(quote.uri);
+	const itemUrip = parseCanonicalResourceUri(quote.uri);
 	const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey);
 	const itemTitle = `Post by ${quote.author.handle}`;
 
 	const richText = useMemo(() => {
-		if (!bsky.dangerousIsType<AppBskyFeedPost.Record>(quote.record, AppBskyFeedPost.isRecord))
-			return undefined;
-		const { text, facets } = quote.record;
-		return text.trim() ? new RichTextAPI({ text: text, facets: facets }) : undefined;
+		const { text, facets } = quote.record as AppBskyFeedPost.Main;
+		return text.trim() ? { text, facets } : undefined;
 	}, [quote.record]);
 
 	const onBeforePress = useCallback(() => {
-		unstableCacheProfileView(queryClient, quote.author);
+		unstableCacheProfileView(queryClient, quote.author as AnyProfileView);
 		onOpen?.();
 	}, [queryClient, quote.author, onOpen]);
 
@@ -255,14 +271,19 @@ export function QuoteEmbed({
 	const contents = (
 		<>
 			<PostMeta
-				author={quote.author}
+				author={quote.author as AnyProfileView}
 				moderation={moderation}
 				showAvatar
 				postHref={itemHref}
 				timestamp={quote.indexedAt}
 				linkDisabled
 			/>
-			{moderation ? <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} /> : null}
+			{moderation ? (
+				<PostAlerts
+					modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+					style={[a.py_xs]}
+				/>
+			) : null}
 			{richText ? <RichText value={richText} style={a.text_md} numberOfLines={20} disableLinks /> : null}
 			{quote.embed && (
 				<Embed
@@ -285,7 +306,7 @@ export function QuoteEmbed({
 				onPointerLeave={linkDisabled ? undefined : onPointerLeave}
 			>
 				<ContentHider
-					modui={moderation?.ui('contentList')}
+					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
 					style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
 					activeStyle={[a.p_md, a.pt_sm]}
 					childContainerStyle={[a.pt_sm]}

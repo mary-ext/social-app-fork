@@ -1,9 +1,8 @@
-import { type ChatBskyConvoGetLog } from '@atproto/api';
-
-import { type BskyAppAgent } from '#/state/session/agent';
+import { type ChatBskyConvoGetLog } from '@atcute/bluesky';
+import { type Client } from '@atcute/client';
 
 export type MessagesEventBusParams = {
-	agent: BskyAppAgent;
+	chat: Client;
 };
 
 export enum MessagesEventBusStatus {
@@ -66,5 +65,5 @@ export type MessagesEventBusEvent =
 	  }
 	| {
 			type: 'logs';
-			logs: ChatBskyConvoGetLog.OutputSchema['logs'];
+			logs: ChatBskyConvoGetLog.$output['logs'];
 	  };

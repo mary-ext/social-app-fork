@@ -16,13 +16,13 @@ import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { auth, type AuthSession } from '#/storage';
 
 import {
-	type BskyAppAgent,
-	createAgentAndFinalizeOAuth,
-	createAgentAndResume,
-	createOptimisticOAuthAgent,
-	createPublicAgent,
+	createGuestClients,
+	createOAuthSession,
 	InactiveAccountError,
+	optimisticOAuthSession,
+	resumeOAuthSession,
 } from './agent';
+import { type Clients } from './clients';
 import { IS_OAUTH_CALLBACK, startOAuthSignIn } from './oauth';
 
 export type { SessionAccount } from '#/state/session/types';
@@ -83,8 +83,12 @@ const StateContext = createContext<SessionStateContext>({
 });
 StateContext.displayName = 'SessionStateContext';
 
-const AgentContext = createContext<BskyAppAgent | null>(null);
-AgentContext.displayName = 'SessionAgentContext';
+const ClientsContext = createContext<Clients | null>(null);
+ClientsContext.displayName = 'SessionClientsContext';
+
+// Module-level mirror of the current clients, for the rare non-React caller.
+// Kept in sync by an effect in `Provider` below.
+let currentClients: Clients | null = null;
 
 const ApiContext = createContext<SessionApiContext>({
 	completeOAuthCallback: async () => {},
@@ -102,7 +106,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		? undefined
 		: boot.accounts.find((a) => a.did === boot.currentAccountDid);
 	const [accounts, setAccounts] = useState<SessionAccount[]>(boot.accounts);
-	const [agent, setAgent] = useState<BskyAppAgent>(createPublicAgent);
+	const [clients, setClients] = useState<Clients>(createGuestClients);
 	const [currentDid, setCurrentDid] = useState<string | undefined>(undefined);
 	const [status, setStatus] = useState<SessionBootStatus>(() => (bootAccount ? 'resuming' : 'idle'));
 
@@ -128,15 +132,15 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			}
 			settled = true;
 			writeSession({ accounts: boot.accounts, currentAccountDid: undefined });
-			setAgent(createPublicAgent());
+			setClients(createGuestClients());
 			setCurrentDid(undefined);
 			setStatus('failed');
 		};
 
 		const resume = async () => {
-			let resumedAgent: BskyAppAgent;
+			let resumed: { clients: Clients; validate: () => Promise<SessionAccount> };
 			try {
-				resumedAgent = await createOptimisticOAuthAgent(bootAccount);
+				resumed = await optimisticOAuthSession(bootAccount);
 			} catch (e) {
 				if (cancelled) {
 					return;
@@ -152,7 +156,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			}
 			// The agent is usable from the stored token — render now and validate
 			// the session against the server in the background.
-			setAgent(resumedAgent);
+			setClients(resumed.clients);
 			setCurrentDid(bootAccount.did);
 			setStatus('validating');
 
@@ -164,7 +168,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			});
 			try {
-				await resumedAgent.validateResumedSession();
+				await resumed.validate();
 			} catch (e) {
 				if (cancelled) {
 					return;
@@ -226,7 +230,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const completeOAuthCallback = useCallback<SessionApiContext['completeOAuthCallback']>(
 		async (params) => {
-			const { account } = await createAgentAndFinalizeOAuth(params);
+			const { account } = await createOAuthSession(params);
 			writeSession({
 				accounts: prependAccount(accounts, account),
 				currentAccountDid: account.did,
@@ -238,7 +242,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const switchAccount = useCallback<SessionApiContext['switchAccount']>(
 		async (account) => {
 			// Validate the stored session resolves before committing the switch.
-			await createAgentAndResume(account);
+			await resumeOAuthSession(account);
 			writeSession({
 				accounts: prependAccount(accounts, account),
 				currentAccountDid: account.did,
@@ -296,15 +300,17 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		[completeOAuthCallback, login, logoutCurrentAccount, logoutEveryAccount, removeAccount, switchAccount],
 	);
 
-	// @ts-expect-error window type is not declared, debug only
-	if (import.meta.env.DEV) window.agent = agent;
+	// Mirror the current clients to module scope so non-React callers can reach them.
+	useEffect(() => {
+		currentClients = clients;
+	}, [clients]);
 
 	return (
-		<AgentContext.Provider value={agent}>
+		<ClientsContext.Provider value={clients}>
 			<StateContext.Provider value={stateContext}>
 				<ApiContext.Provider value={api}>{children}</ApiContext.Provider>
 			</StateContext.Provider>
-		</AgentContext.Provider>
+		</ClientsContext.Provider>
 	);
 }
 
@@ -355,10 +361,30 @@ export function useRequireAuth() {
 	);
 }
 
-export function useAgent(): BskyAppAgent {
-	const agent = useContext(AgentContext);
-	if (!agent) {
-		throw Error('useAgent() must be below <SessionProvider>.');
+/**
+ * The `@atcute/client` clients for the current session. `pds` is `null` while logged out.
+ *
+ * @returns the session's clients.
+ * @throws if called outside `<SessionProvider>`.
+ */
+export function useClients(): Clients {
+	const clients = useContext(ClientsContext);
+	if (!clients) {
+		throw Error('useClients() must be below <SessionProvider>.');
 	}
-	return agent;
+	return clients;
+}
+
+/**
+ * The `@atcute/client` clients for the current session, for non-React callers. Prefer {@link useClients}
+ * inside components.
+ *
+ * @returns the session's clients.
+ * @throws if called before `<SessionProvider>` has mounted.
+ */
+export function getClients(): Clients {
+	if (!currentClients) {
+		throw Error('getClients() called before <SessionProvider> mounted.');
+	}
+	return currentClients;
 }

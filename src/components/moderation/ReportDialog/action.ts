@@ -1,8 +1,11 @@
-import { type $Typed, type ChatBskyConvoDefs, type ComAtprotoModerationCreateReport } from '@atproto/api';
+import type { ComAtprotoModerationCreateReport } from '@atcute/atproto';
+import { ok } from '@atcute/client';
+import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
+import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -12,10 +15,13 @@ import { type ParsedReportSubject } from './types';
 
 export function useSubmitReportMutation() {
 	const { t: l } = useLingui();
-	const agent = useAgent();
+	const { pds } = useClients();
 
 	return useMutation({
 		async mutationFn({ subject, state }: { subject: ParsedReportSubject; state: ReportState }) {
+			if (!pds) {
+				throw new Error(l`You must be signed in to submit a report`);
+			}
 			if (!state.selectedOption) {
 				throw new Error(l`Please select a reason for this report`);
 			}
@@ -40,11 +46,7 @@ export function useSubmitReportMutation() {
 				reasonType = backwardsCompatibleReasonType;
 			}
 
-			let report:
-				| ComAtprotoModerationCreateReport.InputSchema
-				| (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
-						subject: $Typed<ChatBskyConvoDefs.MessageRef>;
-				  });
+			let report: ComAtprotoModerationCreateReport.$input;
 
 			switch (subject.type) {
 				case 'account': {
@@ -53,7 +55,7 @@ export function useSubmitReportMutation() {
 						reason: state.details,
 						subject: {
 							$type: 'com.atproto.admin.defs#repoRef',
-							did: subject.did,
+							did: subject.did as Did,
 						},
 					};
 					break;
@@ -68,8 +70,8 @@ export function useSubmitReportMutation() {
 						reason: state.details,
 						subject: {
 							$type: 'com.atproto.repo.strongRef',
-							uri: subject.uri,
-							cid: subject.cid,
+							uri: subject.uri as ResourceUri,
+							cid: subject.cid as Cid,
 						},
 					};
 					break;
@@ -78,12 +80,14 @@ export function useSubmitReportMutation() {
 					report = {
 						reasonType,
 						reason: state.details,
+						// chat.bsky.convo.defs#messageRef is not in the createReport lexicon's
+						// subject union, but the chat moderation service accepts it
 						subject: {
 							$type: 'chat.bsky.convo.defs#messageRef',
 							messageId: subject.message.id,
 							convoId: subject.convoId,
 							did: subject.message.sender.did,
-						},
+						} as unknown as ComAtprotoModerationCreateReport.$input['subject'],
 					};
 					break;
 				}
@@ -97,12 +101,11 @@ export function useSubmitReportMutation() {
 					report,
 				});
 			} else {
-				await agent.createModerationReport(report, {
-					encoding: 'application/json',
-					headers: {
-						'atproto-proxy': `${labeler.creator.did}#atproto_labeler`,
-					},
+				// the report is funnelled to the selected labeler via the atproto-proxy header
+				const reportClient = pds.clone({
+					proxy: `${labeler.creator.did}#atproto_labeler` as AtprotoAudience,
 				});
+				await ok(reportClient.post('com.atproto.moderation.createReport', { input: report }));
 			}
 		},
 	});

@@ -1,6 +1,6 @@
 import { Fragment, useCallback } from 'react';
 import { Linking, View } from 'react-native';
-import { LABELS } from '@atproto/api';
+import { BUILTIN_LABELS } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
@@ -123,9 +123,10 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 
 	const subscribedDids = preferences.moderationPrefs.labelers.map((l) => l.did);
 	const returnedDids = new Set(labelers?.map((l) => l.creator.did));
-	const unavailableDids = subscribedDids.filter(
-		(did) => !returnedDids.has(did) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did),
-	);
+	const unavailableDids = subscribedDids.filter((did) => {
+		const branded = did as `did:${string}:${string}`;
+		return !returnedDids.has(branded) && !isAppLabeler(did) && !isNonConfigurableModerationAuthority(did);
+	});
 
 	const handleCleanup = async () => {
 		try {
@@ -304,13 +305,13 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 					{adultContentEnabled && (
 						<>
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS.porn} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS.porn!} />
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS.sexual} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS.sexual!} />
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS['graphic-media']} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS['graphic-media']!} />
 							<Divider />
-							<GlobalLabelPreference labelDefinition={LABELS.nudity} />
+							<GlobalLabelPreference labelDefinition={BUILTIN_LABELS.nudity!} />
 						</>
 					)}
 				</View>

@@ -1,7 +1,15 @@
-import { type AppBskyGraphGetLists, moderateUserList } from '@atproto/api';
+import { type AppBskyGraphGetLists } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateList,
+	ModerationCauseType,
+} from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 
@@ -14,24 +22,21 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did];
 export function useProfileListsQuery(did: string, opts?: { enabled?: boolean }) {
 	const moderationOpts = useModerationOpts();
 	const enabled = opts?.enabled !== false && Boolean(moderationOpts);
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyGraphGetLists.OutputSchema,
+		AppBskyGraphGetLists.$output,
 		Error,
-		InfiniteData<AppBskyGraphGetLists.OutputSchema>,
+		InfiniteData<AppBskyGraphGetLists.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		queryKey: RQKEY(did),
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.app.bsky.graph.getLists({
-				actor: did,
-				limit: PAGE_SIZE,
-				cursor: pageParam,
-			});
-
-			return res.data;
-		},
+		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
+			ok(
+				appview.get('app.bsky.graph.getLists', {
+					params: { actor: did as ActorIdentifier, cursor: pageParam, limit: PAGE_SIZE },
+				}),
+			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		enabled,
@@ -42,8 +47,10 @@ export function useProfileListsQuery(did: string, opts?: { enabled?: boolean }) 
 					return {
 						...page,
 						lists: page.lists.filter((list) => {
-							const decision = moderateUserList(list, moderationOpts!);
-							return !decision.ui('contentList').filters.some((cause) => cause.type !== 'muted');
+							const decision = moderateList(list, moderationOpts!);
+							return !getDisplayRestrictions(decision, DisplayContext.ContentList).filters.some(
+								(cause) => cause.type !== ModerationCauseType.MutedPermanent,
+							);
 						}),
 					};
 				}),

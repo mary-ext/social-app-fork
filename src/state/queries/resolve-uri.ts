@@ -1,9 +1,10 @@
-import { AtUri } from '@atproto/api';
+import { type Client, ok } from '@atcute/client';
+import { type Handle } from '@atcute/lexicons';
+import { isResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, queryOptions, useQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients } from '#/state/session';
 
 import { useUnstableProfileViewCache } from './profile';
 
@@ -11,7 +12,7 @@ const RQKEY_ROOT = 'resolved-did';
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle];
 
 const resolvedDidQueryOptions = (
-	agent: BskyAppAgent,
+	appview: Client,
 	getUnstableProfile: (did: string) => { did: string } | undefined,
 	didOrHandle: string | undefined,
 ) =>
@@ -23,8 +24,12 @@ const resolvedDidQueryOptions = (
 			// Just return the did if it's already one
 			if (didOrHandle.startsWith('did:')) return didOrHandle;
 
-			const res = await agent.resolveHandle({ handle: didOrHandle });
-			return res.data.did;
+			const res = await ok(
+				appview.get('com.atproto.identity.resolveHandle', {
+					params: { handle: didOrHandle as Handle },
+				}),
+			);
+			return res.did;
 		},
 		initialData: () => {
 			// Return undefined if no did or handle
@@ -36,26 +41,26 @@ const resolvedDidQueryOptions = (
 	});
 
 export function useResolveUriQuery(uri: string | undefined) {
-	const urip = new AtUri(uri || '');
-	const host = urip.host;
+	const urip = uri && isResourceUri(uri) ? parseResourceUri(uri) : undefined;
+	const host = urip?.repo;
 
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 
 	return useQuery({
-		...resolvedDidQueryOptions(agent, getUnstableProfile, host),
+		...resolvedDidQueryOptions(appview, getUnstableProfile, host),
 		select: (did) => ({
 			did,
-			uri: AtUri.make(did, urip.collection, urip.rkey).toString(),
+			uri: urip ? `at://${did}/${urip.collection}/${urip.rkey}` : '',
 		}),
 	});
 }
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 
-	return useQuery(resolvedDidQueryOptions(agent, getUnstableProfile, didOrHandle));
+	return useQuery(resolvedDidQueryOptions(appview, getUnstableProfile, didOrHandle));
 }
 
 export function precacheResolvedUri(queryClient: QueryClient, handle: string, did: string) {

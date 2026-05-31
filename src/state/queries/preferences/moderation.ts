@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { BskyAgent, DEFAULT_LABEL_SETTINGS, interpretLabelValueDefinitions } from '@atproto/api';
+import { interpretLabelerDefinition } from '@atcute/bluesky-moderation';
+
+import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
 
 import { isNonConfigurableModerationAuthority } from '#/state/session/additional-moderation-authorities';
 
@@ -18,7 +21,7 @@ export function useMyLabelersQuery({
 } = {}) {
 	const prefs = usePreferencesQuery();
 	let dids = Array.from(
-		new Set(BskyAgent.appLabelers.concat(prefs.data?.moderationPrefs.labelers.map((l) => l.did) || [])),
+		new Set(getAppLabelers().concat(prefs.data?.moderationPrefs.labelers.map((l) => l.did) || [])),
 	);
 	if (excludeNonConfigurableLabelers) {
 		dids = dids.filter((did) => !isNonConfigurableModerationAuthority(did));
@@ -41,10 +44,7 @@ export function useLabelDefinitionsQuery() {
 	return useMemo(() => {
 		return {
 			labelDefs: Object.fromEntries(
-				(labelers.data || []).map((labeler) => [
-					labeler.creator.did,
-					interpretLabelValueDefinitions(labeler),
-				]),
+				(labelers.data || []).map((labeler) => [labeler.creator.did, interpretLabelerDefinition(labeler)]),
 			),
 			labelers: labelers.data || [],
 		};

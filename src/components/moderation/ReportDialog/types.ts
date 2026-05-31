@@ -1,10 +1,6 @@
-import {
-	type $Typed,
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type ChatBskyConvoDefs,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type $type } from '@atcute/lexicons';
 
 import type * as Dialog from '#/components/Dialog';
 
@@ -15,14 +11,14 @@ export type ReportSubjectConvo = {
 };
 
 export type ReportSubject =
-	| $Typed<AppBskyActorDefs.ProfileViewBasic>
-	| $Typed<AppBskyActorDefs.ProfileView>
-	| $Typed<AppBskyActorDefs.ProfileViewDetailed>
-	| $Typed<AppBskyActorDefs.StatusView>
-	| $Typed<AppBskyGraphDefs.ListView>
-	| $Typed<AppBskyFeedDefs.GeneratorView>
-	| $Typed<AppBskyGraphDefs.StarterPackView>
-	| $Typed<AppBskyFeedDefs.PostView>
+	| $type.enforce<AppBskyActorDefs.ProfileViewBasic>
+	| $type.enforce<AppBskyActorDefs.ProfileView>
+	| $type.enforce<AppBskyActorDefs.ProfileViewDetailed>
+	| $type.enforce<AppBskyActorDefs.StatusView>
+	| $type.enforce<AppBskyGraphDefs.ListView>
+	| $type.enforce<AppBskyFeedDefs.GeneratorView>
+	| $type.enforce<AppBskyGraphDefs.StarterPackView>
+	| $type.enforce<AppBskyFeedDefs.PostView>
 	| ReportSubjectConvo;
 
 export type ParsedReportSubject =

@@ -1,12 +1,13 @@
 import { Keyboard, View } from 'react-native';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
+	DisplayContext,
+	type DisplayRestrictions,
+	getDisplayRestrictions,
 	moderateFeedGenerator,
 	moderateProfile,
-	type ModerationOpts,
-	type ModerationUI,
-} from '@atproto/api';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -26,8 +27,6 @@ import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Checkbox } from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 function WizardListCard({
 	type,
@@ -50,7 +49,7 @@ function WizardListCard({
 	avatar?: string;
 	included?: boolean;
 	disabled?: boolean;
-	moderationUi: ModerationUI;
+	moderationUi: DisplayRestrictions;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -115,8 +114,8 @@ export function WizardProfileCard({
 	btnType: 'checkbox' | 'remove';
 	state: WizardState;
 	dispatch: (action: WizardAction) => void;
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 }) {
 	const { currentAccount } = useSession();
 
@@ -125,7 +124,10 @@ export function WizardProfileCard({
 	const isTarget = profile.did === targetProfileDid;
 	const included = isTarget || state.profiles.some((p) => p.did === profile.did);
 	const disabled = isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1);
-	const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar');
+	const moderationUi = getDisplayRestrictions(
+		moderateProfile(profile, moderationOpts),
+		DisplayContext.ProfileMedia,
+	);
 	const displayName = profile.displayName
 		? sanitizeDisplayName(profile.displayName)
 		: `@${sanitizeHandle(profile.handle)}`;
@@ -169,12 +171,15 @@ export function WizardFeedCard({
 	generator: AppBskyFeedDefs.GeneratorView;
 	state: WizardState;
 	dispatch: (action: WizardAction) => void;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const isDiscover = generator.uri === DISCOVER_FEED_URI;
 	const included = isDiscover || state.feeds.some((f) => f.uri === generator.uri);
 	const disabled = isDiscover || (!included && state.feeds.length >= 3);
-	const moderationUi = moderateFeedGenerator(generator, moderationOpts).ui('avatar');
+	const moderationUi = getDisplayRestrictions(
+		moderateFeedGenerator(generator, moderationOpts),
+		DisplayContext.ProfileMedia,
+	);
 
 	const onPress = () => {
 		if (disabled) return;

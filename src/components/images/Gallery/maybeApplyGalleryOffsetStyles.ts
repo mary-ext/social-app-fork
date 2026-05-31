@@ -1,17 +1,9 @@
-import {
-	AppBskyEmbedImages,
-	AppBskyEmbedRecordWithMedia,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	type ModerationCause,
-	type ModerationUI,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { type DisplayRestrictions, type ModerationCause } from '@atcute/bluesky-moderation';
 
 import { unique } from '#/lib/moderation';
 
 import { type AppModerationCause } from '#/components/Pills';
-
-import * as bsky from '#/types/bsky';
 
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 10 };
 export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };
@@ -24,23 +16,18 @@ export function maybeApplyGalleryOffsetStyles(
 		additionalCauses,
 	}: {
 		post: AppBskyFeedDefs.PostView;
-		modui: ModerationUI;
+		modui: DisplayRestrictions;
 		additionalCauses?: ModerationCause[] | AppModerationCause[];
 	},
 ) {
-	if (!bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)) {
-		return;
-	}
+	const record = post.record as AppBskyFeedPost.Main;
 
 	/*
 	 * First check if we even have images
 	 */
-	const embed = post.record.embed;
-	const isImageEmbed =
-		embed && bsky.dangerousIsType<AppBskyEmbedImages.Main>(embed, AppBskyEmbedImages.isMain);
-	const isRecordWithMedia =
-		embed &&
-		bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.Main>(embed, AppBskyEmbedRecordWithMedia.isMain);
+	const embed = record.embed;
+	const isImageEmbed = embed?.$type === 'app.bsky.embed.images';
+	const isRecordWithMedia = embed?.$type === 'app.bsky.embed.recordWithMedia';
 	let hasImages = false;
 	if (isImageEmbed) {
 		// one image, not a gallery
@@ -48,7 +35,7 @@ export function maybeApplyGalleryOffsetStyles(
 		hasImages = true;
 	}
 	if (isRecordWithMedia) {
-		if (bsky.dangerousIsType<AppBskyEmbedImages.Main>(embed.media, AppBskyEmbedImages.isMain)) {
+		if (embed.media.$type === 'app.bsky.embed.images') {
 			// one image, not a gallery
 			if (embed.media.images.length === 1) return;
 		}
@@ -60,10 +47,10 @@ export function maybeApplyGalleryOffsetStyles(
 	 * Then check if we have any text
 	 */
 	let hasLabels = false;
-	if (modui.alert) {
+	if (modui.alerts.length > 0) {
 		hasLabels = modui.alerts.filter(unique).length > 0;
 	}
-	if (modui.inform) {
+	if (modui.informs.length > 0) {
 		hasLabels = hasLabels || modui.informs.filter(unique).length > 0;
 	}
 	if (additionalCauses?.length) {
@@ -73,7 +60,7 @@ export function maybeApplyGalleryOffsetStyles(
 	/*
 	 * If no text or labels, then we need a lil bump
 	 */
-	const shouldApplyOffset = !post.record.text && !hasLabels;
+	const shouldApplyOffset = !record.text && !hasLabels;
 
 	return shouldApplyOffset
 		? placement === 'meta'

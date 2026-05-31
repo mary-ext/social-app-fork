@@ -1,14 +1,6 @@
-import {
-	type AppBskyActorDefs,
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	type AtUri,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type ParsedResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey } from '@tanstack/react-query';
-
-import * as bsky from '#/types/bsky';
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
 	string,
@@ -69,32 +61,34 @@ export async function truncateAndInvalidate<T = unknown>(queryClient: QueryClien
 	return queryClient.invalidateQueries({ queryKey });
 }
 
-// Given an AtUri, this function will check if the AtUri matches a
-// hit regardless of whether the AtUri uses a DID or handle as a host.
+// Given a parsed at:// URI, this function will check if it matches a
+// hit regardless of whether the URI uses a DID or handle as the repo.
 //
-// AtUri should be the URI that is being searched for, while currentUri
-// is the URI that is being checked. currentAuthor is the author
-// of the currentUri that is being checked.
+// atUri should be the URI that is being searched for, while record.uri
+// is the URI that is being checked. record.author is the author of the
+// URI that is being checked.
 export function didOrHandleUriMatches(
-	atUri: AtUri,
+	atUri: ParsedResourceUri,
 	record: { uri: string; author: AppBskyActorDefs.ProfileViewBasic },
 ) {
-	if (atUri.host.startsWith('did:')) {
-		return atUri.href === record.uri;
+	if (atUri.rkey === undefined) {
+		return false;
 	}
-
-	return atUri.host === record.author.handle && record.uri.endsWith(atUri.rkey);
+	if (atUri.repo.startsWith('did:')) {
+		return `at://${atUri.repo}/${atUri.collection}/${atUri.rkey}` === record.uri;
+	}
+	return atUri.repo === record.author.handle && record.uri.endsWith(atUri.rkey);
 }
 
 export function getEmbeddedPost(v: unknown): AppBskyEmbedRecord.ViewRecord | undefined {
-	if (bsky.dangerousIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)) {
-		if (AppBskyEmbedRecord.isViewRecord(v.record) && AppBskyFeedPost.isRecord(v.record.value)) {
-			return v.record;
+	const embed = v as AppBskyFeedDefs.PostView['embed'];
+	if (embed?.$type === 'app.bsky.embed.record#view') {
+		if (embed.record.$type === 'app.bsky.embed.record#viewRecord') {
+			return embed.record;
 		}
-	}
-	if (bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.View>(v, AppBskyEmbedRecordWithMedia.isView)) {
-		if (AppBskyEmbedRecord.isViewRecord(v.record.record) && AppBskyFeedPost.isRecord(v.record.record.value)) {
-			return v.record.record;
+	} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
+		if (embed.record.record.$type === 'app.bsky.embed.record#viewRecord') {
+			return embed.record.record;
 		}
 	}
 }

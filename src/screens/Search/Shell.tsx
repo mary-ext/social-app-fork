@@ -1,5 +1,6 @@
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { type StyleProp, type TextInput, View, type ViewStyle } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,7 +25,6 @@ import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 
 import { account, useStorage } from '#/storage';
-import type * as bsky from '#/types/bsky';
 
 import { AutocompleteResults } from './components/AutocompleteResults';
 import { SearchHistory } from './components/SearchHistory';
@@ -123,7 +123,7 @@ export function SearchScreenShell({
 	);
 
 	const updateProfileHistory = useCallback(
-		(item: bsky.profile.AnyProfileView) => {
+		(item: AnyProfileView) => {
 			const newAccountHistory = [item.did, ...accountHistory.filter((p) => p !== item.did)].slice(0, 10);
 			setAccountHistory(newAccountHistory);
 		},
@@ -137,7 +137,7 @@ export function SearchScreenShell({
 		[termHistory, setTermHistory],
 	);
 	const deleteProfileHistoryItem = useCallback(
-		(item: bsky.profile.AnyProfileView) => {
+		(item: AnyProfileView) => {
 			setAccountHistory(accountHistory.filter((p) => p !== item.did));
 		},
 		[accountHistory, setAccountHistory],
@@ -224,7 +224,7 @@ export function SearchScreenShell({
 	);
 
 	const handleProfileClick = useCallback(
-		(profile: bsky.profile.AnyProfileView) => {
+		(profile: AnyProfileView) => {
 			unstableCacheProfileView(queryClient, profile);
 			// Slight delay to avoid updating during push nav animation.
 			setTimeout(() => {

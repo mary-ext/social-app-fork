@@ -1,7 +1,9 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
+import { type ComAtprotoLabelDefs } from '@atcute/atproto';
+import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -121,19 +123,19 @@ let ProfileHeaderShell = ({
 			playHaptic('Light');
 			liveStatusControl.open();
 		} else {
-			const modui = moderation.ui('avatar');
+			const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 			const avatar = profile.avatar;
 			const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi';
-			if (avatar && !(modui.blur && modui.noOverride)) {
+			if (avatar && !(modui.blurs.length > 0 && modui.noOverride)) {
 				_openLightbox(avatar, aviRef, type);
 			}
 		}
 	}, [profile, moderation, _openLightbox, aviRef, liveStatusControl, live, playHaptic]);
 
 	const onPressBanner = useCallback(() => {
-		const modui = moderation.ui('banner');
+		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 		const banner = profile.banner;
-		if (banner && !(modui.blur && modui.noOverride)) {
+		if (banner && !(modui.blurs.length > 0 && modui.noOverride)) {
 			_openLightbox(banner, bannerRef, 'image');
 		}
 	}, [profile.banner, moderation, _openLightbox, bannerRef]);
@@ -191,7 +193,7 @@ let ProfileHeaderShell = ({
 						<UserBanner
 							type={profile.associated?.labeler ? 'labeler' : 'default'}
 							banner={profile.banner}
-							moderation={moderation.ui('banner')}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 						/>
 					)}
 				</GrowableBanner>
@@ -201,7 +203,7 @@ let ProfileHeaderShell = ({
 				(isMe ? (
 					<LabelsOnMe
 						type="account"
-						labels={profile.labels}
+						labels={profile.labels as ComAtprotoLabelDefs.Label[] | undefined}
 						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
 					/>
 				) : (
@@ -236,7 +238,7 @@ let ProfileHeaderShell = ({
 								type={profile.associated?.labeler ? 'labeler' : 'user'}
 								size={live.isActive ? 88 : 90}
 								avatar={profile.avatar}
-								moderation={moderation.ui('avatar')}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								noBorder
 							/>
 							{live.isActive && <LiveIndicator size="large" />}
@@ -246,9 +248,18 @@ let ProfileHeaderShell = ({
 			</GrowableAvatar>
 			{live.isActive &&
 				(isMe ? (
-					<EditLiveDialog control={liveStatusControl} status={live} embed={live.embed} />
+					<EditLiveDialog
+						control={liveStatusControl}
+						status={live}
+						embed={live.embed as AppBskyEmbedExternal.View}
+					/>
 				) : (
-					<LiveStatusDialog control={liveStatusControl} status={live} embed={live.embed} profile={profile} />
+					<LiveStatusDialog
+						control={liveStatusControl}
+						status={live}
+						embed={live.embed as AppBskyEmbedExternal.View}
+						profile={profile}
+					/>
 				))}
 		</View>
 	);

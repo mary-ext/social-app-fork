@@ -1,4 +1,5 @@
-import { type AppBskyActorDefs, AppBskyGraphDefs, AtUri } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -47,15 +48,15 @@ export function MoreOptionsMenu({
 	const { mutateAsync: muteList } = useListMuteMutation();
 	const { mutateAsync: blockList } = useListBlockMutation();
 
-	const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST;
-	const isModList = list.purpose === AppBskyGraphDefs.MODLIST;
+	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
+	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
 	const isBlocking = !!list.viewer?.blocked;
 	const isMuting = !!list.viewer?.muted;
 	const isPinned = Boolean(savedFeedConfig?.pinned);
 	const isOwner = currentAccount?.did === list.creator.did;
 
 	const onPressShare = () => {
-		const { rkey } = new AtUri(list.uri);
+		const { rkey } = parseCanonicalResourceUri(list.uri);
 		const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`);
 		shareUrl(url);
 	};
@@ -229,10 +230,12 @@ export function MoreOptionsMenu({
 			/>
 			<ReportDialog
 				control={reportDialogControl}
-				subject={{
-					...list,
-					$type: 'app.bsky.graph.defs#listView',
-				}}
+				subject={
+					{
+						...list,
+						$type: 'app.bsky.graph.defs#listView',
+					} as unknown as Parameters<typeof ReportDialog>[0]['subject']
+				}
 			/>
 		</>
 	);

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type AppBskyActorDefs, type AppBskyNotificationDefs } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyNotificationDefs } from '@atcute/bluesky';
 import { type QueryClient } from '@tanstack/react-query';
 import { EventEmitter } from 'eventemitter3';
 
@@ -32,8 +32,6 @@ import { findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForExplore
 import { findAllProfilesInQueryData as findAllProfilesInSuggestedUsersForSeeMoreQueryData } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData } from '#/state/queries/usePostThread/queryCache';
 
-import type * as bsky from '#/types/bsky';
-
 import { castAsShadow, type Shadow } from './types';
 
 export type { Shadow } from './types';
@@ -47,10 +45,10 @@ export interface ProfileShadow {
 	activitySubscription: AppBskyNotificationDefs.ActivitySubscription | undefined;
 }
 
-const shadows: WeakMap<bsky.profile.AnyProfileView, Partial<ProfileShadow>> = new WeakMap();
+const shadows: WeakMap<AnyProfileView, Partial<ProfileShadow>> = new WeakMap();
 const emitter = new EventEmitter();
 
-export function useProfileShadow<TProfileView extends bsky.profile.AnyProfileView>(
+export function useProfileShadow<TProfileView extends AnyProfileView>(
 	profile: TProfileView,
 ): Shadow<TProfileView> {
 	const [shadow, setShadow] = useState(() => shadows.get(profile));
@@ -83,7 +81,7 @@ export function useProfileShadow<TProfileView extends bsky.profile.AnyProfileVie
  * Same as useProfileShadow, but allows for the profile to be undefined. This is useful for when the profile
  * is not guaranteed to be loaded yet.
  */
-export function useMaybeProfileShadow<TProfileView extends bsky.profile.AnyProfileView>(
+export function useMaybeProfileShadow<TProfileView extends AnyProfileView>(
 	profile?: TProfileView,
 ): Shadow<TProfileView> | undefined {
 	const [shadow, setShadow] = useState(() => (profile ? shadows.get(profile) : undefined));
@@ -196,7 +194,7 @@ export function updateProfileShadow(queryClient: QueryClient, did: string, value
 	});
 }
 
-function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
+function mergeShadow<TProfileView extends AnyProfileView>(
 	profile: TProfileView,
 	shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
@@ -215,10 +213,7 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
 	});
 }
 
-function* findProfilesInCache(
-	queryClient: QueryClient,
-	did: string,
-): Generator<bsky.profile.AnyProfileView, void> {
+function* findProfilesInCache(queryClient: QueryClient, did: string): Generator<AnyProfileView, void> {
 	yield* findAllProfilesInListMembersQueryData(queryClient, did);
 	yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did);
 	yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did);

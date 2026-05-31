@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { useVerificationsRemoveMutation } from '#/state/queries/verification/useVerificationsRemoveMutation';
@@ -10,8 +10,6 @@ import { type DialogControlProps } from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 export { useDialogControl as usePromptControl } from '#/components/Dialog';
 
 export function VerificationRemovePrompt({
@@ -21,7 +19,7 @@ export function VerificationRemovePrompt({
 	onConfirm: onConfirmInner,
 }: {
 	control: DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	verifications: AppBskyActorDefs.VerificationView[];
 	onConfirm?: () => void;
 }) {

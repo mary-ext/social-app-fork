@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyEmbedExternal, moderateStatus } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -29,7 +30,6 @@ import { Text } from '#/components/Typography';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { Image } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export function LiveStatusDialog({
 	control,
@@ -38,7 +38,7 @@ export function LiveStatusDialog({
 	status,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	status: AppBskyActorDefs.StatusView;
 	embed: AppBskyEmbedExternal.View;
 }) {
@@ -57,7 +57,7 @@ function DialogInner({
 	navigation,
 	status,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	embed: AppBskyEmbedExternal.View;
 	navigation: NavigationProp;
 	status: AppBskyActorDefs.StatusView;
@@ -93,7 +93,7 @@ export function LiveStatus({
 	onPressOpenProfile,
 }: {
 	status: AppBskyActorDefs.StatusView;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	embed: AppBskyEmbedExternal.View;
 	padding?: 'lg' | 'xl';
 	onPressOpenProfile: () => void;
@@ -113,7 +113,7 @@ export function LiveStatus({
 	return (
 		<>
 			{embed.external.thumb && (
-				<Hider.Outer modui={moderation?.ui('contentMedia')}>
+				<Hider.Outer modui={moderation && getDisplayRestrictions(moderation, DisplayContext.ContentMedia)}>
 					<Hider.Mask>
 						<ModeratedImage />
 					</Hider.Mask>

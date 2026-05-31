@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 
 export type PostViewLogContext =
 	| 'FeedItem'

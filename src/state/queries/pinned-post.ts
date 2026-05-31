@@ -1,3 +1,5 @@
+import { ok } from '@atcute/client';
+import { type ActorIdentifier, type ResourceUri } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -8,13 +10,13 @@ import { logger } from '#/logger';
 import * as Toast from '#/components/Toast';
 
 import { updatePostShadow } from '../cache/post-shadow';
-import { useAgent, useSession } from '../session';
+import { useClients, useSession } from '../session';
 import { useProfileUpdateMutation } from './profile';
 
 export function usePinnedPostMutation() {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const { mutateAsync: profileUpdateMutate } = useProfileUpdateMutation();
 
@@ -35,9 +37,11 @@ export function usePinnedPostMutation() {
 
 				// get the currently pinned post so we can optimistically remove the pin from it
 				if (!currentAccount) throw new Error('Not signed in');
-				const { data: profile } = await agent.getProfile({
-					actor: currentAccount.did,
-				});
+				const profile = await ok(
+					appview.get('app.bsky.actor.getProfile', {
+						params: { actor: currentAccount.did as ActorIdentifier },
+					}),
+				);
 				prevPinnedPost = profile.pinnedPost?.uri;
 				if (prevPinnedPost && prevPinnedPost !== postUri) {
 					updatePostShadow(queryClient, prevPinnedPost, { pinned: false });
@@ -46,11 +50,10 @@ export function usePinnedPostMutation() {
 				await profileUpdateMutate({
 					profile,
 					updates: (existing) => {
-						existing.pinnedPost = pinCurrentPost ? { uri: postUri, cid: postCid } : undefined;
+						existing.pinnedPost = pinCurrentPost ? { uri: postUri as ResourceUri, cid: postCid } : undefined;
 						return existing;
 					},
-					checkCommitted: (res) =>
-						pinCurrentPost ? res.data.pinnedPost?.uri === postUri : !res.data.pinnedPost,
+					checkCommitted: (res) => (pinCurrentPost ? res.pinnedPost?.uri === postUri : !res.pinnedPost),
 				});
 
 				if (pinCurrentPost) {

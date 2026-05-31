@@ -1,19 +1,20 @@
 import {
-	type $Typed,
 	type AppBskyEmbedRecord,
 	type ChatBskyActorDefs,
 	type ChatBskyConvoDefs,
 	type ChatBskyConvoSendMessage,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type Client } from '@atcute/client';
+import { type $type, type Did } from '@atcute/lexicons';
 
 import { type MessagesEventBus } from '#/state/messages/events/agent';
-import { type BskyAppAgent } from '#/state/session/agent';
 
 import { type ConvoWithDetails } from '#/components/dms/util';
 
 export type ConvoParams = {
 	convoId: string;
-	agent: BskyAppAgent;
+	chat: Client;
+	currentDid: Did;
 	events: MessagesEventBus;
 	placeholderData?: {
 		convo: ChatBskyConvoDefs.ConvoView;
@@ -100,8 +101,8 @@ export type ConvoItem =
 
 type DeleteMessage = (messageId: string) => Promise<void>;
 type SendMessage = (
-	message: ChatBskyConvoSendMessage.InputSchema['message'],
-	optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>,
+	message: ChatBskyConvoSendMessage.$input['message'],
+	optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>,
 ) => void;
 type FetchMessageHistory = () => Promise<void>;
 type MarkConvoAccepted = () => void;

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { type AppBskyUnspeccedGetPostThreadV2 } from '@atproto/api';
+import { type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { useFocusEffect } from '@react-navigation/native';
 import debounce from 'lodash.debounce';
 
@@ -12,7 +12,7 @@ import { logger } from '#/logger';
 
 import { type Literal } from '#/types/utils';
 
-export type ThreadSortOption = Literal<AppBskyUnspeccedGetPostThreadV2.QueryParams['sort'], string>;
+export type ThreadSortOption = Literal<AppBskyUnspeccedGetPostThreadV2.$params['sort'], string>;
 export type ThreadViewOption = 'linear' | 'tree';
 export type ThreadPreferences = {
 	isLoaded: boolean;

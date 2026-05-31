@@ -10,10 +10,11 @@ declare module 'react-native-web' {
 declare const _WORKLET: boolean | undefined;
 
 interface ImportMetaEnv {
-	PUBLIC_BLUESKY_PROXY_DID?: string;
+	PUBLIC_APPVIEW_PROXY_AUDIENCE: string;
+	PUBLIC_BSKY_LABELER_PROXY_AUDIENCE: string;
 	PUBLIC_BUNDLE_DATE?: string;
 	PUBLIC_BUNDLE_IDENTIFIER?: string;
-	PUBLIC_CHAT_PROXY_DID?: string;
+	PUBLIC_CHAT_PROXY_AUDIENCE: string;
 	PUBLIC_ENV?: string;
 	PUBLIC_LOG_DEBUG?: string;
 	PUBLIC_LOG_LEVEL?: string;
@@ -23,4 +24,5 @@ interface ImportMetaEnv {
 	PUBLIC_RELEASE_VERSION?: string;
 	PUBLIC_SLINGSHOT_SERVICE_URL: string;
 	PUBLIC_SOURCE_CODE_URL: string;
+	PUBLIC_VIDEO_PROXY_DID: string;
 }

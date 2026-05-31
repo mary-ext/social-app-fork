@@ -1,13 +1,8 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import {
-	type AppBskyActorDefs,
-	AppBskyEmbedVideo,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AtUri,
-	type ModerationDecision,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -31,7 +26,6 @@ import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
 import { LinearGradient } from '#/shims/linear-gradient';
-import * as bsky from '#/types/bsky';
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
 	return select(t.name, {
@@ -56,11 +50,11 @@ export function VideoPostCard({
 	const embed = post.embed;
 	const { state: pressed, onIn: onPressIn, onOut: onPressOut } = useInteractionState();
 
-	const listModUi = moderation.ui('contentList');
+	const listModUi = getDisplayRestrictions(moderation, DisplayContext.ContentList);
 
 	const mergedModui = useMemo(() => {
-		const modui = moderation.ui('contentList');
-		const mediaModui = moderation.ui('contentMedia');
+		const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+		const mediaModui = getDisplayRestrictions(moderation, DisplayContext.ContentMedia);
 		modui.alerts = [...modui.alerts, ...mediaModui.alerts];
 		modui.blurs = [...modui.blurs, ...mediaModui.blurs];
 		modui.filters = [...modui.filters, ...mediaModui.filters];
@@ -72,12 +66,10 @@ export function VideoPostCard({
 	 * Filtering should be done at a higher level, such as `PostFeed` or `PostFeedVideoGridRow`, but we need to
 	 * protect here as well.
 	 */
-	if (!AppBskyEmbedVideo.isView(embed)) return null;
+	if (!(embed?.$type === 'app.bsky.embed.video#view')) return null;
 
 	const author = post.author;
-	const text = bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)
-		? post.record?.text
-		: '';
+	const text = (post.record as AppBskyFeedPost.Main).text;
 	const likeCount = post?.likeCount ?? 0;
 	const repostCount = post?.repostCount ?? 0;
 	const { thumbnail } = embed;
@@ -106,7 +98,7 @@ export function VideoPostCard({
 		<Link
 			accessibilityHint={l`Views video in immersive mode`}
 			label={l`Video from ${author.handle}: ${text}`}
-			to={makeProfileLink(author, 'post', new AtUri(post.uri).rkey)}
+			to={makeProfileLink(author, 'post', parseCanonicalResourceUri(post.uri).rkey)}
 			onPress={() => {
 				onInteract?.();
 			}}
@@ -159,7 +151,7 @@ export function VideoPostCard({
 							</View>
 						</View>
 					</View>
-					{listModUi.blur ? <VideoPostCardTextPlaceholder author={post.author} /> : textAndAuthor}
+					{listModUi.blurs.length > 0 ? <VideoPostCardTextPlaceholder author={post.author} /> : textAndAuthor}
 				</Hider.Mask>
 				<Hider.Content>
 					<View
@@ -335,8 +327,8 @@ export function CompactVideoPostCard({
 	const { state: pressed, onIn: onPressIn, onOut: onPressOut } = useInteractionState();
 
 	const mergedModui = useMemo(() => {
-		const modui = moderation.ui('contentList');
-		const mediaModui = moderation.ui('contentMedia');
+		const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+		const mediaModui = getDisplayRestrictions(moderation, DisplayContext.ContentMedia);
 		modui.alerts = [...modui.alerts, ...mediaModui.alerts];
 		modui.blurs = [...modui.blurs, ...mediaModui.blurs];
 		modui.filters = [...modui.filters, ...mediaModui.filters];
@@ -348,7 +340,7 @@ export function CompactVideoPostCard({
 	 * Filtering should be done at a higher level, such as `PostFeed` or `PostFeedVideoGridRow`, but we need to
 	 * protect here as well.
 	 */
-	if (!AppBskyEmbedVideo.isView(embed)) return null;
+	if (!(embed?.$type === 'app.bsky.embed.video#view')) return null;
 
 	const likeCount = post?.likeCount ?? 0;
 	const showLikeCount = false;
@@ -358,7 +350,7 @@ export function CompactVideoPostCard({
 	return (
 		<Link
 			label={l`View video`}
-			to={makeProfileLink(post.author, 'post', new AtUri(post.uri).rkey)}
+			to={makeProfileLink(post.author, 'post', parseCanonicalResourceUri(post.uri).rkey)}
 			onPress={() => {
 				onInteract?.();
 			}}

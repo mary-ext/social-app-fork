@@ -1,5 +1,6 @@
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, type AppBskyGraphStarterpack, AtUri } from '@atproto/api';
+import { type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -36,7 +37,7 @@ export function CreateListFromStarterPackDialog({
 	const createDialogControl = Dialog.useDialogControl();
 	const loadingDialogControl = Dialog.useDialogControl();
 
-	const record = starterPack.record as AppBskyGraphStarterpack.Record;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	const onPressCreate = () => {
 		control.close(() => createDialogControl.open());
@@ -44,9 +45,9 @@ export function CreateListFromStarterPackDialog({
 
 	const addMembersAndNavigate = async (listUri: string) => {
 		const navigateToList = () => {
-			const urip = new AtUri(listUri);
+			const urip = parseCanonicalResourceUri(listUri);
 			navigation.navigate('ProfileList', {
-				name: urip.hostname,
+				name: urip.repo,
 				rkey: urip.rkey,
 			});
 		};

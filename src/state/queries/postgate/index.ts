@@ -1,13 +1,11 @@
 import { useRef } from 'react';
-import {
-	AppBskyEmbedRecord,
-	AppBskyEmbedRecordWithMedia,
-	type AppBskyFeedDefs,
-	AppBskyFeedPostgate,
-	AtUri,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { getRecord, putRecord } from '#/lib/api/records';
 import { networkRetry, retry } from '#/lib/async/retry';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
@@ -19,32 +17,33 @@ import {
 	mergePostgateRecords,
 	POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import * as bsky from '#/types/bsky';
-
 export async function getPostgateRecord({
-	agent,
+	appview,
+	pds,
 	postUri,
 }: {
-	agent: BskyAppAgent;
+	appview: Client;
+	pds: Client;
 	postUri: string;
-}): Promise<AppBskyFeedPostgate.Record | undefined> {
-	const urip = new AtUri(postUri);
+}): Promise<AppBskyFeedPostgate.Main | undefined> {
+	const urip = parseResourceUri(postUri);
 
-	if (!urip.host.startsWith('did:')) {
-		const res = await agent.resolveHandle({
-			handle: urip.host,
-		});
-		// @ts-expect-error TODO new-sdk-migration
-		urip.host = res.data.did;
+	let repo: string = urip.repo;
+	if (!repo.startsWith('did:')) {
+		const resolved = await ok(
+			appview.get('com.atproto.identity.resolveHandle', {
+				params: { handle: repo as Handle },
+			}),
+		);
+		repo = resolved.did;
 	}
 
 	try {
-		const { data } = await retry(
+		const data = await retry(
 			2,
 			(e) => {
 				/*
@@ -58,18 +57,14 @@ export async function getPostgateRecord({
 				return true;
 			},
 			() =>
-				agent.api.com.atproto.repo.getRecord({
-					repo: urip.host,
+				getRecord(pds, {
 					collection: POSTGATE_COLLECTION,
-					rkey: urip.rkey,
+					repo: repo as Did,
+					rkey: urip.rkey!,
 				}),
 		);
 
-		if (data.value && bsky.validate(data.value, AppBskyFeedPostgate.validateRecord)) {
-			return data.value;
-		} else {
-			return undefined;
-		}
+		return data.value ?? undefined;
 	} catch (e) {
 		/*
 		 * If the record doesn't exist, we want to return null instead of
@@ -85,46 +80,52 @@ export async function getPostgateRecord({
 }
 
 export async function writePostgateRecord({
-	agent,
+	did,
+	pds,
 	postUri,
 	postgate,
 }: {
-	agent: BskyAppAgent;
+	did: Did;
+	pds: Client;
 	postUri: string;
-	postgate: AppBskyFeedPostgate.Record;
+	postgate: AppBskyFeedPostgate.Main;
 }) {
-	const postUrip = new AtUri(postUri);
+	const postUrip = parseResourceUri(postUri);
 
 	await networkRetry(2, () =>
-		agent.api.com.atproto.repo.putRecord({
-			repo: agent.session!.did,
+		putRecord(pds, {
 			collection: POSTGATE_COLLECTION,
-			rkey: postUrip.rkey,
 			record: postgate,
+			repo: did,
+			rkey: postUrip.rkey!,
 		}),
 	);
 }
 
 export async function upsertPostgate(
 	{
-		agent,
+		appview,
+		did,
+		pds,
 		postUri,
 	}: {
-		agent: BskyAppAgent;
+		appview: Client;
+		did: Did;
+		pds: Client;
 		postUri: string;
 	},
-	callback: (
-		postgate: AppBskyFeedPostgate.Record | undefined,
-	) => Promise<AppBskyFeedPostgate.Record | undefined>,
+	callback: (postgate: AppBskyFeedPostgate.Main | undefined) => Promise<AppBskyFeedPostgate.Main | undefined>,
 ) {
 	const prev = await getPostgateRecord({
-		agent,
+		appview,
+		pds,
 		postUri,
 	});
 	const next = await callback(prev);
 	if (!next) return;
 	await writePostgateRecord({
-		agent,
+		did,
+		pds,
 		postUri,
 		postgate: next,
 	});
@@ -132,23 +133,25 @@ export async function upsertPostgate(
 
 export const createPostgateQueryKey = (postUri: string) => ['postgate-record', postUri];
 export function usePostgateQuery({ postUri }: { postUri: string }) {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	return useQuery({
 		staleTime: STALE.SECONDS.THIRTY,
 		queryKey: createPostgateQueryKey(postUri),
 		async queryFn() {
-			return await getPostgateRecord({ agent, postUri }).then((res) => res ?? null);
+			return await getPostgateRecord({ appview, pds: pds!, postUri }).then((res) => res ?? null);
 		},
 	});
 }
 
 export function useWritePostgateMutation() {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: async ({ postUri, postgate }: { postUri: string; postgate: AppBskyFeedPostgate.Record }) => {
+		mutationFn: async ({ postUri, postgate }: { postUri: string; postgate: AppBskyFeedPostgate.Main }) => {
 			return writePostgateRecord({
-				agent,
+				did: currentAccount!.did as Did,
+				pds: pds!,
 				postUri,
 				postgate,
 			});
@@ -162,7 +165,8 @@ export function useWritePostgateMutation() {
 }
 
 export function useToggleQuoteDetachmentMutation() {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const getPosts = useGetPosts();
 	const prevEmbed = useRef<AppBskyFeedDefs.PostView['embed']>(undefined);
@@ -191,27 +195,30 @@ export function useToggleQuoteDetachmentMutation() {
 				});
 			}
 
-			await upsertPostgate({ agent, postUri: quoteUri }, async (prev) => {
-				if (prev) {
-					if (action === 'detach') {
-						return mergePostgateRecords(prev, {
-							detachedEmbeddingUris: [post.uri],
-						});
-					} else if (action === 'reattach') {
-						return {
-							...prev,
-							detachedEmbeddingUris: prev.detachedEmbeddingUris?.filter((uri) => uri !== post.uri) || [],
-						};
+			await upsertPostgate(
+				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri: quoteUri },
+				async (prev) => {
+					if (prev) {
+						if (action === 'detach') {
+							return mergePostgateRecords(prev, {
+								detachedEmbeddingUris: [post.uri],
+							});
+						} else if (action === 'reattach') {
+							return {
+								...prev,
+								detachedEmbeddingUris: prev.detachedEmbeddingUris?.filter((uri) => uri !== post.uri) || [],
+							};
+						}
+					} else {
+						if (action === 'detach') {
+							return createPostgateRecord({
+								post: quoteUri as ResourceUri,
+								detachedEmbeddingUris: [post.uri],
+							});
+						}
 					}
-				} else {
-					if (action === 'detach') {
-						return createPostgateRecord({
-							post: quoteUri,
-							detachedEmbeddingUris: [post.uri],
-						});
-					}
-				}
-			});
+				},
+			);
 		},
 		async onSuccess(_data, { post, quoteUri, action }) {
 			if (action === 'reattach') {
@@ -237,8 +244,8 @@ export function useToggleQuoteDetachmentMutation() {
 			if (action === 'detach' && prevEmbed.current) {
 				// detach failed, add the embed back
 				if (
-					AppBskyEmbedRecord.isView(prevEmbed.current) ||
-					AppBskyEmbedRecordWithMedia.isView(prevEmbed.current)
+					prevEmbed.current?.$type === 'app.bsky.embed.record#view' ||
+					prevEmbed.current?.$type === 'app.bsky.embed.recordWithMedia#view'
 				) {
 					updatePostShadow(queryClient, post.uri, {
 						embed: prevEmbed.current,
@@ -253,31 +260,35 @@ export function useToggleQuoteDetachmentMutation() {
 }
 
 export function useToggleQuotepostEnabledMutation() {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 
 	return useMutation({
 		mutationFn: async ({ postUri, action }: { postUri: string; action: 'enable' | 'disable' }) => {
-			await upsertPostgate({ agent, postUri: postUri }, async (prev) => {
-				if (prev) {
-					if (action === 'disable') {
-						return mergePostgateRecords(prev, {
-							embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
-						});
-					} else if (action === 'enable') {
-						return {
-							...prev,
-							embeddingRules: [],
-						};
+			await upsertPostgate(
+				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
+				async (prev) => {
+					if (prev) {
+						if (action === 'disable') {
+							return mergePostgateRecords(prev, {
+								embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
+							});
+						} else if (action === 'enable') {
+							return {
+								...prev,
+								embeddingRules: [],
+							};
+						}
+					} else {
+						if (action === 'disable') {
+							return createPostgateRecord({
+								post: postUri as ResourceUri,
+								embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
+							});
+						}
 					}
-				} else {
-					if (action === 'disable') {
-						return createPostgateRecord({
-							post: postUri,
-							embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
-						});
-					}
-				}
-			});
+				},
+			);
 		},
 	});
 }

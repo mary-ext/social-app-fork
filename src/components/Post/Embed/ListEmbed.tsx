@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { moderateUserList } from '@atproto/api';
+import { DisplayContext, getDisplayRestrictions, moderateList } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
@@ -8,7 +8,7 @@ import { atoms as a, useTheme } from '#/alf';
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import { type EmbedType } from '#/types/bsky/post';
+import { type EmbedType } from '#/types/embed';
 
 import { type CommonProps } from './types';
 
@@ -33,10 +33,13 @@ export function ModeratedListEmbed({
 }) {
 	const moderationOpts = useModerationOpts();
 	const moderation = useMemo(() => {
-		return moderationOpts ? moderateUserList(embed.view, moderationOpts) : undefined;
+		return moderationOpts ? moderateList(embed.view, moderationOpts) : undefined;
 	}, [embed.view, moderationOpts]);
 	return (
-		<ContentHider modui={moderation?.ui('contentList')} childContainerStyle={[a.pt_xs]}>
+		<ContentHider
+			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
+			childContainerStyle={[a.pt_xs]}
+		>
 			<ListEmbed embed={embed} />
 		</ContentHider>
 	);

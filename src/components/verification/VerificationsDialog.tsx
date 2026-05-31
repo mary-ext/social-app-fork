@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -23,8 +23,6 @@ import { Text } from '#/components/Typography';
 import { type FullVerificationState } from '#/components/verification';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 
-import type * as bsky from '#/types/bsky';
-
 export { useDialogControl } from '#/components/Dialog';
 
 export function VerificationsDialog({
@@ -33,7 +31,7 @@ export function VerificationsDialog({
 	verificationState,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	verificationState: FullVerificationState;
 }) {
 	return (
@@ -50,7 +48,7 @@ function Inner({
 	verificationState: state,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	verificationState: FullVerificationState;
 }) {
 	const t = useTheme();
@@ -154,7 +152,7 @@ function VerifierCard({
 	outerDialogControl,
 }: {
 	verification: AppBskyActorDefs.VerificationView;
-	subject: bsky.profile.AnyProfileView;
+	subject: AnyProfileView;
 	outerDialogControl: Dialog.DialogControlProps;
 }) {
 	const t = useTheme();

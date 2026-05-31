@@ -1,8 +1,10 @@
-import { type AppBskyActorDefs, type AppBskyGraphGetFollows } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyGraphGetFollows } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 const PAGE_SIZE = 30;
 type RQPageParam = string | undefined;
@@ -21,23 +23,26 @@ export function useProfileFollowsQuery(
 		limit: PAGE_SIZE,
 	},
 ) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyGraphGetFollows.OutputSchema,
+		AppBskyGraphGetFollows.$output,
 		Error,
-		InfiniteData<AppBskyGraphGetFollows.OutputSchema>,
+		InfiniteData<AppBskyGraphGetFollows.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(did || ''),
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.app.bsky.graph.getFollows({
-				actor: did || '',
-				limit: limit || PAGE_SIZE,
-				cursor: pageParam,
-			});
-			return res.data;
+			return await ok(
+				appview.get('app.bsky.graph.getFollows', {
+					params: {
+						actor: (did || '') as ActorIdentifier,
+						cursor: pageParam,
+						limit: limit || PAGE_SIZE,
+					},
+				}),
+			);
 		},
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
@@ -49,7 +54,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetFollows.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyGraphGetFollows.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

@@ -1,5 +1,5 @@
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { isGifEmbed } from '#/lib/strings/embed-player';
@@ -11,7 +11,7 @@ import { Text } from '#/components/Typography';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
 import { Image } from '#/shims/image';
-import * as bsky from '#/types/bsky';
+import { parseEmbed } from '#/types/embed';
 
 /** Streamlined MediaPreview component which just handles images, gifs, and videos */
 export function Embed({
@@ -21,7 +21,7 @@ export function Embed({
 	embed: AppBskyFeedDefs.PostView['embed'];
 	style?: StyleProp<ViewStyle>;
 }) {
-	const e = bsky.post.parseEmbed(embed);
+	const e = parseEmbed(embed);
 
 	if (!e) return null;
 
@@ -58,7 +58,7 @@ export function Embed({
 		// ignore any unknowns
 		e.media.view !== null
 	) {
-		return <Embed embed={e.media.view} style={style} />;
+		return <Embed embed={e.media.view as unknown as AppBskyFeedDefs.PostView['embed']} style={style} />;
 	}
 
 	return null;

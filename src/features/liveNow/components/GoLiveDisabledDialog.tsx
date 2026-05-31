@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, ToolsOzoneReportDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import type { Cid, ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
-import { BLUESKY_MOD_SERVICE_HEADERS } from '#/lib/constants';
+import { OzoneReason } from '#/lib/moderation/report-reasons';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -17,6 +19,8 @@ import * as Dialog from '#/components/Dialog';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+
+import { BSKY_LABELER_PROXY_AUDIENCE } from '#/env';
 
 export function GoLiveDisabledDialog({
 	control,
@@ -41,12 +45,12 @@ export function DialogInner({
 	status: AppBskyActorDefs.StatusView;
 }) {
 	const { t: l } = useLingui();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const [details, setDetails] = useState('');
 
 	const { mutate, isPending } = useMutation({
 		mutationFn: async () => {
-			if (!agent.session?.did) {
+			if (!pds) {
 				throw new Error('Not logged in');
 			}
 			if (!status.uri || !status.cid) {
@@ -58,20 +62,19 @@ export function DialogInner({
 					details,
 				});
 			} else {
-				await agent.createModerationReport(
-					{
-						reasonType: ToolsOzoneReportDefs.REASONAPPEAL,
-						subject: {
-							$type: 'com.atproto.repo.strongRef',
-							uri: status.uri,
-							cid: status.cid,
+				// appeals to the default Bluesky labeler funnel through the atproto-proxy header
+				await ok(
+					pds.clone({ proxy: BSKY_LABELER_PROXY_AUDIENCE }).post('com.atproto.moderation.createReport', {
+						input: {
+							reasonType: OzoneReason.REASONAPPEAL,
+							subject: {
+								$type: 'com.atproto.repo.strongRef',
+								uri: status.uri as ResourceUri,
+								cid: status.cid as Cid,
+							},
+							reason: details,
 						},
-						reason: details,
-					},
-					{
-						encoding: 'application/json',
-						headers: BLUESKY_MOD_SERVICE_HEADERS,
-					},
+					}),
 				);
 			}
 		},

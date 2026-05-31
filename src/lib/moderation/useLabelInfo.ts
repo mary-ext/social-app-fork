@@ -1,10 +1,12 @@
+import { type ComAtprotoLabelDefs } from '@atcute/atproto';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
-	type AppBskyLabelerDefs,
-	type ComAtprotoLabelDefs,
-	type InterpretedLabelValueDefinition,
+	BUILTIN_LABELS,
+	type InterpretedLabelDefinition,
+	type InterpretedLabelMapping,
 	interpretLabelValueDefinition,
-	LABELS,
-} from '@atproto/api';
+	type LabelLocale,
+} from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react';
 import * as bcp47Match from 'bcp-47-match';
 
@@ -14,8 +16,8 @@ import { useLabelDefinitions } from '#/state/preferences';
 
 export interface LabelInfo {
 	label: ComAtprotoLabelDefs.Label;
-	def: InterpretedLabelValueDefinition;
-	strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings;
+	def: InterpretedLabelDefinition;
+	strings: LabelLocale;
 	labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined;
 }
 
@@ -33,58 +35,51 @@ export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
 }
 
 export function getDefinition(
-	labelDefs: Record<string, InterpretedLabelValueDefinition[]>,
+	labelDefs: Record<string, InterpretedLabelMapping | undefined>,
 	label: ComAtprotoLabelDefs.Label,
-): InterpretedLabelValueDefinition {
-	// check local definitions
-	const customDef =
-		!label.val.startsWith('!') &&
-		labelDefs[label.src]?.find((def) => def.identifier === label.val && def.definedBy === label.src);
-	if (customDef) {
-		return customDef;
+): InterpretedLabelDefinition {
+	// check labeler-defined definitions (custom labels only; `!`-prefixed labels are always global)
+	if (!label.val.startsWith('!')) {
+		const customDef = labelDefs[label.src]?.[label.val];
+		if (customDef) {
+			return customDef;
+		}
 	}
 
 	// check global definitions
-	const globalDef = LABELS[label.val as keyof typeof LABELS];
+	const globalDef = BUILTIN_LABELS[label.val];
 	if (globalDef) {
 		return globalDef;
 	}
 
 	// fallback to a noop definition
-	return interpretLabelValueDefinition(
-		{
-			identifier: label.val,
-			severity: 'none',
-			blurs: 'none',
-			defaultSetting: 'ignore',
-			locales: [],
-		},
-		label.src,
-	);
+	return interpretLabelValueDefinition({
+		blurs: 'none',
+		defaultSetting: 'ignore',
+		identifier: label.val,
+		locales: [],
+		severity: 'none',
+	});
 }
 
 export function getLabelStrings(
 	locale: string,
 	globalLabelStrings: GlobalLabelStrings,
-	def: InterpretedLabelValueDefinition,
-): ComAtprotoLabelDefs.LabelValueDefinitionStrings {
-	if (!def.definedBy) {
-		// global definition, look up strings
-		if (def.identifier in globalLabelStrings) {
-			return globalLabelStrings[def.identifier] as ComAtprotoLabelDefs.LabelValueDefinitionStrings;
-		}
-	} else {
-		// try to find locale match in the definition's strings
-		const localeMatch = def.locales.find(
-			(strings) => bcp47Match.basicFilter(locale, strings.lang).length > 0,
-		);
-		if (localeMatch) {
-			return localeMatch;
-		}
-		// fall back to the zero item if no match
-		if (def.locales[0]) {
-			return def.locales[0];
-		}
+	def: InterpretedLabelDefinition,
+): LabelLocale {
+	// global/builtin labels carry their localized strings in `globalLabelStrings`, keyed by identifier
+	if (def.identifier in globalLabelStrings) {
+		const strings = globalLabelStrings[def.identifier]!;
+		return { lang: locale, name: strings.name, description: strings.description };
+	}
+	// custom labels: try to find a locale match in the definition's own strings
+	const localeMatch = def.locales.find((strings) => bcp47Match.basicFilter(locale, strings.lang).length > 0);
+	if (localeMatch) {
+		return localeMatch;
+	}
+	// fall back to the zero item if no match
+	if (def.locales[0]) {
+		return def.locales[0];
 	}
 	return {
 		lang: locale,

@@ -1,12 +1,12 @@
 import { memo, useMemo } from 'react';
 import { Platform, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 import {
+	type AnyProfileView,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
-	AtUri,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -15,6 +15,7 @@ import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getCurrentRoute } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 import { useTranslate } from '#/lib/translation';
@@ -94,13 +95,13 @@ let PostMenuItems = ({
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
-	record: AppBskyFeedPost.Record;
-	richText: RichTextAPI;
+	record: AppBskyFeedPost.Main;
+	richText: Richtext;
 	style?: StyleProp<ViewStyle>;
 	hitSlop?: PressableProps['hitSlop'];
 	size?: 'lg' | 'md' | 'sm';
 	timestamp: string;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
 	forceGoogleTranslate: boolean;
@@ -133,7 +134,7 @@ let PostMenuItems = ({
 
 	const postUri = post.uri;
 	const postCid = post.cid;
-	const postAuthor = useProfileShadow(post.author);
+	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 	const quoteEmbed = useMemo(() => {
 		if (!currentAccount || !post.embed) return;
 		return getMaybeDetachedQuoteEmbed({
@@ -147,7 +148,7 @@ let PostMenuItems = ({
 	const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(post, rootUri);
 	const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri);
 	const isAuthor = postAuthor.did === currentAccount?.did;
-	const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did;
+	const isRootPostAuthor = parseCanonicalResourceUri(rootUri).repo === currentAccount?.did;
 	const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
 		threadgateRecord,
 	});
@@ -166,7 +167,7 @@ let PostMenuItems = ({
 	});
 
 	const href = useMemo(() => {
-		const urip = new AtUri(postUri);
+		const urip = parseCanonicalResourceUri(postUri);
 		return makeProfileLink(postAuthor, 'post', urip.rkey);
 	}, [postUri, postAuthor]);
 

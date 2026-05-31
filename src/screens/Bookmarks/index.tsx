@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type $Typed, type AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyBookmarkDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type $type } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 
@@ -62,14 +63,14 @@ type ListItem =
 			type: 'bookmark';
 			key: string;
 			bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
-				item: $Typed<AppBskyFeedDefs.PostView>;
+				item: $type.enforce<AppBskyFeedDefs.PostView>;
 			};
 	  }
 	| {
 			type: 'bookmarkNotFound';
 			key: string;
 			bookmark: Omit<AppBskyBookmarkDefs.BookmarkView, 'item'> & {
-				item: $Typed<AppBskyFeedDefs.NotFoundPost>;
+				item: $type.enforce<AppBskyFeedDefs.NotFoundPost>;
 			};
 	  };
 
@@ -113,7 +114,7 @@ function BookmarksInner() {
 
 			if (bookmarks.length > 0) {
 				for (const bookmark of bookmarks) {
-					if (AppBskyFeedDefs.isNotFoundPost(bookmark.item)) {
+					if (bookmark.item.$type === 'app.bsky.feed.defs#notFoundPost') {
 						i.push({
 							type: 'bookmarkNotFound',
 							key: bookmark.item.uri,
@@ -123,7 +124,7 @@ function BookmarksInner() {
 							},
 						});
 					}
-					if (AppBskyFeedDefs.isPostView(bookmark.item)) {
+					if (bookmark.item.$type === 'app.bsky.feed.defs#postView') {
 						i.push({
 							type: 'bookmark',
 							key: bookmark.item.uri,
@@ -180,7 +181,7 @@ function BookmarkNotFound({
 	post,
 }: {
 	hideTopBorder: boolean;
-	post: $Typed<AppBskyFeedDefs.NotFoundPost>;
+	post: $type.enforce<AppBskyFeedDefs.NotFoundPost>;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();

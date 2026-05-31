@@ -1,5 +1,6 @@
 import { View } from 'react-native';
-import { moderateProfile } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfilesQuery } from '#/state/queries/profile';
@@ -10,15 +11,13 @@ import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import type * as bsky from '#/types/bsky';
-
 export function AvatarStack({
 	profiles,
 	size = 26,
 	numPending,
 	backgroundColor,
 }: {
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	size?: number;
 	numPending?: number;
 	backgroundColor?: string;
@@ -72,7 +71,7 @@ export function AvatarStack({
 							size={size - 2}
 							avatar={item.profile.avatar}
 							type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-							moderation={item.moderation.ui('avatar')}
+							moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
 						/>
 					)}
 				</View>

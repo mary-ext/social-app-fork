@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import { type StyleProp, type TextStyle } from 'react-native';
-import { AppBskyRichtextFacet, RichText as RichTextAPI } from '@atproto/api';
+import { type AppBskyRichtextFacet } from '@atcute/bluesky';
+import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
+import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
 import { toShortUrl } from '#/lib/strings/url-helpers';
 
 import { atoms as a, flatten, type TextStyleProp } from '#/alf';
@@ -16,9 +18,11 @@ const WORD_WRAP = { wordWrap: 1 };
 // lifted from facet detection in `RichText` impl, _without_ `gm` flags
 const URL_REGEX = /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i;
 
+type Feature = AppBskyRichtextFacet.Main['features'][number];
+
 export type RichTextProps = TextStyleProp &
 	Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
-		value: RichTextAPI | string;
+		value: Richtext | string;
 		testID?: string;
 		numberOfLines?: number;
 		disableLinks?: boolean;
@@ -54,20 +58,12 @@ export function RichText({
 	onTextLayout,
 	disableMentionFacetValidation,
 }: RichTextProps) {
-	const richText = useMemo(() => {
-		if (value instanceof RichTextAPI) {
-			return value;
-		} else {
-			const rt = new RichTextAPI({ text: value });
-			rt.detectFacetsWithoutResolution();
-			return rt;
-		}
+	const { text, facets } = useMemo(() => {
+		return typeof value === 'string' ? detectFacetsWithoutResolution(value) : value;
 	}, [value]);
 
 	const plainStyles = [a.leading_snug, style];
 	const interactiveStyles = [plainStyles, interactiveStyle];
-
-	const { text, facets } = richText;
 
 	if (!facets?.length) {
 		if (isOnlyEmoji(text)) {
@@ -105,67 +101,75 @@ export function RichText({
 		);
 	}
 
-	const els = [];
+	const els: ReactNode[] = [];
 	let key = 0;
-	// N.B. must access segments via `richText.segments`, not via destructuring
-	for (const segment of richText.segments()) {
-		const link = segment.link;
-		const mention = segment.mention;
-		const tag = segment.tag;
+	for (const segment of segmentize<Feature>(text, facets)) {
+		let el: ReactNode = segment.text;
 
-		if (
-			mention &&
-			(disableMentionFacetValidation || AppBskyRichtextFacet.validateMention(mention).success) &&
-			!disableLinks
-		) {
-			els.push(
-				<ProfileHoverCard key={key} did={mention.did}>
-					<InlineLinkText
-						selectable={selectable}
-						to={`/profile/${mention.did}`}
-						style={interactiveStyles}
-						// @ts-ignore TODO
-						dataSet={WORD_WRAP}
-						onPress={onLinkPress}
-					>
-						{segment.text}
-					</InlineLinkText>
-				</ProfileHoverCard>,
-			);
-		} else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-			const isValidLink = URL_REGEX.test(link.uri);
-			if (!isValidLink || disableLinks) {
-				els.push(toShortUrl(segment.text));
-			} else {
-				els.push(
-					<InlineLinkText
-						selectable={selectable}
-						key={key}
-						to={link.uri}
-						style={interactiveStyles}
-						// @ts-ignore TODO
-						dataSet={WORD_WRAP}
-						shareOnLongPress
-						onPress={onLinkPress}
-						emoji
-					>
-						{toShortUrl(segment.text)}
-					</InlineLinkText>,
-				);
+		// Render the first feature we support, in array order — a facet's `features` can carry more
+		// than one, and we take whichever comes first rather than imposing a type precedence.
+		features: for (const feature of segment.features ?? []) {
+			switch (feature.$type) {
+				case 'app.bsky.richtext.facet#mention': {
+					if (!disableLinks && (disableMentionFacetValidation || feature.did.startsWith('did:'))) {
+						el = (
+							<ProfileHoverCard key={key} did={feature.did}>
+								<InlineLinkText
+									selectable={selectable}
+									to={`/profile/${feature.did}`}
+									style={interactiveStyles}
+									// @ts-ignore TODO
+									dataSet={WORD_WRAP}
+									onPress={onLinkPress}
+								>
+									{segment.text}
+								</InlineLinkText>
+							</ProfileHoverCard>
+						);
+					}
+					break features;
+				}
+				case 'app.bsky.richtext.facet#link': {
+					const isValidLink = URL_REGEX.test(feature.uri);
+					if (!isValidLink || disableLinks) {
+						el = toShortUrl(segment.text);
+					} else {
+						el = (
+							<InlineLinkText
+								selectable={selectable}
+								key={key}
+								to={feature.uri}
+								style={interactiveStyles}
+								// @ts-ignore TODO
+								dataSet={WORD_WRAP}
+								shareOnLongPress
+								onPress={onLinkPress}
+								emoji
+							>
+								{toShortUrl(segment.text)}
+							</InlineLinkText>
+						);
+					}
+					break features;
+				}
+				case 'app.bsky.richtext.facet#tag': {
+					if (!disableLinks && enableTags) {
+						el = (
+							<RichTextTag
+								key={key}
+								display={segment.text}
+								tag={feature.tag}
+								textStyle={interactiveStyles}
+								authorHandle={authorHandle}
+							/>
+						);
+					}
+					break features;
+				}
 			}
-		} else if (!disableLinks && enableTags && tag && AppBskyRichtextFacet.validateTag(tag).success) {
-			els.push(
-				<RichTextTag
-					key={key}
-					display={segment.text}
-					tag={tag.tag}
-					textStyle={interactiveStyles}
-					authorHandle={authorHandle}
-				/>,
-			);
-		} else {
-			els.push(segment.text);
 		}
+
+		els.push(el);
 		key++;
 	}
 

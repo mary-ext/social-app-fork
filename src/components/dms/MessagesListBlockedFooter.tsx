@@ -1,6 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type ModerationDecision } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	type BlockingModerationCause,
+	type ModerationDecision,
+	ModerationCauseType,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -19,15 +24,13 @@ import {
 } from '#/components/icons/Person';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function MessagesListBlockedFooter({
 	recipient: initialRecipient,
 	convoId,
 	moderation,
 	isGroup,
 }: {
-	recipient: bsky.profile.AnyProfileView;
+	recipient: AnyProfileView;
 	convoId: string;
 	moderation: ModerationDecision;
 	isGroup: boolean;
@@ -41,10 +44,11 @@ export function MessagesListBlockedFooter({
 	const blockedByListControl = useDialogControl();
 
 	const { listBlocks, userBlock } = useMemo(() => {
-		const modui = moderation.ui('profileView');
-		const blocks = modui.alerts.filter((alert) => alert.type === 'blocking');
-		const listBlocks = blocks.filter((alert) => alert.source.type === 'list');
-		const userBlock = blocks.find((alert) => alert.source.type === 'user');
+		const blocks = moderation.causes.filter(
+			(cause): cause is BlockingModerationCause => cause.type === ModerationCauseType.Blocking,
+		);
+		const listBlocks = blocks.filter((block) => block.source !== null);
+		const userBlock = blocks.find((block) => block.source === null);
 		return {
 			listBlocks,
 			userBlock,

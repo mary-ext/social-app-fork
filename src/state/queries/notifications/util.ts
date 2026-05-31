@@ -1,23 +1,25 @@
 import {
+	type AnyProfileView,
 	type AppBskyFeedDefs,
-	AppBskyFeedLike,
-	AppBskyFeedPost,
-	AppBskyFeedRepost,
+	type AppBskyFeedLike,
+	type AppBskyFeedPost,
+	type AppBskyFeedRepost,
 	type AppBskyGraphDefs,
-	AppBskyGraphStarterpack,
 	type AppBskyNotificationListNotifications,
-	hasMutedWord,
+} from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
 	moderateNotification,
-	type ModerationOpts,
-} from '@atproto/api';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { type Client, ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import { type QueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
-
-import { type BskyAppAgent } from '#/state/session/agent';
-
-import * as bsky from '#/types/bsky';
+import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { precacheProfile } from '../profile';
 import { type FeedNotification, type FeedPage, type NotificationType } from './types';
@@ -37,7 +39,7 @@ const MS_2DAY = MS_1HR * 48;
 // =
 
 export async function fetchPage({
-	agent,
+	appview,
 	cursor,
 	limit,
 	queryClient,
@@ -45,27 +47,31 @@ export async function fetchPage({
 	fetchAdditionalData,
 	reasons,
 }: {
-	agent: BskyAppAgent;
+	appview: Client;
 	cursor: string | undefined;
 	limit: number;
 	queryClient: QueryClient;
-	moderationOpts: ModerationOpts | undefined;
+	moderationOpts: ModerationOptions | undefined;
 	fetchAdditionalData: boolean;
 	reasons: string[];
 }): Promise<{
 	page: FeedPage;
 	indexedAt: string | undefined;
 }> {
-	const res = await agent.listNotifications({
-		limit,
-		cursor,
-		reasons,
-	});
+	const data = await ok(
+		appview.get('app.bsky.notification.listNotifications', {
+			params: {
+				limit,
+				cursor,
+				reasons,
+			},
+		}),
+	);
 
-	const indexedAt = res.data.notifications[0]?.indexedAt;
+	const indexedAt = data.notifications[0]?.indexedAt;
 
 	// filter out notifs by mod rules
-	const notifs = res.data.notifications.filter((notif) => !shouldFilterNotif(notif, moderationOpts));
+	const notifs = data.notifications.filter((notif) => !shouldFilterNotif(notif, moderationOpts));
 
 	// group notifications which are essentially similar (follows, likes on a post)
 	let notifsGrouped = groupNotifications(notifs);
@@ -73,7 +79,7 @@ export async function fetchPage({
 	// we fetch subjects of notifications (usually posts) now instead of lazily
 	// in the UI to avoid relayouts
 	if (fetchAdditionalData) {
-		const subjects = await fetchSubjects(agent, notifsGrouped);
+		const subjects = await fetchSubjects(appview, notifsGrouped);
 		for (const notif of notifsGrouped) {
 			if (notif.subjectUri) {
 				if (notif.type === 'starterpack-joined' && notif.notification.reasonSubject) {
@@ -81,24 +87,24 @@ export async function fetchPage({
 				} else {
 					notif.subject = subjects.posts.get(notif.subjectUri);
 					if (notif.subject) {
-						precacheProfile(queryClient, notif.subject.author);
+						precacheProfile(queryClient, notif.subject.author as AnyProfileView);
 					}
 				}
 			}
 		}
 	}
 
-	let seenAt = res.data.seenAt ? new Date(res.data.seenAt) : new Date();
+	let seenAt = data.seenAt ? new Date(data.seenAt) : new Date();
 	if (Number.isNaN(seenAt.getTime())) {
 		seenAt = new Date();
 	}
 
 	return {
 		page: {
-			cursor: res.data.cursor,
+			cursor: data.cursor,
 			seenAt,
 			items: notifsGrouped,
-			priority: res.data.priority ?? false,
+			priority: data.priority ?? false,
 		},
 		indexedAt,
 	};
@@ -109,33 +115,38 @@ export async function fetchPage({
 
 export function shouldFilterNotif(
 	notif: AppBskyNotificationListNotifications.Notification,
-	moderationOpts: ModerationOpts | undefined,
+	moderationOpts: ModerationOptions | undefined,
 ): boolean {
-	const containsImperative = !!notif.author.labels?.some(labelIsHideableOffense);
+	const containsImperative = !!notif.author.labels?.some((label) =>
+		labelIsHideableOffense(label as unknown as Parameters<typeof labelIsHideableOffense>[0]),
+	);
 	if (containsImperative) {
 		return true;
 	}
 	if (!moderationOpts) {
 		return false;
 	}
-	if (
-		notif.reason === 'subscribed-post' &&
-		bsky.dangerousIsType<AppBskyFeedPost.Record>(notif.record, AppBskyFeedPost.isRecord) &&
-		hasMutedWord({
-			mutedWords: moderationOpts.prefs.mutedWords,
-			text: notif.record.text,
-			facets: notif.record.facets,
-			outlineTags: notif.record.tags,
-			languages: notif.record.langs,
-			actor: notif.author,
-		})
-	) {
-		return true;
+	if (notif.reason === 'subscribed-post') {
+		const record = notif.record as AppBskyFeedPost.Main;
+		if (
+			hasMutedWord({
+				keywordFilters: moderationOpts.prefs.keywordFilters ?? [],
+				text: record.text,
+				facets: record.facets,
+				outlineTags: record.tags,
+				actor: notif.author,
+			})
+		) {
+			return true;
+		}
 	}
 	if (notif.author.viewer?.following) {
 		return false;
 	}
-	return moderateNotification(notif, moderationOpts).ui('contentList').filter;
+	return (
+		getDisplayRestrictions(moderateNotification(notif, moderationOpts), DisplayContext.ContentList).filters
+			.length > 0
+	);
 }
 
 export function groupNotifications(
@@ -191,7 +202,7 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
-	agent: BskyAppAgent,
+	appview: Client,
 	groupedNotifs: FeedNotification[],
 ): Promise<{
 	posts: Map<string, AppBskyFeedDefs.PostView>;
@@ -209,24 +220,26 @@ async function fetchSubjects(
 	const postUriChunks = chunk(Array.from(postUris), 25);
 	const packUriChunks = chunk(Array.from(packUris), 25);
 	const postsChunks = await Promise.all(
-		postUriChunks.map((uris) => agent.app.bsky.feed.getPosts({ uris }).then((res) => res.data.posts)),
+		postUriChunks.map((uris) =>
+			ok(appview.get('app.bsky.feed.getPosts', { params: { uris: uris as ResourceUri[] } })).then(
+				(data) => data.posts,
+			),
+		),
 	);
 	const packsChunks = await Promise.all(
 		packUriChunks.map((uris) =>
-			agent.app.bsky.graph.getStarterPacks({ uris }).then((res) => res.data.starterPacks),
+			ok(appview.get('app.bsky.graph.getStarterPacks', { params: { uris: uris as ResourceUri[] } })).then(
+				(data) => data.starterPacks,
+			),
 		),
 	);
 	const postsMap = new Map<string, AppBskyFeedDefs.PostView>();
 	const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>();
 	for (const post of postsChunks.flat()) {
-		if (AppBskyFeedPost.isRecord(post.record)) {
-			postsMap.set(post.uri, post);
-		}
+		postsMap.set(post.uri, post);
 	}
 	for (const pack of packsChunks.flat()) {
-		if (AppBskyGraphStarterpack.isRecord(pack.record)) {
-			packsMap.set(pack.uri, pack);
-		}
+		packsMap.set(pack.uri, pack);
 	}
 	return {
 		posts: postsMap,
@@ -272,12 +285,8 @@ function getSubjectUri(
 		type === 'like-via-repost' ||
 		type === 'repost-via-repost'
 	) {
-		if (
-			bsky.dangerousIsType<AppBskyFeedRepost.Record>(notif.record, AppBskyFeedRepost.isRecord) ||
-			bsky.dangerousIsType<AppBskyFeedLike.Record>(notif.record, AppBskyFeedLike.isRecord)
-		) {
-			return typeof notif.record.subject?.uri === 'string' ? notif.record.subject?.uri : undefined;
-		}
+		const record = notif.record as AppBskyFeedLike.Main | AppBskyFeedRepost.Main;
+		return typeof record.subject?.uri === 'string' ? record.subject.uri : undefined;
 	} else if (type === 'feedgen-like') {
 		return notif.reasonSubject;
 	}

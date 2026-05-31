@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { type ScrollView, View } from 'react-native';
-import { moderateProfile } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import Animated, { useAnimatedRef, useSharedValue } from '#/lib/animations/reanimatedCompat';
@@ -19,11 +20,9 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 type Props = {
 	testID?: string;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	onRemove?: (did: string) => void;
 };
 
@@ -82,7 +81,7 @@ function Tab({
 }: {
 	testID?: string;
 	index: number;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	total: number;
 	onRemove?: (did: string) => void;
 }) {
@@ -93,7 +92,7 @@ function Tab({
 	const moderation = moderateProfile(profile, moderationOpts!);
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	const onPressItem = useCallback(

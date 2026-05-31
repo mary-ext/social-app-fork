@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { AppBskyGraphStarterpack, AtUri } from '@atproto/api';
+import { type AnyStarterPackView, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -19,9 +20,7 @@ import { Link as BaseLink, type LinkProps as BaseLinkProps } from '#/components/
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import * as bsky from '#/types/bsky';
-
-export function Default({ starterPack }: { starterPack?: bsky.starterPack.AnyStarterPackView }) {
+export function Default({ starterPack }: { starterPack?: AnyStarterPackView }) {
 	if (!starterPack) return null;
 	return (
 		<Link starterPack={starterPack}>
@@ -30,7 +29,7 @@ export function Default({ starterPack }: { starterPack?: bsky.starterPack.AnySta
 	);
 }
 
-export function Notification({ starterPack }: { starterPack?: bsky.starterPack.AnyStarterPackView }) {
+export function Notification({ starterPack }: { starterPack?: AnyStarterPackView }) {
 	if (!starterPack) return null;
 	return (
 		<Link starterPack={starterPack}>
@@ -44,19 +43,16 @@ export function Card({
 	noIcon,
 	noDescription,
 }: {
-	starterPack: bsky.starterPack.AnyStarterPackView;
+	starterPack: AnyStarterPackView;
 	noIcon?: boolean;
 	noDescription?: boolean;
 }) {
-	const { record, creator, joinedAllTimeCount } = starterPack;
+	const { creator, joinedAllTimeCount } = starterPack;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount } = useSession();
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
 
 	return (
 		<View style={[a.w_full, a.gap_md]}>
@@ -89,11 +85,11 @@ export function Card({
 	);
 }
 
-export function useStarterPackLink({ view }: { view: bsky.starterPack.AnyStarterPackView }) {
+export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	const { t: l } = useLingui();
 	const qc = useQueryClient();
 	const { rkey, did } = useMemo(() => {
-		const rkey = new AtUri(view.uri).rkey;
+		const rkey = parseCanonicalResourceUri(view.uri).rkey;
 		return { rkey, did: view.creator.did };
 	}, [view]);
 	const precache = () => {
@@ -103,9 +99,7 @@ export function useStarterPackLink({ view }: { view: bsky.starterPack.AnyStarter
 
 	return {
 		to: `/starter-pack/${did}/${rkey}`,
-		label: bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(view.record, AppBskyGraphStarterpack.isRecord)
-			? l`Navigate to ${view.record.name}`
-			: l`Navigate to starter pack`,
+		label: l`Navigate to ${(view.record as AppBskyGraphStarterpack.Main).name}`,
 		precache,
 	};
 }
@@ -114,21 +108,17 @@ export function Link({
 	starterPack,
 	children,
 }: {
-	starterPack: bsky.starterPack.AnyStarterPackView;
+	starterPack: AnyStarterPackView;
 	onPress?: () => void;
 	children: BaseLinkProps['children'];
 }) {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
-	const { record } = starterPack;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 	const { rkey, did } = useMemo(() => {
-		const rkey = new AtUri(starterPack.uri).rkey;
+		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 		return { rkey, did: starterPack.creator.did };
 	}, [starterPack]);
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
 
 	return (
 		<BaseLink
@@ -145,7 +135,7 @@ export function Link({
 	);
 }
 
-export function Embed({ starterPack }: { starterPack: bsky.starterPack.AnyStarterPackView }) {
+export function Embed({ starterPack }: { starterPack: AnyStarterPackView }) {
 	const t = useTheme();
 	const imageUri = getStarterPackOgCard(starterPack);
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
-import { AppBskyEmbedVideo, AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -139,7 +139,7 @@ function VideoCards({ data }: { data: Exclude<ReturnType<typeof usePostFeedQuery
 			.flatMap((page) => page.slices)
 			.map((slice) => slice.items[0])
 			.filter((item): item is NonNullable<typeof item> => Boolean(item))
-			.filter((item) => AppBskyEmbedVideo.isView(item.post.embed))
+			.filter((item) => item.post.embed?.$type === 'app.bsky.embed.video#view')
 			.slice(0, 8);
 	}, [data]);
 
@@ -160,8 +160,8 @@ function ViewMoreCard() {
 	const { t: l } = useLingui();
 
 	const href = useMemo(() => {
-		const urip = new AtUri(VIDEO_FEED_URI);
-		return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'discover');
+		const urip = parseCanonicalResourceUri(VIDEO_FEED_URI);
+		return makeCustomFeedLink(urip.repo, urip.rkey, undefined, 'discover');
 	}, []);
 
 	return (

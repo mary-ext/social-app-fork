@@ -1,4 +1,4 @@
-import { AppBskyUnspeccedDefs, type ModerationOpts } from '@atproto/api';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 
 import {
 	type ApiThreadItem,
@@ -24,7 +24,7 @@ export function sortAndAnnotateThreadItems(
 		skipModerationHandling,
 	}: {
 		threadgateHiddenReplies: Set<string>;
-		moderationOpts: ModerationOpts;
+		moderationOpts: ModerationOptions;
 		view: PostThreadParams['view'];
 		/**
 		 * Set to `true` in cases where we already know the moderation state of the post e.g. when fetching
@@ -44,7 +44,7 @@ export function sortAndAnnotateThreadItems(
 		let parentMetadata: TraversalMetadata | undefined;
 		let metadata: TraversalMetadata | undefined;
 
-		if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+		if (item.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 			parentMetadata = metadatas.get(getPostRecord(item.value.post).reply?.parent?.uri || '');
 			metadata = getTraversalMetadata({
 				item,
@@ -61,13 +61,13 @@ export function sortAndAnnotateThreadItems(
 			 * _up_ from there.
 			 */
 		} else if (item.depth === 0) {
-			if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value)) {
+			if (item.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated') {
 				threadItems.push(views.threadPostNoUnauthenticated(item));
-			} else if (AppBskyUnspeccedDefs.isThreadItemNotFound(item.value)) {
+			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound') {
 				threadItems.push(views.threadPostNotFound(item));
-			} else if (AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)) {
+			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemBlocked') {
 				threadItems.push(views.threadPostBlocked(item));
-			} else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 				const post = views.threadPost({
 					uri: item.uri,
 					depth: item.depth,
@@ -80,7 +80,7 @@ export function sortAndAnnotateThreadItems(
 				parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
 					const parent = thread[pi]!;
 
-					if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent.value)) {
+					if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated') {
 						const post = views.threadPostNoUnauthenticated(parent);
 						post.ui = getThreadPostNoUnauthenticatedUI({
 							depth: parent.depth,
@@ -91,13 +91,13 @@ export function sortAndAnnotateThreadItems(
 						threadItems.unshift(post);
 						// for now, break parent traversal at first no-unauthed
 						break parentTraversal;
-					} else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)) {
+					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound') {
 						threadItems.unshift(views.threadPostNotFound(parent));
 						break parentTraversal;
-					} else if (AppBskyUnspeccedDefs.isThreadItemBlocked(parent.value)) {
+					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemBlocked') {
 						threadItems.unshift(views.threadPostBlocked(parent));
 						break parentTraversal;
-					} else if (AppBskyUnspeccedDefs.isThreadItemPost(parent.value)) {
+					} else if (parent.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 						threadItems.unshift(
 							views.threadPost({
 								uri: parent.uri,
@@ -117,16 +117,16 @@ export function sortAndAnnotateThreadItems(
 			 * we could.
 			 */
 			const shouldBreak =
-				AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value) ||
-				AppBskyUnspeccedDefs.isThreadItemNotFound(item.value) ||
-				AppBskyUnspeccedDefs.isThreadItemBlocked(item.value);
+				item.value.$type === 'app.bsky.unspecced.defs#threadItemNoUnauthenticated' ||
+				item.value.$type === 'app.bsky.unspecced.defs#threadItemNotFound' ||
+				item.value.$type === 'app.bsky.unspecced.defs#threadItemBlocked';
 
 			if (shouldBreak) {
 				const branch = getBranch(thread, i, item.depth);
 				// could insert tombstone
 				i = branch.end;
 				continue traversal;
-			} else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+			} else if (item.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 				if (parentMetadata) {
 					/*
 					 * Set this value before incrementing the `repliesSeenCounter` later
@@ -174,7 +174,7 @@ export function sortAndAnnotateThreadItems(
 						for (let ci = startIndex; ci <= branch.end; ci++) {
 							const child = thread[ci]!;
 
-							if (AppBskyUnspeccedDefs.isThreadItemPost(child.value)) {
+							if (child.value.$type === 'app.bsky.unspecced.defs#threadItemPost') {
 								const childParentMetadata = metadatas.get(
 									getPostRecord(child.value.post).reply?.parent?.uri || '',
 								);

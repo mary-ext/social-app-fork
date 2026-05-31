@@ -1,11 +1,10 @@
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs, type ChatBskyConvoGetConvo } from '@atproto/api';
+import { type ChatBskyActorDefs, type ChatBskyConvoDefs, type ChatBskyConvoGetConvo } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
 
 import { STALE } from '#/state/queries';
 import { useOnMarkAsRead } from '#/state/queries/messages/list-conversations';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import {
 	type ConvoListQueryData,
@@ -17,12 +16,13 @@ export const RQKEY_ROOT = 'convo';
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId];
 
 export function useConvoQuery({ convoId }: { convoId: string }) {
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useQuery({
 		queryKey: RQKEY(convoId),
 		queryFn: async () => {
-			const { data } = await agent.chat.bsky.convo.getConvo({ convoId }, { headers: DM_SERVICE_HEADERS });
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(chat.get('chat.bsky.convo.getConvo', { params: { convoId } }));
 			return data.convo;
 		},
 		staleTime: STALE.INFINITY,
@@ -36,21 +36,17 @@ export function precacheConvoQuery(queryClient: QueryClient, convo: ChatBskyConv
 export function useMarkAsReadMutation() {
 	const optimisticUpdate = useOnMarkAsRead();
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async ({ convoId, messageId }: { convoId?: string; messageId?: string }) => {
 			if (!convoId) throw new Error('No convoId provided');
+			if (!chat) throw new Error('Not signed in');
 
-			await agent.chat.bsky.convo.updateRead(
-				{
-					convoId,
-					messageId,
-				},
-				{
-					encoding: 'application/json',
-					headers: DM_SERVICE_HEADERS,
-				},
+			await ok(
+				chat.post('chat.bsky.convo.updateRead', {
+					input: { convoId, messageId },
+				}),
 			);
 		},
 		onMutate({ convoId }) {
@@ -96,7 +92,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<ChatBskyActorDefs.ProfileViewBasic, void> {
-	const queryDatas = queryClient.getQueriesData<ChatBskyConvoGetConvo.OutputSchema['convo']>({
+	const queryDatas = queryClient.getQueriesData<ChatBskyConvoGetConvo.$output['convo']>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

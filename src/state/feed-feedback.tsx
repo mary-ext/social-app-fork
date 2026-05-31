@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import throttle from 'lodash.throttle';
 
 import { PROD_FEEDS, STAGING_FEEDS } from '#/lib/constants';
@@ -12,7 +14,7 @@ import { Logger } from '#/logger';
 
 import * as PostFeed from '#/view/com/posts/PostFeed';
 
-import { useAgent } from './session';
+import { useClients } from './session';
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS];
 
@@ -49,7 +51,7 @@ stateContext.displayName = 'FeedFeedbackContext';
 
 export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasSession: boolean) {
 	const logger = Logger.create(Logger.Context.FeedFeedback);
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	const feed = !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo) ? feedSourceInfo : undefined;
 
@@ -106,17 +108,12 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		}
 
 		// Send to the feed
-		agent.app.bsky.feed
-			.sendInteractions(
-				{ interactions: interactionsToSend, feed: feed?.uri },
-				{
-					encoding: 'application/json',
-					headers: {
-						'atproto-proxy': `${proxyDid}#bsky_fg`,
-					},
-				},
-			)
-			.catch(() => {}); // ignore upstream errors
+		ok(
+			appview.post('app.bsky.feed.sendInteractions', {
+				input: { interactions: interactionsToSend, feed: feed?.uri as ResourceUri | undefined },
+				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
+			}),
+		).catch(() => {}); // ignore upstream errors
 
 		if (aggregatedStats.current === null) {
 			aggregatedStats.current = createAggregatedStats();
@@ -124,7 +121,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		sendOrAggregateInteractionsForStats(aggregatedStats.current, interactionsToSend);
 		throttledFlushAggregatedStats();
 		logger.debug('flushed');
-	}, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed]);
+	}, [appview, throttledFlushAggregatedStats, proxyDid, enabled, feed]);
 
 	const sendToFeed = useMemo(
 		() =>
@@ -158,7 +155,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 					history.current.add(postItem);
 					queue.current.add(
 						toString({
-							item: postItem.uri,
+							item: postItem.uri as ResourceUri,
 							event: 'app.bsky.feed.defs#interactionSeen',
 							feedContext,
 							reqId,
@@ -237,7 +234,7 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
 
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
 	const [item, event, feedContext, reqId] = str.split('|');
-	return { item, event, feedContext, reqId };
+	return { item, event, feedContext, reqId } as AppBskyFeedDefs.Interaction;
 }
 
 type AggregatedStats = {

@@ -1,18 +1,17 @@
 import {
-	type $Typed,
 	type AppBskyEmbedRecord,
 	type ChatBskyActorDefs,
-	ChatBskyConvoDefs,
+	type ChatBskyConvoDefs,
 	type ChatBskyConvoGetLog,
 	type ChatBskyConvoSendMessage,
 	type ChatBskyGroupDefs,
-} from '@atproto/api';
-import { XRPCError } from '@atproto/api';
+} from '@atcute/bluesky';
+import { type Client, ClientResponseError, ok } from '@atcute/client';
+import { type $type, type Did } from '@atcute/lexicons';
 import { EventEmitter } from 'eventemitter3';
 import { nanoid } from 'nanoid/non-secure';
 
 import { networkRetry } from '#/lib/async/retry';
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
 import { isErrorMaybeAppPasswordPermissions, isNetworkError } from '#/lib/strings/errors';
 
 import {
@@ -35,7 +34,6 @@ import {
 } from '#/state/messages/convo/types';
 import { type MessagesEventBus } from '#/state/messages/events/agent';
 import { type MessagesEventBusError } from '#/state/messages/events/types';
-import { type BskyAppAgent } from '#/state/session/agent';
 
 import { Logger } from '#/logger';
 
@@ -49,31 +47,33 @@ export function isConvoItemMessage(item: ConvoItem): item is ConvoItem & { type:
 }
 
 function toSystemMessageView(
-	ev: ChatBskyConvoGetLog.OutputSchema['logs'][number],
+	ev: ChatBskyConvoGetLog.$output['logs'][number],
 ): ChatBskyConvoDefs.SystemMessageView | null {
-	const isSystem =
-		ChatBskyConvoDefs.isLogAddMember(ev) ||
-		ChatBskyConvoDefs.isLogRemoveMember(ev) ||
-		ChatBskyConvoDefs.isLogMemberJoin(ev) ||
-		ChatBskyConvoDefs.isLogMemberLeave(ev) ||
-		ChatBskyConvoDefs.isLogLockConvo(ev) ||
-		ChatBskyConvoDefs.isLogUnlockConvo(ev) ||
-		ChatBskyConvoDefs.isLogLockConvoPermanently(ev) ||
-		ChatBskyConvoDefs.isLogEditGroup(ev) ||
-		ChatBskyConvoDefs.isLogCreateJoinLink(ev) ||
-		ChatBskyConvoDefs.isLogEditJoinLink(ev) ||
-		ChatBskyConvoDefs.isLogEnableJoinLink(ev) ||
-		ChatBskyConvoDefs.isLogDisableJoinLink(ev);
-	if (!isSystem) return null;
-	return ev.message;
+	switch (ev.$type) {
+		case 'chat.bsky.convo.defs#logAddMember':
+		case 'chat.bsky.convo.defs#logRemoveMember':
+		case 'chat.bsky.convo.defs#logMemberJoin':
+		case 'chat.bsky.convo.defs#logMemberLeave':
+		case 'chat.bsky.convo.defs#logLockConvo':
+		case 'chat.bsky.convo.defs#logUnlockConvo':
+		case 'chat.bsky.convo.defs#logLockConvoPermanently':
+		case 'chat.bsky.convo.defs#logEditGroup':
+		case 'chat.bsky.convo.defs#logCreateJoinLink':
+		case 'chat.bsky.convo.defs#logEditJoinLink':
+		case 'chat.bsky.convo.defs#logEnableJoinLink':
+		case 'chat.bsky.convo.defs#logDisableJoinLink':
+			return ev.message;
+		default:
+			return null;
+	}
 }
 
 export class Convo {
 	private id: string;
 
-	private agent: BskyAppAgent;
+	private chat: Client;
 	private events: MessagesEventBus;
-	private senderUserDid: string;
+	private senderUserDid: Did;
 
 	private status: ConvoStatus = ConvoStatus.Uninitialized;
 	private error: ConvoError | undefined;
@@ -93,8 +93,8 @@ export class Convo {
 		string,
 		{
 			id: string;
-			message: ChatBskyConvoSendMessage.InputSchema['message'];
-			optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>;
+			message: ChatBskyConvoSendMessage.$input['message'];
+			optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>;
 		}
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
@@ -115,9 +115,9 @@ export class Convo {
 	constructor(params: ConvoParams) {
 		this.id = nanoid(3);
 		this.convoId = params.convoId;
-		this.agent = params.agent;
+		this.chat = params.chat;
 		this.events = params.events;
-		this.senderUserDid = params.agent.assertDid;
+		this.senderUserDid = params.currentDid;
 
 		if (params.placeholderData) {
 			this.setupPlaceholderData(params.placeholderData);
@@ -623,14 +623,15 @@ export class Convo {
 
 		this.pendingFetchConvo = (async () => {
 			try {
-				const response = await networkRetry(2, () => {
-					return this.agent.chat.bsky.convo.getConvo(
-						{ convoId: this.convoId },
-						{ headers: DM_SERVICE_HEADERS },
+				const data = await networkRetry(2, () => {
+					return ok(
+						this.chat.get('chat.bsky.convo.getConvo', {
+							params: { convoId: this.convoId },
+						}),
 					);
 				});
 
-				const convo = response.data.convo;
+				const convo = data.convo;
 
 				return {
 					convo,
@@ -666,19 +667,16 @@ export class Convo {
 	async fetchMemberList() {
 		let cursor: string | undefined;
 		do {
-			const result = await networkRetry(2, () => {
-				return this.agent.chat.bsky.convo.getConvoMembers(
-					{
-						convoId: this.convoId,
-						limit: 50,
-						cursor,
-					},
-					{ headers: DM_SERVICE_HEADERS },
+			const data = await networkRetry(2, () => {
+				return ok(
+					this.chat.get('chat.bsky.convo.getConvoMembers', {
+						params: { convoId: this.convoId, limit: 50, cursor },
+					}),
 				);
 			});
-			cursor = result.data.cursor;
+			cursor = data.cursor;
 
-			for (const member of result.data.members) {
+			for (const member of data.members) {
 				this.relatedProfiles.set(member.did, member);
 			}
 		} while (cursor);
@@ -710,17 +708,14 @@ export class Convo {
 			this.commit();
 
 			const nextCursor = this.oldestRev; // for TS
-			const response = await networkRetry(2, () => {
-				return this.agent.chat.bsky.convo.getMessages(
-					{
-						cursor: nextCursor,
-						convoId: this.convoId,
-						limit: 60,
-					},
-					{ headers: DM_SERVICE_HEADERS },
+			const data = await networkRetry(2, () => {
+				return ok(
+					this.chat.get('chat.bsky.convo.getMessages', {
+						params: { cursor: nextCursor, convoId: this.convoId, limit: 60 },
+					}),
 				);
 			});
-			const { cursor, messages, relatedProfiles } = response.data;
+			const { cursor, messages, relatedProfiles } = data;
 
 			this.oldestRev = cursor ?? null;
 
@@ -740,9 +735,9 @@ export class Convo {
 
 			for (const message of messages) {
 				if (
-					ChatBskyConvoDefs.isMessageView(message) ||
-					ChatBskyConvoDefs.isDeletedMessageView(message) ||
-					ChatBskyConvoDefs.isSystemMessageView(message)
+					message.$type === 'chat.bsky.convo.defs#messageView' ||
+					message.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
+					message.$type === 'chat.bsky.convo.defs#systemMessageView'
 				) {
 					/*
 					 * If this message is already in new messages, it was added by the
@@ -817,7 +812,7 @@ export class Convo {
 		this.commit();
 	}
 
-	ingestFirehose(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
+	ingestFirehose(events: ChatBskyConvoGetLog.$output['logs']) {
 		let needsCommit = false;
 
 		for (const ev of events) {
@@ -852,7 +847,10 @@ export class Convo {
 						}
 					}
 
-					if (ChatBskyConvoDefs.isLogCreateMessage(ev) && ChatBskyConvoDefs.isMessageView(ev.message)) {
+					if (
+						ev.$type === 'chat.bsky.convo.defs#logCreateMessage' &&
+						ev.message.$type === 'chat.bsky.convo.defs#messageView'
+					) {
 						/**
 						 * If this message is already in new messages, it was added by our sending logic, and is based on
 						 * client-ordering. When we receive the "committed" event from the log, we should replace this
@@ -864,8 +862,8 @@ export class Convo {
 						this.newMessages.set(ev.message.id, ev.message);
 						needsCommit = true;
 					} else if (
-						ChatBskyConvoDefs.isLogDeleteMessage(ev) &&
-						ChatBskyConvoDefs.isDeletedMessageView(ev.message)
+						ev.$type === 'chat.bsky.convo.defs#logDeleteMessage' &&
+						ev.message.$type === 'chat.bsky.convo.defs#deletedMessageView'
 					) {
 						/*
 						 * Update if we have this in state. If we don't, don't worry about it.
@@ -877,8 +875,9 @@ export class Convo {
 							needsCommit = true;
 						}
 					} else if (
-						(ChatBskyConvoDefs.isLogAddReaction(ev) || ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
-						ChatBskyConvoDefs.isMessageView(ev.message)
+						(ev.$type === 'chat.bsky.convo.defs#logAddReaction' ||
+							ev.$type === 'chat.bsky.convo.defs#logRemoveReaction') &&
+						ev.message.$type === 'chat.bsky.convo.defs#messageView'
 					) {
 						/*
 						 * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
@@ -910,8 +909,8 @@ export class Convo {
 	private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null;
 
 	sendMessage(
-		message: ChatBskyConvoSendMessage.InputSchema['message'],
-		optimisticEmbedView?: $Typed<AppBskyEmbedRecord.View>,
+		message: ChatBskyConvoSendMessage.$input['message'],
+		optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>,
 	) {
 		// Ignore empty messages for now since they have no other purpose atm
 		if (!message.text.trim() && !message.embed) return;
@@ -1033,14 +1032,11 @@ export class Convo {
 
 			const { id, message } = pendingMessage;
 
-			const response = await this.agent.chat.bsky.convo.sendMessage(
-				{
-					convoId: this.convoId,
-					message,
-				},
-				{ encoding: 'application/json', headers: DM_SERVICE_HEADERS },
+			const res = await ok(
+				this.chat.post('chat.bsky.convo.sendMessage', {
+					input: { convoId: this.convoId, message },
+				}),
 			);
-			const res = response.data;
 
 			// remove from queue
 			this.pendingMessages.delete(id);
@@ -1065,14 +1061,14 @@ export class Convo {
 		}
 	}
 
-	private handleSendMessageFailure(e: Error | XRPCError) {
-		if (e instanceof XRPCError) {
+	private handleSendMessageFailure(e: Error | ClientResponseError) {
+		if (e instanceof ClientResponseError) {
 			if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
 				this.pendingMessageFailure = 'recoverable';
 			} else {
 				this.pendingMessageFailure = 'unrecoverable';
 
-				switch (e.message) {
+				switch (e.description) {
 					case 'block between recipient and sender':
 						this.emitter.emit('event', {
 							type: 'invalidate-block-state',
@@ -1092,16 +1088,20 @@ export class Convo {
 						if (!isNetworkError(e)) {
 							logger.warn(`handleSendMessageFailure could not handle error`, {
 								status: e.status,
-								message: e.message,
+								message: e.description,
 							});
 						}
 						break;
 				}
 			}
+		} else if (isNetworkError(e)) {
+			// @atcute lets transport failures (offline/DNS/timeout) propagate as a plain TypeError rather
+			// than a ClientResponseError, so they must be caught here to stay retryable.
+			this.pendingMessageFailure = 'recoverable';
 		} else {
 			this.pendingMessageFailure = 'unrecoverable';
 
-			if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
+			if (!isErrorMaybeAppPasswordPermissions(e)) {
 				logger.error(`handleSendMessageFailure received unknown error`, {
 					safeMessage: e.message,
 				});
@@ -1123,14 +1123,15 @@ export class Convo {
 		logger.debug(`batch retrying ${this.pendingMessages.size} pending messages`, {});
 
 		try {
-			const { data } = await this.agent.chat.bsky.convo.sendMessageBatch(
-				{
-					items: messageArray.map(({ message }) => ({
-						convoId: this.convoId,
-						message,
-					})),
-				},
-				{ encoding: 'application/json', headers: DM_SERVICE_HEADERS },
+			const data = await ok(
+				this.chat.post('chat.bsky.convo.sendMessageBatch', {
+					input: {
+						items: messageArray.map(({ message }) => ({
+							convoId: this.convoId,
+							message,
+						})),
+					},
+				}),
 			);
 			const { items } = data;
 
@@ -1166,12 +1167,10 @@ export class Convo {
 
 		try {
 			await networkRetry(2, () => {
-				return this.agent.chat.bsky.convo.deleteMessageForSelf(
-					{
-						convoId: this.convoId,
-						messageId,
-					},
-					{ encoding: 'application/json', headers: DM_SERVICE_HEADERS },
+				return ok(
+					this.chat.post('chat.bsky.convo.deleteMessageForSelf', {
+						input: { convoId: this.convoId, messageId },
+					}),
 				);
 			});
 		} catch (err) {
@@ -1202,24 +1201,16 @@ export class Convo {
 		const items: ConvoItem[] = [];
 
 		this.pastMessages.forEach((m) => {
-			if (ChatBskyConvoDefs.isMessageView(m)) {
-				items.unshift({
-					type: 'message',
-					key: m.id,
-					message: m,
-				});
-			} else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
-				items.unshift({
-					type: 'deleted-message',
-					key: m.id,
-					message: m,
-				});
-			} else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
-				items.unshift({
-					type: 'system-message',
-					key: m.id,
-					message: m,
-				});
+			switch (m.$type) {
+				case 'chat.bsky.convo.defs#messageView':
+					items.unshift({ type: 'message', key: m.id, message: m });
+					break;
+				case 'chat.bsky.convo.defs#deletedMessageView':
+					items.unshift({ type: 'deleted-message', key: m.id, message: m });
+					break;
+				case 'chat.bsky.convo.defs#systemMessageView':
+					items.unshift({ type: 'system-message', key: m.id, message: m });
+					break;
 			}
 		});
 
@@ -1235,24 +1226,16 @@ export class Convo {
 		}
 
 		this.newMessages.forEach((m) => {
-			if (ChatBskyConvoDefs.isMessageView(m)) {
-				items.push({
-					type: 'message',
-					key: m.id,
-					message: m,
-				});
-			} else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
-				items.push({
-					type: 'deleted-message',
-					key: m.id,
-					message: m,
-				});
-			} else if (ChatBskyConvoDefs.isSystemMessageView(m)) {
-				items.push({
-					type: 'system-message',
-					key: m.id,
-					message: m,
-				});
+			switch (m.$type) {
+				case 'chat.bsky.convo.defs#messageView':
+					items.push({ type: 'message', key: m.id, message: m });
+					break;
+				case 'chat.bsky.convo.defs#deletedMessageView':
+					items.push({ type: 'deleted-message', key: m.id, message: m });
+					break;
+				case 'chat.bsky.convo.defs#systemMessageView':
+					items.push({ type: 'system-message', key: m.id, message: m });
+					break;
 			}
 		});
 
@@ -1317,7 +1300,7 @@ export class Convo {
 		if (this.pastMessages.has(messageId)) {
 			const prevMessage = this.pastMessages.get(messageId);
 			if (
-				ChatBskyConvoDefs.isMessageView(prevMessage) &&
+				prevMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
 				// skip optimistic update if reaction already exists
 				!prevMessage.reactions?.find(
 					(reaction) => reaction.sender.did === this.senderUserDid && reaction.value === emoji,
@@ -1343,7 +1326,7 @@ export class Convo {
 		} else if (this.newMessages.has(messageId)) {
 			const prevMessage = this.newMessages.get(messageId);
 			if (
-				ChatBskyConvoDefs.isMessageView(prevMessage) &&
+				prevMessage?.$type === 'chat.bsky.convo.defs#messageView' &&
 				!prevMessage.reactions?.find((reaction) => reaction.value === emoji)
 			) {
 				if (prevMessage.reactions && prevMessage.reactions.length >= 5)
@@ -1362,11 +1345,12 @@ export class Convo {
 
 		try {
 			logger.debug(`Adding reaction ${emoji} to message ${messageId}`);
-			const { data } = await this.agent.chat.bsky.convo.addReaction(
-				{ messageId, value: emoji, convoId: this.convoId },
-				{ encoding: 'application/json', headers: DM_SERVICE_HEADERS },
+			const data = await ok(
+				this.chat.post('chat.bsky.convo.addReaction', {
+					input: { messageId, value: emoji, convoId: this.convoId },
+				}),
 			);
-			if (ChatBskyConvoDefs.isMessageView(data.message)) {
+			if (data.message.$type === 'chat.bsky.convo.defs#messageView') {
 				if (this.pastMessages.has(messageId)) {
 					this.pastMessages.set(messageId, data.message);
 					this.commit();
@@ -1391,7 +1375,7 @@ export class Convo {
 		let restore: null | (() => void) = null;
 		if (this.pastMessages.has(messageId)) {
 			const prevMessage = this.pastMessages.get(messageId);
-			if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+			if (prevMessage?.$type === 'chat.bsky.convo.defs#messageView') {
 				this.pastMessages.set(messageId, {
 					...prevMessage,
 					reactions: prevMessage.reactions?.filter(
@@ -1406,7 +1390,7 @@ export class Convo {
 			}
 		} else if (this.newMessages.has(messageId)) {
 			const prevMessage = this.newMessages.get(messageId);
-			if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+			if (prevMessage?.$type === 'chat.bsky.convo.defs#messageView') {
 				this.newMessages.set(messageId, {
 					...prevMessage,
 					reactions: prevMessage.reactions?.filter(
@@ -1423,9 +1407,10 @@ export class Convo {
 
 		try {
 			logger.debug(`Removing reaction ${emoji} from message ${messageId}`);
-			await this.agent.chat.bsky.convo.removeReaction(
-				{ messageId, value: emoji, convoId: this.convoId },
-				{ encoding: 'application/json', headers: DM_SERVICE_HEADERS },
+			await ok(
+				this.chat.post('chat.bsky.convo.removeReaction', {
+					input: { messageId, value: emoji, convoId: this.convoId },
+				}),
 			);
 		} catch (error) {
 			if (restore) restore();

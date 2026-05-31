@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
-import {
-	AppBskyFeedPost,
-	AppBskyRichtextFacet,
-	AtUri,
-	moderatePost,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AnyProfileView, type AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl, makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -30,8 +27,6 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 export function useMessageEmbed() {
 	const route = useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>();
@@ -68,14 +63,13 @@ export function useMessageEmbed() {
 }
 
 export function useExtractEmbedFromFacets(message: string, setEmbed: (embedUrl: string | undefined) => void) {
-	const rt = new RichTextAPI({ text: message });
-	rt.detectFacetsWithoutResolution();
+	const rt = detectFacetsWithoutResolution(message);
 
 	let uriFromFacet: string | undefined;
 
 	for (const facet of rt.facets ?? []) {
 		for (const feature of facet.features) {
-			if (AppBskyRichtextFacet.isLink(feature) && isBskyPostUrl(feature.uri)) {
+			if (feature.$type === 'app.bsky.richtext.facet#link' && isBskyPostUrl(feature.uri)) {
 				uriFromFacet = feature.uri;
 				break;
 			}
@@ -108,13 +102,11 @@ export function MessageInputEmbed({
 	);
 
 	const { rt, record } = useMemo(() => {
-		if (post && bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)) {
+		if (post) {
+			const postRecord = post.record as AppBskyFeedPost.Main;
 			return {
-				rt: new RichTextAPI({
-					text: post.record.text,
-					facets: post.record.facets,
-				}),
-				record: post.record,
+				rt: { text: postRecord.text, facets: postRecord.facets ?? [] },
+				record: postRecord,
 			};
 		}
 
@@ -146,7 +138,7 @@ export function MessageInputEmbed({
 				</SimpleContainer>
 			);
 		case 'success':
-			const itemUrip = new AtUri(post.uri);
+			const itemUrip = parseCanonicalResourceUri(post.uri);
 			const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
 
 			if (!post || !moderation || !rt || !record) {
@@ -160,7 +152,7 @@ export function MessageInputEmbed({
 					<View style={[a.flex_1, a.flex_row, a.gap_sm]}>
 						<PostMeta
 							showAvatar
-							author={post.author}
+							author={post.author as AnyProfileView}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={itemHref}
@@ -175,8 +167,12 @@ export function MessageInputEmbed({
 							<XIcon size="xs" style={t.atoms.text_contrast_high} />
 						</Button>
 					</View>
-					<ContentHider modui={moderation.ui('contentView')}>
-						<PostAlerts modui={moderation.ui('contentView')} style={a.py_xs} size="sm" />
+					<ContentHider modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}>
+						<PostAlerts
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+							style={a.py_xs}
+							size="sm"
+						/>
 						{rt.text && (
 							<RichText
 								enableTags

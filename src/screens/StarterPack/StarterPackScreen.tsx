@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import {
-	AppBskyGraphDefs,
-	AppBskyGraphStarterpack,
-	AtUri,
-	type ModerationOpts,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import { type Did } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -28,7 +25,7 @@ import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-l
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';
 import { useShortenLink } from '#/state/queries/shorten-link';
 import { useDeleteStarterPackMutation, useStarterPackQuery } from '#/state/queries/starter-packs';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 import { logger } from '#/logger';
@@ -65,8 +62,6 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import * as bsky from '#/types/bsky';
-
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
 type StarterPackScreenShortProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPackShort'>;
 
@@ -124,11 +119,7 @@ export function StarterPackScreenInner({
 		isError: isErrorStarterPack,
 	} = useStarterPackQuery({ did, rkey });
 
-	const isValid =
-		starterPack &&
-		(starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-		AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-		AppBskyGraphStarterpack.validateRecord(starterPack.record);
+	const isValid = starterPack && (starterPack.list || starterPack?.creator?.did === currentAccount?.did);
 
 	if (!did || !starterPack || !isValid || !moderationOpts) {
 		return (
@@ -161,7 +152,7 @@ function StarterPackScreenLoaded({
 }: {
 	starterPack: AppBskyGraphDefs.StarterPackView;
 	routeParams: StarterPackScreeProps['route']['params'];
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const showPeopleTab = Boolean(starterPack.list);
 	const showFeedsTab = Boolean(starterPack.feeds?.length);
@@ -184,7 +175,7 @@ function StarterPackScreenLoaded({
 	useEffect(() => {}, [starterPack.uri]);
 
 	const onOpenShareDialog = useCallback(() => {
-		const rkey = new AtUri(starterPack.uri).rkey;
+		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
 		shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then((res) => {
 			setLink(res.url);
 		});
@@ -274,14 +265,15 @@ function Header({
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const { currentAccount, hasSession } = useSession();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 	const setActiveStarterPack = useSetActiveStarterPack();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	const [isProcessing, setIsProcessing] = useState(false);
 
-	const { record, creator } = starterPack;
+	const { creator } = starterPack;
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 	const isOwn = creator?.did === currentAccount?.did;
 	const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0;
 
@@ -315,7 +307,7 @@ function Header({
 
 		let listItems: AppBskyGraphDefs.ListItemView[] = [];
 		try {
-			listItems = await getAllListMembers(agent, starterPack.list.uri);
+			listItems = await getAllListMembers(appview, starterPack.list.uri);
 		} catch (e) {
 			setIsProcessing(false);
 			Toast.show(l`An error occurred while trying to follow all`, {
@@ -331,17 +323,17 @@ function Header({
 			.filter(
 				(li) =>
 					li.subject.did !== currentAccount?.did &&
-					!isBlockedOrBlocking(li.subject) &&
-					!isMuted(li.subject) &&
+					!isBlockedOrBlocking(li.subject as AnyProfileView) &&
+					!isMuted(li.subject as AnyProfileView) &&
 					!li.subject.viewer?.following,
 			)
 			.map((li) => li.subject.did);
 
 		let followUris: Map<string, string>;
 		try {
-			followUris = await bulkWriteFollows(agent, dids, {
-				uri: starterPack.uri,
+			followUris = await bulkWriteFollows({ appview, did: currentAccount!.did as Did, pds: pds! }, dids, {
 				cid: starterPack.cid,
+				uri: starterPack.uri,
 			});
 		} catch (e) {
 			setIsProcessing(false);
@@ -362,15 +354,11 @@ function Header({
 		Toast.show(l`All accounts have been followed!`);
 	};
 
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
-
 	const richText = record.description
-		? new RichTextAPI({
+		? {
 				text: record.description,
-				facets: record.descriptionFacets,
-			})
+				facets: record.descriptionFacets ?? [],
+			}
 		: undefined;
 
 	return (
@@ -600,10 +588,12 @@ function OverflowMenu({
 			{starterPack.list && (
 				<ReportDialog
 					control={reportDialogControl}
-					subject={{
-						...starterPack,
-						$type: 'app.bsky.graph.defs#starterPackView',
-					}}
+					subject={
+						{
+							...starterPack,
+							$type: 'app.bsky.graph.defs#starterPackView',
+						} as unknown as Parameters<typeof ReportDialog>[0]['subject']
+					}
 				/>
 			)}
 			<Prompt.Outer control={deleteDialogControl}>

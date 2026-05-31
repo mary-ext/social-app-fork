@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { type ModerationUI } from '@atproto/api';
+import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 
 import {
 	type ModerationCauseDescription,
@@ -35,7 +35,7 @@ export function Outer({
 }: React.PropsWithChildren<{
 	isContentVisibleInitialState?: boolean;
 	allowOverride?: boolean;
-	modui: ModerationUI | undefined;
+	modui: DisplayRestrictions | undefined;
 }>) {
 	const control = useModerationDetailsDialogControl();
 	const blur = modui?.blurs[0];
@@ -45,7 +45,8 @@ export function Outer({
 	const meta = {
 		isNoPwi: Boolean(
 			modui?.blurs.find(
-				(cause) => cause.type === 'label' && cause.labelDef.identifier === '!no-unauthenticated',
+				(cause) =>
+					cause.type === ModerationCauseType.Label && cause.labelDef.identifier === '!no-unauthenticated',
 			),
 		),
 		allowOverride: allowOverride ?? !modui?.noOverride,

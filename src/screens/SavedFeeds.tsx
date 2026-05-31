@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
-import { TID } from '@atproto/common-web';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import * as TID from '@atcute/tid';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -127,7 +127,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 								setCurrentFeeds(
 									RECOMMENDED_SAVED_FEEDS.map((f) => ({
 										...f,
-										id: TID.nextStr(),
+										id: TID.now(),
 									})),
 								)
 							}
@@ -178,7 +178,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					<View style={[t.atoms.border_contrast_low, a.border_b]}>
 						<NoFollowingFeed
 							onAddFeed={() =>
-								setCurrentFeeds((feeds) => [...feeds, { ...TIMELINE_SAVED_FEED, id: TID.next().toString() }])
+								setCurrentFeeds((feeds) => [...feeds, { ...TIMELINE_SAVED_FEED, id: TID.now() }])
 							}
 						/>
 					</View>
@@ -305,7 +305,7 @@ function SavedFeedsA11y({ preferences }: { preferences: UsePreferencesQueryRespo
 								setCurrentFeeds(
 									RECOMMENDED_SAVED_FEEDS.map((f) => ({
 										...f,
-										id: TID.nextStr(),
+										id: TID.now(),
 									})),
 								)
 							}
@@ -342,7 +342,7 @@ function SavedFeedsA11y({ preferences }: { preferences: UsePreferencesQueryRespo
 					<View style={[t.atoms.border_contrast_low, a.border_b]}>
 						<NoFollowingFeed
 							onAddFeed={() =>
-								setCurrentFeeds((feeds) => [...feeds, { ...TIMELINE_SAVED_FEED, id: TID.next().toString() }])
+								setCurrentFeeds((feeds) => [...feeds, { ...TIMELINE_SAVED_FEED, id: TID.now() }])
 							}
 						/>
 					</View>

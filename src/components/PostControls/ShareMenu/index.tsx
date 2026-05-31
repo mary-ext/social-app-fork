@@ -1,12 +1,9 @@
 import { memo, useMemo, useState } from 'react';
 import { type Insets } from 'react-native';
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
+
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -35,10 +32,10 @@ let ShareMenuButton = ({
 	testID: string;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	big?: boolean;
-	record: AppBskyFeedPost.Record;
-	richText: RichTextAPI;
+	record: AppBskyFeedPost.Main;
+	richText: Richtext;
 	timestamp: string;
-	threadgateRecord?: AppBskyFeedThreadgate.Record;
+	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShare: () => void;
 	hitSlop?: Insets;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';

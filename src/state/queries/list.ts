@@ -1,23 +1,18 @@
-import {
-	type $Typed,
-	type AppBskyGraphDefs,
-	type AppBskyGraphGetList,
-	type AppBskyGraphList,
-	AtUri,
-	type ComAtprotoRepoApplyWrites,
-	type Facet,
-	type Un$Typed,
-} from '@atproto/api';
+import { type ComAtprotoRepoApplyWrites } from '@atcute/atproto';
+import { type AppBskyGraphDefs, type AppBskyGraphList, type AppBskyRichtextFacet } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
-import { uploadBlob } from '#/lib/api';
+import { createRecord, deleteRecord, getRecord, listRecords, putRecord } from '#/lib/api/records';
+import { uploadBlob } from '#/lib/api/upload-blob';
 import { until } from '#/lib/async/until';
 
 import { type ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
-import { useAgent, useSession } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 
 import { FEED_INFO_RQKEY_ROOT } from './feed';
 import { invalidate as invalidateMyLists } from './my-lists';
@@ -27,19 +22,20 @@ export const RQKEY_ROOT = 'list';
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri];
 
 export function useListQuery(uri?: string) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery<AppBskyGraphDefs.ListView, Error>({
 		staleTime: STALE.MINUTES.ONE,
 		queryKey: RQKEY(uri || ''),
-		async queryFn() {
+		queryFn: async () => {
 			if (!uri) {
 				throw new Error('URI not provided');
 			}
-			const res = await agent.app.bsky.graph.getList({
-				list: uri,
-				limit: 1,
-			});
-			return res.data.list;
+			const data = await ok(
+				appview.get('app.bsky.graph.getList', {
+					params: { limit: 1, list: uri as ResourceUri },
+				}),
+			);
+			return data.list;
 		},
 		enabled: !!uri,
 	});
@@ -49,13 +45,13 @@ export interface ListCreateMutateParams {
 	purpose: string;
 	name: string;
 	description: string;
-	descriptionFacets: Facet[] | undefined;
+	descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 	avatar: ImageMeta | null | undefined;
 }
 export function useListCreateMutation() {
 	const { currentAccount } = useSession();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	const agent = useAgent();
 	return useMutation<{ uri: string; cid: string }, Error, ListCreateMutateParams>({
 		async mutationFn({ purpose, name, description, descriptionFacets, avatar }) {
 			if (!currentAccount) {
@@ -64,28 +60,27 @@ export function useListCreateMutation() {
 			if (purpose !== 'app.bsky.graph.defs#curatelist' && purpose !== 'app.bsky.graph.defs#modlist') {
 				throw new Error('Invalid list purpose: must be curatelist or modlist');
 			}
-			const record: Un$Typed<AppBskyGraphList.Record> = {
-				purpose,
-				name,
-				description,
-				descriptionFacets,
+			const record: AppBskyGraphList.Main = {
+				$type: 'app.bsky.graph.list',
 				avatar: undefined,
 				createdAt: new Date().toISOString(),
+				description,
+				descriptionFacets,
+				name,
+				purpose,
 			};
 			if (avatar) {
-				const blobRes = await uploadBlob(agent, avatar.blob);
-				record.avatar = blobRes.data.blob;
+				record.avatar = await uploadBlob(pds!, avatar.blob);
 			}
-			const res = await agent.app.bsky.graph.list.create(
-				{
-					repo: currentAccount.did,
-				},
+			const res = await createRecord(pds!, {
+				collection: 'app.bsky.graph.list',
 				record,
-			);
+				repo: currentAccount.did as Did,
+			});
 
 			// wait for the appview to update
-			await whenAppViewReady(agent, res.uri, (v: AppBskyGraphGetList.Response) => {
-				return typeof v?.data?.list.uri === 'string';
+			await whenAppViewReady(appview, res.uri, (v) => {
+				return typeof v?.uri === 'string';
 			});
 			return res;
 		},
@@ -102,26 +97,27 @@ export interface ListMetadataMutateParams {
 	uri: string;
 	name: string;
 	description: string;
-	descriptionFacets: Facet[] | undefined;
+	descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 	avatar: ImageMeta | null | undefined;
 }
 export function useListMetadataMutation() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: string; cid: string }, Error, ListMetadataMutateParams>({
 		async mutationFn({ uri, name, description, descriptionFacets, avatar }) {
-			const { hostname, rkey } = new AtUri(uri);
+			const { repo, rkey } = parseCanonicalResourceUri(uri);
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			if (currentAccount.did !== hostname) {
+			if (currentAccount.did !== repo) {
 				throw new Error('You do not own this list');
 			}
 
 			// get the current record
-			const { value: record } = await agent.app.bsky.graph.list.get({
-				repo: currentAccount.did,
+			const { value: record } = await getRecord(pds!, {
+				collection: 'app.bsky.graph.list',
+				repo: currentAccount.did as Did,
 				rkey,
 			});
 
@@ -130,24 +126,20 @@ export function useListMetadataMutation() {
 			record.description = description;
 			record.descriptionFacets = descriptionFacets;
 			if (avatar) {
-				const blobRes = await uploadBlob(agent, avatar.blob);
-				record.avatar = blobRes.data.blob;
+				record.avatar = await uploadBlob(pds!, avatar.blob);
 			} else if (avatar === null) {
 				record.avatar = undefined;
 			}
-			const res = (
-				await agent.com.atproto.repo.putRecord({
-					repo: currentAccount.did,
-					collection: 'app.bsky.graph.list',
-					rkey,
-					record,
-				})
-			).data;
+			const res = await putRecord(pds!, {
+				collection: 'app.bsky.graph.list',
+				record,
+				repo: currentAccount.did as Did,
+				rkey,
+			});
 
 			// wait for the appview to update
-			await whenAppViewReady(agent, res.uri, (v: AppBskyGraphGetList.Response) => {
-				const list = v.data.list;
-				return list.name === record.name && list.description === record.description;
+			await whenAppViewReady(appview, res.uri, (v) => {
+				return v?.name === record.name && v?.description === record.description;
 			});
 			return res;
 		},
@@ -168,7 +160,7 @@ export function useListMetadataMutation() {
 
 export function useListDeleteMutation() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { uri: string }>({
 		mutationFn: async ({ uri }) => {
@@ -176,13 +168,14 @@ export function useListDeleteMutation() {
 				return;
 			}
 			// fetch all the listitem records that belong to this list
-			let cursor;
+			let cursor: string | undefined;
 			let listitemRecordUris: string[] = [];
 			for (let i = 0; i < 100; i++) {
-				const res = await agent.app.bsky.graph.listitem.list({
-					repo: currentAccount.did,
+				const res = await listRecords(pds!, {
+					collection: 'app.bsky.graph.listitem',
 					cursor,
 					limit: 100,
+					repo: currentAccount.did as Did,
 				});
 				listitemRecordUris = listitemRecordUris.concat(
 					res.records.filter((record) => record.value.list === uri).map((record) => record.uri),
@@ -194,8 +187,8 @@ export function useListDeleteMutation() {
 			}
 
 			// batch delete the list and listitem records
-			const createDel = (uri: string): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
-				const urip = new AtUri(uri);
+			const createDel = (uri: string): ComAtprotoRepoApplyWrites.$input['writes'][number] => {
+				const urip = parseCanonicalResourceUri(uri);
 				return {
 					$type: 'com.atproto.repo.applyWrites#delete',
 					collection: urip.collection,
@@ -206,15 +199,19 @@ export function useListDeleteMutation() {
 
 			// apply in chunks
 			for (const writesChunk of chunk(writes, 10)) {
-				await agent.com.atproto.repo.applyWrites({
-					repo: currentAccount.did,
-					writes: writesChunk,
-				});
+				await ok(
+					pds!.post('com.atproto.repo.applyWrites', {
+						input: {
+							repo: currentAccount.did as Did,
+							writes: writesChunk,
+						},
+					}),
+				);
 			}
 
-			// wait for the appview to update
-			await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
-				return !v?.success;
+			// wait for the appview to update (the list read fails once it's gone)
+			await whenAppViewReady(appview, uri, (v) => {
+				return !v;
 			});
 		},
 		onSuccess() {
@@ -229,17 +226,18 @@ export function useListDeleteMutation() {
 
 export function useListMuteMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<void, Error, { uri: string; mute: boolean }>({
 		mutationFn: async ({ uri, mute }) => {
-			if (mute) {
-				await agent.muteModList(uri);
-			} else {
-				await agent.unmuteModList(uri);
-			}
+			await ok(
+				appview.post(mute ? 'app.bsky.graph.muteActorList' : 'app.bsky.graph.unmuteActorList', {
+					as: null,
+					input: { list: uri as ResourceUri },
+				}),
+			);
 
-			await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
-				return Boolean(v?.data.list.viewer?.muted) === mute;
+			await whenAppViewReady(appview, uri, (v) => {
+				return Boolean(v?.viewer?.muted) === mute;
 			});
 		},
 		onSuccess(_data, variables) {
@@ -251,18 +249,42 @@ export function useListMuteMutation() {
 }
 
 export function useListBlockMutation() {
+	const { currentAccount } = useSession();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
-	const agent = useAgent();
 	return useMutation<void, Error, { uri: string; block: boolean }>({
 		mutationFn: async ({ uri, block }) => {
+			if (!currentAccount) {
+				throw new Error('Not signed in');
+			}
 			if (block) {
-				await agent.blockModList(uri);
+				await createRecord(pds!, {
+					collection: 'app.bsky.graph.listblock',
+					record: {
+						$type: 'app.bsky.graph.listblock',
+						createdAt: new Date().toISOString(),
+						subject: uri as ResourceUri,
+					},
+					repo: currentAccount.did as Did,
+				});
 			} else {
-				await agent.unblockModList(uri);
+				const data = await ok(
+					appview.get('app.bsky.graph.getList', {
+						params: { limit: 1, list: uri as ResourceUri },
+					}),
+				);
+				const blocked = data.list.viewer?.blocked;
+				if (blocked) {
+					await deleteRecord(pds!, {
+						collection: 'app.bsky.graph.listblock',
+						repo: currentAccount.did as Did,
+						rkey: parseCanonicalResourceUri(blocked).rkey,
+					});
+				}
 			}
 
-			await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
-				return block ? typeof v?.data.list.viewer?.blocked === 'string' : !v?.data.list.viewer?.blocked;
+			await whenAppViewReady(appview, uri, (v) => {
+				return block ? typeof v?.viewer?.blocked === 'string' : !v?.viewer?.blocked;
 			});
 		},
 		onSuccess(_data, variables) {
@@ -274,18 +296,21 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	uri: string,
-	fn: (res: AppBskyGraphGetList.Response) => boolean,
+	fn: (v: AppBskyGraphDefs.ListView | undefined) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() =>
-			agent.app.bsky.graph.getList({
-				list: uri,
-				limit: 1,
-			}),
+		async () => {
+			const data = await ok(
+				appview.get('app.bsky.graph.getList', {
+					params: { limit: 1, list: uri as ResourceUri },
+				}),
+			);
+			return data.list;
+		},
 	);
 }

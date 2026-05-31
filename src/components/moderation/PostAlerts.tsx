@@ -1,5 +1,5 @@
 import { type StyleProp, type ViewStyle } from 'react-native';
-import { type ModerationCause, type ModerationUI } from '@atproto/api';
+import { type DisplayRestrictions, type ModerationCause } from '@atcute/bluesky-moderation';
 
 import { getModerationCauseKey, unique } from '#/lib/moderation';
 
@@ -11,13 +11,13 @@ export function PostAlerts({
 	style,
 	additionalCauses,
 }: {
-	modui: ModerationUI;
+	modui: DisplayRestrictions;
 	size?: Pills.CommonProps['size'];
 	includeMute?: boolean;
 	style?: StyleProp<ViewStyle>;
 	additionalCauses?: ModerationCause[] | Pills.AppModerationCause[];
 }) {
-	if (!modui.alert && !modui.inform && !additionalCauses?.length) {
+	if (modui.alerts.length === 0 && modui.informs.length === 0 && !additionalCauses?.length) {
 		return null;
 	}
 

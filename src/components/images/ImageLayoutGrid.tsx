@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedImages } from '@atproto/api';
+import { type AppBskyEmbedImages } from '@atcute/bluesky';
 
 import { type AnimatedRef, type AnimatedView, useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 

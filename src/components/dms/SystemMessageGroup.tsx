@@ -1,5 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { type ChatBskyActorDefs } from '@atproto/api';
+import { type ChatBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 

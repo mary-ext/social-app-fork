@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
-import { AppBskyFeedDefs, type ModerationDecision } from '@atproto/api';
+import { type AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -24,11 +25,7 @@ export function PostFeedReason({
 	moderation,
 	onOpenReposter,
 }: {
-	reason:
-		| ReasonFeedSource
-		| AppBskyFeedDefs.ReasonRepost
-		| AppBskyFeedDefs.ReasonPin
-		| { [k: string]: unknown; $type: string };
+	reason: ReasonFeedSource | AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
 	moderation?: ModerationDecision;
 	onOpenReposter?: () => void;
 }) {
@@ -58,18 +55,23 @@ export function PostFeedReason({
 		);
 	}
 
-	if (AppBskyFeedDefs.isReasonRepost(reason)) {
-		const isOwner = reason.by.did === currentAccount?.did;
-		const reposter = createSanitizedDisplayName(reason.by, false, moderation?.ui('displayName'));
+	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
+		const by = reason.by;
+		const isOwner = by.did === currentAccount?.did;
+		const reposter = createSanitizedDisplayName(
+			by as AnyProfileView,
+			false,
+			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+		);
 		return (
 			<Link
 				style={styles.includeReason}
-				to={makeProfileLink(reason.by)}
+				to={makeProfileLink(by)}
 				label={isOwner ? l`Reposted by you` : l`Reposted by ${reposter}`}
 				onPress={onOpenReposter}
 			>
 				<RepostIcon style={[t.atoms.text_contrast_medium, { marginRight: 3 }]} width={13} height={13} />
-				<ProfileHoverCard did={reason.by.did}>
+				<ProfileHoverCard did={by.did}>
 					<Text style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug]} numberOfLines={1}>
 						{isOwner ? <Trans>Reposted by you</Trans> : <Trans>Reposted by {reposter}</Trans>}
 					</Text>
@@ -78,7 +80,7 @@ export function PostFeedReason({
 		);
 	}
 
-	if (AppBskyFeedDefs.isReasonPin(reason)) {
+	if (reason?.$type === 'app.bsky.feed.defs#reasonPin') {
 		return (
 			<View style={styles.includeReason}>
 				<PinIcon style={[t.atoms.text_contrast_medium, { marginRight: 3 }]} width={13} height={13} />

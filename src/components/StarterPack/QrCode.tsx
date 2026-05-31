@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled';
-import { type AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
+import { type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { Logo } from '#/view/icons/Logo';
@@ -13,8 +13,6 @@ import { atoms as a, useTheme } from '#/alf';
 import { LinearGradientBackground } from '#/components/LinearGradientBackground';
 import { Text } from '#/components/Typography';
 
-import * as bsky from '#/types/bsky';
-
 export function QrCode({
 	starterPack,
 	link,
@@ -22,11 +20,7 @@ export function QrCode({
 	starterPack: AppBskyGraphDefs.StarterPackView;
 	link: string;
 }) {
-	const { record } = starterPack;
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	return (
 		<LinearGradientBackground

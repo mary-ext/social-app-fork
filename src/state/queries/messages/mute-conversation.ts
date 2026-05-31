@@ -1,9 +1,8 @@
-import { type ChatBskyConvoMuteConvo } from '@atproto/api';
+import { type ChatBskyConvoMuteConvo } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { rollbackConvoOptimistic, updateConvoOptimistic } from './utils/convo-cache';
 
@@ -13,26 +12,29 @@ export function useMuteConvo(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyConvoMuteConvo.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyConvoMuteConvo.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async ({ mute }: { mute: boolean }) => {
 			if (!convoId) throw new Error('No convoId provided');
+			if (!chat) throw new Error('Not signed in');
 			if (mute) {
-				const { data } = await agent.chat.bsky.convo.muteConvo(
-					{ convoId },
-					{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+				const data = await ok(
+					chat.post('chat.bsky.convo.muteConvo', {
+						input: { convoId },
+					}),
 				);
 				return data;
 			} else {
-				const { data } = await agent.chat.bsky.convo.unmuteConvo(
-					{ convoId },
-					{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+				const data = await ok(
+					chat.post('chat.bsky.convo.unmuteConvo', {
+						input: { convoId },
+					}),
 				);
 				return data;
 			}

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Text as RNText, View } from 'react-native';
-import { RichText } from '@atproto/api';
-import { parseLanguageString } from '@atproto/syntax';
+import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
@@ -24,6 +23,18 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Text } from '#/components/Typography';
 
 import { guessLanguageAsync, type LanguageResult } from '#/shims/bsky-guess-language';
+
+/**
+ * Extracts the primary language subtag from a BCP-47 language tag (e.g. `en-US` → `en`), or `undefined` if
+ * the tag can't be parsed.
+ */
+function getPrimaryLanguageSubtag(lang: string): string | undefined {
+	try {
+		return new Intl.Locale(lang).language;
+	} catch {
+		return undefined;
+	}
+}
 
 type LanguageDetectionPerLanguageConfig = {
 	acceptanceThreshold?: number;
@@ -230,7 +241,7 @@ export function SuggestedLanguage({
 	 */
 	const replyToLanguages = replyToLanguagesProp
 		.filter(Boolean)
-		.map((lang) => parseLanguageString(lang)?.language)
+		.map((lang) => getPrimaryLanguageSubtag(lang))
 		.filter(Boolean) as string[];
 	const [replyToLanguage] = replyToLanguages;
 	const hasSuggestedReplyLanguage =
@@ -433,16 +444,24 @@ async function guessLanguage(
  * leading `#` is short enough not to distort results.
  */
 function sanitizeTextForDetection(text: string): string {
-	const rt = new RichText({ text: text.trim() });
-	rt.detectFacetsWithoutResolution();
-
 	let sanitized = '';
-	for (const segment of rt.segments()) {
-		if (segment.isLink() || segment.isMention() || segment.isTag()) {
-			continue;
+	for (const token of tokenize(text.trim())) {
+		switch (token.type) {
+			case 'mention':
+			case 'autolink':
+			case 'link':
+				// Drop links and mentions — they aren't in the post's language.
+				break;
+			case 'topic':
+				// Keep the hashtag's word content (the leading `#` is dropped).
+				sanitized += token.name;
+				break;
+			case 'text':
+				sanitized += token.content;
+				break;
+			default:
+				sanitized += token.raw;
 		}
-		sanitized += segment.text;
 	}
-
 	return sanitized.trim();
 }

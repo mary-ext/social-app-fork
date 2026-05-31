@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -28,8 +29,6 @@ import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 import { BlockMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
 
@@ -41,7 +40,7 @@ export function MemberMenu({
 	isOwner,
 }: {
 	convo: ConvoWithDetails;
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	type: 'owner' | 'standard' | 'invited';
 	displayName: string;
 	isOwner: boolean;

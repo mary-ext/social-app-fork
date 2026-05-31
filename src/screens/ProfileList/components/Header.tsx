@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { AppBskyGraphDefs, RichText as RichTextAPI } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -41,8 +41,8 @@ export function Header({
 }) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
-	const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST;
-	const isModList = list.purpose === AppBskyGraphDefs.MODLIST;
+	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
+	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
 	const isBlocking = !!list.viewer?.blocked;
 	const isMuting = !!list.viewer?.muted;
 	const playHaptic = useHaptics();
@@ -109,10 +109,10 @@ export function Header({
 	const descriptionRT = useMemo(
 		() =>
 			list.description
-				? new RichTextAPI({
+				? {
 						text: list.description,
-						facets: list.descriptionFacets,
-					})
+						facets: list.descriptionFacets ?? [],
+					}
 				: undefined,
 		[list],
 	);

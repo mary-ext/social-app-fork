@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { moderateProfile, type ModerationOpts, type ModerationUI } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	type DisplayRestrictions,
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 
 import { useSession } from '#/state/session';
 
@@ -9,8 +16,6 @@ import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
-
-import type * as bsky from '#/types/bsky';
 
 type WebViewStyle = ViewStyle & {
 	transition?: string;
@@ -30,9 +35,9 @@ type Layout = {
 
 type Props = {
 	animate?: boolean;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	size?: number;
-	moderationOpts?: ModerationOpts;
+	moderationOpts?: ModerationOptions;
 };
 
 export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 120, moderationOpts }: Props) {
@@ -79,7 +84,9 @@ export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 1
 						y={layout.y}
 						zIndex={layout.zIndex}
 						includeProfileBorder={layout.border}
-						moderation={moderations[i]?.ui('avatar')}
+						moderation={
+							moderations[i] ? getDisplayRestrictions(moderations[i], DisplayContext.ProfileMedia) : undefined
+						}
 					/>
 				))}
 			</View>
@@ -98,7 +105,7 @@ function AvatarBubble({
 	includeProfileBorder,
 	moderation,
 }: {
-	profile?: bsky.profile.AnyProfileView;
+	profile?: AnyProfileView;
 	scale: number;
 	transitionDelay?: number;
 	size: number;
@@ -106,7 +113,7 @@ function AvatarBubble({
 	y: number;
 	zIndex?: number;
 	includeProfileBorder?: boolean;
-	moderation?: ModerationUI;
+	moderation?: DisplayRestrictions;
 }) {
 	const t = useTheme();
 

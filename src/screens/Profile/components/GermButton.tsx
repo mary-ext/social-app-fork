@@ -1,14 +1,16 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyActorGetProfile } from '@atproto/api';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { deleteRecord, getRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { RQKEY } from '#/state/queries/profile';
-import { useAgent, useSession } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -24,14 +26,13 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export function GermButton({
 	germ,
 	profile,
 }: {
 	germ: AppBskyActorDefs.ProfileAssociatedGerm;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -104,25 +105,26 @@ function GermSelfButton({ did }: { did: string }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const selfExplanationDialogControl = Dialog.useDialogControl();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const queryClient = useQueryClient();
 
 	const { mutate: deleteDeclaration, isPending } = useMutation({
 		mutationFn: async () => {
-			const previousRecord = await agent.com.germnetwork.declaration
-				.get({
-					repo: did,
-					rkey: 'self',
-				})
+			const previousRecord = await getRecord(pds!, {
+				collection: 'com.germnetwork.declaration',
+				repo: did as Did,
+				rkey: 'self',
+			})
 				.then((res) => res.value)
 				.catch(() => null);
 
-			await agent.com.germnetwork.declaration.delete({
-				repo: did,
+			await deleteRecord(pds!, {
+				collection: 'com.germnetwork.declaration',
+				repo: did as Did,
 				rkey: 'self',
 			});
 
-			await whenAppViewReady(agent, did, (res) => !res.data.associated?.germ);
+			await whenAppViewReady(appview, did, (res) => !res.associated?.germ);
 
 			return previousRecord;
 		},
@@ -130,14 +132,13 @@ function GermSelfButton({ did }: { did: string }) {
 			async function undo() {
 				if (!previousRecord) return;
 				try {
-					await agent.com.germnetwork.declaration.put(
-						{
-							repo: did,
-							rkey: 'self',
-						},
-						previousRecord,
-					);
-					await whenAppViewReady(agent, did, (res) => !!res.data.associated?.germ);
+					await putRecord(pds!, {
+						collection: 'com.germnetwork.declaration',
+						record: previousRecord,
+						repo: did as Did,
+						rkey: 'self',
+					});
+					await whenAppViewReady(appview, did, (res) => !!res.associated?.germ);
 					await queryClient.refetchQueries({ queryKey: RQKEY(did) });
 
 					Toast.show(l`Germ DM reconnected`);
@@ -246,7 +247,7 @@ function GermSelfButton({ did }: { did: string }) {
 
 function constructGermUrl(
 	declaration: AppBskyActorDefs.ProfileAssociatedGerm,
-	profile: bsky.profile.AnyProfileView,
+	profile: AnyProfileView,
 	viewerDid?: string,
 ) {
 	try {
@@ -280,14 +281,14 @@ function isCustomGermDomain(url: string) {
 }
 
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	actor: string,
-	fn: (res: AppBskyActorGetProfile.Response) => boolean,
+	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => agent.app.bsky.actor.getProfile({ actor }),
+		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor: actor as ActorIdentifier } })),
 	);
 }

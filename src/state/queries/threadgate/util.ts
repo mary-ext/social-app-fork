@@ -1,26 +1,25 @@
-import { type AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 
 import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
-
-import * as bsky from '#/types/bsky';
 
 export function threadgateViewToAllowUISetting(
 	threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
-	// Validate the record for clarity, since backwards compat code is a little confusing
+	const record = threadgateView?.record;
 	const threadgate =
-		threadgateView && bsky.validate(threadgateView.record, AppBskyFeedThreadgate.validateRecord)
-			? threadgateView.record
+		record && (record as { $type?: string }).$type === 'app.bsky.feed.threadgate'
+			? (record as AppBskyFeedThreadgate.Main)
 			: undefined;
 	return threadgateRecordToAllowUISetting(threadgate);
 }
 
 /**
- * Converts a full {@link AppBskyFeedThreadgate.Record} to a list of {@link ThreadgateAllowUISetting}, for use
- * by app UI.
+ * Converts a full {@link AppBskyFeedThreadgate.Main} to a list of {@link ThreadgateAllowUISetting}, for use by
+ * app UI.
  */
 export function threadgateRecordToAllowUISetting(
-	threadgate: AppBskyFeedThreadgate.Record | undefined,
+	threadgate: AppBskyFeedThreadgate.Main | undefined,
 ): ThreadgateAllowUISetting[] {
 	/*
 	 * If `threadgate` doesn't exist (default), or if `threadgate.allow === undefined`, it means
@@ -38,18 +37,17 @@ export function threadgateRecordToAllowUISetting(
 	}
 
 	const settings: ThreadgateAllowUISetting[] = threadgate.allow
-		.map((allow) => {
-			let setting: ThreadgateAllowUISetting | undefined;
-			if (AppBskyFeedThreadgate.isMentionRule(allow)) {
-				setting = { type: 'mention' };
-			} else if (AppBskyFeedThreadgate.isFollowingRule(allow)) {
-				setting = { type: 'following' };
-			} else if (AppBskyFeedThreadgate.isListRule(allow)) {
-				setting = { type: 'list', list: allow.list };
-			} else if (AppBskyFeedThreadgate.isFollowerRule(allow)) {
-				setting = { type: 'followers' };
+		.map((allow): ThreadgateAllowUISetting | undefined => {
+			switch (allow.$type) {
+				case 'app.bsky.feed.threadgate#followerRule':
+					return { type: 'followers' };
+				case 'app.bsky.feed.threadgate#followingRule':
+					return { type: 'following' };
+				case 'app.bsky.feed.threadgate#listRule':
+					return { list: allow.list, type: 'list' };
+				case 'app.bsky.feed.threadgate#mentionRule':
+					return { type: 'mention' };
 			}
-			return setting;
 		})
 		.filter((n) => !!n);
 	return settings;
@@ -57,19 +55,19 @@ export function threadgateRecordToAllowUISetting(
 
 /**
  * Converts an array of {@link ThreadgateAllowUISetting} to the `allow` prop on
- * {@link AppBskyFeedThreadgate.Record}.
+ * {@link AppBskyFeedThreadgate.Main}.
  *
  * If the `allow` property on the record is undefined, we infer that to mean that everyone can reply. If it's
  * an empty array, we infer that to mean that no one can reply.
  */
 export function threadgateAllowUISettingToAllowRecordValue(
 	threadgate: ThreadgateAllowUISetting[],
-): AppBskyFeedThreadgate.Record['allow'] {
+): AppBskyFeedThreadgate.Main['allow'] {
 	if (threadgate.find((v) => v.type === 'everybody')) {
 		return undefined;
 	}
 
-	let allow: Exclude<AppBskyFeedThreadgate.Record['allow'], undefined> = [];
+	let allow: Exclude<AppBskyFeedThreadgate.Main['allow'], undefined> = [];
 
 	if (!threadgate.find((v) => v.type === 'nobody')) {
 		for (const rule of threadgate) {
@@ -82,7 +80,7 @@ export function threadgateAllowUISettingToAllowRecordValue(
 			} else if (rule.type === 'list') {
 				allow.push({
 					$type: 'app.bsky.feed.threadgate#listRule',
-					list: rule.list,
+					list: rule.list as ResourceUri,
 				});
 			}
 		}
@@ -92,18 +90,18 @@ export function threadgateAllowUISettingToAllowRecordValue(
 }
 
 /**
- * Merges two {@link AppBskyFeedThreadgate.Record} objects, combining their `allow` and `hiddenReplies` arrays
+ * Merges two {@link AppBskyFeedThreadgate.Main} objects, combining their `allow` and `hiddenReplies` arrays
  * and de-deduplicating them.
  *
  * Note: `allow` can be undefined here, be sure you don't accidentally set it to an empty array. See other
  * comments in this file.
  */
 export function mergeThreadgateRecords(
-	prev: AppBskyFeedThreadgate.Record,
-	next: Partial<AppBskyFeedThreadgate.Record>,
-): AppBskyFeedThreadgate.Record {
+	prev: AppBskyFeedThreadgate.Main,
+	next: Partial<AppBskyFeedThreadgate.Main>,
+): AppBskyFeedThreadgate.Main {
 	// can be undefined if everyone can reply!
-	const allow: AppBskyFeedThreadgate.Record['allow'] | undefined =
+	const allow: AppBskyFeedThreadgate.Main['allow'] | undefined =
 		prev.allow || next.allow
 			? [...(prev.allow || []), ...(next.allow || [])].filter(
 					(v, i, a) => a.findIndex((t) => t.$type === v.$type) === i,
@@ -112,25 +110,25 @@ export function mergeThreadgateRecords(
 	const hiddenReplies = Array.from(new Set([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]));
 
 	return createThreadgateRecord({
-		post: prev.post,
 		allow, // can be undefined!
 		hiddenReplies,
+		post: prev.post,
 	});
 }
 
-/** Create a new {@link AppBskyFeedThreadgate.Record} object with the given properties. */
+/** Create a new {@link AppBskyFeedThreadgate.Main} object with the given properties. */
 export function createThreadgateRecord(
-	threadgate: Partial<AppBskyFeedThreadgate.Record>,
-): AppBskyFeedThreadgate.Record {
+	threadgate: Partial<AppBskyFeedThreadgate.Main>,
+): AppBskyFeedThreadgate.Main {
 	if (!threadgate.post) {
 		throw new Error('Cannot create a threadgate record without a post URI');
 	}
 
 	return {
 		$type: 'app.bsky.feed.threadgate',
-		post: threadgate.post,
-		createdAt: new Date().toISOString(),
 		allow: threadgate.allow, // can be undefined!
+		createdAt: new Date().toISOString(),
 		hiddenReplies: threadgate.hiddenReplies || [],
+		post: threadgate.post,
 	};
 }

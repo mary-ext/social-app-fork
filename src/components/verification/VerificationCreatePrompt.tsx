@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -20,14 +21,12 @@ import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 export function VerificationCreatePrompt({
 	control,
 	profile,
 }: {
 	control: DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();

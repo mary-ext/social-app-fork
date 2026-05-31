@@ -1,6 +1,6 @@
 import { type JSX, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';

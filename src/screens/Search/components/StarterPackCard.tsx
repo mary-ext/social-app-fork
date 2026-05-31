@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { type AppBskyGraphDefs, AppBskyGraphStarterpack, moderateProfile } from '@atproto/api';
+import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -21,8 +22,6 @@ import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
 
-import * as bsky from '#/types/bsky';
-
 type WebViewStyle = Omit<ViewStyle, 'position' | 'zIndex'> & {
 	position?: 'static';
 	zIndex?: 'unset';
@@ -38,14 +37,10 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 	const { currentAccount } = useSession();
 	const { gtPhone } = useBreakpoints();
 	const link = useStarterPackLink({ view });
-	const record = view.record;
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
+	const record = view.record as AppBskyGraphStarterpack.Main;
 
 	const profileCount = gtPhone ? 11 : 8;
-	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject);
+	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject as AnyProfileView);
 
 	return (
 		<Link to={link.to} label={link.label} onHoverIn={link.precache} onPress={link.precache}>
@@ -123,7 +118,7 @@ export function AvatarStack({
 	numPending,
 	total,
 }: {
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	numPending: number;
 	total?: number;
 }) {
@@ -184,7 +179,7 @@ export function AvatarStack({
 									size={size}
 									avatar={item.profile.avatar}
 									type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-									moderation={item.moderation.ui('avatar')}
+									moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
 									style={[a.absolute, a.inset_0]}
 								/>
 							) : (

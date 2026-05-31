@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { type Insets } from 'react-native';
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';

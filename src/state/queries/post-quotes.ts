@@ -1,13 +1,10 @@
-import {
-	type AppBskyActorDefs,
-	AppBskyEmbedRecord,
-	type AppBskyFeedDefs,
-	type AppBskyFeedGetQuotes,
-	AtUri,
-} from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedGetQuotes } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from './util';
 
@@ -18,23 +15,25 @@ const RQKEY_ROOT = 'post-quotes';
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri];
 
 export function usePostQuotesQuery(resolvedUri: string | undefined) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useInfiniteQuery<
-		AppBskyFeedGetQuotes.OutputSchema,
+		AppBskyFeedGetQuotes.$output,
 		Error,
-		InfiniteData<AppBskyFeedGetQuotes.OutputSchema>,
+		InfiniteData<AppBskyFeedGetQuotes.$output>,
 		QueryKey,
 		RQPageParam
 	>({
 		queryKey: RQKEY(resolvedUri || ''),
-		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
-			const res = await agent.api.app.bsky.feed.getQuotes({
-				uri: resolvedUri || '',
-				limit: PAGE_SIZE,
-				cursor: pageParam,
-			});
-			return res.data;
-		},
+		queryFn: ({ pageParam }: { pageParam: RQPageParam }) =>
+			ok(
+				appview.get('app.bsky.feed.getQuotes', {
+					params: {
+						uri: (resolvedUri || '') as ResourceUri,
+						limit: PAGE_SIZE,
+						cursor: pageParam,
+					},
+				}),
+			),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => lastPage.cursor,
 		enabled: !!resolvedUri,
@@ -45,8 +44,8 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 					return {
 						...page,
 						posts: page.posts.filter((post) => {
-							if (post.embed && AppBskyEmbedRecord.isView(post.embed)) {
-								if (AppBskyEmbedRecord.isViewDetached(post.embed.record)) {
+							if (post.embed?.$type === 'app.bsky.embed.record#view') {
+								if (post.embed.record.$type === 'app.bsky.embed.record#viewDetached') {
 									return false;
 								}
 							}
@@ -63,7 +62,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetQuotes.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetQuotes.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
@@ -88,10 +87,10 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetQuotes.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedGetQuotes.$output>>({
 		queryKey: [RQKEY_ROOT],
 	});
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 	for (const [_queryKey, queryData] of queryDatas) {
 		if (!queryData?.pages) {
 			continue;

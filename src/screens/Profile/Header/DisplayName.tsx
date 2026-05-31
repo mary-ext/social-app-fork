@@ -1,5 +1,6 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type ModerationDecision } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -29,7 +30,7 @@ export function ProfileHeaderDisplayName({
 			>
 				{sanitizeDisplayName(
 					profile.displayName || sanitizeHandle(profile.handle),
-					moderation.ui('displayName'),
+					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 				)}
 			</Text>
 		</View>

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { useHaptics } from '#/lib/haptics';
@@ -357,7 +357,7 @@ function DialogInner({
 	const { mutateAsync: unlikeFeed, isPending: isUnlikePending } = useUnlikeMutation();
 
 	const isLiked = !!likeUri;
-	const feedRkey = useMemo(() => new AtUri(info.uri).rkey, [info.uri]);
+	const feedRkey = useMemo(() => parseCanonicalResourceUri(info.uri).rkey, [info.uri]);
 
 	const onToggleLiked = async () => {
 		try {
@@ -495,10 +495,12 @@ function DialogInner({
 						{info.view && (
 							<ReportDialog
 								control={reportDialogControl}
-								subject={{
-									...info.view,
-									$type: 'app.bsky.feed.defs#generatorView',
-								}}
+								subject={
+									{
+										...info.view,
+										$type: 'app.bsky.feed.defs#generatorView',
+									} as unknown as React.ComponentProps<typeof ReportDialog>['subject']
+								}
 							/>
 						)}
 					</View>

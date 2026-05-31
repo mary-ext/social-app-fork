@@ -1,4 +1,5 @@
-import { type AppBskyGraphDefs, AtUri } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 export function makeProfileLink(info: { did: string }, ...segments: string[]) {
 	return [`/profile`, info.did, ...segments].join('/');
@@ -35,7 +36,7 @@ export function makeStarterPackLink(
 	if (typeof starterPackOrName === 'string') {
 		return `https://bsky.app/start/${starterPackOrName}/${rkey}`;
 	} else {
-		const uriRkey = new AtUri(starterPackOrName.uri).rkey;
+		const uriRkey = parseCanonicalResourceUri(starterPackOrName.uri).rkey;
 		return `https://bsky.app/start/${starterPackOrName.creator.did}/${uriRkey}`;
 	}
 }

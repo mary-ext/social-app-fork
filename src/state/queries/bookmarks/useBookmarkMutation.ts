@@ -1,4 +1,6 @@
-import { type AppBskyFeedDefs } from '@atproto/api';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ResourceUri } from '@atcute/lexicons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';
@@ -8,7 +10,7 @@ import {
 	optimisticallyDeleteBookmark,
 	optimisticallySaveBookmark,
 } from '#/state/queries/bookmarks/useBookmarksQuery';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -25,21 +27,26 @@ type MutationArgs =
 
 export function useBookmarkMutation() {
 	const qc = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useMutation({
 		async mutationFn(args: MutationArgs) {
 			if (args.action === 'create') {
 				updatePostShadow(qc, args.post.uri, { bookmarked: true });
-				await agent.app.bsky.bookmark.createBookmark({
-					uri: args.post.uri,
-					cid: args.post.cid,
-				});
+				await ok(
+					appview.post('app.bsky.bookmark.createBookmark', {
+						as: null,
+						input: { cid: args.post.cid, uri: args.post.uri },
+					}),
+				);
 			} else if (args.action === 'delete') {
 				updatePostShadow(qc, args.uri, { bookmarked: false });
-				await agent.app.bsky.bookmark.deleteBookmark({
-					uri: args.uri,
-				});
+				await ok(
+					appview.post('app.bsky.bookmark.deleteBookmark', {
+						as: null,
+						input: { uri: args.uri as ResourceUri },
+					}),
+				);
 			}
 		},
 		onSuccess(_, args) {

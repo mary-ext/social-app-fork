@@ -1,9 +1,8 @@
-import { ChatBskyConvoDefs, type ChatBskyGroupDisableJoinLink } from '@atproto/api';
+import { type ChatBskyGroupDisableJoinLink } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -15,26 +14,28 @@ export function useDisableJoinLink(
 		onSuccess,
 		onError,
 	}: {
-		onSuccess?: (data: ChatBskyGroupDisableJoinLink.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyGroupDisableJoinLink.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async () => {
 			if (!convoId) throw new Error('No convoId provided');
-			const { data } = await agent.chat.bsky.group.disableJoinLink(
-				{ convoId },
-				{ headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(
+				chat.post('chat.bsky.group.disableJoinLink', {
+					input: { convoId },
+				}),
 			);
 			return data;
 		},
 		onMutate: () => {
 			if (!convoId) return;
 			return updateConvoOptimistic(queryClient, convoId, (prev) => {
-				if (!ChatBskyConvoDefs.isGroupConvo(prev.kind) || !prev.kind.joinLink) {
+				if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo' || !prev.kind.joinLink) {
 					return undefined;
 				}
 				return {
@@ -49,7 +50,7 @@ export function useDisableJoinLink(
 		onSuccess: (data) => {
 			if (convoId) {
 				updateConvoOptimistic(queryClient, convoId, (prev) => {
-					if (!ChatBskyConvoDefs.isGroupConvo(prev.kind)) return undefined;
+					if (prev.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') return undefined;
 					return {
 						...prev,
 						kind: { ...prev.kind, joinLink: data.joinLink },

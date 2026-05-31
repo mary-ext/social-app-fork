@@ -16,7 +16,9 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { AppBskyFeedDefs, AppBskyFeedPost, AtUri, moderatePost } from '@atproto/api';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type InfiniteData,
 	type QueryClient,
@@ -27,10 +29,8 @@ import {
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
-
-import type * as bsky from '#/types/bsky';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
 import { type FeedPage } from './types';
@@ -49,7 +49,7 @@ export function RQKEY(filter: 'all' | 'mentions') {
 }
 
 export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all' | 'mentions' }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
 	const unreads = useUnreadNotificationsApi();
@@ -89,7 +89,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 					];
 				}
 				const { page: fetchedPage } = await fetchPage({
-					agent,
+					appview,
 					limit: PAGE_SIZE,
 					cursor: pageParam,
 					queryClient,
@@ -169,9 +169,10 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 											 * a `$type` field on the `subject`. But if the nested
 											 * `record` is a post, we know it's a post view.
 											 */
-											if (AppBskyFeedPost.isRecord(item.subject?.record)) {
-												const mod = moderatePost(item.subject, moderationOpts!);
-												if (mod.ui('contentList').filter) {
+											const record = item.subject?.record as AppBskyFeedPost.Main | undefined;
+											if (record?.$type === 'app.bsky.feed.post') {
+												const mod = moderatePost(item.subject as AppBskyFeedDefs.PostView, moderationOpts!);
+												if (getDisplayRestrictions(mod, DisplayContext.ContentList).filters.length > 0) {
 													return false;
 												}
 											}
@@ -246,7 +247,7 @@ export function* findAllPostsInQueryData(
 	queryClient: QueryClient,
 	uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
-	const atUri = new AtUri(uri);
+	const atUri = parseResourceUri(uri);
 
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
 		queryKey: [RQKEY_ROOT],
@@ -264,7 +265,7 @@ export function* findAllPostsInQueryData(
 					}
 				}
 
-				if (AppBskyFeedDefs.isPostView(item.subject)) {
+				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
 						yield embedViewRecordToPostView(quotedPost);
@@ -278,7 +279,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
-): Generator<bsky.profile.AnyProfileView, void> {
+): Generator<AnyProfileView, void> {
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
 		queryKey: [RQKEY_ROOT],
 	});
@@ -292,14 +293,14 @@ export function* findAllProfilesInQueryData(
 					(item.type === 'follow' || item.type === 'contact-match') &&
 					item.notification.author.did === did
 				) {
-					yield item.notification.author;
+					yield item.notification.author as AnyProfileView;
 				} else if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
-					yield item.subject.author;
+					yield item.subject.author as AnyProfileView;
 				}
-				if (AppBskyFeedDefs.isPostView(item.subject)) {
+				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost?.author.did === did) {
-						yield quotedPost.author;
+						yield quotedPost.author as AnyProfileView;
 					}
 				}
 			}

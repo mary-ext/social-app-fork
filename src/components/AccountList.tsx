@@ -1,6 +1,6 @@
 import { Fragment, useCallback } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 

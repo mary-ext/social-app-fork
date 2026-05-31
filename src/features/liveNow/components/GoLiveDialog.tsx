@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
@@ -27,7 +28,6 @@ import {
 	useLiveNowConfig,
 	useUpsertLiveStatusMutation,
 } from '#/features/liveNow';
-import type * as bsky from '#/types/bsky';
 
 import { LinkPreview } from './LinkPreview';
 
@@ -36,7 +36,7 @@ export function GoLiveDialog({
 	profile,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 }) {
 	return (
 		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
@@ -49,7 +49,7 @@ export function GoLiveDialog({
 // Possible durations: max 4 hours, 5 minute intervals
 const DURATIONS = Array.from({ length: (4 * 60) / 5 }).map((_, i) => (i + 1) * 5);
 
-function DialogInner({ profile }: { profile: bsky.profile.AnyProfileView }) {
+function DialogInner({ profile }: { profile: AnyProfileView }) {
 	const control = Dialog.useDialogContext();
 	const { t: l, i18n } = useLingui();
 	const t = useTheme();

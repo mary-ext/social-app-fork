@@ -1,10 +1,14 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyUnspeccedDefs, hasMutedWord } from '@atproto/api';
+import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
+
+import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 export type TrendingTopic = AppBskyUnspeccedDefs.TrendingTopic;
 
@@ -27,10 +31,10 @@ function dedup(topics: TrendingTopic[]): TrendingTopic[] {
 export const trendingTopicsQueryKey = ['trending-topics'];
 
 export function useTrendingTopics() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
-	const mutedWords = useMemo(
-		() => preferences?.moderationPrefs?.mutedWords ?? [],
+	const keywordFilters = useMemo(
+		() => (preferences?.moderationPrefs?.mutedWords ?? []).map((word) => interpretMutedWordPreference(word)),
 		[preferences?.moderationPrefs?.mutedWords],
 	);
 
@@ -39,9 +43,11 @@ export function useTrendingTopics() {
 		staleTime: STALE.MINUTES.THREE,
 		queryKey: trendingTopicsQueryKey,
 		async queryFn() {
-			const { data } = await agent.app.bsky.unspecced.getTrendingTopics({
-				limit: DEFAULT_LIMIT,
-			});
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getTrendingTopics', {
+					params: { limit: DEFAULT_LIMIT },
+				}),
+			);
 			return {
 				topics: data.topics ?? [],
 				suggested: data.suggested ?? [],
@@ -53,7 +59,7 @@ export function useTrendingTopics() {
 					topics: dedup(
 						data.topics.filter((t) => {
 							return !hasMutedWord({
-								mutedWords,
+								keywordFilters,
 								text: `${t.topic} ${t.displayName ?? ''} ${t.description ?? ''}`,
 							});
 						}),
@@ -61,14 +67,14 @@ export function useTrendingTopics() {
 					suggested: dedup(
 						data.suggested.filter((t) => {
 							return !hasMutedWord({
-								mutedWords,
+								keywordFilters,
 								text: `${t.topic} ${t.displayName ?? ''} ${t.description ?? ''}`,
 							});
 						}),
 					),
 				};
 			},
-			[mutedWords],
+			[keywordFilters],
 		),
 	});
 }

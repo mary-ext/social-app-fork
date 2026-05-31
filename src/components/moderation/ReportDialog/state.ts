@@ -1,4 +1,4 @@
-import { type AppBskyLabelerDefs } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 
 import { OTHER_REPORT_REASONS } from '#/components/moderation/ReportDialog/const';
 import {

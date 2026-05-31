@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
-import { type ChatBskyConvoDefs, type ModerationOpts, RichText } from '@atproto/api';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -27,7 +28,6 @@ import { usePromptControl } from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
-import type * as bsky from '#/types/bsky';
 
 export let MessageContextMenu = ({
 	message,
@@ -36,8 +36,8 @@ export let MessageContextMenu = ({
 	children,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	senderProfile?: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts | undefined;
+	senderProfile?: AnyProfileView;
+	moderationOpts: ModerationOptions | undefined;
 	children: (props: TriggerChildProps) => React.ReactNode;
 }): React.ReactNode => {
 	const { t: l, i18n } = useLingui();
@@ -53,13 +53,7 @@ export let MessageContextMenu = ({
 	const isFromSelf = message.sender?.did === currentAccount?.did;
 
 	const onCopyMessage = useCallback(() => {
-		const str = richTextToString(
-			new RichText({
-				text: message.text,
-				facets: message.facets,
-			}),
-			true,
-		);
+		const str = richTextToString({ text: message.text, facets: message.facets ?? [] }, true);
 
 		void Clipboard.setStringAsync(str);
 		Toast.show(l`Copied to clipboard`, {

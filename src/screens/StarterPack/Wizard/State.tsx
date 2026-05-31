@@ -1,12 +1,15 @@
 import { createContext, useContext, useReducer } from 'react';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
+import {
+	type AnyProfileView,
+	type AppBskyFeedDefs,
+	type AppBskyGraphDefs,
+	type AppBskyGraphStarterpack,
+} from '@atcute/bluesky';
 import { defineMessage, plural } from '@lingui/core/macro';
 
 import { STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 
 import * as Toast from '#/components/Toast';
-
-import * as bsky from '#/types/bsky';
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const;
 type Step = (typeof steps)[number];
@@ -17,7 +20,7 @@ type Action =
 	| { type: 'SetCanNext'; canNext: boolean }
 	| { type: 'SetName'; name: string }
 	| { type: 'SetDescription'; description: string }
-	| { type: 'AddProfile'; profile: bsky.profile.AnyProfileView }
+	| { type: 'AddProfile'; profile: AnyProfileView }
 	| { type: 'RemoveProfile'; profileDid: string }
 	| { type: 'AddFeed'; feed: AppBskyFeedDefs.GeneratorView }
 	| { type: 'RemoveFeed'; feedUri: string }
@@ -29,7 +32,7 @@ interface State {
 	currentStep: Step;
 	name?: string;
 	description?: string;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	feeds: AppBskyFeedDefs.GeneratorView[];
 	processing: boolean;
 	error?: string;
@@ -120,19 +123,20 @@ export function Provider({
 }: {
 	starterPack?: AppBskyGraphDefs.StarterPackView;
 	listItems?: AppBskyGraphDefs.ListItemView[];
-	targetProfile: bsky.profile.AnyProfileView;
+	targetProfile: AnyProfileView;
 	children: React.ReactNode;
 }) {
 	const createInitialState = (): State => {
 		const targetDid = targetProfile?.did;
 
-		if (starterPack && bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)) {
+		if (starterPack) {
+			const record = starterPack.record as AppBskyGraphStarterpack.Main;
 			return {
 				canNext: true,
 				currentStep: 'Details',
-				name: starterPack.record.name,
-				description: starterPack.record.description,
-				profiles: listItems?.map((i) => i.subject) ?? [],
+				name: record.name,
+				description: record.description,
+				profiles: (listItems?.map((i) => i.subject) as AnyProfileView[]) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,
 				transitionDirection: 'Forward',

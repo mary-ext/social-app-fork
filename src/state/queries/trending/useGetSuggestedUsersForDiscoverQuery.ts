@@ -1,4 +1,5 @@
-import { type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsersForDiscover } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsersForDiscover } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 
 import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/utils';
@@ -6,7 +7,7 @@ import { aggregateUserInterests, createBskyTopicsHeader } from '#/lib/api/feed/u
 import { getContentLanguages } from '#/state/preferences/languages';
 import { STALE } from '#/state/queries';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -21,7 +22,7 @@ export const createGetSuggestedUsersForDiscoverQueryKey = (props: { limit?: numb
 ];
 
 export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 
 	return useQuery({
@@ -31,16 +32,14 @@ export function useGetSuggestedUsersForDiscoverQuery(props: QueryProps = {}) {
 			const contentLangs = getContentLanguages().join(',');
 			const userInterests = aggregateUserInterests(preferences);
 
-			const { data } = await agent.app.bsky.unspecced.getSuggestedUsersForDiscover(
-				{
-					limit: props.limit || 10,
-				},
-				{
+			const data = await ok(
+				appview.get('app.bsky.unspecced.getSuggestedUsersForDiscover', {
+					params: { limit: props.limit || 10 },
 					headers: {
 						...createBskyTopicsHeader(userInterests),
 						'Accept-Language': contentLangs,
 					},
-				},
+				}),
 			);
 			if (!data.recIdStr) {
 				logger.debug('getSuggestedUsersForDiscover response missing recIdStr');
@@ -54,7 +53,7 @@ export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-	const responses = queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForDiscover.OutputSchema>({
+	const responses = queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsersForDiscover.$output>({
 		queryKey: [getSuggestedUsersForDiscoverQueryKeyRoot],
 	});
 	for (const [_key, response] of responses) {

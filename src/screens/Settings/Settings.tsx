@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LayoutAnimation, Pressable, View } from 'react-native';
-import { type AppBskyActorDefs, moderateProfile } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -255,7 +256,7 @@ function ProfilePreview({ profile }: { profile: AppBskyActorDefs.ProfileViewDeta
 	const moderation = moderateProfile(profile, moderationOpts);
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	return (
@@ -263,7 +264,7 @@ function ProfilePreview({ profile }: { profile: AppBskyActorDefs.ProfileViewDeta
 			<UserAvatar
 				size={80}
 				avatar={shadow.avatar}
-				moderation={moderation.ui('avatar')}
+				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				type={shadow.associated?.labeler ? 'labeler' : 'user'}
 				live={live}
 			/>
@@ -424,7 +425,10 @@ function AccountRow({
 					<UserAvatar
 						size={28}
 						avatar={profile.avatar}
-						moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
+						moderation={getDisplayRestrictions(
+							moderateProfile(profile, moderationOpts),
+							DisplayContext.ProfileMedia,
+						)}
 						type={profile.associated?.labeler ? 'labeler' : 'user'}
 						live={live}
 						hideLiveBadge

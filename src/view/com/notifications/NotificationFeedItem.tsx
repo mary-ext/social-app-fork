@@ -8,22 +8,30 @@ import {
 	View,
 } from 'react-native';
 import {
+	type AnyProfileView,
+	type AnyStarterPackView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyGraphFollow,
+} from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
 	moderateProfile,
 	type ModerationDecision,
-	type ModerationOpts,
-} from '@atproto/api';
-import { AtUri } from '@atproto/api';
-import { TID } from '@atproto/common-web';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
+import * as TID from '@atcute/tid';
 import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS, MAX_POST_LINES } from '#/lib/constants';
+import { MAX_POST_LINES } from '#/lib/constants';
 import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type NavigationProp } from '#/lib/routes/types';
@@ -37,7 +45,7 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { type FeedNotification } from '#/state/queries/notifications/feed';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
-import { useAgent, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -72,8 +80,6 @@ import { SubtleHover } from '#/components/SubtleHover';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import * as bsky from '#/types/bsky';
-
 const MAX_AUTHORS = 5;
 
 const EXPANDED_AUTHOR_EL_HEIGHT = 35;
@@ -91,7 +97,7 @@ let NotificationFeedItem = ({
 	hideTopBorder,
 }: {
 	item: FeedNotification;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	highlightUnread: boolean;
 	hideTopBorder?: boolean;
 }): React.ReactNode => {
@@ -106,8 +112,8 @@ let NotificationFeedItem = ({
 			case 'like-via-repost':
 			case 'repost-via-repost': {
 				if (item.subjectUri) {
-					const urip = new AtUri(item.subjectUri);
-					return `/profile/${urip.host}/post/${urip.rkey}`;
+					const urip = parseCanonicalResourceUri(item.subjectUri);
+					return `/profile/${urip.repo}/post/${urip.rkey}`;
 				}
 				break;
 			}
@@ -120,14 +126,14 @@ let NotificationFeedItem = ({
 			case 'reply':
 			case 'mention':
 			case 'quote': {
-				const uripReply = new AtUri(item.notification.uri);
-				return `/profile/${uripReply.host}/post/${uripReply.rkey}`;
+				const uripReply = parseCanonicalResourceUri(item.notification.uri);
+				return `/profile/${uripReply.repo}/post/${uripReply.rkey}`;
 			}
 			case 'feedgen-like':
 			case 'starterpack-joined': {
 				if (item.subjectUri) {
-					const urip = new AtUri(item.subjectUri);
-					return `/profile/${urip.host}/feed/${urip.rkey}`;
+					const urip = parseCanonicalResourceUri(item.subjectUri);
+					return `/profile/${urip.repo}/feed/${urip.rkey}`;
 				}
 				break;
 			}
@@ -158,14 +164,14 @@ let NotificationFeedItem = ({
 	const authors: Author[] = useMemo(() => {
 		return [
 			{
-				profile: item.notification.author,
+				profile: item.notification.author as AppBskyActorDefs.ProfileView,
 				href: makeProfileLink(item.notification.author),
 				moderation: moderateProfile(item.notification.author, moderationOpts),
 			},
 			...(item.additional?.map(({ author }) => ({
-				profile: author,
+				profile: author as AppBskyActorDefs.ProfileView,
 				href: makeProfileLink(author),
-				moderation: moderateProfile(author, moderationOpts),
+				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
 			})) || []),
 		].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
 	}, [item, moderationOpts]);
@@ -177,19 +183,17 @@ let NotificationFeedItem = ({
 	// Calculate if this is a follow-back notification
 	const isFollowBack = useMemo(() => {
 		if (item.type !== 'follow') return false;
-		if (
-			item.notification.author.viewer?.following &&
-			bsky.dangerousIsType<AppBskyGraphFollow.Record>(item.notification.record, AppBskyGraphFollow.isRecord)
-		) {
+		if (item.notification.author.viewer?.following) {
+			const record = item.notification.record as AppBskyGraphFollow.Main;
 			let followingTimestamp;
 			try {
-				const rkey = new AtUri(item.notification.author.viewer.following).rkey;
-				followingTimestamp = TID.fromStr(rkey).timestamp();
+				const rkey = parseCanonicalResourceUri(item.notification.author.viewer.following).rkey;
+				followingTimestamp = TID.parse(rkey).timestamp;
 			} catch (e) {
 				return false;
 			}
 			if (followingTimestamp) {
-				const followedTimestamp = new Date(item.notification.record.createdAt).getTime() * 1000;
+				const followedTimestamp = new Date(record.createdAt).getTime() * 1000;
 				return followedTimestamp > followingTimestamp;
 			}
 		}
@@ -209,7 +213,7 @@ let NotificationFeedItem = ({
 		return (
 			<View testID={`feedItem-by-${item.notification.author.handle}`}>
 				<Post
-					post={item.subject}
+					post={item.subject as AppBskyFeedDefs.PostView}
 					style={
 						isHighlighted && {
 							backgroundColor: t.palette.primary_25,
@@ -607,7 +611,7 @@ let NotificationFeedItem = ({
 						</ExpandListPressable>
 						{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
 						(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
-							<FollowBackButton profile={item.notification.author} />
+							<FollowBackButton profile={item.notification.author as AppBskyActorDefs.ProfileView} />
 						) : null}
 						{item.type === 'post-like' ||
 						item.type === 'repost' ||
@@ -615,7 +619,7 @@ let NotificationFeedItem = ({
 						item.type === 'repost-via-repost' ||
 						item.type === 'subscribed-post' ? (
 							<View style={[a.pt_2xs]}>
-								<AdditionalPostText post={item.subject} />
+								<AdditionalPostText post={item.subject as AppBskyFeedDefs.PostView} />
 							</View>
 						) : null}
 						{item.type === 'feedgen-like' && item.subjectUri ? (
@@ -629,7 +633,7 @@ let NotificationFeedItem = ({
 						{item.type === 'starterpack-joined' ? (
 							<View>
 								<View style={[a.border, a.p_sm, a.rounded_sm, a.mt_sm, t.atoms.border_contrast_low]}>
-									<StarterPackCard starterPack={item.subject} />
+									<StarterPackCard starterPack={item.subject as AnyStarterPackView} />
 								</View>
 							</View>
 						) : null}
@@ -757,7 +761,8 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 
 function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	const { t: l } = useLingui();
-	const agent = useAgent();
+	const { chat } = useClients();
+	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -777,16 +782,16 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			style={[a.self_center, { marginLeft: 'auto' }]}
 			disabled={isLoading}
 			onPress={async () => {
+				if (!chat || !currentAccount) return;
 				try {
 					setIsLoading(true);
-					const res = await agent.api.chat.bsky.convo.getConvoForMembers(
-						{
-							members: [profile.did, agent.session!.did],
-						},
-						{ headers: DM_SERVICE_HEADERS },
+					const data = await ok(
+						chat.get('chat.bsky.convo.getConvoForMembers', {
+							params: { members: [profile.did, currentAccount.did as Did] },
+						}),
 					);
 					navigation.navigate('MessagesConversation', {
-						conversation: res.data.convo.id,
+						conversation: data.convo.id,
 					});
 				} catch (e) {
 					logger.error('Failed to get conversation', { safeMessage: e });
@@ -840,7 +845,7 @@ function CondensedAuthorsList({
 				<PreviewableUserAvatar
 					size={35}
 					profile={authors[0]!.profile}
-					moderation={authors[0]!.moderation.ui('avatar')}
+					moderation={getDisplayRestrictions(authors[0]!.moderation, DisplayContext.ProfileMedia)}
 					type={authors[0]!.profile.associated?.labeler ? 'labeler' : 'user'}
 				/>
 				{showDmButton ? <SayHelloBtn profile={authors[0]!.profile} /> : null}
@@ -855,7 +860,7 @@ function CondensedAuthorsList({
 						<PreviewableUserAvatar
 							size={35}
 							profile={author.profile}
-							moderation={author.moderation.ui('avatar')}
+							moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
 							type={author.profile.associated?.labeler ? 'labeler' : 'user'}
 						/>
 					</View>
@@ -908,7 +913,7 @@ function ExpandedAuthorCard({ author }: { author: Author }) {
 					<UserAvatar
 						size={35}
 						avatar={author.profile.avatar}
-						moderation={author.moderation.ui('avatar')}
+						moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
 						type={author.profile.associated?.labeler ? 'labeler' : 'user'}
 					/>
 				</ProfileHoverCard>
@@ -937,8 +942,9 @@ function ExpandedAuthorCard({ author }: { author: Author }) {
 
 function AdditionalPostText({ post }: { post?: AppBskyFeedDefs.PostView }) {
 	const t = useTheme();
-	if (post && bsky.dangerousIsType<AppBskyFeedPost.Record>(post?.record, AppBskyFeedPost.isRecord)) {
-		const text = post.record.text;
+	if (post) {
+		const record = post.record as AppBskyFeedPost.Main;
+		const text = record.text;
 
 		return (
 			<>

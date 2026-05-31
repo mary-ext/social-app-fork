@@ -3,8 +3,8 @@ import {
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	type ModerationDecision,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 

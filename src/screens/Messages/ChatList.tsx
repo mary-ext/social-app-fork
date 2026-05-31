@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';

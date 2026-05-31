@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type ChatBskyActorDefs } from '@atproto/api';
+import { type ChatBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';

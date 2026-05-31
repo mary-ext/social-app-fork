@@ -1,36 +1,33 @@
-import { type AppBskyFeedDefs } from '@atproto/api';
-
-import { type BskyAppAgent } from '#/state/session/agent';
+import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
 
 import { type FeedAPI, type FeedAPIResponse } from './types';
 
 export class FollowingFeedAPI implements FeedAPI {
-	agent: BskyAppAgent;
+	appview: Client;
 
-	constructor({ agent }: { agent: BskyAppAgent }) {
-		this.agent = agent;
+	constructor({ appview }: { appview: Client }) {
+		this.appview = appview;
 	}
 
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-		const res = await this.agent.getTimeline({
-			limit: 1,
-		});
-		return res.data.feed[0]!;
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getTimeline', {
+				params: { limit: 1 },
+			}),
+		);
+		return data.feed[0]!;
 	}
 
 	async fetch({ cursor, limit }: { cursor: string | undefined; limit: number }): Promise<FeedAPIResponse> {
-		const res = await this.agent.getTimeline({
-			cursor,
-			limit,
-		});
-		if (res.success) {
-			return {
-				cursor: res.data.cursor,
-				feed: res.data.feed,
-			};
-		}
+		const data = await ok(
+			this.appview.get('app.bsky.feed.getTimeline', {
+				params: { cursor, limit },
+			}),
+		);
 		return {
-			feed: [],
+			cursor: data.cursor,
+			feed: data.feed,
 		};
 	}
 }

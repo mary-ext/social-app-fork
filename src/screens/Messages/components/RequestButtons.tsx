@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { type ChatBskyActorDefs, ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -99,7 +99,8 @@ export function RejectMenu({
 	const reportControl = useDialogControl();
 	const blockOrDeleteControl = useDialogControl();
 
-	const lastMessage = ChatBskyConvoDefs.isMessageView(convo.lastMessage) ? convo.lastMessage : null;
+	const lastMessage =
+		convo.lastMessage?.$type === 'chat.bsky.convo.defs#messageView' ? convo.lastMessage : null;
 
 	return (
 		<>

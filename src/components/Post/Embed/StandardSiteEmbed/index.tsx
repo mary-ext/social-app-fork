@@ -1,5 +1,6 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedExternal, AtUri } from '@atproto/api';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
@@ -53,7 +54,7 @@ export const StandardSiteEmbed = ({
 	const imageUri = view.thumb;
 	const hasMedia = Boolean(imageUri);
 	const isStandard = view.associatedRefs?.some((ref) =>
-		new AtUri(ref.uri).collection.startsWith('site.standard.'),
+		parseCanonicalResourceUri(ref.uri).collection.startsWith('site.standard.'),
 	);
 	const isStandardPublication = isStandardSitePublicationEmbed(view);
 	let themeColors: ThemeColors = {

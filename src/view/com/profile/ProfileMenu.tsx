@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -461,10 +461,12 @@ let ProfileMenu = ({
 			<StarterPackDialog control={addToStarterPacksDialogControl} targetDid={profile.did} />
 			<ReportDialog
 				control={reportDialogControl}
-				subject={{
-					...profile,
-					$type: 'app.bsky.actor.defs#profileViewDetailed',
-				}}
+				subject={
+					{
+						...profile,
+						$type: 'app.bsky.actor.defs#profileViewDetailed',
+					} as unknown as Parameters<typeof ReportDialog>[0]['subject']
+				}
 			/>
 			<Prompt.Basic
 				control={blockPromptControl}
@@ -496,7 +498,11 @@ let ProfileMenu = ({
 			{status.isDisabled ? (
 				<GoLiveDisabledDialog control={goLiveDisabledDialogControl} status={status} />
 			) : status.isActive ? (
-				<EditLiveDialog control={goLiveDialogControl} status={status} embed={status.embed} />
+				<EditLiveDialog
+					control={goLiveDialogControl}
+					status={status}
+					embed={status.embed as AppBskyEmbedExternal.View}
+				/>
 			) : (
 				<GoLiveDialog control={goLiveDialogControl} profile={profile} />
 			)}

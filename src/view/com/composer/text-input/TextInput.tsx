@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { AppBskyRichtextFacet, RichText } from '@atproto/api';
 import { Trans } from '@lingui/react/macro';
 
 import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
 import { isUriImage } from '#/lib/media/util';
 
-import { type LinkFacetMatch, suggestLinkCardUri } from '#/view/com/composer/text-input/text-input-util';
+import {
+	detectLinks,
+	type LinkFacetMatch,
+	suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util';
 import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter';
 
 import { atoms as a, useAlf } from '#/alf';
@@ -24,12 +27,12 @@ import { type TextInputProps } from './TextInput.types';
 
 export function TextInput({
 	ref,
-	richtext,
+	text,
 	placeholder,
 	webForceMinHeight,
 	hasRightPadding,
 	isActive,
-	setRichText,
+	setText,
 	onPhotoPasted,
 	onPressPublish,
 	onNewLink,
@@ -46,33 +49,21 @@ export function TextInput({
 	const isPastingRef = useRef(false);
 	const pastSuggestedUris = useRef(new Set<string>());
 	const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>());
-	const prevLength = useRef(richtext.text.length);
-	const richtextRef = useRef(richtext);
+	const prevLength = useRef(text.length);
+	const textRef = useRef(text);
 	const [isDropping, setIsDropping] = useState(false);
 
-	richtextRef.current = richtext;
+	textRef.current = text;
 
-	const handleRichTextChange = useCallback(
+	const handleTextChange = useCallback(
 		(newText: string) => {
 			const mayBePaste = isPastingRef.current || newText.length > prevLength.current + 1;
 			isPastingRef.current = false;
 
-			const newRt = new RichText({ text: newText });
-			newRt.detectFacetsWithoutResolution();
-			richtextRef.current = newRt;
-			setRichText(newRt);
+			textRef.current = newText;
+			setText(newText);
 
-			const nextDetectedUris = new Map<string, LinkFacetMatch>();
-			if (newRt.facets) {
-				for (const facet of newRt.facets) {
-					for (const feature of facet.features) {
-						if (AppBskyRichtextFacet.isLink(feature)) {
-							nextDetectedUris.set(feature.uri, { facet, rt: newRt });
-						}
-					}
-				}
-			}
-
+			const nextDetectedUris = detectLinks(newText);
 			const suggestedUri = suggestLinkCardUri(
 				mayBePaste,
 				nextDetectedUris,
@@ -85,7 +76,7 @@ export function TextInput({
 				onNewLink(suggestedUri);
 			}
 		},
-		[onNewLink, setRichText],
+		[onNewLink, setText],
 	);
 
 	const onEmojiInserted = useCallback(
@@ -182,7 +173,7 @@ export function TextInput({
 				}
 				nativeEvent.preventDefault();
 			}
-			onPressPublish(richtextRef.current);
+			onPressPublish(textRef.current);
 		},
 		[onPressPublish],
 	);
@@ -210,7 +201,7 @@ export function TextInput({
 				internalApiRef={apiRef}
 				label={placeholder || ''}
 				placeholder={placeholder}
-				defaultValue={richtext.text}
+				defaultValue={text}
 				autoFocus={autoFocus}
 				accessible={accessible}
 				accessibilityLabel={accessibilityLabel}
@@ -230,7 +221,7 @@ export function TextInput({
 				onBlur={() => {
 					activeFacetRef.current = false;
 				}}
-				onChange={handleRichTextChange}
+				onChange={handleTextChange}
 				onFocus={onFocus}
 				onRequestSubmit={handleRequestSubmit}
 				onPaste={handlePaste}

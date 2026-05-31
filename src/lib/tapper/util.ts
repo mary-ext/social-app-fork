@@ -1,15 +1,32 @@
-import { type TapperFacet, type TapperFacetConfig, type TapperNode } from './types';
+import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
+
+import { type TapperFacet, type TapperFacetType, type TapperNode } from './types';
 
 const WHITESPACE = /\s/;
-// Regexes whose source starts with this prefix use a leading capture group
-// to gate matches on a boundary (start-of-string, whitespace, or `(`) without
-// lookbehind. The captured boundary char is stripped from the match so
-// positions and `raw` reflect the facet itself.
-const BOUNDARY_PREFIX = '(^|\\s|\\()';
 
-// Mirror the regex's `(^|\s|\()` gate so trigger detection (for chars typed
-// before any regex match exists) doesn't fire mid-word — e.g. the `@` inside
-// `eric@blueskyweb.xyz` should not synthesize a mention trigger.
+// Trigger chars that open an in-progress facet at the cursor (driving autocomplete), mapped to the
+// facet type they produce. URLs have no trigger — there is no URL autocomplete.
+const TRIGGERS: Record<string, TapperFacetType> = {
+	'#': 'tag',
+	'＃': 'tag',
+	'@': 'mention',
+	'＠': 'mention',
+	':': 'emoji',
+};
+
+// Maps an @atcute parser token type to the tapper facet type it highlights. Token types absent here
+// (text, cashtag, escape, markdown styles, …) render as plain text, matching the publish path which
+// uses the same parser.
+const TOKEN_FACET_TYPE: Partial<Record<Token['type'], TapperFacetType>> = {
+	autolink: 'url',
+	emote: 'emoji',
+	mention: 'mention',
+	topic: 'tag',
+};
+
+// Mirror the boundary handling so trigger detection (for chars typed before a complete facet exists)
+// doesn't fire mid-word — e.g. the `@` inside `eric@blueskyweb.xyz` should not synthesize a mention
+// trigger.
 function isBoundaryBefore(text: string, i: number) {
 	if (i === 0) return true;
 	const prev = text[i - 1]!;
@@ -17,106 +34,86 @@ function isBoundaryBefore(text: string, i: number) {
 }
 let nextNodeId = 0;
 
-export type CompiledFacetRegexes = Map<string, RegExp>;
-
-/**
- * Pre-compile facet regexes once at init time. This avoids re-creating RegExp objects on every keystroke in
- * parseNodesFromText. Each Tapper instance gets its own compiled copy so lastIndex state can't leak between
- * instances.
- */
-export function compileFacetRegexes(config: TapperFacetConfig): CompiledFacetRegexes {
-	const compiled = new Map<string, RegExp>();
-	for (const [name, re] of Object.entries(config)) {
-		compiled.set(name, new RegExp(re.source, re.flags));
+/** Builds the trigger-char → facet-type map for the enabled facet types. */
+export function buildTriggers(enabled: Set<TapperFacetType>): Map<string, string> {
+	const triggers = new Map<string, string>();
+	for (const [ch, type] of Object.entries(TRIGGERS)) {
+		if (enabled.has(type)) {
+			triggers.set(ch, type);
+		}
 	}
-	return compiled;
+	return triggers;
+}
+
+/** The value a facet token carries without its sigil, used to drive autocomplete queries. */
+function tokenFacetValue(token: Token): string {
+	switch (token.type) {
+		case 'mention':
+			return token.handle;
+		case 'topic':
+		case 'emote':
+			return token.name;
+		case 'autolink':
+			return token.url;
+		default:
+			return token.raw;
+	}
 }
 
 export function parseNodesFromText(
 	text: string,
-	regexes: CompiledFacetRegexes,
+	enabled: Set<TapperFacetType>,
 	prevNodes?: TapperNode[],
 	cursor?: number,
 	triggers?: Map<string, string>,
 ): TapperNode[] {
-	const allMatches: {
-		facetName: string;
-		fullMatch: string;
-		capture: string;
-		index: number;
-	}[] = [];
-
-	for (const [name, re] of regexes) {
-		// Reset lastIndex so stateful (global) regexes don't carry over
-		// match positions from the previous parse call.
-		re.lastIndex = 0;
-		// Boundary-gated regexes shift the effective start past the captured
-		// boundary char (m[1]) and bump the value capture index by one.
-		const hasBoundary = re.source.startsWith(BOUNDARY_PREFIX);
-		for (const m of text.matchAll(re)) {
-			const boundaryLen = hasBoundary ? (m[1]?.length ?? 0) : 0;
-			const fullMatch = m[0].slice(boundaryLen);
-			allMatches.push({
-				facetName: name,
-				fullMatch,
-				capture: (hasBoundary ? m[2] : m[1]) ?? fullMatch,
-				index: m.index + boundaryLen,
-			});
-		}
-	}
-
-	allMatches.sort((a, b) => a.index - b.index || b.fullMatch.length - a.fullMatch.length);
-
-	const accepted: typeof allMatches = [];
-	let lastEnd = 0;
-	for (const m of allMatches) {
-		if (m.index >= lastEnd) {
-			accepted.push(m);
-			lastEnd = m.index + m.fullMatch.length;
-		}
-	}
-
 	const nodes: TapperNode[] = [];
 	let pos = 0;
+	// Start of a pending run of non-facet tokens, coalesced into one text node when flushed.
+	let textStart = -1;
 
-	for (const m of accepted) {
-		if (m.index > pos) {
-			const raw = text.slice(pos, m.index);
+	const flushText = (end: number) => {
+		if (textStart !== -1) {
+			const raw = text.slice(textStart, end);
+			nodes.push({ id: nextNodeId++, type: 'text', raw, value: raw, start: textStart, end });
+			textStart = -1;
+		}
+	};
+
+	// `tokenize` yields a gap-free, ordered token stream whose `raw` values concatenate to exactly
+	// `text`, so accumulating `raw.length` gives correct UTF-16 positions (matching the cursor model).
+	for (const token of tokenize(text)) {
+		const start = pos;
+		const end = pos + token.raw.length;
+
+		const facetType = TOKEN_FACET_TYPE[token.type];
+		if (
+			facetType &&
+			enabled.has(facetType) &&
+			// The parser boundary-gates mentions/tags/links but not emotes, so require a boundary
+			// before an emote — a mid-word `foo:bar:` should stay plain text, as it did before.
+			(token.type !== 'emote' || isBoundaryBefore(text, start))
+		) {
+			flushText(start);
 			nodes.push({
 				id: nextNodeId++,
-				type: 'text',
-				raw,
-				value: raw,
-				start: pos,
-				end: m.index,
+				type: 'facet',
+				facetType,
+				raw: token.raw,
+				value: tokenFacetValue(token),
+				start,
+				end,
 			});
+		} else if (textStart === -1) {
+			textStart = start;
 		}
-		nodes.push({
-			id: nextNodeId++,
-			type: 'facet',
-			facetType: m.facetName,
-			raw: m.fullMatch,
-			value: m.capture,
-			start: m.index,
-			end: m.index + m.fullMatch.length,
-		});
-		pos = m.index + m.fullMatch.length;
-	}
 
-	if (pos < text.length) {
-		const raw = text.slice(pos);
-		nodes.push({
-			id: nextNodeId++,
-			type: 'text',
-			raw,
-			value: raw,
-			start: pos,
-			end: text.length,
-		});
+		pos = end;
 	}
+	flushText(pos);
 
-	// If the cursor is right after a trigger char that the regex didn't match,
-	// splice a 'trigger' node out of the containing text node.
+	// If the cursor is right after a trigger char that isn't yet a complete facet, splice a 'trigger'
+	// node out of the containing text node.
 	if (cursor != null && triggers) {
 		for (let i = cursor - 1; i >= 0; i--) {
 			const ch = text[i]!;
@@ -124,7 +121,7 @@ export function parseNodesFromText(
 			const facetType = triggers.get(ch);
 			if (facetType && isBoundaryBefore(text, i)) {
 				// Only create a trigger node if the trigger is inside a text node
-				// (i.e. the regex didn't already match it as a facet)
+				// (i.e. it wasn't already tokenized as a complete facet)
 				const textNodeIdx = nodes.findIndex((n) => n.type === 'text' && n.start <= i && n.end > i);
 				if (textNodeIdx !== -1) {
 					const node = nodes[textNodeIdx]!;
@@ -209,17 +206,6 @@ export function parseNodesFromText(
 	return nodes;
 }
 
-export function deriveTriggers(config: TapperFacetConfig): Map<string, string> {
-	const triggers = new Map<string, string>();
-	for (const [name, re] of Object.entries(config)) {
-		// Skip the boundary prefix (if present) before extracting the trigger char.
-		const src = re.source.startsWith(BOUNDARY_PREFIX) ? re.source.slice(BOUNDARY_PREFIX.length) : re.source;
-		const m = src.match(/^[^\\([\]{}.*+?^$|]+/);
-		if (m) triggers.set(m[0], name);
-	}
-	return triggers;
-}
-
 export function nodeToFacet(node: TapperNode): TapperFacet {
 	return {
 		type: node.facetType!,
@@ -254,7 +240,7 @@ export function detectActiveFacet(
 		}
 	}
 
-	// Scan backward from cursor for a trigger char (partial facet not yet matched by regex).
+	// Scan backward from cursor for a trigger char (partial facet not yet tokenized).
 	// Skip if the cursor is inside or at the end of a committed facet.
 	const inCommitted = nodes.some(
 		(n) => n.type === 'facet' && n.committed && n.start < cursor && cursor <= n.end,

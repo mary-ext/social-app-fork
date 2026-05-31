@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
-
-import type * as bsky from '#/types/bsky';
 
 const unstableProfileViewCacheQueryKeyRoot = 'unstableProfileViewCache';
 export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
@@ -15,15 +14,14 @@ export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
  *
  * Access the cache via {@link useUnstableProfileViewCache}.
  */
-export function unstableCacheProfileView(queryClient: QueryClient, profile: bsky.profile.AnyProfileView) {
+export function unstableCacheProfileView(queryClient: QueryClient, profile: AnyProfileView) {
 	queryClient.setQueryData(unstableProfileViewCacheQueryKey(profile.handle), profile);
 	queryClient.setQueryData(unstableProfileViewCacheQueryKey(profile.did), profile);
 }
 
 /**
  * Hook to access the unstable profile view cache. This cache can return ANY profile view type, so if the
- * object shape is important, you need to use the identity validators shipped in the atproto SDK e.g.
- * `AppBskyActorDefs.isValidProfileViewBasic` to confirm before using.
+ * object shape is important, branch on `$type` to confirm before using.
  *
  * To cache a profile, use {@link unstableCacheProfileView}.
  */
@@ -31,7 +29,7 @@ export function useUnstableProfileViewCache() {
 	const qc = useQueryClient();
 	const getUnstableProfile = useCallback(
 		(didOrHandle: string) => {
-			return qc.getQueryData<bsky.profile.AnyProfileView>(unstableProfileViewCacheQueryKey(didOrHandle));
+			return qc.getQueryData<AnyProfileView>(unstableProfileViewCacheQueryKey(didOrHandle));
 		},
 		[qc],
 	);

@@ -1,15 +1,12 @@
 import { useEffect } from 'react';
-import { type ChatBskyActorDefs, ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyActorDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
 
 import { useMessagesEventBus } from '#/state/messages/events';
 import { STALE } from '#/state/queries';
 import { createQueryKey } from '#/state/queries/util';
-import { useAgent } from '#/state/session';
-
-import * as bsky from '#/types/bsky';
+import { useClients } from '#/state/session';
 
 const RQKEY_ROOT = 'listConvoMembers';
 export const listConvoMembersQueryKey = (convoId: string) => createQueryKey(RQKEY_ROOT, { convoId });
@@ -24,7 +21,7 @@ export function useListConvoMembersQuery({
 	convoId: string;
 	placeholderData?: ChatBskyActorDefs.ProfileViewBasic[];
 }) {
-	const agent = useAgent();
+	const { chat } = useClients();
 	const queryClient = useQueryClient();
 	const messagesBus = useMessagesEventBus();
 
@@ -46,14 +43,9 @@ export function useListConvoMembersQuery({
 				}
 
 				for (const log of ev.logs) {
-					if (ChatBskyConvoDefs.isLogAddMember(log)) {
+					if (log.$type === 'chat.bsky.convo.defs#logAddMember') {
 						const data = log.message.data;
-						if (
-							bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataAddMember>(
-								data,
-								ChatBskyConvoDefs.isSystemMessageDataAddMember,
-							)
-						) {
+						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataAddMember') {
 							const newMember = log.relatedProfiles.find((r) => r.did === data.member.did);
 							if (newMember) {
 								mutateList((list) =>
@@ -61,14 +53,9 @@ export function useListConvoMembersQuery({
 								);
 							}
 						}
-					} else if (ChatBskyConvoDefs.isLogRemoveMember(log)) {
+					} else if (log.$type === 'chat.bsky.convo.defs#logRemoveMember') {
 						const data = log.message.data;
-						if (
-							bsky.dangerousIsType<ChatBskyConvoDefs.SystemMessageDataRemoveMember>(
-								data,
-								ChatBskyConvoDefs.isSystemMessageDataRemoveMember,
-							)
-						) {
+						if (data.$type === 'chat.bsky.convo.defs#systemMessageDataRemoveMember') {
 							mutateList((list) => list.filter((m) => m.did !== data.member.did));
 						}
 					}
@@ -82,13 +69,15 @@ export function useListConvoMembersQuery({
 	return useQuery({
 		queryKey: listConvoMembersQueryKey(convoId),
 		queryFn: async () => {
-			const members = [];
-			let cursor;
+			if (!chat) throw new Error('Not signed in');
+			const members: ChatBskyActorDefs.ProfileViewBasic[] = [];
+			let cursor: string | undefined;
 
 			do {
-				const { data } = await agent.chat.bsky.convo.getConvoMembers(
-					{ convoId, cursor, limit: LIMIT },
-					{ headers: DM_SERVICE_HEADERS },
+				const data = await ok(
+					chat.get('chat.bsky.convo.getConvoMembers', {
+						params: { convoId, cursor, limit: LIMIT },
+					}),
 				);
 				members.push(...data.members);
 				cursor = data.cursor;

@@ -1,6 +1,10 @@
-import { type AppBskyFeedDefs, AppBskyFeedThreadgate, AtUri } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { getRecord, putRecord } from '#/lib/api/records';
 import { networkRetry, retry } from '#/lib/async/retry';
 
 import { STALE } from '#/state/queries';
@@ -13,11 +17,8 @@ import {
 	threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util';
 import { useUpdatePostThreadThreadgateQueryCache } from '#/state/queries/usePostThread';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 import { useThreadgateHiddenReplyUrisAPI } from '#/state/threadgate-hidden-replies';
-
-import * as bsky from '#/types/bsky';
 
 export * from '#/state/queries/threadgate/types';
 export * from '#/state/queries/threadgate/util';
@@ -33,9 +34,9 @@ export function useThreadgateRecordQuery({
 	initialData,
 }: {
 	postUri?: string;
-	initialData?: AppBskyFeedThreadgate.Record;
+	initialData?: AppBskyFeedThreadgate.Main;
 } = {}) {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 
 	return useQuery({
 		enabled: !!postUri,
@@ -44,7 +45,8 @@ export function useThreadgateRecordQuery({
 		staleTime: STALE.MINUTES.ONE,
 		async queryFn() {
 			return getThreadgateRecord({
-				agent,
+				appview,
+				pds: pds!,
 				postUri: postUri!,
 			});
 		},
@@ -75,24 +77,28 @@ export function useThreadgateViewQuery({
 }
 
 export async function getThreadgateRecord({
-	agent,
+	appview,
+	pds,
 	postUri,
 }: {
-	agent: BskyAppAgent;
+	appview: Client;
+	pds: Client;
 	postUri: string;
-}): Promise<AppBskyFeedThreadgate.Record | null> {
-	const urip = new AtUri(postUri);
+}): Promise<AppBskyFeedThreadgate.Main | null> {
+	const urip = parseResourceUri(postUri);
 
-	if (!urip.host.startsWith('did:')) {
-		const res = await agent.resolveHandle({
-			handle: urip.host,
-		});
-		// @ts-expect-error TODO new-sdk-migration
-		urip.host = res.data.did;
+	let repo: string = urip.repo;
+	if (!repo.startsWith('did:')) {
+		const resolved = await ok(
+			appview.get('com.atproto.identity.resolveHandle', {
+				params: { handle: repo as Handle },
+			}),
+		);
+		repo = resolved.did;
 	}
 
 	try {
-		const { data } = await retry(
+		const data = await retry(
 			2,
 			(e) => {
 				/*
@@ -106,18 +112,14 @@ export async function getThreadgateRecord({
 				return true;
 			},
 			() =>
-				agent.api.com.atproto.repo.getRecord({
-					repo: urip.host,
+				getRecord(pds, {
 					collection: 'app.bsky.feed.threadgate',
-					rkey: urip.rkey,
+					repo: repo as Did,
+					rkey: urip.rkey!,
 				}),
 		);
 
-		if (data.value && bsky.validate(data.value, AppBskyFeedThreadgate.validateRecord)) {
-			return data.value;
-		} else {
-			return null;
-		}
+		return data.value ?? null;
 	} catch (e) {
 		/*
 		 * If the record doesn't exist, we want to return null instead of
@@ -133,103 +135,90 @@ export async function getThreadgateRecord({
 }
 
 export async function writeThreadgateRecord({
-	agent,
+	did,
+	pds,
 	postUri,
 	threadgate,
 }: {
-	agent: BskyAppAgent;
+	did: Did;
+	pds: Client;
 	postUri: string;
-	threadgate: AppBskyFeedThreadgate.Record;
+	threadgate: AppBskyFeedThreadgate.Main;
 }) {
-	const postUrip = new AtUri(postUri);
+	const postUrip = parseResourceUri(postUri);
 	const record = createThreadgateRecord({
-		post: postUri,
 		allow: threadgate.allow, // can/should be undefined!
 		hiddenReplies: threadgate.hiddenReplies || [],
+		post: postUri as ResourceUri,
 	});
 
 	await networkRetry(2, () =>
-		agent.api.com.atproto.repo.putRecord({
-			repo: agent.session!.did,
+		putRecord(pds, {
 			collection: 'app.bsky.feed.threadgate',
-			rkey: postUrip.rkey,
 			record,
+			repo: did,
+			rkey: postUrip.rkey!,
 		}),
 	);
 }
 
 export async function upsertThreadgate(
 	{
-		agent,
+		appview,
+		did,
+		pds,
 		postUri,
 	}: {
-		agent: BskyAppAgent;
+		appview: Client;
+		did: Did;
+		pds: Client;
 		postUri: string;
 	},
 	callback: (
-		threadgate: AppBskyFeedThreadgate.Record | null,
-	) => Promise<AppBskyFeedThreadgate.Record | undefined>,
+		threadgate: AppBskyFeedThreadgate.Main | null,
+	) => Promise<AppBskyFeedThreadgate.Main | undefined>,
 ) {
 	const prev = await getThreadgateRecord({
-		agent,
+		appview,
+		pds,
 		postUri,
 	});
 	const next = await callback(prev);
 	if (!next) return;
 	validateThreadgateRecordOrThrow(next);
 	await writeThreadgateRecord({
-		agent,
+		did,
+		pds,
 		postUri,
 		threadgate: next,
 	});
 }
 
-/** Update the allow list for a threadgate record. */
-export async function updateThreadgateAllow({
-	agent,
-	postUri,
-	allow,
-}: {
-	agent: BskyAppAgent;
-	postUri: string;
-	allow: ThreadgateAllowUISetting[];
-}) {
-	return upsertThreadgate({ agent, postUri }, async (prev) => {
-		if (prev) {
-			return {
-				...prev,
-				allow: threadgateAllowUISettingToAllowRecordValue(allow),
-			};
-		} else {
-			return createThreadgateRecord({
-				post: postUri,
-				allow: threadgateAllowUISettingToAllowRecordValue(allow),
-			});
-		}
-	});
-}
-
 export function useSetThreadgateAllowMutation() {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const getPost = useGetPost();
 	const updatePostThreadThreadgate = useUpdatePostThreadThreadgateQueryCache();
 
 	return useMutation({
 		mutationFn: async ({ postUri, allow }: { postUri: string; allow: ThreadgateAllowUISetting[] }) => {
-			return upsertThreadgate({ agent, postUri }, async (prev) => {
-				if (prev) {
-					return {
-						...prev,
-						allow: threadgateAllowUISettingToAllowRecordValue(allow),
-					};
-				} else {
-					return createThreadgateRecord({
-						post: postUri,
-						allow: threadgateAllowUISettingToAllowRecordValue(allow),
-					});
-				}
-			});
+			return upsertThreadgate(
+				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
+				async (prev): Promise<AppBskyFeedThreadgate.Main | undefined> => {
+					if (prev) {
+						return {
+							...prev,
+							allow: threadgateAllowUISettingToAllowRecordValue(allow),
+						};
+					} else {
+						return createThreadgateRecord({
+							allow: threadgateAllowUISettingToAllowRecordValue(allow),
+							post: postUri as ResourceUri,
+						});
+					}
+				},
+			);
 		},
 		async onSuccess(_, { postUri, allow }) {
 			const data = await retry<AppBskyFeedDefs.ThreadgateView | undefined>(
@@ -266,7 +255,8 @@ export function useSetThreadgateAllowMutation() {
 }
 
 export function useToggleReplyVisibilityMutation() {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 	const hiddenReplies = useThreadgateHiddenReplyUrisAPI();
 
@@ -286,27 +276,30 @@ export function useToggleReplyVisibilityMutation() {
 				hiddenReplies.removeHiddenReplyUri(replyUri);
 			}
 
-			await upsertThreadgate({ agent, postUri }, async (prev) => {
-				if (prev) {
-					if (action === 'hide') {
-						return mergeThreadgateRecords(prev, {
-							hiddenReplies: [replyUri],
-						});
-					} else if (action === 'show') {
-						return {
-							...prev,
-							hiddenReplies: prev.hiddenReplies?.filter((uri) => uri !== replyUri) || [],
-						};
+			await upsertThreadgate(
+				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
+				async (prev): Promise<AppBskyFeedThreadgate.Main | undefined> => {
+					if (prev) {
+						if (action === 'hide') {
+							return mergeThreadgateRecords(prev, {
+								hiddenReplies: [replyUri as ResourceUri],
+							});
+						} else if (action === 'show') {
+							return {
+								...prev,
+								hiddenReplies: prev.hiddenReplies?.filter((uri) => uri !== replyUri) || [],
+							};
+						}
+					} else {
+						if (action === 'hide') {
+							return createThreadgateRecord({
+								hiddenReplies: [replyUri as ResourceUri],
+								post: postUri as ResourceUri,
+							});
+						}
 					}
-				} else {
-					if (action === 'hide') {
-						return createThreadgateRecord({
-							post: postUri,
-							hiddenReplies: [replyUri],
-						});
-					}
-				}
-			});
+				},
+			);
 		},
 		onSuccess() {
 			queryClient.invalidateQueries({
@@ -337,14 +330,8 @@ export class InvalidInteractionSettingsError extends Error {
 	}
 }
 
-export function validateThreadgateRecordOrThrow(record: AppBskyFeedThreadgate.Record) {
-	const result = AppBskyFeedThreadgate.validateRecord(record);
-
-	if (result.success) {
-		if ((result.value.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {
-			throw new MaxHiddenRepliesError();
-		}
-	} else {
-		throw new InvalidInteractionSettingsError();
+export function validateThreadgateRecordOrThrow(record: AppBskyFeedThreadgate.Main) {
+	if ((record.hiddenReplies?.length ?? 0) > MAX_HIDDEN_REPLIES) {
+		throw new MaxHiddenRepliesError();
 	}
 }

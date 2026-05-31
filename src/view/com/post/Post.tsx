@@ -1,19 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import { type AnyProfileView, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AtUri,
+	DisplayContext,
+	getDisplayRestrictions,
 	moderatePost,
 	type ModerationDecision,
-	RichText as RichTextAPI,
-} from '@atproto/api';
+} from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -37,8 +38,6 @@ import { PostControls } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
 
-import * as bsky from '#/types/bsky';
-
 export function Post({
 	post,
 	showReplyLine,
@@ -53,18 +52,15 @@ export function Post({
 	onBeforePress?: () => void;
 }) {
 	const moderationOpts = useModerationOpts();
-	const record = useMemo<AppBskyFeedPost.Record | undefined>(
-		() => (bsky.validate(post.record, AppBskyFeedPost.validateRecord) ? post.record : undefined),
-		[post],
-	);
+	const record = post.record as AppBskyFeedPost.Main;
 	const postShadowed = usePostShadow(post);
 	const richText = useMemo(
 		() =>
 			record
-				? new RichTextAPI({
+				? {
 						text: record.text,
 						facets: record.facets,
-					})
+					}
 				: undefined,
 		[record],
 	);
@@ -103,8 +99,8 @@ function PostInner({
 	onBeforePress: outerOnBeforePress,
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
-	record: AppBskyFeedPost.Record;
-	richText: RichTextAPI;
+	record: AppBskyFeedPost.Main;
+	richText: Richtext;
 	moderation: ModerationDecision;
 	showReplyLine?: boolean;
 	hideTopBorder?: boolean;
@@ -115,12 +111,12 @@ function PostInner({
 	const t = useTheme();
 	const { openComposer } = useOpenComposer();
 	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
-	const itemUrip = new AtUri(post.uri);
+	const itemUrip = parseCanonicalResourceUri(post.uri);
 	const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
 	let replyAuthorDid = '';
 	if (record.reply) {
-		const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri);
-		replyAuthorDid = urip.hostname;
+		const urip = parseCanonicalResourceUri(record.reply.parent?.uri || record.reply.root.uri);
+		replyAuthorDid = urip.repo;
 	}
 
 	const onPressReply = useCallback(() => {
@@ -143,7 +139,7 @@ function PostInner({
 	}, [setLimitLines]);
 
 	const onBeforePress = useCallback(() => {
-		unstableCacheProfileView(queryClient, post.author);
+		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
 		outerOnBeforePress?.();
 	}, [queryClient, post.author, outerOnBeforePress]);
 
@@ -181,8 +177,8 @@ function PostInner({
 					<View style={styles.layoutAvi}>
 						<PreviewableUserAvatar
 							size={42}
-							profile={post.author}
-							moderation={moderation.ui('avatar')}
+							profile={post.author as AnyProfileView}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 						/>
 					</View>
@@ -191,13 +187,13 @@ function PostInner({
 							styles.layoutContent,
 							maybeApplyGalleryOffsetStyles('meta', {
 								post,
-								modui: moderation.ui('contentList'),
+								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 								additionalCauses: [],
 							}),
 						]}
 					>
 						<PostMeta
-							author={post.author}
+							author={post.author as AnyProfileView}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={itemHref}
@@ -205,11 +201,14 @@ function PostInner({
 						{replyAuthorDid !== '' && <PostRepliedTo parentAuthor={replyAuthorDid} />}
 						<LabelsOnMyPost post={post} />
 						<ContentHider
-							modui={moderation.ui('contentView')}
+							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 							style={styles.contentHider}
 							childContainerStyle={styles.contentHiderChild}
 						>
-							<PostAlerts modui={moderation.ui('contentView')} style={[a.pb_xs]} />
+							<PostAlerts
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+								style={[a.pb_xs]}
+							/>
 							{richText.text ? (
 								<View style={[a.mb_2xs]}>
 									<RichText
@@ -228,7 +227,7 @@ function PostInner({
 								<View
 									style={maybeApplyGalleryOffsetStyles('embed', {
 										post,
-										modui: moderation.ui('contentList'),
+										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 										additionalCauses: [],
 									})}
 								>

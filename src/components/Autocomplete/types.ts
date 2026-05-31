@@ -1,14 +1,13 @@
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type Emoji } from '@emoji-mart/data';
 
 import { type Sift } from '#/lib/sift';
-
-import type * as bsky from '#/types/bsky';
 
 export type AutocompleteProfile = {
 	key: string;
 	type: 'profile';
 	value: string;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 };
 
 export type AutocompleteTag = {

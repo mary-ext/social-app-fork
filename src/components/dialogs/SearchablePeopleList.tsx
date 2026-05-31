@@ -1,6 +1,12 @@
 import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -25,8 +31,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 import { AvatarBubbles } from '../AvatarBubbles';
 import { Error } from '../Error';
 import { ProfileBadges } from '../ProfileBadges';
@@ -39,7 +43,7 @@ type WebViewProps = {
 export type ProfileItem = {
 	type: 'profile';
 	key: string;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 };
 
 type ExistingChatItem = {
@@ -349,8 +353,8 @@ function DefaultProfileCard({
 	moderationOpts,
 	onPress,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 	onPress: (did: string) => void;
 }) {
 	const t = useTheme();
@@ -358,7 +362,11 @@ function DefaultProfileCard({
 	const enabled = canBeMessaged(profile);
 	const moderation = moderateProfile(profile, moderationOpts);
 	const handle = sanitizeHandle(profile.handle, '@');
-	const displayName = createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+	const displayName = createSanitizedDisplayName(
+		profile,
+		true,
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+	);
 
 	const handleOnPress = useCallback(() => {
 		onPress(profile.did);
@@ -400,7 +408,7 @@ function ExistingChatCard({
 	onPress,
 }: {
 	convo: ConvoWithDetails;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onPress: (convoId: string) => void;
 }) {
 	const t = useTheme();
@@ -412,7 +420,10 @@ function ExistingChatCard({
 			: createSanitizedDisplayName(
 					convo.primaryMember,
 					true,
-					moderateProfile(convo.primaryMember, moderationOpts).ui('displayName'),
+					getDisplayRestrictions(
+						moderateProfile(convo.primaryMember, moderationOpts),
+						DisplayContext.ProfileBio,
+					),
 				);
 
 	const handleOnPress = useCallback(() => {

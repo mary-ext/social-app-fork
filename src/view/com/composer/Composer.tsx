@@ -23,17 +23,15 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-	AppBskyDraftCreateDraft,
-	AppBskyUnspeccedDefs,
-	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
-	type RichText,
-} from '@atproto/api';
+import { type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+import { type Client, ClientResponseError, ok } from '@atcute/client';
+import { type Did, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
+import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import Animated, {
 	type AnimatedRef,
@@ -81,8 +79,7 @@ import { useRequireAltTextEnabled } from '#/state/preferences';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
-import { useAgent, useSession } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 import { useComposerControls } from '#/state/shell/composer';
 import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
 
@@ -176,7 +173,7 @@ export const ComposePost = ({
 }) => {
 	const { currentAccount } = useSession();
 	const t = useTheme();
-	const agent = useAgent();
+	const { appview, pds, pdsUrl } = useClients();
 	const queryClient = useQueryClient();
 	const currentDid = currentAccount!.did;
 	const { closeComposer } = useComposerControls();
@@ -263,7 +260,7 @@ export const ComposePost = ({
 	// Clear error when composer content changes, but only if all posts are
 	// back within the character limit.
 	const allPostsWithinLimit = thread.posts.every(
-		(post) => post.richtext.graphemeLength <= MAX_DRAFT_GRAPHEME_LENGTH,
+		(post) => countGraphemes(post.text) <= MAX_DRAFT_GRAPHEME_LENGTH,
 	);
 
 	const activePost = thread.posts[composerState.activePostIndex]!;
@@ -291,6 +288,7 @@ export const ComposePost = ({
 					abortController,
 				},
 			});
+			if (!pds || !pdsUrl) return;
 			void processVideo(
 				asset,
 				(videoAction) => {
@@ -303,13 +301,14 @@ export const ComposePost = ({
 						},
 					});
 				},
-				agent,
+				pdsUrl,
+				pds,
 				currentDid,
 				abortController.signal,
 				i18n,
 			);
 		},
-		[i18n, agent, currentDid, composerDispatch],
+		[i18n, pds, pdsUrl, currentDid, composerDispatch],
 	);
 
 	const onInitVideo = useNonReactiveCallback(() => {
@@ -407,6 +406,7 @@ export const ComposePost = ({
 				}
 
 				// Start video compression and upload
+				if (!pds || !pdsUrl) return;
 				void processVideo(
 					asset,
 					(videoAction) => {
@@ -419,7 +419,8 @@ export const ComposePost = ({
 							},
 						});
 					},
-					agent,
+					pdsUrl,
+					pds,
 					currentDid,
 					abortController.signal,
 					i18n,
@@ -431,7 +432,7 @@ export const ComposePost = ({
 				});
 			}
 		},
-		[i18n, agent, currentDid, composerDispatch],
+		[i18n, pds, pdsUrl, currentDid, composerDispatch],
 	);
 
 	const handleSelectDraft = useCallback(
@@ -487,7 +488,7 @@ export const ComposePost = ({
 
 	const getDraftSaveError = useCallback(
 		(e: unknown): string => {
-			if (e instanceof AppBskyDraftCreateDraft.DraftLimitReachedError) {
+			if (e instanceof ClientResponseError && e.error === 'DraftLimitReached') {
 				return l`You've reached the maximum number of drafts`;
 			}
 			return l`Failed to save draft`;
@@ -497,7 +498,7 @@ export const ComposePost = ({
 
 	const validateDraftTextOrError = useCallback((): boolean => {
 		const tooLong = composerState.thread.posts.some(
-			(post) => post.richtext.graphemeLength > MAX_DRAFT_GRAPHEME_LENGTH,
+			(post) => countGraphemes(post.text) > MAX_DRAFT_GRAPHEME_LENGTH,
 		);
 		if (tooLong) {
 			setError(
@@ -560,7 +561,7 @@ export const ComposePost = ({
 
 		const firstPost = thread.posts[0]!;
 		// Has text
-		if (firstPost.richtext.text.trim().length > 0) return false;
+		if (firstPost.text.trim().length > 0) return false;
 		// Has media
 		if (firstPost.embed.media) return false;
 		// Has quote
@@ -711,7 +712,7 @@ export const ComposePost = ({
 		try {
 			logger.info(`composer: posting...`);
 			postUri = (
-				await apilib.post(agent, queryClient, {
+				await apilib.post({ appview, did: currentDid as Did, pds: pds! }, queryClient, {
 					thread: filteredThread,
 					replyTo: replyTo?.uri,
 					onStateChange: setPublishingStage,
@@ -731,19 +732,23 @@ export const ComposePost = ({
 						5,
 						(_e) => true,
 						async () => {
-							const res = await agent.app.bsky.unspecced.getPostThreadV2({
-								anchor: postUri!,
-								above: false,
-								below: filteredThread.posts.length - 1,
-								branchingFactor: 1,
-							});
-							if (res.data.thread.length !== filteredThread.posts.length) {
+							const data = await ok(
+								appview.get('app.bsky.unspecced.getPostThreadV2', {
+									params: {
+										anchor: postUri! as ResourceUri,
+										above: false,
+										below: filteredThread.posts.length - 1,
+										branchingFactor: 1,
+									},
+								}),
+							);
+							if (data.thread.length !== filteredThread.posts.length) {
 								throw new Error(`composer: app view is not ready`);
 							}
-							if (!res.data.thread.every((p) => AppBskyUnspeccedDefs.isThreadItemPost(p.value))) {
+							if (!data.thread.every((p) => p.value.$type === 'app.bsky.unspecced.defs#threadItemPost')) {
 								throw new Error(`composer: app view returned non-post items`);
 							}
-							return res.data.thread;
+							return data.thread;
 						},
 						1e3,
 					);
@@ -791,10 +796,10 @@ export const ComposePost = ({
 		setLangPrefs.savePostLanguageToHistory();
 		if (initQuote) {
 			// We want to wait for the quote count to update before we call `onPost`, which will refetch data
-			whenAppViewReady(agent, initQuote.uri, (res) => {
-				const anchor = res.data.thread.at(0);
+			whenAppViewReady(appview, initQuote.uri, (res) => {
+				const anchor = res.thread.at(0);
 				if (
-					AppBskyUnspeccedDefs.isThreadItemPost(anchor?.value) &&
+					anchor?.value.$type === 'app.bsky.unspecced.defs#threadItemPost' &&
 					anchor.value.post.quoteCount !== initQuote.quoteCount
 				) {
 					onPost?.(postUri);
@@ -823,7 +828,7 @@ export const ComposePost = ({
 						<Toast.Action
 							label={l`View post`}
 							onPress={() => {
-								const { host: name, rkey } = new AtUri(postUri);
+								const { repo: name, rkey } = parseCanonicalResourceUri(postUri);
 								navigation.navigate('PostThread', { name, rkey });
 							}}
 						>
@@ -836,7 +841,6 @@ export const ComposePost = ({
 		}, 500);
 	}, [
 		l,
-		agent,
 		thread,
 		canPost,
 		isPublishing,
@@ -930,7 +934,7 @@ export const ComposePost = ({
 	const footer = (
 		<>
 			<SuggestedLanguage
-				text={activePost.richtext.text}
+				text={activePost.text}
 				replyToLanguages={replyToLanguages}
 				currentLanguages={currentLanguages}
 				onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
@@ -990,7 +994,7 @@ export const ComposePost = ({
 						isDirty={composerState.isDirty}
 						isEditingDraft={!!composerState.draftId}
 						canSaveDraft={allPostsWithinLimit}
-						textLength={thread.posts[0]!.richtext.text.length}
+						textLength={thread.posts[0]!.text.length}
 					>
 						{missingAltError && <AltTextReminder error={missingAltError} />}
 						<ErrorBanner
@@ -1136,13 +1140,13 @@ let ComposerPost = memo(function ComposerPost({
 	onClearVideo: (postId: string) => void;
 	onSelectVideo: (postId: string, asset: VideoAsset) => void;
 	onError: (error: string) => void;
-	onPublish: (richtext: RichText) => void;
+	onPublish: (text: string) => void;
 }) {
 	const { currentAccount } = useSession();
 	const currentDid = currentAccount!.did;
 	const { t: l } = useLingui();
 	const { data: currentProfile } = useProfileQuery({ did: currentDid });
-	const richtext = post.richtext;
+	const text = post.text;
 	const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media;
 	const forceMinHeight = isTextOnly && isActive;
 	const selectTextInputPlaceholder = isReply
@@ -1230,15 +1234,15 @@ let ComposerPost = memo(function ComposerPost({
 				<TextInput
 					ref={textInputRef}
 					style={[a.pt_xs]}
-					richtext={richtext}
+					text={text}
 					placeholder={selectTextInputPlaceholder}
 					autoFocus={isLastPost}
 					webForceMinHeight={forceMinHeight}
 					// To avoid overlap with the close button:
 					hasRightPadding={isPartOfThread}
 					isActive={isActive}
-					setRichText={(rt) => {
-						dispatchPost({ type: 'update_richtext', richtext: rt });
+					setText={(text) => {
+						dispatchPost({ type: 'update_text', text });
 					}}
 					onFocus={() => {
 						dispatch({
@@ -1931,26 +1935,30 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	uri: string,
-	fn: (res: AppBskyUnspeccedGetPostThreadV2.Response) => boolean,
+	fn: (res: AppBskyUnspeccedGetPostThreadV2.$output) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
 		() =>
-			agent.app.bsky.unspecced.getPostThreadV2({
-				anchor: uri,
-				above: false,
-				below: 0,
-				branchingFactor: 0,
-			}),
+			ok(
+				appview.get('app.bsky.unspecced.getPostThreadV2', {
+					params: {
+						anchor: uri as ResourceUri,
+						above: false,
+						below: 0,
+						branchingFactor: 0,
+					},
+				}),
+			),
 	);
 }
 
 function isEmptyPost(post: PostDraft) {
-	return post.richtext.text.trim().length === 0 && !post.embed.media && !post.embed.link && !post.embed.quote;
+	return post.text.trim().length === 0 && !post.embed.media && !post.embed.link && !post.embed.quote;
 }
 
 function useHideKeyboardOnBackground() {

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -35,9 +35,9 @@ export function ListsScreen({}: Props) {
 	const onCreateList = useCallback(
 		(uri: string) => {
 			try {
-				const urip = new AtUri(uri);
+				const urip = parseCanonicalResourceUri(uri);
 				navigation.navigate('ProfileList', {
-					name: urip.hostname,
+					name: urip.repo,
 					rkey: urip.rkey,
 				});
 			} catch {}

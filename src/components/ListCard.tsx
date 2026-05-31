@@ -1,6 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, AtUri, moderateUserList, type ModerationUI } from '@atproto/api';
+import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	type DisplayRestrictions,
+	getDisplayRestrictions,
+	moderateList,
+} from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,8 +24,6 @@ import { Avatar, Description, Header, Outer, SaveButton } from '#/components/Fee
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import * as Hider from '#/components/moderation/Hider';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -46,7 +51,7 @@ type Props = {
 export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'children'>) {
 	const { view, showPinButton } = props;
 	const moderationOpts = useModerationOpts();
-	const moderation = moderationOpts ? moderateUserList(view, moderationOpts) : undefined;
+	const moderation = moderationOpts ? moderateList(view, moderationOpts) : undefined;
 
 	return (
 		<Link {...props}>
@@ -57,9 +62,11 @@ export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'childre
 						title={view.name}
 						creator={view.creator}
 						purpose={view.purpose}
-						modUi={moderation?.ui('contentView')}
+						modUi={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : undefined}
 					/>
-					{showPinButton && view.purpose === CURATELIST && <SaveButton view={view} pin />}
+					{showPinButton && view.purpose === CURATELIST && (
+						<SaveButton view={view as unknown as Parameters<typeof SaveButton>[0]['view']} pin />
+					)}
 				</Header>
 				<Description description={view.description} />
 			</Outer>
@@ -75,7 +82,7 @@ export function Link({ view, children, ...props }: Props & Omit<LinkProps, 'to' 
 	}, [view]);
 
 	useEffect(() => {
-		precacheList(queryClient, view);
+		precacheList(queryClient, view as unknown as Parameters<typeof precacheList>[1]);
 	}, [view, queryClient]);
 
 	return (
@@ -92,9 +99,9 @@ export function TitleAndByline({
 	modUi,
 }: {
 	title: string;
-	creator?: bsky.profile.AnyProfileView;
+	creator?: AnyProfileView;
 	purpose?: AppBskyGraphDefs.ListView['purpose'];
-	modUi?: ModerationUI;
+	modUi?: DisplayRestrictions;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -130,6 +137,6 @@ export function TitleAndByline({
 }
 
 export function createProfileListHref({ list }: { list: AppBskyGraphDefs.ListView }) {
-	const urip = new AtUri(list.uri);
+	const urip = parseCanonicalResourceUri(list.uri);
 	return `/profile/${list.creator.did}/lists/${urip.rkey}`;
 }

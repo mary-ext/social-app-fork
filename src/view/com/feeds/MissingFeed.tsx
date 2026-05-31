@@ -1,5 +1,5 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { AtUri } from '@atproto/api';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -88,9 +88,9 @@ function DialogInner({ uri, type, error }: { uri: string; type: 'feed' | 'list';
 	const control = Dialog.useDialogContext();
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const atUri = new AtUri(uri);
+	const atUri = parseCanonicalResourceUri(uri);
 	const { data: profile, isError: isProfileError } = useProfileQuery({
-		did: atUri.host,
+		did: atUri.repo,
 	});
 	const moderationOpts = useModerationOpts();
 

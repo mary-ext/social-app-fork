@@ -4,7 +4,7 @@ import { type TextInput, type TextInputSubmitEditingEvent, type TextStyle, View 
 import Animated, { useAnimatedStyle, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { mergeRefs } from '#/lib/merge-refs';
 import { useSift, type UseSiftReturn } from '#/lib/sift';
-import { facets, type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
+import { type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
 
 import { atoms as a, type TextStyleProp, useAlf, type ViewStyleProp } from '#/alf';
 import { normalizeTextStyles } from '#/alf/typography';
@@ -125,13 +125,7 @@ export function Composer({
 	 */
 	const tapper = useTapper({
 		initialText: defaultValue ?? '',
-		facets: disableEmojiFacets
-			? {
-					mention: facets.mention,
-					tag: facets.tag,
-					url: facets.url,
-				}
-			: facets,
+		facets: disableEmojiFacets ? ['mention', 'tag', 'url'] : ['emoji', 'mention', 'tag', 'url'],
 	});
 	const sift = useSift({
 		offset: a.p_sm.padding,

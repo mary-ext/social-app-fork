@@ -1,4 +1,4 @@
-import { type BskyFeedViewPreference, type BskyPreferences } from '@atproto/api';
+import { type BskyFeedViewPreference, type BskyPreferences } from '#/lib/moderation/preferences-types';
 
 export type UsePreferencesQueryResponse = Omit<
 	BskyPreferences,

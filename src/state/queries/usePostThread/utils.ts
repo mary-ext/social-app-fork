@@ -1,11 +1,10 @@
 import {
 	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-	AppBskyFeedThreadgate,
-	AppBskyUnspeccedDefs,
+	type AppBskyFeedPost,
+	type AppBskyFeedThreadgate,
 	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import {
 	type ApiThreadItem,
@@ -14,28 +13,26 @@ import {
 } from '#/state/queries/usePostThread/types';
 
 import { isDevMode } from '#/storage/hooks/dev-mode';
-import * as bsky from '#/types/bsky';
 
-export function getThreadgateRecord(view: AppBskyUnspeccedGetPostThreadV2.OutputSchema['threadgate']) {
-	return bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(view?.record, AppBskyFeedThreadgate.isRecord)
-		? view?.record
-		: undefined;
+export function getThreadgateRecord(
+	view: AppBskyUnspeccedGetPostThreadV2.$output['threadgate'],
+): AppBskyFeedThreadgate.Main | undefined {
+	return view?.record as AppBskyFeedThreadgate.Main | undefined;
 }
 
 export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
-	if (bsky.dangerousIsType<AppBskyFeedPost.Record>(post.record, AppBskyFeedPost.isRecord)) {
-		/** If the record has no `reply` field, it is a root post. */
-		if (!post.record.reply) {
-			return new AtUri(post.uri);
-		}
-		if (post.record.reply?.root?.uri) {
-			return new AtUri(post.record.reply.root.uri);
-		}
+	const record = post.record as AppBskyFeedPost.Main;
+	/** If the record has no `reply` field, it is a root post. */
+	if (!record.reply) {
+		return parseCanonicalResourceUri(post.uri);
+	}
+	if (record.reply?.root?.uri) {
+		return parseCanonicalResourceUri(record.reply.root.uri);
 	}
 }
 
 export function getPostRecord(post: AppBskyFeedDefs.PostView) {
-	return post.record as AppBskyFeedPost.Record;
+	return post.record as AppBskyFeedPost.Main;
 }
 
 export function getTraversalMetadata({
@@ -49,7 +46,7 @@ export function getTraversalMetadata({
 	nextItem?: ApiThreadItem;
 	parentMetadata?: TraversalMetadata;
 }): TraversalMetadata {
-	if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+	if (item.value.$type !== 'app.bsky.unspecced.defs#threadItemPost') {
 		throw new Error(`Expected thread item to be a post`);
 	}
 	const repliesCount = item.value.post.replyCount || 0;

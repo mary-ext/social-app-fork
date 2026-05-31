@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { type ModerationUI } from '@atproto/api';
+import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { openImagePicker } from '#/lib/media/picker';
@@ -36,7 +36,7 @@ export function UserBanner({
 }: {
 	type?: 'labeler' | 'default';
 	banner?: string | null;
-	moderation?: ModerationUI;
+	moderation?: DisplayRestrictions;
 	onSelectNewBanner?: (img: ImageMeta | null) => void;
 }) {
 	const t = useTheme();
@@ -145,7 +145,7 @@ export function UserBanner({
 			style={[styles.bannerImage, t.atoms.bg_contrast_25]}
 			contentFit="cover"
 			source={{ uri: banner }}
-			blurRadius={moderation?.blur ? 100 : 0}
+			blurRadius={(moderation?.blurs.length ?? 0) > 0 ? 100 : 0}
 			accessible={true}
 			accessibilityIgnoresInvertColors
 		/>

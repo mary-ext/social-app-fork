@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 import { Keyboard, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyGraphDefs,
-	AtUri,
-	type ModerationOpts,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { type NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -52,7 +53,6 @@ import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
-import type * as bsky from '#/types/bsky';
 
 import { Provider } from './State';
 
@@ -143,7 +143,7 @@ function WizardInner({
 	currentStarterPack?: AppBskyGraphDefs.StarterPackView;
 	currentListItems?: AppBskyGraphDefs.ListItemView[];
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	fromDialog?: boolean;
 	onSuccess?: () => void;
 }) {
@@ -186,7 +186,7 @@ function WizardInner({
 	const currUiStrings = wizardUiStrings[state.currentStep];
 
 	const onSuccessCreate = (data: { uri: string; cid: string }) => {
-		const rkey = new AtUri(data.uri).rkey;
+		const rkey = parseCanonicalResourceUri(data.uri).rkey;
 		Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)]);
 		dispatch({ type: 'SetProcessing', processing: false });
 
@@ -538,7 +538,7 @@ function Footer({ onNext, nextBtnText }: { onNext: () => void; nextBtnText: stri
 	);
 }
 
-function getName(item: bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView) {
+function getName(item: AnyProfileView | AppBskyFeedDefs.GeneratorView) {
 	if (typeof item.displayName === 'string') {
 		return enforceLen(sanitizeDisplayName(item.displayName), 28, true);
 	} else if ('handle' in item && typeof item.handle === 'string') {

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { type AppBskyFeedDefs, AppBskyFeedPost, moderatePost } from '@atproto/api';
+import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import { moderatePost } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -51,11 +52,11 @@ export function PostQuotes({ uri }: { uri: string }) {
 		data?.pages
 			.flatMap((page) =>
 				page.posts.map((post) => {
-					if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+					if (!moderationOpts) {
 						return null;
 					}
 					const moderation = moderatePost(post, moderationOpts);
-					return { post, record: post.record, moderation };
+					return { post, record: post.record as AppBskyFeedPost.Main, moderation };
 				}),
 			)
 			.filter((item) => item !== null) ?? [];

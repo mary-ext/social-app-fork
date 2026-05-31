@@ -1,4 +1,4 @@
-export type TapperFacetConfig = Record<string, RegExp>;
+export type TapperFacetType = 'emoji' | 'mention' | 'tag' | 'url';
 
 export type TapperNode =
 	| {
@@ -53,7 +53,8 @@ export type TapperSnapshot = {
 };
 
 export type TapperConfig = {
-	facets?: TapperFacetConfig;
+	/** Which facet types to highlight + offer autocomplete for. Defaults to all. */
+	facets?: TapperFacetType[];
 	initialText?: string;
 };
 

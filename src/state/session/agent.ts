@@ -1,3 +1,4 @@
+import { type Client, ok } from '@atcute/client';
 import { type Did as AtcuteDid } from '@atcute/lexicons';
 import {
 	finalizeAuthorization,
@@ -5,25 +6,13 @@ import {
 	OAuthUserAgent,
 	type Session,
 } from '@atcute/oauth-browser-client';
-import {
-	Agent as BaseAgent,
-	type AtprotoServiceType,
-	type AtpSessionData,
-	type ComAtprotoServerRefreshSession,
-	type Did,
-} from '@atproto/api';
 
 import { networkRetry } from '#/lib/async/retry';
-import { BLUESKY_PROXY_HEADER, PUBLIC_BSKY_SERVICE } from '#/lib/constants';
 
-import { emitNetworkConfirmed, emitNetworkLost, emitSessionDropped } from '../events';
+import { type Clients, createOAuthClients, createPublicClients } from './clients';
 import { configureModerationForAccount, configureModerationForGuest } from './moderation';
 import { configureAppOAuth } from './oauth';
 import { type SessionAccount } from './types';
-
-export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`;
-
-type FetchHandler = (this: void, url: string, init: RequestInit) => Promise<Response>;
 
 export class InactiveAccountError extends Error {
 	account: SessionAccount;
@@ -34,26 +23,6 @@ export class InactiveAccountError extends Error {
 		this.account = account;
 		this.status = status;
 	}
-}
-
-export function createPublicAgent() {
-	configureModerationForGuest(); // Side effect but only relevant for tests
-
-	const agent = new BskyAppAgent({ service: PUBLIC_BSKY_SERVICE });
-	agent.configureProxy(BLUESKY_PROXY_HEADER.get());
-	return agent;
-}
-
-export async function createAgentAndFinalizeOAuth(params: URLSearchParams) {
-	configureAppOAuth();
-	const { session } = await finalizeAuthorization(params);
-	return createPreparedOAuthAgent(session);
-}
-
-export async function createAgentAndResume(storedAccount: SessionAccount) {
-	configureAppOAuth();
-	const session = await networkRetry(1, () => getSession(storedAccount.did as AtcuteDid));
-	return createPreparedOAuthAgent(session);
 }
 
 /**
@@ -76,253 +45,108 @@ function tokenExpiringWithin(session: Session, leewayMs: number): boolean {
 }
 
 /**
- * Resumes a stored OAuth session without a network round trip, for a fast boot. The session is not validated
- * — callers must follow up with {@link BskyAppAgent.validateResumedSession}.
+ * Builds the logged-out client set, configuring guest moderation (app labelers) as a side effect.
+ *
+ * @returns the public client set.
+ */
+export function createGuestClients(): Clients {
+	configureModerationForGuest();
+	return createPublicClients();
+}
+
+/**
+ * Fetches the signed-in account's state from its PDS via `com.atproto.server.getSession`.
+ *
+ * @param pds the session's PDS client.
+ * @returns the account's DID and handle.
+ * @throws {InactiveAccountError} if the account is deactivated or taken down.
+ */
+async function refreshSession(pds: Client): Promise<SessionAccount> {
+	const data = await ok(pds.get('com.atproto.server.getSession', { params: {} }));
+	const account: SessionAccount = { did: data.did, handle: data.handle };
+	if (data.active === false || data.status) {
+		throw new InactiveAccountError(account, data.status);
+	}
+	return account;
+}
+
+/**
+ * Builds the OAuth client set for a session, validates it against the PDS, and applies moderation config.
+ *
+ * @param session the finalized/resumed OAuth session.
+ * @returns the account and its client set.
+ */
+async function prepareOAuthSession(session: Session): Promise<{ account: SessionAccount; clients: Clients }> {
+	const oauthAgent = new OAuthUserAgent(session);
+	const clients = createOAuthClients(oauthAgent);
+	const account = await refreshSession(clients.pds!);
+	await configureModerationForAccount(account);
+	return { account, clients };
+}
+
+/**
+ * Finalizes an OAuth authorization redirect into a validated, moderation-configured session.
+ *
+ * @param params the OAuth callback query parameters.
+ * @returns the signed-in account and its client set.
+ */
+export async function createOAuthSession(params: URLSearchParams) {
+	configureAppOAuth();
+	const { session } = await finalizeAuthorization(params);
+	return prepareOAuthSession(session);
+}
+
+/**
+ * Resumes a stored OAuth session and validates it against the PDS.
  *
  * @param storedAccount the persisted account to resume.
- * @returns an agent usable immediately from the stored token.
+ * @returns the account and its client set.
+ */
+export async function resumeOAuthSession(storedAccount: SessionAccount) {
+	configureAppOAuth();
+	const session = await networkRetry(1, () => getSession(storedAccount.did as AtcuteDid));
+	return prepareOAuthSession(session);
+}
+
+/**
+ * Resumes a stored OAuth session without a network round trip, for a fast boot. The session is not validated
+ * — callers must follow up with the returned `validate` callback once the app has rendered.
+ *
+ * @param storedAccount the persisted account to resume.
+ * @returns the client set and a `validate` callback that confirms the session against the server.
  * @throws {TokenRefreshError} if no stored session exists for the account.
  */
-export async function createOptimisticOAuthAgent(storedAccount: SessionAccount) {
+export async function optimisticOAuthSession(
+	storedAccount: SessionAccount,
+): Promise<{ clients: Clients; validate: () => Promise<SessionAccount> }> {
 	configureAppOAuth();
 	const session = await getSession(storedAccount.did as AtcuteDid, { allowStale: true });
-	const agent = new BskyAppAgent({
-		handle: storedAccount.handle,
-		oauthAgent: new OAuthUserAgent(session),
-	});
-	await configureOAuthAgent(agent, storedAccount);
-	return agent;
-}
-
-export class Agent extends BaseAgent {
-	constructor(proxyHeader: ProxyHeaderValue | null, ...options: ConstructorParameters<typeof BaseAgent>) {
-		super(...options);
-		if (proxyHeader) {
-			this.configureProxy(proxyHeader);
-		}
-	}
-}
-
-async function createPreparedOAuthAgent(session: Session) {
-	// handle is seeded empty; refreshSessionData() below replaces the session data.
-	const agent = new BskyAppAgent({ handle: '', oauthAgent: new OAuthUserAgent(session) });
-	const account = await agent.refreshSessionData();
-	await configureOAuthAgent(agent, account);
-	return { account, agent };
-}
-
-/**
- * Applies the configuration shared by every OAuth-backed agent: moderation setup and the network proxy
- * header.
- *
- * @param agent the agent to configure.
- * @param account the account the agent is signed in as.
- */
-async function configureOAuthAgent(agent: BskyAppAgent, account: SessionAccount): Promise<void> {
-	const moderation = configureModerationForAccount(agent, account);
-	agent.configureProxy(BLUESKY_PROXY_HEADER.get());
-	await moderation;
-}
-
-const realFetchWithEvents = withNetworkEvents(fetch);
-
-type BskyAppAgentOptions = { handle: string; oauthAgent: OAuthUserAgent } | { service: string };
-
-/**
- * Bridges an atcute OAuth user-agent to the session-manager contract that {@link BaseAgent} expects, so XRPC
- * requests are routed through OAuth (DPoP) authentication.
- */
-class OAuthSessionManager {
-	readonly did: string;
-	readonly fetchHandler: FetchHandler;
-
-	constructor(oauthAgent: OAuthUserAgent) {
-		this.did = oauthAgent.sub;
-		this.fetchHandler = createOAuthFetchHandler(oauthAgent);
-	}
-}
-
-class BskyAppAgent extends BaseAgent {
-	#oauthAgent: OAuthUserAgent | undefined;
-	#serviceUrl: URL;
-	#session: AtpSessionData | undefined;
-
-	constructor(options: BskyAppAgentOptions) {
-		if ('oauthAgent' in options) {
-			super(new OAuthSessionManager(options.oauthAgent));
-			this.#oauthAgent = options.oauthAgent;
-			this.#serviceUrl = new URL(options.oauthAgent.session.info.aud);
-			this.#session = createSessionData({
-				did: options.oauthAgent.sub,
-				handle: options.handle,
-			});
-		} else {
-			super({
-				service: options.service,
-				fetch(...args) {
-					const [input, init] = args;
-					return realFetchWithEvents(input instanceof URL ? input.toString() : input, init);
-				},
-			});
-			this.#serviceUrl = new URL(options.service);
-		}
-	}
-
-	/** The signed-in account's session data, or undefined for a logged-out (public) agent. */
-	get session(): AtpSessionData | undefined {
-		return this.#session;
-	}
-
-	/** The PDS endpoint this agent talks to. */
-	get serviceUrl(): URL {
-		return this.#serviceUrl;
-	}
-
-	/** The endpoint XRPC requests are dispatched to — the same PDS as {@link BskyAppAgent.serviceUrl}. */
-	get dispatchUrl(): URL {
-		return this.#serviceUrl;
-	}
-
-	async resumeSession(_session: AtpSessionData): Promise<ComAtprotoServerRefreshSession.Response> {
-		await this.#oauthAgent?.getSession();
-		const account = await this.refreshSessionData();
-		return {
-			data: createSessionData({
-				did: account.did,
-				handle: account.handle,
-			}),
-			headers: {},
-			success: true,
-		};
-	}
-
-	async refreshSessionData(): Promise<SessionAccount> {
-		const { data } = await this.com.atproto.server.getSession();
-		const status = data.status;
-		const account = {
-			did: data.did,
-			handle: data.handle,
-		};
-
-		if (data.active === false || status) {
-			this.#session = undefined;
-			throw new InactiveAccountError(account, status);
-		}
-
-		this.#session = createSessionData({
-			active: data.active ?? true,
-			did: data.did,
-			handle: data.handle,
-		});
-		return account;
-	}
-
-	/**
-	 * Validates a session resumed via {@link createOptimisticOAuthAgent}: refreshes the access token when it is
-	 * within {@link TOKEN_REFRESH_LEEWAY_MS} of expiry, then confirms with the server that the account is still
-	 * active.
-	 *
-	 * @returns the up-to-date account.
-	 * @throws {InactiveAccountError} if the account has been deactivated.
-	 * @throws {TokenRefreshError} if the stored session can no longer be refreshed.
-	 */
-	async validateResumedSession(): Promise<SessionAccount> {
-		const oauthAgent = this.#oauthAgent;
-		if (oauthAgent && tokenExpiringWithin(oauthAgent.session, TOKEN_REFRESH_LEEWAY_MS)) {
-			// `noCache` forces the refresh: the leeway window is wider than the
-			// library's own staleness threshold, so a plain getSession() here
-			// would still hand back the soon-to-expire token.
-			await oauthAgent.getSession({ noCache: true });
-		}
-		return this.refreshSessionData();
-	}
-}
-
-/**
- * Builds the XRPC fetch handler for an OAuth session: routes each request through the atcute user-agent
- * (which adds DPoP auth and refreshes tokens on its own) and reports an unrecoverable session drop.
- *
- * @param oauthAgent the atcute user-agent to route requests through.
- * @returns a fetch handler for {@link OAuthSessionManager}.
- */
-function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandler {
-	let dropped = false;
-	return withNetworkEvents(async (url: string, init: RequestInit) => {
-		const response = await oauthAgent.handle(url, withReadableStreamDuplex(init));
-		// `handle` refreshes tokens on its own; an invalid-token 401 coming back
-		// out of it means that refresh failed and the session is unusable.
-		if (!dropped && isInvalidTokenResponse(response)) {
-			dropped = true;
-			emitSessionDropped();
-		}
-		return response;
-	});
-}
-
-type ReadableStreamRequestInit = RequestInit & { duplex?: 'half' };
-
-function withReadableStreamDuplex(init: RequestInit | undefined): RequestInit | undefined {
-	if (typeof ReadableStream === 'undefined' || !(init?.body instanceof ReadableStream)) {
-		return init;
-	}
-
-	const nextInit: ReadableStreamRequestInit = {
-		...init,
-		duplex: 'half',
-	};
-
-	return nextInit;
-}
-
-function isInvalidTokenResponse(response: Response): boolean {
-	if (response.status !== 401) {
-		return false;
-	}
-	const auth = response.headers.get('www-authenticate');
-	return (
-		auth != null &&
-		(auth.startsWith('Bearer ') || auth.startsWith('DPoP ')) &&
-		auth.includes('error="invalid_token"')
-	);
-}
-
-/**
- * Wraps a fetch-like function so each call emits a network-confirmed or network-lost event depending on
- * whether the request settled.
- */
-function withNetworkEvents<Args extends unknown[]>(
-	fetchFn: (...args: Args) => Promise<Response>,
-): (...args: Args) => Promise<Response> {
-	return async (...args) => {
-		try {
-			const response = await fetchFn(...args);
-			emitNetworkConfirmed();
-			return response;
-		} catch (e) {
-			emitNetworkLost();
-			throw e;
-		}
-	};
-}
-
-function createSessionData({
-	active = true,
-	did,
-	handle,
-}: {
-	active?: boolean;
-	did: string;
-	handle: string;
-}): AtpSessionData {
+	const oauthAgent = new OAuthUserAgent(session);
+	const clients = createOAuthClients(oauthAgent);
+	await configureModerationForAccount(storedAccount);
 	return {
-		// OAuth access/refresh tokens live in the atcute user-agent; these JWT
-		// fields exist only to satisfy the AtpSessionData shape and are unused.
-		accessJwt: '',
-		active,
-		did,
-		handle,
-		refreshJwt: '',
+		clients,
+		validate: () => validateResumedSession(oauthAgent, clients.pds!),
 	};
 }
 
-export type { BskyAppAgent };
+/**
+ * Validates a session resumed via {@link optimisticOAuthSession}: refreshes the access token when it is
+ * within {@link TOKEN_REFRESH_LEEWAY_MS} of expiry, then confirms with the server that the account is still
+ * active.
+ *
+ * @param oauthAgent the session's atcute user-agent.
+ * @param pds the session's PDS client.
+ * @returns the up-to-date account.
+ * @throws {InactiveAccountError} if the account has been deactivated.
+ * @throws {TokenRefreshError} if the stored session can no longer be refreshed.
+ */
+async function validateResumedSession(oauthAgent: OAuthUserAgent, pds: Client): Promise<SessionAccount> {
+	if (tokenExpiringWithin(oauthAgent.session, TOKEN_REFRESH_LEEWAY_MS)) {
+		// `noCache` forces the refresh: the leeway window is wider than the
+		// library's own staleness threshold, so a plain getSession() here
+		// would still hand back the soon-to-expire token.
+		await oauthAgent.getSession({ noCache: true });
+	}
+	return refreshSession(pds);
+}

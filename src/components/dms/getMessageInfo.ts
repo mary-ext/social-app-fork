@@ -1,4 +1,4 @@
-import { AppBskyEmbedRecord, ChatBskyConvoDefs } from '@atproto/api';
+import { type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { type I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
@@ -20,7 +20,7 @@ export function getMessageInfo({
 	currentAccountDid: string | undefined;
 	i18n: I18n;
 }): UserMessageInfo | null {
-	if (!ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+	if (convo.lastMessage?.$type !== 'chat.bsky.convo.defs#messageView') {
 		return null;
 	}
 
@@ -29,7 +29,7 @@ export function getMessageInfo({
 	const senderDid = lastMessage.sender?.did;
 	const sender = convo.members.find((m) => m.did === senderDid);
 	const name = sender ? createSanitizedDisplayName(sender) : null;
-	const isGroup = ChatBskyConvoDefs.isGroupConvo(convo.kind);
+	const isGroup = convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo';
 
 	const reportableMessage = isFromMe ? undefined : lastMessage;
 
@@ -59,10 +59,10 @@ export function getMessageInfo({
 	} else if (lastMessage.embed) {
 		const defaultEmbeddedContentMessage = i18n._(defineMessage`(contains embedded content)`);
 
-		if (AppBskyEmbedRecord.isView(lastMessage.embed)) {
+		if (lastMessage.embed.$type === 'app.bsky.embed.record#view') {
 			const embed = lastMessage.embed;
 
-			if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+			if (embed.record.$type === 'app.bsky.embed.record#viewRecord') {
 				const record = embed.record;
 				const path = postUriToRelativePath(record.uri);
 				const href = path ? toBskyAppUrl(path) : undefined;

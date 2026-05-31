@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { View } from 'react-native';
-import { type $Typed, type AppBskyEmbedRecord } from '@atproto/api';
+import { type AppBskyEmbedRecord } from '@atcute/bluesky';
+import { type $type } from '@atcute/lexicons';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -18,7 +19,7 @@ let MessageItemEmbed = ({
 	squaredTopCorner,
 	squaredBottomCorner,
 }: {
-	embed: $Typed<AppBskyEmbedRecord.View>;
+	embed: $type.enforce<AppBskyEmbedRecord.View>;
 	isFromSelf: boolean;
 	isGroupChat: boolean;
 	squaredTopCorner: boolean;

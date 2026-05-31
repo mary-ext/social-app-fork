@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
-	type AppBskyActorGetProfile,
 	type AppBskyActorGetProfiles,
 	type AppBskyActorProfile,
 	type AppBskyGraphGetFollows,
-	AtUri,
-	type ComAtprotoRepoUploadBlob,
-	type Un$Typed,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type Client, ClientResponseError, ok } from '@atcute/client';
+import { type ActorIdentifier, type Did, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type InfiniteData,
 	keepPreviousData,
@@ -18,7 +18,9 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 
-import { uploadBlob } from '#/lib/api';
+import { createRecord, deleteRecord, getRecord, putRecord } from '#/lib/api/records';
+import { uploadBlob } from '#/lib/api/upload-blob';
+import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
@@ -33,11 +35,8 @@ import {
 	useUnstableProfileViewCache,
 } from '#/state/queries/unstable-profile-cache';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
-import { useAgent, useSession } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
-
-import type * as bsky from '#/types/bsky';
 
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';
@@ -78,7 +77,7 @@ export function useProfileQuery({
 	did: string | undefined;
 	staleTime?: number;
 }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const { getUnstableProfile } = useUnstableProfileViewCache();
 	return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
 		// WARNING
@@ -88,10 +87,12 @@ export function useProfileQuery({
 		staleTime,
 		refetchOnWindowFocus: true,
 		queryKey: RQKEY(did ?? ''),
-		queryFn: async () => {
-			const res = await agent.getProfile({ actor: did ?? '' });
-			return res.data;
-		},
+		queryFn: () =>
+			ok(
+				appview.get('app.bsky.actor.getProfile', {
+					params: { actor: (did ?? '') as ActorIdentifier },
+				}),
+			),
 		placeholderData: () => {
 			if (!did) return;
 			return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed;
@@ -101,63 +102,73 @@ export function useProfileQuery({
 }
 
 export function useProfilesQuery({ handles, maintainData }: { handles: string[]; maintainData?: boolean }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: handles.length > 0,
 		staleTime: STALE.MINUTES.FIVE,
 		queryKey: profilesQueryKey(handles),
-		queryFn: async () => {
-			const res = await agent.getProfiles({ actors: handles });
-			return res.data;
-		},
+		queryFn: () =>
+			ok(
+				appview.get('app.bsky.actor.getProfiles', {
+					params: { actors: handles as ActorIdentifier[] },
+				}),
+			),
 		placeholderData: maintainData ? keepPreviousData : undefined,
 	});
 }
 
 export function usePrefetchProfileQuery() {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const prefetchProfileQuery = useCallback(
 		async (did: string) => {
 			await queryClient.prefetchQuery({
 				staleTime: STALE.SECONDS.THIRTY,
 				queryKey: RQKEY(did),
-				queryFn: async () => {
-					const res = await agent.getProfile({ actor: did || '' });
-					return res.data;
-				},
+				queryFn: () =>
+					ok(
+						appview.get('app.bsky.actor.getProfile', {
+							params: { actor: (did || '') as ActorIdentifier },
+						}),
+					),
 			});
 		},
-		[queryClient, agent],
+		[queryClient, appview],
 	);
 	return prefetchProfileQuery;
 }
 
+/**
+ * A writable `app.bsky.actor.profile` record without its `$type` — the shape the profile mutators read,
+ * mutate, and return. `$type` is reattached when the record is written.
+ */
+export type ProfileRecordWrite = {
+	-readonly [K in keyof Omit<AppBskyActorProfile.Main, '$type'>]: Omit<AppBskyActorProfile.Main, '$type'>[K];
+};
+
 interface ProfileUpdateParams {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	updates:
-		| Un$Typed<AppBskyActorProfile.Record>
-		| ((existing: Un$Typed<AppBskyActorProfile.Record>) => Un$Typed<AppBskyActorProfile.Record>);
+	updates: ProfileRecordWrite | ((existing: ProfileRecordWrite) => ProfileRecordWrite);
 	newUserAvatar?: ImageMeta | undefined | null;
 	newUserBanner?: ImageMeta | undefined | null;
-	checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean;
+	checkCommitted?: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean;
 }
 export function useProfileUpdateMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 	return useMutation<void, Error, ProfileUpdateParams>({
 		mutationFn: async ({ profile, updates, newUserAvatar, newUserBanner, checkCommitted }) => {
-			let newUserAvatarPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
+			let newUserAvatarPromise: ReturnType<typeof uploadBlob> | undefined;
 			if (newUserAvatar) {
-				newUserAvatarPromise = uploadBlob(agent, newUserAvatar.blob);
+				newUserAvatarPromise = uploadBlob(pds!, newUserAvatar.blob, newUserAvatar.blob.type);
 			}
-			let newUserBannerPromise: Promise<ComAtprotoRepoUploadBlob.Response> | undefined;
+			let newUserBannerPromise: ReturnType<typeof uploadBlob> | undefined;
 			if (newUserBanner) {
-				newUserBannerPromise = uploadBlob(agent, newUserBanner.blob);
+				newUserBannerPromise = uploadBlob(pds!, newUserBanner.blob, newUserBanner.blob.type);
 			}
-			await agent.upsertProfile(async (existing) => {
-				let next: Un$Typed<AppBskyActorProfile.Record> = existing || {};
+			await upsertProfile(pds!, profile.did as Did, async (existing) => {
+				let next: ProfileRecordWrite = existing || {};
 				if (typeof updates === 'function') {
 					next = updates(next);
 				} else {
@@ -168,38 +179,36 @@ export function useProfileUpdateMutation() {
 					}
 				}
 				if (newUserAvatarPromise) {
-					const res = await newUserAvatarPromise;
-					next.avatar = res.data.blob;
+					next.avatar = await newUserAvatarPromise;
 				} else if (newUserAvatar === null) {
 					next.avatar = undefined;
 				}
 				if (newUserBannerPromise) {
-					const res = await newUserBannerPromise;
-					next.banner = res.data.blob;
+					next.banner = await newUserBannerPromise;
 				} else if (newUserBanner === null) {
 					next.banner = undefined;
 				}
 				return next;
 			});
 			await whenAppViewReady(
-				agent,
+				appview,
 				profile.did,
 				checkCommitted ||
 					((res) => {
 						if (typeof newUserAvatar !== 'undefined') {
-							if (newUserAvatar === null && res.data.avatar) {
+							if (newUserAvatar === null && res.avatar) {
 								// url hasn't cleared yet
 								return false;
-							} else if (res.data.avatar === profile.avatar) {
+							} else if (res.avatar === profile.avatar) {
 								// url hasn't changed yet
 								return false;
 							}
 						}
 						if (typeof newUserBanner !== 'undefined') {
-							if (newUserBanner === null && res.data.banner) {
+							if (newUserBanner === null && res.banner) {
 								// url hasn't cleared yet
 								return false;
-							} else if (res.data.banner === profile.banner) {
+							} else if (res.banner === profile.banner) {
 								// url hasn't changed yet
 								return false;
 							}
@@ -207,9 +216,7 @@ export function useProfileUpdateMutation() {
 						if (typeof updates === 'function') {
 							return true;
 						}
-						return (
-							res.data.displayName === updates.displayName && res.data.description === updates.description
-						);
+						return res.displayName === updates.displayName && res.description === updates.description;
 					}),
 			);
 		},
@@ -227,12 +234,12 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-	profile: Shadow<bsky.profile.AnyProfileView>,
+	profile: Shadow<AnyProfileView>,
 	logContext: ProfileFollowLogContext,
 	position?: number,
 	contextProfileDid?: string,
 ) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
 	const did = profile.did;
@@ -248,7 +255,7 @@ export function useProfileFollowMutationQueue(
 					did,
 				});
 				userActionHistory.follow([did]);
-				return uri;
+				return uri as ResourceUri;
 			} else {
 				if (prevFollowingUri) {
 					await unfollowMutation.mutateAsync({
@@ -268,7 +275,7 @@ export function useProfileFollowMutationQueue(
 
 			// Optimistically update profile follows cache for avatar displays
 			if (currentAccount?.did) {
-				type FollowsQueryData = InfiniteData<AppBskyGraphGetFollows.OutputSchema>;
+				type FollowsQueryData = InfiniteData<AppBskyGraphGetFollows.$output>;
 				queryClient.setQueryData<FollowsQueryData>(PROFILE_FOLLOWS_RQKEY(currentAccount.did), (old) => {
 					if (!old?.pages?.[0]) return old;
 					if (finalFollowingUri) {
@@ -299,17 +306,17 @@ export function useProfileFollowMutationQueue(
 			}
 
 			if (finalFollowingUri) {
-				void agent.app.bsky.graph
-					.getSuggestedFollowsByActor({
-						actor: did,
-					})
-					.then((res) => {
-						const dids = res.data.suggestions
-							.filter((a) => !a.viewer?.following)
-							.map((a) => a.did)
-							.slice(0, 8);
-						userActionHistory.followSuggestion(dids);
-					});
+				void ok(
+					appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
+						params: { actor: did as ActorIdentifier },
+					}),
+				).then((data) => {
+					const dids = data.suggestions
+						.filter((a) => !a.viewer?.following)
+						.map((a) => a.did)
+						.slice(0, 8);
+					userActionHistory.followSuggestion(dids);
+				});
 			}
 		},
 	});
@@ -335,29 +342,43 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
 	_logContext: ProfileFollowLogContext,
-	_profile: Shadow<bsky.profile.AnyProfileView>,
+	_profile: Shadow<AnyProfileView>,
 	_position?: number,
 	_contextProfileDid?: string,
 ) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 
 	return useMutation<{ uri: string; cid: string }, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
-			return await agent.follow(did);
+			return await createRecord(pds!, {
+				collection: 'app.bsky.graph.follow',
+				record: {
+					$type: 'app.bsky.graph.follow',
+					createdAt: new Date().toISOString(),
+					subject: did as Did,
+				},
+				repo: currentAccount!.did as Did,
+			});
 		},
 	});
 }
 
 function useProfileUnfollowMutation(_logContext: ProfileUnfollowLogContext) {
-	const agent = useAgent();
+	const { pds } = useClients();
+	const { currentAccount } = useSession();
 	return useMutation<void, Error, { did: string; followUri: string }>({
 		mutationFn: async ({ followUri }) => {
-			return await agent.deleteFollow(followUri);
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.graph.follow',
+				repo: currentAccount!.did as Did,
+				rkey: parseCanonicalResourceUri(followUri).rkey,
+			});
 		},
 	});
 }
 
-export function useProfileMuteMutationQueue(profile: Shadow<bsky.profile.AnyProfileView>) {
+export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 	const queryClient = useQueryClient();
 	const did = profile.did;
 	const initialMuted = profile.viewer?.muted;
@@ -406,10 +427,15 @@ export function useProfileMuteMutationQueue(profile: Shadow<bsky.profile.AnyProf
 
 function useProfileMuteMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<void, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
-			await agent.mute(did);
+			await ok(
+				appview.post('app.bsky.graph.muteActor', {
+					as: null,
+					input: { actor: did as ActorIdentifier },
+				}),
+			);
 		},
 		onSuccess() {
 			void queryClient.invalidateQueries({ queryKey: RQKEY_MY_MUTED() });
@@ -419,10 +445,15 @@ function useProfileMuteMutation() {
 
 function useProfileUnmuteMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useMutation<void, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
-			await agent.unmute(did);
+			await ok(
+				appview.post('app.bsky.graph.unmuteActor', {
+					as: null,
+					input: { actor: did as ActorIdentifier },
+				}),
+			);
 		},
 		onSuccess() {
 			void queryClient.invalidateQueries({ queryKey: RQKEY_MY_MUTED() });
@@ -430,7 +461,7 @@ function useProfileUnmuteMutation() {
 	});
 }
 
-export function useProfileBlockMutationQueue(profile: Shadow<bsky.profile.AnyProfileView>) {
+export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 	const queryClient = useQueryClient();
 	const did = profile.did;
 	const initialBlockingUri = profile.viewer?.blocking;
@@ -444,7 +475,7 @@ export function useProfileBlockMutationQueue(profile: Shadow<bsky.profile.AnyPro
 				const { uri } = await blockMutation.mutateAsync({
 					did,
 				});
-				return uri;
+				return uri as ResourceUri;
 			} else {
 				if (prevBlockUri) {
 					await unblockMutation.mutateAsync({
@@ -485,17 +516,22 @@ export function useProfileBlockMutationQueue(profile: Shadow<bsky.profile.AnyPro
 
 function useProfileBlockMutation() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<{ uri: string; cid: string }, Error, { did: string }>({
 		mutationFn: async ({ did }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			return await agent.app.bsky.graph.block.create(
-				{ repo: currentAccount.did },
-				{ subject: did, createdAt: new Date().toISOString() },
-			);
+			return await createRecord(pds!, {
+				collection: 'app.bsky.graph.block',
+				record: {
+					$type: 'app.bsky.graph.block',
+					createdAt: new Date().toISOString(),
+					subject: did as Did,
+				},
+				repo: currentAccount.did as Did,
+			});
 		},
 		onSuccess(_, { did }) {
 			void queryClient.invalidateQueries({ queryKey: RQKEY_MY_BLOCKED() });
@@ -506,17 +542,17 @@ function useProfileBlockMutation() {
 
 function useProfileUnblockMutation() {
 	const { currentAccount } = useSession();
-	const agent = useAgent();
+	const { pds } = useClients();
 	const queryClient = useQueryClient();
 	return useMutation<void, Error, { did: string; blockUri: string }>({
 		mutationFn: async ({ blockUri }) => {
 			if (!currentAccount) {
 				throw new Error('Not signed in');
 			}
-			const { rkey } = new AtUri(blockUri);
-			await agent.app.bsky.graph.block.delete({
-				repo: currentAccount.did,
-				rkey,
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.graph.block',
+				repo: currentAccount.did as Did,
+				rkey: parseCanonicalResourceUri(blockUri).rkey,
 			});
 		},
 		onSuccess(_, { did }) {
@@ -525,16 +561,58 @@ function useProfileUnblockMutation() {
 	});
 }
 
+/**
+ * Reads, merges, and writes the signed-in user's own `app.bsky.actor.profile` record, retrying on a swap
+ * conflict (a concurrent profile edit). Mirrors `@atproto/api`'s `BskyAgent.upsertProfile`.
+ *
+ * @param pds the PDS client.
+ * @param did the user's repo DID.
+ * @param updateFn maps the existing record (or undefined when none exists) to the record to write.
+ */
+async function upsertProfile(
+	pds: Client,
+	did: Did,
+	updateFn: (existing: ProfileRecordWrite | undefined) => ProfileRecordWrite | Promise<ProfileRecordWrite>,
+): Promise<void> {
+	await retry(
+		5,
+		(e) => e instanceof ClientResponseError && e.error === 'InvalidSwap',
+		async () => {
+			const existing = await getRecord(pds, {
+				collection: 'app.bsky.actor.profile',
+				repo: did,
+				rkey: 'self',
+			}).catch((e) => {
+				// a missing record means a brand-new profile; anything else should propagate
+				if (e instanceof Error && e.message.includes('Could not locate record:')) {
+					return undefined;
+				}
+				throw e;
+			});
+
+			const updated = await updateFn(existing?.value);
+
+			await putRecord(pds, {
+				collection: 'app.bsky.actor.profile',
+				record: { ...updated, $type: 'app.bsky.actor.profile' },
+				repo: did,
+				rkey: 'self',
+				swapRecord: existing?.cid ?? null,
+			});
+		},
+	);
+}
+
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	actor: string,
-	fn: (res: AppBskyActorGetProfile.Response) => boolean,
+	fn: (res: AppBskyActorDefs.ProfileViewDetailed) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => agent.app.bsky.actor.getProfile({ actor }),
+		() => ok(appview.get('app.bsky.actor.getProfile', { params: { actor: actor as ActorIdentifier } })),
 	);
 }
 
@@ -553,7 +631,7 @@ export function* findAllProfilesInQueryData(
 			yield queryData;
 		}
 	}
-	const profilesQueryDatas = queryClient.getQueriesData<AppBskyActorGetProfiles.OutputSchema>({
+	const profilesQueryDatas = queryClient.getQueriesData<AppBskyActorGetProfiles.$output>({
 		queryKey: [profilesQueryKeyRoot],
 	});
 	for (const [_queryKey, queryData] of profilesQueryDatas) {

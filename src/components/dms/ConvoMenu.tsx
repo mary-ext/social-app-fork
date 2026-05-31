@@ -1,6 +1,7 @@
 import { memo, useCallback } from 'react';
 import { Keyboard, View } from 'react-native';
-import { ChatBskyConvoDefs, type ModerationCause } from '@atproto/api';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type BlockingModerationCause } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -36,8 +37,6 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 let ConvoMenu = ({
 	convo,
 	profile,
@@ -50,14 +49,14 @@ let ConvoMenu = ({
 	style,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	control?: Menu.MenuControlProps;
 	currentScreen: 'list' | 'conversation';
 	showMarkAsRead?: boolean;
 	hideTrigger?: boolean;
 	blockInfo: {
-		listBlocks: ModerationCause[];
-		userBlock?: ModerationCause;
+		listBlocks: BlockingModerationCause[];
+		userBlock?: BlockingModerationCause;
 	};
 	latestReportableMessage?: ChatBskyConvoDefs.MessageView;
 	style?: ViewStyleProp['style'];
@@ -159,11 +158,11 @@ function MenuContent({
 	blockedByListControl,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	showMarkAsRead?: boolean;
 	blockInfo: {
-		listBlocks: ModerationCause[];
-		userBlock?: ModerationCause;
+		listBlocks: BlockingModerationCause[];
+		userBlock?: BlockingModerationCause;
 	};
 	leaveConvoControl: Prompt.PromptControlProps;
 	reportControl: Prompt.PromptControlProps;
@@ -176,7 +175,7 @@ function MenuContent({
 	const { listBlocks, userBlock } = blockInfo;
 	const isBlocking = userBlock || !!listBlocks.length;
 	const isDeletedAccount = profile.handle === 'missing.invalid';
-	const isGroupConvo = ChatBskyConvoDefs.isGroupConvo(initialConvo.kind);
+	const isGroupConvo = initialConvo.kind?.$type === 'chat.bsky.convo.defs#groupConvo';
 
 	const convoId = initialConvo.id;
 	const { data: convo } = useConvoQuery({ convoId });

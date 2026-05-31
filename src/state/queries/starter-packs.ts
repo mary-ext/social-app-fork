@@ -1,17 +1,21 @@
 import {
-	AppBskyFeedDefs,
+	type AnyProfileView,
+	type AppBskyFeedDefs,
 	AppBskyGraphDefs,
 	type AppBskyGraphGetStarterPack,
-	AppBskyGraphStarterpack,
+	type AppBskyGraphStarterpack,
 	type AppBskyRichtextFacet,
-	AtUri,
-	RichText,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { type Client, ok } from '@atcute/client';
+import { type Cid, type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
+import { createRecord, deleteRecord, putRecord } from '#/lib/api/records';
 import { until } from '#/lib/async/until';
 import { createStarterPackList } from '#/lib/generate-starterpack';
+import { detectFacets } from '#/lib/strings/rich-text-facets';
 import {
 	createStarterPackUri,
 	httpStarterPackUriToAtUri,
@@ -21,10 +25,24 @@ import {
 import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { STALE } from '#/state/queries/index';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
-import { useAgent } from '#/state/session';
-import { type BskyAppAgent } from '#/state/session/agent';
+import { useClients, useSession } from '#/state/session';
 
-import * as bsky from '#/types/bsky';
+async function detectDescriptionFacets(
+	appview: Client,
+	description: string,
+): Promise<AppBskyRichtextFacet.Main[] | undefined> {
+	const rt = await detectFacets(description, async (handle) => {
+		try {
+			const res = await ok(
+				appview.get('com.atproto.identity.resolveHandle', { params: { handle: handle as Handle } }),
+			);
+			return res.did;
+		} catch {
+			return undefined;
+		}
+	});
+	return rt.facets;
+}
 
 const RQKEY_ROOT = 'starter-pack';
 const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) => {
@@ -37,7 +55,7 @@ const RQKEY = ({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }
 };
 
 export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: string; rkey?: string }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 
 	return useQuery<AppBskyGraphDefs.StarterPackView>({
 		queryKey: RQKEY(uri ? { uri } : { did, rkey }),
@@ -48,10 +66,12 @@ export function useStarterPackQuery({ uri, did, rkey }: { uri?: string; did?: st
 				uri = httpStarterPackUriToAtUri(uri) as string;
 			}
 
-			const res = await agent.app.bsky.graph.getStarterPack({
-				starterPack: uri,
-			});
-			return res.data.starterPack;
+			const data = await ok(
+				appview.get('app.bsky.graph.getStarterPack', {
+					params: { starterPack: uri as ResourceUri },
+				}),
+			);
+			return data.starterPack;
 		},
 		enabled: Boolean(uri) || Boolean(did && rkey),
 		staleTime: STALE.MINUTES.FIVE,
@@ -73,7 +93,7 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
 	name: string;
 	description?: string;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	feeds?: AppBskyFeedDefs.GeneratorView[];
 }
 
@@ -85,47 +105,47 @@ export function useCreateStarterPackMutation({
 	onError: (e: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 
 	return useMutation<{ uri: string; cid: string }, Error, UseCreateStarterPackMutationParams>({
 		mutationFn: async ({ name, description, feeds, profiles }) => {
+			const did = currentAccount!.did as Did;
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 			if (description) {
-				const rt = new RichText({ text: description });
-				await rt.detectFacets(agent);
-				descriptionFacets = rt.facets;
+				descriptionFacets = await detectDescriptionFacets(appview, description);
 			}
 
-			let listRes;
-			listRes = await createStarterPackList({
-				name,
+			const listRes = await createStarterPackList({
 				description,
-				profiles,
 				descriptionFacets,
-				agent,
+				did,
+				name,
+				pds: pds!,
+				profiles,
 			});
 
-			return await agent.app.bsky.graph.starterpack.create(
-				{
-					repo: agent.assertDid,
-				},
-				{
-					name,
+			return await createRecord(pds!, {
+				collection: 'app.bsky.graph.starterpack',
+				record: {
+					$type: 'app.bsky.graph.starterpack',
+					createdAt: new Date().toISOString(),
 					description,
 					descriptionFacets,
-					list: listRes?.uri,
 					feeds: feeds?.map((f) => ({ uri: f.uri })),
-					createdAt: new Date().toISOString(),
+					list: listRes.uri as ResourceUri,
+					name,
 				},
-			);
+				repo: did,
+			});
 		},
 		onSuccess: async (data) => {
-			await whenAppViewReady(agent, data.uri, (v) => {
-				return typeof v?.data.starterPack.uri === 'string';
+			await whenAppViewReady(appview, data.uri, (v) => {
+				return typeof v?.starterPack.uri === 'string';
 			});
 			await invalidateActorStarterPacksQuery({
 				queryClient,
-				did: agent.session!.did,
+				did: currentAccount!.did,
 			});
 			onSuccess(data);
 		},
@@ -143,7 +163,8 @@ export function useEditStarterPackMutation({
 	onError: (error: Error) => void;
 }) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 
 	return useMutation<
 		void,
@@ -154,32 +175,36 @@ export function useEditStarterPackMutation({
 		}
 	>({
 		mutationFn: async ({ name, description, feeds, profiles, currentStarterPack, currentListItems }) => {
+			const did = currentAccount!.did as Did;
 			let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined;
 			if (description) {
-				const rt = new RichText({ text: description });
-				await rt.detectFacets(agent);
-				descriptionFacets = rt.facets;
+				descriptionFacets = await detectDescriptionFacets(appview, description);
 			}
 
-			if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {
+			const spRecord = currentStarterPack.record as AppBskyGraphStarterpack.Main;
+			if (spRecord.$type !== 'app.bsky.graph.starterpack') {
 				throw new Error('Invalid starter pack');
 			}
 
 			const removedItems = currentListItems.filter(
 				(i) =>
-					i.subject.did !== agent.session?.did && !profiles.find((p) => p.did === i.subject.did && p.did),
+					i.subject.did !== currentAccount?.did && !profiles.find((p) => p.did === i.subject.did && p.did),
 			);
 			if (removedItems.length !== 0) {
 				const chunks = chunk(removedItems, 50);
 				for (const chunk of chunks) {
-					await agent.com.atproto.repo.applyWrites({
-						repo: agent.session!.did,
-						writes: chunk.map((i) => ({
-							$type: 'com.atproto.repo.applyWrites#delete',
-							collection: 'app.bsky.graph.listitem',
-							rkey: new AtUri(i.uri).rkey,
-						})),
-					});
+					await ok(
+						pds!.post('com.atproto.repo.applyWrites', {
+							input: {
+								repo: did,
+								writes: chunk.map((i) => ({
+									$type: 'com.atproto.repo.applyWrites#delete',
+									collection: 'app.bsky.graph.listitem',
+									rkey: parseCanonicalResourceUri(i.uri).rkey,
+								})),
+							},
+						}),
+					);
 				}
 			}
 
@@ -187,46 +212,50 @@ export function useEditStarterPackMutation({
 			if (addedProfiles.length > 0) {
 				const chunks = chunk(addedProfiles, 50);
 				for (const chunk of chunks) {
-					await agent.com.atproto.repo.applyWrites({
-						repo: agent.session!.did,
-						writes: chunk.map((p) => ({
-							$type: 'com.atproto.repo.applyWrites#create',
-							collection: 'app.bsky.graph.listitem',
-							value: {
-								$type: 'app.bsky.graph.listitem',
-								subject: p.did,
-								list: currentStarterPack.list?.uri,
-								createdAt: new Date().toISOString(),
+					await ok(
+						pds!.post('com.atproto.repo.applyWrites', {
+							input: {
+								repo: did,
+								writes: chunk.map((p) => ({
+									$type: 'com.atproto.repo.applyWrites#create',
+									collection: 'app.bsky.graph.listitem',
+									value: {
+										$type: 'app.bsky.graph.listitem',
+										createdAt: new Date().toISOString(),
+										list: currentStarterPack.list!.uri,
+										subject: p.did as Did,
+									},
+								})),
 							},
-						})),
-					});
+						}),
+					);
 				}
 			}
 
 			const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey;
-			await agent.com.atproto.repo.putRecord({
-				repo: agent.session!.did,
+			await putRecord(pds!, {
 				collection: 'app.bsky.graph.starterpack',
-				rkey,
 				record: {
-					name,
+					$type: 'app.bsky.graph.starterpack',
+					createdAt: spRecord.createdAt,
 					description,
 					descriptionFacets,
-					list: currentStarterPack.list?.uri,
-					feeds,
-					createdAt: currentStarterPack.record.createdAt,
-					updatedAt: new Date().toISOString(),
+					feeds: feeds?.map((f) => ({ uri: f.uri })),
+					list: currentStarterPack.list!.uri,
+					name,
 				},
+				repo: did,
+				rkey,
 			});
 		},
 		onSuccess: async (_, { currentStarterPack }) => {
 			const parsed = parseStarterPackUri(currentStarterPack.uri);
-			await whenAppViewReady(agent, currentStarterPack.uri, (v) => {
-				return currentStarterPack.cid !== v?.data.starterPack.cid;
+			await whenAppViewReady(appview, currentStarterPack.uri, (v) => {
+				return currentStarterPack.cid !== v?.starterPack.cid;
 			});
 			await invalidateActorStarterPacksQuery({
 				queryClient,
-				did: agent.session!.did,
+				did: currentAccount!.did,
 			});
 			if (currentStarterPack.list) {
 				await invalidateListMembersQuery({
@@ -236,7 +265,7 @@ export function useEditStarterPackMutation({
 			}
 			await invalidateStarterPack({
 				queryClient,
-				did: agent.session!.did,
+				did: currentAccount!.did,
 				rkey: parsed!.rkey,
 			});
 			onSuccess();
@@ -254,35 +283,38 @@ export function useDeleteStarterPackMutation({
 	onSuccess: () => void;
 	onError: (error: Error) => void;
 }) {
-	const agent = useAgent();
+	const { appview, pds } = useClients();
+	const { currentAccount } = useSession();
 	const queryClient = useQueryClient();
 
 	return useMutation({
 		mutationFn: async ({ listUri, rkey }: { listUri?: string; rkey: string }) => {
-			if (!agent.session) {
+			if (!currentAccount) {
 				throw new Error(`Requires signed in user`);
 			}
 
 			if (listUri) {
-				await agent.app.bsky.graph.list.delete({
-					repo: agent.session.did,
-					rkey: new AtUri(listUri).rkey,
+				await deleteRecord(pds!, {
+					collection: 'app.bsky.graph.list',
+					repo: currentAccount.did as Did,
+					rkey: parseCanonicalResourceUri(listUri).rkey,
 				});
 			}
-			await agent.app.bsky.graph.starterpack.delete({
-				repo: agent.session.did,
+			await deleteRecord(pds!, {
+				collection: 'app.bsky.graph.starterpack',
+				repo: currentAccount.did as Did,
 				rkey,
 			});
 		},
 		onSuccess: async (_, { listUri, rkey }) => {
 			const uri = createStarterPackUri({
-				did: agent.session!.did,
+				did: currentAccount!.did,
 				rkey,
 			});
 
 			if (uri) {
-				await whenAppViewReady(agent, uri, (v) => {
-					return Boolean(v?.data?.starterPack) === false;
+				await whenAppViewReady(appview, uri, (v) => {
+					return Boolean(v?.starterPack) === false;
 				});
 			}
 
@@ -291,11 +323,11 @@ export function useDeleteStarterPackMutation({
 			}
 			await invalidateActorStarterPacksQuery({
 				queryClient,
-				did: agent.session!.did,
+				did: currentAccount!.did,
 			});
 			await invalidateStarterPack({
 				queryClient,
-				did: agent.session!.did,
+				did: currentAccount!.did,
 				rkey,
 			});
 			onSuccess();
@@ -307,15 +339,15 @@ export function useDeleteStarterPackMutation({
 }
 
 async function whenAppViewReady(
-	agent: BskyAppAgent,
+	appview: Client,
 	uri: string,
-	fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
+	fn: (res?: AppBskyGraphGetStarterPack.$output) => boolean,
 ) {
 	await until(
 		5, // 5 tries
 		1e3, // 1s delay between tries
 		fn,
-		() => agent.app.bsky.graph.getStarterPack({ starterPack: uri }),
+		() => ok(appview.get('app.bsky.graph.getStarterPack', { params: { starterPack: uri as ResourceUri } })),
 	);
 }
 
@@ -323,41 +355,31 @@ export function precacheStarterPack(
 	queryClient: QueryClient,
 	starterPack: AppBskyGraphDefs.StarterPackViewBasic | AppBskyGraphDefs.StarterPackView,
 ) {
-	if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
+	if (record.$type !== 'app.bsky.graph.starterpack') {
 		return;
 	}
 
 	let starterPackView: AppBskyGraphDefs.StarterPackView | undefined;
-	if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
-		starterPackView = starterPack;
-	} else if (
-		AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
-		bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
-	) {
-		let feeds: AppBskyFeedDefs.GeneratorView[] | undefined;
-		if (starterPack.record.feeds) {
-			feeds = [];
-			for (const feed of starterPack.record.feeds) {
-				// note: types are wrong? claims to be `FeedItem`, but we actually
-				// get un$typed `GeneratorView` objects here -sfn
-				if (bsky.validate(feed, AppBskyFeedDefs.validateGeneratorView)) {
-					feeds.push(feed);
-				}
-			}
-		}
+	if (starterPack.$type === 'app.bsky.graph.defs#starterPackView') {
+		starterPackView = starterPack as AppBskyGraphDefs.StarterPackView;
+	} else if (starterPack.$type === 'app.bsky.graph.defs#starterPackViewBasic') {
+		// note: the field claims to be `FeedItem`, but the appview returns un$typed `GeneratorView`
+		// objects here -sfn
+		const feeds = record.feeds as unknown as AppBskyFeedDefs.GeneratorView[] | undefined;
 
 		const listView: AppBskyGraphDefs.ListViewBasic = {
-			uri: starterPack.record.list,
 			// This will be populated once the data from server is fetched
-			cid: '',
-			name: starterPack.record.name,
+			cid: '' as Cid,
+			name: record.name,
 			purpose: 'app.bsky.graph.defs#referencelist',
+			uri: record.list,
 		};
 		starterPackView = {
 			...starterPack,
 			$type: 'app.bsky.graph.defs#starterPackView',
-			list: listView,
 			feeds,
+			list: listView,
 		};
 	}
 

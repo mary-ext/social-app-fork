@@ -1,6 +1,6 @@
 import { type JSX, useCallback, useMemo, useState } from 'react';
 import { Dimensions, type GestureResponderEvent, type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyGraphDefs } from '@atproto/api';
+import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -22,8 +22,6 @@ import { atoms as a, useTheme } from '#/alf';
 import { Button, ButtonText } from '#/components/Button';
 import { ListFooter } from '#/components/Lists';
 import * as ProfileCard from '#/components/ProfileCard';
-
-import type * as bsky from '#/types/bsky';
 
 const LOADING_ITEM = { _reactKey: '__loading__' } as const;
 const EMPTY_ITEM = { _reactKey: '__empty__' } as const;
@@ -134,7 +132,7 @@ export function ListMembers({
 	}, [fetchNextPage]);
 
 	const onPressEditMembership = useCallback(
-		(e: GestureResponderEvent, profile: bsky.profile.AnyProfileView) => {
+		(e: GestureResponderEvent, profile: AnyProfileView) => {
 			e.preventDefault();
 			openModal({
 				name: 'user-add-remove-lists',
@@ -169,7 +167,7 @@ export function ListMembers({
 				return renderEmptyState();
 			}
 
-			const profile = item.subject;
+			const profile = item.subject as AnyProfileView;
 			if (!moderationOpts) return null;
 
 			return (

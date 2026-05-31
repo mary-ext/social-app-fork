@@ -1,5 +1,4 @@
 import { View } from 'react-native';
-import { AppBskyEmbedVideo } from '@atproto/api';
 
 import { type FeedPostSliceItem } from '#/state/queries/post-feed';
 
@@ -11,7 +10,7 @@ import { VideoPostCard, VideoPostCardPlaceholder } from '#/components/VideoPostC
 export function PostFeedVideoGridRow({ items: slices }: { items: FeedPostSliceItem[] }) {
 	const gutters = useGutters(['base', 'base', 0, 'base']);
 	const posts = slices
-		.filter((slice) => AppBskyEmbedVideo.isView(slice.post.embed))
+		.filter((slice) => slice.post.embed?.$type === 'app.bsky.embed.video#view')
 		.map((slice) => ({
 			post: slice.post,
 			moderation: slice.moderation,

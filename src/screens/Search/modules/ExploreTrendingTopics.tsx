@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
-import { type AppBskyUnspeccedDefs, moderateProfile } from '@atproto/api';
+import { type AnyProfileView, type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -220,8 +221,9 @@ function useModerateTrendingActors(actors: AppBskyUnspeccedDefs.TrendView['actor
 
 		return actors
 			.filter((actor) => {
-				const decision = moderateProfile(actor, moderationOpts);
-				return !decision.ui('avatar').filter && !decision.ui('avatar').blur;
+				const decision = moderateProfile(actor as AnyProfileView, moderationOpts);
+				const modui = getDisplayRestrictions(decision, DisplayContext.ProfileMedia);
+				return modui.filters.length === 0 && modui.blurs.length === 0;
 			})
 			.slice(0, 3);
 	}, [actors, moderationOpts]);

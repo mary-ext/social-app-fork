@@ -1,15 +1,16 @@
 import { useCallback, useMemo } from 'react';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyActorGetSuggestions,
 	type AppBskyGraphGetSuggestedFollowsByActor,
-} from '@atproto/api';
+} from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';
-import { useAgent } from '#/state/session';
-
-import type * as bsky from '#/types/bsky';
+import { useClients } from '#/state/session';
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows';
 
@@ -25,16 +26,18 @@ export function useSuggestedFollowsByActorQuery({
 	enabled?: boolean;
 	staleTime?: number;
 }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		staleTime,
 		queryKey: suggestedFollowsByActorQueryKey(did),
 		queryFn: async () => {
-			const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
-				actor: did,
-			});
-			const suggestions = res.data.suggestions.filter((profile) => !profile.viewer?.following);
-			return { suggestions, recId: res.data.recIdStr };
+			const data = await ok(
+				appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
+					params: { actor: did as ActorIdentifier },
+				}),
+			);
+			const suggestions = data.suggestions.filter((profile) => !profile.viewer?.following);
+			return { suggestions, recId: data.recIdStr };
 		},
 		enabled,
 	});
@@ -71,7 +74,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 
 	const profiles = useMemo(() => {
 		return (data?.suggestions ?? []).map((profile) => ({
-			actor: profile as bsky.profile.AnyProfileView,
+			actor: profile as AnyProfileView,
 			recId: data?.recId,
 		}));
 	}, [data?.suggestions, data?.recId]);
@@ -94,7 +97,7 @@ export function* findAllProfilesInQueryData(
 }
 
 function* findAllProfilesInSuggestedFollowsQueryData(queryClient: QueryClient, did: string) {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyActorGetSuggestions.OutputSchema>>({
+	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyActorGetSuggestions.$output>>({
 		queryKey: [suggestedFollowsQueryKeyRoot],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {
@@ -112,7 +115,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(queryClient: QueryClient, d
 }
 
 function* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient: QueryClient, did: string) {
-	const queryDatas = queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema>({
+	const queryDatas = queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.$output>({
 		queryKey: [suggestedFollowsByActorQueryKeyRoot],
 	});
 	for (const [_queryKey, queryData] of queryDatas) {

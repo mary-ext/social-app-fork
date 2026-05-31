@@ -6,6 +6,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
+import { type AnyStarterPackView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -34,8 +35,6 @@ import * as Prompt from '#/components/Prompt';
 import { Default as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 interface SectionRef {
 	scrollToTop: () => void;
 }
@@ -55,7 +54,7 @@ interface ProfileFeedgensProps {
 	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
 }
 
-function keyExtractor(item: bsky.starterPack.AnyStarterPackView) {
+function keyExtractor(item: AnyStarterPackView) {
 	return item.uri;
 }
 
@@ -129,7 +128,7 @@ export function ProfileStarterPacks({
 	useEffect(() => {}, [enabled, scrollElRef, setScrollViewTag]);
 
 	const renderItem = useCallback(
-		({ item, index }: ListRenderItemInfo<bsky.starterPack.AnyStarterPackView>) => {
+		({ item, index }: ListRenderItemInfo<AnyStarterPackView>) => {
 			return (
 				<View style={[a.p_lg, (isTabletOrDesktop || index !== 0) && a.border_t, t.atoms.border_contrast_low]}>
 					<StarterPackCard starterPack={item} />

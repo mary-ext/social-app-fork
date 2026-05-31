@@ -1,17 +1,19 @@
 import { memo, useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import {
-	type AppBskyActorDefs,
+	DisplayContext,
+	getDisplayRestrictions,
 	moderateProfile,
 	type ModerationDecision,
-	type ModerationOpts,
-	type RichText as RichTextAPI,
-} from '@atproto/api';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useHaptics } from '#/lib/haptics';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
+import { type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';
@@ -47,8 +49,8 @@ import { ProfileHeaderSuggestedFollows } from './SuggestedFollows';
 
 interface Props {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	descriptionRT: RichTextAPI | null;
-	moderationOpts: ModerationOpts;
+	descriptionRT: Richtext | null;
+	moderationOpts: ModerationOptions;
 	hideBackButton?: boolean;
 	isPlaceholderProfile?: boolean;
 }
@@ -139,7 +141,7 @@ let ProfileHeaderStandard = ({
 							>
 								{sanitizeDisplayName(
 									profile.displayName || sanitizeHandle(profile.handle),
-									moderation.ui('displayName'),
+									getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 								)}
 								<View style={[a.pl_xs, { marginTop: undefined }]}>
 									<ProfileBadges profile={profile} size="lg" interactive />
@@ -151,7 +153,8 @@ let ProfileHeaderStandard = ({
 					{!isPlaceholderProfile && !isBlockedUser && (
 						<View style={a.gap_md}>
 							<ProfileHeaderMetrics profile={profile} />
-							{descriptionRT && !moderation.ui('profileView').blur ? (
+							{descriptionRT &&
+							getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 								<View pointerEvents="auto">
 									<RichText
 										testID="profileHeaderDescription"
@@ -211,7 +214,7 @@ export function HeaderStandardButtons({
 }: {
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 	moderation: ModerationDecision;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	onFollow?: () => void;
 	onUnfollow?: () => void;
 	minimal?: boolean;
@@ -236,7 +239,7 @@ export function HeaderStandardButtons({
 				Toast.show(
 					l`Following ${sanitizeDisplayName(
 						profile.displayName || profile.handle,
-						moderation.ui('displayName'),
+						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 					)}`,
 				);
 			} catch (err) {
@@ -260,7 +263,7 @@ export function HeaderStandardButtons({
 				Toast.show(
 					l`No longer following ${sanitizeDisplayName(
 						profile.displayName || profile.handle,
-						moderation.ui('displayName'),
+						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 					)}`,
 					{ type: 'default' },
 				);

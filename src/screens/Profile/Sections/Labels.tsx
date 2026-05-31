@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
-	type AppBskyLabelerDefs,
-	type InterpretedLabelValueDefinition,
-	interpretLabelValueDefinitions,
-	type ModerationOpts,
-} from '@atproto/api';
+	type InterpretedLabelDefinition,
+	interpretLabelerDefinition,
+	LabelFlags,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
@@ -29,7 +30,7 @@ interface LabelsSectionProps {
 	isLabelerLoading: boolean;
 	labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined;
 	labelerError: Error | null;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	scrollElRef: ListRef;
 	headerHeight: number;
 	isFocused: boolean;
@@ -66,17 +67,17 @@ export function ProfileLabelsSection({
 
 	const labelValues = useMemo(() => {
 		if (isLabelerLoading || !labelerInfo || labelerError) return [];
-		const customDefs = interpretLabelValueDefinitions(labelerInfo);
+		const customDefs = Object.values(interpretLabelerDefinition(labelerInfo));
 		return labelerInfo.policies.labelValues
 			.filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
 			.map((val) => lookupLabelValueDefinition(val, customDefs))
-			.filter((def) => def && def?.configurable) as InterpretedLabelValueDefinition[];
+			.filter((def) => def && !(def.flags & LabelFlags.NoConfigurable)) as InterpretedLabelDefinition[];
 	}, [labelerInfo, labelerError, isLabelerLoading]);
 
 	const numItems = labelValues.length;
 
 	const renderItem = useCallback(
-		({ item, index }: ListRenderItemInfo<InterpretedLabelValueDefinition>) => {
+		({ item, index }: ListRenderItemInfo<InterpretedLabelDefinition>) => {
 			if (!labelerInfo) return null;
 			return (
 				<View
@@ -135,7 +136,7 @@ export function ProfileLabelsSection({
 	);
 }
 
-function keyExtractor(item: InterpretedLabelValueDefinition) {
+function keyExtractor(item: InterpretedLabelDefinition) {
 	return item.identifier;
 }
 

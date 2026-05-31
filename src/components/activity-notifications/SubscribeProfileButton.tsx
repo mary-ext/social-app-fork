@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -13,7 +14,6 @@ import * as Tooltip from '#/components/Tooltip';
 import { Text } from '#/components/Typography';
 
 import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
-import type * as bsky from '#/types/bsky';
 
 import { SubscribeProfileDialog } from './SubscribeProfileDialog';
 
@@ -22,8 +22,8 @@ export function SubscribeProfileButton({
 	moderationOpts,
 	disableHint,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 	disableHint?: boolean;
 }) {
 	const { t: l } = useLingui();

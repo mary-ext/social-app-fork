@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { ChatBskyConvoDefs, moderateProfile } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -21,7 +22,6 @@ import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 
 import { LinearGradient } from '#/shims/linear-gradient';
-import type * as bsky from '#/types/bsky';
 
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
 
@@ -39,9 +39,10 @@ export function ChatStatusInfo({ convoState }: { convoState: ActiveConvoStates }
 	// if we ever allow someone other than the owner to invite people, this will need to change
 	const otherUser = convoState.convo.primaryMember;
 
-	const lastMessage = ChatBskyConvoDefs.isMessageView(convoState.convo.view.lastMessage)
-		? convoState.convo.view.lastMessage
-		: null;
+	const lastMessage =
+		convoState.convo.view.lastMessage?.$type === 'chat.bsky.convo.defs#messageView'
+			? convoState.convo.view.lastMessage
+			: null;
 
 	if (!moderationOpts) {
 		return null;
@@ -111,17 +112,25 @@ function InviterHeader({
 	profile: profileUnshadowed,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: NonNullable<ReturnType<typeof useModerationOpts>>;
 }) {
 	const t = useTheme();
 	const profile = useProfileShadow(profileUnshadowed);
 	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
-	const displayName = createSanitizedDisplayName(profile, true, moderation.ui('displayName'));
+	const displayName = createSanitizedDisplayName(
+		profile,
+		true,
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+	);
 
 	return (
 		<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-			<PreviewableUserAvatar profile={profile} size={42} moderation={moderation.ui('avatar')} />
+			<PreviewableUserAvatar
+				profile={profile}
+				size={42}
+				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+			/>
 			<View style={[a.flex_1]}>
 				<Text style={[a.flex_row, a.align_center]}>
 					<Trans comment="Text identifying the person who added you to a group chat">

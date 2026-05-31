@@ -1,13 +1,20 @@
 import { useCallback, useMemo } from 'react';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { ok } from '@atcute/client';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
+import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import {
 	type AutocompleteApi,
@@ -19,8 +26,8 @@ import {
 import { useEmojiSearch } from './useEmojiSearch';
 
 const DEFAULT_MOD_OPTS = {
-	userDid: undefined,
-	prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+	viewerDid: undefined,
+	prefs: toModerationPreferences(DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs),
 };
 
 export function useAutocomplete({
@@ -34,7 +41,7 @@ export function useAutocomplete({
 	limit?: number;
 	showSearchFallback?: boolean;
 }): AutocompleteApi {
-	const agent = useAgent();
+	const { appview } = useClients();
 	const moderationOpts = useModerationOpts();
 	const emojiSearch = useEmojiSearch();
 
@@ -55,12 +62,13 @@ export function useAutocomplete({
 				// Going from "foo" to "foo." should not clear matches.
 				q = q.toLowerCase().trim().replace(/\.$/, '');
 
-				const res = await agent.searchActorsTypeahead({
-					q,
-					limit: limit || 8,
-				});
+				const data = await ok(
+					appview.get('app.bsky.actor.searchActorsTypeahead', {
+						params: { limit: limit || 8, q },
+					}),
+				);
 
-				return (res?.data.actors || []).map((profile) => ({
+				return data.actors.map((profile) => ({
 					key: profile.did,
 					type: 'profile' as const,
 					value: '@' + profile.handle,
@@ -131,12 +139,19 @@ function moderateProfileItem({
 }: {
 	query: string;
 	item: AutocompleteProfile;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
-	const modui = moderateProfile(item.profile, moderationOpts).ui('profileList');
+	const modui = getDisplayRestrictions(
+		moderateProfile(item.profile, moderationOpts),
+		DisplayContext.ProfileList,
+	);
 	const isExactMatch = query && item.profile.handle.toLowerCase() === query;
 
-	if ((isExactMatch && !moduiContainsHideableOffense(modui)) || !modui.filter || isJustAMute(modui)) {
+	if (
+		(isExactMatch && !moduiContainsHideableOffense(modui)) ||
+		modui.filters.length === 0 ||
+		isJustAMute(modui)
+	) {
 		return item;
 	}
 

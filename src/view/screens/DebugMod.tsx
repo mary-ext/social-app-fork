@@ -1,21 +1,25 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type ComAtprotoLabelDefs } from '@atcute/atproto';
 import {
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
-	type ComAtprotoLabelDefs,
+	type AppBskyNotificationListNotifications,
+} from '@atcute/bluesky';
+import {
+	BUILTIN_LABELS,
+	DisplayContext,
+	getDisplayRestrictions,
 	interpretLabelValueDefinition,
+	LabelFlags,
 	type LabelPreference,
-	LABELS,
-	mock,
 	moderatePost,
 	moderateProfile,
-	type ModerationBehavior,
 	type ModerationDecision,
-	type ModerationOpts,
-	RichText,
-} from '@atproto/api';
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { type Did } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
@@ -52,7 +56,46 @@ import { ScreenHider } from '../../components/moderation/ScreenHider';
 import { NotificationFeedItem } from '../com/notifications/NotificationFeedItem';
 import { PostFeedItem } from '../com/posts/PostFeedItem';
 
-const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(LABELS) as (keyof typeof LABELS)[];
+const LABEL_VALUES: string[] = Object.keys(BUILTIN_LABELS);
+
+const FAKE_LABELER_DID = 'did:plc:fake-labeler' as Did;
+
+const makeLabel = (opts: { src?: string; uri: string; val: string }): ComAtprotoLabelDefs.Label =>
+	({
+		cts: '1970-01-01T00:00:00.000Z',
+		src: (opts.src ?? FAKE_LABELER_DID) as Did,
+		uri: opts.uri,
+		val: opts.val,
+	}) as ComAtprotoLabelDefs.Label;
+
+const makePostRecord = (text: string, reply?: AppBskyFeedPost.Main['reply']): AppBskyFeedPost.Main => ({
+	$type: 'app.bsky.feed.post',
+	createdAt: '1970-01-01T00:00:00.000Z',
+	reply,
+	text,
+});
+
+const makeProfileViewBasic = (
+	props: Partial<AppBskyActorDefs.ProfileViewBasic> & {
+		did: string;
+		handle: string;
+		// not a real ProfileViewBasic field, but the dev screen renders it as the profile bio
+		description?: string;
+	},
+): AppBskyActorDefs.ProfileViewBasic => props as AppBskyActorDefs.ProfileViewBasic;
+
+const makePostView = (
+	props: Partial<AppBskyFeedDefs.PostView> & {
+		author: AppBskyActorDefs.ProfileViewBasic;
+		record: AppBskyFeedPost.Main;
+	},
+): AppBskyFeedDefs.PostView =>
+	({
+		cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
+		indexedAt: '1970-01-01T00:00:00.000Z',
+		uri: `at://${props.author.did}/app.bsky.feed.post/fake`,
+		...props,
+	}) as AppBskyFeedDefs.PostView;
 
 export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams, 'DebugMod'>) => {
 	const t = useTheme();
@@ -84,57 +127,43 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 	const isLoggedOut = scenario[0] === 'label' && scenarioSwitches.includes('loggedOut');
 	const isFollowing = scenarioSwitches.includes('following');
 
-	const did = isTargetMe && currentAccount ? currentAccount.did : 'did:web:bob.test';
+	const did = (isTargetMe && currentAccount ? currentAccount.did : 'did:web:bob.test') as Did;
 
 	const profile = useMemo(() => {
-		const mockedProfile = mock.profileViewBasic({
-			handle: `bob.test`,
-			displayName: 'Bob Robertson',
+		return makeProfileViewBasic({
+			avatar: 'https://bsky.social/about/images/favicon-32x32.png',
 			description: 'User with this as their bio',
+			did,
+			displayName: 'Bob Robertson',
+			handle: 'bob.test',
 			labels:
 				scenario[0] === 'label' && target[0] === 'account'
-					? [
-							mock.label({
-								src: isSelfLabel ? did : undefined,
-								val: label[0]!,
-								uri: `at://${did}/`,
-							}),
-						]
+					? [makeLabel({ src: isSelfLabel ? did : undefined, val: label[0]!, uri: `at://${did}/` })]
 					: scenario[0] === 'label' && target[0] === 'profile'
 						? [
-								mock.label({
+								makeLabel({
 									src: isSelfLabel ? did : undefined,
 									val: label[0]!,
 									uri: `at://${did}/app.bsky.actor.profile/self`,
 								}),
 							]
 						: undefined,
-			viewer: mock.actorViewerState({
+			viewer: {
+				blocking: scenario[0] === 'block' ? `at://did:web:alice.test/app.bsky.actor.block/fake` : undefined,
 				following: isFollowing ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234` : undefined,
 				muted: scenario[0] === 'mute',
-				mutedByList: undefined,
-				blockedBy: undefined,
-				blocking: scenario[0] === 'block' ? `at://did:web:alice.test/app.bsky.actor.block/fake` : undefined,
-				blockingByList: undefined,
-			}),
+			} as AppBskyActorDefs.ViewerState,
 		});
-		mockedProfile.did = did;
-		mockedProfile.avatar = 'https://bsky.social/about/images/favicon-32x32.png';
-		// @ts-expect-error ProfileViewBasic is close enough -esb
-		mockedProfile.banner = 'https://bsky.social/about/images/social-card-default-gradient.png';
-		return mockedProfile;
 	}, [scenario, target, label, isSelfLabel, did, isFollowing, currentAccount]);
 
 	const post = useMemo(() => {
-		return mock.postView({
-			record: mock.post({
-				text: "This is the body of the post. It's where the text goes. You get the idea.",
-			}),
+		return makePostView({
 			author: profile,
+			record: makePostRecord("This is the body of the post. It's where the text goes. You get the idea."),
 			labels:
 				scenario[0] === 'label' && target[0] === 'post'
 					? [
-							mock.label({
+							makeLabel({
 								src: isSelfLabel ? did : undefined,
 								val: label[0]!,
 								uri: `at://${did}/app.bsky.feed.post/fake`,
@@ -143,99 +172,105 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 					: undefined,
 			embed:
 				target[0] === 'embed'
-					? mock.embedRecordView({
-							record: mock.post({
-								text: 'Embed',
-							}),
-							labels:
-								scenario[0] === 'label' && target[0] === 'embed'
-									? [
-											mock.label({
-												src: isSelfLabel ? did : undefined,
-												val: label[0]!,
-												uri: `at://${did}/app.bsky.feed.post/fake`,
-											}),
-										]
-									: undefined,
-							author: profile,
-						})
-					: {
+					? ({
+							$type: 'app.bsky.embed.record#view',
+							record: {
+								$type: 'app.bsky.embed.record#viewRecord',
+								author: profile,
+								cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
+								indexedAt: '1970-01-01T00:00:00.000Z',
+								labels:
+									scenario[0] === 'label' && target[0] === 'embed'
+										? [
+												makeLabel({
+													src: isSelfLabel ? did : undefined,
+													val: label[0]!,
+													uri: `at://${did}/app.bsky.feed.post/fake`,
+												}),
+											]
+										: undefined,
+								uri: `at://${did}/app.bsky.feed.post/embed`,
+								value: makePostRecord('Embed'),
+							},
+						} as AppBskyFeedDefs.PostView['embed'])
+					: ({
 							$type: 'app.bsky.embed.images#view',
 							images: [
 								{
-									thumb: 'https://bsky.social/about/images/social-card-default-gradient.png',
-									fullsize: 'https://bsky.social/about/images/social-card-default-gradient.png',
 									alt: '',
+									fullsize: 'https://bsky.social/about/images/social-card-default-gradient.png',
+									thumb: 'https://bsky.social/about/images/social-card-default-gradient.png',
 								},
 							],
-						},
+						} as AppBskyFeedDefs.PostView['embed']),
 		});
 	}, [scenario, label, target, profile, isSelfLabel, did]);
 
 	const replyNotif = useMemo(() => {
-		const notif = mock.replyNotification({
-			record: mock.post({
-				text: "This is the body of the post. It's where the text goes. You get the idea.",
-				reply: {
-					parent: {
-						uri: `at://${did}/app.bsky.feed.post/fake-parent`,
-						cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
-					},
-					root: {
-						uri: `at://${did}/app.bsky.feed.post/fake-parent`,
-						cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
-					},
-				},
-			}),
+		const cid = 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq';
+		const record = makePostRecord(
+			"This is the body of the post. It's where the text goes. You get the idea.",
+			{
+				parent: { uri: `at://${did}/app.bsky.feed.post/fake-parent`, cid },
+				root: { uri: `at://${did}/app.bsky.feed.post/fake-parent`, cid },
+			},
+		);
+		const labels =
+			scenario[0] === 'label' && target[0] === 'post'
+				? [
+						makeLabel({
+							src: isSelfLabel ? did : undefined,
+							val: label[0]!,
+							uri: `at://${did}/app.bsky.feed.post/fake`,
+						}),
+					]
+				: undefined;
+		const notif = {
+			$type: 'app.bsky.notification.listNotifications#notification',
 			author: profile,
-			labels:
-				scenario[0] === 'label' && target[0] === 'post'
-					? [
-							mock.label({
-								src: isSelfLabel ? did : undefined,
-								val: label[0]!,
-								uri: `at://${did}/app.bsky.feed.post/fake`,
-							}),
-						]
-					: undefined,
-		});
+			cid,
+			indexedAt: '1970-01-01T00:00:00.000Z',
+			isRead: false,
+			labels,
+			reason: 'reply',
+			record,
+			uri: `at://${did}/app.bsky.feed.post/fake`,
+		} as unknown as AppBskyNotificationListNotifications.Notification;
 		const [item] = groupNotifications([notif]);
-		item!.subject = mock.postView({
-			record: notif.record as AppBskyFeedPost.Record,
-			author: profile,
-			labels: notif.labels,
-		});
+		item!.subject = makePostView({ author: profile, labels, record });
 		return item!;
 	}, [scenario, label, target, profile, isSelfLabel, did]);
 
 	const followNotif = useMemo(() => {
-		const notif = mock.followNotification({
+		const notif = {
+			$type: 'app.bsky.notification.listNotifications#notification',
 			author: profile,
-			subjectDid: currentAccount?.did || '',
-		});
+			cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
+			indexedAt: '1970-01-01T00:00:00.000Z',
+			isRead: false,
+			reason: 'follow',
+			record: { $type: 'app.bsky.graph.follow', createdAt: '1970-01-01T00:00:00.000Z', subject: did },
+			uri: `at://${profile.did}/app.bsky.graph.follow/fake`,
+		} as unknown as AppBskyNotificationListNotifications.Notification;
 		const [item] = groupNotifications([notif]);
 		return item!;
-	}, [profile, currentAccount]);
+	}, [profile, did]);
 
-	const modOpts = useMemo(() => {
+	const modOpts = useMemo<ModerationOptions>(() => {
 		return {
-			userDid: isLoggedOut ? '' : isTargetMe ? did : 'did:web:alice.test',
+			viewerDid: (isLoggedOut ? undefined : isTargetMe ? did : 'did:web:alice.test') as Did | undefined,
 			prefs: {
 				adultContentEnabled: !noAdult,
-				labels: {
-					[label[0]!]: visibility[0] as LabelPreference,
-				},
-				labelers: [
-					{
-						did: 'did:plc:fake-labeler',
-						labels: { [label[0]!]: visibility[0] as LabelPreference },
-					},
-				],
-				mutedWords: [],
+				globalLabelPrefs: { [label[0]!]: visibility[0] as LabelPreference },
 				hiddenPosts: [],
+				keywordFilters: [],
+				prefsByLabelers: {
+					[FAKE_LABELER_DID]: { labelPrefs: { [label[0]!]: visibility[0] as LabelPreference } },
+				},
+				temporaryMutes: [],
 			},
 			labelDefs: {
-				'did:plc:fake-labeler': [interpretLabelValueDefinition(customLabelDef, 'did:plc:fake-labeler')],
+				[FAKE_LABELER_DID]: { [customLabelDef.identifier]: interpretLabelValueDefinition(customLabelDef) },
 			},
 		};
 	}, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef]);
@@ -279,7 +314,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 												if (targetFixed !== 'account' && targetFixed !== 'profile') {
 													targetFixed = 'content';
 												}
-												const disabled = isSelfLabel && LABELS[labelValue].flags.includes('no-self');
+												const disabled =
+													isSelfLabel &&
+													Boolean((BUILTIN_LABELS[labelValue]?.flags ?? 0) & LabelFlags.NoSelf);
 												return (
 													<Toggle.Item
 														key={labelValue}
@@ -347,7 +384,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 											</View>
 										</Toggle.Group>
 
-										{LABELS[label[0] as keyof typeof LABELS]?.configurable !== false && (
+										{!((BUILTIN_LABELS[label[0]!]?.flags ?? 0) & LabelFlags.NoConfigurable) && (
 											<View style={[a.mt_md]}>
 												<Text style={[a.font_semi_bold, a.text_xs, t.atoms.text, a.pb_sm]}>Preference</Text>
 												<Toggle.Group
@@ -438,13 +475,17 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 							{view[0] === 'post' && (
 								<>
 									<Heading title="Post" subtitle="in feed" />
-									<MockPostFeedItem post={post} moderation={postModeration} />
+									<MockPostFeedItem post={post as AppBskyFeedDefs.PostView} moderation={postModeration} />
 
 									<Heading title="Post" subtitle="viewed directly" />
-									<MockPostThreadItem post={post} moderationOpts={modOpts} />
+									<MockPostThreadItem post={post as AppBskyFeedDefs.PostView} moderationOpts={modOpts} />
 
 									<Heading title="Post" subtitle="reply in thread" />
-									<MockPostThreadItem post={post} moderationOpts={modOpts} isReply />
+									<MockPostThreadItem
+										post={post as AppBskyFeedDefs.PostView}
+										moderationOpts={modOpts}
+										isReply
+									/>
 								</>
 							)}
 
@@ -461,11 +502,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 							{view[0] === 'account' && (
 								<>
 									<Heading title="Account" subtitle="in listing" />
-									<MockAccountCard profile={profile} moderation={profileModeration} />
+									<MockAccountCard
+										profile={profile as unknown as AppBskyActorDefs.ProfileViewBasic}
+										moderation={profileModeration}
+									/>
 
 									<Heading title="Account" subtitle="viewing directly" />
 									<MockAccountScreen
-										profile={profile}
+										profile={profile as unknown as AppBskyActorDefs.ProfileViewBasic}
 										moderation={profileModeration}
 										moderationOpts={modOpts}
 									/>
@@ -476,7 +520,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 								<>
 									<ModerationUIView label="Profile Moderation UI" mod={profileModeration} />
 									<ModerationUIView label="Post Moderation UI" mod={postModeration} />
-									<DataView label={label[0]!} data={LABELS[label[0] as keyof typeof LABELS]} />
+									<DataView label={label[0]!} data={BUILTIN_LABELS[label[0]!]} />
 									<DataView label="Profile Moderation Data" data={profileModeration} />
 									<DataView label="Post Moderation Data" data={postModeration} />
 								</>
@@ -621,28 +665,30 @@ function DataView({ label, data }: { label: string; data: unknown }) {
 	);
 }
 
+const MODERATION_UI_CONTEXTS: { key: string; context: DisplayContext }[] = [
+	{ key: 'profileList', context: DisplayContext.ProfileList },
+	{ key: 'profileView', context: DisplayContext.ProfileView },
+	{ key: 'avatar', context: DisplayContext.ProfileMedia },
+	{ key: 'banner', context: DisplayContext.ProfileMedia },
+	{ key: 'displayName', context: DisplayContext.ProfileBio },
+	{ key: 'contentList', context: DisplayContext.ContentList },
+	{ key: 'contentView', context: DisplayContext.ContentView },
+	{ key: 'contentMedia', context: DisplayContext.ContentMedia },
+];
+
 function ModerationUIView({ mod, label }: { mod: ModerationDecision; label: string }) {
 	return (
 		<Toggler label={label}>
 			<View style={a.p_lg}>
-				{[
-					'profileList',
-					'profileView',
-					'avatar',
-					'banner',
-					'displayName',
-					'contentList',
-					'contentView',
-					'contentMedia',
-				].map((key) => {
-					const ui = mod.ui(key as keyof ModerationBehavior);
+				{MODERATION_UI_CONTEXTS.map(({ key, context }) => {
+					const ui = getDisplayRestrictions(mod, context);
 					return (
 						<View key={key} style={[a.flex_row, a.gap_md]}>
 							<Text style={[a.font_semi_bold, { width: 100 }]}>{key}</Text>
-							<Flag v={ui.filter} label="Filter" />
-							<Flag v={ui.blur} label="Blur" />
-							<Flag v={ui.alert} label="Alert" />
-							<Flag v={ui.inform} label="Inform" />
+							<Flag v={ui.filters.length > 0} label="Filter" />
+							<Flag v={ui.blurs.length > 0} label="Blur" />
+							<Flag v={ui.alerts.length > 0} label="Alert" />
+							<Flag v={ui.informs.length > 0} label="Inform" />
 							<Flag v={ui.noOverride} label="No-override" />
 						</View>
 					);
@@ -664,13 +710,13 @@ function MockPostFeedItem({
 	moderation: ModerationDecision;
 }) {
 	const t = useTheme();
-	if (moderation.ui('contentList').filter) {
+	if (getDisplayRestrictions(moderation, DisplayContext.ContentList).filters.length > 0) {
 		return <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md, a.mb_lg]}>Filtered from the feed</P>;
 	}
 	return (
 		<PostFeedItem
 			post={post}
-			record={post.record as AppBskyFeedPost.Record}
+			record={post.record as AppBskyFeedPost.Main}
 			moderation={moderation}
 			parentAuthor={undefined}
 			showReplyTo={false}
@@ -688,7 +734,7 @@ function MockPostThreadItem({
 	isReply,
 }: {
 	post: AppBskyFeedDefs.PostView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	isReply?: boolean;
 }) {
 	const thread = threadPost({
@@ -696,7 +742,8 @@ function MockPostThreadItem({
 		depth: isReply ? 1 : 0,
 		value: {
 			$type: 'app.bsky.unspecced.defs#threadItemPost',
-			post,
+			// TODO(atcute Phase 3.1): drop cast once usePostThread views flip to @atcute
+			post: post as unknown as Parameters<typeof threadPost>[0]['value']['post'],
 			moreParents: false,
 			moreReplies: 0,
 			opThread: false,
@@ -715,7 +762,7 @@ function MockNotifItem({
 	moderationOpts,
 }: {
 	notif: FeedNotification;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	if (shouldFilterNotif(notif.notification, moderationOpts)) {
@@ -736,7 +783,7 @@ function MockAccountCard({
 
 	if (!moderationOpts) return null;
 
-	if (moderation.ui('profileList').filter) {
+	if (getDisplayRestrictions(moderation, DisplayContext.ProfileList).filters.length > 0) {
 		return <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md, a.mb_lg]}>Filtered from the listing</P>;
 	}
 
@@ -750,19 +797,23 @@ function MockAccountScreen({
 }: {
 	profile: AppBskyActorDefs.ProfileViewBasic;
 	moderation: ModerationDecision;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	return (
 		<View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
-			<ScreenHider style={{}} screenDescription={l`profile`} modui={moderation.ui('profileView')}>
+			<ScreenHider
+				style={{}}
+				screenDescription={l`profile`}
+				modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
+			>
 				<ProfileHeaderStandard
 					// @ts-ignore ProfileViewBasic is close enough -prf
 					profile={profile}
 					moderationOpts={moderationOpts}
 					// @ts-ignore ProfileViewBasic is close enough -esb
-					descriptionRT={new RichText({ text: profile.description as string })}
+					descriptionRT={{ text: profile.description as string }}
 				/>
 			</ScreenHider>
 		</View>

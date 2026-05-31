@@ -1,5 +1,5 @@
 import { type TextStyle, View } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';

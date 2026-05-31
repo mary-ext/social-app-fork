@@ -1,6 +1,5 @@
-import { AtUri } from '@atproto/api';
-
-import type * as bsky from '#/types/bsky';
+import { type AnyStarterPackView } from '@atcute/bluesky';
+import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 export function createStarterPackLinkFromAndroidReferrer(referrerQueryString: string): string | null {
 	try {
@@ -32,11 +31,11 @@ export function parseStarterPackUri(uri?: string): {
 
 	try {
 		if (uri.startsWith('at://')) {
-			const atUri = new AtUri(uri);
+			const atUri = parseResourceUri(uri);
 			if (atUri.collection !== 'app.bsky.graph.starterpack') return null;
 			if (atUri.rkey) {
 				return {
-					name: atUri.hostname,
+					name: atUri.repo,
 					rkey: atUri.rkey,
 				};
 			}
@@ -75,20 +74,17 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 	return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`;
 }
 
-export function getStarterPackOgCard(
-	didOrStarterPack: bsky.starterPack.AnyStarterPackView | string,
-	rkey?: string,
-) {
+export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | string, rkey?: string) {
 	if (typeof didOrStarterPack === 'string') {
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`;
 	} else {
-		const rkey = new AtUri(didOrStarterPack.uri).rkey;
+		const rkey = parseResourceUri(didOrStarterPack.uri).rkey;
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`;
 	}
 }
 
 export function createStarterPackUri({ did, rkey }: { did: string; rkey: string }): string {
-	return new AtUri(`at://${did}/app.bsky.graph.starterpack/${rkey}`).toString();
+	return `at://${did}/app.bsky.graph.starterpack/${rkey}`;
 }
 
 export function startUriToStarterPackUri(uri: string) {

@@ -1,4 +1,6 @@
-import { type AppBskyLabelerDefs } from '@atproto/api';
+import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 
@@ -6,8 +8,9 @@ import { MAX_LABELERS } from '#/lib/constants';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
+import { addLabeler, removeLabeler } from '#/state/queries/preferences/agent';
 import { createQueryKey } from '#/state/queries/util';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 const labelerInfoQueryKeyRoot = 'labeler-info';
 export const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
@@ -19,56 +22,62 @@ const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
 
 export function useLabelerInfoQuery({ did, enabled }: { did?: string; enabled?: boolean }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: !!did && enabled !== false,
 		queryKey: labelerInfoQueryKey(did as string),
 		queryFn: async () => {
-			const res = await agent.app.bsky.labeler.getServices({
-				dids: [did!],
-				detailed: true,
-			});
-			return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
+			const data = await ok(
+				appview.get('app.bsky.labeler.getServices', {
+					params: { detailed: true, dids: [did! as Did] },
+				}),
+			);
+			return data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed;
 		},
 	});
 }
 
 export function useLabelersInfoQuery({ dids }: { dids: string[] }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: !!dids.length,
 		queryKey: labelersInfoQueryKey(dids),
 		queryFn: async () => {
-			const res = await agent.app.bsky.labeler.getServices({ dids });
-			return res.data.views as AppBskyLabelerDefs.LabelerView[];
+			const data = await ok(
+				appview.get('app.bsky.labeler.getServices', {
+					params: { dids: dids as Did[] },
+				}),
+			);
+			return data.views as AppBskyLabelerDefs.LabelerView[];
 		},
 	});
 }
 
 export function useLabelersDetailedInfoQuery({ dids }: { dids: string[] }) {
-	const agent = useAgent();
+	const { appview } = useClients();
 	return useQuery({
 		enabled: !!dids.length,
 		queryKey: createLabelersDetailedInfoQueryKey(dids),
 		gcTime: GCTIME.INFINITY,
 		staleTime: STALE.MINUTES.ONE,
 		queryFn: async () => {
-			const res = await agent.app.bsky.labeler.getServices({
-				dids,
-				detailed: true,
-			});
-			return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[];
+			const data = await ok(
+				appview.get('app.bsky.labeler.getServices', {
+					params: { detailed: true, dids: dids as Did[] },
+				}),
+			);
+			return data.views as AppBskyLabelerDefs.LabelerViewDetailed[];
 		},
 	});
 }
 
 export function useRemoveLabelersMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { pds } = useClients();
 
 	return useMutation({
 		async mutationFn({ dids }: { dids: string[] }) {
-			await Promise.all(dids.map((did) => agent.removeLabeler(did)));
+			await Promise.all(dids.map((did) => removeLabeler(pds!, did)));
 		},
 		async onSuccess() {
 			await queryClient.invalidateQueries({
@@ -80,7 +89,7 @@ export function useRemoveLabelersMutation() {
 
 export function useLabelerSubscriptionMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { appview, pds } = useClients();
 	const preferences = usePreferencesQuery();
 
 	return useMutation({
@@ -101,24 +110,26 @@ export function useLabelerSubscriptionMutation() {
 			const labelerDids = (preferences.data?.moderationPrefs?.labelers ?? []).map((l) => l.did);
 			const invalidLabelers: string[] = [];
 			if (labelerDids.length) {
-				const profiles = await agent.getProfiles({ actors: labelerDids });
-				if (profiles.data) {
-					for (const did of labelerDids) {
-						const exists = profiles.data.profiles.find((p) => p.did === did);
-						if (exists) {
-							// profile came back but it's not a valid labeler
-							if (exists.associated && !exists.associated.labeler) {
-								invalidLabelers.push(did);
-							}
-						} else {
-							// no response came back, might be deactivated or takendown
+				const { profiles } = await ok(
+					appview.get('app.bsky.actor.getProfiles', {
+						params: { actors: labelerDids as ActorIdentifier[] },
+					}),
+				);
+				for (const did of labelerDids) {
+					const exists = profiles.find((p) => p.did === did);
+					if (exists) {
+						// profile came back but it's not a valid labeler
+						if (exists.associated && !exists.associated.labeler) {
 							invalidLabelers.push(did);
 						}
+					} else {
+						// no response came back, might be deactivated or takendown
+						invalidLabelers.push(did);
 					}
 				}
 			}
 			if (invalidLabelers.length) {
-				await Promise.all(invalidLabelers.map((did) => agent.removeLabeler(did)));
+				await Promise.all(invalidLabelers.map((did) => removeLabeler(pds!, did)));
 			}
 
 			if (subscribe) {
@@ -126,9 +137,9 @@ export function useLabelerSubscriptionMutation() {
 				if (labelerCount >= MAX_LABELERS) {
 					throw new Error('MAX_LABELERS');
 				}
-				await agent.addLabeler(did);
+				await addLabeler(pds!, did);
 			} else {
-				await agent.removeLabeler(did);
+				await removeLabeler(pds!, did);
 			}
 		},
 		async onSuccess() {

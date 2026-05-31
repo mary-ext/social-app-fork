@@ -1,16 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { preferencesQueryKey } from '#/state/queries/preferences';
-import { useAgent } from '#/state/session';
+import { setPersonalDetails } from '#/state/queries/preferences/agent';
+import { useClients } from '#/state/session';
 
 export function useBirthdateMutation() {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { pds } = useClients();
 
 	return useMutation<void, unknown, { birthDate: Date }>({
 		mutationFn: async ({ birthDate }: { birthDate: Date }) => {
 			const bday = birthDate.toISOString();
-			await agent.setPersonalDetails({ birthDate: bday });
+			await setPersonalDetails(pds!, { birthDate: bday });
 			// triggers a refetch
 			await queryClient.invalidateQueries({
 				queryKey: preferencesQueryKey,

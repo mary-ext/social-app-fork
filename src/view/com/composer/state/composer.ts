@@ -1,16 +1,12 @@
-import {
-	type AppBskyActorDefs,
-	type AppBskyDraftDefs,
-	type AppBskyFeedPostgate,
-	AppBskyRichtextFacet,
-	RichText,
-} from '@atproto/api';
+import { type AppBskyDraftDefs, type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type ResourceUri } from '@atcute/lexicons';
 import { nanoid } from 'nanoid/non-secure';
 
 import { type VideoAsset } from '#/lib/media/video/types';
 import { type SelfLabel } from '#/lib/moderation';
+import { type AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
-import { shortenLinks } from '#/lib/strings/rich-text-manip';
+import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { isBskyPostUrl, postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 import { type ComposerImage } from '#/state/gallery';
@@ -18,7 +14,11 @@ import { createPostgateRecord } from '#/state/queries/postgate/util';
 import { threadgateRecordToAllowUISetting } from '#/state/queries/threadgate';
 import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate';
 
-import { type LinkFacetMatch, suggestLinkCardUri } from '#/view/com/composer/text-input/text-input-util';
+import {
+	detectLinks,
+	type LinkFacetMatch,
+	suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util';
 
 import { type Gif } from '#/features/gifPicker/types';
 
@@ -57,14 +57,14 @@ export type EmbedDraft = {
 
 export type PostDraft = {
 	id: string;
-	richtext: RichText;
+	text: string;
 	labels: SelfLabel[];
 	embed: EmbedDraft;
 	shortenedGraphemeLength: number;
 };
 
 export type PostAction =
-	| { type: 'update_richtext'; richtext: RichText }
+	| { type: 'update_text'; text: string }
 	| { type: 'update_labels'; labels: SelfLabel[] }
 	| { type: 'embed_add_images'; images: ComposerImage[] }
 	| { type: 'embed_update_image'; image: ComposerImage }
@@ -85,7 +85,7 @@ export type PostAction =
 
 export type ThreadDraft = {
 	posts: PostDraft[];
-	postgate: AppBskyFeedPostgate.Record;
+	postgate: AppBskyFeedPostgate.Main;
 	threadgate: ThreadgateAllowUISetting[];
 };
 
@@ -107,7 +107,7 @@ export type ComposerState = {
 };
 
 export type ComposerAction =
-	| { type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record }
+	| { type: 'update_postgate'; postgate: AppBskyFeedPostgate.Main }
 	| { type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[] }
 	| {
 			type: 'update_post';
@@ -191,7 +191,7 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 			const nextPosts = [...state.thread.posts];
 			nextPosts.splice(activePostIndex + 1, 0, {
 				id: nanoid(),
-				richtext: new RichText({ text: '' }),
+				text: '',
 				shortenedGraphemeLength: 0,
 				labels: [],
 				embed: {
@@ -259,14 +259,14 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 				thread: {
 					posts,
 					postgate: createPostgateRecord({
-						post: '',
-						embeddingRules: postgateEmbeddingRules,
+						post: '' as ResourceUri,
+						embeddingRules: postgateEmbeddingRules as AppBskyFeedPostgate.Main['embeddingRules'],
 					}),
 					threadgate: threadgateRecordToAllowUISetting({
 						$type: 'app.bsky.feed.threadgate',
-						post: '',
+						post: '' as ResourceUri,
 						createdAt: new Date().toString(),
-						allow: threadgateAllow,
+						allow: threadgateAllow as AppBskyFeedThreadgate.Main['allow'],
 					}),
 				},
 			};
@@ -291,11 +291,11 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 
 function postReducer(state: PostDraft, action: PostAction): PostDraft {
 	switch (action.type) {
-		case 'update_richtext': {
+		case 'update_text': {
 			return {
 				...state,
-				richtext: action.richtext,
-				shortenedGraphemeLength: getShortenedLength(action.richtext),
+				text: action.text,
+				shortenedGraphemeLength: getShortenedLength(action.text),
 			};
 		}
 		case 'update_labels': {
@@ -561,13 +561,11 @@ export function createComposerState({
 			};
 		}
 	}
-	const initRichText = new RichText({
-		text: initText
-			? initText
-			: initMention
-				? insertMentionAt(`@${initMention}`, initMention.length + 1, `${initMention}`)
-				: '',
-	});
+	const initialText = initText
+		? initText
+		: initMention
+			? insertMentionAt(`@${initMention}`, initMention.length + 1, `${initMention}`)
+			: '';
 
 	let link: Link | undefined;
 
@@ -579,20 +577,13 @@ export function createComposerState({
 	 * `suggestLinkCardUri` is then applied to ensure we suggest at most 1 of each.
 	 */
 	if (initText) {
-		initRichText.detectFacetsWithoutResolution();
 		const detectedExtUris = new Map<string, LinkFacetMatch>();
 		const detectedPostUris = new Map<string, LinkFacetMatch>();
-		if (initRichText.facets) {
-			for (const facet of initRichText.facets) {
-				for (const feature of facet.features) {
-					if (AppBskyRichtextFacet.isLink(feature)) {
-						if (isBskyPostUrl(feature.uri)) {
-							detectedPostUris.set(feature.uri, { facet, rt: initRichText });
-						} else {
-							detectedExtUris.set(feature.uri, { facet, rt: initRichText });
-						}
-					}
-				}
+		for (const [uri, match] of detectLinks(initialText)) {
+			if (isBskyPostUrl(uri)) {
+				detectedPostUris.set(uri, match);
+			} else {
+				detectedExtUris.set(uri, match);
 			}
 		}
 		const pastSuggestedUris = new Set<string>();
@@ -616,9 +607,6 @@ export function createComposerState({
 				};
 			}
 		}
-	} else if (initMention) {
-		// highlight the mention
-		initRichText.detectFacetsWithoutResolution();
 	}
 
 	return {
@@ -629,8 +617,8 @@ export function createComposerState({
 			posts: [
 				{
 					id: nanoid(),
-					richtext: initRichText,
-					shortenedGraphemeLength: getShortenedLength(initRichText),
+					text: initialText,
+					shortenedGraphemeLength: getShortenedLength(initialText),
 					labels: [],
 					embed: {
 						quote,
@@ -640,19 +628,16 @@ export function createComposerState({
 				},
 			],
 			postgate: createPostgateRecord({
-				post: '',
-				embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
+				post: '' as ResourceUri,
+				embeddingRules: (initInteractionSettings?.postgateEmbeddingRules ||
+					[]) as AppBskyFeedPostgate.Main['embeddingRules'],
 			}),
 			threadgate: threadgateRecordToAllowUISetting({
 				$type: 'app.bsky.feed.threadgate',
-				post: '',
+				post: '' as ResourceUri,
 				createdAt: new Date().toString(),
-				allow: initInteractionSettings?.threadgateAllowRules,
+				allow: initInteractionSettings?.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 			}),
 		},
 	};
-}
-
-function getShortenedLength(rt: RichText) {
-	return shortenLinks(rt).graphemeLength;
 }

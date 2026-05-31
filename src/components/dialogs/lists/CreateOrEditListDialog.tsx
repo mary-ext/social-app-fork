@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, RichText as RichTextAPI } from '@atproto/api';
+import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
+import { type Did, type Handle } from '@atcute/lexicons';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
+import { cleanNewlines, detectFacets, getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
-import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip';
+import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
 import { type ImageMeta } from '#/state/gallery';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -132,7 +135,7 @@ function DialogInner({
 
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const agent = useAgent();
+	const { appview } = useClients();
 	const control = Dialog.useDialogContext();
 	const {
 		mutateAsync: createListMutation,
@@ -151,22 +154,16 @@ function DialogInner({
 	const initialDisplayName = list?.name || initialValues?.name || '';
 	const [displayName, setDisplayName] = useState(initialDisplayName);
 	const initialDescription = list?.description || initialValues?.description || '';
-	const [descriptionRt, setDescriptionRt] = useState<RichTextAPI>(() => {
+	const [descriptionText, setDescriptionText] = useState<string>(() => {
 		const text = list?.description ?? initialValues?.description;
 		const facets = list?.descriptionFacets;
 
 		if (!text || !facets) {
-			return new RichTextAPI({ text: text || '' });
+			return text || '';
 		}
 
-		// We want to be working with a blank state here, so let's get the
-		// serialized version and turn it back into a RichText
-		const serialized = richTextToString(new RichTextAPI({ text, facets }), false);
-
-		const richText = new RichTextAPI({ text: serialized });
-		richText.detectFacetsWithoutResolution();
-
-		return richText;
+		// Serialize the stored facets back into editable plain text.
+		return richTextToString({ text, facets }, false);
 	});
 
 	const initialAvatar = list?.avatar ?? initialValues?.avatar;
@@ -179,7 +176,7 @@ function DialogInner({
 	const dirty =
 		hasInitialValuesForCreate ||
 		displayName !== initialDisplayName ||
-		descriptionRt.text !== initialDescription ||
+		descriptionText !== initialDescription ||
 		listAvatar !== initialAvatar;
 
 	useEffect(() => {
@@ -213,11 +210,22 @@ function DialogInner({
 				return;
 			}
 
-			let richText = new RichTextAPI({ text: descriptionRt.text.trimEnd() }, { cleanNewlines: true });
-
-			await richText.detectFacets(agent);
-			richText = shortenLinks(richText);
-			richText = stripInvalidMentions(richText);
+			// `detectFacets` only emits mention facets for handles that resolve, so there are no
+			// invalid mentions left to strip.
+			const richText = shortenLinks(
+				await detectFacets(cleanNewlines(descriptionText.trimEnd()), async (handle) => {
+					try {
+						const res = await ok(
+							appview.get('com.atproto.identity.resolveHandle', {
+								params: { handle: handle as Handle },
+							}),
+						);
+						return res.did as Did;
+					} catch {
+						return undefined;
+					}
+				}),
+			);
 
 			if (list) {
 				await updateListMutation({
@@ -258,12 +266,12 @@ function DialogInner({
 		onSave,
 		control,
 		displayName,
-		descriptionRt,
+		descriptionText,
 		newListAvatar,
 		setImageError,
 		activePurpose,
 		isCurateList,
-		agent,
+		appview,
 		l,
 	]);
 
@@ -271,10 +279,7 @@ function DialogInner({
 		text: displayName,
 		maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
 	});
-	const descriptionTooLong = isOverMaxGraphemeCount({
-		text: descriptionRt,
-		maxCount: DESCRIPTION_MAX_GRAPHEMES,
-	});
+	const descriptionTooLong = getShortenedLength(descriptionText) > DESCRIPTION_MAX_GRAPHEMES;
 
 	const cancelButton = useCallback(
 		() => (
@@ -326,15 +331,9 @@ function DialogInner({
 		[displayNameTooShort],
 	);
 
-	const onChangeDescription = useCallback(
-		(newText: string) => {
-			const richText = new RichTextAPI({ text: newText });
-			richText.detectFacetsWithoutResolution();
-
-			setDescriptionRt(richText);
-		},
-		[setDescriptionRt],
-	);
+	const onChangeDescription = useCallback((newText: string) => {
+		setDescriptionText(newText);
+	}, []);
 
 	const title = list
 		? isCurateList
@@ -411,7 +410,7 @@ function DialogInner({
 					</TextField.LabelText>
 					<TextField.Root isInvalid={descriptionTooLong}>
 						<Dialog.Input
-							defaultValue={descriptionRt.text}
+							defaultValue={descriptionText}
 							onChangeText={onChangeDescription}
 							multiline
 							label={l`Description`}

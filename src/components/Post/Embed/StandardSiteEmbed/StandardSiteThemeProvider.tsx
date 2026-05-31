@@ -1,4 +1,4 @@
-import { type AppBskyEmbedExternal } from '@atproto/api';
+import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { Context, useAlf, utils } from '#/alf';
 

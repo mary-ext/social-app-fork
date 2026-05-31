@@ -1,6 +1,12 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { AppBskyGraphDefs, AtUri, moderateUserList, type ModerationOpts } from '@atproto/api';
+import { AppBskyGraphDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateList,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -56,7 +62,7 @@ function ProfileListScreenInner(props: Props) {
 	const { t: l } = useLingui();
 	const { name: handleOrDid, rkey } = props.route.params;
 	const { data: resolvedUri, error: resolveError } = useResolveUriQuery(
-		AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+		`at://${handleOrDid}/app.bsky.graph.list/${rkey}`,
 	);
 	const { data: preferences } = usePreferencesQuery();
 	const { data: list, error: listError } = useListQuery(resolvedUri?.uri);
@@ -132,7 +138,7 @@ function ProfileListScreenLoaded({
 }: Props & {
 	uri: string;
 	list: AppBskyGraphDefs.ListView;
-	moderationOpts: ModerationOpts;
+	moderationOpts: ModerationOptions;
 	preferences: UsePreferencesQueryResponse;
 }) {
 	const t = useTheme();
@@ -143,7 +149,7 @@ function ProfileListScreenLoaded({
 	const { rkey } = route.params;
 	const feedSectionRef = useRef<SectionRef>(null);
 	const aboutSectionRef = useRef<SectionRef>(null);
-	const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST;
+	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isScreenFocused = useIsFocused();
 	const isHidden = list.labels?.findIndex((l) => l.val === '!hide') !== -1;
 	const isOwner = currentAccount?.did === list.creator.did;
@@ -154,7 +160,7 @@ function ProfileListScreenLoaded({
 	const [headerHeight, setHeaderHeight] = useState<number | null>(null);
 
 	const moderation = useMemo(() => {
-		return moderateUserList(list, moderationOpts);
+		return moderateList(list, moderationOpts);
 	}, [list, moderationOpts]);
 
 	useSetTitle(isHidden ? l`List Hidden` : list.name);
@@ -182,7 +188,10 @@ function ProfileListScreenLoaded({
 
 	if (isCurateList) {
 		return (
-			<Hider.Outer modui={moderation.ui('contentView')} allowOverride={isOwner}>
+			<Hider.Outer
+				modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+				allowOverride={isOwner}
+			>
 				<Hider.Mask>
 					<ListHiddenScreen list={list} preferences={preferences} />
 				</Hider.Mask>
@@ -230,7 +239,10 @@ function ProfileListScreenLoaded({
 		);
 	}
 	return (
-		<Hider.Outer modui={moderation.ui('contentView')} allowOverride={isOwner}>
+		<Hider.Outer
+			modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
+			allowOverride={isOwner}
+		>
 			<Hider.Mask>
 				<ListHiddenScreen list={list} preferences={preferences} />
 			</Hider.Mask>

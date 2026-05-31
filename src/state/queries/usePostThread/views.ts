@@ -1,13 +1,18 @@
 import {
-	type $Typed,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
 	type AppBskyUnspeccedDefs,
 	type AppBskyUnspeccedGetPostThreadV2,
-	AtUri,
+} from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
 	moderatePost,
-	type ModerationOpts,
-} from '@atproto/api';
+	ModerationCauseType,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { type $type } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
@@ -70,16 +75,16 @@ export function threadPost({
 }: {
 	uri: string;
 	depth: number;
-	value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>;
-	moderationOpts: ModerationOpts;
+	value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
+	moderationOpts: ModerationOptions;
 	threadgateHiddenReplies: Set<string>;
 }): Extract<ThreadItem, { type: 'threadPost' }> {
 	const moderation = moderatePost(value.post, moderationOpts);
-	const modui = moderation.ui('contentList');
-	const blurred = modui.blur || modui.filter;
-	const muted = (modui.blurs[0] || modui.filters[0])?.type === 'muted';
+	const modui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
+	const blurred = modui.blurs.length > 0 || modui.filters.length > 0;
+	const muted = (modui.blurs[0] || modui.filters[0])?.type === ModerationCauseType.MutedPermanent;
 	const hiddenByThreadgate = threadgateHiddenReplies.has(uri);
-	const isOwnPost = value.post.author.did === moderationOpts.userDid;
+	const isOwnPost = value.post.author.did === moderationOpts.viewerDid;
 	const isBlurred = (hiddenByThreadgate || blurred || muted) && !isOwnPost;
 	return {
 		type: 'threadPost',
@@ -93,7 +98,7 @@ export function threadPost({
 			 * equality reference checks.
 			 */
 			post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
-				record: AppBskyFeedPost.Record;
+				record: AppBskyFeedPost.Main;
 			},
 		},
 		isBlurred,
@@ -109,8 +114,8 @@ export function readMore({
 	skippedIndentIndices,
 	postData,
 }: TraversalMetadata): Extract<ThreadItem, { type: 'readMore' }> {
-	const urip = new AtUri(postData.uri);
-	const href = makeProfileLink({ did: urip.host }, 'post', urip.rkey);
+	const urip = parseCanonicalResourceUri(postData.uri);
+	const href = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
 	return {
 		type: 'readMore' as const,
 		key: `readMore:${postData.uri}`,
@@ -122,8 +127,8 @@ export function readMore({
 }
 
 export function readMoreUp({ postData }: TraversalMetadata): Extract<ThreadItem, { type: 'readMoreUp' }> {
-	const urip = new AtUri(postData.uri);
-	const href = makeProfileLink({ did: urip.host }, 'post', urip.rkey);
+	const urip = parseCanonicalResourceUri(postData.uri);
+	const href = makeProfileLink({ did: urip.repo }, 'post', urip.rkey);
 	return {
 		type: 'readMoreUp' as const,
 		key: `readMoreUp:${postData.uri}`,
@@ -142,9 +147,9 @@ export function skeleton({
 	};
 }
 
-export function postViewToThreadPlaceholder(post: AppBskyFeedDefs.PostView): $Typed<
+export function postViewToThreadPlaceholder(post: AppBskyFeedDefs.PostView): $type.enforce<
 	Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-		value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>;
+		value: $type.enforce<AppBskyUnspeccedDefs.ThreadItemPost>;
 	}
 > {
 	return {

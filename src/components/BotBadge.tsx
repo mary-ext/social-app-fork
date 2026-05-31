@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type ComAtprotoLabelDefs } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -9,9 +9,7 @@ import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 
-import type * as bsky from '#/types/bsky';
-
-export function isBotAccount(profile: { did: string; labels?: ComAtprotoLabelDefs.Label[] }): boolean {
+export function isBotAccount(profile: { did: string; labels?: { src: string; val: string }[] }): boolean {
 	return profile.labels?.some((l) => l.val === 'bot' && l.src === profile.did) ?? false;
 }
 
@@ -20,7 +18,7 @@ export function BotBadge({
 	alwaysShow = false,
 	width,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	alwaysShow?: boolean;
 	width: number;
 }) {
@@ -37,7 +35,7 @@ export function BotBadge({
 	);
 }
 
-export function BotBadgeButton({ profile, width }: { profile: bsky.profile.AnyProfileView; width: number }) {
+export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const control = useDialogControl();

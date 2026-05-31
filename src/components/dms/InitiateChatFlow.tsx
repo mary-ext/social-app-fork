@@ -1,6 +1,12 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
-import { moderateProfile, type ModerationOpts } from '@atproto/api';
+import { type AnyProfileView } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -29,8 +35,6 @@ import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/compon
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
@@ -61,7 +65,7 @@ type LabelItem = {
 type ProfileItem = {
 	type: 'profile';
 	key: string;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 };
 
 type EmptyItem = {
@@ -92,7 +96,7 @@ export type State = {
 	chatState: ChatState;
 	screenTitle: string;
 	groupChatDids: string[];
-	groupChatProfiles: bsky.profile.AnyProfileView[];
+	groupChatProfiles: AnyProfileView[];
 	groupName: string;
 };
 
@@ -104,12 +108,12 @@ export type Action =
 	| {
 			type: 'setDids';
 			groupChatDids: string[];
-			groupChatProfiles: bsky.profile.AnyProfileView[];
+			groupChatProfiles: AnyProfileView[];
 	  }
 	| {
 			type: 'removeDids';
 			groupChatDids: string[];
-			groupChatProfiles: bsky.profile.AnyProfileView[];
+			groupChatProfiles: AnyProfileView[];
 	  }
 	| {
 			type: 'startNameGroup';
@@ -668,8 +672,8 @@ function DefaultProfileCard({
 	moderationOpts,
 	onPress,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 	onPress: (did: string) => void;
 }) {
 	const t = useTheme();
@@ -679,7 +683,7 @@ function DefaultProfileCard({
 	const handle = sanitizeHandle(profile.handle, '@');
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		moderation.ui('displayName'),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	const handleOnPress = useCallback(() => {
@@ -720,8 +724,8 @@ function GroupChatMemberProfileCard({
 	profile,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
-	moderationOpts: ModerationOpts;
+	profile: AnyProfileView;
+	moderationOpts: ModerationOptions;
 }) {
 	const t = useTheme();
 	const enabled = canBeAddedToGroup(profile);

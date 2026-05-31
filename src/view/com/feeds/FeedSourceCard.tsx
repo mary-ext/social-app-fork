@@ -1,5 +1,7 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type $Typed, AppBskyFeedDefs, type AppBskyGraphDefs, AtUri } from '@atproto/api';
+import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type $type } from '@atcute/lexicons';
+import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Plural, Trans } from '@lingui/react/macro';
 
@@ -25,7 +27,7 @@ import { MissingFeed } from './MissingFeed';
 
 type FeedSourceCardProps = {
 	feedUri: string;
-	feedData?: $Typed<AppBskyFeedDefs.GeneratorView> | $Typed<AppBskyGraphDefs.ListView>;
+	feedData?: $type.enforce<AppBskyFeedDefs.GeneratorView> | $type.enforce<AppBskyGraphDefs.ListView>;
 	style?: StyleProp<ViewStyle>;
 	showSaveBtn?: boolean;
 	showDescription?: boolean;
@@ -39,7 +41,7 @@ type FeedSourceCardProps = {
 export function FeedSourceCard({ feedUri, feedData, ...props }: FeedSourceCardProps) {
 	if (feedData) {
 		let feed: FeedSourceInfo;
-		if (AppBskyFeedDefs.isGeneratorView(feedData)) {
+		if (feedData.$type === 'app.bsky.feed.defs#generatorView') {
 			feed = hydrateFeedGenerator(feedData);
 		} else {
 			feed = hydrateList(feedData);
@@ -154,7 +156,7 @@ export function FeedSourceCardLoaded({
 				}
 				to={{
 					screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
-					params: { name: feed.creatorDid, rkey: new AtUri(feed.uri).rkey },
+					params: { name: feed.creatorDid, rkey: parseCanonicalResourceUri(feed.uri).rkey },
 				}}
 				style={[
 					a.flex_1,

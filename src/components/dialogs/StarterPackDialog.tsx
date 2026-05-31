@@ -1,6 +1,10 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphGetStarterPacksWithMembership, AppBskyGraphStarterpack } from '@atproto/api';
+import {
+	type AnyProfileView,
+	type AppBskyGraphGetStarterPacksWithMembership,
+	type AppBskyGraphStarterpack,
+} from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -29,8 +33,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 type StarterPackWithMembership = AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership;
 type StarterPackDialogItem = StarterPackWithMembership | { type: 'starter_pack_dialog_loader' };
@@ -188,7 +190,11 @@ function StarterPackList({
 
 	return (
 		<Dialog.InnerFlatList
-			data={isLoading ? [{ type: 'starter_pack_dialog_loader' }] : membershipItems}
+			data={
+				isLoading
+					? [{ type: 'starter_pack_dialog_loader' } as StarterPackDialogItem]
+					: (membershipItems as StarterPackDialogItem[])
+			}
 			renderItem={renderItem}
 			keyExtractor={(item) => ('type' in item ? item.type : item.starterPack.uri)}
 			onEndReached={onEndReached}
@@ -207,7 +213,7 @@ function StarterPackItem({
 }: {
 	starterPackWithMembership: StarterPackWithMembership;
 	targetDid: string;
-	subject?: bsky.profile.AnyProfileView;
+	subject?: AnyProfileView;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -267,11 +273,7 @@ function StarterPackItem({
 		}
 	};
 
-	const { record } = starterPack;
-
-	if (!bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(record, AppBskyGraphStarterpack.isRecord)) {
-		return null;
-	}
+	const record = starterPack.record as AppBskyGraphStarterpack.Main;
 
 	return (
 		<View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
@@ -285,7 +287,9 @@ function StarterPackItem({
 						<>
 							<AvatarStack
 								size={24}
-								profiles={starterPack.listItemsSample?.slice(0, 4).map((p) => p.subject)}
+								profiles={
+									starterPack.listItemsSample?.slice(0, 4).map((p) => p.subject as AnyProfileView) ?? []
+								}
 							/>
 
 							{starterPack.list?.listItemCount && starterPack.list.listItemCount > 4 && (

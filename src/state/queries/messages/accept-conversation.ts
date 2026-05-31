@@ -1,9 +1,8 @@
-import { type ChatBskyConvoAcceptConvo, type ChatBskyConvoListConvos } from '@atproto/api';
+import { type ChatBskyConvoAcceptConvo, type ChatBskyConvoListConvos } from '@atcute/bluesky';
+import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { DM_SERVICE_HEADERS } from '#/lib/constants';
-
-import { useAgent } from '#/state/session';
+import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -17,29 +16,27 @@ export function useAcceptConversation(
 		onError,
 	}: {
 		onMutate?: () => void;
-		onSuccess?: (data: ChatBskyConvoAcceptConvo.OutputSchema) => void;
+		onSuccess?: (data: ChatBskyConvoAcceptConvo.$output) => void;
 		onError?: (error: Error) => void;
 	},
 ) {
 	const queryClient = useQueryClient();
-	const agent = useAgent();
+	const { chat } = useClients();
 
 	return useMutation({
 		mutationFn: async () => {
-			const { data } = await agent.chat.bsky.convo.acceptConvo({ convoId }, { headers: DM_SERVICE_HEADERS });
+			if (!chat) throw new Error('Not signed in');
+			const data = await ok(chat.post('chat.bsky.convo.acceptConvo', { input: { convoId } }));
 
 			return data;
 		},
 		onMutate: () => {
-			let prevAcceptedPages: ChatBskyConvoListConvos.OutputSchema[] = [];
-			let prevInboxPages: ChatBskyConvoListConvos.OutputSchema[] = [];
-			let convoBeingAccepted: ChatBskyConvoListConvos.OutputSchema['convos'][number] | undefined;
+			let prevAcceptedPages: ChatBskyConvoListConvos.$output[] = [];
+			let prevInboxPages: ChatBskyConvoListConvos.$output[] = [];
+			let convoBeingAccepted: ChatBskyConvoListConvos.$output['convos'][number] | undefined;
 			queryClient.setQueryData(
 				CONVO_LIST_KEY('request'),
-				(old?: {
-					pageParams: Array<string | undefined>;
-					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
-				}) => {
+				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
 					if (!old) return old;
 					prevInboxPages = old.pages;
 					return {
@@ -60,10 +57,7 @@ export function useAcceptConversation(
 			);
 			queryClient.setQueryData(
 				CONVO_LIST_KEY('accepted'),
-				(old?: {
-					pageParams: Array<string | undefined>;
-					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
-				}) => {
+				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
 					if (!old) return old;
 					prevAcceptedPages = old.pages;
 					if (convoBeingAccepted) {
@@ -99,10 +93,7 @@ export function useAcceptConversation(
 			logger.error(error);
 			queryClient.setQueryData(
 				CONVO_LIST_KEY('accepted'),
-				(old?: {
-					pageParams: Array<string | undefined>;
-					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
-				}) => {
+				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
 					if (!old) return old;
 					return {
 						...old,
@@ -112,10 +103,7 @@ export function useAcceptConversation(
 			);
 			queryClient.setQueryData(
 				CONVO_LIST_KEY('request'),
-				(old?: {
-					pageParams: Array<string | undefined>;
-					pages: Array<ChatBskyConvoListConvos.OutputSchema>;
-				}) => {
+				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
 					if (!old) return old;
 					return {
 						...old,
