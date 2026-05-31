@@ -1457,6 +1457,22 @@ When this is undertaken:
 should be filtered, or hides content that should not. Smoke-test against an account with
 adult-content prefs and an active labeler subscription.
 
+**Decision baseline (captured pre-migration).** `src/lib/moderation/decision-baseline.json` records the
+current `@atproto/api` engine's `moderateProfile` / `moderatePost` `.ui()` flags (filter / blur / alert /
+inform / noOverride, for every profile and content context) across the full DebugMod option matrix — 194
+entries spanning each label × target (account / profile / post / embed) × visibility (hide / warn /
+ignore), each advanced switch in isolation (self-label / adult-disabled / signed-out / following /
+target-is-me), the custom-label `blurs × severity` grid, and the block / mute scenarios. It was produced
+by temporarily instrumenting `DebugMod.tsx` with a `useEffect` that ran the engine over the matrix using
+the same `mock` factory the screen already uses, stashed the result on `window.__MODBASELINE__`, and read
+it back at `/sys/debug-mod`. **After swapping to `@atcute/bluesky-moderation`, re-run the same matrix and
+diff against this file** — `getDisplayRestrictions(...)` must reproduce these flags for every entry (mind
+the `.ui(context)` → `DisplayContext` mapping). Behaviors it pins down: `!hide` / `!warn` ignore the user
+pref (system labels); adult labels honor the pref, but **adult-disabled forces filter + noOverride**;
+`!no-unauthenticated` is inert when signed in and hard-hides when **signed out**; `target-is-me`
+downgrades `!hide` to blur-only; `block` filters + noOverride; `mute` filters + informs. (Not browser-
+verified for visual rendering — the baseline is the engine's decision output, not the pixels.)
+
 **Done when:** `@atproto/*` is absent from `package.json`, `rg "@atproto" src` is clean, and content
 filtering / blur / labeler badges behave correctly in `pnpm dev`.
 
