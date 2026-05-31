@@ -1,12 +1,11 @@
 import { type GestureResponderEvent, View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import * as ProfileCard from '#/components/ProfileCard';
-
-import type * as bsky from '#/types/bsky';
 
 export function ProfileCardWithFollowBtn({
 	profile,
@@ -16,7 +15,7 @@ export function ProfileCardWithFollowBtn({
 	contextProfileDid,
 	onPress,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	noBorder?: boolean;
 	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
 	position?: number;

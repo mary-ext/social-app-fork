@@ -1,5 +1,5 @@
 import { type ComAtprotoRepoApplyWrites } from '@atcute/atproto';
-import { type AppBskyActorDefs, type AppBskyRichtextFacet } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { type Did, type ResourceUri } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
@@ -13,8 +13,6 @@ import { enforceLen } from '#/lib/strings/helpers';
 
 import { useClients, useSession } from '#/state/session';
 
-import type * as bsky from '#/types/bsky';
-
 export const createStarterPackList = async ({
 	name,
 	description,
@@ -26,7 +24,7 @@ export const createStarterPackList = async ({
 	name: string;
 	description?: string;
 	descriptionFacets?: AppBskyRichtextFacet.Main[];
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	did: Did;
 	pds: Client;
 }): Promise<{ uri: string; cid: string }> => {

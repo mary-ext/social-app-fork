@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -30,7 +31,6 @@ import { Text } from '#/components/Typography';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { Image } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export function LiveStatusDialog({
 	control,
@@ -39,7 +39,7 @@ export function LiveStatusDialog({
 	status,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	status: AppBskyActorDefs.StatusView;
 	embed: AppBskyEmbedExternal.View;
 }) {
@@ -58,7 +58,7 @@ function DialogInner({
 	navigation,
 	status,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	embed: AppBskyEmbedExternal.View;
 	navigation: NavigationProp;
 	status: AppBskyActorDefs.StatusView;
@@ -94,7 +94,7 @@ export function LiveStatus({
 	onPressOpenProfile,
 }: {
 	status: AppBskyActorDefs.StatusView;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	embed: AppBskyEmbedExternal.View;
 	padding?: 'lg' | 'xl';
 	onPressOpenProfile: () => void;

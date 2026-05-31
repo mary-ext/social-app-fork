@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -30,8 +30,6 @@ import { RichText, type RichTextProps } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from './icons/Trash';
 
 type Props = {
@@ -46,7 +44,7 @@ export function Default(props: Props) {
 			<Outer>
 				<Header>
 					<Avatar src={view.avatar} />
-					<TitleAndByline title={view.displayName} creator={view.creator as bsky.profile.AnyProfileView} />
+					<TitleAndByline title={view.displayName} creator={view.creator as AnyProfileView} />
 					<SaveButton view={view} pin />
 				</Header>
 				<Description description={view.description} />
@@ -104,7 +102,7 @@ export function AvatarPlaceholder({ size = 40 }: Omit<AvatarProps, 'src'>) {
 	);
 }
 
-export function TitleAndByline({ title, creator }: { title: string; creator?: bsky.profile.AnyProfileView }) {
+export function TitleAndByline({ title, creator }: { title: string; creator?: AnyProfileView }) {
 	const t = useTheme();
 
 	return (

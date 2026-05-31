@@ -1,4 +1,5 @@
 import {
+	type AnyProfileView,
 	type AppBskyFeedDefs,
 	type AppBskyFeedLike,
 	type AppBskyFeedPost,
@@ -13,8 +14,6 @@ import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
 import { hasMutedWord, moderateNotification, type ModerationOpts } from '#/lib/moderation/compat';
-
-import type * as bsky from '#/types/bsky';
 
 import { precacheProfile } from '../profile';
 import { type FeedNotification, type FeedPage, type NotificationType } from './types';
@@ -83,7 +82,7 @@ export async function fetchPage({
 					notif.subject = subjects.posts.get(notif.subjectUri);
 					if (notif.subject) {
 						// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-						precacheProfile(queryClient, notif.subject.author as bsky.profile.AnyProfileView);
+						precacheProfile(queryClient, notif.subject.author as AnyProfileView);
 					}
 				}
 			}

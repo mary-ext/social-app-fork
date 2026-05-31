@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type ModerationDecision } from '#/lib/moderation/compat';
@@ -20,15 +21,13 @@ import {
 } from '#/components/icons/Person';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function MessagesListBlockedFooter({
 	recipient: initialRecipient,
 	convoId,
 	moderation,
 	isGroup,
 }: {
-	recipient: bsky.profile.AnyProfileView;
+	recipient: AnyProfileView;
 	convoId: string;
 	moderation: ModerationDecision;
 	isGroup: boolean;

@@ -1,4 +1,5 @@
 import {
+	type AnyProfileView,
 	type ChatBskyActorDefs,
 	type ChatBskyConvoDefs,
 	type ChatBskyConvoListConvos,
@@ -11,8 +12,6 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
-
-import type * as bsky from '#/types/bsky';
 
 import { RQKEY as CONVO_KEY } from './conversation';
 import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
@@ -34,7 +33,7 @@ export function useAddGroupMembers(
 	const { data: myProfile } = useProfileQuery({ did: currentAccount?.did });
 
 	return useMutation({
-		mutationFn: async ({ members }: { members: string[]; profiles: bsky.profile.AnyProfileView[] }) => {
+		mutationFn: async ({ members }: { members: string[]; profiles: AnyProfileView[] }) => {
 			if (!convoId) throw new Error('No convoId provided');
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(

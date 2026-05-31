@@ -1,5 +1,5 @@
 import { Keyboard, View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
@@ -21,8 +21,6 @@ import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Checkbox } from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 function WizardListCard({
 	type,
@@ -110,7 +108,7 @@ export function WizardProfileCard({
 	btnType: 'checkbox' | 'remove';
 	state: WizardState;
 	dispatch: (action: WizardAction) => void;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 }) {
 	const { currentAccount } = useSession();

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AnyStarterPackView, type AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
 
@@ -20,8 +20,6 @@ import { useDialogControl } from '#/components/Dialog';
 import { Newskie } from '#/components/icons/Newskie';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 export function NewskieDialog({
 	profile,
@@ -133,12 +131,12 @@ function DialogInner({
 				{profile.joinedViaStarterPack ? (
 					// TODO(atcute Phase 2.3): drop casts once StarterPackView flips to @atcute
 					<StarterPackCard.Link
-						starterPack={profile.joinedViaStarterPack as unknown as bsky.starterPack.AnyStarterPackView}
+						starterPack={profile.joinedViaStarterPack as unknown as AnyStarterPackView}
 						onPress={() => control.close()}
 					>
 						<View style={[a.w_full, a.mt_sm, a.p_lg, a.border, a.rounded_sm, t.atoms.border_contrast_low]}>
 							<StarterPackCard.Card
-								starterPack={profile.joinedViaStarterPack as unknown as bsky.starterPack.AnyStarterPackView}
+								starterPack={profile.joinedViaStarterPack as unknown as AnyStarterPackView}
 							/>
 						</View>
 					</StarterPackCard.Link>

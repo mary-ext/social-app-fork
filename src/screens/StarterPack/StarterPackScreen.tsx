@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { AppBskyGraphDefs as ApiAppBskyGraphDefs, AppBskyGraphStarterpack } from '@atproto/api';
@@ -331,8 +331,8 @@ function Header({
 				(li) =>
 					li.subject.did !== currentAccount?.did &&
 					// TODO(atcute Phase 2.3): drop casts once ListItemView flips to @atcute
-					!isBlockedOrBlocking(li.subject as bsky.profile.AnyProfileView) &&
-					!isMuted(li.subject as bsky.profile.AnyProfileView) &&
+					!isBlockedOrBlocking(li.subject as AnyProfileView) &&
+					!isMuted(li.subject as AnyProfileView) &&
 					!li.subject.viewer?.following,
 			)
 			.map((li) => li.subject.did);

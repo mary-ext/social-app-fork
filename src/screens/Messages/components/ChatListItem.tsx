@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -41,8 +41,6 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 import { useIsWithinSplitView } from './splitView/context';
 
@@ -228,7 +226,7 @@ function BaseChatItem({
 	accessibilityHint: string;
 	isDeletedAccount: boolean;
 	isBlockedAccount: boolean;
-	primaryProfile?: Shadow<bsky.profile.AnyProfileView>;
+	primaryProfile?: Shadow<AnyProfileView>;
 	primaryProfileModeration?: ModerationDecision;
 	showMenu?: boolean;
 	selected?: boolean;

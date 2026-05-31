@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
+import { type AnyStarterPackView } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { AppBskyGraphStarterpack } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
@@ -22,7 +23,7 @@ import { Text } from '#/components/Typography';
 import { Image } from '#/shims/image';
 import * as bsky from '#/types/bsky';
 
-export function Default({ starterPack }: { starterPack?: bsky.starterPack.AnyStarterPackView }) {
+export function Default({ starterPack }: { starterPack?: AnyStarterPackView }) {
 	if (!starterPack) return null;
 	return (
 		<Link starterPack={starterPack}>
@@ -31,7 +32,7 @@ export function Default({ starterPack }: { starterPack?: bsky.starterPack.AnySta
 	);
 }
 
-export function Notification({ starterPack }: { starterPack?: bsky.starterPack.AnyStarterPackView }) {
+export function Notification({ starterPack }: { starterPack?: AnyStarterPackView }) {
 	if (!starterPack) return null;
 	return (
 		<Link starterPack={starterPack}>
@@ -45,7 +46,7 @@ export function Card({
 	noIcon,
 	noDescription,
 }: {
-	starterPack: bsky.starterPack.AnyStarterPackView;
+	starterPack: AnyStarterPackView;
 	noIcon?: boolean;
 	noDescription?: boolean;
 }) {
@@ -90,7 +91,7 @@ export function Card({
 	);
 }
 
-export function useStarterPackLink({ view }: { view: bsky.starterPack.AnyStarterPackView }) {
+export function useStarterPackLink({ view }: { view: AnyStarterPackView }) {
 	const { t: l } = useLingui();
 	const qc = useQueryClient();
 	const { rkey, did } = useMemo(() => {
@@ -115,7 +116,7 @@ export function Link({
 	starterPack,
 	children,
 }: {
-	starterPack: bsky.starterPack.AnyStarterPackView;
+	starterPack: AnyStarterPackView;
 	onPress?: () => void;
 	children: BaseLinkProps['children'];
 }) {
@@ -146,7 +147,7 @@ export function Link({
 	);
 }
 
-export function Embed({ starterPack }: { starterPack: bsky.starterPack.AnyStarterPackView }) {
+export function Embed({ starterPack }: { starterPack: AnyStarterPackView }) {
 	const t = useTheme();
 	const imageUri = getStarterPackOgCard(starterPack);
 

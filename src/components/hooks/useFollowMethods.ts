@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { type Shadow } from '#/state/cache/types';
@@ -13,13 +14,11 @@ import { logger } from '#/logger';
 
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 export function useFollowMethods({
 	profile,
 	logContext,
 }: {
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
 }) {
 	const { t: l } = useLingui();

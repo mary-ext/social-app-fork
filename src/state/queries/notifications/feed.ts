@@ -16,7 +16,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type InfiniteData,
@@ -32,8 +32,6 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
 import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
-
-import type * as bsky from '#/types/bsky';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
 import { type FeedPage } from './types';
@@ -282,7 +280,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
 	queryClient: QueryClient,
 	did: string,
-): Generator<bsky.profile.AnyProfileView, void> {
+): Generator<AnyProfileView, void> {
 	const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
 		queryKey: [RQKEY_ROOT],
 	});
@@ -296,14 +294,14 @@ export function* findAllProfilesInQueryData(
 					(item.type === 'follow' || item.type === 'contact-match') &&
 					item.notification.author.did === did
 				) {
-					yield item.notification.author as bsky.profile.AnyProfileView;
+					yield item.notification.author as AnyProfileView;
 				} else if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
-					yield item.subject.author as bsky.profile.AnyProfileView;
+					yield item.subject.author as AnyProfileView;
 				}
 				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost?.author.did === did) {
-						yield quotedPost.author as bsky.profile.AnyProfileView;
+						yield quotedPost.author as AnyProfileView;
 					}
 				}
 			}

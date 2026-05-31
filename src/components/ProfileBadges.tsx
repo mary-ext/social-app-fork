@@ -1,4 +1,5 @@
 import { useWindowDimensions, View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 
@@ -8,8 +9,6 @@ import { BotBadge, BotBadgeButton, isBotAccount } from '#/components/BotBadge';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import { VerificationCheckButton } from '#/components/verification/VerificationCheckButton';
-
-import type * as bsky from '#/types/bsky';
 
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -35,7 +34,7 @@ export function ProfileBadges({
 	size,
 	style,
 }: ViewStyleProp & {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	interactive?: boolean;
 	size: Size;
 }) {

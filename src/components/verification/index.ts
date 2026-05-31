@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
+import { type AnyProfileView } from '@atcute/bluesky';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';
 import { useSession } from '#/state/session';
-
-import type * as bsky from '#/types/bsky';
 
 export type FullVerificationState = {
 	profile: {
@@ -26,11 +25,7 @@ export type FullVerificationState = {
 		  };
 };
 
-export function useFullVerificationState({
-	profile,
-}: {
-	profile: bsky.profile.AnyProfileView;
-}): FullVerificationState {
+export function useFullVerificationState({ profile }: { profile: AnyProfileView }): FullVerificationState {
 	const { currentAccount } = useSession();
 	const currentAccountProfile = useCurrentAccountProfile();
 	const profileState = useSimpleVerificationState({ profile });
@@ -80,7 +75,7 @@ export type SimpleVerificationState = {
 export function useSimpleVerificationState({
 	profile,
 }: {
-	profile?: bsky.profile.AnyProfileView;
+	profile?: AnyProfileView;
 }): SimpleVerificationState {
 	const preferences = usePreferencesQuery();
 	const prefs = useMemo(

@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
@@ -47,7 +48,6 @@ import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
 
 import { useActorStatus } from '#/features/liveNow';
-import * as bsky from '#/types/bsky';
 
 import { PostFeedReason } from './PostFeedReason';
 
@@ -223,7 +223,7 @@ let FeedItemInner = ({
 			reqId,
 		});
 		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
-		unstableCacheProfileView(queryClient, post.author as bsky.profile.AnyProfileView);
+		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
 		setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
 			feedSourceInfo,
 			post: {
@@ -254,7 +254,7 @@ let FeedItemInner = ({
 		? (rootPost.threadgate.record as AppBskyFeedThreadgate.Main)
 		: undefined;
 
-	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
 
 	const viaRepost = useMemo(() => {
 		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
@@ -332,7 +332,7 @@ let FeedItemInner = ({
 					<View style={styles.layoutAvi}>
 						<PreviewableUserAvatar
 							size={42}
-							profile={post.author as bsky.profile.AnyProfileView}
+							profile={post.author as AnyProfileView}
 							moderation={moderation.ui('avatar')}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 							onBeforePress={onOpenAuthor}
@@ -373,7 +373,7 @@ let FeedItemInner = ({
 						/>
 						{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
 							<PostRepliedTo
-								parentAuthor={parentAuthor as bsky.profile.AnyProfileView | undefined}
+								parentAuthor={parentAuthor as AnyProfileView | undefined}
 								isParentBlocked={isParentBlocked}
 								isParentNotFound={isParentNotFound}
 							/>

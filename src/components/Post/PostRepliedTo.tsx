@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
@@ -11,14 +12,12 @@ import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIco
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function PostRepliedTo({
 	parentAuthor,
 	isParentBlocked,
 	isParentNotFound,
 }: {
-	parentAuthor: string | bsky.profile.AnyProfileView | undefined;
+	parentAuthor: string | AnyProfileView | undefined;
 	isParentBlocked?: boolean;
 	isParentNotFound?: boolean;
 }) {

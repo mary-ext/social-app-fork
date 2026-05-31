@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { type AnyStarterPackView } from '@atcute/bluesky';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
@@ -143,7 +144,7 @@ export const ExternalEmbedLink = ({
 				);
 			} else if (data.kind === 'starter-pack') {
 				// TODO(atcute Phase 5.2): EmbedType is still @atproto-typed
-				return <StarterPackEmbed starterPack={data.view as unknown as bsky.starterPack.AnyStarterPackView} />;
+				return <StarterPackEmbed starterPack={data.view as unknown as AnyStarterPackView} />;
 			}
 		}
 	}, [data, uri, thumbUrl]);

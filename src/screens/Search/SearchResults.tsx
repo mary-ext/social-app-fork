@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
@@ -30,8 +30,6 @@ import { InlineLinkText } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 type SearchResultPressTab = 'top' | 'latest' | 'people' | 'feeds' | undefined;
 
@@ -415,10 +413,10 @@ let SearchScreenUserResults = ({ query, active }: { query: string; active: boole
 			{profiles.length ? (
 				<List
 					data={profiles}
-					renderItem={({ item, index }: { item: bsky.profile.AnyProfileView; index: number }) => (
+					renderItem={({ item, index }: { item: AnyProfileView; index: number }) => (
 						<SearchScreenProfileButton position={index} profile={item} />
 					)}
-					keyExtractor={(item: bsky.profile.AnyProfileView) => item.did}
+					keyExtractor={(item: AnyProfileView) => item.did}
 					refreshing={isPTR}
 					onRefresh={() => void onPullToRefresh()}
 					onEndReached={onEndReached}
@@ -442,7 +440,7 @@ function SearchScreenProfileButton({
 	profile,
 }: {
 	position: number;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 }) {
 	const handlePress = () => {};
 	return <ProfileCardWithFollowBtn profile={profile} onPress={handlePress} />;

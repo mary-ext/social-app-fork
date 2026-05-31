@@ -5,6 +5,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { getModerationCauseKey } from '#/lib/moderation';
@@ -38,7 +39,6 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { useActorStatus } from '#/features/liveNow';
-import type * as bsky from '#/types/bsky';
 
 export function Default({
 	profile,
@@ -49,7 +49,7 @@ export function Default({
 	contextProfileDid,
 	onPress,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
 	testID?: string;
@@ -77,7 +77,7 @@ export function Card({
 	position,
 	contextProfileDid,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	logContext?: 'ProfileCard' | 'StarterPackProfilesList';
 	position?: number;
@@ -118,7 +118,7 @@ export function Link({
 	style,
 	...rest
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 } & Omit<LinkProps, 'to' | 'label'>) {
 	const { t: l } = useLingui();
 
@@ -145,7 +145,7 @@ export function Avatar({
 	liveOverride,
 	size = 40,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	onPress?: () => void;
 	disabledPreview?: boolean;
@@ -196,7 +196,7 @@ export function NameAndHandle({
 	moderationOpts,
 	inline = false,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	inline?: boolean;
 }) {
@@ -216,7 +216,7 @@ function InlineNameAndHandle({
 	profile,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 }) {
 	const t = useTheme();
@@ -253,7 +253,7 @@ export function Name({
 	style,
 	textStyle,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	style?: StyleProp<ViewStyle>;
 	textStyle?: StyleProp<TextStyle>;
@@ -281,7 +281,7 @@ export function Handle({
 	profile,
 	textStyle,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	textStyle?: StyleProp<TextStyle>;
 }) {
 	const t = useTheme();
@@ -347,7 +347,7 @@ export function Description({
 	numberOfLines = 3,
 	style,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	numberOfLines?: number;
 } & TextStyleProp) {
 	const profile = useProfileShadow(profileUnshadowed);
@@ -386,7 +386,7 @@ export function DescriptionPlaceholder({ numberOfLines = 3 }: { numberOfLines?: 
 }
 
 export type FollowButtonProps = {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	logContext: ProfileFollowLogContext & ProfileUnfollowLogContext;
 	colorInverted?: boolean;
@@ -544,7 +544,7 @@ export function Labels({
 	profile,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyActorGetProfiles,
 	type AppBskyActorProfile,
@@ -36,8 +37,6 @@ import {
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
-
-import type * as bsky from '#/types/bsky';
 
 import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations';
 import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts';
@@ -235,7 +234,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-	profile: Shadow<bsky.profile.AnyProfileView>,
+	profile: Shadow<AnyProfileView>,
 	logContext: ProfileFollowLogContext,
 	position?: number,
 	contextProfileDid?: string,
@@ -343,7 +342,7 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
 	_logContext: ProfileFollowLogContext,
-	_profile: Shadow<bsky.profile.AnyProfileView>,
+	_profile: Shadow<AnyProfileView>,
 	_position?: number,
 	_contextProfileDid?: string,
 ) {
@@ -379,7 +378,7 @@ function useProfileUnfollowMutation(_logContext: ProfileUnfollowLogContext) {
 	});
 }
 
-export function useProfileMuteMutationQueue(profile: Shadow<bsky.profile.AnyProfileView>) {
+export function useProfileMuteMutationQueue(profile: Shadow<AnyProfileView>) {
 	const queryClient = useQueryClient();
 	const did = profile.did;
 	const initialMuted = profile.viewer?.muted;
@@ -462,7 +461,7 @@ function useProfileUnmuteMutation() {
 	});
 }
 
-export function useProfileBlockMutationQueue(profile: Shadow<bsky.profile.AnyProfileView>) {
+export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 	const queryClient = useQueryClient();
 	const did = profile.did;
 	const initialBlockingUri = profile.viewer?.blocking;

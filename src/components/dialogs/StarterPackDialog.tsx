@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type AppBskyGraphGetStarterPacksWithMembership, AppBskyGraphStarterpack } from '@atproto/api';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -211,7 +212,7 @@ function StarterPackItem({
 }: {
 	starterPackWithMembership: StarterPackWithMembership;
 	targetDid: string;
-	subject?: bsky.profile.AnyProfileView;
+	subject?: AnyProfileView;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -290,9 +291,7 @@ function StarterPackItem({
 							<AvatarStack
 								size={24}
 								profiles={
-									starterPack.listItemsSample
-										?.slice(0, 4)
-										.map((p) => p.subject as bsky.profile.AnyProfileView) ?? []
+									starterPack.listItemsSample?.slice(0, 4).map((p) => p.subject as AnyProfileView) ?? []
 								}
 							/>
 

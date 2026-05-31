@@ -1,4 +1,4 @@
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { type $Typed } from '@atproto/api';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
@@ -9,12 +9,10 @@ import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 
 import { logger } from '#/logger';
 
-import * as bsky from '#/types/bsky';
-
 export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000;
 export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000;
 
-export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
+export function canBeMessaged(profile: AnyProfileView) {
 	switch (profile.associated?.chat?.allowIncoming) {
 		case 'none':
 			return false;
@@ -31,7 +29,7 @@ export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
 	}
 }
 
-export function canBeAddedToGroup(profile: bsky.profile.AnyProfileView) {
+export function canBeAddedToGroup(profile: AnyProfileView) {
 	switch (profile.associated?.chat?.allowGroupInvites) {
 		case 'none':
 			return false;
@@ -88,7 +86,7 @@ export function canReact({
 	moderationOpts,
 }: {
 	convoState: ConvoState;
-	primaryMember: Shadow<bsky.profile.AnyProfileView> | undefined;
+	primaryMember: Shadow<AnyProfileView> | undefined;
 	moderationOpts: ModerationOpts | undefined;
 }): boolean {
 	if (convoState.status === ConvoStatus.Disabled) {

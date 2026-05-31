@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type ModerationUI } from '@atproto/api';
 
 import Animated, {
@@ -20,8 +21,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 
-import type * as bsky from '#/types/bsky';
-
 type Layout = {
 	size: number;
 	x: number;
@@ -32,7 +31,7 @@ type Layout = {
 
 type Props = {
 	animate?: boolean;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	size?: number;
 	moderationOpts?: ModerationOpts;
 };
@@ -116,7 +115,7 @@ function AvatarBubble({
 	includeProfileBorder,
 	moderation,
 }: {
-	profile?: bsky.profile.AnyProfileView;
+	profile?: AnyProfileView;
 	scale: SharedValue<number>;
 	size: number;
 	x: number;

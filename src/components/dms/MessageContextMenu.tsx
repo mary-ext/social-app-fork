@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -28,7 +28,6 @@ import { usePromptControl } from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
-import type * as bsky from '#/types/bsky';
 
 export let MessageContextMenu = ({
 	message,
@@ -37,7 +36,7 @@ export let MessageContextMenu = ({
 	children,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	senderProfile?: bsky.profile.AnyProfileView;
+	senderProfile?: AnyProfileView;
 	moderationOpts: ModerationOpts | undefined;
 	children: (props: TriggerChildProps) => React.ReactNode;
 }): React.ReactNode => {

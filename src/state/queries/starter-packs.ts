@@ -1,4 +1,5 @@
 import {
+	type AnyProfileView,
 	type AppBskyFeedDefs,
 	AppBskyGraphDefs,
 	type AppBskyGraphGetStarterPack,
@@ -25,8 +26,6 @@ import { invalidateActorStarterPacksQuery } from '#/state/queries/actor-starter-
 import { STALE } from '#/state/queries/index';
 import { invalidateListMembersQuery } from '#/state/queries/list-members';
 import { useClients, useSession } from '#/state/session';
-
-import type * as bsky from '#/types/bsky';
 
 async function detectDescriptionFacets(
 	appview: Client,
@@ -94,7 +93,7 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
 	name: string;
 	description?: string;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	feeds?: AppBskyFeedDefs.GeneratorView[];
 }
 
@@ -188,7 +187,8 @@ export function useEditStarterPackMutation({
 			}
 
 			const removedItems = currentListItems.filter(
-				(i) => i.subject.did !== currentAccount?.did && !profiles.find((p) => p.did === i.subject.did && p.did),
+				(i) =>
+					i.subject.did !== currentAccount?.did && !profiles.find((p) => p.did === i.subject.did && p.did),
 			);
 			if (removedItems.length !== 0) {
 				const chunks = chunk(removedItems, 50);

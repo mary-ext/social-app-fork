@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
-
-import type * as bsky from '#/types/bsky';
 
 const unstableProfileViewCacheQueryKeyRoot = 'unstableProfileViewCache';
 export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
@@ -15,7 +14,7 @@ export const unstableProfileViewCacheQueryKey = (didOrHandle: string) => [
  *
  * Access the cache via {@link useUnstableProfileViewCache}.
  */
-export function unstableCacheProfileView(queryClient: QueryClient, profile: bsky.profile.AnyProfileView) {
+export function unstableCacheProfileView(queryClient: QueryClient, profile: AnyProfileView) {
 	queryClient.setQueryData(unstableProfileViewCacheQueryKey(profile.handle), profile);
 	queryClient.setQueryData(unstableProfileViewCacheQueryKey(profile.did), profile);
 }
@@ -30,7 +29,7 @@ export function useUnstableProfileViewCache() {
 	const qc = useQueryClient();
 	const getUnstableProfile = useCallback(
 		(didOrHandle: string) => {
-			return qc.getQueryData<bsky.profile.AnyProfileView>(unstableProfileViewCacheQueryKey(didOrHandle));
+			return qc.getQueryData<AnyProfileView>(unstableProfileViewCacheQueryKey(didOrHandle));
 		},
 		[qc],
 	);

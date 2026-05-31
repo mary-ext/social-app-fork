@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { type ModerationOpts } from '#/lib/moderation/compat';
@@ -16,8 +16,6 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/comp
 import { EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 import { EmojiReactionPicker } from './EmojiReactionPicker';
 import { canReact, hasReachedReactionLimit } from './util';
 
@@ -32,7 +30,7 @@ export function ActionsWrapper({
 	message: ChatBskyConvoDefs.MessageView;
 	hasReactions?: boolean;
 	isFromSelf: boolean;
-	senderProfile?: bsky.profile.AnyProfileView;
+	senderProfile?: AnyProfileView;
 	moderationOpts: ModerationOpts | undefined;
 	children: React.ReactNode;
 }) {

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedImages, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyEmbedImages, type AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -17,7 +17,6 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 import { parseEmbed } from '#/types/bsky/post';
 
 type WebViewStyle = ViewStyle & {
@@ -99,7 +98,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			<PreviewableUserAvatar
 				size={42}
 				// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute
-				profile={replyTo.author as bsky.profile.AnyProfileView}
+				profile={replyTo.author as AnyProfileView}
 				moderation={replyTo.moderation?.ui('avatar')}
 				type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
 				disableNavigation={true}
@@ -109,11 +108,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 					<Text style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]} numberOfLines={1} emoji>
 						{sanitizeDisplayName(replyTo.author.displayName || sanitizeHandle(replyTo.author.handle))}
 					</Text>
-					<ProfileBadges
-						profile={replyTo.author as bsky.profile.AnyProfileView}
-						size="sm"
-						style={[a.pl_xs]}
-					/>
+					<ProfileBadges profile={replyTo.author as AnyProfileView} size="sm" style={[a.pl_xs]} />
 				</View>
 				<View style={[a.flex_row, a.gap_md]}>
 					<View style={[a.flex_1, a.flex_grow]}>

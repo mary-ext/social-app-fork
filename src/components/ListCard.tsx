@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
@@ -20,8 +20,6 @@ import { Avatar, Description, Header, Outer, SaveButton } from '#/components/Fee
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import * as Hider from '#/components/moderation/Hider';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -97,7 +95,7 @@ export function TitleAndByline({
 	modUi,
 }: {
 	title: string;
-	creator?: bsky.profile.AnyProfileView;
+	creator?: AnyProfileView;
 	purpose?: AppBskyGraphDefs.ListView['purpose'];
 	modUi?: ModerationUI;
 }) {

@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
@@ -11,14 +12,13 @@ import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import { Text } from '#/components/Typography';
 
 import { navigate } from '#/Navigation';
-import type * as bsky from '#/types/bsky';
 
 export function BotAccountAlert({
 	control,
 	profile,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();

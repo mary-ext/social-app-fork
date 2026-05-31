@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
@@ -51,8 +52,6 @@ import {
 import * as Layout from '#/components/Layout';
 import * as ProfileCard from '#/components/ProfileCard';
 import { H1, H3, P, Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 import { ScreenHider } from '../../components/moderation/ScreenHider';
 import { NotificationFeedItem } from '../com/notifications/NotificationFeedItem';
@@ -253,7 +252,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 	}, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef]);
 
 	const profileModeration = useMemo(() => {
-		return moderateProfile(profile as unknown as bsky.profile.AnyProfileView, modOpts);
+		return moderateProfile(profile as unknown as AnyProfileView, modOpts);
 	}, [profile, modOpts]);
 	const postModeration = useMemo(() => {
 		// `post` is a `mock(...)` $Typed result and the compat takes an atcute PostView; structurally compatible.

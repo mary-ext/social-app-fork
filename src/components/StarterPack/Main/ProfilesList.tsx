@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyActorDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
 
@@ -20,8 +20,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { Default as ProfileCard } from '#/components/ProfileCard';
-
-import type * as bsky from '#/types/bsky';
 
 function keyExtractor(item: { did: string }, index: number) {
 	return `${item.did}-${index}`;
@@ -54,7 +52,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 		.filter(
 			(profile): profile is AppBskyActorDefs.ProfileView =>
 				profile !== undefined &&
-				!isBlockedOrBlocking(profile as bsky.profile.AnyProfileView) &&
+				!isBlockedOrBlocking(profile as AnyProfileView) &&
 				!profile.associated?.labeler,
 		)
 		.reverse();
@@ -86,7 +84,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 			<View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
 				{/* TODO(atcute Phase 2.3): drop cast once ListView flips to @atcute */}
 				<ProfileCard
-					profile={item as bsky.profile.AnyProfileView}
+					profile={item as AnyProfileView}
 					moderationOpts={moderationOpts}
 					logContext="StarterPackProfilesList"
 				/>

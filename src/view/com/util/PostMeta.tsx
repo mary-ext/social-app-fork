@@ -1,5 +1,6 @@
 import { memo, useCallback } from 'react';
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type ModerationDecision } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -22,7 +23,6 @@ import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
 
 import { useActorStatus } from '#/features/liveNow';
-import type * as bsky from '#/types/bsky';
 
 import { TimeElapsed } from './TimeElapsed';
 import { PreviewableUserAvatar } from './UserAvatar';
@@ -36,7 +36,7 @@ const webTextStyle = (style: WebTextStyle): TextStyle => {
 };
 
 interface PostMetaOpts {
-	author: bsky.profile.AnyProfileView;
+	author: AnyProfileView;
 	moderation: ModerationDecision | undefined;
 	postHref: string;
 	timestamp: string;

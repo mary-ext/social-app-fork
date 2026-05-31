@@ -1,6 +1,11 @@
 import { memo, useMemo } from 'react';
 import { Platform, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import {
+	type AnyProfileView,
+	type AppBskyFeedDefs,
+	type AppBskyFeedPost,
+	type AppBskyFeedThreadgate,
+} from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
@@ -74,7 +79,6 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
-import type * as bsky from '#/types/bsky';
 
 let PostMenuItems = ({
 	post,
@@ -131,7 +135,7 @@ let PostMenuItems = ({
 	const postUri = post.uri;
 	const postCid = post.cid;
 	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-	const postAuthor = useProfileShadow(post.author as bsky.profile.AnyProfileView);
+	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 	const quoteEmbed = useMemo(() => {
 		if (!currentAccount || !post.embed) return;
 		return getMaybeDetachedQuoteEmbed({

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -25,8 +25,6 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 export function ListAddRemoveUsersDialog({
 	control,
 	list,
@@ -34,7 +32,7 @@ export function ListAddRemoveUsersDialog({
 }: {
 	control: Dialog.DialogControlProps;
 	list: AppBskyGraphDefs.ListView;
-	onChange?: (type: 'add' | 'remove', profile: bsky.profile.AnyProfileView) => void | undefined;
+	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 }) {
 	return (
 		<Dialog.Outer control={control} testID="listAddRemoveUsersDialog" nativeOptions={{ fullHeight: true }}>
@@ -49,7 +47,7 @@ function DialogInner({
 	onChange,
 }: {
 	list: AppBskyGraphDefs.ListView;
-	onChange?: (type: 'add' | 'remove', profile: bsky.profile.AnyProfileView) => void | undefined;
+	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 }) {
 	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
@@ -80,10 +78,10 @@ function UserResult({
 	onChange,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	list: AppBskyGraphDefs.ListView;
 	memberships: ListMembersip[] | undefined;
-	onChange?: (type: 'add' | 'remove', profile: bsky.profile.AnyProfileView) => void | undefined;
+	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 	moderationOpts?: ModerationOpts;
 }) {
 	const { t: l } = useLingui();

@@ -1,4 +1,5 @@
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyGraphDefs,
@@ -20,8 +21,6 @@ import {
 	type ModerationSubjectProfile,
 	type ModerationSubjectUserList,
 } from '@atproto/api';
-
-import type * as bsky from '#/types/bsky';
 
 /**
  * Moderation compatibility adapter.
@@ -50,7 +49,7 @@ export type {
  * @param opts the moderation options.
  * @returns the moderation decision.
  */
-export const moderateProfile = (subject: bsky.profile.AnyProfileView, opts: ModerationOpts) => {
+export const moderateProfile = (subject: AnyProfileView, opts: ModerationOpts) => {
 	return moderateProfileEngine(subject as unknown as ModerationSubjectProfile, opts);
 };
 
@@ -97,7 +96,7 @@ export const moderateFeedGenerator = (subject: AppBskyFeedDefs.GeneratorView, op
  * @param opts the moderation options.
  * @returns the moderation decision.
  */
-export const moderateStatus = (subject: bsky.profile.AnyProfileView, opts: ModerationOpts) => {
+export const moderateStatus = (subject: AnyProfileView, opts: ModerationOpts) => {
 	return moderateStatusEngine(subject as unknown as ModerationSubjectProfile, opts);
 };
 

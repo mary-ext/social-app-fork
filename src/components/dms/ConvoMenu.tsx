@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { Keyboard, View } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -37,8 +37,6 @@ import { ReportDialog } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
-import type * as bsky from '#/types/bsky';
-
 let ConvoMenu = ({
 	convo,
 	profile,
@@ -51,7 +49,7 @@ let ConvoMenu = ({
 	style,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	control?: Menu.MenuControlProps;
 	currentScreen: 'list' | 'conversation';
 	showMarkAsRead?: boolean;
@@ -160,7 +158,7 @@ function MenuContent({
 	blockedByListControl,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
-	profile: Shadow<bsky.profile.AnyProfileView>;
+	profile: Shadow<AnyProfileView>;
 	showMarkAsRead?: boolean;
 	blockInfo: {
 		listBlocks: ModerationCause[];

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { LayoutAnimation, Pressable, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type ModerationCause, type ModerationUI } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
@@ -21,14 +22,12 @@ import {
 } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 interface Props extends React.ComponentProps<typeof Link> {
 	disabled: boolean;
 	iconSize: number;
 	iconStyles: StyleProp<ViewStyle>;
 	modui: ModerationUI;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	interpretFilterAsBlur?: boolean;
 	hiderStyle?: StyleProp<ViewStyle>;
 }

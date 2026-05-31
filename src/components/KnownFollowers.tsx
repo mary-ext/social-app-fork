@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
@@ -13,8 +13,6 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Link, type LinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 const AVI_SIZE = 30;
 const AVI_SIZE_SMALL = 20;
@@ -37,7 +35,7 @@ export function KnownFollowers({
 	minimal,
 	showIfEmpty,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	onLinkPress?: LinkProps['onPress'];
 	minimal?: boolean;
@@ -83,7 +81,7 @@ function KnownFollowersInner({
 	minimal,
 	showIfEmpty,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	cachedKnownFollowers: AppBskyActorDefs.KnownFollowers;
 	onLinkPress?: LinkProps['onPress'];

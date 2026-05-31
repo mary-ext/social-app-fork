@@ -1,4 +1,4 @@
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -10,8 +10,6 @@ import { until } from '#/lib/async/until';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { useClients, useSession } from '#/state/session';
 
-import type * as bsky from '#/types/bsky';
-
 export function useVerificationsRemoveMutation() {
 	const { appview, pds } = useClients();
 	const { currentAccount } = useSession();
@@ -22,7 +20,7 @@ export function useVerificationsRemoveMutation() {
 			profile,
 			verifications,
 		}: {
-			profile: bsky.profile.AnyProfileView;
+			profile: AnyProfileView;
 			verifications: AppBskyActorDefs.VerificationView[];
 		}) {
 			if (!currentAccount) {

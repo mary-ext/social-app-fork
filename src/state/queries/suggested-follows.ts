@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyActorGetSuggestions,
 	type AppBskyGraphGetSuggestedFollowsByActor,
@@ -10,8 +11,6 @@ import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@
 
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
-
-import type * as bsky from '#/types/bsky';
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows';
 
@@ -75,7 +74,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 
 	const profiles = useMemo(() => {
 		return (data?.suggestions ?? []).map((profile) => ({
-			actor: profile as bsky.profile.AnyProfileView,
+			actor: profile as AnyProfileView,
 			recId: data?.recId,
 		}));
 	}, [data?.suggestions, data?.recId]);

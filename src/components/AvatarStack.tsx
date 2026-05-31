@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 
 import { moderateProfile } from '#/lib/moderation/compat';
 
@@ -11,15 +12,13 @@ import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import type * as bsky from '#/types/bsky';
-
 export function AvatarStack({
 	profiles,
 	size = 26,
 	numPending,
 	backgroundColor,
 }: {
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	size?: number;
 	numPending?: number;
 	backgroundColor?: string;

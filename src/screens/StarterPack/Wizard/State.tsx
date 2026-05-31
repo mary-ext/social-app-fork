@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { AppBskyGraphStarterpack } from '@atproto/api';
 import { defineMessage, plural } from '@lingui/core/macro';
 
@@ -18,7 +18,7 @@ type Action =
 	| { type: 'SetCanNext'; canNext: boolean }
 	| { type: 'SetName'; name: string }
 	| { type: 'SetDescription'; description: string }
-	| { type: 'AddProfile'; profile: bsky.profile.AnyProfileView }
+	| { type: 'AddProfile'; profile: AnyProfileView }
 	| { type: 'RemoveProfile'; profileDid: string }
 	| { type: 'AddFeed'; feed: AppBskyFeedDefs.GeneratorView }
 	| { type: 'RemoveFeed'; feedUri: string }
@@ -30,7 +30,7 @@ interface State {
 	currentStep: Step;
 	name?: string;
 	description?: string;
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	feeds: AppBskyFeedDefs.GeneratorView[];
 	processing: boolean;
 	error?: string;
@@ -121,7 +121,7 @@ export function Provider({
 }: {
 	starterPack?: AppBskyGraphDefs.StarterPackView;
 	listItems?: AppBskyGraphDefs.ListItemView[];
-	targetProfile: bsky.profile.AnyProfileView;
+	targetProfile: AnyProfileView;
 	children: React.ReactNode;
 }) {
 	const createInitialState = (): State => {
@@ -134,7 +134,7 @@ export function Provider({
 				name: starterPack.record.name,
 				description: starterPack.record.description,
 				// TODO(atcute Phase 2.3): drop cast once ListItemView flips to @atcute
-				profiles: (listItems?.map((i) => i.subject) as bsky.profile.AnyProfileView[]) ?? [],
+				profiles: (listItems?.map((i) => i.subject) as AnyProfileView[]) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,
 				transitionDirection: 'Forward',

@@ -8,6 +8,8 @@ import {
 	View,
 } from 'react-native';
 import {
+	type AnyProfileView,
+	type AnyStarterPackView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	AppBskyFeedPost,
@@ -71,8 +73,6 @@ import { Notification as StarterPackCard } from '#/components/StarterPack/Starte
 import { SubtleHover } from '#/components/SubtleHover';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 const MAX_AUTHORS = 5;
 
@@ -165,7 +165,7 @@ let NotificationFeedItem = ({
 			...(item.additional?.map(({ author }) => ({
 				profile: author as AppBskyActorDefs.ProfileView,
 				href: makeProfileLink(author),
-				moderation: moderateProfile(author as bsky.profile.AnyProfileView, moderationOpts),
+				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
 			})) || []),
 		].filter((author, index, arr) => arr.findIndex((au) => au.profile.did === author.profile.did) === index);
 	}, [item, moderationOpts]);
@@ -627,7 +627,7 @@ let NotificationFeedItem = ({
 						{item.type === 'starterpack-joined' ? (
 							<View>
 								<View style={[a.border, a.p_sm, a.rounded_sm, a.mt_sm, t.atoms.border_contrast_low]}>
-									<StarterPackCard starterPack={item.subject as bsky.starterPack.AnyStarterPackView} />
+									<StarterPackCard starterPack={item.subject as AnyStarterPackView} />
 								</View>
 							</View>
 						) : null}

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -26,14 +26,13 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export function GermButton({
 	germ,
 	profile,
 }: {
 	germ: AppBskyActorDefs.ProfileAssociatedGerm;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -248,7 +247,7 @@ function GermSelfButton({ did }: { did: string }) {
 
 function constructGermUrl(
 	declaration: AppBskyActorDefs.ProfileAssociatedGerm,
-	profile: bsky.profile.AnyProfileView,
+	profile: AnyProfileView,
 	viewerDid?: string,
 ) {
 	try {

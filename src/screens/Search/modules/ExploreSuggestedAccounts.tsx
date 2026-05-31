@@ -1,5 +1,6 @@
 import { memo, useEffect } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type AppBskyActorSearchActors, type ModerationOpts } from '@atproto/api';
 import { useLingui } from '@lingui/react/macro';
 import { type InfiniteData } from '@tanstack/react-query';
@@ -17,8 +18,6 @@ import { atoms as a, useTheme } from '#/alf';
 import { boostInterests, InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SubtleHover } from '#/components/SubtleHover';
-
-import type * as bsky from '#/types/bsky';
 
 export function useLoadEnoughProfiles({
 	interest,
@@ -99,7 +98,7 @@ let SuggestedProfileCard = ({
 	recId: _recId,
 	position: _position,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	recId?: string;
 	position: number;

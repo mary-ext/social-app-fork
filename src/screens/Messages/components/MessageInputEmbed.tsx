@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
-import { type AppBskyFeedPost } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedPost } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -27,8 +27,6 @@ import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
-
-import * as bsky from '#/types/bsky';
 
 export function useMessageEmbed() {
 	const route = useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>();
@@ -154,7 +152,7 @@ export function MessageInputEmbed({
 					<View style={[a.flex_1, a.flex_row, a.gap_sm]}>
 						<PostMeta
 							showAvatar
-							author={post.author as bsky.profile.AnyProfileView}
+							author={post.author as AnyProfileView}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={itemHref}

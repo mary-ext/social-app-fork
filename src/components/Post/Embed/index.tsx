@@ -1,6 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import {
+	type AnyProfileView,
+	type AnyStarterPackView,
+	type AppBskyFeedDefs,
+	AppBskyFeedPost,
+} from '@atcute/bluesky';
 import { type $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
@@ -28,7 +33,6 @@ import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 
-import * as bsky from '#/types/bsky';
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/bsky/post';
 
 import { ExternalEmbed } from './ExternalEmbed';
@@ -140,7 +144,7 @@ function RecordEmbed({
 			return (
 				<View style={a.mt_sm}>
 					{/* TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute */}
-					<StarterPackCard starterPack={embed.view as unknown as bsky.starterPack.AnyStarterPackView} />
+					<StarterPackCard starterPack={embed.view as unknown as AnyStarterPackView} />
 				</View>
 			);
 		}
@@ -243,7 +247,7 @@ export function QuoteEmbed({
 
 	const onBeforePress = useCallback(() => {
 		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-		unstableCacheProfileView(queryClient, quote.author as bsky.profile.AnyProfileView);
+		unstableCacheProfileView(queryClient, quote.author as AnyProfileView);
 		onOpen?.();
 	}, [queryClient, quote.author, onOpen]);
 
@@ -253,7 +257,7 @@ export function QuoteEmbed({
 	const contents = (
 		<>
 			<PostMeta
-				author={quote.author as bsky.profile.AnyProfileView}
+				author={quote.author as AnyProfileView}
 				moderation={moderation}
 				showAvatar
 				postHref={itemHref}

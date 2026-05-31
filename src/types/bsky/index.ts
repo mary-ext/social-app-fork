@@ -1,8 +1,6 @@
 import { type ValidationResult } from '@atproto/lexicon';
 
 export * as post from '#/types/bsky/post';
-export * as profile from '#/types/bsky/profile';
-export * as starterPack from '#/types/bsky/starterPack';
 
 /**
  * Fast type checking without full schema validation, for use with data we trust, or for non-critical path use

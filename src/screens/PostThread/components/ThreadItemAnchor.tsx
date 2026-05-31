@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
@@ -56,7 +57,6 @@ import { Text } from '#/components/Typography';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';
-import * as bsky from '#/types/bsky';
 
 export function ThreadItemAnchor({
 	item,
@@ -178,8 +178,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const record = item.value.post.record;
 	const moderation = item.moderation;
 	// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute types
-	const authorShadow = useProfileShadow(post.author as bsky.profile.AnyProfileView);
-	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
+	const authorShadow = useProfileShadow(post.author as AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
 	const richText: Richtext = useMemo(
 		() => ({
 			text: record.text,
@@ -304,7 +304,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						<View collapsable={false}>
 							<PreviewableUserAvatar
 								size={42}
-								profile={post.author as bsky.profile.AnyProfileView}
+								profile={post.author as AnyProfileView}
 								moderation={moderation.ui('avatar')}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}

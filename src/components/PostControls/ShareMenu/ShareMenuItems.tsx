@@ -1,4 +1,5 @@
 import { memo, useMemo } from 'react';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
@@ -20,7 +21,6 @@ import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/P
 import * as Menu from '#/components/Menu';
 
 import { useDevMode } from '#/storage/hooks/dev-mode';
-import type * as bsky from '#/types/bsky';
 
 import { type ShareMenuItemsProps } from './ShareMenuItems.types';
 
@@ -33,7 +33,7 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 
 	const postUri = post.uri;
 	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-	const postAuthor = useProfileShadow(post.author as bsky.profile.AnyProfileView);
+	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 
 	const href = useMemo(() => {
 		const urip = parseCanonicalResourceUri(postUri);

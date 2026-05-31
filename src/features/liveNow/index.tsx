@@ -1,5 +1,10 @@
 import { useMemo } from 'react';
-import { type AppBskyActorDefs, type AppBskyActorStatus, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import {
+	type AnyProfileView,
+	type AppBskyActorDefs,
+	type AppBskyActorStatus,
+	type AppBskyEmbedExternal,
+} from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import { type $type, type Did, type GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -25,7 +30,6 @@ import { useDialogContext } from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 
 import { getLiveServiceNames, isLiveNowUrlAllowed } from '#/features/liveNow/utils';
-import type * as bsky from '#/types/bsky';
 
 export * from '#/features/liveNow/utils';
 
@@ -84,7 +88,7 @@ export function useLiveNowConfig(): LiveNowConfig {
 	}, [currentAccount]);
 }
 
-export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
+export function useActorStatus(actor?: AnyProfileView) {
 	const shadowed = useMaybeProfileShadow(actor);
 	const tick = useTickEveryMinute();
 	const config = useLiveNowConfig();

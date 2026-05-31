@@ -13,7 +13,11 @@
  * -prf
  */
 
-import { type AppBskyActorDefs, type AppBskyGraphGetStarterPacksWithMembership } from '@atcute/bluesky';
+import {
+	type AnyProfileView,
+	type AppBskyActorDefs,
+	type AppBskyGraphGetStarterPacksWithMembership,
+} from '@atcute/bluesky';
 import { type Did, type ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,8 +27,6 @@ import { createRecord, deleteRecord, listRecords } from '#/lib/api/records';
 import { STALE } from '#/state/queries';
 import { RQKEY as LIST_MEMBERS_RQKEY } from '#/state/queries/list-members';
 import { useClients, useSession } from '#/state/session';
-
-import type * as bsky from '#/types/bsky';
 
 import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './actor-starter-packs';
 
@@ -101,7 +103,7 @@ export function useListMembershipAddMutation({
 	onError,
 }: {
 	/** Needed for optimistic update of starter pack query */
-	subject?: bsky.profile.AnyProfileView;
+	subject?: AnyProfileView;
 	onSuccess?: (data: { uri: string; cid: string }) => void;
 	onError?: (error: Error) => void;
 } = {}) {

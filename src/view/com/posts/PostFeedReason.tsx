@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -17,8 +17,6 @@ import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons
 import { Link } from '#/components/Link';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 import { FeedNameText } from '../util/FeedInfoText';
 
@@ -60,11 +58,7 @@ export function PostFeedReason({
 	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
 		const by = reason.by;
 		const isOwner = by.did === currentAccount?.did;
-		const reposter = createSanitizedDisplayName(
-			by as bsky.profile.AnyProfileView,
-			false,
-			moderation?.ui('displayName'),
-		);
+		const reposter = createSanitizedDisplayName(by as AnyProfileView, false, moderation?.ui('displayName'));
 		return (
 			<Link
 				style={styles.includeReason}

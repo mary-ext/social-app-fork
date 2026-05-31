@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
 import { AppBskyGraphStarterpack } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -47,9 +47,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 	}
 
 	const profileCount = gtPhone ? 11 : 8;
-	const profiles = view.listItemsSample
-		?.slice(0, profileCount)
-		.map((item) => item.subject as bsky.profile.AnyProfileView);
+	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject as AnyProfileView);
 
 	return (
 		<Link to={link.to} label={link.label} onHoverIn={link.precache} onPress={link.precache}>
@@ -127,7 +125,7 @@ export function AvatarStack({
 	numPending,
 	total,
 }: {
-	profiles: bsky.profile.AnyProfileView[];
+	profiles: AnyProfileView[];
 	numPending: number;
 	total?: number;
 }) {

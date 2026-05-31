@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile } from '#/lib/moderation/compat';
@@ -21,7 +22,6 @@ import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 
 import { LinearGradient } from '#/shims/linear-gradient';
-import type * as bsky from '#/types/bsky';
 
 import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons';
 
@@ -112,7 +112,7 @@ function InviterHeader({
 	profile: profileUnshadowed,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: NonNullable<ReturnType<typeof useModerationOpts>>;
 }) {
 	const t = useTheme();

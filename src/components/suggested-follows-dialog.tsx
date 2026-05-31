@@ -1,5 +1,6 @@
 import { type ComponentProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View, type ViewToken } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -25,8 +26,6 @@ import { boostInterests, InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 type WebViewProps = ComponentProps<typeof View> & {
 	onMouseEnter?: () => void;
 	onMouseLeave?: () => void;
@@ -40,7 +39,7 @@ type Item =
 	| {
 			type: 'profile';
 			key: string;
-			profile: bsky.profile.AnyProfileView;
+			profile: AnyProfileView;
 	  }
 	| {
 			type: 'empty';
@@ -439,7 +438,7 @@ let FollowProfileCard = ({
 	recSource,
 	recId,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	noBorder?: boolean;
 	position: number;
@@ -468,7 +467,7 @@ function FollowProfileCardInner({
 	recSource: _recSource,
 	recId: _recId,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	onFollow?: () => void;
 	noBorder?: boolean;

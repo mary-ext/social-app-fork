@@ -1,5 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -20,8 +21,6 @@ import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
@@ -47,7 +46,7 @@ type LabelItem = {
 type ProfileItem = {
 	type: 'profile';
 	key: string;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 };
 
 type EmptyItem = {
@@ -70,19 +69,19 @@ type Item = LabelItem | ProfileItem | EmptyItem | PlaceholderItem | LoadingItem;
 
 export type State = {
 	groupChatDids: string[];
-	groupChatProfiles: bsky.profile.AnyProfileView[];
+	groupChatProfiles: AnyProfileView[];
 };
 
 export type Action =
 	| {
 			type: 'setDids';
 			groupChatDids: string[];
-			groupChatProfiles: bsky.profile.AnyProfileView[];
+			groupChatProfiles: AnyProfileView[];
 	  }
 	| {
 			type: 'removeDids';
 			groupChatDids: string[];
-			groupChatProfiles: bsky.profile.AnyProfileView[];
+			groupChatProfiles: AnyProfileView[];
 	  };
 
 function reducer(state: State, action: Action): State {
@@ -111,7 +110,7 @@ export function AddMembersFlow({
 }: {
 	convo: Extract<ConvoWithDetails, { kind: 'group' }>;
 	title: string;
-	onAddMembers: (dids: string[], profiles: bsky.profile.AnyProfileView[]) => void;
+	onAddMembers: (dids: string[], profiles: AnyProfileView[]) => void;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();

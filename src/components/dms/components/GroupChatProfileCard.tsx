@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
@@ -12,13 +13,11 @@ import * as Toggle from '#/components/forms/Toggle';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function GroupChatProfileCard({
 	profile,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 }) {
 	const t = useTheme();

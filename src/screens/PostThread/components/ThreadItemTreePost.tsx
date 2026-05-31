@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
@@ -43,8 +44,6 @@ import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 /** Mimic the space in PostMeta */
 const TREE_AVI_PLUS_SPACE = TREE_AVI_WIDTH + a.gap_xs.gap;
@@ -304,13 +303,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 					modui={moderation.ui('contentList')}
 					iconSize={42}
 					iconStyles={{ marginLeft: 2, marginRight: 2 }}
-					profile={post.author as bsky.profile.AnyProfileView}
+					profile={post.author as AnyProfileView}
 					interpretFilterAsBlur
 				>
 					<ThreadItemTreePostInnerWrapper item={item}>
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author as bsky.profile.AnyProfileView}
+								author={post.author as AnyProfileView}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}

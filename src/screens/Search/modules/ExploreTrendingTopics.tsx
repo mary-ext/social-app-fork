@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
-import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile } from '#/lib/moderation/compat';
@@ -21,8 +21,6 @@ import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/
 import { Link } from '#/components/Link';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
-
-import type * as bsky from '#/types/bsky';
 
 const TOPIC_COUNT = 5;
 
@@ -96,7 +94,7 @@ export function TrendRow({
 							</View>
 							<View style={[a.flex_row, a.gap_sm, a.align_center, { paddingLeft: 20 }]}>
 								{actors.length > 0 && (
-									<AvatarStack size={20} profiles={actors as unknown as bsky.profile.AnyProfileView[]} />
+									<AvatarStack size={20} profiles={actors as unknown as AnyProfileView[]} />
 								)}
 								<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]} numberOfLines={1}>
 									{category}
@@ -226,7 +224,7 @@ function useModerateTrendingActors(actors: AppBskyUnspeccedDefs.TrendView['actor
 
 		return actors
 			.filter((actor) => {
-				const decision = moderateProfile(actor as bsky.profile.AnyProfileView, moderationOpts);
+				const decision = moderateProfile(actor as AnyProfileView, moderationOpts);
 				return !decision.ui('avatar').filter && !decision.ui('avatar').blur;
 			})
 			.slice(0, 3);

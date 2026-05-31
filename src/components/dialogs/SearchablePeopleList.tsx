@@ -1,5 +1,6 @@
 import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
@@ -25,8 +26,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 import { AvatarBubbles } from '../AvatarBubbles';
 import { Error } from '../Error';
 import { ProfileBadges } from '../ProfileBadges';
@@ -39,7 +38,7 @@ type WebViewProps = {
 export type ProfileItem = {
 	type: 'profile';
 	key: string;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 };
 
 type ExistingChatItem = {
@@ -349,7 +348,7 @@ function DefaultProfileCard({
 	moderationOpts,
 	onPress,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	onPress: (did: string) => void;
 }) {

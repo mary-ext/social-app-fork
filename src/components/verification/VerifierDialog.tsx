@@ -1,4 +1,5 @@
 import { Text as RNText, View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
@@ -17,7 +18,6 @@ import { Text } from '#/components/Typography';
 import { type FullVerificationState } from '#/components/verification';
 
 import { Image } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export { useDialogControl } from '#/components/Dialog';
 
@@ -27,7 +27,7 @@ export function VerifierDialog({
 	verificationState,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	verificationState: FullVerificationState;
 }) {
 	return (
@@ -44,7 +44,7 @@ function Inner({
 	control,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	verificationState: FullVerificationState;
 }) {
 	const t = useTheme();

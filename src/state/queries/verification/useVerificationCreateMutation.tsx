@@ -1,3 +1,4 @@
+import { type AnyProfileView } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier, type Did, type Handle } from '@atcute/lexicons';
 import { useMutation } from '@tanstack/react-query';
@@ -8,15 +9,13 @@ import { until } from '#/lib/async/until';
 import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache';
 import { useClients, useSession } from '#/state/session';
 
-import type * as bsky from '#/types/bsky';
-
 export function useVerificationCreateMutation() {
 	const { appview, pds } = useClients();
 	const { currentAccount } = useSession();
 	const updateProfileVerificationCache = useUpdateProfileVerificationCache();
 
 	return useMutation({
-		async mutationFn({ profile }: { profile: bsky.profile.AnyProfileView }) {
+		async mutationFn({ profile }: { profile: AnyProfileView }) {
 			if (!currentAccount) {
 				throw new Error('User not logged in');
 			}

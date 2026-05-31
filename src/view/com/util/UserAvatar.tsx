@@ -10,6 +10,7 @@ import {
 	type ViewStyle,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { type AppBskyEmbedExternal, type ModerationUI } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -51,7 +52,6 @@ import { useActorStatus } from '#/features/liveNow';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
 import { Image as ExpoImage } from '#/shims/image';
-import type * as bsky from '#/types/bsky';
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler';
 
@@ -80,7 +80,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
 	moderation?: ModerationUI;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	disableHoverCard?: boolean;
 	disableNavigation?: boolean;
 	onBeforePress?: () => void;

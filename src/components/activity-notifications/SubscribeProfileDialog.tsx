@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import {
 	type AppBskyNotificationDefs,
 	type AppBskyNotificationListActivitySubscriptions,
@@ -30,8 +31,6 @@ import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function SubscribeProfileDialog({
 	control,
 	profile,
@@ -39,7 +38,7 @@ export function SubscribeProfileDialog({
 	includeProfile,
 }: {
 	control: Dialog.DialogControlProps;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	includeProfile?: boolean;
 }) {
@@ -56,7 +55,7 @@ function DialogInner({
 	moderationOpts,
 	includeProfile,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	includeProfile?: boolean;
 }) {

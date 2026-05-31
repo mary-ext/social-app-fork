@@ -1,4 +1,5 @@
 import { Pressable, ScrollView, View } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { createHitslop, HITSLOP_10 } from '#/lib/constants';
@@ -21,8 +22,6 @@ import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 export function SearchHistory({
 	searchHistory,
 	selectedProfiles,
@@ -32,11 +31,11 @@ export function SearchHistory({
 	onRemoveProfileClick,
 }: {
 	searchHistory: string[];
-	selectedProfiles: bsky.profile.AnyProfileView[];
+	selectedProfiles: AnyProfileView[];
 	onItemClick: (item: string) => void;
-	onProfileClick: (profile: bsky.profile.AnyProfileView) => void;
+	onProfileClick: (profile: AnyProfileView) => void;
 	onRemoveItemClick: (item: string) => void;
-	onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void;
+	onRemoveProfileClick: (profile: AnyProfileView) => void;
 }) {
 	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
@@ -117,7 +116,7 @@ function RecentProfileItem({
 	onPress,
 	onRemove,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	onPress: () => void;
 	onRemove: () => void;

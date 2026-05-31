@@ -1,6 +1,5 @@
+import { type AnyStarterPackView } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-
-import type * as bsky from '#/types/bsky';
 
 export function createStarterPackLinkFromAndroidReferrer(referrerQueryString: string): string | null {
 	try {
@@ -75,10 +74,7 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 	return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`;
 }
 
-export function getStarterPackOgCard(
-	didOrStarterPack: bsky.starterPack.AnyStarterPackView | string,
-	rkey?: string,
-) {
+export function getStarterPackOgCard(didOrStarterPack: AnyStarterPackView | string, rkey?: string) {
 	if (typeof didOrStarterPack === 'string') {
 		return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`;
 	} else {

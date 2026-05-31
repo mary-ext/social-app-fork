@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { moderateFeedGenerator } from '#/lib/moderation/compat';
 
@@ -10,7 +10,6 @@ import { atoms as a, useTheme } from '#/alf';
 import * as FeedCard from '#/components/FeedCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import type * as bsky from '#/types/bsky';
 import { type EmbedType } from '#/types/bsky/post';
 
 import { type CommonProps } from './types';
@@ -28,10 +27,7 @@ export function FeedEmbed({
 			<FeedCard.Outer>
 				<FeedCard.Header>
 					<FeedCard.Avatar src={view.avatar} size={48} />
-					<FeedCard.TitleAndByline
-						title={view.displayName}
-						creator={view.creator as bsky.profile.AnyProfileView}
-					/>
+					<FeedCard.TitleAndByline title={view.displayName} creator={view.creator as AnyProfileView} />
 				</FeedCard.Header>
 			</FeedCard.Outer>
 		</FeedCard.Link>

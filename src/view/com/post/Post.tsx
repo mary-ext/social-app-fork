@@ -1,6 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import {
+	type AnyProfileView,
+	type AppBskyActorDefs,
+	type AppBskyFeedDefs,
+	AppBskyFeedPost,
+} from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -32,8 +37,6 @@ import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
-
-import * as bsky from '#/types/bsky';
 
 export function Post({
 	post,
@@ -138,7 +141,7 @@ function PostInner({
 
 	const onBeforePress = useCallback(() => {
 		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
-		unstableCacheProfileView(queryClient, post.author as bsky.profile.AnyProfileView);
+		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
 		outerOnBeforePress?.();
 	}, [queryClient, post.author, outerOnBeforePress]);
 
@@ -176,7 +179,7 @@ function PostInner({
 					<View style={styles.layoutAvi}>
 						<PreviewableUserAvatar
 							size={42}
-							profile={post.author as bsky.profile.AnyProfileView}
+							profile={post.author as AnyProfileView}
 							moderation={moderation.ui('avatar')}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 						/>
@@ -192,7 +195,7 @@ function PostInner({
 						]}
 					>
 						<PostMeta
-							author={post.author as bsky.profile.AnyProfileView}
+							author={post.author as AnyProfileView}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={itemHref}

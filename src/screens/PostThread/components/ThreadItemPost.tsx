@@ -1,6 +1,7 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import {
+	type AnyProfileView,
 	type AppBskyActorDefs,
 	type AppBskyFeedDefs,
 	type AppBskyFeedPost,
@@ -46,7 +47,6 @@ import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
 
 import { useActorStatus } from '#/features/liveNow';
-import type * as bsky from '#/types/bsky';
 
 export type ThreadItemPostProps = {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
@@ -230,7 +230,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	}, [setLimitLines]);
 
 	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-	const { isActive: live } = useActorStatus(post.author as bsky.profile.AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
 
 	return (
 		<SubtleHoverWrapper>
@@ -243,7 +243,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
 					iconSize={LINEAR_AVI_WIDTH}
 					iconStyles={[a.mr_xs]}
-					profile={post.author as bsky.profile.AnyProfileView}
+					profile={post.author as AnyProfileView}
 					interpretFilterAsBlur
 				>
 					<ThreadItemPostParentReplyLine item={item} />
@@ -252,7 +252,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 						<View>
 							<PreviewableUserAvatar
 								size={LINEAR_AVI_WIDTH}
-								profile={post.author as bsky.profile.AnyProfileView}
+								profile={post.author as AnyProfileView}
 								moderation={moderation.ui('avatar')}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
@@ -275,7 +275,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author as bsky.profile.AnyProfileView}
+								author={post.author as AnyProfileView}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}

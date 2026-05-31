@@ -1,9 +1,9 @@
-import type * as bsky from '#/types/bsky';
+import { type AnyProfileView } from '@atcute/bluesky';
 
-export function isBlockedOrBlocking(profile: bsky.profile.AnyProfileView) {
+export function isBlockedOrBlocking(profile: AnyProfileView) {
 	return profile.viewer?.blockedBy || profile.viewer?.blocking;
 }
 
-export function isMuted(profile: bsky.profile.AnyProfileView) {
+export function isMuted(profile: AnyProfileView) {
 	return profile.viewer?.muted || profile.viewer?.mutedByList;
 }

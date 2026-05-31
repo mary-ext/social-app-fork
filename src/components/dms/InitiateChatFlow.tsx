@@ -1,5 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
+import { type AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { moderateProfile, type ModerationOpts } from '#/lib/moderation/compat';
@@ -30,8 +31,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
-import type * as bsky from '#/types/bsky';
-
 import { ChatProfileTabs } from './ChatProfileTabs';
 import { EmptyMemberList } from './components/EmptyMemberList';
 import { GroupChatProfileCard } from './components/GroupChatProfileCard';
@@ -61,7 +60,7 @@ type LabelItem = {
 type ProfileItem = {
 	type: 'profile';
 	key: string;
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 };
 
 type EmptyItem = {
@@ -92,7 +91,7 @@ export type State = {
 	chatState: ChatState;
 	screenTitle: string;
 	groupChatDids: string[];
-	groupChatProfiles: bsky.profile.AnyProfileView[];
+	groupChatProfiles: AnyProfileView[];
 	groupName: string;
 };
 
@@ -104,12 +103,12 @@ export type Action =
 	| {
 			type: 'setDids';
 			groupChatDids: string[];
-			groupChatProfiles: bsky.profile.AnyProfileView[];
+			groupChatProfiles: AnyProfileView[];
 	  }
 	| {
 			type: 'removeDids';
 			groupChatDids: string[];
-			groupChatProfiles: bsky.profile.AnyProfileView[];
+			groupChatProfiles: AnyProfileView[];
 	  }
 	| {
 			type: 'startNameGroup';
@@ -668,7 +667,7 @@ function DefaultProfileCard({
 	moderationOpts,
 	onPress,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 	onPress: (did: string) => void;
 }) {
@@ -720,7 +719,7 @@ function GroupChatMemberProfileCard({
 	profile,
 	moderationOpts,
 }: {
-	profile: bsky.profile.AnyProfileView;
+	profile: AnyProfileView;
 	moderationOpts: ModerationOpts;
 }) {
 	const t = useTheme();
