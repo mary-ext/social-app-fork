@@ -35,8 +35,9 @@ import {
 	type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types';
 import { createQueryKey } from '#/state/queries/util';
-import { useAgent, useClients, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 import { saveLabelers } from '#/state/session/agent-config';
+import { setSubscribedLabelers } from '#/state/session/labelers';
 
 export * from '#/state/queries/preferences/const';
 export * from '#/state/queries/preferences/moderation';
@@ -45,7 +46,6 @@ export * from '#/state/queries/preferences/types';
 export const preferencesQueryKey = createQueryKey('getPreferences', {}, { persistedVersion: 1 });
 
 export function usePreferencesQuery() {
-	const agent = useAgent();
 	const { pds } = useClients();
 	const { currentAccount } = useSession();
 
@@ -64,9 +64,9 @@ export function usePreferencesQuery() {
 				const labelerDids = res.moderationPrefs.labelers.map((l) => l.did);
 				// save to local storage to ensure there are labels on initial requests
 				void saveLabelers(currentAccount.did, labelerDids);
-				// keep the agent's labeler header in sync with the freshly fetched prefs, as
+				// keep the appview client's labeler header in sync with the freshly fetched prefs, as
 				// `agent.getPreferences()` used to do internally
-				agent.configureLabelers(labelerDids.filter((did) => !getAppLabelers().includes(did)));
+				setSubscribedLabelers(labelerDids.filter((did) => !getAppLabelers().includes(did)));
 
 				const preferences: UsePreferencesQueryResponse = {
 					...res,
