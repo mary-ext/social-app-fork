@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from 'react';
-import { View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { View, type ViewStyle } from 'react-native';
 import { type AnyProfileView } from '@atcute/bluesky';
 import {
 	type DisplayRestrictions,
@@ -9,15 +9,6 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 
-import Animated, {
-	Easing,
-	type SharedValue,
-	useAnimatedStyle,
-	useSharedValue,
-	withDelay,
-	withTiming,
-} from '#/lib/animations/reanimatedCompat';
-
 import { useSession } from '#/state/session';
 
 import { UserAvatar } from '#/view/com/util/UserAvatar';
@@ -25,6 +16,14 @@ import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
+
+type WebViewStyle = ViewStyle & {
+	transition?: string;
+};
+
+const webViewStyle = (style: WebViewStyle): ViewStyle => {
+	return style as ViewStyle;
+};
 
 type Layout = {
 	size: number;
@@ -53,37 +52,19 @@ export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 1
 	const scale = size / 120;
 	const marginOffset = size < 120 ? -2 : 0;
 
-	const initialValue = animate ? 0 : 1;
-	const p0 = useSharedValue(initialValue);
-	const p1 = useSharedValue(initialValue);
-	const p2 = useSharedValue(initialValue);
-	const p3 = useSharedValue(initialValue);
-
+	// Drive the entrance scale from React state so the CSS transition (below) actually re-renders.
+	// Real reanimated animated this on the UI thread, but our web compat shim snaps shared values.
+	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
-		if (!animate) return;
-		const animateBubble = (p: SharedValue<number>, i: number) => {
-			p.set(0);
-			p.set(() =>
-				withDelay(
-					500 + i * 100,
-					withTiming(1, {
-						duration: 250,
-						easing: Easing.out(Easing.back(1.75)),
-					}),
-				),
-			);
-		};
-		animateBubble(p0, 0);
-		animateBubble(p1, 1);
-		animateBubble(p2, 2);
-		animateBubble(p3, 3);
-	}, [animate, p0, p1, p2, p3]);
+		if (animate) {
+			setAnimatedIn(true);
+		}
+	}, [animate]);
 
-	const scales = [p0, p1, p2, p3];
 	const layouts = getLayouts(profiles.length);
 
 	return (
-		<Animated.View style={[a.p_2xs, { height: size, width: size }]}>
+		<View style={[a.p_2xs, { height: size, width: size }]}>
 			<View
 				style={{
 					marginTop: marginOffset,
@@ -96,7 +77,8 @@ export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 1
 					<AvatarBubble
 						key={i}
 						profile={profiles[i]}
-						scale={scales[i]!}
+						scale={animate ? (animatedIn ? 1 : 0) : 1}
+						transitionDelay={animate ? 500 + i * 100 : undefined}
 						size={layout.size}
 						x={layout.x}
 						y={layout.y}
@@ -108,13 +90,14 @@ export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 1
 					/>
 				))}
 			</View>
-		</Animated.View>
+		</View>
 	);
 }
 
 function AvatarBubble({
 	profile,
 	scale,
+	transitionDelay,
 	size,
 	x,
 	y,
@@ -123,7 +106,8 @@ function AvatarBubble({
 	moderation,
 }: {
 	profile?: AnyProfileView;
-	scale: SharedValue<number>;
+	scale: number;
+	transitionDelay?: number;
 	size: number;
 	x: number;
 	y: number;
@@ -133,12 +117,16 @@ function AvatarBubble({
 }) {
 	const t = useTheme();
 
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ translateX: x }, { translateY: y }, { scale: scale.get() }],
-	}));
+	const transformStyle: WebViewStyle = {
+		transform: [{ translateX: x }, { translateY: y }, { scale }],
+	};
+	if (transitionDelay != null) {
+		// approximate upstream's Easing.out(Easing.back(1.75)) scale-in with the canonical ease-out-back curve
+		transformStyle.transition = `transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1) ${transitionDelay}ms`;
+	}
 
 	return (
-		<Animated.View
+		<View
 			style={[
 				a.absolute,
 				a.rounded_full,
@@ -148,7 +136,7 @@ function AvatarBubble({
 					borderWidth: 2,
 				},
 				zIndex != null && { zIndex },
-				animatedStyle,
+				webViewStyle(transformStyle),
 			]}
 		>
 			{profile ? (
@@ -163,7 +151,7 @@ function AvatarBubble({
 			) : (
 				<AvatarPlaceholder size={size} />
 			)}
-		</Animated.View>
+		</View>
 	);
 }
 
