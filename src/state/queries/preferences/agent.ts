@@ -216,8 +216,9 @@ async function updatePreferences(
 
 /**
  * Fetches and derives the user's full preferences, mirroring `@atproto/api`'s `BskyAgent.getPreferences`.
- * Reads the raw pref array from the PDS, narrows each item by `$type`, migrates legacy saved feeds when
- * needed, and applies legacy-label remapping.
+ * Reads the raw pref array from the PDS, narrows each item by `$type`, and applies legacy-label remapping.
+ * Unlike `@atproto/api`, it does not migrate a legacy v1 `savedFeedsPref` into v2 — the fork assumes a
+ * `savedFeedsPrefV2` already exists.
  *
  * @param pds the PDS client.
  * @param appLabelers the app-level labeler DIDs to seed `moderationPrefs.labelers` with.
@@ -350,8 +351,8 @@ export async function clearPreferences(pds: Client): Promise<void> {
 // #region saved feeds
 
 /**
- * Read-modify-write of the v2 saved-feeds pref, enforcing pinned-first ordering and double-writing to the
- * legacy v1 pref when one is present (v2 → v1 only, never the reverse).
+ * Read-modify-write of the v2 saved-feeds pref, enforcing pinned-first ordering. The legacy v1
+ * `savedFeedsPref` is not written (the v1 double-write `@atproto/api` performed was dropped).
  *
  * @param pds the PDS client.
  * @param cb maps the current saved feeds to the next set.
