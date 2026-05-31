@@ -60,7 +60,7 @@ export function InviteLinkDialog({
 	const ownerName = createSanitizedDisplayName(
 		owner,
 		false,
-		getDisplayRestrictions(moderateProfile(owner, moderationOpts), DisplayContext.ProfileView),
+		getDisplayRestrictions(moderateProfile(owner, moderationOpts), DisplayContext.ProfileBio),
 	);
 
 	const { joinLink } = convo.details;

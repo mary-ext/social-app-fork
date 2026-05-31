@@ -228,7 +228,7 @@ function InlineNameAndHandle({
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 	const handle = sanitizeHandle(profile.handle, '@');
 	return (
@@ -266,7 +266,7 @@ export function Name({
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 	return (
 		<View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
@@ -438,7 +438,7 @@ export function FollowButtonInner({
 			Toast.show(
 				l`Following ${sanitizeDisplayName(
 					profile.displayName || profile.handle,
-					getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 				)}`,
 			);
 			onPressProp?.(e);
@@ -461,7 +461,7 @@ export function FollowButtonInner({
 			Toast.show(
 				l`No longer following ${sanitizeDisplayName(
 					profile.displayName || profile.handle,
-					getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 				)}`,
 			);
 			onPressProp?.(e);

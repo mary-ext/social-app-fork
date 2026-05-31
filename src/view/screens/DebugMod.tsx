@@ -670,7 +670,7 @@ const MODERATION_UI_CONTEXTS: { key: string; context: DisplayContext }[] = [
 	{ key: 'profileView', context: DisplayContext.ProfileView },
 	{ key: 'avatar', context: DisplayContext.ProfileMedia },
 	{ key: 'banner', context: DisplayContext.ProfileMedia },
-	{ key: 'displayName', context: DisplayContext.ProfileView },
+	{ key: 'displayName', context: DisplayContext.ProfileBio },
 	{ key: 'contentList', context: DisplayContext.ContentList },
 	{ key: 'contentView', context: DisplayContext.ContentView },
 	{ key: 'contentMedia', context: DisplayContext.ContentMedia },

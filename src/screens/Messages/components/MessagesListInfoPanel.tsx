@@ -39,7 +39,7 @@ export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetai
 		? createSanitizedDisplayName(
 				profile,
 				true,
-				getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileView),
+				getDisplayRestrictions(moderateProfile(profile, moderationOpts), DisplayContext.ProfileBio),
 			)
 		: handle;
 	const profileLink = profile.handle && !isInvalidHandle(profile.handle) ? profile.handle : profile.did;

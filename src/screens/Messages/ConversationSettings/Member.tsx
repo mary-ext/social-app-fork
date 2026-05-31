@@ -78,7 +78,7 @@ export function Member({
 		: createSanitizedDisplayName(
 				profile,
 				true,
-				getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 			);
 	const isProfileOwner = profile.did === convo.primaryMember?.did;
 	const isSelf = currentAccount?.did === profile.did;
@@ -99,7 +99,7 @@ export function Member({
 				true,
 				getDisplayRestrictions(
 					moderateProfile(profile.kind.addedBy, moderationOpts),
-					DisplayContext.ProfileView,
+					DisplayContext.ProfileBio,
 				),
 			)}`
 		: l`Added by invite link`;

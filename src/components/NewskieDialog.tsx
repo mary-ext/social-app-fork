@@ -90,7 +90,7 @@ function DialogInner({
 		const moderation = moderateProfile(profile, moderationOpts);
 		return sanitizeDisplayName(
 			profile.displayName || profile.handle,
-			getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+			getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 		);
 	}, [moderationOpts, profile]);
 

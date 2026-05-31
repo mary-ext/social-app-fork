@@ -124,7 +124,7 @@ function DirectChatItem({
 		: createSanitizedDisplayName(
 				profile,
 				true,
-				getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 			);
 
 	return (

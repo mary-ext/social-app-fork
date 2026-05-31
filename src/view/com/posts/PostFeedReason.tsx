@@ -61,7 +61,7 @@ export function PostFeedReason({
 		const reposter = createSanitizedDisplayName(
 			by as AnyProfileView,
 			false,
-			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 		);
 		return (
 			<Link

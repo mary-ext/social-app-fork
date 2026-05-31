@@ -256,7 +256,7 @@ function ProfilePreview({ profile }: { profile: AppBskyActorDefs.ProfileViewDeta
 	const moderation = moderateProfile(profile, moderationOpts);
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	return (

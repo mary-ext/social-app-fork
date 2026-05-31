@@ -365,7 +365,7 @@ function DefaultProfileCard({
 	const displayName = createSanitizedDisplayName(
 		profile,
 		true,
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	const handleOnPress = useCallback(() => {
@@ -422,7 +422,7 @@ function ExistingChatCard({
 					true,
 					getDisplayRestrictions(
 						moderateProfile(convo.primaryMember, moderationOpts),
-						DisplayContext.ProfileView,
+						DisplayContext.ProfileBio,
 					),
 				);
 

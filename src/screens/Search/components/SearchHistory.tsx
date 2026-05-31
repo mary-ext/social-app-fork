@@ -132,7 +132,7 @@ function RecentProfileItem({
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	return (

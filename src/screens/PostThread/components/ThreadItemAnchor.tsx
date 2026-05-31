@@ -317,7 +317,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 							style={[a.flex_1]}
 							label={sanitizeDisplayName(
 								post.author.displayName || sanitizeHandle(post.author.handle),
-								getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+								getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 							)}
 							onPress={onOpenAuthor}
 						>
@@ -331,7 +331,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										>
 											{sanitizeDisplayName(
 												post.author.displayName || sanitizeHandle(post.author.handle),
-												getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+												getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 											)}
 										</Text>
 

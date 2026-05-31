@@ -105,7 +105,7 @@ function KnownFollowersInner({
 				...f,
 				displayName: sanitizeDisplayName(
 					f.displayName || f.handle,
-					getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 				),
 			},
 			moderation,

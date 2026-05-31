@@ -1014,7 +1014,7 @@ msgstr ""
 msgid "Add user to list"
 msgstr ""
 
-#. placeholder {0}: createSanitizedDisplayName( profile.kind.addedBy, true, getDisplayRestrictions( moderateProfile(profile.kind.addedBy, moderationOpts), DisplayContext.ProfileView, ), )
+#. placeholder {0}: createSanitizedDisplayName( profile.kind.addedBy, true, getDisplayRestrictions( moderateProfile(profile.kind.addedBy, moderationOpts), DisplayContext.ProfileBio, ), )
 #: src/screens/Messages/ConversationSettings/Member.tsx:97
 msgid "Added by {0}"
 msgstr "Added by {0}"
@@ -3554,8 +3554,8 @@ msgctxt "feed-name"
 msgid "Following"
 msgstr ""
 
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileView), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileView), )
+#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
+#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:439
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:240
@@ -5285,8 +5285,8 @@ msgstr ""
 msgid "No lists"
 msgstr ""
 
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileView), )
-#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileView), )
+#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
+#. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:462
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:264

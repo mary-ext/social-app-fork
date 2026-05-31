@@ -141,7 +141,7 @@ let ProfileHeaderStandard = ({
 							>
 								{sanitizeDisplayName(
 									profile.displayName || sanitizeHandle(profile.handle),
-									getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+									getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 								)}
 								<View style={[a.pl_xs, { marginTop: undefined }]}>
 									<ProfileBadges profile={profile} size="lg" interactive />
@@ -239,7 +239,7 @@ export function HeaderStandardButtons({
 				Toast.show(
 					l`Following ${sanitizeDisplayName(
 						profile.displayName || profile.handle,
-						getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 					)}`,
 				);
 			} catch (err) {
@@ -263,7 +263,7 @@ export function HeaderStandardButtons({
 				Toast.show(
 					l`No longer following ${sanitizeDisplayName(
 						profile.displayName || profile.handle,
-						getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+						getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 					)}`,
 					{ type: 'default' },
 				);

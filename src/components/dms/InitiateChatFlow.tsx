@@ -683,7 +683,7 @@ function DefaultProfileCard({
 	const handle = sanitizeHandle(profile.handle, '@');
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	const handleOnPress = useCallback(() => {

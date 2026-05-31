@@ -109,7 +109,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 							{forceLTR(
 								sanitizeDisplayName(
 									displayName,
-									opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileView),
+									opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileBio),
 								),
 							)}
 						</MaybeLinkText>

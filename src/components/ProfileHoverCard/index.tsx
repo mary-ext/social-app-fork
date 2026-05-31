@@ -480,7 +480,7 @@ function Inner({
 						<Text numberOfLines={1} style={[a.text_lg, a.leading_snug, a.font_semi_bold, a.self_start]}>
 							{sanitizeDisplayName(
 								profile.displayName || sanitizeHandle(profile.handle),
-								getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+								getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 							)}
 						</Text>
 						<ProfileBadges

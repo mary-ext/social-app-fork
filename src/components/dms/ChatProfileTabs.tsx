@@ -92,7 +92,7 @@ function Tab({
 	const moderation = moderateProfile(profile, moderationOpts!);
 	const displayName = sanitizeDisplayName(
 		profile.displayName || sanitizeHandle(profile.handle),
-		getDisplayRestrictions(moderation, DisplayContext.ProfileView),
+		getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 	);
 
 	const onPressItem = useCallback(
