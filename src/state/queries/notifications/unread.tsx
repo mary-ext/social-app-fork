@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState } from 'react-native';
+import { ok } from '@atcute/client';
 import { useQueryClient } from '@tanstack/react-query';
 import { EventEmitter } from 'eventemitter3';
 
@@ -9,7 +10,7 @@ import BroadcastChannel from '#/lib/broadcast';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { truncateAndInvalidate } from '#/state/queries/util';
-import { useAgent, useClients, useSession } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { RQKEY as RQKEY_NOTIFS } from './feed';
 import { type CachedFeedPage, type FeedPage } from './types';
@@ -41,7 +42,6 @@ apiContext.displayName = 'NotificationsUnreadApiContext';
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const { hasSession } = useSession();
-	const agent = useAgent();
 	const { appview } = useClients();
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();
@@ -102,7 +102,12 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		return {
 			async markAllRead() {
 				// update server
-				await agent.updateSeenNotifications(cacheRef.current.syncedAt.toISOString());
+				await ok(
+					appview.post('app.bsky.notification.updateSeen', {
+						input: { seenAt: cacheRef.current.syncedAt.toISOString() },
+						as: null,
+					}),
+				);
 
 				// update & broadcast
 				setNumUnread('');
@@ -111,7 +116,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 			async checkUnread({ invalidate, isPoll }: { invalidate?: boolean; isPoll?: boolean } = {}) {
 				try {
-					if (!agent.session) return;
+					if (!hasSession) return;
 					if (AppState.currentState !== 'active') {
 						return;
 					}
@@ -175,7 +180,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				}
 			},
 		};
-	}, [setNumUnread, queryClient, moderationOpts, agent, appview]);
+	}, [setNumUnread, queryClient, moderationOpts, appview]);
 	checkUnreadRef.current = api.checkUnread;
 
 	return (
