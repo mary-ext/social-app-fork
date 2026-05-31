@@ -67,7 +67,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 		return threadgateRecordToAllowUISetting({
 			$type: 'app.bsky.feed.threadgate',
 			post: '' as ResourceUri,
-			createdAt: new Date().toString(),
+			createdAt: new Date().toISOString(),
 			// TODO(atcute Phase 3.2): threadgateAllowRules comes from @atproto-typed preferences
 			allow: preferences.postInteractionSettings.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 		});

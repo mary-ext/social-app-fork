@@ -548,7 +548,7 @@ export async function upsertMutedWords(
 		if (!sanitizedValue) continue;
 		newWords.push({
 			actorTarget: mutedWord.actorTarget || 'all',
-			expiresAt: mutedWord.expiresAt as AppBskyActorDefs.MutedWord['expiresAt'],
+			expiresAt: mutedWord.expiresAt || undefined,
 			id: TID.now(),
 			targets: (mutedWord.targets || []) as AppBskyActorDefs.MutedWord['targets'],
 			value: sanitizedValue,
