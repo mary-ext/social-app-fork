@@ -2662,20 +2662,20 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:104
+#: src/screens/Settings/components/ExportCarDialog.tsx:105
 msgid "Download CAR file"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:110
+#: src/screens/Settings/components/ExportCarDialog.tsx:111
 msgctxt "button"
 msgid "Download CAR file"
 msgstr "Download CAR file"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:127
+#: src/screens/Settings/components/ExportCarDialog.tsx:128
 msgid "Download chat data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:133
+#: src/screens/Settings/components/ExportCarDialog.tsx:134
 msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
@@ -2950,8 +2950,8 @@ msgstr ""
 msgid "Error message"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:48
-#: src/screens/Settings/components/ExportCarDialog.tsx:72
+#: src/screens/Settings/components/ExportCarDialog.tsx:49
+#: src/screens/Settings/components/ExportCarDialog.tsx:73
 msgid "Error occurred while saving file"
 msgstr ""
 
@@ -3066,7 +3066,7 @@ msgstr ""
 msgid "Export chat data"
 msgstr "Export chat data"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:115
+#: src/screens/Settings/components/ExportCarDialog.tsx:116
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
@@ -3075,7 +3075,7 @@ msgstr "Export my chat data"
 msgid "Export my data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:88
+#: src/screens/Settings/components/ExportCarDialog.tsx:89
 msgid "Export my profile data"
 msgstr "Export my profile data"
 
@@ -3407,8 +3407,8 @@ msgstr ""
 msgid "Feeds we think you might like."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:44
-#: src/screens/Settings/components/ExportCarDialog.tsx:68
+#: src/screens/Settings/components/ExportCarDialog.tsx:45
+#: src/screens/Settings/components/ExportCarDialog.tsx:69
 msgid "File saved successfully!"
 msgstr ""
 
@@ -8283,7 +8283,7 @@ msgstr ""
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:138
+#: src/screens/Settings/components/ExportCarDialog.tsx:139
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
@@ -9080,7 +9080,7 @@ msgstr "View @{0}'s profile"
 msgid "View blocked user's profile"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:141
+#: src/screens/Settings/components/ExportCarDialog.tsx:142
 msgid "View blogpost for more details"
 msgstr ""
 
@@ -9496,7 +9496,7 @@ msgstr ""
 msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:118
+#: src/screens/Settings/components/ExportCarDialog.tsx:119
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
 msgstr ""
 
@@ -9750,7 +9750,7 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:94
+#: src/screens/Settings/components/ExportCarDialog.tsx:95
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 

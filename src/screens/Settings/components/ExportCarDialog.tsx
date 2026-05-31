@@ -1,11 +1,12 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { ok } from '@atcute/client';
+import { type Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { saveBytesToDisk } from '#/lib/media/manip';
 
-import { useAgent, useClients } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -22,22 +23,22 @@ import { Text } from '#/components/Typography';
 export function ExportCarDialog({ control }: { control: Dialog.DialogControlProps }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const agent = useAgent();
-	const { chat } = useClients();
+	const { chat, pds } = useClients();
+	const { currentAccount } = useSession();
 	const [loading, setLoading] = useState<'repo' | 'chat' | false>(false);
 
 	const download = useCallback(async () => {
-		if (!agent.session) {
+		if (!currentAccount || !pds) {
 			return; // shouldn't ever happen
 		}
 		try {
 			setLoading('repo');
-			const did = agent.session.did;
-			const downloadRes = await agent.com.atproto.sync.getRepo({ did });
+			const did = currentAccount.did as Did;
+			const carData = await ok(pds.get('com.atproto.sync.getRepo', { params: { did }, as: 'bytes' }));
 			const saveRes = await saveBytesToDisk(
 				'repo.car',
-				downloadRes.data as Uint8Array<ArrayBuffer>,
-				downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
+				carData as Uint8Array<ArrayBuffer>,
+				'application/vnd.ipld.car',
 			);
 
 			if (saveRes) {
@@ -49,7 +50,7 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 		} finally {
 			setLoading(false);
 		}
-	}, [l, agent]);
+	}, [l, currentAccount, pds]);
 
 	const downloadChatData = useCallback(async () => {
 		if (!chat) {
