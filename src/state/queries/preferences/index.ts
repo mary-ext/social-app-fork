@@ -1,13 +1,10 @@
-import {
-	BskyAgent,
-	type AppBskyActorDefs,
-	type BskyFeedViewPreference,
-	type LabelPreference,
-} from '@atproto/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { replaceEqualDeep } from '#/lib/functions';
+import { getAppLabelers } from '#/lib/moderation/app-labelers';
+import { type LabelPreference } from '#/lib/moderation/compat';
+import { type AppBskyActorDefs, type BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
 import { getAge } from '#/lib/strings/time';
 
 import { GCTIME, STALE } from '#/state/queries';
@@ -62,14 +59,14 @@ export function usePreferencesQuery() {
 			if (!pds || !currentAccount) {
 				return DEFAULT_LOGGED_OUT_PREFERENCES;
 			} else {
-				const res = await getPreferences(pds, BskyAgent.appLabelers);
+				const res = await getPreferences(pds, getAppLabelers());
 
 				const labelerDids = res.moderationPrefs.labelers.map((l) => l.did);
 				// save to local storage to ensure there are labels on initial requests
 				void saveLabelers(currentAccount.did, labelerDids);
 				// keep the agent's labeler header in sync with the freshly fetched prefs, as
 				// `agent.getPreferences()` used to do internally
-				agent.configureLabelers(labelerDids.filter((did) => !BskyAgent.appLabelers.includes(did)));
+				agent.configureLabelers(labelerDids.filter((did) => !getAppLabelers().includes(did)));
 
 				const preferences: UsePreferencesQueryResponse = {
 					...res,

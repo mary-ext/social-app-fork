@@ -2,16 +2,16 @@ import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { type Did } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
+import { TID } from '@atproto/common-web';
+
+import { DEFAULT_LABEL_SETTINGS, type LabelPreference } from '#/lib/moderation/compat';
 import {
 	type AppBskyActorDefs as AtpActorDefs,
 	type BskyFeedViewPreference,
 	type BskyInterestsPreference,
 	type BskyPreferences,
 	type BskyThreadViewPreference,
-	DEFAULT_LABEL_SETTINGS,
-	type LabelPreference,
-} from '@atproto/api';
-import { TID } from '@atproto/common-web';
+} from '#/lib/moderation/preferences-types';
 
 /**
  * Fork-owned reimplementation of `@atproto/api`'s `BskyAgent` preference logic, talking to the
