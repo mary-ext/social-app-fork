@@ -36,7 +36,7 @@ export function withNetworkEvents<Args extends unknown[]>(
  * unrecoverable session drop.
  *
  * @param oauthAgent the atcute user-agent to route requests through.
- * @returns a fetch handler usable by both `BskyAppAgent` and the `@atcute/client` clients.
+ * @returns a fetch handler for the `@atcute/client` clients.
  */
 export function createOAuthFetchHandler(oauthAgent: OAuthUserAgent): FetchHandler {
 	let dropped = false;

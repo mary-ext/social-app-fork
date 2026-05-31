@@ -51,10 +51,6 @@ export const SLINGSHOT_SERVICE_URL: string = import.meta.env.PUBLIC_SLINGSHOT_SE
 /** the source code URL shown in the desktop right nav. */
 export const SOURCE_CODE_URL: string = import.meta.env.PUBLIC_SOURCE_CODE_URL;
 
-/** The DID of the Bluesky appview to proxy to */
-export const BLUESKY_PROXY_DID: Did = (import.meta.env.PUBLIC_BLUESKY_PROXY_DID ||
-	'did:web:api.bsky.app') as Did;
-
 /** The full proxy audience (`did#service`) of the Bluesky AppView, for the `@atcute/client` clients. */
 export const APPVIEW_PROXY_AUDIENCE = import.meta.env.PUBLIC_APPVIEW_PROXY_AUDIENCE as AtprotoAudience;
 

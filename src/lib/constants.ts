@@ -1,10 +1,6 @@
 import { type Insets } from 'react-native';
 import { type AppBskyActorDefs } from '@atcute/bluesky';
 
-import { type ProxyHeaderValue } from '#/state/session/agent';
-
-import { BLUESKY_PROXY_DID } from '#/env';
-
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';
 export const BSKY_SERVICE_DID = 'did:web:bsky.social';
@@ -28,10 +24,6 @@ export const MAX_DM_GRAPHEME_LENGTH = 1000;
 export const MAX_ALT_TEXT = 2000;
 
 export const MAX_REPORT_REASON_GRAPHEME_LENGTH = 2000;
-
-export function IS_TEST_USER(handle?: string) {
-	return handle && handle?.endsWith('.test');
-}
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
 	`at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`;
@@ -136,16 +128,5 @@ export const urls = {
 		support: {
 			findFriendsPrivacyPolicy: 'https://bsky.social/about/support/find-friends-privacy-policy',
 		},
-	},
-};
-
-// temp hack for e2e - esb
-export const BLUESKY_PROXY_HEADER = {
-	value: `${BLUESKY_PROXY_DID}#bsky_appview`,
-	get() {
-		return this.value as ProxyHeaderValue;
-	},
-	set(value: string) {
-		this.value = value;
 	},
 };
