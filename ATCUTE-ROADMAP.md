@@ -365,15 +365,25 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `appview` client. The quote-post `whenAppViewReady` consumed-result branch (quote-count refresh) was not
   directly driven (the repost/quote menu resisted automation), but it issues the byte-identical migrated
   call as the verified retry and the already-live `usePostThread` read.
-- Next: `@atproto/api` is down to **8 importers** — the bounded seven-file `src/lib/moderation/**` island
-  and `src/state/session/agent.ts`. One thread remains, folded into **Stream 6** (`6.1` partial
-  `@atproto/api` removal: delete the `BskyAgent` compat layer):
-  - **Decouple moderation from `BskyAppAgent`** — `session/moderation.ts` / `preferences/index.ts` still
-    call `agent.configureLabelersHeader` / `agent.configureLabelers` / `agent.resolveHandle`; these get
-    rewritten onto clients as part of Stream 6 (which deletes the agent). `Composer.tsx` / `video.ts`
-    also still use `useAgent` for video-service routing — the same Stream 6 cleanup, not the thread read.
-  After Stream 6 the only remaining `@atproto/api` importer is the moderation island; the moderation
-  engine (Appendix A) stays deferred until the owner chooses to run it.
+- **Stream 6 (Phase 6.1) — done.** `BskyAppAgent` / `useAgent` / `AgentContext` are deleted; `useClients()`
+  is the sole network accessor. Across eight commits: (1-6) the eleven `useAgent` consumers moved onto the
+  clients — identity/profile/notification/list/logged-out reads → `appview`; feed interactions keep their
+  per-feed `#bsky_fg` proxy via a per-call header (atcute's `_mergeHeaders` lets a per-call header win over
+  the client's configured proxy); `ExportCarDialog` → `pds` (`getRepo` as bytes) + `useSession`;
+  notifications `updateSeen` → `appview` (`as: null`); labeler subscribe/unsubscribe re-homed onto new
+  `addLabeler`/`removeLabeler` preference mutators in `preferences/agent.ts`; the composer video pipeline
+  threads a new `Clients.pdsUrl` (the PDS service URL the @atcute clients don't expose). (7)
+  `session/agent.ts` rewritten `@atproto/api`-free — session validation reads `com.atproto.server.getSession`
+  through `pds` and throws `InactiveAccountError`; the optimistic-boot path returns a `validate` callback in
+  place of `agent.validateResumedSession()`; the dead test-env labeler switch + `IS_TEST_USER` and the
+  `BLUESKY_PROXY_*` / `ProxyHeaderValue` plumbing are removed. (8) `pnpm remove @atproto/syntax`.
+  **`@atproto/api` is now imported only by the seven-file `src/lib/moderation/**` island.** lint + typecheck
+  + `pnpm build` pass; **live-verified (2026-05-31)** — reloading the app resumes the stored session
+  (account confirmed `mary.my.id`, following feed loads) through the rewritten boot/validate path.
+- Next: **Appendix A (deferred)** is all that remains — migrate the moderation engine to
+  `@atcute/bluesky-moderation` and drop `@atproto/api` entirely. The island is self-contained (no call site
+  outside it changes), with `decision-baseline.json` as the regression reference. Deferred by the owner; not
+  on the immediate path.
 
 Two dead-code removals happened alongside the migration rather than migrating the code: the
 `handle-availability` query and the change-handle flow (`ChangeHandleDialog` — handle changes are
