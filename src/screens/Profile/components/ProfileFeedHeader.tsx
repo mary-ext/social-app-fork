@@ -495,7 +495,6 @@ function DialogInner({
 						{info.view && (
 							<ReportDialog
 								control={reportDialogControl}
-								// TODO(atcute Phase 5.2): drop cast once ReportDialog flips to @atcute
 								subject={
 									{
 										...info.view,

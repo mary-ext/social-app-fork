@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AnyStarterPackView, type AppBskyActorDefs } from '@atcute/bluesky';
+import { type AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
@@ -132,15 +132,9 @@ function DialogInner({
 				</View>
 				<Text style={[a.text_md, a.text_center, a.leading_snug]}>{getJoinMessage()}</Text>
 				{profile.joinedViaStarterPack ? (
-					// TODO(atcute Phase 2.3): drop casts once StarterPackView flips to @atcute
-					<StarterPackCard.Link
-						starterPack={profile.joinedViaStarterPack as unknown as AnyStarterPackView}
-						onPress={() => control.close()}
-					>
+					<StarterPackCard.Link starterPack={profile.joinedViaStarterPack} onPress={() => control.close()}>
 						<View style={[a.w_full, a.mt_sm, a.p_lg, a.border, a.rounded_sm, t.atoms.border_contrast_low]}>
-							<StarterPackCard.Card
-								starterPack={profile.joinedViaStarterPack as unknown as AnyStarterPackView}
-							/>
+							<StarterPackCard.Card starterPack={profile.joinedViaStarterPack} />
 						</View>
 					</StarterPackCard.Link>
 				) : null}

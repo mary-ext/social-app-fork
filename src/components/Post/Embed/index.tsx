@@ -1,11 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import {
-	type AnyProfileView,
-	type AnyStarterPackView,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-} from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { type $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -165,8 +160,7 @@ function RecordEmbed({
 		case 'starter_pack': {
 			return (
 				<View style={a.mt_sm}>
-					{/* TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute */}
-					<StarterPackCard starterPack={embed.view as unknown as AnyStarterPackView} />
+					<StarterPackCard starterPack={embed.view} />
 				</View>
 			);
 		}
@@ -242,7 +236,6 @@ export function QuoteEmbed({
 }) {
 	const moderationOpts = useModerationOpts();
 	const quote = useMemo<$type.enforce<AppBskyFeedDefs.PostView>>(
-		// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
 		() =>
 			({
 				...embed.view,
@@ -268,7 +261,6 @@ export function QuoteEmbed({
 	}, [quote.record]);
 
 	const onBeforePress = useCallback(() => {
-		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 		unstableCacheProfileView(queryClient, quote.author as AnyProfileView);
 		onOpen?.();
 	}, [queryClient, quote.author, onOpen]);

@@ -136,7 +136,6 @@ export function Provider({
 				currentStep: 'Details',
 				name: record.name,
 				description: record.description,
-				// TODO(atcute Phase 2.3): drop cast once ListItemView flips to @atcute
 				profiles: (listItems?.map((i) => i.subject) as AnyProfileView[]) ?? [],
 				feeds: starterPack.feeds ?? [],
 				processing: false,

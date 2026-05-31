@@ -677,7 +677,7 @@ let PostFeed = ({
 						feedContext={slice.feedContext}
 						reqId={slice.reqId}
 						moderation={item.moderation}
-						parentAuthor={item.parentAuthor as unknown as AppBskyActorDefs.ProfileViewBasic | undefined}
+						parentAuthor={item.parentAuthor}
 						showReplyTo={row.showReplyTo}
 						isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
 						isThreadChild={isThreadChildAt(slice.items, indexInSlice)}
@@ -793,7 +793,6 @@ let PostFeed = ({
 				const actor = post.author;
 				if (
 					actor.status &&
-					// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 					isStatusValidForViewers(actor.status as AppBskyActorDefs.StatusView, liveNowConfig) &&
 					isStatusStillActive(actor.status.expiresAt)
 				) {

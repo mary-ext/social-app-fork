@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AppBskyEmbedRecord } from '@atcute/bluesky';
 import { type $type } from '@atcute/lexicons';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -43,8 +43,7 @@ let MessageItemEmbed = ({
 			>
 				<View>
 					<Embed
-						// TODO(atcute Phase 2.4): drop cast once PostView/embed flip to @atcute
-						embed={embed as unknown as AppBskyFeedDefs.PostView['embed']}
+						embed={embed}
 						allowNestedQuotes
 						viewContext={PostEmbedViewContext.ChatMessage}
 						style={[

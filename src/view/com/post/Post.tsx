@@ -1,11 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	AppBskyFeedPost,
-} from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -130,8 +125,7 @@ function PostInner({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text,
-				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
-				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
+				author: post.author,
 				embed: post.embed,
 				moderation,
 				langs: record.langs,
@@ -145,7 +139,6 @@ function PostInner({
 	}, [setLimitLines]);
 
 	const onBeforePress = useCallback(() => {
-		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
 		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
 		outerOnBeforePress?.();
 	}, [queryClient, post.author, outerOnBeforePress]);

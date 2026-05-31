@@ -56,7 +56,6 @@ export function KnownFollowers({
 	 * displayed.
 	 */
 	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
-		// TODO(atcute Phase 4.1): drop cast once chat profile type flips to @atcute
 		cache.current.set(profile.did, profile.viewer.knownFollowers as AppBskyActorDefs.KnownFollowers);
 	}
 

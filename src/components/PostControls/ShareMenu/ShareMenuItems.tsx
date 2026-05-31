@@ -32,7 +32,6 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	const [devModeEnabled] = useDevMode();
 
 	const postUri = post.uri;
-	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 
 	const href = useMemo(() => {

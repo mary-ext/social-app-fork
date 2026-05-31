@@ -68,7 +68,6 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			$type: 'app.bsky.feed.threadgate',
 			post: '' as ResourceUri,
 			createdAt: new Date().toISOString(),
-			// TODO(atcute Phase 3.2): threadgateAllowRules comes from @atproto-typed preferences
 			allow: preferences.postInteractionSettings.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 		});
 	}, [preferences.postInteractionSettings.threadgateAllowRules]);

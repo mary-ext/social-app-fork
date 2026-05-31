@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
@@ -17,15 +16,13 @@ export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisable
 
 	const view = useMemo(() => {
 		if (!data || data.type !== 'record' || data.kind !== 'post') return;
-		// TODO(atcute Phase 3.1): drop cast once resolve-link flips to @atcute types (entangled with composer publish path)
-		return createEmbedViewRecordFromPost(data.view as unknown as AppBskyFeedDefs.PostView);
+		return createEmbedViewRecordFromPost(data.view);
 	}, [data]);
 
 	return view ? (
 		<QuoteEmbed
 			embed={{
 				type: 'post',
-				// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
 				view: view as unknown as EmbedType<'post'>['view'],
 			}}
 			linkDisabled={linkDisabled}

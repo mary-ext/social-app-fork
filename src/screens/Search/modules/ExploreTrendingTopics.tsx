@@ -92,9 +92,7 @@ export function TrendRow({
 								</Text>
 							</View>
 							<View style={[a.flex_row, a.gap_sm, a.align_center, { paddingLeft: 20 }]}>
-								{actors.length > 0 && (
-									<AvatarStack size={20} profiles={actors as unknown as AnyProfileView[]} />
-								)}
+								{actors.length > 0 && <AvatarStack size={20} profiles={actors} />}
 								<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]} numberOfLines={1}>
 									{category}
 								</Text>

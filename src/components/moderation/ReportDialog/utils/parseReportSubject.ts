@@ -55,7 +55,6 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 		};
 	} else if (subject?.$type === 'app.bsky.feed.defs#postView') {
 		const record = subject.record as AppBskyFeedPost.Main;
-		// TODO(atcute Phase 5.2): parseEmbed lives in the @atproto-typed validation island
 		const embed = parseEmbed(subject.embed as Parameters<typeof parseEmbed>[0]);
 		return {
 			type: 'post',

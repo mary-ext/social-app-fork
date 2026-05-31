@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView, type AppBskyEmbedImages, type AppBskyFeedDefs } from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
@@ -31,8 +31,7 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	// TODO(atcute Phase 3.1): replyTo (composer state) is @atproto-typed; the embed shape matches
-	const embed = replyTo.embed as unknown as AppBskyFeedDefs.PostView['embed'];
+	const embed = replyTo.embed;
 
 	const [showFull, setShowFull] = useState(false);
 
@@ -98,7 +97,6 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		>
 			<PreviewableUserAvatar
 				size={42}
-				// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute
 				profile={replyTo.author as AnyProfileView}
 				moderation={
 					replyTo.moderation

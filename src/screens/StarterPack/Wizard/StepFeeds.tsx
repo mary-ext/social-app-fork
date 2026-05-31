@@ -54,11 +54,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 	const suggestedFeeds: AppBskyFeedDefs.GeneratorView[] | undefined =
 		savedFeeds || isFetchedSavedFeeds
 			? popularFeeds
-				? savedFeeds.concat(
-						popularFeeds.filter(
-							(f) => !savedFeeds.some((sf) => sf.uri === f.uri),
-						) as unknown as AppBskyFeedDefs.GeneratorView[],
-					)
+				? savedFeeds.concat(popularFeeds.filter((f) => !savedFeeds.some((sf) => sf.uri === f.uri)))
 				: savedFeeds
 			: undefined;
 
@@ -88,7 +84,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				</View>
 			</View>
 			<List
-				data={(query ? searchedFeeds : suggestedFeeds) as unknown as AppBskyFeedDefs.GeneratorView[]}
+				data={query ? searchedFeeds : suggestedFeeds}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 				onEndReached={!query && !screenReaderEnabled ? () => fetchNextPage() : undefined}

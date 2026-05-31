@@ -82,7 +82,6 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
 		return (
 			<View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
-				{/* TODO(atcute Phase 2.3): drop cast once ListView flips to @atcute */}
 				<ProfileCard
 					profile={item as AnyProfileView}
 					moderationOpts={moderationOpts}

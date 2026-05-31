@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyActorDefs, type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
@@ -34,10 +34,7 @@ export function useTrendingTopics() {
 	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = useMemo(
-		() =>
-			(preferences?.moderationPrefs?.mutedWords ?? []).map((word) =>
-				interpretMutedWordPreference(word as unknown as AppBskyActorDefs.MutedWord),
-			),
+		() => (preferences?.moderationPrefs?.mutedWords ?? []).map((word) => interpretMutedWordPreference(word)),
 		[preferences?.moderationPrefs?.mutedWords],
 	);
 

@@ -1,12 +1,6 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-} from '@atcute/bluesky';
+import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
@@ -60,8 +54,7 @@ export type ThreadItemPostProps = {
 };
 
 export function ThreadItemPost({ item, overrides, onPostSuccess, threadgateRecord }: ThreadItemPostProps) {
-	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-	const postShadow = usePostShadow(item.value.post as unknown as AppBskyFeedDefs.PostView);
+	const postShadow = usePostShadow(item.value.post);
 
 	if (postShadow === POST_TOMBSTONE) {
 		return <ThreadItemPostDeleted item={item} overrides={overrides} />;
@@ -215,8 +208,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text,
-				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
-				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
+				author: post.author,
 				embed: post.embed,
 				moderation,
 				langs: post.record.langs,
@@ -230,7 +222,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 		setLimitLines(false);
 	}, [setLimitLines]);
 
-	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
 
 	return (
@@ -283,15 +274,13 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 								style={[
 									a.pb_xs,
 									maybeApplyGalleryOffsetStyles('meta', {
-										// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-										post: post as unknown as AppBskyFeedDefs.PostView,
+										post: post,
 										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 										additionalCauses: additionalPostAlerts,
 									}),
 								]}
 							/>
-							{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
-							<LabelsOnMyPost post={post as unknown as AppBskyFeedDefs.PostView} style={[a.pb_xs]} />
+							<LabelsOnMyPost post={post} style={[a.pb_xs]} />
 							<PostAlerts
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 								style={[a.pb_2xs]}
@@ -309,32 +298,24 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 								</View>
 							) : undefined}
-							{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
-							<TranslatedPost hideTranslateLink post={post as unknown as AppBskyFeedDefs.PostView} />
+							<TranslatedPost hideTranslateLink post={post} />
 							{post.embed && (
 								<View
 									style={[
 										maybeApplyGalleryOffsetStyles('embed', {
-											// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-											post: post as unknown as AppBskyFeedDefs.PostView,
+											post: post,
 											modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
 											additionalCauses: additionalPostAlerts,
 										}),
 										a.pb_xs,
 									]}
 								>
-									<Embed
-										// TODO(atcute Phase 2.4): drop cast once Embed types flip to @atcute
-										embed={post.embed as unknown as AppBskyFeedDefs.PostView['embed']}
-										moderation={moderation}
-										viewContext={PostEmbedViewContext.Feed}
-									/>
+									<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
 								</View>
 							)}
 							<PostControls
 								post={postShadow}
-								// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-								record={record as unknown as AppBskyFeedPost.Main}
+								record={record}
 								richText={richText}
 								onPressReply={onPressReply}
 								logContext="PostThreadItem"

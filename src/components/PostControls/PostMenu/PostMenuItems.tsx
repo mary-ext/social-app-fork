@@ -134,7 +134,6 @@ let PostMenuItems = ({
 
 	const postUri = post.uri;
 	const postCid = post.cid;
-	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
 	const postAuthor = useProfileShadow(post.author as AnyProfileView);
 	const quoteEmbed = useMemo(() => {
 		if (!currentAccount || !post.embed) return;

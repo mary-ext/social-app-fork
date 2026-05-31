@@ -1245,7 +1245,7 @@ export class Convo {
 				key: m.id,
 				message: {
 					...m.message,
-					embed: m.optimisticEmbedView as unknown as ChatBskyConvoDefs.MessageView['embed'],
+					embed: m.optimisticEmbedView,
 					$type: 'chat.bsky.convo.defs#messageView',
 					id: nanoid(),
 					rev: '__fake__',

@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyActorDefs, type AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
+import { type AppBskyUnspeccedGetTrends } from '@atcute/bluesky';
 import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';
@@ -20,9 +20,7 @@ export function useGetTrendsQuery() {
 	const { appview } = useClients();
 	const { data: preferences } = usePreferencesQuery();
 	const keywordFilters = useMemo(() => {
-		return (preferences?.moderationPrefs?.mutedWords || []).map((word) =>
-			interpretMutedWordPreference(word as unknown as AppBskyActorDefs.MutedWord),
-		);
+		return (preferences?.moderationPrefs?.mutedWords || []).map((word) => interpretMutedWordPreference(word));
 	}, [preferences?.moderationPrefs]);
 
 	return useQuery({

@@ -178,8 +178,7 @@ let FeedItemInner = ({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text || '',
-				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
-				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
+				author: post.author,
 				embed: post.embed,
 				moderation,
 				langs: record.langs,
@@ -222,7 +221,6 @@ let FeedItemInner = ({
 			feedContext,
 			reqId,
 		});
-		// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
 		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
 		setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
 			feedSourceInfo,
@@ -365,7 +363,7 @@ let FeedItemInner = ({
 						]}
 					>
 						<PostMeta
-							author={post.author as unknown as AppBskyActorDefs.ProfileViewBasic}
+							author={post.author}
 							moderation={moderation}
 							timestamp={post.indexedAt}
 							postHref={href}

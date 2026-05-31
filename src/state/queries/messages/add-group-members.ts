@@ -55,24 +55,21 @@ export function useAddGroupMembers(
 			);
 
 			const addedBy: ChatBskyActorDefs.ProfileViewBasic | undefined = myProfile
-				? ({
+				? {
 						...myProfile,
 						$type: 'chat.bsky.actor.defs#profileViewBasic',
-					} as unknown as ChatBskyActorDefs.ProfileViewBasic)
+					}
 				: undefined;
 
-			const optimisticMembers: ChatBskyActorDefs.ProfileViewBasic[] = profiles.map(
-				(profile) =>
-					({
-						...profile,
-						$type: 'chat.bsky.actor.defs#profileViewBasic',
-						kind: {
-							$type: 'chat.bsky.actor.defs#groupConvoMember',
-							role: 'standard',
-							addedBy,
-						},
-					}) as unknown as ChatBskyActorDefs.ProfileViewBasic,
-			);
+			const optimisticMembers: ChatBskyActorDefs.ProfileViewBasic[] = profiles.map((profile) => ({
+				...profile,
+				$type: 'chat.bsky.actor.defs#profileViewBasic',
+				kind: {
+					$type: 'chat.bsky.actor.defs#groupConvoMember',
+					role: 'standard',
+					addedBy,
+				},
+			}));
 
 			queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(CONVO_KEY(convoId), (prev) => {
 				if (!prev) return;

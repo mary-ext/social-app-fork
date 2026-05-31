@@ -323,7 +323,6 @@ function Header({
 			.filter(
 				(li) =>
 					li.subject.did !== currentAccount?.did &&
-					// TODO(atcute Phase 2.3): drop casts once ListItemView flips to @atcute
 					!isBlockedOrBlocking(li.subject as AnyProfileView) &&
 					!isMuted(li.subject as AnyProfileView) &&
 					!li.subject.viewer?.following,

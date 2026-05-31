@@ -403,8 +403,7 @@ export function MessagesList({
 				{
 					text: rt.text,
 					facets: rt.facets,
-					// TODO(atcute Phase 2.4): drop cast once the embed view types migrate to @atcute
-					embed: embed as unknown as ChatBskyConvoDefs.MessageInput['embed'],
+					embed: embed,
 				},
 				embedView,
 			);

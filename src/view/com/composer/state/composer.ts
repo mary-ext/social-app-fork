@@ -266,7 +266,6 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 						$type: 'app.bsky.feed.threadgate',
 						post: '' as ResourceUri,
 						createdAt: new Date().toString(),
-						// TODO(atcute Phase 3.2): threadgateAllow comes from @atproto-typed preferences
 						allow: threadgateAllow as AppBskyFeedThreadgate.Main['allow'],
 					}),
 				},
@@ -637,7 +636,6 @@ export function createComposerState({
 				$type: 'app.bsky.feed.threadgate',
 				post: '' as ResourceUri,
 				createdAt: new Date().toString(),
-				// TODO(atcute Phase 3.2): threadgateAllowRules comes from @atproto-typed preferences
 				allow: initInteractionSettings?.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
 			}),
 		},

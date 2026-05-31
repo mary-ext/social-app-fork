@@ -167,7 +167,6 @@ export function ListMembers({
 				return renderEmptyState();
 			}
 
-			// TODO(atcute Phase 2.3): drop cast once ListItemView flips to @atcute
 			const profile = item.subject as AnyProfileView;
 			if (!moderationOpts) return null;
 

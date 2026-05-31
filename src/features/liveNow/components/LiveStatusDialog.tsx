@@ -24,7 +24,7 @@ import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/I
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as Hider from '#/components/moderation/Hider';
-import { type ReportSubject, useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
+import { useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
 
@@ -198,11 +198,10 @@ export function LiveStatus({
 							{...createStaticClick(() => {
 								function open() {
 									reportDialogControl.open({
-										// TODO(atcute Phase 2.6): drop cast once the live status views flip to @atcute
 										subject: {
 											...status,
 											$type: 'app.bsky.actor.defs#statusView',
-										} as unknown as ReportSubject,
+										},
 									});
 								}
 								if (dialogContext.isWithinDialog) {

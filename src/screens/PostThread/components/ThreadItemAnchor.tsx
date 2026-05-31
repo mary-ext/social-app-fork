@@ -2,7 +2,6 @@ import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
 import {
 	type AnyProfileView,
-	type AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	type AppBskyFeedThreadgate,
@@ -70,8 +69,7 @@ export function ThreadItemAnchor({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
-	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-	const postShadow = usePostShadow(item.value.post as unknown as AppBskyFeedDefs.PostView);
+	const postShadow = usePostShadow(item.value.post);
 	const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri;
 	const isRoot = threadRootUri === item.uri;
 
@@ -178,7 +176,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const post = postShadow;
 	const record = item.value.post.record;
 	const moderation = item.moderation;
-	// TODO(atcute Phase 2.4): drop casts once PostView flips to @atcute types
 	const authorShadow = useProfileShadow(post.author as AnyProfileView);
 	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
 	const richText: Richtext = useMemo(
@@ -191,9 +188,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const authorHref = makeProfileLink(post.author);
-	// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-	const isThreadAuthor =
-		getThreadAuthor(post, record as unknown as AppBskyFeedPost.Main) === currentAccount?.did;
+	const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did;
 
 	const likesHref = useMemo(() => {
 		const urip = parseCanonicalResourceUri(post.uri);
@@ -246,8 +241,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 				uri: post.uri,
 				cid: post.cid,
 				text: record.text,
-				// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute
-				author: post.author as unknown as AppBskyActorDefs.ProfileViewBasic,
+				author: post.author,
 				embed: post.embed,
 				moderation,
 				langs: record.langs,
@@ -467,8 +461,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								<PostControls
 									big
 									post={postShadow}
-									// TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types
-									record={record as unknown as AppBskyFeedPost.Main}
+									record={record}
 									richText={richText}
 									onPressReply={onPressReply}
 									logContext="PostThreadItem"
@@ -500,16 +493,12 @@ function ExpandedPostDetails({
 
 	return (
 		<View style={[a.gap_md, a.pt_md, a.align_start]}>
-			{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
-			<BackdatedPostIndicator post={post as unknown as AppBskyFeedDefs.PostView} />
+			<BackdatedPostIndicator post={post} />
 			<View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
 				<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
 					{niceDate(i18n, post.indexedAt, 'dot separated')}
 				</Text>
-				{/* TODO(atcute Phase 2.4): drop cast once PostView flips to @atcute types */}
-				{isRootPost && (
-					<WhoCanReply post={post as unknown as AppBskyFeedDefs.PostView} isThreadAuthor={isThreadAuthor} />
-				)}
+				{isRootPost && <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />}
 			</View>
 		</View>
 	);
