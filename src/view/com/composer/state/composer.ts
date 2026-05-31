@@ -1,10 +1,10 @@
-import { type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { type AppBskyDraftDefs, type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { type ResourceUri } from '@atcute/lexicons';
-import { type AppBskyActorDefs, type AppBskyDraftDefs } from '@atproto/api';
 import { nanoid } from 'nanoid/non-secure';
 
 import { type VideoAsset } from '#/lib/media/video/types';
 import { type SelfLabel } from '#/lib/moderation';
+import { type AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 import { insertMentionAt } from '#/lib/strings/mention-manip';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 import { isBskyPostUrl, postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
@@ -643,4 +643,3 @@ export function createComposerState({
 		},
 	};
 }
-

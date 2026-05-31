@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react';
 import { type TextStyle, View } from 'react-native';
-import { type AppBskyActorDefs } from '@atproto/api';
 import { Trans, useLingui } from '@lingui/react/macro';
+
+import { type AppBskyActorDefs } from '#/lib/moderation/preferences-types';
 
 import {
 	usePreferencesQuery,
