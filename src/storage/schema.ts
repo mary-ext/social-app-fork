@@ -22,6 +22,7 @@ export type Device = {
 	hiddenPosts?: string[];
 	kawaii: boolean;
 	largeAltBadgeEnabled: boolean;
+	pdsAddressHistory?: string[];
 	requireAltTextEnabled: boolean;
 	subtitlesEnabled: boolean;
 	threadgateNudged?: boolean;

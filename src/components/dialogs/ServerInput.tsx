@@ -4,7 +4,6 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { BSKY_SERVICE } from '#/lib/constants';
 
-import * as persisted from '#/state/persisted';
 import { useSession } from '#/state/session';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
@@ -17,6 +16,8 @@ import * as TextField from '#/components/forms/TextField';
 import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
+import { device, useStorage } from '#/storage';
 
 type SegmentedControlOptions = typeof BSKY_SERVICE | 'custom';
 
@@ -75,9 +76,7 @@ function DialogInner({
 	const { accounts } = useSession();
 	const { gtMobile } = useBreakpoints();
 	const [customAddress, setCustomAddress] = useState(initialCustomAddress);
-	const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
-		persisted.get('pdsAddressHistory') || [],
-	);
+	const [pdsAddressHistory = [], setPdsAddressHistory] = useStorage(device, ['pdsAddressHistory']);
 
 	useImperativeHandle(
 		formRef,
@@ -102,9 +101,7 @@ function DialogInner({
 
 				if (fixedOption === 'custom') {
 					if (!pdsAddressHistory.includes(url)) {
-						const newHistory = [url, ...pdsAddressHistory.slice(0, 4)];
-						setPdsAddressHistory(newHistory);
-						persisted.write('pdsAddressHistory', newHistory);
+						setPdsAddressHistory([url, ...pdsAddressHistory.slice(0, 4)]);
 					}
 				}
 

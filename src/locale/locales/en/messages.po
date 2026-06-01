@@ -819,7 +819,7 @@ msgstr ""
 msgid "Account options"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:131
+#: src/components/dialogs/ServerInput.tsx:128
 msgid "Account provider"
 msgstr ""
 
@@ -1586,8 +1586,8 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:135
-#: src/components/dialogs/ServerInput.tsx:136
+#: src/components/dialogs/ServerInput.tsx:132
+#: src/components/dialogs/ServerInput.tsx:133
 msgid "Bluesky"
 msgstr ""
 
@@ -1595,11 +1595,11 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:195
+#: src/components/dialogs/ServerInput.tsx:192
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:146
+#: src/components/dialogs/ServerInput.tsx:143
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr ""
 
@@ -1895,7 +1895,7 @@ msgstr ""
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
-#: src/components/dialogs/ServerInput.tsx:127
+#: src/components/dialogs/ServerInput.tsx:124
 msgid "Choose your account provider"
 msgstr ""
 
@@ -2359,8 +2359,8 @@ msgstr ""
 msgid "Culture"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:138
-#: src/components/dialogs/ServerInput.tsx:139
+#: src/components/dialogs/ServerInput.tsx:135
+#: src/components/dialogs/ServerInput.tsx:136
 msgid "Custom"
 msgstr ""
 
@@ -2639,8 +2639,8 @@ msgid "Does not include nudity."
 msgstr ""
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:288
+#: src/components/dialogs/ServerInput.tsx:213
 #: src/components/dialogs/ServerInput.tsx:216
-#: src/components/dialogs/ServerInput.tsx:219
 #: src/components/dms/AfterReportDialog.tsx:130
 #: src/view/com/composer/labels/LabelsBtn.tsx:181
 #: src/view/com/composer/labels/LabelsBtn.tsx:189
@@ -4088,7 +4088,7 @@ msgstr ""
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:193
+#: src/components/dialogs/ServerInput.tsx:190
 msgid "If you're a developer, you can host your own server."
 msgstr ""
 
@@ -4344,7 +4344,7 @@ msgstr ""
 msgid "Learn more about Bluesky"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:201
+#: src/components/dialogs/ServerInput.tsx:198
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
@@ -4373,7 +4373,7 @@ msgstr ""
 msgid "Learn more about your Germ DM link"
 msgstr ""
 
-#: src/components/dialogs/ServerInput.tsx:204
+#: src/components/dialogs/ServerInput.tsx:201
 #: src/components/moderation/ContentHider.tsx:243
 msgid "Learn more."
 msgstr ""
@@ -7297,7 +7297,7 @@ msgstr ""
 msgid "Sent at {0}"
 msgstr "Sent at {0}"
 
-#: src/components/dialogs/ServerInput.tsx:157
+#: src/components/dialogs/ServerInput.tsx:154
 msgid "Server address"
 msgstr ""
 

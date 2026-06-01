@@ -46,7 +46,6 @@ const schema = z.object({
 	invites: z.object({
 		copiedInvites: z.array(z.string()),
 	}),
-	pdsAddressHistory: z.array(z.string()).optional(),
 	disableHaptics: z.boolean().optional(),
 });
 export type Schema = z.infer<typeof schema>;
@@ -65,7 +64,6 @@ export const defaults: Schema = {
 	invites: {
 		copiedInvites: [],
 	},
-	pdsAddressHistory: [],
 	disableHaptics: false,
 };
 
