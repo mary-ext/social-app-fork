@@ -72,6 +72,11 @@ msgstr ""
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr ""
 
+#. placeholder {0}: convo.details.joinRequestCount
+#: src/screens/Messages/components/ChatListItem.tsx:218
+msgid "{0, plural, one {# new join request} other {# new join requests}}"
+msgstr "{0, plural, one {# new join request} other {# new join requests}}"
+
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map((g) => g.value).join(' ')
 #: src/components/dms/MessageItem.tsx:257
@@ -587,7 +592,7 @@ msgstr ""
 msgid "{requestCount, plural, one {# request} other {# requests}}"
 msgstr "{requestCount, plural, one {# request} other {# requests}}"
 
-#. Displayed when there are more than 50 requests to join a group chat
+#. Displayed when there are more than 20 requests to join a group chat
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:47
 msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ requests"
@@ -707,6 +712,11 @@ msgstr ""
 #: src/screens/Profile/Header/Handle.tsx:62
 msgid "⚠Invalid Handle"
 msgstr ""
+
+#: src/screens/Messages/components/ChatListItem.tsx:214
+msgctxt "Displayed when there are more than 20 requests to join a group chat"
+msgid "20+ new join requests"
+msgstr "20+ new join requests"
 
 #: src/components/dialogs/MutedWords.tsx:174
 #: src/components/dialogs/MutedWords.tsx:434
@@ -2132,7 +2142,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Messages/components/ChatListItem.tsx:297
+#: src/screens/Messages/components/ChatListItem.tsx:311
 msgid "Conversation deleted"
 msgstr ""
 
@@ -2484,7 +2494,7 @@ msgid "Deleted"
 msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:105
-#: src/screens/Messages/components/ChatListItem.tsx:122
+#: src/screens/Messages/components/ChatListItem.tsx:123
 #: src/screens/Messages/ConversationSettings/Member.tsx:77
 msgid "Deleted Account"
 msgstr ""
@@ -3798,7 +3808,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Messages/components/ChatListItem.tsx:145
+#: src/screens/Messages/components/ChatListItem.tsx:146
 msgid "Go to conversation with {0}"
 msgstr ""
 
@@ -3814,7 +3824,7 @@ msgstr ""
 msgid "Go to profile"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:205
+#: src/screens/Messages/components/ChatListItem.tsx:206
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
@@ -4810,7 +4820,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:297
+#: src/screens/Messages/components/ChatListItem.tsx:311
 msgid "Message deleted"
 msgstr ""
 
@@ -5313,7 +5323,7 @@ msgstr ""
 msgid "No media yet"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:285
+#: src/screens/Messages/components/ChatListItem.tsx:299
 msgid "No messages yet"
 msgstr ""
 
@@ -8259,7 +8269,7 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
-#: src/screens/Messages/components/ChatListItem.tsx:342
+#: src/screens/Messages/components/ChatListItem.tsx:356
 #: src/screens/Messages/components/ChatLocked.tsx:61
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -8285,7 +8295,7 @@ msgstr ""
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:146
+#: src/screens/Messages/components/ChatListItem.tsx:147
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 

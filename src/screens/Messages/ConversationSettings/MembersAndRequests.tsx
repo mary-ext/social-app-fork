@@ -46,7 +46,7 @@ export function MembersAndRequests({
 					{hasMoreRequests
 						? l({
 								message: `${requestCount}+ requests`,
-								comment: 'Displayed when there are more than 50 requests to join a group chat',
+								comment: 'Displayed when there are more than 20 requests to join a group chat',
 							})
 						: l({
 								message: plural(requestCount, {

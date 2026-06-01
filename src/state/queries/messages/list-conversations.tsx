@@ -455,11 +455,21 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							debouncedRefetch();
 							break;
 						}
-						case 'chat.bsky.convo.defs#logIncomingJoinRequest':
 						case 'chat.bsky.convo.defs#logApproveJoinRequest':
-						case 'chat.bsky.convo.defs#logRejectJoinRequest':
+						case 'chat.bsky.convo.defs#logRejectJoinRequest': {
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								updateGroupConvoJoinRequestCount(log, old, -1),
+							);
+							break;
+						}
+						case 'chat.bsky.convo.defs#logIncomingJoinRequest': {
+							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
+								updateGroupConvoJoinRequestCount(log, old, 1),
+							);
+							break;
+						}
 						case 'chat.bsky.convo.defs#logOutgoingJoinRequest': {
-							// TODO update join request count here when available
+							// viewer isn't in the chat yet, no need to do anything
 							break;
 						}
 						case 'chat.bsky.convo.defs#logAddReaction': {
@@ -671,6 +681,29 @@ function optimisticUpdate(
 			convos: page.convos.map((convo) => (chatId === convo.id ? updateFn(convo) : convo)),
 		})),
 	};
+}
+
+function updateGroupConvoJoinRequestCount(
+	log: { convoId: string; rev: string },
+	old: ConvoListQueryData | undefined,
+	delta: 1 | -1,
+) {
+	return optimisticUpdate(log.convoId, old, (convo) => {
+		// join requests are only meaningful for group convos
+		if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+			return { ...convo, rev: log.rev };
+		}
+		const current = convo.kind.joinRequestCount ?? 0;
+		const next = Math.max(0, current + delta);
+		return {
+			...convo,
+			kind: {
+				...convo.kind,
+				joinRequestCount: next === 0 ? undefined : next,
+			},
+			rev: log.rev,
+		};
+	});
 }
 
 function removeMemberFromConvoView(

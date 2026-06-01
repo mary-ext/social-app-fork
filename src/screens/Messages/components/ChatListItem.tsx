@@ -10,6 +10,7 @@ import {
 	type ModerationDecision,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -207,6 +208,19 @@ function GroupChatItem({
 			primaryProfileModeration={moderation}
 			isBlockedAccount={false}
 			isDeletedAccount={false}
+			subtitle={
+				convo.details.joinRequestCount
+					? convo.details.joinRequestCount > 20
+						? l({
+								message: '20+ new join requests',
+								context: 'Displayed when there are more than 20 requests to join a group chat',
+							})
+						: plural(convo.details.joinRequestCount, {
+								one: '# new join request',
+								other: '# new join requests',
+							})
+					: undefined
+			}
 			showProfileBadges={false}
 			selected={selected}
 			showMenu={showMenu}
