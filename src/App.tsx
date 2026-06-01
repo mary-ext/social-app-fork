@@ -1,6 +1,6 @@
 import './style.css';
 
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useLingui } from '@lingui/react/macro';
 
@@ -16,7 +16,6 @@ import { Provider as DialogStateProvider } from '#/state/dialogs';
 import { Provider as HomeBadgeProvider } from '#/state/home-badge';
 import { MessagesProvider } from '#/state/messages';
 import { Provider as ModalStateProvider } from '#/state/modals';
-import { init as initPersistedState } from '#/state/persisted';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
@@ -118,17 +117,10 @@ function InnerApp() {
 }
 
 function App() {
-	const [isReady, setIsReady] = useState(false);
-
 	useEffect(() => {
-		void initPersistedState().then(() => setIsReady(true));
 		// prewarm language-detection weights so detection is ready by first use
 		void initializeLanguageDetection();
 	}, []);
-
-	if (!isReady) {
-		return null;
-	}
 
 	/*
 	 * NOTE: nothing here can depend on other data or session state, since that

@@ -13,7 +13,6 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { clearStorage } from '#/state/persisted';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useDeleteActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
@@ -303,8 +302,7 @@ function DevOptions() {
 	const [debugFeedContextEnabled, setDebugFeedContextEnabled] = useDebugFeedContextEnabled();
 	const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged();
 
-	const clearAllStorage = async () => {
-		await clearStorage();
+	const clearAllStorage = () => {
 		account.removeAll();
 		auth.removeAll();
 		device.removeAll();

@@ -2,7 +2,6 @@ import { type AppBskyLabelerDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type ActorIdentifier, type Did } from '@atcute/lexicons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { z } from 'zod';
 
 import { MAX_LABELERS } from '#/lib/constants';
 
@@ -94,12 +93,6 @@ export function useLabelerSubscriptionMutation() {
 
 	return useMutation({
 		async mutationFn({ did, subscribe }: { did: string; subscribe: boolean }) {
-			// TODO
-			z.object({
-				did: z.string(),
-				subscribe: z.boolean(),
-			}).parse({ did, subscribe });
-
 			/**
 			 * If a user has invalid/takendown/deactivated labelers, we need to remove them. We don't have a great
 			 * way to do this atm on the server, so we do it here.
