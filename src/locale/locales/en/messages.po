@@ -9161,7 +9161,7 @@ msgstr ""
 msgid "View your default post interaction settings"
 msgstr ""
 
-#: src/view/com/home/HomeHeaderLayout.tsx:59
+#: src/view/com/home/HomeHeaderLayout.tsx:60
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:85
 msgid "View your feeds and explore more"
 msgstr ""

@@ -3,7 +3,6 @@ import { View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { useKawaiiMode } from '#/state/preferences/kawaii';
 import { useSession } from '#/state/session';
 
 import { DesktopFeeds } from '#/view/shell/desktop/Feeds';
@@ -18,6 +17,7 @@ import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
 import { SOURCE_CODE_URL } from '#/env/common';
+import { useKawaiiMode } from '#/storage/hooks/kawaii';
 
 type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position' | 'transform'> & {
 	maxHeight?: string;

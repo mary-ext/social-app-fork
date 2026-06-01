@@ -69,7 +69,6 @@ const schema = z.object({
 	hiddenPosts: z.array(z.string()).optional(), // should move to server
 	pdsAddressHistory: z.array(z.string()).optional(),
 	disableHaptics: z.boolean().optional(),
-	kawaii: z.boolean().optional(),
 });
 export type Schema = z.infer<typeof schema>;
 
@@ -93,7 +92,6 @@ export const defaults: Schema = {
 	hiddenPosts: [],
 	pdsAddressHistory: [],
 	disableHaptics: false,
-	kawaii: false,
 };
 
 export function tryParse(rawData: string): Schema | undefined {

@@ -4,8 +4,6 @@ import { Trans } from '@lingui/react/macro';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 
-import { useKawaiiMode } from '#/state/preferences/kawaii';
-
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import { Logo } from '#/view/icons/Logo';
 import { Logotype } from '#/view/icons/Logotype';
@@ -18,6 +16,8 @@ import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/ic
 import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+
+import { useKawaiiMode } from '#/storage/hooks/kawaii';
 
 export const SplashScreen = ({
 	onDismiss,

@@ -4,7 +4,6 @@ import { useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 
-import { useKawaiiMode } from '#/state/preferences/kawaii';
 import { useSession } from '#/state/session';
 import { useShellLayout } from '#/state/shell/shell-layout';
 
@@ -17,6 +16,8 @@ import { ButtonIcon } from '#/components/Button';
 import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag';
 import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
+
+import { useKawaiiMode } from '#/storage/hooks/kawaii';
 
 export function HomeHeaderLayout(props: {
 	children: React.ReactNode;

@@ -2,11 +2,10 @@ import { forwardRef } from 'react';
 import { type TextProps } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, type PathProps, Stop, type SvgProps } from 'react-native-svg';
 
-import { useKawaiiMode } from '#/state/preferences/kawaii';
-
 import { flatten, useTheme } from '#/alf';
 
 import { Image } from '#/shims/image';
+import { useKawaiiMode } from '#/storage/hooks/kawaii';
 
 const ratio = 57 / 64;
 
