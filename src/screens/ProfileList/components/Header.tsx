@@ -4,7 +4,6 @@ import { type AppBskyGraphDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
-import { useHaptics } from '#/lib/haptics';
 import { makeListLink } from '#/lib/routes/links';
 
 import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
@@ -45,7 +44,6 @@ export function Header({
 	const isModList = list.purpose === 'app.bsky.graph.defs#modlist';
 	const isBlocking = !!list.viewer?.blocked;
 	const isMuting = !!list.viewer?.muted;
-	const playHaptic = useHaptics();
 
 	const { mutateAsync: muteList, isPending: isMutePending } = useListMuteMutation();
 	const { mutateAsync: blockList, isPending: isBlockPending } = useListBlockMutation();
@@ -58,8 +56,6 @@ export function Header({
 	const isPinned = Boolean(savedFeedConfig?.pinned);
 
 	const onTogglePinned = async () => {
-		playHaptic();
-
 		try {
 			if (savedFeedConfig) {
 				const pinned = !savedFeedConfig.pinned;

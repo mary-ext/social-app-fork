@@ -1,8 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 import { type GestureResponderEvent, type Insets, type View } from 'react-native';
 
-import { useHaptics } from '#/lib/haptics';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, type ButtonProps } from '#/components/Button';
@@ -37,7 +35,6 @@ export function PostControlButton({
 	hitSlop?: Insets;
 }) {
 	const t = useTheme();
-	const playHaptic = useHaptics();
 
 	const ctx = useMemo(
 		() => ({
@@ -55,18 +52,16 @@ export function PostControlButton({
 	const handlePress = useMemo(() => {
 		if (!onPress) return;
 		return (evt: GestureResponderEvent) => {
-			playHaptic('Light');
 			onPress(evt);
 		};
-	}, [onPress, playHaptic]);
+	}, [onPress]);
 
 	const handleLongPress = useMemo(() => {
 		if (!onLongPress) return;
 		return (evt: GestureResponderEvent) => {
-			playHaptic('Heavy');
 			onLongPress(evt);
 		};
-	}, [onLongPress, playHaptic]);
+	}, [onLongPress]);
 
 	return (
 		<Button

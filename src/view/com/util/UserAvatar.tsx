@@ -15,7 +15,6 @@ import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useHaptics } from '#/lib/haptics';
 import { openImagePicker } from '#/lib/media/picker';
 import { convertCdnPreset } from '#/lib/media/util';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -474,7 +473,6 @@ let PreviewableUserAvatar = ({
 	const queryClient = useQueryClient();
 	const status = useActorStatus(profile);
 	const liveControl = useDialogControl();
-	const playHaptic = useHaptics();
 
 	const onPress = useCallback(() => {
 		onBeforePress?.();
@@ -482,9 +480,8 @@ let PreviewableUserAvatar = ({
 	}, [profile, queryClient, onBeforePress]);
 
 	const onOpenLiveStatus = useCallback(() => {
-		playHaptic('Light');
 		liveControl.open();
-	}, [liveControl, playHaptic, profile.did]);
+	}, [liveControl, profile.did]);
 
 	const avatarEl = (
 		<UserAvatar

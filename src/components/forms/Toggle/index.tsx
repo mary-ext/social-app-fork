@@ -3,7 +3,6 @@ import { Pressable, type PressableProps, type StyleProp, View, type ViewStyle } 
 
 import Animated, { Easing, LinearTransition } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
-import { useHaptics } from '#/lib/haptics';
 
 import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
 
@@ -159,18 +158,16 @@ export function Item({
 	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 	const { state: pressed, onIn: onPressIn, onOut: onPressOut } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
-	const playHaptic = useHaptics();
 
 	const role = groupType === 'radio' ? 'radio' : type;
 	const selected = selectedValues.includes(name) || !!value;
 	const disabled = groupDisabled || itemDisabled || (!selected && maxSelectionsReached);
 
 	const onPress = useCallback(() => {
-		playHaptic('Light');
 		const next = !selected;
 		setFieldValue({ name, value: next });
 		onChange?.(next);
-	}, [playHaptic, name, selected, onChange, setFieldValue]);
+	}, [name, selected, onChange, setFieldValue]);
 
 	const state = useMemo(
 		() => ({

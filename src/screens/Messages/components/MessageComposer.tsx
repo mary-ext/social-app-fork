@@ -5,7 +5,6 @@ import { useLingui } from '@lingui/react/macro';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import { HITSLOP_10, MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
-import { useHaptics } from '#/lib/haptics';
 import { isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
@@ -43,7 +42,6 @@ export function MessageComposer({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const playHaptic = useHaptics();
 	const { getDraft, clearDraft } = useMessageDraft();
 	const composerInternalApiRef = useComposerInternalApiRef();
 
@@ -68,7 +66,6 @@ export function MessageComposer({
 		}
 
 		clearDraft();
-		playHaptic();
 		setEmbed(undefined);
 		composerInternalApiRef.current?.clear();
 

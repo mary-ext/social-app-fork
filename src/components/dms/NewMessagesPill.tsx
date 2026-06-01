@@ -2,9 +2,8 @@ import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Animated, { runOnJS, useAnimatedStyle, useSharedValue } from '#/lib/animations/reanimatedCompat';
+import Animated, { useAnimatedStyle, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { ScaleAndFadeIn, ScaleAndFadeOut } from '#/lib/custom-animations/ScaleAndFade';
-import { useHaptics } from '#/lib/haptics';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -14,7 +13,6 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void }) {
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const { bottom: bottomInset } = useSafeAreaInsets();
 
 	const scale = useSharedValue(1);
@@ -28,9 +26,8 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 	}, [scale]);
 
 	const onPress = useCallback(() => {
-		runOnJS(playHaptic)();
 		onPressInner?.();
-	}, [onPressInner, playHaptic]);
+	}, [onPressInner]);
 
 	const animatedStyle = useAnimatedStyle(() => ({
 		transform: [{ scale: scale.get() }],

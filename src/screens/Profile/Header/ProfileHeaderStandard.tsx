@@ -10,7 +10,6 @@ import {
 } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { useHaptics } from '#/lib/haptics';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
@@ -221,7 +220,6 @@ export function HeaderStandardButtons({
 }) {
 	const { t: l } = useLingui();
 	const { hasSession, currentAccount } = useSession();
-	const playHaptic = useHaptics();
 	const requireAuth = useRequireAuth();
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileHeader');
 	const [, queueUnblock] = useProfileBlockMutationQueue(profile);
@@ -231,7 +229,6 @@ export function HeaderStandardButtons({
 	const isMe = currentAccount?.did === profile.did;
 
 	const onPressFollow = () => {
-		playHaptic();
 		requireAuth(async () => {
 			try {
 				await queueFollow();
@@ -255,7 +252,6 @@ export function HeaderStandardButtons({
 	};
 
 	const onPressUnfollow = () => {
-		playHaptic();
 		requireAuth(async () => {
 			try {
 				await queueUnfollow();
@@ -314,7 +310,6 @@ export function HeaderStandardButtons({
 						size="small"
 						color="secondary"
 						onPress={() => {
-							playHaptic('Light');
 							editProfileControl.open();
 						}}
 						label={l`Edit profile`}

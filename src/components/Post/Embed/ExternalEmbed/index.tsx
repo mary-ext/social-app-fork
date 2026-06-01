@@ -4,7 +4,6 @@ import { type AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
-import { useHaptics } from '#/lib/haptics';
 import { exemptExternalEmbedSources, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
@@ -36,7 +35,6 @@ export const ExternalEmbed = ({
 }) => {
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const externalEmbedPrefs = useExternalEmbedsPrefs();
 	const niceUrl = toNiceDomain(link.uri);
 	const imageUri = link.thumb;
@@ -51,11 +49,10 @@ export const ExternalEmbed = ({
 	const hasMedia = Boolean(imageUri || embedPlayerParams);
 
 	const onPress = useCallback(() => {
-		playHaptic('Light');
 		onOpen?.();
-	}, [playHaptic, onOpen]);
+	}, [onOpen]);
 
-	const onShareExternal = useCallback(() => {}, [link.uri, playHaptic]);
+	const onShareExternal = useCallback(() => {}, [link.uri]);
 
 	if (embedPlayerParams?.source === 'tenor' || embedPlayerParams?.source === 'klipy') {
 		const parsedAlt = parseAltFromGIFDescription(link.description);

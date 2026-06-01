@@ -4,7 +4,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Animated from '#/lib/animations/reanimatedCompat';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
-import { useHaptics } from '#/lib/haptics';
 import { useMinimalShellFabTransform } from '#/lib/hooks/useMinimalShellTransform';
 import { clamp } from '#/lib/numbers';
 
@@ -20,7 +19,6 @@ export function FABInner({ testID, icon, onPress, style, ...props }: FABProps) {
 	const insets = useSafeAreaInsets();
 	const { gtMobile } = useBreakpoints();
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const fabMinimalShellTransform = useMinimalShellFabTransform();
 
 	const size = gtMobile ? styles.sizeLarge : styles.sizeRegular;
@@ -36,7 +34,6 @@ export function FABInner({ testID, icon, onPress, style, ...props }: FABProps) {
 				onPressIn={undefined}
 				onPress={(evt) => {
 					onPress?.(evt);
-					playHaptic('Light');
 				}}
 				onLongPress={undefined}
 				targetScale={0.9}

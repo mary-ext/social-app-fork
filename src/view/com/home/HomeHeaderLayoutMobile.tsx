@@ -5,7 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import Animated from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
-import { useHaptics } from '#/lib/haptics';
 import { type NavigationProp } from '#/lib/routes/types';
 
 import { emitSoftReset } from '#/state/events';
@@ -35,7 +34,6 @@ export function HomeHeaderLayoutMobile({
 	const { headerHeight } = useShellLayout();
 	const headerMinimalShellTransform = useHomeHeaderTransform();
 	const { hasSession } = useSession();
-	const playHaptic = useHaptics();
 	const { navigate } = useNavigation<NavigationProp>();
 
 	return (
@@ -67,7 +65,6 @@ export function HomeHeaderLayoutMobile({
 							if (IS_DEV) {
 								navigate('Debug');
 							} else {
-								playHaptic('Light');
 								emitSoftReset();
 							}
 						}}

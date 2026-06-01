@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
-import { useHaptics } from '#/lib/haptics';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -115,7 +114,6 @@ export function Item({
 	onPress: onPressProp,
 	...props
 }: { value: string; children: React.ReactNode } & Omit<ButtonProps, 'children'>) {
-	const playHaptic = useHaptics();
 	const [position, setPosition] = useState<{ x: number; width: number } | null>(null);
 
 	const ctx = useContext(InternalContext);
@@ -142,11 +140,10 @@ export function Item({
 
 	const onPress = useCallback(
 		(evt: Parameters<NonNullable<ButtonProps['onPress']>>[0]) => {
-			playHaptic('Light');
 			ctx.onSelectValue(value, position);
 			onPressProp?.(evt);
 		},
-		[ctx, value, position, onPressProp, playHaptic],
+		[ctx, value, position, onPressProp],
 	);
 
 	return (

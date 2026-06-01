@@ -14,7 +14,6 @@ import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { GestureActionView } from '#/lib/custom-animations/GestureActionView';
-import { useHaptics } from '#/lib/haptics';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -257,7 +256,6 @@ function BaseChatItem({
 	const { gtMobile } = useBreakpoints();
 	const { isWithinSplitView } = useIsWithinSplitView();
 
-	const playHaptic = useHaptics();
 	const queryClient = useQueryClient();
 	const hasUnread =
 		convo.view.unreadCount > 0 &&
@@ -385,9 +383,8 @@ function BaseChatItem({
 	);
 
 	const onLongPress = useCallback(() => {
-		playHaptic();
 		menuControl.open();
-	}, [playHaptic, menuControl]);
+	}, [menuControl]);
 
 	const markReadAction = {
 		threshold: 120,

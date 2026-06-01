@@ -13,7 +13,6 @@ import {
 	useScrollViewOffset,
 } from '#/lib/animations/reanimatedCompat';
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
-import { useHaptics } from '#/lib/haptics';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
 
 import { useA11y } from '#/state/a11y';
@@ -411,11 +410,9 @@ function PinnedFeedItem({
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const feedUri = feed.value;
 
 	const onTogglePinned = () => {
-		playHaptic();
 		setCurrentFeeds(currentFeeds.map((f) => (f.id === feed.id ? { ...feed, pinned: !feed.pinned } : f)));
 	};
 
@@ -481,16 +478,13 @@ function UnpinnedFeedItem({
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const feedUri = feed.value;
 
 	const onTogglePinned = () => {
-		playHaptic();
 		setCurrentFeeds(currentFeeds.map((f) => (f.id === feed.id ? { ...feed, pinned: !feed.pinned } : f)));
 	};
 
 	const onPressRemove = () => {
-		playHaptic();
 		setCurrentFeeds(currentFeeds.filter((f) => f.id !== feed.id));
 	};
 

@@ -4,7 +4,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
-import { useHaptics } from '#/lib/haptics';
 import { niceDate } from '#/lib/strings/time';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
@@ -49,7 +48,6 @@ export const StandardSiteEmbed = ({
 }) => {
 	const { t: l, i18n } = useLingui();
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const niceUrl = toNiceDomain(view.uri);
 	const imageUri = view.thumb;
 	const hasMedia = Boolean(imageUri);
@@ -74,7 +72,6 @@ export const StandardSiteEmbed = ({
 	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
 
 	const onPress = () => {
-		playHaptic('Light');
 		onOpen?.();
 	};
 

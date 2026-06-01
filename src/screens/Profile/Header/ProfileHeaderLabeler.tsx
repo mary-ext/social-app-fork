@@ -13,7 +13,6 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { MAX_LABELERS } from '#/lib/constants';
-import { useHaptics } from '#/lib/haptics';
 import { isAppLabeler } from '#/lib/moderation';
 import { type Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -69,7 +68,6 @@ let ProfileHeaderLabeler = ({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
-	const playHaptic = useHaptics();
 	const isSelf = currentAccount?.did === profile.did;
 
 	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
@@ -83,8 +81,6 @@ let ProfileHeaderLabeler = ({
 			return;
 		}
 		try {
-			playHaptic();
-
 			if (likeUri) {
 				await unlikeMod({ uri: likeUri });
 				setLikeCount((c) => c - 1);
@@ -103,7 +99,7 @@ let ProfileHeaderLabeler = ({
 				message: e instanceof Error ? e.message : String(e),
 			});
 		}
-	}, [labeler, playHaptic, likeUri, unlikeMod, likeMod, l]);
+	}, [labeler, likeUri, unlikeMod, likeMod, l]);
 
 	return (
 		<ProfileHeaderShell
@@ -230,7 +226,6 @@ export function HeaderLabelerButtons({
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const requireAuth = useRequireAuth();
-	const playHaptic = useHaptics();
 	const editProfileControl = useDialogControl();
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: toggleSubscription, variables, reset } = useLabelerSubscriptionMutation();
@@ -243,7 +238,6 @@ export function HeaderLabelerButtons({
 
 	const onPressSubscribe = () =>
 		requireAuth(async (): Promise<void> => {
-			playHaptic();
 			const subscribe = !isSubscribed;
 
 			try {

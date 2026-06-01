@@ -2,7 +2,6 @@ import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
-import { useHaptics } from '#/lib/haptics';
 import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBorder';
 
 import { useProfileQuery } from '#/state/queries/profile';
@@ -30,7 +29,6 @@ export function ThreadComposePrompt({
 	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const t = useTheme();
-	const playHaptic = useHaptics();
 	const { state: hovered, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 
 	useHideBottomBarBorderForScreen();
@@ -59,7 +57,6 @@ export function ThreadComposePrompt({
 				accessibilityHint={l`Opens composer`}
 				onPress={() => {
 					onPressCompose();
-					playHaptic('Light');
 				}}
 				onLongPress={undefined}
 				onHoverIn={onHoverIn}

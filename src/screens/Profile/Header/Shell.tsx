@@ -8,7 +8,6 @@ import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { BACK_HITSLOP } from '#/lib/constants';
-import { useHaptics } from '#/lib/haptics';
 import { type NavigationProp } from '#/lib/routes/types';
 
 import { type Shadow } from '#/state/cache/types';
@@ -55,7 +54,6 @@ let ProfileHeaderShell = ({
 	const { openLightbox } = useLightboxControls();
 	const navigation = useNavigation<NavigationProp>();
 	useSafeAreaInsets();
-	const playHaptic = useHaptics();
 	const liveStatusControl = useDialogControl();
 
 	const onPressBack = useCallback(() => {
@@ -87,7 +85,6 @@ let ProfileHeaderShell = ({
 
 	const onPressAvi = useCallback(() => {
 		if (live.isActive) {
-			playHaptic('Light');
 			liveStatusControl.open();
 		} else {
 			const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
@@ -97,7 +94,7 @@ let ProfileHeaderShell = ({
 				_openLightbox(avatar, type);
 			}
 		}
-	}, [profile, moderation, _openLightbox, liveStatusControl, live, playHaptic]);
+	}, [profile, moderation, _openLightbox, liveStatusControl, live]);
 
 	const onPressBanner = useCallback(() => {
 		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);

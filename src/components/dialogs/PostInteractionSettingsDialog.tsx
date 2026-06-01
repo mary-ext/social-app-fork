@@ -6,7 +6,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useHaptics } from '#/lib/haptics';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import { STALE } from '#/state/queries';
@@ -261,7 +260,6 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const playHaptic = useHaptics();
 	const [showLists, setShowLists] = useState(false);
 	const { data: lists, isPending: isListsPending, isError: isListsError } = useMyListsQuery('curate');
 	const [quotesEnabled, setQuotesEnabled] = useState(
@@ -471,7 +469,6 @@ export function PostInteractionSettingsForm({
 								accessibilityRole="togglebutton"
 								hitSlop={0}
 								onPress={() => {
-									playHaptic('Light');
 									setShowLists((s) => !s);
 								}}
 							>

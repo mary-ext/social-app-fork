@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
-import { useHaptics } from '#/lib/haptics';
 import { makeCustomFeedLink, makeProfileLink } from '#/lib/routes/links';
 import { shareUrl } from '#/lib/sharing';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -87,7 +86,6 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 	const { hasSession } = useSession();
 	const { gtMobile } = useBreakpoints();
 	const infoControl = Dialog.useDialogControl();
-	const playHaptic = useHaptics();
 
 	const { data: preferences } = usePreferencesQuery();
 
@@ -106,8 +104,6 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 
 	const onToggleSaved = async () => {
 		try {
-			playHaptic();
-
 			if (savedFeedConfig) {
 				await removeFeed(savedFeedConfig);
 				Toast.show(l`Removed from your feeds`);
@@ -134,8 +130,6 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 
 	const onTogglePinned = async () => {
 		try {
-			playHaptic();
-
 			if (savedFeedConfig) {
 				const pinned = !savedFeedConfig.pinned;
 				await updateSavedFeeds([
@@ -184,7 +178,6 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 								},
 							]}
 							onPress={() => {
-								playHaptic();
 								infoControl.open();
 							}}
 						>
@@ -349,7 +342,6 @@ function DialogInner({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const { hasSession } = useSession();
-	const playHaptic = useHaptics();
 	const control = Dialog.useDialogContext();
 	const reportDialogControl = useReportDialogControl();
 	const [rt] = useRichText(info.description.text);
@@ -361,8 +353,6 @@ function DialogInner({
 
 	const onToggleLiked = async () => {
 		try {
-			playHaptic();
-
 			if (isLiked && likeUri) {
 				await unlikeFeed({ uri: likeUri });
 				setLikeUri('');
@@ -382,10 +372,9 @@ function DialogInner({
 	};
 
 	const onPressShare = useCallback(() => {
-		playHaptic();
 		const url = toShareUrl(info.route.href);
 		shareUrl(url);
-	}, [info, playHaptic]);
+	}, [info]);
 
 	const onPressReport = useCallback(() => {
 		reportDialogControl.open();
