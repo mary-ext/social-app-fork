@@ -5,8 +5,6 @@ import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';
 
-import { useAutoplayDisabled } from '#/state/preferences';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
@@ -26,6 +24,7 @@ import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
 
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 import { useSubtitlesEnabled } from '#/storage/hooks/subtitles';
 
 import { GifPresentationControls } from '../../GifPresentationControls';
@@ -129,7 +128,8 @@ export function Controls({
 
 	// autoplay/pause based on visibility
 	const isWithinMessage = useIsWithinMessage();
-	const autoplayDisabled = useAutoplayDisabled() || isWithinMessage;
+	const [autoplayDisabledPref] = useAutoplayDisabled();
+	const autoplayDisabled = autoplayDisabledPref || isWithinMessage;
 	useEffect(() => {
 		if (active) {
 			// GIFs play immediately, videos wait until onScreen

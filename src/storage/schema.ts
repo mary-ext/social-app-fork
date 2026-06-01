@@ -5,6 +5,7 @@ export type Device = {
 	activitySubscriptionsNudged?: boolean;
 	demoMode: boolean;
 	devMode: boolean;
+	disableAutoplay: boolean;
 	/**
 	 * Formerly managed by StatSig, this is the migrated stable ID for the device, used with our logging and
 	 * metrics tracking.

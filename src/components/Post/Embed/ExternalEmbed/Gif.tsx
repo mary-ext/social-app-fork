@@ -4,8 +4,6 @@ import { useLingui } from '@lingui/react/macro';
 
 import { type EmbedPlayerParams } from '#/lib/strings/embed-player';
 
-import { useAutoplayDisabled } from '#/state/preferences';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Fill } from '#/components/Fill';
@@ -14,6 +12,7 @@ import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 
 import { GifView } from '#/shims/gif-view';
 import { type GifViewStateChangeEvent } from '#/shims/gif-view';
+import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 
 import { GifPresentationControls } from '../VideoEmbed/GifPresentationControls';
 
@@ -32,7 +31,7 @@ export function GifEmbed({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const autoplayDisabled = useAutoplayDisabled();
+	const [autoplayDisabled] = useAutoplayDisabled();
 
 	const playerRef = useRef<GifView>(null);
 

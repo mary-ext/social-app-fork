@@ -3,7 +3,6 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 
-import { useAutoplayDisabled, useSetAutoplayDisabled } from '#/state/preferences';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/state/preferences/trending';
 import { useTrendingConfig } from '#/state/service-config';
 
@@ -19,11 +18,12 @@ import { Play_Stroke2_Corner2_Rounded as PlayIcon } from '#/components/icons/Pla
 import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending';
 import * as Layout from '#/components/Layout';
 
+import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ContentAndMediaSettings'>;
 export function ContentAndMediaSettingsScreen({}: Props) {
 	const { t: l } = useLingui();
-	const autoplayDisabledPref = useAutoplayDisabled();
-	const setAutoplayDisabledPref = useSetAutoplayDisabled();
+	const [autoplayDisabledPref, setAutoplayDisabledPref] = useAutoplayDisabled();
 	const { enabled: trendingEnabled } = useTrendingConfig();
 	const { trendingDisabled, trendingVideoDisabled } = useTrendingSettings();
 	const { setTrendingDisabled, setTrendingVideoDisabled } = useTrendingSettingsApi();

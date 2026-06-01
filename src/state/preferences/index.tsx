@@ -1,5 +1,4 @@
 import { Provider as AltTextRequiredProvider } from './alt-text-required';
-import { Provider as AutoplayProvider } from './autoplay';
 import { Provider as DebugPreferencesProvider } from './debug';
 import { Provider as DisableHapticsProvider } from './disable-haptics';
 import { Provider as ExternalEmbedsProvider } from './external-embeds-prefs';
@@ -10,7 +9,6 @@ import { Provider as LargeAltBadgeProvider } from './large-alt-badge';
 import { Provider as TrendingSettingsProvider } from './trending';
 
 export { useRequireAltTextEnabled, useSetRequireAltTextEnabled } from './alt-text-required';
-export { useAutoplayDisabled, useSetAutoplayDisabled } from './autoplay';
 export { useDebugFeedContextEnabled, useSetDebugFeedContextEnabled } from './debug';
 export { useHapticsDisabled, useSetHapticsDisabled } from './disable-haptics';
 export { useExternalEmbedsPrefs, useSetExternalEmbedPref } from './external-embeds-prefs';
@@ -26,13 +24,11 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 					<ExternalEmbedsProvider>
 						<HiddenPostsProvider>
 							<DisableHapticsProvider>
-								<AutoplayProvider>
-									<TrendingSettingsProvider>
-										<DebugPreferencesProvider>
-											<KawaiiProvider>{children}</KawaiiProvider>
-										</DebugPreferencesProvider>
-									</TrendingSettingsProvider>
-								</AutoplayProvider>
+								<TrendingSettingsProvider>
+									<DebugPreferencesProvider>
+										<KawaiiProvider>{children}</KawaiiProvider>
+									</DebugPreferencesProvider>
+								</TrendingSettingsProvider>
 							</DisableHapticsProvider>
 						</HiddenPostsProvider>
 					</ExternalEmbedsProvider>

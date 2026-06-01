@@ -1286,7 +1286,7 @@ msgstr ""
 msgid "Animals"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:96
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:95
 msgid "Animated GIF"
 msgstr ""
 

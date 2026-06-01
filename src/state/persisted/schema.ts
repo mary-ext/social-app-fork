@@ -5,8 +5,6 @@ import { logger } from '#/logger';
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 import { AppLanguage } from '#/locale/languages';
 
-import { PlatformInfo } from '#/shims/bluesky-swiss-army';
-
 const externalEmbedOptions = ['show', 'hide'] as const;
 
 const schema = z.object({
@@ -73,7 +71,6 @@ const schema = z.object({
 	hiddenPosts: z.array(z.string()).optional(), // should move to server
 	pdsAddressHistory: z.array(z.string()).optional(),
 	disableHaptics: z.boolean().optional(),
-	disableAutoplay: z.boolean().optional(),
 	kawaii: z.boolean().optional(),
 	trendingDisabled: z.boolean().optional(),
 	trendingVideoDisabled: z.boolean().optional(),
@@ -103,7 +100,6 @@ export const defaults: Schema = {
 	hiddenPosts: [],
 	pdsAddressHistory: [],
 	disableHaptics: false,
-	disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
 	kawaii: false,
 	trendingDisabled: false,
 	trendingVideoDisabled: false,
