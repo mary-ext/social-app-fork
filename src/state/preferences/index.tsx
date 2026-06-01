@@ -8,7 +8,6 @@ import { Provider as KawaiiProvider } from './kawaii';
 import { Provider as LanguagesProvider } from './languages';
 import { Provider as LargeAltBadgeProvider } from './large-alt-badge';
 import { Provider as TrendingSettingsProvider } from './trending';
-import { Provider as UsedStarterPacksProvider } from './used-starter-packs';
 
 export { useRequireAltTextEnabled, useSetRequireAltTextEnabled } from './alt-text-required';
 export { useAutoplayDisabled, useSetAutoplayDisabled } from './autoplay';
@@ -28,13 +27,11 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 						<HiddenPostsProvider>
 							<DisableHapticsProvider>
 								<AutoplayProvider>
-									<UsedStarterPacksProvider>
-										<TrendingSettingsProvider>
-											<DebugPreferencesProvider>
-												<KawaiiProvider>{children}</KawaiiProvider>
-											</DebugPreferencesProvider>
-										</TrendingSettingsProvider>
-									</UsedStarterPacksProvider>
+									<TrendingSettingsProvider>
+										<DebugPreferencesProvider>
+											<KawaiiProvider>{children}</KawaiiProvider>
+										</DebugPreferencesProvider>
+									</TrendingSettingsProvider>
 								</AutoplayProvider>
 							</DisableHapticsProvider>
 						</HiddenPostsProvider>
