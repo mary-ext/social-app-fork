@@ -9,7 +9,6 @@ const schema = z.object({
 	invites: z.object({
 		copiedInvites: z.array(z.string()),
 	}),
-	disableHaptics: z.boolean().optional(),
 });
 export type Schema = z.infer<typeof schema>;
 
@@ -20,7 +19,6 @@ export const defaults: Schema = {
 	invites: {
 		copiedInvites: [],
 	},
-	disableHaptics: false,
 };
 
 export function tryParse(rawData: string): Schema | undefined {
