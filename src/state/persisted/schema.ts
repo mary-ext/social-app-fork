@@ -5,8 +5,6 @@ import { logger } from '#/logger';
 import { deviceLanguageCodes } from '#/locale/deviceLocales';
 import { AppLanguage } from '#/locale/languages';
 
-const externalEmbedOptions = ['show', 'hide'] as const;
-
 const schema = z.object({
 	colorMode: z.enum(['system', 'light', 'dark']),
 	darkTheme: z.enum(['dim', 'dark']).optional(),
@@ -47,22 +45,6 @@ const schema = z.object({
 		 */
 		appLanguage: z.string(),
 	}),
-	externalEmbeds: z
-		.object({
-			giphy: z.enum(externalEmbedOptions).optional(),
-			tenor: z.enum(externalEmbedOptions).optional(),
-			klipy: z.enum(externalEmbedOptions).optional(),
-			youtube: z.enum(externalEmbedOptions).optional(),
-			youtubeShorts: z.enum(externalEmbedOptions).optional(),
-			twitch: z.enum(externalEmbedOptions).optional(),
-			vimeo: z.enum(externalEmbedOptions).optional(),
-			spotify: z.enum(externalEmbedOptions).optional(),
-			appleMusic: z.enum(externalEmbedOptions).optional(),
-			soundcloud: z.enum(externalEmbedOptions).optional(),
-			flickr: z.enum(externalEmbedOptions).optional(),
-			bandcamp: z.enum(externalEmbedOptions).optional(),
-		})
-		.optional(),
 	invites: z.object({
 		copiedInvites: z.array(z.string()),
 	}),
@@ -85,7 +67,6 @@ export const defaults: Schema = {
 		postLanguageHistory: (deviceLanguageCodes || []).concat(['en', 'ja', 'pt', 'de']).slice(0, 6),
 		appLanguage: AppLanguage.en,
 	},
-	externalEmbeds: {},
 	invites: {
 		copiedInvites: [],
 	},

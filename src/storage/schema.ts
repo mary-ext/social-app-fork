@@ -1,3 +1,5 @@
+import { type EmbedPlayerSource } from '#/lib/strings/embed-player';
+
 import { type Gif } from '#/features/gifPicker/types';
 
 /** Data that's specific to the device and does not vary based account */
@@ -12,6 +14,7 @@ export type Device = {
 	 * metrics tracking.
 	 */
 	deviceId?: string;
+	externalEmbeds?: Partial<Record<EmbedPlayerSource, 'hide' | 'show'>>;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
 	kawaii: boolean;
