@@ -48,7 +48,6 @@ const schema = z.object({
 	invites: z.object({
 		copiedInvites: z.array(z.string()),
 	}),
-	hiddenPosts: z.array(z.string()).optional(), // should move to server
 	pdsAddressHistory: z.array(z.string()).optional(),
 	disableHaptics: z.boolean().optional(),
 });
@@ -70,7 +69,6 @@ export const defaults: Schema = {
 	invites: {
 		copiedInvites: [],
 	},
-	hiddenPosts: [],
 	pdsAddressHistory: [],
 	disableHaptics: false,
 };
