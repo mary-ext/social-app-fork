@@ -1,10 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
-
-import * as persisted from '#/state/persisted';
-
-import { useClients, useSession } from '../session';
+import { createContext, useCallback, useContext, useState } from 'react';
 
 type StateContext = Map<string, boolean>;
 type SetStateContext = (uri: string, value: boolean) => void;
@@ -28,8 +22,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		[setState],
 	);
 
-	useMigrateMutes(setThreadMute);
-
 	return (
 		<stateContext.Provider value={state}>
 			<setStateContext.Provider value={setThreadMute}>{children}</setStateContext.Provider>
@@ -48,51 +40,4 @@ export function useIsThreadMuted(uri: string, defaultValue = false) {
 
 export function useSetThreadMute() {
 	return useContext(setStateContext);
-}
-
-function useMigrateMutes(setThreadMute: SetStateContext) {
-	const { appview } = useClients();
-	const { currentAccount } = useSession();
-
-	useEffect(() => {
-		if (currentAccount) {
-			if (!persisted.get('mutedThreads').some((uri) => uri.includes(currentAccount.did))) {
-				return;
-			}
-
-			let cancelled = false;
-
-			const migrate = async () => {
-				while (!cancelled) {
-					const threads = persisted.get('mutedThreads');
-
-					const root = threads.findLast((uri) => uri.includes(currentAccount.did));
-
-					if (!root) break;
-
-					persisted.write(
-						'mutedThreads',
-						threads.filter((uri) => uri !== root),
-					);
-
-					setThreadMute(root, true);
-
-					await ok(
-						appview.post('app.bsky.graph.muteThread', {
-							as: null,
-							input: { root: root as ResourceUri },
-						}),
-					)
-						// not a big deal if this fails, since the post might have been deleted
-						.catch(console.error);
-				}
-			};
-
-			migrate();
-
-			return () => {
-				cancelled = true;
-			};
-		}
-	}, [appview, currentAccount, setThreadMute]);
 }

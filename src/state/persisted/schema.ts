@@ -76,8 +76,6 @@ const schema = z.object({
 	disableAutoplay: z.boolean().optional(),
 	kawaii: z.boolean().optional(),
 	hasCheckedForStarterPack: z.boolean().optional(),
-	/** @deprecated */
-	mutedThreads: z.array(z.string()),
 	trendingDisabled: z.boolean().optional(),
 	trendingVideoDisabled: z.boolean().optional(),
 	debugFeedContextEnabled: z.boolean().optional(),
@@ -100,7 +98,6 @@ export const defaults: Schema = {
 	requireAltTextEnabled: false,
 	largeAltBadgeEnabled: false,
 	externalEmbeds: {},
-	mutedThreads: [],
 	invites: {
 		copiedInvites: [],
 	},
