@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
 import { type Account, type Auth, type Device } from '#/storage/schema';
 
@@ -8,18 +9,32 @@ export * from '#/storage/schema';
 export class Storage<Scopes extends unknown[], Schema> {
 	protected sep = ':';
 	protected id: string;
-	protected listeners = new Map<string, Set<() => void>>();
+	protected emitters = new Map<string, SimpleEventEmitter<[]>>();
+
+	/** Count of active key listeners; the cross-tab `storage` handler is attached only while this is > 0. */
+	private subscriberCount = 0;
 
 	constructor({ id }: { id: string }) {
 		this.id = id;
 	}
+
+	/**
+	 * A single cross-tab `storage` handler shared by every key listener on this instance, so subscribing N
+	 * components costs one window listener rather than N.
+	 */
+	private readonly handleStorageEvent = (event: StorageEvent) => {
+		if (event.storageArea !== this.localStorage || event.key == null) {
+			return;
+		}
+		this.emitters.get(event.key)?.emit();
+	};
 
 	protected scopedKey(scopes: unknown[]): string {
 		return `${this.id}${this.sep}${scopes.join(this.sep)}`;
 	}
 
 	protected emit(key: string) {
-		this.listeners.get(key)?.forEach((callback) => callback());
+		this.emitters.get(key)?.emit();
 	}
 
 	protected get localStorage(): globalThis.Storage | undefined {
@@ -120,27 +135,30 @@ export class Storage<Scopes extends unknown[], Schema> {
 	 */
 	addOnValueChangedListener<Key extends keyof Schema>(scopes: [...Scopes, Key], callback: () => void) {
 		const key = this.scopedKey(scopes);
-		let callbacks = this.listeners.get(key);
-		if (!callbacks) {
-			callbacks = new Set();
-			this.listeners.set(key, callbacks);
+		let emitter = this.emitters.get(key);
+		if (!emitter) {
+			emitter = new SimpleEventEmitter();
+			this.emitters.set(key, emitter);
 		}
-		callbacks.add(callback);
+		const unsubscribe = emitter.subscribe(callback);
 
-		const onStorage = (event: StorageEvent) => {
-			if (event.storageArea === this.localStorage && event.key === key) {
-				callback();
-			}
-		};
-		globalThis.addEventListener?.('storage', onStorage);
+		if (this.subscriberCount === 0) {
+			globalThis.addEventListener?.('storage', this.handleStorageEvent);
+		}
+		this.subscriberCount++;
 
+		let removed = false;
 		return {
 			remove: () => {
-				callbacks.delete(callback);
-				if (callbacks.size === 0) {
-					this.listeners.delete(key);
+				if (removed) {
+					return;
 				}
-				globalThis.removeEventListener?.('storage', onStorage);
+				removed = true;
+				unsubscribe();
+				this.subscriberCount--;
+				if (this.subscriberCount === 0) {
+					globalThis.removeEventListener?.('storage', this.handleStorageEvent);
+				}
 			},
 		};
 	}

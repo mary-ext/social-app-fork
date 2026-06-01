@@ -87,6 +87,9 @@ importers:
       '@lingui/react':
         specifier: ^5.9.2
         version: 5.9.5(@lingui/babel-plugin-lingui-macro@5.9.5(typescript@6.0.3))(react@19.1.0)
+      '@mary-ext/simple-event-emitter':
+        specifier: ^1.0.1
+        version: 1.0.1
       '@mary/exif-rm':
         specifier: jsr:^0.2.2
         version: '@jsr/mary__exif-rm@0.2.2'
@@ -1072,6 +1075,9 @@ packages:
         optional: true
       babel-plugin-macros:
         optional: true
+
+  '@mary-ext/simple-event-emitter@1.0.1':
+    resolution: {integrity: sha512-9+VvZisxZ/gSg+JJH7hmXaA8Qj42Qjz3O58RSB+INYc8iLA0icATZxHB9vKbj59ojDGZjO3hCKzMXocx3L0H8w==}
 
   '@messageformat/parser@5.1.1':
     resolution: {integrity: sha512-3p0YRGCcTUCYvBKLIxtDDyrJ0YijGIwrTRu1DT8gIviIDZru8H23+FkY6MJBzM1n9n20CiM4VeDYuBsrrwnLjg==}
@@ -6179,6 +6185,8 @@ snapshots:
       react: 19.1.0
     optionalDependencies:
       '@lingui/babel-plugin-lingui-macro': 5.9.5(typescript@6.0.3)
+
+  '@mary-ext/simple-event-emitter@1.0.1': {}
 
   '@messageformat/parser@5.1.1':
     dependencies:

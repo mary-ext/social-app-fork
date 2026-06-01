@@ -42,6 +42,7 @@
 		"@ipld/dag-cbor": "^9.2.7",
 		"@lingui/core": "^5.9.2",
 		"@lingui/react": "^5.9.2",
+		"@mary-ext/simple-event-emitter": "^1.0.1",
 		"@mary/exif-rm": "jsr:^0.2.2",
 		"@oomfware/lang-detect": "^0.2.1",
 		"@react-navigation/bottom-tabs": "^7.15.5",
