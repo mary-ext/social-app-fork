@@ -5,7 +5,6 @@ import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import Animated, { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -54,32 +53,17 @@ export function ProfileSubpageHeader({
 	const { openLightbox } = useLightboxControls();
 	const pal = usePalette('default');
 	const canGoBack = navigation.canGoBack();
-	const aviRef = useAnimatedRef();
 
 	const onPressAvi = useCallback(() => {
 		if (
 			avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
 		) {
 			openLightbox({
-				images: [
-					{
-						uri: avatar,
-						thumbUri: avatar,
-						thumbRect: null,
-						thumbRef: aviRef,
-						dimensions: {
-							// It's fine if it's actually smaller but we know it's 1:1.
-							height: 1000,
-							width: 1000,
-						},
-						thumbDimensions: null,
-						type: 'rect-avi',
-					},
-				],
+				images: [{ type: 'rect-avi', uri: avatar }],
 				index: 0,
 			});
 		}
-	}, [openLightbox, avatar, aviRef]);
+	}, [openLightbox, avatar]);
 
 	return (
 		<>
@@ -98,7 +82,7 @@ export function ProfileSubpageHeader({
 					paddingHorizontal: isMobile ? 12 : 14,
 				}}
 			>
-				<Animated.View ref={aviRef} collapsable={false}>
+				<View>
 					<Pressable
 						testID="headerAviButton"
 						onPress={onPressAvi}
@@ -113,7 +97,7 @@ export function ProfileSubpageHeader({
 							<UserAvatar type={avatarType} size={58} avatar={avatar} />
 						)}
 					</Pressable>
-				</Animated.View>
+				</View>
 				<View style={{ flex: 1, gap: 4 }}>
 					{isLoading ? (
 						<LoadingPlaceholder width={200} height={32} style={{ marginVertical: 6 }} />

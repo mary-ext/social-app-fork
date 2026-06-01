@@ -1,14 +1,7 @@
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { type DimensionValue, Pressable, View, type ViewStyle } from 'react-native';
 import { type AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
-
-import Animated, {
-	type AnimatedRef,
-	type AnimatedView,
-	useAnimatedRef,
-} from '#/lib/animations/reanimatedCompat';
-import { type Dimensions } from '#/lib/media/types';
 
 import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 
@@ -78,15 +71,13 @@ export function AutoSizedImage({
 	image: AppBskyEmbedImages.ViewImage;
 	crop?: 'none' | 'square' | 'constrained';
 	hideBadge?: boolean;
-	onPress?: (containerRef: AnimatedRef<AnimatedView>, fetchedDims: Dimensions | null) => void;
+	onPress?: () => void;
 	onLongPress?: () => void;
 	onPressIn?: () => void;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const largeAlt = useLargeAltBadgeEnabled();
-	const containerRef = useAnimatedRef();
-	const fetchedDimsRef = useRef<{ width: number; height: number } | null>(null);
 
 	let aspectRatio: number | undefined;
 	const dims = image.aspectRatio;
@@ -113,7 +104,7 @@ export function AutoSizedImage({
 	const hasAlt = !!image.alt;
 
 	const contents = (
-		<Animated.View ref={containerRef} collapsable={false} style={{ flex: 1 }}>
+		<View style={{ flex: 1 }}>
 			<Image
 				contentFit={isContain ? 'contain' : 'cover'}
 				style={[a.w_full, a.h_full]}
@@ -122,14 +113,6 @@ export function AutoSizedImage({
 				accessibilityIgnoresInvertColors
 				accessibilityLabel={image.alt}
 				accessibilityHint=""
-				onLoad={(e) => {
-					if (!isContain) {
-						fetchedDimsRef.current = {
-							width: e.source.width,
-							height: e.source.height,
-						};
-					}
-				}}
 				loading="lazy"
 			/>
 			<MediaInsetBorder />
@@ -195,13 +178,13 @@ export function AutoSizedImage({
 					)}
 				</View>
 			) : null}
-		</Animated.View>
+		</View>
 	);
 
 	if (cropDisabled) {
 		return (
 			<Pressable
-				onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
+				onPress={() => onPress?.()}
 				onLongPress={onLongPress}
 				onPressIn={onPressIn}
 				// alt here is what screen readers actually use
@@ -230,7 +213,7 @@ export function AutoSizedImage({
 		return (
 			<ConstrainedImage fullBleed={crop === 'square'} aspectRatio={constrained ?? 1}>
 				<Pressable
-					onPress={() => onPress?.(containerRef, fetchedDimsRef.current)}
+					onPress={() => onPress?.()}
 					onLongPress={onLongPress}
 					onPressIn={onPressIn}
 					// alt here is what screen readers actually use

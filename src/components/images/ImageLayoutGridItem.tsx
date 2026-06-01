@@ -2,9 +2,6 @@ import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
 import { type AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
-import { type Dimensions } from '#/lib/media/types';
-
 import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 
 import { atoms as a, useTheme, utils } from '#/alf';
@@ -20,18 +17,12 @@ type EventFunction = (index: number) => void;
 interface Props {
 	images: AppBskyEmbedImages.ViewImage[];
 	index: number;
-	onPress?: (
-		index: number,
-		containerRefs: AnimatedRef<AnimatedView>[],
-		fetchedDims: (Dimensions | null)[],
-	) => void;
+	onPress?: (index: number) => void;
 	onLongPress?: EventFunction;
 	onPressIn?: EventFunction;
 	imageStyle?: StyleProp<ImageStyle>;
 	viewContext?: PostEmbedViewContext;
 	insetBorderStyle?: StyleProp<ViewStyle>;
-	containerRefs: AnimatedRef<AnimatedView>[];
-	thumbDimsRef: React.RefObject<(Dimensions | null)[]>;
 }
 
 export function GalleryItem({
@@ -43,8 +34,6 @@ export function GalleryItem({
 	onLongPress,
 	viewContext,
 	insetBorderStyle,
-	containerRefs,
-	thumbDimsRef,
 }: Props) {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -53,9 +42,9 @@ export function GalleryItem({
 	const hasAlt = !!image.alt;
 	const hideBadges = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
 	return (
-		<View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
+		<View style={a.flex_1}>
 			<Pressable
-				onPress={onPress ? () => onPress(index, containerRefs, thumbDimsRef.current.slice()) : undefined}
+				onPress={onPress ? () => onPress(index) : undefined}
 				onPressIn={onPressIn ? () => onPressIn(index) : undefined}
 				onLongPress={onLongPress ? () => onLongPress(index) : undefined}
 				android_ripple={{
@@ -74,12 +63,6 @@ export function GalleryItem({
 					accessibilityLabel={image.alt}
 					accessibilityHint=""
 					accessibilityIgnoresInvertColors
-					onLoad={(e) => {
-						thumbDimsRef.current[index] = {
-							width: e.source.width,
-							height: e.source.height,
-						};
-					}}
 					loading="lazy"
 				/>
 				<MediaInsetBorder style={insetBorderStyle} />

@@ -13,12 +13,6 @@ import { type AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 
-import Animated, {
-	type AnimatedRef,
-	type AnimatedView,
-	useAnimatedRef,
-} from '#/lib/animations/reanimatedCompat';
-import { type Dimensions } from '#/lib/media/types';
 import { mergeRefs } from '#/lib/merge-refs';
 
 import { useA11y } from '#/state/a11y';
@@ -45,11 +39,7 @@ export * from './maybeApplyGalleryOffsetStyles';
 
 interface GalleryProps {
 	images: AppBskyEmbedImages.ViewImage[];
-	onPress?: (
-		index: number,
-		containerRefs: AnimatedRef<AnimatedView>[],
-		fetchedDims: (Dimensions | null)[],
-	) => void;
+	onPress?: (index: number) => void;
 	onPressIn?: (index: number) => void;
 	viewContext?: PostEmbedViewContext;
 }
@@ -158,8 +148,6 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 	const flatListRef = useRef<FlatList>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
 	const itemRefsRef = useRef<Map<number, View>>(new Map());
-	const containerRefsRef = useRef<Map<number, AnimatedRef<AnimatedView>>>(new Map());
-	const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map());
 	const currentIndexRef = useRef(0);
 
 	const emitSwipeMetric = useMemo(
@@ -222,7 +210,7 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 									: 'constrained'
 						}
 						image={image}
-						onPress={(containerRef, dims) => onPress?.(index, [containerRef], [dims])}
+						onPress={() => onPress?.(index)}
 						onPressIn={() => onPressIn?.(index)}
 						hideBadge={viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
 					/>
@@ -277,25 +265,7 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 										itemRefsRef.current.delete(index);
 									}
 								}}
-								onContainerRef={(i, ref) => {
-									containerRefsRef.current.set(i, ref);
-								}}
-								onThumbDims={(i, dims) => {
-									thumbDimsRef.current.set(i, dims);
-								}}
-								onPress={
-									onPress
-										? () => {
-												const refs: AnimatedRef<AnimatedView>[] = [];
-												const dims: (Dimensions | null)[] = [];
-												for (let i = 0; i < images.length; i++) {
-													refs.push(containerRefsRef.current.get(i)!);
-													dims.push(thumbDimsRef.current.get(i) ?? null);
-												}
-												onPress(index, refs, dims);
-											}
-										: undefined
-								}
+								onPress={onPress ? () => onPress(index) : undefined}
 								onPressIn={onPressIn ? () => onPressIn(index) : undefined}
 							/>
 						);
@@ -345,8 +315,6 @@ function GalleryImage({
 	itemRef,
 	hideBadges,
 	largeAltBadge,
-	onContainerRef,
-	onThumbDims,
 	onPress,
 	onPressIn,
 }: {
@@ -358,15 +326,12 @@ function GalleryImage({
 	itemRef: (node: View | null) => void;
 	hideBadges?: boolean;
 	largeAltBadge?: boolean;
-	onContainerRef: (index: number, ref: AnimatedRef<AnimatedView>) => void;
-	onThumbDims: (index: number, dims: Dimensions) => void;
 	onPress?: () => void;
 	onPressIn?: () => void;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const [focused, setFocused] = useState(false);
-	const containerRef = useAnimatedRef();
 	const [aspectRatio, setAspectRatio] = useState(() => getAspectRatio(image.aspectRatio));
 	const { isCropped, ...dims } = computeDims({ height, aspectRatio });
 	const hasAlt = !!image.alt;
@@ -375,17 +340,8 @@ function GalleryImage({
 		onWidthChange(index, dims.width);
 	}, [index, dims.width, onWidthChange]);
 
-	useEffect(() => {
-		onContainerRef(index, containerRef);
-	}, [index, containerRef, onContainerRef]);
-
 	return (
-		<Animated.View
-			ref={containerRef}
-			collapsable={false}
-			aria-roledescription={l`slide`}
-			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
-		>
+		<View aria-roledescription={l`slide`} aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}>
 			<Pressable
 				ref={itemRef}
 				tabIndex={index === 0 ? 0 : -1}
@@ -428,10 +384,6 @@ function GalleryImage({
 						if (ar && ar !== aspectRatio) {
 							setAspectRatio(ar);
 						}
-						onThumbDims(index, {
-							width: e.source.width,
-							height: e.source.height,
-						});
 					}}
 				/>
 
@@ -499,6 +451,6 @@ function GalleryImage({
 					}
 				/>
 			</Pressable>
-		</Animated.View>
+		</View>
 	);
 }

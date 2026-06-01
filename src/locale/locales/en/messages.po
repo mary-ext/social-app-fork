@@ -1157,9 +1157,9 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:192
-#: src/components/images/Gallery/index.tsx:487
-#: src/components/images/ImageLayoutGridItem.tsx:112
+#: src/components/images/AutoSizedImage.tsx:175
+#: src/components/images/Gallery/index.tsx:439
+#: src/components/images/ImageLayoutGridItem.tsx:95
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:84
 #: src/view/com/composer/GifAltText.tsx:102
 #: src/view/com/composer/photos/Gallery.tsx:190
@@ -1456,7 +1456,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:149
 #: src/screens/Messages/components/ChatDisabled.tsx:152
 #: src/screens/Messages/Inbox.tsx:211
-#: src/screens/Profile/Header/Shell.tsx:157
+#: src/screens/Profile/Header/Shell.tsx:123
 #: src/screens/StarterPack/Wizard/index.tsx:286
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:72
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
@@ -1751,7 +1751,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:250
+#: src/components/images/Gallery/index.tsx:238
 msgid "carousel"
 msgstr "carousel"
 
@@ -4092,12 +4092,12 @@ msgstr ""
 msgid "If you're a developer, you can host your own server."
 msgstr ""
 
-#: src/components/images/ImageLayoutGridItem.tsx:67
+#: src/components/images/ImageLayoutGridItem.tsx:56
 msgid "Image"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:397
+#: src/components/images/Gallery/index.tsx:353
 msgid "Image {0}"
 msgstr "Image {0}"
 
@@ -4108,12 +4108,12 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:387
+#: src/components/images/Gallery/index.tsx:344
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:251
+#: src/components/images/Gallery/index.tsx:239
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -4520,11 +4520,11 @@ msgstr ""
 msgid "List by {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:140
+#: src/view/com/profile/ProfileSubpageHeader.tsx:124
 msgid "List by <0/>"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:138
+#: src/view/com/profile/ProfileSubpageHeader.tsx:122
 msgid "List by you"
 msgstr ""
 
@@ -4890,12 +4890,12 @@ msgstr ""
 msgid "Moderation list by {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:153
+#: src/view/com/profile/ProfileSubpageHeader.tsx:137
 msgid "Moderation list by <0/>"
 msgstr ""
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:206
-#: src/view/com/profile/ProfileSubpageHeader.tsx:151
+#: src/view/com/profile/ProfileSubpageHeader.tsx:135
 msgid "Moderation list by you"
 msgstr ""
 
@@ -5705,7 +5705,7 @@ msgstr ""
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:398
+#: src/components/images/Gallery/index.tsx:354
 msgid "Opens full image"
 msgstr "Opens full image"
 
@@ -6224,7 +6224,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:148
+#: src/screens/Profile/Header/Shell.tsx:115
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
@@ -7615,7 +7615,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/images/Gallery/index.tsx:386
+#: src/components/images/Gallery/index.tsx:344
 msgid "slide"
 msgstr "slide"
 
@@ -7789,12 +7789,12 @@ msgstr ""
 msgid "Starter pack by {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:166
+#: src/view/com/profile/ProfileSubpageHeader.tsx:150
 msgid "Starter pack by <0/>"
 msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:67
-#: src/view/com/profile/ProfileSubpageHeader.tsx:164
+#: src/view/com/profile/ProfileSubpageHeader.tsx:148
 msgid "Starter pack by you"
 msgstr ""
 
@@ -9036,7 +9036,7 @@ msgid "View {0}"
 msgstr "View {0}"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/Shell.tsx:220
+#: src/screens/Profile/Header/Shell.tsx:186
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -9117,7 +9117,7 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:148
+#: src/screens/Profile/Header/Shell.tsx:115
 msgid "View profile banner"
 msgstr "View profile banner"
 
@@ -9128,7 +9128,7 @@ msgstr "View profile banner"
 msgid "View publication"
 msgstr "View publication"
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:106
+#: src/view/com/profile/ProfileSubpageHeader.tsx:90
 msgid "View the avatar"
 msgstr ""
 
@@ -9178,8 +9178,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:209
-#: src/components/images/AutoSizedImage.tsx:238
+#: src/components/images/AutoSizedImage.tsx:192
+#: src/components/images/AutoSizedImage.tsx:221
 msgid "Views full image"
 msgstr ""
 

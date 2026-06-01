@@ -7,11 +7,6 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import Animated, {
-	type AnimatedRef,
-	type AnimatedView,
-	useAnimatedRef,
-} from '#/lib/animations/reanimatedCompat';
 import { BACK_HITSLOP } from '#/lib/constants';
 import { useHaptics } from '#/lib/haptics';
 import { type NavigationProp } from '#/lib/routes/types';
@@ -63,9 +58,6 @@ let ProfileHeaderShell = ({
 	const playHaptic = useHaptics();
 	const liveStatusControl = useDialogControl();
 
-	const aviRef = useAnimatedRef();
-	const bannerRef = useAnimatedRef<AnimatedView>();
-
 	const onPressBack = useCallback(() => {
 		if (navigation.canGoBack()) {
 			navigation.goBack();
@@ -75,34 +67,9 @@ let ProfileHeaderShell = ({
 	}, [navigation]);
 
 	const _openLightbox = useCallback(
-		(
-			uri: string,
-			thumbRef: AnimatedRef<AnimatedView>,
-			type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi',
-		) => {
+		(uri: string, type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi') => {
 			openLightbox({
-				images: [
-					{
-						uri,
-						thumbUri: uri,
-						thumbRect: null,
-						thumbRef,
-						dimensions:
-							type === 'circle-avi' || type === 'rect-avi'
-								? {
-										// It's fine if it's actually smaller but we know it's 1:1.
-										height: 1000,
-										width: 1000,
-									}
-								: {
-										// Banner aspect ratio is 3:1
-										width: 3000,
-										height: 1000,
-									},
-						thumbDimensions: null,
-						type,
-					},
-				],
+				images: [{ type, uri }],
 				index: 0,
 			});
 		},
@@ -127,18 +94,18 @@ let ProfileHeaderShell = ({
 			const avatar = profile.avatar;
 			const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi';
 			if (avatar && !(modui.blurs.length > 0 && modui.noOverride)) {
-				_openLightbox(avatar, aviRef, type);
+				_openLightbox(avatar, type);
 			}
 		}
-	}, [profile, moderation, _openLightbox, aviRef, liveStatusControl, live, playHaptic]);
+	}, [profile, moderation, _openLightbox, liveStatusControl, live, playHaptic]);
 
 	const onPressBanner = useCallback(() => {
 		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 		const banner = profile.banner;
 		if (banner && !(modui.blurs.length > 0 && modui.noOverride)) {
-			_openLightbox(banner, bannerRef, 'image');
+			_openLightbox(banner, 'image');
 		}
-	}, [profile.banner, moderation, _openLightbox, bannerRef]);
+	}, [profile.banner, moderation, _openLightbox]);
 
 	return (
 		<View style={t.atoms.bg} pointerEvents={'box-none'}>
@@ -147,7 +114,6 @@ let ProfileHeaderShell = ({
 					testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
 					label={profile.banner ? l`View profile banner` : l`Profile banner placeholder`}
 					onPress={isPlaceholderProfile ? undefined : onPressBanner}
-					bannerRef={bannerRef}
 					backButton={
 						!hideBackButton && (
 							<Button
@@ -233,7 +199,7 @@ let ProfileHeaderShell = ({
 							profile.associated?.labeler && a.rounded_md,
 						]}
 					>
-						<Animated.View ref={aviRef} collapsable={false}>
+						<View>
 							<UserAvatar
 								type={profile.associated?.labeler ? 'labeler' : 'user'}
 								size={live.isActive ? 88 : 90}
@@ -242,7 +208,7 @@ let ProfileHeaderShell = ({
 								noBorder
 							/>
 							{live.isActive && <LiveIndicator size="large" />}
-						</Animated.View>
+						</View>
 					</View>
 				</Pressable>
 			</GrowableAvatar>

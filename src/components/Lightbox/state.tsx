@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { nanoid } from 'nanoid/non-secure';
 
-import { measure, type MeasuredDimensions, runOnJS, runOnUI } from '#/lib/animations/reanimatedCompat';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useHotkeysContext } from '#/lib/hotkeys';
 
@@ -41,7 +40,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		}
 	}, [activeLightbox, disableScope, enableScope]);
 
-	const doOpen = useNonReactiveCallback((lightbox: Omit<Lightbox, 'id'>) => {
+	const openLightbox = useNonReactiveCallback((lightbox: Omit<Lightbox, 'id'>) => {
 		setActiveLightbox((prevLightbox) => {
 			if (prevLightbox) {
 				// Ignore duplicate open requests. If it's already open,
@@ -51,29 +50,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				return { ...lightbox, id: nanoid() };
 			}
 		});
-	});
-
-	const openLightbox = useNonReactiveCallback((lightbox: Omit<Lightbox, 'id'>) => {
-		const thumbRef = lightbox.images[lightbox.index]?.thumbRef;
-		if (thumbRef) {
-			// Measure the tapped image on the UI thread, then open with
-			// the rect baked in so it's available from the first render.
-			// Only the rect (plain data) goes through runOnJS — AnimatedRef
-			// objects can't survive serialization across threads.
-			const openWithRect = (rect: MeasuredDimensions | null) => {
-				doOpen({
-					...lightbox,
-					images: lightbox.images.map((img, i) => (i === lightbox.index ? { ...img, thumbRect: rect } : img)),
-				});
-			};
-			runOnUI(() => {
-				'worklet';
-				const rect = measure(thumbRef);
-				runOnJS(openWithRect)(rect);
-			})();
-		} else {
-			doOpen(lightbox);
-		}
 	});
 
 	const closeLightbox = useNonReactiveCallback(() => {

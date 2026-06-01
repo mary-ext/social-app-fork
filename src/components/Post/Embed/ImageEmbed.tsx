@@ -1,13 +1,10 @@
 import { InteractionManager, View } from 'react-native';
 
-import { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
-
-import { atoms as a, tokens } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { AutoSizedImage } from '#/components/images/AutoSizedImage';
 import { Gallery } from '#/components/images/Gallery';
 import { useLightboxControls } from '#/components/Lightbox/state';
-import { type Dimensions } from '#/components/Lightbox/types';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 
 import { Image } from '#/shims/image';
@@ -26,24 +23,14 @@ export function ImageEmbed({
 
 	if (images.length > 0) {
 		const items = images.map((img) => ({
-			uri: img.fullsize,
-			thumbUri: img.thumb,
 			alt: img.alt,
-			dimensions: img.aspectRatio ?? null,
+			uri: img.fullsize,
 		}));
-		const onPress = (
-			index: number,
-			refs: AnimatedRef<AnimatedView>[],
-			fetchedDims: (Dimensions | null)[],
-		) => {
+		const onPress = (index: number) => {
 			openLightbox({
-				images: items.map((item, i) => ({
+				images: items.map((item) => ({
 					...item,
-					thumbRect: null,
-					thumbRef: refs[i] ?? null,
-					thumbDimensions: fetchedDims[i] ?? null,
-					thumbBorderRadius: tokens.borderRadius.md,
-					type: 'image',
+					type: 'image' as const,
 				})),
 				index,
 			});
@@ -70,7 +57,7 @@ export function ImageEmbed({
 									: 'constrained'
 						}
 						image={image}
-						onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}
+						onPress={() => onPress(0)}
 						onPressIn={() => onPressIn(0)}
 						hideBadge={rest.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
 					/>

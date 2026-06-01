@@ -1,23 +1,19 @@
-import { Pressable } from 'react-native';
-
-import Animated, { type AnimatedRef, type AnimatedView } from '#/lib/animations/reanimatedCompat';
+import { Pressable, View } from 'react-native';
 
 import { atoms as a } from '#/alf';
 
 export function GrowableBanner({
 	backButton,
 	children,
-	onPress,
-	bannerRef,
-	testID,
 	label,
+	onPress,
+	testID,
 }: {
 	backButton?: React.ReactNode;
 	children: React.ReactNode;
-	onPress?: () => void;
-	bannerRef?: AnimatedRef<AnimatedView>;
-	testID?: string;
 	label?: string;
+	onPress?: () => void;
+	testID?: string;
 }) {
 	return (
 		<Pressable
@@ -28,12 +24,8 @@ export function GrowableBanner({
 			accessibilityHint=""
 			style={[a.w_full, a.h_full]}
 		>
-			<Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
-				{children}
-			</Animated.View>
+			<View style={[a.w_full, a.h_full]}>{children}</View>
 			{backButton}
 		</Pressable>
 	);
 }
-
-// stayed true for at least `delay` ms before returning to false
