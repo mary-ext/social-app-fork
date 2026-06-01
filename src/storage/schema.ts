@@ -21,6 +21,7 @@ export type Device = {
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
 	hiddenPosts?: string[];
 	kawaii?: boolean;
+	languagePrefs?: LanguagePrefs;
 	largeAltBadgeEnabled?: boolean;
 	pdsAddressHistory?: string[];
 	requireAltTextEnabled?: boolean;
@@ -29,6 +30,19 @@ export type Device = {
 	trendingBetaEnabled: boolean;
 	trendingDisabled?: boolean;
 	trendingVideoDisabled?: boolean;
+};
+
+export type LanguagePrefs = {
+	/** The language for UI translations in the app, matching {@link AppLanguage}. */
+	appLanguage: string;
+	/** BCP-47 2-letter language codes the user can read, passed to feeds. */
+	contentLanguages: string[];
+	/** Comma-separated BCP-47 2-letter language code(s) the user is currently posting in. */
+	postLanguage: string;
+	/** Previously used {@link LanguagePrefs.postLanguage} values, used to pre-populate the composer selector. */
+	postLanguageHistory: string[];
+	/** BCP-47 2-letter language code to translate posts into. */
+	primaryLanguage: string;
 };
 
 export type Account = {
