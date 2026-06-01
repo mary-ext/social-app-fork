@@ -497,7 +497,7 @@ msgid "{following} following"
 msgstr ""
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:54
-#: src/components/dms/InitiateChatFlow.tsx:749
+#: src/components/dms/InitiateChatFlow.tsx:770
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
@@ -505,7 +505,7 @@ msgstr "{handle} can’t be added"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:717
+#: src/components/dms/InitiateChatFlow.tsx:738
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -1458,8 +1458,8 @@ msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:425
 #: src/components/dms/AddMembersFlow.tsx:428
-#: src/components/dms/InitiateChatFlow.tsx:596
-#: src/components/dms/InitiateChatFlow.tsx:600
+#: src/components/dms/InitiateChatFlow.tsx:616
+#: src/components/dms/InitiateChatFlow.tsx:620
 #: src/components/moderation/LabelsOnMeDialog.tsx:285
 #: src/components/moderation/LabelsOnMeDialog.tsx:287
 #: src/screens/Messages/components/ChatDisabled.tsx:155
@@ -1967,7 +1967,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:90
 #: src/components/dms/AfterReportDialog.tsx:198
 #: src/components/dms/AfterReportDialog.tsx:200
-#: src/components/dms/InitiateChatFlow.tsx:469
+#: src/components/dms/InitiateChatFlow.tsx:481
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
@@ -2128,7 +2128,7 @@ msgid "Continue thread..."
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:283
-#: src/components/dms/InitiateChatFlow.tsx:420
+#: src/components/dms/InitiateChatFlow.tsx:432
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
@@ -2278,7 +2278,7 @@ msgstr "Couldn’t load GIFs"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:94
 #: src/components/dialogs/StarterPackDialog.tsx:180
-#: src/components/dms/InitiateChatFlow.tsx:428
+#: src/components/dms/InitiateChatFlow.tsx:440
 #: src/components/StarterPack/ProfileStarterPacks.tsx:285
 msgid "Create"
 msgstr ""
@@ -2315,7 +2315,7 @@ msgstr ""
 msgid "Create another"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:427
+#: src/components/dms/InitiateChatFlow.tsx:439
 msgid "Create group chat"
 msgstr "Create group chat"
 
@@ -3886,8 +3886,8 @@ msgstr "Group chat unmuted"
 msgid "Group is locked"
 msgstr "Group is locked"
 
-#: src/components/dms/InitiateChatFlow.tsx:231
-#: src/components/dms/InitiateChatFlow.tsx:486
+#: src/components/dms/InitiateChatFlow.tsx:237
+#: src/components/dms/InitiateChatFlow.tsx:498
 #: src/screens/Messages/ConversationSettings/prompts.tsx:34
 msgid "Group name"
 msgstr "Group name"
@@ -5179,19 +5179,19 @@ msgstr ""
 msgid "New followers"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:230
+#: src/components/dms/InitiateChatFlow.tsx:236
 msgid "New group chat"
 msgstr "New group chat"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:628
-#: src/components/dms/InitiateChatFlow.tsx:663
+#: src/components/dms/InitiateChatFlow.tsx:648
+#: src/components/dms/InitiateChatFlow.tsx:684
 msgctxt "action"
 msgid "New group chat"
 msgstr "New group chat"
 
-#: src/components/dms/InitiateChatFlow.tsx:264
+#: src/components/dms/InitiateChatFlow.tsx:270
 msgid "New group chat with:"
 msgstr "New group chat with:"
 
@@ -5244,7 +5244,7 @@ msgid "News"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:284
-#: src/components/dms/InitiateChatFlow.tsx:421
+#: src/components/dms/InitiateChatFlow.tsx:433
 #: src/screens/StarterPack/Wizard/index.tsx:170
 #: src/screens/StarterPack/Wizard/index.tsx:174
 #: src/screens/StarterPack/Wizard/index.tsx:338
@@ -5374,7 +5374,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:238
 #: src/components/dms/AddMembersFlow.tsx:222
-#: src/components/dms/InitiateChatFlow.tsx:324
+#: src/components/dms/InitiateChatFlow.tsx:330
 #: src/components/suggested-follows-dialog.tsx:170
 msgid "No results"
 msgstr ""
@@ -5532,6 +5532,7 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:53
 #: src/components/BotAccountAlert.tsx:55
+#: src/components/dms/InitiateChatFlow.tsx:596
 #: src/components/dms/MessageItem.tsx:560
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:571
 msgid "Okay"
@@ -7215,7 +7216,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:577
+#: src/components/dms/InitiateChatFlow.tsx:589
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
@@ -7783,12 +7784,12 @@ msgstr ""
 msgid "Start adding people!"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:577
+#: src/components/dms/InitiateChatFlow.tsx:589
 msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:376
-#: src/components/dms/InitiateChatFlow.tsx:699
+#: src/components/dms/InitiateChatFlow.tsx:720
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -7898,7 +7899,7 @@ msgid "Successfully verified"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:213
-#: src/components/dms/InitiateChatFlow.tsx:312
+#: src/components/dms/InitiateChatFlow.tsx:318
 msgid "Suggested"
 msgstr "Suggested"
 
@@ -9310,7 +9311,7 @@ msgid "We're having network issues, try again"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:170
-#: src/components/dms/InitiateChatFlow.tsx:253
+#: src/components/dms/InitiateChatFlow.tsx:259
 msgid "We’re having network issues, try again"
 msgstr "We’re having network issues, try again"
 
@@ -9782,6 +9783,14 @@ msgstr ""
 #: src/view/com/composer/state/video.ts:422
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
+
+#: src/components/dms/InitiateChatFlow.tsx:594
+msgid "Your account is too new"
+msgstr "Your account is too new"
+
+#: src/components/dms/InitiateChatFlow.tsx:595
+msgid "Your account must be at least 7 days old to create a new group chat."
+msgstr "Your account must be at least 7 days old to create a new group chat."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:95
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."

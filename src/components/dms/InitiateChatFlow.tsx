@@ -14,6 +14,7 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
+import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
 
@@ -34,6 +35,7 @@ import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/comp
 import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/components/icons/Person';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
+import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 
 import { ChatProfileTabs } from './ChatProfileTabs';
@@ -210,6 +212,10 @@ export function InitiateChatFlow({
 	const listRef = useRef<ListMethods>(null);
 	const { currentAccount } = useSession();
 	const inputRef = useRef<TextInput>(null);
+	const accountTooNewPromptControl = Dialog.useDialogControl();
+
+	const { data: chatStatus } = useChatActorStatusQuery();
+	const canCreateGroups = chatStatus?.canCreateGroups ?? true;
 
 	const [searchText, setSearchText] = useState('');
 
@@ -342,9 +348,13 @@ export function InitiateChatFlow({
 	}, [chatState, control, newGroupChatTitle, title]);
 
 	const handlePressNewGroupChat = useCallback(() => {
+		if (!canCreateGroups) {
+			accountTooNewPromptControl.open();
+			return;
+		}
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 		dispatch({ type: 'startNewGroupChat', screenTitle: newGroupChatTitle });
-	}, [newGroupChatTitle]);
+	}, [accountTooNewPromptControl, canCreateGroups, newGroupChatTitle]);
 
 	const handlePressNext = useCallback(() => {
 		LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -364,7 +374,9 @@ export function InitiateChatFlow({
 		({ item }: { item: Item }) => {
 			switch (item.type) {
 				case 'newGroupChat': {
-					return <NewGroupChatButton key={item.key} onPress={handlePressNewGroupChat} />;
+					return (
+						<NewGroupChatButton key={item.key} onPress={handlePressNewGroupChat} dimmed={!canCreateGroups} />
+					);
 				}
 				case 'label': {
 					return <UserLabel key={item.key} message={item.message} />;
@@ -408,7 +420,7 @@ export function InitiateChatFlow({
 					return null;
 			}
 		},
-		[chatState, handlePressNewGroupChat, moderationOpts, onSelectChat],
+		[canCreateGroups, chatState, handlePressNewGroupChat, moderationOpts, onSelectChat],
 	);
 
 	useLayoutEffect(() => {
@@ -577,6 +589,14 @@ export function InitiateChatFlow({
 			label={chatState === ChatState.NEW_GROUP_CHAT ? l`Select group chat members` : l`Start chat`}
 			style={[webViewStyle(a.contents)]}
 		>
+			<Prompt.Basic
+				control={accountTooNewPromptControl}
+				title={l`Your account is too new`}
+				description={l`Your account must be at least 7 days old to create a new group chat.`}
+				confirmButtonCta={l`Okay`}
+				onConfirm={() => {}}
+				showCancel={false}
+			/>
 			<Dialog.InnerFlatList
 				ref={listRef}
 				data={items}
@@ -619,7 +639,7 @@ export function InitiateChatFlow({
 	);
 }
 
-function NewGroupChatButton({ onPress }: { onPress: () => void }) {
+function NewGroupChatButton({ onPress, dimmed = false }: { onPress: () => void; dimmed?: boolean }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 
@@ -643,6 +663,7 @@ function NewGroupChatButton({ onPress }: { onPress: () => void }) {
 						a.align_center,
 						a.gap_sm,
 						pressed || focused || hovered ? t.atoms.bg_contrast_25 : t.atoms.bg,
+						dimmed && { opacity: 0.5 },
 					]}
 				>
 					<View
