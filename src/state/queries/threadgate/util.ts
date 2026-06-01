@@ -1,7 +1,7 @@
-import { type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 
-import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
+import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
 
 export function threadgateViewToAllowUISetting(
 	threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,

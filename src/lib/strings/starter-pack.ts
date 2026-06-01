@@ -1,4 +1,4 @@
-import { type AnyStarterPackView } from '@atcute/bluesky';
+import type { AnyStarterPackView } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 export function createStarterPackLinkFromAndroidReferrer(referrerQueryString: string): string | null {

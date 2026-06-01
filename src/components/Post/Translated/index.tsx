@@ -1,11 +1,10 @@
 import { useCallback, useMemo } from 'react';
 import { type StyleProp, type TextStyle, View } from 'react-native';
-import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_30 } from '#/lib/constants';
-import { useTranslate } from '#/lib/translation';
-import { type TranslationFunction, type TranslationFunctionParams } from '#/lib/translation';
+import { useTranslate, type TranslationFunction, type TranslationFunctionParams } from '#/lib/translation';
 
 import { useLanguagePrefs } from '#/state/preferences';
 

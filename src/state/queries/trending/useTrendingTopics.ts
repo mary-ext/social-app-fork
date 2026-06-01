@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import type { AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { interpretMutedWordPreference } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { useQuery } from '@tanstack/react-query';

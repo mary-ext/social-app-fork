@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';

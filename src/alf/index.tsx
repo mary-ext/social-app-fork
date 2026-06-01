@@ -11,7 +11,7 @@ import {
 import { themes } from '#/alf/themes';
 import { darken, lighten, rgbToHex } from '#/alf/util/colorGeneration';
 
-import { type Device } from '#/storage';
+import type { Device } from '#/storage';
 
 export { atoms } from '#/alf/atoms';
 export { type TextStyleProp, type Theme, type ThemeName, type ViewStyleProp } from '#/alf/base';

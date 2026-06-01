@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyNotificationDefs } from '@atcute/bluesky';
+import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings';

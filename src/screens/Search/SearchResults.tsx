@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { type AnyProfileView, type AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';

@@ -6,14 +6,14 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AnyStarterPackView } from '@atcute/bluesky';
+import type { AnyStarterPackView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useGenerateStarterPackMutation } from '#/lib/generate-starterpack';
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { parseStarterPackUri } from '#/lib/strings/starter-pack';
 
 import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';

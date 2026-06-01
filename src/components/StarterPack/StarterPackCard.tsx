@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyStarterPackView, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AnyStarterPackView, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
-import { Plural, Trans } from '@lingui/react/macro';
+import { useLingui, Plural, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { sanitizeHandle } from '#/lib/strings/handles';

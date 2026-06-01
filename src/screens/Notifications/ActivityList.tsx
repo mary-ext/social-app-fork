@@ -1,8 +1,7 @@
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useLingui, Trans } from '@lingui/react/macro';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { type AllNavigatorParams } from '#/lib/routes/types';
+import type { AllNavigatorParams } from '#/lib/routes/types';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';

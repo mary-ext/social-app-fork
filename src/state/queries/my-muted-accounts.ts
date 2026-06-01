@@ -1,4 +1,4 @@
-import { type AppBskyActorDefs, type AppBskyGraphGetMutes } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyGraphGetMutes } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 

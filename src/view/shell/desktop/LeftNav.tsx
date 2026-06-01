@@ -1,6 +1,6 @@
 import { type JSX, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
@@ -10,7 +10,7 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useReducedMotion } from '#/lib/reduced-motion';
 import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
@@ -30,7 +30,7 @@ import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
 import { atoms as a, tokens, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { type DialogControlProps } from '#/components/Dialog';
+import type { DialogControlProps } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft';
 import {

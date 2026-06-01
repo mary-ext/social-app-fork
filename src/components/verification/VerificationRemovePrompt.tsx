@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
-import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { useVerificationsRemoveMutation } from '#/state/queries/verification/useVerificationsRemoveMutation';
 
 import { logger } from '#/logger';
 
-import { type DialogControlProps } from '#/components/Dialog';
+import type { DialogControlProps } from '#/components/Dialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 

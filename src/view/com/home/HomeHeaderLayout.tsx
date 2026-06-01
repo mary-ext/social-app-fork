@@ -1,4 +1,4 @@
-import { type JSX } from 'react';
+import type { JSX } from 'react';
 import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 

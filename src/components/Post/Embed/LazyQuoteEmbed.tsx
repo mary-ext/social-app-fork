@@ -8,7 +8,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { QuoteEmbed } from '#/components/Post/Embed';
 
-import { type EmbedType } from '#/types/embed';
+import type { EmbedType } from '#/types/embed';
 
 export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisabled?: boolean }) {
 	const t = useTheme();

@@ -1,5 +1,5 @@
-import { type ComAtprotoRepoStrongRef } from '@atcute/atproto';
-import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 export function isStandardSiteDocumentUri(ref: ComAtprotoRepoStrongRef.Main) {

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { type EmbedPlayerSource } from '#/lib/strings/embed-player';
+import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
 import { type Device, device } from '#/storage';
 

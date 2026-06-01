@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { useSift } from '#/lib/sift';
 
 import { atoms as a } from '#/alf';

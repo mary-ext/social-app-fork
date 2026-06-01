@@ -1,6 +1,6 @@
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier, type Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { MAX_LABELERS } from '#/lib/constants';

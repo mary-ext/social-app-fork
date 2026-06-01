@@ -1,9 +1,8 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { type $type } from '@atcute/lexicons';
+import type { AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
+import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
-import { Plural, Trans } from '@lingui/react/macro';
+import { useLingui, Plural, Trans } from '@lingui/react/macro';
 
 import { sanitizeHandle } from '#/lib/strings/handles';
 

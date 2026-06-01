@@ -9,7 +9,7 @@ import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-f
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
-import { type ListRef } from '#/view/com/util/List';
+import type { ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a } from '#/alf';

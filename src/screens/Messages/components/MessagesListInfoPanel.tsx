@@ -4,7 +4,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -15,7 +15,7 @@ import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { type ConvoWithDetails } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as ProfileCard from '#/components/ProfileCard';

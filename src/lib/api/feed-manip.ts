@@ -1,8 +1,8 @@
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { isPostInLanguage } from '../../locale/helpers';
 import { FALLBACK_MARKER_POST } from './feed/home';
-import { type ReasonFeedSource } from './feed/types';
+import type { ReasonFeedSource } from './feed/types';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { type ChatBskyActorDefs } from '@atcute/bluesky';
+import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 

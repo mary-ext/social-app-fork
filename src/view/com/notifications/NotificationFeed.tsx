@@ -8,8 +8,7 @@ import { cleanError } from '#/lib/strings/errors';
 import { s } from '#/lib/styles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { type FeedNotification } from '#/state/queries/notifications/feed';
-import { useNotificationFeedQuery } from '#/state/queries/notifications/feed';
+import { type FeedNotification, useNotificationFeedQuery } from '#/state/queries/notifications/feed';
 
 import { logger } from '#/logger';
 

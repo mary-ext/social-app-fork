@@ -1,16 +1,14 @@
-import {
-	type AccessibilityProps,
-	type GestureResponderEvent,
-	type ScrollViewProps,
-	type StyleProp,
-	type ViewStyle,
+import type {
+	AccessibilityProps,
+	GestureResponderEvent,
+	ScrollViewProps,
+	StyleProp,
+	ViewStyle,
 } from 'react-native';
 
-import { type ViewStyleProp } from '#/alf';
+import type { ViewStyleProp } from '#/alf';
 
-import { type BottomSheetViewProps } from '#/shims/bottom-sheet';
-import { type BottomSheetSnapPoint } from '#/shims/bottom-sheet';
-
+import type { BottomSheetViewProps, BottomSheetSnapPoint } from '#/shims/bottom-sheet';
 type A11yProps = Required<AccessibilityProps>;
 
 /**

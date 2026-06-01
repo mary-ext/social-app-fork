@@ -1,5 +1,5 @@
 import { Keyboard, View } from 'react-native';
-import { type AnyProfileView, type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	type DisplayRestrictions,
@@ -8,8 +8,7 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -19,7 +18,7 @@ import { useSession } from '#/state/session';
 
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 
-import { type WizardAction, type WizardState } from '#/screens/StarterPack/Wizard/State';
+import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { atoms as a, useTheme } from '#/alf';
 

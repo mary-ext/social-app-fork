@@ -1,12 +1,12 @@
-import { type AppBskyVideoDefs } from '@atcute/bluesky';
-import { type Client } from '@atcute/client';
-import { type I18n } from '@lingui/core';
+import type { AppBskyVideoDefs } from '@atcute/bluesky';
+import type { Client } from '@atcute/client';
+import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 import { nanoid } from 'nanoid/non-secure';
 
 import { AbortError } from '#/lib/async/cancelable';
 import { ServerError } from '#/lib/media/video/errors';
-import { type CompressedVideo } from '#/lib/media/video/types';
+import type { CompressedVideo } from '#/lib/media/video/types';
 
 import { getServiceAuthToken, getVideoUploadLimits } from './upload.shared';
 import { createVideoEndpointUrl, mimeToExt } from './util';

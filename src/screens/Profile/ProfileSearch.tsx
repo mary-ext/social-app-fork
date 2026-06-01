@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useResolveDidQuery } from '#/state/queries/resolve-uri';

@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView, type AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { type ComposerOptsPostRef } from '#/state/shell/composer';
+import type { ComposerOptsPostRef } from '#/state/shell/composer';
 
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 

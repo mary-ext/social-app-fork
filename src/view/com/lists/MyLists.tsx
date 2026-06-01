@@ -7,7 +7,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
+import type { AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';

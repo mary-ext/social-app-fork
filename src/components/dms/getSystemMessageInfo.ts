@@ -1,5 +1,5 @@
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type MessageDescriptor } from '@lingui/core';
+import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { MessageDescriptor } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
@@ -10,7 +10,7 @@ import {
 	ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon,
 	ChainLinkBroken_Stroke2_Corner0_Rounded as ChainLinkBrokenIcon,
 } from '#/components/icons/ChainLink';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import {
 	Lock_Stroke2_Corner0_Rounded as LockIcon,
 	Unlock_Stroke2_Corner2_Rounded as UnlockIcon,

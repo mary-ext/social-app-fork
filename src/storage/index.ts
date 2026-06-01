@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { SimpleEventEmitter } from '@mary-ext/simple-event-emitter';
 
-import { type Account, type Auth, type Device } from '#/storage/schema';
+import type { Account, Auth, Device } from '#/storage/schema';
 
 export * from '#/storage/schema';
 

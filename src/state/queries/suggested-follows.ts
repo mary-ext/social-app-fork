@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
-	type AppBskyActorGetSuggestions,
-	type AppBskyGraphGetSuggestedFollowsByActor,
+import type {
+	AnyProfileView,
+	AppBskyActorDefs,
+	AppBskyActorGetSuggestions,
+	AppBskyGraphGetSuggestedFollowsByActor,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { STALE } from '#/state/queries';

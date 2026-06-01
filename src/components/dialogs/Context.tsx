@@ -1,9 +1,9 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
-import { type SessionAccount } from '#/state/session';
+import type { SessionAccount } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { type ReportSubject } from '#/components/moderation/ReportDialog';
+import type { ReportSubject } from '#/components/moderation/ReportDialog';
 
 type Control = Dialog.DialogControlProps;
 

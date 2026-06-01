@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

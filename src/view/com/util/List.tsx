@@ -18,7 +18,7 @@ import {
 	type ViewStyle,
 } from 'react-native';
 
-import { type ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
+import type { ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useScrollHandlers } from '#/lib/ScrollContext';

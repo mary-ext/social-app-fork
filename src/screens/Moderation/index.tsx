@@ -4,7 +4,7 @@ import { BUILTIN_LABELS } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { getLabelingServiceTitle, isAppLabeler } from '#/lib/moderation';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useRemoveLabelersMutation } from '#/state/queries/labeler';
 import {
@@ -27,7 +27,7 @@ import * as Toggle from '#/components/forms/Toggle';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron';
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign';
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EditBig_Stroke2_Corner2_Rounded as EditBig } from '#/components/icons/EditBig';
 import { Filter_Stroke2_Corner0_Rounded as Filter } from '#/components/icons/Filter';
 import { Group3_Stroke2_Corner0_Rounded as Group } from '#/components/icons/Group';

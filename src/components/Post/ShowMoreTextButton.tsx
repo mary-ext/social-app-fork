@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { LayoutAnimation, type TextStyle } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
 

@@ -1,6 +1,6 @@
-import { type AppBskyActorDefs, type AppBskyEmbedRecord, type AppBskyFeedDefs } from '@atcute/bluesky';
-import { type ParsedResourceUri } from '@atcute/lexicons/syntax';
-import { type InfiniteData, type QueryClient, type QueryKey } from '@tanstack/react-query';
+import type { AppBskyActorDefs, AppBskyEmbedRecord, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { ParsedResourceUri } from '@atcute/lexicons/syntax';
+import type { InfiniteData, QueryClient, QueryKey } from '@tanstack/react-query';
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
 	string,

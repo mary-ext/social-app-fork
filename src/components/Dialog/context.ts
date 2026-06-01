@@ -2,11 +2,7 @@ import { createContext, useContext, useEffect, useId, useMemo, useRef } from 're
 
 import { useDialogStateContext } from '#/state/dialogs';
 
-import {
-	type DialogContextProps,
-	type DialogControlRefProps,
-	type DialogOuterProps,
-} from '#/components/Dialog/types';
+import type { DialogContextProps, DialogControlRefProps, DialogOuterProps } from '#/components/Dialog/types';
 
 import { IS_DEV } from '#/env';
 import { BottomSheetSnapPoint } from '#/shims/bottom-sheet';

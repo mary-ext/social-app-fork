@@ -1,6 +1,6 @@
-import { type ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 
-import { type Placement } from './useSift';
+import type { Placement } from './useSift';
 
 export function computeStyles(
 	{

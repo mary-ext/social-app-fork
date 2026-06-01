@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
-import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
+import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 
 import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn';
 

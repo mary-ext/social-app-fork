@@ -19,11 +19,11 @@ import {
 	type SubmitRequest,
 	useComposerInternalApiRef,
 } from '#/components/Composer';
-import { type Emoji } from '#/components/EmojiPicker';
+import type { Emoji } from '#/components/EmojiPicker';
 import { Portal } from '#/components/Portal';
 import { Text } from '#/components/Typography';
 
-import { type TextInputProps } from './TextInput.types';
+import type { TextInputProps } from './TextInput.types';
 
 export function TextInput({
 	ref,

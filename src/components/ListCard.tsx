@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	type DisplayRestrictions,
@@ -8,8 +8,7 @@ import {
 	moderateList,
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { sanitizeHandle } from '#/lib/strings/handles';

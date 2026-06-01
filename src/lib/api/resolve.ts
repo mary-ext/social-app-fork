@@ -1,7 +1,7 @@
-import { type ComAtprotoRepoStrongRef } from '@atcute/atproto';
-import { type AppBskyEmbedExternal, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { ComAtprotoRepoStrongRef } from '@atcute/atproto';
+import type { AppBskyEmbedExternal, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Handle, type ResourceUri } from '@atcute/lexicons';
+import type { Handle, ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
 import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta';
@@ -19,10 +19,9 @@ import {
 	makeRecordUri,
 } from '#/lib/strings/url-helpers';
 
-import { type ComposerImage } from '#/state/gallery';
-import { createComposerImage } from '#/state/gallery';
+import { type ComposerImage, createComposerImage } from '#/state/gallery';
 
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 import { createGIFDescription } from '../gif-alt-text';
 

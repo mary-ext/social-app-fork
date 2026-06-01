@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
-import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,7 +18,7 @@ import Animated, {
 	useAnimatedRef,
 	useFrameCallback,
 } from '#/lib/animations/reanimatedCompat';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-player';
 
 import { useExternalEmbedsPrefs } from '#/state/preferences';

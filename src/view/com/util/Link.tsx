@@ -16,7 +16,7 @@ import { type DebouncedNavigationProp, useNavigationDeduped } from '#/lib/hooks/
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getTabState, TabState } from '#/lib/routes/helpers';
 import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#/lib/strings/url-helpers';
-import { type TypographyVariant } from '#/lib/ThemeContext';
+import type { TypographyVariant } from '#/lib/ThemeContext';
 
 import { emitSoftReset } from '#/state/events';
 import { useModalControls } from '#/state/modals';

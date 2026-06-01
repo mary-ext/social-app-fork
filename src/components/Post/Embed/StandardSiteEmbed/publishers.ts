@@ -1,4 +1,4 @@
-import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { Leaflet } from '#/components/icons/community/Leaflet';
 import { Offprint } from '#/components/icons/community/Offprint';

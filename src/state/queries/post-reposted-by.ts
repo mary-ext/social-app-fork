@@ -1,6 +1,6 @@
-import { type AppBskyActorDefs, type AppBskyFeedGetRepostedBy } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedGetRepostedBy } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

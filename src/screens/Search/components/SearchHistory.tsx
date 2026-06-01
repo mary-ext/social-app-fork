@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,

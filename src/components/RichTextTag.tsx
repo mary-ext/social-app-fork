@@ -3,7 +3,7 @@ import { type StyleProp, Text as RNText, type TextStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { isInvalidHandle } from '#/lib/strings/handles';
 
 import {

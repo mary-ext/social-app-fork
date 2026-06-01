@@ -1,7 +1,7 @@
 import { VIDEO_MAX_SIZE } from '#/lib/constants';
 import { VideoTooLargeError } from '#/lib/media/video/errors';
 
-import { type CompressedVideo, type VideoAsset } from './types';
+import type { CompressedVideo, VideoAsset } from './types';
 
 /**
  * Web doesn't compress videos client-side; this just validates the size and hands the blob through.

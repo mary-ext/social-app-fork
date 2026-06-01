@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 

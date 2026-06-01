@@ -1,6 +1,6 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
@@ -9,12 +9,12 @@ import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
-import { type ThreadItem } from '#/state/queries/usePostThread/types';
+import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import { type OnPostSuccessData } from '#/state/shell/composer';
+import type { OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
@@ -31,7 +31,7 @@ import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { PostHider } from '#/components/moderation/PostHider';
-import { type AppModerationCause } from '#/components/Pills';
+import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { TranslatedPost } from '#/components/Post/Translated';

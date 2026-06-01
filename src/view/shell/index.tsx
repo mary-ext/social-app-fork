@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
 import { useIntentHandler } from '#/lib/hooks/useIntentHandler';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { IS_OAUTH_CALLBACK } from '#/state/session/oauth';
 import { useIsDrawerOpen, useSetDrawerOpen } from '#/state/shell';

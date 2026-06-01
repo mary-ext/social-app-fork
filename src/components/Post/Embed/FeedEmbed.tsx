@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -9,9 +9,9 @@ import { atoms as a, useTheme } from '#/alf';
 import * as FeedCard from '#/components/FeedCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import { type EmbedType } from '#/types/embed';
+import type { EmbedType } from '#/types/embed';
 
-import { type CommonProps } from './types';
+import type { CommonProps } from './types';
 
 export function FeedEmbed({
 	embed,

@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyBookmarkDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
-import { type $type } from '@atcute/lexicons';
+import type { AppBskyBookmarkDefs, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { $type } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type NavigationProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useBookmarksQuery } from '#/state/queries/bookmarks/useBookmarksQuery';

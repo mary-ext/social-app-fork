@@ -1,8 +1,7 @@
 import { StyleSheet, View } from 'react-native';
-import { type AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { isReasonFeedSource, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';

@@ -1,6 +1,6 @@
 import { Fragment, type ReactNode } from 'react';
 import { View } from 'react-native';
-import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 

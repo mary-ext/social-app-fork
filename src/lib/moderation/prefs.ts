@@ -1,7 +1,7 @@
 import { interpretMutedWordPreference, type ModerationPreferences } from '@atcute/bluesky-moderation';
-import { type CanonicalResourceUri, type Did } from '@atcute/lexicons';
+import type { CanonicalResourceUri, Did } from '@atcute/lexicons';
 
-import { type BskyPreferences } from '#/lib/moderation/preferences-types';
+import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 
 /**
  * Converts the fork's @atproto-shaped moderation preferences (still produced by the preferences cache) into

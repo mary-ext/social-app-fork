@@ -1,14 +1,9 @@
 import { useCallback } from 'react';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import {
-	type CommonNavigatorParams,
-	type NativeStackScreenProps,
-	type NavigationProp,
-} from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 
 import { MyLists } from '#/view/com/lists/MyLists';
 

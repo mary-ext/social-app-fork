@@ -1,7 +1,7 @@
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type ActorIdentifier, type Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

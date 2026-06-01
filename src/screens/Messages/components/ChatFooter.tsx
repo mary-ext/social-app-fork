@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
 export function ChatFooter({

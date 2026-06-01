@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type TextStyle, type ViewStyle } from 'react-native';
+import type { TextStyle, ViewStyle } from 'react-native';
 
 import { type PaletteColor, type PaletteColorName, useTheme } from '../ThemeContext';
 

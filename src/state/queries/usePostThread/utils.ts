@@ -1,16 +1,12 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type AppBskyUnspeccedGetPostThreadV2,
+import type {
+	AppBskyFeedDefs,
+	AppBskyFeedPost,
+	AppBskyFeedThreadgate,
+	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
-import {
-	type ApiThreadItem,
-	type ThreadItem,
-	type TraversalMetadata,
-} from '#/state/queries/usePostThread/types';
+import type { ApiThreadItem, ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
 
 import { isDevMode } from '#/storage/hooks/dev-mode';
 

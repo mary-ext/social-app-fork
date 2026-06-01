@@ -1,7 +1,7 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type AppBskyNotificationListNotifications,
+import type {
+	AppBskyFeedDefs,
+	AppBskyGraphDefs,
+	AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
 
 export type NotificationType = StarterPackNotificationType | OtherNotificationType;

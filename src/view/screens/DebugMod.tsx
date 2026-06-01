@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type ComAtprotoLabelDefs } from '@atcute/atproto';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyNotificationListNotifications,
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type {
+	AppBskyActorDefs,
+	AppBskyFeedDefs,
+	AppBskyFeedPost,
+	AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
 import {
 	BUILTIN_LABELS,
@@ -19,14 +19,14 @@ import {
 	type ModerationDecision,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { type Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { moderationOptsOverrideContext, useModerationOpts } from '#/state/preferences/moderation-opts';
-import { type FeedNotification } from '#/state/queries/notifications/types';
+import type { FeedNotification } from '#/state/queries/notifications/types';
 import { groupNotifications, shouldFilterNotif } from '#/state/queries/notifications/util';
 import { threadPost } from '#/state/queries/usePostThread/views';
 import { useSession } from '#/state/session';

@@ -8,7 +8,7 @@ import { shareUrl } from '#/lib/sharing';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
-import { type FeedSourceFeedInfo } from '#/state/queries/feed';
+import type { FeedSourceFeedInfo } from '#/state/queries/feed';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import {
 	useAddSavedFeedsMutation,

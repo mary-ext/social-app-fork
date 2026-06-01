@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { type ScrollView, View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 

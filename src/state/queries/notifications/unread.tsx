@@ -13,7 +13,7 @@ import { truncateAndInvalidate } from '#/state/queries/util';
 import { useClients, useSession } from '#/state/session';
 
 import { RQKEY as RQKEY_NOTIFS } from './feed';
-import { type CachedFeedPage, type FeedPage } from './types';
+import type { CachedFeedPage, FeedPage } from './types';
 import { fetchPage } from './util';
 
 const UPDATE_INTERVAL = 30 * 1e3; // 30sec

@@ -1,7 +1,7 @@
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type Emoji } from '@emoji-mart/data';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { Emoji } from '@emoji-mart/data';
 
-import { type Sift } from '#/lib/sift';
+import type { Sift } from '#/lib/sift';
 
 export type AutocompleteProfile = {
 	key: string;

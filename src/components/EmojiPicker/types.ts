@@ -1,5 +1,5 @@
-import { type DialogControlProps } from '../Dialog';
-import { type TriggerProps as MenuTriggerProps } from '../Menu/types';
+import type { DialogControlProps } from '../Dialog';
+import type { TriggerProps as MenuTriggerProps } from '../Menu/types';
 
 /** Represents an emoji selected from the picker. Sourced from the `emoji-mart` library's selection data. */
 export type Emoji = {

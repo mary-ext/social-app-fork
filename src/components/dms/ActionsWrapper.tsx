@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';

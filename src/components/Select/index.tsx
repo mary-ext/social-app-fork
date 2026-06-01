@@ -14,16 +14,16 @@ import {
 } from '#/components/icons/Chevron';
 import { Text } from '#/components/Typography';
 
-import {
-	type ContentProps,
-	type IconProps,
-	type ItemIndicatorProps,
-	type ItemProps,
-	type ItemTextProps,
-	type RadixPassThroughTriggerProps,
-	type RootProps,
-	type TriggerProps,
-	type ValueProps,
+import type {
+	ContentProps,
+	IconProps,
+	ItemIndicatorProps,
+	ItemProps,
+	ItemTextProps,
+	RadixPassThroughTriggerProps,
+	RootProps,
+	TriggerProps,
+	ValueProps,
 } from './types';
 
 const SelectedValueContext = createContext<string | undefined | null>(null);

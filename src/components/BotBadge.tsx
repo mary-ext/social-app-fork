@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';

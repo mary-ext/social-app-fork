@@ -1,6 +1,6 @@
-import { type AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedPost } from '@atcute/bluesky';
 
-import { type ParsedReportSubject, type ReportSubject } from '#/components/moderation/ReportDialog/types';
+import type { ParsedReportSubject, ReportSubject } from '#/components/moderation/ReportDialog/types';
 
 import { parseEmbed } from '#/types/embed';
 

@@ -1,4 +1,4 @@
-import { type AppBskyActorDefs, type AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type KeywordFilter, KeywordFilterFlags } from '@atcute/bluesky-moderation';
 
 /**

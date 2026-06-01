@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Plural, Trans } from '@lingui/react/macro';
+import { useLingui, Plural, Trans } from '@lingui/react/macro';
 
 import { HITSLOP_10, MAX_ALT_TEXT } from '#/lib/constants';
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
@@ -25,7 +24,7 @@ import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Pl
 import { GifEmbed } from '#/components/Post/Embed/ExternalEmbed/Gif';
 import { Text } from '#/components/Typography';
 
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 export function GifAltTextDialog({
 	gif,

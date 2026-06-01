@@ -1,13 +1,13 @@
-import {
-	type AppBskyEmbedRecord,
-	type ChatBskyActorDefs,
-	type ChatBskyConvoDefs,
-	type ChatBskyConvoGetLog,
-	type ChatBskyConvoSendMessage,
-	type ChatBskyGroupDefs,
+import type {
+	AppBskyEmbedRecord,
+	ChatBskyActorDefs,
+	ChatBskyConvoDefs,
+	ChatBskyConvoGetLog,
+	ChatBskyConvoSendMessage,
+	ChatBskyGroupDefs,
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
-import { type $type, type Did } from '@atcute/lexicons';
+import type { $type, Did } from '@atcute/lexicons';
 import { EventEmitter } from 'eventemitter3';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -32,8 +32,8 @@ import {
 	type ConvoState,
 	ConvoStatus,
 } from '#/state/messages/convo/types';
-import { type MessagesEventBus } from '#/state/messages/events/agent';
-import { type MessagesEventBusError } from '#/state/messages/events/types';
+import type { MessagesEventBus } from '#/state/messages/events/agent';
+import type { MessagesEventBusError } from '#/state/messages/events/types';
 
 import { Logger } from '#/logger';
 

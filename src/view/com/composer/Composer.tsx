@@ -23,9 +23,9 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
-import { type Did, type ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -65,9 +65,9 @@ import {
 import { useIsKeyboardVisible } from '#/lib/hooks/useIsKeyboardVisible';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
-import { type VideoAsset } from '#/lib/media/video/types';
+import type { VideoAsset } from '#/lib/media/video/types';
 import { useCallOnce } from '#/lib/once';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { colors } from '#/lib/styles';
 
@@ -79,8 +79,7 @@ import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
-import { useComposerControls } from '#/state/shell/composer';
-import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
+import { useComposerControls, type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
 
 import { logger } from '#/logger';
 
@@ -116,7 +115,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 import { BottomSheetPortalProvider } from '#/shims/bottom-sheet';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
@@ -126,7 +125,7 @@ import {
 	useCleanupPublishedDraftMutation,
 	useSaveDraftMutation,
 } from './drafts/state/queries';
-import { type DraftSummary } from './drafts/state/schema';
+import type { DraftSummary } from './drafts/state/schema';
 import { PostLanguageSelect } from './select-language/PostLanguageSelect';
 import { type AssetType, SelectMediaButton, type SelectMediaButtonProps } from './SelectMediaButton';
 import {
@@ -140,7 +139,7 @@ import {
 	type ThreadDraft,
 } from './state/composer';
 import { NO_VIDEO, type NoVideoState, processVideo, type VideoState } from './state/video';
-import { type TextInputRef } from './text-input/TextInput.types';
+import type { TextInputRef } from './text-input/TextInput.types';
 
 type CancelRef = {
 	onPressCancel: () => void;

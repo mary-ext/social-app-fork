@@ -4,7 +4,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
-import { type ConvoWithDetails } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 
 import { InviteLinkDialog } from './InviteLinkDialog';
 

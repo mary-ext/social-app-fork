@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { type I18n } from '@lingui/core';
+import type { I18n } from '@lingui/core';
 import { defineMessage, plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';

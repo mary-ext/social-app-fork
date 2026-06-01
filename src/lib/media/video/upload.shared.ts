@@ -1,6 +1,6 @@
 import { type Client, ok } from '@atcute/client';
-import { type Did, type Nsid } from '@atcute/lexicons';
-import { type I18n } from '@lingui/core';
+import type { Did, Nsid } from '@atcute/lexicons';
+import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
 import { UploadLimitError } from '#/lib/media/video/errors';

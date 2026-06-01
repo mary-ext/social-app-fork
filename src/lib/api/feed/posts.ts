@@ -1,9 +1,9 @@
-import { type AppBskyFeedDefs, type AppBskyFeedGetPosts } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedGetPosts } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
 import { logger } from '#/logger';
 
-import { type FeedAPI, type FeedAPIResponse } from './types';
+import type { FeedAPI, FeedAPIResponse } from './types';
 
 export class PostListFeedAPI implements FeedAPI {
 	appview: Client;

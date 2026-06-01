@@ -9,7 +9,7 @@ import {
 	useState,
 } from 'react';
 import { FlatList, Pressable, type StyleProp, useWindowDimensions, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import debounce from 'lodash.debounce';
 

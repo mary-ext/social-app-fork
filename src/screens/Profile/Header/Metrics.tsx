@@ -1,11 +1,11 @@
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 
 import { formatCount } from '#/view/com/util/numeric/format';
 

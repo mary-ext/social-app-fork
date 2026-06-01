@@ -1,8 +1,8 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
+import type {
+	AnyProfileView,
+	AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyFeedThreadgate,
@@ -11,13 +11,13 @@ import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from 
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type ReasonFeedSource } from '#/lib/api/feed/types';
+import type { ReasonFeedSource } from '#/lib/api/feed/types';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
@@ -36,7 +36,7 @@ import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { type AppModerationCause } from '#/components/Pills';
+import type { AppModerationCause } from '#/components/Pills';
 import { Embed } from '#/components/Post/Embed';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';

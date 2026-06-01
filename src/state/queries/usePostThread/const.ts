@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { type AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 
 /** See the `below` param on {@link AppBskyUnspeccedGetPostThreadV2.$params} */
 export const LINEAR_VIEW_BELOW = 10;

@@ -1,7 +1,6 @@
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
@@ -20,7 +19,7 @@ import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/T
 import { Link } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
-import { type FullVerificationState } from '#/components/verification';
+import type { FullVerificationState } from '#/components/verification';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 
 export { useDialogControl } from '#/components/Dialog';

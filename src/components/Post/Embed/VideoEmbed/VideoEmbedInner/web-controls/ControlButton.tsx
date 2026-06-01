@@ -1,5 +1,5 @@
-import { type ViewStyle } from 'react-native';
-import { type SvgProps } from 'react-native-svg';
+import type { ViewStyle } from 'react-native';
+import type { SvgProps } from 'react-native-svg';
 
 import { PressableWithHover } from '#/view/com/util/PressableWithHover';
 

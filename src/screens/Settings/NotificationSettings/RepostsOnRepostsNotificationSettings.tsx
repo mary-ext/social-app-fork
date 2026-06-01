@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
-import { type AllNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 

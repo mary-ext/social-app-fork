@@ -1,5 +1,5 @@
-import { type Did } from '@atcute/lexicons';
-import { type AtprotoAudience } from '@atcute/lexicons/syntax';
+import type { Did } from '@atcute/lexicons';
+import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 
 import packageJson from '#/../package.json';
 

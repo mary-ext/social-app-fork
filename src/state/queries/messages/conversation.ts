@@ -1,4 +1,4 @@
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs, type ChatBskyConvoGetConvo } from '@atcute/bluesky';
+import type { ChatBskyActorDefs, ChatBskyConvoDefs, ChatBskyConvoGetConvo } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

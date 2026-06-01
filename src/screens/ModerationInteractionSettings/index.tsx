@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 

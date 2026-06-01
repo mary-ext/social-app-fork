@@ -1,4 +1,4 @@
-import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
+import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 // \u2705 = ✅
 // \u2713 = ✓

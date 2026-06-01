@@ -1,8 +1,7 @@
 import { memo, useMemo, useState } from 'react';
 import { type LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import { moderateProfile, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -13,7 +12,7 @@ import Animated, {
 	withTiming,
 } from '#/lib/animations/reanimatedCompat';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

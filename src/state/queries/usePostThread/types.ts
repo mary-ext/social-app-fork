@@ -1,12 +1,12 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
-	type AppBskyUnspeccedDefs,
-	type AppBskyUnspeccedGetPostThreadOtherV2,
-	type AppBskyUnspeccedGetPostThreadV2,
+import type {
+	AppBskyFeedDefs,
+	AppBskyFeedPost,
+	AppBskyFeedThreadgate,
+	AppBskyUnspeccedDefs,
+	AppBskyUnspeccedGetPostThreadOtherV2,
+	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
-import { type ModerationDecision } from '@atcute/bluesky-moderation';
+import type { ModerationDecision } from '@atcute/bluesky-moderation';
 
 export type ApiThreadItem =
 	| AppBskyUnspeccedGetPostThreadV2.ThreadItem

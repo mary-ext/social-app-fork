@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { type MessageDescriptor } from '@lingui/core';
+import type { MessageDescriptor } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
@@ -8,7 +8,7 @@ import { atoms as a, useTheme } from '#/alf';
 import { Button, ButtonIcon } from '#/components/Button';
 import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import {
 	EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
 	EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,

@@ -1,14 +1,8 @@
-import {
-	type AccessibilityProps,
-	type Insets,
-	type StyleProp,
-	type TextStyle,
-	type ViewStyle,
-} from 'react-native';
+import type { AccessibilityProps, Insets, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
-import { type TextStyleProp } from '#/alf';
+import type { TextStyleProp } from '#/alf';
 
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 
 export type RootProps = {
 	children?: React.ReactNode;

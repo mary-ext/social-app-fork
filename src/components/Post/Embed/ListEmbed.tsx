@@ -8,9 +8,9 @@ import { atoms as a, useTheme } from '#/alf';
 import * as ListCard from '#/components/ListCard';
 import { ContentHider } from '#/components/moderation/ContentHider';
 
-import { type EmbedType } from '#/types/embed';
+import type { EmbedType } from '#/types/embed';
 
-import { type CommonProps } from './types';
+import type { CommonProps } from './types';
 
 export function ListEmbed({
 	embed,

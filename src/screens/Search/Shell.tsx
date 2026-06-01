@@ -1,6 +1,6 @@
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { type StyleProp, type TextInput, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,7 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { HITSLOP_10, HITSLOP_20 } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { MagnifyingGlassIcon } from '#/lib/icons';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { listenSoftReset } from '#/state/events';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';

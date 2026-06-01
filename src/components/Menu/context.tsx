@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { type ContextType, type ItemContextType } from '#/components/Menu/types';
+import type { ContextType, ItemContextType } from '#/components/Menu/types';
 
 export const Context = createContext<ContextType | null>(null);
 Context.displayName = 'MenuContext';

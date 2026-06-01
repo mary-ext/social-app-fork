@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { moderatePost } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 

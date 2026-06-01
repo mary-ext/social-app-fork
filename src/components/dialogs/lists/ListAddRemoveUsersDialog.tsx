@@ -1,9 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 

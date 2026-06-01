@@ -1,11 +1,11 @@
-import {
-	type AppBskyEmbedExternal,
-	type AppBskyEmbedImages,
-	type AppBskyEmbedRecord,
-	type AppBskyEmbedVideo,
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type AppBskyLabelerDefs,
+import type {
+	AppBskyEmbedExternal,
+	AppBskyEmbedImages,
+	AppBskyEmbedRecord,
+	AppBskyEmbedVideo,
+	AppBskyFeedDefs,
+	AppBskyGraphDefs,
+	AppBskyLabelerDefs,
 } from '@atcute/bluesky';
 
 export type Embed =

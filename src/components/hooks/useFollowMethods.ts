@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import {
 	type ProfileFollowLogContext,
 	type ProfileUnfollowLogContext,

@@ -1,6 +1,6 @@
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { router } from '#/routes';
 

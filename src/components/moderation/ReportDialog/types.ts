@@ -1,6 +1,5 @@
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type $type } from '@atcute/lexicons';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { $type } from '@atcute/lexicons';
 
 import type * as Dialog from '#/components/Dialog';
 

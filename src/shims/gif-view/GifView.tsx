@@ -1,8 +1,7 @@
-import { createRef, PureComponent, type RefObject } from 'react';
-import { type CSSProperties } from 'react';
+import { createRef, PureComponent, type RefObject, type CSSProperties } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { type GifViewProps } from '#/shims/gif-view/GifView.types';
+import type { GifViewProps } from '#/shims/gif-view/GifView.types';
 
 export class GifView extends PureComponent<GifViewProps> {
 	private readonly videoPlayerRef: RefObject<HTMLVideoElement | null> = createRef();

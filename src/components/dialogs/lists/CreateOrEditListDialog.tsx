@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type Did, type Handle } from '@atcute/lexicons';
+import type { Did, Handle } from '@atcute/lexicons';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -11,7 +11,7 @@ import { cleanNewlines, detectFacets, getShortenedLength } from '#/lib/strings/r
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
 
-import { type ImageMeta } from '#/state/gallery';
+import type { ImageMeta } from '#/state/gallery';
 import { useListCreateMutation, useListMetadataMutation } from '#/state/queries/list';
 import { useClients } from '#/state/session';
 

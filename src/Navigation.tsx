@@ -37,12 +37,12 @@ import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useWebScrollRestoration } from '#/lib/hooks/useWebScrollRestoration';
 import { useCallOnce } from '#/lib/once';
 import { buildStateObject } from '#/lib/routes/helpers';
-import {
-	type AllNavigatorParams,
-	type FlatNavigatorParams,
-	type NativeStackNavigationOptionsWithAuth,
-	type RouteParams,
-	type State,
+import type {
+	AllNavigatorParams,
+	FlatNavigatorParams,
+	NativeStackNavigationOptionsWithAuth,
+	RouteParams,
+	State,
 } from '#/lib/routes/types';
 import { bskyTitle } from '#/lib/strings/headings';
 

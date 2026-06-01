@@ -11,7 +11,7 @@ import {
 	Text as ToastText,
 	ToastConfigProvider,
 } from '#/components/Toast/Toast';
-import { type BaseToastOptions } from '#/components/Toast/types';
+import type { BaseToastOptions } from '#/components/Toast/types';
 
 export { DURATION } from '#/components/Toast/const';
 export * from '#/components/Toast/Toast';

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect } from 'react';
-import { type NativeScrollEvent } from 'react-native';
+import type { NativeScrollEvent } from 'react-native';
 import { EventEmitter } from 'eventemitter3';
 
 import {

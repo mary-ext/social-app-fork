@@ -1,8 +1,8 @@
-import {
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyUnspeccedDefs,
-	type AppBskyUnspeccedGetPostThreadV2,
+import type {
+	AppBskyFeedDefs,
+	AppBskyFeedPost,
+	AppBskyUnspeccedDefs,
+	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -11,16 +11,12 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { type $type } from '@atcute/lexicons';
+import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
-import {
-	type ApiThreadItem,
-	type ThreadItem,
-	type TraversalMetadata,
-} from '#/state/queries/usePostThread/types';
+import type { ApiThreadItem, ThreadItem, TraversalMetadata } from '#/state/queries/usePostThread/types';
 
 export function threadPostNoUnauthenticated({
 	uri,

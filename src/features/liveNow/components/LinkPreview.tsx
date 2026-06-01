@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
-import { type LinkMeta } from '#/lib/link-meta/link-meta';
+import type { LinkMeta } from '#/lib/link-meta/link-meta';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';

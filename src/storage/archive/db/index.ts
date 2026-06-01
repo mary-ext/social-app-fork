@@ -1,4 +1,4 @@
-import { type DB } from '#/storage/archive/db/types';
+import type { DB } from '#/storage/archive/db/types';
 
 export function create({ id }: { id: string }): DB {
 	const prefix = `${id}:`;

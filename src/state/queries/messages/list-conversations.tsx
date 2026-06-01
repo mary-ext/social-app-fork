@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
-import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { moderateProfile, ModerationCauseType, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';

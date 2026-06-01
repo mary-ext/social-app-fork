@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyUnspeccedDefs,
-	type AppBskyUnspeccedGetPostThreadOtherV2,
-	type AppBskyUnspeccedGetPostThreadV2,
+import type {
+	AppBskyActorDefs,
+	AppBskyFeedDefs,
+	AppBskyUnspeccedDefs,
+	AppBskyUnspeccedGetPostThreadOtherV2,
+	AppBskyUnspeccedGetPostThreadV2,
 } from '@atcute/bluesky';
-import { type $type } from '@atcute/lexicons';
+import type { $type } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 

@@ -1,10 +1,10 @@
 import { type TextStyle, View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 
 import { atoms as a, useTheme } from '#/alf';
 

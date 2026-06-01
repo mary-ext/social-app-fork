@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
-import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -16,7 +16,7 @@ import { useSession } from '#/state/session';
 import { atoms as a } from '#/alf';
 
 import * as ContextMenu from '#/components/ContextMenu';
-import { type TriggerChildProps } from '#/components/ContextMenu/types';
+import type { TriggerChildProps } from '#/components/ContextMenu/types';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';

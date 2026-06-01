@@ -14,7 +14,7 @@ import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { type ConvoWithDetails, type GroupConvoMember } from '#/components/dms/util';
+import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';

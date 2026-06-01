@@ -1,7 +1,6 @@
 import { Text as RNText, View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
@@ -15,7 +14,7 @@ import * as Dialog from '#/components/Dialog';
 import { VerifierCheck } from '#/components/icons/VerifierCheck';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
-import { type FullVerificationState } from '#/components/verification';
+import type { FullVerificationState } from '#/components/verification';
 
 import { Image } from '#/shims/image';
 

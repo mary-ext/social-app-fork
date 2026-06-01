@@ -1,4 +1,4 @@
-import { type TextInput } from 'react-native';
+import type { TextInput } from 'react-native';
 
 export type TextInputRef = {
 	focus: () => void;

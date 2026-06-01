@@ -2,8 +2,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 
 import { type CSSProperties, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import ReactCrop, { type PercentCrop } from 'react-image-crop';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';

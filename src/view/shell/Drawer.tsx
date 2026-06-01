@@ -5,9 +5,9 @@ import { plural } from '@lingui/core/macro';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { type PressableScale } from '#/lib/custom-animations/PressableScale';
+import type { PressableScale } from '#/lib/custom-animations/PressableScale';
 import { useNavigationTabState } from '#/lib/hooks/useNavigationTabState';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { colors } from '#/lib/styles';
 

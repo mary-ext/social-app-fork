@@ -1,4 +1,4 @@
-import { type AppBskyDraftDefs } from '@atcute/bluesky';
+import type { AppBskyDraftDefs } from '@atcute/bluesky';
 import { ClientResponseError, ok } from '@atcute/client';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -7,7 +7,7 @@ import { isNetworkError } from '#/lib/strings/errors';
 
 import { useClients } from '#/state/session';
 
-import { type ComposerState } from '#/view/com/composer/state/composer';
+import type { ComposerState } from '#/view/com/composer/state/composer';
 
 import { composerStateToDraft, draftViewToSummary } from './api';
 import { logger } from './logger';

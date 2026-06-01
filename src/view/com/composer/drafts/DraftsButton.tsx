@@ -1,5 +1,4 @@
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { atoms as a } from '#/alf';
 
@@ -9,7 +8,7 @@ import * as Prompt from '#/components/Prompt';
 
 import { DraftsListDialog } from './DraftsListDialog';
 import { useSaveDraftMutation } from './state/queries';
-import { type DraftSummary } from './state/schema';
+import type { DraftSummary } from './state/schema';
 
 export function DraftsButton({
 	onSelectDraft,

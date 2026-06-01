@@ -16,7 +16,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import {
@@ -33,7 +33,7 @@ import { useClients } from '#/state/session';
 import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies';
 
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '../util';
-import { type FeedPage } from './types';
+import type { FeedPage } from './types';
 import { useUnreadNotificationsApi } from './unread';
 import { fetchPage } from './util';
 

@@ -1,6 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 

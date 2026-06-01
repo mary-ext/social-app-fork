@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 

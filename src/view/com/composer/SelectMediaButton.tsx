@@ -5,7 +5,7 @@ import { useLingui } from '@lingui/react/macro';
 import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE } from '#/lib/constants';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
-import { type VideoAsset } from '#/lib/media/video/types';
+import type { VideoAsset } from '#/lib/media/video/types';
 
 import { MAX_IMAGES } from '#/view/com/composer/state/composer';
 

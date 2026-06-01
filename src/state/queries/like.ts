@@ -1,4 +1,4 @@
-import { type Cid, type Did, type ResourceUri } from '@atcute/lexicons';
+import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation } from '@tanstack/react-query';
 

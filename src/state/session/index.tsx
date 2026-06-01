@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { type Did as AtcuteDid } from '@atcute/lexicons';
+import type { Did as AtcuteDid } from '@atcute/lexicons';
 import { deleteStoredSession, TokenRefreshError } from '@atcute/oauth-browser-client';
 
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { listenSessionDropped } from '#/state/events';
-import { type SessionAccount, type SessionApiContext, type SessionStateContext } from '#/state/session/types';
+import type { SessionAccount, SessionApiContext, SessionStateContext } from '#/state/session/types';
 import { useCloseAllActiveElements } from '#/state/util';
 
 import { logger } from '#/logger';
@@ -21,7 +21,7 @@ import {
 	optimisticOAuthSession,
 	resumeOAuthSession,
 } from './agent';
-import { type Clients } from './clients';
+import type { Clients } from './clients';
 import { IS_OAUTH_CALLBACK, startOAuthSignIn } from './oauth';
 
 export type { SessionAccount } from '#/state/session/types';

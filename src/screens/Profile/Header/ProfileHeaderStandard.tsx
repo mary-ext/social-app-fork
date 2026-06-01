@@ -1,6 +1,6 @@
 import { memo, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -12,7 +12,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { type Shadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useProfileBlockMutationQueue, useProfileFollowMutationQueue } from '#/state/queries/profile';

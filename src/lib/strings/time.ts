@@ -1,4 +1,4 @@
-import { type I18n } from '@lingui/core';
+import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
 export function niceDate(

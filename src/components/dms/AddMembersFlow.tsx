@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { LayoutAnimation, type TextInput, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -9,7 +9,7 @@ import { useListConvoMembersQuery } from '#/state/queries/messages/list-convo-me
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
 
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 
 import { atoms as a, useTheme } from '#/alf';
 

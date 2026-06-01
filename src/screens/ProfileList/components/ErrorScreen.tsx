@@ -1,9 +1,8 @@
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { atoms as a, useTheme } from '#/alf';
 

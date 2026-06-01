@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -18,7 +18,7 @@ import { useListConvosQuery } from '#/state/queries/messages/list-conversations'
 import { useProfileFollowsQuery } from '#/state/queries/profile-follows';
 import { useSession } from '#/state/session';
 
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 
 import { atoms as a, useTheme } from '#/alf';
 

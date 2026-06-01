@@ -1,7 +1,7 @@
-import { type AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import RichtextBuilder from '@atcute/bluesky-richtext-builder';
 import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
-import { type Did, type GenericUri } from '@atcute/lexicons';
+import type { Did, GenericUri } from '@atcute/lexicons';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import { toShortUrl } from './url-helpers';

@@ -1,13 +1,13 @@
 import { useCallback, useImperativeHandle, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
 
 import { ListMembers } from '#/view/com/lists/ListMembers';
 import { EmptyState } from '#/view/com/util/EmptyState';
-import { type ListRef } from '#/view/com/util/List';
+import type { ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a, useBreakpoints } from '#/alf';

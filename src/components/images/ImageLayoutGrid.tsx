@@ -1,5 +1,5 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AppBskyEmbedImages } from '@atcute/bluesky';
 
 import { atoms as a, useBreakpoints } from '#/alf';
 

@@ -1,6 +1,6 @@
-import { type AppBskyActorDefs, type AppBskyGraphDefs, type AppBskyGraphGetList } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyGraphDefs, AppBskyGraphGetList } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import {
 	type InfiniteData,
 	type QueryClient,

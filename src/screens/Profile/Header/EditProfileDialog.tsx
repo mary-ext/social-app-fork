@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls } from '#/lib/constants';
 import { cleanError } from '#/lib/strings/errors';
 import { isOverMaxGraphemeCount } from '#/lib/strings/helpers';
 
-import { type ImageMeta } from '#/state/gallery';
+import type { ImageMeta } from '#/state/gallery';
 import { useProfileUpdateMutation } from '#/state/queries/profile';
 
 import { logger } from '#/logger';

@@ -1,5 +1,5 @@
-import { type ChatBskyConvoGetLog } from '@atcute/bluesky';
-import { type Client } from '@atcute/client';
+import type { ChatBskyConvoGetLog } from '@atcute/bluesky';
+import type { Client } from '@atcute/client';
 
 export type MessagesEventBusParams = {
 	chat: Client;

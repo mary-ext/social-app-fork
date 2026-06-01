@@ -7,7 +7,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,8 +24,8 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
-import { type Shadow } from '#/state/cache/types';
-import { type ConvoItem } from '#/state/messages/convo/types';
+import type { Shadow } from '#/state/cache/types';
+import type { ConvoItem } from '#/state/messages/convo/types';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';

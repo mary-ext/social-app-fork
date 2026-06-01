@@ -1,5 +1,5 @@
-import { type Insets } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { Insets } from 'react-native';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';

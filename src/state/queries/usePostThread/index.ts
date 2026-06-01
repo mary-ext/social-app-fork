@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -12,7 +12,7 @@ import {
 	TREE_VIEW_BELOW_DESKTOP,
 	TREE_VIEW_BF,
 } from '#/state/queries/usePostThread/const';
-import { type PostThreadContextType } from '#/state/queries/usePostThread/context';
+import type { PostThreadContextType } from '#/state/queries/usePostThread/context';
 import { createCacheMutator, getThreadPlaceholder } from '#/state/queries/usePostThread/queryCache';
 import { buildThread, sortAndAnnotateThreadItems } from '#/state/queries/usePostThread/traversal';
 import {

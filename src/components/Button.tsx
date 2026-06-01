@@ -16,7 +16,7 @@ import {
 
 import { atoms as a, flatten, select, useTheme } from '#/alf';
 
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
 /**

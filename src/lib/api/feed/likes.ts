@@ -1,7 +1,7 @@
-import { type AppBskyFeedDefs, type AppBskyFeedGetActorLikes } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedGetActorLikes } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
-import { type FeedAPI, type FeedAPIResponse } from './types';
+import type { FeedAPI, FeedAPIResponse } from './types';
 
 export class LikesFeedAPI implements FeedAPI {
 	appview: Client;

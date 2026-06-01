@@ -1,6 +1,5 @@
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useListBlockMutation, useListMuteMutation } from '#/state/queries/list';
 

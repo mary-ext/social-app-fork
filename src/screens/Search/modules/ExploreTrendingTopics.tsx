@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
-import { type AnyProfileView, type AppBskyUnspeccedDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyUnspeccedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -13,7 +13,7 @@ import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { atoms as a, useGutters, useTheme, type ViewStyleProp } from '#/alf';
 
 import { AvatarStack } from '#/components/AvatarStack';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Flame_Stroke2_Corner1_Rounded as FlameIcon } from '#/components/icons/Flame';
 import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/icons/Trending';
 import { Link } from '#/components/Link';

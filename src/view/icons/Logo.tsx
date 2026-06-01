@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { type TextProps } from 'react-native';
+import type { TextProps } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, type PathProps, Stop, type SvgProps } from 'react-native-svg';
 
 import { flatten, useTheme } from '#/alf';

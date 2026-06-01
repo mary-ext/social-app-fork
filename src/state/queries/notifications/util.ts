@@ -1,11 +1,11 @@
-import {
-	type AnyProfileView,
-	type AppBskyFeedDefs,
-	type AppBskyFeedLike,
-	type AppBskyFeedPost,
-	type AppBskyFeedRepost,
-	type AppBskyGraphDefs,
-	type AppBskyNotificationListNotifications,
+import type {
+	AnyProfileView,
+	AppBskyFeedDefs,
+	AppBskyFeedLike,
+	AppBskyFeedPost,
+	AppBskyFeedRepost,
+	AppBskyGraphDefs,
+	AppBskyNotificationListNotifications,
 } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -14,15 +14,15 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { type Client, ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
-import { type QueryClient } from '@tanstack/react-query';
+import type { ResourceUri } from '@atcute/lexicons';
+import type { QueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
 
 import { labelIsHideableOffense } from '#/lib/moderation';
 import { hasMutedWord } from '#/lib/moderation/muted-words';
 
 import { precacheProfile } from '../profile';
-import { type FeedNotification, type FeedPage, type NotificationType } from './types';
+import type { FeedNotification, FeedPage, NotificationType } from './types';
 
 const GROUPABLE_REASONS = [
 	'like',

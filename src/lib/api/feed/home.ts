@@ -1,12 +1,12 @@
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
-import { type Client } from '@atcute/client';
-import { type Did, type ResourceUri } from '@atcute/lexicons';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import type { Client } from '@atcute/client';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 
 import { CustomFeedAPI } from './custom';
 import { FollowingFeedAPI } from './following';
-import { type FeedAPI, type FeedAPIResponse } from './types';
+import type { FeedAPI, FeedAPIResponse } from './types';
 
 // HACK
 // the feed API does not include any facilities for passing down

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { Pressable, type ScrollView, View } from 'react-native';
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { wait } from '#/lib/async/wait';
@@ -44,7 +44,7 @@ import {
 } from './const';
 import { useCopyForSubject } from './copy';
 import { initialState, reducer } from './state';
-import { type ReportDialogProps, type ReportSubject } from './types';
+import type { ReportDialogProps, ReportSubject } from './types';
 import { parseReportSubject } from './utils/parseReportSubject';
 import { type ReportCategoryConfig, type ReportOption, useReportOptions } from './utils/useReportOptions';
 

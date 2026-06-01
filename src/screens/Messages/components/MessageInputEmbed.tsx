@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
-import { type AnyProfileView, type AppBskyFeedPost } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -8,7 +8,7 @@ import { type RouteProp, useNavigation, useRoute } from '@react-navigation/nativ
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';
 import { convertBskyAppUrlIfNeeded, isBskyPostUrl, makeRecordUri } from '#/lib/strings/url-helpers';
 

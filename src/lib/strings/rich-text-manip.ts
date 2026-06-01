@@ -1,8 +1,8 @@
-import { type AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import RichtextBuilder from '@atcute/bluesky-richtext-builder';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
-import { type Richtext } from './rich-text-facets';
+import type { Richtext } from './rich-text-facets';
 import { toShortUrl } from './url-helpers';
 
 type Feature = AppBskyRichtextFacet.Main['features'][number];

@@ -1,4 +1,4 @@
-import { type AuthAccount } from '#/storage';
+import type { AuthAccount } from '#/storage';
 
 export type SessionAccount = AuthAccount;
 

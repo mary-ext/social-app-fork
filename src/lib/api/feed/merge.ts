@@ -1,6 +1,6 @@
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import shuffle from 'lodash.shuffle';
 
 import { bundleAsync } from '#/lib/async/bundle';
@@ -8,11 +8,10 @@ import { timeout } from '#/lib/async/timeout';
 import { feedUriToHref } from '#/lib/strings/url-helpers';
 
 import { getContentLanguages } from '#/state/preferences/languages';
-import { type FeedParams } from '#/state/queries/post-feed';
+import type { FeedParams } from '#/state/queries/post-feed';
 
-import { FeedTuner } from '../feed-manip';
-import { type FeedTunerFn } from '../feed-manip';
-import { type FeedAPI, type FeedAPIResponse, type ReasonFeedSource } from './types';
+import { FeedTuner, type FeedTunerFn } from '../feed-manip';
+import type { FeedAPI, FeedAPIResponse, ReasonFeedSource } from './types';
 import { createBskyTopicsHeader, isBlueskyOwnedFeed } from './utils';
 
 const REQUEST_WAIT_MS = 500; // 500ms

@@ -1,8 +1,7 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type ComAtprotoLabelDefs } from '@atcute/atproto';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Plural, Trans } from '@lingui/react/macro';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import { useLingui, Plural, Trans } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
 

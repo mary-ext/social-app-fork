@@ -1,4 +1,4 @@
-import { type AppBskyActorDefs, type AppBskyUnspeccedGetSuggestedUsersForSeeMore } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyUnspeccedGetSuggestedUsersForSeeMore } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type QueryClient, useQuery } from '@tanstack/react-query';
 

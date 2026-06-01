@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useUpdateActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useProfileQuery } from '#/state/queries/profile';

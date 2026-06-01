@@ -1,7 +1,7 @@
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { usePostQuery } from '#/state/queries/post';

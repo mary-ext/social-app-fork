@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { useKeyboardHandling } from './useKeyboardHandling';
-import { type UseSiftReturn } from './useSift';
+import type { UseSiftReturn } from './useSift';
 
 export * from './useSift';
 

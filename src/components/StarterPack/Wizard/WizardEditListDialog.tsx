@@ -1,15 +1,14 @@
 import { useRef } from 'react';
-import { type ListRenderItemInfo } from 'react-native';
-import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import { type ListRenderItemInfo, View } from 'react-native';
+import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 
-import { type WizardAction, type WizardState } from '#/screens/StarterPack/Wizard/State';
+import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { atoms as a, useTheme } from '#/alf';
 

@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useVerificationCreateMutation } from '#/state/queries/verification/useVerificationCreateMutation';

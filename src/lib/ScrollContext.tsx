@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
 
-import { type ScrollHandlers } from '#/lib/animations/reanimatedCompat';
+import type { ScrollHandlers } from '#/lib/animations/reanimatedCompat';
 
 const ScrollContext = createContext<ScrollHandlers>({
 	onBeginDrag: undefined,

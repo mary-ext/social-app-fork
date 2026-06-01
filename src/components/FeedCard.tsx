@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
-import { type AnyProfileView, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';

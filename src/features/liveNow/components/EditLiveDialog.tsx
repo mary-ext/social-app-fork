@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, AppBskyActorStatus, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInMinutes } from 'date-fns';
 

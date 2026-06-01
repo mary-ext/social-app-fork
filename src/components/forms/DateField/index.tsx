@@ -2,7 +2,7 @@ import { forwardRef, useCallback } from 'react';
 import { StyleSheet, type TextInput, type TextInputProps } from 'react-native';
 import { unstable_createElement } from 'react-native-web';
 
-import { type DateFieldProps } from '#/components/forms/DateField/types';
+import type { DateFieldProps } from '#/components/forms/DateField/types';
 import { toSimpleDateString } from '#/components/forms/DateField/utils';
 import * as TextField from '#/components/forms/TextField';
 import { CalendarDays_Stroke2_Corner0_Rounded as CalendarDays } from '#/components/icons/CalendarDays';

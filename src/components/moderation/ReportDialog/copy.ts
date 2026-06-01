@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
-import { type ParsedReportSubject } from './types';
+import type { ParsedReportSubject } from './types';
 
 export function useCopyForSubject(subject: ParsedReportSubject) {
 	const { t: l } = useLingui();

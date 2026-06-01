@@ -1,8 +1,8 @@
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { DEMO_FEED } from '#/lib/demo';
 
-import { type FeedAPI, type FeedAPIResponse } from './types';
+import type { FeedAPI, FeedAPIResponse } from './types';
 
 export class DemoFeedAPI implements FeedAPI {
 	async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {

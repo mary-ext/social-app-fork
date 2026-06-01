@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { type FlatList } from 'react-native';
+import type { FlatList } from 'react-native';
 
 import { ITEM_GAP } from '#/components/images/Gallery/const';
 import { tween } from '#/components/images/Gallery/tween';

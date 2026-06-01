@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView, type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from '#/lib/animations/reanimatedCompat';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useGetPopularFeedsQuery } from '#/state/queries/feed';
-import { type FeedDescriptor } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
 import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { useSession } from '#/state/session';

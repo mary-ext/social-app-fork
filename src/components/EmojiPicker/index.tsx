@@ -12,7 +12,7 @@ import { Loader } from '#/components/Loader';
 
 import * as Menu from '../Menu';
 import { useWebPreloadEmoji } from './preload';
-import { type Emoji, type PickerProps, type RootProps, type TriggerProps } from './types';
+import type { Emoji, PickerProps, RootProps, TriggerProps } from './types';
 
 export * from './types';
 

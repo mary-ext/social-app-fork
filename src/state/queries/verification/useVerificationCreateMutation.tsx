@@ -1,6 +1,6 @@
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier, type Did, type Handle } from '@atcute/lexicons';
+import type { ActorIdentifier, Did, Handle } from '@atcute/lexicons';
 import { useMutation } from '@tanstack/react-query';
 
 import { createRecord } from '#/lib/api/records';

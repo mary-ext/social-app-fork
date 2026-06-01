@@ -1,5 +1,4 @@
-import { forwardRef, memo, useCallback, useState } from 'react';
-import { type JSX } from 'react';
+import { forwardRef, memo, useCallback, useState, type JSX } from 'react';
 import { type ScrollView, View } from 'react-native';
 
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
@@ -10,7 +9,7 @@ import { atoms as a } from '#/alf';
 
 import * as Layout from '#/components/Layout';
 
-import { type ListMethods } from '../util/List';
+import type { ListMethods } from '../util/List';
 import { TabBar } from './TabBar';
 
 export interface PagerWithHeaderChildParams {

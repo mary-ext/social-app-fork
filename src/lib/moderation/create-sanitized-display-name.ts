@@ -1,5 +1,5 @@
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';

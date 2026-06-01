@@ -1,4 +1,4 @@
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 /**
  * The fork-owned shape of the preferences aggregate the preferences cache derives, and the moderation

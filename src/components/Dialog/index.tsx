@@ -23,11 +23,7 @@ import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
 import { Context } from '#/components/Dialog/context';
-import {
-	type DialogControlProps,
-	type DialogInnerProps,
-	type DialogOuterProps,
-} from '#/components/Dialog/types';
+import type { DialogControlProps, DialogInnerProps, DialogOuterProps } from '#/components/Dialog/types';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
 import { Portal } from '#/components/Portal';
 

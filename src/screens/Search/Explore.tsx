@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View, type ViewabilityConfig } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import * as bcp47Match from 'bcp-47-match';
@@ -50,7 +50,7 @@ import { Button } from '#/components/Button';
 import * as FeedCard from '#/components/FeedCard';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
-import { type Props as IcoProps, type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as IcoProps, Props as SVGIconProps } from '#/components/icons/common';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { StarterPack } from '#/components/icons/StarterPack';
 import { UserCircle_Stroke2_Corner0_Rounded as Person } from '#/components/icons/UserCircle';

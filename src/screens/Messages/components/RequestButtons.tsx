@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
-import { type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useAcceptConversation } from '#/state/queries/messages/accept-conversation';

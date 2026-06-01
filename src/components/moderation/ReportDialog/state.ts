@@ -1,9 +1,9 @@
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 
 import { OTHER_REPORT_REASONS } from '#/components/moderation/ReportDialog/const';
-import {
-	type ReportCategoryConfig,
-	type ReportOption,
+import type {
+	ReportCategoryConfig,
+	ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions';
 
 export type ReportState = {

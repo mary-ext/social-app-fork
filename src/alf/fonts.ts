@@ -1,4 +1,4 @@
-import { type FontVariant, type TextStyle } from 'react-native';
+import type { FontVariant, TextStyle } from 'react-native';
 
 import { type Device, device } from '#/storage';
 

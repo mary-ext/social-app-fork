@@ -1,7 +1,7 @@
-import { type ComAtprotoRepoApplyWrites } from '@atcute/atproto';
-import { type AppBskyGraphDefs, type AppBskyGraphList, type AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
+import type { AppBskyGraphDefs, AppBskyGraphList, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Did, type ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
@@ -10,7 +10,7 @@ import { createRecord, deleteRecord, getRecord, listRecords, putRecord } from '#
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { until } from '#/lib/async/until';
 
-import { type ImageMeta } from '#/state/gallery';
+import type { ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
 import { useClients, useSession } from '#/state/session';
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled';
-import { type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { Logo } from '#/view/icons/Logo';

@@ -1,4 +1,4 @@
-import { type LabelVisibility } from '#/lib/moderation/preferences-types';
+import type { LabelVisibility } from '#/lib/moderation/preferences-types';
 
 /** DID of the Bluesky-operated moderation labeler, applied as an app labeler. */
 export const BSKY_LABELER_DID = 'did:plc:ar7c4by46qjdydhdevvrndac';

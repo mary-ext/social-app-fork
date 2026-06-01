@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
-	type AppBskyActorStatus,
-	type AppBskyEmbedExternal,
+import type {
+	AnyProfileView,
+	AppBskyActorDefs,
+	AppBskyActorStatus,
+	AppBskyEmbedExternal,
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
-import { type $type, type Did, type GenericUri } from '@atcute/lexicons';
+import type { $type, Did, GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

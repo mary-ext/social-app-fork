@@ -13,7 +13,7 @@ import { atoms as a, useTheme } from '#/alf';
 import { Button } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { AddMembersFlow } from '#/components/dms/AddMembersFlow';
-import { type ConvoWithDetails } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/components/icons/Chevron';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Loader } from '#/components/Loader';

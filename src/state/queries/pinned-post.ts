@@ -1,5 +1,5 @@
 import { ok } from '@atcute/client';
-import { type ActorIdentifier, type ResourceUri } from '@atcute/lexicons';
+import type { ActorIdentifier, ResourceUri } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

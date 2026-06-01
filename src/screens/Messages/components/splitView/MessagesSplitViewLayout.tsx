@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import { type ScreenLayoutArgs, useIsFocused } from '@react-navigation/native';
-import { type NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { type ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
-import { type FlatNavigatorParams, type NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
+import type { ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
+import type { FlatNavigatorParams, NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
 import { ScrollProvider } from '#/lib/ScrollContext';
 
 import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';

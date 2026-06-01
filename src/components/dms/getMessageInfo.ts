@@ -1,5 +1,5 @@
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type I18n } from '@lingui/core';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';

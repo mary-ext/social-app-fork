@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 import { LayoutAnimation, Pressable, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type DisplayRestrictions, type ModerationCause } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';

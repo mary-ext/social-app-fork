@@ -1,6 +1,6 @@
-import { type AppBskyFeedDefs, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -9,7 +9,7 @@ import { networkRetry, retry } from '#/lib/async/retry';
 
 import { STALE } from '#/state/queries';
 import { useGetPost } from '#/state/queries/post';
-import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
+import type { ThreadgateAllowUISetting } from '#/state/queries/threadgate/types';
 import {
 	createThreadgateRecord,
 	mergeThreadgateRecords,

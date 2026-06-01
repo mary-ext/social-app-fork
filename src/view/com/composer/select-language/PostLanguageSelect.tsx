@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import Animated, {
 	Easing,

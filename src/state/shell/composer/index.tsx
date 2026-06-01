@@ -1,15 +1,11 @@
 import { createContext, useContext, useMemo, useState } from 'react';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyUnspeccedGetPostThreadV2,
-} from '@atcute/bluesky';
-import { type ModerationDecision } from '@atcute/bluesky-moderation';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
+import type { ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { type VideoAsset } from '#/lib/media/video/types';
+import type { VideoAsset } from '#/lib/media/video/types';
 import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';

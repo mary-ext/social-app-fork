@@ -1,11 +1,11 @@
 import { memo, useMemo, useState } from 'react';
-import { type Insets } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { Insets } from 'react-native';
+import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
-import { type Shadow } from '#/state/cache/post-shadow';
+import type { Shadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 
 import { EventStopper } from '#/view/com/util/EventStopper';

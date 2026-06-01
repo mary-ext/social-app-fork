@@ -1,4 +1,4 @@
-import { type InterpretedLabelDefinition, type LabelPreference } from '@atcute/bluesky-moderation';
+import type { InterpretedLabelDefinition, LabelPreference } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 export function useLabelBehaviorDescription(

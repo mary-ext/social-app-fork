@@ -1,4 +1,4 @@
-import { type ThemeName } from '../themes';
+import type { ThemeName } from '../themes';
 
 export function select<T>(
 	name: ThemeName,

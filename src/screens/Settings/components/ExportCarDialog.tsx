@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { ok } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { saveBytesToDisk } from '#/lib/media/manip';

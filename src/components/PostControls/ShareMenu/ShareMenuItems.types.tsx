@@ -1,9 +1,9 @@
-import { type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { PressableProps, StyleProp, ViewStyle } from 'react-native';
+import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
-import { type Shadow } from '#/state/cache/post-shadow';
+import type { Shadow } from '#/state/cache/post-shadow';
 
 export interface ShareMenuItemsProps {
 	testID: string;

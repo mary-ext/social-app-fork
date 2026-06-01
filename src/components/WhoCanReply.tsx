@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useRef } from 'react';
 import { Platform, type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, AppBskyFeedPost, type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 

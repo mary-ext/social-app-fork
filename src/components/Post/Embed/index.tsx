@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
-import { type $type } from '@atcute/lexicons';
+import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,7 +35,7 @@ import { ModeratedFeedEmbed } from './FeedEmbed';
 import { ImageEmbed } from './ImageEmbed';
 import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
-import { type CommonProps, type EmbedProps, type PostEmbedViewContext } from './types';
+import type { CommonProps, EmbedProps, PostEmbedViewContext } from './types';
 import { VideoEmbed } from './VideoEmbed';
 
 export { PostEmbedViewContext } from './types';

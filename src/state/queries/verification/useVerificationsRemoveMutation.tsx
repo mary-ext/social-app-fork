@@ -1,6 +1,6 @@
-import { type AnyProfileView, type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier, type Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation } from '@tanstack/react-query';
 

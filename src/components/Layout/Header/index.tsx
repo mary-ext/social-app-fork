@@ -4,7 +4,7 @@ import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_30 } from '#/lib/constants';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useSetDrawerOpen } from '#/state/shell';
 

@@ -1,9 +1,9 @@
-import { type AppBskyFeedDefs, type AppBskyFeedGetFeed } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedGetFeed } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 
 import { getContentLanguages } from '#/state/preferences/languages';
 
-import { type FeedAPI, type FeedAPIResponse } from './types';
+import type { FeedAPI, FeedAPIResponse } from './types';
 import { createBskyTopicsHeader, isBlueskyOwnedFeed } from './utils';
 
 export class CustomFeedAPI implements FeedAPI {

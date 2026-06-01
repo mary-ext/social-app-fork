@@ -1,6 +1,6 @@
 import { type Token, tokenize } from '@atcute/bluesky-richtext-parser';
 
-import { type TapperFacet, type TapperFacetType, type TapperNode } from './types';
+import type { TapperFacet, TapperFacetType, TapperNode } from './types';
 
 const WHITESPACE = /\s/;
 

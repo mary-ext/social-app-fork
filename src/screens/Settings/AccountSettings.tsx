@@ -1,8 +1,7 @@
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useLingui, Trans } from '@lingui/react/macro';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';

@@ -14,7 +14,7 @@ import { atoms as a, useGutters, useTheme } from '#/alf';
 import { Admonition } from '#/components/Admonition';
 import * as Dialog from '#/components/Dialog';
 import { InlineLinkText } from '#/components/Link';
-import { type AppModerationCause } from '#/components/Pills';
+import type { AppModerationCause } from '#/components/Pills';
 import { Text } from '#/components/Typography';
 
 export { useDialogControl as useModerationDetailsDialogControl } from '#/components/Dialog';

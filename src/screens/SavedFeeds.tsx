@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import {
 	type AnimatedScrollView,
@@ -13,10 +12,10 @@ import {
 	useScrollViewOffset,
 } from '#/lib/animations/reanimatedCompat';
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
-import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
 import { useOverwriteSavedFeedsMutation, usePreferencesQuery } from '#/state/queries/preferences';
-import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
+import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 
 import { logger } from '#/logger';
 

@@ -1,16 +1,16 @@
 import { memo, useCallback, useMemo } from 'react';
-import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import { useModalControls } from '#/state/modals';
 import {
 	RQKEY as profileQueryKey,

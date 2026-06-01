@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedThreadgate } from '@atcute/bluesky';
 
 type StateContext = {
 	uris: Set<string>;

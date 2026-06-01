@@ -1,4 +1,4 @@
-import { type ConvoItem } from '#/state/messages/convo/types';
+import type { ConvoItem } from '#/state/messages/convo/types';
 
 import { localDateString, MESSAGE_GAP_THRESHOLD_MS } from '#/components/dms/util';
 

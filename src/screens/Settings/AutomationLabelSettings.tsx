@@ -1,9 +1,9 @@
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';

@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { Text as RNText, View } from 'react-native';
-import {
-	type AnyProfileView,
+import type {
+	AnyProfileView,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
+	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -15,17 +15,17 @@ import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { niceDate } from '#/lib/strings/time';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
-import { type ThreadItem } from '#/state/queries/usePostThread/types';
+import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import { type OnPostSuccessData } from '#/state/shell/composer';
+import type { OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
-import { type PostSource } from '#/state/unstable-post-source';
+import type { PostSource } from '#/state/unstable-post-source';
 
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
@@ -43,7 +43,7 @@ import { Link } from '#/components/Link';
 import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { type AppModerationCause } from '#/components/Pills';
+import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';

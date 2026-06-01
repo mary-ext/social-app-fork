@@ -1,10 +1,10 @@
 import { memo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';

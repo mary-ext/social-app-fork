@@ -3,7 +3,7 @@ import { useWindowDimensions, View, type ViewStyle } from 'react-native';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 
 import { atoms as a, useBreakpoints } from '#/alf';
 
@@ -11,7 +11,7 @@ import * as Dialog from '#/components/Dialog';
 import { ListFooter } from '#/components/Lists';
 
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 type WebViewStyle = Omit<ViewStyle, 'minHeight'> & {
 	minHeight?: string;

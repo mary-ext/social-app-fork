@@ -1,4 +1,4 @@
-import { type StyleProp, type TextStyle } from 'react-native';
+import type { StyleProp, TextStyle } from 'react-native';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 

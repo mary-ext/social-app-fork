@@ -1,10 +1,10 @@
-import {
-	type AppBskyActorDefs,
-	type AppBskyNotificationDeclaration,
-	type AppBskyNotificationListActivitySubscriptions,
+import type {
+	AppBskyActorDefs,
+	AppBskyNotificationDeclaration,
+	AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,

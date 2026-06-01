@@ -1,7 +1,7 @@
-import { type ComAtprotoRepoApplyWrites } from '@atcute/atproto';
-import { type AnyProfileView, type AppBskyActorDefs, type AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { ComAtprotoRepoApplyWrites } from '@atcute/atproto';
+import type { AnyProfileView, AppBskyActorDefs, AppBskyRichtextFacet } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Did, type ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 

@@ -1,20 +1,19 @@
 import { memo, useCallback } from 'react';
 import { Keyboard, View } from 'react-native';
-import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type BlockingModerationCause } from '@atcute/bluesky-moderation';
+import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import { useConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation';
 import { unstableCacheProfileView, useProfileBlockMutationQueue } from '#/state/queries/profile';
 
-import { type ViewStyleProp } from '#/alf';
-import { atoms as a } from '#/alf';
+import { type ViewStyleProp, atoms as a } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
 import { AfterReportDialog } from '#/components/dms/AfterReportDialog';

@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';

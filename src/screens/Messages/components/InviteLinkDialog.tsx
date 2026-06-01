@@ -21,7 +21,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText, StackedButton } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
-import { type ConvoWithDetails, type GroupConvoMember } from '#/components/dms/util';
+import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';

@@ -8,9 +8,9 @@ import { useLightboxControls } from '#/components/Lightbox/state';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 
 import { Image } from '#/shims/image';
-import { type EmbedType } from '#/types/embed';
+import type { EmbedType } from '#/types/embed';
 
-import { type CommonProps } from './types';
+import type { CommonProps } from './types';
 
 export function ImageEmbed({
 	embed,

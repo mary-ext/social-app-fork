@@ -1,11 +1,11 @@
-import { type StyleProp, type ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Typography';
 
-import { type AuxiliaryViewProps } from './types';
+import type { AuxiliaryViewProps } from './types';
 
 export {
 	ContainerItem,

@@ -1,6 +1,6 @@
-import { type AppBskyBookmarkGetBookmarks, type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyBookmarkGetBookmarks, AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type $type } from '@atcute/lexicons';
+import type { $type } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 

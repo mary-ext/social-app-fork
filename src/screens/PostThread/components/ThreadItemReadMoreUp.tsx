@@ -1,9 +1,8 @@
 import { memo } from 'react';
 import { View } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
-import { type ThreadItem } from '#/state/queries/usePostThread';
+import type { ThreadItem } from '#/state/queries/usePostThread';
 
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 

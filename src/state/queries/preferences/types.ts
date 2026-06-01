@@ -1,4 +1,4 @@
-import { type BskyFeedViewPreference, type BskyPreferences } from '#/lib/moderation/preferences-types';
+import type { BskyFeedViewPreference, BskyPreferences } from '#/lib/moderation/preferences-types';
 
 export type UsePreferencesQueryResponse = Omit<
 	BskyPreferences,

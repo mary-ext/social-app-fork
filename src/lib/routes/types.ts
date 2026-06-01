@@ -1,8 +1,5 @@
-import { type NavigationState, type PartialState } from '@react-navigation/native';
-import {
-	type NativeStackNavigationOptions,
-	type NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import type { NavigationState, PartialState } from '@react-navigation/native';
+import type { NativeStackNavigationOptions, NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type { NativeStackScreenProps } from '@react-navigation/native-stack';
 

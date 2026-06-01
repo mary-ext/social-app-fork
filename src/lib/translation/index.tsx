@@ -3,12 +3,7 @@ import { useCallback, useContext, useMemo } from 'react';
 import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
 
 import { Context } from './context';
-import {
-	type ContextType,
-	type TranslationFunctionParams,
-	type TranslationOptions,
-	type TranslationState,
-} from './types';
+import type { ContextType, TranslationFunctionParams, TranslationOptions, TranslationState } from './types';
 
 export * from './types';
 

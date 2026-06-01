@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type StyleProp, type ViewStyle } from 'react-native';
-import { type AppBskyFeedPostgate, type AppBskyFeedThreadgate } from '@atcute/bluesky';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { StyleProp, ViewStyle } from 'react-native';
+import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
-import { type AnimatedStyle } from '#/lib/animations/reanimatedCompat';
+import type { AnimatedStyle } from '#/lib/animations/reanimatedCompat';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';

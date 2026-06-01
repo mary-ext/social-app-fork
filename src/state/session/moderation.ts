@@ -4,7 +4,7 @@ import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities';
 import { readLabelers } from './agent-config';
 import { setAppLabelers, setSubscribedLabelers } from './labelers';
-import { type SessionAccount } from './types';
+import type { SessionAccount } from './types';
 
 export function configureModerationForGuest() {
 	switchToBskyAppLabeler();

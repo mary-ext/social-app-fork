@@ -1,21 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
-import { type FeedDescriptor, type FeedParams } from '#/state/queries/post-feed';
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import { type FeedDescriptor, type FeedParams, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
@@ -25,7 +24,7 @@ import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { FAB } from '#/view/com/util/fab/FAB';
-import { type ListRef } from '#/view/com/util/List';
+import type { ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 

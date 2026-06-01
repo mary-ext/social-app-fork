@@ -1,5 +1,5 @@
-import { type ComAtprotoLabelDefs } from '@atcute/atproto';
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	BUILTIN_LABELS,
 	type InterpretedLabelDefinition,

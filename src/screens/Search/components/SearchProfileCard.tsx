@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 

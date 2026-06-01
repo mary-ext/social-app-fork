@@ -7,11 +7,11 @@ import {
 	TouchableOpacity,
 	View,
 } from 'react-native';
-import {
-	type AnyProfileView,
-	type AnyStarterPackView,
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
+import type {
+	AnyProfileView,
+	AnyStarterPackView,
+	AppBskyActorDefs,
+	AppBskyFeedDefs,
 	AppBskyFeedPost,
 	AppBskyGraphFollow,
 } from '@atcute/bluesky';
@@ -23,7 +23,7 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 import { plural } from '@lingui/core/macro';
@@ -34,7 +34,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -42,7 +42,7 @@ import { niceDate } from '#/lib/strings/time';
 import { s } from '#/lib/styles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { type FeedNotification } from '#/state/queries/notifications/feed';
+import type { FeedNotification } from '#/state/queries/notifications/feed';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useClients, useSession } from '#/state/session';

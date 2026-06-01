@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { type AnyProfileView, type AppBskyActorDefs, type AppBskyNotificationDefs } from '@atcute/bluesky';
-import { type QueryClient } from '@tanstack/react-query';
+import type { AnyProfileView, AppBskyActorDefs, AppBskyNotificationDefs } from '@atcute/bluesky';
+import type { QueryClient } from '@tanstack/react-query';
 import { EventEmitter } from 'eventemitter3';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';

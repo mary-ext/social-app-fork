@@ -12,7 +12,7 @@ import { type LinkProps as RNLinkProps, StackActions } from '@react-navigation/n
 import { BSKY_DOWNLOAD_URL } from '#/lib/constants';
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
-import { type AllNavigatorParams, type RouteParams } from '#/lib/routes/types';
+import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
 import { shareUrl } from '#/lib/sharing';
 import {
 	convertBskyAppUrlIfNeeded,

@@ -1,7 +1,7 @@
 import { type ComponentProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TextInput, View, type ViewToken } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -13,7 +13,7 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useGetSuggestedUsersForSeeMoreQuery } from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery';
 import { useSession } from '#/state/session';
 
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 

@@ -10,14 +10,14 @@ import { atoms as a, flatten, useTheme } from '#/alf';
 import type * as Dialog from '#/components/Dialog';
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Context, ItemContext, useMenuContext, useMenuItemContext } from '#/components/Menu/context';
-import {
-	type ContextType,
-	type GroupProps,
-	type ItemIconProps,
-	type ItemProps,
-	type ItemTextProps,
-	type RadixPassThroughTriggerProps,
-	type TriggerProps,
+import type {
+	ContextType,
+	GroupProps,
+	ItemIconProps,
+	ItemProps,
+	ItemTextProps,
+	RadixPassThroughTriggerProps,
+	TriggerProps,
 } from '#/components/Menu/types';
 import { Portal } from '#/components/Portal';
 import { Text } from '#/components/Typography';

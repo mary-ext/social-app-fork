@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -14,11 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import {
-	type CommonNavigatorParams,
-	type NativeStackScreenProps,
-	type NavigationProp,
-} from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 import { combinedDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 import { isInvalidHandle } from '#/lib/strings/handles';
@@ -38,7 +34,7 @@ import { ProfileLists } from '#/view/com/lists/ProfileLists';
 import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { FAB } from '#/view/com/util/fab/FAB';
-import { type ListRef } from '#/view/com/util/List';
+import type { ListRef } from '#/view/com/util/List';
 
 import { ProfileHeader, ProfileHeaderLoading } from '#/screens/Profile/Header';
 import { ProfileFeedSection } from '#/screens/Profile/Sections/Feed';

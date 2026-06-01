@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
-import { type ThreadItem } from '#/state/queries/usePostThread/types';
+import type { ThreadItem } from '#/state/queries/usePostThread/types';
 
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 

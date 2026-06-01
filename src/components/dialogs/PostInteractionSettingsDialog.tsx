@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Text as NestedText, View } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atcute/bluesky';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';

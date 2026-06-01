@@ -1,15 +1,15 @@
-import {
-	type AppBskyEmbedRecord,
-	type ChatBskyActorDefs,
-	type ChatBskyConvoDefs,
-	type ChatBskyConvoSendMessage,
+import type {
+	AppBskyEmbedRecord,
+	ChatBskyActorDefs,
+	ChatBskyConvoDefs,
+	ChatBskyConvoSendMessage,
 } from '@atcute/bluesky';
-import { type Client } from '@atcute/client';
-import { type $type, type Did } from '@atcute/lexicons';
+import type { Client } from '@atcute/client';
+import type { $type, Did } from '@atcute/lexicons';
 
-import { type MessagesEventBus } from '#/state/messages/events/agent';
+import type { MessagesEventBus } from '#/state/messages/events/agent';
 
-import { type ConvoWithDetails } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 
 export type ConvoParams = {
 	convoId: string;

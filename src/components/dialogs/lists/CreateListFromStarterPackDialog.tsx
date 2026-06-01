@@ -1,11 +1,11 @@
 import { View } from 'react-native';
-import { type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useSession } from '#/state/session';
 

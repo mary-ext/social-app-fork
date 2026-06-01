@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
-import { type Did } from '@atcute/lexicons';
+import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
@@ -14,7 +14,7 @@ import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
-import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { getStarterPackOgCard } from '#/lib/strings/starter-pack';
 

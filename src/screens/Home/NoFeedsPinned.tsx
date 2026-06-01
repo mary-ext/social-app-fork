@@ -1,13 +1,14 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
 import * as TID from '@atcute/tid';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED } from '#/lib/constants';
 
-import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences';
-import { type UsePreferencesQueryResponse } from '#/state/queries/preferences';
+import {
+	useOverwriteSavedFeedsMutation,
+	type UsePreferencesQueryResponse,
+} from '#/state/queries/preferences';
 
 import { CenteredView } from '#/view/com/util/Views';
 

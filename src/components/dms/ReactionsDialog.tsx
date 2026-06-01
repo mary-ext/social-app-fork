@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, useWindowDimensions, View } from 'react-native';
-import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { HITSLOP_10 } from '#/lib/constants';
@@ -9,7 +9,7 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { type ActiveConvoStates, useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
-import { type SessionAccount } from '#/state/session/types';
+import type { SessionAccount } from '#/state/session/types';
 
 import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
 import { UserAvatar } from '#/view/com/util/UserAvatar';

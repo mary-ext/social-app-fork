@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { type ComAtprotoLabelDefs } from '@atcute/atproto';
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	BUILTIN_LABELS,
 	type DisplayRestrictions,
@@ -9,13 +9,13 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { type Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { type AppModerationCause } from '#/components/Pills';
+import type { AppModerationCause } from '#/components/Pills';
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const;
 export const OTHER_SELF_LABELS = ['graphic-media'] as const;

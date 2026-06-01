@@ -6,17 +6,13 @@ import { withSpring } from '#/lib/animations/reanimatedCompat';
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import {
-	type HomeTabNavigatorParams,
-	type NativeStackScreenProps,
-	type NavigationProp,
-} from '#/lib/routes/types';
+import type { HomeTabNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 
 import { emitSoftReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
-import { type FeedDescriptor, type FeedParams } from '#/state/queries/post-feed';
+import type { FeedDescriptor, FeedParams } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
+import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { useSession } from '#/state/session';
 import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
 

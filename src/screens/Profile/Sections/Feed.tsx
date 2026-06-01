@@ -10,7 +10,7 @@ import { truncateAndInvalidate } from '#/state/queries/util';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import { type ListRef } from '#/view/com/util/List';
+import type { ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -18,7 +18,7 @@ import { atoms as a, useTheme } from '#/alf';
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Text } from '#/components/Typography';
 
-import { type SectionRef } from './types';
+import type { SectionRef } from './types';
 
 interface FeedSectionProps {
 	ref?: React.Ref<SectionRef>;

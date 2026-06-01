@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useCurrentAccountProfile } from '#/state/queries/useCurrentAccountProfile';

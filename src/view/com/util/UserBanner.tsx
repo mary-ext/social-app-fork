@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { type DisplayRestrictions } from '@atcute/bluesky-moderation';
+import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { openImagePicker } from '#/lib/media/picker';

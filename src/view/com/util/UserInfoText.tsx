@@ -1,5 +1,5 @@
-import { type StyleProp, type TextStyle } from 'react-native';
-import { type AppBskyActorGetProfile } from '@atcute/bluesky';
+import type { StyleProp, TextStyle } from 'react-native';
+import type { AppBskyActorGetProfile } from '@atcute/bluesky';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';

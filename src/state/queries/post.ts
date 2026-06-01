@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type Cid, type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import type { Cid, Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -9,7 +9,7 @@ import { createRecord, deleteRecord } from '#/lib/api/records';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updatePostShadow } from '#/state/cache/post-shadow';
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import { useClients, useSession } from '#/state/session';
 import * as userActionHistory from '#/state/userActionHistory';
 

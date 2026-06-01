@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type ChatBskyConvoLeaveConvo, type ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
 

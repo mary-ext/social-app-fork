@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
-import { type Client } from '@atcute/client';
+import type { Client } from '@atcute/client';
 
 import { MessagesEventBus } from '#/state/messages/events/agent';
 import { useClients, useSession } from '#/state/session';

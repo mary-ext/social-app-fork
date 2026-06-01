@@ -10,8 +10,8 @@ import { useClients } from '#/state/session';
 import { logger } from '#/logger';
 
 import { NEW_TO_OLD_REASONS_MAP } from './const';
-import { type ReportState } from './state';
-import { type ParsedReportSubject } from './types';
+import type { ReportState } from './state';
+import type { ParsedReportSubject } from './types';
 
 export function useSubmitReportMutation() {
 	const { t: l } = useLingui();

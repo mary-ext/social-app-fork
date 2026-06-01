@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { View } from 'react-native';
-import { type BlockingModerationCause } from '@atcute/bluesky-moderation';
+import type { BlockingModerationCause } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { listUriToHref } from '#/lib/strings/url-helpers';

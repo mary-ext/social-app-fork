@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
-import {
-	type AnyProfileView,
-	type AppBskyNotificationDefs,
-	type AppBskyNotificationListActivitySubscriptions,
+import type {
+	AnyProfileView,
+	AppBskyNotificationDefs,
+	AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';

@@ -1,4 +1,4 @@
-import { type AppBskyNotificationDefs } from '@atcute/bluesky';
+import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { t } from '@lingui/core/macro';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

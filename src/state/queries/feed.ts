@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import {
-	type AppBskyActorDefs,
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type AppBskyUnspeccedGetPopularFeedGenerators,
+import type {
+	AppBskyActorDefs,
+	AppBskyFeedDefs,
+	AppBskyGraphDefs,
+	AppBskyUnspeccedGetPopularFeedGenerators,
 } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { t } from '@lingui/core/macro';
 import {
@@ -23,7 +23,7 @@ import {
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
@@ -34,7 +34,7 @@ import { useClients, useSession } from '#/state/session';
 import { router } from '#/routes';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
-import { type FeedDescriptor } from './post-feed';
+import type { FeedDescriptor } from './post-feed';
 import { precacheResolvedUri } from './resolve-uri';
 
 export type FeedSourceFeedInfo = {

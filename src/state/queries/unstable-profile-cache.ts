@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { type QueryClient, useQueryClient } from '@tanstack/react-query';
 
 const unstableProfileViewCacheQueryKeyRoot = 'unstableProfileViewCache';

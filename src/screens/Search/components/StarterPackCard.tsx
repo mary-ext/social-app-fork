@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { type AnyProfileView, type AppBskyGraphDefs, type AppBskyGraphStarterpack } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyGraphDefs, AppBskyGraphStarterpack } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 

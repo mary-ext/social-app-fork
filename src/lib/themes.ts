@@ -3,7 +3,7 @@ import { darkPalette, dimPalette, lightPalette } from '#/alf/themes';
 import { fontWeight } from '#/alf/tokens';
 
 import { colors } from './styles';
-import { type Theme } from './ThemeContext';
+import type { Theme } from './ThemeContext';
 
 export const defaultTheme: Theme = {
 	colorScheme: 'light',

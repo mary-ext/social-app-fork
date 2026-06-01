@@ -6,7 +6,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import * as ProfileCard from '#/components/ProfileCard';
 
-import { type AutocompleteItemProps } from './types';
+import type { AutocompleteItemProps } from './types';
 
 export function AutocompleteItemProfile({ active, isFirst, isLast, props, item }: AutocompleteItemProps) {
 	const t = useTheme();

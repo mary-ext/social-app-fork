@@ -1,15 +1,15 @@
 import { memo, useMemo, useState } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs, type AppBskyFeedPost, type AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import { CountWheel } from '#/lib/custom-animations/CountWheel';
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
 import { useRequireAuth } from '#/state/session';

@@ -1,4 +1,4 @@
-import { type Ref } from 'react';
+import type { Ref } from 'react';
 import { type TextInput, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 

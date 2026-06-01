@@ -1,5 +1,5 @@
 import * as toast from '#/components/Toast';
-import { type ToastType } from '#/components/Toast/types';
+import type { ToastType } from '#/components/Toast/types';
 
 /** @deprecated use {@link ToastType} and {@link toast} instead */
 export type LegacyToastType =

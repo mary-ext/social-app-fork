@@ -1,5 +1,5 @@
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 
 import { isGifEmbed } from '#/lib/strings/embed-player';

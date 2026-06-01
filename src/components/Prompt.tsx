@@ -6,10 +6,10 @@ import { atoms as a, type TextStyleProp, useTheme } from '#/alf';
 
 import { Button, type ButtonColor, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Text } from '#/components/Typography';
 
-import { type BottomSheetViewProps } from '#/shims/bottom-sheet';
+import type { BottomSheetViewProps } from '#/shims/bottom-sheet';
 
 export {
 	type DialogControlProps as PromptControlProps,

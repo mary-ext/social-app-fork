@@ -1,9 +1,9 @@
 import { createContext, useContext, useReducer } from 'react';
-import {
-	type AnyProfileView,
-	type AppBskyFeedDefs,
-	type AppBskyGraphDefs,
-	type AppBskyGraphStarterpack,
+import type {
+	AnyProfileView,
+	AppBskyFeedDefs,
+	AppBskyGraphDefs,
+	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
 import { defineMessage, plural } from '@lingui/core/macro';
 

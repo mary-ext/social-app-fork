@@ -1,8 +1,8 @@
 import { createContext, useContext } from 'react';
 
-import {
-	type createPostThreadOtherQueryKey,
-	type createPostThreadQueryKey,
+import type {
+	createPostThreadOtherQueryKey,
+	createPostThreadQueryKey,
 } from '#/state/queries/usePostThread/types';
 
 /**

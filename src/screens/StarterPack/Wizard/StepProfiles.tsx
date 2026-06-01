@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';

@@ -1,4 +1,4 @@
-import { type StyleProp, type ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
 import { getModerationCauseKey, unique } from '#/lib/moderation';

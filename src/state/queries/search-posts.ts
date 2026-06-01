@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedSearchPosts } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedSearchPosts } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';

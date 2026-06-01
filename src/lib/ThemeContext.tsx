@@ -1,8 +1,7 @@
-import { type ReactNode } from 'react';
-import { createContext, useContext } from 'react';
-import { type TextStyle, type ViewStyle } from 'react-native';
+import { type ReactNode, createContext, useContext } from 'react';
+import type { TextStyle, ViewStyle } from 'react-native';
 
-import { type ThemeName } from '#/alf';
+import type { ThemeName } from '#/alf';
 
 import { darkTheme, defaultTheme, dimTheme } from './themes';
 

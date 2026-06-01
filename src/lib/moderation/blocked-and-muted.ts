@@ -1,4 +1,4 @@
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 
 export function isBlockedOrBlocking(profile: AnyProfileView) {
 	return profile.viewer?.blockedBy || profile.viewer?.blocking;

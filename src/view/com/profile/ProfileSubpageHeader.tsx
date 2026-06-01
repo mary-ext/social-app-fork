@@ -1,14 +1,13 @@
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { emitSoftReset } from '#/state/events';

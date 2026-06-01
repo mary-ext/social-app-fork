@@ -16,11 +16,11 @@ import { STALE } from '#/state/queries';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from '#/state/queries/preferences';
 import { useClients } from '#/state/session';
 
-import {
-	type AutocompleteApi,
-	type AutocompleteItem,
-	type AutocompleteItemType,
-	type AutocompleteProfile,
+import type {
+	AutocompleteApi,
+	AutocompleteItem,
+	AutocompleteItemType,
+	AutocompleteProfile,
 } from '#/components/Autocomplete/types';
 
 import { useEmojiSearch } from './useEmojiSearch';

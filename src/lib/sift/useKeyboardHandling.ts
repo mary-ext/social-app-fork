@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { type UseSiftReturn } from './useSift';
+import type { UseSiftReturn } from './useSift';
 
 export function useKeyboardHandling(props: {
 	enabled?: boolean;

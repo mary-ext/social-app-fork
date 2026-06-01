@@ -1,4 +1,4 @@
-import { type I18n } from '@lingui/core';
+import type { I18n } from '@lingui/core';
 import { plural } from '@lingui/core/macro';
 
 export function displayDuration(i18n: I18n, durationInMinutes: number) {

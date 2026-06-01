@@ -1,6 +1,6 @@
-import { type AppBskyActorDefs, type AppBskyFeedDefs, type AppBskyFeedGetQuotes } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedGetQuotes } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ResourceUri } from '@atcute/lexicons';
+import type { ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 

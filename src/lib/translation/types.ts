@@ -1,4 +1,4 @@
-import { type TranslationTaskResult } from '#/shims/bsky-translate-text';
+import type { TranslationTaskResult } from '#/shims/bsky-translate-text';
 
 export type TranslationState =
 	| { status: 'idle' }

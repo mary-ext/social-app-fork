@@ -1,10 +1,10 @@
-import { type LabelPreference } from '@atcute/bluesky-moderation';
+import type { LabelPreference } from '@atcute/bluesky-moderation';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { replaceEqualDeep } from '#/lib/functions';
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
-import { type AppBskyActorDefs, type BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
+import type { AppBskyActorDefs, BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
 import { getAge } from '#/lib/strings/time';
 
 import { GCTIME, STALE } from '#/state/queries';
@@ -30,10 +30,7 @@ import {
 	DEFAULT_LOGGED_OUT_PREFERENCES,
 	DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const';
-import {
-	type ThreadViewPreferences,
-	type UsePreferencesQueryResponse,
-} from '#/state/queries/preferences/types';
+import type { ThreadViewPreferences, UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { createQueryKey } from '#/state/queries/util';
 import { useClients, useSession } from '#/state/session';
 import { saveLabelers } from '#/state/session/agent-config';

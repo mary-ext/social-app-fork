@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyGraphDefs } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { makeListLink } from '#/lib/routes/links';
 

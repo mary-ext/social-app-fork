@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { DropdownMenu } from 'radix-ui';
 

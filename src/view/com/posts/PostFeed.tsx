@@ -10,7 +10,7 @@ import {
 	View,
 	type ViewStyle,
 } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 

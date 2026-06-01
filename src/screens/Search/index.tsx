@@ -1,4 +1,4 @@
-import { type NativeStackScreenProps, type SearchTabNavigatorParams } from '#/lib/routes/types';
+import type { NativeStackScreenProps, SearchTabNavigatorParams } from '#/lib/routes/types';
 
 import { SearchScreenShell } from './Shell';
 

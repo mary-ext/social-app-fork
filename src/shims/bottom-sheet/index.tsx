@@ -8,7 +8,7 @@ import {
 	type RefAttributes,
 	useImperativeHandle,
 } from 'react';
-import { type ColorValue, type NativeSyntheticEvent } from 'react-native';
+import type { ColorValue, NativeSyntheticEvent } from 'react-native';
 
 export type BottomSheetState = 'closed' | 'closing' | 'open' | 'opening';
 

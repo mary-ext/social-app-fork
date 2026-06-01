@@ -1,17 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { type InfiniteData, type UseInfiniteQueryResult } from '@tanstack/react-query';
+import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import {
-	type CommonNavigatorParams,
-	type NativeStackScreenProps,
-	type NavigationProp,
-} from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';

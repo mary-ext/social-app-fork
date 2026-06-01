@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import { i18n } from '@lingui/core';
 import { I18nProvider as DefaultI18nProvider } from '@lingui/react';
-import { type Locale } from 'date-fns';
+import type { Locale } from 'date-fns';
 
 import { useLocaleLanguage } from './i18n';
 

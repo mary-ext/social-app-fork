@@ -1,5 +1,5 @@
 import { Pressable, View } from 'react-native';
-import { type ChatBskyActorDefs } from '@atcute/bluesky';
+import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
@@ -13,7 +13,7 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 
-import { type SystemMessageGroupItem } from '#/screens/Messages/components/groupSystemMessages';
+import type { SystemMessageGroupItem } from '#/screens/Messages/components/groupSystemMessages';
 
 import { atoms as a, useTheme } from '#/alf';
 

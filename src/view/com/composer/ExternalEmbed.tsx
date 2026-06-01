@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { cleanError } from '#/lib/strings/errors';
@@ -20,7 +20,7 @@ import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/u
 import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Typography';
 
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 export const ExternalEmbedGif = ({ onRemove, gif }: { onRemove: () => void; gif: Gif }) => {
 	const t = useTheme();

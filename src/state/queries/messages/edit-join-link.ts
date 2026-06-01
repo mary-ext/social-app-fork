@@ -1,4 +1,4 @@
-import { type ChatBskyGroupDefs, type ChatBskyGroupEditJoinLink } from '@atcute/bluesky';
+import type { ChatBskyGroupDefs, ChatBskyGroupEditJoinLink } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

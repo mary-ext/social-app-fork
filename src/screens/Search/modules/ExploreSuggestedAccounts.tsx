@@ -1,9 +1,9 @@
 import { memo, useEffect } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView, type AppBskyActorSearchActors } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AnyProfileView, AppBskyActorSearchActors } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
-import { type InfiniteData } from '@tanstack/react-query';
+import type { InfiniteData } from '@tanstack/react-query';
 
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 

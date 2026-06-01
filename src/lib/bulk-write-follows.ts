@@ -1,6 +1,6 @@
-import { type ComAtprotoRepoApplyWrites, type ComAtprotoRepoStrongRef } from '@atcute/atproto';
+import type { ComAtprotoRepoApplyWrites, ComAtprotoRepoStrongRef } from '@atcute/atproto';
 import { type Client, ok } from '@atcute/client';
-import { type ActorIdentifier, type Did } from '@atcute/lexicons';
+import type { ActorIdentifier, Did } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
 import chunk from 'lodash.chunk';
 

@@ -1,6 +1,6 @@
-import { type AppBskyActorDefs, type AppBskyGraphGetFollowers } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyGraphGetFollowers } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

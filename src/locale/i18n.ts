@@ -5,7 +5,7 @@ import defaultLocale from 'date-fns/locale/en-US';
 import { useLanguagePrefs } from '#/state/preferences';
 
 import { sanitizeAppLanguageSetting } from '#/locale/helpers';
-import { AppLanguage } from '#/locale/languages';
+import type { AppLanguage } from '#/locale/languages';
 import { messages } from '#/locale/locales/en/messages';
 
 export async function dynamicActivate(locale: AppLanguage) {

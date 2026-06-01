@@ -1,5 +1,5 @@
 import { type Client, ok } from '@atcute/client';
-import { type Blob as AtpBlob } from '@atcute/lexicons';
+import type { Blob as AtpBlob } from '@atcute/lexicons';
 
 /**
  * Uploads a blob to the user's repo via `com.atproto.repo.uploadBlob`.

@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type GestureResponderEvent, type TextStyle, View } from 'react-native';
-import { type AnyProfileView, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
 	type BlockingModerationCause,
 	DisplayContext,
@@ -38,7 +38,7 @@ import { getSystemMessageInfo } from '#/components/dms/getSystemMessageInfo';
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
 import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/components/icons/EnveopeOpen';
 import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash';

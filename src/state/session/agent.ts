@@ -1,5 +1,5 @@
 import { type Client, ok } from '@atcute/client';
-import { type Did as AtcuteDid } from '@atcute/lexicons';
+import type { Did as AtcuteDid } from '@atcute/lexicons';
 import {
 	finalizeAuthorization,
 	getSession,
@@ -12,7 +12,7 @@ import { networkRetry } from '#/lib/async/retry';
 import { type Clients, createOAuthClients, createPublicClients } from './clients';
 import { configureModerationForAccount, configureModerationForGuest } from './moderation';
 import { configureAppOAuth } from './oauth';
-import { type SessionAccount } from './types';
+import type { SessionAccount } from './types';
 
 export class InactiveAccountError extends Error {
 	account: SessionAccount;

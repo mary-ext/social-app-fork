@@ -13,12 +13,12 @@
  * -prf
  */
 
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
-	type AppBskyGraphGetStarterPacksWithMembership,
+import type {
+	AnyProfileView,
+	AppBskyActorDefs,
+	AppBskyGraphGetStarterPacksWithMembership,
 } from '@atcute/bluesky';
-import { type Did, type ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

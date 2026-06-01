@@ -1,20 +1,20 @@
 import { createContext, useCallback, useContext, useEffect, useState, useSyncExternalStore } from 'react';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
-import { type Client } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { Client } from '@atcute/client';
+import type { Did } from '@atcute/lexicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useAppState } from '#/lib/appState';
 
 import { Convo } from '#/state/messages/convo/agent';
-import {
-	type ConvoParams,
-	type ConvoState,
-	type ConvoStateBackgrounded,
-	type ConvoStateDisabled,
-	type ConvoStateReady,
-	type ConvoStateSuspended,
+import type {
+	ConvoParams,
+	ConvoState,
+	ConvoStateBackgrounded,
+	ConvoStateDisabled,
+	ConvoStateReady,
+	ConvoStateSuspended,
 } from '#/state/messages/convo/types';
 import { isConvoActive } from '#/state/messages/convo/util';
 import { useMessagesEventBus } from '#/state/messages/events';
@@ -23,7 +23,7 @@ import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/l
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
 
-import { type GroupConvoMember } from '#/components/dms/util';
+import type { GroupConvoMember } from '#/components/dms/util';
 
 export * from '#/state/messages/convo/util';
 

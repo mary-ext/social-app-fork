@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { type AppBskyFeedDefs, type AppBskyFeedPostgate } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

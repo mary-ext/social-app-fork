@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 import { View } from 'react-native';
-import {
-	type AnyProfileView,
-	type AppBskyGraphGetStarterPacksWithMembership,
-	type AppBskyGraphStarterpack,
+import type {
+	AnyProfileView,
+	AppBskyGraphGetStarterPacksWithMembership,
+	AppBskyGraphStarterpack,
 } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { useActorStarterPacksWithMembershipsQuery } from '#/state/queries/actor-starter-packs';

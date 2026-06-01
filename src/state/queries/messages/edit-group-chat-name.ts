@@ -1,4 +1,4 @@
-import { type ChatBskyGroupEditGroup } from '@atcute/bluesky';
+import type { ChatBskyGroupEditGroup } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

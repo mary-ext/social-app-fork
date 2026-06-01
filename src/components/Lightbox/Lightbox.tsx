@@ -22,7 +22,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { CircleChromeButton } from '#/components/Lightbox/chrome/CircleChromeButton';
 import { PagerDots } from '#/components/Lightbox/chrome/PagerDots';
 import { useLightbox, useLightboxControls } from '#/components/Lightbox/state';
-import { type ImageSource } from '#/components/Lightbox/types';
+import type { ImageSource } from '#/components/Lightbox/types';
 import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import * as Toast from '#/components/Toast';

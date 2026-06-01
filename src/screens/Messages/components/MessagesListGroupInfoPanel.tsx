@@ -15,7 +15,7 @@ import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { AddMembersFlow } from '#/components/dms/AddMembersFlow';
-import { type ConvoWithDetails } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 import * as Toast from '#/components/Toast';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';

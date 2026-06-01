@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react';
-import { type AppBskyFeedDefs as AtcAppBskyFeedDefs, type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs as AtcAppBskyFeedDefs, AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
@@ -11,7 +11,7 @@ import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { type FeedPostSlice, type FeedPostSliceItem } from '#/state/queries/post-feed';
+import type { FeedPostSlice, FeedPostSliceItem } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost } from '#/state/queries/util';
 import { useClients } from '#/state/session';

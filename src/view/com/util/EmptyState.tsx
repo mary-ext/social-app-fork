@@ -1,6 +1,5 @@
 import { isValidElement } from 'react';
-import { type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
-import { View } from 'react-native';
+import { type StyleProp, type TextStyle, type ViewStyle, View } from 'react-native';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 

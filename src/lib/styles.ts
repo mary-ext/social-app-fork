@@ -1,6 +1,6 @@
 import { type StyleProp, StyleSheet, type TextStyle } from 'react-native';
 
-import { type Theme, type TypographyVariant } from './ThemeContext';
+import type { Theme, TypographyVariant } from './ThemeContext';
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 /** @deprecated use ALF colors instead */

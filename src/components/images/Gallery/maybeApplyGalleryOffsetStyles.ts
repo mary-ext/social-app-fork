@@ -1,9 +1,9 @@
-import { type AppBskyFeedDefs, type AppBskyFeedPost } from '@atcute/bluesky';
-import { type DisplayRestrictions, type ModerationCause } from '@atcute/bluesky-moderation';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
 
 import { unique } from '#/lib/moderation';
 
-import { type AppModerationCause } from '#/components/Pills';
+import type { AppModerationCause } from '#/components/Pills';
 
 export const POST_META_NO_CONTENT_OFFSET = { paddingTop: 10 };
 export const POST_EMBED_NO_CONTENT_OFFSET = { paddingTop: 6 };

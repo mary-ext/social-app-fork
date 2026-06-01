@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -14,7 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -27,7 +27,7 @@ import { useSession } from '#/state/session';
 
 import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { FAB } from '#/view/com/util/fab/FAB';
-import { type ListRef } from '#/view/com/util/List';
+import type { ListRef } from '#/view/com/util/List';
 
 import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen';
 

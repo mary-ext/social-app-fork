@@ -1,17 +1,13 @@
 import { useState } from 'react';
 import { View } from 'react-native';
-import { type ChatBskyActorDefs } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ChatBskyActorDefs } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import {
-	type CommonNavigatorParams,
-	type NativeStackScreenProps,
-	type NavigationProp,
-} from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
 
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
 import { ConvoStatus } from '#/state/messages/convo/types';
@@ -33,7 +29,7 @@ import { atoms as a, useTheme } from '#/alf';
 import { AvatarBubbles } from '#/components/AvatarBubbles';
 import { Button, type ButtonColor, ButtonIcon } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
-import { type ConvoWithDetails, type GroupConvoMember } from '#/components/dms/util';
+import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeftIcon } from '#/components/icons/ArrowBoxLeft';
 import {
@@ -41,7 +37,7 @@ import {
 	Bell2Off_Stroke2_Corner0_Rounded as BellOffIcon,
 } from '#/components/icons/Bell2';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { EditBig_Stroke2_Corner2_Rounded as EditIcon } from '#/components/icons/EditBig';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';

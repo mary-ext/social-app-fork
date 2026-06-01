@@ -1,9 +1,8 @@
-import { type AppBskyNotificationDeclaration } from '@atcute/bluesky';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
+import { useLingui, Trans } from '@lingui/react/macro';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
 

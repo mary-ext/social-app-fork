@@ -1,13 +1,13 @@
 import { useCallback } from 'react';
-import {
-	type AnyProfileView,
-	type AppBskyActorDefs,
-	type AppBskyActorGetProfiles,
-	type AppBskyActorProfile,
-	type AppBskyGraphGetFollows,
+import type {
+	AnyProfileView,
+	AppBskyActorDefs,
+	AppBskyActorGetProfiles,
+	AppBskyActorProfile,
+	AppBskyGraphGetFollows,
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
-import { type ActorIdentifier, type Did, type ResourceUri } from '@atcute/lexicons';
+import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import {
 	type InfiniteData,
@@ -25,8 +25,8 @@ import { until } from '#/lib/async/until';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
 
 import { updateProfileShadow } from '#/state/cache/profile-shadow';
-import { type Shadow } from '#/state/cache/types';
-import { type ImageMeta } from '#/state/gallery';
+import type { Shadow } from '#/state/cache/types';
+import type { ImageMeta } from '#/state/gallery';
 import { STALE } from '#/state/queries';
 import { resetProfilePostsQueries } from '#/state/queries/post-feed';
 import { RQKEY as PROFILE_FOLLOWS_RQKEY } from '#/state/queries/profile-follows';

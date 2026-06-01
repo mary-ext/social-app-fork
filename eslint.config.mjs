@@ -101,6 +101,7 @@ export default defineConfig(
 					},
 				},
 			],
+			'bsky-internal/consistent-type-imports': 'error',
 			'bsky-internal/use-prefixed-imports': 'error',
 			'bsky-internal/lingui-msg-rule': 'error',
 
@@ -120,7 +121,6 @@ export default defineConfig(
 			'react-hooks/immutability': 'warn',
 
 			/** Import linting */
-			'import-x/consistent-type-specifier-style': ['warn', 'prefer-inline'],
 			'import-x/no-unresolved': [
 				'error',
 				{
@@ -155,10 +155,6 @@ export default defineConfig(
 					caughtErrors: 'none',
 					ignoreRestSiblings: true,
 				},
-			],
-			'@typescript-eslint/consistent-type-imports': [
-				'warn',
-				{ prefer: 'type-imports', fixStyle: 'inline-type-imports' },
 			],
 			'@typescript-eslint/no-require-imports': 'off',
 			'@typescript-eslint/no-unused-expressions': [

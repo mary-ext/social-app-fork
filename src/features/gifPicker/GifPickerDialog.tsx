@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { type TextInput } from 'react-native';
+import type { TextInput } from 'react-native';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 
 import * as Dialog from '#/components/Dialog';
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
@@ -18,7 +18,7 @@ import { GifPickerHeader } from '#/features/gifPicker/components/GifPickerHeader
 import { GifPickerPlaceholder } from '#/features/gifPicker/components/GifPickerPlaceholder';
 import { useGifPickerData } from '#/features/gifPicker/hooks/useGifPickerData';
 import { useRecentGifs } from '#/features/gifPicker/hooks/useRecentGifs';
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 export function GifPickerDialog({
 	control,

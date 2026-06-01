@@ -1,9 +1,9 @@
 import { useCallback, useRef, useState } from 'react';
 import { ActivityIndicator, type GestureResponderEvent, Pressable } from 'react-native';
-import { type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
-import { type EmbedPlayerParams } from '#/lib/strings/embed-player';
+import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 

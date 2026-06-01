@@ -1,5 +1,5 @@
-import { type CSSProperties } from 'react';
-import { type ImageStyle, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+import type { CSSProperties } from 'react';
+import type { ImageStyle, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 

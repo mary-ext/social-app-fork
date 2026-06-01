@@ -1,7 +1,7 @@
-import { type AppBskyVideoDefs } from '@atcute/bluesky';
+import type { AppBskyVideoDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Blob as AtpBlob } from '@atcute/lexicons';
-import { type I18n } from '@lingui/core';
+import type { Blob as AtpBlob } from '@atcute/lexicons';
+import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
 import { uploadBlob } from '#/lib/api/upload-blob';
@@ -9,7 +9,7 @@ import { AbortError } from '#/lib/async/cancelable';
 import { LOCAL_DEV_SERVICE } from '#/lib/constants';
 import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
-import { type CompressedVideo, type VideoAsset } from '#/lib/media/video/types';
+import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
 import { uploadVideo } from '#/lib/media/video/upload';
 import { createVideoClient } from '#/lib/media/video/util';
 import { isNetworkError } from '#/lib/strings/errors';

@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/react/macro';
 
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { makeRecordUri } from '#/lib/strings/url-helpers';
 
 import { PostLikedBy as PostLikedByComponent } from '#/view/com/post-thread/PostLikedBy';

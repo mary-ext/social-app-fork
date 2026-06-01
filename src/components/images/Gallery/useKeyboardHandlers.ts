@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { type FlatList } from 'react-native';
+import type { FlatList } from 'react-native';
 
 import { tween } from '#/components/images/Gallery/tween';
 import { getOffsetForIndex } from '#/components/images/Gallery/utils';

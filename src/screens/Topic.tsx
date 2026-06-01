@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
 import { enforceLen } from '#/lib/strings/helpers';

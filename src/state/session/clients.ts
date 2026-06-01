@@ -1,5 +1,5 @@
 import { Client, simpleFetchHandler } from '@atcute/client';
-import { type OAuthUserAgent } from '@atcute/oauth-browser-client';
+import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 
 import { PUBLIC_BSKY_SERVICE } from '#/lib/constants';
 

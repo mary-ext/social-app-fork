@@ -33,7 +33,7 @@ import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 
-import { type ConvoWithDetails } from './util';
+import type { ConvoWithDetails } from './util';
 
 const PFP_SIZE = 40;
 

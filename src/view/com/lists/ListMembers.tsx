@@ -1,6 +1,6 @@
 import { type JSX, useCallback, useMemo, useState } from 'react';
 import { Dimensions, type GestureResponderEvent, type StyleProp, View, type ViewStyle } from 'react-native';
-import { type AnyProfileView, type AppBskyGraphDefs } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';

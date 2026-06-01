@@ -2,7 +2,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 import { BSKY_FEED_OWNER_DIDS } from '#/lib/constants';
 
-import { type UsePreferencesQueryResponse } from '#/state/queries/preferences';
+import type { UsePreferencesQueryResponse } from '#/state/queries/preferences';
 
 let debugTopics = '';
 if (typeof window !== 'undefined') {

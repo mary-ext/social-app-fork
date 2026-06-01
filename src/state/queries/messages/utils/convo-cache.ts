@@ -1,5 +1,5 @@
-import { type ChatBskyConvoDefs, type ChatBskyConvoListConvos } from '@atcute/bluesky';
-import { type InfiniteData, type QueryClient, type QueryKey } from '@tanstack/react-query';
+import type { ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { InfiniteData, QueryClient, QueryKey } from '@tanstack/react-query';
 
 import { RQKEY as CONVO_KEY } from '../conversation';
 import { RQKEY_ROOT as CONVO_LIST_KEY } from '../list-conversations';

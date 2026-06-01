@@ -1,12 +1,11 @@
 import { memo, useMemo } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { makeProfileLink } from '#/lib/routes/links';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
@@ -22,7 +21,7 @@ import * as Menu from '#/components/Menu';
 
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
-import { type ShareMenuItemsProps } from './ShareMenuItems.types';
+import type { ShareMenuItemsProps } from './ShareMenuItems.types';
 
 let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode => {
 	const { hasSession } = useSession();

@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 
-import { type FeedPostSliceItem } from '#/state/queries/post-feed';
+import type { FeedPostSliceItem } from '#/state/queries/post-feed';
 
 import { atoms as a, useGutters } from '#/alf';
 

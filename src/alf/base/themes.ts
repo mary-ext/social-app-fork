@@ -1,5 +1,5 @@
 import { atoms } from './atoms';
-import { type ShadowStyle } from './atoms/types';
+import type { ShadowStyle } from './atoms/types';
 import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from './palette';
 import { alpha } from './utils/alpha';
 

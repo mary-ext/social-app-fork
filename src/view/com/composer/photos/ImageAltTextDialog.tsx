@@ -6,7 +6,7 @@ import { MAX_ALT_TEXT } from '#/lib/constants';
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
 import { enforceLen } from '#/lib/strings/helpers';
 
-import { type ComposerImage } from '#/state/gallery';
+import type { ComposerImage } from '#/state/gallery';
 
 import { AltTextCounterWrapper } from '#/view/com/composer/AltTextCounterWrapper';
 

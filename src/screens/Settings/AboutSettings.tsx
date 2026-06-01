@@ -1,9 +1,9 @@
 import { Platform } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { getDeviceId } from '#/lib/device-id';
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
 

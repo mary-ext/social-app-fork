@@ -1,12 +1,11 @@
 import { useCallback, useMemo } from 'react';
 import { type ListRenderItemInfo, Text as RNText, View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { type AllNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';

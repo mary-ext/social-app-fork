@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { type AnyProfileView } from '@atcute/bluesky';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import type { AnyProfileView } from '@atcute/bluesky';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 

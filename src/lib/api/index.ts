@@ -1,27 +1,19 @@
-import {
-	type ComAtprotoLabelDefs,
-	type ComAtprotoRepoApplyWrites,
-	type ComAtprotoRepoStrongRef,
+import type {
+	ComAtprotoLabelDefs,
+	ComAtprotoRepoApplyWrites,
+	ComAtprotoRepoStrongRef,
 } from '@atcute/atproto';
-import {
-	type AppBskyEmbedExternal,
-	type AppBskyEmbedImages,
-	type AppBskyEmbedVideo,
-	type AppBskyFeedPost,
+import type {
+	AppBskyEmbedExternal,
+	AppBskyEmbedImages,
+	AppBskyEmbedVideo,
+	AppBskyFeedPost,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import {
-	type $type,
-	type Blob as AtpBlob,
-	type Cid,
-	type Did,
-	type GenericUri,
-	type Handle,
-	type ResourceUri,
-} from '@atcute/lexicons';
+import type { $type, Blob as AtpBlob, Cid, Did, GenericUri, Handle, ResourceUri } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
 import { t } from '@lingui/core/macro';
-import { type QueryClient } from '@tanstack/react-query';
+import type { QueryClient } from '@tanstack/react-query';
 
 import { isNetworkError } from '#/lib/strings/errors';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
@@ -36,7 +28,7 @@ import {
 
 import { logger } from '#/logger';
 
-import { type EmbedDraft, type PostDraft, type ThreadDraft } from '#/view/com/composer/state/composer';
+import type { EmbedDraft, PostDraft, ThreadDraft } from '#/view/com/composer/state/composer';
 
 import { createGIFDescription } from '../gif-alt-text';
 import { serializeRecordCid } from './cid';

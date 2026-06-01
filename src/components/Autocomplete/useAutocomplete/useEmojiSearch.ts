@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { type AutocompleteEmoji } from '#/components/Autocomplete/types';
+import type { AutocompleteEmoji } from '#/components/Autocomplete/types';
 import { loadEmojiMart } from '#/components/EmojiPicker/preload';
 
 /**

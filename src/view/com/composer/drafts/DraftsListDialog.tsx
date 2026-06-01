@@ -17,7 +17,7 @@ import { Text } from '#/components/Typography';
 
 import { DraftItem } from './DraftItem';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
-import { type DraftSummary } from './state/schema';
+import type { DraftSummary } from './state/schema';
 
 export function DraftsListDialog({
 	control,

@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type AppBskyEmbedRecord, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AppBskyEmbedRecord, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
-import { type $type, type Did, type Handle } from '@atcute/lexicons';
+import type { $type, Did, Handle } from '@atcute/lexicons';
 
 import {
 	runOnJS,

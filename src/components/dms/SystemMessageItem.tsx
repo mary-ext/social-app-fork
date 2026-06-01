@@ -1,10 +1,10 @@
 import { View } from 'react-native';
-import { type ChatBskyActorDefs } from '@atcute/bluesky';
+import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
-import { type ConvoItem } from '#/state/messages/convo/types';
+import type { ConvoItem } from '#/state/messages/convo/types';
 
 import { useInviteLinkDialog } from '#/screens/Messages/components/InviteLinkDialogProvider';
 

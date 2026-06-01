@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { View } from 'react-native';
 
 import { atoms as a, flatten, type TextStyleProp, useAlf, useTheme, type ViewStyleProp } from '#/alf';

@@ -3,7 +3,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
 import { HITSLOP_10 } from '#/lib/constants';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 import { useLockConvo } from '#/state/queries/messages/lock-conversation';
@@ -13,7 +13,7 @@ import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { type ConvoWithDetails } from '#/components/dms/util';
+import type { ConvoWithDetails } from '#/components/dms/util';
 import { Lock_Stroke2_Corner0_Rounded as LockIcon } from '#/components/icons/Lock';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';

@@ -1,6 +1,6 @@
 import { Client, ok, simpleFetchHandler } from '@atcute/client';
-import { type ActorResolver } from '@atcute/identity-resolver';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import type { ActorResolver } from '@atcute/identity-resolver';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { configureOAuth, createAuthorizationUrl } from '@atcute/oauth-browser-client';
 
 import { timeout } from '#/lib/async/timeout';

@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
 
 import { type Alf, atoms as a, useAlf, useTheme } from '#/alf';
 
 import * as SegmentedControl from '#/components/forms/SegmentedControl';
-import { type Props as SVGIconProps } from '#/components/icons/common';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
 import { TextSize_Stroke2_Corner0_Rounded as TextSize } from '#/components/icons/TextSize';

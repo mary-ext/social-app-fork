@@ -1,10 +1,10 @@
-import {
-	type AppBskyEmbedRecord,
-	type AppBskyEmbedRecordWithMedia,
-	type AppBskyFeedDefs,
-	type AppBskyFeedPostgate,
+import type {
+	AppBskyEmbedRecord,
+	AppBskyEmbedRecordWithMedia,
+	AppBskyFeedDefs,
+	AppBskyFeedPostgate,
 } from '@atcute/bluesky';
-import { type $type, type ResourceUri } from '@atcute/lexicons';
+import type { $type, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate';

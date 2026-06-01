@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -14,10 +13,10 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { MAX_LABELERS } from '#/lib/constants';
 import { isAppLabeler } from '#/lib/moderation';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import { useLabelerSubscriptionMutation } from '#/state/queries/labeler';
 import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like';
 import { usePreferencesQuery } from '#/state/queries/preferences';

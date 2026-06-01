@@ -1,8 +1,8 @@
 import { useEffect, useId, useState } from 'react';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
-import { type FeedSourceInfo } from '#/state/queries/feed';
+import type { FeedSourceInfo } from '#/state/queries/feed';
 
 import { Logger } from '#/logger';
 

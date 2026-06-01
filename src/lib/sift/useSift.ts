@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useCallback, useId, useRef, useState } from 'react';
-import { type ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { computeStyles } from './computeStyles';

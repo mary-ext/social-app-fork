@@ -1,16 +1,16 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ClientResponseError } from '@atcute/client';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { usePalette } from '#/lib/hooks/usePalette';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
-import { type FeedDescriptor } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useRemoveFeedMutation } from '#/state/queries/preferences';
 
 import { logger } from '#/logger';

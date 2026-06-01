@@ -1,4 +1,4 @@
-import { type ComponentType } from 'react';
+import type { ComponentType } from 'react';
 import {
 	Pressable,
 	type PressableProps,
@@ -10,7 +10,7 @@ import {
 
 import { HITSLOP_20 } from '#/lib/constants';
 
-import { type Props as IconProps } from '#/components/icons/common';
+import type { Props as IconProps } from '#/components/icons/common';
 
 type Props = {
 	icon: ComponentType<IconProps>;

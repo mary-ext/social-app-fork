@@ -1,6 +1,6 @@
-import { type EmbedPlayerSource } from '#/lib/strings/embed-player';
+import type { EmbedPlayerSource } from '#/lib/strings/embed-player';
 
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 /** Data that's specific to the device and does not vary based account */
 export type Device = {

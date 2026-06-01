@@ -1,16 +1,16 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { type ComAtprotoLabelDefs } from '@atcute/atproto';
-import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { ComAtprotoLabelDefs } from '@atcute/atproto';
+import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { BACK_HITSLOP } from '#/lib/constants';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
-import { type Shadow } from '#/state/cache/types';
+import type { Shadow } from '#/state/cache/types';
 import { useSession } from '#/state/session';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';

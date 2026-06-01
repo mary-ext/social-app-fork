@@ -1,4 +1,4 @@
-import { type AppBskyFeedGetActorFeeds } from '@atcute/bluesky';
+import type { AppBskyFeedGetActorFeeds } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -6,7 +6,7 @@ import {
 	ModerationCauseType,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { type InfiniteData, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

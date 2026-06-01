@@ -5,8 +5,7 @@ import {
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
 import { useLabelBehaviorDescription } from '#/lib/moderation/useLabelBehaviorDescription';

@@ -1,4 +1,4 @@
-import { type OAuthUserAgent } from '@atcute/oauth-browser-client';
+import type { OAuthUserAgent } from '@atcute/oauth-browser-client';
 
 import { emitNetworkConfirmed, emitNetworkLost, emitSessionDropped } from '#/state/events';
 

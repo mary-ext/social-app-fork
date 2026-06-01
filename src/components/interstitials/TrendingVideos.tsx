@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { VIDEO_FEED_URI } from '#/lib/constants';

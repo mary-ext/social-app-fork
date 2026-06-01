@@ -1,6 +1,6 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
-import { type AppBskyDraftDefs } from '@atcute/bluesky';
-import { type GenericUri } from '@atcute/lexicons';
+import type { AppBskyDraftDefs } from '@atcute/bluesky';
+import type { GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -11,17 +11,17 @@ import { getImageDimensions } from '#/lib/media/metadata';
 import { mimeToExt } from '#/lib/media/video/util';
 import { getShortenedLength } from '#/lib/strings/rich-text-facets';
 
-import { type ComposerImage } from '#/state/gallery';
+import type { ComposerImage } from '#/state/gallery';
 import { threadgateAllowUISettingToAllowRecordValue } from '#/state/queries/threadgate/util';
 import { getClients } from '#/state/session';
 
-import { type ComposerState, type EmbedDraft, type PostDraft } from '#/view/com/composer/state/composer';
-import { type VideoState } from '#/view/com/composer/state/video';
+import type { ComposerState, EmbedDraft, PostDraft } from '#/view/com/composer/state/composer';
+import type { VideoState } from '#/view/com/composer/state/video';
 
-import { type Gif } from '#/features/gifPicker/types';
+import type { Gif } from '#/features/gifPicker/types';
 
 import { logger } from './logger';
-import { type DraftPostDisplay, type DraftSummary } from './schema';
+import type { DraftPostDisplay, DraftSummary } from './schema';
 import * as storage from './storage';
 
 const TENOR_HOSTNAME = 'media.tenor.com';

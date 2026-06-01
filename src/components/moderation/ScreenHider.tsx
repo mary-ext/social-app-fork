@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { CenteredView } from '#/view/com/util/Views';
 

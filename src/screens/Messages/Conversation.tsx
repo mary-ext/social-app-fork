@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { type RouteProp, useFocusEffect, useIsFocused, useRoute } from '@react-navigation/native';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';

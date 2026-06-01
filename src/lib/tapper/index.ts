@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useCallback, useRef, useState, useSyncExternalStore } from 'react';
-import { type TextInput } from 'react-native';
+import type { TextInput } from 'react-native';
 
-import {
-	type TapperActiveFacet,
-	type TapperConfig,
-	type TapperEvents,
-	type TapperFacetType,
-	type TapperNode,
-	type TapperSelection,
-	type TapperSnapshot,
+import type {
+	TapperActiveFacet,
+	TapperConfig,
+	TapperEvents,
+	TapperFacetType,
+	TapperNode,
+	TapperSelection,
+	TapperSnapshot,
 } from './types';
 import { buildTriggers, detectActiveFacet, nodeToFacet, parseNodesFromText } from './util';
 

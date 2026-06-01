@@ -1,4 +1,4 @@
-import { type TextStyle } from 'react-native';
+import type { TextStyle } from 'react-native';
 
 import * as tokens from '../tokens';
 

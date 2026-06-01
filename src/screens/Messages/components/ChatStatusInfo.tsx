@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { type AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -8,7 +8,7 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
-import { type ActiveConvoStates } from '#/state/messages/convo';
+import type { ActiveConvoStates } from '#/state/messages/convo';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';

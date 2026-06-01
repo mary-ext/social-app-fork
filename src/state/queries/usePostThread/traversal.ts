@@ -1,10 +1,10 @@
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
 
-import {
-	type ApiThreadItem,
-	type PostThreadParams,
-	type ThreadItem,
-	type TraversalMetadata,
+import type {
+	ApiThreadItem,
+	PostThreadParams,
+	ThreadItem,
+	TraversalMetadata,
 } from '#/state/queries/usePostThread/types';
 import {
 	getPostRecord,

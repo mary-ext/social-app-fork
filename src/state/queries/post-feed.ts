@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { AppState } from 'react-native';
-import {
-	type AppBskyActorDefs,
+import type {
+	AppBskyActorDefs,
 	AppBskyFeedDefs,
-	type AppBskyFeedGetActorLikes,
-	type AppBskyFeedGetAuthorFeed,
-	type AppBskyFeedGetFeed,
-	type AppBskyFeedGetListFeed,
-	type AppBskyFeedGetPosts,
-	type AppBskyFeedPost,
+	AppBskyFeedGetActorLikes,
+	AppBskyFeedGetAuthorFeed,
+	AppBskyFeedGetFeed,
+	AppBskyFeedGetListFeed,
+	AppBskyFeedGetPosts,
+	AppBskyFeedPost,
 } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -17,7 +17,7 @@ import {
 	ModerationCauseType,
 	type ModerationDecision,
 } from '@atcute/bluesky-moderation';
-import { type Client } from '@atcute/client';
+import type { Client } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
@@ -31,10 +31,10 @@ import { LikesFeedAPI } from '#/lib/api/feed/likes';
 import { ListFeedAPI } from '#/lib/api/feed/list';
 import { MergeFeedAPI } from '#/lib/api/feed/merge';
 import { PostListFeedAPI } from '#/lib/api/feed/posts';
-import { type FeedAPI, type ReasonFeedSource } from '#/lib/api/feed/types';
+import type { FeedAPI, ReasonFeedSource } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
-import { type BskyPreferences } from '#/lib/moderation/preferences-types';
+import type { BskyPreferences } from '#/lib/moderation/preferences-types';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';

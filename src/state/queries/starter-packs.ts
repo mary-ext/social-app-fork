@@ -1,13 +1,13 @@
-import {
-	type AnyProfileView,
-	type AppBskyFeedDefs,
+import type {
+	AnyProfileView,
+	AppBskyFeedDefs,
 	AppBskyGraphDefs,
-	type AppBskyGraphGetStarterPack,
-	type AppBskyGraphStarterpack,
-	type AppBskyRichtextFacet,
+	AppBskyGraphGetStarterPack,
+	AppBskyGraphStarterpack,
+	AppBskyRichtextFacet,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Cid, type Did, type Handle, type ResourceUri } from '@atcute/lexicons';
+import type { Cid, Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';

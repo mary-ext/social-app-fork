@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import * as TID from '@atcute/tid';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
+import { useLingui, Trans } from '@lingui/react/macro';
 
 import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants';
 

@@ -1,5 +1,5 @@
 import { ok } from '@atcute/client';
-import { type ActorIdentifier } from '@atcute/lexicons';
+import type { ActorIdentifier } from '@atcute/lexicons';
 import { type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';

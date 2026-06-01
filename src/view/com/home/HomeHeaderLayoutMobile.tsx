@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Animated from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { emitSoftReset } from '#/state/events';
 import { useSession } from '#/state/session';

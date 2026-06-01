@@ -1,17 +1,17 @@
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { type Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import * as TID from '@atcute/tid';
 
 import { DEFAULT_LABEL_SETTINGS } from '#/lib/moderation/const';
-import {
-	type AppBskyActorDefs as AtpActorDefs,
-	type BskyFeedViewPreference,
-	type BskyInterestsPreference,
-	type BskyPreferences,
-	type BskyThreadViewPreference,
-	type LabelVisibility,
+import type {
+	AppBskyActorDefs as AtpActorDefs,
+	BskyFeedViewPreference,
+	BskyInterestsPreference,
+	BskyPreferences,
+	BskyThreadViewPreference,
+	LabelVisibility,
 } from '#/lib/moderation/preferences-types';
 
 /**

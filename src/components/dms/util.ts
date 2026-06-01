@@ -1,4 +1,4 @@
-import { type AnyProfileView, type ChatBskyActorDefs, type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -6,11 +6,11 @@ import {
 	ModerationCauseType,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
-import { type $type } from '@atcute/lexicons';
+import type { $type } from '@atcute/lexicons';
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants';
 
-import { type Shadow } from '#/state/cache/profile-shadow';
+import type { Shadow } from '#/state/cache/profile-shadow';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
 
 import { logger } from '#/logger';

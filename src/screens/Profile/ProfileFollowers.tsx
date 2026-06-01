@@ -1,7 +1,7 @@
 import { Plural, useLingui } from '@lingui/react/macro';
 
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
-import { type CommonNavigatorParams, type NativeStackScreenProps } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useProfileQuery } from '#/state/queries/profile';

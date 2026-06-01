@@ -1,9 +1,9 @@
-import {
-	type AnyProfileView,
-	type ChatBskyActorDefs,
-	type ChatBskyConvoDefs,
-	type ChatBskyConvoListConvos,
-	type ChatBskyGroupAddMembers,
+import type {
+	AnyProfileView,
+	ChatBskyActorDefs,
+	ChatBskyConvoDefs,
+	ChatBskyConvoListConvos,
+	ChatBskyGroupAddMembers,
 } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { type InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query';

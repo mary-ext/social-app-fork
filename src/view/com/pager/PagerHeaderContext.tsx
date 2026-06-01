@@ -1,6 +1,6 @@
 import { createContext, useMemo } from 'react';
 
-import { type SharedValue } from '#/lib/animations/reanimatedCompat';
+import type { SharedValue } from '#/lib/animations/reanimatedCompat';
 
 export const PagerHeaderContext = createContext<{
 	scrollY: SharedValue<number>;

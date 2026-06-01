@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs, type AppBskyEmbedExternal } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
@@ -48,7 +48,7 @@ import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
 
-import { type ProfileHoverCardProps } from './types';
+import type { ProfileHoverCardProps } from './types';
 
 const floatingMiddlewares = [
 	offset(4),

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import { type AppBskyLabelerDefs } from '@atcute/bluesky';
+import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	type InterpretedLabelDefinition,
 	interpretLabelerDefinition,
@@ -23,7 +23,7 @@ import { LabelerLabelPreference } from '#/components/moderation/LabelPreference'
 import { Text } from '#/components/Typography';
 
 import { ErrorState } from '../ErrorState';
-import { type SectionRef } from './types';
+import type { SectionRef } from './types';
 
 interface LabelsSectionProps {
 	ref: React.Ref<SectionRef>;

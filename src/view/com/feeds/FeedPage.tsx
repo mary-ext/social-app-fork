@@ -1,6 +1,6 @@
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { type AppBskyActorDefs } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { type NavigationProp, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,19 +8,19 @@ import { useQueryClient } from '@tanstack/react-query';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { getRootNavigation, getTabState, TabState } from '#/lib/routes/helpers';
-import { type AllNavigatorParams } from '#/lib/routes/types';
+import type { AllNavigatorParams } from '#/lib/routes/types';
 
 import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { useSetHomeBadge } from '#/state/home-badge';
-import { type FeedSourceInfo } from '#/state/queries/feed';
+import type { FeedSourceInfo } from '#/state/queries/feed';
 import { type FeedDescriptor, type FeedParams, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
-import { type ListMethods } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { MainScrollProvider } from '#/view/com/util/MainScrollProvider';
 

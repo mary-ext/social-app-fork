@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { Platform, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
-import {
-	type AnyProfileView,
-	type AppBskyFeedDefs,
-	type AppBskyFeedPost,
-	type AppBskyFeedThreadgate,
+import type {
+	AnyProfileView,
+	AppBskyFeedDefs,
+	AppBskyFeedPost,
+	AppBskyFeedThreadgate,
 } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
@@ -14,13 +14,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getCurrentRoute } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
-import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
-import { type Richtext } from '#/lib/strings/rich-text-facets';
+import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
+import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 import { useTranslate } from '#/lib/translation';
 
-import { type Shadow } from '#/state/cache/post-shadow';
+import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useHiddenPosts, useHiddenPostsApi, useLanguagePrefs } from '#/state/preferences';

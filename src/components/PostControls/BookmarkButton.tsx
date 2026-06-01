@@ -1,11 +1,11 @@
 import { memo } from 'react';
-import { type Insets } from 'react-native';
-import { type AppBskyFeedDefs } from '@atcute/bluesky';
+import type { Insets } from 'react-native';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
-import { type Shadow } from '#/state/cache/post-shadow';
+import type { Shadow } from '#/state/cache/post-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
 import { useRequireAuth } from '#/state/session';

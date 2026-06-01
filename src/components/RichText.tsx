@@ -1,6 +1,6 @@
 import { type ReactNode, useMemo } from 'react';
-import { type StyleProp, type TextStyle } from 'react-native';
-import { type AppBskyRichtextFacet } from '@atcute/bluesky';
+import type { StyleProp, TextStyle } from 'react-native';
+import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';

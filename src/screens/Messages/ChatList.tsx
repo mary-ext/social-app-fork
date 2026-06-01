@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
-import { type ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useAppState } from '#/lib/appState';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { type MessagesTabNavigatorParams, type NavigationProp } from '#/lib/routes/types';
+import type { MessagesTabNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 
 import { listenSoftReset } from '#/state/events';

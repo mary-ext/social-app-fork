@@ -1,7 +1,7 @@
-import { type ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 
 import * as tokens from '../tokens';
-import { type ShadowStyle } from './types';
+import type { ShadowStyle } from './types';
 
 export const atoms = {
 	debug: {

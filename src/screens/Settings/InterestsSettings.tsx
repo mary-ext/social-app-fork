@@ -1,17 +1,16 @@
 import { useMemo, useState } from 'react';
 import { type TextStyle, View, type ViewStyle } from 'react-native';
-import { useLingui } from '@lingui/react/macro';
-import { Trans } from '@lingui/react/macro';
-import { type NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useLingui, Trans } from '@lingui/react/macro';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash.debounce';
 
 import { type Interest, interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
-import { type CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
 import { setInterestsPref } from '#/state/queries/preferences/agent';
-import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
+import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { createGetSuggestedFeedsQueryKey } from '#/state/queries/trending/useGetSuggestedFeedsQuery';
 import { createGetSuggestedUsersForDiscoverQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
 import { createGetSuggestedUsersForExploreQueryKey } from '#/state/queries/trending/useGetSuggestedUsersForExploreQuery';

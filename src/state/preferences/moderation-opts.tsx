@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo } from 'react';
-import { type ModerationOptions } from '@atcute/bluesky-moderation';
-import { type Did } from '@atcute/lexicons';
+import type { ModerationOptions } from '@atcute/bluesky-moderation';
+import type { Did } from '@atcute/lexicons';
 
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import { toModerationPreferences } from '#/lib/moderation/prefs';

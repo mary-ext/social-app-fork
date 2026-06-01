@@ -1,4 +1,4 @@
-import { type ChatBskyConvoGetLog } from '@atcute/bluesky';
+import type { ChatBskyConvoGetLog } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { EventEmitter } from 'eventemitter3';
 import { nanoid } from 'nanoid/non-secure';
