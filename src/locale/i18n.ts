@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { i18n } from '@lingui/core';
-import defaultLocale from 'date-fns/locale/en-US';
+import { enUS as defaultLocale } from 'date-fns/locale/en-US';
 
 import { useLanguagePrefs } from '#/state/preferences';
 
