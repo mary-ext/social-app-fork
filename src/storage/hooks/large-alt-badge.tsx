@@ -1,0 +1,31 @@
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+
+import { device } from '#/storage';
+
+type LargeAltBadgeContext = readonly [boolean, (value: boolean) => void];
+
+const context = createContext<LargeAltBadgeContext>([false, () => {}]);
+
+export function Provider({ children }: React.PropsWithChildren<{}>) {
+	const [enabled, setEnabled] = useState(() => device.get(['largeAltBadgeEnabled']) ?? false);
+
+	useEffect(() => {
+		const sub = device.addOnValueChangedListener(['largeAltBadgeEnabled'], () => {
+			setEnabled(device.get(['largeAltBadgeEnabled']) ?? false);
+		});
+		return () => sub.remove();
+	}, []);
+
+	const setter = useCallback((value: boolean) => {
+		setEnabled(value);
+		device.set(['largeAltBadgeEnabled'], value);
+	}, []);
+
+	const value = useMemo<LargeAltBadgeContext>(() => [enabled, setter], [enabled, setter]);
+
+	return <context.Provider value={value}>{children}</context.Provider>;
+}
+
+export function useLargeAltBadgeEnabled() {
+	return useContext(context);
+}

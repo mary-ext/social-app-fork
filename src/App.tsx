@@ -16,6 +16,7 @@ import { Provider as DialogStateProvider } from '#/state/dialogs';
 import { Provider as HomeBadgeProvider } from '#/state/home-badge';
 import { MessagesProvider } from '#/state/messages';
 import { Provider as ModalStateProvider } from '#/state/modals';
+import { Provider as PrefsStateProvider } from '#/state/preferences';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
 import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/unread';
@@ -129,21 +130,23 @@ function App() {
 	return (
 		<A11yProvider>
 			<SessionProvider>
-				<I18nProvider>
-					<ShellStateProvider>
-						<ModalStateProvider>
-							<DialogStateProvider>
-								<LightboxStateProvider>
-									<PortalProvider>
-										<StarterPackProvider>
-											<InnerApp />
-										</StarterPackProvider>
-									</PortalProvider>
-								</LightboxStateProvider>
-							</DialogStateProvider>
-						</ModalStateProvider>
-					</ShellStateProvider>
-				</I18nProvider>
+				<PrefsStateProvider>
+					<I18nProvider>
+						<ShellStateProvider>
+							<ModalStateProvider>
+								<DialogStateProvider>
+									<LightboxStateProvider>
+										<PortalProvider>
+											<StarterPackProvider>
+												<InnerApp />
+											</StarterPackProvider>
+										</PortalProvider>
+									</LightboxStateProvider>
+								</DialogStateProvider>
+							</ModalStateProvider>
+						</ShellStateProvider>
+					</I18nProvider>
+				</PrefsStateProvider>
 			</SessionProvider>
 		</A11yProvider>
 	);

@@ -9809,7 +9809,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/App.tsx:59
+#: src/App.tsx:60
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 
