@@ -99,7 +99,6 @@ export default defineConfig(({ envMode }) => {
 			alias: {
 				'#': path.resolve(root, 'src'),
 				'react-native': 'react-native-web',
-				'react-native-webview': 'react-native-web-webview',
 			},
 			aliasStrategy: 'prefer-alias',
 			conditionNames: ['browser', 'import', 'module', 'default'],
@@ -128,15 +127,6 @@ export default defineConfig(({ envMode }) => {
 		},
 		tools: {
 			rspack(config) {
-				config.module ??= {};
-				config.module.rules ??= [];
-				config.module.rules.push({
-					generator: {
-						filename: 'static/[name][ext]',
-					},
-					test: /postMock\.html$/,
-					type: 'asset/resource',
-				});
 				// opt-in bundle analysis: `RSDOCTOR=true pnpm build`
 				if (process.env.RSDOCTOR) {
 					config.plugins ??= [];

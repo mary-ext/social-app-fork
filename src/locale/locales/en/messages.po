@@ -5945,7 +5945,7 @@ msgstr ""
 msgid "Play video"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:60
+#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:56
 msgid "Play Video"
 msgstr ""
 
@@ -5957,7 +5957,7 @@ msgstr ""
 msgid "Plays the GIF"
 msgstr ""
 
-#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:61
+#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:57
 msgid "Plays the video"
 msgstr ""
 

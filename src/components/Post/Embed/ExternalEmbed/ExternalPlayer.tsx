@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
 import {
 	ActivityIndicator,
 	type GestureResponderEvent,
 	Pressable,
+	StyleSheet,
 	useWindowDimensions,
 	View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -33,10 +33,6 @@ import { Fill } from '#/components/Fill';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
 import { Image } from '#/shims/image';
-
-interface ShouldStartLoadRequest {
-	url: string;
-}
 
 // This renders the overlay when the player is either inactive or loading as a separate layer
 function PlaceholderOverlay({
@@ -68,7 +64,7 @@ function PlaceholderOverlay({
 	);
 }
 
-// This renders the webview/youtube player as a separate layer
+// This renders the youtube/embed player iframe as a separate layer
 function Player({
 	params,
 	onLoad,
@@ -78,36 +74,35 @@ function Player({
 	params: EmbedPlayerParams;
 	onLoad: () => void;
 }) {
-	// ensures we only load what's requested
-	// youtube videos navigate within www.youtube.com once the player loads
-	const onShouldStartLoadWithRequest = useCallback(
-		(event: ShouldStartLoadRequest) =>
-			event.url === params.playerUri ||
-			(params.source.startsWith('youtube') && event.url.includes('www.youtube.com')),
-		[params.playerUri, params.source],
-	);
-
 	// Don't show the player until it is active
 	if (!isPlayerActive) return null;
 
 	return (
 		<EventStopper style={[a.absolute, a.inset_0, { zIndex: 3 }]}>
-			<WebView
-				javaScriptEnabled={true}
-				onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-				mediaPlaybackRequiresUserAction={false}
-				allowsInlineMediaPlayback
-				bounces={false}
-				allowsFullscreenVideo
-				nestedScrollEnabled
-				source={{ uri: params.playerUri }}
+			{/*
+			 * keying on the src remounts the iframe for a new embed rather than navigating the existing one.
+			 * `allow="autoplay"` delegates the autoplay permission policy to the cross-origin frame — without
+			 * it the browser ignores the `autoplay=1` in the player URL, since the default allowlist is `self`.
+			 */}
+			<iframe
+				key={params.playerUri}
+				src={params.playerUri}
 				onLoad={onLoad}
-				style={a.bg_transparent}
-				setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+				allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+				allowFullScreen
+				style={StyleSheet.flatten([styles.iframe, a.bg_transparent]) as CSSProperties}
 			/>
 		</EventStopper>
 	);
 }
+
+const styles = StyleSheet.create({
+	iframe: {
+		borderWidth: 0,
+		height: '100%',
+		width: '100%',
+	},
+});
 
 // This renders the player area and handles the logic for when to show the player and when to show the overlay
 export function ExternalPlayer({
