@@ -6,7 +6,6 @@ import { Trans } from '@lingui/react/macro';
 
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 
-import { useA11y } from '#/state/a11y';
 import { useGetPopularFeedsQuery, usePopularFeedsSearch, useSavedFeeds } from '#/state/queries/feed';
 
 import { List } from '#/view/com/util/List';
@@ -33,7 +32,6 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
 	const throttledQuery = useThrottledValue(query, 500);
-	const { screenReaderEnabled } = useA11y();
 
 	const { data: savedFeedsAndLists, isFetchedAfterMount: isFetchedSavedFeeds } = useSavedFeeds();
 	const savedFeeds = savedFeedsAndLists?.feeds
@@ -87,7 +85,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				data={query ? searchedFeeds : suggestedFeeds}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
-				onEndReached={!query && !screenReaderEnabled ? () => fetchNextPage() : undefined}
+				onEndReached={!query ? () => fetchNextPage() : undefined}
 				onEndReachedThreshold={2}
 				keyboardDismissMode="on-drag"
 				renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}

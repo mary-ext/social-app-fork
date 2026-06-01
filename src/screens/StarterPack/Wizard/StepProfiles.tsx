@@ -4,7 +4,6 @@ import { type AnyProfileView } from '@atcute/bluesky';
 import { type ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
 
-import { useA11y } from '#/state/a11y';
 import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete';
 import { useActorSearch } from '#/state/queries/actor-search';
 
@@ -30,7 +29,6 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 	const t = useTheme();
 	const [state, dispatch] = useWizardState();
 	const [query, setQuery] = useState('');
-	const { screenReaderEnabled } = useA11y();
 
 	const {
 		data: topPages,
@@ -78,7 +76,7 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 				disableFullWindowScroll={true}
 				sideBorders={false}
 				style={[a.flex_1]}
-				onEndReached={!query && !screenReaderEnabled ? () => fetchNextPage() : undefined}
+				onEndReached={!query ? () => fetchNextPage() : undefined}
 				onEndReachedThreshold={0.25}
 				keyboardDismissMode="on-drag"
 				ListEmptyComponent={

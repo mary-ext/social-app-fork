@@ -7,6 +7,7 @@ import { useNavigation, useNavigationState } from '@react-navigation/native';
 
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useReducedMotion } from '#/lib/reduced-motion';
 import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import { type CommonNavigatorParams, type NavigationProp } from '#/lib/routes/types';
@@ -75,7 +76,6 @@ import { Text } from '#/components/Typography';
 
 import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';
-import { PlatformInfo } from '#/shims/bluesky-swiss-army';
 
 const NAV_ICON_WIDTH = 28;
 
@@ -98,6 +98,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 		handles: accounts.map((acc) => acc.did),
 	});
 	const profiles = data?.profiles;
+	const reduceMotion = useReducedMotion();
 	const signOutPromptControl = Prompt.usePromptControl();
 	const { t: l } = useLingui();
 	const t = useTheme();
@@ -139,7 +140,7 @@ function ProfileCard({ minimal }: { minimal: boolean }) {
 								>
 									<View
 										style={[
-											!PlatformInfo.getIsReducedMotionEnabled() && [
+											!reduceMotion && [
 												a.transition_transform,
 												{ transitionDuration: '250ms' },
 												!active && a.transition_delay_50ms,

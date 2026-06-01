@@ -63,7 +63,6 @@ import {
 import { atoms as a, type Theme, useLayoutBreakpoints, useTheme } from '#/alf';
 
 import { router } from '#/routes';
-import { Referrer } from '#/shims/bluesky-swiss-army';
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>();
 
@@ -1054,10 +1053,6 @@ function RoutesContainer({ children }: React.PropsWithChildren<{}>) {
 	const onNavigationReady = useCallOnce(() => {
 		const currentScreen = getCurrentRouteName();
 		previousScreen.current = currentScreen;
-
-		const referrerInfo = Referrer.getReferrerInfo();
-		if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-		}
 	});
 
 	return (

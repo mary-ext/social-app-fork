@@ -10,7 +10,6 @@ import { QueryProvider } from '#/lib/react-query';
 import { ThemeProvider } from '#/lib/ThemeContext';
 import { Provider as TranslateOnDeviceProvider } from '#/lib/translation';
 
-import { Provider as A11yProvider } from '#/state/a11y';
 import { Provider as MutedThreadsProvider } from '#/state/cache/thread-mutes';
 import { Provider as DialogStateProvider } from '#/state/dialogs';
 import { Provider as HomeBadgeProvider } from '#/state/home-badge';
@@ -128,27 +127,25 @@ function App() {
 	 * is set up in the InnerApp component above.
 	 */
 	return (
-		<A11yProvider>
-			<SessionProvider>
-				<PrefsStateProvider>
-					<I18nProvider>
-						<ShellStateProvider>
-							<ModalStateProvider>
-								<DialogStateProvider>
-									<LightboxStateProvider>
-										<PortalProvider>
-											<StarterPackProvider>
-												<InnerApp />
-											</StarterPackProvider>
-										</PortalProvider>
-									</LightboxStateProvider>
-								</DialogStateProvider>
-							</ModalStateProvider>
-						</ShellStateProvider>
-					</I18nProvider>
-				</PrefsStateProvider>
-			</SessionProvider>
-		</A11yProvider>
+		<SessionProvider>
+			<PrefsStateProvider>
+				<I18nProvider>
+					<ShellStateProvider>
+						<ModalStateProvider>
+							<DialogStateProvider>
+								<LightboxStateProvider>
+									<PortalProvider>
+										<StarterPackProvider>
+											<InnerApp />
+										</StarterPackProvider>
+									</PortalProvider>
+								</LightboxStateProvider>
+							</DialogStateProvider>
+						</ModalStateProvider>
+					</ShellStateProvider>
+				</I18nProvider>
+			</PrefsStateProvider>
+		</SessionProvider>
 	);
 }
 

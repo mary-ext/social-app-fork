@@ -15,14 +15,11 @@ import debounce from 'lodash.debounce';
 
 import { mergeRefs } from '#/lib/merge-refs';
 
-import { useA11y } from '#/state/a11y';
-
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
 
 import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
 
 import { ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen } from '#/components/icons/ArrowsDiagonal';
-import { AutoSizedImage } from '#/components/images/AutoSizedImage';
 import { ITEM_GAP, MAX_ASPECT_RATIO, MIN_ASPECT_RATIO } from '#/components/images/Gallery/const';
 import { useKeyboardHandlers } from '#/components/images/Gallery/useKeyboardHandlers';
 import { usePointerHandlers } from '#/components/images/Gallery/usePointerHandlers';
@@ -99,7 +96,6 @@ export function useGalleryBleed() {
 
 export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProps) {
 	const { t: l } = useLingui();
-	const { screenReaderEnabled } = useA11y();
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const bps = useBreakpoints();
 	const window = useWindowDimensions();
@@ -195,29 +191,6 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 		onSettle,
 		imageCount: images.length,
 	});
-
-	if (screenReaderEnabled) {
-		return (
-			<View style={[a.relative, a.gap_sm]}>
-				{images.map((image, index) => (
-					<AutoSizedImage
-						key={image.thumb + index}
-						crop={
-							viewContext === PostEmbedViewContext.ThreadHighlighted
-								? 'none'
-								: viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-									? 'square'
-									: 'constrained'
-						}
-						image={image}
-						onPress={() => onPress?.(index)}
-						onPressIn={() => onPressIn?.(index)}
-						hideBadge={viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
-					/>
-				))}
-			</View>
-		);
-	}
 
 	return (
 		<View

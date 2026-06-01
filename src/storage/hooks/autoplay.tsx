@@ -1,21 +1,21 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import { getReducedMotion } from '#/lib/reduced-motion';
+
 import { device } from '#/storage';
 
 type AutoplayContext = readonly [boolean, (value: boolean) => void];
-
-const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const context = createContext<AutoplayContext>([false, () => {}]);
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const [disableAutoplay, setDisableAutoplay] = useState(
-		() => device.get(['disableAutoplay']) ?? prefersReducedMotion(),
+		() => device.get(['disableAutoplay']) ?? getReducedMotion(),
 	);
 
 	useEffect(() => {
 		const sub = device.addOnValueChangedListener(['disableAutoplay'], () => {
-			setDisableAutoplay(device.get(['disableAutoplay']) ?? prefersReducedMotion());
+			setDisableAutoplay(device.get(['disableAutoplay']) ?? getReducedMotion());
 		});
 		return () => sub.remove();
 	}, []);

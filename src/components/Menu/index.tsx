@@ -3,7 +3,7 @@ import { Pressable, type StyleProp, type TextStyle, View, type ViewStyle } from 
 import { useLingui } from '@lingui/react/macro';
 import { DropdownMenu } from 'radix-ui';
 
-import { useA11y } from '#/state/a11y';
+import { useReducedMotion } from '#/lib/reduced-motion';
 
 import { atoms as a, flatten, useTheme } from '#/alf';
 
@@ -181,7 +181,7 @@ export function Outer({
 	style?: StyleProp<ViewStyle>;
 }>) {
 	const t = useTheme();
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 
 	return (
 		<DropdownMenu.Portal>

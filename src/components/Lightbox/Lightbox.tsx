@@ -5,8 +5,7 @@ import { FocusGuards, FocusScope } from 'radix-ui/internal';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
-
-import { useA11y } from '#/state/a11y';
+import { useReducedMotion } from '#/lib/reduced-motion';
 
 import { atoms as a, flatten, ThemeProvider, useBreakpoints, useTheme } from '#/alf';
 
@@ -99,7 +98,7 @@ function LightboxGallery({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 	const [index, setIndex] = useState(initialIndex);
 	const [hasAnyLoaded, setAnyHasLoaded] = useState(false);
 	const [isAltExpanded, setAltExpanded] = useState(false);
@@ -336,7 +335,7 @@ function LightboxGalleryItem({
 	onLoad: () => void;
 	hasAnyLoaded: boolean;
 }) {
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 	const [hasLoaded, setHasLoaded] = useState(false);
 	const [isFirstToLoad] = useState(!hasAnyLoaded);
 

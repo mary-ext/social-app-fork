@@ -7,7 +7,6 @@ import { parseLinkingUrl } from '#/lib/parseLinkingUrl';
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import { Referrer } from '#/shims/bluesky-swiss-army';
 import * as Linking from '#/shims/linking';
 
 // This needs to stay outside of react to persist between account switches
@@ -20,9 +19,6 @@ export function useIntentHandler() {
 
 	useEffect(() => {
 		const handleIncomingURL = async (url: string) => {
-			const referrerInfo = Referrer.getReferrerInfo();
-			if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-			}
 			const urlp = parseLinkingUrl(url);
 			const [, intent, intentType] = urlp.pathname.split('/');
 

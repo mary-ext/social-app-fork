@@ -2,7 +2,7 @@ import { createContext, type CSSProperties, forwardRef, Fragment, useContext, us
 import { type TextStyle, View } from 'react-native';
 import { Select as RadixSelect } from 'radix-ui';
 
-import { useA11y } from '#/state/a11y';
+import { useReducedMotion } from '#/lib/reduced-motion';
 
 import { atoms as a, flatten, useTheme } from '#/alf';
 
@@ -152,7 +152,7 @@ export function Content<T>({
 }: ContentProps<T>) {
 	const t = useTheme();
 	const selectedValue = useContext(SelectedValueContext);
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 
 	const scrollBtnStyles: React.CSSProperties[] = [
 		a.absolute,

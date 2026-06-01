@@ -13,7 +13,8 @@ import { useLingui } from '@lingui/react/macro';
 import { DismissableLayer, FocusGuards, FocusScope } from 'radix-ui/internal';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
-import { useA11y } from '#/state/a11y';
+import { useReducedMotion } from '#/lib/reduced-motion';
+
 import { useDialogStateControlContext } from '#/state/dialogs';
 
 import { logger } from '#/logger';
@@ -183,7 +184,7 @@ export function Inner({
 	const t = useTheme();
 	const { close } = useContext(Context);
 	const { gtMobile } = useBreakpoints();
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 	FocusGuards.useFocusGuards();
 	return (
 		<FocusScope.FocusScope loop asChild trapped>
@@ -328,7 +329,7 @@ export function Handle(_props: { fill?: string; difference?: boolean } = {}) {
 
 export function Backdrop() {
 	const t = useTheme();
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 	return (
 		<View style={{ opacity: 0.8 }}>
 			<View

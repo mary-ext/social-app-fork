@@ -2,7 +2,8 @@ import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { DismissableLayer, FocusGuards, FocusScope } from 'radix-ui/internal';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
-import { useA11y } from '#/state/a11y';
+import { useReducedMotion } from '#/lib/reduced-motion';
+
 import { useModals } from '#/state/modals';
 import { type ComposerOpts, useComposerState } from '#/state/shell/composer';
 
@@ -45,7 +46,7 @@ function Inner({ state }: { state: ComposerOpts }) {
 	const { isModalActive } = useModals();
 	const t = useTheme();
 	const { gtMobile } = useBreakpoints();
-	const { reduceMotionEnabled } = useA11y();
+	const reduceMotionEnabled = useReducedMotion();
 
 	FocusGuards.useFocusGuards();
 

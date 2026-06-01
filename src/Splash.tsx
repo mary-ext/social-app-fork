@@ -7,6 +7,8 @@
 import { useEffect, useRef, useState } from 'react';
 import Svg, { Path } from 'react-native-svg';
 
+import { getReducedMotion } from '#/lib/reduced-motion';
+
 import { atoms as a, flatten } from '#/alf';
 
 const size = 100;
@@ -38,7 +40,7 @@ export function Splash({
 	useEffect(() => {
 		if (!isReady) return;
 
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const reduceMotion = getReducedMotion();
 		const node = splashRef.current;
 		if (!node || reduceMotion) {
 			setIsAnimationComplete(true);
