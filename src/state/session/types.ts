@@ -1,6 +1,6 @@
-import { type PersistedAccount } from '#/state/persisted';
+import { type AuthAccount } from '#/storage';
 
-export type SessionAccount = PersistedAccount;
+export type SessionAccount = AuthAccount;
 
 export type SessionStateContext = {
 	accounts: SessionAccount[];

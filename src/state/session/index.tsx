@@ -5,7 +5,6 @@ import { deleteStoredSession, TokenRefreshError } from '@atcute/oauth-browser-cl
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
 import { listenSessionDropped } from '#/state/events';
-import * as persisted from '#/state/persisted';
 import { type SessionAccount, type SessionApiContext, type SessionStateContext } from '#/state/session/types';
 import { useCloseAllActiveElements } from '#/state/util';
 
@@ -314,25 +313,9 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	);
 }
 
-/**
- * Reads the persisted session, migrating once from the legacy token-based session storage when the new
- * storage is empty.
- */
+/** Reads the persisted session from storage, defaulting to a logged-out session. */
 function readPersistedSession(): AuthSession {
-	const stored = auth.get(['session']);
-	if (stored) {
-		return stored;
-	}
-
-	const legacy = persisted.get('session');
-	const migrated: AuthSession = {
-		accounts: legacy.accounts.map(({ did, handle }) => ({ did, handle })),
-		currentAccountDid: legacy.currentAccount?.did,
-	};
-	if (migrated.accounts.length > 0) {
-		auth.set(['session'], migrated);
-	}
-	return migrated;
+	return auth.get(['session']) ?? { accounts: [], currentAccountDid: undefined };
 }
 
 export function useSession() {

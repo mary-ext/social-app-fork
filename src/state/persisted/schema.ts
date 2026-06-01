@@ -9,24 +9,9 @@ import { PlatformInfo } from '#/shims/bluesky-swiss-army';
 
 const externalEmbedOptions = ['show', 'hide'] as const;
 
-const accountSchema = z.object({
-	did: z.string(),
-	handle: z.string(),
-});
-export type PersistedAccount = z.infer<typeof accountSchema>;
-
-const currentAccountSchema = accountSchema.partial().extend({
-	did: z.string(),
-});
-export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>;
-
 const schema = z.object({
 	colorMode: z.enum(['system', 'light', 'dark']),
 	darkTheme: z.enum(['dim', 'dark']).optional(),
-	session: z.object({
-		accounts: z.array(accountSchema),
-		currentAccount: currentAccountSchema.optional(),
-	}),
 	reminders: z.object({
 		lastEmailConfirm: z.string().optional(),
 	}),
@@ -106,10 +91,6 @@ export type Schema = z.infer<typeof schema>;
 export const defaults: Schema = {
 	colorMode: 'system',
 	darkTheme: 'dim',
-	session: {
-		accounts: [],
-		currentAccount: undefined,
-	},
 	reminders: {
 		lastEmailConfirm: undefined,
 	},

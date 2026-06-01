@@ -9,7 +9,7 @@ import { logger } from '#/logger';
 import { type PersistedApi } from './types';
 import { normalizeData } from './util';
 
-export type { PersistedAccount, Schema } from '#/state/persisted/schema';
+export type { Schema } from '#/state/persisted/schema';
 export { defaults } from '#/state/persisted/schema';
 
 const BSKY_STORAGE = 'BSKY_STORAGE';
