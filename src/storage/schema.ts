@@ -5,12 +5,12 @@ import { type Gif } from '#/features/gifPicker/types';
 /** Data that's specific to the device and does not vary based account */
 export type Device = {
 	activitySubscriptionsNudged?: boolean;
-	colorMode: 'dark' | 'light' | 'system';
+	colorMode?: 'dark' | 'light' | 'system';
 	darkTheme?: 'dark' | 'dim';
-	debugFeedContextEnabled: boolean;
+	debugFeedContextEnabled?: boolean;
 	demoMode: boolean;
 	devMode: boolean;
-	disableAutoplay: boolean;
+	disableAutoplay?: boolean;
 	/**
 	 * Formerly managed by StatSig, this is the migrated stable ID for the device, used with our logging and
 	 * metrics tracking.
@@ -20,15 +20,15 @@ export type Device = {
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
 	hiddenPosts?: string[];
-	kawaii: boolean;
-	largeAltBadgeEnabled: boolean;
+	kawaii?: boolean;
+	largeAltBadgeEnabled?: boolean;
 	pdsAddressHistory?: string[];
-	requireAltTextEnabled: boolean;
-	subtitlesEnabled: boolean;
+	requireAltTextEnabled?: boolean;
+	subtitlesEnabled?: boolean;
 	threadgateNudged?: boolean;
 	trendingBetaEnabled: boolean;
-	trendingDisabled: boolean;
-	trendingVideoDisabled: boolean;
+	trendingDisabled?: boolean;
+	trendingVideoDisabled?: boolean;
 };
 
 export type Account = {
