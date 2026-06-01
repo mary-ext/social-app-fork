@@ -19,8 +19,8 @@
 		"nuke": "rm -rf ./node_modules ./web-build"
 	},
 	"dependencies": {
-		"@atcute/atproto": "4.0.1",
-		"@atcute/bluesky": "4.0.3",
+		"@atcute/atproto": "4.0.2",
+		"@atcute/bluesky": "4.0.5",
 		"@atcute/bluesky-moderation": "^4.2.0",
 		"@atcute/bluesky-richtext-builder": "^4.0.0",
 		"@atcute/bluesky-richtext-parser": "^2.1.1",
