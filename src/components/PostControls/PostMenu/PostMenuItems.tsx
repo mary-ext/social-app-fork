@@ -24,7 +24,6 @@ import { type Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { useHiddenPosts, useHiddenPostsApi, useLanguagePrefs } from '#/state/preferences';
-import { useDebugFeedContextEnabled } from '#/state/preferences/debug';
 import { usePinnedPostMutation } from '#/state/queries/pinned-post';
 import { usePostDeleteMutation, useThreadMuteMutationQueue } from '#/state/queries/post';
 import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate';
@@ -79,6 +78,7 @@ import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
+import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 let PostMenuItems = ({
 	post,
@@ -108,7 +108,7 @@ let PostMenuItems = ({
 }): React.ReactNode => {
 	const { hasSession, currentAccount } = useSession();
 	const { t: l } = useLingui();
-	const debugFeedContextEnabled = useDebugFeedContextEnabled();
+	const [debugFeedContextEnabled] = useDebugFeedContextEnabled();
 	const langPrefs = useLanguagePrefs();
 	const { mutateAsync: deletePostMutate } = usePostDeleteMutation();
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();

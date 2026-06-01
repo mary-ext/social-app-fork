@@ -14,7 +14,6 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { clearStorage } from '#/state/persisted';
-import { useDebugFeedContextEnabled, useSetDebugFeedContextEnabled } from '#/state/preferences/debug';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useDeleteActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
@@ -61,6 +60,7 @@ import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { account, auth, device } from '#/storage';
 import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
+import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>;
 export function SettingsScreen({}: Props) {
@@ -300,8 +300,7 @@ function DevOptions() {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const { mutate: deleteChatDeclarationRecord } = useDeleteActorDeclaration();
-	const debugFeedContextEnabled = useDebugFeedContextEnabled();
-	const setDebugFeedContextEnabled = useSetDebugFeedContextEnabled();
+	const [debugFeedContextEnabled, setDebugFeedContextEnabled] = useDebugFeedContextEnabled();
 	const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged();
 
 	const clearAllStorage = async () => {

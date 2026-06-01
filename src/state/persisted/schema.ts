@@ -72,7 +72,6 @@ const schema = z.object({
 	kawaii: z.boolean().optional(),
 	trendingDisabled: z.boolean().optional(),
 	trendingVideoDisabled: z.boolean().optional(),
-	debugFeedContextEnabled: z.boolean().optional(),
 });
 export type Schema = z.infer<typeof schema>;
 
@@ -99,7 +98,6 @@ export const defaults: Schema = {
 	kawaii: false,
 	trendingDisabled: false,
 	trendingVideoDisabled: false,
-	debugFeedContextEnabled: false,
 };
 
 export function tryParse(rawData: string): Schema | undefined {

@@ -1,4 +1,3 @@
-import { Provider as DebugPreferencesProvider } from './debug';
 import { Provider as DisableHapticsProvider } from './disable-haptics';
 import { Provider as ExternalEmbedsProvider } from './external-embeds-prefs';
 import { Provider as HiddenPostsProvider } from './hidden-posts';
@@ -6,7 +5,6 @@ import { Provider as KawaiiProvider } from './kawaii';
 import { Provider as LanguagesProvider } from './languages';
 import { Provider as TrendingSettingsProvider } from './trending';
 
-export { useDebugFeedContextEnabled, useSetDebugFeedContextEnabled } from './debug';
 export { useHapticsDisabled, useSetHapticsDisabled } from './disable-haptics';
 export { useExternalEmbedsPrefs, useSetExternalEmbedPref } from './external-embeds-prefs';
 export { useHiddenPosts, useHiddenPostsApi } from './hidden-posts';
@@ -20,9 +18,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				<HiddenPostsProvider>
 					<DisableHapticsProvider>
 						<TrendingSettingsProvider>
-							<DebugPreferencesProvider>
-								<KawaiiProvider>{children}</KawaiiProvider>
-							</DebugPreferencesProvider>
+							<KawaiiProvider>{children}</KawaiiProvider>
 						</TrendingSettingsProvider>
 					</DisableHapticsProvider>
 				</HiddenPostsProvider>

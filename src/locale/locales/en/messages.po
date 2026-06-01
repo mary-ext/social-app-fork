@@ -815,7 +815,7 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:450
+#: src/screens/Settings/Settings.tsx:449
 msgid "Account options"
 msgstr ""
 
@@ -823,7 +823,7 @@ msgstr ""
 msgid "Account provider"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:483
+#: src/screens/Settings/Settings.tsx:482
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -908,8 +908,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:392
-#: src/screens/Settings/Settings.tsx:395
+#: src/screens/Settings/Settings.tsx:391
+#: src/screens/Settings/Settings.tsx:394
 #: src/view/shell/desktop/LeftNav.tsx:258
 #: src/view/shell/desktop/LeftNav.tsx:261
 msgid "Add another account"
@@ -1903,11 +1903,11 @@ msgstr ""
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:370
+#: src/screens/Settings/Settings.tsx:369
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:372
+#: src/screens/Settings/Settings.tsx:371
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -2134,7 +2134,7 @@ msgid "Copied build version to clipboard"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:59
-#: src/components/PostControls/DiscoverDebug.tsx:28
+#: src/components/PostControls/DiscoverDebug.tsx:27
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:231
 #: src/lib/sharing.ts:17
 #: src/lib/sharing.ts:30
@@ -2381,7 +2381,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:349
+#: src/screens/Settings/Settings.tsx:348
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2411,7 +2411,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:357
+#: src/screens/Settings/Settings.tsx:356
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -5628,7 +5628,7 @@ msgstr "Open group chat settings"
 msgid "Open link to {niceUrl}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:346
+#: src/screens/Settings/Settings.tsx:345
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5662,12 +5662,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:339
-#: src/screens/Settings/Settings.tsx:354
+#: src/screens/Settings/Settings.tsx:338
+#: src/screens/Settings/Settings.tsx:353
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:334
+#: src/screens/Settings/Settings.tsx:333
 msgid "Open system log"
 msgstr ""
 
@@ -6406,7 +6406,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:99
 #: src/screens/Bookmarks/index.tsx:233
 #: src/screens/Moderation/index.tsx:338
-#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:484
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
@@ -6428,8 +6428,8 @@ msgstr "Remove {displayName} from this group chat"
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:467
-#: src/screens/Settings/Settings.tsx:469
+#: src/screens/Settings/Settings.tsx:466
+#: src/screens/Settings/Settings.tsx:468
 msgid "Remove account"
 msgstr ""
 
@@ -6478,7 +6478,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:479
+#: src/screens/Settings/Settings.tsx:478
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6824,8 +6824,8 @@ msgstr ""
 msgid "Required in your region"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:363
-#: src/screens/Settings/Settings.tsx:366
+#: src/screens/Settings/Settings.tsx:362
+#: src/screens/Settings/Settings.tsx:365
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -7448,8 +7448,8 @@ msgstr ""
 msgid "Show badge and filter from feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:323
-#: src/screens/Settings/Settings.tsx:329
+#: src/screens/Settings/Settings.tsx:322
+#: src/screens/Settings/Settings.tsx:328
 msgid "Show feed context debug"
 msgstr "Show feed context debug"
 
@@ -7819,12 +7819,12 @@ msgstr ""
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:312
+#: src/screens/Settings/Settings.tsx:311
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
 #: src/Navigation.tsx:703
-#: src/screens/Settings/Settings.tsx:341
+#: src/screens/Settings/Settings.tsx:340
 msgid "Storybook"
 msgstr ""
 
@@ -7905,7 +7905,7 @@ msgstr ""
 #: src/components/dialogs/SwitchAccount.tsx:49
 #: src/screens/Settings/Settings.tsx:100
 #: src/screens/Settings/Settings.tsx:111
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:426
 #: src/view/shell/desktop/LeftNav.tsx:248
 msgid "Switch account"
 msgstr ""
@@ -7927,7 +7927,7 @@ msgstr ""
 #: src/screens/Log.tsx:46
 #: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
-#: src/screens/Settings/Settings.tsx:336
+#: src/screens/Settings/Settings.tsx:335
 msgid "System log"
 msgstr ""
 
@@ -8452,7 +8452,7 @@ msgid "This will delete \"{0}\" from your muted words. You can always add it bac
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:479
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
