@@ -21,6 +21,8 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
+import { account, auth, device } from '#/storage';
+
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
@@ -305,6 +307,9 @@ function DevOptions() {
 
 	const clearAllStorage = async () => {
 		await clearStorage();
+		account.removeAll();
+		auth.removeAll();
+		device.removeAll();
 		Toast.show(l`Storage cleared, you need to restart the app now.`);
 	};
 
