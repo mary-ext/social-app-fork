@@ -22,7 +22,6 @@ export type SigninDialogPayload = {
 type ControlsContext = {
 	mutedWordsDialogControl: Control;
 	signinDialogControl: StatefulControl<SigninDialogPayload>;
-	inAppBrowserConsentControl: StatefulControl<string>;
 	linkWarningDialogControl: StatefulControl<{
 		href: string;
 		displayText: string;
@@ -45,7 +44,6 @@ export function useGlobalDialogsControlContext() {
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const mutedWordsDialogControl = Dialog.useDialogControl();
 	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();
-	const inAppBrowserConsentControl = useStatefulDialogControl<string>();
 	const linkWarningDialogControl = useStatefulDialogControl<{
 		href: string;
 		displayText: string;
@@ -59,17 +57,10 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		() => ({
 			mutedWordsDialogControl,
 			signinDialogControl,
-			inAppBrowserConsentControl,
 			linkWarningDialogControl,
 			reportDialogControl,
 		}),
-		[
-			mutedWordsDialogControl,
-			signinDialogControl,
-			inAppBrowserConsentControl,
-			linkWarningDialogControl,
-			reportDialogControl,
-		],
+		[mutedWordsDialogControl, signinDialogControl, linkWarningDialogControl, reportDialogControl],
 	);
 
 	return <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>;

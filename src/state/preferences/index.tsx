@@ -4,7 +4,6 @@ import { Provider as DebugPreferencesProvider } from './debug';
 import { Provider as DisableHapticsProvider } from './disable-haptics';
 import { Provider as ExternalEmbedsProvider } from './external-embeds-prefs';
 import { Provider as HiddenPostsProvider } from './hidden-posts';
-import { Provider as InAppBrowserProvider } from './in-app-browser';
 import { Provider as KawaiiProvider } from './kawaii';
 import { Provider as LanguagesProvider } from './languages';
 import { Provider as LargeAltBadgeProvider } from './large-alt-badge';
@@ -27,19 +26,17 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				<LargeAltBadgeProvider>
 					<ExternalEmbedsProvider>
 						<HiddenPostsProvider>
-							<InAppBrowserProvider>
-								<DisableHapticsProvider>
-									<AutoplayProvider>
-										<UsedStarterPacksProvider>
-											<TrendingSettingsProvider>
-												<DebugPreferencesProvider>
-													<KawaiiProvider>{children}</KawaiiProvider>
-												</DebugPreferencesProvider>
-											</TrendingSettingsProvider>
-										</UsedStarterPacksProvider>
-									</AutoplayProvider>
-								</DisableHapticsProvider>
-							</InAppBrowserProvider>
+							<DisableHapticsProvider>
+								<AutoplayProvider>
+									<UsedStarterPacksProvider>
+										<TrendingSettingsProvider>
+											<DebugPreferencesProvider>
+												<KawaiiProvider>{children}</KawaiiProvider>
+											</DebugPreferencesProvider>
+										</TrendingSettingsProvider>
+									</UsedStarterPacksProvider>
+								</AutoplayProvider>
+							</DisableHapticsProvider>
 						</HiddenPostsProvider>
 					</ExternalEmbedsProvider>
 				</LargeAltBadgeProvider>

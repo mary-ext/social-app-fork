@@ -7,8 +7,6 @@ import { clamp } from '#/lib/numbers';
 
 import { useAutoplayDisabled } from '#/state/preferences';
 
-import { useSubtitlesEnabled } from '#/storage/hooks/subtitles';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
@@ -28,6 +26,7 @@ import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
 
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
+import { useSubtitlesEnabled } from '#/storage/hooks/subtitles';
 
 import { GifPresentationControls } from '../../GifPresentationControls';
 import { TimeIndicator } from '../TimeIndicator';

@@ -71,7 +71,6 @@ const schema = z.object({
 		copiedInvites: z.array(z.string()),
 	}),
 	hiddenPosts: z.array(z.string()).optional(), // should move to server
-	useInAppBrowser: z.boolean().optional(),
 	/** @deprecated */
 	lastSelectedHomeFeed: z.string().optional(),
 	pdsAddressHistory: z.array(z.string()).optional(),
@@ -108,7 +107,6 @@ export const defaults: Schema = {
 		copiedInvites: [],
 	},
 	hiddenPosts: [],
-	useInAppBrowser: undefined,
 	lastSelectedHomeFeed: undefined,
 	pdsAddressHistory: [],
 	disableHaptics: false,

@@ -159,9 +159,7 @@ export function PostInteractionSettingsDialogControlledInner(props: PostInteract
 		return editedPostgate || postgate || createPostgateRecord({ post: props.postUri as ResourceUri });
 	}, [postgate, editedPostgate, props.postUri]);
 	const allowUIValue = useMemo(() => {
-		return (
-			editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView)
-		);
+		return editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView);
 	}, [threadgateView, editedAllowUISettings]);
 
 	const onSave = useCallback(async () => {

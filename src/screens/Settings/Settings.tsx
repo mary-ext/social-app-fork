@@ -21,8 +21,6 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import { account, auth, device } from '#/storage';
-
 import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
@@ -61,6 +59,7 @@ import { Text } from '#/components/Typography';
 
 import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
+import { account, auth, device } from '#/storage';
 import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>;

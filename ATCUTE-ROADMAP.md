@@ -153,18 +153,18 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
 - **Phase 2.4 — done.** Generator-view slice plus the `PostView`/`FeedViewPost` flip (one large
   commit). Because `PostView` is shared through the post-shadow cache and the shared render
   components, the flip can't stay inside 2.4's file set; it uses a seam-cast approach — 2.5/2.6/3.1
-  consumer files (thread, notifications, search, quotes, bookmarks, composer) keep their
-  `@atproto` data path and are bridged with `as unknown as` casts marked
-  `TODO(atcute Phase 2.5/2.6/3.1)`, removed when each phase migrates. The nine `src/lib/api/feed/**`
-  classes moved off `BskyAppAgent` onto the `appview` client. Dropped the custom-feed
-  `loggedOutFetch` lang cache-bust (accepted regression) and the dead `asPostRecord` helper.
-  Deferred (still on `@atproto/api`): `resolveLink`, the composer publish path (`lib/api/index`),
-  bookmarks reads, and the `src/types/bsky` validation layer.
-- **Phase 2.5 — done.** Posts and threads. The thread hub
-  (`app.bsky.unspecced.getPostThreadV2` / `getPostThreadOtherV2` + its node union) and the post
-  reads (`post.ts` `getPosts`, `post-quotes`) moved to the `appview` client. Thread node narrowing
-  is now `$type`-based (`AppBskyUnspeccedDefs.is*ThreadItem*` → `value.$type === '...'`); `$Typed` →
-  `$type.enforce`; record reads inline-cast to `.Main` (no `dangerousIsType`/`validate`). Removed the
+  consumer files (thread, notifications, search, quotes, bookmarks, composer) keep their `@atproto`
+  data path and are bridged with `as unknown as` casts marked `TODO(atcute Phase 2.5/2.6/3.1)`,
+  removed when each phase migrates. The nine `src/lib/api/feed/**` classes moved off `BskyAppAgent`
+  onto the `appview` client. Dropped the custom-feed `loggedOutFetch` lang cache-bust (accepted
+  regression) and the dead `asPostRecord` helper. Deferred (still on `@atproto/api`): `resolveLink`,
+  the composer publish path (`lib/api/index`), bookmarks reads, and the `src/types/bsky` validation
+  layer.
+- **Phase 2.5 — done.** Posts and threads. The thread hub (`app.bsky.unspecced.getPostThreadV2` /
+  `getPostThreadOtherV2` + its node union) and the post reads (`post.ts` `getPosts`, `post-quotes`)
+  moved to the `appview` client. Thread node narrowing is now `$type`-based
+  (`AppBskyUnspeccedDefs.is*ThreadItem*` → `value.$type === '...'`); `$Typed` → `$type.enforce`;
+  record reads inline-cast to `.Main` (no `dangerousIsType`/`validate`). Removed the
   `TODO(atcute Phase 2.5)` seam casts in the thread query cache, thread components, post-shadow,
   quotes, and postgate. Markers whose true data source migrates later were relabeled: search-posts
   consumers (`Hashtag` / `Topic` / `SearchResults`) and bookmarks → 2.6; `resolveLink` /
@@ -176,101 +176,106 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
 - **Phase 2.6 — done.** Notifications (feed + unread/count via `fetchPage`, now threading the
   `appview` client; `getPreferences` / `putPreferencesV2`), search (`search-posts`), bookmarks reads
   (`getBookmarks`), and trending (`getTrends` / `getTrendingTopics`) all moved to `appview`; labeler
-  + notification-settings reads were already done. `moderateNotification` and `hasMutedWord` were
-  added to `src/lib/moderation/compat.ts` (the engine stays on `@atproto/api`). Notification/search/
-  bookmark record discrimination is now `$type`-based; removed every `TODO(atcute Phase 2.6)` seam
-  cast in the thread placeholder fan-out, post-shadow, and the search/notification/bookmark view
-  consumers. **Deferred (still `@atproto/api`):** `useBookmarkMutation` create/delete and the
-  notification `declaration.get/put` record CRUD (Stream 3); `feed.ts` / `list.ts` / `profile.ts` /
-  `starter-packs.ts` retain `@atproto` only for write paths (Stream 3) and the `RichText` class
-  (Phase 3.0); `preferences/**` is Phase 3.2. `DebugMod.tsx` casts the `@atproto/api` `mock` factory
-  output at its dev-screen boundary.
+  - notification-settings reads were already done. `moderateNotification` and `hasMutedWord` were
+    added to `src/lib/moderation/compat.ts` (the engine stays on `@atproto/api`).
+    Notification/search/ bookmark record discrimination is now `$type`-based; removed every
+    `TODO(atcute Phase 2.6)` seam cast in the thread placeholder fan-out, post-shadow, and the
+    search/notification/bookmark view consumers. **Deferred (still `@atproto/api`):**
+    `useBookmarkMutation` create/delete and the notification `declaration.get/put` record CRUD
+    (Stream 3); `feed.ts` / `list.ts` / `profile.ts` / `starter-packs.ts` retain `@atproto` only for
+    write paths (Stream 3) and the `RichText` class (Phase 3.0); `preferences/**` is Phase 3.2.
+    `DebugMod.tsx` casts the `@atproto/api` `mock` factory output at its dev-screen boundary.
 - **Stream 4 — done.** Phases 4.1 (chat client), 4.2 (video upload), 4.3 (moderation reporting) all
-  landed. Chat exposes a third `chat` field on `useClients()` (built as `pds.clone({ proxy:
-  CHAT_PROXY_AUDIENCE })`-equivalent over the OAuth handler), departing from the roadmap's "non-
-  global accessor" wording to avoid per-render `clone` allocations.
+  landed. Chat exposes a third `chat` field on `useClients()` (built as
+  `pds.clone({ proxy: CHAT_PROXY_AUDIENCE })`-equivalent over the OAuth handler), departing from the
+  roadmap's "non- global accessor" wording to avoid per-render `clone` allocations.
 - **Phase 5.1 — done.** `AtUri` swapped for `@atcute/lexicons/syntax` (`parseResourceUri` /
-  `parseCanonicalResourceUri`); pulled forward as a PostView-independent slice. Server-derived
-  URIs route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null;
-  call sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.)
-  stay on `parseResourceUri`.
+  `parseCanonicalResourceUri`); pulled forward as a PostView-independent slice. Server-derived URIs
+  route through `parseCanonicalResourceUri` so the `rkey`/`collection` come back non-null; call
+  sites that legitimately accept handle-form URIs (resolveLink, getThreadgateRecord, etc.) stay on
+  `parseResourceUri`.
 - **Phase 5.1 — done.** `@atproto/syntax` is fully removed from `src`. The `AtUri` call sites had
   already moved to `@atcute/lexicons/syntax` in an earlier commit; the last holdout was
   `parseLanguageString` in the composer's reply-language suggestion, now a local
   `getPrimaryLanguageSubtag` over `Intl.Locale(...).language` (BCP-47 primary subtag, `undefined` on
   parse failure). `TID` stays on `@atproto/common-web` — `@atcute/tid` isn't installed, and the
   roadmap only migrates it "if it exists". One residual `new AtUri` remains in a **commented-out**
-  block in `TrendingTopics.tsx` (the disabled at:// profile/feed-topic path; its live union type already
-  uses the migrated `ParsedCanonicalResourceUri`) — left intact as intentionally-disabled code.
+  block in `TrendingTopics.tsx` (the disabled at:// profile/feed-topic path; its live union type
+  already uses the migrated `ParsedCanonicalResourceUri`) — left intact as intentionally-disabled
+  code.
 - **Phase 5.2 — done.** The `#/types/bsky` validation layer is fully retired and the directory
   deleted, across three commits. (1) `AnyProfileView` / `AnyStarterPackView` already ship from
-  `@atcute/bluesky` byte-identical, so the local `profile.ts` / `starterPack.ts` aliases were dropped
-  and their 96 consumers re-pointed at the package. (2) The six `dangerousIsType` + one `validate`
-  starter-pack-record guards became inline `as AppBskyGraphStarterpack.Main` casts (trust-the-server,
-  no runtime validation); `StarterPackScreen`'s `isValid` shed its `validateStarterPackView` /
-  `validateRecord` clauses — both no-op truthy `ValidationResult`s in a boolean `&&`, so
-  behavior-preserving — which removed the last `@atproto/lexicon` import from `src`. (3) The `Embed`
-  tagged union + `parseEmbed` / `parseEmbedRecordView` moved to a new `src/types/embed.ts` on
-  `@atcute/bluesky`, the `is*` chains rewritten as `$type` switches **verified case-for-case against
-  bsky's AppView hydrator** (`packages/bsky/src/views/index.ts`: 5 top-level embed views + 8
-  record-embed variants, `unknown` fallback kept since atcute unions are runtime-open); every embed
-  render component (`ImageEmbed` / `FeedEmbed` / `ListEmbed` / `VideoEmbed` / `ExternalEmbed` /
-  `StandardSiteEmbed`) and consumer flipped its lexicon annotations to `@atcute`, `moderateUserList`
-  routed through the compat island, and the cross-SDK `TODO(atcute Phase 2.4/5.x)` seam casts dropped
-  (the composer's plain-string external-link previews keep one `as AppBskyEmbedExternal.ViewExternal`
-  boundary cast for atcute's branded URI fields). **Not browser-verified** — the hydrator cross-check
-  makes the `$type` mapping exhaustive without it. **Follow-up:** `CreateListFromStarterPackDialog.tsx`
-  still casts `starterPack.record as AppBskyGraphStarterpack.Record` from `@atproto/api` (an inline
-  lexicon cast, not a validation guard — outside 5.2's scope; swept by 5.3-A below).
-- **Phase 5.3 — done (moderation island consolidated; the engine itself stays deferred to Appendix A).**
-  `@atproto/api` is now confined to three places: the bounded `src/lib/moderation/**` island,
-  `src/state/session/agent.ts` (Stream 6's job), and three composer thread-context files. Session-wide
-  `@atproto/api` importers fell 108 → 11. Across five commits:
+  `@atcute/bluesky` byte-identical, so the local `profile.ts` / `starterPack.ts` aliases were
+  dropped and their 96 consumers re-pointed at the package. (2) The six `dangerousIsType` + one
+  `validate` starter-pack-record guards became inline `as AppBskyGraphStarterpack.Main` casts
+  (trust-the-server, no runtime validation); `StarterPackScreen`'s `isValid` shed its
+  `validateStarterPackView` / `validateRecord` clauses — both no-op truthy `ValidationResult`s in a
+  boolean `&&`, so behavior-preserving — which removed the last `@atproto/lexicon` import from
+  `src`. (3) The `Embed` tagged union + `parseEmbed` / `parseEmbedRecordView` moved to a new
+  `src/types/embed.ts` on `@atcute/bluesky`, the `is*` chains rewritten as `$type` switches
+  **verified case-for-case against bsky's AppView hydrator** (`packages/bsky/src/views/index.ts`: 5
+  top-level embed views + 8 record-embed variants, `unknown` fallback kept since atcute unions are
+  runtime-open); every embed render component (`ImageEmbed` / `FeedEmbed` / `ListEmbed` /
+  `VideoEmbed` / `ExternalEmbed` / `StandardSiteEmbed`) and consumer flipped its lexicon annotations
+  to `@atcute`, `moderateUserList` routed through the compat island, and the cross-SDK
+  `TODO(atcute Phase 2.4/5.x)` seam casts dropped (the composer's plain-string external-link
+  previews keep one `as AppBskyEmbedExternal.ViewExternal` boundary cast for atcute's branded URI
+  fields). **Not browser-verified** — the hydrator cross-check makes the `$type` mapping exhaustive
+  without it. **Follow-up:** `CreateListFromStarterPackDialog.tsx` still casts
+  `starterPack.record as AppBskyGraphStarterpack.Record` from `@atproto/api` (an inline lexicon
+  cast, not a validation guard — outside 5.2's scope; swept by 5.3-A below).
+- **Phase 5.3 — done (moderation island consolidated; the engine itself stays deferred to Appendix
+  A).** `@atproto/api` is now confined to three places: the bounded `src/lib/moderation/**` island,
+  `src/state/session/agent.ts` (Stream 6's job), and three composer thread-context files.
+  Session-wide `@atproto/api` importers fell 108 → 11. Across five commits:
   - **5.3-A** flipped the 44-file non-moderation lexicon-annotation tail (leftover Streams 2-4) to
     `@atcute`: `AppBsky*`/`ComAtproto*`/`Did` → the right `@atcute` package, `$Typed<X>` →
-    `$type.enforce<X>`, `XRPCError` / `AppBskyFeedGetAuthorFeed.Blocked*Error` → `ClientResponseError`
-    + `.error` checks (`'BlockedActor'` / `'BlockedByActor'`), `AppBskyActorStatus.isRecord` /
-    `validateRecord` → an inline `.Main` cast (EditLiveDialog), and the `@atcute` member renames
-    (`.Record`→`.Main`, `.OutputSchema`→`.$output`, `.QueryParams`→`.$params`). Five composer/prefs
-    files were reverted here and finished in 5.3-B once the island offered the @atproto-shaped types.
-  - **5.3-B** consolidated moderation: `compat.ts` re-exports the full `@atproto/api` moderation surface
-    (types + values); ~28 consumers and the config files (`session/moderation.ts`,
+    `$type.enforce<X>`, `XRPCError` / `AppBskyFeedGetAuthorFeed.Blocked*Error` →
+    `ClientResponseError`
+    - `.error` checks (`'BlockedActor'` / `'BlockedByActor'`), `AppBskyActorStatus.isRecord` /
+      `validateRecord` → an inline `.Main` cast (EditLiveDialog), and the `@atcute` member renames
+      (`.Record`→`.Main`, `.OutputSchema`→`.$output`, `.QueryParams`→`.$params`). Five
+      composer/prefs files were reverted here and finished in 5.3-B once the island offered the
+      @atproto-shaped types.
+  - **5.3-B** consolidated moderation: `compat.ts` re-exports the full `@atproto/api` moderation
+    surface (types + values); ~28 consumers and the config files (`session/moderation.ts`,
     `additional-moderation-authorities.ts`, `labelers.ts`, `moderation-opts.tsx`,
-    `preferences/moderation.ts`, `label-defs.tsx`, `lib/moderation.ts`) now import moderation from the
-    island. New `app-labelers.ts` fronts the `Agent.appLabelers` / `Agent.configure` statics; new
-    `preferences-types.ts` re-exports the `@atproto`-shaped `BskyPreferences` bridge (which feeds the
-    deferred engine via `moderationPrefs` → `ModerationOpts`), so the preferences cache
-    (`preferences/{agent,index,types}.ts`) and the prefs-bound `MutedWords` / composer-state files are
-    `@atproto/api`-free too. `Un$Typed<X>` → `Omit<X, '$type'>`.
-  - **Residual (not done):** three composer files — `Composer.tsx`, `state/shell/composer/index.tsx`,
-    `PostControls/index.tsx` — still import `@atproto/api` for `app.bsky.unspecced.getPostThreadV2` /
-    the `openComposer` quote type, because the composer's thread-context read still flows through
-    `useAgent` (a read migration Phase 2.5/3.1 left for later — not moderation). Migrating that read is
-    what clears the literal done-when grep. The **`BskyAppAgent` coupling** in `session/moderation.ts`
-    and `preferences/index.ts` (`configureLabelersHeader` / `configureLabelers` / `resolveHandle`) is
-    left for Stream 6, which deletes the agent. **Not yet live-verified** (content filtering / labeler
-    badges / appeal flows) — recommended before relying on it.
-- **Phase 3.3 — done.** Profile writes are off `@atproto/api`'s `BskyAgent` and onto the `pds` client.
-  `profile.ts` gains a fork-owned `upsertProfile(pds, did, updateFn)` mirroring `BskyAgent.upsertProfile`:
-  `getRecord` the own `app.bsky.actor.profile` record (rkey `self`) → merge → `putRecord` with
-  `swapRecord: existing?.cid ?? null`, retrying up to 5× on a `ClientResponseError` with
-  `error === 'InvalidSwap'`. The `getRecord` not-found catch is narrowed (only a `Could not locate
-  record:` error → "new profile"; everything else rethrows — safer than upstream's catch-all, and
-  consistent with the fork's other record reads). Avatar/banner upload via `uploadBlob(pds, …)` (the 3.1
-  helper, returning an `@atcute` Blob assigned straight onto the record); `whenAppViewReady` polls
-  `appview.get('app.bsky.actor.getProfile')`. The write type is a new `ProfileRecordWrite` (a writable,
-  `$type`-less view of `AppBskyActorProfile.Main`); `$type` is reattached at write. Consumers migrated:
-  `pinned-post.ts` (pinned-post strongRef, getProfile → `appview`), `EditProfileDialog` (display name /
-  description), and the two self-label screens (`AutomationLabelSettings` `bot`, `PwiOptOut`
-  `!no-unauthenticated`) — the latter rewritten from `bsky.validate()` to a `$type` discriminant narrow
-  with an immutable values rebuild, and (per an oracle review) made **idempotent**: the intended final
-  state is captured up front so an `InvalidSwap` re-read can't invert the user's action. `profile.ts` is
-  now `@atproto/api`-free. `agent.updateHandle` / account-settings writes had **no call sites** (the
-  change-handle flow was already stripped), so the profile record was the whole surface. **Verified
-  live** against a real account: a bio edit→reload→revert round-trip persisted then restored
-  byte-for-byte, and a description-only edit **preserved** display name + avatar (no partial clobber);
-  display name and handle were never touched (Bluesky verification hardcodes them). lint + typecheck
-  pass.
+    `preferences/moderation.ts`, `label-defs.tsx`, `lib/moderation.ts`) now import moderation from
+    the island. New `app-labelers.ts` fronts the `Agent.appLabelers` / `Agent.configure` statics;
+    new `preferences-types.ts` re-exports the `@atproto`-shaped `BskyPreferences` bridge (which
+    feeds the deferred engine via `moderationPrefs` → `ModerationOpts`), so the preferences cache
+    (`preferences/{agent,index,types}.ts`) and the prefs-bound `MutedWords` / composer-state files
+    are `@atproto/api`-free too. `Un$Typed<X>` → `Omit<X, '$type'>`.
+  - **Residual (not done):** three composer files — `Composer.tsx`,
+    `state/shell/composer/index.tsx`, `PostControls/index.tsx` — still import `@atproto/api` for
+    `app.bsky.unspecced.getPostThreadV2` / the `openComposer` quote type, because the composer's
+    thread-context read still flows through `useAgent` (a read migration Phase 2.5/3.1 left for
+    later — not moderation). Migrating that read is what clears the literal done-when grep. The
+    **`BskyAppAgent` coupling** in `session/moderation.ts` and `preferences/index.ts`
+    (`configureLabelersHeader` / `configureLabelers` / `resolveHandle`) is left for Stream 6, which
+    deletes the agent. **Not yet live-verified** (content filtering / labeler badges / appeal flows)
+    — recommended before relying on it.
+- **Phase 3.3 — done.** Profile writes are off `@atproto/api`'s `BskyAgent` and onto the `pds`
+  client. `profile.ts` gains a fork-owned `upsertProfile(pds, did, updateFn)` mirroring
+  `BskyAgent.upsertProfile`: `getRecord` the own `app.bsky.actor.profile` record (rkey `self`) →
+  merge → `putRecord` with `swapRecord: existing?.cid ?? null`, retrying up to 5× on a
+  `ClientResponseError` with `error === 'InvalidSwap'`. The `getRecord` not-found catch is narrowed
+  (only a `Could not locate record:` error → "new profile"; everything else rethrows — safer than
+  upstream's catch-all, and consistent with the fork's other record reads). Avatar/banner upload via
+  `uploadBlob(pds, …)` (the 3.1 helper, returning an `@atcute` Blob assigned straight onto the
+  record); `whenAppViewReady` polls `appview.get('app.bsky.actor.getProfile')`. The write type is a
+  new `ProfileRecordWrite` (a writable, `$type`-less view of `AppBskyActorProfile.Main`); `$type` is
+  reattached at write. Consumers migrated: `pinned-post.ts` (pinned-post strongRef, getProfile →
+  `appview`), `EditProfileDialog` (display name / description), and the two self-label screens
+  (`AutomationLabelSettings` `bot`, `PwiOptOut` `!no-unauthenticated`) — the latter rewritten from
+  `bsky.validate()` to a `$type` discriminant narrow with an immutable values rebuild, and (per an
+  oracle review) made **idempotent**: the intended final state is captured up front so an
+  `InvalidSwap` re-read can't invert the user's action. `profile.ts` is now `@atproto/api`-free.
+  `agent.updateHandle` / account-settings writes had **no call sites** (the change-handle flow was
+  already stripped), so the profile record was the whole surface. **Verified live** against a real
+  account: a bio edit→reload→revert round-trip persisted then restored byte-for-byte, and a
+  description-only edit **preserved** display name + avatar (no partial clobber); display name and
+  handle were never touched (Bluesky verification hardcodes them). lint + typecheck pass.
 - **Phase 3.2 — done.** The preferences subsystem is re-homed onto a fork-owned module,
   `src/state/queries/preferences/agent.ts`, built directly on `app.bsky.actor.getPreferences` /
   `putPreferences` over the **`pds`** client (the AppView-namespaced, PDS-implemented exception).
@@ -278,21 +283,21 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   union by `$type` (a `prefGuard` `Extract` factory) instead of `predicate.isValid*`, with the
   legacy-label remap kept verbatim. The saved-feed V1→V2 migration and V1 double-write are dropped
   (this fork assumes a `savedFeedsPrefV2` already exists), which also removed the read-path write
-  behind the oracle's stale-read finding. `updatePreferences` is a
-  read-modify-write serialized by a promise-chain mutex (`withPrefsLock`, replacing `@atproto`'s
-  `AwaitLock`); mutators rebuild the pref array immutably (`upsertPref` spreads rather than
-  `Array.concat`, which mis-resolves on the union element type) and route every entry through `pds`.
-  Ported mutators: content-label (+ legacy `graphic-media`/`porn`/`sexual` double-write),
-  adult-content, saved-feeds (overwrite/add/remove/update, V2-only), muted words
-  (`upsertMutedWords` batched into one write; update/remove splice the **first** match per target),
-  feed/thread-view, interests, personal details, `setPostInteractionSettings` (deferred from 3.1),
-  verification, and clear. Consumers migrated to `useClients().pds`: `preferences/index.ts` hooks,
-  `state/birthdate.ts`, `post-interaction-settings.ts`, `InterestsSettings.tsx`, and
-  `MutedWords.tsx`'s `sanitizeMutedWordValue` import. The compat `BskyPreferences` shape is kept
-  `@atproto`-typed (the moderation island consumes it; → 5.3), with branded-type casts at the
-  read/write boundaries. The labeler-config side effect `agent.getPreferences()` did internally
-  (`configureLabelers`) is preserved explicitly in the query hook. **Pruned:** the two nudge mutators
-  / `useQueueNudgesMutation` / `useDismissNudgesMutation` — dead in this fork (zero callers,
+  behind the oracle's stale-read finding. `updatePreferences` is a read-modify-write serialized by a
+  promise-chain mutex (`withPrefsLock`, replacing `@atproto`'s `AwaitLock`); mutators rebuild the
+  pref array immutably (`upsertPref` spreads rather than `Array.concat`, which mis-resolves on the
+  union element type) and route every entry through `pds`. Ported mutators: content-label (+ legacy
+  `graphic-media`/`porn`/`sexual` double-write), adult-content, saved-feeds
+  (overwrite/add/remove/update, V2-only), muted words (`upsertMutedWords` batched into one write;
+  update/remove splice the **first** match per target), feed/thread-view, interests, personal
+  details, `setPostInteractionSettings` (deferred from 3.1), verification, and clear. Consumers
+  migrated to `useClients().pds`: `preferences/index.ts` hooks, `state/birthdate.ts`,
+  `post-interaction-settings.ts`, `InterestsSettings.tsx`, and `MutedWords.tsx`'s
+  `sanitizeMutedWordValue` import. The compat `BskyPreferences` shape is kept `@atproto`-typed (the
+  moderation island consumes it; → 5.3), with branded-type casts at the read/write boundaries. The
+  labeler-config side effect `agent.getPreferences()` did internally (`configureLabelers`) is
+  preserved explicitly in the query hook. **Pruned:** the two nudge mutators /
+  `useQueueNudgesMutation` / `useDismissNudgesMutation` — dead in this fork (zero callers,
   `bskyAppState` read nowhere). **Reviewed:** an oracle adversarial pass flagged batched muted-word
   removal dropping all value-duplicates (fixed to splice-first-per-target, matching upstream) and a
   saved-feed migration "stale read" race (mooted — the migration was subsequently dropped).
@@ -301,16 +306,18 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   remove→reload round-trip persisted and reverted cleanly (the only write path exercised — fully
   reversible). lint + typecheck pass.
 - **Phase 3.1 — done.** Record writes + the composer publish path, across nine commits (mutes had
-  already landed). Toggle helpers (`like`/`repost`/`follow`/`block`/`deletePost`), threadgate/postgate
-  CRUD, bookmarks, the Germ declaration, list/list-item writes, starter-pack + bulk-follow writes,
-  composer drafts CRUD, and verification/notification-declaration/live-status writes all route
-  through `src/lib/api/records.ts` (`createRecord`/`deleteRecord`/`getRecord`/`putRecord`/
-  `listRecords`) on the `pds` client, or `appview.post(...)` for `app.bsky.*` procedures (bookmarks,
-  drafts). `whenAppViewReady`-style readiness checks and handle resolution moved to `appview`. The
-  composer publish (`lib/api/index.ts`) builds `@atcute` records and `applyWrites` on `pds`; record
-  CIDs for self-thread reply chaining come from a new `src/lib/api/cid.ts` (`serializeRecordCid` over
-  `@atcute/cbor` + `@atcute/cid`), replacing the `BlobRef`/`@ipld/dag-cbor`/`multiformats`/`js-sha256`
-  machinery. `uploadBlob` (`lib/api/upload-blob.ts`) re-homed onto `pds` returning an `@atcute` Blob;
+  already landed). Toggle helpers (`like`/`repost`/`follow`/`block`/`deletePost`),
+  threadgate/postgate CRUD, bookmarks, the Germ declaration, list/list-item writes, starter-pack +
+  bulk-follow writes, composer drafts CRUD, and verification/notification-declaration/live-status
+  writes all route through `src/lib/api/records.ts`
+  (`createRecord`/`deleteRecord`/`getRecord`/`putRecord`/ `listRecords`) on the `pds` client, or
+  `appview.post(...)` for `app.bsky.*` procedures (bookmarks, drafts). `whenAppViewReady`-style
+  readiness checks and handle resolution moved to `appview`. The composer publish
+  (`lib/api/index.ts`) builds `@atcute` records and `applyWrites` on `pds`; record CIDs for
+  self-thread reply chaining come from a new `src/lib/api/cid.ts` (`serializeRecordCid` over
+  `@atcute/cbor` + `@atcute/cid`), replacing the
+  `BlobRef`/`@ipld/dag-cbor`/`multiformats`/`js-sha256` machinery. `uploadBlob`
+  (`lib/api/upload-blob.ts`) re-homed onto `pds` returning an `@atcute` Blob;
   `resolve.ts`/`resolve-link.ts`/`link-meta.ts`/`video.ts` `BlobRef` flipped; the 3.0 facet-cast and
   the gate/record seam casts dropped. Added `@atcute/cbor` + `@atcute/cid`; bumped `@atcute/bluesky`
   to 4.0.3 (adds the external-embed `associatedRefs` field) and `@atcute/atproto`. `is*`/`validate*`
@@ -321,11 +328,11 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   embed); like/unlike and bookmark add/remove round-trips confirmed live against a real account.
   **Deferred by design:** `post-interaction-settings.ts` `setPostInteractionSettings` (built on the
   preferences cache → 3.2); `profile.ts` `upsertProfile` + avatar/banner uploads (→ 3.3). **Composer
-  residual `@atproto/api`:** the Phase 2.5 `getPostThreadV2` thread-context read and the video-service
-  routing (`agent.serviceUrl`/`dispatchUrl`) keep `useAgent` in `Composer.tsx`/`video.ts` — separate
-  concerns, not record writes. The `ExternalEmbed`/composer-quote/`StandardSiteEmbed` preview
-  consumers keep relabeled `TODO(5.x)` seam casts where they remain `@atproto`-typed (validation
-  layer / composer-internal state).
+  residual `@atproto/api`:** the Phase 2.5 `getPostThreadV2` thread-context read and the
+  video-service routing (`agent.serviceUrl`/`dispatchUrl`) keep `useAgent` in
+  `Composer.tsx`/`video.ts` — separate concerns, not record writes. The
+  `ExternalEmbed`/composer-quote/`StandardSiteEmbed` preview consumers keep relabeled `TODO(5.x)`
+  seam casts where they remain `@atproto`-typed (validation layer / composer-internal state).
 - **Phase 3.0 — done.** `@atproto/api`'s `RichText` class + `UnicodeString` are fully removed.
   Rendering goes through `@atcute`'s `segmentize`; a new `src/lib/strings/rich-text-facets.ts`
   (`detectFacets` / `detectFacetsWithoutResolution` / `cleanNewlines` / `getShortenedLength`) wraps
@@ -336,7 +343,8 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `UnicodeString` byte-stitching in `shortenLinks` / `suggestLinkCardUri` is gone). The publish
   record building (`lib/api/index.ts`) and the starter-pack/DM write paths keep an `as unknown as`
   facet cast at the `@atproto`-typed record boundary (3.1). **Accepted regression:** protocol-less
-  URLs (`bsky.app` without a scheme) no longer auto-facet — the parser's autolink requires `https?://`.
+  URLs (`bsky.app` without a scheme) no longer auto-facet — the parser's autolink requires
+  `https?://`.
 - **Tapper editor — done (bonus, alongside 3.0).** The in-house composer editor (`src/lib/tapper/`)
   now reuses the same `tokenize` parser instead of its own regex bank, so its highlighting exactly
   matches the published facets (protocol-less URLs stop lighting up). The cursor trigger-splice +
@@ -345,60 +353,66 @@ Tracked loosely — `git log` is the source of truth, since each commit subject 
   `tapper/facets.ts` deleted; positions the editor for future markdown rendering.
 - **Composer thread-context read — done (finishes Phase 2.5/3.1's deferred read).** The composer's
   `app.bsky.unspecced.getPostThreadV2` post-publish polling — the "wait for the AppView" retry in
-  `Composer.tsx` and the `whenAppViewReady` quote-count poll — moved off `useAgent`/`BskyAppAgent` onto
-  the `appview` client (`ok(appview.get(...))` returning `$output` directly, so the `.data.thread`
-  unwrap is gone and `whenAppViewReady` is typed `(res: …$output)`; anchor branded `as ResourceUri`).
-  Thread-node narrowing is `$type`-based (`AppBskyUnspeccedDefs.isThreadItemPost(x.value)` →
+  `Composer.tsx` and the `whenAppViewReady` quote-count poll — moved off `useAgent`/`BskyAppAgent`
+  onto the `appview` client (`ok(appview.get(...))` returning `$output` directly, so the
+  `.data.thread` unwrap is gone and `whenAppViewReady` is typed `(res: …$output)`; anchor branded
+  `as ResourceUri`). Thread-node narrowing is `$type`-based
+  (`AppBskyUnspeccedDefs.isThreadItemPost(x.value)` →
   `x.value.$type === 'app.bsky.unspecced.defs#threadItemPost'`). `ComposerOpts.quote` /
-  `OnPostSuccessData` flipped to `@atcute/bluesky`; `ModerationDecision` re-pointed at the island. Three
-  seam casts collapsed as a result: `PostControls`' `quote as unknown as @atproto PostView`,
-  `PostThread`'s `posts as unknown as ThreadItem[]` (its `AppBskyUnspeccedGetPostThreadV2` import then
-  dropped), and `shell/composer`'s `precacheResolveLinkQuery({…}) as unknown as ResolvedLink` — the
-  `@atcute`-typed quote now matches `ResolvedPostRecord` structurally (branded `cid`/`uri` align), so the
-  whole object literal type-checks against `ResolvedLink` with no cast. `agent` (`useAgent`) **stays** in
-  `Composer.tsx` for the out-of-scope video-service routing (`agent.serviceUrl`/`dispatchUrl` → Stream 6).
-  Session-wide `@atproto/api` importers fell 11 → 8. lint + typecheck pass; an adversarial 3-lens review
-  found only the now-stale `ResolvedLink` cast (removed). **Live-verified (2026-05-31)** against a real
-  account via `/playwriter --direct`: composed and published a real post through the migrated path — the
-  composer closed cleanly with no error, the post landed on the profile, and a delete round-trip confirmed
-  it gone after reload. This exercises the inline `getPostThreadV2` AppView-confirmation retry on the live
-  `appview` client. The quote-post `whenAppViewReady` consumed-result branch (quote-count refresh) was not
-  directly driven (the repost/quote menu resisted automation), but it issues the byte-identical migrated
-  call as the verified retry and the already-live `usePostThread` read.
-- **Stream 6 (Phase 6.1) — done.** `BskyAppAgent` / `useAgent` / `AgentContext` are deleted; `useClients()`
-  is the sole network accessor. Across eight commits: (1-6) the eleven `useAgent` consumers moved onto the
-  clients — identity/profile/notification/list/logged-out reads → `appview`; feed interactions keep their
-  per-feed `#bsky_fg` proxy via a per-call header (atcute's `_mergeHeaders` lets a per-call header win over
-  the client's configured proxy); `ExportCarDialog` → `pds` (`getRepo` as bytes) + `useSession`;
-  notifications `updateSeen` → `appview` (`as: null`); labeler subscribe/unsubscribe re-homed onto new
-  `addLabeler`/`removeLabeler` preference mutators in `preferences/agent.ts`; the composer video pipeline
-  threads a new `Clients.pdsUrl` (the PDS service URL the @atcute clients don't expose). (7)
-  `session/agent.ts` rewritten `@atproto/api`-free — session validation reads `com.atproto.server.getSession`
-  through `pds` and throws `InactiveAccountError`; the optimistic-boot path returns a `validate` callback in
-  place of `agent.validateResumedSession()`; the dead test-env labeler switch + `IS_TEST_USER` and the
+  `OnPostSuccessData` flipped to `@atcute/bluesky`; `ModerationDecision` re-pointed at the island.
+  Three seam casts collapsed as a result: `PostControls`' `quote as unknown as @atproto PostView`,
+  `PostThread`'s `posts as unknown as ThreadItem[]` (its `AppBskyUnspeccedGetPostThreadV2` import
+  then dropped), and `shell/composer`'s `precacheResolveLinkQuery({…}) as unknown as ResolvedLink` —
+  the `@atcute`-typed quote now matches `ResolvedPostRecord` structurally (branded `cid`/`uri`
+  align), so the whole object literal type-checks against `ResolvedLink` with no cast. `agent`
+  (`useAgent`) **stays** in `Composer.tsx` for the out-of-scope video-service routing
+  (`agent.serviceUrl`/`dispatchUrl` → Stream 6). Session-wide `@atproto/api` importers fell 11 → 8.
+  lint + typecheck pass; an adversarial 3-lens review found only the now-stale `ResolvedLink` cast
+  (removed). **Live-verified (2026-05-31)** against a real account via `/playwriter --direct`:
+  composed and published a real post through the migrated path — the composer closed cleanly with no
+  error, the post landed on the profile, and a delete round-trip confirmed it gone after reload.
+  This exercises the inline `getPostThreadV2` AppView-confirmation retry on the live `appview`
+  client. The quote-post `whenAppViewReady` consumed-result branch (quote-count refresh) was not
+  directly driven (the repost/quote menu resisted automation), but it issues the byte-identical
+  migrated call as the verified retry and the already-live `usePostThread` read.
+- **Stream 6 (Phase 6.1) — done.** `BskyAppAgent` / `useAgent` / `AgentContext` are deleted;
+  `useClients()` is the sole network accessor. Across eight commits: (1-6) the eleven `useAgent`
+  consumers moved onto the clients — identity/profile/notification/list/logged-out reads →
+  `appview`; feed interactions keep their per-feed `#bsky_fg` proxy via a per-call header (atcute's
+  `_mergeHeaders` lets a per-call header win over the client's configured proxy); `ExportCarDialog`
+  → `pds` (`getRepo` as bytes) + `useSession`; notifications `updateSeen` → `appview` (`as: null`);
+  labeler subscribe/unsubscribe re-homed onto new `addLabeler`/`removeLabeler` preference mutators
+  in `preferences/agent.ts`; the composer video pipeline threads a new `Clients.pdsUrl` (the PDS
+  service URL the @atcute clients don't expose). (7) `session/agent.ts` rewritten
+  `@atproto/api`-free — session validation reads `com.atproto.server.getSession` through `pds` and
+  throws `InactiveAccountError`; the optimistic-boot path returns a `validate` callback in place of
+  `agent.validateResumedSession()`; the dead test-env labeler switch + `IS_TEST_USER` and the
   `BLUESKY_PROXY_*` / `ProxyHeaderValue` plumbing are removed. (8) `pnpm remove @atproto/syntax`.
-  **`@atproto/api` is now imported only by the seven-file `src/lib/moderation/**` island.** lint + typecheck
-  + `pnpm build` pass; **live-verified (2026-05-31)** — reloading the app resumes the stored session
-  (account confirmed `mary.my.id`, following feed loads) through the rewritten boot/validate path.
-- **Appendix A — done (2026-05-31). The migration is complete; `@atproto/api` is fully removed.** The
-  "self-contained island" framing turned out wrong: moderation _rendering_ reads cause/label **shapes**
-  directly (string `cause.type`, rich `cause.source`, `labelDef` fields), so the swap was a ~100-file
-  big-bang, not a re-export flip. Landed in two committable parts plus a prep commit:
-  - _Prep (63411d894):_ fork-native `const.ts` (BSKY_LABELER_DID, DEFAULT_LABEL_SETTINGS) + `muted-words.ts`
-    (hasMutedWord over @atcute keyword filters); `app-labelers.ts` off `Agent`.
+  **`@atproto/api` is now imported only by the seven-file `src/lib/moderation/**` island.\*\* lint +
+  typecheck
+  - `pnpm build` pass; **live-verified (2026-05-31)** — reloading the app resumes the stored session
+    (account confirmed `mary.my.id`, following feed loads) through the rewritten boot/validate path.
+- **Appendix A — done (2026-05-31). The migration is complete; `@atproto/api` is fully removed.**
+  The "self-contained island" framing turned out wrong: moderation _rendering_ reads cause/label
+  **shapes** directly (string `cause.type`, rich `cause.source`, `labelDef` fields), so the swap was
+  a ~100-file big-bang, not a re-export flip. Landed in two committable parts plus a prep commit:
+  - _Prep (63411d894):_ fork-native `const.ts` (BSKY_LABELER_DID, DEFAULT_LABEL_SETTINGS) +
+    `muted-words.ts` (hasMutedWord over @atcute keyword filters); `app-labelers.ts` off `Agent`.
   - _Part 1 (26e3bf0a6):_ engine → `@atcute/bluesky-moderation`. `.ui(ctx)` →
-    `getDisplayRestrictions(decision, DisplayContext.X)` (cause arrays, no boolean shortcuts); numeric
-    `ModerationCauseType`; bare `source` (Did|null for labels, ListViewBasic|null for blocks/mutes);
-    labelDefs as `Record<did, InterpretedLabelMapping>`. The 87 mechanical leaf consumers were converted by a
-    multi-agent Workflow against a hand-written contract; deep-logic/shared files + DebugMod fixtures by hand.
-    `compat.ts` deleted. Dropped @atproto cause types with no @atcute equivalent (block-other; reply-hidden as
-    an engine cause — kept as a synthetic UI cause). Account-level adult labels intentionally diverge from
-    @atproto's newer stricter behavior.
-  - _Part 2 (d5034f535):_ `preferences-types.ts` defines fork-OWNED types (BskyPreferences, Bsky*Preference,
-    and the app's own moderation interface LabelVisibility/LabelerPreference/ModerationPrefs) backing on
-    @atcute/bluesky lexicon records, NOT on the engine's interpreted types; `toModerationPreferences` is the
-    storage→engine adapter. TID → `@atcute/tid`, retry → fork `#/lib/async/retry`. `pnpm remove @atproto/api`.
-    Stored shape unchanged → no cache bump.
+    `getDisplayRestrictions(decision, DisplayContext.X)` (cause arrays, no boolean shortcuts);
+    numeric `ModerationCauseType`; bare `source` (Did|null for labels, ListViewBasic|null for
+    blocks/mutes); labelDefs as `Record<did, InterpretedLabelMapping>`. The 87 mechanical leaf
+    consumers were converted by a multi-agent Workflow against a hand-written contract;
+    deep-logic/shared files + DebugMod fixtures by hand. `compat.ts` deleted. Dropped @atproto cause
+    types with no @atcute equivalent (block-other; reply-hidden as an engine cause — kept as a
+    synthetic UI cause). Account-level adult labels intentionally diverge from @atproto's newer
+    stricter behavior.
+  - _Part 2 (d5034f535):_ `preferences-types.ts` defines fork-OWNED types (BskyPreferences,
+    Bsky\*Preference, and the app's own moderation interface
+    LabelVisibility/LabelerPreference/ModerationPrefs) backing on @atcute/bluesky lexicon records,
+    NOT on the engine's interpreted types; `toModerationPreferences` is the storage→engine adapter.
+    TID → `@atcute/tid`, retry → fork `#/lib/async/retry`. `pnpm remove @atproto/api`. Stored shape
+    unchanged → no cache bump.
   - Live-verified via `/playwriter`: DebugMod decision JSON, home feed, moderation settings, and the
     muted-words dialog all render correctly with no runtime errors.
 
@@ -1503,21 +1517,23 @@ When this is undertaken:
 should be filtered, or hides content that should not. Smoke-test against an account with
 adult-content prefs and an active labeler subscription.
 
-**Decision baseline (captured pre-migration).** `src/lib/moderation/decision-baseline.json` records the
-current `@atproto/api` engine's `moderateProfile` / `moderatePost` `.ui()` flags (filter / blur / alert /
-inform / noOverride, for every profile and content context) across the full DebugMod option matrix — 194
-entries spanning each label × target (account / profile / post / embed) × visibility (hide / warn /
-ignore), each advanced switch in isolation (self-label / adult-disabled / signed-out / following /
-target-is-me), the custom-label `blurs × severity` grid, and the block / mute scenarios. It was produced
-by temporarily instrumenting `DebugMod.tsx` with a `useEffect` that ran the engine over the matrix using
-the same `mock` factory the screen already uses, stashed the result on `window.__MODBASELINE__`, and read
-it back at `/sys/debug-mod`. **After swapping to `@atcute/bluesky-moderation`, re-run the same matrix and
-diff against this file** — `getDisplayRestrictions(...)` must reproduce these flags for every entry (mind
-the `.ui(context)` → `DisplayContext` mapping). Behaviors it pins down: `!hide` / `!warn` ignore the user
-pref (system labels); adult labels honor the pref, but **adult-disabled forces filter + noOverride**;
+**Decision baseline (captured pre-migration).** `src/lib/moderation/decision-baseline.json` records
+the current `@atproto/api` engine's `moderateProfile` / `moderatePost` `.ui()` flags (filter / blur
+/ alert / inform / noOverride, for every profile and content context) across the full DebugMod
+option matrix — 194 entries spanning each label × target (account / profile / post / embed) ×
+visibility (hide / warn / ignore), each advanced switch in isolation (self-label / adult-disabled /
+signed-out / following / target-is-me), the custom-label `blurs × severity` grid, and the block /
+mute scenarios. It was produced by temporarily instrumenting `DebugMod.tsx` with a `useEffect` that
+ran the engine over the matrix using the same `mock` factory the screen already uses, stashed the
+result on `window.__MODBASELINE__`, and read it back at `/sys/debug-mod`. **After swapping to
+`@atcute/bluesky-moderation`, re-run the same matrix and diff against this file** —
+`getDisplayRestrictions(...)` must reproduce these flags for every entry (mind the `.ui(context)` →
+`DisplayContext` mapping). Behaviors it pins down: `!hide` / `!warn` ignore the user pref (system
+labels); adult labels honor the pref, but **adult-disabled forces filter + noOverride**;
 `!no-unauthenticated` is inert when signed in and hard-hides when **signed out**; `target-is-me`
-downgrades `!hide` to blur-only; `block` filters + noOverride; `mute` filters + informs. (Not browser-
-verified for visual rendering — the baseline is the engine's decision output, not the pixels.)
+downgrades `!hide` to blur-only; `block` filters + noOverride; `mute` filters + informs. (Not
+browser- verified for visual rendering — the baseline is the engine's decision output, not the
+pixels.)
 
 **Done when:** `@atproto/*` is absent from `package.json`, `rg "@atproto" src` is clean, and content
 filtering / blur / labeler badges behave correctly in `pnpm dev`.

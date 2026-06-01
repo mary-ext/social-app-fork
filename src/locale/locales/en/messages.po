@@ -733,8 +733,8 @@ msgstr ""
 
 #: src/Navigation.tsx:906
 #: src/screens/Settings/AboutSettings.tsx:32
-#: src/screens/Settings/Settings.tsx:195
-#: src/screens/Settings/Settings.tsx:198
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "About"
 msgstr ""
 
@@ -761,8 +761,8 @@ msgid "Accept this language suggestion"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:32
-#: src/screens/Settings/Settings.tsx:183
-#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:182
+#: src/screens/Settings/Settings.tsx:185
 msgid "Accessibility"
 msgstr ""
 
@@ -772,8 +772,8 @@ msgstr ""
 
 #: src/Navigation.tsx:770
 #: src/screens/Settings/AccountSettings.tsx:33
-#: src/screens/Settings/Settings.tsx:147
-#: src/screens/Settings/Settings.tsx:150
+#: src/screens/Settings/Settings.tsx:146
+#: src/screens/Settings/Settings.tsx:149
 msgid "Account"
 msgstr ""
 
@@ -815,7 +815,7 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:451
+#: src/screens/Settings/Settings.tsx:450
 msgid "Account options"
 msgstr ""
 
@@ -823,7 +823,7 @@ msgstr ""
 msgid "Account provider"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:484
+#: src/screens/Settings/Settings.tsx:483
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -908,8 +908,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:393
-#: src/screens/Settings/Settings.tsx:396
+#: src/screens/Settings/Settings.tsx:392
+#: src/screens/Settings/Settings.tsx:395
 #: src/view/shell/desktop/LeftNav.tsx:258
 #: src/view/shell/desktop/LeftNav.tsx:261
 msgid "Add another account"
@@ -1112,7 +1112,7 @@ msgstr ""
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:386
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -1131,24 +1131,24 @@ msgstr "Allow group chat invites from"
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:441
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:458
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:551
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:549
 msgid "Allow quote posts"
 msgstr ""
 
 #. placeholder {0}: list.name
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:521
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:519
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:428
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:426
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1195,7 +1195,7 @@ msgstr ""
 msgid "An error has occurred"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:425
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:424
 msgid "An error occurred"
 msgstr ""
 
@@ -1215,7 +1215,7 @@ msgstr ""
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:506
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1290,7 +1290,7 @@ msgstr ""
 msgid "Animated GIF"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:395
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Anyone"
 msgstr ""
 
@@ -1353,8 +1353,8 @@ msgstr ""
 
 #: src/Navigation.tsx:762
 #: src/screens/Settings/AppearanceSettings.tsx:63
-#: src/screens/Settings/Settings.tsx:177
-#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:176
+#: src/screens/Settings/Settings.tsx:179
 msgid "Appearance"
 msgstr ""
 
@@ -1722,7 +1722,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
 #: src/screens/Profile/Header/EditProfileDialog.tsx:214
 #: src/screens/Search/Shell.tsx:354
-#: src/screens/Settings/Settings.tsx:240
+#: src/screens/Settings/Settings.tsx:239
 #: src/view/com/composer/Composer.tsx:1363
 #: src/view/com/composer/Composer.tsx:1374
 #: src/view/com/composer/photos/EditImageDialog.tsx:49
@@ -1903,11 +1903,11 @@ msgstr ""
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:371
+#: src/screens/Settings/Settings.tsx:370
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:373
+#: src/screens/Settings/Settings.tsx:372
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -2057,8 +2057,8 @@ msgstr ""
 msgid "Content & Media"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:171
-#: src/screens/Settings/Settings.tsx:174
+#: src/screens/Settings/Settings.tsx:170
+#: src/screens/Settings/Settings.tsx:173
 msgid "Content and media"
 msgstr ""
 
@@ -2381,7 +2381,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:350
+#: src/screens/Settings/Settings.tsx:349
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2411,7 +2411,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:358
+#: src/screens/Settings/Settings.tsx:357
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -2513,8 +2513,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:221
-#: src/screens/Settings/Settings.tsx:225
+#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:224
 msgid "Developer options"
 msgstr ""
 
@@ -2531,7 +2531,7 @@ msgstr ""
 msgid "Disable"
 msgstr "Disable"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:393
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:392
 msgid "Disable captions"
 msgstr "Disable captions"
 
@@ -2540,11 +2540,11 @@ msgstr "Disable captions"
 msgid "Disable link"
 msgstr "Disable link"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:544
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:542
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:401
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -2808,7 +2808,7 @@ msgid "Edit People"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:97
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:224
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:222
 msgid "Edit post interaction settings"
 msgstr ""
 
@@ -2865,7 +2865,7 @@ msgstr ""
 msgid "Enable adult content"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:394
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:393
 msgid "Enable captions"
 msgstr "Enable captions"
 
@@ -2883,7 +2883,7 @@ msgstr ""
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:544
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:542
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -2918,7 +2918,7 @@ msgstr "Ensure you have selected a language for each caption file."
 msgid "Enter a word or tag"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:412
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:411
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -2992,7 +2992,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:411
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:410
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -3953,7 +3953,7 @@ msgstr ""
 msgid "Hide group chat updates"
 msgstr "Hide group chat updates"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:472
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
 msgid "Hide lists"
 msgstr ""
 
@@ -4313,8 +4313,8 @@ msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:93
-#: src/screens/Settings/Settings.tsx:189
-#: src/screens/Settings/Settings.tsx:192
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Languages"
 msgstr ""
 
@@ -4645,11 +4645,11 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:500
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:229
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:227
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -4874,8 +4874,8 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:159
-#: src/screens/Settings/Settings.tsx:162
+#: src/screens/Settings/Settings.tsx:158
+#: src/screens/Settings/Settings.tsx:161
 msgid "Moderation and content filters"
 msgstr "Moderation and content filters"
 
@@ -5399,7 +5399,7 @@ msgstr ""
 msgid "No video posts yet"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:410
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:408
 msgid "Nobody"
 msgstr ""
 
@@ -5477,8 +5477,8 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:28
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:28
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:28
-#: src/screens/Settings/Settings.tsx:165
-#: src/screens/Settings/Settings.tsx:168
+#: src/screens/Settings/Settings.tsx:164
+#: src/screens/Settings/Settings.tsx:167
 #: src/view/screens/Notifications.tsx:113
 #: src/view/shell/desktop/LeftNav.tsx:649
 #: src/view/shell/Drawer.tsx:319
@@ -5628,7 +5628,7 @@ msgstr "Open group chat settings"
 msgid "Open link to {niceUrl}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:347
+#: src/screens/Settings/Settings.tsx:346
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5662,12 +5662,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:340
-#: src/screens/Settings/Settings.tsx:355
+#: src/screens/Settings/Settings.tsx:339
+#: src/screens/Settings/Settings.tsx:354
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:335
+#: src/screens/Settings/Settings.tsx:334
 msgid "Open system log"
 msgstr ""
 
@@ -5819,7 +5819,7 @@ msgstr ""
 msgid "Party GIFs"
 msgstr "Party GIFs"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:378
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:377
 msgid "Pause"
 msgstr ""
 
@@ -5827,7 +5827,7 @@ msgstr ""
 msgid "Pause GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:342
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
 msgid "Pause video"
 msgstr ""
 
@@ -5868,11 +5868,11 @@ msgstr "People I follow can join instantly"
 msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:450
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:448
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:463
 msgid "People you mention"
 msgstr ""
 
@@ -5932,7 +5932,7 @@ msgstr ""
 msgid "Pinned to your feeds"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:379
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:378
 msgid "Play"
 msgstr ""
 
@@ -5945,7 +5945,7 @@ msgstr ""
 msgid "Play GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:342
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
 msgid "Play video"
 msgstr ""
 
@@ -6085,7 +6085,7 @@ msgstr ""
 msgid "Post Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:593
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:591
 msgid "Post interaction settings"
 msgstr ""
 
@@ -6175,8 +6175,8 @@ msgstr ""
 msgid "Primary language"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:153
-#: src/screens/Settings/Settings.tsx:156
+#: src/screens/Settings/Settings.tsx:152
+#: src/screens/Settings/Settings.tsx:155
 msgid "Privacy and security"
 msgstr ""
 
@@ -6406,7 +6406,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:99
 #: src/screens/Bookmarks/index.tsx:233
 #: src/screens/Moderation/index.tsx:338
-#: src/screens/Settings/Settings.tsx:486
+#: src/screens/Settings/Settings.tsx:485
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
@@ -6428,8 +6428,8 @@ msgstr "Remove {displayName} from this group chat"
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:468
-#: src/screens/Settings/Settings.tsx:470
+#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:469
 msgid "Remove account"
 msgstr ""
 
@@ -6478,7 +6478,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:480
+#: src/screens/Settings/Settings.tsx:479
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6655,7 +6655,7 @@ msgstr ""
 msgid "Reply notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:358
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:356
 msgid "Reply settings are chosen by the author of the thread"
 msgstr ""
 
@@ -6824,8 +6824,8 @@ msgstr ""
 msgid "Required in your region"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:364
-#: src/screens/Settings/Settings.tsx:367
+#: src/screens/Settings/Settings.tsx:363
+#: src/screens/Settings/Settings.tsx:366
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -6882,8 +6882,8 @@ msgstr "Sad GIFs"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:306
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:577
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:579
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:581
 #: src/features/liveNow/components/EditLiveDialog.tsx:171
 #: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:48
@@ -6926,8 +6926,8 @@ msgstr ""
 msgid "Save draft?"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:563
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:567
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7182,11 +7182,11 @@ msgstr ""
 msgid "Select duration"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:483
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:481
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:483
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
@@ -7301,16 +7301,16 @@ msgstr "Sent at {0}"
 msgid "Server address"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:419
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:417
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:369
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:367
 msgid "Set who can reply to your post"
 msgstr ""
 
 #: src/Navigation.tsx:625
-#: src/screens/Settings/Settings.tsx:88
+#: src/screens/Settings/Settings.tsx:87
 #: src/view/shell/desktop/LeftNav.tsx:688
 #: src/view/shell/Drawer.tsx:423
 msgid "Settings"
@@ -7448,8 +7448,8 @@ msgstr ""
 msgid "Show badge and filter from feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:324
-#: src/screens/Settings/Settings.tsx:330
+#: src/screens/Settings/Settings.tsx:323
+#: src/screens/Settings/Settings.tsx:329
 msgid "Show feed context debug"
 msgstr "Show feed context debug"
 
@@ -7466,7 +7466,7 @@ msgstr ""
 msgid "Show list anyway"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:472
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:470
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -7528,7 +7528,7 @@ msgstr ""
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:102
+#: src/screens/Settings/Settings.tsx:101
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
@@ -7584,16 +7584,16 @@ msgstr ""
 msgid "Sign in with your Bluesky account."
 msgstr "Sign in with your Bluesky account."
 
-#: src/screens/Settings/Settings.tsx:205
-#: src/screens/Settings/Settings.tsx:208
-#: src/screens/Settings/Settings.tsx:239
+#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:207
+#: src/screens/Settings/Settings.tsx:238
 #: src/view/shell/desktop/LeftNav.tsx:213
 #: src/view/shell/desktop/LeftNav.tsx:264
 #: src/view/shell/desktop/LeftNav.tsx:267
 msgid "Sign out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:236
+#: src/screens/Settings/Settings.tsx:235
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "Sign out?"
 msgstr ""
@@ -7819,12 +7819,12 @@ msgstr ""
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:313
+#: src/screens/Settings/Settings.tsx:312
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
 #: src/Navigation.tsx:703
-#: src/screens/Settings/Settings.tsx:342
+#: src/screens/Settings/Settings.tsx:341
 msgid "Storybook"
 msgstr ""
 
@@ -7903,9 +7903,9 @@ msgstr ""
 
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
-#: src/screens/Settings/Settings.tsx:101
-#: src/screens/Settings/Settings.tsx:112
-#: src/screens/Settings/Settings.tsx:428
+#: src/screens/Settings/Settings.tsx:100
+#: src/screens/Settings/Settings.tsx:111
+#: src/screens/Settings/Settings.tsx:427
 #: src/view/shell/desktop/LeftNav.tsx:248
 msgid "Switch account"
 msgstr ""
@@ -7927,7 +7927,7 @@ msgstr ""
 #: src/screens/Log.tsx:46
 #: src/screens/Settings/AboutSettings.tsx:39
 #: src/screens/Settings/AboutSettings.tsx:42
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:336
 msgid "System log"
 msgstr ""
 
@@ -8155,7 +8155,7 @@ msgstr ""
 msgid "There was an issue! {0}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:202
 #: src/screens/List/ListHiddenScreen.tsx:62
 #: src/screens/List/ListHiddenScreen.tsx:72
 #: src/screens/List/ListHiddenScreen.tsx:90
@@ -8175,7 +8175,7 @@ msgstr ""
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:574
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:572
 msgid "These are your default settings"
 msgstr ""
 
@@ -8452,7 +8452,7 @@ msgid "This will delete \"{0}\" from your muted words. You can always add it bac
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:481
+#: src/screens/Settings/Settings.tsx:480
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -8757,7 +8757,7 @@ msgstr "Unmute this group chat"
 msgid "Unmute thread"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:342
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
 msgid "Unmute video"
 msgstr ""
 
@@ -9325,7 +9325,7 @@ msgstr ""
 msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:363
 #: src/components/WhoCanReply.tsx:82
 msgid "Who can reply"
 msgstr ""
@@ -9537,7 +9537,7 @@ msgstr ""
 msgid "You don't follow any users who follow @{name}."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:510
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -9679,7 +9679,7 @@ msgstr ""
 msgid "You reacted {0} to {target}"
 msgstr "You reacted {0} to {target}"
 
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:236
 #: src/view/shell/desktop/LeftNav.tsx:211
 msgid "You will be signed out of all your accounts."
 msgstr ""
@@ -9760,7 +9760,7 @@ msgstr ""
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:435
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
 msgid "Your followers"
 msgstr ""
 

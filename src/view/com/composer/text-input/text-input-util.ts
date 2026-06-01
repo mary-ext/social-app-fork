@@ -7,8 +7,8 @@ export type LinkFacetMatch = {
 };
 
 /**
- * Detects scheme-prefixed link URLs in `text`, mapping each URL to the text that follows it. Works in
- * plain JS-string space — no facets or byte offsets, since detection is a purely visual concern.
+ * Detects scheme-prefixed link URLs in `text`, mapping each URL to the text that follows it. Works in plain
+ * JS-string space — no facets or byte offsets, since detection is a purely visual concern.
  *
  * @param text the compose-input text.
  * @returns a map of detected URL to its match metadata.

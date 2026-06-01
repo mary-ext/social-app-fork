@@ -265,30 +265,27 @@ export function useToggleQuotepostEnabledMutation() {
 
 	return useMutation({
 		mutationFn: async ({ postUri, action }: { postUri: string; action: 'enable' | 'disable' }) => {
-			await upsertPostgate(
-				{ appview, did: currentAccount!.did as Did, pds: pds!, postUri },
-				async (prev) => {
-					if (prev) {
-						if (action === 'disable') {
-							return mergePostgateRecords(prev, {
-								embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
-							});
-						} else if (action === 'enable') {
-							return {
-								...prev,
-								embeddingRules: [],
-							};
-						}
-					} else {
-						if (action === 'disable') {
-							return createPostgateRecord({
-								post: postUri as ResourceUri,
-								embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
-							});
-						}
+			await upsertPostgate({ appview, did: currentAccount!.did as Did, pds: pds!, postUri }, async (prev) => {
+				if (prev) {
+					if (action === 'disable') {
+						return mergePostgateRecords(prev, {
+							embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
+						});
+					} else if (action === 'enable') {
+						return {
+							...prev,
+							embeddingRules: [],
+						};
 					}
-				},
-			);
+				} else {
+					if (action === 'disable') {
+						return createPostgateRecord({
+							post: postUri as ResourceUri,
+							embeddingRules: [{ $type: 'app.bsky.feed.postgate#disableRule' }],
+						});
+					}
+				}
+			});
 		},
 	});
 }
