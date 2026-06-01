@@ -578,7 +578,7 @@ msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:86
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:87
 msgid "{rank}."
 msgstr ""
 
@@ -593,7 +593,7 @@ msgid "{requestCount}+ requests"
 msgstr "{requestCount}+ requests"
 
 #. trending topic time spent trending. should be as short as possible to fit in a pill
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:150
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
 msgid "{type}h ago"
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgid "Browse starter pack {displayName}"
 msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:73
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:74
 msgid "Browse topic {0}"
 msgstr ""
 
@@ -2612,7 +2612,7 @@ msgstr ""
 msgid "Dismiss error"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:79
+#: src/components/interstitials/TrendingVideos.tsx:80
 msgid "Dismiss this section"
 msgstr ""
 
@@ -2926,7 +2926,7 @@ msgstr ""
 msgid "Enter your handle or DID."
 msgstr "Enter your handle or DID."
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:179
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:180
 msgid "Entertainment"
 msgstr ""
 
@@ -3930,8 +3930,8 @@ msgstr ""
 msgid "Hidden list"
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:88
-#: src/components/interstitials/TrendingVideos.tsx:129
+#: src/components/interstitials/Trending.tsx:89
+#: src/components/interstitials/TrendingVideos.tsx:130
 #: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:126
 #: src/components/moderation/PostHider.tsx:131
@@ -3940,7 +3940,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:19
 #: src/lib/moderation/useLabelBehaviorDescription.ts:24
 #: src/lib/moderation/useLabelBehaviorDescription.ts:29
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:106
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:107
 msgid "Hide"
 msgstr ""
 
@@ -3988,16 +3988,16 @@ msgstr ""
 msgid "Hide translation"
 msgstr "Hide translation"
 
-#: src/components/interstitials/Trending.tsx:69
+#: src/components/interstitials/Trending.tsx:70
 msgid "Hide trending topics"
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:86
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
+#: src/components/interstitials/Trending.tsx:87
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
 msgid "Hide trending topics?"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:127
+#: src/components/interstitials/TrendingVideos.tsx:128
 msgid "Hide trending videos?"
 msgstr ""
 
@@ -4054,7 +4054,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:139
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:140
 msgid "Hot"
 msgstr ""
 
@@ -5116,7 +5116,7 @@ msgstr ""
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:144
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:145
 msgid "New"
 msgstr ""
 
@@ -5224,7 +5224,7 @@ msgid "Newest replies first"
 msgstr ""
 
 #: src/lib/interests.ts:66
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:181
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:182
 msgid "News"
 msgstr ""
 
@@ -6004,7 +6004,7 @@ msgid "Please sign in as @{0}"
 msgstr ""
 
 #: src/lib/interests.ts:69
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:175
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:176
 msgid "Politics"
 msgstr ""
 
@@ -7755,7 +7755,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
 #: src/lib/interests.ts:71
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:173
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:174
 msgid "Sports"
 msgstr ""
 
@@ -8548,7 +8548,7 @@ msgstr "Translating…"
 msgid "Tree view"
 msgstr ""
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:44
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:45
 msgid "Trending"
 msgstr ""
 
@@ -8557,11 +8557,11 @@ msgstr ""
 msgid "Trending GIFs"
 msgstr "Trending GIFs"
 
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:51
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:52
 msgid "Trending options"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:76
+#: src/components/interstitials/TrendingVideos.tsx:77
 msgid "Trending Videos"
 msgstr ""
 
@@ -9000,7 +9000,7 @@ msgid "Video from {0}: {text}"
 msgstr ""
 
 #: src/lib/interests.ts:61
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:177
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:178
 msgid "Video Games"
 msgstr ""
 
@@ -9093,14 +9093,14 @@ msgstr "View incoming group chat requests"
 msgid "View information about these labels"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:171
-#: src/components/interstitials/TrendingVideos.tsx:195
+#: src/components/interstitials/TrendingVideos.tsx:172
+#: src/components/interstitials/TrendingVideos.tsx:196
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:173
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:188
 msgid "View more"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:197
+#: src/components/interstitials/TrendingVideos.tsx:198
 msgid "View more trending videos"
 msgstr ""
 
@@ -9336,7 +9336,7 @@ msgstr ""
 msgid "Whoops!"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:117
+#: src/components/interstitials/TrendingVideos.tsx:118
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:107
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
@@ -9522,9 +9522,9 @@ msgstr "You can read chat history but can't send new messages."
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:87
-#: src/components/interstitials/TrendingVideos.tsx:128
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
+#: src/components/interstitials/Trending.tsx:88
+#: src/components/interstitials/TrendingVideos.tsx:129
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:106
 msgid "You can update this later from your settings."
 msgstr ""
 

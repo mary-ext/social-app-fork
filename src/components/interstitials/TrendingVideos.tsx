@@ -8,7 +8,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { VIDEO_FEED_URI } from '#/lib/constants';
 import { makeCustomFeedLink } from '#/lib/routes/links';
 
-import { useTrendingSettingsApi } from '#/state/preferences/trending';
 import { RQKEY, usePostFeedQuery } from '#/state/queries/post-feed';
 
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
@@ -22,6 +21,8 @@ import { Link } from '#/components/Link';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
 import { CompactVideoPostCard, CompactVideoPostCardPlaceholder } from '#/components/VideoPostCard';
+
+import { useTrendingSettingsApi } from '#/storage/hooks/trending';
 
 const CARD_WIDTH = 108;
 

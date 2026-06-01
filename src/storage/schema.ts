@@ -19,6 +19,8 @@ export type Device = {
 	subtitlesEnabled: boolean;
 	threadgateNudged?: boolean;
 	trendingBetaEnabled: boolean;
+	trendingDisabled: boolean;
+	trendingVideoDisabled: boolean;
 };
 
 export type Account = {

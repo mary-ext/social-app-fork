@@ -3,7 +3,6 @@ import { Provider as ExternalEmbedsProvider } from './external-embeds-prefs';
 import { Provider as HiddenPostsProvider } from './hidden-posts';
 import { Provider as KawaiiProvider } from './kawaii';
 import { Provider as LanguagesProvider } from './languages';
-import { Provider as TrendingSettingsProvider } from './trending';
 
 export { useHapticsDisabled, useSetHapticsDisabled } from './disable-haptics';
 export { useExternalEmbedsPrefs, useSetExternalEmbedPref } from './external-embeds-prefs';
@@ -17,9 +16,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			<ExternalEmbedsProvider>
 				<HiddenPostsProvider>
 					<DisableHapticsProvider>
-						<TrendingSettingsProvider>
-							<KawaiiProvider>{children}</KawaiiProvider>
-						</TrendingSettingsProvider>
+						<KawaiiProvider>{children}</KawaiiProvider>
 					</DisableHapticsProvider>
 				</HiddenPostsProvider>
 			</ExternalEmbedsProvider>

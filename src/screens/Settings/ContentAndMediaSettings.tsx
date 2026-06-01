@@ -3,7 +3,6 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 
-import { useTrendingSettings, useTrendingSettingsApi } from '#/state/preferences/trending';
 import { useTrendingConfig } from '#/state/service-config';
 
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
@@ -19,6 +18,7 @@ import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/T
 import * as Layout from '#/components/Layout';
 
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
+import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ContentAndMediaSettings'>;
 export function ContentAndMediaSettingsScreen({}: Props) {

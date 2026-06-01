@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import { ScrollView, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
-import { useTrendingSettings, useTrendingSettingsApi } from '#/state/preferences/trending';
 import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
 
@@ -17,6 +16,8 @@ import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/T
 import * as Prompt from '#/components/Prompt';
 import { TrendingTopicLink } from '#/components/TrendingTopics';
 import { Text } from '#/components/Typography';
+
+import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 
 export function TrendingInterstitial() {
 	const { enabled } = useTrendingConfig();

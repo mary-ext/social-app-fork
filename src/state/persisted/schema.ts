@@ -70,8 +70,6 @@ const schema = z.object({
 	pdsAddressHistory: z.array(z.string()).optional(),
 	disableHaptics: z.boolean().optional(),
 	kawaii: z.boolean().optional(),
-	trendingDisabled: z.boolean().optional(),
-	trendingVideoDisabled: z.boolean().optional(),
 });
 export type Schema = z.infer<typeof schema>;
 
@@ -96,8 +94,6 @@ export const defaults: Schema = {
 	pdsAddressHistory: [],
 	disableHaptics: false,
 	kawaii: false,
-	trendingDisabled: false,
-	trendingVideoDisabled: false,
 };
 
 export function tryParse(rawData: string): Schema | undefined {

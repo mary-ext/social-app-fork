@@ -5,7 +5,6 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useTrendingSettings } from '#/state/preferences/trending';
 import { useGetTrendsQuery } from '#/state/queries/trending/useGetTrendsQuery';
 import { useTrendingConfig } from '#/state/service-config';
 
@@ -20,6 +19,8 @@ import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/
 import { Link } from '#/components/Link';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+
+import { useTrendingSettings } from '#/storage/hooks/trending';
 
 const TOPIC_COUNT = 5;
 

@@ -2,7 +2,6 @@ import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 import { Trans } from '@lingui/react/macro';
 
-import { useTrendingSettings, useTrendingSettingsApi } from '#/state/preferences/trending';
 import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
 
@@ -14,6 +13,8 @@ import { Trending3_Stroke2_Corner1_Rounded as TrendingIcon } from '#/components/
 import * as Prompt from '#/components/Prompt';
 import { TrendingTopicLink } from '#/components/TrendingTopics';
 import { Text } from '#/components/Typography';
+
+import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
 
 const TRENDING_LIMIT = 5;
 

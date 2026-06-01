@@ -22,7 +22,6 @@ import { isNetworkError } from '#/lib/strings/errors';
 import { usePostAuthorShadowFilter } from '#/state/cache/profile-shadow';
 import { listenPostCreated } from '#/state/events';
 import { useFeedFeedbackContext } from '#/state/feed-feedback';
-import { useTrendingSettings } from '#/state/preferences/trending';
 import { STALE } from '#/state/queries';
 import {
 	type FeedDescriptor,
@@ -53,6 +52,7 @@ import { TrendingInterstitial } from '#/components/interstitials/Trending';
 import { TrendingVideos as TrendingVideosInterstitial } from '#/components/interstitials/TrendingVideos';
 
 import { isStatusStillActive, isStatusValidForViewers, useLiveNowConfig } from '#/features/liveNow';
+import { useTrendingSettings } from '#/storage/hooks/trending';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { DiscoverFallbackHeader } from './DiscoverFallbackHeader';
