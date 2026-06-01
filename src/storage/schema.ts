@@ -5,6 +5,8 @@ import { type Gif } from '#/features/gifPicker/types';
 /** Data that's specific to the device and does not vary based account */
 export type Device = {
 	activitySubscriptionsNudged?: boolean;
+	colorMode: 'dark' | 'light' | 'system';
+	darkTheme?: 'dark' | 'dim';
 	debugFeedContextEnabled: boolean;
 	demoMode: boolean;
 	devMode: boolean;
