@@ -5,7 +5,9 @@ import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';
 
-import { useAutoplayDisabled, useSetSubtitlesEnabled, useSubtitlesEnabled } from '#/state/preferences';
+import { useAutoplayDisabled } from '#/state/preferences';
+
+import { useSubtitlesEnabled } from '#/storage/hooks/subtitles';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -88,8 +90,7 @@ export function Controls({
 	} = useVideoElement(videoRef);
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const subtitlesEnabled = useSubtitlesEnabled();
-	const setSubtitlesEnabled = useSetSubtitlesEnabled();
+	const [subtitlesEnabled, setSubtitlesEnabled] = useSubtitlesEnabled();
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
 	const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef);
 	const { state: hasFocus, onIn: onFocus, onOut: onBlur } = useInteractionState();

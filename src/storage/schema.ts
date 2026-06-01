@@ -12,6 +12,7 @@ export type Device = {
 	deviceId?: string;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
+	subtitlesEnabled: boolean;
 	threadgateNudged?: boolean;
 	trendingBetaEnabled: boolean;
 };

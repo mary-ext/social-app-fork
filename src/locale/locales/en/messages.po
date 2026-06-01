@@ -1195,7 +1195,7 @@ msgstr ""
 msgid "An error has occurred"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:424
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:425
 msgid "An error occurred"
 msgstr ""
 
@@ -2531,7 +2531,7 @@ msgstr ""
 msgid "Disable"
 msgstr "Disable"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:392
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:393
 msgid "Disable captions"
 msgstr "Disable captions"
 
@@ -2865,7 +2865,7 @@ msgstr ""
 msgid "Enable adult content"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:393
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:394
 msgid "Enable captions"
 msgstr "Enable captions"
 
@@ -2918,7 +2918,7 @@ msgstr "Ensure you have selected a language for each caption file."
 msgid "Enter a word or tag"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:411
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:412
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -2992,7 +2992,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:410
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:411
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -5819,7 +5819,7 @@ msgstr ""
 msgid "Party GIFs"
 msgstr "Party GIFs"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:377
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:378
 msgid "Pause"
 msgstr ""
 
@@ -5827,7 +5827,7 @@ msgstr ""
 msgid "Pause GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:342
 msgid "Pause video"
 msgstr ""
 
@@ -5932,7 +5932,7 @@ msgstr ""
 msgid "Pinned to your feeds"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:378
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:379
 msgid "Play"
 msgstr ""
 
@@ -5945,7 +5945,7 @@ msgstr ""
 msgid "Play GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:342
 msgid "Play video"
 msgstr ""
 
@@ -8757,7 +8757,7 @@ msgstr "Unmute this group chat"
 msgid "Unmute thread"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:342
 msgid "Unmute video"
 msgstr ""
 
