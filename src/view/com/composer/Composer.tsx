@@ -75,7 +75,6 @@ import { useDialogStateControlContext } from '#/state/dialogs';
 import { emitPostCreated } from '#/state/events';
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
 import { useModalControls } from '#/state/modals';
-import { useRequireAltTextEnabled } from '#/state/preferences';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -119,6 +118,7 @@ import { Text } from '#/components/Typography';
 
 import { type Gif } from '#/features/gifPicker/types';
 import { BottomSheetPortalProvider } from '#/shims/bottom-sheet';
+import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
 import {
@@ -178,7 +178,7 @@ export const ComposePost = ({
 	const currentDid = currentAccount!.did;
 	const { closeComposer } = useComposerControls();
 	const { t: l, i18n } = useLingui();
-	const requireAltTextEnabled = useRequireAltTextEnabled();
+	const [requireAltTextEnabled] = useRequireAltTextEnabled();
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
 	const textInputRef = useRef<TextInputRef>(null);

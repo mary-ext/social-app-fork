@@ -13,6 +13,8 @@ export type Device = {
 	deviceId?: string;
 	fontFamily: 'system' | 'theme';
 	fontScale: '-2' | '-1' | '0' | '1' | '2';
+	largeAltBadgeEnabled: boolean;
+	requireAltTextEnabled: boolean;
 	subtitlesEnabled: boolean;
 	threadgateNudged?: boolean;
 	trendingBetaEnabled: boolean;

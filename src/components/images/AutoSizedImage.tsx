@@ -3,8 +3,6 @@ import { type DimensionValue, Pressable, View, type ViewStyle } from 'react-nati
 import { type AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
-
 import { atoms as a, useTheme, utils } from '#/alf';
 
 import { ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen } from '#/components/icons/ArrowsDiagonal';
@@ -12,6 +10,7 @@ import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
+import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 type WebViewStyle = ViewStyle & {
 	transitionDuration?: string;
@@ -77,7 +76,7 @@ export function AutoSizedImage({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const largeAlt = useLargeAltBadgeEnabled();
+	const [largeAlt] = useLargeAltBadgeEnabled();
 
 	let aspectRatio: number | undefined;
 	const dims = image.aspectRatio;

@@ -2,8 +2,6 @@ import { Pressable, type StyleProp, View, type ViewStyle } from 'react-native';
 import { type AppBskyEmbedImages } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
-
 import { atoms as a, useTheme, utils } from '#/alf';
 
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
@@ -11,6 +9,7 @@ import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { Text } from '#/components/Typography';
 
 import { Image, type ImageStyle } from '#/shims/image';
+import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 type EventFunction = (index: number) => void;
 
@@ -37,7 +36,7 @@ export function GalleryItem({
 }: Props) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const largeAltBadge = useLargeAltBadgeEnabled();
+	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const image = images[index]!;
 	const hasAlt = !!image.alt;
 	const hideBadges = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;

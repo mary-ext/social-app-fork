@@ -760,7 +760,7 @@ msgstr ""
 msgid "Accept this language suggestion"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:32
+#: src/screens/Settings/AccessibilitySettings.tsx:30
 #: src/screens/Settings/Settings.tsx:182
 #: src/screens/Settings/Settings.tsx:185
 msgid "Accessibility"
@@ -1157,16 +1157,16 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:175
+#: src/components/images/AutoSizedImage.tsx:174
 #: src/components/images/Gallery/index.tsx:439
-#: src/components/images/ImageLayoutGridItem.tsx:95
+#: src/components/images/ImageLayoutGridItem.tsx:94
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:84
 #: src/view/com/composer/GifAltText.tsx:102
 #: src/view/com/composer/photos/Gallery.tsx:190
 msgid "ALT"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:42
+#: src/screens/Settings/AccessibilitySettings.tsx:40
 #: src/view/com/composer/GifAltText.tsx:160
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
 #: src/view/com/composer/videos/SubtitleDialog.tsx:96
@@ -2620,8 +2620,8 @@ msgstr ""
 msgid "Dismiss this suggestion"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:58
-#: src/screens/Settings/AccessibilitySettings.tsx:64
+#: src/screens/Settings/AccessibilitySettings.tsx:56
+#: src/screens/Settings/AccessibilitySettings.tsx:62
 msgid "Display larger alt text badges"
 msgstr ""
 
@@ -4092,7 +4092,7 @@ msgstr ""
 msgid "If you're a developer, you can host your own server."
 msgstr ""
 
-#: src/components/images/ImageLayoutGridItem.tsx:56
+#: src/components/images/ImageLayoutGridItem.tsx:55
 msgid "Image"
 msgstr ""
 
@@ -6815,8 +6815,8 @@ msgstr ""
 msgid "Requests"
 msgstr "Requests"
 
-#: src/screens/Settings/AccessibilitySettings.tsx:46
-#: src/screens/Settings/AccessibilitySettings.tsx:52
+#: src/screens/Settings/AccessibilitySettings.tsx:44
+#: src/screens/Settings/AccessibilitySettings.tsx:50
 msgid "Require alt text before posting"
 msgstr ""
 
@@ -9178,8 +9178,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:192
-#: src/components/images/AutoSizedImage.tsx:221
+#: src/components/images/AutoSizedImage.tsx:191
+#: src/components/images/AutoSizedImage.tsx:220
 msgid "Views full image"
 msgstr ""
 

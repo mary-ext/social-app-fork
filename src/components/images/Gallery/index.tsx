@@ -16,7 +16,6 @@ import debounce from 'lodash.debounce';
 import { mergeRefs } from '#/lib/merge-refs';
 
 import { useA11y } from '#/state/a11y';
-import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
 
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
 
@@ -33,6 +32,7 @@ import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { Text } from '#/components/Typography';
 
 import { Image } from '#/shims/image';
+import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export * from './const';
 export * from './maybeApplyGalleryOffsetStyles';
@@ -100,7 +100,7 @@ export function useGalleryBleed() {
 export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProps) {
 	const { t: l } = useLingui();
 	const { screenReaderEnabled } = useA11y();
-	const largeAltBadge = useLargeAltBadgeEnabled();
+	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const bps = useBreakpoints();
 	const window = useWindowDimensions();
 	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;

@@ -3,9 +3,6 @@ import { type NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { type CommonNavigatorParams } from '#/lib/routes/types';
 
-import { useRequireAltTextEnabled, useSetRequireAltTextEnabled } from '#/state/preferences';
-import { useLargeAltBadgeEnabled, useSetLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge';
-
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
 
 import { atoms as a } from '#/alf';
@@ -14,14 +11,15 @@ import * as Toggle from '#/components/forms/Toggle';
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
 import * as Layout from '#/components/Layout';
 
+import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
+import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccessibilitySettings'>;
 export function AccessibilitySettingsScreen({}: Props) {
 	const { t: l } = useLingui();
 
-	const requireAltTextEnabled = useRequireAltTextEnabled();
-	const setRequireAltTextEnabled = useSetRequireAltTextEnabled();
-	const largeAltBadgeEnabled = useLargeAltBadgeEnabled();
-	const setLargeAltBadgeEnabled = useSetLargeAltBadgeEnabled();
+	const [requireAltTextEnabled, setRequireAltTextEnabled] = useRequireAltTextEnabled();
+	const [largeAltBadgeEnabled, setLargeAltBadgeEnabled] = useLargeAltBadgeEnabled();
 
 	return (
 		<Layout.Screen>
