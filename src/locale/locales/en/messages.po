@@ -3776,6 +3776,7 @@ msgstr ""
 #: src/components/Layout/Header/index.tsx:127
 #: src/components/moderation/ScreenHider.tsx:138
 #: src/components/moderation/ScreenHider.tsx:148
+#: src/components/web/Layout/Header.tsx:69
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
 #: src/screens/ProfileList/components/ErrorScreen.tsx:39
 #: src/view/com/auth/LoggedOut.tsx:68
