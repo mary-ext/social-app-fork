@@ -311,7 +311,11 @@ export function InitiateChatFlow({
 			}
 		}
 
-		if (searchText === '' && (chatState === ChatState.NEW_CHAT || chatState === ChatState.NEW_GROUP_CHAT)) {
+		if (
+			searchText === '' &&
+			_items.length > 0 &&
+			(chatState === ChatState.NEW_CHAT || chatState === ChatState.NEW_GROUP_CHAT)
+		) {
 			_items.unshift({
 				type: 'label',
 				key: 'suggested',
