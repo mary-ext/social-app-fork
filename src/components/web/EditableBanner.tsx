@@ -66,7 +66,7 @@ export function EditableBanner({
 						<CameraFilledIcon width={14} height={14} fill="currentColor" />
 					</span>
 				</Menu.Trigger>
-				<Menu.Popup label={l`Edit banner`}>
+				<Menu.Popup label={l`Edit banner`} align="center">
 					<Menu.Item onClick={onOpenLibrary}>
 						<Menu.ItemText>
 							<Trans>Upload from Files</Trans>
