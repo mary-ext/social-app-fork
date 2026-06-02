@@ -1,4 +1,4 @@
-import { createGlobalTheme } from '@vanilla-extract/css';
+import { assignVars, globalStyle } from '@vanilla-extract/css';
 
 import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from '#/styles/palette';
 
@@ -28,6 +28,6 @@ const themeValues = (palette: Palette, shadowOpacity: number) => ({
 // assign onto the selectors `useColorModeTheme.ts` / `web/index.html` already toggle on <html>, so the
 // new DOM components recolor alongside the RNW ones with no extra switching machinery. mirrors the
 // palette inversion + shadow opacity from `createTheme` in `#/alf/base/themes`.
-createGlobalTheme('.theme--light', vars, themeValues(DEFAULT_PALETTE, 0.1));
-createGlobalTheme('.theme--dark', vars, themeValues(invertPalette(DEFAULT_PALETTE), 0.4));
-createGlobalTheme('.theme--dim', vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4));
+globalStyle('.theme--light', { vars: assignVars(vars, themeValues(DEFAULT_PALETTE, 0.1)) });
+globalStyle('.theme--dark', { vars: assignVars(vars, themeValues(invertPalette(DEFAULT_PALETTE), 0.4)) });
+globalStyle('.theme--dim', { vars: assignVars(vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4)) });

@@ -1,28 +1,15 @@
-import { createGlobalThemeContract } from '@vanilla-extract/css';
+import { createThemeContract } from '@vanilla-extract/css';
 
-import { DEFAULT_PALETTE, type Palette } from '#/styles/palette';
-
-type PaletteVarNames = { [K in keyof Palette]: string };
-
-const paletteVarNames = (() => {
-	const out = {} as PaletteVarNames;
-	for (const key of Object.keys(DEFAULT_PALETTE) as (keyof Palette)[]) {
-		out[key] = `p-${key}`;
-	}
-	return out;
-})();
+import { DEFAULT_PALETTE } from '#/styles/palette';
 
 /**
- * Global CSS-variable contract for the theme. Variable *names* only — values are assigned per theme
- * in `theme.css.ts` onto the existing `.theme--{light,dark,dim}` selectors. Consume via
- * `vars.palette.*` (the full palette, which inverts between light/dark) or `vars.shadow.*`.
+ * CSS-variable contract for the theme — variable *names* only, auto-generated and scoped by VE (so they
+ * can't collide with the hand-authored theme vars in `web/index.html`). Values are assigned per theme in
+ * `theme.css.ts` onto the existing `.theme--{light,dark,dim}` selectors. The palette shape is borrowed
+ * from `DEFAULT_PALETTE` (its values are ignored; only the keys matter). Consume via `vars.palette.*`
+ * (the full palette, which inverts between light/dark) or `vars.shadow.*`.
  */
-export const vars = createGlobalThemeContract({
-	palette: paletteVarNames,
-	shadow: {
-		lg: 'shadow-lg',
-		md: 'shadow-md',
-		sm: 'shadow-sm',
-		xs: 'shadow-xs',
-	},
+export const vars = createThemeContract({
+	palette: DEFAULT_PALETTE,
+	shadow: { lg: null, md: null, sm: null, xs: null },
 });
