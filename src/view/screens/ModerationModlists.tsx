@@ -10,22 +10,20 @@ import { MyLists } from '#/view/com/lists/MyLists';
 import { atoms as a } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Layout from '#/components/Layout';
+import * as Sheet from '#/components/web/Sheet';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ModerationModlists'>;
 export function ModerationModlistsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
-	const createListDialogControl = useDialogControl();
+	const createListHandle = Sheet.useSheetHandle();
 
 	const onPressNewList = useCallback(() => {
-		createListDialogControl.open();
-	}, [createListDialogControl]);
-
-	const wrappedOnPressNewList = onPressNewList;
+		createListHandle.open(null);
+	}, [createListHandle]);
 
 	const onCreateList = useCallback(
 		(uri: string) => {
@@ -55,7 +53,7 @@ export function ModerationModlistsScreen({}: Props) {
 					color="secondary"
 					variant="solid"
 					size="small"
-					onPress={wrappedOnPressNewList}
+					onPress={onPressNewList}
 				>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>
@@ -66,7 +64,7 @@ export function ModerationModlistsScreen({}: Props) {
 			<MyLists filter="mod" style={a.flex_grow} />
 			<CreateOrEditListDialog
 				purpose="app.bsky.graph.defs#modlist"
-				control={createListDialogControl}
+				handle={createListHandle}
 				onSave={onCreateList}
 			/>
 		</Layout.Screen>

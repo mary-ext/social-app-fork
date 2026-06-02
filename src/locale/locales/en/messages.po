@@ -1058,8 +1058,8 @@ msgstr ""
 msgid "Added to starter pack"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:134
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:138
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:135
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:139
 msgid "Adding members to list..."
 msgstr ""
 
@@ -1406,7 +1406,7 @@ msgstr "Are you sure you want to delete this message? The message will be delete
 msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:98
 #: src/screens/Profile/Header/EditProfileDialog.tsx:73
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
@@ -1750,13 +1750,13 @@ msgstr "by <0>@{0}</0>"
 msgid "By you"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:112
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:114
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:287
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:296
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:113
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:115
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:314
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
 #: src/components/Prompt.tsx:121
 #: src/components/Prompt.tsx:122
-#: src/components/web/Prompt/index.tsx:101
+#: src/components/web/Prompt/index.tsx:104
 #: src/features/liveNow/components/GoLiveDialog.tsx:226
 #: src/features/liveNow/components/GoLiveDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:424
@@ -1831,7 +1831,7 @@ msgstr "Change the source language"
 msgid "Changes saved"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:100
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:101
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
 msgstr ""
 
@@ -2033,7 +2033,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:310
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
-#: src/components/web/Dialog/index.tsx:88
+#: src/components/web/Dialog/index.tsx:91
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""
@@ -2104,7 +2104,7 @@ msgstr ""
 
 #: src/components/Prompt.tsx:171
 #: src/components/Prompt.tsx:175
-#: src/components/web/Prompt/index.tsx:77
+#: src/components/web/Prompt/index.tsx:80
 msgid "Confirm"
 msgstr ""
 
@@ -2235,8 +2235,8 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:141
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:142
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:143
 msgid "Copy link to list"
 msgstr ""
 
@@ -2368,8 +2368,8 @@ msgstr ""
 msgid "Create group chat"
 msgstr "Create group chat"
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:107
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:109
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:108
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:110
 msgid "Create list"
 msgstr ""
 
@@ -2377,14 +2377,18 @@ msgstr ""
 msgid "Create list from members"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:87
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:90
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:88
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:91
 msgid "Create list from starter pack"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:344
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:302
 msgid "Create moderation list"
 msgstr ""
+
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:83
+msgid "Create or edit list"
+msgstr "Create or edit list"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:429
 msgid "Create or modify an invite link for this group chat"
@@ -2402,7 +2406,7 @@ msgstr ""
 msgid "Create starter pack"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:343
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:301
 msgid "Create user list"
 msgstr ""
 
@@ -2461,7 +2465,7 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:164
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:667
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:228
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:229
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/screens/StarterPack/StarterPackScreen.tsx:637
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
@@ -2492,8 +2496,8 @@ msgstr ""
 msgid "Delete for me"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:165
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:166
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:168
 msgid "Delete list"
 msgstr ""
 
@@ -2520,7 +2524,7 @@ msgstr ""
 msgid "Delete starter pack?"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:225
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:226
 msgid "Delete this list?"
 msgstr ""
 
@@ -2545,7 +2549,7 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:416
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 #: src/screens/Profile/Header/EditProfileDialog.tsx:284
 #: src/screens/Profile/Header/EditProfileDialog.tsx:291
 msgid "Description"
@@ -2621,7 +2625,7 @@ msgstr "Disable this invite link?"
 msgid "Disabled"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:103
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:75
 #: src/view/com/composer/Composer.tsx:1042
 #: src/view/com/composer/Composer.tsx:1080
@@ -2631,7 +2635,7 @@ msgstr ""
 msgid "Discard"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:97
 #: src/screens/Profile/Header/EditProfileDialog.tsx:72
 msgid "Discard changes?"
 msgstr ""
@@ -2768,19 +2772,19 @@ msgstr "e.g. alice.bsky.social"
 msgid "E.g. artistic nudes."
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:346
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:304
 msgid "e.g. Great Posters"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:346
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:304
 msgid "e.g. Spammers"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:349
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:307
 msgid "e.g. The posters who never miss."
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:350
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:308
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr ""
 
@@ -2836,8 +2840,8 @@ msgstr ""
 msgid "Edit link settings"
 msgstr "Edit link settings"
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:159
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:160
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:162
 msgid "Edit list details"
 msgstr ""
 
@@ -2846,7 +2850,7 @@ msgstr ""
 msgid "Edit live status"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:341
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:299
 msgid "Edit moderation list"
 msgstr ""
 
@@ -2888,7 +2892,7 @@ msgstr ""
 msgid "Edit this group chat’s name"
 msgstr "Edit this group chat’s name"
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:340
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:298
 msgid "Edit user list"
 msgstr ""
 
@@ -3353,7 +3357,7 @@ msgstr ""
 msgid "Failed to unlock group chat"
 msgstr "Failed to unlock group chat"
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:98
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:99
 msgid "Failed to unpin list"
 msgstr ""
 
@@ -4121,7 +4125,7 @@ msgstr ""
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:226
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:227
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
@@ -4549,7 +4553,7 @@ msgstr "Link copied to clipboard"
 msgid "List"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:369
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:360
 msgid "List avatar"
 msgstr ""
 
@@ -4573,7 +4577,7 @@ msgstr ""
 msgid "List by you"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:66
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:67
 msgid "List created, but failed to add some members"
 msgstr ""
 
@@ -4581,16 +4585,16 @@ msgstr ""
 msgid "List creator"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:84
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:85
 msgctxt "toast"
 msgid "List deleted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:409
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:400
 msgid "List description"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:423
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:413
 msgid "List description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
@@ -4602,7 +4606,7 @@ msgstr ""
 msgid "List Hidden"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:401
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:392
 msgid "List must have a name."
 msgstr ""
 
@@ -4611,28 +4615,28 @@ msgctxt "toast"
 msgid "List muted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:382
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:374
 msgid "List name"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:396
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:387
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
 #: src/screens/ProfileList/components/Header.tsx:98
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:116
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:117
 msgctxt "toast"
 msgid "List unblocked"
 msgstr ""
 
 #: src/screens/ProfileList/components/Header.tsx:89
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:107
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:108
 msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
 
 #: src/Navigation.tsx:524
-#: src/view/screens/Lists.tsx:49
+#: src/view/screens/Lists.tsx:47
 #: src/view/screens/Profile.tsx:229
 #: src/view/screens/Profile.tsx:237
 #: src/view/shell/desktop/LeftNav.tsx:665
@@ -4937,12 +4941,12 @@ msgstr ""
 msgid "Moderation list by you"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:255
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:263
 msgctxt "toast"
 msgid "Moderation list created"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:241
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:248
 msgctxt "toast"
 msgid "Moderation list updated"
 msgstr ""
@@ -4953,7 +4957,7 @@ msgid "Moderation lists"
 msgstr ""
 
 #: src/Navigation.tsx:535
-#: src/view/screens/ModerationModlists.tsx:49
+#: src/view/screens/ModerationModlists.tsx:47
 msgid "Moderation Lists"
 msgstr ""
 
@@ -4984,7 +4988,7 @@ msgstr ""
 msgid "More languages..."
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:125
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:126
 #: src/view/com/composer/drafts/DraftItem.tsx:171
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:235
@@ -5131,7 +5135,7 @@ msgstr ""
 msgid "My starter pack"
 msgstr "My starter pack"
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:388
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:380
 msgid "Name"
 msgstr ""
 
@@ -5159,8 +5163,8 @@ msgstr ""
 msgid "New"
 msgstr ""
 
-#: src/view/screens/Lists.tsx:61
-#: src/view/screens/ModerationModlists.tsx:62
+#: src/view/screens/Lists.tsx:59
+#: src/view/screens/ModerationModlists.tsx:60
 msgctxt "action"
 msgid "New"
 msgstr ""
@@ -5221,8 +5225,8 @@ msgstr "New group chat"
 msgid "New group chat with:"
 msgstr "New group chat with:"
 
-#: src/view/screens/Lists.tsx:53
-#: src/view/screens/ModerationModlists.tsx:53
+#: src/view/screens/Lists.tsx:51
+#: src/view/screens/ModerationModlists.tsx:51
 msgid "New list"
 msgstr ""
 
@@ -6487,8 +6491,8 @@ msgstr "Remove from chat"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:280
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:283
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:146
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:148
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:147
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:149
 #: src/screens/SavedFeeds.tsx:337
 msgid "Remove from my feeds"
 msgstr ""
@@ -6579,7 +6583,7 @@ msgid "Removed from starter pack"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:109
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:68
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:69
 #: src/view/com/posts/FeedShutdownMsg.tsx:43
 msgid "Removed from your feeds"
 msgstr ""
@@ -6711,8 +6715,8 @@ msgstr ""
 msgid "Report feed"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:174
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:176
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:175
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:177
 msgid "Report list"
 msgstr ""
 
@@ -6884,8 +6888,8 @@ msgstr ""
 msgid "Sad GIFs"
 msgstr "Sad GIFs"
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:306
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:325
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:333
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:574
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:576
 #: src/features/liveNow/components/EditLiveDialog.tsx:171
@@ -8100,7 +8104,7 @@ msgstr "There was a problem loading GIFs. Check your connection and try again."
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:158
 #: src/screens/ProfileList/components/Header.tsx:79
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:70
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:71
 #: src/screens/SavedFeeds.tsx:87
 msgid "There was an issue contacting the server"
 msgstr ""
@@ -8167,8 +8171,8 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:89
 #: src/screens/ProfileList/components/Header.tsx:91
 #: src/screens/ProfileList/components/Header.tsx:100
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:109
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:118
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:110
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:119
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:31
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:42
 msgid "There was an issue. Please check your internet connection and try again."
@@ -8456,7 +8460,7 @@ msgstr ""
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 
-#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:94
+#: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:95
 msgid "This will create a new list with the same name, description, and members as this starter pack."
 msgstr ""
 
@@ -8662,8 +8666,8 @@ msgstr ""
 msgid "Unblock Account?"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:202
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:204
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:203
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:205
 msgid "Unblock list"
 msgstr ""
 
@@ -8761,8 +8765,8 @@ msgstr ""
 msgid "Unmute conversation"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:210
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:212
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:211
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:213
 msgid "Unmute list"
 msgstr ""
 
@@ -8801,8 +8805,8 @@ msgstr ""
 msgid "Unpin from profile"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:187
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:189
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:188
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:190
 msgid "Unpin moderation list"
 msgstr ""
 
@@ -8815,7 +8819,7 @@ msgstr ""
 msgid "Unpinned from your feeds"
 msgstr ""
 
-#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:96
+#: src/screens/ProfileList/components/MoreOptionsMenu.tsx:97
 msgid "Unpinned list"
 msgstr ""
 
@@ -8932,12 +8936,12 @@ msgstr "User list"
 msgid "User List by {0}"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:254
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:262
 msgctxt "toast"
 msgid "User list created"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:240
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:247
 msgctxt "toast"
 msgid "User list updated"
 msgstr ""

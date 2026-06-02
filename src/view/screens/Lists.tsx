@@ -10,22 +10,20 @@ import { MyLists } from '#/view/com/lists/MyLists';
 import { atoms as a } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Layout from '#/components/Layout';
+import * as Sheet from '#/components/web/Sheet';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>;
 export function ListsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
-	const createListDialogControl = useDialogControl();
+	const createListHandle = Sheet.useSheetHandle();
 
 	const onPressNewList = useCallback(() => {
-		createListDialogControl.open();
-	}, [createListDialogControl]);
-
-	const wrappedOnPressNewList = onPressNewList;
+		createListHandle.open(null);
+	}, [createListHandle]);
 
 	const onCreateList = useCallback(
 		(uri: string) => {
@@ -54,7 +52,7 @@ export function ListsScreen({}: Props) {
 					testID="newUserListBtn"
 					color="secondary"
 					size="small"
-					onPress={wrappedOnPressNewList}
+					onPress={onPressNewList}
 				>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>
@@ -65,7 +63,7 @@ export function ListsScreen({}: Props) {
 			<MyLists filter="curate" style={a.flex_grow} />
 			<CreateOrEditListDialog
 				purpose="app.bsky.graph.defs#curatelist"
-				control={createListDialogControl}
+				handle={createListHandle}
 				onSave={onCreateList}
 			/>
 		</Layout.Screen>

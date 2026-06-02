@@ -27,6 +27,7 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
+import * as Sheet from '#/components/web/Sheet';
 import * as Toast from '#/components/Toast';
 
 export function MoreOptionsMenu({
@@ -38,7 +39,7 @@ export function MoreOptionsMenu({
 }) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
-	const editListDialogControl = useDialogControl();
+	const editListHandle = Sheet.useSheetHandle();
 	const deleteListPromptControl = useDialogControl();
 	const reportDialogControl = useReportDialogControl();
 	const navigation = useNavigation<NavigationProp>();
@@ -156,7 +157,7 @@ export function MoreOptionsMenu({
 
 					{isOwner ? (
 						<Menu.Group>
-							<Menu.Item label={l`Edit list details`} onPress={editListDialogControl.open}>
+							<Menu.Item label={l`Edit list details`} onPress={() => editListHandle.open(null)}>
 								<Menu.ItemText>
 									<Trans>Edit list details</Trans>
 								</Menu.ItemText>
@@ -219,7 +220,7 @@ export function MoreOptionsMenu({
 					)}
 				</Menu.Outer>
 			</Menu.Root>
-			<CreateOrEditListDialog control={editListDialogControl} list={list} />
+			<CreateOrEditListDialog handle={editListHandle} list={list} />
 			<Prompt.Basic
 				control={deleteListPromptControl}
 				title={l`Delete this list?`}

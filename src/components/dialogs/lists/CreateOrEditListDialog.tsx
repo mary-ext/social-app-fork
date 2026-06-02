@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Did, Handle } from '@atcute/lexicons';
@@ -18,17 +17,16 @@ import { useClients } from '#/state/session';
 import { logger } from '#/logger';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { EditableUserAvatar } from '#/view/com/util/UserAvatar';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as TextField from '#/components/forms/TextField';
+import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { Loader } from '#/components/Loader';
-import * as Prompt from '#/components/Prompt';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { EditableAvatar } from '#/components/web/EditableAvatar';
+import * as Prompt from '#/components/web/Prompt';
+import * as Sheet from '#/components/web/Sheet';
+import { Text } from '#/components/web/Text';
+import * as TextField from '#/components/web/TextField';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64;
 const DESCRIPTION_MAX_GRAPHEMES = 300;
@@ -40,29 +38,28 @@ export type InitialListValues = {
 };
 
 export function CreateOrEditListDialog({
-	control,
+	handle,
 	list,
 	purpose,
 	onSave,
 	initialValues,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Sheet.SheetHandle;
 	list?: AppBskyGraphDefs.ListView;
 	purpose?: AppBskyGraphDefs.ListPurpose;
 	onSave?: (uri: string) => void;
 	initialValues?: InitialListValues;
 }) {
 	const { t: l } = useLingui();
-	const cancelControl = Dialog.useDialogControl();
+	const cancelHandle = Prompt.usePromptHandle();
 	const [dirty, setDirty] = useState(false);
 
 	// 'You might lose unsaved changes' warning
 	useEffect(() => {
 		if (dirty) {
 			const abortController = new AbortController();
-			const { signal } = abortController;
 			window.addEventListener('beforeunload', (evt) => evt.preventDefault(), {
-				signal,
+				signal: abortController.signal,
 			});
 			return () => {
 				abortController.abort();
@@ -70,40 +67,40 @@ export function CreateOrEditListDialog({
 		}
 	}, [dirty]);
 
-	const onPressCancel = useCallback(() => {
-		if (dirty) {
-			cancelControl.open();
-		} else {
-			control.close();
-		}
-	}, [dirty, control, cancelControl]);
-
 	return (
-		<Dialog.Outer
-			control={control}
-			nativeOptions={{
-				preventDismiss: dirty,
-				fullHeight: true,
-			}}
-			testID="createOrEditListDialog"
-		>
-			<DialogInner
-				list={list}
-				purpose={purpose}
-				onSave={onSave}
-				setDirty={setDirty}
-				onPressCancel={onPressCancel}
-				initialValues={initialValues}
-			/>
+		<>
+			<Sheet.Root
+				handle={handle}
+				onOpenChange={(open, details) => {
+					// guard every non-imperative dismissal while dirty (escape/backdrop, and the focus-out caused
+					// by the discard prompt itself) — Save/Discard close imperatively and pass through
+					if (!open && dirty && details.reason !== 'imperative-action') {
+						details.cancel();
+						cancelHandle.open(null);
+					}
+				}}
+			>
+				<Sheet.Popup label={l`Create or edit list`}>
+					<DialogInner
+						list={list}
+						purpose={purpose}
+						onSave={onSave}
+						handle={handle}
+						cancelHandle={cancelHandle}
+						setDirty={setDirty}
+						initialValues={initialValues}
+					/>
+				</Sheet.Popup>
+			</Sheet.Root>
 			<Prompt.Basic
-				control={cancelControl}
+				handle={cancelHandle}
 				title={l`Discard changes?`}
 				description={l`Are you sure you want to discard your changes?`}
-				onConfirm={() => control.close()}
+				onConfirm={() => handle.close()}
 				confirmButtonCta={l`Discard`}
 				confirmButtonColor="negative"
 			/>
-		</Dialog.Outer>
+		</>
 	);
 }
 
@@ -111,15 +108,17 @@ function DialogInner({
 	list,
 	purpose,
 	onSave,
+	handle,
+	cancelHandle,
 	setDirty,
-	onPressCancel,
 	initialValues,
 }: {
 	list?: AppBskyGraphDefs.ListView;
 	purpose?: AppBskyGraphDefs.ListPurpose;
 	onSave?: (uri: string) => void;
+	handle: Sheet.SheetHandle;
+	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
-	onPressCancel: () => void;
 	initialValues?: InitialListValues;
 }) {
 	const activePurpose = useMemo(() => {
@@ -134,9 +133,7 @@ function DialogInner({
 	const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist';
 
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const { appview } = useClients();
-	const control = Dialog.useDialogContext();
 	const {
 		mutateAsync: createListMutation,
 		error: createListError,
@@ -170,8 +167,7 @@ function DialogInner({
 	const [listAvatar, setListAvatar] = useState<string | undefined | null>(initialAvatar);
 	const [newListAvatar, setNewListAvatar] = useState<ImageMeta | undefined | null>();
 
-	// When creating with pre-filled values (from starter pack), consider dirty
-	// immediately so the Save button is enabled
+	// When creating with pre-filled values (from starter pack), consider dirty immediately so Save is enabled
 	const hasInitialValuesForCreate = !list && initialValues != null;
 	const dirty =
 		hasInitialValuesForCreate ||
@@ -183,23 +179,34 @@ function DialogInner({
 		setDirty(dirty);
 	}, [dirty, setDirty]);
 
-	const onSelectNewAvatar = useCallback(
-		(img: ImageMeta | null) => {
-			setImageError('');
-			if (img === null) {
-				setNewListAvatar(null);
-				setListAvatar(null);
-				return;
-			}
-			try {
-				setNewListAvatar(img);
-				setListAvatar(URL.createObjectURL(img.blob));
-			} catch (e) {
-				setImageError(cleanError(e));
-			}
-		},
-		[setNewListAvatar, setListAvatar, setImageError],
-	);
+	const onRequestClose = useCallback(() => {
+		if (dirty) {
+			cancelHandle.open(null);
+		} else {
+			handle.close();
+		}
+	}, [dirty, handle, cancelHandle]);
+
+	const onSelectNewAvatar = useCallback((img: ImageMeta | null) => {
+		setImageError('');
+		if (img === null) {
+			setNewListAvatar(null);
+			setListAvatar(null);
+			return;
+		}
+		try {
+			setNewListAvatar(img);
+			setListAvatar(URL.createObjectURL(img.blob));
+		} catch (e) {
+			setImageError(cleanError(e));
+		}
+	}, []);
+
+	const displayNameTooLong = isOverMaxGraphemeCount({
+		text: displayName,
+		maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
+	});
+	const descriptionTooLong = getShortenedLength(descriptionText) > DESCRIPTION_MAX_GRAPHEMES;
 
 	const onPressSave = useCallback(async () => {
 		setImageError('');
@@ -210,14 +217,14 @@ function DialogInner({
 				return;
 			}
 
-			// `detectFacets` only emits mention facets for handles that resolve, so there are no
-			// invalid mentions left to strip.
+			// `detectFacets` only emits mention facets for handles that resolve, so there are no invalid
+			// mentions left to strip.
 			const richText = shortenLinks(
-				await detectFacets(cleanNewlines(descriptionText.trimEnd()), async (handle) => {
+				await detectFacets(cleanNewlines(descriptionText.trimEnd()), async (h) => {
 					try {
 						const res = await ok(
 							appview.get('com.atproto.identity.resolveHandle', {
-								params: { handle: handle as Handle },
+								params: { handle: h as Handle },
 							}),
 						);
 						return res.did as Did;
@@ -240,7 +247,8 @@ function DialogInner({
 						? l({ message: 'User list updated', context: 'toast' })
 						: l({ message: 'Moderation list updated', context: 'toast' }),
 				);
-				control.close(() => onSave?.(list.uri));
+				handle.close();
+				onSave?.(list.uri);
 			} else {
 				const { uri } = await createListMutation({
 					purpose: activePurpose,
@@ -254,7 +262,8 @@ function DialogInner({
 						? l({ message: 'User list created', context: 'toast' })
 						: l({ message: 'Moderation list created', context: 'toast' }),
 				);
-				control.close(() => onSave?.(uri));
+				handle.close();
+				onSave?.(uri);
 			}
 		} catch (e) {
 			logger.error('Failed to create/edit list', { message: String(e) });
@@ -264,62 +273,15 @@ function DialogInner({
 		createListMutation,
 		updateListMutation,
 		onSave,
-		control,
+		handle,
 		displayName,
 		descriptionText,
 		newListAvatar,
-		setImageError,
 		activePurpose,
 		isCurateList,
 		appview,
 		l,
 	]);
-
-	const displayNameTooLong = isOverMaxGraphemeCount({
-		text: displayName,
-		maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
-	});
-	const descriptionTooLong = getShortenedLength(descriptionText) > DESCRIPTION_MAX_GRAPHEMES;
-
-	const cancelButton = useCallback(
-		() => (
-			<Button
-				label={l`Cancel`}
-				onPress={onPressCancel}
-				size="small"
-				color="primary"
-				variant="ghost"
-				style={[a.rounded_full]}
-				testID="editProfileCancelBtn"
-			>
-				<ButtonText style={[a.text_md]}>
-					<Trans>Cancel</Trans>
-				</ButtonText>
-			</Button>
-		),
-		[onPressCancel, l],
-	);
-
-	const saveButton = useCallback(
-		() => (
-			<Button
-				label={l`Save`}
-				onPress={onPressSave}
-				disabled={!dirty || isCreatingList || isUpdatingList || displayNameTooLong || descriptionTooLong}
-				size="small"
-				color="primary"
-				variant="ghost"
-				style={[a.rounded_full]}
-				testID="editProfileSaveBtn"
-			>
-				<ButtonText style={[a.text_md, !dirty && t.atoms.text_contrast_low]}>
-					<Trans>Save</Trans>
-				</ButtonText>
-				{(isCreatingList || isUpdatingList) && <ButtonIcon icon={Loader} />}
-			</Button>
-		),
-		[l, t, dirty, onPressSave, isCreatingList, isUpdatingList, displayNameTooLong, descriptionTooLong],
-	);
 
 	const onChangeDisplayName = useCallback(
 		(text: string) => {
@@ -330,10 +292,6 @@ function DialogInner({
 		},
 		[displayNameTooShort],
 	);
-
-	const onChangeDescription = useCallback((newText: string) => {
-		setDescriptionText(newText);
-	}, []);
 
 	const title = list
 		? isCurateList
@@ -350,84 +308,117 @@ function DialogInner({
 		: l`e.g. Users that repeatedly reply with ads.`;
 
 	return (
-		<Dialog.ScrollableInner
-			label={title}
-			style={[a.overflow_hidden, { maxWidth: 500 }]}
-			contentContainerStyle={[a.px_0, a.pt_0]}
-			header={
-				<Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
-					<Dialog.HeaderText>{title}</Dialog.HeaderText>
-				</Dialog.Header>
-			}
-		>
-			{isUpdateListError && <ErrorMessage message={cleanError(updateListError)} />}
-			{isCreateListError && <ErrorMessage message={cleanError(createListError)} />}
-			{imageError !== '' && <ErrorMessage message={imageError} />}
-			<View style={[a.pt_xl, a.px_xl, a.gap_xl]}>
-				<View>
-					<TextField.LabelText>
-						<Trans>List avatar</Trans>
-					</TextField.LabelText>
-					<View style={[a.align_start]}>
-						<EditableUserAvatar
-							size={80}
-							avatar={listAvatar}
-							onSelectNewAvatar={onSelectNewAvatar}
-							type="list"
-						/>
-					</View>
-				</View>
-				<View>
-					<TextField.LabelText>
-						<Trans>List name</Trans>
-					</TextField.LabelText>
-					<TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
-						<Dialog.Input
-							defaultValue={displayName}
-							onChangeText={onChangeDisplayName}
-							label={l`Name`}
-							placeholder={displayNamePlaceholder}
-							testID="editListNameInput"
-						/>
-					</TextField.Root>
-					{(displayNameTooLong || displayNameTooShort) && (
-						<Text style={[a.text_sm, a.mt_xs, a.font_bold, { color: t.palette.negative_400 }]}>
-							{displayNameTooLong ? (
-								<Trans>
-									List name is too long.{' '}
-									<Plural value={DISPLAY_NAME_MAX_GRAPHEMES} other="The maximum number of characters is #." />
-								</Trans>
-							) : displayNameTooShort ? (
-								<Trans>List must have a name.</Trans>
-							) : null}
-						</Text>
-					)}
-				</View>
+		<>
+			<Sheet.Header.Outer>
+				<Sheet.Header.Slot>
+					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
+						<ButtonText size="md">
+							<Trans>Cancel</Trans>
+						</ButtonText>
+					</Button>
+				</Sheet.Header.Slot>
+				<Sheet.Header.Content>
+					<Sheet.Header.TitleText>{title}</Sheet.Header.TitleText>
+				</Sheet.Header.Content>
+				<Sheet.Header.Slot>
+					<Button
+						label={l`Save`}
+						variant="ghost"
+						color="primary"
+						size="small"
+						disabled={!dirty || isCreatingList || isUpdatingList || displayNameTooLong || descriptionTooLong}
+						onClick={onPressSave}
+					>
+						<ButtonText size="md">
+							<Trans>Save</Trans>
+						</ButtonText>
+						{(isCreatingList || isUpdatingList) && <ButtonIcon icon={Loader} />}
+					</Button>
+				</Sheet.Header.Slot>
+			</Sheet.Header.Outer>
 
-				<View>
-					<TextField.LabelText>
-						<Trans>List description</Trans>
-					</TextField.LabelText>
-					<TextField.Root isInvalid={descriptionTooLong}>
-						<Dialog.Input
-							defaultValue={descriptionText}
-							onChangeText={onChangeDescription}
-							multiline
-							label={l`Description`}
-							placeholder={descriptionPlaceholder}
-							testID="editListDescriptionInput"
-						/>
-					</TextField.Root>
-					{descriptionTooLong && (
-						<Text style={[a.text_sm, a.mt_xs, a.font_bold, { color: t.palette.negative_400 }]}>
-							<Trans>
-								List description is too long.{' '}
-								<Plural value={DESCRIPTION_MAX_GRAPHEMES} other="The maximum number of characters is #." />
-							</Trans>
-						</Text>
-					)}
-				</View>
-			</View>
-		</Dialog.ScrollableInner>
+			<Sheet.Body>
+				{isUpdateListError && (
+					<div className={styles.errorWrap}>
+						<ErrorMessage message={cleanError(updateListError)} />
+					</div>
+				)}
+				{isCreateListError && (
+					<div className={styles.errorWrap}>
+						<ErrorMessage message={cleanError(createListError)} />
+					</div>
+				)}
+				{imageError !== '' && (
+					<div className={styles.errorWrap}>
+						<ErrorMessage message={imageError} />
+					</div>
+				)}
+
+				<div className={styles.fields}>
+					<div>
+						<TextField.LabelText>
+							<Trans>List avatar</Trans>
+						</TextField.LabelText>
+						<div className={styles.avatarWrap}>
+							<EditableAvatar
+								type="list"
+								size={80}
+								avatar={listAvatar}
+								onSelectNewAvatar={onSelectNewAvatar}
+							/>
+						</div>
+					</div>
+
+					<div>
+						<TextField.LabelText>
+							<Trans>List name</Trans>
+						</TextField.LabelText>
+						<TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
+							<TextField.Input
+								defaultValue={displayName}
+								onChangeText={onChangeDisplayName}
+								label={l`Name`}
+								placeholder={displayNamePlaceholder}
+							/>
+						</TextField.Root>
+						{(displayNameTooLong || displayNameTooShort) && (
+							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
+								{displayNameTooLong ? (
+									<Trans>
+										List name is too long.{' '}
+										<Plural value={DISPLAY_NAME_MAX_GRAPHEMES} other="The maximum number of characters is #." />
+									</Trans>
+								) : (
+									<Trans>List must have a name.</Trans>
+								)}
+							</Text>
+						)}
+					</div>
+
+					<div>
+						<TextField.LabelText>
+							<Trans>List description</Trans>
+						</TextField.LabelText>
+						<TextField.Root isInvalid={descriptionTooLong}>
+							<TextField.Input
+								defaultValue={descriptionText}
+								onChangeText={setDescriptionText}
+								multiline
+								label={l`Description`}
+								placeholder={descriptionPlaceholder}
+							/>
+						</TextField.Root>
+						{descriptionTooLong && (
+							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
+								<Trans>
+									List description is too long.{' '}
+									<Plural value={DESCRIPTION_MAX_GRAPHEMES} other="The maximum number of characters is #." />
+								</Trans>
+							</Text>
+						)}
+					</div>
+				</div>
+			</Sheet.Body>
+		</>
 	);
 }
