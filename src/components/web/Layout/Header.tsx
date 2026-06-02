@@ -66,7 +66,7 @@ export function BackButton() {
 
 	return (
 		<Slot>
-			<Button label={l`Go back`} variant="ghost" shape="round" className={styles.backButton} onClick={onClick}>
+			<Button label={l`Go back`} variant="ghost" color="secondary" shape="round" className={styles.backButton} onClick={onClick}>
 				<ButtonIcon icon={ArrowLeft} size="lg" />
 			</Button>
 		</Slot>
