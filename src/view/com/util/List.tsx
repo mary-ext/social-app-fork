@@ -36,7 +36,7 @@ export type ListMethods = {
 	scrollToEnd: (options?: { animated?: boolean }) => void;
 };
 type WebViewStyle = ViewStyle & {
-	overflowY?: 'scroll';
+	overflowY?: 'auto' | 'scroll';
 	scrollbarColor?: string;
 	scrollbarWidth?: 'thin';
 };
@@ -332,7 +332,7 @@ function ListImpl<ItemT>(
 				disableFullWindowScroll &&
 					webViewStyle({
 						flex: 1,
-						overflowY: 'scroll',
+						overflowY: isWithinSplitView ? 'auto' : 'scroll',
 					}),
 			]}
 			ref={nativeRef as unknown as React.RefObject<View>}
