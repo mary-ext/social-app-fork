@@ -30,7 +30,6 @@ import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
 import type { DialogOuterProps } from '#/components/Dialog';
-import * as Sheet from '#/components/web/Sheet';
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 	Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -40,6 +39,7 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as Sheet from '#/components/web/Sheet';
 
 import { ProfileHeaderDisplayName } from './DisplayName';
 import { EditProfileDialog } from './EditProfileDialog';

@@ -39,7 +39,12 @@ export function Select({ label, items, value, onValueChange, placeholder, disabl
 					<BaseSelect.Popup className={styles.popup}>
 						<BaseSelect.List className={styles.list}>
 							{items.map((item) => (
-								<BaseSelect.Item key={item.value} value={item.value} label={item.label} className={styles.item}>
+								<BaseSelect.Item
+									key={item.value}
+									value={item.value}
+									label={item.label}
+									className={styles.item}
+								>
 									<BaseSelect.ItemIndicator className={styles.indicator}>
 										<CheckIcon size="sm" fill="currentColor" />
 									</BaseSelect.ItemIndicator>

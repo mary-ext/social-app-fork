@@ -3,8 +3,8 @@ import { AlertDialog } from '@base-ui/react/alert-dialog';
 import { useLingui } from '@lingui/react/macro';
 
 import type { Props as IconProps } from '#/components/icons/common';
-import * as button from '#/components/web/Button.css';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as button from '#/components/web/Button.css';
 import { cx } from '#/components/web/cx';
 import * as dialogStyles from '#/components/web/Dialog/Dialog.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
@@ -24,7 +24,13 @@ export function usePromptHandle() {
 }
 
 /** A confirmation dialog (no backdrop/Escape dismissal — an explicit action is required). */
-export function Outer({ children, handle }: { children: ReactNode; handle: ReturnType<typeof createHandle> }) {
+export function Outer({
+	children,
+	handle,
+}: {
+	children: ReactNode;
+	handle: ReturnType<typeof createHandle>;
+}) {
 	const id = useId();
 	const registerOpen = useRegisterDialog(id, () => handle.close());
 	return (

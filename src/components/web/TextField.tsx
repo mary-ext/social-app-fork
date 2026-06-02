@@ -47,7 +47,8 @@ export function Input({
 }: InputProps) {
 	const ctxInvalid = useContext(InvalidContext);
 	const invalid = isInvalid ?? ctxInvalid;
-	const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeText?.(e.currentTarget.value);
+	const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+		onChangeText?.(e.currentTarget.value);
 	const cls = cx(styles.input, multiline && styles.multiline, invalid && styles.invalid, className);
 
 	if (multiline) {

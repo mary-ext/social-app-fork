@@ -1,7 +1,5 @@
 import { createVar, style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
-
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
 	CENTER_COLUMN_OFFSET,
@@ -9,6 +7,8 @@ import {
 	HEADER_SLOT_SIZE,
 	SCROLLBAR_OFFSET,
 } from '#/components/web/Layout/const';
+
+import { vars } from '#/styles/contract.css';
 
 const offsetVar = createVar();
 

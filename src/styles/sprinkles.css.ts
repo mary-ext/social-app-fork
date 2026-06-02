@@ -1,8 +1,7 @@
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles';
 
-import { borderRadius, fontSize, fontWeight, lineHeight, space } from '#/styles/tokens';
-
 import { vars } from '#/styles/contract.css';
+import { borderRadius, fontSize, fontWeight, lineHeight, space } from '#/styles/tokens';
 
 const px = <T extends Record<string, number>>(scale: T): { [K in keyof T]: string } => {
 	const out = {} as { -readonly [K in keyof T]: string };
@@ -27,9 +26,9 @@ const spacingAuto = { ...spacing, auto: 'auto' };
 const borderWidths = { 0: '0px', 1: '1px', 2: '2px' };
 
 /**
- * Color values for `color` / `background` / `borderColor`. Exposes the full themed palette plus the
- * semantic aliases mirroring `ThemeAtoms` (`text`, `bg`, `border*`). All resolve to themed CSS vars, so
- * they invert with the active theme.
+ * Color values for `color` / `background` / `borderColor`. Exposes the full themed palette plus the semantic
+ * aliases mirroring `ThemeAtoms` (`text`, `bg`, `border*`). All resolve to themed CSS vars, so they invert
+ * with the active theme.
  */
 const colors = {
 	...vars.palette,

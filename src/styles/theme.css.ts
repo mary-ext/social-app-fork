@@ -1,8 +1,7 @@
 import { assignVars, globalStyle } from '@vanilla-extract/css';
 
-import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from '#/styles/palette';
-
 import { vars } from '#/styles/contract.css';
+import { DEFAULT_PALETTE, DEFAULT_SUBDUED_PALETTE, invertPalette, type Palette } from '#/styles/palette';
 
 // palette.black is always an opaque 7-char hex, so a fixed 8-digit-hex alpha suffices for shadows.
 const alpha = (hex: string, opacity: number) => {
@@ -30,4 +29,6 @@ const themeValues = (palette: Palette, shadowOpacity: number) => ({
 // palette inversion + shadow opacity from `createTheme` in `#/alf/base/themes`.
 globalStyle('.theme--light', { vars: assignVars(vars, themeValues(DEFAULT_PALETTE, 0.1)) });
 globalStyle('.theme--dark', { vars: assignVars(vars, themeValues(invertPalette(DEFAULT_PALETTE), 0.4)) });
-globalStyle('.theme--dim', { vars: assignVars(vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4)) });
+globalStyle('.theme--dim', {
+	vars: assignVars(vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4)),
+});

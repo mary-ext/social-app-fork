@@ -1,8 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { fontSize } from '#/styles/tokens';
-
 import { vars } from '#/styles/contract.css';
+import { fontSize } from '#/styles/tokens';
 
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,

@@ -205,8 +205,8 @@ export const DEFAULT_SUBDUED_PALETTE: Palette = {
 };
 
 /**
- * Mirrors a palette's contrast/primary/positive/negative scales for a dark scheme (e.g. `contrast_0`
- * ↔ `contrast_1000`). Static colors pass through unchanged.
+ * Mirrors a palette's contrast/primary/positive/negative scales for a dark scheme (e.g. `contrast_0` ↔
+ * `contrast_1000`). Static colors pass through unchanged.
  *
  * @param palette the light-scheme palette to invert
  * @returns the inverted palette

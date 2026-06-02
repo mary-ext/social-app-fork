@@ -10,9 +10,9 @@ import { useExternalEmbedsPrefs } from '#/state/preferences';
 import { atoms as a, useTheme } from '#/alf';
 
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
-import { useDialogHandle } from '#/components/web/Dialog';
 import { Fill } from '#/components/Fill';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { Image } from '#/shims/image';
 

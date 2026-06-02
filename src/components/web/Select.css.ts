@@ -1,8 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { fontSize } from '#/styles/tokens';
-
 import { vars } from '#/styles/contract.css';
+import { fontSize } from '#/styles/tokens';
 
 const textSm = `calc(var(--font-scale, 1) * ${fontSize.sm}px)`;
 

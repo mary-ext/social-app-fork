@@ -5,14 +5,20 @@ import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from 
 
 import { useSetExternalEmbedPref } from '#/state/preferences';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { Text } from '#/components/web/Text';
 
-const bodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'lg', marginBottom: '_2xl', marginTop: 'sm' });
+import { sprinkles } from '#/styles/sprinkles.css';
+
+const bodyClass = sprinkles({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: 'lg',
+	marginBottom: '_2xl',
+	marginTop: 'sm',
+});
 const actionsClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md' });
 
 export function EmbedConsentDialog({

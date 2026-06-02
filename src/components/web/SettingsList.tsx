@@ -8,8 +8,8 @@ export function Container({ children }: { children: ReactNode }) {
 }
 
 /**
- * A titled settings section. Unlike the RNW original, this does not teleport icons/title into a header
- * row — children render in order, so write the `ItemText` heading first.
+ * A titled settings section. Unlike the RNW original, this does not teleport icons/title into a header row —
+ * children render in order, so write the `ItemText` heading first.
  */
 export function Group({
 	children,

@@ -1,8 +1,8 @@
 import { type ComponentPropsWithoutRef, memo, useContext, useMemo } from 'react';
 
-import { useBreakpoints, useLayoutBreakpoints } from '#/alf/breakpoints';
-
 import { useEnableMinimalShellModeForScreen } from '#/state/shell';
+
+import { useBreakpoints, useLayoutBreakpoints } from '#/alf/breakpoints';
 
 import { cx } from '#/components/web/cx';
 import { ScrollbarOffsetContext } from '#/components/web/Layout/context';
@@ -16,7 +16,13 @@ export type ScreenProps = ComponentPropsWithoutRef<'div'> & {
 };
 
 /** Outermost component of every screen. */
-export const Screen = memo(function Screen({ noInsetTop, minimalShell = false, className, children, ...rest }: ScreenProps) {
+export const Screen = memo(function Screen({
+	noInsetTop,
+	minimalShell = false,
+	className,
+	children,
+	...rest
+}: ScreenProps) {
 	const { gtMobile } = useBreakpoints();
 	useEnableMinimalShellModeForScreen({ enabled: minimalShell });
 	return (
@@ -34,7 +40,12 @@ export type ContentProps = ComponentPropsWithoutRef<'div'> & {
 };
 
 /** Default content region for simple pages. */
-export const Content = memo(function Content({ ignoreTabletLayoutOffset, className, children, ...rest }: ContentProps) {
+export const Content = memo(function Content({
+	ignoreTabletLayoutOffset,
+	className,
+	children,
+	...rest
+}: ContentProps) {
 	return (
 		<div className={cx(styles.content, className)} {...rest}>
 			<Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>{children}</Center>
@@ -47,7 +58,12 @@ export type CenterProps = ComponentPropsWithoutRef<'div'> & {
 };
 
 /** Centers content within the screen, accounting for the nav rail and scrollbar gutter. */
-export const Center = memo(function Center({ ignoreTabletLayoutOffset, className, children, ...rest }: CenterProps) {
+export const Center = memo(function Center({
+	ignoreTabletLayoutOffset,
+	className,
+	children,
+	...rest
+}: CenterProps) {
 	const { isWithinOffsetView } = useContext(ScrollbarOffsetContext);
 	const { centerColumnOffset } = useLayoutBreakpoints();
 	const ctx = useMemo(() => ({ isWithinOffsetView: true }), []);

@@ -1,8 +1,8 @@
 import { createVar, style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
-
 import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH, SCROLLBAR_OFFSET } from '#/components/web/Layout/const';
+
+import { vars } from '#/styles/contract.css';
 
 /** Discrete tablet-breakpoint column shift, toggled by the `columnOffset` class. */
 const columnOffsetVar = createVar();

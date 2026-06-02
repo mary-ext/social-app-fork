@@ -1,8 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-import { fontSize } from '#/styles/tokens';
-
 import { vars } from '#/styles/contract.css';
+import { fontSize } from '#/styles/tokens';
 
 const FONT_FAMILY = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
 

@@ -1,12 +1,11 @@
 import type { ComponentPropsWithoutRef, ComponentType, ReactNode, Ref } from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
 
-import { sprinkles, type Sprinkles } from '#/styles/sprinkles.css';
-
 import type { Props as IconProps } from '#/components/icons/common';
-
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Button.css';
+import { cx } from '#/components/web/cx';
+
+import { sprinkles, type Sprinkles } from '#/styles/sprinkles.css';
 
 type Variant = 'bare' | 'ghost' | 'solid';
 type Color = 'negative' | 'primary' | 'secondary';
@@ -36,7 +35,8 @@ export function Button({
 	children,
 	...rest
 }: ButtonProps) {
-	const colorClass = variant === 'solid' ? styles.solid[color] : variant === 'ghost' ? styles.ghost[color] : styles.bare;
+	const colorClass =
+		variant === 'solid' ? styles.solid[color] : variant === 'ghost' ? styles.ghost[color] : styles.bare;
 	return (
 		<BaseButton
 			aria-label={label}

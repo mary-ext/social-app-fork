@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 
-import type { DialogControlRefProps } from '#/components/Dialog';
 import { useDialogStateContext, useDialogStateControlContext } from '#/state/dialogs';
+
+import type { DialogControlRefProps } from '#/components/Dialog';
 
 /**
  * Bridges a Base UI dialog into the app's shared `state/dialogs` registry so `closeAllDialogs` and the

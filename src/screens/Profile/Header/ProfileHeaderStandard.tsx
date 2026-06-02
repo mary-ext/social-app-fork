@@ -28,8 +28,6 @@ import { SubscribeProfileButton } from '#/components/activity-notifications/Subs
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
-import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
-import * as Sheet from '#/components/web/Sheet';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/KnownFollowers';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -37,6 +35,8 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
+import * as Sheet from '#/components/web/Sheet';
 
 import { useActorStatus } from '#/features/liveNow';
 

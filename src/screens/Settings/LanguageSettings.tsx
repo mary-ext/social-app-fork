@@ -8,8 +8,6 @@ import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
 import { useDialogControl } from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
@@ -19,6 +17,8 @@ import { Select } from '#/components/web/Select';
 import * as SettingsList from '#/components/web/SettingsList';
 import { Text } from '#/components/web/Text';
 import * as Toggle from '#/components/web/Toggle';
+
+import { sprinkles } from '#/styles/sprinkles.css';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
 	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,

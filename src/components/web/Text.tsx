@@ -1,10 +1,10 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { sprinkles, type Sprinkles } from '#/styles/sprinkles.css';
-
 import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Text.css';
+
+import { sprinkles, type Sprinkles } from '#/styles/sprinkles.css';
 
 export type TextProps = Omit<ComponentPropsWithoutRef<'span'>, 'color' | 'style'> & {
 	size?: Sprinkles['fontSize'];
