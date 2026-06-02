@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -9,19 +8,17 @@ import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
-import { atoms as a } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
-import * as Toggle from '#/components/forms/Toggle';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import * as Layout from '#/components/Layout';
-import * as Select from '#/components/Select';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import * as Layout from '#/components/web/Layout';
+import { Select } from '#/components/web/Select';
+import * as SettingsList from '#/components/web/SettingsList';
+import { Text } from '#/components/web/Text';
+import * as Toggle from '#/components/web/Toggle';
 
-import * as SettingsList from './components/SettingsList';
+import * as styles from './LanguageSettings.css';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
 	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,
@@ -39,8 +36,6 @@ export function LanguageSettingsScreen({}: Props) {
 	const setContentLanguages = useCallback(
 		(languages: string[]) => {
 			_setContentLanguages(languages);
-			// TODO: try using startTransition/useOptimistic when we switch to New Arch
-			// Old arch doesn't support concurrent react features so use rAF instead
 			requestAnimationFrame(() => {
 				setLangPrefs.setContentLanguages(languages);
 			});
@@ -84,8 +79,17 @@ export function LanguageSettingsScreen({}: Props) {
 			.filter((x) => !!x);
 	}, [recentLanguages, contentLanguages, langPrefs.primaryLanguage]);
 
+	const primaryLanguageItems = useMemo(
+		() =>
+			DEDUPED_LANGUAGES.map((lang) => ({
+				label: languageName(lang, langPrefs.appLanguage),
+				value: lang.code2,
+			})).sort((a, b) => a.label.localeCompare(b.label, langPrefs.appLanguage)),
+		[langPrefs.appLanguage],
+	);
+
 	return (
-		<Layout.Screen testID="PreferencesLanguagesScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
@@ -101,71 +105,45 @@ export function LanguageSettingsScreen({}: Props) {
 						<SettingsList.ItemText>
 							<Trans>App language</Trans>
 						</SettingsList.ItemText>
-						<View style={[a.gap_md, a.w_full]}>
-							<Text style={[a.leading_snug]}>
+						<div className={styles.section}>
+							<Text leading="snug">
 								<Trans>Select which language to use for the app's user interface.</Trans>
 							</Text>
-							<Select.Root
+							<Select
+								label={l`Select app language`}
 								value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
 								onValueChange={onChangeAppLanguage}
-							>
-								<Select.Trigger label={l`Select app language`}>
-									<Select.ValueText />
-									<Select.Icon />
-								</Select.Trigger>
-								<Select.Content
-									label={l`App language`}
-									renderItem={({ label, value }) => (
-										<Select.Item value={value} label={label}>
-											<Select.ItemIndicator />
-											<Select.ItemText>{label}</Select.ItemText>
-										</Select.Item>
-									)}
-									items={APP_LANGUAGES.map((language) => ({
-										label: language.name,
-										value: language.code2,
-									}))}
-								/>
-							</Select.Root>
-						</View>
+								items={APP_LANGUAGES.map((language) => ({
+									label: language.name,
+									value: language.code2,
+								}))}
+							/>
+						</div>
 					</SettingsList.Group>
 					<SettingsList.Divider />
 					<SettingsList.Group iconInset={false}>
 						<SettingsList.ItemText>
 							<Trans>Primary language</Trans>
 						</SettingsList.ItemText>
-						<View style={[a.gap_md, a.w_full]}>
-							<Text style={[a.leading_snug]}>
+						<div className={styles.section}>
+							<Text leading="snug">
 								<Trans>Select your preferred language for translations in your feed.</Trans>
 							</Text>
-							<Select.Root value={langPrefs.primaryLanguage} onValueChange={onChangePrimaryLanguage}>
-								<Select.Trigger label={l`Select primary language`}>
-									<Select.ValueText />
-									<Select.Icon />
-								</Select.Trigger>
-								<Select.Content
-									label={l`Primary language`}
-									renderItem={({ label, value }) => (
-										<Select.Item value={value} label={label}>
-											<Select.ItemIndicator />
-											<Select.ItemText>{label}</Select.ItemText>
-										</Select.Item>
-									)}
-									items={DEDUPED_LANGUAGES.map((l) => ({
-										label: languageName(l, langPrefs.appLanguage),
-										value: l.code2,
-									})).sort((a, b) => a.label.localeCompare(b.label, langPrefs.appLanguage))}
-								/>
-							</Select.Root>
-						</View>
+							<Select
+								label={l`Select primary language`}
+								value={langPrefs.primaryLanguage}
+								onValueChange={onChangePrimaryLanguage}
+								items={primaryLanguageItems}
+							/>
+						</div>
 					</SettingsList.Group>
 					<SettingsList.Divider />
 					<SettingsList.Group iconInset={false}>
 						<SettingsList.ItemText>
 							<Trans>Content languages</Trans>
 						</SettingsList.ItemText>
-						<View style={[a.gap_md]}>
-							<Text style={[a.leading_snug]}>
+						<div className={styles.section}>
+							<Text leading="snug">
 								<Trans>
 									Select which languages you want your subscribed feeds to include. If none are selected, all
 									languages will be shown.
@@ -178,37 +156,28 @@ export function LanguageSettingsScreen({}: Props) {
 								</Admonition>
 							)}
 
-							<View style={[a.w_full, { maxWidth: 400 }]}>
+							<div className={styles.narrow}>
 								<Toggle.Group
 									label={l`Select content languages`}
 									values={contentLanguages}
 									onChange={setContentLanguages}
 								>
-									<Toggle.PanelGroup>
-										{possibleLanguages.map((language, index) => {
-											const name = languageName(language, langPrefs.appLanguage);
-											return (
-												<Toggle.Item key={language.code2} name={language.code2} label={name}>
-													{({ selected }) => (
-														<Toggle.Panel active={selected} adjacent={index === 0 ? 'trailing' : 'both'}>
-															<Toggle.Checkbox />
-															<Toggle.PanelText>{name}</Toggle.PanelText>
-														</Toggle.Panel>
-													)}
-												</Toggle.Item>
-											);
-										})}
-										<Button label={l`Add more languages…`} onPress={contentLanguagePrefsControl.open}>
-											<Toggle.Panel adjacent="leading">
-												<Toggle.PanelIcon icon={PlusIcon} />
-												<Toggle.PanelText>
-													<Trans>Add more languages…</Trans>
-												</Toggle.PanelText>
-											</Toggle.Panel>
-										</Button>
-									</Toggle.PanelGroup>
+									{possibleLanguages.map((language) => (
+										<Toggle.Item
+											key={language.code2}
+											value={language.code2}
+											label={languageName(language, langPrefs.appLanguage)}
+										/>
+									))}
+									<Toggle.Action
+										label={l`Add more languages…`}
+										icon={PlusIcon}
+										onClick={contentLanguagePrefsControl.open}
+									>
+										<Trans>Add more languages…</Trans>
+									</Toggle.Action>
 								</Toggle.Group>
-							</View>
+							</div>
 
 							<LanguageSelectDialog
 								control={contentLanguagePrefsControl}
@@ -220,7 +189,7 @@ export function LanguageSettingsScreen({}: Props) {
 									setRecentLanguages((recent) => [...new Set([...recent, ...languages])]);
 								}}
 							/>
-						</View>
+						</div>
 					</SettingsList.Group>
 				</SettingsList.Container>
 			</Layout.Content>

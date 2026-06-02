@@ -980,8 +980,8 @@ msgstr "Add members"
 msgid "Add more details (optional)"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:201
-#: src/screens/Settings/LanguageSettings.tsx:205
+#: src/screens/Settings/LanguageSettings.tsx:173
+#: src/screens/Settings/LanguageSettings.tsx:177
 msgid "Add more languages…"
 msgstr "Add more languages…"
 
@@ -1130,7 +1130,7 @@ msgstr ""
 msgid "All languages"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:177
+#: src/screens/Settings/LanguageSettings.tsx:155
 msgid "All languages will be shown in your feeds."
 msgstr ""
 
@@ -1344,8 +1344,7 @@ msgstr ""
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
-#: src/screens/Settings/LanguageSettings.tsx:102
-#: src/screens/Settings/LanguageSettings.tsx:117
+#: src/screens/Settings/LanguageSettings.tsx:106
 msgid "App language"
 msgstr "App language"
 
@@ -2131,7 +2130,7 @@ msgstr ""
 msgid "Content from across the network we think you might like."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:165
+#: src/screens/Settings/LanguageSettings.tsx:143
 msgid "Content languages"
 msgstr ""
 
@@ -4110,7 +4109,7 @@ msgstr ""
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:216
+#: src/screens/Settings/LanguageSettings.tsx:185
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
 
@@ -4350,7 +4349,7 @@ msgstr ""
 msgid "Language Settings"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:93
+#: src/screens/Settings/LanguageSettings.tsx:97
 #: src/screens/Settings/Settings.tsx:187
 #: src/screens/Settings/Settings.tsx:190
 msgid "Languages"
@@ -6189,8 +6188,7 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:135
-#: src/screens/Settings/LanguageSettings.tsx:147
+#: src/screens/Settings/LanguageSettings.tsx:126
 msgid "Primary language"
 msgstr ""
 
@@ -7159,7 +7157,7 @@ msgstr ""
 msgid "Select an app language"
 msgstr "Select an app language"
 
-#: src/screens/Settings/LanguageSettings.tsx:112
+#: src/screens/Settings/LanguageSettings.tsx:113
 msgid "Select app language"
 msgstr "Select app language"
 
@@ -7172,8 +7170,8 @@ msgstr "Select caption file (.vtt)"
 msgid "Select chat \"{name}\""
 msgstr "Select chat \"{name}\""
 
-#: src/screens/Settings/LanguageSettings.tsx:183
-#: src/screens/Settings/LanguageSettings.tsx:215
+#: src/screens/Settings/LanguageSettings.tsx:161
+#: src/screens/Settings/LanguageSettings.tsx:184
 msgid "Select content languages"
 msgstr ""
 
@@ -7228,7 +7226,7 @@ msgstr ""
 msgid "Select post language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:142
+#: src/screens/Settings/LanguageSettings.tsx:133
 msgid "Select primary language"
 msgstr ""
 
@@ -7245,11 +7243,11 @@ msgstr ""
 msgid "Select what content this mute word should apply to."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:106
+#: src/screens/Settings/LanguageSettings.tsx:110
 msgid "Select which language to use for the app's user interface."
 msgstr "Select which language to use for the app's user interface."
 
-#: src/screens/Settings/LanguageSettings.tsx:169
+#: src/screens/Settings/LanguageSettings.tsx:147
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
@@ -7257,7 +7255,7 @@ msgstr ""
 msgid "Select your interests from the options below"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:139
+#: src/screens/Settings/LanguageSettings.tsx:130
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 

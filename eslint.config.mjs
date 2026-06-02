@@ -89,6 +89,7 @@ export default defineConfig(
 						'Admonition',
 						'Admonition.Admonition',
 						'Toast.Action',
+						'Toggle.Action',
 						'AgeAssuranceAdmonition',
 						'Span',
 						'StackedButton',
