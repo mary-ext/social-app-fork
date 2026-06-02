@@ -751,7 +751,7 @@ msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
 #: src/Navigation.tsx:775
-#: src/screens/Settings/AboutSettings.tsx:32
+#: src/screens/Settings/AboutSettings.tsx:29
 #: src/screens/Settings/Settings.tsx:193
 #: src/screens/Settings/Settings.tsx:196
 msgid "About"
@@ -784,7 +784,7 @@ msgstr ""
 msgid "Accepted conversations"
 msgstr "Accepted conversations"
 
-#: src/screens/Settings/AccessibilitySettings.tsx:34
+#: src/screens/Settings/AccessibilitySettings.tsx:37
 #: src/screens/Settings/Settings.tsx:181
 #: src/screens/Settings/Settings.tsx:184
 msgid "Accessibility"
@@ -1192,7 +1192,7 @@ msgstr ""
 msgid "ALT"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:46
+#: src/screens/Settings/AccessibilitySettings.tsx:49
 #: src/view/com/composer/GifAltText.tsx:159
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
 #: src/view/com/composer/videos/SubtitleDialog.tsx:96
@@ -1467,8 +1467,8 @@ msgstr "Automation label"
 msgid "Automation Label"
 msgstr "Automation Label"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:80
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
@@ -1756,7 +1756,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
 #: src/components/Prompt.tsx:121
 #: src/components/Prompt.tsx:122
-#: src/components/web/Prompt/index.tsx:104
+#: src/components/web/Prompt/index.tsx:98
 #: src/features/liveNow/components/GoLiveDialog.tsx:226
 #: src/features/liveNow/components/GoLiveDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:424
@@ -2104,11 +2104,11 @@ msgstr ""
 
 #: src/components/Prompt.tsx:171
 #: src/components/Prompt.tsx:175
-#: src/components/web/Prompt/index.tsx:80
+#: src/components/web/Prompt/index.tsx:74
 msgid "Confirm"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:37
+#: src/screens/Settings/ContentAndMediaSettings.tsx:35
 msgid "Content & Media"
 msgstr ""
 
@@ -2190,7 +2190,7 @@ msgctxt "toast"
 msgid "Conversation left"
 msgstr "Conversation left"
 
-#: src/screens/Settings/AboutSettings.tsx:67
+#: src/screens/Settings/AboutSettings.tsx:64
 msgid "Copied build version to clipboard"
 msgstr ""
 
@@ -2207,7 +2207,7 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:47
+#: src/screens/Settings/AboutSettings.tsx:44
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -2549,7 +2549,7 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:410
 #: src/screens/Profile/Header/EditProfileDialog.tsx:284
 #: src/screens/Profile/Header/EditProfileDialog.tsx:291
 msgid "Description"
@@ -2569,12 +2569,12 @@ msgstr ""
 msgid "Detach quote post?"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:57
+#: src/screens/Settings/AboutSettings.tsx:54
 msgctxt "toast"
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:53
+#: src/screens/Settings/AboutSettings.tsx:50
 msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
@@ -2686,7 +2686,8 @@ msgstr ""
 msgid "Dismiss this suggestion"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:56
+#: src/screens/Settings/AccessibilitySettings.tsx:66
+#: src/screens/Settings/AccessibilitySettings.tsx:71
 msgid "Display larger alt text badges"
 msgstr ""
 
@@ -2934,7 +2935,7 @@ msgstr "Enable captions"
 msgid "Enable external media"
 msgstr ""
 
-#: src/screens/Settings/ExternalMediaPreferences.tsx:47
+#: src/screens/Settings/ExternalMediaPreferences.tsx:45
 msgid "Enable media players for"
 msgstr ""
 
@@ -2950,13 +2951,13 @@ msgstr ""
 msgid "Enable this source only"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:95
-#: src/screens/Settings/ContentAndMediaSettings.tsx:108
+#: src/screens/Settings/ContentAndMediaSettings.tsx:88
+#: src/screens/Settings/ContentAndMediaSettings.tsx:94
 msgid "Enable trending topics"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:115
-#: src/screens/Settings/ContentAndMediaSettings.tsx:128
+#: src/screens/Settings/ContentAndMediaSettings.tsx:99
+#: src/screens/Settings/ContentAndMediaSettings.tsx:105
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
@@ -3075,7 +3076,7 @@ msgstr ""
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
-#: src/screens/Settings/FollowingFeedPreferences.tsx:115
+#: src/screens/Settings/FollowingFeedPreferences.tsx:91
 msgid "Experimental"
 msgstr ""
 
@@ -3135,8 +3136,8 @@ msgstr ""
 msgid "Export my profile data"
 msgstr "Export my profile data"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:62
-#: src/screens/Settings/ContentAndMediaSettings.tsx:65
+#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:63
 msgid "External media"
 msgstr ""
 
@@ -3146,12 +3147,12 @@ msgid "External Media"
 msgstr ""
 
 #: src/components/dialogs/EmbedConsent.tsx:70
-#: src/screens/Settings/ExternalMediaPreferences.tsx:39
+#: src/screens/Settings/ExternalMediaPreferences.tsx:37
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
 
 #: src/Navigation.tsx:695
-#: src/screens/Settings/ExternalMediaPreferences.tsx:30
+#: src/screens/Settings/ExternalMediaPreferences.tsx:28
 msgid "External Media Preferences"
 msgstr ""
 
@@ -3614,13 +3615,13 @@ msgstr ""
 msgid "Following {displayName}"
 msgstr "Following {displayName}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:56
-#: src/screens/Settings/ContentAndMediaSettings.tsx:59
+#: src/screens/Settings/ContentAndMediaSettings.tsx:54
+#: src/screens/Settings/ContentAndMediaSettings.tsx:57
 msgid "Following feed preferences"
 msgstr ""
 
 #: src/Navigation.tsx:679
-#: src/screens/Settings/FollowingFeedPreferences.tsx:42
+#: src/screens/Settings/FollowingFeedPreferences.tsx:40
 msgid "Following Feed Preferences"
 msgstr ""
 
@@ -4590,11 +4591,11 @@ msgctxt "toast"
 msgid "List deleted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:400
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:403
 msgid "List description"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:413
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:416
 msgid "List description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
@@ -4606,7 +4607,7 @@ msgstr ""
 msgid "List Hidden"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:392
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:395
 msgid "List must have a name."
 msgstr ""
 
@@ -4764,8 +4765,8 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:44
-#: src/screens/Settings/ContentAndMediaSettings.tsx:47
+#: src/screens/Settings/ContentAndMediaSettings.tsx:42
+#: src/screens/Settings/ContentAndMediaSettings.tsx:45
 msgid "Manage saved feeds"
 msgstr ""
 
@@ -5263,8 +5264,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:94
 #: src/screens/PostThread/components/HeaderDropdown.tsx:100
-#: src/screens/Settings/ThreadPreferences.tsx:69
-#: src/screens/Settings/ThreadPreferences.tsx:72
+#: src/screens/Settings/ThreadPreferences.tsx:68
 msgid "Newest replies first"
 msgstr ""
 
@@ -5553,8 +5553,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:83
 #: src/screens/PostThread/components/HeaderDropdown.tsx:89
-#: src/screens/Settings/ThreadPreferences.tsx:63
-#: src/screens/Settings/ThreadPreferences.tsx:66
+#: src/screens/Settings/ThreadPreferences.tsx:67
 msgid "Oldest replies first"
 msgstr ""
 
@@ -6824,7 +6823,8 @@ msgstr ""
 msgid "Requests"
 msgstr "Requests"
 
-#: src/screens/Settings/AccessibilitySettings.tsx:51
+#: src/screens/Settings/AccessibilitySettings.tsx:55
+#: src/screens/Settings/AccessibilitySettings.tsx:60
 msgid "Require alt text before posting"
 msgstr ""
 
@@ -7486,17 +7486,17 @@ msgstr ""
 msgid "Show more replies"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:94
+#: src/screens/Settings/ThreadPreferences.tsx:91
 msgid "Show post replies in a threaded tree view"
 msgstr ""
 
-#: src/screens/Settings/FollowingFeedPreferences.tsx:95
-#: src/screens/Settings/FollowingFeedPreferences.tsx:106
+#: src/screens/Settings/FollowingFeedPreferences.tsx:75
+#: src/screens/Settings/FollowingFeedPreferences.tsx:81
 msgid "Show quote posts"
 msgstr ""
 
-#: src/screens/Settings/FollowingFeedPreferences.tsx:57
-#: src/screens/Settings/FollowingFeedPreferences.tsx:68
+#: src/screens/Settings/FollowingFeedPreferences.tsx:53
+#: src/screens/Settings/FollowingFeedPreferences.tsx:59
 msgid "Show replies"
 msgstr ""
 
@@ -7509,13 +7509,13 @@ msgstr ""
 msgid "Show reply for everyone"
 msgstr ""
 
-#: src/screens/Settings/FollowingFeedPreferences.tsx:76
-#: src/screens/Settings/FollowingFeedPreferences.tsx:87
+#: src/screens/Settings/FollowingFeedPreferences.tsx:64
+#: src/screens/Settings/FollowingFeedPreferences.tsx:70
 msgid "Show reposts"
 msgstr ""
 
-#: src/screens/Settings/FollowingFeedPreferences.tsx:120
-#: src/screens/Settings/FollowingFeedPreferences.tsx:130
+#: src/screens/Settings/FollowingFeedPreferences.tsx:97
+#: src/screens/Settings/FollowingFeedPreferences.tsx:102
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
@@ -7727,15 +7727,15 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:44
+#: src/screens/Settings/ThreadPreferences.tsx:54
 msgid "Sort replies"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:51
+#: src/screens/Settings/ThreadPreferences.tsx:62
 msgid "Sort replies by"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:48
+#: src/screens/Settings/ThreadPreferences.tsx:59
 msgid "Sort replies to the same post by:"
 msgstr ""
 
@@ -7936,8 +7936,8 @@ msgid "System"
 msgstr ""
 
 #: src/screens/Log.tsx:45
+#: src/screens/Settings/AboutSettings.tsx:36
 #: src/screens/Settings/AboutSettings.tsx:39
-#: src/screens/Settings/AboutSettings.tsx:42
 #: src/screens/Settings/Settings.tsx:333
 msgid "System log"
 msgstr ""
@@ -8189,7 +8189,7 @@ msgstr ""
 msgid "These are your default settings"
 msgstr ""
 
-#: src/screens/Settings/FollowingFeedPreferences.tsx:51
+#: src/screens/Settings/FollowingFeedPreferences.tsx:49
 msgid "These settings only apply to the Following feed."
 msgstr ""
 
@@ -8483,12 +8483,12 @@ msgstr ""
 msgid "Thread options"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:50
-#: src/screens/Settings/ContentAndMediaSettings.tsx:53
+#: src/screens/Settings/ContentAndMediaSettings.tsx:48
+#: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Thread preferences"
 msgstr ""
 
-#: src/screens/Settings/ThreadPreferences.tsx:34
+#: src/screens/Settings/ThreadPreferences.tsx:42
 msgid "Thread Preferences"
 msgstr ""
 
@@ -8526,8 +8526,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:72
 #: src/screens/PostThread/components/HeaderDropdown.tsx:78
-#: src/screens/Settings/ThreadPreferences.tsx:57
-#: src/screens/Settings/ThreadPreferences.tsx:60
+#: src/screens/Settings/ThreadPreferences.tsx:66
 msgid "Top replies first"
 msgstr ""
 
@@ -8557,8 +8556,8 @@ msgstr "Translating"
 msgid "Translating…"
 msgstr "Translating…"
 
-#: src/screens/Settings/ThreadPreferences.tsx:83
-#: src/screens/Settings/ThreadPreferences.tsx:88
+#: src/screens/Settings/ThreadPreferences.tsx:80
+#: src/screens/Settings/ThreadPreferences.tsx:86
 msgid "Tree view"
 msgstr ""
 
@@ -9003,8 +9002,8 @@ msgid "Verify this account?"
 msgstr ""
 
 #. placeholder {0}: env.APP_VERSION
-#: src/screens/Settings/AboutSettings.tsx:46
-#: src/screens/Settings/AboutSettings.tsx:72
+#: src/screens/Settings/AboutSettings.tsx:43
+#: src/screens/Settings/AboutSettings.tsx:69
 msgid "Version {0}"
 msgstr ""
 
@@ -9804,8 +9803,8 @@ msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr ""
 
 #: src/Navigation.tsx:767
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
-#: src/screens/Settings/ContentAndMediaSettings.tsx:71
+#: src/screens/Settings/ContentAndMediaSettings.tsx:66
+#: src/screens/Settings/ContentAndMediaSettings.tsx:69
 #: src/screens/Settings/InterestsSettings.tsx:44
 msgid "Your interests"
 msgstr ""

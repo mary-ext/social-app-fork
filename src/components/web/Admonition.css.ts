@@ -7,7 +7,9 @@ export const outer = style({
 	borderRadius: '8px',
 	borderStyle: 'solid',
 	borderWidth: '1px',
+	boxSizing: 'border-box',
 	padding: '12px',
+	width: '100%',
 });
 
 export const border = styleVariants({

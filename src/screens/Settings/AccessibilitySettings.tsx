@@ -3,20 +3,23 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 
-import { Checkbox } from '#/components/web/Checkbox';
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
 import * as Layout from '#/components/web/Layout';
 import * as SettingsList from '#/components/web/SettingsList';
 
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
-
 import { sprinkles } from '#/styles/sprinkles.css';
 
 const groupBodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
 const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
 // inset the rows to align under the title text, past the header icon (24px) + gap (8px)
-const insetColumnClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', paddingLeft: '_4xl' });
+const insetColumnClass = sprinkles({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: 'sm',
+	paddingLeft: '_4xl',
+});
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccessibilitySettings'>;
 export function AccessibilitySettingsScreen({}: Props) {
@@ -47,16 +50,28 @@ export function AccessibilitySettingsScreen({}: Props) {
 								</SettingsList.ItemText>
 							</div>
 							<div className={insetColumnClass}>
-								<Checkbox
+								<SettingsList.CheckboxItem
+									flush
 									label={l`Require alt text before posting`}
-									checked={requireAltTextEnabled ?? false}
+									value={requireAltTextEnabled ?? false}
 									onChange={setRequireAltTextEnabled}
-								/>
-								<Checkbox
+								>
+									<SettingsList.LabelText>
+										<Trans>Require alt text before posting</Trans>
+									</SettingsList.LabelText>
+									<SettingsList.CheckboxBox />
+								</SettingsList.CheckboxItem>
+								<SettingsList.CheckboxItem
+									flush
 									label={l`Display larger alt text badges`}
-									checked={!!largeAltBadgeEnabled}
+									value={!!largeAltBadgeEnabled}
 									onChange={setLargeAltBadgeEnabled}
-								/>
+								>
+									<SettingsList.LabelText>
+										<Trans>Display larger alt text badges</Trans>
+									</SettingsList.LabelText>
+									<SettingsList.CheckboxBox />
+								</SettingsList.CheckboxItem>
 							</div>
 						</div>
 					</SettingsList.Group>
