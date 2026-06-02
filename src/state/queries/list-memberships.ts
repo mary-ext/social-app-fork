@@ -16,13 +16,16 @@
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
+	AppBskyGraphGetListsWithMembership,
 	AppBskyGraphGetStarterPacksWithMembership,
 } from '@atcute/bluesky';
-import type { Did, ResourceUri } from '@atcute/lexicons';
+import { ok } from '@atcute/client';
+import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord, listRecords } from '#/lib/api/records';
+import { accumulate } from '#/lib/async/accumulate';
 
 import { STALE } from '#/state/queries';
 import { RQKEY as LIST_MEMBERS_RQKEY } from '#/state/queries/list-members';
@@ -78,6 +81,42 @@ export function useDangerousListMembershipsQuery() {
 			}
 			return arr;
 		},
+	});
+}
+
+export type ListWithMembership = AppBskyGraphGetListsWithMembership.ListWithMembership;
+
+const RQKEY_WITH_MEMBERSHIP_ROOT = 'lists-with-membership';
+export const RQKEY_WITH_MEMBERSHIP = (actor?: string) => [RQKEY_WITH_MEMBERSHIP_ROOT, actor];
+
+/**
+ * Fetches the signed-in user's curate and moderation lists, each annotated with the given actor's membership,
+ * via the server-side `getListsWithMembership` endpoint. Prefer this over
+ * {@link useDangerousListMembershipsQuery} whenever the subject actor is fixed.
+ *
+ * All pages are accumulated: the server applies its purpose filter after pagination, so individual pages may
+ * come back empty while still carrying a cursor.
+ */
+export function useListsWithMembershipQuery({
+	actor,
+	enabled = true,
+}: {
+	actor?: string;
+	enabled?: boolean;
+}) {
+	const { appview } = useClients();
+	return useQuery<ListWithMembership[]>({
+		staleTime: STALE.MINUTES.ONE,
+		queryKey: RQKEY_WITH_MEMBERSHIP(actor),
+		queryFn: () =>
+			accumulate((cursor) =>
+				ok(
+					appview.get('app.bsky.graph.getListsWithMembership', {
+						params: { actor: actor! as ActorIdentifier, cursor, limit: 50 },
+					}),
+				).then((data) => ({ cursor: data.cursor, items: data.listsWithMembership })),
+			),
+		enabled: Boolean(actor) && enabled,
 	});
 }
 
@@ -157,6 +196,20 @@ export function useListMembershipAddMutation({
 			// update WITH_MEMBERSHIPS query
 
 			if (subject) {
+				queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
+					old?.map((item) =>
+						item.list.uri === variables.listUri
+							? {
+									...item,
+									listItem: {
+										uri: data.uri as ResourceUri,
+										subject: subject as AppBskyActorDefs.ProfileView,
+									},
+								}
+							: item,
+					),
+				);
+
 				type StarterPacksWithMembership = AppBskyGraphGetStarterPacksWithMembership.$output;
 				queryClient.setQueryData<InfiniteData<StarterPacksWithMembership>>(
 					STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid),
@@ -253,6 +306,10 @@ export function useListMembershipRemoveMutation({
 					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
 				});
 			}, 1e3);
+
+			queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
+				old?.map((item) => (item.list.uri === variables.listUri ? { ...item, listItem: undefined } : item)),
+			);
 
 			queryClient.setQueryData<InfiniteData<AppBskyGraphGetStarterPacksWithMembership.$output>>(
 				STARTER_PACKS_WITH_MEMBERSHIPS_RKEY(variables.actorDid),

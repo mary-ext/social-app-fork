@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from 'react-native';
-import type { AppBskyGraphDefs as GraphDefs } from '@atcute/bluesky';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, useWindowDimensions, View } from 'react-native';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { usePalette } from '#/lib/hooks/usePalette';
@@ -11,34 +11,26 @@ import { s } from '#/lib/styles';
 
 import { useModalControls } from '#/state/modals';
 import {
-	getMembership,
-	type ListMembersip,
-	useDangerousListMembershipsQuery,
+	type ListWithMembership,
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
+	useListsWithMembershipQuery,
 } from '#/state/queries/list-memberships';
 import { useSession } from '#/state/session';
 
 import { IS_WEB_MOBILE } from '#/env';
 
-import { MyLists } from '../lists/MyLists';
 import { Button } from '../util/forms/Button';
 import { Text } from '../util/text/Text';
 import * as Toast from '../util/Toast';
 import { UserAvatar } from '../util/UserAvatar';
 
-export const snapPoints = ['fullscreen'];
-
 export function Component({
-	subject,
-	handle,
-	displayName,
+	profile,
 	onAdd,
 	onRemove,
 }: {
-	subject: string;
-	handle: string;
-	displayName: string;
+	profile: AnyProfileView;
 	onAdd?: (listUri: string) => void;
 	onRemove?: (listUri: string) => void;
 }) {
@@ -46,19 +38,21 @@ export function Component({
 	const pal = usePalette('default');
 	const { height: screenHeight } = useWindowDimensions();
 	const { t: l } = useLingui();
-	const { data: memberships } = useDangerousListMembershipsQuery();
+	const displayName = profile.displayName || profile.handle;
+	const { data: lists, isLoading } = useListsWithMembershipQuery({ actor: profile.did });
 
 	const onPressDone = useCallback(() => {
 		closeModal();
 	}, [closeModal]);
 
-	const listStyle = useMemo(() => {
-		if (IS_WEB_MOBILE) {
-			return [pal.border, { height: screenHeight / 2 }];
-		} else return [pal.border, { height: screenHeight / 1.5 }];
+	const renderItem = useCallback(
+		({ item, index }: { item: ListWithMembership; index: number }) => (
+			<ListItem index={index} item={item} profile={profile} onAdd={onAdd} onRemove={onRemove} />
+		),
+		[profile, onAdd, onRemove],
+	);
 
-		return [pal.border, { flex: 1, borderTopWidth: StyleSheet.hairlineWidth }];
-	}, [pal.border, screenHeight]);
+	const listHeight = IS_WEB_MOBILE ? screenHeight / 2 : screenHeight / 1.5;
 
 	const headerStyles = [
 		{
@@ -82,23 +76,22 @@ export function Component({
 					in Lists
 				</Trans>
 			</Text>
-			<MyLists
-				filter="all"
-				inline
-				renderItem={(list, index) => (
-					<ListItem
-						key={list.uri}
-						index={index}
-						list={list}
-						memberships={memberships}
-						subject={subject}
-						handle={handle}
-						onAdd={onAdd}
-						onRemove={onRemove}
+			<View style={[pal.border, { height: listHeight }]}>
+				{isLoading ? (
+					<View style={{ padding: 20 }}>
+						<ActivityIndicator />
+					</View>
+				) : (
+					<FlatList
+						testID="userAddRemoveListsModal-flatlist"
+						data={lists}
+						keyExtractor={(item) => item.list.uri}
+						renderItem={renderItem}
+						contentContainerStyle={[s.contentContainer]}
+						removeClippedSubviews={true}
 					/>
 				)}
-				style={listStyle}
-			/>
+			</View>
 			<View style={[styles.btns, pal.border]}>
 				<Button
 					testID="doneBtn"
@@ -117,18 +110,14 @@ export function Component({
 
 function ListItem({
 	index,
-	list,
-	memberships,
-	subject,
-	handle,
+	item,
+	profile,
 	onAdd,
 	onRemove,
 }: {
 	index: number;
-	list: GraphDefs.ListView;
-	memberships: ListMembersip[] | undefined;
-	subject: string;
-	handle: string;
+	item: ListWithMembership;
+	profile: AnyProfileView;
 	onAdd?: (listUri: string) => void;
 	onRemove?: (listUri: string) => void;
 }) {
@@ -136,31 +125,26 @@ function ListItem({
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const [isProcessing, setIsProcessing] = useState(false);
-	const membership = useMemo(
-		() => getMembership(memberships, list.uri, subject),
-		[memberships, list.uri, subject],
-	);
-	const listMembershipAddMutation = useListMembershipAddMutation();
+	const { list } = item;
+	const membershipUri = item.listItem?.uri;
+	const listMembershipAddMutation = useListMembershipAddMutation({ subject: profile });
 	const listMembershipRemoveMutation = useListMembershipRemoveMutation();
 
 	const onToggleMembership = useCallback(async () => {
-		if (typeof membership === 'undefined') {
-			return;
-		}
 		setIsProcessing(true);
 		try {
-			if (membership === false) {
+			if (!membershipUri) {
 				await listMembershipAddMutation.mutateAsync({
 					listUri: list.uri,
-					actorDid: subject,
+					actorDid: profile.did,
 				});
 				Toast.show(l`Added to list`);
 				onAdd?.(list.uri);
 			} else {
 				await listMembershipRemoveMutation.mutateAsync({
 					listUri: list.uri,
-					actorDid: subject,
-					membershipUri: membership,
+					actorDid: profile.did,
+					membershipUri,
 				});
 				Toast.show(l`Removed from list`);
 				onRemove?.(list.uri);
@@ -172,10 +156,9 @@ function ListItem({
 		}
 	}, [
 		l,
-		list,
-		subject,
-		membership,
-		setIsProcessing,
+		list.uri,
+		profile.did,
+		membershipUri,
 		onAdd,
 		onRemove,
 		listMembershipAddMutation,
@@ -210,13 +193,13 @@ function ListItem({
 				</Text>
 			</View>
 			<View>
-				{isProcessing || typeof membership === 'undefined' ? (
+				{isProcessing ? (
 					<ActivityIndicator />
 				) : (
 					<Button
-						testID={`user-${handle}-addBtn`}
+						testID={`user-${profile.handle}-addBtn`}
 						type="default"
-						label={membership === false ? l`Add` : l`Remove`}
+						label={!membershipUri ? l`Add` : l`Remove`}
 						onPress={onToggleMembership}
 					/>
 				)}
@@ -226,9 +209,6 @@ function ListItem({
 }
 
 const styles = StyleSheet.create({
-	container: {
-		paddingHorizontal: 0,
-	},
 	btns: {
 		position: 'relative',
 		flexDirection: 'row',
@@ -243,7 +223,6 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 24,
 		paddingVertical: 12,
 	},
-
 	listItem: {
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -261,22 +240,5 @@ const styles = StyleSheet.create({
 		paddingRight: 10,
 		paddingTop: 10,
 		paddingBottom: 10,
-	},
-	checkbox: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'center',
-		borderWidth: 1,
-		width: 24,
-		height: 24,
-		borderRadius: 6,
-		marginRight: 8,
-	},
-	loadingContainer: {
-		position: 'absolute',
-		top: 10,
-		right: 0,
-		bottom: 0,
-		justifyContent: 'center',
 	},
 });

@@ -1,13 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import type { AnyProfileView } from '@atcute/bluesky';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useHotkeysContext } from '#/lib/hotkeys';
 
 export interface UserAddRemoveListsModal {
 	name: 'user-add-remove-lists';
-	subject: string;
-	handle: string;
-	displayName: string;
+	profile: AnyProfileView;
 	onAdd?: (listUri: string) => void;
 	onRemove?: (listUri: string) => void;
 }
