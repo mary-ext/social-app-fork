@@ -5,18 +5,22 @@ import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes
 
 import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
 
-import { type Alf, atoms as a, useAlf, useTheme } from '#/alf';
+import { type Alf, useAlf } from '#/alf';
 
-import * as SegmentedControl from '#/components/forms/SegmentedControl';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
 import { TextSize_Stroke2_Corner0_Rounded as TextSize } from '#/components/icons/TextSize';
 import { TitleCase_Stroke2_Corner0_Rounded as Aa } from '#/components/icons/TitleCase';
-import * as Layout from '#/components/Layout';
-import { Text } from '#/components/Typography';
+import * as Layout from '#/components/web/Layout';
+import { SegmentedControl, type SegmentedControlItem } from '#/components/web/SegmentedControl';
+import * as SettingsList from '#/components/web/SettingsList';
+import { Text } from '#/components/web/Text';
 
-import * as SettingsList from './components/SettingsList';
+import { sprinkles } from '#/styles/sprinkles.css';
+
+const groupBodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
+const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>;
 export function AppearanceSettingsScreen({}: Props) {
@@ -27,14 +31,14 @@ export function AppearanceSettingsScreen({}: Props) {
 	const { setColorMode, setDarkTheme } = useSetThemePrefs();
 
 	const onChangeAppearance = useCallback(
-		(value: 'light' | 'system' | 'dark') => {
+		(value: 'dark' | 'light' | 'system') => {
 			setColorMode(value);
 		},
 		[setColorMode],
 	);
 
 	const onChangeDarkTheme = useCallback(
-		(value: 'dim' | 'dark') => {
+		(value: 'dark' | 'dim') => {
 			setDarkTheme(value);
 		},
 		[setDarkTheme],
@@ -55,7 +59,7 @@ export function AppearanceSettingsScreen({}: Props) {
 	);
 
 	return (
-		<Layout.Screen testID="preferencesThreadsScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
@@ -67,83 +71,53 @@ export function AppearanceSettingsScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<SettingsList.Container>
-					<AppearanceToggleButtonGroup
+					<AppearanceGroup
 						title={l`Color mode`}
 						icon={PhoneIcon}
 						items={[
-							{
-								label: l`System`,
-								name: 'system',
-							},
-							{
-								label: l`Light`,
-								name: 'light',
-							},
-							{
-								label: l`Dark`,
-								name: 'dark',
-							},
+							{ label: l`System`, value: 'system' },
+							{ label: l`Light`, value: 'light' },
+							{ label: l`Dark`, value: 'dark' },
 						]}
 						value={colorMode}
-						onChange={onChangeAppearance}
+						onValueChange={onChangeAppearance}
 					/>
 
 					{colorMode !== 'light' && (
-						<AppearanceToggleButtonGroup
+						<AppearanceGroup
 							title={l`Dark theme`}
 							icon={MoonIcon}
 							items={[
-								{
-									label: l`Dim`,
-									name: 'dim',
-								},
-								{
-									label: l`Dark`,
-									name: 'dark',
-								},
+								{ label: l`Dim`, value: 'dim' },
+								{ label: l`Dark`, value: 'dark' },
 							]}
 							value={darkTheme ?? 'dim'}
-							onChange={onChangeDarkTheme}
+							onValueChange={onChangeDarkTheme}
 						/>
 					)}
 
 					<SettingsList.Divider />
-					<AppearanceToggleButtonGroup
+					<AppearanceGroup
 						title={l`Font`}
 						description={l`For the best experience, we recommend using the theme font.`}
 						icon={Aa}
 						items={[
-							{
-								label: l`System`,
-								name: 'system',
-							},
-							{
-								label: l`Theme`,
-								name: 'theme',
-							},
+							{ label: l`System`, value: 'system' },
+							{ label: l`Theme`, value: 'theme' },
 						]}
 						value={fonts.family}
-						onChange={onChangeFontFamily}
+						onValueChange={onChangeFontFamily}
 					/>
-					<AppearanceToggleButtonGroup
+					<AppearanceGroup
 						title={l`Font size`}
 						icon={TextSize}
 						items={[
-							{
-								label: l`Smaller`,
-								name: '-1',
-							},
-							{
-								label: l`Default`,
-								name: '0',
-							},
-							{
-								label: l`Larger`,
-								name: '1',
-							},
+							{ label: l`Smaller`, value: '-1' },
+							{ label: l`Default`, value: '0' },
+							{ label: l`Larger`, value: '1' },
 						]}
 						value={fonts.scale}
-						onChange={onChangeFontScale}
+						onValueChange={onChangeFontScale}
 					/>
 				</SettingsList.Container>
 			</Layout.Content>
@@ -151,43 +125,35 @@ export function AppearanceSettingsScreen({}: Props) {
 	);
 }
 
-export function AppearanceToggleButtonGroup<T extends string>({
+function AppearanceGroup<T extends string>({
 	title,
 	description,
-	icon: Icon,
+	icon,
 	items,
 	value,
-	onChange,
+	onValueChange,
 }: {
 	title: string;
 	description?: string;
 	icon: React.ComponentType<SVGIconProps>;
-	items: {
-		label: string;
-		name: T;
-	}[];
+	items: SegmentedControlItem<T>[];
 	value: T;
-	onChange: (value: T) => void;
+	onValueChange: (value: T) => void;
 }) {
-	const t = useTheme();
 	return (
-		<>
-			<SettingsList.Group contentContainerStyle={[a.gap_sm]} iconInset={false}>
-				<SettingsList.ItemIcon icon={Icon} />
-				<SettingsList.ItemText>{title}</SettingsList.ItemText>
+		<SettingsList.Group>
+			<div className={groupBodyClass}>
+				<div className={headerRowClass}>
+					<SettingsList.ItemIcon icon={icon} />
+					<SettingsList.ItemText>{title}</SettingsList.ItemText>
+				</div>
 				{description && (
-					<Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium, a.w_full]}>
+					<Text size="sm" leading="snug" color="textContrastMedium">
 						{description}
 					</Text>
 				)}
-				<SegmentedControl.Root type="radio" label={title} value={value} onChange={onChange}>
-					{items.map((item) => (
-						<SegmentedControl.Item key={item.name} label={item.label} value={item.name}>
-							<SegmentedControl.ItemText>{item.label}</SegmentedControl.ItemText>
-						</SegmentedControl.Item>
-					))}
-				</SegmentedControl.Root>
-			</SettingsList.Group>
-		</>
+				<SegmentedControl label={title} items={items} value={value} onValueChange={onValueChange} />
+			</div>
+		</SettingsList.Group>
 	);
 }

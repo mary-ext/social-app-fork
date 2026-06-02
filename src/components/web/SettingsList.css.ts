@@ -17,6 +17,12 @@ export const group = style({
 	width: '100%',
 });
 
+export const itemIcon = style({
+	color: vars.palette.contrast_1000,
+	display: 'flex',
+	flexShrink: 0,
+});
+
 export const divider = style({
 	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	marginBlock: '8px',

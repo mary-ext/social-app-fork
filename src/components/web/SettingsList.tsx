@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 
+import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/web/SettingsList.css';
 import { Text } from '#/components/web/Text';
 
@@ -19,6 +20,14 @@ export function Group({
 	iconInset?: boolean;
 }) {
 	return <div className={styles.group}>{children}</div>;
+}
+
+export function ItemIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
+	return (
+		<span className={styles.itemIcon}>
+			<Icon size="lg" fill="currentColor" />
+		</span>
+	);
 }
 
 export function ItemText({ children }: { children: ReactNode }) {

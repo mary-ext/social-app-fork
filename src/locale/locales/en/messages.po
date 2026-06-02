@@ -1377,7 +1377,7 @@ msgid "Appeal this decision"
 msgstr ""
 
 #: src/Navigation.tsx:711
-#: src/screens/Settings/AppearanceSettings.tsx:63
+#: src/screens/Settings/AppearanceSettings.tsx:67
 #: src/screens/Settings/Settings.tsx:175
 #: src/screens/Settings/Settings.tsx:178
 msgid "Appearance"
@@ -2059,7 +2059,7 @@ msgstr ""
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:71
+#: src/screens/Settings/AppearanceSettings.tsx:75
 msgid "Color mode"
 msgstr ""
 
@@ -2434,12 +2434,12 @@ msgstr ""
 msgid "Dangerous substances or drug abuse"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:83
-#: src/screens/Settings/AppearanceSettings.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:80
+#: src/screens/Settings/AppearanceSettings.tsx:92
 msgid "Dark"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:93
+#: src/screens/Settings/AppearanceSettings.tsx:88
 msgid "Dark theme"
 msgstr ""
 
@@ -2455,7 +2455,7 @@ msgstr "Decline this language suggestion"
 msgid "Deepfake adult content"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:137
+#: src/screens/Settings/AppearanceSettings.tsx:116
 msgid "Default"
 msgstr ""
 
@@ -2584,7 +2584,7 @@ msgstr ""
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:97
+#: src/screens/Settings/AppearanceSettings.tsx:91
 msgid "Dim"
 msgstr ""
 
@@ -3629,11 +3629,11 @@ msgstr ""
 msgid "Follows You"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:112
+#: src/screens/Settings/AppearanceSettings.tsx:101
 msgid "Font"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:129
+#: src/screens/Settings/AppearanceSettings.tsx:112
 msgid "Font size"
 msgstr ""
 
@@ -3641,7 +3641,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:113
+#: src/screens/Settings/AppearanceSettings.tsx:102
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
@@ -4364,7 +4364,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:141
+#: src/screens/Settings/AppearanceSettings.tsx:117
 msgid "Larger"
 msgstr ""
 
@@ -7620,7 +7620,7 @@ msgstr "Skip empty posts?"
 msgid "slide"
 msgstr "slide"
 
-#: src/screens/Settings/AppearanceSettings.tsx:133
+#: src/screens/Settings/AppearanceSettings.tsx:115
 msgid "Smaller"
 msgstr ""
 
@@ -7928,8 +7928,8 @@ msgstr ""
 msgid "Switch to {0}"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:75
-#: src/screens/Settings/AppearanceSettings.tsx:117
+#: src/screens/Settings/AppearanceSettings.tsx:78
+#: src/screens/Settings/AppearanceSettings.tsx:105
 msgid "System"
 msgstr ""
 
@@ -8087,7 +8087,7 @@ msgstr ""
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:121
+#: src/screens/Settings/AppearanceSettings.tsx:106
 msgid "Theme"
 msgstr ""
 
