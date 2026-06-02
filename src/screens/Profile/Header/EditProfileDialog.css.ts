@@ -6,7 +6,7 @@ export const bannerWrap = style({
 	position: 'relative',
 });
 
-/** Avatar overlapping the banner; wraps the (still RNW) EditableUserAvatar. */
+/** Avatar overlapping the banner; wraps the web-native EditableAvatar. */
 export const avatar = style({
 	borderColor: vars.palette.contrast_0,
 	borderRadius: '42px',

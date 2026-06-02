@@ -12,22 +12,22 @@ import { useProfileUpdateMutation } from '#/state/queries/profile';
 import { logger } from '#/logger';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { EditableUserAvatar } from '#/view/com/util/UserAvatar';
-import { UserBanner } from '#/view/com/util/UserBanner';
 
-import { sprinkles } from '#/styles/sprinkles.css';
+import * as styles from '#/screens/Profile/Header/EditProfileDialog.css';
 
 import { InlineLinkText } from '#/components/Link';
 import { Loader } from '#/components/Loader';
+import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { EditableAvatar } from '#/components/web/EditableAvatar';
+import { EditableBanner } from '#/components/web/EditableBanner';
 import * as Prompt from '#/components/web/Prompt';
 import * as Sheet from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
-import { useSimpleVerificationState } from '#/components/verification';
 
-import * as styles from '#/screens/Profile/Header/EditProfileDialog.css';
+import { sprinkles } from '#/styles/sprinkles.css';
 
 const errorTextClass = sprinkles({ marginTop: 'xs' });
 
@@ -178,7 +178,16 @@ function DialogInner({
 		} catch (e) {
 			logger.error('Failed to update user profile', { message: String(e) });
 		}
-	}, [updateProfileMutation, profile, onUpdate, handle, displayName, description, newUserAvatar, newUserBanner]);
+	}, [
+		updateProfileMutation,
+		profile,
+		onUpdate,
+		handle,
+		displayName,
+		description,
+		newUserAvatar,
+		newUserBanner,
+	]);
 
 	return (
 		<>
@@ -214,9 +223,9 @@ function DialogInner({
 
 			<Sheet.Body>
 				<div className={styles.bannerWrap}>
-					<UserBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
+					<EditableBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
 					<div className={styles.avatar}>
-						<EditableUserAvatar size={80} avatar={userAvatar} onSelectNewAvatar={onSelectNewAvatar} />
+						<EditableAvatar size={80} avatar={userAvatar} onSelectNewAvatar={onSelectNewAvatar} />
 					</div>
 				</div>
 
@@ -254,19 +263,21 @@ function DialogInner({
 						)}
 					</div>
 
-					{verification.isVerified && verification.role === 'default' && displayName !== initialDisplayName && (
-						<Admonition type="error">
-							<Trans>
-								You are verified. You will lose your verification status if you change your display name.{' '}
-								<InlineLinkText
-									label={l({ message: `Learn more`, context: `english-only-resource` })}
-									to={urls.website.blog.initialVerificationAnnouncement}
-								>
-									<Trans context="english-only-resource">Learn more.</Trans>
-								</InlineLinkText>
-							</Trans>
-						</Admonition>
-					)}
+					{verification.isVerified &&
+						verification.role === 'default' &&
+						displayName !== initialDisplayName && (
+							<Admonition type="error">
+								<Trans>
+									You are verified. You will lose your verification status if you change your display name.{' '}
+									<InlineLinkText
+										label={l({ message: `Learn more`, context: `english-only-resource` })}
+										to={urls.website.blog.initialVerificationAnnouncement}
+									>
+										<Trans context="english-only-resource">Learn more.</Trans>
+									</InlineLinkText>
+								</Trans>
+							</Admonition>
+						)}
 
 					<div>
 						<TextField.LabelText>

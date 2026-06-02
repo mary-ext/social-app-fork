@@ -2802,10 +2802,16 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
+#: src/components/web/EditableAvatar.tsx:73
+#: src/components/web/EditableAvatar.tsx:86
 #: src/view/com/util/UserAvatar.tsx:402
-#: src/view/com/util/UserBanner.tsx:81
 msgid "Edit avatar"
 msgstr ""
+
+#: src/components/web/EditableBanner.tsx:63
+#: src/components/web/EditableBanner.tsx:69
+msgid "Edit banner"
+msgstr "Edit banner"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:96
 msgid "Edit Feeds"
@@ -6447,13 +6453,13 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
+#: src/components/web/EditableAvatar.tsx:98
 #: src/view/com/util/UserAvatar.tsx:439
 #: src/view/com/util/UserAvatar.tsx:441
 msgid "Remove Avatar"
 msgstr ""
 
-#: src/view/com/util/UserBanner.tsx:123
-#: src/view/com/util/UserBanner.tsx:125
+#: src/components/web/EditableBanner.tsx:81
 msgid "Remove Banner"
 msgstr ""
 
@@ -8852,13 +8858,13 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
 
+#: src/components/web/EditableAvatar.tsx:89
+#: src/components/web/EditableBanner.tsx:72
 #: src/view/com/util/UserAvatar.tsx:431
-#: src/view/com/util/UserBanner.tsx:115
 msgid "Upload from Files"
 msgstr ""
 
 #: src/view/com/util/UserAvatar.tsx:430
-#: src/view/com/util/UserBanner.tsx:112
 msgid "Upload from Library"
 msgstr ""
 
