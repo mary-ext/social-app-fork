@@ -5,9 +5,6 @@ import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { useTrendingConfig } from '#/state/service-config';
 
-import * as SettingsList from '#/screens/Settings/components/SettingsList';
-
-import * as Toggle from '#/components/forms/Toggle';
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Hashtag_Stroke2_Corner0_Rounded as HashtagIcon } from '#/components/icons/Hashtag';
@@ -15,7 +12,8 @@ import { Home_Stroke2_Corner2_Rounded as HomeIcon } from '#/components/icons/Hom
 import { Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon } from '#/components/icons/Macintosh';
 import { Play_Stroke2_Corner2_Rounded as PlayIcon } from '#/components/icons/Play';
 import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending';
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
+import * as SettingsList from '#/components/web/SettingsList';
 
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';
@@ -72,66 +70,44 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
 					<SettingsList.Divider />
-
-					<Toggle.Item
-						name="disable_autoplay"
+					<SettingsList.CheckboxItem
 						label={l`Autoplay videos and GIFs`}
 						value={!autoplayDisabledPref}
 						onChange={(value) => setAutoplayDisabledPref(!value)}
 					>
-						<SettingsList.Item>
-							<SettingsList.ItemIcon icon={PlayIcon} />
-							<SettingsList.ItemText>
-								<Trans>Autoplay videos and GIFs</Trans>
-							</SettingsList.ItemText>
-							<Toggle.Platform />
-						</SettingsList.Item>
-					</Toggle.Item>
-					{trendingEnabled ? (
+						<SettingsList.ItemIcon icon={PlayIcon} />
+						<SettingsList.ItemText>
+							<Trans>Autoplay videos and GIFs</Trans>
+						</SettingsList.ItemText>
+						<SettingsList.CheckboxBox />
+					</SettingsList.CheckboxItem>
+					{trendingEnabled && (
 						<>
 							<SettingsList.Divider />
-							<Toggle.Item
-								name="show_trending_topics"
+							<SettingsList.CheckboxItem
 								label={l`Enable trending topics`}
 								value={!trendingDisabled}
-								onChange={(value) => {
-									const hide = Boolean(!value);
-									if (hide) {
-									} else {
-									}
-									setTrendingDisabled(hide);
-								}}
+								onChange={(value) => setTrendingDisabled(!value)}
 							>
-								<SettingsList.Item>
-									<SettingsList.ItemIcon icon={Graph} />
-									<SettingsList.ItemText>
-										<Trans>Enable trending topics</Trans>
-									</SettingsList.ItemText>
-									<Toggle.Platform />
-								</SettingsList.Item>
-							</Toggle.Item>
-							<Toggle.Item
-								name="show_trending_videos"
+								<SettingsList.ItemIcon icon={Graph} />
+								<SettingsList.ItemText>
+									<Trans>Enable trending topics</Trans>
+								</SettingsList.ItemText>
+								<SettingsList.CheckboxBox />
+							</SettingsList.CheckboxItem>
+							<SettingsList.CheckboxItem
 								label={l`Enable trending videos in your Discover feed`}
 								value={!trendingVideoDisabled}
-								onChange={(value) => {
-									const hide = Boolean(!value);
-									if (hide) {
-									} else {
-									}
-									setTrendingVideoDisabled(hide);
-								}}
+								onChange={(value) => setTrendingVideoDisabled(!value)}
 							>
-								<SettingsList.Item>
-									<SettingsList.ItemIcon icon={Graph} />
-									<SettingsList.ItemText>
-										<Trans>Enable trending videos in your Discover feed</Trans>
-									</SettingsList.ItemText>
-									<Toggle.Platform />
-								</SettingsList.Item>
-							</Toggle.Item>
+								<SettingsList.ItemIcon icon={Graph} />
+								<SettingsList.ItemText>
+									<Trans>Enable trending videos in your Discover feed</Trans>
+								</SettingsList.ItemText>
+								<SettingsList.CheckboxBox />
+							</SettingsList.CheckboxItem>
 						</>
-					) : null}
+					)}
 				</SettingsList.Container>
 			</Layout.Content>
 		</Layout.Screen>
