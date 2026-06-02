@@ -1,120 +1,24 @@
-import { StyleSheet, View, type ViewStyle } from 'react-native';
-import { DismissableLayer, FocusGuards, FocusScope } from 'radix-ui/internal';
-import { RemoveScrollBar } from 'react-remove-scroll-bar';
-
-import { useReducedMotion } from '#/lib/reduced-motion';
-
-import { type ComposerOpts, useComposerState } from '#/state/shell/composer';
-
-import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
+import * as Dialog from '#/components/Dialog';
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 
 import { ComposePost, useComposerCancelRef } from '../com/composer/Composer';
 
-const BOTTOM_BAR_HEIGHT = 61;
-
-type WebViewStyle = ViewStyle & {
-	animationDelay?: number;
-	animationFillMode?: 'backwards';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
-
-export function Composer({}: { winHeight: number }) {
-	const state = useComposerState();
-	const isActive = !!state;
-
-	// rendering
-	// =
-
-	if (!isActive) {
-		return null;
-	}
+export function ComposerDialog() {
+	const { composerDialogControl } = useGlobalDialogsControlContext();
+	const cancelRef = useComposerCancelRef();
+	const state = composerDialogControl.value;
 
 	return (
-		<>
-			<RemoveScrollBar />
-			<Inner state={state} />
-		</>
+		<Dialog.Outer
+			control={composerDialogControl.control}
+			onClose={composerDialogControl.clear}
+			webOptions={{
+				// ESC routes through ComposePost's own `onDismiss`; the backdrop press lives on the
+				// Outer (outside ComposePost), so it has to be forwarded into the same cancel path.
+				onBackgroundPress: () => cancelRef.current?.onPressCancel(),
+			}}
+		>
+			{state && <ComposePost cancelRef={cancelRef} {...state} />}
+		</Dialog.Outer>
 	);
 }
-
-function Inner({ state }: { state: ComposerOpts }) {
-	const ref = useComposerCancelRef();
-	const t = useTheme();
-	const { gtMobile } = useBreakpoints();
-	const reduceMotionEnabled = useReducedMotion();
-
-	FocusGuards.useFocusGuards();
-
-	return (
-		<FocusScope.FocusScope loop trapped asChild>
-			<DismissableLayer.DismissableLayer
-				role="dialog"
-				aria-modal
-				style={flatten([
-					{ position: 'fixed' },
-					a.inset_0,
-					{ backgroundColor: '#000c' },
-					a.flex,
-					a.flex_col,
-					a.align_center,
-					!reduceMotionEnabled && a.fade_in,
-				])}
-				onFocusOutside={(evt) => evt.preventDefault()}
-				onInteractOutside={(evt) => evt.preventDefault()}
-				onDismiss={() => {
-					ref.current?.onPressCancel();
-				}}
-			>
-				<View
-					style={[
-						styles.container,
-						!gtMobile && styles.containerMobile,
-						t.atoms.bg,
-						t.atoms.border_contrast_medium,
-						!reduceMotionEnabled && [
-							a.zoom_fade_in,
-							webViewStyle({ animationDelay: 0.1 }),
-							webViewStyle({ animationFillMode: 'backwards' }),
-						],
-					]}
-				>
-					<ComposePost
-						cancelRef={ref}
-						replyTo={state.replyTo}
-						quote={state.quote}
-						onPost={state.onPost}
-						onPostSuccess={state.onPostSuccess}
-						mention={state.mention}
-						text={state.text}
-						videoUri={state.videoUri}
-						openGallery={state.openGallery}
-					/>
-				</View>
-			</DismissableLayer.DismissableLayer>
-		</FocusScope.FocusScope>
-	);
-}
-
-const styles = StyleSheet.create({
-	container: {
-		marginTop: 50,
-		maxWidth: 600,
-		width: '100%',
-		paddingVertical: 0,
-		borderRadius: 8,
-		marginBottom: 0,
-		borderWidth: 1,
-		// @ts-expect-error web only
-		maxHeight: 'calc(100% - (40px * 2))',
-		overflow: 'hidden',
-	},
-	containerMobile: {
-		borderRadius: 0,
-		marginBottom: BOTTOM_BAR_HEIGHT,
-		// @ts-expect-error web only
-		maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
-	},
-});

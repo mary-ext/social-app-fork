@@ -25,7 +25,7 @@ import { Outlet as PortalOutlet } from '#/components/Portal';
 
 import { FlatNavigator, RoutesContainer } from '#/Navigation';
 
-import { Composer } from './Composer';
+import { ComposerDialog } from './Composer';
 import { DrawerContent } from './Drawer';
 
 function ShellInner() {
@@ -50,7 +50,7 @@ function ShellInner() {
 			<ErrorBoundary>
 				<FlatNavigator layout={drawerLayout} />
 			</ErrorBoundary>
-			<Composer winHeight={0} />
+			<ComposerDialog />
 			<MutedWordsDialog />
 			<SigninDialog />
 			<LinkWarningDialog />

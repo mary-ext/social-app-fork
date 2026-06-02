@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
 import type { SessionAccount } from '#/state/session';
+import type { ComposerOpts } from '#/state/shell/composer';
 
 import * as Dialog from '#/components/Dialog';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
@@ -20,6 +21,7 @@ export type SigninDialogPayload = {
 };
 
 type ControlsContext = {
+	composerDialogControl: StatefulControl<ComposerOpts>;
 	mutedWordsDialogControl: Control;
 	signinDialogControl: StatefulControl<SigninDialogPayload>;
 	linkWarningDialogControl: StatefulControl<{
@@ -42,6 +44,7 @@ export function useGlobalDialogsControlContext() {
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
+	const composerDialogControl = useStatefulDialogControl<ComposerOpts>();
 	const mutedWordsDialogControl = Dialog.useDialogControl();
 	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();
 	const linkWarningDialogControl = useStatefulDialogControl<{
@@ -55,12 +58,13 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 
 	const ctx = useMemo<ControlsContext>(
 		() => ({
+			composerDialogControl,
 			mutedWordsDialogControl,
 			signinDialogControl,
 			linkWarningDialogControl,
 			reportDialogControl,
 		}),
-		[mutedWordsDialogControl, signinDialogControl, linkWarningDialogControl, reportDialogControl],
+		[composerDialogControl, mutedWordsDialogControl, signinDialogControl, linkWarningDialogControl, reportDialogControl],
 	);
 
 	return <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>;

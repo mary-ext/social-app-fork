@@ -12,7 +12,6 @@ import {
 import {
 	ActivityIndicator,
 	Keyboard,
-	KeyboardAvoidingView,
 	type LayoutChangeEvent,
 	ScrollView,
 	type StyleProp,
@@ -22,7 +21,6 @@ import {
 } from 'react-native';
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
 import type { Did, ResourceUri } from '@atcute/lexicons';
@@ -53,7 +51,6 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import * as apilib from '#/lib/api/index';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
-import { useAppState } from '#/lib/appState';
 import { retry } from '#/lib/async/retry';
 import { until } from '#/lib/async/until';
 import {
@@ -62,7 +59,6 @@ import {
 	SUPPORTED_MIME_TYPES,
 	type SupportedMimeTypes,
 } from '#/lib/constants';
-import { useIsKeyboardVisible } from '#/lib/hooks/useIsKeyboardVisible';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
@@ -104,6 +100,8 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import * as Dialog from '#/components/Dialog';
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
@@ -115,7 +113,6 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import type { Gif } from '#/features/gifPicker/types';
-import { BottomSheetPortalProvider } from '#/shims/bottom-sheet';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
@@ -144,7 +141,8 @@ type CancelRef = {
 	onPressCancel: () => void;
 };
 
-type WebViewStyle = Omit<ViewStyle, 'position'> & {
+type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position'> & {
+	maxHeight?: string;
 	position?: 'sticky';
 	scrollbarColor?: string;
 	scrollbarGutter?: 'stable';
@@ -186,10 +184,10 @@ export const ComposePost = ({
 	const { mutateAsync: saveDraft, isPending: _isSavingDraft } = useSaveDraftMutation();
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
 	const { closeAllDialogs } = useDialogStateControlContext();
+	const { composerDialogControl } = useGlobalDialogsControlContext();
 	const { data: preferences } = usePreferencesQuery();
 	const navigation = useNavigation<NavigationProp>();
 
-	const [isKeyboardVisible] = useIsKeyboardVisible();
 	const [isPublishing, setIsPublishing] = useState(false);
 	const [publishingStage, setPublishingStage] = useState('');
 	const [error, setError] = useState('');
@@ -577,15 +575,6 @@ export const ComposePost = ({
 		});
 	}, [composerDispatch, preferences?.postInteractionSettings]);
 
-	const insets = useSafeAreaInsets();
-	const viewStyles = useMemo(
-		() => ({
-			paddingTop: 0,
-			paddingBottom: 0,
-		}),
-		[insets, isKeyboardVisible],
-	);
-
 	const onPressCancel = useCallback(() => {
 		if (textInputRef.current?.maybeClosePopup()) {
 			return;
@@ -599,20 +588,25 @@ export const ComposePost = ({
 		// - No draft is loaded (new composition)
 		// - Draft is loaded but has been modified
 		if (hasContent && (!composerState.draftId || composerState.isDirty)) {
-			closeAllDialogs();
+			// Dismiss sub-dialogs (emoji picker, etc.) but keep the composer itself open so the discard
+			// prompt has something to confirm against.
+			closeAllDialogs({ except: [composerDialogControl.control.id] });
 			Keyboard.dismiss();
 			discardPromptControl.open();
 		} else {
 			onClose();
 		}
-	}, [thread, composerState.draftId, composerState.isDirty, closeAllDialogs, discardPromptControl, onClose]);
+	}, [
+		thread,
+		composerState.draftId,
+		composerState.isDirty,
+		closeAllDialogs,
+		composerDialogControl.control.id,
+		discardPromptControl,
+		onClose,
+	]);
 
 	useImperativeHandle(cancelRef, () => ({ onPressCancel }));
-
-	// On Android, pressing Back should ask confirmation.
-	useEffect(() => {
-		return;
-	}, [onPressCancel, closeAllDialogs]);
 
 	const missingAltError = useMemo(() => {
 		if (!requireAltTextEnabled) {
@@ -919,14 +913,11 @@ export const ComposePost = ({
 		scrollHandler,
 		onScrollViewContentSizeChange,
 		onScrollViewLayout,
-		topBarAnimatedStyle,
 		bottomBarAnimatedStyle,
 	} = useScrollTracker({
 		scrollViewRef,
 		stickyBottom: isLastThreadedPost,
 	});
-
-	const keyboardVerticalOffset = useKeyboardVerticalOffset();
 
 	const footer = (
 		<>
@@ -966,14 +957,14 @@ export const ComposePost = ({
 
 	const IS_WEBFooterSticky = thread.posts.length > 1;
 	return (
-		<BottomSheetPortalProvider>
-			<KeyboardAvoidingView
-				testID="composePostView"
-				behavior={'height'}
-				keyboardVerticalOffset={keyboardVerticalOffset}
-				style={a.flex_1}
-			>
-				<View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
+		<>
+			<Dialog.ScrollableInner
+				label={l`Write post`}
+				// The composer owns its own scrolling (the `Animated.ScrollView` below), so the card is
+				// height-bounded and clips while the internal scroll view does the work.
+				style={[a.overflow_hidden, webViewStyle({ maxHeight: Dialog.WEB_DIALOG_HEIGHT })]}
+				contentContainerStyle={[a.flex_1, a.p_0, { minHeight: 0 }]}
+				header={
 					<ComposerTopBar
 						canPost={canPost}
 						isReply={!!replyTo}
@@ -981,7 +972,6 @@ export const ComposePost = ({
 						isPublishing={isPublishing}
 						isThread={thread.posts.length > 1}
 						publishingStage={publishingStage}
-						topBarAnimatedStyle={topBarAnimatedStyle}
 						onCancel={onPressCancel}
 						onPublish={onPressPublish}
 						onSelectDraft={handleSelectDraft}
@@ -992,119 +982,120 @@ export const ComposePost = ({
 						isEditingDraft={!!composerState.draftId}
 						canSaveDraft={allPostsWithinLimit}
 						textLength={thread.posts[0]!.text.length}
-					>
-						{missingAltError && <AltTextReminder error={missingAltError} />}
-						<ErrorBanner
-							error={error}
-							videoState={erroredVideo}
-							clearError={() => setError('')}
-							clearVideo={erroredVideoPostId ? () => clearVideo(erroredVideoPostId) : () => {}}
-						/>
-					</ComposerTopBar>
-
-					<Animated.ScrollView
-						ref={scrollViewRef}
-						layout={undefined}
-						onScroll={scrollHandler}
-						contentContainerStyle={a.flex_grow}
-						style={[
-							a.flex_1,
-							webViewStyle({
-								scrollbarGutter: 'stable',
-								scrollbarColor: `${t.palette.contrast_200} transparent`,
-							}),
-						]}
-						keyboardShouldPersistTaps="always"
-						onContentSizeChange={onScrollViewContentSizeChange}
-						onLayout={onScrollViewLayout}
-					>
-						{replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-						{thread.posts.map((post, index) => (
-							<Fragment key={post.id + (composerState.draftId ?? '')}>
-								<ComposerPost
-									post={post}
-									dispatch={composerDispatch}
-									textInputRef={post.id === activePost.id ? textInputRef : null}
-									isFirstPost={index === 0}
-									isLastPost={index === thread.posts.length - 1}
-									isPartOfThread={thread.posts.length > 1}
-									isReply={index > 0 || !!replyTo}
-									isActive={post.id === activePost.id}
-									canRemovePost={thread.posts.length > 1}
-									canRemoveQuote={index > 0 || !initQuote}
-									onSelectVideo={selectVideo}
-									onClearVideo={clearVideo}
-									onPublish={onComposerPostPublish}
-									onError={setError}
-								/>
-								{IS_WEBFooterSticky && post.id === activePost.id && (
-									<View style={styles.stickyFooterWeb}>{footer}</View>
-								)}
-							</Fragment>
-						))}
-					</Animated.ScrollView>
-					{!IS_WEBFooterSticky && footer}
-				</View>
-
-				{replyTo ? (
-					<Prompt.Basic
-						control={discardPromptControl}
-						title={l`Discard draft?`}
-						description=""
-						confirmButtonCta={l`Discard`}
-						confirmButtonColor="negative"
-						onConfirm={handleDiscard}
 					/>
-				) : (
-					<Prompt.Outer control={discardPromptControl}>
-						<Prompt.Content>
-							<Prompt.TitleText>
-								{allPostsWithinLimit ? (
-									composerState.draftId ? (
-										<Trans>Save changes?</Trans>
-									) : (
-										<Trans>Save draft?</Trans>
-									)
-								) : (
-									<Trans>Discard post?</Trans>
-								)}
-							</Prompt.TitleText>
-							<Prompt.DescriptionText>
-								{allPostsWithinLimit ? (
-									composerState.draftId ? (
-										<Trans>You have unsaved changes to this draft, would you like to save them?</Trans>
-									) : (
-										<Trans>Would you like to save this as a draft to edit later?</Trans>
-									)
-								) : (
-									<Trans>You can only save drafts up to 1000 characters.</Trans>
-								)}
-							</Prompt.DescriptionText>
-						</Prompt.Content>
-						<Prompt.Actions>
-							{allPostsWithinLimit && (
-								<Prompt.Action
-									cta={composerState.draftId ? l`Save changes` : l`Save draft`}
-									onPress={handleSaveDraft}
-									color="primary"
-								/>
-							)}
-							<Prompt.Action cta={l`Discard`} onPress={handleDiscard} color="negative_subtle" />
-							<Prompt.Cancel cta={l`Keep editing`} />
-						</Prompt.Actions>
-					</Prompt.Outer>
-				)}
-
-				<Prompt.Basic
-					control={emptyPostsPromptControl}
-					title={l`Skip empty posts?`}
-					description={l`Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.`}
-					confirmButtonCta={l`Post anyway`}
-					cancelButtonCta={l`Keep editing`}
-					onConfirm={handleConfirmSkipEmpty}
+				}
+				onDismiss={onPressCancel}
+			>
+				{missingAltError && <AltTextReminder error={missingAltError} />}
+				<ErrorBanner
+					error={error}
+					videoState={erroredVideo}
+					clearError={() => setError('')}
+					clearVideo={erroredVideoPostId ? () => clearVideo(erroredVideoPostId) : () => {}}
 				/>
-			</KeyboardAvoidingView>
-		</BottomSheetPortalProvider>
+				<Animated.ScrollView
+					testID="composePostView"
+					ref={scrollViewRef}
+					layout={undefined}
+					onScroll={scrollHandler}
+					contentContainerStyle={a.flex_grow}
+					style={[
+						a.flex_1,
+						webViewStyle({
+							scrollbarGutter: 'stable',
+							scrollbarColor: `${t.palette.contrast_200} transparent`,
+						}),
+					]}
+					keyboardShouldPersistTaps="always"
+					onContentSizeChange={onScrollViewContentSizeChange}
+					onLayout={onScrollViewLayout}
+				>
+					{replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+					{thread.posts.map((post, index) => (
+						<Fragment key={post.id + (composerState.draftId ?? '')}>
+							<ComposerPost
+								post={post}
+								dispatch={composerDispatch}
+								textInputRef={post.id === activePost.id ? textInputRef : null}
+								isFirstPost={index === 0}
+								isLastPost={index === thread.posts.length - 1}
+								isPartOfThread={thread.posts.length > 1}
+								isReply={index > 0 || !!replyTo}
+								isActive={post.id === activePost.id}
+								canRemovePost={thread.posts.length > 1}
+								canRemoveQuote={index > 0 || !initQuote}
+								onSelectVideo={selectVideo}
+								onClearVideo={clearVideo}
+								onPublish={onComposerPostPublish}
+								onError={setError}
+							/>
+							{IS_WEBFooterSticky && post.id === activePost.id && (
+								<View style={styles.stickyFooterWeb}>{footer}</View>
+							)}
+						</Fragment>
+					))}
+				</Animated.ScrollView>
+				{!IS_WEBFooterSticky && footer}
+			</Dialog.ScrollableInner>
+
+			{replyTo ? (
+				<Prompt.Basic
+					control={discardPromptControl}
+					title={l`Discard draft?`}
+					description=""
+					confirmButtonCta={l`Discard`}
+					confirmButtonColor="negative"
+					onConfirm={handleDiscard}
+				/>
+			) : (
+				<Prompt.Outer control={discardPromptControl}>
+					<Prompt.Content>
+						<Prompt.TitleText>
+							{allPostsWithinLimit ? (
+								composerState.draftId ? (
+									<Trans>Save changes?</Trans>
+								) : (
+									<Trans>Save draft?</Trans>
+								)
+							) : (
+								<Trans>Discard post?</Trans>
+							)}
+						</Prompt.TitleText>
+						<Prompt.DescriptionText>
+							{allPostsWithinLimit ? (
+								composerState.draftId ? (
+									<Trans>You have unsaved changes to this draft, would you like to save them?</Trans>
+								) : (
+									<Trans>Would you like to save this as a draft to edit later?</Trans>
+								)
+							) : (
+								<Trans>You can only save drafts up to 1000 characters.</Trans>
+							)}
+						</Prompt.DescriptionText>
+					</Prompt.Content>
+					<Prompt.Actions>
+						{allPostsWithinLimit && (
+							<Prompt.Action
+								cta={composerState.draftId ? l`Save changes` : l`Save draft`}
+								onPress={handleSaveDraft}
+								color="primary"
+							/>
+						)}
+						<Prompt.Action cta={l`Discard`} onPress={handleDiscard} color="negative_subtle" />
+						<Prompt.Cancel cta={l`Keep editing`} />
+					</Prompt.Actions>
+				</Prompt.Outer>
+			)}
+
+			<Prompt.Basic
+				control={emptyPostsPromptControl}
+				title={l`Skip empty posts?`}
+				description={l`Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.`}
+				confirmButtonCta={l`Post anyway`}
+				cancelButtonCta={l`Keep editing`}
+				onConfirm={handleConfirmSkipEmpty}
+			/>
+		</>
 	);
 };
 
@@ -1217,8 +1208,6 @@ let ComposerPost = memo(function ComposerPost({
 		[post.id, onSelectVideo, onImageAdd, onError, l],
 	);
 
-	useHideKeyboardOnBackground();
-
 	return (
 		<View style={[a.mx_lg, a.mb_sm, !isActive && isLastPost && a.mb_lg, !isActive && styles.inactivePost]}>
 			<View style={[a.flex_row]}>
@@ -1328,8 +1317,6 @@ function ComposerTopBar({
 	isEditingDraft,
 	canSaveDraft,
 	textLength,
-	topBarAnimatedStyle,
-	children,
 }: {
 	isPublishing: boolean;
 	publishingStage: string;
@@ -1347,96 +1334,90 @@ function ComposerTopBar({
 	isEditingDraft: boolean;
 	canSaveDraft: boolean;
 	textLength: number;
-	topBarAnimatedStyle: StyleProp<ViewStyle>;
-	children?: React.ReactNode;
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 
-	return (
-		<Animated.View style={topBarAnimatedStyle} layout={undefined}>
-			<View style={[a.flex_row, a.align_center, a.gap_xs, a.p_sm]}>
+	const renderLeft = () => (
+		<Button
+			label={l`Cancel`}
+			onPress={onCancel}
+			size="small"
+			color="primary"
+			variant="ghost"
+			style={[a.rounded_full]}
+			accessibilityHint={l`Closes post composer and discards post draft`}
+		>
+			<ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
+				<Trans>Cancel</Trans>
+			</ButtonText>
+		</Button>
+	);
+
+	const renderRight = () =>
+		isPublishing ? (
+			<View style={[a.flex_row, a.align_center]}>
+				<Text style={[t.atoms.text_contrast_medium]}>{publishingStage}</Text>
+				<View style={styles.postBtn}>
+					<ActivityIndicator />
+				</View>
+			</View>
+		) : (
+			<View style={[a.flex_row, a.align_center, a.gap_xs]}>
+				{!isReply && (
+					<DraftsButton
+						onSelectDraft={onSelectDraft}
+						onSaveDraft={onSaveDraft}
+						onDiscard={onDiscard}
+						isEmpty={isEmpty}
+						isDirty={isDirty}
+						isEditingDraft={isEditingDraft}
+						canSaveDraft={canSaveDraft}
+						textLength={textLength}
+					/>
+				)}
 				<Button
-					label={l`Cancel`}
-					variant="ghost"
+					testID="composerPublishBtn"
+					label={
+						isReply
+							? isThread
+								? l({
+										message: 'Publish replies',
+										comment: 'Accessibility label for button to publish multiple replies in a thread',
+									})
+								: l({
+										message: 'Publish reply',
+										comment: 'Accessibility label for button to publish a single reply',
+									})
+							: isThread
+								? l({
+										message: 'Publish posts',
+										comment: 'Accessibility label for button to publish multiple posts in a thread',
+									})
+								: l({
+										message: 'Publish post',
+										comment: 'Accessibility label for button to publish a single post',
+									})
+					}
 					color="primary"
-					shape="default"
 					size="small"
-					style={[{ paddingLeft: 7, paddingRight: 7 }]}
-					hoverStyle={[a.bg_transparent, { opacity: 0.5 }]}
-					onPress={onCancel}
-					accessibilityHint={l`Closes post composer and discards post draft`}
+					onPress={onPublish}
+					disabled={!canPost || isPublishQueued}
 				>
 					<ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
-						<Trans>Cancel</Trans>
+						{isReply ? (
+							<Trans context="action">Reply</Trans>
+						) : isThread ? (
+							<Trans context="action">Post All</Trans>
+						) : (
+							<Trans context="action">Post</Trans>
+						)}
 					</ButtonText>
 				</Button>
-				<View style={a.flex_1} />
-				{isPublishing ? (
-					<>
-						<Text style={[t.atoms.text_contrast_medium]}>{publishingStage}</Text>
-						<View style={styles.postBtn}>
-							<ActivityIndicator />
-						</View>
-					</>
-				) : (
-					<>
-						{!isReply && (
-							<DraftsButton
-								onSelectDraft={onSelectDraft}
-								onSaveDraft={onSaveDraft}
-								onDiscard={onDiscard}
-								isEmpty={isEmpty}
-								isDirty={isDirty}
-								isEditingDraft={isEditingDraft}
-								canSaveDraft={canSaveDraft}
-								textLength={textLength}
-							/>
-						)}
-						<Button
-							testID="composerPublishBtn"
-							label={
-								isReply
-									? isThread
-										? l({
-												message: 'Publish replies',
-												comment: 'Accessibility label for button to publish multiple replies in a thread',
-											})
-										: l({
-												message: 'Publish reply',
-												comment: 'Accessibility label for button to publish a single reply',
-											})
-									: isThread
-										? l({
-												message: 'Publish posts',
-												comment: 'Accessibility label for button to publish multiple posts in a thread',
-											})
-										: l({
-												message: 'Publish post',
-												comment: 'Accessibility label for button to publish a single post',
-											})
-							}
-							color="primary"
-							size="small"
-							onPress={onPublish}
-							disabled={!canPost || isPublishQueued}
-						>
-							<ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
-								{isReply ? (
-									<Trans context="action">Reply</Trans>
-								) : isThread ? (
-									<Trans context="action">Post All</Trans>
-								) : (
-									<Trans context="action">Post</Trans>
-								)}
-							</ButtonText>
-						</Button>
-					</>
-				)}
 			</View>
-			{children}
-		</Animated.View>
-	);
+		);
+
+	return <Dialog.Header renderLeft={renderLeft} renderRight={renderRight} style={[a.border_b_0]} />;
 }
 
 function AltTextReminder({ error }: { error: string }) {
@@ -1824,8 +1805,6 @@ function useScrollTracker({
 	const scrollViewHeight = useSharedValue(Infinity);
 	const contentHeight = useSharedValue(0);
 
-	const hasScrolledToTop = useDerivedValue(() => withTiming(contentOffset.get() === 0 ? 1 : 0));
-
 	const hasScrolledToBottom = useDerivedValue(() =>
 		withTiming(contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get() ? 1 : 0),
 	);
@@ -1894,16 +1873,6 @@ function useScrollTracker({
 		[showHideBottomBorder],
 	);
 
-	const topBarAnimatedStyle = useAnimatedStyle(() => {
-		return {
-			borderBottomWidth: StyleSheet.hairlineWidth,
-			borderColor: interpolateColor(
-				hasScrolledToTop.get(),
-				[0, 1],
-				[t.atoms.border_contrast_medium.borderColor, 'transparent'],
-			),
-		};
-	});
 	const bottomBarAnimatedStyle = useAnimatedStyle(() => {
 		return {
 			borderTopWidth: StyleSheet.hairlineWidth,
@@ -1919,16 +1888,8 @@ function useScrollTracker({
 		scrollHandler,
 		onScrollViewContentSizeChange,
 		onScrollViewLayout,
-		topBarAnimatedStyle,
 		bottomBarAnimatedStyle,
 	};
-}
-
-function useKeyboardVerticalOffset() {
-	const { bottom } = useSafeAreaInsets();
-
-	// need to account for the edge-to-edge nav bar
-	return bottom * -1;
 }
 
 async function whenAppViewReady(
@@ -1956,12 +1917,6 @@ async function whenAppViewReady(
 
 function isEmptyPost(post: PostDraft) {
 	return post.text.trim().length === 0 && !post.embed.media && !post.embed.link && !post.embed.quote;
-}
-
-function useHideKeyboardOnBackground() {
-	const appState = useAppState();
-
-	useEffect(() => {}, [appState]);
 }
 
 const styles = StyleSheet.create({

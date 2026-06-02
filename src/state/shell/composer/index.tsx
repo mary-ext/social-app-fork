@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyUnspeccedGetPostThreadV2 } from '@atcute/bluesky';
 import type { ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -10,6 +10,7 @@ import { postUriToRelativePath, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 import { precacheResolveLinkQuery } from '#/state/queries/resolve-link';
 
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as Toast from '#/components/Toast';
 
 export interface ComposerOptsPostRef {
@@ -61,8 +62,22 @@ controlsContext.displayName = 'ComposerControlsContext';
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const { t: l } = useLingui();
-	const [state, setState] = useState<StateContext>();
+	const { composerDialogControl } = useGlobalDialogsControlContext();
 	const queryClient = useQueryClient();
+
+	const state = composerDialogControl.value;
+
+	/*
+	 * Synchronously guards against opening a second composer in the same tick (e.g. a double-tapped
+	 * FAB) before `composerDialogControl.value` has re-rendered. Kept in sync with the dialog value so
+	 * it resets no matter which path closed the composer (cancel, ESC, backdrop, account switch).
+	 */
+	const composerOpenRef = useRef(false);
+	useEffect(() => {
+		if (!state) {
+			composerOpenRef.current = false;
+		}
+	}, [state]);
 
 	const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
 		if (opts.quote) {
@@ -88,25 +103,36 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			Toast.show(l`Cannot interact with a blocked user`, {
 				type: 'warning',
 			});
-		} else {
-			setState((prevOpts) => {
-				if (prevOpts) {
-					// Never replace an already open composer.
-					return prevOpts;
-				}
-				return opts;
-			});
+			return;
 		}
+		// Never replace an already open composer.
+		if (composerOpenRef.current || composerDialogControl.value) {
+			return;
+		}
+		composerOpenRef.current = true;
+		composerDialogControl.open(opts);
 	});
 
 	const closeComposer = useNonReactiveCallback(() => {
-		let wasOpen = !!state;
+		const wasOpen = composerOpenRef.current || !!composerDialogControl.value;
+		composerOpenRef.current = false;
 		if (wasOpen) {
-			setState(undefined);
+			composerDialogControl.control.close();
 		}
-
 		return wasOpen;
 	});
+
+	/*
+	 * The dialog control lives above the account-keyed `InnerApp`, so it outlives this provider on
+	 * account switch. Clear any open composer on unmount so a stale `ComposerOpts` (which assumes the
+	 * previous `currentAccount`) can't survive into the next session.
+	 */
+	useEffect(() => {
+		return () => {
+			composerDialogControl.clear();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	const api = useMemo(
 		() => ({
