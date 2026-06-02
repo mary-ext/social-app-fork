@@ -8,11 +8,9 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import {
-	getMembership,
-	type ListMembersip,
-	useDangerousListMembershipsQuery,
 	useListMembershipAddMutation,
 	useListMembershipRemoveMutation,
+	useListsWithMembershipQuery,
 } from '#/state/queries/list-memberships';
 
 import { atoms as a } from '#/alf';
@@ -50,21 +48,14 @@ function DialogInner({
 }) {
 	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
-	const { data: memberships } = useDangerousListMembershipsQuery();
 
 	const renderProfileCard = useCallback(
 		(item: ProfileItem) => {
 			return (
-				<UserResult
-					profile={item.profile}
-					onChange={onChange}
-					memberships={memberships}
-					list={list}
-					moderationOpts={moderationOpts}
-				/>
+				<UserResult profile={item.profile} onChange={onChange} list={list} moderationOpts={moderationOpts} />
 			);
 		},
-		[onChange, memberships, list, moderationOpts],
+		[onChange, list, moderationOpts],
 	);
 
 	return <SearchablePeopleList title={l`Add people to list`} renderProfileCard={renderProfileCard} />;
@@ -73,22 +64,23 @@ function DialogInner({
 function UserResult({
 	profile,
 	list,
-	memberships,
 	onChange,
 	moderationOpts,
 }: {
 	profile: AnyProfileView;
 	list: AppBskyGraphDefs.ListView;
-	memberships: ListMembersip[] | undefined;
 	onChange?: (type: 'add' | 'remove', profile: AnyProfileView) => void | undefined;
 	moderationOpts?: ModerationOptions;
 }) {
 	const { t: l } = useLingui();
-	const membership = useMemo(
-		() => getMembership(memberships, list.uri, profile.did),
-		[memberships, list.uri, profile.did],
+	const { data: lists } = useListsWithMembershipQuery({ actor: profile.did });
+	// undefined while pending, false once loaded and not a member, else the membership record uri
+	const membership = useMemo<string | false | undefined>(
+		() => (lists ? (lists.find((item) => item.list.uri === list.uri)?.listItem?.uri ?? false) : undefined),
+		[lists, list.uri],
 	);
 	const { mutate: listMembershipAdd, isPending: isAddingPending } = useListMembershipAddMutation({
+		subject: profile,
 		onSuccess: () => {
 			Toast.show(l`Added to list`);
 			onChange?.('add', profile);

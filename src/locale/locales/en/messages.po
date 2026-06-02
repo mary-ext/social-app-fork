@@ -879,7 +879,7 @@ msgstr ""
 msgid "Activity from others"
 msgstr ""
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:153
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:145
 #: src/components/dialogs/MutedWords.tsx:276
 #: src/components/dialogs/StarterPackDialog.tsx:307
 #: src/components/dialogs/StarterPackDialog.tsx:315
@@ -995,7 +995,7 @@ msgstr ""
 msgid "Add people"
 msgstr ""
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:70
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:61
 msgid "Add people to list"
 msgstr ""
 
@@ -1030,7 +1030,7 @@ msgstr ""
 msgid "Add to starter packs"
 msgstr ""
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:143
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:135
 msgid "Add user to list"
 msgstr ""
 
@@ -1043,7 +1043,7 @@ msgstr "Added by {0}"
 msgid "Added by invite link"
 msgstr "Added by invite link"
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:93
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:85
 #: src/view/com/modals/UserAddRemoveLists.tsx:141
 msgid "Added to list"
 msgstr ""
@@ -6407,7 +6407,7 @@ msgstr ""
 msgid "Reload conversations"
 msgstr ""
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:153
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:145
 #: src/components/dialogs/MutedWords.tsx:369
 #: src/components/dialogs/StarterPackDialog.tsx:307
 #: src/components/dialogs/StarterPackDialog.tsx:315
@@ -6531,7 +6531,7 @@ msgstr ""
 msgid "Remove unavailable moderation services"
 msgstr ""
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:143
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:135
 msgid "Remove user from list"
 msgstr ""
 
@@ -6554,7 +6554,7 @@ msgstr ""
 msgid "Removed by you"
 msgstr ""
 
-#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:103
+#: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:95
 #: src/view/com/modals/UserAddRemoveLists.tsx:149
 msgid "Removed from list"
 msgstr ""

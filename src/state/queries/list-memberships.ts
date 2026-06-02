@@ -1,18 +1,3 @@
-/**
- * NOTE
- *
- * This query is a temporary solution to our lack of server API for querying user membership in an API. It is
- * extremely inefficient.
- *
- * THIS SHOULD ONLY BE USED IN MODALS FOR MODIFYING A USER'S LIST MEMBERSHIP! Use the list-members query for
- * rendering a list's members.
- *
- * It works by fetching _all_ of the user's list item records and querying or manipulating that cache. For
- * users with large lists, it will fall down completely, so be very conservative about how you use it.
- *
- * -prf
- */
-
 import type {
 	AnyProfileView,
 	AppBskyActorDefs,
@@ -24,7 +9,7 @@ import type { ActorIdentifier, Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { createRecord, deleteRecord, listRecords } from '#/lib/api/records';
+import { createRecord, deleteRecord } from '#/lib/api/records';
 import { accumulate } from '#/lib/async/accumulate';
 
 import { STALE } from '#/state/queries';
@@ -33,57 +18,6 @@ import { useClients, useSession } from '#/state/session';
 
 import { RQKEY_WITH_MEMBERSHIP as STARTER_PACKS_WITH_MEMBERSHIPS_RKEY } from './actor-starter-packs';
 
-// sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
-const SANITY_PAGE_LIMIT = 1000;
-const PAGE_SIZE = 100;
-// ...which comes 100,000k list members
-
-const RQKEY_ROOT = 'list-memberships';
-export const RQKEY = () => [RQKEY_ROOT];
-
-export interface ListMembersip {
-	membershipUri: string;
-	listUri: string;
-	actorDid: string;
-}
-
-/** This API is dangerous! Read the note above! */
-export function useDangerousListMembershipsQuery() {
-	const { currentAccount } = useSession();
-	const { pds } = useClients();
-	return useQuery<ListMembersip[]>({
-		staleTime: STALE.MINUTES.FIVE,
-		queryKey: RQKEY(),
-		async queryFn() {
-			if (!currentAccount) {
-				return [];
-			}
-			let cursor: string | undefined;
-			let arr: ListMembersip[] = [];
-			for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
-				const res = await listRecords(pds!, {
-					collection: 'app.bsky.graph.listitem',
-					cursor,
-					limit: PAGE_SIZE,
-					repo: currentAccount.did as Did,
-				});
-				arr = arr.concat(
-					res.records.map((r) => ({
-						membershipUri: r.uri,
-						listUri: r.value.list,
-						actorDid: r.value.subject,
-					})),
-				);
-				cursor = res.cursor;
-				if (!cursor) {
-					break;
-				}
-			}
-			return arr;
-		},
-	});
-}
-
 export type ListWithMembership = AppBskyGraphGetListsWithMembership.ListWithMembership;
 
 const RQKEY_WITH_MEMBERSHIP_ROOT = 'lists-with-membership';
@@ -91,8 +25,7 @@ export const RQKEY_WITH_MEMBERSHIP = (actor?: string) => [RQKEY_WITH_MEMBERSHIP_
 
 /**
  * Fetches the signed-in user's curate and moderation lists, each annotated with the given actor's membership,
- * via the server-side `getListsWithMembership` endpoint. Prefer this over
- * {@link useDangerousListMembershipsQuery} whenever the subject actor is fixed.
+ * via the server-side `getListsWithMembership` endpoint.
  *
  * All pages are accumulated: the server applies its purpose filter after pagination, so individual pages may
  * come back empty while still carrying a cursor.
@@ -118,22 +51,6 @@ export function useListsWithMembershipQuery({
 			),
 		enabled: Boolean(actor) && enabled,
 	});
-}
-
-/**
- * Returns undefined for pending, false for not a member, and string for a member (the URI of the membership
- * record)
- */
-export function getMembership(
-	memberships: ListMembersip[] | undefined,
-	list: string,
-	actor: string,
-): string | false | undefined {
-	if (!memberships) {
-		return undefined;
-	}
-	const membership = memberships.find((m) => m.listUri === list && m.actorDid === actor);
-	return membership ? membership.membershipUri : false;
 }
 
 export function useListMembershipAddMutation({
@@ -171,20 +88,6 @@ export function useListMembershipAddMutation({
 			return res;
 		},
 		onSuccess: (data, variables) => {
-			// manually update the cache; a refetch is too expensive
-			let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY());
-			if (memberships) {
-				memberships = memberships
-					// avoid dups
-					.filter((m) => !(m.actorDid === variables.actorDid && m.listUri === variables.listUri))
-					.concat([
-						{
-							...variables,
-							membershipUri: data.uri,
-						},
-					]);
-				queryClient.setQueryData(RQKEY(), memberships);
-			}
 			// invalidate the members queries (used for rendering the listings)
 			// use a timeout to wait for the appview (see above)
 			setTimeout(() => {
@@ -193,7 +96,7 @@ export function useListMembershipAddMutation({
 				});
 			}, 1e3);
 
-			// update WITH_MEMBERSHIPS query
+			// update WITH_MEMBERSHIPS queries
 
 			if (subject) {
 				queryClient.setQueryData<ListWithMembership[]>(RQKEY_WITH_MEMBERSHIP(variables.actorDid), (old) =>
@@ -291,14 +194,6 @@ export function useListMembershipRemoveMutation({
 			// -prf
 		},
 		onSuccess: (data, variables) => {
-			// manually update the cache; a refetch is too expensive
-			let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY());
-			if (memberships) {
-				memberships = memberships.filter(
-					(m) => !(m.actorDid === variables.actorDid && m.listUri === variables.listUri),
-				);
-				queryClient.setQueryData(RQKEY(), memberships);
-			}
 			// invalidate the members queries (used for rendering the listings)
 			// use a timeout to wait for the appview (see above)
 			setTimeout(() => {
