@@ -100,7 +100,8 @@ export const ExternalEmbedLink = ({
 									title: external.title || data.title || uri,
 									uri,
 									description: external.description || data.description,
-									thumb: external.thumb || thumbUrl,
+									// prefer opengraph data to atproto record-derived image
+									thumb: thumbUrl || external.thumb,
 								} as AppBskyEmbedExternal.ViewExternal
 							}
 						/>
