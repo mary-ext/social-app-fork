@@ -74,7 +74,7 @@ const responsive = defineProperties({
 		marginLeft: spacingAuto,
 		marginRight: spacingAuto,
 		marginTop: spacingAuto,
-		maxWidth: { full: '100%', none: 'none' },
+		maxWidth: { 400: '400px', 600: '600px', full: '100%', none: 'none' },
 		overflow: ['visible', 'hidden', 'auto', 'scroll', 'clip'],
 		paddingBottom: spacing,
 		paddingLeft: spacing,
