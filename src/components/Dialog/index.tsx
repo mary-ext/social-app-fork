@@ -176,6 +176,7 @@ export function Inner({
 	accessibilityDescribedBy,
 	header,
 	contentContainerStyle,
+	onDismiss,
 }: DialogInnerProps) {
 	const t = useTheme();
 	const { close } = useContext(Context);
@@ -217,7 +218,7 @@ export function Inner({
 				<DismissableLayer.DismissableLayer
 					onInteractOutside={preventDefault}
 					onFocusOutside={preventDefault}
-					onDismiss={close}
+					onDismiss={onDismiss ?? close}
 					style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
 				>
 					{header}

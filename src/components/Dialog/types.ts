@@ -75,6 +75,8 @@ export type DialogInnerProps =
 			keyboardDismissMode?: ScrollViewProps['keyboardDismissMode'];
 			contentContainerStyle?: StyleProp<ViewStyle>;
 			header?: React.ReactNode;
+			/** Overrides the default dismiss handler (ESC / outside dismiss) instead of closing immediately. */
+			onDismiss?: () => void;
 	  }>
 	| DialogInnerPropsBase<{
 			label: string;
@@ -83,4 +85,6 @@ export type DialogInnerProps =
 			keyboardDismissMode?: ScrollViewProps['keyboardDismissMode'];
 			contentContainerStyle?: StyleProp<ViewStyle>;
 			header?: React.ReactNode;
+			/** Overrides the default dismiss handler (ESC / outside dismiss) instead of closing immediately. */
+			onDismiss?: () => void;
 	  }>;
