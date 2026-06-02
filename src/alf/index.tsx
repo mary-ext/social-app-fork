@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { type Theme, type ThemeName, utils as baseUtils } from '#/alf/base';
 import {
@@ -12,6 +13,7 @@ import { themes } from '#/alf/themes';
 import { darken, lighten, rgbToHex } from '#/alf/util/colorGeneration';
 
 import type { Device } from '#/storage';
+import { fontScale as fontScaleVar } from '#/styles/tokens.css';
 
 export { atoms } from '#/alf/atoms';
 export { type TextStyleProp, type Theme, type ThemeName, type ViewStyleProp } from '#/alf/base';
@@ -76,6 +78,16 @@ export function ThemeProvider({
 		},
 		[setFontScale],
 	);
+	useEffect(() => {
+		// bridge the font-size preference into CSS: write the `fontScale` var onto <html> so the
+		// `fontSize.*` tokens (and everything built on them) scale without per-component JS.
+		const root = document.documentElement;
+		const inline = assignInlineVars({ [fontScaleVar]: String(fontScaleMultiplier) });
+		for (const [prop, value] of Object.entries(inline)) {
+			root.style.setProperty(prop, value);
+		}
+	}, [fontScaleMultiplier]);
+
 	const [fontFamily, setFontFamily] = useState<Alf['fonts']['family']>(() => getFontFamily());
 	const setFontFamilyAndPersist = useCallback<Alf['fonts']['setFontFamily']>(
 		(ff) => {

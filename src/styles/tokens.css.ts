@@ -2,11 +2,11 @@
 // `#/styles/palette`. the vanilla-extract layer owns its own design scales.
 //
 // most scales are plain values, read inside `*.css.ts` at build time. `fontSize` is the exception: it
-// must scale at runtime by the `--font-scale` custom property (set on `<html>` from the user's font-size
-// preference, default `1`), so it's projected to CSS variables assigned once on `:root` — every consumer
-// references `fontSize.sm` etc. rather than re-deriving the `calc()`.
+// must scale at runtime by the `fontScale` variable (the ALF `ThemeProvider` writes it onto `<html>` from
+// the user's font-size preference, defaulting to `1`), so it's projected to CSS variables assigned once on
+// `:root` — every consumer references `fontSize.sm` etc. rather than re-deriving the `calc()`.
 
-import { createGlobalTheme } from '@vanilla-extract/css';
+import { createGlobalTheme, createVar, fallbackVar } from '@vanilla-extract/css';
 
 export const space = {
 	_2xs: 2,
@@ -45,27 +45,24 @@ export const fontWeight = {
 	bold: '700',
 } as const;
 
-// raw px scale, kept private — consumers read the `--font-scale`-scaled `fontSize` vars below.
-const fontSizeScale = {
-	_2xs: 9.4,
-	xs: 11.3,
-	sm: 13.1,
-	md: 15,
-	lg: 16.9,
-	xl: 18.8,
-	_2xl: 20.6,
-	_3xl: 24.3,
-	_4xl: 30,
-	_5xl: 37.5,
-} as const;
+/** Runtime font-size multiplier; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`. */
+export const fontScale = createVar();
+
+const scaled = (px: number) => `calc(${px}px * ${fallbackVar(fontScale, '1')})`;
 
 /**
- * Font-size scale as CSS variables, assigned once on `:root`, each scaling by `--font-scale` (default 1).
- * Consume `fontSize.sm` etc. from both `style()`/`styleVariants` and the sprinkles `fontSize` property.
+ * Font-size scale as CSS variables, assigned once on `:root`, each scaling by {@link fontScale}. Consume
+ * `fontSize.sm` etc. from both `style()`/`styleVariants` and the sprinkles `fontSize` property.
  */
-export const fontSize = createGlobalTheme(
-	':root',
-	Object.fromEntries(
-		Object.entries(fontSizeScale).map(([key, px]) => [key, `calc(${px}px * var(--font-scale, 1))`]),
-	) as Record<keyof typeof fontSizeScale, string>,
-);
+export const fontSize = createGlobalTheme(':root', {
+	_2xs: scaled(9.4),
+	xs: scaled(11.3),
+	sm: scaled(13.1),
+	md: scaled(15),
+	lg: scaled(16.9),
+	xl: scaled(18.8),
+	_2xl: scaled(20.6),
+	_3xl: scaled(24.3),
+	_4xl: scaled(30),
+	_5xl: scaled(37.5),
+});
