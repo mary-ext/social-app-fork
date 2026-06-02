@@ -220,7 +220,7 @@ export function Dialogs() {
 							variant="outline"
 							color="secondary"
 							size="small"
-							onPress={closeAllDialogs}
+							onPress={() => closeAllDialogs()}
 							label="Close all dialogs"
 						>
 							<ButtonText>Close all dialogs</ButtonText>

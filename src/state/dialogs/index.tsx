@@ -12,8 +12,13 @@ interface IDialogContext {
 	openDialogs: React.MutableRefObject<Set<string>>;
 }
 
+interface CloseAllDialogsOptions {
+	/** Dialog ids to leave open. */
+	except?: Iterable<string>;
+}
+
 interface IDialogControlContext {
-	closeAllDialogs(): boolean;
+	closeAllDialogs(opts?: CloseAllDialogsOptions): boolean;
 	setDialogIsOpen(id: string, isOpen: boolean): void;
 	setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -51,13 +56,16 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const activeDialogs = useRef<Map<string, React.MutableRefObject<DialogControlRefProps>>>(new Map());
 	const openDialogs = useRef<Set<string>>(new Set());
 
-	const closeAllDialogs = useCallback(() => {
-		openDialogs.current.forEach((id) => {
-			const dialog = activeDialogs.current.get(id);
-			if (dialog) dialog.current.close();
-		});
+	const closeAllDialogs = useCallback((opts: CloseAllDialogsOptions = {}) => {
+		const except = new Set(opts.except);
+		// snapshot before closing, since closing mutates openDialogs as each dialog reports back
+		const ids = [...openDialogs.current].filter((id) => !except.has(id));
 
-		return openDialogs.current.size > 0;
+		for (const id of ids) {
+			activeDialogs.current.get(id)?.current.close();
+		}
+
+		return ids.length > 0;
 	}, []);
 
 	const setDialogIsOpen = useCallback(
