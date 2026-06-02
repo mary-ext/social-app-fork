@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
-import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE } from '#/lib/constants';
+import { VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { VideoAsset } from '#/lib/media/video/types';
@@ -252,7 +252,7 @@ export function SelectMediaButton({
 				[SelectedAssetError.MaxVideos]: l`You can only select one video at a time.`,
 				[SelectedAssetError.VideoTooLong]: l`Videos must be less than 3 minutes long.`,
 				[SelectedAssetError.MaxGIFs]: l`You can only select one GIF at a time.`,
-				[SelectedAssetError.FileTooBig]: l`One or more of your selected files are too large. Maximum size is 100 MB.`,
+				[SelectedAssetError.FileTooBig]: l`One or more of your selected files are too large. Maximum size is ${VIDEO_MAX_SIZE_MB} MB.`,
 			}[error];
 		});
 

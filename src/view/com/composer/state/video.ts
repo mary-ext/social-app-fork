@@ -6,7 +6,7 @@ import { defineMessage } from '@lingui/core/macro';
 
 import { uploadBlob } from '#/lib/api/upload-blob';
 import { AbortError } from '#/lib/async/cancelable';
-import { LOCAL_DEV_SERVICE } from '#/lib/constants';
+import { LOCAL_DEV_SERVICE, VIDEO_MAX_SIZE_MB } from '#/lib/constants';
 import { compressVideo } from '#/lib/media/video/compress';
 import { ServerError, UploadLimitError, VideoTooLargeError } from '#/lib/media/video/errors';
 import type { CompressedVideo, VideoAsset } from '#/lib/media/video/types';
@@ -389,7 +389,7 @@ function getCompressErrorMessage(e: unknown, i18n: I18n): string | null {
 	}
 	if (e instanceof VideoTooLargeError) {
 		return i18n._(
-			defineMessage`The selected video is larger than 300 MB. Please try again with a smaller file.`,
+			defineMessage`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
 		);
 	}
 	logger.error('Error compressing video', { safeMessage: e });
@@ -423,7 +423,7 @@ function getUploadErrorMessage(e: unknown, i18n: I18n): string | null {
 				);
 			case 'file size (300000001 bytes) is larger than the maximum allowed size (300000000 bytes)':
 				return i18n._(
-					defineMessage`The selected video is larger than 300 MB. Please try again with a smaller file.`,
+					defineMessage`The selected video is larger than ${VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file.`,
 				);
 			case 'Confirm your email address to upload videos':
 				return i18n._(defineMessage`Please confirm your email address to upload videos.`);
