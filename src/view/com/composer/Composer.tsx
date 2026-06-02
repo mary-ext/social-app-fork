@@ -74,7 +74,6 @@ import { colors } from '#/lib/styles';
 import { useDialogStateControlContext } from '#/state/dialogs';
 import { emitPostCreated } from '#/state/events';
 import { type ComposerImage, createComposerImage } from '#/state/gallery';
-import { useModalControls } from '#/state/modals';
 import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences/languages';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
@@ -187,7 +186,6 @@ export const ComposePost = ({
 	const { mutateAsync: saveDraft, isPending: _isSavingDraft } = useSaveDraftMutation();
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
 	const { closeAllDialogs } = useDialogStateControlContext();
-	const { closeAllModals } = useModalControls();
 	const { data: preferences } = usePreferencesQuery();
 	const navigation = useNavigation<NavigationProp>();
 
@@ -614,7 +612,7 @@ export const ComposePost = ({
 	// On Android, pressing Back should ask confirmation.
 	useEffect(() => {
 		return;
-	}, [onPressCancel, closeAllDialogs, closeAllModals]);
+	}, [onPressCancel, closeAllDialogs]);
 
 	const missingAltError = useMemo(() => {
 		if (!requireAltTextEnabled) {

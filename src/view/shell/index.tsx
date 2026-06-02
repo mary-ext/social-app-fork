@@ -12,7 +12,6 @@ import { useIsDrawerOpen, useSetDrawerOpen } from '#/state/shell';
 import { useCloseAllActiveElements } from '#/state/util';
 
 import { OAuthCallback } from '#/view/com/auth/OAuthCallback';
-import { ModalsContainer } from '#/view/com/modals/Modal';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
 import { atoms as a, select, useBreakpoints, useTheme } from '#/alf';
@@ -52,7 +51,6 @@ function ShellInner() {
 				<FlatNavigator layout={drawerLayout} />
 			</ErrorBoundary>
 			<Composer winHeight={0} />
-			<ModalsContainer />
 			<MutedWordsDialog />
 			<SigninDialog />
 			<LinkWarningDialog />

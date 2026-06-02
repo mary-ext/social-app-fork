@@ -19,7 +19,6 @@ import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#
 import type { TypographyVariant } from '#/lib/ThemeContext';
 
 import { emitSoftReset } from '#/state/events';
-import { useModalControls } from '#/state/modals';
 
 import { WebAuxClickWrapper } from '#/view/com/util/WebAuxClickWrapper';
 
@@ -81,7 +80,6 @@ export const Link = memo(function Link({
 	...props
 }: Props) {
 	const t = useTheme();
-	const { closeModal } = useModalControls();
 	const navigation = useNavigationDeduped();
 	const anchorHref = asAnchor ? sanitizeUrl(href) : undefined;
 	const openLink = useOpenLink();
@@ -90,10 +88,10 @@ export const Link = memo(function Link({
 		(e?: Event) => {
 			onBeforePress?.();
 			if (typeof href === 'string') {
-				return onPressInner(closeModal, navigation, sanitizeUrl(href), navigationAction, openLink, e);
+				return onPressInner(navigation, sanitizeUrl(href), navigationAction, openLink, e);
 			}
 		},
-		[closeModal, navigation, navigationAction, href, openLink, onBeforePress],
+		[navigation, navigationAction, href, openLink, onBeforePress],
 	);
 
 	const accessibilityActionsWithActivate = [
@@ -188,7 +186,6 @@ export const TextLink = memo(function TextLink({
 	onBeforePress?: () => void;
 } & TextProps) {
 	const navigation = useNavigationDeduped();
-	const { closeModal } = useModalControls();
 	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
 	const openLink = useOpenLink();
 
@@ -219,12 +216,11 @@ export const TextLink = memo(function TextLink({
 				// @ts-expect-error function signature differs by platform -prf
 				return onPressProp();
 			}
-			return onPressInner(closeModal, navigation, sanitizeUrl(href), navigationAction, openLink, e);
+			return onPressInner(navigation, sanitizeUrl(href), navigationAction, openLink, e);
 		},
 		[
 			onBeforePress,
 			onPressProp,
-			closeModal,
 			navigation,
 			href,
 			text,
@@ -280,7 +276,6 @@ const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/'];
 // needed customizations
 // -prf
 function onPressInner(
-	closeModal = () => {},
 	navigation: DebouncedNavigationProp,
 	href: string,
 	navigationAction: 'push' | 'replace' | 'navigate' = 'push',
@@ -326,8 +321,6 @@ function onPressInner(
 		) {
 			openLink(href);
 		} else {
-			closeModal(); // close any active modals
-
 			const [routeName, params] = router.matchPath(href);
 			if (navigationAction === 'push') {
 				// @ts-ignore we're not able to type check on this one -prf

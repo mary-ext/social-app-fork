@@ -11,7 +11,6 @@ import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
 import type { Shadow } from '#/state/cache/types';
-import { useModalControls } from '#/state/modals';
 import {
 	RQKEY as profileQueryKey,
 	useProfileBlockMutationQueue,
@@ -26,6 +25,7 @@ import { EventStopper } from '#/view/com/util/EventStopper';
 
 import { Button, ButtonIcon } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
+import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon } from '#/components/icons/CircleCheck';
@@ -70,8 +70,8 @@ let ProfileMenu = ({
 }): React.ReactNode => {
 	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
-	const { openModal } = useModalControls();
 	const reportDialogControl = useReportDialogControl();
+	const addToListsDialogControl = useDialogControl();
 	const queryClient = useQueryClient();
 	const navigation = useNavigation<NavigationProp>();
 	const isSelf = currentAccount?.did === profile.did;
@@ -114,15 +114,6 @@ let ProfileMenu = ({
 	const onPressShare = useCallback(() => {
 		shareUrl(toShareUrl(makeProfileLink(profile)));
 	}, [profile]);
-
-	const onPressAddRemoveLists = useCallback(() => {
-		openModal({
-			name: 'user-add-remove-lists',
-			profile,
-			onAdd: invalidateProfileQuery,
-			onRemove: invalidateProfileQuery,
-		});
-	}, [profile, openModal, invalidateProfileQuery]);
 
 	const onPressMuteAccount = useCallback(async () => {
 		if (profile.viewer?.muted) {
@@ -316,7 +307,7 @@ let ProfileMenu = ({
 								<Menu.Item
 									testID="profileHeaderDropdownListAddRemoveBtn"
 									label={l`Add to lists`}
-									onPress={onPressAddRemoveLists}
+									onPress={addToListsDialogControl.open}
 								>
 									<Menu.ItemText>
 										<Trans>Add to lists</Trans>
@@ -457,6 +448,11 @@ let ProfileMenu = ({
 				</Menu.Outer>
 			</Menu.Root>
 			<StarterPackDialog control={addToStarterPacksDialogControl} targetDid={profile.did} />
+			<UserAddRemoveListsDialog
+				control={addToListsDialogControl}
+				profile={profile}
+				onChange={invalidateProfileQuery}
+			/>
 			<ReportDialog
 				control={reportDialogControl}
 				subject={

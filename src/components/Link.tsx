@@ -21,8 +21,6 @@ import {
 	linkRequiresWarning,
 } from '#/lib/strings/url-helpers';
 
-import { useModalControls } from '#/state/modals';
-
 import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
 
 import { Button, type ButtonProps } from '#/components/Button';
@@ -174,7 +172,6 @@ export function useLink({
 	}
 
 	const isExternal = isExternalUrl(href);
-	const { closeModal } = useModalControls();
 	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
 	const openLink = useOpenLink();
 
@@ -206,8 +203,6 @@ export function useLink({
 					} else if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
 						void openLink(href);
 					} else {
-						closeModal(); // close any active modals
-
 						const [screen, params] = router.matchPath(href) as [
 							screen: keyof AllNavigatorParams,
 							params?: RouteParams,
@@ -234,7 +229,6 @@ export function useLink({
 			isExternal,
 			href,
 			openLink,
-			closeModal,
 			action,
 			navigation,
 			linkWarningDialogControl,

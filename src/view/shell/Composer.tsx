@@ -4,7 +4,6 @@ import { RemoveScrollBar } from 'react-remove-scroll-bar';
 
 import { useReducedMotion } from '#/lib/reduced-motion';
 
-import { useModals } from '#/state/modals';
 import { type ComposerOpts, useComposerState } from '#/state/shell/composer';
 
 import { atoms as a, flatten, useBreakpoints, useTheme } from '#/alf';
@@ -43,7 +42,6 @@ export function Composer({}: { winHeight: number }) {
 
 function Inner({ state }: { state: ComposerOpts }) {
 	const ref = useComposerCancelRef();
-	const { isModalActive } = useModals();
 	const t = useTheme();
 	const { gtMobile } = useBreakpoints();
 	const reduceMotionEnabled = useReducedMotion();
@@ -67,10 +65,7 @@ function Inner({ state }: { state: ComposerOpts }) {
 				onFocusOutside={(evt) => evt.preventDefault()}
 				onInteractOutside={(evt) => evt.preventDefault()}
 				onDismiss={() => {
-					// TEMP: remove when all modals are ALF'd -sfn
-					if (!isModalActive) {
-						ref.current?.onPressCancel();
-					}
+					ref.current?.onPressCancel();
 				}}
 			>
 				<View

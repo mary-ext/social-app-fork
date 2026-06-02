@@ -14,7 +14,6 @@ import { Provider as MutedThreadsProvider } from '#/state/cache/thread-mutes';
 import { Provider as DialogStateProvider } from '#/state/dialogs';
 import { Provider as HomeBadgeProvider } from '#/state/home-badge';
 import { MessagesProvider } from '#/state/messages';
-import { Provider as ModalStateProvider } from '#/state/modals';
 import { Provider as PrefsStateProvider } from '#/state/preferences';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
 import { Provider as ModerationOptsProvider } from '#/state/preferences/moderation-opts';
@@ -131,17 +130,15 @@ function App() {
 			<PrefsStateProvider>
 				<I18nProvider>
 					<ShellStateProvider>
-						<ModalStateProvider>
-							<DialogStateProvider>
-								<LightboxStateProvider>
-									<PortalProvider>
-										<StarterPackProvider>
-											<InnerApp />
-										</StarterPackProvider>
-									</PortalProvider>
-								</LightboxStateProvider>
-							</DialogStateProvider>
-						</ModalStateProvider>
+						<DialogStateProvider>
+							<LightboxStateProvider>
+								<PortalProvider>
+									<StarterPackProvider>
+										<InnerApp />
+									</StarterPackProvider>
+								</PortalProvider>
+							</LightboxStateProvider>
+						</DialogStateProvider>
 					</ShellStateProvider>
 				</I18nProvider>
 			</PrefsStateProvider>
