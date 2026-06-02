@@ -531,11 +531,11 @@ msgstr ""
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:286
+#: src/screens/Profile/Header/EditProfileDialog.tsx:297
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:249
+#: src/screens/Profile/Header/EditProfileDialog.tsx:258
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
@@ -1756,15 +1756,15 @@ msgstr ""
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:296
 #: src/components/Prompt.tsx:121
 #: src/components/Prompt.tsx:122
-#: src/components/web/Prompt/index.tsx:95
+#: src/components/web/Prompt/index.tsx:101
 #: src/features/liveNow/components/GoLiveDialog.tsx:226
 #: src/features/liveNow/components/GoLiveDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:424
 #: src/screens/Messages/components/InviteLinkDialog.tsx:429
 #: src/screens/Messages/ConversationSettings/prompts.tsx:71
 #: src/screens/Messages/ConversationSettings/prompts.tsx:95
-#: src/screens/Profile/Header/EditProfileDialog.tsx:187
-#: src/screens/Profile/Header/EditProfileDialog.tsx:189
+#: src/screens/Profile/Header/EditProfileDialog.tsx:196
+#: src/screens/Profile/Header/EditProfileDialog.tsx:198
 #: src/screens/Search/Shell.tsx:354
 #: src/screens/Settings/Settings.tsx:238
 #: src/view/com/composer/Composer.tsx:1339
@@ -2104,7 +2104,7 @@ msgstr ""
 
 #: src/components/Prompt.tsx:171
 #: src/components/Prompt.tsx:175
-#: src/components/web/Prompt/index.tsx:71
+#: src/components/web/Prompt/index.tsx:77
 msgid "Confirm"
 msgstr ""
 
@@ -2546,8 +2546,8 @@ msgid "Deleted list"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:416
-#: src/screens/Profile/Header/EditProfileDialog.tsx:273
-#: src/screens/Profile/Header/EditProfileDialog.tsx:280
+#: src/screens/Profile/Header/EditProfileDialog.tsx:284
+#: src/screens/Profile/Header/EditProfileDialog.tsx:291
 msgid "Description"
 msgstr ""
 
@@ -2687,8 +2687,8 @@ msgstr ""
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:237
-#: src/screens/Profile/Header/EditProfileDialog.tsx:243
+#: src/screens/Profile/Header/EditProfileDialog.tsx:246
+#: src/screens/Profile/Header/EditProfileDialog.tsx:252
 msgid "Display name"
 msgstr ""
 
@@ -2757,7 +2757,7 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:244
+#: src/screens/Profile/Header/EditProfileDialog.tsx:253
 msgid "e.g. Alice Lastname"
 msgstr ""
 
@@ -2870,7 +2870,7 @@ msgid "Edit post interaction settings"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:60
-#: src/screens/Profile/Header/EditProfileDialog.tsx:195
+#: src/screens/Profile/Header/EditProfileDialog.tsx:204
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:268
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:311
 msgid "Edit profile"
@@ -2914,7 +2914,7 @@ msgid "Embedded video player"
 msgstr ""
 
 #. placeholder {0}: externalEmbedLabels[source]
-#: src/components/dialogs/EmbedConsent.tsx:79
+#: src/components/dialogs/EmbedConsent.tsx:85
 msgid "Enable {0} only"
 msgstr ""
 
@@ -2926,8 +2926,8 @@ msgstr ""
 msgid "Enable captions"
 msgstr "Enable captions"
 
-#: src/components/dialogs/EmbedConsent.tsx:72
-#: src/components/dialogs/EmbedConsent.tsx:74
+#: src/components/dialogs/EmbedConsent.tsx:78
+#: src/components/dialogs/EmbedConsent.tsx:80
 msgid "Enable external media"
 msgstr ""
 
@@ -2943,7 +2943,7 @@ msgstr ""
 msgid "Enable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:77
+#: src/components/dialogs/EmbedConsent.tsx:83
 msgid "Enable this source only"
 msgstr ""
 
@@ -3137,12 +3137,12 @@ msgstr "Export my profile data"
 msgid "External media"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:51
-#: src/components/dialogs/EmbedConsent.tsx:53
+#: src/components/dialogs/EmbedConsent.tsx:57
+#: src/components/dialogs/EmbedConsent.tsx:59
 msgid "External Media"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:64
+#: src/components/dialogs/EmbedConsent.tsx:70
 #: src/screens/Settings/ExternalMediaPreferences.tsx:39
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
@@ -3784,7 +3784,7 @@ msgstr ""
 #: src/components/Layout/Header/index.tsx:127
 #: src/components/moderation/ScreenHider.tsx:138
 #: src/components/moderation/ScreenHider.tsx:148
-#: src/components/web/Layout/Header.tsx:69
+#: src/components/web/Layout/Header.tsx:70
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
 #: src/screens/ProfileList/components/ErrorScreen.tsx:39
 #: src/view/com/auth/LoggedOut.tsx:68
@@ -4377,7 +4377,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:139
 #: src/components/verification/VerifierDialog.tsx:105
 #: src/screens/Moderation/VerificationSettings.tsx:47
-#: src/screens/Profile/Header/EditProfileDialog.tsx:262
+#: src/screens/Profile/Header/EditProfileDialog.tsx:273
 msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
@@ -5432,8 +5432,8 @@ msgstr ""
 msgid "No Starter Packs yet"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:82
-#: src/components/dialogs/EmbedConsent.tsx:84
+#: src/components/dialogs/EmbedConsent.tsx:88
+#: src/components/dialogs/EmbedConsent.tsx:90
 msgid "No thanks"
 msgstr ""
 
@@ -6893,8 +6893,8 @@ msgstr "Sad GIFs"
 #: src/features/liveNow/components/EditLiveDialog.tsx:171
 #: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:48
-#: src/screens/Profile/Header/EditProfileDialog.tsx:200
-#: src/screens/Profile/Header/EditProfileDialog.tsx:208
+#: src/screens/Profile/Header/EditProfileDialog.tsx:209
+#: src/screens/Profile/Header/EditProfileDialog.tsx:217
 #: src/screens/SavedFeeds.tsx:112
 #: src/view/com/composer/GifAltText.tsx:190
 #: src/view/com/composer/GifAltText.tsx:200
@@ -7986,7 +7986,7 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:281
+#: src/screens/Profile/Header/EditProfileDialog.tsx:292
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -8263,7 +8263,7 @@ msgid "This content has received a general warning from moderators."
 msgstr ""
 
 #. placeholder {0}: externalEmbedLabels[source]
-#: src/components/dialogs/EmbedConsent.tsx:58
+#: src/components/dialogs/EmbedConsent.tsx:64
 msgid "This content is hosted by {0}. Do you want to enable external media?"
 msgstr ""
 
@@ -9501,7 +9501,7 @@ msgstr ""
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:259
+#: src/screens/Profile/Header/EditProfileDialog.tsx:270
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 

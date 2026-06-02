@@ -3,7 +3,7 @@ import { createVar, style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens';
 
-const textMd = `calc(var(--font-scale, 1) * ${fontSize.md}px)`;
+const textSm = `calc(var(--font-scale, 1) * ${fontSize.sm}px)`;
 
 /** Icon tint, kept one notch lighter than the item text and overridden for destructive/disabled items. */
 export const iconColor = createVar();
@@ -36,12 +36,14 @@ export const popup = style({
 export const item = style({
 	alignItems: 'center',
 	borderRadius: '4px',
+	boxSizing: 'border-box',
 	color: vars.palette.contrast_900,
 	cursor: 'pointer',
 	display: 'flex',
-	fontSize: textMd,
+	fontSize: textSm,
 	fontWeight: 600,
 	gap: '16px',
+	lineHeight: 1,
 	minHeight: '32px',
 	outline: 0,
 	paddingBlock: '8px',
@@ -83,8 +85,9 @@ export const itemIconRight = style({
 });
 
 export const groupLabel = style({
+	boxSizing: 'border-box',
 	color: vars.palette.contrast_400,
-	fontSize: textMd,
+	fontSize: textSm,
 	fontWeight: 600,
 	lineHeight: 1.3,
 	paddingBlock: '8px',
