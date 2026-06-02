@@ -1,7 +1,7 @@
 import { style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens';
+import { fontSize } from '#/styles/tokens.css';
 
 export const base = style({
 	alignItems: 'center',
@@ -28,13 +28,13 @@ export const base = style({
 
 export const size = styleVariants({
 	large: {
-		fontSize: `calc(var(--font-scale, 1) * ${fontSize.md}px)`,
+		fontSize: fontSize.md,
 		gap: '6px',
 		paddingBlock: '12px',
 		paddingInline: '24px',
 	},
 	small: {
-		fontSize: `calc(var(--font-scale, 1) * ${fontSize.sm}px)`,
+		fontSize: fontSize.sm,
 		gap: '5px',
 		paddingBlock: '8px',
 		paddingInline: '14px',

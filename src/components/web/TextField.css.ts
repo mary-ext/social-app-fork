@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens';
+import { fontSize } from '#/styles/tokens.css';
 
 const FONT_FAMILY = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
 
@@ -9,7 +9,7 @@ export const label = style({
 	color: vars.palette.contrast_700,
 	display: 'block',
 	fontFamily: FONT_FAMILY,
-	fontSize: `calc(var(--font-scale, 1) * ${fontSize.sm}px)`,
+	fontSize: fontSize.sm,
 	fontWeight: 500,
 	marginBottom: '8px',
 });
@@ -23,7 +23,7 @@ export const input = style({
 	color: vars.palette.contrast_1000,
 	display: 'block',
 	fontFamily: FONT_FAMILY,
-	fontSize: `calc(var(--font-scale, 1) * ${fontSize.md}px)`,
+	fontSize: fontSize.md,
 	lineHeight: 1.2,
 	margin: 0,
 	outline: 'none',

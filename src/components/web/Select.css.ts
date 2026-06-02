@@ -1,9 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens';
-
-const textSm = `calc(var(--font-scale, 1) * ${fontSize.sm}px)`;
+import { fontSize } from '#/styles/tokens.css';
 
 export const trigger = style({
 	alignItems: 'center',
@@ -14,7 +12,7 @@ export const trigger = style({
 	color: vars.palette.contrast_1000,
 	cursor: 'pointer',
 	display: 'flex',
-	fontSize: textSm,
+	fontSize: fontSize.sm,
 	gap: '8px',
 	justifyContent: 'space-between',
 	maxWidth: '400px',
@@ -66,7 +64,7 @@ export const item = style({
 	color: vars.palette.contrast_1000,
 	cursor: 'pointer',
 	display: 'flex',
-	fontSize: textSm,
+	fontSize: fontSize.sm,
 	minHeight: '25px',
 	outline: 0,
 	paddingBlock: '2px',

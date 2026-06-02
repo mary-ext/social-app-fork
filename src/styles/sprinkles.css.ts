@@ -1,7 +1,7 @@
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, fontSize, fontWeight, lineHeight, space } from '#/styles/tokens';
+import { borderRadius, fontSize, fontWeight, lineHeight, space } from '#/styles/tokens.css';
 
 const px = <T extends Record<string, number>>(scale: T): { [K in keyof T]: string } => {
 	const out = {} as { -readonly [K in keyof T]: string };
@@ -10,16 +10,6 @@ const px = <T extends Record<string, number>>(scale: T): { [K in keyof T]: strin
 	}
 	return out;
 };
-
-// font sizes scale via a `--font-scale` custom property on <html> (default 1), so user font-size
-// preferences flow through without per-component JS. see `#/styles` wiring in the ALF font context.
-const scaledFontSize = (() => {
-	const out = {} as { -readonly [K in keyof typeof fontSize]: string };
-	for (const k of Object.keys(fontSize) as (keyof typeof fontSize)[]) {
-		out[k] = `calc(var(--font-scale, 1) * ${fontSize[k]}px)`;
-	}
-	return out;
-})();
 
 const spacing = { none: '0px', ...px(space) };
 const spacingAuto = { ...spacing, auto: 'auto' };
@@ -63,7 +53,7 @@ const responsive = defineProperties({
 		flexGrow: [0, 1],
 		flexShrink: [0, 1],
 		flexWrap: ['nowrap', 'wrap'],
-		fontSize: scaledFontSize,
+		fontSize,
 		fontWeight,
 		gap: spacing,
 		height: { auto: 'auto', full: '100%' },

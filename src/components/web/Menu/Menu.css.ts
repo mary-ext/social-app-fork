@@ -1,9 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens';
-
-const textSm = `calc(var(--font-scale, 1) * ${fontSize.sm}px)`;
+import { fontSize } from '#/styles/tokens.css';
 
 /** Icon tint, kept one notch lighter than the item text and overridden for destructive/disabled items. */
 export const iconColor = createVar();
@@ -40,7 +38,7 @@ export const item = style({
 	color: vars.palette.contrast_900,
 	cursor: 'pointer',
 	display: 'flex',
-	fontSize: textSm,
+	fontSize: fontSize.sm,
 	fontWeight: 600,
 	gap: '16px',
 	lineHeight: 1,
@@ -87,7 +85,7 @@ export const itemIconRight = style({
 export const groupLabel = style({
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_400,
-	fontSize: textSm,
+	fontSize: fontSize.sm,
 	fontWeight: 600,
 	lineHeight: 1.3,
 	paddingBlock: '8px',

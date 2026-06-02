@@ -1,9 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens';
-
-const textMd = `calc(var(--font-scale, 1) * ${fontSize.md}px)`;
+import { fontSize } from '#/styles/tokens.css';
 
 export const group = style({
 	display: 'flex',
@@ -68,7 +66,7 @@ export const indicator = style({
 
 export const text = style({
 	flex: 1,
-	fontSize: textMd,
+	fontSize: fontSize.md,
 	selectors: {
 		[`${row}[data-checked] &`]: {
 			color: vars.palette.contrast_1000,

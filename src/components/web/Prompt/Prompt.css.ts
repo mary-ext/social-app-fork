@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens';
+import { fontSize } from '#/styles/tokens.css';
 
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
@@ -23,7 +23,7 @@ export const popup = style({
 
 export const title = style({
 	color: vars.palette.contrast_1000,
-	fontSize: `calc(var(--font-scale, 1) * ${fontSize._2xl}px)`,
+	fontSize: fontSize._2xl,
 	fontWeight: 600,
 	lineHeight: 1.3,
 	margin: 0,
@@ -32,7 +32,7 @@ export const title = style({
 
 export const description = style({
 	color: vars.palette.contrast_900,
-	fontSize: `calc(var(--font-scale, 1) * ${fontSize.md}px)`,
+	fontSize: fontSize.md,
 	lineHeight: 1.3,
 	margin: 0,
 	paddingBottom: '16px',
