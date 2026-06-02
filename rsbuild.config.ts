@@ -4,6 +4,7 @@ import { defineConfig } from '@rsbuild/core';
 import { pluginBabel } from '@rsbuild/plugin-babel';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
+import { VanillaExtractPlugin } from '@vanilla-extract/webpack-plugin';
 
 import oauthMetadata from './public/oauth-client-metadata.json' with { type: 'json' };
 
@@ -38,6 +39,9 @@ export default defineConfig(({ envMode }) => {
 		plugins: [
 			pluginReact(),
 			pluginBabel({
+				// vanilla-extract `.css.ts` files are build-evaluated by VanillaExtractPlugin, not runtime
+				// code — keep them out of the babel pipeline (notably react-compiler) entirely.
+				exclude: /\.css\.ts$/,
 				include: transpiledPaths,
 				babelLoaderOptions(options, { addPlugins }) {
 					options.presets = [];
@@ -127,9 +131,11 @@ export default defineConfig(({ envMode }) => {
 		},
 		tools: {
 			rspack(config) {
+				config.plugins ??= [];
+				config.plugins.push(new VanillaExtractPlugin());
+
 				// opt-in bundle analysis: `RSDOCTOR=true pnpm build`
 				if (process.env.RSDOCTOR) {
-					config.plugins ??= [];
 					config.plugins.push(
 						new RsdoctorRspackPlugin({
 							disableClientServer: !process.stdout.isTTY,
