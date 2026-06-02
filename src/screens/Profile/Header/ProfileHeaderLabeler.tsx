@@ -29,7 +29,8 @@ import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
 import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
-import { type DialogOuterProps, useDialogControl } from '#/components/Dialog';
+import type { DialogOuterProps } from '#/components/Dialog';
+import * as Sheet from '#/components/web/Sheet';
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 	Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -225,7 +226,7 @@ export function HeaderLabelerButtons({
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const requireAuth = useRequireAuth();
-	const editProfileControl = useDialogControl();
+	const editProfileHandle = Sheet.useSheetHandle();
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: toggleSubscription, variables, reset } = useLabelerSubscriptionMutation();
 	const isSubscribed =
@@ -263,7 +264,7 @@ export function HeaderLabelerButtons({
 						testID="profileHeaderEditProfileButton"
 						size="small"
 						color="secondary"
-						onPress={editProfileControl.open}
+						onPress={() => editProfileHandle.open(null)}
 						label={l`Edit profile`}
 						style={a.rounded_full}
 					>
@@ -271,7 +272,7 @@ export function HeaderLabelerButtons({
 							<Trans>Edit Profile</Trans>
 						</ButtonText>
 					</Button>
-					<EditProfileDialog profile={profile} control={editProfileControl} />
+					<EditProfileDialog profile={profile} handle={editProfileHandle} />
 				</>
 			) : !isAppLabeler(profile.did) && !minimal ? (
 				// hidden in the minimal header, because it's not shadowed so the two buttons

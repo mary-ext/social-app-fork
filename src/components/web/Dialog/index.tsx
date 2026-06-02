@@ -22,13 +22,16 @@ export function useDialogHandle() {
 
 type DialogActions = { close: () => void; unmount: () => void };
 
+/** Reason + cancel handle for an open-state change; `cancel()` prevents Base UI from honouring it. */
+export type OpenChangeDetails = { reason: string; cancel: () => void };
+
 export type RootProps = {
 	children?: ReactNode;
 	handle?: ReturnType<typeof createHandle>;
 	modal?: boolean | 'trap-focus';
 	open?: boolean;
 	defaultOpen?: boolean;
-	onOpenChange?: (open: boolean) => void;
+	onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
 };
 
 export function Root({ children, handle, modal, open, defaultOpen, onOpenChange }: RootProps) {
@@ -42,9 +45,9 @@ export function Root({ children, handle, modal, open, defaultOpen, onOpenChange 
 			defaultOpen={defaultOpen}
 			handle={handle}
 			modal={modal}
-			onOpenChange={(next) => {
+			onOpenChange={(next, details) => {
 				registerOpen(next);
-				onOpenChange?.(next);
+				onOpenChange?.(next, details);
 			}}
 			open={open}
 		>

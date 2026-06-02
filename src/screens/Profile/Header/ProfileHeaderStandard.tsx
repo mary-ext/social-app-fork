@@ -27,8 +27,9 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
-import { useDialogControl } from '#/components/Dialog';
 import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
+import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
+import * as Sheet from '#/components/web/Sheet';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/KnownFollowers';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -223,7 +224,7 @@ export function HeaderStandardButtons({
 	const requireAuth = useRequireAuth();
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileHeader');
 	const [, queueUnblock] = useProfileBlockMutationQueue(profile);
-	const editProfileControl = useDialogControl();
+	const editProfileHandle = Sheet.useSheetHandle();
 	const unblockPromptControl = Prompt.usePromptControl();
 
 	const isMe = currentAccount?.did === profile.did;
@@ -305,20 +306,15 @@ export function HeaderStandardButtons({
 		<>
 			{isMe ? (
 				<>
-					<Button
-						testID="profileHeaderEditProfileButton"
-						size="small"
-						color="secondary"
-						onPress={() => {
-							editProfileControl.open();
-						}}
-						label={l`Edit profile`}
+					<Sheet.Trigger
+						handle={editProfileHandle}
+						render={<WebButton label={l`Edit profile`} color="secondary" size="small" />}
 					>
-						<ButtonText>
+						<WebButtonText>
 							<Trans>Edit Profile</Trans>
-						</ButtonText>
-					</Button>
-					<EditProfileDialog profile={profile} control={editProfileControl} />
+						</WebButtonText>
+					</Sheet.Trigger>
+					<EditProfileDialog profile={profile} handle={editProfileHandle} />
 				</>
 			) : profile.viewer?.blocking ? (
 				profile.viewer?.blockingByList ? null : (

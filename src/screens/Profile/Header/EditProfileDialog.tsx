@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
@@ -16,88 +15,85 @@ import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 import { EditableUserAvatar } from '#/view/com/util/UserAvatar';
 import { UserBanner } from '#/view/com/util/UserBanner';
 
-import { atoms as a, useTheme } from '#/alf';
+import { sprinkles } from '#/styles/sprinkles.css';
 
-import { Admonition } from '#/components/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as TextField from '#/components/forms/TextField';
 import { InlineLinkText } from '#/components/Link';
 import { Loader } from '#/components/Loader';
-import * as Prompt from '#/components/Prompt';
-import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Prompt from '#/components/web/Prompt';
+import * as Sheet from '#/components/web/Sheet';
+import { Text } from '#/components/web/Text';
+import * as TextField from '#/components/web/TextField';
 import { useSimpleVerificationState } from '#/components/verification';
+
+import * as styles from '#/screens/Profile/Header/EditProfileDialog.css';
+
+const errorTextClass = sprinkles({ marginTop: 'xs' });
 
 export function EditProfileDialog({
 	profile,
-	control,
+	handle,
 	onUpdate,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	control: Dialog.DialogControlProps;
+	handle: ReturnType<typeof Sheet.createHandle>;
 	onUpdate?: () => void;
 }) {
 	const { t: l } = useLingui();
-	const cancelControl = Dialog.useDialogControl();
+	const cancelHandle = Prompt.usePromptHandle();
 	const [dirty, setDirty] = useState(false);
 
-	const onPressCancel = useCallback(() => {
-		if (dirty) {
-			cancelControl.open();
-		} else {
-			control.close();
-		}
-	}, [dirty, control, cancelControl]);
-
 	return (
-		<Dialog.Outer
-			control={control}
-			nativeOptions={{
-				preventDismiss: dirty,
-				fullHeight: true,
-			}}
-			webOptions={{
-				onBackgroundPress: () => {
-					if (dirty) {
-						cancelControl.open();
-					} else {
-						control.close();
+		<>
+			<Sheet.Root
+				handle={handle}
+				onOpenChange={(open, details) => {
+					// guard every non-imperative dismissal while dirty (escape/backdrop, and the focus-out
+					// caused by the discard prompt itself) — Save/Discard close imperatively and pass through
+					if (!open && dirty && details.reason !== 'imperative-action') {
+						details.cancel();
+						cancelHandle.open(null);
 					}
-				},
-			}}
-			testID="editProfileModal"
-		>
-			<DialogInner profile={profile} onUpdate={onUpdate} setDirty={setDirty} onPressCancel={onPressCancel} />
+				}}
+			>
+				<Sheet.Popup label={l`Edit profile`}>
+					<DialogInner
+						profile={profile}
+						handle={handle}
+						onUpdate={onUpdate}
+						cancelHandle={cancelHandle}
+						setDirty={setDirty}
+					/>
+				</Sheet.Popup>
+			</Sheet.Root>
 			<Prompt.Basic
-				control={cancelControl}
+				handle={cancelHandle}
 				title={l`Discard changes?`}
 				description={l`Are you sure you want to discard your changes?`}
-				onConfirm={() => control.close()}
+				onConfirm={() => handle.close()}
 				confirmButtonCta={l`Discard`}
 				confirmButtonColor="negative"
 			/>
-		</Dialog.Outer>
+		</>
 	);
 }
 
 function DialogInner({
 	profile,
+	handle,
 	onUpdate,
+	cancelHandle,
 	setDirty,
-	onPressCancel,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
+	handle: ReturnType<typeof Sheet.createHandle>;
 	onUpdate?: () => void;
+	cancelHandle: ReturnType<typeof Prompt.createHandle>;
 	setDirty: (dirty: boolean) => void;
-	onPressCancel: () => void;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
-	const control = Dialog.useDialogContext();
-	const verification = useSimpleVerificationState({
-		profile,
-	});
+	const verification = useSimpleVerificationState({ profile });
 	const {
 		mutateAsync: updateProfileMutation,
 		error: updateProfileError,
@@ -124,41 +120,46 @@ function DialogInner({
 		setDirty(dirty);
 	}, [dirty, setDirty]);
 
-	const onSelectNewAvatar = useCallback(
-		(img: ImageMeta | null) => {
-			setImageError('');
-			if (img === null) {
-				setNewUserAvatar(null);
-				setUserAvatar(null);
-				return;
-			}
-			try {
-				setNewUserAvatar(img);
-				setUserAvatar(URL.createObjectURL(img.blob));
-			} catch (e) {
-				setImageError(cleanError(e));
-			}
-		},
-		[setNewUserAvatar, setUserAvatar, setImageError],
-	);
+	const onRequestClose = useCallback(() => {
+		if (dirty) {
+			cancelHandle.open(null);
+		} else {
+			handle.close();
+		}
+	}, [dirty, handle, cancelHandle]);
 
-	const onSelectNewBanner = useCallback(
-		(img: ImageMeta | null) => {
-			setImageError('');
-			if (!img) {
-				setNewUserBanner(null);
-				setUserBanner(null);
-				return;
-			}
-			try {
-				setNewUserBanner(img);
-				setUserBanner(URL.createObjectURL(img.blob));
-			} catch (e) {
-				setImageError(cleanError(e));
-			}
-		},
-		[setNewUserBanner, setUserBanner, setImageError],
-	);
+	const onSelectNewAvatar = useCallback((img: ImageMeta | null) => {
+		setImageError('');
+		if (img === null) {
+			setNewUserAvatar(null);
+			setUserAvatar(null);
+			return;
+		}
+		try {
+			setNewUserAvatar(img);
+			setUserAvatar(URL.createObjectURL(img.blob));
+		} catch (e) {
+			setImageError(cleanError(e));
+		}
+	}, []);
+
+	const onSelectNewBanner = useCallback((img: ImageMeta | null) => {
+		setImageError('');
+		if (!img) {
+			setNewUserBanner(null);
+			setUserBanner(null);
+			return;
+		}
+		try {
+			setNewUserBanner(img);
+			setUserBanner(URL.createObjectURL(img.blob));
+		} catch (e) {
+			setImageError(cleanError(e));
+		}
+	}, []);
+
+	const displayNameTooLong = isOverMaxGraphemeCount({ text: displayName, maxCount: MAX_DISPLAY_NAME });
+	const descriptionTooLong = isOverMaxGraphemeCount({ text: description, maxCount: MAX_DESCRIPTION });
 
 	const onPressSave = useCallback(async () => {
 		setImageError('');
@@ -172,180 +173,125 @@ function DialogInner({
 				newUserAvatar,
 				newUserBanner,
 			});
-			control.close(() => onUpdate?.());
-			Toast.show(l({ message: 'Profile updated', context: 'toast' }));
+			handle.close();
+			onUpdate?.();
 		} catch (e) {
 			logger.error('Failed to update user profile', { message: String(e) });
 		}
-	}, [
-		updateProfileMutation,
-		profile,
-		onUpdate,
-		control,
-		displayName,
-		description,
-		newUserAvatar,
-		newUserBanner,
-		setImageError,
-		l,
-	]);
-
-	const displayNameTooLong = isOverMaxGraphemeCount({
-		text: displayName,
-		maxCount: MAX_DISPLAY_NAME,
-	});
-	const descriptionTooLong = isOverMaxGraphemeCount({
-		text: description,
-		maxCount: MAX_DESCRIPTION,
-	});
-
-	const cancelButton = useCallback(
-		() => (
-			<Button
-				label={l`Cancel`}
-				onPress={onPressCancel}
-				size="small"
-				color="primary"
-				variant="ghost"
-				style={[a.rounded_full]}
-				testID="editProfileCancelBtn"
-			>
-				<ButtonText style={[a.text_md]}>
-					<Trans>Cancel</Trans>
-				</ButtonText>
-			</Button>
-		),
-		[onPressCancel, l],
-	);
-
-	const saveButton = useCallback(
-		() => (
-			<Button
-				label={l`Save`}
-				onPress={onPressSave}
-				disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
-				size="small"
-				color="primary"
-				variant="ghost"
-				style={[a.rounded_full]}
-				testID="editProfileSaveBtn"
-			>
-				<ButtonText style={[a.text_md, !dirty && t.atoms.text_contrast_low]}>
-					<Trans>Save</Trans>
-				</ButtonText>
-				{isUpdatingProfile && <ButtonIcon icon={Loader} />}
-			</Button>
-		),
-		[l, t, dirty, onPressSave, isUpdatingProfile, displayNameTooLong, descriptionTooLong],
-	);
+	}, [updateProfileMutation, profile, onUpdate, handle, displayName, description, newUserAvatar, newUserBanner]);
 
 	return (
-		<Dialog.ScrollableInner
-			label={l`Edit profile`}
-			style={[a.overflow_hidden]}
-			contentContainerStyle={[a.px_0, a.pt_0]}
-			header={
-				<Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
-					<Dialog.HeaderText>
+		<>
+			<Sheet.Header.Outer>
+				<Sheet.Header.Slot>
+					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
+						<ButtonText>
+							<Trans>Cancel</Trans>
+						</ButtonText>
+					</Button>
+				</Sheet.Header.Slot>
+				<Sheet.Header.Content>
+					<Sheet.Header.TitleText>
 						<Trans>Edit profile</Trans>
-					</Dialog.HeaderText>
-				</Dialog.Header>
-			}
-		>
-			<View style={[a.relative]}>
-				<UserBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
-				<View
-					style={[
-						a.absolute,
-						{
-							top: 80,
-							left: 20,
-							width: 84,
-							height: 84,
-							borderWidth: 2,
-							borderRadius: 42,
-							borderColor: t.atoms.bg.backgroundColor,
-						},
-					]}
-				>
-					<EditableUserAvatar size={80} avatar={userAvatar} onSelectNewAvatar={onSelectNewAvatar} />
-				</View>
-			</View>
-			{isUpdateProfileError && (
-				<View style={[a.mt_xl]}>
-					<ErrorMessage message={cleanError(updateProfileError)} />
-				</View>
-			)}
-			{imageError !== '' && (
-				<View style={[a.mt_xl]}>
-					<ErrorMessage message={imageError} />
-				</View>
-			)}
-			<View style={[a.mt_4xl, a.px_xl, a.gap_xl]}>
-				<View>
-					<TextField.LabelText>
-						<Trans>Display name</Trans>
-					</TextField.LabelText>
-					<TextField.Root isInvalid={displayNameTooLong}>
-						<Dialog.Input
-							defaultValue={displayName}
-							onChangeText={setDisplayName}
-							label={l`Display name`}
-							placeholder={l`e.g. Alice Lastname`}
-							testID="editProfileDisplayNameInput"
-						/>
-					</TextField.Root>
-					{displayNameTooLong && (
-						<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-							<Plural
-								value={MAX_DISPLAY_NAME}
-								other="Display name is too long. The maximum number of characters is #."
-							/>
-						</Text>
-					)}
-				</View>
+					</Sheet.Header.TitleText>
+				</Sheet.Header.Content>
+				<Sheet.Header.Slot>
+					<Button
+						label={l`Save`}
+						variant="ghost"
+						color="primary"
+						size="small"
+						disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
+						onClick={onPressSave}
+					>
+						<ButtonText>
+							<Trans>Save</Trans>
+						</ButtonText>
+						{isUpdatingProfile && <ButtonIcon icon={Loader} />}
+					</Button>
+				</Sheet.Header.Slot>
+			</Sheet.Header.Outer>
 
-				{verification.isVerified && verification.role === 'default' && displayName !== initialDisplayName && (
-					<Admonition type="error">
-						<Trans>
-							You are verified. You will lose your verification status if you change your display name.{' '}
-							<InlineLinkText
-								label={l({
-									message: `Learn more`,
-									context: `english-only-resource`,
-								})}
-								to={urls.website.blog.initialVerificationAnnouncement}
-							>
-								<Trans context="english-only-resource">Learn more.</Trans>
-							</InlineLinkText>
-						</Trans>
-					</Admonition>
+			<Sheet.Body>
+				<div className={styles.bannerWrap}>
+					<UserBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
+					<div className={styles.avatar}>
+						<EditableUserAvatar size={80} avatar={userAvatar} onSelectNewAvatar={onSelectNewAvatar} />
+					</div>
+				</div>
+
+				{isUpdateProfileError && (
+					<div className={styles.errorWrap}>
+						<ErrorMessage message={cleanError(updateProfileError)} />
+					</div>
+				)}
+				{imageError !== '' && (
+					<div className={styles.errorWrap}>
+						<ErrorMessage message={imageError} />
+					</div>
 				)}
 
-				<View>
-					<TextField.LabelText>
-						<Trans>Description</Trans>
-					</TextField.LabelText>
-					<TextField.Root isInvalid={descriptionTooLong}>
-						<Dialog.Input
-							defaultValue={description}
-							onChangeText={setDescription}
-							multiline
-							label={l`Description`}
-							placeholder={l`Tell us a bit about yourself`}
-							testID="editProfileDescriptionInput"
-						/>
-					</TextField.Root>
-					{descriptionTooLong && (
-						<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
-							<Plural
-								value={MAX_DESCRIPTION}
-								other="Description is too long. The maximum number of characters is #."
+				<div className={styles.fields}>
+					<div>
+						<TextField.LabelText>
+							<Trans>Display name</Trans>
+						</TextField.LabelText>
+						<TextField.Root isInvalid={displayNameTooLong}>
+							<TextField.Input
+								defaultValue={displayName}
+								onChangeText={setDisplayName}
+								label={l`Display name`}
+								placeholder={l`e.g. Alice Lastname`}
 							/>
-						</Text>
+						</TextField.Root>
+						{displayNameTooLong && (
+							<Text size="sm" weight="semiBold" color="negative_400" className={errorTextClass}>
+								<Plural
+									value={MAX_DISPLAY_NAME}
+									other="Display name is too long. The maximum number of characters is #."
+								/>
+							</Text>
+						)}
+					</div>
+
+					{verification.isVerified && verification.role === 'default' && displayName !== initialDisplayName && (
+						<Admonition type="error">
+							<Trans>
+								You are verified. You will lose your verification status if you change your display name.{' '}
+								<InlineLinkText
+									label={l({ message: `Learn more`, context: `english-only-resource` })}
+									to={urls.website.blog.initialVerificationAnnouncement}
+								>
+									<Trans context="english-only-resource">Learn more.</Trans>
+								</InlineLinkText>
+							</Trans>
+						</Admonition>
 					)}
-				</View>
-			</View>
-		</Dialog.ScrollableInner>
+
+					<div>
+						<TextField.LabelText>
+							<Trans>Description</Trans>
+						</TextField.LabelText>
+						<TextField.Root isInvalid={descriptionTooLong}>
+							<TextField.Input
+								defaultValue={description}
+								onChangeText={setDescription}
+								multiline
+								label={l`Description`}
+								placeholder={l`Tell us a bit about yourself`}
+							/>
+						</TextField.Root>
+						{descriptionTooLong && (
+							<Text size="sm" weight="semiBold" color="negative_400" className={errorTextClass}>
+								<Plural
+									value={MAX_DESCRIPTION}
+									other="Description is too long. The maximum number of characters is #."
+								/>
+							</Text>
+						)}
+					</div>
+				</div>
+			</Sheet.Body>
+		</>
 	);
 }

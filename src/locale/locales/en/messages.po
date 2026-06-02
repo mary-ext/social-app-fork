@@ -531,11 +531,11 @@ msgstr ""
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:341
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:300
+#: src/screens/Profile/Header/EditProfileDialog.tsx:249
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
@@ -852,8 +852,8 @@ msgid "Account removed from quick access"
 msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:95
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:80
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:281
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:81
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:282
 #: src/view/com/profile/ProfileMenu.tsx:150
 msgctxt "toast"
 msgid "Account unblocked"
@@ -1407,7 +1407,7 @@ msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:101
-#: src/screens/Profile/Header/EditProfileDialog.tsx:75
+#: src/screens/Profile/Header/EditProfileDialog.tsx:73
 msgid "Are you sure you want to discard your changes?"
 msgstr ""
 
@@ -1509,7 +1509,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatStatusInfo.tsx:65
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 #: src/screens/Messages/ConversationSettings/prompts.tsx:116
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:191
 #: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Block"
 msgstr ""
@@ -1763,8 +1763,8 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:429
 #: src/screens/Messages/ConversationSettings/prompts.tsx:71
 #: src/screens/Messages/ConversationSettings/prompts.tsx:95
-#: src/screens/Profile/Header/EditProfileDialog.tsx:205
-#: src/screens/Profile/Header/EditProfileDialog.tsx:214
+#: src/screens/Profile/Header/EditProfileDialog.tsx:187
+#: src/screens/Profile/Header/EditProfileDialog.tsx:189
 #: src/screens/Search/Shell.tsx:354
 #: src/screens/Settings/Settings.tsx:238
 #: src/view/com/composer/Composer.tsx:1339
@@ -2033,7 +2033,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:310
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
-#: src/components/web/Dialog/index.tsx:85
+#: src/components/web/Dialog/index.tsx:88
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""
@@ -2546,8 +2546,8 @@ msgid "Deleted list"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:416
-#: src/screens/Profile/Header/EditProfileDialog.tsx:327
-#: src/screens/Profile/Header/EditProfileDialog.tsx:334
+#: src/screens/Profile/Header/EditProfileDialog.tsx:273
+#: src/screens/Profile/Header/EditProfileDialog.tsx:280
 msgid "Description"
 msgstr ""
 
@@ -2622,7 +2622,7 @@ msgid "Disabled"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:103
-#: src/screens/Profile/Header/EditProfileDialog.tsx:77
+#: src/screens/Profile/Header/EditProfileDialog.tsx:75
 #: src/view/com/composer/Composer.tsx:1042
 #: src/view/com/composer/Composer.tsx:1080
 #: src/view/com/composer/Composer.tsx:1283
@@ -2632,7 +2632,7 @@ msgid "Discard"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
-#: src/screens/Profile/Header/EditProfileDialog.tsx:74
+#: src/screens/Profile/Header/EditProfileDialog.tsx:72
 msgid "Discard changes?"
 msgstr ""
 
@@ -2687,8 +2687,8 @@ msgstr ""
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:287
-#: src/screens/Profile/Header/EditProfileDialog.tsx:293
+#: src/screens/Profile/Header/EditProfileDialog.tsx:237
+#: src/screens/Profile/Header/EditProfileDialog.tsx:243
 msgid "Display name"
 msgstr ""
 
@@ -2757,7 +2757,7 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:294
+#: src/screens/Profile/Header/EditProfileDialog.tsx:244
 msgid "e.g. Alice Lastname"
 msgstr ""
 
@@ -2863,15 +2863,15 @@ msgstr ""
 msgid "Edit post interaction settings"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:244
-#: src/screens/Profile/Header/EditProfileDialog.tsx:250
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:315
+#: src/screens/Profile/Header/EditProfileDialog.tsx:60
+#: src/screens/Profile/Header/EditProfileDialog.tsx:195
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:268
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:311
 msgid "Edit profile"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:271
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:318
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:272
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
 msgid "Edit Profile"
 msgstr ""
 
@@ -3499,7 +3499,7 @@ msgstr "Focus the search field"
 #: src/components/ProfileHoverCard/index.tsx:473
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:369
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
 #: src/view/com/notifications/NotificationFeedItem.tsx:748
 #: src/view/com/notifications/NotificationFeedItem.tsx:755
 msgid "Follow"
@@ -3507,7 +3507,7 @@ msgstr ""
 
 #. placeholder {0}: profile.handle
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:119
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:359
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:355
 msgid "Follow {0}"
 msgstr ""
 
@@ -3528,7 +3528,7 @@ msgstr ""
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:483
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:367
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:363
 #: src/view/com/notifications/NotificationFeedItem.tsx:748
 #: src/view/com/notifications/NotificationFeedItem.tsx:755
 msgid "Follow back"
@@ -3580,7 +3580,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:473
 #: src/Navigation.tsx:597
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:361
 #: src/view/com/notifications/NotificationFeedItem.tsx:726
 #: src/view/com/notifications/NotificationFeedItem.tsx:743
 msgid "Following"
@@ -3596,7 +3596,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:439
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:238
 #: src/view/com/notifications/NotificationFeedItem.tsx:686
 msgid "Following {0}"
 msgstr ""
@@ -4371,7 +4371,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:139
 #: src/components/verification/VerifierDialog.tsx:105
 #: src/screens/Moderation/VerificationSettings.tsx:47
-#: src/screens/Profile/Header/EditProfileDialog.tsx:313
+#: src/screens/Profile/Header/EditProfileDialog.tsx:262
 msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
@@ -4487,7 +4487,7 @@ msgstr ""
 msgid "Like this feed"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:144
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:145
 msgid "Like this labeler"
 msgstr ""
 
@@ -4511,8 +4511,8 @@ msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:74
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:428
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:164
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:178
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:165
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
@@ -5325,7 +5325,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:462
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:260
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:261
 #: src/view/com/notifications/NotificationFeedItem.tsx:702
 msgid "No longer following {0}"
 msgstr ""
@@ -5530,7 +5530,7 @@ msgstr ""
 msgid "Oh no!"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:210
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:211
 msgid "OK"
 msgstr ""
 
@@ -6251,11 +6251,6 @@ msgstr "Profile banner placeholder"
 msgid "Profile not found"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:176
-msgctxt "toast"
-msgid "Profile updated"
-msgstr ""
-
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:222
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
@@ -6892,8 +6887,8 @@ msgstr "Sad GIFs"
 #: src/features/liveNow/components/EditLiveDialog.tsx:171
 #: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:48
-#: src/screens/Profile/Header/EditProfileDialog.tsx:224
-#: src/screens/Profile/Header/EditProfileDialog.tsx:234
+#: src/screens/Profile/Header/EditProfileDialog.tsx:200
+#: src/screens/Profile/Header/EditProfileDialog.tsx:208
 #: src/screens/SavedFeeds.tsx:112
 #: src/view/com/composer/GifAltText.tsx:190
 #: src/view/com/composer/GifAltText.tsx:200
@@ -7867,11 +7862,11 @@ msgstr ""
 msgid "Subscribe to account activity"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:313
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:314
 msgid "Subscribe to Labeler"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:282
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:283
 msgid "Subscribe to this labeler"
 msgstr ""
 
@@ -7985,7 +7980,7 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:335
+#: src/screens/Profile/Header/EditProfileDialog.tsx:281
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -8025,8 +8020,8 @@ msgstr ""
 msgid "That's all, folks!"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:380
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:187
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:376
 #: src/view/com/profile/ProfileMenu.tsx:470
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
@@ -8107,7 +8102,7 @@ msgid "There was an issue contacting the server"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:365
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:94
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:95
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
@@ -8149,10 +8144,10 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:113
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:92
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:105
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:85
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:246
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:270
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:86
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:247
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:271
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:287
 #: src/view/com/profile/ProfileMenu.tsx:126
 #: src/view/com/profile/ProfileMenu.tsx:138
 #: src/view/com/profile/ProfileMenu.tsx:154
@@ -8632,16 +8627,16 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:94
 #: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:329
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:384
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:191
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:325
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:380
 #: src/screens/ProfileList/components/Header.tsx:144
 #: src/screens/ProfileList/components/Header.tsx:152
 #: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Unblock"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:334
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:330
 msgctxt "action"
 msgid "Unblock"
 msgstr ""
@@ -8657,8 +8652,8 @@ msgstr "Unblock {displayName}"
 msgid "Unblock account"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:185
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:379
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:375
 #: src/view/com/profile/ProfileMenu.tsx:467
 msgid "Unblock Account?"
 msgstr ""
@@ -8684,7 +8679,7 @@ msgid "Undo repost"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:359
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:355
 msgid "Unfollow {0}"
 msgstr ""
 
@@ -8820,7 +8815,7 @@ msgstr ""
 msgid "Unpinned list"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:313
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:314
 msgid "Unsubscribe"
 msgstr ""
 
@@ -8829,7 +8824,7 @@ msgstr ""
 msgid "Unsubscribe from list"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:282
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:283
 msgid "Unsubscribe from this labeler"
 msgstr ""
 
@@ -9314,7 +9309,7 @@ msgstr ""
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:205
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
@@ -9500,7 +9495,7 @@ msgstr ""
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:310
+#: src/screens/Profile/Header/EditProfileDialog.tsx:259
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 

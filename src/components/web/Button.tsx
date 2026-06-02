@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ComponentType, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ComponentType, ReactNode, Ref } from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
 
 import type { Props as IconProps } from '#/components/icons/common';
@@ -19,6 +19,8 @@ export type ButtonProps = Omit<ComponentPropsWithoutRef<typeof BaseButton>, 'cla
 	size?: Size;
 	shape?: Shape;
 	className?: string;
+	/** Forwarded to the underlying `<button>` so the Button can back a `Dialog.Trigger`. */
+	ref?: Ref<HTMLButtonElement>;
 };
 
 /** The web-native button primitive, built on Base UI's headless `<button>`. */
