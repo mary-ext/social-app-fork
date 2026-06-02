@@ -60,6 +60,7 @@ import {
 	type SupportedMimeTypes,
 } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
+import { useComposerControls, type ComposerOpts, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { useCallOnce } from '#/lib/once';
@@ -74,7 +75,6 @@ import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi } from '#/state/
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
-import { useComposerControls, type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer';
 
 import { logger } from '#/logger';
 
@@ -909,15 +909,11 @@ export const ComposePost = ({
 	}, [composerState]);
 
 	const isLastThreadedPost = thread.posts.length > 1 && nextPost === undefined;
-	const {
-		scrollHandler,
-		onScrollViewContentSizeChange,
-		onScrollViewLayout,
-		bottomBarAnimatedStyle,
-	} = useScrollTracker({
-		scrollViewRef,
-		stickyBottom: isLastThreadedPost,
-	});
+	const { scrollHandler, onScrollViewContentSizeChange, onScrollViewLayout, bottomBarAnimatedStyle } =
+		useScrollTracker({
+			scrollViewRef,
+			stickyBottom: isLastThreadedPost,
+		});
 
 	const footer = (
 		<>

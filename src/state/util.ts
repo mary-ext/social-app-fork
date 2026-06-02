@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
 
+import { useComposerControls } from '#/lib/hooks/useOpenComposer';
+
 import { useDialogStateControlContext } from '#/state/dialogs';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { useLightboxControls } from '#/components/Lightbox/state';
 
-import { useComposerControls } from './shell/composer';
 import { useSetDrawerOpen } from './shell/drawer-open';
 
 /** returns true if something was closed (used by the android hardware back btn) */

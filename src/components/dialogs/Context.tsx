@@ -1,7 +1,8 @@
 import { createContext, useContext, useMemo, useState } from 'react';
 
+import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
+
 import type { SessionAccount } from '#/state/session';
-import type { ComposerOpts } from '#/state/shell/composer';
 
 import * as Dialog from '#/components/Dialog';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
@@ -64,7 +65,13 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 			linkWarningDialogControl,
 			reportDialogControl,
 		}),
-		[composerDialogControl, mutedWordsDialogControl, signinDialogControl, linkWarningDialogControl, reportDialogControl],
+		[
+			composerDialogControl,
+			mutedWordsDialogControl,
+			signinDialogControl,
+			linkWarningDialogControl,
+			reportDialogControl,
+		],
 	);
 
 	return <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>;

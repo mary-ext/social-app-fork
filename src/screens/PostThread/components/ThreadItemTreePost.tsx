@@ -1,12 +1,12 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -14,7 +14,6 @@ import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import type { OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
@@ -296,13 +295,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					iconSize={42}
 					iconStyles={{ marginLeft: 2, marginRight: 2 }}
-					profile={post.author as AnyProfileView}
+					profile={post.author}
 					interpretFilterAsBlur
 				>
 					<ThreadItemTreePostInnerWrapper item={item}>
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author as AnyProfileView}
+								author={post.author}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}

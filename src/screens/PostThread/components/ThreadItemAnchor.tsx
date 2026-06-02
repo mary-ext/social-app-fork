@@ -11,7 +11,7 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -23,7 +23,6 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import type { OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import type { PostSource } from '#/state/unstable-post-source';
 
@@ -177,7 +176,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	const record = item.value.post.record;
 	const moderation = item.moderation;
 	const authorShadow = useProfileShadow(post.author as AnyProfileView);
-	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author);
 	const richText: Richtext = useMemo(
 		() => ({
 			text: record.text,
@@ -299,7 +298,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						<View collapsable={false}>
 							<PreviewableUserAvatar
 								size={42}
-								profile={post.author as AnyProfileView}
+								profile={post.author}
 								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}

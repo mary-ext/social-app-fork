@@ -21,7 +21,6 @@ import { Provider as UnreadNotifsProvider } from '#/state/queries/notifications/
 import { Provider as ServiceConfigProvider } from '#/state/service-config';
 import { Provider as SessionProvider, useSession } from '#/state/session';
 import { Provider as ShellStateProvider } from '#/state/shell';
-import { Provider as ComposerProvider } from '#/state/shell/composer';
 import { Provider as SelectedFeedProvider } from '#/state/shell/selected-feed';
 import { Provider as StarterPackProvider } from '#/state/shell/starter-pack';
 import { Provider as HiddenRepliesProvider } from '#/state/threadgate-hidden-replies';
@@ -71,39 +70,37 @@ function InnerApp() {
 									key={currentAccount?.did}
 								>
 									<QueryProvider currentDid={currentAccount?.did}>
-										<ComposerProvider>
-											<MessagesProvider>
-												{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-												<LabelDefsProvider>
-													<ModerationOptsProvider>
-														<SelectedFeedProvider>
-															<HiddenRepliesProvider>
-																<HomeBadgeProvider>
-																	<UnreadNotifsProvider>
-																		<MutedThreadsProvider>
-																			<SafeAreaProvider>
-																				<ServiceConfigProvider>
-																					<HideBottomBarBorderProvider>
-																						<IntentDialogProvider>
-																							<TranslateOnDeviceProvider>
-																								<HotkeysProvider>
-																									<Shell />
-																									<ToastOutlet />
-																								</HotkeysProvider>
-																							</TranslateOnDeviceProvider>
-																						</IntentDialogProvider>
-																					</HideBottomBarBorderProvider>
-																				</ServiceConfigProvider>
-																			</SafeAreaProvider>
-																		</MutedThreadsProvider>
-																	</UnreadNotifsProvider>
-																</HomeBadgeProvider>
-															</HiddenRepliesProvider>
-														</SelectedFeedProvider>
-													</ModerationOptsProvider>
-												</LabelDefsProvider>
-											</MessagesProvider>
-										</ComposerProvider>
+										<MessagesProvider>
+											{/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+											<LabelDefsProvider>
+												<ModerationOptsProvider>
+													<SelectedFeedProvider>
+														<HiddenRepliesProvider>
+															<HomeBadgeProvider>
+																<UnreadNotifsProvider>
+																	<MutedThreadsProvider>
+																		<SafeAreaProvider>
+																			<ServiceConfigProvider>
+																				<HideBottomBarBorderProvider>
+																					<IntentDialogProvider>
+																						<TranslateOnDeviceProvider>
+																							<HotkeysProvider>
+																								<Shell />
+																								<ToastOutlet />
+																							</HotkeysProvider>
+																						</TranslateOnDeviceProvider>
+																					</IntentDialogProvider>
+																				</HideBottomBarBorderProvider>
+																			</ServiceConfigProvider>
+																		</SafeAreaProvider>
+																	</MutedThreadsProvider>
+																</UnreadNotifsProvider>
+															</HomeBadgeProvider>
+														</HiddenRepliesProvider>
+													</SelectedFeedProvider>
+												</ModerationOptsProvider>
+											</LabelDefsProvider>
+										</MessagesProvider>
 									</QueryProvider>
 								</Fragment>
 							</ActiveVideoProvider>

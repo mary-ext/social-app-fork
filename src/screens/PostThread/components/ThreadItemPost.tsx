@@ -1,12 +1,12 @@
 import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 
 import { MAX_POST_LINES } from '#/lib/constants';
-import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
+import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -14,7 +14,6 @@ import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
 import type { ThreadItem } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
-import type { OnPostSuccessData } from '#/state/shell/composer';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
@@ -222,7 +221,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 		setLimitLines(false);
 	}, [setLimitLines]);
 
-	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author);
 
 	return (
 		<SubtleHoverWrapper>
@@ -235,7 +234,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
 					iconSize={LINEAR_AVI_WIDTH}
 					iconStyles={[a.mr_xs]}
-					profile={post.author as AnyProfileView}
+					profile={post.author}
 					interpretFilterAsBlur
 				>
 					<ThreadItemPostParentReplyLine item={item} />
@@ -244,7 +243,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 						<View>
 							<PreviewableUserAvatar
 								size={LINEAR_AVI_WIDTH}
-								profile={post.author as AnyProfileView}
+								profile={post.author}
 								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
@@ -267,7 +266,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
 						<View style={[a.flex_1]}>
 							<PostMeta
-								author={post.author as AnyProfileView}
+								author={post.author}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={postHref}

@@ -4,10 +4,9 @@ import type { AnyProfileView, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
+import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
-
-import type { ComposerOptsPostRef } from '#/state/shell/composer';
 
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
