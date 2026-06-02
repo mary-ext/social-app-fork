@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { type NavigationProp } from '#/lib/routes/types';
+import type { NavigationProp } from '#/lib/routes/types';
 
 import { atoms as a, useTheme } from '#/alf';
 
