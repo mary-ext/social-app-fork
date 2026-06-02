@@ -46,6 +46,8 @@ export function Button({
 
 /** Button label text. Inherits the button's color and size. */
 export function ButtonText({ children }: { children: ReactNode }) {
+	// renders a web <span> that inherits the button's color/size — the RN unwrapped-text rule doesn't model this
+	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return <span>{children}</span>;
 }
 

@@ -1,24 +1,26 @@
 import { useCallback } from 'react';
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from '#/lib/strings/embed-player';
 
 import { useSetExternalEmbedPref } from '#/state/preferences';
 
-import { atoms as a } from '#/alf';
+import { sprinkles } from '#/styles/sprinkles.css';
 
-import { Admonition } from '#/components/Admonition';
-import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { Text } from '#/components/web/Text';
+
+const bodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'lg', marginBottom: '_2xl', marginTop: 'sm' });
+const actionsClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md' });
 
 export function EmbedConsentDialog({
-	control,
+	handle,
 	source,
 	onAccept,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: ReturnType<typeof Dialog.createHandle>;
 	source: EmbedPlayerSource;
 	onAccept: () => void;
 }) {
@@ -30,82 +32,62 @@ export function EmbedConsentDialog({
 			setExternalEmbedPref(key, 'show');
 		}
 		onAccept();
-		control.close();
-	}, [control, onAccept, setExternalEmbedPref]);
+		handle.close();
+	}, [handle, onAccept, setExternalEmbedPref]);
 
 	const onShowPress = useCallback(() => {
 		setExternalEmbedPref(source, 'show');
 		onAccept();
-		control.close();
-	}, [control, onAccept, setExternalEmbedPref, source]);
+		handle.close();
+	}, [handle, onAccept, setExternalEmbedPref, source]);
 
 	const onHidePress = useCallback(() => {
 		setExternalEmbedPref(source, 'hide');
-		control.close();
-	}, [control, setExternalEmbedPref, source]);
+		handle.close();
+	}, [handle, setExternalEmbedPref, source]);
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle />
-			<Dialog.ScrollableInner label={l`External Media`} style={{ maxWidth: 400 }}>
-				<View style={a.gap_sm}>
-					<Text style={[a.text_2xl, a.font_bold]}>
-						<Trans>External Media</Trans>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup size="narrow" label={l`External Media`}>
+				<Text size="_2xl" weight="bold">
+					<Trans>External Media</Trans>
+				</Text>
+
+				<div className={bodyClass}>
+					<Text size="md" leading="snug">
+						<Trans>
+							This content is hosted by {externalEmbedLabels[source]}. Do you want to enable external media?
+						</Trans>
 					</Text>
 
-					<View style={[a.mt_sm, a.mb_2xl, a.gap_lg]}>
-						<Text style={[a.text_md, a.leading_snug]}>
-							<Trans>
-								This content is hosted by {externalEmbedLabels[source]}. Do you want to enable external media?
-							</Trans>
-						</Text>
+					<Admonition type="info">
+						<Trans>
+							External media may allow websites to collect information about you and your device. No
+							information is sent or requested until you press the "play" button.
+						</Trans>
+					</Admonition>
+				</div>
 
-						<Admonition type="info">
-							<Trans>
-								External media may allow websites to collect information about you and your device. No
-								information is sent or requested until you press the "play" button.
-							</Trans>
-						</Admonition>
-					</View>
-				</View>
-				<View style={a.gap_md}>
-					<Button
-						label={l`Enable external media`}
-						onPress={onShowAllPress}
-						onAccessibilityEscape={control.close}
-						color="primary"
-						size="large"
-					>
+				<div className={actionsClass}>
+					<Button label={l`Enable external media`} onClick={onShowAllPress} color="primary" size="large">
 						<ButtonText>
 							<Trans>Enable external media</Trans>
 						</ButtonText>
 					</Button>
-					<Button
-						label={l`Enable this source only`}
-						onPress={onShowPress}
-						onAccessibilityEscape={control.close}
-						color="secondary"
-						size="large"
-					>
+					<Button label={l`Enable this source only`} onClick={onShowPress} color="secondary" size="large">
 						<ButtonText>
 							<Trans>Enable {externalEmbedLabels[source]} only</Trans>
 						</ButtonText>
 					</Button>
-					<Button
-						label={l`No thanks`}
-						onAccessibilityEscape={control.close}
-						onPress={onHidePress}
-						color="secondary"
-						size="large"
-						variant="ghost"
-					>
+					<Button label={l`No thanks`} onClick={onHidePress} variant="ghost" color="secondary" size="large">
 						<ButtonText>
 							<Trans>No thanks</Trans>
 						</ButtonText>
 					</Button>
-				</View>
+				</div>
+
 				<Dialog.Close />
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }

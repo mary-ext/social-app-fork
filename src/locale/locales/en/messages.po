@@ -2032,6 +2032,7 @@ msgstr ""
 #: src/components/dialogs/LanguageSelectDialog.tsx:310
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
+#: src/components/web/Dialog/index.tsx:85
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""
@@ -2905,7 +2906,7 @@ msgid "Embedded video player"
 msgstr ""
 
 #. placeholder {0}: externalEmbedLabels[source]
-#: src/components/dialogs/EmbedConsent.tsx:91
+#: src/components/dialogs/EmbedConsent.tsx:79
 msgid "Enable {0} only"
 msgstr ""
 
@@ -2917,8 +2918,8 @@ msgstr ""
 msgid "Enable captions"
 msgstr "Enable captions"
 
-#: src/components/dialogs/EmbedConsent.tsx:73
-#: src/components/dialogs/EmbedConsent.tsx:80
+#: src/components/dialogs/EmbedConsent.tsx:72
+#: src/components/dialogs/EmbedConsent.tsx:74
 msgid "Enable external media"
 msgstr ""
 
@@ -2934,7 +2935,7 @@ msgstr ""
 msgid "Enable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:84
+#: src/components/dialogs/EmbedConsent.tsx:77
 msgid "Enable this source only"
 msgstr ""
 
@@ -3128,7 +3129,7 @@ msgstr "Export my profile data"
 msgid "External media"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:50
+#: src/components/dialogs/EmbedConsent.tsx:51
 #: src/components/dialogs/EmbedConsent.tsx:53
 msgid "External Media"
 msgstr ""
@@ -5423,8 +5424,8 @@ msgstr ""
 msgid "No Starter Packs yet"
 msgstr ""
 
-#: src/components/dialogs/EmbedConsent.tsx:95
-#: src/components/dialogs/EmbedConsent.tsx:103
+#: src/components/dialogs/EmbedConsent.tsx:82
+#: src/components/dialogs/EmbedConsent.tsx:84
 msgid "No thanks"
 msgstr ""
 

@@ -12,6 +12,8 @@ export function Root({ isInvalid = false, children }: { isInvalid?: boolean; chi
 }
 
 export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
+	// renders a semantic web <label>, not RN <Text> — the unwrapped-text rule doesn't model this
+	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
 		<label className={styles.label} htmlFor={htmlFor}>
 			{children}

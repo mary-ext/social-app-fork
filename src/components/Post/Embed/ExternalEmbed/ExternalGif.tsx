@@ -9,8 +9,8 @@ import { useExternalEmbedsPrefs } from '#/state/preferences';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { useDialogControl } from '#/components/Dialog';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
+import { useDialogHandle } from '#/components/web/Dialog';
 import { Fill } from '#/components/Fill';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
@@ -26,7 +26,7 @@ export function ExternalGif({
 	const t = useTheme();
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
 	const { t: l } = useLingui();
-	const consentDialogControl = useDialogControl();
+	const consentDialogControl = useDialogHandle();
 
 	// Tracking if the placer has been activated
 	const [isPlayerActive, setIsPlayerActive] = useState(false);
@@ -53,7 +53,7 @@ export function ExternalGif({
 
 			// Show consent if this is the first load
 			if (externalEmbedsPrefs?.[params.source] === undefined) {
-				consentDialogControl.open();
+				consentDialogControl.open(null);
 				return;
 			}
 			// If the player isn't active, we want to activate it and prefetch the gif
@@ -75,7 +75,7 @@ export function ExternalGif({
 
 	return (
 		<>
-			<EmbedConsentDialog control={consentDialogControl} source={params.source} onAccept={load} />
+			<EmbedConsentDialog handle={consentDialogControl} source={params.source} onAccept={load} />
 			<Pressable
 				style={[
 					{ height: 300 },

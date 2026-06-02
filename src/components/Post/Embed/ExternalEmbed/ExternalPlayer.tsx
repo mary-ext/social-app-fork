@@ -27,8 +27,8 @@ import { EventStopper } from '#/view/com/util/EventStopper';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { useDialogControl } from '#/components/Dialog';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
+import { useDialogHandle } from '#/components/web/Dialog';
 import { Fill } from '#/components/Fill';
 import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
 
@@ -117,7 +117,7 @@ export function ExternalPlayer({
 	const insets = useSafeAreaInsets();
 	const windowDims = useWindowDimensions();
 	const externalEmbedsPrefs = useExternalEmbedsPrefs();
-	const consentDialogControl = useDialogControl();
+	const consentDialogControl = useDialogHandle();
 
 	const [isPlayerActive, setIsPlayerActive] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -181,7 +181,7 @@ export function ExternalPlayer({
 			event.preventDefault();
 
 			if (externalEmbedsPrefs?.[params.source] === undefined) {
-				consentDialogControl.open();
+				consentDialogControl.open(null);
 				return;
 			}
 
@@ -196,7 +196,7 @@ export function ExternalPlayer({
 
 	return (
 		<>
-			<EmbedConsentDialog control={consentDialogControl} source={params.source} onAccept={onAcceptConsent} />
+			<EmbedConsentDialog handle={consentDialogControl} source={params.source} onAccept={onAcceptConsent} />
 
 			<Animated.View ref={viewRef} collapsable={false} style={[aspect, a.overflow_hidden]}>
 				{link.thumb && (!isPlayerActive || isLoading) ? (
