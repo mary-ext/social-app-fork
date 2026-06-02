@@ -1,6 +1,8 @@
 import type { ComponentPropsWithoutRef, ComponentType, ReactNode, Ref } from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
 
+import { sprinkles, type Sprinkles } from '#/styles/sprinkles.css';
+
 import type { Props as IconProps } from '#/components/icons/common';
 
 import { cx } from '#/components/web/cx';
@@ -46,11 +48,11 @@ export function Button({
 	);
 }
 
-/** Button label text. Inherits the button's color and size. */
-export function ButtonText({ children }: { children: ReactNode }) {
+/** Button label text. Inherits the button's color; `size` overrides the inherited font size. */
+export function ButtonText({ children, size }: { children: ReactNode; size?: Sprinkles['fontSize'] }) {
 	// renders a web <span> that inherits the button's color/size — the RN unwrapped-text rule doesn't model this
 	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
-	return <span>{children}</span>;
+	return <span className={size ? sprinkles({ fontSize: size }) : undefined}>{children}</span>;
 }
 
 export type ButtonIconProps = {

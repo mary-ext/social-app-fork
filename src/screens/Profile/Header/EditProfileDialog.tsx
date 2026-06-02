@@ -185,7 +185,7 @@ function DialogInner({
 			<Sheet.Header.Outer>
 				<Sheet.Header.Slot>
 					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
-						<ButtonText>
+						<ButtonText size="md">
 							<Trans>Cancel</Trans>
 						</ButtonText>
 					</Button>
@@ -204,7 +204,7 @@ function DialogInner({
 						disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
 						onClick={onPressSave}
 					>
-						<ButtonText>
+						<ButtonText size="md">
 							<Trans>Save</Trans>
 						</ButtonText>
 						{isUpdatingProfile && <ButtonIcon icon={Loader} />}

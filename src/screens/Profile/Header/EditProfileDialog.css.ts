@@ -25,6 +25,7 @@ export const fields = style({
 	flexDirection: 'column',
 	gap: '20px',
 	marginTop: '32px',
+	paddingBottom: '24px',
 	paddingInline: '20px',
 });
 
