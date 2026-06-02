@@ -1,4 +1,5 @@
 import './style.css';
+import '#/styles/theme.css';
 
 import { Fragment, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
