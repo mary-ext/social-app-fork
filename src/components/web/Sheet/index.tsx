@@ -1,13 +1,15 @@
 import type { ReactNode } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 
-import { Close, createHandle, Root, Trigger, useDialogHandle } from '#/components/web/Dialog';
+import { Close, createHandle, type DialogHandle, Root, Trigger, useDialogHandle } from '#/components/web/Dialog';
 import * as dialogStyles from '#/components/web/Dialog/Dialog.css';
 import * as styles from '#/components/web/Sheet/Sheet.css';
 
 // a Sheet is a header dialog: it reuses the basic Dialog's Root/Trigger/handle/registry and supplies a
 // structured popup (sticky header + scrollable body).
 export { Close, createHandle, Root, Trigger };
+/** A detached handle for opening/closing a Sheet (shares the Dialog surface); `T` is the `openWithPayload` type. */
+export type SheetHandle<T = void> = DialogHandle<T>;
 export const useSheetHandle = useDialogHandle;
 export * as Header from '#/components/web/Sheet/Header';
 

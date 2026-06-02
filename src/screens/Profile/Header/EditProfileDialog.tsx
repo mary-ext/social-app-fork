@@ -37,7 +37,7 @@ export function EditProfileDialog({
 	onUpdate,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	handle: ReturnType<typeof Sheet.createHandle>;
+	handle: Sheet.SheetHandle;
 	onUpdate?: () => void;
 }) {
 	const { t: l } = useLingui();
@@ -87,9 +87,9 @@ function DialogInner({
 	setDirty,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	handle: ReturnType<typeof Sheet.createHandle>;
+	handle: Sheet.SheetHandle;
 	onUpdate?: () => void;
-	cancelHandle: ReturnType<typeof Prompt.createHandle>;
+	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
 }) {
 	const { t: l } = useLingui();

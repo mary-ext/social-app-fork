@@ -14,9 +14,12 @@ export const Description = BaseDialog.Description;
 /** Creates a detached handle to open/close a Dialog imperatively or from a detached Trigger. */
 export const createHandle = BaseDialog.createHandle;
 
+/** A detached handle for opening/closing a Dialog */
+export type DialogHandle<T = void> = BaseDialog.Handle<T>;
+
 /** Component-local dialog handle. */
-export function useDialogHandle() {
-	const [handle] = useState(createHandle);
+export function useDialogHandle<T = void>(): DialogHandle<T> {
+	const [handle] = useState(createHandle<T>);
 	return handle;
 }
 
@@ -27,7 +30,7 @@ export type OpenChangeDetails = { reason: string; cancel: () => void };
 
 export type RootProps = {
 	children?: ReactNode;
-	handle?: ReturnType<typeof createHandle>;
+	handle?: DialogHandle<unknown>;
 	modal?: boolean | 'trap-focus';
 	open?: boolean;
 	defaultOpen?: boolean;

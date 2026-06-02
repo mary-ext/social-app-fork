@@ -17,9 +17,12 @@ export const Trigger = AlertDialog.Trigger;
 /** Creates a detached handle to open/close a Prompt imperatively or from a detached Trigger. */
 export const createHandle = AlertDialog.createHandle;
 
+/** A detached handle for opening/closing a Prompt */
+export type PromptHandle<T = void> = AlertDialog.Handle<T>;
+
 /** Component-local prompt handle. */
-export function usePromptHandle() {
-	const [handle] = useState(createHandle);
+export function usePromptHandle<T = void>(): PromptHandle<T> {
+	const [handle] = useState(createHandle<T>);
 	return handle;
 }
 
@@ -29,7 +32,7 @@ export function Outer({
 	handle,
 }: {
 	children: ReactNode;
-	handle: ReturnType<typeof createHandle>;
+	handle: PromptHandle;
 }) {
 	const id = useId();
 	const registerOpen = useRegisterDialog(id, () => handle.close());
@@ -113,7 +116,7 @@ export function Basic({
 	confirmButtonColor,
 	showCancel = true,
 }: {
-	handle: ReturnType<typeof createHandle>;
+	handle: PromptHandle;
 	title: string;
 	description?: string;
 	cancelButtonCta?: string;

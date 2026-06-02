@@ -14,9 +14,12 @@ export const Group = BaseMenu.Group;
 /** Creates a detached handle to associate a Trigger with a Root or open/close the menu imperatively. */
 export const createHandle = BaseMenu.createHandle;
 
+/** A detached handle for associating a Trigger with a Root or opening/closing a Menu */
+export type MenuHandle<T = void> = BaseMenu.Handle<T>;
+
 /** Component-local menu handle. */
-export function useMenuHandle() {
-	const [handle] = useState(createHandle);
+export function useMenuHandle<T = void>(): MenuHandle<T> {
+	const [handle] = useState(createHandle<T>);
 	return handle;
 }
 
