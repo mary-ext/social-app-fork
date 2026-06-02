@@ -34,7 +34,7 @@ export type RootProps = {
 export function Root({ children, handle, modal, open, defaultOpen, onOpenChange }: RootProps) {
 	const id = useId();
 	const actionsRef = useRef<DialogActions>(null);
-	const registerOpen = useRegisterDialog(id, actionsRef);
+	const registerOpen = useRegisterDialog(id, () => actionsRef.current?.close());
 
 	return (
 		<BaseDialog.Root

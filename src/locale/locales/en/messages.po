@@ -1756,6 +1756,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:296
 #: src/components/Prompt.tsx:121
 #: src/components/Prompt.tsx:122
+#: src/components/web/Prompt/index.tsx:95
 #: src/features/liveNow/components/GoLiveDialog.tsx:226
 #: src/features/liveNow/components/GoLiveDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:424
@@ -2103,6 +2104,7 @@ msgstr ""
 
 #: src/components/Prompt.tsx:171
 #: src/components/Prompt.tsx:175
+#: src/components/web/Prompt/index.tsx:71
 msgid "Confirm"
 msgstr ""
 
