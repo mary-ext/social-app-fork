@@ -784,7 +784,7 @@ msgstr ""
 msgid "Accepted conversations"
 msgstr "Accepted conversations"
 
-#: src/screens/Settings/AccessibilitySettings.tsx:30
+#: src/screens/Settings/AccessibilitySettings.tsx:34
 #: src/screens/Settings/Settings.tsx:181
 #: src/screens/Settings/Settings.tsx:184
 msgid "Accessibility"
@@ -1192,7 +1192,7 @@ msgstr ""
 msgid "ALT"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:40
+#: src/screens/Settings/AccessibilitySettings.tsx:46
 #: src/view/com/composer/GifAltText.tsx:159
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
 #: src/view/com/composer/videos/SubtitleDialog.tsx:96
@@ -2683,7 +2683,6 @@ msgid "Dismiss this suggestion"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:56
-#: src/screens/Settings/AccessibilitySettings.tsx:62
 msgid "Display larger alt text badges"
 msgstr ""
 
@@ -6821,8 +6820,7 @@ msgstr ""
 msgid "Requests"
 msgstr "Requests"
 
-#: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/AccessibilitySettings.tsx:50
+#: src/screens/Settings/AccessibilitySettings.tsx:51
 msgid "Require alt text before posting"
 msgstr ""
 
