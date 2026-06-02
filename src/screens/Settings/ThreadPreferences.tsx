@@ -1,32 +1,40 @@
-import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import {
 	normalizeSort,
 	normalizeView,
+	type ThreadSortOption,
 	useThreadPreferences,
 } from '#/state/queries/preferences/useThreadPreferences';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import * as Toggle from '#/components/forms/Toggle';
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { Tree_Stroke2_Corner0_Rounded as TreeIcon } from '#/components/icons/Tree';
-import * as Layout from '#/components/Layout';
-import { Text } from '#/components/Typography';
+import * as Layout from '#/components/web/Layout';
+import { RadioGroup } from '#/components/web/RadioGroup';
+import * as SettingsList from '#/components/web/SettingsList';
+import { Text } from '#/components/web/Text';
 
-import * as SettingsList from './components/SettingsList';
+import { sprinkles } from '#/styles/sprinkles.css';
+
+const bodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
+const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
+const insetColumnClass = sprinkles({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: 'md',
+	paddingLeft: '_4xl',
+});
+const insetClass = sprinkles({ paddingLeft: '_4xl' });
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>;
 export function ThreadPreferencesScreen({}: Props) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { sort, setSort, view, setView } = useThreadPreferences({ save: true });
 
 	return (
-		<Layout.Screen testID="threadPreferencesScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
@@ -39,62 +47,53 @@ export function ThreadPreferencesScreen({}: Props) {
 			<Layout.Content>
 				<SettingsList.Container>
 					<SettingsList.Group>
-						<SettingsList.ItemIcon icon={BubblesIcon} />
-						<SettingsList.ItemText>
-							<Trans>Sort replies</Trans>
-						</SettingsList.ItemText>
-						<View style={[a.w_full, a.gap_md]}>
-							<Text style={[a.flex_1, t.atoms.text_contrast_medium]}>
-								<Trans>Sort replies to the same post by:</Trans>
-							</Text>
-							<Toggle.Group
-								label={l`Sort replies by`}
-								type="radio"
-								values={sort ? [sort] : []}
-								onChange={(values) => setSort(normalizeSort(values[0]!))}
-							>
-								<View style={[a.gap_sm, a.flex_1]}>
-									<Toggle.Item name="top" label={l`Top replies first`}>
-										<Toggle.Radio />
-										<Toggle.LabelText>
-											<Trans>Top replies first</Trans>
-										</Toggle.LabelText>
-									</Toggle.Item>
-									<Toggle.Item name="oldest" label={l`Oldest replies first`}>
-										<Toggle.Radio />
-										<Toggle.LabelText>
-											<Trans>Oldest replies first</Trans>
-										</Toggle.LabelText>
-									</Toggle.Item>
-									<Toggle.Item name="newest" label={l`Newest replies first`}>
-										<Toggle.Radio />
-										<Toggle.LabelText>
-											<Trans>Newest replies first</Trans>
-										</Toggle.LabelText>
-									</Toggle.Item>
-								</View>
-							</Toggle.Group>
-						</View>
+						<div className={bodyClass}>
+							<div className={headerRowClass}>
+								<SettingsList.ItemIcon icon={BubblesIcon} />
+								<SettingsList.ItemText>
+									<Trans>Sort replies</Trans>
+								</SettingsList.ItemText>
+							</div>
+							<div className={insetColumnClass}>
+								<Text size="sm" leading="none" color="textContrastMedium">
+									<Trans>Sort replies to the same post by:</Trans>
+								</Text>
+								<RadioGroup<ThreadSortOption>
+									label={l`Sort replies by`}
+									value={sort}
+									onValueChange={(value) => setSort(normalizeSort(value))}
+									items={[
+										{ label: l`Top replies first`, value: 'top' },
+										{ label: l`Oldest replies first`, value: 'oldest' },
+										{ label: l`Newest replies first`, value: 'newest' },
+									]}
+								/>
+							</div>
+						</div>
 					</SettingsList.Group>
 
 					<SettingsList.Group>
-						<SettingsList.ItemIcon icon={TreeIcon} />
-						<SettingsList.ItemText>
-							<Trans>Tree view</Trans>
-						</SettingsList.ItemText>
-						<Toggle.Item
-							type="checkbox"
-							name="threaded-mode"
-							label={l`Tree view`}
-							value={view === 'tree'}
-							onChange={(value) => setView(normalizeView({ treeViewEnabled: value }))}
-							style={[a.w_full, a.gap_md]}
-						>
-							<Toggle.LabelText style={[a.flex_1]}>
-								<Trans>Show post replies in a threaded tree view</Trans>
-							</Toggle.LabelText>
-							<Toggle.Platform />
-						</Toggle.Item>
+						<div className={bodyClass}>
+							<div className={headerRowClass}>
+								<SettingsList.ItemIcon icon={TreeIcon} />
+								<SettingsList.ItemText>
+									<Trans>Tree view</Trans>
+								</SettingsList.ItemText>
+							</div>
+							<div className={insetClass}>
+								<SettingsList.CheckboxItem
+									flush
+									label={l`Tree view`}
+									value={view === 'tree'}
+									onChange={(value) => setView(normalizeView({ treeViewEnabled: value }))}
+								>
+									<SettingsList.LabelText>
+										<Trans>Show post replies in a threaded tree view</Trans>
+									</SettingsList.LabelText>
+									<SettingsList.CheckboxBox />
+								</SettingsList.CheckboxItem>
+							</div>
+						</div>
 					</SettingsList.Group>
 				</SettingsList.Container>
 			</Layout.Content>
