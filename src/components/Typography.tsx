@@ -22,7 +22,7 @@ export function Text({
 	const { fonts, flags } = useAlf();
 	const t = useTheme();
 	const s = normalizeTextStyles(
-		[a.text_sm, t.atoms.text, numberOfLines === 1 && numberOfLinesClippingFix, style],
+		[a.text_sm, t.atoms.text, a.leading_snug, numberOfLines === 1 && numberOfLinesClippingFix, style],
 		{
 			fontScale: fonts.scaleMultiplier,
 			fontFamily: fonts.family,
