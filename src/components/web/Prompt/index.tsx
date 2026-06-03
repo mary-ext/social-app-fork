@@ -27,13 +27,7 @@ export function usePromptHandle<T = void>(): PromptHandle<T> {
 }
 
 /** A confirmation dialog (no backdrop/Escape dismissal — an explicit action is required). */
-export function Outer({
-	children,
-	handle,
-}: {
-	children: ReactNode;
-	handle: PromptHandle;
-}) {
+export function Outer({ children, handle }: { children: ReactNode; handle: PromptHandle }) {
 	const id = useId();
 	const registerOpen = useRegisterDialog(id, () => handle.close());
 	return (

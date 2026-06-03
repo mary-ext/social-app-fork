@@ -20,13 +20,13 @@ import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
 import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { Loader } from '#/components/Loader';
+import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { EditableAvatar } from '#/components/web/EditableAvatar';
 import * as Prompt from '#/components/web/Prompt';
 import * as Sheet from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
-import * as Toast from '#/components/Toast';
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64;
 const DESCRIPTION_MAX_GRAPHEMES = 300;
@@ -386,7 +386,10 @@ function DialogInner({
 								{displayNameTooLong ? (
 									<Trans>
 										List name is too long.{' '}
-										<Plural value={DISPLAY_NAME_MAX_GRAPHEMES} other="The maximum number of characters is #." />
+										<Plural
+											value={DISPLAY_NAME_MAX_GRAPHEMES}
+											other="The maximum number of characters is #."
+										/>
 									</Trans>
 								) : (
 									<Trans>List must have a name.</Trans>
