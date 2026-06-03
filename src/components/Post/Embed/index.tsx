@@ -27,12 +27,12 @@ import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/u
 import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
+import { ImageEmbed } from '#/components/web/ImageEmbed';
 
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ExternalEmbed } from './ExternalEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
-import { ImageEmbed } from './ImageEmbed';
 import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
 import type { CommonProps, EmbedProps, PostEmbedViewContext } from './types';

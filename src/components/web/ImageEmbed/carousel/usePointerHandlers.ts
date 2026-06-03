@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import type { FlatList } from 'react-native';
 
-import { ITEM_GAP } from '#/components/images/Gallery/const';
-import { tween } from '#/components/images/Gallery/tween';
-import { getOffsetForIndex } from '#/components/images/Gallery/utils';
+import { ITEM_GAP } from '#/components/web/ImageEmbed/carousel/const';
+import { tween } from '#/components/web/ImageEmbed/carousel/tween';
+import { getOffsetForIndex } from '#/components/web/ImageEmbed/carousel/utils';
 
 const DRAG_THRESHOLD = 3;
 const FLICK_DECAY = 0.85;
@@ -40,15 +39,19 @@ function whichByDistance(
 	return Math.max(0, Math.min(i, imageCount - 1));
 }
 
+/**
+ * Twitter-style mouse-drag paging for the image carousel: rubber-band overscroll, flick-to-settle, and click
+ * suppression after a drag. Operates directly on the scroll element returned by `getScrollEl`.
+ */
 export function usePointerHandlers({
-	flatListRef,
+	getScrollEl,
 	itemWidthsRef,
 	currentIndexRef,
 	scrollTo,
 	onSettle,
 	imageCount,
 }: {
-	flatListRef: React.RefObject<FlatList | null>;
+	getScrollEl: () => HTMLElement | null;
 	itemWidthsRef: React.RefObject<Map<number, number>>;
 	currentIndexRef: React.RefObject<number>;
 	scrollTo: (offset: number) => void;
@@ -58,7 +61,7 @@ export function usePointerHandlers({
 	useEffect(() => {
 		if (imageCount <= 1) return;
 
-		const el = flatListRef.current?.getScrollableNode() as unknown as HTMLElement | null;
+		const el = getScrollEl();
 		if (!el) return;
 
 		let isDragging = false;
@@ -258,5 +261,5 @@ export function usePointerHandlers({
 			el.style.cursor = '';
 			el.style.userSelect = '';
 		};
-	}, [flatListRef, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount]);
+	}, [getScrollEl, itemWidthsRef, currentIndexRef, scrollTo, onSettle, imageCount]);
 }

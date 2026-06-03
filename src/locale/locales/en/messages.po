@@ -1184,9 +1184,8 @@ msgid "Already signed in as @{0}"
 msgstr ""
 
 #: src/components/images/AutoSizedImage.tsx:174
-#: src/components/images/Gallery/index.tsx:412
-#: src/components/images/ImageLayoutGridItem.tsx:94
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
+#: src/components/web/ImageEmbed/MediaBadges.tsx:51
 #: src/view/com/composer/GifAltText.tsx:101
 #: src/view/com/composer/photos/Gallery.tsx:190
 msgid "ALT"
@@ -1795,7 +1794,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:211
+#: src/components/web/ImageEmbed/Gallery.tsx:140
 msgid "carousel"
 msgstr "carousel"
 
@@ -4142,15 +4141,6 @@ msgstr ""
 msgid "If you're a developer, you can host your own server."
 msgstr ""
 
-#: src/components/images/ImageLayoutGridItem.tsx:55
-msgid "Image"
-msgstr ""
-
-#. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:326
-msgid "Image {0}"
-msgstr "Image {0}"
-
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
 #: src/components/Lightbox/Lightbox.tsx:248
@@ -4158,12 +4148,12 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:317
+#: src/components/web/ImageEmbed/Gallery.tsx:210
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:212
+#: src/components/web/ImageEmbed/Gallery.tsx:141
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -5740,10 +5730,6 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:89
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
-
-#: src/components/images/Gallery/index.tsx:327
-msgid "Opens full image"
-msgstr "Opens full image"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:97
 msgid "Opens image picker"
@@ -7618,7 +7604,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/images/Gallery/index.tsx:317
+#: src/components/web/ImageEmbed/Gallery.tsx:209
 msgid "slide"
 msgstr "slide"
 

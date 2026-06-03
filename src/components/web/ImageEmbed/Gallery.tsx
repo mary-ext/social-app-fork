@@ -1,0 +1,248 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { AppBskyEmbedImages } from '@atcute/bluesky';
+import { useLingui } from '@lingui/react/macro';
+
+import { useGalleryBleed } from '#/components/images/Gallery';
+import { PostEmbedViewContext } from '#/components/Post/Embed/types';
+import { useKeyboardHandlers } from '#/components/web/ImageEmbed/carousel/useKeyboardHandlers';
+import { usePointerHandlers } from '#/components/web/ImageEmbed/carousel/usePointerHandlers';
+import { computeDims, getAspectRatio } from '#/components/web/ImageEmbed/carousel/utils';
+import * as styles from '#/components/web/ImageEmbed/Gallery.css';
+import { MediaBadges } from '#/components/web/ImageEmbed/MediaBadges';
+import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
+
+import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
+
+export type GalleryProps = {
+	images: AppBskyEmbedImages.ViewImage[];
+	onPress?: (index: number) => void;
+	onPressIn?: (index: number) => void;
+	viewContext?: PostEmbedViewContext;
+};
+
+/** Resolve the carousel's content height from the viewport width, matching the RNW breakpoint heights. */
+function useContentHeight(isWithinChat: boolean) {
+	const [height, setHeight] = useState(() => measureContentHeight(isWithinChat));
+	useEffect(() => {
+		if (isWithinChat) {
+			setHeight(120);
+			return;
+		}
+		const update = () => setHeight(measureContentHeight(false));
+		update();
+		window.addEventListener('resize', update);
+		return () => window.removeEventListener('resize', update);
+	}, [isWithinChat]);
+	return height;
+}
+
+function measureContentHeight(isWithinChat: boolean) {
+	if (isWithinChat) {
+		return 120;
+	}
+	if (window.innerWidth >= 800) {
+		return 300;
+	} else if (window.innerWidth >= 500) {
+		return 260;
+	} else {
+		return 200;
+	}
+}
+
+export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProps) {
+	const { t: l } = useLingui();
+	const [largeAltBadge] = useLargeAltBadgeEnabled();
+	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
+	const isWithinChat = viewContext === PostEmbedViewContext.ChatMessage;
+	const hideBadges = isWithinQuote;
+	const contentHeight = useContentHeight(isWithinChat);
+
+	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor so it can extend past the
+	// post's content column. The RNW version uses `measureLayout`; on the DOM we diff bounding rects.
+	const { bleedRef, bleedWidth } = useGalleryBleed();
+	const contentRef = useRef<HTMLDivElement>(null);
+	const [contentDims, setContentDims] = useState<{ x: number; width: number }>();
+	// `useEffect`, not `useLayoutEffect`: the bleed element is an ancestor, so its ref attaches after this
+	// descendant's layout phase. Measuring post-commit (and re-running when `bleedWidth` settles) sees it.
+	useEffect(() => {
+		const measure = () => {
+			const bleedEl = bleedRef.current as unknown as HTMLElement | null;
+			if (contentRef.current && bleedEl) {
+				const c = contentRef.current.getBoundingClientRect();
+				const b = bleedEl.getBoundingClientRect();
+				setContentDims({ x: c.left - b.left, width: c.width });
+			}
+		};
+		measure();
+		window.addEventListener('resize', measure);
+		return () => window.removeEventListener('resize', measure);
+	}, [bleedRef, bleedWidth, contentHeight]);
+
+	const width = bleedWidth || Math.min(600, window.innerWidth);
+	const insetLeft = contentDims?.x ?? 0;
+	const insetRight = bleedWidth > 0 ? bleedWidth - (contentDims?.x ?? 0) - (contentDims?.width ?? 0) : 0;
+
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const itemWidthsRef = useRef<Map<number, number>>(new Map());
+	const itemRefsRef = useRef<Map<number, HTMLButtonElement>>(new Map());
+	const currentIndexRef = useRef(0);
+
+	const getScrollEl = useCallback(() => scrollRef.current, []);
+	const scrollTo = useCallback((offset: number) => {
+		if (scrollRef.current) {
+			scrollRef.current.scrollLeft = offset;
+		}
+	}, []);
+
+	const onSettle = useCallback((index: number) => {
+		currentIndexRef.current = index;
+		// Only the active image is tab-focusable
+		itemRefsRef.current.forEach((node, i) => {
+			node.tabIndex = i === index ? 0 : -1;
+		});
+		itemRefsRef.current.get(index)?.focus({ preventScroll: true });
+	}, []);
+
+	const onWidthChange = useCallback((index: number, w: number) => {
+		itemWidthsRef.current.set(index, w);
+	}, []);
+
+	const setItemRef = useCallback((index: number, node: HTMLButtonElement | null) => {
+		if (node) {
+			itemRefsRef.current.set(index, node);
+		} else {
+			itemRefsRef.current.delete(index);
+		}
+	}, []);
+
+	useKeyboardHandlers({
+		getScrollEl,
+		itemWidthsRef,
+		currentIndexRef,
+		scrollTo,
+		onSettle,
+		imageCount: images.length,
+	});
+	usePointerHandlers({
+		getScrollEl,
+		itemWidthsRef,
+		currentIndexRef,
+		scrollTo,
+		onSettle,
+		imageCount: images.length,
+	});
+
+	return (
+		<div ref={contentRef} className={styles.root} style={{ height: contentHeight }}>
+			<div
+				ref={scrollRef}
+				role="group"
+				aria-roledescription={l`carousel`}
+				aria-label={l`Image gallery, ${images.length} images`}
+				className={styles.scroll}
+				style={{
+					marginLeft: -insetLeft,
+					paddingLeft: insetLeft,
+					paddingRight: insetRight,
+					width,
+				}}
+			>
+				{images.map((image, index) => (
+					<GalleryImage
+						key={image.thumb + index}
+						image={image}
+						index={index}
+						imageCount={images.length}
+						contentHeight={contentHeight}
+						hideBadges={hideBadges}
+						largeAltBadge={largeAltBadge}
+						onWidthChange={onWidthChange}
+						setItemRef={setItemRef}
+						onPress={onPress ? () => onPress(index) : undefined}
+						onPressIn={onPressIn ? () => onPressIn(index) : undefined}
+					/>
+				))}
+			</div>
+		</div>
+	);
+}
+
+function GalleryImage({
+	image,
+	index,
+	imageCount,
+	contentHeight,
+	hideBadges,
+	largeAltBadge,
+	onWidthChange,
+	setItemRef,
+	onPress,
+	onPressIn,
+}: {
+	image: AppBskyEmbedImages.ViewImage;
+	index: number;
+	imageCount: number;
+	contentHeight: number;
+	hideBadges: boolean;
+	largeAltBadge: boolean;
+	onWidthChange: (index: number, width: number) => void;
+	setItemRef: (index: number, node: HTMLButtonElement | null) => void;
+	onPress?: () => void;
+	onPressIn?: () => void;
+}) {
+	const { t: l } = useLingui();
+	const [focused, setFocused] = useState(false);
+	const [aspectRatio, setAspectRatio] = useState(() => getAspectRatio(image.aspectRatio));
+	const { isCropped, ...dims } = computeDims({ height: contentHeight, aspectRatio });
+	const hasAlt = !!image.alt;
+
+	useEffect(() => {
+		onWidthChange(index, dims.width);
+	}, [index, dims.width, onWidthChange]);
+
+	return (
+		<button
+			type="button"
+			ref={(node) => setItemRef(index, node)}
+			className={styles.item}
+			tabIndex={index === 0 ? 0 : -1}
+			aria-roledescription={l`slide`}
+			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
+			onClick={
+				onPress
+					? (e) => {
+							// scope the press to the lightbox; don't bubble to an ancestor post link
+							e.preventDefault();
+							e.stopPropagation();
+							onPress();
+						}
+					: undefined
+			}
+			onPointerDown={onPressIn}
+			onFocus={() => setFocused(true)}
+			onBlur={() => setFocused(false)}
+		>
+			<img
+				className={styles.image}
+				src={image.thumb}
+				alt={image.alt}
+				width={dims.width}
+				height={dims.height}
+				loading={index === 0 ? 'eager' : 'lazy'}
+				onLoad={(e) => {
+					const ar = getAspectRatio({
+						width: e.currentTarget.naturalWidth,
+						height: e.currentTarget.naturalHeight,
+					});
+					if (ar && ar !== aspectRatio) {
+						setAspectRatio(ar);
+					}
+				}}
+			/>
+			{!hideBadges && (
+				<MediaBadges variant="gallery" hasAlt={hasAlt} cropped={isCropped} large={largeAltBadge} />
+			)}
+			<MediaInsetBorder focused={focused} />
+		</button>
+	);
+}
