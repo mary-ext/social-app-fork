@@ -35,8 +35,8 @@ import { atoms as a, useTheme } from '#/alf';
 import { isOnlyEmoji } from '#/alf/typography';
 
 import { Button } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
+import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { InlineLinkText, Link } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
@@ -46,7 +46,7 @@ import { Text } from '#/components/Typography';
 import { DateDivider } from './DateDivider';
 import { MessageItemEmbed } from './MessageItemEmbed';
 import { MessageItemInviteEmbed } from './MessageItemInviteEmbed';
-import { ReactionsDialog } from './ReactionsDialog';
+import { groupReactions } from './ReactionsDialog';
 import { CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS } from './util';
 
 const AVATAR_SIZE = 28;
@@ -103,7 +103,7 @@ let MessageItem = ({
 	const { message } = item;
 	const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did));
 
-	const reactionsControl = useDialogControl();
+	const { openReactions } = useMessageDialogs();
 
 	const isPending = item.type === 'pending-message';
 
@@ -209,34 +209,7 @@ let MessageItem = ({
 			<ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
 		);
 
-	const groupedReactions = useMemo(() => {
-		const reactions = message.reactions ?? [];
-		const grouped = new Map<
-			string,
-			{
-				key: string;
-				value: string;
-				senders: ChatBskyConvoDefs.ReactionViewSender[];
-				count: number;
-			}
-		>();
-		for (const reaction of reactions) {
-			if (!reaction) continue;
-			const existing = grouped.get(reaction.value);
-			if (existing) {
-				existing.senders.push(reaction.sender);
-				existing.count++;
-			} else {
-				grouped.set(reaction.value, {
-					key: reaction.value,
-					value: reaction.value,
-					senders: [reaction.sender],
-					count: 1,
-				});
-			}
-		}
-		return Array.from(grouped.values());
-	}, [message.reactions]);
+	const groupedReactions = useMemo(() => groupReactions(message.reactions), [message.reactions]);
 
 	const reactions = useMemo(() => message.reactions ?? [], [message.reactions]);
 
@@ -292,7 +265,7 @@ let MessageItem = ({
 								transform: [{ translateY: -8 }],
 							},
 						]}
-						onPress={isGroupChat ? reactionsControl.open : undefined}
+						onPress={isGroupChat ? () => openReactions(message) : undefined}
 					>
 						{groupedReactions.map((group) => (
 							<Animated.View
@@ -324,13 +297,6 @@ let MessageItem = ({
 					</Pressable>
 				</View>
 			) : null}
-			<ReactionsDialog
-				control={reactionsControl}
-				relatedProfiles={relatedProfiles}
-				message={message}
-				reactions={message.reactions}
-				groupedReactions={groupedReactions}
-			/>
 		</LayoutAnimationConfig>
 	);
 

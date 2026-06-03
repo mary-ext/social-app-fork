@@ -81,4 +81,6 @@ export type ReportDialogProps = {
 	subject: ParsedReportSubject;
 	/** Called if the report was successfully submitted. */
 	onAfterSubmit?: () => void;
+	/** Called after the dialog finishes closing. */
+	onClose?: () => void;
 };

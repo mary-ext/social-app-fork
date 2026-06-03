@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { LayoutAnimation, Pressable, type ScrollView, useWindowDimensions, View } from 'react-native';
 import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -33,14 +33,12 @@ export function ReactionsDialog({
 	control,
 	relatedProfiles,
 	message,
-	reactions,
-	groupedReactions,
+	onClose,
 }: {
 	control: Dialog.DialogControlProps;
 	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
 	message: ChatBskyConvoDefs.MessageView;
-	reactions?: ChatBskyConvoDefs.ReactionView[];
-	groupedReactions?: Reaction[];
+	onClose?: () => void;
 }) {
 	const { t: l } = useLingui();
 
@@ -49,6 +47,9 @@ export function ReactionsDialog({
 	const convo = useConvoActive();
 
 	const [selected, setSelected] = useState('all');
+
+	const reactions = message.reactions;
+	const groupedReactions = useMemo(() => groupReactions(reactions), [reactions]);
 
 	const filteredReactions = reactions?.filter((r) => selected === 'all' || r.value === selected);
 
@@ -72,7 +73,10 @@ export function ReactionsDialog({
 	return (
 		<Dialog.Outer
 			control={control}
-			onClose={() => setSelected('all')}
+			onClose={() => {
+				setSelected('all');
+				onClose?.();
+			}}
 			nativeOptions={{
 				preventExpansion: true,
 				minHeight: screenHeight / 2,
@@ -341,4 +345,24 @@ function ReactionTab({
 			</Text>
 		</Pressable>
 	);
+}
+
+export function groupReactions(reactions: ChatBskyConvoDefs.ReactionView[] | undefined): Reaction[] {
+	const grouped = new Map<string, Reaction>();
+	for (const reaction of reactions ?? []) {
+		if (!reaction) continue;
+		const existing = grouped.get(reaction.value);
+		if (existing) {
+			existing.senders.push(reaction.sender);
+			existing.count++;
+		} else {
+			grouped.set(reaction.value, {
+				key: reaction.value,
+				value: reaction.value,
+				senders: [reaction.sender],
+				count: 1,
+			});
+		}
+	}
+	return Array.from(grouped.values());
 }

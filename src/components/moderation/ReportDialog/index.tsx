@@ -69,7 +69,10 @@ export function ReportDialog(
 		() => (props.subject ? parseReportSubject(props.subject) : undefined),
 		[props.subject],
 	);
-	const onClose = useCallback(() => {}, []);
+	const propsOnClose = props.onClose;
+	const onClose = useCallback(() => {
+		propsOnClose?.();
+	}, [propsOnClose]);
 	return (
 		<Dialog.Outer control={props.control} onClose={onClose}>
 			<Dialog.Handle />
