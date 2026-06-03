@@ -105,7 +105,11 @@ export function AutomationLabelSettingsScreen({}: Props) {
 								},
 							]}
 						>
-							<UserAvatar size={42} avatar={profile.avatar} type="user" />
+							<UserAvatar
+								size={42}
+								avatar={profile.avatar}
+								type={profile.associated?.labeler ? 'labeler' : 'user'}
+							/>
 							<View>
 								<View style={[a.flex_row, a.align_baseline]}>
 									<View style={[a.flex_row, a.align_center, a.gap_xs]}>
