@@ -330,33 +330,57 @@ export function SubscribeButton({
 			: l`View publication`;
 	const cta = highlightedPublisher ? l`Subscribe on ${highlightedPublisher.name}` : l`View publication`;
 
-	return (
-		<StandardSiteThemeProvider view={view}>
-			<Link
-				shouldProxy
-				to={view.source.uri}
-				label={label}
-				size="small"
-				color="secondary_inverted"
-				style={[style, a.gap_sm, preview ? a.pointer_events_none : a.pointer_events_auto]}
-				onPress={onPress}
-			>
-				{highlightedPublisher ? (
-					<>
-						<View style={[a.flex_row, a.align_center, { gap: 7 }]}>
-							<ButtonIcon icon={highlightedPublisher.Icon} size="md" />
-						</View>
-						<ButtonText>{cta}</ButtonText>
-					</>
-				) : (
-					<>
-						<ButtonText>{cta}</ButtonText>
-						<ButtonIcon icon={ArrowTopRightIcon} />
-					</>
-				)}
-			</Link>
-		</StandardSiteThemeProvider>
+	/*
+	 * The custom site theme paints the button background with `accent` and the
+	 * text with `accentForeground`. Only honor it when that pairing clears WCAG
+	 * AAA (4.5:1) for large text, which the button's bold label qualifies as.
+	 * Otherwise we fall through to the default `secondary_inverted` styling,
+	 * which is guaranteed to be legible.
+	 */
+	const { accentRGB, accentForegroundRGB } = view.source.theme || {};
+	let useCustomTheme = false;
+	if (accentRGB && accentForegroundRGB) {
+		const accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b);
+		const accentForeground = utils.rgbToHex(
+			accentForegroundRGB.r,
+			accentForegroundRGB.g,
+			accentForegroundRGB.b,
+		);
+		const ratio = utils.contrastRatio(accent, accentForeground);
+		useCustomTheme = ratio !== null && ratio >= 4.5;
+	}
+
+	const button = (
+		<Link
+			shouldProxy
+			to={view.source.uri}
+			label={label}
+			size="small"
+			color="secondary_inverted"
+			style={[style, a.gap_sm, preview ? a.pointer_events_none : a.pointer_events_auto]}
+			onPress={onPress}
+		>
+			{highlightedPublisher ? (
+				<>
+					<View style={[a.flex_row, a.align_center, { gap: 7 }]}>
+						<ButtonIcon icon={highlightedPublisher.Icon} size="md" />
+					</View>
+					<ButtonText>{cta}</ButtonText>
+				</>
+			) : (
+				<>
+					<ButtonText>{cta}</ButtonText>
+					<ButtonIcon icon={ArrowTopRightIcon} />
+				</>
+			)}
+		</Link>
 	);
+
+	if (!useCustomTheme) {
+		return button;
+	}
+
+	return <StandardSiteThemeProvider view={view}>{button}</StandardSiteThemeProvider>;
 }
 
 function PublicationIcon({
