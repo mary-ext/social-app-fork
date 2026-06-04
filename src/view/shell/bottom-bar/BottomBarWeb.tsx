@@ -60,6 +60,7 @@ export function BottomBarWeb() {
 	const hideBorder = useHideBottomBarBorder();
 	const accountSwitchControl = useDialogControl();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
+	const isLabeler = profile?.associated?.labeler;
 	const iconWidth = 26;
 
 	const unreadMessageCount = useUnreadMessageCount();
@@ -160,8 +161,11 @@ export function BottomBarWeb() {
 											<View
 												style={[
 													styles.ctrlIcon,
-													styles.profileIcon,
-													isActive && [styles.onProfile, { borderColor: t.atoms.text.color }],
+													isLabeler ? styles.profileIconSquare : styles.profileIcon,
+													isActive && [
+														isLabeler ? styles.onProfileSquare : styles.onProfile,
+														{ borderColor: t.atoms.text.color },
+													],
 												]}
 											>
 												<UserAvatar
