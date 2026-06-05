@@ -35,6 +35,7 @@ export function Root({
 	code,
 	initialPreview,
 	currentConvoId,
+	hasFixedHeight,
 	children,
 }: {
 	code: string;
@@ -44,6 +45,7 @@ export function Root({
 	 * becomes "Copy link" instead of open/join (you're already here).
 	 */
 	currentConvoId?: string;
+	hasFixedHeight: boolean;
 	children: React.ReactNode;
 }) {
 	const { hasSession } = useSession();
@@ -136,7 +138,7 @@ export function Root({
 	}
 
 	return (
-		<ChatInviteProvider value={{ code, loading, error: !!error, preview, action }}>
+		<ChatInviteProvider value={{ code, loading, error: !!error, preview, action, hasFixedHeight }}>
 			{children}
 			<GroupChatJoinDialog control={joinDialogControl} code={code} />
 		</ChatInviteProvider>

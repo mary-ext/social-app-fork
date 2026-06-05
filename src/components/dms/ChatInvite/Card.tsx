@@ -19,7 +19,7 @@ import { useChatInvite } from './Context';
  */
 export function Card({ size }: { size: 'large' | 'small' }) {
 	const t = useTheme();
-	const { preview } = useChatInvite();
+	const { preview, hasFixedHeight } = useChatInvite();
 
 	if (!preview) return null;
 
@@ -31,21 +31,26 @@ export function Card({ size }: { size: 'large' | 'small' }) {
 		<View style={[a.flex_row, a.gap_md, a.align_center]}>
 			<AvatarBubbles size={56} self profiles={avatarProfiles} />
 			<View style={[a.flex_1, size === 'large' ? a.gap_2xs : a.gap_xs]}>
-				<Text emoji style={[size === 'large' ? a.text_lg : a.text_md, a.font_bold]} numberOfLines={1}>
+				<Text
+					emoji
+					style={[size === 'large' ? a.text_lg : a.text_md, a.font_bold]}
+					numberOfLines={1}
+					allowFontScaling={!hasFixedHeight}
+				>
 					{preview.name}
 				</Text>
 				<View style={[a.flex_row, a.align_center, a.gap_sm]}>
 					<Text
 						style={[a.text_2xs, a.font_medium, t.atoms.text_contrast_high]}
-						allowFontScaling
 						numberOfLines={1}
+						allowFontScaling={!hasFixedHeight}
 					>
 						<Trans>Group chat</Trans>
 					</Text>
 					<Text
 						style={[a.text_2xs, a.leading_tight, a.font_medium, t.atoms.text_contrast_high]}
-						allowFontScaling
 						numberOfLines={1}
+						allowFontScaling={!hasFixedHeight}
 					>
 						<Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
 							{preview.memberCount}/{preview.memberLimit}{' '}
@@ -54,13 +59,25 @@ export function Card({ size }: { size: 'large' | 'small' }) {
 					</Text>
 				</View>
 				<View style={[a.flex_row, a.align_center, a.gap_xs, size === 'large' && a.mt_2xs]}>
-					<Text emoji style={[a.flex_shrink, a.text_sm, a.font_medium]} allowFontScaling numberOfLines={1}>
+					<Text
+						emoji
+						style={[a.flex_shrink, a.text_sm, a.font_medium]}
+						numberOfLines={1}
+						allowFontScaling={!hasFixedHeight}
+					>
 						<Trans comment="The group chat creator, in the format 'By {displayName}'.">
-							By <Text style={[a.font_medium]}>{ownerDisplayName}</Text>
+							By{' '}
+							<Text style={[a.font_medium]} allowFontScaling={!hasFixedHeight}>
+								{ownerDisplayName}
+							</Text>
 						</Trans>
 					</Text>
-					<ProfileBadges profile={preview.owner} size="sm" />
-					<Text style={[a.flex_shrink, t.atoms.text_contrast_medium]} allowFontScaling numberOfLines={1}>
+					<ProfileBadges profile={preview.owner} size="sm" allowFontScaling={!hasFixedHeight} />
+					<Text
+						style={[a.flex_shrink, t.atoms.text_contrast_medium]}
+						numberOfLines={1}
+						allowFontScaling={!hasFixedHeight}
+					>
 						{ownerHandle}
 					</Text>
 				</View>

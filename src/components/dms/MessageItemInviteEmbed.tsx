@@ -68,6 +68,7 @@ let MessageItemInviteEmbed = ({
 						code={embed.joinLinkPreview.code}
 						initialPreview={embed.joinLinkPreview}
 						currentConvoId={convo.convo.view.id}
+						hasFixedHeight={false}
 					>
 						<ChatInvite.Card size="small" />
 						<ChatInvite.JoinButton />

@@ -31,7 +31,7 @@ export function JoinRequestEmbed({
 	if (!resolvedCode) return null;
 
 	return (
-		<ChatInvite.Root code={resolvedCode} initialPreview={preview}>
+		<ChatInvite.Root code={resolvedCode} initialPreview={preview} hasFixedHeight>
 			<JoinRequestEmbedBody style={style} onOpen={onOpen} />
 		</ChatInvite.Root>
 	);

@@ -12,7 +12,7 @@ import { useChatInvite } from './Context';
  * Renders nothing while loading or when there's no preview to act on.
  */
 export function JoinButton({ onPress, style }: { onPress?: () => void; style?: StyleProp<ViewStyle> }) {
-	const { action } = useChatInvite();
+	const { action, hasFixedHeight } = useChatInvite();
 
 	if (!action) return null;
 
@@ -31,7 +31,7 @@ export function JoinButton({ onPress, style }: { onPress?: () => void; style?: S
 			style={[a.w_full, style]}
 		>
 			{action.side === 'left' && <ButtonIcon icon={action.icon} />}
-			<ButtonText>{action.label}</ButtonText>
+			<ButtonText allowFontScaling={!hasFixedHeight}>{action.label}</ButtonText>
 			{action.side === 'right' && <ButtonIcon icon={action.icon} />}
 		</Button>
 	);

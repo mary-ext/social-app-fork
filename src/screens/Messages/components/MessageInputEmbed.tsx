@@ -233,7 +233,7 @@ function MessageInputInviteEmbed({ code, onRemove }: { code: string; onRemove: (
 	const { t: l } = useLingui();
 
 	return (
-		<ChatInvite.Root code={code}>
+		<ChatInvite.Root code={code} hasFixedHeight={false}>
 			<View
 				style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}
 			>
