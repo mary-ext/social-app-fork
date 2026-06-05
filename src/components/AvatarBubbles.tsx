@@ -35,18 +35,32 @@ type Layout = {
 
 type Props = {
 	animate?: boolean;
-	profiles: AnyProfileView[];
+	profiles: (AnyProfileView | undefined)[];
+	/**
+	 * By default, when there are more than 2 profiles, the current user is filtered out (so you don't see
+	 * yourself among your own group's members). Set this to `true` for cases where every passed profile should
+	 * appear, e.g. an invite preview where the owner is meaningful regardless of viewer.
+	 */
+	self?: boolean;
 	size?: number;
 	moderationOpts?: ModerationOptions;
 };
 
-export function AvatarBubbles({ animate = false, profiles: allProfiles, size = 120, moderationOpts }: Props) {
+export function AvatarBubbles({
+	animate = false,
+	profiles: allProfiles,
+	self = false,
+	size = 120,
+	moderationOpts,
+}: Props) {
 	const { currentAccount } = useSession();
 	const profiles =
-		allProfiles.length > 2 ? allProfiles.filter((p) => p.did !== currentAccount?.did) : allProfiles;
+		!self && allProfiles.length > 2
+			? allProfiles.filter((p) => p?.did != null && p.did !== currentAccount?.did)
+			: allProfiles;
 	const moderations = useMemo(() => {
 		if (!moderationOpts) return [];
-		return profiles.map((p) => moderateProfile(p, moderationOpts));
+		return profiles.map((p) => (p ? moderateProfile(p, moderationOpts) : undefined));
 	}, [profiles, moderationOpts]);
 
 	const scale = size / 120;

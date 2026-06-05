@@ -286,6 +286,21 @@ msgstr ""
 msgid "{0}’s avatar"
 msgstr "{0}’s avatar"
 
+#. The number of members in a group chat, in the format '{members}/{total} members'.
+#. placeholder {0}: preview.memberCount
+#. placeholder {1}: preview.memberLimit
+#. placeholder {2}: preview.memberCount
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:167
+msgid "{0}/{1} {2, plural, one {member} other {members}}"
+msgstr "{0}/{1} {2, plural, one {member} other {members}}"
+
+#. The number of active group chat members out of the total number allowed.
+#. placeholder {0}: joinLinkPreview.memberCount
+#. placeholder {1}: joinLinkPreview.memberLimit
+#: src/components/intents/GroupChatJoinDialog.tsx:279
+msgid "{0}/{1} members"
+msgstr "{0}/{1} members"
+
 #. How many days have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:158
@@ -813,6 +828,10 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:156
 msgid "Accepted conversations"
 msgstr "Accepted conversations"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:93
+msgid "Access requested! The group owner will review your request."
+msgstr "Access requested! The group owner will review your request."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:37
 #: src/screens/Settings/Settings.tsx:181
@@ -1353,6 +1372,10 @@ msgstr ""
 msgid "Anyone can interact"
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:287
+msgid "Anyone can join"
+msgstr "Anyone can join"
+
 #: src/screens/Messages/components/InviteLinkDialog.tsx:127
 #: src/screens/Messages/components/InviteLinkDialog.tsx:128
 msgid "Anyone can join instantly"
@@ -1621,7 +1644,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:202
+#: src/components/Post/Embed/index.tsx:224
 msgid "Blocked"
 msgstr ""
 
@@ -1772,6 +1795,11 @@ msgstr ""
 msgid "By <0>{0}</0>"
 msgstr ""
 
+#. The group chat creator, in the format 'By {displayName}'.
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:180
+msgid "By <0>{ownerDisplayName}</0>"
+msgstr "By <0>{ownerDisplayName}</0>"
+
 #. placeholder {0}: authorProfile.handle
 #: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:69
 msgid "by <0>@{0}</0>"
@@ -1881,6 +1909,13 @@ msgstr ""
 #: src/components/dms/getSystemMessageInfo.ts:114
 msgid "Chat ended"
 msgstr "Chat ended"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:214
+#: src/components/intents/GroupChatJoinDialog.tsx:244
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:78
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:117
+msgid "Chat invite link no longer available"
+msgstr "Chat invite link no longer available"
 
 #: src/components/dms/getSystemMessageInfo.ts:110
 msgid "Chat locked"
@@ -2039,6 +2074,8 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:198
 #: src/components/dms/AfterReportDialog.tsx:200
 #: src/components/dms/InitiateChatFlow.tsx:485
+#: src/components/intents/GroupChatJoinDialog.tsx:198
+#: src/components/intents/GroupChatJoinDialog.tsx:227
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
@@ -2085,6 +2122,13 @@ msgstr ""
 #: src/screens/Messages/components/RequestStatus.tsx:80
 msgid "Close the incoming requests banner"
 msgstr "Close the incoming requests banner"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:190
+#: src/components/intents/GroupChatJoinDialog.tsx:191
+#: src/components/intents/GroupChatJoinDialog.tsx:221
+#: src/components/intents/GroupChatJoinDialog.tsx:222
+msgid "Close this dialog"
+msgstr "Close this dialog"
 
 #: src/view/com/composer/Composer.tsx:1399
 msgid "Closes post composer and discards post draft"
@@ -2576,7 +2620,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:195
+#: src/components/Post/Embed/index.tsx:217
 msgid "Deleted"
 msgstr ""
 
@@ -3296,6 +3340,10 @@ msgstr "Failed to enable invite link"
 msgid "Failed to ignore join request"
 msgstr "Failed to ignore join request"
 
+#: src/components/intents/GroupChatJoinDialog.tsx:115
+msgid "Failed to join the group chat. Please try again."
+msgstr "Failed to join the group chat. Please try again."
+
 #: src/screens/Messages/components/ChatEnded.tsx:43
 #: src/screens/Messages/components/ChatLocked.tsx:54
 #: src/screens/Messages/ConversationSettings/index.tsx:330
@@ -3386,6 +3434,10 @@ msgstr "Failed to remove group chat member"
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:151
+msgid "Failed to rescind your request. Please try again."
+msgstr "Failed to rescind your request. Please try again."
 
 #: src/view/com/composer/Composer.tsx:545
 msgid "Failed to save draft"
@@ -3632,6 +3684,10 @@ msgstr ""
 #: src/Navigation.tsx:598
 msgid "Followers"
 msgstr "Followers"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:287
+msgid "Followers can join"
+msgstr "Followers can join"
 
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/KnownFollowers.tsx:55
@@ -3950,6 +4006,11 @@ msgstr ""
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:168
 msgid "Grooming or predatory behavior"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:273
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:160
+msgid "Group chat"
+msgstr "Group chat"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:487
 msgid "Group chat invite link dialog"
@@ -4306,6 +4367,10 @@ msgstr ""
 msgid "Interaction settings"
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:127
+msgid "Invalid group chat code."
+msgstr "Invalid group chat code."
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:333
 msgctxt "toast"
 msgid "Invalid interaction settings."
@@ -4314,6 +4379,10 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:90
 msgid "Invalid report subject"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:155
+msgid "Invalid rescind request."
+msgstr "Invalid rescind request."
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:151
 #: src/screens/Messages/components/InviteLinkDialog.tsx:279
@@ -4375,6 +4444,21 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:135
 msgid "Jobs"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:239
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:112
+msgid "Join"
+msgstr "Join"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:60
+#: src/components/intents/GroupChatJoinDialog.tsx:361
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:220
+msgid "Join group chat"
+msgstr "Join group chat"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:147
+msgid "Join request rescinded."
+msgstr "Join request rescinded."
 
 #: src/components/StarterPack/QrCode.tsx:42
 #: src/view/shell/nav-sign-in-card.tsx:34
@@ -5685,11 +5769,20 @@ msgstr "Only admins can accept join requests."
 msgid "Only admins can ignore join requests."
 msgstr "Only admins can ignore join requests."
 
+#: src/components/intents/GroupChatJoinDialog.tsx:124
+msgid "Only followers can join this group chat."
+msgstr "Only followers can join this group chat."
+
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:104
 msgid "Only followers who I follow"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:254
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:127
+msgid "Only people the chat owner follows can join"
+msgstr "Only people the chat owner follows can join"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:41
 msgid "Only WebVTT (.vtt) files are supported"
@@ -5705,6 +5798,11 @@ msgstr ""
 #: src/view/screens/Profile.tsx:132
 msgid "Oops!"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:353
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:209
+msgid "Open chat"
+msgstr "Open chat"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:130
 msgid "Open chat member options for {displayName}"
@@ -5736,6 +5834,11 @@ msgstr ""
 #: src/screens/Profile/components/GermButton.tsx:72
 msgid "Open Germ DM"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:345
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:202
+msgid "Open group chat"
+msgstr "Open group chat"
 
 #: src/components/dms/MessagesListHeader.tsx:180
 #: src/components/dms/MessagesListHeader.tsx:214
@@ -5789,6 +5892,10 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:331
 msgid "Open system log"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:346
+msgid "Open this group chat"
+msgstr "Open this group chat"
 
 #. placeholder {0}: feedInfo.displayName
 #: src/view/shell/desktop/Feeds.tsx:178
@@ -6635,11 +6742,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:221
+#: src/components/Post/Embed/index.tsx:243
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:221
+#: src/components/Post/Embed/index.tsx:243
 msgid "Removed by you"
 msgstr ""
 
@@ -6898,6 +7005,11 @@ msgstr ""
 msgid "Reposts of your reposts"
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:361
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:220
+msgid "Request access to group chat"
+msgstr "Request access to group chat"
+
 #: src/screens/Messages/JoinRequests.tsx:151
 msgid "Request approved."
 msgstr "Request approved."
@@ -6905,6 +7017,15 @@ msgstr "Request approved."
 #: src/screens/Messages/JoinRequests.tsx:185
 msgid "Request ignored."
 msgstr "Request ignored."
+
+#: src/components/intents/GroupChatJoinDialog.tsx:239
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:112
+msgid "Request to join"
+msgstr "Request to join"
+
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:131
+msgid "Requested"
+msgstr "Requested"
 
 #. Incoming message requests
 #: src/screens/Messages/components/InboxRequests.tsx:26
@@ -6924,6 +7045,10 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:64
 msgid "Required in your region"
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:258
+msgid "Rescind request"
+msgstr "Rescind request"
 
 #: src/screens/Settings/Settings.tsx:360
 #: src/screens/Settings/Settings.tsx:363
@@ -7977,6 +8102,10 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:99
+msgid "Successfully joined the group chat!"
+msgstr "Successfully joined the group chat!"
+
 #: src/components/verification/VerificationCreatePrompt.tsx:38
 msgid "Successfully verified"
 msgstr ""
@@ -8049,6 +8178,15 @@ msgstr "Tap for details"
 msgid "Tap for more information"
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:365
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:224
+msgid "Tap to join this group chat immediately"
+msgstr "Tap to join this group chat immediately"
+
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:203
+msgid "Tap to open this group chat"
+msgstr "Tap to open this group chat"
+
 #: src/components/dms/ReactionsDialog.tsx:175
 msgid "Tap to remove"
 msgstr "Tap to remove"
@@ -8057,6 +8195,11 @@ msgstr "Tap to remove"
 #: src/components/dms/ReactionsDialog.tsx:191
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
+
+#: src/components/intents/GroupChatJoinDialog.tsx:364
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:223
+msgid "Tap to request access to join this group chat"
+msgstr "Tap to request access to join this group chat"
 
 #: src/components/dms/MessageItem.tsx:482
 msgid "Tap to retry"
@@ -8162,6 +8305,7 @@ msgstr ""
 msgid "The following settings will be used as your defaults when creating new posts. You can edit these for a specific post from the composer."
 msgstr ""
 
+#: src/components/intents/GroupChatJoinDialog.tsx:133
 #: src/screens/Messages/JoinRequests.tsx:171
 msgid "The member limit has been reached."
 msgstr "The member limit has been reached."
@@ -8200,6 +8344,11 @@ msgstr "There is no invite link for this group chat."
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:55
 msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "There was a problem loading GIFs. Check your connection and try again."
+
+#: src/components/intents/GroupChatJoinDialog.tsx:117
+#: src/components/intents/GroupChatJoinDialog.tsx:153
+msgid "There was a problem with your internet connection, please try again"
+msgstr "There was a problem with your internet connection, please try again"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:158
 #: src/screens/ProfileList/components/Header.tsx:79
@@ -8346,6 +8495,11 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
+#: src/components/intents/GroupChatJoinDialog.tsx:249
+#: src/components/Post/Embed/JoinRequestEmbed.tsx:122
+msgid "This chat is full"
+msgstr "This chat is full"
+
 #: src/screens/Messages/components/ChatListItem.tsx:360
 #: src/screens/Messages/components/ChatLocked.tsx:61
 msgid "This chat is locked"
@@ -8371,6 +8525,10 @@ msgstr ""
 #: src/view/com/posts/PostFeedErrorMessage.tsx:105
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:121
+msgid "This conversation is locked."
+msgstr "This conversation is locked."
 
 #: src/screens/Messages/components/ChatListItem.tsx:148
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
@@ -8413,6 +8571,14 @@ msgstr ""
 #: src/view/com/posts/FeedShutdownMsg.tsx:83
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:130
+msgid "This invite link has been disabled."
+msgstr "This invite link has been disabled."
+
+#: src/components/intents/GroupChatJoinDialog.tsx:187
+msgid "This invite link is invalid"
+msgstr "This invite link is invalid"
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:158
 #: src/features/liveNow/components/GoLiveDialog.tsx:150
@@ -9698,6 +9864,10 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:188
 msgid "You don't have any saved feeds."
 msgstr ""
+
+#: src/components/intents/GroupChatJoinDialog.tsx:136
+msgid "You have been previously removed from this group and can’t join it using this link."
+msgstr "You have been previously removed from this group and can’t join it using this link."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:73
 #: src/lib/moderation/useModerationCauseDescription.ts:69
