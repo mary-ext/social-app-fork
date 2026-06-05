@@ -18,6 +18,10 @@ export const scroll = style({
 	flexDirection: 'row',
 	gap: `${ITEM_GAP}px`,
 	height: '100%',
+	// prevent horizontal trackpad/wheel swipes from triggering the browser's back/forward
+	// overscroll-navigation gesture. handles chrome and firefox; safari ignores this and is handled
+	// via the wheel listener in carousel/usePointerHandlers.ts
+	overscrollBehaviorX: 'contain',
 	overflowX: 'scroll',
 	overflowY: 'hidden',
 	position: 'relative',
