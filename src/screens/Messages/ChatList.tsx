@@ -399,6 +399,12 @@ export function Header({
 	const { t: l } = useLingui();
 	const { gtMobile } = useBreakpoints();
 	const leftConvos = useLeftConvos();
+	const { isWithinSplitView } = useIsWithinSplitView();
+
+	// In split view, the left column (and this header) stays mounted while the
+	// right column shows the selected route. Pushing would stack duplicate routes
+	// on repeated clicks, so navigate instead to dedupe by route + params.
+	const action = isWithinSplitView ? 'navigate' : 'push';
 
 	const { data: unreadInboxData, hasNextPage: hasMoreRequests } = useListConvosQuery({
 		status: 'request',
@@ -431,9 +437,15 @@ export function Header({
 					</Layout.Header.Content>
 
 					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-						<InboxRequests count={inboxAllConvos.length} more={hasMoreRequests} variant="solid" />
+						<InboxRequests
+							count={inboxAllConvos.length}
+							more={hasMoreRequests}
+							variant="solid"
+							action={action}
+						/>
 						<Link
 							to="/messages/settings"
+							action={action}
 							label={l`Chat settings`}
 							size="small"
 							color="secondary"

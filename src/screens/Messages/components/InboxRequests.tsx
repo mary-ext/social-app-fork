@@ -13,10 +13,12 @@ export function InboxRequests({
 	count,
 	more,
 	variant,
+	action,
 }: {
 	count: number;
 	more: boolean;
 	variant?: 'ghost' | 'solid';
+	action?: 'navigate' | 'push';
 }) {
 	const { t: l } = useLingui();
 
@@ -43,6 +45,7 @@ export function InboxRequests({
 				<Link
 					label={label}
 					to="/messages/inbox"
+					action={action}
 					size="small"
 					variant={unread ? 'solid' : 'ghost'}
 					color={unread ? 'primary_subtle' : 'secondary'}
@@ -65,7 +68,13 @@ export function InboxRequests({
 		}
 		case 'solid': {
 			return (
-				<Link label={label} to="/messages/inbox" color={unread ? 'primary_subtle' : 'secondary'} size="small">
+				<Link
+					label={label}
+					to="/messages/inbox"
+					action={action}
+					color={unread ? 'primary_subtle' : 'secondary'}
+					size="small"
+				>
 					<ButtonIcon icon={InboxIcon} />
 					<ButtonText>{label}</ButtonText>
 				</Link>
