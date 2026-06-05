@@ -383,67 +383,40 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logLockConvo': {
 							const logRef: ChatBskyConvoDefs.LogLockConvo = log;
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => {
-									if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
-										return {
+							mutateConvoView(logRef.convoId, (convo) =>
+								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
+									? {
 											...convo,
-											kind: {
-												...convo.kind,
-												lockStatus: 'locked',
-											},
+											kind: { ...convo.kind, lockStatus: 'locked' },
 											rev: logRef.rev,
-										};
-									}
-									return {
-										...convo,
-										rev: logRef.rev,
-									};
-								}),
+										}
+									: { ...convo, rev: logRef.rev },
 							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logUnlockConvo': {
 							const logRef: ChatBskyConvoDefs.LogUnlockConvo = log;
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => {
-									if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
-										return {
+							mutateConvoView(logRef.convoId, (convo) =>
+								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
+									? {
 											...convo,
-											kind: {
-												...convo.kind,
-												lockStatus: 'unlocked',
-											},
+											kind: { ...convo.kind, lockStatus: 'unlocked' },
 											rev: logRef.rev,
-										};
-									}
-									return {
-										...convo,
-										rev: logRef.rev,
-									};
-								}),
+										}
+									: { ...convo, rev: logRef.rev },
 							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logLockConvoPermanently': {
 							const logRef: ChatBskyConvoDefs.LogLockConvoPermanently = log;
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => {
-									if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
-										return {
+							mutateConvoView(logRef.convoId, (convo) =>
+								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
+									? {
 											...convo,
-											kind: {
-												...convo.kind,
-												lockStatus: 'locked-permanently',
-											},
+											kind: { ...convo.kind, lockStatus: 'locked-permanently' },
 											rev: logRef.rev,
-										};
-									}
-									return {
-										...convo,
-										rev: logRef.rev,
-									};
-								}),
+										}
+									: { ...convo, rev: logRef.rev },
 							);
 							break;
 						}
