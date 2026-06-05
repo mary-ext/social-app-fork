@@ -502,7 +502,7 @@ msgid "{following} following"
 msgstr ""
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:54
-#: src/components/dms/InitiateChatFlow.tsx:770
+#: src/components/dms/InitiateChatFlow.tsx:774
 msgid "{handle} can’t be added"
 msgstr "{handle} can’t be added"
 
@@ -510,7 +510,7 @@ msgstr "{handle} can’t be added"
 msgid "{handle} can't be messaged"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:738
+#: src/components/dms/InitiateChatFlow.tsx:742
 msgid "{handle} can’t be messaged"
 msgstr "{handle} can’t be messaged"
 
@@ -570,7 +570,7 @@ msgstr "{name}'s favorite feeds and people - join me!"
 msgid "{name}'s starter pack"
 msgstr "{name}'s starter pack"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:269
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:273
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -771,7 +771,7 @@ msgid "Accept chat request"
 msgstr ""
 
 #. Accept a chat request
-#: src/screens/Messages/components/RequestListItem.tsx:46
+#: src/screens/Messages/components/RequestListItem.tsx:48
 msgid "Accept Request"
 msgstr ""
 
@@ -948,7 +948,7 @@ msgstr ""
 msgid "Add another post to thread"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:135
+#: src/screens/Settings/AutomationLabelSettings.tsx:139
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
@@ -1185,7 +1185,7 @@ msgstr ""
 
 #: src/components/images/AutoSizedImage.tsx:174
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
-#: src/components/web/ImageEmbed/MediaBadges.tsx:51
+#: src/components/web/ImageEmbed/MediaBadges.tsx:71
 #: src/view/com/composer/GifAltText.tsx:101
 #: src/view/com/composer/photos/Gallery.tsx:190
 msgid "ALT"
@@ -1261,9 +1261,9 @@ msgstr ""
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:158
-msgid "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
-msgstr "An invite link lets people join this group chat without being added directly. You control who can use the link and whether they need your approval. You can disable the link at any time."
+#: src/screens/Messages/components/InviteLinkDialog.tsx:156
+msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
+msgstr "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:238
 msgid "An issue not included in these options"
@@ -1323,13 +1323,13 @@ msgstr ""
 msgid "Anyone can interact"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:129
-#: src/screens/Messages/components/InviteLinkDialog.tsx:130
+#: src/screens/Messages/components/InviteLinkDialog.tsx:127
+#: src/screens/Messages/components/InviteLinkDialog.tsx:128
 msgid "Anyone can join instantly"
 msgstr "Anyone can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:134
-#: src/screens/Messages/components/InviteLinkDialog.tsx:135
+#: src/screens/Messages/components/InviteLinkDialog.tsx:132
+#: src/screens/Messages/components/InviteLinkDialog.tsx:133
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
@@ -1339,7 +1339,7 @@ msgstr "Anyone can request to join"
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:401
+#: src/screens/Messages/components/InviteLinkDialog.tsx:412
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
@@ -1473,12 +1473,14 @@ msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:425
 #: src/components/dms/AddMembersFlow.tsx:428
-#: src/components/dms/InitiateChatFlow.tsx:616
 #: src/components/dms/InitiateChatFlow.tsx:620
+#: src/components/dms/InitiateChatFlow.tsx:624
 #: src/components/moderation/LabelsOnMeDialog.tsx:285
 #: src/components/moderation/LabelsOnMeDialog.tsx:287
 #: src/screens/Messages/components/ChatDisabled.tsx:155
 #: src/screens/Messages/components/ChatDisabled.tsx:158
+#: src/screens/Messages/components/InviteLinkDialog.tsx:235
+#: src/screens/Messages/components/InviteLinkDialog.tsx:260
 #: src/screens/Messages/Inbox.tsx:207
 #: src/screens/Profile/Header/Shell.tsx:120
 #: src/screens/StarterPack/Wizard/index.tsx:281
@@ -1758,8 +1760,8 @@ msgstr ""
 #: src/components/web/Prompt/index.tsx:98
 #: src/features/liveNow/components/GoLiveDialog.tsx:226
 #: src/features/liveNow/components/GoLiveDialog.tsx:233
-#: src/screens/Messages/components/InviteLinkDialog.tsx:424
-#: src/screens/Messages/components/InviteLinkDialog.tsx:429
+#: src/screens/Messages/components/InviteLinkDialog.tsx:435
+#: src/screens/Messages/components/InviteLinkDialog.tsx:440
 #: src/screens/Messages/ConversationSettings/prompts.tsx:71
 #: src/screens/Messages/ConversationSettings/prompts.tsx:95
 #: src/screens/Profile/Header/EditProfileDialog.tsx:196
@@ -1938,7 +1940,7 @@ msgstr ""
 msgid "Choose post languages"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:191
+#: src/screens/Messages/components/InviteLinkDialog.tsx:202
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
@@ -2006,7 +2008,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:90
 #: src/components/dms/AfterReportDialog.tsx:198
 #: src/components/dms/AfterReportDialog.tsx:200
-#: src/components/dms/InitiateChatFlow.tsx:481
+#: src/components/dms/InitiateChatFlow.tsx:485
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
@@ -2016,8 +2018,8 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:47
 #: src/features/liveNow/components/EditLiveDialog.tsx:185
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
-#: src/screens/Messages/components/InviteLinkDialog.tsx:447
-#: src/screens/Messages/components/InviteLinkDialog.tsx:449
+#: src/screens/Messages/components/InviteLinkDialog.tsx:459
+#: src/screens/Messages/components/InviteLinkDialog.tsx:461
 msgid "Close"
 msgstr ""
 
@@ -2169,7 +2171,7 @@ msgid "Continue thread..."
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:283
-#: src/components/dms/InitiateChatFlow.tsx:432
+#: src/components/dms/InitiateChatFlow.tsx:436
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
@@ -2326,7 +2328,7 @@ msgstr "Couldn’t load GIFs"
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:94
 #: src/components/dialogs/StarterPackDialog.tsx:180
-#: src/components/dms/InitiateChatFlow.tsx:440
+#: src/components/dms/InitiateChatFlow.tsx:444
 #: src/components/StarterPack/ProfileStarterPacks.tsx:285
 msgid "Create"
 msgstr ""
@@ -2363,7 +2365,7 @@ msgstr ""
 msgid "Create another"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:439
+#: src/components/dms/InitiateChatFlow.tsx:443
 msgid "Create group chat"
 msgstr "Create group chat"
 
@@ -2411,7 +2413,7 @@ msgstr ""
 
 #. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
-#: src/screens/Messages/components/InviteLinkDialog.tsx:286
+#: src/screens/Messages/components/InviteLinkDialog.tsx:297
 #: src/screens/Messages/ConversationSettings/index.tsx:396
 msgid "Created {0}"
 msgstr ""
@@ -2591,8 +2593,8 @@ msgstr ""
 msgid "Dim"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:319
-#: src/screens/Messages/components/InviteLinkDialog.tsx:325
+#: src/screens/Messages/components/InviteLinkDialog.tsx:330
+#: src/screens/Messages/components/InviteLinkDialog.tsx:336
 msgid "Disable"
 msgstr "Disable"
 
@@ -2600,8 +2602,8 @@ msgstr "Disable"
 msgid "Disable captions"
 msgstr "Disable captions"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:411
-#: src/screens/Messages/components/InviteLinkDialog.tsx:418
+#: src/screens/Messages/components/InviteLinkDialog.tsx:422
+#: src/screens/Messages/components/InviteLinkDialog.tsx:429
 msgid "Disable link"
 msgstr "Disable link"
 
@@ -2613,7 +2615,7 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:398
+#: src/screens/Messages/components/InviteLinkDialog.tsx:409
 msgid "Disable this invite link?"
 msgstr "Disable this invite link?"
 
@@ -2792,7 +2794,7 @@ msgstr ""
 msgid "Eating disorders"
 msgstr ""
 
-#: src/screens/Messages/components/EditTextButton.tsx:40
+#: src/screens/Messages/components/EditTextButton.tsx:46
 #: src/screens/StarterPack/StarterPackScreen.tsx:536
 #: src/screens/StarterPack/Wizard/index.tsx:294
 #: src/screens/StarterPack/Wizard/index.tsx:296
@@ -2836,7 +2838,7 @@ msgstr ""
 msgid "Edit interaction settings"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:300
+#: src/screens/Messages/components/InviteLinkDialog.tsx:311
 msgid "Edit link settings"
 msgstr "Edit link settings"
 
@@ -3186,7 +3188,7 @@ msgstr "Failed to copy link"
 msgid "Failed to create conversation"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:95
+#: src/screens/Messages/components/InviteLinkDialog.tsx:93
 msgid "Failed to create invite link"
 msgstr "Failed to create invite link"
 
@@ -3213,7 +3215,7 @@ msgstr ""
 msgid "Failed to delete starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:112
+#: src/screens/Messages/components/InviteLinkDialog.tsx:110
 msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
@@ -3226,11 +3228,11 @@ msgstr ""
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:105
+#: src/screens/Messages/components/InviteLinkDialog.tsx:103
 msgid "Failed to edit invite link"
 msgstr "Failed to edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:119
+#: src/screens/Messages/components/InviteLinkDialog.tsx:117
 msgid "Failed to enable invite link"
 msgstr "Failed to enable invite link"
 
@@ -3676,17 +3678,17 @@ msgstr ""
 msgid "Generate a starter pack"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:186
-#: src/screens/Messages/components/InviteLinkDialog.tsx:224
-#: src/screens/Messages/components/InviteLinkDialog.tsx:247
+#: src/screens/Messages/components/InviteLinkDialog.tsx:197
+#: src/screens/Messages/components/InviteLinkDialog.tsx:235
+#: src/screens/Messages/components/InviteLinkDialog.tsx:260
 msgid "Generate invite link"
 msgstr "Generate invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:376
+#: src/screens/Messages/components/InviteLinkDialog.tsx:387
 msgid "Generate new invite link"
 msgstr "Generate new invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:382
+#: src/screens/Messages/components/InviteLinkDialog.tsx:393
 msgid "Generate new link"
 msgstr "Generate new link"
 
@@ -3764,8 +3766,8 @@ msgstr ""
 msgid "Get notified when {name} posts"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:169
-#: src/screens/Messages/components/InviteLinkDialog.tsx:177
+#: src/screens/Messages/components/InviteLinkDialog.tsx:176
+#: src/screens/Messages/components/InviteLinkDialog.tsx:184
 msgid "Get started"
 msgstr ""
 
@@ -3889,7 +3891,7 @@ msgstr ""
 msgid "Grooming or predatory behavior"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:475
+#: src/screens/Messages/components/InviteLinkDialog.tsx:487
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
@@ -3924,12 +3926,17 @@ msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
 
+#. placeholder {0}: convo.details.memberLimit
+#: src/screens/Messages/components/InviteLinkDialog.tsx:162
+msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
+msgstr "Group chats can only have a maximum of {0, plural, other {# people}}."
+
 #: src/components/dialogs/SearchablePeopleList.tsx:477
 msgid "Group is locked"
 msgstr "Group is locked"
 
 #: src/components/dms/InitiateChatFlow.tsx:237
-#: src/components/dms/InitiateChatFlow.tsx:498
+#: src/components/dms/InitiateChatFlow.tsx:502
 #: src/screens/Messages/ConversationSettings/prompts.tsx:34
 msgid "Group name"
 msgstr "Group name"
@@ -4238,10 +4245,10 @@ msgstr ""
 msgid "Invalid report subject"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:153
-#: src/screens/Messages/components/InviteLinkDialog.tsx:264
-#: src/screens/Messages/components/InviteLinkDialog.tsx:270
-#: src/screens/Messages/components/InviteLinkDialog.tsx:438
+#: src/screens/Messages/components/InviteLinkDialog.tsx:151
+#: src/screens/Messages/components/InviteLinkDialog.tsx:279
+#: src/screens/Messages/components/InviteLinkDialog.tsx:285
+#: src/screens/Messages/components/InviteLinkDialog.tsx:450
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:133
 #: src/screens/Messages/ConversationSettings/index.tsx:432
 msgid "Invite link"
@@ -4252,7 +4259,7 @@ msgid "Invite link created"
 msgstr "Invite link created"
 
 #: src/components/dms/getSystemMessageInfo.ts:144
-#: src/screens/Messages/components/InviteLinkDialog.tsx:264
+#: src/screens/Messages/components/InviteLinkDialog.tsx:279
 msgid "Invite link disabled"
 msgstr "Invite link disabled"
 
@@ -5206,8 +5213,8 @@ msgstr "New group chat"
 
 #. Button used to create a new group chat.
 #. Button used to create a new group chat.
-#: src/components/dms/InitiateChatFlow.tsx:648
-#: src/components/dms/InitiateChatFlow.tsx:684
+#: src/components/dms/InitiateChatFlow.tsx:652
+#: src/components/dms/InitiateChatFlow.tsx:688
 msgctxt "action"
 msgid "New group chat"
 msgstr "New group chat"
@@ -5264,7 +5271,7 @@ msgid "News"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:284
-#: src/components/dms/InitiateChatFlow.tsx:433
+#: src/components/dms/InitiateChatFlow.tsx:437
 #: src/screens/StarterPack/Wizard/index.tsx:170
 #: src/screens/StarterPack/Wizard/index.tsx:174
 #: src/screens/StarterPack/Wizard/index.tsx:338
@@ -5394,7 +5401,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:238
 #: src/components/dms/AddMembersFlow.tsx:222
-#: src/components/dms/InitiateChatFlow.tsx:330
+#: src/components/dms/InitiateChatFlow.tsx:334
 #: src/components/suggested-follows-dialog.tsx:170
 msgid "No results"
 msgstr ""
@@ -5535,7 +5542,7 @@ msgstr ""
 
 #: src/components/BotAccountAlert.tsx:53
 #: src/components/BotAccountAlert.tsx:55
-#: src/components/dms/InitiateChatFlow.tsx:596
+#: src/components/dms/InitiateChatFlow.tsx:600
 #: src/components/dms/MessageItem.tsx:560
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:570
 msgid "Okay"
@@ -5576,8 +5583,8 @@ msgid "One or more of your selected files are not supported."
 msgstr ""
 
 #: src/view/com/composer/SelectMediaButton.tsx:255
-msgid "One or more of your selected files are too large. Maximum size is 100 MB."
-msgstr "One or more of your selected files are too large. Maximum size is 100 MB."
+msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
+msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
 #: src/view/com/composer/Composer.tsx:500
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
@@ -5858,11 +5865,11 @@ msgstr ""
 msgid "People"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:140
+#: src/screens/Messages/components/InviteLinkDialog.tsx:138
 msgid "People {ownerName} follows can join instantly"
 msgstr "People {ownerName} follows can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:145
+#: src/screens/Messages/components/InviteLinkDialog.tsx:143
 msgid "People {ownerName} follows can request to join"
 msgstr "People {ownerName} follows can request to join"
 
@@ -5881,11 +5888,11 @@ msgstr ""
 msgid "People I follow"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:139
+#: src/screens/Messages/components/InviteLinkDialog.tsx:137
 msgid "People I follow can join instantly"
 msgstr "People I follow can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:144
+#: src/screens/Messages/components/InviteLinkDialog.tsx:142
 msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
@@ -6119,8 +6126,8 @@ msgstr ""
 msgid "Post language selection"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:330
-#: src/screens/Messages/components/InviteLinkDialog.tsx:343
+#: src/screens/Messages/components/InviteLinkDialog.tsx:341
+#: src/screens/Messages/components/InviteLinkDialog.tsx:354
 msgid "Post link"
 msgstr "Post link"
 
@@ -6327,11 +6334,11 @@ msgstr ""
 msgid "Re-attach quote"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:362
+#: src/screens/Messages/components/InviteLinkDialog.tsx:373
 msgid "Re-enable invite link"
 msgstr "Re-enable invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:370
+#: src/screens/Messages/components/InviteLinkDialog.tsx:381
 msgid "Re-enable link"
 msgstr "Re-enable link"
 
@@ -7190,7 +7197,7 @@ msgstr ""
 msgid "Select GIF \"{0}\""
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:589
+#: src/components/dms/InitiateChatFlow.tsx:593
 msgid "Select group chat members"
 msgstr "Select group chat members"
 
@@ -7363,8 +7370,8 @@ msgid "Sexually Suggestive"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:112
-#: src/screens/Messages/components/InviteLinkDialog.tsx:347
-#: src/screens/Messages/components/InviteLinkDialog.tsx:355
+#: src/screens/Messages/components/InviteLinkDialog.tsx:358
+#: src/screens/Messages/components/InviteLinkDialog.tsx:366
 #: src/screens/StarterPack/StarterPackScreen.tsx:388
 #: src/screens/Topic.tsx:83
 msgid "Share"
@@ -7423,8 +7430,8 @@ msgstr ""
 msgid "Show anyway"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:150
-#: src/screens/Settings/AutomationLabelSettings.tsx:164
+#: src/screens/Settings/AutomationLabelSettings.tsx:154
+#: src/screens/Settings/AutomationLabelSettings.tsx:168
 msgid "Show automation label"
 msgstr "Show automation label"
 
@@ -7536,8 +7543,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:432
 #: src/view/com/auth/SplashScreen.tsx:88
 #: src/view/com/auth/SplashScreen.tsx:95
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:208
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:210
 #: src/view/shell/nav-sign-in-card.tsx:38
 #: src/view/shell/nav-sign-in-card.tsx:40
 msgid "Sign in"
@@ -7758,12 +7765,12 @@ msgstr ""
 msgid "Start adding people!"
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:589
+#: src/components/dms/InitiateChatFlow.tsx:593
 msgid "Start chat"
 msgstr "Start chat"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:376
-#: src/components/dms/InitiateChatFlow.tsx:720
+#: src/components/dms/InitiateChatFlow.tsx:724
 msgid "Start chat with {displayName}"
 msgstr ""
 
@@ -7873,7 +7880,7 @@ msgid "Successfully verified"
 msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:213
-#: src/components/dms/InitiateChatFlow.tsx:318
+#: src/components/dms/InitiateChatFlow.tsx:322
 msgid "Suggested"
 msgstr "Suggested"
 
@@ -8063,8 +8070,8 @@ msgstr "The post you’re replying to was marked as being written in {suggestedL
 
 #: src/view/com/composer/state/video.ts:392
 #: src/view/com/composer/state/video.ts:426
-msgid "The selected video is larger than 300 MB. Please try again with a smaller file."
-msgstr "The selected video is larger than 300 MB. Please try again with a smaller file."
+msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
+msgstr "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 
 #: src/lib/hooks/useCleanError.ts:37
 #: src/lib/strings/errors.ts:17
@@ -8079,7 +8086,7 @@ msgstr ""
 msgid "Theme"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:443
+#: src/screens/Messages/components/InviteLinkDialog.tsx:455
 msgid "There is no invite link for this group chat."
 msgstr "There is no invite link for this group chat."
 
@@ -8306,7 +8313,7 @@ msgstr ""
 msgid "This is not a valid link"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:138
+#: src/screens/Settings/AutomationLabelSettings.tsx:142
 msgid "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 msgstr "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 
@@ -8829,9 +8836,9 @@ msgstr ""
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:186
-#: src/screens/Messages/components/InviteLinkDialog.tsx:224
-#: src/screens/Messages/components/InviteLinkDialog.tsx:247
+#: src/screens/Messages/components/InviteLinkDialog.tsx:197
+#: src/screens/Messages/components/InviteLinkDialog.tsx:235
+#: src/screens/Messages/components/InviteLinkDialog.tsx:260
 msgid "Update invite link"
 msgstr "Update invite link"
 
@@ -9034,7 +9041,7 @@ msgstr ""
 
 #. placeholder {0}: view.source.title
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:242
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:440
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:464
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9127,7 +9134,7 @@ msgstr "View profile banner"
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:242
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:330
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:331
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:440
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:464
 msgid "View publication"
 msgstr "View publication"
 
@@ -9324,7 +9331,7 @@ msgstr ""
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:196
+#: src/screens/Messages/components/InviteLinkDialog.tsx:207
 msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
@@ -9756,11 +9763,11 @@ msgstr ""
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
-#: src/components/dms/InitiateChatFlow.tsx:594
+#: src/components/dms/InitiateChatFlow.tsx:598
 msgid "Your account is too new"
 msgstr "Your account is too new"
 
-#: src/components/dms/InitiateChatFlow.tsx:595
+#: src/components/dms/InitiateChatFlow.tsx:599
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Your account must be at least 7 days old to create a new group chat."
 
@@ -9804,9 +9811,9 @@ msgstr ""
 msgid "Your muted words"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:164
-msgid "Your name, avatar, and the name of the group chat will be visible to everyone."
-msgstr "Your name, avatar, and the name of the group chat will be visible to everyone."
+#: src/screens/Messages/components/InviteLinkDialog.tsx:168
+msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
+msgstr "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 
 #: src/view/com/composer/Composer.tsx:816
 msgid "Your post was sent"
