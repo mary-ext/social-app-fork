@@ -181,7 +181,7 @@ function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: 
 			if (result.status === 'full') {
 				Toast.show(
 					l({
-						message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
+						message: `You can only add up to ${plural(MAX_GALLERY_IMAGES, { other: '# images' })} per post`,
 						comment:
 							'Toast shown when the user tries to add more images but the post gallery is already at the cap',
 					}),
