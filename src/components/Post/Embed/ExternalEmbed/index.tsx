@@ -52,7 +52,9 @@ export const ExternalEmbed = ({
 		onOpen?.();
 	}, [onOpen]);
 
-	const onShareExternal = useCallback(() => {}, [link.uri]);
+	// a no-op handler would still swallow the browser's native long-press/context
+	// menu on web, so leave it undefined (native sharing is stripped from this fork)
+	const onShareExternal = undefined;
 
 	if (embedPlayerParams?.source === 'tenor' || embedPlayerParams?.source === 'klipy') {
 		const parsedAlt = parseAltFromGIFDescription(link.description);
