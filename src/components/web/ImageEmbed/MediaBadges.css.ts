@@ -16,6 +16,20 @@ export const cluster = styleVariants({
 	large: [clusterBase, { gap: '4px' }],
 });
 
+const countClusterBase = style({
+	display: 'flex',
+	flexDirection: 'row',
+	position: 'absolute',
+	right: '4px',
+	top: '4px',
+});
+
+/** The image-count badge sits top-right; the alt/crop cluster sits bottom-right. */
+export const countCluster = styleVariants({
+	regular: [countClusterBase],
+	large: [countClusterBase],
+});
+
 const boxBase = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,

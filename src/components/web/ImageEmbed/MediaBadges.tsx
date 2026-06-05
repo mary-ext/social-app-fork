@@ -12,11 +12,20 @@ export type MediaBadgesProps = {
 	hasAlt: boolean;
 	cropped: boolean;
 	large: boolean;
+	/** Total image count; when set and > 1, a top-right `index+1/count` badge is shown. */
+	count?: number;
+	/** Zero-based index of this image, paired with {@link MediaBadgesProps.count}. */
+	index?: number;
 };
 
-/** Bottom-right overlay badges on a media thumbnail: a fullscreen indicator when cropped, and an ALT tag. */
-export function MediaBadges({ variant, hasAlt, cropped, large }: MediaBadgesProps) {
-	if (!hasAlt && !cropped) {
+/**
+ * Overlay badges on a media thumbnail: a top-right image-count badge for galleries, plus a bottom-right
+ * cluster with a fullscreen indicator when cropped and an ALT tag.
+ */
+export function MediaBadges({ variant, hasAlt, cropped, large, count, index }: MediaBadgesProps) {
+	const showCount = count !== undefined && index !== undefined && count > 1;
+
+	if (!hasAlt && !cropped && !showCount) {
 		return null;
 	}
 
@@ -31,27 +40,40 @@ export function MediaBadges({ variant, hasAlt, cropped, large }: MediaBadgesProp
 	const iconSize = large ? 18 : 12;
 
 	return (
-		<div aria-hidden className={large ? styles.cluster.large : styles.cluster.regular}>
-			{cropped && (
-				<div className={boxClass}>
-					<svg
-						className={styles.icon}
-						width={iconSize}
-						height={iconSize}
-						viewBox="0 0 24 24"
-						fill="currentColor"
-					>
-						<path d={FULLSCREEN_PATH} />
-					</svg>
+		<>
+			{showCount && (
+				<div aria-hidden className={large ? styles.countCluster.large : styles.countCluster.regular}>
+					<div className={boxClass}>
+						<Text weight="bold" size={large ? 'xs' : 'sm'} className={large ? undefined : styles.altSmall}>
+							{index + 1}/{count}
+						</Text>
+					</div>
 				</div>
 			)}
-			{hasAlt && (
-				<div className={boxClass}>
-					<Text weight="bold" size={large ? 'xs' : 'sm'} className={large ? undefined : styles.altSmall}>
-						<Trans>ALT</Trans>
-					</Text>
+			{(hasAlt || cropped) && (
+				<div aria-hidden className={large ? styles.cluster.large : styles.cluster.regular}>
+					{cropped && (
+						<div className={boxClass}>
+							<svg
+								className={styles.icon}
+								width={iconSize}
+								height={iconSize}
+								viewBox="0 0 24 24"
+								fill="currentColor"
+							>
+								<path d={FULLSCREEN_PATH} />
+							</svg>
+						</div>
+					)}
+					{hasAlt && (
+						<div className={boxClass}>
+							<Text weight="bold" size={large ? 'xs' : 'sm'} className={large ? undefined : styles.altSmall}>
+								<Trans>ALT</Trans>
+							</Text>
+						</div>
+					)}
 				</div>
 			)}
-		</div>
+		</>
 	);
 }

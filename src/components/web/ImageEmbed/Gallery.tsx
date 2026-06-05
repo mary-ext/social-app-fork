@@ -240,7 +240,14 @@ function GalleryImage({
 				}}
 			/>
 			{!hideBadges && (
-				<MediaBadges variant="gallery" hasAlt={hasAlt} cropped={isCropped} large={largeAltBadge} />
+				<MediaBadges
+					variant="gallery"
+					hasAlt={hasAlt}
+					cropped={isCropped}
+					large={largeAltBadge}
+					count={imageCount}
+					index={index}
+				/>
 			)}
 			<MediaInsetBorder focused={focused} />
 		</button>

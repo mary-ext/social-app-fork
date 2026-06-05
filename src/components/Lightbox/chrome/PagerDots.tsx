@@ -1,7 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 
-import { atoms as a } from '#/alf';
-
 type Props = {
 	count: number;
 	activeIndex: number;
@@ -14,7 +12,7 @@ const GAP = 5;
 export function PagerDots({ count, activeIndex }: Props) {
 	if (count <= 1) return null;
 	return (
-		<View style={[a.flex_row, a.align_center, a.justify_center, styles.row]}>
+		<View style={styles.root}>
 			{Array.from({ length: count }).map((_, i) => {
 				const isActive = i === activeIndex;
 				return (
@@ -32,8 +30,18 @@ export function PagerDots({ count, activeIndex }: Props) {
 }
 
 const styles = StyleSheet.create({
-	row: {
+	root: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
 		gap: GAP,
+		paddingHorizontal: 10,
+		paddingVertical: 6,
+		borderRadius: 999,
+		backgroundColor: 'rgba(0, 0, 0, 0.75)',
+		// @ts-expect-error web-only
+		backdropFilter: 'blur(8px)',
+		WebkitBackdropFilter: 'blur(8px)',
 	},
 	activeDot: {
 		width: ACTIVE,
