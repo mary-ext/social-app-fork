@@ -447,7 +447,16 @@ function BaseChatItem({
 					onBlur={onMouseLeave}
 					style={[a.relative, t.atoms.bg, isWithinLeftPanel && a.mx_sm]}
 				>
-					<View style={[a.z_10, a.absolute, { top: tokens.space.md, left: tokens.space.lg }]}>{avatar}</View>
+					<View
+						style={[
+							a.z_10,
+							a.absolute,
+							{ top: tokens.space.md, left: tokens.space.lg },
+							isGroupConvo && a.pointer_events_none,
+						]}
+					>
+						{avatar}
+					</View>
 
 					<Link
 						to={`/messages/${convo.view.id}`}
