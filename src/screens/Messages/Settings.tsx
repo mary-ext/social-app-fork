@@ -15,6 +15,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import * as Dialog from '#/components/Dialog';
 import { Divider } from '#/components/Divider';
+import { resolveAllowGroupInvites } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
@@ -144,7 +145,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 						<Toggle.Group
 							label={l`Allow group chat invites from`}
 							type="radio"
-							values={[(profile?.associated?.chat?.allowGroupInvites as AllowIncoming) ?? 'following']}
+							values={[resolveAllowGroupInvites(profile?.associated?.chat)]}
 							onChange={onSelectGroupInvitesFrom}
 						>
 							<View>
