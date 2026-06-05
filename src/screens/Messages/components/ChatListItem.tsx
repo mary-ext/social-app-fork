@@ -115,7 +115,7 @@ function DirectChatItem({
 }) {
 	const { t: l } = useLingui();
 	const profile = useProfileShadow(convo.primaryMember);
-	const { isWithinSplitView } = useIsWithinSplitView();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
 
 	const moderation = useMemo(() => moderateProfile(profile, moderationOpts), [profile, moderationOpts]);
 
@@ -134,7 +134,7 @@ function DirectChatItem({
 			avatar={
 				<PreviewableUserAvatar
 					profile={profile}
-					size={isWithinSplitView ? 48 : 52}
+					size={isWithinLeftPanel ? 48 : 52}
 					moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 				/>
 			}
@@ -155,7 +155,7 @@ function DirectChatItem({
 			)}
 			showProfileBadges
 			postAlerts={
-				isWithinSplitView ? null : (
+				isWithinLeftPanel ? null : (
 					<PostAlerts
 						modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 						size="sm"
@@ -184,7 +184,7 @@ function GroupChatItem({
 }) {
 	const { t: l } = useLingui();
 	const groupOwner = useMaybeProfileShadow(convo.primaryMember);
-	const { isWithinSplitView } = useIsWithinSplitView();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
 
 	const moderation = useMemo(
 		() => (groupOwner ? moderateProfile(groupOwner, moderationOpts) : undefined),
@@ -199,7 +199,7 @@ function GroupChatItem({
 			avatar={
 				<AvatarBubbles
 					profiles={convo.members}
-					size={isWithinSplitView ? 48 : 52}
+					size={isWithinLeftPanel ? 48 : 52}
 					moderationOpts={moderationOpts}
 				/>
 			}
@@ -271,7 +271,7 @@ function BaseChatItem({
 	const leaveConvoControl = useDialogControl();
 	const { mutate: markAsRead } = useMarkAsReadMutation();
 	const { gtMobile } = useBreakpoints();
-	const { isWithinSplitView } = useIsWithinSplitView();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
 
 	const queryClient = useQueryClient();
 	const hasUnread =
@@ -433,7 +433,7 @@ function BaseChatItem({
 				leftFirst: deleteAction,
 			};
 
-	const avatarSize = isWithinSplitView ? 48 : 52;
+	const avatarSize = isWithinLeftPanel ? 48 : 52;
 	const isGroupConvo = convo.kind === 'group';
 
 	return (
@@ -445,7 +445,7 @@ function BaseChatItem({
 					// @ts-expect-error web only
 					onFocus={onFocus}
 					onBlur={onMouseLeave}
-					style={[a.relative, t.atoms.bg, isWithinSplitView && a.mx_sm]}
+					style={[a.relative, t.atoms.bg, isWithinLeftPanel && a.mx_sm]}
 				>
 					<View style={[a.z_10, a.absolute, { top: tokens.space.md, left: tokens.space.lg }]}>{avatar}</View>
 
@@ -468,7 +468,7 @@ function BaseChatItem({
 									a.px_lg,
 									a.py_md,
 									a.gap_md,
-									isWithinSplitView && a.rounded_sm,
+									isWithinLeftPanel && a.rounded_sm,
 									{
 										backgroundColor: hasUnread ? t.palette.primary_25 : t.palette.contrast_0,
 									},

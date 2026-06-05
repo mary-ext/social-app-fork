@@ -19,11 +19,10 @@ import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
-import { FAB } from '#/view/com/util/fab/FAB';
 import { List } from '#/view/com/util/List';
 import { ChatListLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useRefreshOnFocus } from '#/components/hooks/useRefreshOnFocus';
@@ -47,8 +46,6 @@ export function MessagesInboxScreen(props: Props) {
 }
 
 export function MessagesInboxScreenInner({}: Props) {
-	const { gtTablet } = useBreakpoints();
-
 	const listConvosQuery = useListConvosQuery({ status: 'request' });
 	const { data } = listConvosQuery;
 
@@ -78,18 +75,14 @@ export function MessagesInboxScreenInner({}: Props) {
 		<Layout.Screen testID="messagesInboxScreen">
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
-				<Layout.Header.Content align={gtTablet ? 'left' : 'platform'}>
+				<Layout.Header.Content align="left">
 					<Layout.Header.TitleText>
 						<Trans>Chat requests</Trans>
 					</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				{hasUnreadConvos && gtTablet ? <MarkAsReadHeaderButton /> : <Layout.Header.Slot />}
+				{hasUnreadConvos ? <MarkAsReadHeaderButton /> : <Layout.Header.Slot />}
 			</Layout.Header.Outer>
-			<RequestList
-				listConvosQuery={listConvosQuery}
-				conversations={conversations}
-				hasUnreadConvos={hasUnreadConvos}
-			/>
+			<RequestList listConvosQuery={listConvosQuery} conversations={conversations} />
 		</Layout.Screen>
 	);
 }
@@ -97,11 +90,9 @@ export function MessagesInboxScreenInner({}: Props) {
 function RequestList({
 	listConvosQuery,
 	conversations,
-	hasUnreadConvos,
 }: {
 	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvos.$output>, Error>;
 	conversations: ChatBskyConvoDefs.ConvoView[];
-	hasUnreadConvos: boolean;
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
@@ -250,7 +241,6 @@ function RequestList({
 				desktopFixedHeight
 				sideBorders={false}
 			/>
-			{hasUnreadConvos && <MarkAllReadFAB />}
 		</>
 	);
 }
@@ -261,34 +251,6 @@ function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
 
 function renderItem({ item }: { item: ChatBskyConvoDefs.ConvoView }) {
 	return <RequestListItem convo={item} />;
-}
-
-function MarkAllReadFAB() {
-	const { t: l } = useLingui();
-	const t = useTheme();
-	const { mutate: markAllRead } = useUpdateAllRead('request', {
-		onMutate: () => {
-			Toast.show(l`Marked all as read`, {
-				type: 'success',
-			});
-		},
-		onError: () => {
-			Toast.show(l`Failed to mark all requests as read`, {
-				type: 'error',
-			});
-		},
-	});
-
-	return (
-		<FAB
-			testID="markAllAsReadFAB"
-			onPress={() => markAllRead()}
-			icon={<CheckIcon size="lg" fill={t.palette.white} />}
-			accessibilityRole="button"
-			accessibilityLabel={l`Mark all as read`}
-			accessibilityHint=""
-		/>
-	);
 }
 
 function MarkAsReadHeaderButton() {
