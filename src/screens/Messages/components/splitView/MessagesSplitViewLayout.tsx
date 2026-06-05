@@ -26,6 +26,7 @@ type MessageScreens =
 	| 'MessagesConversation'
 	| 'MessagesConversationSettings'
 	| 'MessagesInbox'
+	| 'MessagesJoinRequests'
 	| 'MessagesSettings';
 
 type LayoutProps = ScreenLayoutArgs<

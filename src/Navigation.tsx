@@ -147,6 +147,11 @@ const MessagesConversationSettingsScreen = lazy(() =>
 		default: m.MessagesConversationSettingsScreen,
 	})),
 );
+const MessagesJoinRequestsScreen = lazy(() =>
+	import('#/screens/Messages/JoinRequests').then((m) => ({
+		default: m.MessagesJoinRequestsScreen,
+	})),
+);
 const MessagesInboxScreen = lazy(() =>
 	import('#/screens/Messages/Inbox').then((m) => ({
 		default: m.MessagesInboxScreen,
@@ -324,6 +329,7 @@ type MessageScreens =
 	| 'MessagesConversation'
 	| 'MessagesConversationSettings'
 	| 'MessagesInbox'
+	| 'MessagesJoinRequests'
 	| 'MessagesSettings';
 
 type FlatStackTypeBag = {
@@ -797,6 +803,14 @@ const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Na
 					getComponent={() => MessagesConversationSettingsScreen}
 					options={{
 						title: title(defineMessage`Group chat settings`),
+						requireAuth: true,
+					}}
+				/>
+				<Flat.Screen
+					name="MessagesJoinRequests"
+					getComponent={() => MessagesJoinRequestsScreen}
+					options={{
+						title: title(defineMessage`Requests to join`),
 						requireAuth: true,
 					}}
 				/>
