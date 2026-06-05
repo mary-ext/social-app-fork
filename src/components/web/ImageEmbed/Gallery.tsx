@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
+import type { LightboxImage } from '@oomfware/lightbox';
 
+import type { LightboxControl } from '#/components/dialogs/Context';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
+import * as Dialog from '#/components/web/Dialog';
 import { useKeyboardHandlers } from '#/components/web/ImageEmbed/carousel/useKeyboardHandlers';
 import { usePointerHandlers } from '#/components/web/ImageEmbed/carousel/usePointerHandlers';
 import { computeDims, getAspectRatio } from '#/components/web/ImageEmbed/carousel/utils';
@@ -15,8 +18,13 @@ import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
 export type GalleryProps = {
 	images: AppBskyEmbedImages.ViewImage[];
-	onPress?: (index: number) => void;
-	onPressIn?: (index: number) => void;
+	/**
+	 * Lightbox handle + the full lib image list; each slide is a detached `Dialog.Trigger` opening at its
+	 * index.
+	 */
+	control: LightboxControl;
+	lightboxImages: LightboxImage[];
+	onPressIn?: () => void;
 	viewContext?: PostEmbedViewContext;
 };
 
@@ -49,7 +57,7 @@ function measureContentHeight(isWithinChat: boolean) {
 	}
 }
 
-export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProps) {
+export function Gallery({ images, control, lightboxImages, onPressIn, viewContext }: GalleryProps) {
 	const { t: l } = useLingui();
 	const [largeAltBadge] = useLargeAltBadgeEnabled();
 	const isWithinQuote = viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia;
@@ -84,7 +92,7 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 
 	const scrollRef = useRef<HTMLDivElement>(null);
 	const itemWidthsRef = useRef<Map<number, number>>(new Map());
-	const itemRefsRef = useRef<Map<number, HTMLButtonElement>>(new Map());
+	const itemRefsRef = useRef<Map<number, HTMLElement>>(new Map());
 	const currentIndexRef = useRef(0);
 
 	const getScrollEl = useCallback(() => scrollRef.current, []);
@@ -107,7 +115,7 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 		itemWidthsRef.current.set(index, w);
 	}, []);
 
-	const setItemRef = useCallback((index: number, node: HTMLButtonElement | null) => {
+	const setItemRef = useCallback((index: number, node: HTMLElement | null) => {
 		if (node) {
 			itemRefsRef.current.set(index, node);
 		} else {
@@ -158,8 +166,9 @@ export function Gallery({ images, onPress, onPressIn, viewContext }: GalleryProp
 						largeAltBadge={largeAltBadge}
 						onWidthChange={onWidthChange}
 						setItemRef={setItemRef}
-						onPress={onPress ? () => onPress(index) : undefined}
-						onPressIn={onPressIn ? () => onPressIn(index) : undefined}
+						control={control}
+						lightboxImages={lightboxImages}
+						onPressIn={onPressIn}
 					/>
 				))}
 			</div>
@@ -176,7 +185,8 @@ function GalleryImage({
 	largeAltBadge,
 	onWidthChange,
 	setItemRef,
-	onPress,
+	control,
+	lightboxImages,
 	onPressIn,
 }: {
 	image: AppBskyEmbedImages.ViewImage;
@@ -186,8 +196,9 @@ function GalleryImage({
 	hideBadges: boolean;
 	largeAltBadge: boolean;
 	onWidthChange: (index: number, width: number) => void;
-	setItemRef: (index: number, node: HTMLButtonElement | null) => void;
-	onPress?: () => void;
+	setItemRef: (index: number, node: HTMLElement | null) => void;
+	control: LightboxControl;
+	lightboxImages: LightboxImage[];
 	onPressIn?: () => void;
 }) {
 	const { t: l } = useLingui();
@@ -201,23 +212,18 @@ function GalleryImage({
 	}, [index, dims.width, onWidthChange]);
 
 	return (
-		<button
+		<Dialog.Trigger
+			handle={control}
+			payload={{ images: lightboxImages, index }}
 			type="button"
-			ref={(node) => setItemRef(index, node)}
+			ref={(node: HTMLElement | null) => setItemRef(index, node)}
 			className={styles.item}
 			tabIndex={index === 0 ? 0 : -1}
 			aria-roledescription={l`slide`}
 			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
-			onClick={
-				onPress
-					? (e) => {
-							// scope the press to the lightbox; don't bubble to an ancestor post link
-							e.preventDefault();
-							e.stopPropagation();
-							onPress();
-						}
-					: undefined
-			}
+			// scope the press to the lightbox; don't bubble to an ancestor post link. the Trigger owns the open,
+			// so only stop propagation (preventDefault could suppress Base UI's open).
+			onClick={(e) => e.stopPropagation()}
 			onPointerDown={onPressIn}
 			onFocus={() => setFocused(true)}
 			onBlur={() => setFocused(false)}
@@ -250,6 +256,6 @@ function GalleryImage({
 				/>
 			)}
 			<MediaInsetBorder focused={focused} />
-		</button>
+		</Dialog.Trigger>
 	);
 }

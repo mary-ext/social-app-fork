@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react';
+import type { LightboxImage } from '@oomfware/lightbox';
 
 import type { ComposerOpts } from '#/lib/hooks/useOpenComposer';
 
@@ -6,8 +7,15 @@ import type { SessionAccount } from '#/state/session';
 
 import * as Dialog from '#/components/Dialog';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
+import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
 
 type Control = Dialog.DialogControlProps;
+
+/** Payload opening the global lightbox: the image list and the index to start on. */
+export type LightboxPayload = { images: LightboxImage[]; index: number };
+
+/** Detached handle for the global lightbox; open it with `lightboxControl.openWithPayload({ images, index })`. */
+export type LightboxControl = DialogHandle<LightboxPayload>;
 
 export type StatefulControl<T> = {
 	control: Control;
@@ -23,6 +31,7 @@ export type SigninDialogPayload = {
 
 type ControlsContext = {
 	composerDialogControl: StatefulControl<ComposerOpts>;
+	lightboxControl: LightboxControl;
 	mutedWordsDialogControl: Control;
 	signinDialogControl: StatefulControl<SigninDialogPayload>;
 	linkWarningDialogControl: StatefulControl<{
@@ -46,6 +55,7 @@ export function useGlobalDialogsControlContext() {
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const composerDialogControl = useStatefulDialogControl<ComposerOpts>();
+	const lightboxControl = useDialogHandle<LightboxPayload>();
 	const mutedWordsDialogControl = Dialog.useDialogControl();
 	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();
 	const linkWarningDialogControl = useStatefulDialogControl<{
@@ -60,6 +70,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const ctx = useMemo<ControlsContext>(
 		() => ({
 			composerDialogControl,
+			lightboxControl,
 			mutedWordsDialogControl,
 			signinDialogControl,
 			linkWarningDialogControl,
@@ -67,6 +78,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		}),
 		[
 			composerDialogControl,
+			lightboxControl,
 			mutedWordsDialogControl,
 			signinDialogControl,
 			linkWarningDialogControl,

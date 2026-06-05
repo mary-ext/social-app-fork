@@ -21,8 +21,8 @@ import { atoms as a, useTheme, utils } from '#/alf';
 
 import { Button } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
-import { useLightboxControls } from '#/components/Lightbox/state';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 
@@ -51,7 +51,7 @@ let ProfileHeaderShell = ({
 	const t = useTheme();
 	const { currentAccount } = useSession();
 	const { t: l } = useLingui();
-	const { openLightbox } = useLightboxControls();
+	const { lightboxControl } = useGlobalDialogsControlContext();
 	const navigation = useNavigation<NavigationProp>();
 	useSafeAreaInsets();
 	const liveStatusControl = useDialogControl();
@@ -65,13 +65,13 @@ let ProfileHeaderShell = ({
 	}, [navigation]);
 
 	const _openLightbox = useCallback(
-		(uri: string, type: 'circle-avi' | 'rect-avi' | 'image' = 'circle-avi') => {
-			openLightbox({
-				images: [{ type, uri }],
+		(uri: string) => {
+			lightboxControl.openWithPayload({
+				images: [{ src: uri }],
 				index: 0,
 			});
 		},
-		[openLightbox],
+		[lightboxControl],
 	);
 
 	const isMe = useMemo(() => currentAccount?.did === profile.did, [currentAccount, profile]);
@@ -89,9 +89,8 @@ let ProfileHeaderShell = ({
 		} else {
 			const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 			const avatar = profile.avatar;
-			const type = profile.associated?.labeler ? 'rect-avi' : 'circle-avi';
 			if (avatar && !(modui.blurs.length > 0 && modui.noOverride)) {
-				_openLightbox(avatar, type);
+				_openLightbox(avatar);
 			}
 		}
 	}, [profile, moderation, _openLightbox, liveStatusControl, live]);
@@ -100,7 +99,7 @@ let ProfileHeaderShell = ({
 		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 		const banner = profile.banner;
 		if (banner && !(modui.blurs.length > 0 && modui.noOverride)) {
-			_openLightbox(banner, 'image');
+			_openLightbox(banner);
 		}
 	}, [profile.banner, moderation, _openLightbox]);
 

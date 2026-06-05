@@ -2,7 +2,9 @@ import type { MouseEvent } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import type { LightboxControl, LightboxPayload } from '#/components/dialogs/Context';
 import { cx } from '#/components/web/cx';
+import * as Dialog from '#/components/web/Dialog';
 import * as styles from '#/components/web/ImageEmbed/AutoSizedImage.css';
 import { MediaBadges } from '#/components/web/ImageEmbed/MediaBadges';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
@@ -13,7 +15,9 @@ export type AutoSizedImageProps = {
 	image: AppBskyEmbedImages.ViewImage;
 	crop?: 'constrained' | 'none' | 'square';
 	hideBadge?: boolean;
-	onPress?: () => void;
+	/** Lightbox handle + payload; the image renders as a detached `Dialog.Trigger` that opens it. */
+	control: LightboxControl;
+	payload: LightboxPayload;
 	onPressIn?: () => void;
 };
 
@@ -22,7 +26,8 @@ export function AutoSizedImage({
 	image,
 	crop = 'constrained',
 	hideBadge,
-	onPress,
+	control,
+	payload,
 	onPressIn,
 }: AutoSizedImageProps) {
 	const [largeAlt] = useLargeAltBadgeEnabled();
@@ -67,18 +72,17 @@ export function AutoSizedImage({
 
 	const onPointerDown = onPressIn ? () => onPressIn() : undefined;
 	// Scope the press to opening the lightbox: don't let the click bubble to an ancestor post link (a quote's
-	// `<a>`, or the feed item's thread link) and navigate away. Mirrors RN's press-responder scoping.
-	const onClick = onPress
-		? (e: MouseEvent) => {
-				e.preventDefault();
-				e.stopPropagation();
-				onPress();
-			}
-		: undefined;
+	// pressable, or the feed item's thread link) and navigate away. Mirrors RN's press-responder scoping. The
+	// Trigger itself owns the open, so we only stop propagation (preventDefault could suppress Base UI's open).
+	const onClick = (e: MouseEvent) => {
+		e.stopPropagation();
+	};
 
 	if (cropDisabled) {
 		return (
-			<button
+			<Dialog.Trigger
+				handle={control}
+				payload={payload}
 				type="button"
 				className={styles.pressableBleed}
 				style={assignInlineVars({ [styles.maxRatioVar]: String(max ?? 1) })}
@@ -87,7 +91,7 @@ export function AutoSizedImage({
 				onPointerDown={onPointerDown}
 			>
 				{contents}
-			</button>
+			</Dialog.Trigger>
 		);
 	}
 
@@ -102,7 +106,9 @@ export function AutoSizedImage({
 						className={cx(styles.innerBox, fullBleed ? styles.innerBoxFullBleed : styles.innerBoxConstrained)}
 						style={fullBleed ? undefined : assignInlineVars({ [styles.ratioVar]: String(ratio) })}
 					>
-						<button
+						<Dialog.Trigger
+							handle={control}
+							payload={payload}
 							type="button"
 							className={styles.pressable}
 							aria-label={image.alt || undefined}
@@ -110,7 +116,7 @@ export function AutoSizedImage({
 							onPointerDown={onPointerDown}
 						>
 							{contents}
-						</button>
+						</Dialog.Trigger>
 					</div>
 				</div>
 			</div>

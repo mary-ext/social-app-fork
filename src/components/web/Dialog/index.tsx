@@ -28,16 +28,24 @@ type DialogActions = { close: () => void; unmount: () => void };
 /** Reason + cancel handle for an open-state change; `cancel()` prevents Base UI from honouring it. */
 export type OpenChangeDetails = { reason: string; cancel: () => void };
 
-export type RootProps = {
-	children?: ReactNode;
-	handle?: DialogHandle<unknown>;
+export type RootProps<Payload = unknown> = {
+	/** A node, or a render function receiving the active trigger's `payload` (undefined while closed). */
+	children?: ReactNode | ((bag: { payload: Payload | undefined }) => ReactNode);
+	handle?: DialogHandle<Payload>;
 	modal?: boolean | 'trap-focus';
 	open?: boolean;
 	defaultOpen?: boolean;
 	onOpenChange?: (open: boolean, details: OpenChangeDetails) => void;
 };
 
-export function Root({ children, handle, modal, open, defaultOpen, onOpenChange }: RootProps) {
+export function Root<Payload = unknown>({
+	children,
+	handle,
+	modal,
+	open,
+	defaultOpen,
+	onOpenChange,
+}: RootProps<Payload>) {
 	const id = useId();
 	const actionsRef = useRef<DialogActions>(null);
 	const registerOpen = useRegisterDialog(id, () => actionsRef.current?.close());

@@ -36,7 +36,6 @@ import { useColorModeTheme } from '#/alf/util/useColorModeTheme';
 import { Provider as ContextMenuProvider } from '#/components/ContextMenu';
 import { useStarterPackEntry } from '#/components/hooks/useStarterPackEntry';
 import { Provider as IntentDialogProvider } from '#/components/intents/IntentDialogs';
-import { Provider as LightboxStateProvider } from '#/components/Lightbox/state';
 import { Provider as PortalProvider } from '#/components/Portal';
 import { Provider as ActiveVideoProvider } from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext';
 import { Provider as VideoVolumeProvider } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext';
@@ -129,13 +128,11 @@ function App() {
 				<I18nProvider>
 					<ShellStateProvider>
 						<DialogStateProvider>
-							<LightboxStateProvider>
-								<PortalProvider>
-									<StarterPackProvider>
-										<InnerApp />
-									</StarterPackProvider>
-								</PortalProvider>
-							</LightboxStateProvider>
+							<PortalProvider>
+								<StarterPackProvider>
+									<InnerApp />
+								</StarterPackProvider>
+							</PortalProvider>
 						</DialogStateProvider>
 					</ShellStateProvider>
 				</I18nProvider>

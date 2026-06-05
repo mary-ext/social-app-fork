@@ -1535,7 +1535,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:235
 #: src/screens/Messages/components/InviteLinkDialog.tsx:260
 #: src/screens/Messages/Inbox.tsx:207
-#: src/screens/Profile/Header/Shell.tsx:120
+#: src/screens/Profile/Header/Shell.tsx:119
 #: src/screens/StarterPack/Wizard/index.tsx:281
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:72
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
@@ -1854,7 +1854,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/web/ImageEmbed/Gallery.tsx:140
+#: src/components/web/ImageEmbed/Gallery.tsx:148
 msgid "carousel"
 msgstr "carousel"
 
@@ -2105,7 +2105,7 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:310
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
-#: src/components/web/Dialog/index.tsx:91
+#: src/components/web/Dialog/index.tsx:99
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""
@@ -2114,8 +2114,7 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:70
-#: src/components/Lightbox/Lightbox.tsx:314
+#: src/components/web/Lightbox/index.tsx:176
 msgid "Close image viewer"
 msgstr ""
 
@@ -2823,8 +2822,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/Lightbox/Lightbox.tsx:293
-#: src/components/Lightbox/Lightbox.tsx:306
+#: src/components/web/Lightbox/index.tsx:166
+#: src/components/web/Lightbox/index.tsx:168
 msgid "Download image"
 msgstr "Download image"
 
@@ -3159,7 +3158,7 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:230
+#: src/components/web/Lightbox/index.tsx:185
 msgid "Expand alt text"
 msgstr ""
 
@@ -3285,7 +3284,7 @@ msgstr "Failed to add members"
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:282
+#: src/components/web/Lightbox/index.tsx:113
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -3449,7 +3448,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:300
+#: src/components/web/Lightbox/index.tsx:125
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -4251,10 +4250,6 @@ msgstr ""
 msgid "I understand"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:231
-msgid "If alt text is long, toggles alt text expanded state"
-msgstr ""
-
 #: src/screens/Settings/LanguageSettings.tsx:188
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
@@ -4286,18 +4281,18 @@ msgid "Ignore join request"
 msgstr "Ignore join request"
 
 #. placeholder {0}: index + 1
-#. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.tsx:248
+#. placeholder {1}: images.length
+#: src/components/web/Lightbox/index.tsx:206
 msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/web/ImageEmbed/Gallery.tsx:210
+#: src/components/web/ImageEmbed/Gallery.tsx:223
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/web/ImageEmbed/Gallery.tsx:141
+#: src/components/web/ImageEmbed/Gallery.tsx:149
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -4311,16 +4306,16 @@ msgstr "Image is hidden due to your moderation settings."
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
-#: src/components/Lightbox/Lightbox.tsx:252
-#: src/components/Lightbox/Lightbox.tsx:260
+#: src/components/web/Lightbox/index.tsx:154
+#: src/components/web/Lightbox/index.tsx:159
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/Lightbox/Lightbox.tsx:297
+#: src/components/web/Lightbox/index.tsx:124
 msgid "Image saved"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:80
+#: src/components/web/Lightbox/index.tsx:76
 msgid "Image viewer"
 msgstr ""
 
@@ -4702,7 +4697,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:280
+#: src/components/web/Lightbox/index.tsx:111
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -5438,7 +5433,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:219
+#: src/components/web/Lightbox/index.tsx:145
 msgid "Next image"
 msgstr ""
 
@@ -6386,7 +6381,7 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:200
+#: src/components/web/Lightbox/index.tsx:135
 msgid "Previous image"
 msgstr ""
 
@@ -6442,7 +6437,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:112
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
@@ -7611,8 +7606,8 @@ msgstr ""
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.tsx:268
-#: src/components/Lightbox/Lightbox.tsx:288
+#: src/components/web/Lightbox/index.tsx:160
+#: src/components/web/Lightbox/index.tsx:162
 msgid "Share image"
 msgstr "Share image"
 
@@ -7841,7 +7836,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/web/ImageEmbed/Gallery.tsx:209
+#: src/components/web/ImageEmbed/Gallery.tsx:222
 msgid "slide"
 msgstr "slide"
 
@@ -9332,7 +9327,7 @@ msgid "View {0}"
 msgstr "View {0}"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/Shell.tsx:183
+#: src/screens/Profile/Header/Shell.tsx:182
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -9421,7 +9416,7 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:112
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "View profile banner"
 msgstr "View profile banner"
 
@@ -10144,7 +10139,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/App.tsx:58
+#: src/App.tsx:57
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 

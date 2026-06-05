@@ -17,9 +17,9 @@ import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { Text } from '#/view/com/util/text/Text';
 import { UserAvatar, type UserAvatarType } from '#/view/com/util/UserAvatar';
 
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Layout from '#/components/Layout';
-import { useLightboxControls } from '#/components/Lightbox/state';
 
 export function ProfileSubpageHeader({
 	isLoading,
@@ -49,7 +49,7 @@ export function ProfileSubpageHeader({
 	const navigation = useNavigation<NavigationProp>();
 	const { t: l } = useLingui();
 	const { isMobile } = useWebMediaQueries();
-	const { openLightbox } = useLightboxControls();
+	const { lightboxControl } = useGlobalDialogsControlContext();
 	const pal = usePalette('default');
 	const canGoBack = navigation.canGoBack();
 
@@ -57,12 +57,12 @@ export function ProfileSubpageHeader({
 		if (
 			avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
 		) {
-			openLightbox({
-				images: [{ type: 'rect-avi', uri: avatar }],
+			lightboxControl.openWithPayload({
+				images: [{ src: avatar }],
 				index: 0,
 			});
 		}
-	}, [openLightbox, avatar]);
+	}, [lightboxControl, avatar]);
 
 	return (
 		<>

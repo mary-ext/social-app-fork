@@ -1,6 +1,7 @@
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
+import type { LightboxImage } from '@oomfware/lightbox';
 
-import { useLightboxControls } from '#/components/Lightbox/state';
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { AutoSizedImage } from '#/components/web/ImageEmbed/AutoSizedImage';
 import { Gallery } from '#/components/web/ImageEmbed/Gallery';
@@ -31,7 +32,7 @@ export function ImageEmbed({
 }: CommonProps & {
 	embed: EmbedType<'images'> | EmbedType<'gallery'>;
 }) {
-	const { openLightbox } = useLightboxControls();
+	const { lightboxControl } = useGlobalDialogsControlContext();
 	// Gallery embeds carry the same image data under different field names (`thumbnail` -> `thumb`);
 	// normalize to `ViewImage` so the carousel and lightbox stay shared with the `images` embed.
 	const images: AppBskyEmbedImages.ViewImage[] =
@@ -48,14 +49,8 @@ export function ImageEmbed({
 		return null;
 	}
 
-	const items = images.map((img) => ({ alt: img.alt, uri: img.fullsize }));
-	const onPress = (index: number) => {
-		openLightbox({
-			images: items.map((item) => ({ ...item, type: 'image' as const })),
-			index,
-		});
-	};
-	const onPressIn = () => prefetch(items.map((i) => i.uri));
+	const lightboxImages: LightboxImage[] = images.map((img) => ({ alt: img.alt, src: img.fullsize }));
+	const onPressIn = () => prefetch(lightboxImages.map((i) => i.src));
 
 	return (
 		<div className={wrapper}>
@@ -70,11 +65,18 @@ export function ImageEmbed({
 								: 'constrained'
 					}
 					hideBadge={viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia}
-					onPress={() => onPress(0)}
+					control={lightboxControl}
+					payload={{ images: lightboxImages, index: 0 }}
 					onPressIn={onPressIn}
 				/>
 			) : (
-				<Gallery images={images} onPress={onPress} onPressIn={onPressIn} viewContext={viewContext} />
+				<Gallery
+					images={images}
+					control={lightboxControl}
+					lightboxImages={lightboxImages}
+					onPressIn={onPressIn}
+					viewContext={viewContext}
+				/>
 			)}
 		</div>
 	);
