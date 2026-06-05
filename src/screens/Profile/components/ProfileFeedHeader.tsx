@@ -28,7 +28,6 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { Divider } from '#/components/Divider';
-import { useRichText } from '#/components/hooks/useRichText';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid';
@@ -344,7 +343,6 @@ function DialogInner({
 	const { hasSession } = useSession();
 	const control = Dialog.useDialogContext();
 	const reportDialogControl = useReportDialogControl();
-	const [rt] = useRichText(info.description.text);
 	const { mutateAsync: likeFeed, isPending: isLikePending } = useLikeMutation();
 	const { mutateAsync: unlikeFeed, isPending: isUnlikePending } = useUnlikeMutation();
 
@@ -416,7 +414,7 @@ function DialogInner({
 					<ButtonIcon icon={Share} size="lg" />
 				</Button>
 			</View>
-			<RichText value={rt} style={[a.text_md]} />
+			<RichText value={info.description} style={[a.text_md]} />
 			<View style={[a.flex_row, a.gap_sm, a.align_center]}>
 				{typeof likeCount === 'number' && (
 					<InlineLinkText

@@ -23,7 +23,7 @@ import {
 import { DISCOVER_FEED_URI, DISCOVER_SAVED_FEED } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
-import type { Richtext } from '#/lib/strings/rich-text-facets';
+import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
 
 import { GCTIME, STALE } from '#/state/queries';
 import { RQKEY as listQueryKey } from '#/state/queries/list';
@@ -98,6 +98,11 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
 	const route = router.matchPath(href);
 
+	// specified facets take priority; only detect when none were provided
+	const description: Richtext = view.descriptionFacets
+		? { text: view.description || '', facets: view.descriptionFacets.slice() }
+		: detectFacetsWithoutResolution(view.description || '');
+
 	return {
 		type: 'feed',
 		view,
@@ -113,10 +118,7 @@ export function hydrateFeedGenerator(view: AppBskyFeedDefs.GeneratorView): FeedS
 		displayName: view.displayName
 			? sanitizeDisplayName(view.displayName)
 			: t`Feed by ${sanitizeHandle(view.creator.handle, '@')}`,
-		description: {
-			text: view.description || '',
-			facets: (view.descriptionFacets || []).slice(),
-		},
+		description,
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
 		likeCount: view.likeCount,
@@ -132,6 +134,11 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 	const href = `/profile/${urip.repo}/${collection}/${urip.rkey}`;
 	const route = router.matchPath(href);
 
+	// specified facets take priority; only detect when none were provided
+	const description: Richtext = view.descriptionFacets
+		? { text: view.description || '', facets: view.descriptionFacets.slice() }
+		: detectFacetsWithoutResolution(view.description || '');
+
 	return {
 		type: 'list',
 		view,
@@ -144,10 +151,7 @@ export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
 		},
 		cid: view.cid,
 		avatar: view.avatar,
-		description: {
-			text: view.description || '',
-			facets: (view.descriptionFacets || []).slice(),
-		},
+		description,
 		creatorDid: view.creator.did,
 		creatorHandle: view.creator.handle,
 		displayName: view.name
