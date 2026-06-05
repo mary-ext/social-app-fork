@@ -1,7 +1,9 @@
+import { ClientResponseError } from '@atcute/client';
 import { useLingui } from '@lingui/react/macro';
 import { StackActions, useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
+import { isNetworkError } from '#/lib/strings/errors';
 
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation';
 
@@ -29,10 +31,16 @@ export function LeaveConvoPrompt({
 				navigation.dispatch(StackActions.replace('Messages', {}));
 			}
 		},
-		onError: () => {
-			Toast.show(l`Could not leave chat`, {
-				type: 'error',
-			});
+		onError: (error) => {
+			let errorMessage = l`Could not leave chat`;
+			if (isNetworkError(error)) {
+				errorMessage = l`A network error occurred. Please check your internet connection.`;
+			} else if (error instanceof ClientResponseError && error.error === 'InvalidConvo') {
+				errorMessage = l`Conversation not found.`;
+			} else if (error instanceof ClientResponseError && error.error === 'OwnerCannotLeave') {
+				errorMessage = l`Owner must lock the group before leaving.`;
+			}
+			Toast.show(errorMessage, { type: 'error' });
 		},
 	});
 
@@ -42,7 +50,7 @@ export function LeaveConvoPrompt({
 			title={l`Leave conversation`}
 			description={
 				hasMessages
-					? l`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`
+					? l`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants.`
 					: l`Are you sure you want to leave this conversation?`
 			}
 			confirmButtonCta={l`Leave`}
