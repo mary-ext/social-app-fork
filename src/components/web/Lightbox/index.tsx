@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { Lightbox as Lb, useLightbox, useLightboxState } from '@oomfware/lightbox';
+import { type LightboxImage, Lightbox as Lb, useLightbox, useLightboxState } from '@oomfware/lightbox';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
@@ -13,6 +13,7 @@ import {
 } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
+import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Toast from '#/components/Toast';
 import { cx } from '#/components/web/cx';
@@ -75,13 +76,71 @@ function LightboxContents({ payload, close }: { payload: LightboxPayload; close:
 				</BaseDialog.Backdrop>
 				<BaseDialog.Popup aria-label={l`Image viewer`} className={styles.popup} initialFocus={viewportRef}>
 					<Lb.Viewport ref={viewportRef} className={styles.viewport}>
-						<Lb.Track />
+						<Lb.Track>{renderSlide}</Lb.Track>
 						<Chrome />
 					</Lb.Viewport>
 				</BaseDialog.Popup>
 			</BaseDialog.Portal>
 		</Lb.Provider>
 	);
+}
+
+/**
+ * Stable custom slide renderer for `Lb.Track`. Hoisted (not inlined) so the lib can memoize the slide list on
+ * its identity — a fresh closure each render would rebuild every slide on the per-frame paging path.
+ */
+const renderSlide = (image: LightboxImage, index: number) => (
+	<Slide key={image.src} image={image} index={index} />
+);
+
+/** A carousel cell that overlays a spinner on the lib's image until the full-size source resolves. */
+function Slide({ image, index }: { image: LightboxImage; index: number }) {
+	const { t: l } = useLingui();
+	const loading = useImageLoading(image.src);
+
+	return (
+		<Lb.Slide index={index}>
+			<Lb.Image index={index} />
+			{loading ? (
+				<div className={styles.slideSpinner} role="progressbar" aria-label={l`Loading image`}>
+					<span className={styles.spinnerIcon}>
+						<LoaderIcon size="2xl" fill="currentColor" />
+					</span>
+				</div>
+			) : null}
+		</Lb.Slide>
+	);
+}
+
+/**
+ * Track whether a full-size image is still loading, via a cache-warming preload (the same `new Image()` path
+ * `ImageEmbed` prefetches with), so a prefetched source resolves from cache with no spinner flash. Resolves
+ * on both load and error, so a broken source stops spinning rather than hanging.
+ */
+function useImageLoading(src: string) {
+	const [loading, setLoading] = useState(true);
+	useEffect(() => {
+		const img = new window.Image();
+		let active = true;
+		const done = () => {
+			if (active) {
+				setLoading(false);
+			}
+		};
+		img.onload = done;
+		img.onerror = done;
+		img.src = src;
+		// a cached source can already be complete before the handlers attach
+		if (img.complete) {
+			done();
+		}
+		return () => {
+			active = false;
+			img.onload = null;
+			img.onerror = null;
+		};
+	}, [src]);
+	return loading;
 }
 
 function Chrome() {

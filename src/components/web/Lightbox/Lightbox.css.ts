@@ -9,6 +9,10 @@ const fadeIn = keyframes({
 	to: { opacity: 1 },
 });
 
+const spin = keyframes({
+	to: { transform: 'rotate(360deg)' },
+});
+
 // #region shell
 /**
  * The modal backdrop: carries only the open/close fade; the engine's swipe-dismiss fade rides the nested
@@ -179,6 +183,25 @@ export const dotPill = style({
 });
 export const dotActive = style({ ...dotBase, width: 6, height: 6, background: '#fff' });
 export const dotInactive = style({ ...dotBase, width: 4, height: 4, background: 'rgba(255, 255, 255, 0.4)' });
+// #endregion
+
+// #region loading spinner
+/** Centred, non-interactive overlay covering a slide while its full-size image is still loading. */
+export const slideSpinner = style({
+	position: 'absolute',
+	inset: 0,
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	pointerEvents: 'none',
+	color: 'rgba(255, 255, 255, 0.9)',
+});
+
+/** Matches the app's 500ms loader cadence; `transform` is safe here since the slide places it absolutely. */
+export const spinnerIcon = style({
+	display: 'flex',
+	animation: `${spin} 500ms linear infinite`,
+});
 // #endregion
 
 export const srOnly = style({
