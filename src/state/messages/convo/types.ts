@@ -3,6 +3,7 @@ import type {
 	ChatBskyActorDefs,
 	ChatBskyConvoDefs,
 	ChatBskyConvoSendMessage,
+	ChatBskyEmbedJoinLink,
 } from '@atcute/bluesky';
 import type { Client } from '@atcute/client';
 import type { $type, Did } from '@atcute/lexicons';
@@ -102,7 +103,7 @@ export type ConvoItem =
 type DeleteMessage = (messageId: string) => Promise<void>;
 type SendMessage = (
 	message: ChatBskyConvoSendMessage.$input['message'],
-	optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>,
+	optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View> | $type.enforce<ChatBskyEmbedJoinLink.View>,
 ) => void;
 type FetchMessageHistory = () => Promise<void>;
 type MarkConvoAccepted = () => void;

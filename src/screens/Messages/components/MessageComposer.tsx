@@ -5,7 +5,7 @@ import { useLingui } from '@lingui/react/macro';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
 
 import { HITSLOP_10, MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants';
-import { isBskyPostUrl } from '#/lib/strings/url-helpers';
+import { isBskyChatInviteUrl, isBskyPostUrl } from '#/lib/strings/url-helpers';
 
 import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-drafts';
 
@@ -159,7 +159,10 @@ export function MessageComposer({
 								}}
 								onChange={handleChange}
 								onFacetCommitted={(facet) => {
-									if (facet.type === 'url' && isBskyPostUrl(facet.value)) {
+									if (
+										facet.type === 'url' &&
+										(isBskyPostUrl(facet.value) || isBskyChatInviteUrl(facet.value))
+									) {
 										setEmbed(facet.value);
 									}
 								}}

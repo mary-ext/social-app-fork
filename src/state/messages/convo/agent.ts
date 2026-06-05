@@ -4,6 +4,7 @@ import type {
 	ChatBskyConvoDefs,
 	ChatBskyConvoGetLog,
 	ChatBskyConvoSendMessage,
+	ChatBskyEmbedJoinLink,
 	ChatBskyGroupDefs,
 } from '@atcute/bluesky';
 import { type Client, ClientResponseError, ok } from '@atcute/client';
@@ -94,7 +95,9 @@ export class Convo {
 		{
 			id: string;
 			message: ChatBskyConvoSendMessage.$input['message'];
-			optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>;
+			optimisticEmbedView?:
+				| $type.enforce<AppBskyEmbedRecord.View>
+				| $type.enforce<ChatBskyEmbedJoinLink.View>;
 		}
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
@@ -910,7 +913,7 @@ export class Convo {
 
 	sendMessage(
 		message: ChatBskyConvoSendMessage.$input['message'],
-		optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View>,
+		optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View> | $type.enforce<ChatBskyEmbedJoinLink.View>,
 	) {
 		// Ignore empty messages for now since they have no other purpose atm
 		if (!message.text.trim() && !message.embed) return;

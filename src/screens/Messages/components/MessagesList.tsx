@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { AppBskyEmbedRecord, ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
 import type { $type, Did, Handle } from '@atcute/lexicons';
@@ -18,13 +18,18 @@ import { mergeRefs } from '#/lib/merge-refs';
 import { ScrollProvider } from '#/lib/ScrollContext';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
-import { convertBskyAppUrlIfNeeded, isBskyPostUrl } from '#/lib/strings/url-helpers';
+import {
+	convertBskyAppUrlIfNeeded,
+	getChatInviteCodeFromUrl,
+	isBskyPostUrl,
+} from '#/lib/strings/url-helpers';
 
 import { type ActiveConvoStates, isConvoActive, useConvoActive } from '#/state/messages/convo';
 import { type ConvoState, ConvoStatus } from '#/state/messages/convo/types';
+import { useGetJoinLinkPreview } from '#/state/queries/join-links';
 import { useGetPost } from '#/state/queries/post';
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
-import { useClients } from '#/state/session';
+import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
@@ -128,8 +133,10 @@ export function MessagesList({
 }) {
 	const convoState = useConvoActive();
 	const { appview } = useClients();
+	const { hasSession } = useSession();
 	const getPost = useGetPost();
-	const { embedUri, setEmbed } = useMessageEmbed();
+	const getJoinLinkPreview = useGetJoinLinkPreview();
+	const { embed: messageEmbed, setEmbed } = useMessageEmbed();
 	const t = useTheme();
 
 	const textInputId = 'chat-input-' + useId();
@@ -324,12 +331,18 @@ export function MessagesList({
 		async (text: string) => {
 			let trimmedText = cleanNewlines(text.trimEnd());
 
-			let embed: $type.enforce<AppBskyEmbedRecord.Main> | undefined;
-			let embedView: $type.enforce<AppBskyEmbedRecord.View> | undefined;
+			let embed:
+				| $type.enforce<AppBskyEmbedRecord.Main>
+				| $type.enforce<ChatBskyEmbedJoinLink.Main>
+				| undefined;
+			let embedView:
+				| $type.enforce<AppBskyEmbedRecord.View>
+				| $type.enforce<ChatBskyEmbedJoinLink.View>
+				| undefined;
 
-			if (embedUri) {
+			if (messageEmbed?.type === 'post') {
 				try {
-					const post = await getPost({ uri: embedUri });
+					const post = await getPost({ uri: messageEmbed.uri });
 					if (post) {
 						embed = {
 							$type: 'app.bsky.embed.record',
@@ -366,6 +379,34 @@ export function MessagesList({
 				} catch (error) {
 					logger.error('Failed to get post as quote for DM', { error });
 				}
+			} else if (messageEmbed?.type === 'invite') {
+				const code = messageEmbed.code;
+				embed = {
+					$type: 'chat.bsky.embed.joinLink',
+					code,
+				};
+
+				const joinLinkPreview = await getJoinLinkPreview({ code, hasSession });
+				if (joinLinkPreview) {
+					embedView = {
+						$type: 'chat.bsky.embed.joinLink#view',
+						joinLinkPreview,
+					};
+				}
+
+				// If the invite link sits at the start or end of the message text, strip it — it shows as the
+				// invite card instead.
+				for (const token of tokenize(trimmedText)) {
+					if (token.type !== 'autolink' || getChatInviteCodeFromUrl(token.url) !== code) {
+						continue;
+					}
+					if (trimmedText.startsWith(token.raw)) {
+						trimmedText = cleanNewlines(trimmedText.slice(token.raw.length).trim());
+					} else if (trimmedText.endsWith(token.raw)) {
+						trimmedText = cleanNewlines(trimmedText.slice(0, -token.raw.length).trim());
+					}
+					break;
+				}
 			}
 
 			// `detectFacets` only emits mention facets for handles that resolve, so there are no
@@ -398,7 +439,7 @@ export function MessagesList({
 				embedView,
 			);
 		},
-		[appview, convoState, embedUri, getPost, hasScrolled, setHasScrolled],
+		[appview, convoState, messageEmbed, getPost, getJoinLinkPreview, hasSession, hasScrolled, setHasScrolled],
 	);
 
 	const scrollToEndOnPress = useCallback(() => {
@@ -541,11 +582,11 @@ export function MessagesList({
 								<MessageComposer
 									textInputId={textInputId}
 									onSendMessage={(message: string) => void onSendMessage(message)}
-									hasEmbed={!!embedUri}
+									hasEmbed={!!messageEmbed}
 									setEmbed={setEmbed}
 									loading={loading}
 								>
-									<MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+									<MessageInputEmbed embed={messageEmbed} setEmbed={setEmbed} />
 								</MessageComposer>
 							)}
 						</ConversationFooter>

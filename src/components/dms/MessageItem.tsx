@@ -45,6 +45,7 @@ import { Text } from '#/components/Typography';
 
 import { DateDivider } from './DateDivider';
 import { MessageItemEmbed } from './MessageItemEmbed';
+import { MessageItemInviteEmbed } from './MessageItemInviteEmbed';
 import { ReactionsDialog } from './ReactionsDialog';
 import { CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS } from './util';
 
@@ -154,7 +155,10 @@ let MessageItem = ({
 
 	const rt = { text: message.text, facets: message.facets ?? [] };
 
-	const hasEmbedAndText = message.embed?.$type === 'app.bsky.embed.record#view' && rt.text.length > 0;
+	const hasEmbed =
+		message.embed?.$type === 'app.bsky.embed.record#view' ||
+		message.embed?.$type === 'chat.bsky.embed.joinLink#view';
+	const hasEmbedAndText = hasEmbed && rt.text.length > 0;
 
 	const targetBottomRadius = squaredBottomCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
 	const targetTopRadius = squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
@@ -378,6 +382,15 @@ let MessageItem = ({
 							>
 								{message.embed?.$type === 'app.bsky.embed.record#view' && (
 									<MessageItemEmbed
+										embed={message.embed}
+										isFromSelf={isFromSelf}
+										isGroupChat={isGroupChat}
+										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+										squaredTopCorner={squaredTopCorner}
+									/>
+								)}
+								{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
+									<MessageItemInviteEmbed
 										embed={message.embed}
 										isFromSelf={isFromSelf}
 										isGroupChat={isGroupChat}
