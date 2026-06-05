@@ -1,6 +1,6 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
-import type { $type, GenericUri } from '@atcute/lexicons';
+import type { GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -104,17 +104,13 @@ async function postDraftToServerPost(
 
 	// Add embeds
 	if (post.embed.media) {
-		if (post.embed.media.type === 'images') {
-			draftPost.embedImages = serializeImages(post.embed.media.images, localRefPaths);
-		} else if (post.embed.media.type === 'gallery') {
+		// We always write the `embedGallery` shape for images now, including the
+		// legacy `images` variant (<=4 photos). We still read `embedImages` from
+		// older drafts for backwards compat - see `draftToPostDrafts`.
+		if (post.embed.media.type === 'images' || post.embed.media.type === 'gallery') {
 			draftPost.embedGallery = {
 				$type: 'app.bsky.draft.defs#draftEmbedGallery',
-				// serializeImages stamps each item's `$type`; the gallery items array is a variant, so assert
-				// the discriminator is present.
-				items: serializeImages(
-					post.embed.media.images,
-					localRefPaths,
-				) as $type.enforce<AppBskyDraftDefs.DraftEmbedImage>[],
+				items: serializeImages(post.embed.media.images, localRefPaths),
 			};
 		} else if (post.embed.media.type === 'video') {
 			const video = await serializeVideo(post.embed.media.video, localRefPaths);
@@ -211,7 +207,7 @@ async function restoreDraftImages(
 function serializeImages(
 	images: ComposerImage[],
 	localRefPaths: Map<string, Blob>,
-): AppBskyDraftDefs.DraftEmbedImage[] {
+): AppBskyDraftDefs.DraftEmbedGalleryItems {
 	return images.map((image) => {
 		const sourceBlob = (image.transformed ?? image.source).blob;
 		// Reuse existing localRefPath if present (editing draft), otherwise generate new
@@ -225,7 +221,7 @@ function serializeImages(
 		});
 
 		return {
-			$type: 'app.bsky.draft.defs#draftEmbedImage',
+			$type: 'app.bsky.draft.defs#draftEmbedImage' as const,
 			localRef: {
 				$type: 'app.bsky.draft.defs#draftEmbedLocalRef',
 				path: localRefPath,
