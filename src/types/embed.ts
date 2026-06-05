@@ -1,5 +1,6 @@
 import type {
 	AppBskyEmbedExternal,
+	AppBskyEmbedGallery,
 	AppBskyEmbedImages,
 	AppBskyEmbedRecord,
 	AppBskyEmbedVideo,
@@ -44,6 +45,10 @@ export type Embed =
 	| {
 			type: 'images';
 			view: AppBskyEmbedImages.View;
+	  }
+	| {
+			type: 'gallery';
+			view: AppBskyEmbedGallery.View;
 	  }
 	| {
 			type: 'link';
@@ -92,6 +97,8 @@ export function parseEmbed(embed: AppBskyFeedDefs.PostView['embed']): Embed {
 	switch (embed?.$type) {
 		case 'app.bsky.embed.images#view':
 			return { type: 'images', view: embed };
+		case 'app.bsky.embed.gallery#view':
+			return { type: 'gallery', view: embed };
 		case 'app.bsky.embed.external#view':
 			return { type: 'link', view: embed };
 		case 'app.bsky.embed.video#view':

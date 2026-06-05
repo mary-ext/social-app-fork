@@ -1,3 +1,5 @@
+import type { AppBskyEmbedImages } from '@atcute/bluesky';
+
 import { useLightboxControls } from '#/components/Lightbox/state';
 import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { AutoSizedImage } from '#/components/web/ImageEmbed/AutoSizedImage';
@@ -27,10 +29,20 @@ export function ImageEmbed({
 	embed,
 	viewContext,
 }: CommonProps & {
-	embed: EmbedType<'images'>;
+	embed: EmbedType<'images'> | EmbedType<'gallery'>;
 }) {
 	const { openLightbox } = useLightboxControls();
-	const { images } = embed.view;
+	// Gallery embeds carry the same image data under different field names (`thumbnail` -> `thumb`);
+	// normalize to `ViewImage` so the carousel and lightbox stay shared with the `images` embed.
+	const images: AppBskyEmbedImages.ViewImage[] =
+		embed.type === 'gallery'
+			? embed.view.items.map((item) => ({
+					alt: item.alt,
+					aspectRatio: item.aspectRatio,
+					fullsize: item.fullsize,
+					thumb: item.thumbnail,
+				}))
+			: embed.view.images;
 
 	if (images.length === 0) {
 		return null;

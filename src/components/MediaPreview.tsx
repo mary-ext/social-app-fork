@@ -33,6 +33,15 @@ export function Embed({
 				))}
 			</Outer>
 		);
+	} else if (e.type === 'gallery') {
+		// cap at 4 tiles so a large gallery doesn't blow out this narrow inline strip
+		return (
+			<Outer style={style}>
+				{e.view.items.slice(0, 4).map((image) => (
+					<ImageItem key={image.thumbnail} thumbnail={image.thumbnail} alt={image.alt} />
+				))}
+			</Outer>
+		);
 	} else if (e.type === 'link') {
 		if (!e.view.external.thumb) return null;
 		if (!isGifEmbed(e.view.external.uri)) return null;

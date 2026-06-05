@@ -27,6 +27,7 @@ export function maybeApplyGalleryOffsetStyles(
 	 */
 	const embed = record.embed;
 	const isImageEmbed = embed?.$type === 'app.bsky.embed.images';
+	const isGalleryEmbed = embed?.$type === 'app.bsky.embed.gallery';
 	const isRecordWithMedia = embed?.$type === 'app.bsky.embed.recordWithMedia';
 	let hasImages = false;
 	if (isImageEmbed) {
@@ -34,10 +35,19 @@ export function maybeApplyGalleryOffsetStyles(
 		if (embed.images.length === 1) return;
 		hasImages = true;
 	}
+	if (isGalleryEmbed) {
+		// single (or empty) gallery - no offset needed
+		if (embed.items.length <= 1) return;
+		hasImages = true;
+	}
 	if (isRecordWithMedia) {
 		if (embed.media.$type === 'app.bsky.embed.images') {
 			// one image, not a gallery
 			if (embed.media.images.length === 1) return;
+		}
+		if (embed.media.$type === 'app.bsky.embed.gallery') {
+			// single (or empty) gallery - no offset needed
+			if (embed.media.items.length <= 1) return;
 		}
 		hasImages = true;
 	}
