@@ -1,6 +1,6 @@
 /** Type converters for Draft API - convert between ComposerState and server Draft types. */
 import type { AppBskyDraftDefs } from '@atcute/bluesky';
-import type { GenericUri } from '@atcute/lexicons';
+import type { $type, GenericUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -106,6 +106,16 @@ async function postDraftToServerPost(
 	if (post.embed.media) {
 		if (post.embed.media.type === 'images') {
 			draftPost.embedImages = serializeImages(post.embed.media.images, localRefPaths);
+		} else if (post.embed.media.type === 'gallery') {
+			draftPost.embedGallery = {
+				$type: 'app.bsky.draft.defs#draftEmbedGallery',
+				// serializeImages stamps each item's `$type`; the gallery items array is a variant, so assert
+				// the discriminator is present.
+				items: serializeImages(
+					post.embed.media.images,
+					localRefPaths,
+				) as $type.enforce<AppBskyDraftDefs.DraftEmbedImage>[],
+			};
 		} else if (post.embed.media.type === 'video') {
 			const video = await serializeVideo(post.embed.media.video, localRefPaths);
 			if (video) {
@@ -152,6 +162,52 @@ async function postDraftToServerPost(
  * Serialize images to server format with localRef paths. Reuses existing localRefPath if present (when
  * editing a draft), otherwise generates a new one.
  */
+/** Restore `DraftEmbedImage`s (from the `embedImages` or `embedGallery` field) back into composer images. */
+async function restoreDraftImages(
+	items: AppBskyDraftDefs.DraftEmbedImage[],
+	loadedMedia: Map<string, Blob>,
+): Promise<ComposerImage[]> {
+	const imagePromises = items.map(async (img): Promise<ComposerImage | null> => {
+		const blob = loadedMedia.get(img.localRef.path);
+		if (!blob) {
+			return null;
+		}
+
+		let width = 0;
+		let height = 0;
+		try {
+			const dims = await getImageDimensions(blob);
+			width = dims.width;
+			height = dims.height;
+		} catch (e) {
+			logger.warn('Failed to get image dimensions', {
+				localRefPath: img.localRef.path,
+				error: e,
+			});
+		}
+
+		logger.debug('restoring image with localRefPath', {
+			localRefPath: img.localRef.path,
+			width,
+			height,
+		});
+
+		return {
+			alt: img.alt || '',
+			// Preserve the original localRefPath for reuse when saving
+			localRefPath: img.localRef.path,
+			source: {
+				id: nanoid(),
+				blob,
+				width,
+				height,
+			},
+		};
+	});
+
+	return (await Promise.all(imagePromises)).filter((img): img is ComposerImage => img !== null);
+}
+
 function serializeImages(
 	images: ComposerImage[],
 	localRefPaths: Map<string, Blob>,
@@ -407,49 +463,18 @@ export async function draftToComposerPosts(
 				media: undefined,
 			};
 
-			// Restore images
+			// Restore images / gallery. A gallery is just an image set that promoted past the legacy
+			// 4-image cap, so both deserialize identically; the field they were saved under picks the
+			// embed variant back.
 			if (post.embedImages && post.embedImages.length > 0) {
-				const imagePromises = post.embedImages.map(async (img): Promise<ComposerImage | null> => {
-					const blob = loadedMedia.get(img.localRef.path);
-					if (!blob) {
-						return null;
-					}
-
-					let width = 0;
-					let height = 0;
-					try {
-						const dims = await getImageDimensions(blob);
-						width = dims.width;
-						height = dims.height;
-					} catch (e) {
-						logger.warn('Failed to get image dimensions', {
-							localRefPath: img.localRef.path,
-							error: e,
-						});
-					}
-
-					logger.debug('restoring image with localRefPath', {
-						localRefPath: img.localRef.path,
-						width,
-						height,
-					});
-
-					return {
-						alt: img.alt || '',
-						// Preserve the original localRefPath for reuse when saving
-						localRefPath: img.localRef.path,
-						source: {
-							id: nanoid(),
-							blob,
-							width,
-							height,
-						},
-					};
-				});
-
-				const images = (await Promise.all(imagePromises)).filter((img): img is ComposerImage => img !== null);
+				const images = await restoreDraftImages(post.embedImages, loadedMedia);
 				if (images.length > 0) {
 					embed.media = { type: 'images', images };
+				}
+			} else if (post.embedGallery && post.embedGallery.items.length > 0) {
+				const images = await restoreDraftImages(post.embedGallery.items, loadedMedia);
+				if (images.length > 0) {
+					embed.media = { type: 'gallery', images };
 				}
 			}
 

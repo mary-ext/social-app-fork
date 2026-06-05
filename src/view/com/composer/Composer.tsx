@@ -129,7 +129,7 @@ import {
 	composerReducer,
 	createComposerState,
 	type EmbedDraft,
-	MAX_IMAGES,
+	MAX_GALLERY_IMAGES,
 	type PostAction,
 	type PostDraft,
 	type ThreadDraft,
@@ -151,6 +151,62 @@ type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position'> & {
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
 	return style as unknown as ViewStyle;
 };
+
+function applyGalleryCap(
+	currentCount: number,
+	incoming: ComposerImage[],
+):
+	| { status: 'full' }
+	| { status: 'partial'; accepted: ComposerImage[]; dropped: number }
+	| { status: 'ok'; accepted: ComposerImage[] } {
+	const remaining = MAX_GALLERY_IMAGES - currentCount;
+	if (remaining <= 0) {
+		return { status: 'full' };
+	}
+	if (incoming.length > remaining) {
+		return {
+			status: 'partial',
+			accepted: incoming.slice(0, remaining),
+			dropped: incoming.length - remaining,
+		};
+	}
+	return { status: 'ok', accepted: incoming };
+}
+
+function useAddImagesWithCap(currentCount: number, dispatchPostAction: (action: PostAction) => void) {
+	const { t: l } = useLingui();
+	return useCallback(
+		(next: ComposerImage[]) => {
+			const result = applyGalleryCap(currentCount, next);
+			if (result.status === 'full') {
+				Toast.show(
+					l({
+						message: `You can only add up to ${MAX_GALLERY_IMAGES} images per post`,
+						comment:
+							'Toast shown when the user tries to add more images but the post gallery is already at the cap',
+					}),
+					{ type: 'warning' },
+				);
+				return;
+			}
+			if (result.status === 'partial') {
+				Toast.show(
+					l({
+						message: `Only ${result.accepted.length} of ${next.length} ${plural(next.length, { one: 'image', other: 'images' })} added; limit is ${MAX_GALLERY_IMAGES}`,
+						comment:
+							'Toast shown when adding images would exceed the post gallery cap; only the first N are kept',
+					}),
+					{ type: 'warning' },
+				);
+			}
+			dispatchPostAction({
+				type: 'embed_add_images',
+				images: result.accepted,
+			});
+		},
+		[currentCount, dispatchPostAction, l],
+	);
+}
 
 type Props = ComposerOpts;
 export const ComposePost = ({
@@ -615,7 +671,7 @@ export const ComposePost = ({
 		for (let i = 0; i < thread.posts.length; i++) {
 			const media = thread.posts[i]!.embed.media;
 			if (media) {
-				if (media.type === 'images' && media.images.some((img) => !img.alt)) {
+				if ((media.type === 'images' || media.type === 'gallery') && media.images.some((img) => !img.alt)) {
 					return l`One or more images is missing alt text.`;
 				}
 				if (media.type === 'gif' && !media.alt) {
@@ -757,7 +813,9 @@ export const ComposePost = ({
 			const error = e instanceof Error ? e : new Error(String(e));
 			logger.error(error, {
 				message: `Composer: create post failed`,
-				hasImages: filteredThread.posts.some((p) => p.embed.media?.type === 'images'),
+				hasImages: filteredThread.posts.some(
+					(p) => p.embed.media?.type === 'images' || p.embed.media?.type === 'gallery',
+				),
 			});
 
 			let err = cleanError(error.message);
@@ -1151,15 +1209,11 @@ let ComposerPost = memo(function ComposerPost({
 		[dispatch, post.id],
 	);
 
-	const onImageAdd = useCallback(
-		(next: ComposerImage[]) => {
-			dispatchPost({
-				type: 'embed_add_images',
-				images: next,
-			});
-		},
-		[dispatchPost],
-	);
+	const postImagesCount =
+		post.embed.media?.type === 'images' || post.embed.media?.type === 'gallery'
+			? post.embed.media.images.length
+			: 0;
+	const onImageAdd = useAddImagesWithCap(postImagesCount, dispatchPost);
 
 	const onNewLink = useCallback(
 		(uri: string) => {
@@ -1440,7 +1494,9 @@ function ComposerEmbeds({
 	const video = embed.media?.type === 'video' ? embed.media.video : null;
 	return (
 		<>
-			{embed.media?.type === 'images' && <Gallery images={embed.media.images} dispatch={dispatch} />}
+			{(embed.media?.type === 'images' || embed.media?.type === 'gallery') && (
+				<Gallery images={embed.media.images} dispatch={dispatch} />
+			)}
 			{embed.media?.type === 'gif' && (
 				<View style={[a.relative, a.mt_lg]} key={embed.media.gif.url}>
 					<ExternalEmbedGif gif={embed.media.gif} onRemove={() => dispatch({ type: 'embed_remove_gif' })} />
@@ -1533,7 +1589,8 @@ function ComposerPills({
 }) {
 	const t = useTheme();
 	const media = post.embed.media;
-	const hasMedia = media?.type === 'images' || media?.type === 'video';
+	const hasMedia =
+		media?.type === 'images' || media?.type === 'gallery' || media?.type === 'gif' || media?.type === 'video';
 	const hasLink = !!post.embed.link;
 
 	// Don't render anything if no pills are going to be displayed
@@ -1621,15 +1678,15 @@ function ComposerFooter({
 	const [selectedAssetsType, setSelectedAssetsType] = useState<AssetType | undefined>(undefined);
 
 	const media = post.embed.media;
-	const images = media?.type === 'images' ? media.images : [];
+	const images = media?.type === 'images' || media?.type === 'gallery' ? media.images : [];
 	const video = media?.type === 'video' ? media.video : null;
-	const isMaxImages = images.length >= MAX_IMAGES;
+	const isMaxImages = images.length >= MAX_GALLERY_IMAGES;
 	const isMaxVideos = !!video;
 
 	let selectedAssetsCount = 0;
 	let isMediaSelectionDisabled = false;
 
-	if (media?.type === 'images') {
+	if (media?.type === 'images' || media?.type === 'gallery') {
 		isMediaSelectionDisabled = isMaxImages;
 		selectedAssetsCount = images.length;
 	} else if (media?.type === 'video') {
@@ -1639,15 +1696,7 @@ function ComposerFooter({
 		isMediaSelectionDisabled = !!media;
 	}
 
-	const onImageAdd = useCallback(
-		(next: ComposerImage[]) => {
-			dispatch({
-				type: 'embed_add_images',
-				images: next,
-			});
-		},
-		[dispatch],
-	);
+	const onImageAdd = useAddImagesWithCap(images.length, dispatch);
 
 	const onSelectGif = useCallback(
 		(gif: Gif) => {

@@ -5,6 +5,7 @@ import type {
 } from '@atcute/atproto';
 import type {
 	AppBskyEmbedExternal,
+	AppBskyEmbedGallery,
 	AppBskyEmbedImages,
 	AppBskyEmbedVideo,
 	AppBskyFeedPost,
@@ -288,6 +289,7 @@ async function resolveMedia(
 	onStateChange: ((state: string) => void) | undefined,
 ): Promise<
 	| $type.enforce<AppBskyEmbedExternal.Main>
+	| $type.enforce<AppBskyEmbedGallery.Main>
 	| $type.enforce<AppBskyEmbedImages.Main>
 	| $type.enforce<AppBskyEmbedVideo.Main>
 	| undefined
@@ -313,6 +315,30 @@ async function resolveMedia(
 		return {
 			$type: 'app.bsky.embed.images',
 			images,
+		};
+	}
+	if (embedDraft.media?.type === 'gallery') {
+		const imagesDraft = embedDraft.media.images;
+		logger.debug(`Uploading images`, {
+			count: imagesDraft.length,
+		});
+		onStateChange?.(t`Uploading images...`);
+		const items: $type.enforce<AppBskyEmbedGallery.Image>[] = await Promise.all(
+			imagesDraft.map(async (image, i) => {
+				logger.debug(`Compressing image #${i}`);
+				const { blob, width, height } = await compressImage(image);
+				logger.debug(`Uploading image #${i}`);
+				return {
+					$type: 'app.bsky.embed.gallery#image',
+					alt: image.alt,
+					aspectRatio: { height, width },
+					image: await uploadBlob(pds, blob),
+				};
+			}),
+		);
+		return {
+			$type: 'app.bsky.embed.gallery',
+			items,
 		};
 	}
 	if (embedDraft.media?.type === 'video' && embedDraft.media.video.status === 'done') {

@@ -7,7 +7,7 @@ import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import { openMediaPicker } from '#/lib/media/picker';
 import type { VideoAsset } from '#/lib/media/video/types';
 
-import { MAX_IMAGES } from '#/view/com/composer/state/composer';
+import { MAX_GALLERY_IMAGES } from '#/view/com/composer/state/composer';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -226,7 +226,7 @@ export function SelectMediaButton({
 	const t = useTheme();
 	const hasAutoOpened = useRef(false);
 
-	const selectionCountRemaining = MAX_IMAGES - selectedAssetsCount;
+	const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount;
 
 	const onPressSelectMedia = useCallback(async () => {
 		const files = await openMediaPicker();
@@ -244,7 +244,7 @@ export function SelectMediaButton({
 				[SelectedAssetError.Unsupported]: l`One or more of your selected files are not supported.`,
 				[SelectedAssetError.MixedTypes]: l`Selecting multiple media types is not supported.`,
 				[SelectedAssetError.MaxImages]: l({
-					message: `You can select up to ${plural(MAX_IMAGES, {
+					message: `You can select up to ${plural(MAX_GALLERY_IMAGES, {
 						other: '# images',
 					})} in total.`,
 					comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
@@ -275,7 +275,7 @@ export function SelectMediaButton({
 				comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
 			})}
 			accessibilityHint={l({
-				message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
+				message: `Opens device gallery to select up to ${plural(MAX_GALLERY_IMAGES, {
 					other: '# images',
 				})}, or a single video or GIF.`,
 				comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,

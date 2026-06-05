@@ -69,6 +69,20 @@ export async function loadDraftMedia(draft: AppBskyDraftDefs.Draft): Promise<{
 				}
 			}
 		}
+		// Load gallery
+		if (post.embedGallery) {
+			for (const item of post.embedGallery.items) {
+				try {
+					const blob = await storage.loadMediaFromLocal(item.localRef.path);
+					loadedMedia.set(item.localRef.path, blob);
+				} catch (e) {
+					logger.error('Failed to load draft gallery image', {
+						path: item.localRef.path,
+						safeMessage: e instanceof Error ? e.message : String(e),
+					});
+				}
+			}
+		}
 		// Load videos
 		if (post.embedVideos) {
 			for (const vid of post.embedVideos) {
@@ -215,6 +229,11 @@ export function useDeleteDraftMutation() {
 				if (post.embedImages) {
 					for (const img of post.embedImages) {
 						await storage.deleteMediaFromLocal(img.localRef.path);
+					}
+				}
+				if (post.embedGallery) {
+					for (const item of post.embedGallery.items) {
+						await storage.deleteMediaFromLocal(item.localRef.path);
 					}
 				}
 				if (post.embedVideos) {

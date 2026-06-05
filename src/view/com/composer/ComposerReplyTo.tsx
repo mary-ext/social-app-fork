@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import type { AnyProfileView, AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
@@ -68,11 +68,14 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 	const images = useMemo(() => {
 		if (embed?.$type === 'app.bsky.embed.images#view') {
 			return embed.images;
-		} else if (
-			embed?.$type === 'app.bsky.embed.recordWithMedia#view' &&
-			embed.media?.$type === 'app.bsky.embed.images#view'
-		) {
-			return embed.media.images;
+		} else if (embed?.$type === 'app.bsky.embed.gallery#view') {
+			return galleryItemsToImages(embed.items);
+		} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
+			if (embed.media?.$type === 'app.bsky.embed.images#view') {
+				return embed.media.images;
+			} else if (embed.media?.$type === 'app.bsky.embed.gallery#view') {
+				return galleryItemsToImages(embed.media.items);
+			}
 		}
 	}, [embed]);
 
@@ -134,6 +137,16 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			</View>
 		</Pressable>
 	);
+}
+
+/** Normalize gallery view items (`thumbnail`) to the shared image `ViewImage` shape (`thumb`). */
+function galleryItemsToImages(items: AppBskyEmbedGallery.ViewImage[]): AppBskyEmbedImages.ViewImage[] {
+	return items.map((item) => ({
+		alt: item.alt,
+		aspectRatio: item.aspectRatio,
+		fullsize: item.fullsize,
+		thumb: item.thumbnail,
+	}));
 }
 
 function ComposerReplyToImages({ images }: { images: AppBskyEmbedImages.ViewImage[]; showFull: boolean }) {
