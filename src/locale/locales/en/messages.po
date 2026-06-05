@@ -72,8 +72,8 @@ msgstr ""
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr ""
 
-#. placeholder {0}: convo.details.joinRequestCount
-#: src/screens/Messages/components/ChatListItem.tsx:218
+#. placeholder {0}: convo.details.unreadJoinRequestCount
+#: src/screens/Messages/components/ChatListItem.tsx:219
 msgid "{0, plural, one {# new join request} other {# new join requests}}"
 msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 
@@ -318,6 +318,10 @@ msgstr "{count, plural, =0 {No requests to join} one {# request to join} other {
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {# chat update} other {# chat updates}}"
 
+#: src/screens/Messages/components/RequestStatus.tsx:71
+msgid "{count, plural, one {# new join request} other {# new join requests}}"
+msgstr "{count, plural, one {# new join request} other {# new join requests}}"
+
 #: src/screens/Messages/components/InboxRequests.tsx:35
 msgid "{count, plural, one {# request} other {# requests}}"
 msgstr "{count, plural, one {# request} other {# requests}}"
@@ -531,6 +535,16 @@ msgstr ""
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
+#. Displayed when the number of requests is greater than 20
+#: src/screens/Messages/components/RequestStatus.tsx:67
+msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
+msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
+
+#: src/screens/Messages/components/ChatListItem.tsx:215
+msgctxt "Displayed when there are more than 20 requests to join a group chat"
+msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
+msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
+
 #. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
 #: src/components/StarterPack/StarterPackCard.tsx:78
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
@@ -721,11 +735,6 @@ msgstr ""
 #: src/screens/Profile/Header/Handle.tsx:62
 msgid "⚠Invalid Handle"
 msgstr ""
-
-#: src/screens/Messages/components/ChatListItem.tsx:214
-msgctxt "Displayed when there are more than 20 requests to join a group chat"
-msgid "20+ new join requests"
-msgstr "20+ new join requests"
 
 #: src/components/dialogs/MutedWords.tsx:174
 #: src/components/dialogs/MutedWords.tsx:434
@@ -2049,6 +2058,10 @@ msgstr ""
 msgid "Close active dialog"
 msgstr ""
 
+#: src/screens/Messages/components/RequestStatus.tsx:79
+msgid "Close banner"
+msgstr "Close banner"
+
 #. Accessibility label for the button that dismisses the GIF picker error dialog.
 #: src/components/dialogs/LanguageSelectDialog.tsx:198
 #: src/components/dialogs/LanguageSelectDialog.tsx:286
@@ -2068,6 +2081,10 @@ msgstr ""
 #: src/components/Lightbox/Lightbox.tsx:314
 msgid "Close image viewer"
 msgstr ""
+
+#: src/screens/Messages/components/RequestStatus.tsx:80
+msgid "Close the incoming requests banner"
+msgstr "Close the incoming requests banner"
 
 #: src/view/com/composer/Composer.tsx:1399
 msgid "Closes post composer and discards post draft"
@@ -2196,7 +2213,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:315
 msgid "Conversation deleted"
 msgstr ""
 
@@ -2564,7 +2581,7 @@ msgid "Deleted"
 msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:105
-#: src/screens/Messages/components/ChatListItem.tsx:123
+#: src/screens/Messages/components/ChatListItem.tsx:124
 #: src/screens/Messages/ConversationSettings/Member.tsx:77
 msgid "Deleted Account"
 msgstr ""
@@ -3885,7 +3902,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Messages/components/ChatListItem.tsx:146
+#: src/screens/Messages/components/ChatListItem.tsx:147
 msgid "Go to conversation with {0}"
 msgstr ""
 
@@ -3901,7 +3918,7 @@ msgstr ""
 msgid "Go to profile"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:206
+#: src/screens/Messages/components/ChatListItem.tsx:207
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
@@ -4897,7 +4914,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:311
+#: src/screens/Messages/components/ChatListItem.tsx:315
 msgid "Message deleted"
 msgstr ""
 
@@ -5393,7 +5410,7 @@ msgstr ""
 msgid "No media yet"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:299
+#: src/screens/Messages/components/ChatListItem.tsx:303
 msgid "No messages yet"
 msgstr ""
 
@@ -7773,7 +7790,7 @@ msgstr "Someone was removed from the group"
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:96
+#: src/screens/Messages/Conversation.tsx:104
 #: src/screens/Messages/ConversationSettings/index.tsx:102
 #: src/screens/Messages/JoinRequests.tsx:68
 msgid "Something went wrong"
@@ -8329,7 +8346,7 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
-#: src/screens/Messages/components/ChatListItem.tsx:356
+#: src/screens/Messages/components/ChatListItem.tsx:360
 #: src/screens/Messages/components/ChatLocked.tsx:61
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -8355,7 +8372,7 @@ msgstr ""
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:147
+#: src/screens/Messages/components/ChatListItem.tsx:148
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
@@ -9194,6 +9211,14 @@ msgstr ""
 msgid "View incoming group chat requests"
 msgstr "View incoming group chat requests"
 
+#: src/screens/Messages/components/RequestStatus.tsx:58
+msgid "View incoming requests"
+msgstr "View incoming requests"
+
+#: src/screens/Messages/components/RequestStatus.tsx:59
+msgid "View incoming requests to join this group chat"
+msgstr "View incoming requests to join this group chat"
+
 #: src/components/moderation/LabelsOnMe.tsx:44
 msgid "View information about these labels"
 msgstr ""
@@ -9348,7 +9373,7 @@ msgstr ""
 msgid "We couldn't find any results for that topic."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:97
+#: src/screens/Messages/Conversation.tsx:105
 msgid "We couldn't load this conversation"
 msgstr ""
 

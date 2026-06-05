@@ -8,6 +8,8 @@ import { useClients } from '#/state/session';
 
 import { STALE } from '..';
 
+export const JOIN_REQUESTS_THRESHOLD = 20;
+
 const listJoinRequestsQueryKeyRoot = 'list-join-requests';
 
 export const createListJoinRequestsQueryKey = (args: { convoId: string }) =>
@@ -55,7 +57,7 @@ export function useListJoinRequestsQuery({
 			if (!chat) throw new Error('Not signed in');
 			const data = await ok(
 				chat.get('chat.bsky.group.listJoinRequests', {
-					params: { convoId: convoId!, cursor: pageParam, limit: 20 },
+					params: { convoId: convoId!, cursor: pageParam, limit: JOIN_REQUESTS_THRESHOLD },
 				}),
 			);
 			return data;

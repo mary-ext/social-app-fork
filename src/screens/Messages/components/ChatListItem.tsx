@@ -21,6 +21,7 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { type Shadow, useMaybeProfileShadow, useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { precacheConvoQuery, useMarkAsReadMutation } from '#/state/queries/messages/conversation';
+import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
@@ -208,14 +209,14 @@ function GroupChatItem({
 			primaryProfileModeration={moderation}
 			isBlockedAccount={false}
 			isDeletedAccount={false}
-			subtitle={
-				convo.details.joinRequestCount
-					? convo.details.joinRequestCount > 20
+			requestInfo={
+				convo.details.unreadJoinRequestCount
+					? convo.details.unreadJoinRequestCount > JOIN_REQUESTS_THRESHOLD
 						? l({
-								message: '20+ new join requests',
+								message: `${JOIN_REQUESTS_THRESHOLD}+ new join requests`,
 								context: 'Displayed when there are more than 20 requests to join a group chat',
 							})
-						: plural(convo.details.joinRequestCount, {
+						: plural(convo.details.unreadJoinRequestCount, {
 								one: '# new join request',
 								other: '# new join requests',
 							})
@@ -235,6 +236,7 @@ function BaseChatItem({
 	avatar,
 	title,
 	subtitle,
+	requestInfo,
 	accessibilityHint,
 	isDeletedAccount,
 	isBlockedAccount,
@@ -250,6 +252,7 @@ function BaseChatItem({
 	avatar: React.ReactNode;
 	title: string;
 	subtitle?: string;
+	requestInfo?: string;
 	accessibilityHint: string;
 	isDeletedAccount: boolean;
 	isBlockedAccount: boolean;
@@ -272,8 +275,9 @@ function BaseChatItem({
 
 	const queryClient = useQueryClient();
 	const hasUnread =
-		convo.view.unreadCount > 0 &&
 		!isDeletedAccount &&
+		(convo.view.unreadCount > 0 ||
+			(convo.kind === 'group' && (convo.details.unreadJoinRequestCount ?? 0) > 0)) &&
 		(convo.kind !== 'group' || convo.details.lockStatus === 'unlocked');
 
 	const blockInfo = useMemo(() => {
@@ -550,6 +554,20 @@ function BaseChatItem({
 									)}
 
 									{postAlerts}
+
+									{requestInfo && (
+										<Text
+											numberOfLines={1}
+											style={[
+												hasUnread ? a.font_medium : t.atoms.text_contrast_high,
+												isDimStyle && t.atoms.text_contrast_medium,
+												a.pb_2xs,
+											]}
+											emoji
+										>
+											{requestInfo}
+										</Text>
+									)}
 
 									<View style={[a.flex_row, a.align_center]}>
 										{LastMessageIcon && (

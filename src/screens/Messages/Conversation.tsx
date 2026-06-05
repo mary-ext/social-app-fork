@@ -1,12 +1,18 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { type LayoutChangeEvent, View } from 'react-native';
 import { moderateProfile, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
-import { type RouteProp, useFocusEffect, useIsFocused, useRoute } from '@react-navigation/native';
+import {
+	type RouteProp,
+	useFocusEffect,
+	useIsFocused,
+	useNavigation,
+	useRoute,
+} from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { useViewportZoomLock } from '#/lib/hooks/useViewportZoomLock';
-import type { CommonNavigatorParams } from '#/lib/routes/types';
+import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo';
@@ -14,9 +20,11 @@ import { ConvoStatus } from '#/state/messages/convo/types';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useConvoQuery } from '#/state/queries/messages/conversation';
+import { useMarkJoinRequestsRead } from '#/state/queries/messages/mark-join-request-read';
 import { useSession } from '#/state/session';
 
 import { MessagesList } from '#/screens/Messages/components/MessagesList';
+import { RequestStatus } from '#/screens/Messages/components/RequestStatus';
 
 import { atoms as a } from '#/alf';
 
@@ -131,12 +139,21 @@ function InnerReady({
 	isDisabled: boolean;
 }) {
 	const { params } = useRoute<RouteProp<CommonNavigatorParams, 'MessagesConversation'>>();
+	const navigation = useNavigation<NavigationProp>();
 	const primaryMember = useMaybeProfileShadow(convo?.primaryMember);
 	const moderationOpts = useModerationOpts();
 	const primaryMemberModeration = useMemo(() => {
 		if (!primaryMember || !moderationOpts) return null;
 		return moderateProfile(primaryMember, moderationOpts);
 	}, [primaryMember, moderationOpts]);
+
+	const [headerHeight, setHeaderHeight] = useState(0);
+	const onHeaderLayout = useCallback((e: LayoutChangeEvent) => {
+		setHeaderHeight(e.nativeEvent.layout.height);
+	}, []);
+
+	const unreadRequestCount = convo?.kind === 'group' ? (convo.details.unreadJoinRequestCount ?? 0) : 0;
+	const { mutate: markJoinRequestsRead } = useMarkJoinRequestsRead(convo?.view.id);
 
 	const header = <MessagesListHeader convo={convo} />;
 
@@ -171,7 +188,24 @@ function InnerReady({
 
 	return (
 		<>
-			{header}
+			<View onLayout={onHeaderLayout}>{header}</View>
+
+			{isActive && convo?.kind === 'group' && unreadRequestCount > 0 ? (
+				<RequestStatus
+					top={headerHeight}
+					count={unreadRequestCount}
+					onDismiss={() => {
+						markJoinRequestsRead();
+					}}
+					onPress={() => {
+						markJoinRequestsRead();
+						navigation.navigate('MessagesJoinRequests', {
+							conversation: convo.view.id,
+						});
+					}}
+				/>
+			) : null}
+
 			{isActive && (
 				<MessagesList
 					hasScrolled={hasScrolled}
