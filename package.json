@@ -45,7 +45,7 @@
 		"@mary-ext/simple-event-emitter": "^1.0.1",
 		"@mary/exif-rm": "jsr:^0.2.2",
 		"@oomfware/lang-detect": "^0.2.1",
-		"@oomfware/lightbox": "^0.1.0",
+		"@oomfware/lightbox": "^0.1.1",
 		"@react-navigation/bottom-tabs": "^7.16.2",
 		"@react-navigation/native": "^7.2.5",
 		"@react-navigation/native-stack": "^7.16.0",
