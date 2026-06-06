@@ -56,7 +56,29 @@ export const viewport = style({
 });
 // #endregion
 
-// #region chrome buttons
+// #region chrome
+/**
+ * Full-bleed container holding every chrome element so a single tap can fade them all at once. Transparent to
+ * pointers (`pointer-events: none`) so taps fall through to the image/viewport; the interactive controls
+ * inside opt back in with `pointer-events: auto`.
+ */
+export const chrome = style({
+	position: 'absolute',
+	inset: 0,
+	zIndex: 1,
+	pointerEvents: 'none',
+	// `visibility` is transitioned too so it's held `visible` through the opacity fade-out and only flips to
+	// `hidden` once it ends (and back to `visible` instantly on fade-in) — without it the discrete flip lands
+	// at the start and cuts the fade.
+	transition: 'opacity 200ms ease, visibility 200ms ease',
+});
+
+/** Tap-toggled hidden state for {@link chrome}; `visibility` also drops the controls out of the tab order. */
+export const chromeHidden = style({
+	opacity: 0,
+	visibility: 'hidden',
+});
+
 const blurred = {
 	backdropFilter: 'blur(8px)',
 	WebkitBackdropFilter: 'blur(8px)',
@@ -75,6 +97,7 @@ export const circle = style({
 	color: '#fff',
 	background: 'rgba(0, 0, 0, 0.75)',
 	cursor: 'pointer',
+	pointerEvents: 'auto',
 	animation: `${fadeIn} 200ms ease 200ms both`,
 	...blurred,
 	selectors: {
@@ -108,6 +131,7 @@ export const navButton = style({
 	color: '#fff',
 	background: 'rgba(0, 0, 0, 0.47)',
 	cursor: 'pointer',
+	pointerEvents: 'auto',
 	zIndex: 1,
 	animation: `${fadeIn} 200ms ease 200ms both`,
 	backdropFilter: 'blur(10px)',
@@ -143,6 +167,7 @@ export const altButton = style({
 	background: 'transparent',
 	textAlign: 'left',
 	cursor: 'pointer',
+	pointerEvents: 'auto',
 });
 
 /**

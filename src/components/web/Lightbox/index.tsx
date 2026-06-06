@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { type LightboxImage, Lightbox as Lb, useLightbox, useLightboxState } from '@oomfware/lightbox';
+import {
+	type LightboxImage,
+	Lightbox as Lb,
+	type LightboxTapInfo,
+	useLightbox,
+	useLightboxState,
+} from '@oomfware/lightbox';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
@@ -65,6 +71,44 @@ function LightboxContents({
 }) {
 	const { t: l } = useLingui();
 	const viewportRef = useRef<HTMLDivElement>(null);
+	const [chromeVisible, setChromeVisible] = useState(true);
+
+	// each open starts with the chrome shown; Base UI keeps this content mounted after close, so reopening
+	// the same instance would otherwise inherit whatever the last session toggled it to.
+	useEffect(() => {
+		if (open) {
+			setChromeVisible(true);
+		}
+	}, [open]);
+
+	const toggleTimer = useRef<number | null>(null);
+	useEffect(
+		() => () => {
+			if (toggleTimer.current !== null) {
+				clearTimeout(toggleTimer.current);
+			}
+		},
+		[],
+	);
+	const onTap = useCallback((info: LightboxTapInfo) => {
+		// only taps on the image toggle the chrome — backdrop/chrome taps keep their own behaviour (mouse
+		// backdrop-click closes, the controls handle their own clicks).
+		if (!info.onImage) {
+			return;
+		}
+		// the lib fires onTap on the *first* tap of a double-tap-to-zoom too, so defer the toggle past the
+		// engine's double-tap window (300ms): a second tap inside it cancels the pending toggle, leaving the
+		// zoom unflickered.
+		if (toggleTimer.current !== null) {
+			clearTimeout(toggleTimer.current);
+			toggleTimer.current = null;
+			return;
+		}
+		toggleTimer.current = window.setTimeout(() => {
+			toggleTimer.current = null;
+			setChromeVisible((v) => !v);
+		}, DOUBLE_TAP_MS);
+	}, []);
 
 	// the lib Provider wraps the whole Portal so both the Scrim (in the Backdrop) and the Viewport/chrome (in the
 	// Popup) get its context; React context flows through portals by tree position, not DOM position. `active`
@@ -78,15 +122,23 @@ function LightboxContents({
 					<Lb.Scrim className={styles.scrim} />
 				</BaseDialog.Backdrop>
 				<BaseDialog.Popup aria-label={l`Image viewer`} className={styles.popup} initialFocus={viewportRef}>
-					<Lb.Viewport ref={viewportRef} className={styles.viewport}>
+					<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
 						<Lb.Track>{renderSlide}</Lb.Track>
-						<Chrome />
+						<div className={cx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
+							<Chrome />
+						</div>
 					</Lb.Viewport>
 				</BaseDialog.Popup>
 			</BaseDialog.Portal>
 		</Lb.Provider>
 	);
 }
+
+/**
+ * the lib's double-tap-to-zoom window (`DOUBLE_TAP_MS` in its engine); single-tap chrome toggles wait this
+ * out.
+ */
+const DOUBLE_TAP_MS = 300;
 
 /**
  * Stable custom slide renderer for `Lb.Track`. Hoisted (not inlined) so the lib can memoize the slide list on
