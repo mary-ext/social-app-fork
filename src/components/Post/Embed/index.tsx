@@ -28,12 +28,12 @@ import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/u
 import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
+import { ExternalEmbed } from '#/components/web/ExternalEmbed';
 import { ImageEmbed } from '#/components/web/ImageEmbed';
 
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ChatInviteEmbed } from './ChatInviteEmbed';
-import { ExternalEmbed } from './ExternalEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
 import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
@@ -142,7 +142,7 @@ function MediaEmbed({
 					}
 					activeStyle={[a.mt_sm]}
 				>
-					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} style={[a.mt_sm, rest.style]} />
+					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} />
 				</ContentHider>
 			);
 		}
