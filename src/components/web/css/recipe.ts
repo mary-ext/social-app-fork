@@ -1,4 +1,4 @@
-import { type ComplexStyleRule, type StyleRule, style, styleVariants } from '@vanilla-extract/css';
+import { type StyleRule, style, styleVariants } from '@vanilla-extract/css';
 import { addFunctionSerializer } from '@vanilla-extract/css/functionSerializer';
 
 import {
@@ -12,9 +12,7 @@ import { components } from '#/styles/layers.css';
 
 // #region types
 
-/** A variant's payload: a style object (emitted into the `components` layer) or an existing class name. */
-type RecipeStyleRule = StyleRule | string;
-type VariantDefinitions = Record<string, RecipeStyleRule>;
+type VariantDefinitions = Record<string, StyleRule>;
 type VariantGroups = Record<string, VariantDefinitions>;
 
 /** Collapses `'true'`/`'false'` variant keys to `boolean`, mirroring cva's prop typing. */
@@ -33,11 +31,11 @@ type CompoundVariant<Variants extends VariantGroups> = {
 		| StringToBoolean<keyof Variants[Group]>
 		| StringToBoolean<keyof Variants[Group]>[];
 } & {
-	style: RecipeStyleRule;
+	style: StyleRule;
 };
 
 type RecipeDefinition<Variants extends VariantGroups> = {
-	base?: RecipeStyleRule;
+	base?: StyleRule;
 	compoundVariants?: CompoundVariant<Variants>[];
 	defaultVariants?: VariantSelection<Variants>;
 	variants?: Variants;
@@ -80,19 +78,11 @@ export const recipe = <Variants extends VariantGroups>(
 ): RecipeRuntimeFn<Variants> => {
 	const { base, compoundVariants = [], defaultVariants = {}, variants = {} as Variants } = definition;
 
-	const layered = (rule: RecipeStyleRule): ComplexStyleRule => {
-		// a bare class name composes via array form; style objects go into the components layer
-		return typeof rule === 'string' ? [rule] : { '@layer': { [components]: rule } };
+	const layered = (rule: StyleRule): StyleRule => {
+		return { '@layer': { [components]: rule } };
 	};
 
-	let defaultClassName: string;
-	if (base == null) {
-		defaultClassName = style({}, debugId);
-	} else if (typeof base === 'string') {
-		defaultClassName = `${style({}, debugId)} ${base}`;
-	} else {
-		defaultClassName = style(layered(base), debugId);
-	}
+	const defaultClassName = base == null ? style({}, debugId) : style(layered(base), debugId);
 
 	const variantClassNames = mapValues(variants, (group, groupName) => {
 		return styleVariants(group, (rule) => layered(rule), debugId ? `${debugId}_${groupName}` : groupName);
