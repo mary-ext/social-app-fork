@@ -1,8 +1,6 @@
-import { keyframes, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-
-const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
 
 // fixed 300px tall, square-bottomed so it abuts the card body's top border seamlessly (matches RNW).
 export const button = style({
@@ -50,10 +48,4 @@ export const dim = style({
 		'.theme--light &': { backgroundColor: vars.palette.contrast_975 },
 		'.theme--dark &, .theme--dim &': { backgroundColor: vars.palette.contrast_0 },
 	},
-});
-
-export const spinner = style({
-	animation: `${spin} 500ms linear infinite`,
-	color: '#fff',
-	display: 'inline-flex',
 });

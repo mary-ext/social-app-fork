@@ -19,13 +19,13 @@ import {
 } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid';
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
-import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Toast from '#/components/Toast';
 import { cx } from '#/components/web/cx';
 import * as Dialog from '#/components/web/Dialog';
 import * as styles from '#/components/web/Lightbox/Lightbox.css';
 import * as Menu from '#/components/web/Menu';
+import { Spinner } from '#/components/web/Spinner';
 import { Text } from '#/components/web/Text';
 
 /**
@@ -157,10 +157,8 @@ function Slide({ image, index }: { image: LightboxImage; index: number }) {
 		<Lb.Slide index={index}>
 			<Lb.Image index={index} />
 			{loading ? (
-				<div className={styles.slideSpinner} role="progressbar" aria-label={l`Loading image`}>
-					<span className={styles.spinnerIcon}>
-						<LoaderIcon size="2xl" fill="currentColor" />
-					</span>
+				<div className={styles.slideSpinner}>
+					<Spinner label={l`Loading image`} color="rgba(255, 255, 255, 0.9)" />
 				</div>
 			) : null}
 		</Lb.Slide>

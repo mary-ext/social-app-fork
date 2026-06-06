@@ -7,9 +7,9 @@ import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
-import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
 import { useDialogHandle } from '#/components/web/Dialog';
 import { PlayButtonIcon } from '#/components/web/PlayButtonIcon';
+import { Spinner } from '#/components/web/Spinner';
 
 import * as styles from './ExternalGif.css';
 
@@ -64,13 +64,7 @@ export function ExternalGif({ link, params }: ExternalGifProps) {
 				{showOverlay ? (
 					<span className={styles.overlay}>
 						<span aria-hidden className={styles.dim} />
-						{!isAnimating || !isPlayerActive ? (
-							<PlayButtonIcon />
-						) : (
-							<span className={styles.spinner} role="progressbar" aria-label={l`Loading GIF`}>
-								<LoaderIcon size="2xl" fill="currentColor" />
-							</span>
-						)}
+						{!isAnimating || !isPlayerActive ? <PlayButtonIcon /> : <Spinner label={l`Loading GIF`} />}
 					</span>
 				) : null}
 			</button>

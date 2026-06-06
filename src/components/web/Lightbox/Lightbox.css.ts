@@ -9,10 +9,6 @@ const fadeIn = keyframes({
 	to: { opacity: 1 },
 });
 
-const spin = keyframes({
-	to: { transform: 'rotate(360deg)' },
-});
-
 // #region shell
 /**
  * The modal backdrop: carries only the open/close fade; the engine's swipe-dismiss fade rides the nested
@@ -219,13 +215,6 @@ export const slideSpinner = style({
 	alignItems: 'center',
 	justifyContent: 'center',
 	pointerEvents: 'none',
-	color: 'rgba(255, 255, 255, 0.9)',
-});
-
-/** Matches the app's 500ms loader cadence; `transform` is safe here since the slide places it absolutely. */
-export const spinnerIcon = style({
-	display: 'flex',
-	animation: `${spin} 500ms linear infinite`,
 });
 // #endregion
 

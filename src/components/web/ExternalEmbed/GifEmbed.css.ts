@@ -1,4 +1,4 @@
-import { createVar, keyframes, style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { borderRadius } from '#/styles/tokens.css';
@@ -7,8 +7,6 @@ import { borderRadius } from '#/styles/tokens.css';
 export const ratioVar = createVar();
 /** `paddingTop` percentage driving the bounding-box height. */
 export const padVar = createVar();
-
-const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
 
 export const outer = style({ width: '100%' });
 
@@ -110,10 +108,4 @@ export const altBadge = style([
 
 export const badgeText = style({
 	selectors: { '&&': { color: '#fff' } },
-});
-
-export const spinner = style({
-	animation: `${spin} 500ms linear infinite`,
-	color: '#fff',
-	display: 'inline-flex',
 });

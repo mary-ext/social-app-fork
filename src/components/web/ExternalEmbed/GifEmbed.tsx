@@ -4,10 +4,10 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 
-import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 import { PlayButtonIcon } from '#/components/web/PlayButtonIcon';
 import * as Prompt from '#/components/web/Prompt';
+import { Spinner } from '#/components/web/Spinner';
 import { Text } from '#/components/web/Text';
 
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
@@ -81,13 +81,7 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt }
 								aria-label={isPlaying ? l`Pause GIF` : l`Play GIF`}
 								onClick={onPress}
 							>
-								{!isLoaded ? (
-									<span className={styles.spinner} role="progressbar" aria-label={l`Loading GIF`}>
-										<LoaderIcon size="2xl" fill="currentColor" />
-									</span>
-								) : !isPlaying ? (
-									<PlayButtonIcon />
-								) : null}
+								{!isLoaded ? <Spinner label={l`Loading GIF`} /> : !isPlaying ? <PlayButtonIcon /> : null}
 							</button>
 							<div className={styles.gifBadge}>
 								<Text size="xs" weight="bold" className={styles.badgeText}>

@@ -7,9 +7,9 @@ import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-pla
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
-import { Loader_Stroke2_Corner0_Rounded as LoaderIcon } from '#/components/icons/Loader';
 import { useDialogHandle } from '#/components/web/Dialog';
 import { PlayButtonIcon } from '#/components/web/PlayButtonIcon';
+import { Spinner } from '#/components/web/Spinner';
 
 import * as styles from './ExternalPlayer.css';
 
@@ -83,13 +83,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 				{!isActive || isLoading ? <div aria-hidden className={styles.dim} /> : null}
 				{!isActive || isLoading ? (
 					<button type="button" className={styles.overlay} aria-label={l`Play Video`} onClick={onPlayPress}>
-						{!isActive ? (
-							<PlayButtonIcon />
-						) : (
-							<span className={styles.spinner} role="progressbar" aria-label={l`Loading video`}>
-								<LoaderIcon size="2xl" fill="currentColor" />
-							</span>
-						)}
+						{!isActive ? <PlayButtonIcon /> : <Spinner label={l`Loading video`} />}
 					</button>
 				) : null}
 				{isActive ? (

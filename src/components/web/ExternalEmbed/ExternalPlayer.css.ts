@@ -1,8 +1,6 @@
-import { keyframes, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-
-const spin = keyframes({ to: { transform: 'rotate(360deg)' } });
 
 export const container = style({
 	overflow: 'hidden',
@@ -67,10 +65,4 @@ export const iframe = style({
 	border: 0,
 	height: '100%',
 	width: '100%',
-});
-
-export const spinner = style({
-	animation: `${spin} 500ms linear infinite`,
-	color: '#fff',
-	display: 'inline-flex',
 });

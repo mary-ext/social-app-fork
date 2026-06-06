@@ -1235,7 +1235,7 @@ msgstr ""
 
 #: src/components/images/AutoSizedImage.tsx:174
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:141
+#: src/components/web/ExternalEmbed/GifEmbed.tsx:135
 #: src/components/web/ImageEmbed/MediaBadges.tsx:71
 #: src/view/com/composer/GifAltText.tsx:101
 #: src/view/com/composer/photos/Gallery.tsx:192
@@ -1251,7 +1251,7 @@ msgid "Alt text"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:146
+#: src/components/web/ExternalEmbed/GifEmbed.tsx:140
 msgid "Alt Text"
 msgstr ""
 
@@ -2085,7 +2085,7 @@ msgstr ""
 #: src/components/suggested-follows-dialog.tsx:356
 #: src/components/verification/VerificationsDialog.tsx:123
 #: src/components/verification/VerifierDialog.tsx:117
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:150
+#: src/components/web/ExternalEmbed/GifEmbed.tsx:144
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:47
 #: src/features/liveNow/components/EditLiveDialog.tsx:185
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
@@ -2118,7 +2118,7 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:290
+#: src/components/web/Lightbox/index.tsx:288
 msgid "Close image viewer"
 msgstr ""
 
@@ -2827,8 +2827,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
+#: src/components/web/Lightbox/index.tsx:278
 #: src/components/web/Lightbox/index.tsx:280
-#: src/components/web/Lightbox/index.tsx:282
 msgid "Download image"
 msgstr "Download image"
 
@@ -3020,7 +3020,7 @@ msgstr ""
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
 msgstr ""
 
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:109
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:103
 msgid "Embedded player"
 msgstr "Embedded player"
 
@@ -3167,7 +3167,7 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:299
+#: src/components/web/Lightbox/index.tsx:297
 msgid "Expand alt text"
 msgstr ""
 
@@ -3293,7 +3293,7 @@ msgstr "Failed to add members"
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:227
+#: src/components/web/Lightbox/index.tsx:225
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -3456,7 +3456,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:239
+#: src/components/web/Lightbox/index.tsx:237
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -3899,7 +3899,7 @@ msgstr ""
 
 #: src/components/MediaPreview.tsx:128
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:59
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:94
+#: src/components/web/ExternalEmbed/GifEmbed.tsx:88
 msgid "GIF"
 msgstr ""
 
@@ -4293,7 +4293,7 @@ msgstr "Ignore join request"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: images.length
-#: src/components/web/Lightbox/index.tsx:320
+#: src/components/web/Lightbox/index.tsx:318
 msgid "Image {0} of {1}"
 msgstr ""
 
@@ -4317,12 +4317,12 @@ msgstr "Image is hidden due to your moderation settings."
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
-#: src/components/web/Lightbox/index.tsx:268
-#: src/components/web/Lightbox/index.tsx:273
+#: src/components/web/Lightbox/index.tsx:266
+#: src/components/web/Lightbox/index.tsx:271
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/web/Lightbox/index.tsx:238
+#: src/components/web/Lightbox/index.tsx:236
 msgid "Image saved"
 msgstr ""
 
@@ -4708,7 +4708,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:225
+#: src/components/web/Lightbox/index.tsx:223
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -4857,12 +4857,12 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
-#: src/components/web/ExternalEmbed/ExternalGif.tsx:70
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:85
+#: src/components/web/ExternalEmbed/ExternalGif.tsx:67
+#: src/components/web/ExternalEmbed/GifEmbed.tsx:84
 msgid "Loading GIF"
 msgstr "Loading GIF"
 
-#: src/components/web/Lightbox/index.tsx:160
+#: src/components/web/Lightbox/index.tsx:161
 msgid "Loading image"
 msgstr "Loading image"
 
@@ -4874,7 +4874,7 @@ msgstr ""
 msgid "Loading post interaction settings..."
 msgstr ""
 
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:89
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:86
 msgid "Loading video"
 msgstr "Loading video"
 
@@ -5455,7 +5455,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:259
+#: src/components/web/Lightbox/index.tsx:257
 msgid "Next image"
 msgstr ""
 
@@ -6412,7 +6412,7 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:249
+#: src/components/web/Lightbox/index.tsx:247
 msgid "Previous image"
 msgstr ""
 
@@ -7637,8 +7637,8 @@ msgstr ""
 msgid "Share anyway"
 msgstr ""
 
+#: src/components/web/Lightbox/index.tsx:272
 #: src/components/web/Lightbox/index.tsx:274
-#: src/components/web/Lightbox/index.tsx:276
 msgid "Share image"
 msgstr "Share image"
 
@@ -7675,7 +7675,7 @@ msgid "Show"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:76
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:137
+#: src/components/web/ExternalEmbed/GifEmbed.tsx:131
 msgid "Show alt text"
 msgstr ""
 
