@@ -17,10 +17,7 @@ import { SegmentedControl, type SegmentedControlItem } from '#/components/web/Se
 import * as SettingsList from '#/components/web/SettingsList';
 import { Text } from '#/components/web/Text';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
-const groupBodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
-const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
+import * as styles from './AppearanceSettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>;
 export function AppearanceSettingsScreen({}: Props) {
@@ -142,8 +139,8 @@ function AppearanceGroup<T extends string>({
 }) {
 	return (
 		<SettingsList.Group>
-			<div className={groupBodyClass}>
-				<div className={headerRowClass}>
+			<div className={styles.groupBody}>
+				<div className={styles.headerRow}>
 					<SettingsList.ItemIcon icon={icon} />
 					<SettingsList.ItemText>{title}</SettingsList.ItemText>
 				</div>

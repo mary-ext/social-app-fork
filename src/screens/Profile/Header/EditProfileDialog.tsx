@@ -13,8 +13,6 @@ import { logger } from '#/logger';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
-import * as styles from '#/screens/Profile/Header/EditProfileDialog.css';
-
 import { InlineLinkText } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import { useSimpleVerificationState } from '#/components/verification';
@@ -27,9 +25,7 @@ import * as Sheet from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
-const errorTextClass = sprinkles({ marginTop: 'xs' });
+import * as styles from './EditProfileDialog.css';
 
 export function EditProfileDialog({
 	profile,
@@ -254,7 +250,7 @@ function DialogInner({
 							/>
 						</TextField.Root>
 						{displayNameTooLong && (
-							<Text size="sm" weight="semiBold" color="negative_400" className={errorTextClass}>
+							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
 								<Plural
 									value={MAX_DISPLAY_NAME}
 									other="Display name is too long. The maximum number of characters is #."
@@ -293,7 +289,7 @@ function DialogInner({
 							/>
 						</TextField.Root>
 						{descriptionTooLong && (
-							<Text size="sm" weight="semiBold" color="negative_400" className={errorTextClass}>
+							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
 								<Plural
 									value={MAX_DESCRIPTION}
 									other="Description is too long. The maximum number of characters is #."

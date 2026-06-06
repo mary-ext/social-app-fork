@@ -6,8 +6,9 @@ import { type CommonProps, PostEmbedViewContext } from '#/components/Post/Embed/
 import { AutoSizedImage } from '#/components/web/ImageEmbed/AutoSizedImage';
 import { Gallery } from '#/components/web/ImageEmbed/Gallery';
 
-import { sprinkles } from '#/styles/sprinkles.css';
 import type { EmbedType } from '#/types/embed';
+
+import * as styles from './index.css';
 
 /** Warm the browser cache with the full-size images so the lightbox opens instantly. */
 function prefetch(uris: string[]) {
@@ -23,8 +24,6 @@ function prefetch(uris: string[]) {
 		setTimeout(run, 0);
 	}
 }
-
-const wrapper = sprinkles({ marginTop: 'sm' });
 
 export function ImageEmbed({
 	embed,
@@ -53,7 +52,7 @@ export function ImageEmbed({
 	const onPressIn = () => prefetch(lightboxImages.map((i) => i.src));
 
 	return (
-		<div className={wrapper}>
+		<div className={styles.wrapper}>
 			{images.length === 1 ? (
 				<AutoSizedImage
 					image={images[0]!}

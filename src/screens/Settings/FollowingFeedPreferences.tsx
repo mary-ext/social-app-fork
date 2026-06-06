@@ -12,11 +12,7 @@ import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 import * as SettingsList from '#/components/web/SettingsList';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
-const bodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
-const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
-const insetClass = sprinkles({ paddingLeft: '_4xl' });
+import * as styles from './FollowingFeedPreferences.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesFollowingFeed'>;
 export function FollowingFeedPreferencesScreen({}: Props) {
@@ -84,14 +80,14 @@ export function FollowingFeedPreferencesScreen({}: Props) {
 					</SettingsList.CheckboxItem>
 					<SettingsList.Divider />
 					<SettingsList.Group>
-						<div className={bodyClass}>
-							<div className={headerRowClass}>
+						<div className={styles.body}>
+							<div className={styles.headerRow}>
 								<SettingsList.ItemIcon icon={BeakerIcon} />
 								<SettingsList.ItemText>
 									<Trans>Experimental</Trans>
 								</SettingsList.ItemText>
 							</div>
-							<div className={insetClass}>
+							<div className={styles.inset}>
 								<SettingsList.CheckboxItem
 									flush
 									label={l`Show samples of your saved feeds in your Following feed`}

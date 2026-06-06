@@ -13,9 +13,7 @@ import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 import * as SettingsList from '#/components/web/SettingsList';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
-const headingClass = sprinkles({ paddingBottom: 'xl', paddingTop: 'sm', paddingX: 'xl' });
+import * as styles from './ExternalMediaPreferences.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesExternalEmbeds'>;
 export function ExternalMediaPreferencesScreen({}: Props) {
@@ -40,7 +38,7 @@ export function ExternalMediaPreferencesScreen({}: Props) {
 							</Trans>
 						</Admonition>
 					</SettingsList.Item>
-					<div className={headingClass}>
+					<div className={styles.heading}>
 						<SettingsList.ItemText>
 							<Trans>Enable media players for</Trans>
 						</SettingsList.ItemText>

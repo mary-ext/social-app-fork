@@ -1,6 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { sprinkles } from '#/styles/sprinkles.css';
+
+export const errorText = sprinkles({ marginTop: 'xs' });
 
 export const bannerWrap = style({
 	position: 'relative',

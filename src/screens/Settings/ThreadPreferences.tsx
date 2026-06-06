@@ -16,17 +16,7 @@ import { RadioGroup } from '#/components/web/RadioGroup';
 import * as SettingsList from '#/components/web/SettingsList';
 import { Text } from '#/components/web/Text';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
-const bodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
-const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
-const insetColumnClass = sprinkles({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 'md',
-	paddingLeft: '_4xl',
-});
-const insetClass = sprinkles({ paddingLeft: '_4xl' });
+import * as styles from './ThreadPreferences.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>;
 export function ThreadPreferencesScreen({}: Props) {
@@ -47,14 +37,14 @@ export function ThreadPreferencesScreen({}: Props) {
 			<Layout.Content>
 				<SettingsList.Container>
 					<SettingsList.Group>
-						<div className={bodyClass}>
-							<div className={headerRowClass}>
+						<div className={styles.body}>
+							<div className={styles.headerRow}>
 								<SettingsList.ItemIcon icon={BubblesIcon} />
 								<SettingsList.ItemText>
 									<Trans>Sort replies</Trans>
 								</SettingsList.ItemText>
 							</div>
-							<div className={insetColumnClass}>
+							<div className={styles.insetColumn}>
 								<Text size="sm" leading="none" color="textContrastMedium">
 									<Trans>Sort replies to the same post by:</Trans>
 								</Text>
@@ -73,14 +63,14 @@ export function ThreadPreferencesScreen({}: Props) {
 					</SettingsList.Group>
 
 					<SettingsList.Group>
-						<div className={bodyClass}>
-							<div className={headerRowClass}>
+						<div className={styles.body}>
+							<div className={styles.headerRow}>
 								<SettingsList.ItemIcon icon={TreeIcon} />
 								<SettingsList.ItemText>
 									<Trans>Tree view</Trans>
 								</SettingsList.ItemText>
 							</div>
-							<div className={insetClass}>
+							<div className={styles.inset}>
 								<SettingsList.CheckboxItem
 									flush
 									label={l`Tree view`}

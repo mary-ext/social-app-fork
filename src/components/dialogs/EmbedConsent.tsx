@@ -10,16 +10,7 @@ import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { Text } from '#/components/web/Text';
 
-import { sprinkles } from '#/styles/sprinkles.css';
-
-const bodyClass = sprinkles({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 'lg',
-	marginBottom: '_2xl',
-	marginTop: 'sm',
-});
-const actionsClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md' });
+import * as styles from './EmbedConsent.css';
 
 export function EmbedConsentDialog({
 	handle,
@@ -59,7 +50,7 @@ export function EmbedConsentDialog({
 					<Trans>External Media</Trans>
 				</Text>
 
-				<div className={bodyClass}>
+				<div className={styles.body}>
 					<Text size="md" leading="snug">
 						<Trans>
 							This content is hosted by {externalEmbedLabels[source]}. Do you want to enable external media?
@@ -74,7 +65,7 @@ export function EmbedConsentDialog({
 					</Admonition>
 				</div>
 
-				<div className={actionsClass}>
+				<div className={styles.actions}>
 					<Button label={l`Enable external media`} onClick={onShowAllPress} color="primary" size="large">
 						<ButtonText>
 							<Trans>Enable external media</Trans>

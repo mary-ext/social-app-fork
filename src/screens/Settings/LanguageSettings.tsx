@@ -18,14 +18,11 @@ import * as SettingsList from '#/components/web/SettingsList';
 import { Text } from '#/components/web/Text';
 import * as Toggle from '#/components/web/Toggle';
 
-import { sprinkles } from '#/styles/sprinkles.css';
+import * as styles from './LanguageSettings.css';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
 	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,
 );
-
-const sectionClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md', width: 'full' });
-const narrowClass = sprinkles({ maxWidth: 400, width: 'full' });
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>;
 export function LanguageSettingsScreen({}: Props) {
@@ -108,7 +105,7 @@ export function LanguageSettingsScreen({}: Props) {
 						<SettingsList.ItemText>
 							<Trans>App language</Trans>
 						</SettingsList.ItemText>
-						<div className={sectionClass}>
+						<div className={styles.section}>
 							<Text leading="snug">
 								<Trans>Select which language to use for the app's user interface.</Trans>
 							</Text>
@@ -128,7 +125,7 @@ export function LanguageSettingsScreen({}: Props) {
 						<SettingsList.ItemText>
 							<Trans>Primary language</Trans>
 						</SettingsList.ItemText>
-						<div className={sectionClass}>
+						<div className={styles.section}>
 							<Text leading="snug">
 								<Trans>Select your preferred language for translations in your feed.</Trans>
 							</Text>
@@ -145,7 +142,7 @@ export function LanguageSettingsScreen({}: Props) {
 						<SettingsList.ItemText>
 							<Trans>Content languages</Trans>
 						</SettingsList.ItemText>
-						<div className={sectionClass}>
+						<div className={styles.section}>
 							<Text leading="snug">
 								<Trans>
 									Select which languages you want your subscribed feeds to include. If none are selected, all
@@ -159,7 +156,7 @@ export function LanguageSettingsScreen({}: Props) {
 								</Admonition>
 							)}
 
-							<div className={narrowClass}>
+							<div className={styles.narrow}>
 								<Toggle.Group
 									label={l`Select content languages`}
 									values={contentLanguages}

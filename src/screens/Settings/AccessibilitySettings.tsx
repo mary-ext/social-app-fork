@@ -9,17 +9,8 @@ import * as SettingsList from '#/components/web/SettingsList';
 
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
-import { sprinkles } from '#/styles/sprinkles.css';
 
-const groupBodyClass = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
-const headerRowClass = sprinkles({ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 'sm' });
-// inset the rows to align under the title text, past the header icon (24px) + gap (8px)
-const insetColumnClass = sprinkles({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 'sm',
-	paddingLeft: '_4xl',
-});
+import * as styles from './AccessibilitySettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccessibilitySettings'>;
 export function AccessibilitySettingsScreen({}: Props) {
@@ -42,14 +33,14 @@ export function AccessibilitySettingsScreen({}: Props) {
 			<Layout.Content>
 				<SettingsList.Container>
 					<SettingsList.Group>
-						<div className={groupBodyClass}>
-							<div className={headerRowClass}>
+						<div className={styles.groupBody}>
+							<div className={styles.headerRow}>
 								<SettingsList.ItemIcon icon={AccessibilityIcon} />
 								<SettingsList.ItemText>
 									<Trans>Alt text</Trans>
 								</SettingsList.ItemText>
 							</div>
-							<div className={insetColumnClass}>
+							<div className={styles.insetColumn}>
 								<SettingsList.CheckboxItem
 									flush
 									label={l`Require alt text before posting`}
