@@ -55,8 +55,8 @@ export function EditNamePrompt({
 						{nameTooLong ? (
 							<Text style={[a.text_sm, a.mt_xs, a.font_semi_bold, { color: t.palette.negative_400 }]}>
 								<Trans>
-									Group name is too long. The maximum number of characters is{' '}
-									{MAX_GROUP_NAME_GRAPHEME_LENGTH}.
+									Group name is too long. The maximum number of characters is {MAX_GROUP_NAME_GRAPHEME_LENGTH}
+									.
 								</Trans>
 							</Text>
 						) : null}

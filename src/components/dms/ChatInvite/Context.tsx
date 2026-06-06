@@ -29,7 +29,10 @@ export type ChatInviteContextValue = {
 	preview: ChatBskyGroupDefs.JoinLinkPreviewView | undefined;
 	/** The derived action descriptor. Undefined while loading or when there's no preview to act on. */
 	action: ChatInviteAction | undefined;
-	/** Whether the invite is rendered inside a fixed-height container; when true, text inside disables font scaling so the card doesn't overflow. */
+	/**
+	 * Whether the invite is rendered inside a fixed-height container; when true, text inside disables font
+	 * scaling so the card doesn't overflow.
+	 */
 	hasFixedHeight: boolean;
 };
 

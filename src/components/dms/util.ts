@@ -51,11 +51,10 @@ export function canBeAddedToGroup(profile: AnyProfileView) {
 }
 
 /**
- * Resolves the effective `allowGroupInvites` value for a chat declaration.
- * When unset, group invites follow the general DM preference
- * (`allowIncoming`), which itself defaults to `following`. This mirrors the
- * `undefined` fallthrough in canBeAddedToGroup, and is the single source of
- * truth for both displaying and persisting the setting.
+ * Resolves the effective `allowGroupInvites` value for a chat declaration. When unset, group invites follow
+ * the general DM preference (`allowIncoming`), which itself defaults to `following`. This mirrors the
+ * `undefined` fallthrough in canBeAddedToGroup, and is the single source of truth for both displaying and
+ * persisting the setting.
  */
 export function resolveAllowGroupInvites(
 	chat: { allowIncoming?: string; allowGroupInvites?: string } | undefined,

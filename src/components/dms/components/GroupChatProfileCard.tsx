@@ -46,7 +46,12 @@ export function GroupChatProfileCard({
 				<>
 					<View style={[a.flex_grow, !enabled || (disabled && !selected) ? { opacity: 0.5 } : null]}>
 						<ProfileCard.Header>
-							<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} size={44} disabledPreview />
+							<ProfileCard.Avatar
+								profile={profile}
+								moderationOpts={moderationOpts}
+								size={44}
+								disabledPreview
+							/>
 							<View>
 								<ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
 								{enabled ? (

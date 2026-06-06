@@ -54,8 +54,7 @@ export function useUpdateActorDeclaration({
 				PROFILE_RKEY(currentAccount?.did),
 				(old?: AppBskyActorDefs.ProfileViewDetailed) => {
 					if (!old) return old;
-					const allowIncoming =
-						update.allowIncoming ?? old.associated?.chat?.allowIncoming ?? 'following';
+					const allowIncoming = update.allowIncoming ?? old.associated?.chat?.allowIncoming ?? 'following';
 					// resolve the same concrete value the server will receive, so
 					// optimistic cache and persisted record stay aligned
 					const allowGroupInvites = resolveAllowGroupInvites({
