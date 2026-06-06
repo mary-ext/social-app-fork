@@ -35,41 +35,31 @@ export function Lightbox() {
 	const close = useCallback(() => lightboxControl.close(), [lightboxControl]);
 	useBackButtonCloses(open, close);
 
-	// Base UI keeps the payload (and thus `LightboxContents`) mounted after close and commits a fresh payload
-	// object per open. Keying the content on that object's identity remounts it exactly when the new payload
-	// lands — rebuilding the engine at the right `defaultIndex`. Keying on the open edge instead would remount
-	// while the render still sees the previous payload, leaving the engine one open behind.
-	const keys = useRef(new WeakMap<object, number>());
-	const nextKey = useRef(0);
-	const keyFor = (payload: object) => {
-		let key = keys.current.get(payload);
-		if (key === undefined) {
-			key = nextKey.current++;
-			keys.current.set(payload, key);
-		}
-		return key;
-	};
-
-	// Our `Dialog.Root` (not the raw Base UI one) registers into `state/dialogs`, so `closeAllDialogs` and the
-	// global hotkey-scope toggle span the lightbox like every other web dialog.
+	// Base UI keeps the payload (and thus `LightboxContents`) mounted after close, so the engine persists across
+	// opens. Rather than remount it per open to rebuild the engine at the new index, we feed the dialog's open
+	// state to the lib's `active` prop: its `false → true` edge resets the engine to the current `defaultIndex`.
+	// Remounting on payload identity instead would miss a reopen from the *same* trigger — Base UI forwards that
+	// trigger's `payload` prop unchanged, so the object identity (and thus a key derived from it) never changes,
+	// leaving the engine on the index it was last paged to.
 	return (
 		<Dialog.Root handle={lightboxControl} onOpenChange={(next) => setOpen(next)}>
 			{({ payload }: { payload: LightboxPayload | undefined }) =>
-				payload ? <LightboxContents key={keyFor(payload)} payload={payload} close={close} /> : null
+				payload ? <LightboxContents payload={payload} open={open} close={close} /> : null
 			}
 		</Dialog.Root>
 	);
 }
 
-function LightboxContents({ payload, close }: { payload: LightboxPayload; close: () => void }) {
+function LightboxContents({ payload, open, close }: { payload: LightboxPayload; open: boolean; close: () => void }) {
 	const { t: l } = useLingui();
 	const viewportRef = useRef<HTMLDivElement>(null);
 
 	// the lib Provider wraps the whole Portal so both the Scrim (in the Backdrop) and the Viewport/chrome (in the
-	// Popup) get its context; React context flows through portals by tree position, not DOM position. A fresh
-	// `key` per open (see `keyFor`) remounts this, so the engine is rebuilt at the current `defaultIndex`.
+	// Popup) get its context; React context flows through portals by tree position, not DOM position. `active`
+	// resets the engine to `defaultIndex` on each open edge — `open` and `payload` land in the same render, so
+	// the reset reads the index of the image just clicked.
 	return (
-		<Lb.Provider images={payload.images} defaultIndex={payload.index} onDismiss={close}>
+		<Lb.Provider active={open} images={payload.images} defaultIndex={payload.index} onDismiss={close}>
 			<BaseDialog.Portal>
 				<BaseDialog.Backdrop className={styles.backdrop}>
 					<Lb.Scrim className={styles.scrim} />

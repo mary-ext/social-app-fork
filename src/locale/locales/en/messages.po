@@ -2114,7 +2114,7 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:235
+#: src/components/web/Lightbox/index.tsx:225
 msgid "Close image viewer"
 msgstr ""
 
@@ -2822,8 +2822,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/web/Lightbox/index.tsx:225
-#: src/components/web/Lightbox/index.tsx:227
+#: src/components/web/Lightbox/index.tsx:215
+#: src/components/web/Lightbox/index.tsx:217
 msgid "Download image"
 msgstr "Download image"
 
@@ -3158,7 +3158,7 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:244
+#: src/components/web/Lightbox/index.tsx:234
 msgid "Expand alt text"
 msgstr ""
 
@@ -3284,7 +3284,7 @@ msgstr "Failed to add members"
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:172
+#: src/components/web/Lightbox/index.tsx:162
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
@@ -3448,7 +3448,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:184
+#: src/components/web/Lightbox/index.tsx:174
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -4282,7 +4282,7 @@ msgstr "Ignore join request"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: images.length
-#: src/components/web/Lightbox/index.tsx:265
+#: src/components/web/Lightbox/index.tsx:255
 msgid "Image {0} of {1}"
 msgstr ""
 
@@ -4306,16 +4306,16 @@ msgstr "Image is hidden due to your moderation settings."
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
-#: src/components/web/Lightbox/index.tsx:213
-#: src/components/web/Lightbox/index.tsx:218
+#: src/components/web/Lightbox/index.tsx:203
+#: src/components/web/Lightbox/index.tsx:208
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/web/Lightbox/index.tsx:183
+#: src/components/web/Lightbox/index.tsx:173
 msgid "Image saved"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:77
+#: src/components/web/Lightbox/index.tsx:67
 msgid "Image viewer"
 msgstr ""
 
@@ -4697,7 +4697,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:170
+#: src/components/web/Lightbox/index.tsx:160
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -4846,7 +4846,7 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
-#: src/components/web/Lightbox/index.tsx:105
+#: src/components/web/Lightbox/index.tsx:95
 msgid "Loading image"
 msgstr "Loading image"
 
@@ -5437,7 +5437,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:204
+#: src/components/web/Lightbox/index.tsx:194
 msgid "Next image"
 msgstr ""
 
@@ -6385,7 +6385,7 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:194
+#: src/components/web/Lightbox/index.tsx:184
 msgid "Previous image"
 msgstr ""
 
@@ -7610,8 +7610,8 @@ msgstr ""
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:219
-#: src/components/web/Lightbox/index.tsx:221
+#: src/components/web/Lightbox/index.tsx:209
+#: src/components/web/Lightbox/index.tsx:211
 msgid "Share image"
 msgstr "Share image"
 
