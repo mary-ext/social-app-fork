@@ -166,14 +166,10 @@ export const altButton = style({
 	pointerEvents: 'auto',
 });
 
-/**
- * Force the alt text white + readable leading over the themed default (doubled specificity beats the single
- * sprinkles classes).
- */
+/** Force the alt text white + readable leading over the themed default. */
 export const altText = style({
-	selectors: {
-		'&&': { color: '#fff', lineHeight: 1.4 },
-	},
+	color: '#fff',
+	lineHeight: 1.4,
 });
 
 export const pagerDots = style({

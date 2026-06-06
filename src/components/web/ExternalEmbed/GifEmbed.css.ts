@@ -107,5 +107,5 @@ export const altBadge = style([
 ]);
 
 export const badgeText = style({
-	selectors: { '&&': { color: '#fff' } },
+	color: '#fff',
 });

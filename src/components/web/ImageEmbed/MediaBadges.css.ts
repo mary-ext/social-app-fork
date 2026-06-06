@@ -53,9 +53,7 @@ export const icon = style({
 	display: 'block',
 });
 
-/** The non-large ALT label is 8px, which isn't a font token; `&&` outranks the `Text` size class. */
+/** The non-large ALT label is 8px, which isn't a font token. */
 export const altSmall = style({
-	selectors: {
-		'&&': { fontSize: '8px' },
-	},
+	fontSize: '8px',
 });

@@ -9,6 +9,7 @@ import {
 } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
+import { fontSize } from '#/styles/tokens.css';
 
 const offsetVar = createVar();
 
@@ -69,4 +70,14 @@ export const slot = style({
 
 export const backButton = style({
 	marginLeft: `-${BUTTON_VISUAL_ALIGNMENT_OFFSET}px`,
+});
+
+/** Header title: bumps from `lg` to `xl` past the mobile breakpoint. */
+export const title = style({
+	fontSize: fontSize.lg,
+	'@media': {
+		'screen and (min-width: 800px)': {
+			fontSize: fontSize.xl,
+		},
+	},
 });

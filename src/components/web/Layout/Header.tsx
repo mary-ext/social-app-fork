@@ -46,7 +46,7 @@ export function Slot({ children }: { children?: React.ReactNode }) {
 
 export function TitleText({ children }: { children: React.ReactNode }) {
 	return (
-		<Text size={{ gtMobile: 'xl', mobile: 'lg' }} weight="semiBold" leading="tight" numberOfLines={2}>
+		<Text weight="semiBold" leading="tight" numberOfLines={2} className={styles.title}>
 			{children}
 		</Text>
 	);

@@ -1,30 +1,31 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
+import type { RecipeVariants } from '#/components/web/css/recipe';
 import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Text.css';
 
-import { sprinkles, type Sprinkles } from '#/styles/sprinkles.css';
+type TextVariants = RecipeVariants<typeof styles.text>;
 
 export type TextProps = Omit<ComponentPropsWithoutRef<'span'>, 'color' | 'style'> & {
-	size?: Sprinkles['fontSize'];
-	weight?: Sprinkles['fontWeight'];
-	color?: Sprinkles['color'];
-	align?: Sprinkles['textAlign'];
-	leading?: Sprinkles['lineHeight'];
+	size?: TextVariants['size'];
+	weight?: TextVariants['weight'];
+	color?: TextVariants['color'];
+	align?: TextVariants['align'];
+	leading?: TextVariants['leading'];
 	/** Clamp to this many lines with an ellipsis. */
 	numberOfLines?: number;
 	/** Tri-state text selection: omit for the browser default, `true` to force selectable, `false` to lock. */
 	selectable?: boolean;
 };
 
-/** The web-native text primitive. Renders a `<span>` styled through sprinkles. */
+/** The web-native text primitive. Renders a `<span>` styled through the `text` recipe. */
 export function Text({
-	size = 'sm',
+	size,
 	weight,
-	color = 'text',
+	color,
 	align,
-	leading = 'none',
+	leading,
 	numberOfLines,
 	selectable,
 	className,
@@ -36,8 +37,7 @@ export function Text({
 	return (
 		<span
 			className={cx(
-				styles.base,
-				sprinkles({ color, fontSize: size, fontWeight: weight, lineHeight: leading, textAlign: align }),
+				styles.text({ align, color, leading, size, weight }),
 				clamped && styles.clamp,
 				selectable === true && styles.userSelect.text,
 				selectable === false && styles.userSelect.none,

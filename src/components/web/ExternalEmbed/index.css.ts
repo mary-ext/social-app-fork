@@ -109,12 +109,11 @@ export const globe = style({
 	},
 });
 
-// `&&` outranks the `Text` component's own single-class `color` sprinkle.
 export const domain = style({
 	...transition,
+	color: vars.palette.contrast_700,
 	transitionProperty: 'color',
 	selectors: {
-		'&&': { color: vars.palette.contrast_700 },
-		[`${card}:hover &&`]: { color: vars.palette.contrast_900 },
+		[`${card}:hover &`]: { color: vars.palette.contrast_900 },
 	},
 });
