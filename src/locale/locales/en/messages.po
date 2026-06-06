@@ -3897,7 +3897,7 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
-#: src/components/MediaPreview.tsx:128
+#: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:59
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:88
 msgid "GIF"
