@@ -8,11 +8,10 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 
-import { atoms as a } from '#/alf';
-
 import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
-import { ExternalEmbed as ExternalEmbedNative } from '#/components/Post/Embed/ExternalEmbed';
 import { cx } from '#/components/web/cx';
+import { ExternalGif } from '#/components/web/ExternalEmbed/ExternalGif';
+import { ExternalPlayer } from '#/components/web/ExternalEmbed/ExternalPlayer';
 import { GifEmbed } from '#/components/web/ExternalEmbed/GifEmbed';
 import { Text } from '#/components/web/Text';
 
@@ -24,7 +23,7 @@ export type ExternalEmbedProps = {
 	hideAlt?: boolean;
 };
 
-/** Web-native external link card. GIF/iframe-player embeds fall back to the RNW implementation. */
+/** Web-native external embed: a plain link card, an embedded gif/iframe player, or an autoplaying gif. */
 export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 	const { t: l } = useLingui();
 	const externalEmbedPrefs = useExternalEmbedsPrefs();
@@ -42,7 +41,16 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 		}
 	}, [link.uri, externalEmbedPrefs]);
 
-	// Autoplaying tenor/klipy gifs are web-native.
+	// Scope the press: the anchor opens the external link (default nav, new tab), but the click must not
+	// bubble to an ancestor post's thread link and navigate in-app. RN's press responder scopes this for free.
+	const onClick = (e: MouseEvent) => {
+		e.stopPropagation();
+		onOpen?.();
+	};
+
+	const ariaLabel = link.title || l`Open link to ${niceUrl}`;
+
+	// Autoplaying tenor/klipy gifs render standalone, without the card chrome.
 	if (embedPlayerParams?.source === 'tenor' || embedPlayerParams?.source === 'klipy') {
 		const parsedAlt = parseAltFromGIFDescription(link.description);
 		return (
@@ -58,18 +66,34 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 		);
 	}
 
-	// Other iframe players (youtube/vimeo/giphy/…) still fall back to the RNW implementation.
+	// Giphy gifs + iframe players render inside the card, but the media slot owns its own press (play); only
+	// the body navigates. So the card is a plain `<div>` and the body is the `<a>` (not the whole card).
 	if (embedPlayerParams) {
-		return <ExternalEmbedNative link={link} onOpen={onOpen} style={a.mt_sm} hideAlt={hideAlt} />;
+		const hideTitle = !!embedPlayerParams.isGif || !!embedPlayerParams.dimensions;
+		return (
+			<div className={styles.wrapper}>
+				<div className={styles.card}>
+					{embedPlayerParams.isGif ? (
+						<ExternalGif link={link} params={embedPlayerParams} />
+					) : (
+						<ExternalPlayer link={link} params={embedPlayerParams} />
+					)}
+					<a
+						className={cx(styles.body, styles.bodyWithMedia, styles.bodyLink)}
+						href={link.uri}
+						target="_blank"
+						rel="noopener noreferrer"
+						aria-label={ariaLabel}
+						onClick={onClick}
+					>
+						<CardBody link={link} niceUrl={niceUrl} hideTitle={hideTitle} />
+					</a>
+				</div>
+			</div>
+		);
 	}
 
-	// Scope the press: the anchor opens the external link (default nav, new tab), but the click must not
-	// bubble to an ancestor post's thread link and navigate in-app. RN's press responder scopes this for free.
-	const onClick = (e: MouseEvent) => {
-		e.stopPropagation();
-		onOpen?.();
-	};
-
+	// Plain link card — the whole card is the link.
 	return (
 		<div className={styles.wrapper}>
 			<a
@@ -77,34 +101,52 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 				href={link.uri}
 				target="_blank"
 				rel="noopener noreferrer"
-				aria-label={link.title || l`Open link to ${niceUrl}`}
+				aria-label={ariaLabel}
 				onClick={onClick}
 			>
 				{imageUri ? <img className={styles.thumb} src={imageUri} alt="" loading="lazy" /> : null}
 				<div className={cx(styles.body, imageUri && styles.bodyWithMedia)}>
-					<div className={styles.titleBlock}>
-						<Text size="md" weight="semiBold" leading="snug" numberOfLines={3}>
-							{link.title || link.uri}
-						</Text>
-						{link.description ? (
-							<Text size="sm" leading="snug" numberOfLines={imageUri ? 2 : 4}>
-								{link.description}
-							</Text>
-						) : null}
-					</div>
-					<div className={styles.domainWrap}>
-						<div className={styles.divider} />
-						<div className={styles.domainRow}>
-							<span className={styles.globe}>
-								<Globe size="xs" fill="currentColor" />
-							</span>
-							<Text size="xs" leading="snug" numberOfLines={1} className={styles.domain}>
-								{niceUrl}
-							</Text>
-						</div>
-					</div>
+					<CardBody link={link} niceUrl={niceUrl} />
 				</div>
 			</a>
 		</div>
+	);
+}
+
+function CardBody({
+	hideTitle,
+	link,
+	niceUrl,
+}: {
+	hideTitle?: boolean;
+	link: AppBskyEmbedExternal.ViewExternal;
+	niceUrl: string;
+}) {
+	return (
+		<>
+			<div className={styles.titleBlock}>
+				{!hideTitle ? (
+					<Text size="md" weight="semiBold" leading="snug" numberOfLines={3}>
+						{link.title || link.uri}
+					</Text>
+				) : null}
+				{link.description ? (
+					<Text size="sm" leading="snug" numberOfLines={link.thumb ? 2 : 4}>
+						{link.description}
+					</Text>
+				) : null}
+			</div>
+			<div className={styles.domainWrap}>
+				<div className={styles.divider} />
+				<div className={styles.domainRow}>
+					<span className={styles.globe}>
+						<Globe size="xs" fill="currentColor" />
+					</span>
+					<Text size="xs" leading="snug" numberOfLines={1} className={styles.domain}>
+						{niceUrl}
+					</Text>
+				</div>
+			</div>
+		</>
 	);
 }

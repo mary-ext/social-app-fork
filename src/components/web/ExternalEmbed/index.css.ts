@@ -50,6 +50,12 @@ export const body = style({
 	paddingTop: `${space.sm}px`,
 });
 
+/** Anchor reset for the player-card body (the `<a>` is the body itself, not the whole card). */
+export const bodyLink = style({
+	color: 'inherit',
+	textDecoration: 'none',
+});
+
 /** Top border separating the body from the thumbnail; tracks the card's hover state. */
 export const bodyWithMedia = style({
 	...transition,

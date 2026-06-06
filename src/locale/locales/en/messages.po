@@ -3020,6 +3020,10 @@ msgstr ""
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
 msgstr ""
 
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:109
+msgid "Embedded player"
+msgstr "Embedded player"
+
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:58
 msgid "Embedded video player"
 msgstr ""
@@ -4853,6 +4857,7 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
+#: src/components/web/ExternalEmbed/ExternalGif.tsx:70
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:85
 msgid "Loading GIF"
 msgstr "Loading GIF"
@@ -4868,6 +4873,10 @@ msgstr ""
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:226
 msgid "Loading post interaction settings..."
 msgstr ""
+
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:89
+msgid "Loading video"
+msgstr "Loading video"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:441
 msgid "Lock"
@@ -5859,7 +5868,7 @@ msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:76
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:108
-#: src/components/web/ExternalEmbed/index.tsx:80
+#: src/components/web/ExternalEmbed/index.tsx:51
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -6176,6 +6185,7 @@ msgstr ""
 
 #. placeholder {0}: link.title
 #: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:92
+#: src/components/web/ExternalEmbed/ExternalGif.tsx:60
 msgid "Play {0}"
 msgstr ""
 
@@ -6189,6 +6199,7 @@ msgid "Play video"
 msgstr ""
 
 #: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:56
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:85
 msgid "Play Video"
 msgstr ""
 
