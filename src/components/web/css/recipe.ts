@@ -1,4 +1,4 @@
-import { type StyleRule, style, styleVariants } from '@vanilla-extract/css';
+import { type ComplexStyleRule, type StyleRule, style, styleVariants } from '@vanilla-extract/css';
 import { addFunctionSerializer } from '@vanilla-extract/css/functionSerializer';
 
 import {
@@ -8,11 +8,11 @@ import {
 	createRuntimeFn,
 } from '#/components/web/css/recipe-runtime';
 
-import { components } from '#/styles/layers.css';
-
 // #region types
 
-type VariantDefinitions = Record<string, StyleRule>;
+/** A variant's payload: a single style rule, or an array of rules composed together. */
+type RecipeStyleRule = StyleRule | StyleRule[];
+type VariantDefinitions = Record<string, RecipeStyleRule>;
 type VariantGroups = Record<string, VariantDefinitions>;
 
 /** Collapses `'true'`/`'false'` variant keys to `boolean`, mirroring cva's prop typing. */
@@ -31,14 +31,21 @@ type CompoundVariant<Variants extends VariantGroups> = {
 		| StringToBoolean<keyof Variants[Group]>
 		| StringToBoolean<keyof Variants[Group]>[];
 } & {
-	style: StyleRule;
+	style: RecipeStyleRule;
 };
 
 type RecipeDefinition<Variants extends VariantGroups> = {
-	base?: StyleRule;
+	base?: RecipeStyleRule;
 	compoundVariants?: CompoundVariant<Variants>[];
 	defaultVariants?: VariantSelection<Variants>;
 	variants?: Variants;
+};
+
+type RecipeOptions = {
+	/** Name woven into generated class identifiers. */
+	debugId?: string;
+	/** Cascade layer to emit every generated style into; omit to leave them unlayered. */
+	layer?: string;
 };
 
 type Resolve<T> = { [Key in keyof T]: T[Key] } & {};
@@ -64,22 +71,27 @@ const mapValues = <T, R>(input: Record<string, T>, fn: (value: T, key: string) =
 };
 
 /**
- * Builds a cva-style recipe with vanilla-extract: each variant value compiles to its own class in the
- * `components` cascade layer, and the returned function resolves a variant selection to the matching class
- * string. The serializer reconstructs that function in the client bundle, so no build-time style code ships.
+ * Builds a cva-style recipe with vanilla-extract: each variant value compiles to its own class and the
+ * returned function resolves a variant selection to the matching class string. The serializer reconstructs
+ * that function in the client bundle, so no build-time style code ships.
  *
  * @param definition base style, variant groups, optional compound variants and defaults
- * @param debugId optional name woven into generated class identifiers
+ * @param options `debugId` woven into class identifiers, and `layer` to emit every style into a cascade layer
  * @returns a function mapping a variant selection to its resolved class string
  */
 export const recipe = <Variants extends VariantGroups>(
 	definition: RecipeDefinition<Variants>,
-	debugId?: string,
+	options: RecipeOptions = {},
 ): RecipeRuntimeFn<Variants> => {
+	const { debugId, layer } = options;
 	const { base, compoundVariants = [], defaultVariants = {}, variants = {} as Variants } = definition;
 
-	const layered = (rule: StyleRule): StyleRule => {
-		return { '@layer': { [components]: rule } };
+	const layered = (rule: RecipeStyleRule): ComplexStyleRule => {
+		if (layer == null) {
+			return rule;
+		}
+		const rules = Array.isArray(rule) ? rule : [rule];
+		return rules.map((r) => ({ '@layer': { [layer]: r } }));
 	};
 
 	const defaultClassName = base == null ? style({}, debugId) : style(layered(base), debugId);

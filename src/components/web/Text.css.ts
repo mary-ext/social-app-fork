@@ -32,7 +32,7 @@ export const text = recipe(
 			weight: variantsFor(fontWeight, 'fontWeight'),
 		},
 	},
-	'text',
+	{ debugId: 'text', layer: components },
 );
 
 /** Set per-instance via `assignInlineVars` — the only value that can't be known at build time. */
