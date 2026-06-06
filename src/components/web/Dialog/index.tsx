@@ -67,6 +67,14 @@ export function Root<Payload = unknown>({
 	);
 }
 
+// the portalled backdrop/viewport are rendered into `document.body`, but React still routes their
+// events up the *component* tree — so a click would bubble into whatever owns the dialog (e.g. the
+// RNW `Link` wrapping an external embed) and trigger it. stop it at the portal boundary.
+//
+// TODO: revisit when we redo router/navigation — the leak stems from the RNW `Link`/`<a>` press
+// handler sitting above the portal on the component tree, and this guard may become unnecessary.
+const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagation();
+
 /** Portalled backdrop + scrollable viewport + themed popup card. Put dialog content inside. */
 export function Popup({
 	children,
@@ -82,8 +90,8 @@ export function Popup({
 }) {
 	return (
 		<BaseDialog.Portal>
-			<BaseDialog.Backdrop className={styles.backdrop} />
-			<BaseDialog.Viewport className={styles.viewport}>
+			<BaseDialog.Backdrop className={styles.backdrop} onClick={stopPropagation} />
+			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
 				<BaseDialog.Popup aria-label={label} className={cx(styles.popup, styles.popupSize[size], className)}>
 					{children}
 				</BaseDialog.Popup>
