@@ -54,7 +54,15 @@ export function Lightbox() {
 	);
 }
 
-function LightboxContents({ payload, open, close }: { payload: LightboxPayload; open: boolean; close: () => void }) {
+function LightboxContents({
+	payload,
+	open,
+	close,
+}: {
+	payload: LightboxPayload;
+	open: boolean;
+	close: () => void;
+}) {
 	const { t: l } = useLingui();
 	const viewportRef = useRef<HTMLDivElement>(null);
 

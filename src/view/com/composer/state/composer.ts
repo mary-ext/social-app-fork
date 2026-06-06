@@ -154,8 +154,9 @@ export type ComposerAction =
 
 /**
  * Threshold for picking between embed variants. <= this count uses the legacy `app.bsky.embed.images` shape;
- * > this count promotes to `app.bsky.embed.gallery`. Named to flag that if/when we deprecate the legacy
- * images embed entirely, this constant (and the variant split it gates) should go away.
+ *
+ * > this count promotes to `app.bsky.embed.gallery`. Named to flag that if/when we deprecate the legacy images
+ * > embed entirely, this constant (and the variant split it gates) should go away.
  */
 export const LEGACY_IMAGES_EMBED_MAX = 4;
 export const MAX_GALLERY_IMAGES = 10;
