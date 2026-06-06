@@ -37,10 +37,14 @@ export function Lightbox() {
 
 	// Base UI keeps the payload (and thus `LightboxContents`) mounted after close, so the engine persists across
 	// opens. Rather than remount it per open to rebuild the engine at the new index, we feed the dialog's open
-	// state to the lib's `active` prop: its `false → true` edge resets the engine to the current `defaultIndex`.
-	// Remounting on payload identity instead would miss a reopen from the *same* trigger — Base UI forwards that
-	// trigger's `payload` prop unchanged, so the object identity (and thus a key derived from it) never changes,
-	// leaving the engine on the index it was last paged to.
+	// state to the lib's `active` prop and the payload's index to `defaultIndex`. The lib resets the engine to
+	// `defaultIndex` both on the `active` false → true edge and whenever `defaultIndex` moves while active; the
+	// latter is load-bearing here, because Base UI flips `open` synchronously on the trigger click but forwards
+	// the new trigger's `payload` one commit later (via a layout effect), so the activation edge alone resets to
+	// the *previous* open's index and the index update has to re-reset. Remounting on payload identity instead
+	// would miss a reopen from the *same* trigger — Base UI forwards that trigger's `payload` prop unchanged, so
+	// the object identity (and thus a key derived from it) never changes, leaving the engine on the index it was
+	// last paged to.
 	return (
 		<Dialog.Root handle={lightboxControl} onOpenChange={(next) => setOpen(next)}>
 			{({ payload }: { payload: LightboxPayload | undefined }) =>
@@ -56,8 +60,9 @@ function LightboxContents({ payload, open, close }: { payload: LightboxPayload; 
 
 	// the lib Provider wraps the whole Portal so both the Scrim (in the Backdrop) and the Viewport/chrome (in the
 	// Popup) get its context; React context flows through portals by tree position, not DOM position. `active`
-	// resets the engine to `defaultIndex` on each open edge — `open` and `payload` land in the same render, so
-	// the reset reads the index of the image just clicked.
+	// resets the engine to `defaultIndex` on each open edge; on a reopen the new `payload` (and thus the clicked
+	// image's index) arrives a commit after `open` flips, so it's the lib's re-reset on a `defaultIndex` change
+	// while active that lands the engine on the image just clicked.
 	return (
 		<Lb.Provider active={open} images={payload.images} defaultIndex={payload.index} onDismiss={close}>
 			<BaseDialog.Portal>
