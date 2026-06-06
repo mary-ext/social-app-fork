@@ -2,6 +2,7 @@ import { type MouseEvent, useMemo } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
+import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { exemptExternalEmbedSources, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
@@ -12,6 +13,7 @@ import { atoms as a } from '#/alf';
 import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
 import { ExternalEmbed as ExternalEmbedNative } from '#/components/Post/Embed/ExternalEmbed';
 import { cx } from '#/components/web/cx';
+import { GifEmbed } from '#/components/web/ExternalEmbed/GifEmbed';
 import { Text } from '#/components/web/Text';
 
 import * as styles from './index.css';
@@ -40,8 +42,23 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 		}
 	}, [link.uri, externalEmbedPrefs]);
 
-	// GIF + iframe players keep the RNW implementation (player chrome, consent dialogs, autoplay prefs);
-	// this slice ports only the plain link card.
+	// Autoplaying tenor/klipy gifs are web-native.
+	if (embedPlayerParams?.source === 'tenor' || embedPlayerParams?.source === 'klipy') {
+		const parsedAlt = parseAltFromGIFDescription(link.description);
+		return (
+			<div className={styles.wrapper}>
+				<GifEmbed
+					params={embedPlayerParams}
+					thumb={link.thumb}
+					altText={parsedAlt.alt}
+					isPreferredAltText={parsedAlt.isPreferred}
+					hideAlt={hideAlt}
+				/>
+			</div>
+		);
+	}
+
+	// Other iframe players (youtube/vimeo/giphy/…) still fall back to the RNW implementation.
 	if (embedPlayerParams) {
 		return <ExternalEmbedNative link={link} onOpen={onOpen} style={a.mt_sm} hideAlt={hideAlt} />;
 	}
