@@ -5,6 +5,6 @@ export const body = sprinkles({
 	flexDirection: 'column',
 	gap: 'lg',
 	marginBottom: '_2xl',
-	marginTop: 'sm',
+	marginTop: 'lg',
 });
 export const actions = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md' });

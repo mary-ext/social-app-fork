@@ -35,7 +35,7 @@ export const popup = style({
 	borderRadius: '12px',
 	boxShadow: vars.shadow.lg,
 	boxSizing: 'border-box',
-	padding: '20px',
+	padding: '24px',
 	position: 'relative',
 	transitionDuration: '200ms',
 	transitionProperty: 'opacity, transform',
