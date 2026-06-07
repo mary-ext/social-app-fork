@@ -206,6 +206,7 @@ function DialogInner({
 						variant="ghost"
 						color="primary"
 						size="small"
+						className={!dirty ? styles.inactiveSave : undefined}
 						disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
 						onClick={onPressSave}
 					>
