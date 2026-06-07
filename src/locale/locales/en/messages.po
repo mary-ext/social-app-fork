@@ -341,7 +341,7 @@ msgstr "{count, plural, one {# new join request} other {# new join requests}}"
 msgid "{count, plural, one {# request} other {# requests}}"
 msgstr "{count, plural, one {# request} other {# requests}}"
 
-#: src/view/shell/desktop/LeftNav.tsx:450
+#: src/view/shell/desktop/LeftNav.tsx:454
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1898,7 +1898,7 @@ msgid "Changes to the starter pack will not be reflected in the list after creat
 msgstr ""
 
 #: src/Navigation.tsx:799
-#: src/view/shell/desktop/LeftNav.tsx:572
+#: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:292
 msgid "Chat"
 msgstr ""
@@ -2159,7 +2159,7 @@ msgstr ""
 
 #: src/lib/hotkeys/index.tsx:60
 #: src/view/com/feeds/ComposerPrompt.tsx:52
-#: src/view/shell/desktop/LeftNav.tsx:542
+#: src/view/shell/desktop/LeftNav.tsx:546
 msgid "Compose new post"
 msgstr ""
 
@@ -3224,7 +3224,7 @@ msgstr ""
 
 #: src/Navigation.tsx:500
 #: src/screens/Search/Shell.tsx:315
-#: src/view/shell/desktop/LeftNav.tsx:642
+#: src/view/shell/desktop/LeftNav.tsx:637
 #: src/view/shell/Drawer.tsx:252
 msgid "Explore"
 msgstr ""
@@ -3559,7 +3559,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:164
 #: src/view/screens/Feeds.tsx:478
 #: src/view/screens/Profile.tsx:235
-#: src/view/shell/desktop/LeftNav.tsx:658
+#: src/view/shell/desktop/LeftNav.tsx:667
 #: src/view/shell/Drawer.tsx:348
 msgid "Feeds"
 msgstr ""
@@ -4244,7 +4244,7 @@ msgstr ""
 
 #: src/Navigation.tsx:495
 #: src/Navigation.tsx:520
-#: src/view/shell/desktop/LeftNav.tsx:633
+#: src/view/shell/desktop/LeftNav.tsx:628
 #: src/view/shell/Drawer.tsx:272
 msgid "Home"
 msgstr ""
@@ -4802,7 +4802,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:47
 #: src/view/screens/Profile.tsx:229
 #: src/view/screens/Profile.tsx:237
-#: src/view/shell/desktop/LeftNav.tsx:665
+#: src/view/shell/desktop/LeftNav.tsx:676
 #: src/view/shell/Drawer.tsx:361
 msgid "Lists"
 msgstr ""
@@ -5414,7 +5414,7 @@ msgid "New post"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:148
-#: src/view/shell/desktop/LeftNav.tsx:551
+#: src/view/shell/desktop/LeftNav.tsx:555
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -5685,7 +5685,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:163
 #: src/screens/Settings/Settings.tsx:166
 #: src/view/screens/Notifications.tsx:113
-#: src/view/shell/desktop/LeftNav.tsx:650
+#: src/view/shell/desktop/LeftNav.tsx:647
 #: src/view/shell/Drawer.tsx:319
 msgid "Notifications"
 msgstr ""
@@ -6462,7 +6462,7 @@ msgid "profile"
 msgstr ""
 
 #: src/Navigation.tsx:593
-#: src/view/shell/desktop/LeftNav.tsx:682
+#: src/view/shell/desktop/LeftNav.tsx:697
 #: src/view/shell/Drawer.tsx:78
 #: src/view/shell/Drawer.tsx:410
 msgid "Profile"
@@ -7190,7 +7190,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:672
+#: src/view/shell/desktop/LeftNav.tsx:685
 #: src/view/shell/Drawer.tsx:385
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -7563,7 +7563,7 @@ msgstr ""
 
 #: src/Navigation.tsx:580
 #: src/screens/Settings/Settings.tsx:86
-#: src/view/shell/desktop/LeftNav.tsx:689
+#: src/view/shell/desktop/LeftNav.tsx:706
 #: src/view/shell/Drawer.tsx:423
 msgid "Settings"
 msgstr ""
