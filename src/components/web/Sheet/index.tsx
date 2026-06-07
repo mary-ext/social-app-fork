@@ -24,11 +24,22 @@ export const useSheetHandle = useDialogHandle;
 export * as Header from '#/components/web/Sheet/Header';
 
 /** Portalled backdrop + viewport + a flex-column popup (header pinned, body scrolls). */
-export function Popup({ children, label }: { children: ReactNode; label?: string }) {
+export function Popup({
+	children,
+	label,
+	outerClose,
+}: {
+	children: ReactNode;
+	label?: string;
+	/** Render the close button at the screen corner (outside the popup) — for full-height dialogs. */
+	outerClose?: boolean;
+}) {
 	return (
 		<BaseDialog.Portal>
-			<BaseDialog.Backdrop className={dialogStyles.backdrop} />
+			{/* forceRender so a Sheet opened inside another dialog (e.g. the composer Sheet) still dims */}
+			<BaseDialog.Backdrop className={dialogStyles.backdrop} forceRender />
 			<BaseDialog.Viewport className={dialogStyles.viewport}>
+				{outerClose && <Close outer />}
 				<BaseDialog.Popup aria-label={label} className={styles.popup}>
 					{children}
 				</BaseDialog.Popup>

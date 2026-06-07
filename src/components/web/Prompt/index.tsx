@@ -9,7 +9,7 @@ import * as dialogStyles from '#/components/web/Dialog/Dialog.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 import * as styles from '#/components/web/Prompt/Prompt.css';
 
-type Color = 'negative' | 'primary' | 'secondary';
+type Color = 'negative' | 'negative_subtle' | 'primary' | 'secondary';
 
 export const Trigger = AlertDialog.Trigger;
 
@@ -32,13 +32,20 @@ export function Outer({ children, handle }: { children: ReactNode; handle: Promp
 	return (
 		<AlertDialog.Root handle={handle} onOpenChange={(open) => registerOpen(open)}>
 			<AlertDialog.Portal>
-				<AlertDialog.Backdrop className={dialogStyles.backdrop} />
+				{/* a confirmation must always dim its host; Base UI hides nested backdrops by default (e.g. when
+				    the prompt is rendered inside another open dialog like the composer Sheet). */}
+				<AlertDialog.Backdrop className={dialogStyles.backdrop} forceRender />
 				<AlertDialog.Viewport className={dialogStyles.viewport}>
 					<AlertDialog.Popup className={styles.popup}>{children}</AlertDialog.Popup>
 				</AlertDialog.Viewport>
 			</AlertDialog.Portal>
 		</AlertDialog.Root>
 	);
+}
+
+/** Groups the title + description above the actions (matches the ALF `Prompt.Content`). */
+export function Content({ children }: { children: ReactNode }) {
+	return <div className={styles.content}>{children}</div>;
 }
 
 export function TitleText({ children }: { children: ReactNode }) {
@@ -122,8 +129,10 @@ export function Basic({
 }) {
 	return (
 		<Outer handle={handle}>
-			<TitleText>{title}</TitleText>
-			{description && <DescriptionText>{description}</DescriptionText>}
+			<Content>
+				<TitleText>{title}</TitleText>
+				{description && <DescriptionText>{description}</DescriptionText>}
+			</Content>
 			<Actions>
 				<Action onPress={onConfirm} color={confirmButtonColor} cta={confirmButtonCta} />
 				{showCancel && <Cancel cta={cancelButtonCta} />}

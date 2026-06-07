@@ -2,7 +2,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 
 import { type CSSProperties, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import ReactCrop, { type PercentCrop } from 'react-image-crop';
 
 import { useBlobUrl } from '#/lib/hooks/useBlobUrl';
@@ -17,11 +17,11 @@ import {
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { Loader } from '#/components/Loader';
+import * as Sheet from '#/components/web/Sheet';
 
 export type EditImageDialogProps = {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Sheet.SheetHandle;
 	image?: ComposerImage;
 	onChange: (next: ComposerImage) => void;
 	aspectRatio?: number;
@@ -29,86 +29,84 @@ export type EditImageDialogProps = {
 };
 
 export function EditImageDialog(props: EditImageDialogProps) {
+	const { t: l } = useLingui();
 	return (
-		<Dialog.Outer control={props.control} webOptions={{ alignCenter: true }}>
-			<Dialog.Handle />
-			<DialogInner {...props} />
-		</Dialog.Outer>
+		<Sheet.Root handle={props.handle}>
+			<Sheet.Popup label={l`Edit image`}>
+				<DialogInner {...props} />
+			</Sheet.Popup>
+		</Sheet.Root>
 	);
 }
 
-function DialogInner({ control, image, onChange, circularCrop, aspectRatio }: EditImageDialogProps) {
+function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: EditImageDialogProps) {
 	const { t: l } = useLingui();
 	const [pending, setPending] = useState(false);
 	const ref = useRef<{ save: () => Promise<void> }>(null);
 
-	const cancelButton = useCallback(
-		() => (
-			<Button
-				label={l`Cancel`}
-				disabled={pending}
-				onPress={() => control.close()}
-				size="small"
-				color="primary"
-				variant="ghost"
-				style={[a.rounded_full]}
-				testID="cropImageCancelBtn"
-			>
-				<ButtonText style={[a.text_md]}>
-					<Trans>Cancel</Trans>
-				</ButtonText>
-			</Button>
-		),
-		[control, l, pending],
-	);
-
-	const saveButton = useCallback(
-		() => (
-			<Button
-				label={l`Save`}
-				onPress={async () => {
-					setPending(true);
-					await ref.current?.save();
-					setPending(false);
-				}}
-				disabled={pending}
-				size="small"
-				color="primary"
-				variant="ghost"
-				style={[a.rounded_full]}
-				testID="cropImageSaveBtn"
-			>
-				<ButtonText style={[a.text_md]}>
-					<Trans>Save</Trans>
-				</ButtonText>
-				{pending && <ButtonIcon icon={Loader} />}
-			</Button>
-		),
-		[l, pending],
-	);
-
 	return (
-		<Dialog.Inner
-			label={l`Edit image`}
-			header={
-				<Dialog.Header renderLeft={cancelButton} renderRight={saveButton}>
-					<Dialog.HeaderText>
+		<>
+			<Sheet.Header.Outer>
+				<Sheet.Header.Slot>
+					<Button
+						label={l`Cancel`}
+						disabled={pending}
+						onPress={() => handle.close()}
+						size="small"
+						color="primary"
+						variant="ghost"
+						style={[a.rounded_full]}
+						testID="cropImageCancelBtn"
+					>
+						<ButtonText style={[a.text_md]}>
+							<Trans>Cancel</Trans>
+						</ButtonText>
+					</Button>
+				</Sheet.Header.Slot>
+				<Sheet.Header.Content>
+					<Sheet.Header.TitleText>
 						<Trans>Edit image</Trans>
-					</Dialog.HeaderText>
-				</Dialog.Header>
-			}
-		>
-			{image && (
-				<EditImageInner
-					saveRef={ref}
-					key={image.source.id}
-					image={image}
-					onChange={onChange}
-					circularCrop={circularCrop}
-					aspectRatio={aspectRatio}
-				/>
-			)}
-		</Dialog.Inner>
+					</Sheet.Header.TitleText>
+				</Sheet.Header.Content>
+				<Sheet.Header.Slot>
+					<Button
+						label={l`Save`}
+						onPress={async () => {
+							setPending(true);
+							await ref.current?.save();
+							setPending(false);
+						}}
+						disabled={pending}
+						size="small"
+						color="primary"
+						variant="ghost"
+						style={[a.rounded_full]}
+						testID="cropImageSaveBtn"
+					>
+						<ButtonText style={[a.text_md]}>
+							<Trans>Save</Trans>
+						</ButtonText>
+						{pending && <ButtonIcon icon={Loader} />}
+					</Button>
+				</Sheet.Header.Slot>
+			</Sheet.Header.Outer>
+
+			<Sheet.Body>
+				<View style={[a.p_xl]}>
+					{image && (
+						<EditImageInner
+							saveRef={ref}
+							handle={handle}
+							key={image.source.id}
+							image={image}
+							onChange={onChange}
+							circularCrop={circularCrop}
+							aspectRatio={aspectRatio}
+						/>
+					)}
+				</View>
+			</Sheet.Body>
+		</>
 	);
 }
 
@@ -116,15 +114,15 @@ function EditImageInner({
 	image,
 	onChange,
 	saveRef,
+	handle,
 	circularCrop = false,
 	aspectRatio,
 }: Required<Pick<EditImageDialogProps, 'image'>> &
-	Omit<EditImageDialogProps, 'control' | 'image'> & {
+	Omit<EditImageDialogProps, 'image'> & {
 		saveRef: React.RefObject<{ save: () => Promise<void> } | null>;
 	}) {
 	const t = useTheme();
 	const [isDragging, setIsDragging] = useState(false);
-	const control = Dialog.useDialogContext();
 
 	const source = image.source;
 	const sourceUrl = useBlobUrl(source.blob);
@@ -152,10 +150,9 @@ function EditImageInner({
 					: undefined,
 		});
 
-		control.close(() => {
-			onChange(result);
-		});
-	}, [crop, image, source, control, onChange]);
+		onChange(result);
+		handle.close();
+	}, [crop, image, source, handle, onChange]);
 
 	useImperativeHandle(
 		saveRef,

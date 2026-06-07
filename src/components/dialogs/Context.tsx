@@ -8,6 +8,7 @@ import type { SessionAccount } from '#/state/session';
 import * as Dialog from '#/components/Dialog';
 import type { ReportSubject } from '#/components/moderation/ReportDialog';
 import { type DialogHandle, useDialogHandle } from '#/components/web/Dialog';
+import { type SheetHandle, useSheetHandle } from '#/components/web/Sheet';
 
 type Control = Dialog.DialogControlProps;
 
@@ -30,7 +31,13 @@ export type SigninDialogPayload = {
 };
 
 type ControlsContext = {
-	composerDialogControl: StatefulControl<ComposerOpts>;
+	/**
+	 * The composer's Base UI {@link SheetHandle}-backed dialog. Opened from RNW triggers all over the app (no
+	 * declarative Trigger), so callers drive it imperatively — `openWithPayload(opts)` to open with the
+	 * composer state, `isOpen` to test, `close()` to close — and read the active opts in the dialog tree via
+	 * the `Sheet.Root` payload render-prop. The registry id is the constant `COMPOSER_DIALOG_ID`.
+	 */
+	composerDialogControl: SheetHandle<ComposerOpts>;
 	lightboxControl: LightboxControl;
 	mutedWordsDialogControl: Control;
 	signinDialogControl: StatefulControl<SigninDialogPayload>;
@@ -54,7 +61,7 @@ export function useGlobalDialogsControlContext() {
 }
 
 export function Provider({ children }: React.PropsWithChildren<{}>) {
-	const composerDialogControl = useStatefulDialogControl<ComposerOpts>();
+	const composerDialogControl = useSheetHandle<ComposerOpts>();
 	const lightboxControl = useDialogHandle<LightboxPayload>();
 	const mutedWordsDialogControl = Dialog.useDialogControl();
 	const signinDialogControl = useStatefulDialogControl<SigninDialogPayload>();

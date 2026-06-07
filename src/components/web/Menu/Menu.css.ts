@@ -99,3 +99,23 @@ export const separator = style({
 	height: 1,
 	marginBlock: 4,
 });
+
+// radio indicator placed at the trailing edge of an item (e.g. the current post language).
+export const itemRadio = style({
+	alignItems: 'center',
+	border: `1px solid ${vars.palette.contrast_300}`,
+	borderRadius: 999,
+	boxSizing: 'border-box',
+	display: 'inline-flex',
+	flexShrink: 0,
+	height: 20,
+	justifyContent: 'center',
+	width: 20,
+});
+
+export const itemRadioDot = style({
+	backgroundColor: vars.palette.primary_500,
+	borderRadius: 999,
+	height: 14,
+	width: 14,
+});

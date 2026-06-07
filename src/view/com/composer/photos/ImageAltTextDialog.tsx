@@ -13,50 +13,52 @@ import { AltTextCounterWrapper } from '#/view/com/composer/AltTextCounterWrapper
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { type DialogControlProps } from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import { Image } from '#/shims/image';
 
 type Props = {
-	control: Dialog.DialogOuterProps['control'];
+	handle: Dialog.DialogHandle;
 	image: ComposerImage;
 	onChange: (next: ComposerImage) => void;
-	sourceViewTag?: number;
 };
 
-export const ImageAltTextDialog = ({ control, image, onChange, sourceViewTag }: Props): React.ReactNode => {
+export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.ReactNode => {
+	const { t: l } = useLingui();
 	const [altText, setAltText] = useState(image.alt);
 
 	return (
-		<Dialog.Outer
-			control={control}
-			onClose={() => {
-				onChange({
-					...image,
-					alt: enforceLen(altText, MAX_ALT_TEXT, true),
-				});
+		<Dialog.Root
+			handle={handle}
+			onOpenChange={(open) => {
+				if (!open) {
+					onChange({
+						...image,
+						alt: enforceLen(altText, MAX_ALT_TEXT, true),
+					});
+				}
 			}}
-			nativeOptions={{ fullHeight: true, sourceViewTag }}
 		>
-			<Dialog.Handle />
-			<ImageAltTextInner control={control} image={image} altText={altText} setAltText={setAltText} />
-		</Dialog.Outer>
+			<Dialog.Popup label={l`Add alt text`}>
+				<Dialog.Close />
+				<ImageAltTextInner handle={handle} image={image} altText={altText} setAltText={setAltText} />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 };
 
 const ImageAltTextInner = ({
 	altText,
 	setAltText,
-	control,
+	handle,
 	image,
 }: {
 	altText: string;
 	setAltText: (text: string) => void;
-	control: DialogControlProps;
+	handle: Dialog.DialogHandle;
 	image: Props['image'];
 }): React.ReactNode => {
 	const { t: l, i18n } = useLingui();
@@ -85,8 +87,7 @@ const ImageAltTextInner = ({
 	}, [image, screenWidth]);
 
 	return (
-		<Dialog.ScrollableInner label={l`Add alt text`}>
-			<Dialog.Close />
+		<>
 			<View>
 				{/* vertical space is too precious - gets scrolled out of the way anyway */}
 				{
@@ -114,7 +115,7 @@ const ImageAltTextInner = ({
 							<Trans>Descriptive alt text</Trans>
 						</TextField.LabelText>
 						<TextField.Root>
-							<Dialog.Input
+							<TextField.Input
 								label={l`Alt text`}
 								onChangeText={(text) => {
 									setAltText(text);
@@ -148,7 +149,7 @@ const ImageAltTextInner = ({
 						color="primary"
 						variant="solid"
 						onPress={() => {
-							control.close();
+							handle.close();
 						}}
 						style={[a.flex_grow]}
 					>
@@ -158,6 +159,6 @@ const ImageAltTextInner = ({
 					</Button>
 				</AltTextCounterWrapper>
 			</View>
-		</Dialog.ScrollableInner>
+		</>
 	);
 };

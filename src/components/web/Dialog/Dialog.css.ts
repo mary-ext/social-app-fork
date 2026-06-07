@@ -54,21 +54,30 @@ export const popupSize = styleVariants({
 export const closeBtn = style({
 	alignItems: 'center',
 	appearance: 'none',
-	background: 'transparent',
+	// solid surface bg (matches the RNW ghost-secondary close): blends into a card, but reads as a circle
+	// over a backdrop (e.g. the GIF picker's outer close).
+	backgroundColor: vars.palette.contrast_0,
 	border: 'none',
 	borderRadius: 999,
 	color: vars.palette.contrast_600,
 	cursor: 'pointer',
 	display: 'inline-flex',
-	height: 34,
+	height: 33,
 	justifyContent: 'center',
 	position: 'absolute',
-	right: 8,
-	top: 8,
-	width: 34,
+	right: 12,
+	top: 12,
+	width: 33,
 	zIndex: 10,
 	selectors: {
 		'&:hover': { backgroundColor: vars.palette.contrast_50 },
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 	},
+});
+
+// declared after `closeBtn` so it wins by source order: pins the button to the screen corner (outside the
+// popup card) — for full-height dialogs whose close floats over the backdrop, like the GIF picker.
+export const closeBtnOuter = style({
+	position: 'fixed',
+	zIndex: 11,
 });

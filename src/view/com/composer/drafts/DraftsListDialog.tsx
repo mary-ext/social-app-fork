@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { Keyboard, View } from 'react-native';
+import { FlatList, Keyboard, View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCallOnce } from '#/lib/once';
@@ -9,21 +9,21 @@ import { EmptyState } from '#/view/com/util/EmptyState';
 import { atoms as a, select, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
 import { ListFooter } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+import * as Sheet from '#/components/web/Sheet';
 
 import { DraftItem } from './DraftItem';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
 import type { DraftSummary } from './state/schema';
 
 export function DraftsListDialog({
-	control,
+	handle,
 	onSelectDraft,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Sheet.SheetHandle;
 	onSelectDraft: (draft: DraftSummary) => void;
 }) {
 	const { t: l } = useLingui();
@@ -51,12 +51,10 @@ export function DraftsListDialog({
 			// drafts sheet closes, then loses it again when the post component
 			// remounts with the draft content, causing a show-hide-show cycle -sfn
 			Keyboard.dismiss();
-
-			control.close(() => {
-				onSelectDraft(summary);
-			});
+			handle.close();
+			onSelectDraft(summary);
 		},
-		[control, onSelectDraft],
+		[handle, onSelectDraft],
 	);
 
 	const handleDeleteDraft = useCallback(
@@ -65,17 +63,6 @@ export function DraftsListDialog({
 			deleteDraft({ draftId: draftSummary.id, draft: draftSummary.draft });
 		},
 		[deleteDraft],
-	);
-
-	const backButton = useCallback(
-		() => (
-			<Button label={l`Back`} onPress={() => control.close()} size="small" color="primary" variant="ghost">
-				<ButtonText style={[a.text_md]}>
-					<Trans>Back</Trans>
-				</ButtonText>
-			</Button>
-		),
-		[control, l],
 	);
 
 	const renderItem = useCallback(
@@ -87,17 +74,6 @@ export function DraftsListDialog({
 			);
 		},
 		[handleSelectDraft, handleDeleteDraft, gtPhone],
-	);
-
-	const header = useMemo(
-		() => (
-			<Dialog.Header renderLeft={backButton}>
-				<Dialog.HeaderText>
-					<Trans>Drafts</Trans>
-				</Dialog.HeaderText>
-			</Dialog.Header>
-		),
-		[backButton],
 	);
 
 	const onEndReached = useCallback(() => {
@@ -144,33 +120,51 @@ export function DraftsListDialog({
 	);
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ fullHeight: true }}>
-			{/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
-
-			<Dialog.InnerFlatList
-				data={drafts}
-				renderItem={renderItem}
-				keyExtractor={(item: DraftSummary) => item.id}
-				ListHeaderComponent={header}
-				stickyHeaderIndices={[0]}
-				ListEmptyComponent={emptyComponent}
-				ListFooterComponent={footerComponent}
-				onEndReached={onEndReached}
-				onEndReachedThreshold={0.5}
-				style={[
-					a.px_0,
-					{ minHeight: 500 },
-					{
-						backgroundColor: select(t.name, {
-							light: t.palette.contrast_50,
-							dark: t.palette.contrast_0,
-							dim: '#000000',
-						}),
-					},
-				]}
-				webInnerContentContainerStyle={[a.py_0]}
-				contentContainerStyle={[a.pb_xl]}
-			/>
-		</Dialog.Outer>
+		<Sheet.Root handle={handle}>
+			<Sheet.Popup label={l`Drafts`}>
+				<Sheet.Header.Outer>
+					<Sheet.Header.Slot>
+						<Button
+							label={l`Back`}
+							onPress={() => handle.close()}
+							size="small"
+							color="primary"
+							variant="ghost"
+						>
+							<ButtonText style={[a.text_md]}>
+								<Trans>Back</Trans>
+							</ButtonText>
+						</Button>
+					</Sheet.Header.Slot>
+					<Sheet.Header.Content>
+						<Sheet.Header.TitleText>
+							<Trans>Drafts</Trans>
+						</Sheet.Header.TitleText>
+					</Sheet.Header.Content>
+					<Sheet.Header.Slot />
+				</Sheet.Header.Outer>
+				<FlatList
+					data={drafts}
+					renderItem={renderItem}
+					keyExtractor={(item: DraftSummary) => item.id}
+					ListEmptyComponent={emptyComponent}
+					ListFooterComponent={footerComponent}
+					onEndReached={onEndReached}
+					onEndReachedThreshold={0.5}
+					style={[
+						a.flex_1,
+						{ minHeight: 0 },
+						{
+							backgroundColor: select(t.name, {
+								light: t.palette.contrast_50,
+								dark: t.palette.contrast_0,
+								dim: '#000000',
+							}),
+						},
+					]}
+					contentContainerStyle={[a.pb_xl]}
+				/>
+			</Sheet.Popup>
+		</Sheet.Root>
 	);
 }

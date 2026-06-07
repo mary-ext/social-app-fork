@@ -14,15 +14,16 @@ import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWeb
 
 import { atoms as a, useAlf } from '#/alf';
 
+import { Portal } from '#/components/Portal';
+import { Text } from '#/components/Typography';
 import {
 	Composer as TapperComposer,
 	type SubmitRequest,
 	useComposerInternalApiRef,
-} from '#/components/Composer';
-import type { Emoji } from '#/components/EmojiPicker';
-import { Portal } from '#/components/Portal';
-import { Text } from '#/components/Typography';
+} from '#/components/web/Composer';
+import type { Emoji } from '#/components/web/EmojiPicker';
 
+import * as styles from './TextInput.css';
 import type { TextInputProps } from './TextInput.types';
 
 export function TextInput({
@@ -39,7 +40,6 @@ export function TextInput({
 	onError,
 	onFocus,
 	autoFocus,
-	accessible,
 	accessibilityHint,
 	accessibilityLabel,
 }: TextInputProps) {
@@ -199,21 +199,18 @@ export function TextInput({
 		<>
 			<TapperComposer
 				internalApiRef={apiRef}
-				label={placeholder || ''}
 				placeholder={placeholder}
 				defaultValue={text}
 				autoFocus={autoFocus}
-				accessible={accessible}
 				accessibilityLabel={accessibilityLabel}
 				accessibilityHint={accessibilityHint}
 				minRows={webForceMinHeight ? 7 : 2}
-				outerStyle={[styles.container]}
-				contentTextStyle={[a.text_lg]}
-				contentPaddingStyle={{
-					paddingBottom: 5,
-					paddingLeft: 5,
-					paddingRight: hasRightPadding ? 37 : 5,
-					paddingTop: 5,
+				className={styles.editor}
+				contentPadding={{
+					bottom: 5,
+					left: 5,
+					right: hasRightPadding ? 37 : 5,
+					top: 5,
 				}}
 				onActiveFacet={(facet) => {
 					activeFacetRef.current = !!facet;
@@ -230,18 +227,18 @@ export function TextInput({
 			{isDropping && (
 				<Portal>
 					<Animated.View
-						style={styles.dropContainer}
+						style={dropStyles.dropContainer}
 						entering={FadeIn.duration(80)}
 						exiting={FadeOut.duration(80)}
 					>
-						<View style={[t.atoms.bg, t.atoms.border_contrast_low, styles.dropModal]}>
+						<View style={[t.atoms.bg, t.atoms.border_contrast_low, dropStyles.dropModal]}>
 							<Text
 								style={[
 									a.text_lg,
 									a.font_semi_bold,
 									t.atoms.text_contrast_medium,
 									t.atoms.border_contrast_high,
-									styles.dropText,
+									dropStyles.dropText,
 								]}
 							>
 								<Trans>Drop to add images</Trans>
@@ -254,13 +251,7 @@ export function TextInput({
 	);
 }
 
-const styles = StyleSheet.create({
-	container: {
-		alignSelf: 'flex-start',
-		flex: 1,
-		marginBottom: 10,
-		marginLeft: 8,
-	},
+const dropStyles = StyleSheet.create({
 	dropContainer: {
 		alignItems: 'center',
 		backgroundColor: '#0007',

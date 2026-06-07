@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import { useWindowDimensions, View, type ViewStyle } from 'react-native';
+import { FlatList, useWindowDimensions, View } from 'react-native';
 
 import { cleanError } from '#/lib/strings/errors';
 
@@ -7,24 +7,13 @@ import type { ListMethods } from '#/view/com/util/List';
 
 import { atoms as a, useBreakpoints } from '#/alf';
 
-import * as Dialog from '#/components/Dialog';
 import { ListFooter } from '#/components/Lists';
 
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
 import type { Gif } from '#/features/gifPicker/types';
 
-type WebViewStyle = Omit<ViewStyle, 'minHeight'> & {
-	minHeight?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
-
 type Props = {
 	items: Gif[];
-	header: React.ReactNode;
-	hasData: boolean;
 	isFetchingNextPage: boolean;
 	error: unknown;
 	fetchNextPage: () => Promise<unknown>;
@@ -33,12 +22,13 @@ type Props = {
 };
 
 export const GifPickerGrid = forwardRef<ListMethods, Props>(function GifPickerGrid(
-	{ items, header, hasData, isFetchingNextPage, error, fetchNextPage, onEndReached, onSelectGif },
+	{ items, isFetchingNextPage, error, fetchNextPage, onEndReached, onSelectGif },
 	ref,
 ) {
 	const { gtMobile } = useBreakpoints();
 	useWindowDimensions();
 	const numColumns = gtMobile ? 3 : 2;
+	const padding = gtMobile ? a.px_2xl : a.px_xl;
 
 	const columns = distributeIntoColumns(items, numColumns);
 
@@ -47,13 +37,15 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(function GifPickerGr
 	 * `onEndReached` still fires against the outer FlatList's scroll position, so pagination behaves the same
 	 * as a conventional grid.
 	 */
-	const data = hasData ? [columns] : [];
+	const data = [columns];
 
 	return (
-		<Dialog.InnerFlatList
-			ref={ref}
+		<FlatList
+			ref={ref as React.Ref<FlatList>}
 			key={String(numColumns)}
 			data={data}
+			style={[a.flex_1, { minHeight: 0 }]}
+			contentContainerStyle={[padding]}
 			renderItem={({ item }: { item: Gif[][] }) => (
 				<View style={[a.flex_row, a.gap_sm]}>
 					{item.map((column, i) => (
@@ -66,10 +58,6 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(function GifPickerGr
 				</View>
 			)}
 			keyExtractor={(_item, index) => `masonry-${index}`}
-			webInnerStyle={[webViewStyle({ minHeight: '80vh' })]}
-			webInnerContentContainerStyle={[a.pb_0]}
-			ListHeaderComponent={<>{header}</>}
-			stickyHeaderIndices={[0]}
 			onEndReached={onEndReached}
 			onEndReachedThreshold={1}
 			// On web, "on-drag" blurs the focused input on ANY scroll event,
@@ -78,14 +66,12 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(function GifPickerGr
 			// mid-typing and subsequent keystrokes go nowhere.
 			keyboardDismissMode={'none'}
 			ListFooterComponent={
-				hasData ? (
-					<ListFooter
-						isFetchingNextPage={isFetchingNextPage}
-						error={cleanError(error)}
-						onRetry={fetchNextPage}
-						style={{ borderTopWidth: 0 }}
-					/>
-				) : null
+				<ListFooter
+					isFetchingNextPage={isFetchingNextPage}
+					error={cleanError(error)}
+					onRetry={fetchNextPage}
+					style={{ borderTopWidth: 0 }}
+				/>
 			}
 		/>
 	);

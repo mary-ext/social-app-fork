@@ -45,6 +45,12 @@ export interface ComposerOpts {
 }
 
 /**
+ * Registry id for the singleton composer dialog. A stable constant (rather than a `useId`) so the discard
+ * flow can `closeAllDialogs({ except: [COMPOSER_DIALOG_ID] })` without threading an id through context.
+ */
+export const COMPOSER_DIALOG_ID = 'composer';
+
+/**
  * The composer is a global ALF dialog (see `composerDialogControl` in `#/components/dialogs/Context`); these
  * hooks are the thin imperative API over that control.
  */
@@ -80,10 +86,10 @@ export function useOpenComposer() {
 			return;
 		}
 		// Never replace an already open composer.
-		if (composerDialogControl.value) {
+		if (composerDialogControl.isOpen) {
 			return;
 		}
-		composerDialogControl.open(opts);
+		composerDialogControl.openWithPayload(opts);
 	});
 
 	return useMemo(() => ({ openComposer }), [openComposer]);
@@ -93,9 +99,9 @@ export function useComposerControls() {
 	const { composerDialogControl } = useGlobalDialogsControlContext();
 
 	const closeComposer = useNonReactiveCallback(() => {
-		const wasOpen = !!composerDialogControl.value;
+		const wasOpen = composerDialogControl.isOpen;
 		if (wasOpen) {
-			composerDialogControl.control.close();
+			composerDialogControl.close();
 		}
 		return wasOpen;
 	});

@@ -16,9 +16,9 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/ico
 import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as MediaPreview from '#/components/MediaPreview';
-import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+import * as Prompt from '#/components/web/Prompt';
 
 import type { DraftPostDisplay, DraftSummary } from './state/schema';
 import * as storage from './state/storage';
@@ -34,7 +34,7 @@ export function DraftItem({
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
-	const discardPromptControl = Prompt.usePromptControl();
+	const discardPromptControl = Prompt.usePromptHandle();
 	const post = draft.posts[0]!;
 
 	const mediaExistsOnOtherDevice = !draft.meta.isOriginatingDevice && draft.meta.hasMissingMedia;
@@ -172,7 +172,7 @@ export function DraftItem({
 						hitSlop={8}
 						onPress={(e) => {
 							e.stopPropagation();
-							discardPromptControl.open();
+							discardPromptControl.open(null);
 						}}
 						style={[
 							a.pointer,
@@ -212,7 +212,7 @@ export function DraftItem({
 				</View>
 			</View>
 			<Prompt.Basic
-				control={discardPromptControl}
+				handle={discardPromptControl}
 				title={l`Discard draft?`}
 				description={l`This draft will be permanently deleted.`}
 				onConfirm={handleDelete}

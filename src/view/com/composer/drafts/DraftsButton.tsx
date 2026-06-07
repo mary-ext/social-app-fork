@@ -3,8 +3,8 @@ import { useLingui, Trans } from '@lingui/react/macro';
 import { atoms as a } from '#/alf';
 
 import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as Prompt from '#/components/Prompt';
+import * as Prompt from '#/components/web/Prompt';
+import * as Sheet from '#/components/web/Sheet';
 
 import { DraftsListDialog } from './DraftsListDialog';
 import { useSaveDraftMutation } from './state/queries';
@@ -30,30 +30,30 @@ export function DraftsButton({
 	textLength: number;
 }) {
 	const { t: l } = useLingui();
-	const draftsDialogControl = Dialog.useDialogControl();
-	const savePromptControl = Prompt.usePromptControl();
+	const draftsDialogControl = Sheet.useSheetHandle();
+	const savePromptControl = Prompt.usePromptHandle();
 	const { isPending: isSaving } = useSaveDraftMutation();
 
 	const handlePress = () => {
 		if (isEmpty || !isDirty) {
 			// Composer is empty or has no unsaved changes, go directly to drafts list
-			draftsDialogControl.open();
+			draftsDialogControl.open(null);
 		} else {
 			// Composer has unsaved changes, ask what to do
-			savePromptControl.open();
+			savePromptControl.open(null);
 		}
 	};
 
 	const handleSaveAndOpen = async () => {
 		const { success } = await onSaveDraft();
 		if (success) {
-			draftsDialogControl.open();
+			draftsDialogControl.open(null);
 		}
 	};
 
 	const handleDiscardAndOpen = () => {
 		onDiscard();
-		draftsDialogControl.open();
+		draftsDialogControl.open(null);
 	};
 
 	return (
@@ -72,8 +72,8 @@ export function DraftsButton({
 					<Trans>Drafts</Trans>
 				</ButtonText>
 			</Button>
-			<DraftsListDialog control={draftsDialogControl} onSelectDraft={onSelectDraft} />
-			<Prompt.Outer control={savePromptControl}>
+			<DraftsListDialog handle={draftsDialogControl} onSelectDraft={onSelectDraft} />
+			<Prompt.Outer handle={savePromptControl}>
 				<Prompt.Content>
 					<Prompt.TitleText>
 						{canSaveDraft ? (
@@ -86,21 +86,23 @@ export function DraftsButton({
 							<Trans>Discard draft?</Trans>
 						)}
 					</Prompt.TitleText>
-				</Prompt.Content>
-				<Prompt.DescriptionText>
-					{canSaveDraft ? (
-						isEditingDraft ? (
-							<Trans>You have unsaved changes. Would you like to save them before viewing your drafts?</Trans>
+					<Prompt.DescriptionText>
+						{canSaveDraft ? (
+							isEditingDraft ? (
+								<Trans>
+									You have unsaved changes. Would you like to save them before viewing your drafts?
+								</Trans>
+							) : (
+								<Trans>Would you like to save this as a draft before viewing your drafts?</Trans>
+							)
 						) : (
-							<Trans>Would you like to save this as a draft before viewing your drafts?</Trans>
-						)
-					) : (
-						<Trans>
-							You can only save drafts up to 1000 characters. Would you like to discard this post before
-							viewing your drafts?
-						</Trans>
-					)}
-				</Prompt.DescriptionText>
+							<Trans>
+								You can only save drafts up to 1000 characters. Would you like to discard this post before
+								viewing your drafts?
+							</Trans>
+						)}
+					</Prompt.DescriptionText>
+				</Prompt.Content>
 				<Prompt.Actions>
 					{canSaveDraft && (
 						<Prompt.Action

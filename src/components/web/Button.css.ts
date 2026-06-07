@@ -62,6 +62,17 @@ export const button = recipe(
 				variant: 'solid',
 			},
 			{
+				// subtle destructive action (e.g. the composer's "Discard"): tinted fill rather than a
+				// full-strength negative button.
+				color: 'negative_subtle',
+				style: {
+					backgroundColor: vars.palette.negative_50,
+					color: vars.palette.negative_600,
+					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_100 } },
+				},
+				variant: 'solid',
+			},
+			{
 				color: 'negative',
 				style: {
 					backgroundColor: 'transparent',
@@ -93,7 +104,7 @@ export const button = recipe(
 		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
-			color: { negative: {}, primary: {}, secondary: {} },
+			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {} },
 			shape: { default: {}, round: {} },
 			size: {
 				large: { fontSize: fontSize.md, gap: 6, paddingBlock: 12, paddingInline: 24 },

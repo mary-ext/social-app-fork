@@ -4,9 +4,7 @@ import { recipe } from '#/components/web/css/recipe';
 
 import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
-import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
-
-const FONT_FAMILY = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
+import { fontFamily, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 /** Turns a token scale into a variant group setting `property` to each token value. */
 const variantsFor = <Scale extends Record<string, number | string>, Property extends string>(
@@ -22,7 +20,7 @@ const variantsFor = <Scale extends Record<string, number | string>, Property ext
 
 export const text = recipe(
 	{
-		base: { fontFamily: FONT_FAMILY, margin: 0, padding: 0 },
+		base: { fontFamily, margin: 0, padding: 0 },
 		defaultVariants: { color: 'text', leading: 'none', size: 'sm' },
 		variants: {
 			align: { center: { textAlign: 'center' }, left: { textAlign: 'left' }, right: { textAlign: 'right' } },

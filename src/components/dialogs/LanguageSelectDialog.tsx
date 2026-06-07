@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
+import { FlatList, View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
@@ -10,14 +10,14 @@ import { type Language, LANGUAGES, LANGUAGES_MAP_CODE2 } from '#/locale/language
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
+import * as Sheet from '#/components/web/Sheet';
 
 type WebViewStyle = ViewStyle & {
 	display?: 'contents';
@@ -40,13 +40,13 @@ type FlatListItem =
 export function LanguageSelectDialog({
 	titleText,
 	subtitleText,
-	control,
+	handle,
 	/** Optionally can be passed to show different values than what is saved in langPrefs. */
 	currentLanguages,
 	onSelectLanguages,
 	maxLanguages,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Sheet.SheetHandle;
 	titleText?: React.ReactNode;
 	subtitleText?: React.ReactNode;
 	/** Defaults to the primary language */
@@ -54,41 +54,45 @@ export function LanguageSelectDialog({
 	onSelectLanguages: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
-	const renderErrorBoundary = useCallback((error: unknown) => <DialogError details={String(error)} />, []);
+	const { t: l } = useLingui();
+	const renderErrorBoundary = useCallback(
+		(error: unknown) => <DialogError handle={handle} details={String(error)} />,
+		[handle],
+	);
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ fullHeight: true }}>
-			<Dialog.Handle />
-			<ErrorBoundary renderError={renderErrorBoundary}>
-				<DialogInner
-					titleText={titleText}
-					subtitleText={subtitleText}
-					currentLanguages={currentLanguages}
-					onSelectLanguages={onSelectLanguages}
-					maxLanguages={maxLanguages}
-				/>
-			</ErrorBoundary>
-		</Dialog.Outer>
+		<Sheet.Root handle={handle}>
+			<Sheet.Popup label={l`Choose languages`}>
+				<ErrorBoundary renderError={renderErrorBoundary}>
+					<DialogInner
+						handle={handle}
+						titleText={titleText}
+						subtitleText={subtitleText}
+						currentLanguages={currentLanguages}
+						onSelectLanguages={onSelectLanguages}
+						maxLanguages={maxLanguages}
+					/>
+				</ErrorBoundary>
+			</Sheet.Popup>
+		</Sheet.Root>
 	);
 }
 
 export function DialogInner({
+	handle,
 	titleText,
 	subtitleText,
 	currentLanguages,
 	onSelectLanguages,
 	maxLanguages,
 }: {
+	handle: Sheet.SheetHandle;
 	titleText?: React.ReactNode;
 	subtitleText?: React.ReactNode;
 	currentLanguages?: string[];
 	onSelectLanguages?: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
-	const control = Dialog.useDialogContext();
-	const [headerHeight, setHeaderHeight] = useState(0);
-	const [footerHeight, setFooterHeight] = useState(0);
-
 	const allowedLanguages = useMemo(() => {
 		const uniqueLanguagesMap = LANGUAGES.filter((lang) => !!lang.code2).reduce(
 			(acc, lang) => {
@@ -109,11 +113,12 @@ export function DialogInner({
 
 	const t = useTheme();
 	const { t: l } = useLingui();
+	const { gtMobile } = useBreakpoints();
+	const padding = gtMobile ? a.px_2xl : a.px_xl;
 
 	const handleClose = () => {
-		control.close(() => {
-			onSelectLanguages?.(checkedLanguagesCode2);
-		});
+		onSelectLanguages?.(checkedLanguagesCode2);
+		handle.close();
 	};
 
 	// NOTE(@elijaharita): Displayed languages are split into 3 lists for
@@ -170,7 +175,7 @@ export function DialogInner({
 	}, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2, langPrefs.appLanguage]);
 
 	const listHeader = (
-		<View style={[a.pb_xs, t.atoms.bg]} onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}>
+		<View style={[gtMobile ? a.pt_2xl : a.pt_xl, a.pb_xs, padding, t.atoms.bg]}>
 			<View style={[a.flex_row, a.w_full, a.justify_between]}>
 				<View>
 					<Text
@@ -246,13 +251,11 @@ export function DialogInner({
 			label={l`Select languages`}
 			style={[webViewStyle(a.contents)]}
 		>
-			<Dialog.InnerFlatList
+			{listHeader}
+			<FlatList
 				data={flatListData}
-				ListHeaderComponent={listHeader}
-				stickyHeaderIndices={[0]}
-				contentContainerStyle={[a.gap_0]}
-				style={[{ paddingBottom: 120 }]}
-				scrollIndicatorInsets={{ top: headerHeight, bottom: footerHeight }}
+				contentContainerStyle={[a.gap_0, padding]}
+				style={[a.flex_1, { minHeight: 0 }]}
 				renderItem={({ item, index }: { item: FlatListItem; index: number }) => {
 					if (item.type === 'header') {
 						return (
@@ -281,37 +284,33 @@ export function DialogInner({
 						</Toggle.Item>
 					);
 				}}
-				footer={
-					<Dialog.FlatListFooter onLayout={(evt) => setFooterHeight(evt.nativeEvent.layout.height)}>
-						<Button label={l`Close dialog`} onPress={handleClose} color="primary" size="large">
-							<ButtonText>
-								<Trans>Done</Trans>
-							</ButtonText>
-						</Button>
-					</Dialog.FlatListFooter>
-				}
 			/>
+			<View style={[padding, a.py_md, a.border_t, t.atoms.border_contrast_low, t.atoms.bg]}>
+				<Button label={l`Close dialog`} onPress={handleClose} color="primary" size="large">
+					<ButtonText>
+						<Trans>Done</Trans>
+					</ButtonText>
+				</Button>
+			</View>
 		</Toggle.Group>
 	);
 }
 
-function DialogError({ details }: { details?: string }) {
+function DialogError({ handle, details }: { handle: Sheet.SheetHandle; details?: string }) {
 	const { t: l } = useLingui();
-	const control = Dialog.useDialogContext();
 
 	return (
-		<Dialog.ScrollableInner style={a.gap_md} label={l`An error has occurred`}>
-			<Dialog.Close />
+		<View style={[a.gap_md, a.p_xl]}>
 			<ErrorScreen
 				title={l`Oh no!`}
 				message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
 				details={details}
 			/>
-			<Button label={l`Close dialog`} onPress={() => control.close()} color="primary" size="large">
+			<Button label={l`Close dialog`} onPress={() => handle.close()} color="primary" size="large">
 				<ButtonText>
 					<Trans>Close</Trans>
 				</ButtonText>
 			</Button>
-		</Dialog.ScrollableInner>
+		</View>
 	);
 }

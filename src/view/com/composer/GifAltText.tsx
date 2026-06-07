@@ -15,14 +15,13 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { type DialogControlProps } from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { GifEmbed } from '#/components/Post/Embed/ExternalEmbed/Gif';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 import type { Gif } from '#/features/gifPicker/types';
 
@@ -66,7 +65,7 @@ export function GifAltTextDialogLoaded({
 	params: EmbedPlayerParams;
 	thumb: string | undefined;
 }) {
-	const control = Dialog.useDialogControl();
+	const control = Dialog.useDialogHandle();
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const [altTextDraft, setAltTextDraft] = useState(altText || vendorAltText);
@@ -78,7 +77,7 @@ export function GifAltTextDialogLoaded({
 				accessibilityLabel={l`Add alt text`}
 				accessibilityHint=""
 				hitSlop={HITSLOP_10}
-				onPress={control.open}
+				onPress={() => control.open(null)}
 				style={[
 					a.absolute,
 					{ top: 8, left: 8 },
@@ -106,23 +105,26 @@ export function GifAltTextDialogLoaded({
 					Alt text describes images for blind and low-vision users, and helps give context to everyone.
 				</Trans>
 			</Admonition>
-			<Dialog.Outer
-				control={control}
-				onClose={() => {
-					onSubmit(altTextDraft);
+			<Dialog.Root
+				handle={control}
+				onOpenChange={(open) => {
+					if (!open) {
+						onSubmit(altTextDraft);
+					}
 				}}
-				nativeOptions={{ fullHeight: true }}
 			>
-				<Dialog.Handle />
-				<AltTextInner
-					vendorAltText={vendorAltText}
-					altText={altTextDraft}
-					onChange={setAltTextDraft}
-					thumb={thumb}
-					control={control}
-					params={params}
-				/>
-			</Dialog.Outer>
+				<Dialog.Popup label={l`Add alt text`}>
+					<Dialog.Close />
+					<AltTextInner
+						vendorAltText={vendorAltText}
+						altText={altTextDraft}
+						onChange={setAltTextDraft}
+						thumb={thumb}
+						control={control}
+						params={params}
+					/>
+				</Dialog.Popup>
+			</Dialog.Root>
 		</>
 	);
 }
@@ -138,7 +140,7 @@ function AltTextInner({
 	vendorAltText: string;
 	altText: string;
 	onChange: (text: string) => void;
-	control: DialogControlProps;
+	control: Dialog.DialogHandle;
 	params: EmbedPlayerParams;
 	thumb: string | undefined;
 }) {
@@ -146,71 +148,68 @@ function AltTextInner({
 	const { t: l, i18n } = useLingui();
 
 	return (
-		<Dialog.ScrollableInner label={l`Add alt text`}>
-			<View style={a.flex_col_reverse}>
-				<View style={[a.mt_md, a.gap_md]}>
-					<View style={[a.gap_sm]}>
-						<View style={[a.relative]}>
-							<TextField.LabelText>
-								<Trans>Descriptive alt text</Trans>
-							</TextField.LabelText>
-							<TextField.Root>
-								<Dialog.Input
-									label={l`Alt text`}
-									placeholder={vendorAltText}
-									onChangeText={onChange}
-									defaultValue={altText}
-									multiline
-									numberOfLines={3}
-									autoFocus
-									onKeyPress={({ nativeEvent }) => {
-										if (nativeEvent.key === 'Escape') {
-											control.close();
-										}
-									}}
-								/>
-							</TextField.Root>
-						</View>
-
-						{altText.length > MAX_ALT_TEXT && (
-							<View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
-								<CircleInfo fill={t.palette.negative_500} />
-								<Text style={[a.italic, a.leading_snug, t.atoms.text_contrast_medium]}>
-									<Trans>
-										Alt text will be truncated.{' '}
-										<Plural value={MAX_ALT_TEXT} other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`} />
-									</Trans>
-								</Text>
-							</View>
-						)}
+		<View style={a.flex_col_reverse}>
+			<View style={[a.mt_md, a.gap_md]}>
+				<View style={[a.gap_sm]}>
+					<View style={[a.relative]}>
+						<TextField.LabelText>
+							<Trans>Descriptive alt text</Trans>
+						</TextField.LabelText>
+						<TextField.Root>
+							<TextField.Input
+								label={l`Alt text`}
+								placeholder={vendorAltText}
+								onChangeText={onChange}
+								defaultValue={altText}
+								multiline
+								numberOfLines={3}
+								autoFocus
+								onKeyPress={({ nativeEvent }) => {
+									if (nativeEvent.key === 'Escape') {
+										control.close();
+									}
+								}}
+							/>
+						</TextField.Root>
 					</View>
 
-					<AltTextCounterWrapper altText={altText}>
-						<Button
-							label={l`Save`}
-							size="large"
-							color="primary"
-							variant="solid"
-							onPress={() => {
-								control.close();
-							}}
-							style={[a.flex_grow]}
-						>
-							<ButtonText>
-								<Trans>Save</Trans>
-							</ButtonText>
-						</Button>
-					</AltTextCounterWrapper>
+					{altText.length > MAX_ALT_TEXT && (
+						<View style={[a.pb_sm, a.flex_row, a.gap_xs]}>
+							<CircleInfo fill={t.palette.negative_500} />
+							<Text style={[a.italic, a.leading_snug, t.atoms.text_contrast_medium]}>
+								<Trans>
+									Alt text will be truncated.{' '}
+									<Plural value={MAX_ALT_TEXT} other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`} />
+								</Trans>
+							</Text>
+						</View>
+					)}
 				</View>
-				{/* below the text input to force tab order */}
-				<View>
-					<Text style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
-						<Trans>Add alt text</Trans>
-					</Text>
-					<GifEmbed thumb={thumb} altText={altText} isPreferredAltText={true} params={params} hideAlt />
-				</View>
+
+				<AltTextCounterWrapper altText={altText}>
+					<Button
+						label={l`Save`}
+						size="large"
+						color="primary"
+						variant="solid"
+						onPress={() => {
+							control.close();
+						}}
+						style={[a.flex_grow]}
+					>
+						<ButtonText>
+							<Trans>Save</Trans>
+						</ButtonText>
+					</Button>
+				</AltTextCounterWrapper>
 			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+			{/* below the text input to force tab order */}
+			<View>
+				<Text style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
+					<Trans>Add alt text</Trans>
+				</Text>
+				<GifEmbed thumb={thumb} altText={altText} isPreferredAltText={true} params={params} hideAlt />
+			</View>
+		</View>
 	);
 }

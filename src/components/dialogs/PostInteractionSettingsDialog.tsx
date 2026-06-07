@@ -6,8 +6,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-
 import { STALE } from '#/state/queries';
 import { useMyListsQuery } from '#/state/queries/my-lists';
 import { useGetPost } from '#/state/queries/post';
@@ -46,6 +44,7 @@ import { CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon } from '#/components/ic
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as WebDialog from '#/components/web/Dialog';
 
 export type PostInteractionSettingsFormProps = {
 	canSave?: boolean;
@@ -67,25 +66,23 @@ export type PostInteractionSettingsFormProps = {
 
 /** Threadgate settings dialog. Used in the composer. */
 export function PostInteractionSettingsControlledDialog({
-	control,
+	handle,
 	...rest
 }: PostInteractionSettingsFormProps & {
-	control: Dialog.DialogControlProps;
+	handle: WebDialog.DialogHandle;
 }) {
-	const onClose = useNonReactiveCallback(() => {});
-
 	return (
-		<Dialog.Outer
-			control={control}
-			nativeOptions={{
-				preventExpansion: true,
-				preventDismiss: rest.isDirty && rest.persist,
+		<WebDialog.Root
+			handle={handle}
+			onOpenChange={(open, details) => {
+				// preserve the old `preventDismiss` while there are unsaved changes pending a persist
+				if (!open && rest.isDirty && rest.persist && details.reason !== 'imperative-action') {
+					details.cancel();
+				}
 			}}
-			onClose={onClose}
 		>
-			<Dialog.Handle />
 			<DialogInner {...rest} />
-		</Dialog.Outer>
+		</WebDialog.Root>
 	);
 }
 
@@ -93,11 +90,11 @@ function DialogInner(props: Omit<PostInteractionSettingsFormProps, 'control'>) {
 	const { t: l } = useLingui();
 
 	return (
-		<Dialog.ScrollableInner label={l`Edit post interaction settings`} style={[{ maxWidth: 400 }, a.w_full]}>
+		<WebDialog.Popup label={l`Edit post interaction settings`} size="narrow">
+			<WebDialog.Close />
 			<Header />
 			<PostInteractionSettingsForm {...props} />
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+		</WebDialog.Popup>
 	);
 }
 

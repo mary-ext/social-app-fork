@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import type { TextInput } from 'react-native';
+import { type TextInput, View } from 'react-native';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import type { ListMethods } from '#/view/com/util/List';
 
-import * as Dialog from '#/components/Dialog';
+import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
+import * as Sheet from '#/components/web/Sheet';
 
 import {
 	GIF_CATEGORIES,
@@ -21,41 +23,46 @@ import { useRecentGifs } from '#/features/gifPicker/hooks/useRecentGifs';
 import type { Gif } from '#/features/gifPicker/types';
 
 export function GifPickerDialog({
-	control,
+	handle,
 	onClose,
 	onSelectGif: onSelectGifProp,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Sheet.SheetHandle;
 	onClose?: () => void;
 	onSelectGif: (gif: Gif) => void;
 }) {
 	const onSelectGif = (gif: Gif) => {
-		control.close(() => onSelectGifProp(gif));
+		handle.close();
+		onSelectGifProp(gif);
 	};
 
 	return (
-		<Dialog.Outer
-			control={control}
-			onClose={onClose}
-			nativeOptions={{
-				fullHeight: true,
+		<Sheet.Root
+			handle={handle}
+			onOpenChange={(open) => {
+				if (!open) {
+					onClose?.();
+				}
 			}}
 		>
-			<Dialog.Handle />
-			<ErrorBoundary renderError={(error) => <GifPickerErrorBoundary details={String(error)} />}>
-				<GifPickerBody control={control} onSelectGif={onSelectGif} />
-			</ErrorBoundary>
-		</Dialog.Outer>
+			<Sheet.Popup label="GIFs" outerClose>
+				<ErrorBoundary renderError={(error) => <GifPickerErrorBoundary details={String(error)} />}>
+					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
+				</ErrorBoundary>
+			</Sheet.Popup>
+		</Sheet.Root>
 	);
 }
 
 function GifPickerBody({
-	control,
+	handle,
 	onSelectGif,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Sheet.SheetHandle;
 	onSelectGif: (gif: Gif) => void;
 }) {
+	const t = useTheme();
+	const { gtMobile } = useBreakpoints();
 	const textInputRef = useRef<TextInput>(null);
 	const listRef = useRef<ListMethods>(null);
 	const [rawSearch, setRawSearch] = useState('');
@@ -115,7 +122,7 @@ function GifPickerBody({
 		if (isSearching || activeCategory !== 'trending') {
 			onClearSearch();
 		} else {
-			control.close();
+			handle.close();
 		}
 	};
 
@@ -133,47 +140,47 @@ function GifPickerBody({
 	};
 
 	const showPills = rawSearch.length === 0;
-
-	const header = (
-		<>
-			<GifPickerHeader
-				inputRef={textInputRef}
-				onChangeText={onChangeSearch}
-				onClear={onClearSearch}
-				canClear={rawSearch.length > 0}
-				onEscape={() => control.close()}
-			/>
-			{showPills && (
-				<GifCategoryPills activeId={activeCategory} onSelect={onSelectCategory} hasRecents={hasRecents} />
-			)}
-			{!hasData && (
-				<GifPickerPlaceholder
-					isLoading={!isRecentsActive && isPending}
-					isError={!isRecentsActive && isError}
-					isSearching={isSearching}
-					isRecentsEmpty={isRecentsActive}
-					query={effectiveSearch}
-					onRetry={refetch}
-					onGoBack={onGoBack}
-				/>
-			)}
-		</>
-	);
+	const padding = gtMobile ? a.px_2xl : a.px_xl;
 
 	return (
 		<>
-			<Dialog.Close />
-			<GifPickerGrid
-				ref={listRef}
-				items={items}
-				header={header}
-				hasData={hasData}
-				isFetchingNextPage={!isRecentsActive && isFetchingNextPage}
-				error={isRecentsActive ? null : error}
-				fetchNextPage={fetchNextPage}
-				onEndReached={onEndReached}
-				onSelectGif={handleSelectGif}
-			/>
+			{/* fixed, padded header — rendered before the close so the search input is the first tabbable
+			    (and thus what Base UI focuses on open) */}
+			<View style={[gtMobile ? a.pt_2xl : a.pt_xl, padding, t.atoms.bg]}>
+				<GifPickerHeader
+					inputRef={textInputRef}
+					onChangeText={onChangeSearch}
+					onClear={onClearSearch}
+					canClear={rawSearch.length > 0}
+					onEscape={() => handle.close()}
+				/>
+				{showPills && (
+					<GifCategoryPills activeId={activeCategory} onSelect={onSelectCategory} hasRecents={hasRecents} />
+				)}
+			</View>
+			{hasData ? (
+				<GifPickerGrid
+					ref={listRef}
+					items={items}
+					isFetchingNextPage={!isRecentsActive && isFetchingNextPage}
+					error={isRecentsActive ? null : error}
+					fetchNextPage={fetchNextPage}
+					onEndReached={onEndReached}
+					onSelectGif={handleSelectGif}
+				/>
+			) : (
+				<View style={[a.flex_1, padding]}>
+					<GifPickerPlaceholder
+						isLoading={!isRecentsActive && isPending}
+						isError={!isRecentsActive && isError}
+						isSearching={isSearching}
+						isRecentsEmpty={isRecentsActive}
+						query={effectiveSearch}
+						onRetry={refetch}
+						onGoBack={onGoBack}
+					/>
+				</View>
+			)}
 		</>
 	);
 }

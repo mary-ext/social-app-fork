@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react';
 
+import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Sheet/Header.css';
 import { Text } from '#/components/web/Text';
 
 /** Sticky header row. Compose with `Slot` (edge buttons) + `Content`/`TitleText`, like `Layout.Header`. */
-export function Outer({ children }: { children: ReactNode }) {
-	return <div className={styles.outer}>{children}</div>;
+export function Outer({ border = true, children }: { border?: boolean; children: ReactNode }) {
+	return <div className={cx(styles.outer, !border && styles.borderless)}>{children}</div>;
 }
 
 export function Content({ children }: { children?: ReactNode }) {

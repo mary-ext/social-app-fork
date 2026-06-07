@@ -32,6 +32,12 @@ export type RootProps<Payload = unknown> = {
 	/** A node, or a render function receiving the active trigger's `payload` (undefined while closed). */
 	children?: ReactNode | ((bag: { payload: Payload | undefined }) => ReactNode);
 	handle?: DialogHandle<Payload>;
+	/**
+	 * Stable id under which this dialog registers in the shared `state/dialogs` registry. Pass an explicit id
+	 * when callers need to reference it (e.g. `closeAllDialogs({ except: [id] })`); defaults to a generated
+	 * one.
+	 */
+	id?: string;
 	modal?: boolean | 'trap-focus';
 	open?: boolean;
 	defaultOpen?: boolean;
@@ -41,12 +47,14 @@ export type RootProps<Payload = unknown> = {
 export function Root<Payload = unknown>({
 	children,
 	handle,
+	id: idProp,
 	modal,
 	open,
 	defaultOpen,
 	onOpenChange,
 }: RootProps<Payload>) {
-	const id = useId();
+	const generatedId = useId();
+	const id = idProp ?? generatedId;
 	const actionsRef = useRef<DialogActions>(null);
 	const registerOpen = useRegisterDialog(id, () => actionsRef.current?.close());
 
@@ -90,7 +98,8 @@ export function Popup({
 }) {
 	return (
 		<BaseDialog.Portal>
-			<BaseDialog.Backdrop className={styles.backdrop} onClick={stopPropagation} />
+			{/* forceRender so a dialog opened inside another dialog (e.g. from the composer Sheet) still dims */}
+			<BaseDialog.Backdrop className={styles.backdrop} forceRender onClick={stopPropagation} />
 			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
 				<BaseDialog.Popup aria-label={label} className={cx(styles.popup, styles.popupSize[size], className)}>
 					{children}
@@ -100,12 +109,16 @@ export function Popup({
 	);
 }
 
-/** Top-right close (×) button. */
-export function Close() {
+/** Close (×) button. Defaults to the popup's top-right corner; `outer` pins it to the screen corner. */
+export function Close({ outer }: { outer?: boolean } = {}) {
 	const { t: l } = useLingui();
 	return (
-		<BaseDialog.Close aria-label={l`Close dialog`} className={styles.closeBtn}>
-			<TimesIcon size="md" fill="currentColor" />
+		<BaseDialog.Close
+			aria-label={l`Close dialog`}
+			className={cx(styles.closeBtn, outer && styles.closeBtnOuter)}
+		>
+			{/* 18px matches the RNW `ButtonIcon size="md"` map (which differs from the raw icon `md`) */}
+			<TimesIcon width={18} height={18} fill="currentColor" />
 		</BaseDialog.Close>
 	);
 }

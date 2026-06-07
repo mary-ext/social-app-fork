@@ -45,6 +45,8 @@ export const fontWeight = {
 	bold: '700',
 } as const;
 
+export const fontFamily = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
+
 /** Runtime font-size multiplier; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`. */
 export const fontScale = createVar();
 

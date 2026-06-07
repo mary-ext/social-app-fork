@@ -20,13 +20,14 @@ import type { ComposerImage } from '#/state/gallery';
 import { atoms as a, tokens, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
-import * as Dialog from '#/components/Dialog';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { Pencil_Stroke2_Corner0_Rounded as PencilIcon } from '#/components/icons/Pencil';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
+import { useDialogHandle } from '#/components/web/Dialog';
+import { useSheetHandle } from '#/components/web/Sheet';
 
 import { Image } from '#/shims/image';
 
@@ -153,19 +154,18 @@ const GalleryItem = ({
 
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 
-	const altTextControl = Dialog.useDialogControl();
-	const editControl = Dialog.useDialogControl();
-	const [altBtnViewTag] = useState<number>();
+	const altTextControl = useDialogHandle();
+	const editControl = useSheetHandle();
 
 	const altBtnRef = () => {};
 
 	const onImageEdit = () => {
-		editControl.open();
+		editControl.open(null);
 	};
 
 	const onAltTextEdit = () => {
 		Keyboard.dismiss();
-		altTextControl.open();
+		altTextControl.open(null);
 	};
 
 	return (
@@ -232,13 +232,8 @@ const GalleryItem = ({
 				contentFit="cover"
 			/>
 			<MediaInsetBorder />
-			<ImageAltTextDialog
-				control={altTextControl}
-				image={image}
-				onChange={onChange}
-				sourceViewTag={altBtnViewTag}
-			/>
-			<EditImageDialog control={editControl} image={image} onChange={onChange} />
+			<ImageAltTextDialog handle={altTextControl} image={image} onChange={onChange} />
+			<EditImageDialog handle={editControl} image={image} onChange={onChange} />
 		</View>
 	);
 };

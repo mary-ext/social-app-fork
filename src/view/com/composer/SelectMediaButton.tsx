@@ -9,11 +9,9 @@ import type { VideoAsset } from '#/lib/media/video/types';
 
 import { MAX_GALLERY_IMAGES } from '#/view/com/composer/state/composer';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 
+import { ComposerToolbarButton } from './ComposerToolbarButton';
 import { isAnimatedGif } from './videos/isAnimatedGif';
 
 /** Generic asset classes, or buckets, that we support. */
@@ -223,7 +221,6 @@ export function SelectMediaButton({
 	autoOpen,
 }: SelectMediaButtonProps) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const hasAutoOpened = useRef(false);
 
 	const selectionCountRemaining = MAX_GALLERY_IMAGES - selectedAssetsCount;
@@ -267,30 +264,20 @@ export function SelectMediaButton({
 	}, [autoOpen, disabled, onPressSelectMedia]);
 
 	return (
-		<Button
-			testID="openMediaBtn"
-			onPress={onPressSelectMedia}
+		<ComposerToolbarButton
+			icon={ImageIcon}
+			onClick={onPressSelectMedia}
 			label={l({
 				message: `Add media to post`,
 				comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
 			})}
-			accessibilityHint={l({
+			aria-description={l({
 				message: `Opens device gallery to select up to ${plural(MAX_GALLERY_IMAGES, {
 					other: '# images',
 				})}, or a single video or GIF.`,
 				comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
 			})}
-			style={a.p_sm}
-			variant="ghost"
-			shape="round"
-			color="primary"
 			disabled={disabled}
-		>
-			<ImageIcon
-				size="lg"
-				style={disabled && t.atoms.text_contrast_low}
-				accessibilityIgnoresInvertColors={true}
-			/>
-		</Button>
+		/>
 	);
 }

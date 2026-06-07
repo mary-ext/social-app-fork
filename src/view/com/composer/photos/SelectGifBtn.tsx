@@ -1,12 +1,10 @@
-import { useCallback } from 'react';
 import { Keyboard } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
-import { atoms as a, useTheme } from '#/alf';
+import { ComposerToolbarButton } from '#/view/com/composer/ComposerToolbarButton';
 
-import { Button } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif';
+import * as Sheet from '#/components/web/Sheet';
 
 import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
 import type { Gif } from '#/features/gifPicker/types';
@@ -19,38 +17,32 @@ type Props = {
 
 export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
 	const { t: l } = useLingui();
-	const control = Dialog.useDialogControl();
-	const t = useTheme();
-
-	const onPressSelectGif = useCallback(() => {
-		Keyboard.dismiss();
-		control.open();
-	}, [control]);
+	const control = Sheet.useSheetHandle();
 
 	return (
 		<>
-			<Button
-				testID="openGifBtn"
-				onPress={onPressSelectGif}
-				label={l({
-					message: 'Select GIF',
-					comment:
-						'Accessibility label for the button in the post composer that opens the GIF picker dialog.',
-				})}
-				accessibilityHint={l({
-					message: 'Opens the GIF picker dialog',
-					comment:
-						'Accessibility hint announced after the GIF picker button label, describing what activating it will do.',
-				})}
-				style={a.p_sm}
-				variant="ghost"
-				shape="round"
-				color="primary"
-				disabled={disabled}
-			>
-				<GifIcon size="lg" style={disabled && t.atoms.text_contrast_low} />
-			</Button>
-			<GifPickerDialog control={control} onClose={onClose} onSelectGif={onSelectGif} />
+			<Sheet.Trigger
+				handle={control}
+				render={
+					<ComposerToolbarButton
+						icon={GifIcon}
+						// the dialog open is owned by the Trigger; dismiss the soft keyboard alongside it.
+						onClick={() => Keyboard.dismiss()}
+						label={l({
+							message: 'Select GIF',
+							comment:
+								'Accessibility label for the button in the post composer that opens the GIF picker dialog.',
+						})}
+						aria-description={l({
+							message: 'Opens the GIF picker dialog',
+							comment:
+								'Accessibility hint announced after the GIF picker button label, describing what activating it will do.',
+						})}
+						disabled={disabled}
+					/>
+				}
+			/>
+			<GifPickerDialog handle={control} onClose={onClose} onSelectGif={onSelectGif} />
 		</>
 	);
 }

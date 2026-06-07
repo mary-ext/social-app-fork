@@ -16,6 +16,12 @@ export const outer = style({
 	paddingInline: 6,
 });
 
+// declared after `outer` so it wins by source order (both unlayered); for headers whose surface owns its
+// own divider (e.g. the composer's scroll-driven border).
+export const borderless = style({
+	borderBottom: 'none',
+});
+
 // shrink-to-fit so it sits at its natural width when short; the equal-grow slots keep it centered, and
 // `minWidth: 0` lets it shrink past its content (truncating the title) once the slots hit their button floors.
 export const content = style({

@@ -276,8 +276,8 @@ msgid "{0}, a list by {1}"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle))
-#: src/view/com/util/UserAvatar.tsx:508
-#: src/view/com/util/UserAvatar.tsx:523
+#: src/view/com/util/UserAvatar.tsx:509
+#: src/view/com/util/UserAvatar.tsx:524
 msgid "{0}'s avatar"
 msgstr ""
 
@@ -369,7 +369,7 @@ msgstr "{date} at {time}"
 msgid "{displayName}'s Starter Pack"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1744
+#: src/view/com/composer/Composer.tsx:1752
 msgid "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 msgstr "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 
@@ -969,13 +969,13 @@ msgstr ""
 msgid "Add account"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:78
-#: src/view/com/composer/GifAltText.tsx:149
-#: src/view/com/composer/GifAltText.tsx:208
+#: src/view/com/composer/GifAltText.tsx:77
+#: src/view/com/composer/GifAltText.tsx:116
+#: src/view/com/composer/GifAltText.tsx:209
 #: src/view/com/composer/photos/Gallery.tsx:181
 #: src/view/com/composer/photos/Gallery.tsx:219
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:94
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:45
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
 msgid "Add alt text"
 msgstr ""
 
@@ -990,11 +990,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1197
+#: src/view/com/composer/Composer.tsx:1199
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1816
+#: src/view/com/composer/Composer.tsx:1815
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1002,7 +1002,7 @@ msgstr ""
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
-#: src/components/dms/EmojiReactionPicker.tsx:33
+#: src/components/dms/ActionsWrapper.tsx:116
 msgid "Add emoji reaction"
 msgstr ""
 
@@ -1015,7 +1015,7 @@ msgid "Add image"
 msgstr ""
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:273
+#: src/view/com/composer/SelectMediaButton.tsx:270
 msgid "Add media to post"
 msgstr ""
 
@@ -1173,7 +1173,7 @@ msgstr "All {0}"
 msgid "All accounts have been followed!"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:234
+#: src/components/dialogs/LanguageSelectDialog.tsx:239
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:60
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:83
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:85
@@ -1188,7 +1188,7 @@ msgstr ""
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:384
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:381
 msgid "Allow anyone to reply"
 msgstr ""
 
@@ -1207,24 +1207,24 @@ msgstr "Allow group chat invites from"
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:439
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:436
 msgid "Allow people you follow to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:454
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:451
 msgid "Allow people you mention to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:546
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:543
 msgid "Allow quote posts"
 msgstr ""
 
 #. placeholder {0}: list.name
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:516
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:513
 msgid "Allow users in {0} to reply"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:424
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:421
 msgid "Allow your followers to reply"
 msgstr ""
 
@@ -1237,14 +1237,14 @@ msgstr ""
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:135
 #: src/components/web/ImageEmbed/MediaBadges.tsx:71
-#: src/view/com/composer/GifAltText.tsx:101
+#: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:192
 msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:40
-#: src/view/com/composer/GifAltText.tsx:159
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
+#: src/view/com/composer/GifAltText.tsx:160
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:119
 #: src/view/com/composer/videos/SubtitleDialog.tsx:96
 #: src/view/com/composer/videos/SubtitleDialog.tsx:100
 msgid "Alt text"
@@ -1255,19 +1255,18 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:105
-#: src/view/com/composer/photos/Gallery.tsx:125
+#: src/view/com/composer/GifAltText.tsx:104
+#: src/view/com/composer/photos/Gallery.tsx:126
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:179
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:134
+#: src/view/com/composer/GifAltText.tsx:180
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:135
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
 #. Accessibility label for the dialog shown when the GIF picker hits an unexpected runtime error and falls back to its error boundary.
-#: src/components/dialogs/LanguageSelectDialog.tsx:303
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:17
 msgid "An error has occurred"
 msgstr ""
@@ -1292,7 +1291,7 @@ msgstr ""
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:501
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:498
 msgid "An error occurred while loading your lists :/"
 msgstr ""
 
@@ -1367,11 +1366,11 @@ msgstr ""
 msgid "Animated GIF"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:391
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:117
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:116
 msgid "Anyone can interact"
 msgstr ""
 
@@ -1482,7 +1481,7 @@ msgstr "Are you sure you want to leave this conversation? Your messages will be 
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1330
+#: src/view/com/composer/Composer.tsx:1332
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1540,8 +1539,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:198
 #: src/screens/Profile/Header/Shell.tsx:119
 #: src/screens/StarterPack/Wizard/index.tsx:281
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:72
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:74
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:128
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:135
 msgid "Back"
 msgstr ""
 
@@ -1818,7 +1817,7 @@ msgstr ""
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:316
 #: src/components/Prompt.tsx:121
 #: src/components/Prompt.tsx:122
-#: src/components/web/Prompt/index.tsx:99
+#: src/components/web/Prompt/index.tsx:106
 #: src/features/liveNow/components/GoLiveDialog.tsx:226
 #: src/features/liveNow/components/GoLiveDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:435
@@ -1829,10 +1828,10 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:194
 #: src/screens/Search/Shell.tsx:354
 #: src/screens/Settings/Settings.tsx:238
-#: src/view/com/composer/Composer.tsx:1393
-#: src/view/com/composer/Composer.tsx:1402
-#: src/view/com/composer/photos/EditImageDialog.tsx:48
-#: src/view/com/composer/photos/EditImageDialog.tsx:58
+#: src/view/com/composer/Composer.tsx:1395
+#: src/view/com/composer/Composer.tsx:1404
+#: src/view/com/composer/photos/EditImageDialog.tsx:52
+#: src/view/com/composer/photos/EditImageDialog.tsx:62
 #: src/view/shell/desktop/LeftNav.tsx:215
 msgid "Cancel"
 msgstr ""
@@ -1844,7 +1843,7 @@ msgstr ""
 #: src/components/PostControls/index.tsx:87
 #: src/components/PostControls/index.tsx:116
 #: src/components/PostControls/index.tsx:144
-#: src/lib/hooks/useOpenComposer.tsx:77
+#: src/lib/hooks/useOpenComposer.tsx:83
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
@@ -1995,7 +1994,8 @@ msgstr ""
 msgid "Choose for me"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:180
+#: src/components/dialogs/LanguageSelectDialog.tsx:65
+#: src/components/dialogs/LanguageSelectDialog.tsx:185
 msgid "Choose languages"
 msgstr ""
 
@@ -2003,8 +2003,7 @@ msgstr ""
 msgid "Choose People"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:64
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:113
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:48
 msgid "Choose post languages"
 msgstr ""
 
@@ -2063,7 +2062,7 @@ msgid "Click to retry failed message"
 msgstr ""
 
 #. Visible label of the button that dismisses the GIF picker error dialog.
-#: src/components/dialogs/LanguageSelectDialog.tsx:312
+#: src/components/dialogs/LanguageSelectDialog.tsx:311
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:180
 #: src/components/dialogs/SearchablePeopleList.tsx:307
 #: src/components/dialogs/StarterPackDialog.tsx:156
@@ -2104,12 +2103,12 @@ msgid "Close banner"
 msgstr "Close banner"
 
 #. Accessibility label for the button that dismisses the GIF picker error dialog.
-#: src/components/dialogs/LanguageSelectDialog.tsx:198
-#: src/components/dialogs/LanguageSelectDialog.tsx:286
-#: src/components/dialogs/LanguageSelectDialog.tsx:310
+#: src/components/dialogs/LanguageSelectDialog.tsx:203
+#: src/components/dialogs/LanguageSelectDialog.tsx:289
+#: src/components/dialogs/LanguageSelectDialog.tsx:309
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
-#: src/components/web/Dialog/index.tsx:107
+#: src/components/web/Dialog/index.tsx:117
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""
@@ -2133,7 +2132,7 @@ msgstr "Close the incoming requests banner"
 msgid "Close this dialog"
 msgstr "Close this dialog"
 
-#: src/view/com/composer/Composer.tsx:1399
+#: src/view/com/composer/Composer.tsx:1401
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2164,7 +2163,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1295
+#: src/view/com/composer/Composer.tsx:1297
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2172,11 +2171,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2127
+#: src/view/com/composer/Composer.tsx:2118
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2129
+#: src/view/com/composer/Composer.tsx:2120
 msgid "Compressing video..."
 msgstr ""
 
@@ -2190,7 +2189,7 @@ msgstr ""
 
 #: src/components/Prompt.tsx:171
 #: src/components/Prompt.tsx:175
-#: src/components/web/Prompt/index.tsx:73
+#: src/components/web/Prompt/index.tsx:80
 msgid "Confirm"
 msgstr ""
 
@@ -2609,7 +2608,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:650
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:653
-#: src/view/com/composer/Composer.tsx:1303
+#: src/view/com/composer/Composer.tsx:1305
 msgid "Delete post"
 msgstr ""
 
@@ -2653,8 +2652,8 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/view/com/composer/GifAltText.tsx:155
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
+#: src/view/com/composer/GifAltText.tsx:156
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
 msgid "Descriptive alt text"
 msgstr ""
 
@@ -2704,11 +2703,11 @@ msgstr "Disable captions"
 msgid "Disable link"
 msgstr "Disable link"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:539
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:536
 msgid "Disable quote posts of this post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:399
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:396
 msgid "Disable replies entirely"
 msgstr ""
 
@@ -2725,11 +2724,11 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:71
-#: src/view/com/composer/Composer.tsx:1100
-#: src/view/com/composer/Composer.tsx:1138
-#: src/view/com/composer/Composer.tsx:1337
+#: src/view/com/composer/Composer.tsx:1102
+#: src/view/com/composer/Composer.tsx:1140
+#: src/view/com/composer/Composer.tsx:1339
 #: src/view/com/composer/drafts/DraftItem.tsx:219
-#: src/view/com/composer/drafts/DraftsButton.tsx:112
+#: src/view/com/composer/drafts/DraftsButton.tsx:114
 msgid "Discard"
 msgstr ""
 
@@ -2738,14 +2737,14 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1098
+#: src/view/com/composer/Composer.tsx:1101
 #: src/view/com/composer/drafts/DraftItem.tsx:216
 #: src/view/com/composer/drafts/DraftsButton.tsx:86
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1115
-#: src/view/com/composer/Composer.tsx:1329
+#: src/view/com/composer/Composer.tsx:1117
+#: src/view/com/composer/Composer.tsx:1331
 msgid "Discard post?"
 msgstr ""
 
@@ -2772,7 +2771,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2055
+#: src/view/com/composer/Composer.tsx:2046
 msgid "Dismiss error"
 msgstr ""
 
@@ -2802,7 +2801,7 @@ msgstr ""
 msgid "Does not include nudity."
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:288
+#: src/components/dialogs/LanguageSelectDialog.tsx:291
 #: src/components/dialogs/ServerInput.tsx:213
 #: src/components/dialogs/ServerInput.tsx:216
 #: src/components/dms/AfterReportConversationDialog.tsx:146
@@ -2847,11 +2846,12 @@ msgstr ""
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:62
 #: src/view/com/composer/drafts/DraftsButton.tsx:72
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:96
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:124
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:141
 msgid "Drafts"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.tsx:247
+#: src/view/com/composer/text-input/TextInput.tsx:244
 msgid "Drop to add images"
 msgstr ""
 
@@ -2906,7 +2906,7 @@ msgstr ""
 
 #: src/components/web/EditableAvatar.tsx:73
 #: src/components/web/EditableAvatar.tsx:86
-#: src/view/com/util/UserAvatar.tsx:402
+#: src/view/com/util/UserAvatar.tsx:403
 msgid "Edit avatar"
 msgstr ""
 
@@ -2924,8 +2924,8 @@ msgstr ""
 msgid "Edit group name"
 msgstr "Edit group name"
 
-#: src/view/com/composer/photos/EditImageDialog.tsx:92
-#: src/view/com/composer/photos/EditImageDialog.tsx:96
+#: src/view/com/composer/photos/EditImageDialog.tsx:35
+#: src/view/com/composer/photos/EditImageDialog.tsx:68
 #: src/view/com/composer/photos/Gallery.tsx:199
 msgid "Edit image"
 msgstr ""
@@ -2975,8 +2975,8 @@ msgstr "Edit name"
 msgid "Edit People"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:96
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:221
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:93
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:218
 msgid "Edit post interaction settings"
 msgstr ""
 
@@ -3054,7 +3054,7 @@ msgstr ""
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:539
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:536
 msgid "Enable quote posts of this post"
 msgstr ""
 
@@ -3101,7 +3101,7 @@ msgstr "Enter your handle or DID."
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2147
+#: src/view/com/composer/Composer.tsx:2138
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -3280,7 +3280,7 @@ msgstr ""
 msgid "Failed to accept join request"
 msgstr "Failed to accept join request"
 
-#: src/components/dms/ActionsWrapper.tsx:76
+#: src/components/dms/ActionsWrapper.tsx:78
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -3431,7 +3431,7 @@ msgstr ""
 msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
-#: src/components/dms/ActionsWrapper.tsx:72
+#: src/components/dms/ActionsWrapper.tsx:74
 #: src/components/dms/ReactionsDialog.tsx:167
 msgid "Failed to remove emoji reaction"
 msgstr ""
@@ -3452,7 +3452,7 @@ msgstr ""
 msgid "Failed to rescind your request. Please try again."
 msgstr "Failed to rescind your request. Please try again."
 
-#: src/view/com/composer/Composer.tsx:545
+#: src/view/com/composer/Composer.tsx:550
 msgid "Failed to save draft"
 msgstr ""
 
@@ -3903,7 +3903,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2152
+#: src/view/com/composer/Composer.tsx:2143
 msgid "GIF uploaded"
 msgstr ""
 
@@ -4148,7 +4148,7 @@ msgstr ""
 msgid "Hide group chat updates"
 msgstr "Hide group chat updates"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:468
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Hide lists"
 msgstr ""
 
@@ -4371,7 +4371,7 @@ msgstr "Inbox empty"
 msgid "Inbox zero!"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:117
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:116
 msgid "Interaction limited"
 msgstr ""
 
@@ -4448,7 +4448,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2076
+#: src/view/com/composer/Composer.tsx:2067
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4480,9 +4480,9 @@ msgstr ""
 msgid "Journalism"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1139
-#: src/view/com/composer/Composer.tsx:1149
-#: src/view/com/composer/drafts/DraftsButton.tsx:113
+#: src/view/com/composer/Composer.tsx:1141
+#: src/view/com/composer/Composer.tsx:1151
+#: src/view/com/composer/drafts/DraftsButton.tsx:115
 msgid "Keep editing"
 msgstr ""
 
@@ -4851,8 +4851,7 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:143
-#: src/screens/Messages/components/MessageInput.tsx:192
+#: src/screens/Messages/components/MessageComposer.tsx:131
 msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
@@ -4866,11 +4865,11 @@ msgstr "Loading GIF"
 msgid "Loading image"
 msgstr "Loading image"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:495
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:492
 msgid "Loading lists..."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:226
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:223
 msgid "Loading post interaction settings..."
 msgstr ""
 
@@ -5004,8 +5003,7 @@ msgstr ""
 msgid "Mentions"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:144
-#: src/screens/Messages/components/MessageInput.tsx:193
+#: src/screens/Messages/components/MessageComposer.tsx:132
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:186
 msgctxt "action"
 msgid "Message"
@@ -5044,15 +5042,11 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:140
+#: src/screens/Messages/components/MessageComposer.tsx:128
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInput.tsx:63
-msgid "Message is too long"
-msgstr ""
-
-#: src/screens/Messages/components/MessageComposer.tsx:64
+#: src/screens/Messages/components/MessageComposer.tsx:67
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -5152,13 +5146,17 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
+#: src/components/dms/EmojiReactionPicker.tsx:100
+msgid "More emojis"
+msgstr "More emojis"
+
 #: src/view/shell/desktop/Feeds.tsx:106
 #: src/view/shell/desktop/Feeds.tsx:150
 msgid "More feeds"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:104
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:106
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:107
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:109
 msgid "More languages..."
 msgstr ""
 
@@ -5463,7 +5461,7 @@ msgstr ""
 msgid "No custom feeds yet"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:120
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:96
 msgid "No drafts yet"
 msgstr ""
 
@@ -5617,7 +5615,7 @@ msgstr ""
 msgid "No video posts yet"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:406
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Nobody"
 msgstr ""
 
@@ -5706,7 +5704,7 @@ msgid "Off"
 msgstr ""
 
 #. Title of the error screen shown when the GIF picker crashes unexpectedly.
-#: src/components/dialogs/LanguageSelectDialog.tsx:306
+#: src/components/dialogs/LanguageSelectDialog.tsx:305
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:25
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
@@ -5746,27 +5744,27 @@ msgstr "One of the selected recipients does not allow group chats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "One of the selected recipients has blocked you and cannot be messaged."
 
-#: src/view/com/composer/Composer.tsx:678
+#: src/view/com/composer/Composer.tsx:688
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:675
+#: src/view/com/composer/Composer.tsx:685
 msgid "One or more images is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:244
+#: src/view/com/composer/SelectMediaButton.tsx:241
 msgid "One or more of your selected files are not supported."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:255
+#: src/view/com/composer/SelectMediaButton.tsx:252
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:556
+#: src/view/com/composer/Composer.tsx:561
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:681
+#: src/view/com/composer/Composer.tsx:691
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -5779,7 +5777,7 @@ msgstr ""
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:194
+#: src/view/com/composer/Composer.tsx:200
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 
@@ -5838,9 +5836,8 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:105
-#: src/screens/Messages/components/MessageInput.tsx:137
-#: src/view/com/composer/Composer.tsx:1792
+#: src/screens/Messages/components/MessageComposer.tsx:110
+#: src/view/com/composer/Composer.tsx:1802
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5928,7 +5925,7 @@ msgstr ""
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:129
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:128
 msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
@@ -5945,7 +5942,7 @@ msgid "Opens composer"
 msgstr ""
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:277
+#: src/view/com/composer/SelectMediaButton.tsx:274
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 
@@ -5962,12 +5959,8 @@ msgstr ""
 msgid "Opens link {0}"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:509
+#: src/view/com/util/UserAvatar.tsx:510
 msgid "Opens live status dialog"
-msgstr ""
-
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:174
-msgid "Opens post language settings"
 msgstr ""
 
 #: src/components/dms/SystemMessageItem.tsx:57
@@ -5975,7 +5968,7 @@ msgid "Opens profile"
 msgstr "Opens profile"
 
 #. Accessibility hint announced after the GIF picker button label, describing what activating it will do.
-#: src/view/com/composer/photos/SelectGifBtn.tsx:40
+#: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens the GIF picker dialog"
 msgstr "Opens the GIF picker dialog"
 
@@ -5989,7 +5982,7 @@ msgstr ""
 
 #: src/components/dms/MessageItem.tsx:197
 #: src/view/com/notifications/NotificationFeedItem.tsx:907
-#: src/view/com/util/UserAvatar.tsx:524
+#: src/view/com/util/UserAvatar.tsx:525
 msgid "Opens this profile"
 msgstr ""
 
@@ -6116,11 +6109,11 @@ msgstr "People I follow can join instantly"
 msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:446
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
 msgid "People you follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:461
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:458
 msgid "People you mention"
 msgstr ""
 
@@ -6269,7 +6262,7 @@ msgstr ""
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/composer/Composer.tsx:1463
+#: src/view/com/composer/Composer.tsx:1465
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -6289,12 +6282,12 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1461
+#: src/view/com/composer/Composer.tsx:1463
 msgctxt "action"
 msgid "Post All"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1148
+#: src/view/com/composer/Composer.tsx:1150
 msgid "Post anyway"
 msgstr "Post anyway"
 
@@ -6335,7 +6328,7 @@ msgstr ""
 msgid "Post Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:588
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:585
 msgid "Post interaction settings"
 msgstr ""
 
@@ -6344,8 +6337,7 @@ msgstr ""
 msgid "Post Interaction Settings"
 msgstr ""
 
-#. Accessibility label for button that opens dialog to choose post language settings
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:170
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:63
 msgid "Post language selection"
 msgstr ""
 
@@ -6445,11 +6437,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2141
+#: src/view/com/composer/Composer.tsx:2132
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2143
+#: src/view/com/composer/Composer.tsx:2134
 msgid "Processing video..."
 msgstr ""
 
@@ -6480,7 +6472,7 @@ msgstr ""
 msgid "Promoting or selling prohibited items or services"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:140
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:139
 msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
@@ -6489,22 +6481,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1447
+#: src/view/com/composer/Composer.tsx:1449
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1443
+#: src/view/com/composer/Composer.tsx:1445
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1434
+#: src/view/com/composer/Composer.tsx:1436
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1438
+#: src/view/com/composer/Composer.tsx:1440
 msgid "Publish reply"
 msgstr ""
 
@@ -6606,7 +6598,7 @@ msgstr "Recent GIFs"
 msgid "Recent searches"
 msgstr "Recent searches"
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:225
+#: src/components/dialogs/LanguageSelectDialog.tsx:230
 msgid "Recently used"
 msgstr ""
 
@@ -6673,8 +6665,8 @@ msgid "Remove attachment"
 msgstr ""
 
 #: src/components/web/EditableAvatar.tsx:98
-#: src/view/com/util/UserAvatar.tsx:439
-#: src/view/com/util/UserAvatar.tsx:441
+#: src/view/com/util/UserAvatar.tsx:440
+#: src/view/com/util/UserAvatar.tsx:442
 msgid "Remove Avatar"
 msgstr ""
 
@@ -6866,7 +6858,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1459
+#: src/view/com/composer/Composer.tsx:1461
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -6887,7 +6879,7 @@ msgstr ""
 msgid "Reply Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:354
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:351
 msgid "Reply settings are chosen by the author of the thread"
 msgstr ""
 
@@ -7139,20 +7131,20 @@ msgstr "Sad GIFs"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:325
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:333
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:574
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:576
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:571
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:573
 #: src/features/liveNow/components/EditLiveDialog.tsx:171
 #: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:66
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
 #: src/screens/Profile/Header/EditProfileDialog.tsx:214
 #: src/screens/SavedFeeds.tsx:112
-#: src/view/com/composer/GifAltText.tsx:190
-#: src/view/com/composer/GifAltText.tsx:200
-#: src/view/com/composer/photos/EditImageDialog.tsx:68
-#: src/view/com/composer/photos/EditImageDialog.tsx:82
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:145
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:156
+#: src/view/com/composer/GifAltText.tsx:191
+#: src/view/com/composer/GifAltText.tsx:201
+#: src/view/com/composer/photos/EditImageDialog.tsx:73
+#: src/view/com/composer/photos/EditImageDialog.tsx:87
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:146
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:157
 msgid "Save"
 msgstr ""
 
@@ -7160,28 +7152,28 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:173
 #: src/screens/SavedFeeds.tsx:108
 #: src/screens/SavedFeeds.tsx:112
-#: src/view/com/composer/Composer.tsx:1133
-#: src/view/com/composer/drafts/DraftsButton.tsx:107
+#: src/view/com/composer/Composer.tsx:1135
+#: src/view/com/composer/drafts/DraftsButton.tsx:109
 msgid "Save changes"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1110
+#: src/view/com/composer/Composer.tsx:1112
 #: src/view/com/composer/drafts/DraftsButton.tsx:81
 msgid "Save changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1133
-#: src/view/com/composer/drafts/DraftsButton.tsx:107
+#: src/view/com/composer/Composer.tsx:1135
+#: src/view/com/composer/drafts/DraftsButton.tsx:109
 msgid "Save draft"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1112
+#: src/view/com/composer/Composer.tsx:1114
 #: src/view/com/composer/drafts/DraftsButton.tsx:83
 msgid "Save draft?"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:558
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:564
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:555
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:561
 msgid "Save these options for next time"
 msgstr ""
 
@@ -7313,8 +7305,8 @@ msgstr ""
 msgid "Search KLIPY"
 msgstr "Search KLIPY"
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:210
-#: src/components/dialogs/LanguageSelectDialog.tsx:211
+#: src/components/dialogs/LanguageSelectDialog.tsx:215
+#: src/components/dialogs/LanguageSelectDialog.tsx:216
 msgid "Search languages"
 msgstr ""
 
@@ -7400,7 +7392,7 @@ msgstr ""
 msgid "Select \"{interestsDisplayName}\" category"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:91
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:94
 msgid "Select {langName}"
 msgstr ""
 
@@ -7434,16 +7426,16 @@ msgstr ""
 msgid "Select duration"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:478
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:475
 msgid "Select from your lists"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:480
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:477
 msgid "Select from your lists <0>{numberOfListsSelected, plural, other {(# selected)}}</0>"
 msgstr ""
 
 #. Accessibility label for the button in the post composer that opens the GIF picker dialog.
-#: src/view/com/composer/photos/SelectGifBtn.tsx:35
+#: src/view/com/composer/photos/SelectGifBtn.tsx:31
 msgid "Select GIF"
 msgstr ""
 
@@ -7469,7 +7461,7 @@ msgstr "Select language"
 msgid "Select language..."
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:246
+#: src/components/dialogs/LanguageSelectDialog.tsx:251
 msgid "Select languages"
 msgstr ""
 
@@ -7478,6 +7470,7 @@ msgid "Select moderation service"
 msgstr ""
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:78
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:84
 msgid "Select post language"
 msgstr ""
 
@@ -7489,8 +7482,7 @@ msgstr ""
 msgid "Select the source language"
 msgstr "Select the source language"
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:65
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:114
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:49
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
@@ -7518,7 +7510,7 @@ msgstr ""
 msgid "Select your preferred notification channels"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:245
+#: src/view/com/composer/SelectMediaButton.tsx:242
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
@@ -7526,8 +7518,7 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:208
-#: src/screens/Messages/components/MessageInput.tsx:214
+#: src/screens/Messages/components/MessageComposer.tsx:196
 msgid "Send message"
 msgstr ""
 
@@ -7553,11 +7544,11 @@ msgstr "Sent at {0}"
 msgid "Server address"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:415
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:412
 msgid "Set precisely which groups of people can reply to your post"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:362
 msgid "Set who can reply to your post"
 msgstr ""
 
@@ -7719,7 +7710,7 @@ msgstr ""
 msgid "Show list anyway"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:468
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:465
 msgid "Show lists of users to select from"
 msgstr ""
 
@@ -7864,7 +7855,7 @@ msgstr "Signing in..."
 msgid "Skip"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1146
+#: src/view/com/composer/Composer.tsx:1148
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
@@ -7876,7 +7867,7 @@ msgstr "slide"
 msgid "Smaller"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:132
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:108
 msgid "So many thoughts, you should post one"
 msgstr ""
 
@@ -8345,7 +8336,7 @@ msgstr ""
 msgid "The member limit has been reached."
 msgstr "The member limit has been reached."
 
-#: src/view/com/composer/Composer.tsx:1252
+#: src/view/com/composer/Composer.tsx:1254
 msgid "The pasted image couldn't be added to your post."
 msgstr "The pasted image couldn't be added to your post."
 
@@ -8448,7 +8439,7 @@ msgstr ""
 msgid "There was an issue! {0}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:201
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:198
 #: src/screens/List/ListHiddenScreen.tsx:61
 #: src/screens/List/ListHiddenScreen.tsx:71
 #: src/screens/List/ListHiddenScreen.tsx:89
@@ -8462,13 +8453,13 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #. Body of the error screen shown when the GIF picker crashes unexpectedly. Encourages the user to report the issue.
-#: src/components/dialogs/LanguageSelectDialog.tsx:307
+#: src/components/dialogs/LanguageSelectDialog.tsx:306
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:29
 #: src/view/com/util/ErrorBoundary.tsx:58
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:569
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:566
 msgid "These are your default settings"
 msgstr ""
 
@@ -8693,7 +8684,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:825
+#: src/view/com/composer/Composer.tsx:835
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -9144,7 +9135,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1230
+#: src/view/com/composer/Composer.tsx:1232
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -9166,15 +9157,15 @@ msgstr ""
 
 #: src/components/web/EditableAvatar.tsx:89
 #: src/components/web/EditableBanner.tsx:72
-#: src/view/com/util/UserAvatar.tsx:431
+#: src/view/com/util/UserAvatar.tsx:432
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:430
+#: src/view/com/util/UserAvatar.tsx:431
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2134
+#: src/view/com/composer/Composer.tsx:2125
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -9188,7 +9179,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2136
+#: src/view/com/composer/Composer.tsx:2127
 msgid "Uploading video..."
 msgstr ""
 
@@ -9335,7 +9326,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2154
+#: src/view/com/composer/Composer.tsx:2145
 msgid "Video uploaded"
 msgstr ""
 
@@ -9343,11 +9334,11 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:253
+#: src/view/com/composer/SelectMediaButton.tsx:250
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:884
+#: src/view/com/composer/Composer.tsx:894
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -9435,7 +9426,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:878
+#: src/view/com/composer/Composer.tsx:888
 msgid "View post"
 msgstr ""
 
@@ -9625,7 +9616,7 @@ msgstr ""
 msgid "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "We’re sorry, but your search could not be completed. Please try again in a few minutes."
 
-#: src/view/com/composer/Composer.tsx:823
+#: src/view/com/composer/Composer.tsx:833
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -9647,7 +9638,7 @@ msgid "What do you want to call your starter pack?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:77
-#: src/view/com/composer/Composer.tsx:1198
+#: src/view/com/composer/Composer.tsx:1200
 #: src/view/com/feeds/ComposerPrompt.tsx:88
 msgid "What's up?"
 msgstr ""
@@ -9660,7 +9651,7 @@ msgstr ""
 msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:361
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:358
 #: src/components/WhoCanReply.tsx:82
 msgid "Who can reply"
 msgstr ""
@@ -9717,11 +9708,11 @@ msgstr ""
 msgid "Would you like to block this user and/or leave this conversation?"
 msgstr "Would you like to block this user and/or leave this conversation?"
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:95
+#: src/view/com/composer/drafts/DraftsButton.tsx:96
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1123
+#: src/view/com/composer/Composer.tsx:1125
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
@@ -9730,13 +9721,13 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1016
-#: src/view/com/composer/Composer.tsx:1294
+#: src/view/com/composer/Composer.tsx:1296
+#: src/view/shell/Composer.tsx:30
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:80
-#: src/view/com/composer/Composer.tsx:1196
+#: src/view/com/composer/Composer.tsx:1198
 msgid "Write your reply"
 msgstr ""
 
@@ -9840,23 +9831,23 @@ msgid "You can continue ongoing conversations regardless of which setting you ch
 msgstr ""
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:183
+#: src/view/com/composer/Composer.tsx:189
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 
-#: src/view/com/composer/Composer.tsx:1126
+#: src/view/com/composer/Composer.tsx:1128
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:98
+#: src/view/com/composer/drafts/DraftsButton.tsx:99
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:254
+#: src/view/com/composer/SelectMediaButton.tsx:251
 msgid "You can only select one GIF at a time."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:252
+#: src/view/com/composer/SelectMediaButton.tsx:249
 msgid "You can only select one video at a time."
 msgstr ""
 
@@ -9865,7 +9856,7 @@ msgid "You can read chat history but can't send new messages."
 msgstr "You can read chat history but can't send new messages."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:246
+#: src/view/com/composer/SelectMediaButton.tsx:243
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 
@@ -9888,7 +9879,7 @@ msgstr ""
 msgid "You don't follow any users who follow @{name}."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:507
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:504
 msgid "You don't have any lists yet."
 msgstr ""
 
@@ -9962,11 +9953,11 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1121
+#: src/view/com/composer/Composer.tsx:1123
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:93
+#: src/view/com/composer/drafts/DraftsButton.tsx:92
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr ""
 
@@ -10078,7 +10069,7 @@ msgstr ""
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:543
+#: src/view/com/composer/Composer.tsx:548
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
@@ -10122,7 +10113,7 @@ msgstr ""
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:431
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:428
 msgid "Your followers"
 msgstr ""
 
@@ -10150,15 +10141,15 @@ msgstr ""
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 
-#: src/view/com/composer/Composer.tsx:874
+#: src/view/com/composer/Composer.tsx:884
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:871
+#: src/view/com/composer/Composer.tsx:881
 msgid "Your posts were sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:873
+#: src/view/com/composer/Composer.tsx:883
 msgid "Your reply was sent"
 msgstr ""
 
@@ -10175,7 +10166,7 @@ msgstr ""
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 
-#: src/view/com/composer/Composer.tsx:1147
+#: src/view/com/composer/Composer.tsx:1149
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 

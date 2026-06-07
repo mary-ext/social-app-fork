@@ -38,6 +38,10 @@ export const description = style({
 	paddingBottom: 16,
 });
 
+export const content = style({
+	paddingBottom: 8,
+});
+
 export const actions = style({
 	display: 'flex',
 	flexDirection: 'column',

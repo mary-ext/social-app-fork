@@ -45,6 +45,7 @@ import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import * as Menu from '#/components/Menu';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
+import { useSheetHandle } from '#/components/web/Sheet';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
@@ -348,7 +349,7 @@ let EditableUserAvatar = ({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogControl = useDialogControl();
+	const editImageDialogControl = useSheetHandle();
 
 	const circular = type !== 'algo' && type !== 'list';
 
@@ -375,7 +376,7 @@ let EditableUserAvatar = ({
 
 		try {
 			setRawImage(await createComposerImage(file));
-			editImageDialogControl.open();
+			editImageDialogControl.open(null);
 		} catch (e) {
 			// Don't log errors for user-cancelled selection on iOS or Android.
 			if (!isCancelledError(e)) {
@@ -448,7 +449,7 @@ let EditableUserAvatar = ({
 				</Menu.Outer>
 			</Menu.Root>
 			<EditImageDialog
-				control={editImageDialogControl}
+				handle={editImageDialogControl}
 				image={rawImage}
 				onChange={onChangeEditImage}
 				aspectRatio={1}

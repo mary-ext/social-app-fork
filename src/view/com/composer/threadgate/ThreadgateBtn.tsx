@@ -20,13 +20,13 @@ import {
 import { logger } from '#/logger';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import * as Tooltip from '#/components/Tooltip';
 import { Text } from '#/components/Typography';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { useThreadgateNudged } from '#/storage/hooks/threadgate-nudged';
 
@@ -45,7 +45,7 @@ export function ThreadgateBtn({
 	style?: StyleProp<AnimatedStyle<ViewStyle>>;
 }) {
 	const { t: l } = useLingui();
-	const control = Dialog.useDialogControl();
+	const control = useDialogHandle();
 	const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged();
 	const [showTooltip, setShowTooltip] = useState(false);
 	const [_tooltipWasShown] = useState(!threadgateNudged);
@@ -72,7 +72,7 @@ export function ThreadgateBtn({
 		setShowTooltip(false);
 		setThreadgateNudged(true);
 
-		control.open();
+		control.open(null);
 	};
 
 	const prefThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
@@ -104,9 +104,8 @@ export function ThreadgateBtn({
 			}
 		},
 		onSettled: () => {
-			control.close(() => {
-				setPersist(false);
-			});
+			control.close();
+			setPersist(false);
 		},
 	});
 
@@ -142,7 +141,7 @@ export function ThreadgateBtn({
 				</Tooltip.TextBubble>
 			</Tooltip.Outer>
 			<PostInteractionSettingsControlledDialog
-				control={control}
+				handle={control}
 				onSave={() => {
 					if (persist) {
 						persistChanges({

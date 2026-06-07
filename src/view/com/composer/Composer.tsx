@@ -60,7 +60,12 @@ import {
 	type SupportedMimeTypes,
 } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { useComposerControls, type ComposerOpts, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
+import {
+	COMPOSER_DIALOG_ID,
+	type ComposerOpts,
+	type OnPostSuccessData,
+	useComposerControls,
+} from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
 import { useCallOnce } from '#/lib/once';
@@ -100,21 +105,21 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
-import * as EmojiPicker from '#/components/EmojiPicker';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as EmojiPicker from '#/components/web/EmojiPicker';
+import * as Prompt from '#/components/web/Prompt';
+import * as Sheet from '#/components/web/Sheet';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 
+import { ComposerToolbarButton } from './ComposerToolbarButton';
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
 import {
 	loadDraftMedia,
@@ -138,7 +143,8 @@ import { NO_VIDEO, type NoVideoState, processVideo, type VideoState } from './st
 import type { TextInputRef } from './text-input/TextInput.types';
 
 type CancelRef = {
-	onPressCancel: () => void;
+	/** Returns `true` if the composer should stay open, `false` if the caller should close it. */
+	onPressCancel: () => boolean;
 };
 
 type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position'> & {
@@ -234,13 +240,12 @@ export const ComposePost = ({
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
 	const textInputRef = useRef<TextInputRef>(null);
-	const discardPromptControl = Prompt.usePromptControl();
-	const emptyPostsPromptControl = Prompt.usePromptControl();
+	const discardPromptControl = Prompt.usePromptHandle();
+	const emptyPostsPromptControl = Prompt.usePromptHandle();
 	const skipEmptyConfirmedRef = useRef(false);
 	const { mutateAsync: saveDraft, isPending: _isSavingDraft } = useSaveDraftMutation();
 	const { mutate: cleanupPublishedDraft } = useCleanupPublishedDraftMutation();
 	const { closeAllDialogs } = useDialogStateControlContext();
-	const { composerDialogControl } = useGlobalDialogsControlContext();
 	const { data: preferences } = usePreferencesQuery();
 	const navigation = useNavigation<NavigationProp>();
 
@@ -631,9 +636,15 @@ export const ComposePost = ({
 		});
 	}, [composerDispatch, preferences?.postInteractionSettings]);
 
-	const onPressCancel = useCallback(() => {
+	/**
+	 * Decides what a cancel request (Cancel button, Escape, backdrop press) should do. Returns `true` when the
+	 * composer should stay open (a sub-popup was closed, or the discard prompt was raised), `false` when the
+	 * caller should close the composer. Kept side-effect-only so the host can own the actual close (avoids
+	 * re-entrant `handle.close()` inside Base UI's `onOpenChange`).
+	 */
+	const onPressCancel = useCallback((): boolean => {
 		if (textInputRef.current?.maybeClosePopup()) {
-			return;
+			return true;
 		}
 
 		const hasContent = thread.posts.some(
@@ -646,23 +657,22 @@ export const ComposePost = ({
 		if (hasContent && (!composerState.draftId || composerState.isDirty)) {
 			// Dismiss sub-dialogs (emoji picker, etc.) but keep the composer itself open so the discard
 			// prompt has something to confirm against.
-			closeAllDialogs({ except: [composerDialogControl.control.id] });
+			closeAllDialogs({ except: [COMPOSER_DIALOG_ID] });
 			Keyboard.dismiss();
-			discardPromptControl.open();
-		} else {
-			onClose();
+			discardPromptControl.open(null);
+			return true;
 		}
-	}, [
-		thread,
-		composerState.draftId,
-		composerState.isDirty,
-		closeAllDialogs,
-		composerDialogControl.control.id,
-		discardPromptControl,
-		onClose,
-	]);
+		return false;
+	}, [thread, composerState.draftId, composerState.isDirty, closeAllDialogs, discardPromptControl]);
 
 	useImperativeHandle(cancelRef, () => ({ onPressCancel }));
+
+	// The Cancel button drives the close itself (the Sheet's `onOpenChange` does it for Escape/backdrop).
+	const onRequestClose = useCallback(() => {
+		if (!onPressCancel()) {
+			onClose();
+		}
+	}, [onPressCancel, onClose]);
 
 	const missingAltError = useMemo(() => {
 		if (!requireAltTextEnabled) {
@@ -734,7 +744,7 @@ export const ComposePost = ({
 		const { type: emptyType, filteredThread } = getFilteredThread();
 
 		if (emptyType === 'non-trailing' && !skipEmptyConfirmedRef.current) {
-			emptyPostsPromptControl.open();
+			emptyPostsPromptControl.open(null);
 			return;
 		}
 
@@ -1012,34 +1022,27 @@ export const ComposePost = ({
 	const IS_WEBFooterSticky = thread.posts.length > 1;
 	return (
 		<>
-			<Dialog.ScrollableInner
-				label={l`Write post`}
-				// The composer owns its own scrolling (the `Animated.ScrollView` below), so the card is
-				// height-bounded and clips while the internal scroll view does the work.
-				style={[a.overflow_hidden, webViewStyle({ maxHeight: Dialog.WEB_DIALOG_HEIGHT })]}
-				contentContainerStyle={[a.flex_1, a.p_0, { minHeight: 0 }]}
-				header={
-					<ComposerTopBar
-						canPost={canPost}
-						isReply={!!replyTo}
-						isPublishQueued={publishOnUpload}
-						isPublishing={isPublishing}
-						isThread={thread.posts.length > 1}
-						publishingStage={publishingStage}
-						onCancel={onPressCancel}
-						onPublish={onPressPublish}
-						onSelectDraft={handleSelectDraft}
-						onSaveDraft={saveCurrentDraft}
-						onDiscard={handleClearComposer}
-						isEmpty={isComposerEmpty}
-						isDirty={composerState.isDirty}
-						isEditingDraft={!!composerState.draftId}
-						canSaveDraft={allPostsWithinLimit}
-						textLength={thread.posts[0]!.text.length}
-					/>
-				}
-				onDismiss={onPressCancel}
-			>
+			<ComposerTopBar
+				canPost={canPost}
+				isReply={!!replyTo}
+				isPublishQueued={publishOnUpload}
+				isPublishing={isPublishing}
+				isThread={thread.posts.length > 1}
+				publishingStage={publishingStage}
+				onCancel={onRequestClose}
+				onPublish={onPressPublish}
+				onSelectDraft={handleSelectDraft}
+				onSaveDraft={saveCurrentDraft}
+				onDiscard={handleClearComposer}
+				isEmpty={isComposerEmpty}
+				isDirty={composerState.isDirty}
+				isEditingDraft={!!composerState.draftId}
+				canSaveDraft={allPostsWithinLimit}
+				textLength={thread.posts[0]!.text.length}
+			/>
+			{/* The composer owns its own scrolling (the `Animated.ScrollView` below); this body fills the
+			    height-bounded Sheet card while `minHeight: 0` lets the inner scroll view clip. */}
+			<View style={[a.flex_1, { minHeight: 0 }]}>
 				{missingAltError && <AltTextReminder error={missingAltError} />}
 				<ErrorBanner
 					error={error}
@@ -1090,19 +1093,18 @@ export const ComposePost = ({
 					))}
 				</Animated.ScrollView>
 				{!IS_WEBFooterSticky && footer}
-			</Dialog.ScrollableInner>
+			</View>
 
 			{replyTo ? (
 				<Prompt.Basic
-					control={discardPromptControl}
+					handle={discardPromptControl}
 					title={l`Discard draft?`}
-					description=""
 					confirmButtonCta={l`Discard`}
 					confirmButtonColor="negative"
 					onConfirm={handleDiscard}
 				/>
 			) : (
-				<Prompt.Outer control={discardPromptControl}>
+				<Prompt.Outer handle={discardPromptControl}>
 					<Prompt.Content>
 						<Prompt.TitleText>
 							{allPostsWithinLimit ? (
@@ -1142,7 +1144,7 @@ export const ComposePost = ({
 			)}
 
 			<Prompt.Basic
-				control={emptyPostsPromptControl}
+				handle={emptyPostsPromptControl}
 				title={l`Skip empty posts?`}
 				description={l`Your thread has empty posts that will be skipped. The remaining posts will be published as a thread.`}
 				confirmButtonCta={l`Post anyway`}
@@ -1196,7 +1198,7 @@ let ComposerPost = memo(function ComposerPost({
 			? l`Write your reply`
 			: l`Add another post`
 		: l`What's up?`;
-	const discardPromptControl = Prompt.usePromptControl();
+	const discardPromptControl = Prompt.usePromptHandle();
 
 	const dispatchPost = useCallback(
 		(action: PostAction) => {
@@ -1313,7 +1315,7 @@ let ComposerPost = memo(function ComposerPost({
 								post.embed.link ||
 								post.embed.quote
 							) {
-								discardPromptControl.open();
+								discardPromptControl.open(null);
 							} else {
 								dispatch({
 									type: 'remove_post',
@@ -1325,7 +1327,7 @@ let ComposerPost = memo(function ComposerPost({
 						<ButtonIcon icon={XIcon} />
 					</Button>
 					<Prompt.Basic
-						control={discardPromptControl}
+						handle={discardPromptControl}
 						title={l`Discard post?`}
 						description={l`Are you sure you'd like to discard this post?`}
 						onConfirm={() => {
@@ -1467,7 +1469,12 @@ function ComposerTopBar({
 			</View>
 		);
 
-	return <Dialog.Header renderLeft={renderLeft} renderRight={renderRight} style={[a.border_b_0]} />;
+	return (
+		<Sheet.Header.Outer border={false}>
+			<Sheet.Header.Slot>{renderLeft()}</Sheet.Header.Slot>
+			<Sheet.Header.Slot>{renderRight()}</Sheet.Header.Slot>
+		</Sheet.Header.Outer>
+	);
 }
 
 function AltTextReminder({ error }: { error: string }) {
@@ -1671,6 +1678,7 @@ function ComposerFooter({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const { gtPhone } = useBreakpoints();
+	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
 	/*
 	 * Once we've allowed a certain type of asset to be selected, we don't allow
 	 * other types of media to be selected.
@@ -1788,23 +1796,15 @@ function ComposerFooter({
 							/>
 							<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
 							{gtPhone ? (
-								<EmojiPicker.Root nextFocusRef={textInputRef}>
-									<EmojiPicker.Trigger label={l`Open emoji picker`}>
-										{({ props }) => (
-											<Button
-												style={a.p_sm}
-												label={props.accessibilityLabel}
-												variant="ghost"
-												shape="round"
-												color="primary"
-												{...props}
-											>
-												<EmojiSmileIcon size="lg" />
-											</Button>
-										)}
-									</EmojiPicker.Trigger>
-									<EmojiPicker.Picker />
-								</EmojiPicker.Root>
+								<>
+									<EmojiPicker.Trigger
+										handle={emojiPickerHandle}
+										render={<ComposerToolbarButton label={l`Open emoji picker`} icon={EmojiSmileIcon} />}
+									/>
+									<EmojiPicker.Root handle={emojiPickerHandle} nextFocusRef={textInputRef}>
+										<EmojiPicker.Picker />
+									</EmojiPicker.Root>
+								</>
 							) : null}
 						</ToolbarWrapper>
 					)}
@@ -1812,16 +1812,7 @@ function ComposerFooter({
 			</View>
 			<View style={[a.flex_row, a.align_center, a.justify_between]}>
 				{showAddButton && (
-					<Button
-						label={l`Add another post to thread`}
-						onPress={onAddPost}
-						style={[a.p_sm]}
-						variant="ghost"
-						shape="round"
-						color="primary"
-					>
-						<PlusIcon size="lg" />
-					</Button>
+					<ComposerToolbarButton label={l`Add another post to thread`} onClick={onAddPost} icon={PlusIcon} />
 				)}
 				<PostLanguageSelect
 					currentLanguages={currentLanguages}

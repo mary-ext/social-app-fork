@@ -8,13 +8,13 @@ import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences';
 import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
-import { useDialogControl } from '#/components/Dialog';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
 import { Select } from '#/components/web/Select';
 import * as SettingsList from '#/components/web/SettingsList';
+import { useSheetHandle } from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
 import * as Toggle from '#/components/web/Toggle';
 
@@ -43,7 +43,7 @@ export function LanguageSettingsScreen({}: Props) {
 		[setLangPrefs],
 	);
 
-	const contentLanguagePrefsControl = useDialogControl();
+	const contentLanguagePrefsControl = useSheetHandle();
 
 	const onChangeAppLanguage = useCallback(
 		(value: string) => {
@@ -172,7 +172,7 @@ export function LanguageSettingsScreen({}: Props) {
 									<Toggle.Action
 										label={l`Add more languages…`}
 										icon={PlusIcon}
-										onClick={contentLanguagePrefsControl.open}
+										onClick={() => contentLanguagePrefsControl.open(null)}
 									>
 										<Trans>Add more languages…</Trans>
 									</Toggle.Action>
@@ -180,7 +180,7 @@ export function LanguageSettingsScreen({}: Props) {
 							</div>
 
 							<LanguageSelectDialog
-								control={contentLanguagePrefsControl}
+								handle={contentLanguagePrefsControl}
 								titleText={<Trans>Select content languages</Trans>}
 								subtitleText={<Trans>If none are selected, all languages will be shown in your feeds.</Trans>}
 								currentLanguages={contentLanguages}

@@ -104,6 +104,11 @@ export function ItemIcon({
 	);
 }
 
+/** A radio/selection indicator for an item — an outlined circle, filled when `selected`. */
+export function ItemRadio({ selected }: { selected: boolean }) {
+	return <span className={styles.itemRadio}>{selected && <span className={styles.itemRadioDot} />}</span>;
+}
+
 export function GroupLabel({ children }: { children: ReactNode }) {
 	return <BaseMenu.GroupLabel className={styles.groupLabel}>{children}</BaseMenu.GroupLabel>;
 }
