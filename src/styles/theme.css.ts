@@ -12,6 +12,8 @@ const alpha = (hex: string, opacity: number) => {
 const shadows = (palette: Palette, opacity: number) => {
 	const c = alpha(palette.black, opacity);
 	return {
+		// the soft, offsetless glow shared by every modal surface (mirrors `shadowRadius: 30` in the RNW dialog).
+		dialog: `0 0 30px ${c}`,
 		lg: `0 20px 25px -5px ${c}, 0 8px 10px -6px ${c}`,
 		md: `0 10px 15px -3px ${c}, 0 4px 6px -4px ${c}`,
 		sm: `0 4px 6px -1px ${c}, 0 2px 4px -2px ${c}`,

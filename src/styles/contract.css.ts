@@ -11,5 +11,5 @@ import { DEFAULT_PALETTE } from '#/styles/palette';
  */
 export const vars = createThemeContract({
 	palette: DEFAULT_PALETTE,
-	shadow: { lg: null, md: null, sm: null, xs: null },
+	shadow: { dialog: null, lg: null, md: null, sm: null, xs: null },
 });
