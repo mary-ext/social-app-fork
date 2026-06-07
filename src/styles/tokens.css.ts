@@ -52,7 +52,7 @@ const scaled = (px: number) => `calc(${px}px * ${fallbackVar(fontScale, '1')})`;
 
 /**
  * Font-size scale as CSS variables, assigned once on `:root`, each scaling by {@link fontScale}. Consume
- * `fontSize.sm` etc. from both `style()`/`styleVariants` and the sprinkles `fontSize` property.
+ * `fontSize.sm` etc. from `style()`/`styleVariants` and recipe variants.
  */
 export const fontSize = createGlobalTheme(':root', {
 	_2xs: scaled(9.4),

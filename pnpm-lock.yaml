@@ -123,9 +123,6 @@ importers:
       '@vanilla-extract/dynamic':
         specifier: ^2.1.5
         version: 2.1.5
-      '@vanilla-extract/sprinkles':
-        specifier: ^1.6.5
-        version: 1.6.5(@vanilla-extract/css@1.20.1)
       bcp-47:
         specifier: ^2.1.0
         version: 2.1.0
@@ -2757,11 +2754,6 @@ packages:
 
   '@vanilla-extract/private@1.0.9':
     resolution: {integrity: sha512-gT2jbfZuaaCLrAxwXbRgIhGhcXbRZCG3v4TTUnjw0EJ7ArdBRxkq4msNJkbuRkCgfIK5ATmprB5t9ljvLeFDEA==}
-
-  '@vanilla-extract/sprinkles@1.6.5':
-    resolution: {integrity: sha512-HOYidLONR/SeGk8NBAeI64I4gYdsMX9vJmniL13ZcLVwawyK0s2GUENEAcGA+GYLIoeyQB61UqmhqPodJry7zA==}
-    peerDependencies:
-      '@vanilla-extract/css': ^1.0.0
 
   '@vanilla-extract/webpack-plugin@2.3.27':
     resolution: {integrity: sha512-i/GFQPifTkGYXYpkVYzScBPwXB82f+5GMLg9rh9UBgTG6M/YUebIDVjVOC9Mn5VMvc8Fk2w/FmagDRLugHA09w==}
@@ -8110,10 +8102,6 @@ snapshots:
       - supports-color
 
   '@vanilla-extract/private@1.0.9': {}
-
-  '@vanilla-extract/sprinkles@1.6.5(@vanilla-extract/css@1.20.1)':
-    dependencies:
-      '@vanilla-extract/css': 1.20.1
 
   '@vanilla-extract/webpack-plugin@2.3.27(webpack@5.107.2)':
     dependencies:
