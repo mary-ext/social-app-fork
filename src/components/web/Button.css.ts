@@ -4,7 +4,7 @@ import { recipe } from '#/components/web/css/recipe';
 
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 const HOVER = '&:hover:not(:disabled)';
 
@@ -19,8 +19,9 @@ export const button = recipe(
 			cursor: 'pointer',
 			display: 'inline-flex',
 			fontFamily: 'inherit',
-			fontWeight: 600,
+			fontWeight: fontWeight.medium,
 			justifyContent: 'center',
+			lineHeight: lineHeight.snug,
 			margin: 0,
 			textDecoration: 'none',
 			transitionDuration: '100ms',
