@@ -49,6 +49,7 @@ import { VerificationCreatePrompt } from '#/components/verification/Verification
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as Menu from '#/components/web/Menu';
+import * as WebPrompt from '#/components/web/Prompt';
 
 import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
@@ -85,8 +86,8 @@ let ProfileMenu = ({
 	const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile);
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileMenu');
 
-	const blockPromptControl = Prompt.usePromptControl();
-	const loggedOutWarningPromptControl = Prompt.usePromptControl();
+	const blockPromptHandle = WebPrompt.usePromptHandle();
+	const loggedOutWarningPromptHandle = WebPrompt.usePromptHandle();
 	const goLiveDialogControl = useDialogControl();
 	const goLiveDisabledDialogControl = useDialogControl();
 	const addToStarterPacksDialogControl = useDialogControl();
@@ -236,7 +237,7 @@ let ProfileMenu = ({
 							label={l`Copy link to profile`}
 							onClick={() => {
 								if (showLoggedOutWarning) {
-									loggedOutWarningPromptControl.open();
+									loggedOutWarningPromptHandle.open(null);
 								} else {
 									onPressShare();
 								}
@@ -358,7 +359,7 @@ let ProfileMenu = ({
 										{!profile.viewer?.blockingByList && (
 											<Menu.Item
 												label={profile.viewer ? l`Unblock account` : l`Block account`}
-												onClick={() => blockPromptControl.open()}
+												onClick={() => blockPromptHandle.open(null)}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.blocking ? (
@@ -417,8 +418,8 @@ let ProfileMenu = ({
 					} as unknown as Parameters<typeof ReportDialog>[0]['subject']
 				}
 			/>
-			<Prompt.Basic
-				control={blockPromptControl}
+			<WebPrompt.Basic
+				handle={blockPromptHandle}
 				title={profile.viewer?.blocking ? l`Unblock Account?` : l`Block Account?`}
 				description={
 					profile.viewer?.blocking
@@ -431,8 +432,8 @@ let ProfileMenu = ({
 				confirmButtonCta={profile.viewer?.blocking ? l`Unblock` : l`Block`}
 				confirmButtonColor={profile.viewer?.blocking ? undefined : 'negative'}
 			/>
-			<Prompt.Basic
-				control={loggedOutWarningPromptControl}
+			<WebPrompt.Basic
+				handle={loggedOutWarningPromptHandle}
 				title={l`Note about sharing`}
 				description={l`This profile is only visible to logged-in users. It won't be visible to people who aren't signed in.`}
 				onConfirm={onPressShare}
