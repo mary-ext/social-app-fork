@@ -27,13 +27,11 @@
 	font-display: swap;
 }
 
-/* Buttons and inputs have a font set by UA, so we'll have to reset that */
-button,
-input,
-textarea {
-	font: inherit;
-	line-height: inherit;
-}
+/*
+ * The UA-default resets (font/line-height on form controls, link color, focus outline) live in
+ * `styles/reset.css.ts`, emitted into the `reset` cascade layer so component styles win over them.
+ * The autofill override below stays unlayered: it must win over component input styling, not lose to it.
+ */
 
 /* Remove autofill styles on Webkit */
 input:autofill,
@@ -54,9 +52,6 @@ input::-webkit-date-and-time-value {
 }
 
 /* Remove default link styling */
-a {
-	color: inherit;
-}
 a[role='link']:hover {
 	text-decoration: underline;
 }
@@ -70,11 +65,6 @@ a[role='link'][data-no-underline='1']:hover {
 }
 *[data-stable-gutters] {
 	scrollbar-gutter: stable both-edges;
-}
-
-textarea:focus,
-input:focus {
-	outline: 0;
 }
 
 /* Tooltips */
