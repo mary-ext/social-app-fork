@@ -4,8 +4,7 @@ import { useLingui } from '@lingui/react/macro';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
-import * as button from '#/components/web/Button.css';
-import { cx } from '#/components/web/cx';
+import * as buttonStyles from '#/components/web/Button.css';
 import * as dialogStyles from '#/components/web/Dialog/Dialog.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 import * as styles from '#/components/web/Prompt/Prompt.css';
@@ -68,7 +67,7 @@ export function Action({
 	shouldCloseOnPress?: boolean;
 }) {
 	const { t: l } = useLingui();
-	const cls = cx(button.base, button.size.large, button.solid[color]);
+	const cls = buttonStyles.button({ color, size: 'large', variant: 'solid' });
 	const content = (
 		<>
 			<ButtonText>{cta ?? l`Confirm`}</ButtonText>
@@ -94,7 +93,9 @@ export function Action({
 export function Cancel({ cta }: { cta?: string }) {
 	const { t: l } = useLingui();
 	return (
-		<AlertDialog.Close className={cx(button.base, button.size.large, button.solid.secondary)}>
+		<AlertDialog.Close
+			className={buttonStyles.button({ color: 'secondary', size: 'large', variant: 'solid' })}
+		>
 			<ButtonText>{cta ?? l`Cancel`}</ButtonText>
 		</AlertDialog.Close>
 	);
