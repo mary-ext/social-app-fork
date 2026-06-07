@@ -12,7 +12,7 @@ export const positioner = style({
 });
 
 export const popup = style({
-	backgroundColor: vars.palette.contrast_0,
+	backgroundColor: vars.palette.contrast_25,
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 8,
 	boxShadow: vars.shadow.md,
@@ -49,7 +49,7 @@ export const item = style({
 	userSelect: 'none',
 	vars: { [iconColor]: vars.palette.contrast_700 },
 	selectors: {
-		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_25 },
+		'&[data-highlighted]': { backgroundColor: vars.palette.contrast_50 },
 		'&[data-disabled]': {
 			color: vars.palette.contrast_400,
 			cursor: 'default',
