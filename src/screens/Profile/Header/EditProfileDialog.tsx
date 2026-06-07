@@ -239,10 +239,10 @@ function DialogInner({
 
 				<div className={styles.fields}>
 					<div>
-						<TextField.LabelText>
-							<Trans>Display name</Trans>
-						</TextField.LabelText>
 						<TextField.Root isInvalid={displayNameTooLong}>
+							<TextField.LabelText>
+								<Trans>Display name</Trans>
+							</TextField.LabelText>
 							<TextField.Input
 								defaultValue={displayName}
 								onChangeText={setDisplayName}
@@ -277,10 +277,10 @@ function DialogInner({
 						)}
 
 					<div>
-						<TextField.LabelText>
-							<Trans>Description</Trans>
-						</TextField.LabelText>
 						<TextField.Root isInvalid={descriptionTooLong}>
+							<TextField.LabelText>
+								<Trans>Description</Trans>
+							</TextField.LabelText>
 							<TextField.Input
 								defaultValue={description}
 								onChangeText={setDescription}

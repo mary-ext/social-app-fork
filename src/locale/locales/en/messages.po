@@ -569,11 +569,11 @@ msgstr ""
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:293
+#: src/screens/Profile/Header/EditProfileDialog.tsx:294
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:254
+#: src/screens/Profile/Header/EditProfileDialog.tsx:255
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
@@ -2648,8 +2648,8 @@ msgid "Deleted list"
 msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:410
-#: src/screens/Profile/Header/EditProfileDialog.tsx:280
-#: src/screens/Profile/Header/EditProfileDialog.tsx:287
+#: src/screens/Profile/Header/EditProfileDialog.tsx:282
+#: src/screens/Profile/Header/EditProfileDialog.tsx:288
 msgid "Description"
 msgstr ""
 
@@ -2789,8 +2789,8 @@ msgstr ""
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:242
-#: src/screens/Profile/Header/EditProfileDialog.tsx:248
+#: src/screens/Profile/Header/EditProfileDialog.tsx:244
+#: src/screens/Profile/Header/EditProfileDialog.tsx:249
 msgid "Display name"
 msgstr ""
 
@@ -2859,7 +2859,7 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:249
+#: src/screens/Profile/Header/EditProfileDialog.tsx:250
 msgid "e.g. Alice Lastname"
 msgstr ""
 
@@ -4543,7 +4543,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:139
 #: src/components/verification/VerifierDialog.tsx:105
 #: src/screens/Moderation/VerificationSettings.tsx:47
-#: src/screens/Profile/Header/EditProfileDialog.tsx:269
+#: src/screens/Profile/Header/EditProfileDialog.tsx:270
 msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
@@ -4753,7 +4753,7 @@ msgctxt "toast"
 msgid "List deleted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:403
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:404
 msgid "List description"
 msgstr ""
 
@@ -4778,7 +4778,7 @@ msgctxt "toast"
 msgid "List muted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:374
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:375
 msgid "List name"
 msgstr ""
 
@@ -7145,7 +7145,7 @@ msgstr "Sad GIFs"
 #: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:66
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
-#: src/screens/Profile/Header/EditProfileDialog.tsx:213
+#: src/screens/Profile/Header/EditProfileDialog.tsx:214
 #: src/screens/SavedFeeds.tsx:112
 #: src/view/com/composer/GifAltText.tsx:190
 #: src/view/com/composer/GifAltText.tsx:200
@@ -8261,7 +8261,7 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:288
+#: src/screens/Profile/Header/EditProfileDialog.tsx:289
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -9821,7 +9821,7 @@ msgstr ""
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:266
+#: src/screens/Profile/Header/EditProfileDialog.tsx:267
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 

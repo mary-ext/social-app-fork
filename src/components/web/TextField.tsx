@@ -1,21 +1,33 @@
-import { type ChangeEvent, createContext, type ReactNode, useContext } from 'react';
+import { type ChangeEvent, createContext, type ReactNode, useContext, useId, useMemo } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 
 import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/TextField.css';
 
-const InvalidContext = createContext(false);
+type FieldContextValue = {
+	/** Generated id linking a field's {@link LabelText} to its {@link Input}; `undefined` outside a {@link Root}. */
+	id: string | undefined;
+	isInvalid: boolean;
+};
 
-/** Groups a field's label + input, propagating the invalid state to the input. */
+const FieldContext = createContext<FieldContextValue>({ id: undefined, isInvalid: false });
+
+/**
+ * Groups a field's label + input, sharing a generated id so the {@link LabelText} is associated with the
+ * {@link Input}, and propagating the invalid state to the input.
+ */
 export function Root({ isInvalid = false, children }: { isInvalid?: boolean; children: ReactNode }) {
-	return <InvalidContext.Provider value={isInvalid}>{children}</InvalidContext.Provider>;
+	const id = useId();
+	const value = useMemo(() => ({ id, isInvalid }), [id, isInvalid]);
+	return <FieldContext.Provider value={value}>{children}</FieldContext.Provider>;
 }
 
 export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
+	const { id } = useContext(FieldContext);
 	// renders a semantic web <label>, not RN <Text> — the unwrapped-text rule doesn't model this
 	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
-		<label className={styles.label} htmlFor={htmlFor}>
+		<label className={styles.label} htmlFor={htmlFor ?? id}>
 			{children}
 		</label>
 	);
@@ -45,8 +57,9 @@ export function Input({
 	id,
 	className,
 }: InputProps) {
-	const ctxInvalid = useContext(InvalidContext);
+	const { id: ctxId, isInvalid: ctxInvalid } = useContext(FieldContext);
 	const invalid = isInvalid ?? ctxInvalid;
+	const inputId = id ?? ctxId;
 	const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
 		onChangeText?.(e.currentTarget.value);
 	const cls = cx(styles.input, multiline && styles.multiline, invalid && styles.invalid, className);
@@ -57,7 +70,7 @@ export function Input({
 				aria-label={label}
 				className={cls}
 				defaultValue={defaultValue}
-				id={id}
+				id={inputId}
 				onChange={onChange}
 				placeholder={placeholder}
 				value={value}
@@ -70,7 +83,7 @@ export function Input({
 			aria-label={label}
 			className={cls}
 			defaultValue={defaultValue}
-			id={id}
+			id={inputId}
 			onChange={onChange}
 			placeholder={placeholder}
 			type="text"
