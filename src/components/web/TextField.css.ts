@@ -1,11 +1,11 @@
-import { style } from '@vanilla-extract/css';
+import { layeredStyle } from '#/components/web/css/layered-style';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';
 
 const FONT_FAMILY = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
 
-export const label = style({
+export const label = layeredStyle({
 	color: vars.palette.contrast_700,
 	display: 'block',
 	fontFamily: FONT_FAMILY,
@@ -14,7 +14,7 @@ export const label = style({
 	marginBottom: 8,
 });
 
-export const input = style({
+export const input = layeredStyle({
 	appearance: 'none',
 	backgroundColor: vars.palette.contrast_50,
 	border: '1px solid transparent',
@@ -37,7 +37,7 @@ export const input = style({
 	},
 });
 
-export const invalid = style({
+export const invalid = layeredStyle({
 	backgroundColor: vars.palette.negative_25,
 	borderColor: vars.palette.negative_300,
 	selectors: {
@@ -46,7 +46,7 @@ export const invalid = style({
 	},
 });
 
-export const multiline = style({
+export const multiline = layeredStyle({
 	minHeight: 80,
 	resize: 'none',
 });

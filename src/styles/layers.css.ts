@@ -2,7 +2,8 @@ import { layer } from '@vanilla-extract/css';
 
 /**
  * Cascade layer holding the global UA-default reset (see `reset.css.ts`). Declared first so it sits below
- * {@link components}: the reset neutralizes browser defaults, and layered component styles still win over it.
+ * {@link components}: the reset neutralizes browser defaults, and layered component styles still win over
+ * it.
  */
 export const reset = layer('reset');
 

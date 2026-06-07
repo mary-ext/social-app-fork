@@ -1,9 +1,9 @@
-import { style } from '@vanilla-extract/css';
+import { layeredStyle } from '#/components/web/css/layered-style';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';
 
-export const trigger = style({
+export const trigger = layeredStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	border: `1px solid ${vars.palette.contrast_50}`,
@@ -26,25 +26,25 @@ export const trigger = style({
 	},
 });
 
-export const value = style({
+export const value = layeredStyle({
 	overflow: 'hidden',
 	textAlign: 'left',
 	textOverflow: 'ellipsis',
 	whiteSpace: 'nowrap',
 });
 
-export const icon = style({
+export const icon = layeredStyle({
 	alignItems: 'center',
 	color: vars.palette.contrast_1000,
 	display: 'flex',
 	flexShrink: 0,
 });
 
-export const positioner = style({
+export const positioner = layeredStyle({
 	zIndex: 10,
 });
 
-export const popup = style({
+export const popup = layeredStyle({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 8,
@@ -54,11 +54,11 @@ export const popup = style({
 	overflowY: 'auto',
 });
 
-export const list = style({
+export const list = layeredStyle({
 	padding: 4,
 });
 
-export const item = style({
+export const item = layeredStyle({
 	alignItems: 'center',
 	borderRadius: 4,
 	color: vars.palette.contrast_1000,
@@ -80,7 +80,7 @@ export const item = style({
 	},
 });
 
-export const indicator = style({
+export const indicator = layeredStyle({
 	alignItems: 'center',
 	color: vars.palette.primary_500,
 	display: 'flex',

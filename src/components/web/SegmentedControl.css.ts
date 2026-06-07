@@ -1,4 +1,6 @@
-import { createVar, fallbackVar, style } from '@vanilla-extract/css';
+import { createVar, fallbackVar } from '@vanilla-extract/css';
+
+import { layeredStyle } from '#/components/web/css/layered-style';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';
@@ -8,7 +10,7 @@ export const countVar = createVar();
 /** Zero-based index of the selected segment; drives the indicator's horizontal offset. */
 export const indexVar = createVar();
 
-export const root = style({
+export const root = layeredStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 14,
@@ -20,7 +22,7 @@ export const root = style({
 	width: '100%',
 });
 
-export const slider = style({
+export const slider = layeredStyle({
 	backgroundColor: vars.palette.contrast_0,
 	borderRadius: 10,
 	bottom: 4,
@@ -36,7 +38,7 @@ export const slider = style({
 	width: `calc((100% - 8px) / ${fallbackVar(countVar, '1')})`,
 });
 
-export const item = style({
+export const item = layeredStyle({
 	alignItems: 'center',
 	appearance: 'none',
 	background: 'transparent',
@@ -63,7 +65,7 @@ export const item = style({
 	},
 });
 
-export const text = style({
+export const text = layeredStyle({
 	fontSize: fontSize.md,
 	fontWeight: 500,
 	textAlign: 'center',

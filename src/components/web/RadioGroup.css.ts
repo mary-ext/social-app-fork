@@ -1,16 +1,16 @@
-import { style } from '@vanilla-extract/css';
+import { layeredStyle } from '#/components/web/css/layered-style';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';
 
-export const group = style({
+export const group = layeredStyle({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 8,
 	width: '100%',
 });
 
-export const item = style({
+export const item = layeredStyle({
 	alignItems: 'center',
 	appearance: 'none',
 	background: 'transparent',
@@ -28,7 +28,7 @@ export const item = style({
 	},
 });
 
-export const circle = style({
+export const circle = layeredStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
 	border: `1px solid ${vars.palette.contrast_100}`,
@@ -50,14 +50,14 @@ export const circle = style({
 });
 
 /** The inner dot; Base UI only mounts the indicator when its radio is selected. */
-export const dot = style({
+export const dot = layeredStyle({
 	backgroundColor: vars.palette.white,
 	borderRadius: 999,
 	height: 12,
 	width: 12,
 });
 
-export const text = style({
+export const text = layeredStyle({
 	color: vars.palette.contrast_900,
 	flex: 1,
 	fontSize: fontSize.sm,
