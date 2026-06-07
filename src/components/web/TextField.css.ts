@@ -27,8 +27,8 @@ export const input = layeredStyle({
 	lineHeight: 1.2,
 	margin: 0,
 	outline: 'none',
-	paddingBlock: 13,
-	paddingInline: 12,
+	paddingBlock: 12,
+	paddingInline: 15,
 	width: '100%',
 	selectors: {
 		'&::placeholder': { color: vars.palette.contrast_500 },
