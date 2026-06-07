@@ -36,7 +36,15 @@ const matches = (expected: VariantValue | VariantValue[], actual: VariantValue |
  */
 export const createRuntimeFn = (config: RecipeConfig): RecipeFn => {
 	return (props) => {
-		const selections: Selection = { ...config.defaultVariants, ...props };
+		const selections: Selection = { ...config.defaultVariants };
+		if (props) {
+			for (const name in props) {
+				const value = props[name];
+				if (value !== undefined) {
+					selections[name] = value;
+				}
+			}
+		}
 		let className = config.defaultClassName;
 
 		for (const name in config.variantClassNames) {
