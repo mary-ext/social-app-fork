@@ -18,7 +18,6 @@ export const item = style({
 	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
-	font: 'inherit',
 	gap: 8,
 	margin: 0,
 	padding: 0,

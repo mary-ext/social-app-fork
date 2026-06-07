@@ -21,7 +21,6 @@ export const row = style({
 	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
-	font: 'inherit',
 	gap: 8,
 	margin: 0,
 	minHeight: 48,

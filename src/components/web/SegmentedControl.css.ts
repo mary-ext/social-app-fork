@@ -47,7 +47,6 @@ export const item = style({
 	cursor: 'pointer',
 	display: 'flex',
 	flex: 1,
-	font: 'inherit',
 	justifyContent: 'center',
 	margin: 0,
 	minHeight: 40,
