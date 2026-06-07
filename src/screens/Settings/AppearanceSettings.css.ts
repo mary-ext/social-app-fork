@@ -1,9 +1,16 @@
-import { sprinkles } from '#/styles/sprinkles.css';
+import { style } from '@vanilla-extract/css';
 
-export const groupBody = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
-export const headerRow = sprinkles({
+import { space } from '#/styles/tokens.css';
+
+export const groupBody = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: `${space.sm}px`,
+	width: '100%',
+});
+export const headerRow = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 'sm',
+	gap: `${space.sm}px`,
 });

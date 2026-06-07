@@ -1,10 +1,12 @@
-import { sprinkles } from '#/styles/sprinkles.css';
+import { style } from '@vanilla-extract/css';
 
-export const body = sprinkles({
+import { space } from '#/styles/tokens.css';
+
+export const body = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 'lg',
-	marginBottom: '_2xl',
-	marginTop: 'lg',
+	gap: `${space.lg}px`,
+	marginBottom: `${space._2xl}px`,
+	marginTop: `${space.lg}px`,
 });
-export const actions = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md' });
+export const actions = style({ display: 'flex', flexDirection: 'column', gap: `${space.md}px` });

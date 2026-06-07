@@ -3,7 +3,6 @@ import { style } from '@vanilla-extract/css';
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
 import { vars } from '#/styles/contract.css';
-import { sprinkles } from '#/styles/sprinkles.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 // matches the RNW `transition_color` atom (border/color hover swaps on the card).
@@ -12,7 +11,7 @@ const transition = {
 	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
 } as const;
 
-export const wrapper = sprinkles({ marginTop: 'sm' });
+export const wrapper = style({ marginTop: `${space.sm}px` });
 
 export const card = style({
 	...transition,

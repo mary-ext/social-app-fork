@@ -1,16 +1,23 @@
-import { sprinkles } from '#/styles/sprinkles.css';
+import { style } from '@vanilla-extract/css';
 
-export const groupBody = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'sm', width: 'full' });
-export const headerRow = sprinkles({
+import { space } from '#/styles/tokens.css';
+
+export const groupBody = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: `${space.sm}px`,
+	width: '100%',
+});
+export const headerRow = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 'sm',
+	gap: `${space.sm}px`,
 });
 // inset the rows to align under the title text, past the header icon (24px) + gap (8px)
-export const insetColumn = sprinkles({
+export const insetColumn = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 'sm',
-	paddingLeft: '_4xl',
+	gap: `${space.sm}px`,
+	paddingLeft: `${space._4xl}px`,
 });

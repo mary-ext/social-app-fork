@@ -1,3 +1,5 @@
-import { sprinkles } from '#/styles/sprinkles.css';
+import { style } from '@vanilla-extract/css';
 
-export const wrapper = sprinkles({ marginTop: 'sm' });
+import { space } from '#/styles/tokens.css';
+
+export const wrapper = style({ marginTop: `${space.sm}px` });

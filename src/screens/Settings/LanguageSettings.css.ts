@@ -1,4 +1,11 @@
-import { sprinkles } from '#/styles/sprinkles.css';
+import { style } from '@vanilla-extract/css';
 
-export const section = sprinkles({ display: 'flex', flexDirection: 'column', gap: 'md', width: 'full' });
-export const narrow = sprinkles({ maxWidth: 400, width: 'full' });
+import { space } from '#/styles/tokens.css';
+
+export const section = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: `${space.md}px`,
+	width: '100%',
+});
+export const narrow = style({ maxWidth: '400px', width: '100%' });
