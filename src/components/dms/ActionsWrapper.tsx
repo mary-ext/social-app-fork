@@ -14,8 +14,10 @@ import { MessageContextMenu } from '#/components/dms/MessageContextMenu';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
 import { EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import * as Toast from '#/components/Toast';
+import { cx } from '#/components/web/cx';
 
 import { EmojiReactionPicker } from './EmojiReactionPicker';
+import * as reactionStyles from './EmojiReactionPicker.css';
 import { canReact, hasReachedReactionLimit } from './util';
 
 export function ActionsWrapper({
@@ -104,24 +106,21 @@ export function ActionsWrapper({
 				]}
 			>
 				{reactionsAvailable && (
-					<EmojiReactionPicker message={message} onEmojiSelect={onEmojiSelect}>
-						{({ props, state, control }) => {
-							const showMenuTrigger = showActions || control.isOpen ? 1 : 0;
-							return (
-								<Pressable
-									{...props}
-									style={[
-										{ opacity: showMenuTrigger },
-										a.p_xs,
-										a.rounded_full,
-										(state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-									]}
-								>
-									<EmojiSmileIcon size="md" style={t.atoms.text_contrast_medium} />
-								</Pressable>
-							);
-						}}
-					</EmojiReactionPicker>
+					<EmojiReactionPicker
+						message={message}
+						onEmojiSelect={onEmojiSelect}
+						render={(props, state) => (
+							<button
+								{...props}
+								type="button"
+								aria-label={l`Add emoji reaction`}
+								className={cx(props.className, reactionStyles.trigger)}
+								style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
+							>
+								<EmojiSmileIcon size="md" style={t.atoms.text_contrast_medium} />
+							</button>
+						)}
+					/>
 				)}
 				<MessageContextMenu message={message} senderProfile={senderProfile} moderationOpts={moderationOpts}>
 					{({ props, state, control }) => {

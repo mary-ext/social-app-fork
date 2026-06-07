@@ -1,135 +1,105 @@
-import { useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { type ComponentProps, useState } from 'react';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
+import { Popover } from '@base-ui/react/popover';
 import { useLingui } from '@lingui/react/macro';
-import { DropdownMenu } from 'radix-ui';
 
 import { useSession } from '#/state/session';
 
-import { atoms as a, flatten, useTheme } from '#/alf';
-
-import * as EmojiPicker from '#/components/EmojiPicker';
+import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import * as Menu from '#/components/Menu';
-import { Text } from '#/components/Typography';
+import { cx } from '#/components/web/cx';
+import { EmojiMartPanel } from '#/components/web/EmojiPicker/EmojiMartPanel';
 
+import * as styles from './EmojiReactionPicker.css';
 import { hasAlreadyReacted, hasReachedReactionLimit } from './util';
+
+const QUICK_REACTIONS = ['❤️', '👍', '😆', '👀', '😢'];
 
 export function EmojiReactionPicker({
 	message,
-	children,
+	render,
 	onEmojiSelect,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	children?: EmojiPicker.TriggerProps['children'];
+	/** The trigger element (a message-hover button); receives Base UI trigger props + `{ open }` state. */
+	render: ComponentProps<typeof Popover.Trigger>['render'];
 	onEmojiSelect: (emoji: string) => void;
 }) {
-	if (!children) throw new Error('EmojiReactionPicker requires the children prop on web');
-
-	const { t: l } = useLingui();
-
-	return (
-		<EmojiPicker.Root onEmojiSelect={(emoji) => onEmojiSelect(emoji.native)}>
-			<EmojiPicker.Trigger label={l`Add emoji reaction`}>{children}</EmojiPicker.Trigger>
-			<MenuInner message={message} onEmojiSelect={onEmojiSelect} />
-		</EmojiPicker.Root>
-	);
-}
-
-function MenuInner({
-	message,
-	onEmojiSelect,
-}: {
-	message: ChatBskyConvoDefs.MessageView;
-	onEmojiSelect: (emoji: string) => void;
-}) {
-	const t = useTheme();
-	const { control } = Menu.useMenuContext();
-	const { currentAccount } = useSession();
-
+	const [open, setOpen] = useState(false);
 	const [expanded, setExpanded] = useState(false);
+	const preloadEmoji = useWebPreloadEmoji();
 
-	const [prevOpen, setPrevOpen] = useState(control.isOpen);
-
-	if (control.isOpen !== prevOpen) {
-		setPrevOpen(control.isOpen);
-		if (!control.isOpen) {
-			setExpanded(false);
-		}
-	}
-
-	const handleEmojiSelect = (emoji: string) => {
-		control.close();
+	const handleSelect = (emoji: string) => {
+		setOpen(false);
 		onEmojiSelect(emoji);
 	};
 
-	const limitReacted = hasReachedReactionLimit(message, currentAccount?.did);
-
-	return expanded ? (
-		<EmojiPicker.Picker keepOpenWhenShiftHeld={false} />
-	) : (
-		<Menu.Outer
-			style={[a.rounded_full]}
-			onCloseAutoFocus={(evt) => {
-				// keep focus in emoji-mart's search field when swapping from the quick reactions menu.
-				if (document.activeElement && document.activeElement !== document.body) {
-					evt.preventDefault();
+	return (
+		<Popover.Root
+			open={open}
+			onOpenChange={(next) => {
+				setOpen(next);
+				if (next) {
+					preloadEmoji();
+				} else {
+					// back to quick reactions next time it opens
+					setExpanded(false);
 				}
 			}}
 		>
-			<View style={[a.flex_row, a.gap_xs]}>
-				{['❤️', '👍', '😆', '👀', '😢'].map((emoji) => {
-					const alreadyReacted = hasAlreadyReacted(message, currentAccount?.did, emoji);
-					return (
-						<DropdownMenu.Item
-							key={emoji}
-							className={[
-								'EmojiReactionPicker__Pressable',
-								alreadyReacted && '__selected',
-								limitReacted && '__disabled',
-							]
-								.filter(Boolean)
-								.join(' ')}
-							onSelect={() => handleEmojiSelect(emoji)}
-							style={flatten([
-								a.flex,
-								a.flex_col,
-								a.rounded_full,
-								a.justify_center,
-								a.align_center,
-								a.transition_transform,
-								{
-									width: 34,
-									height: 34,
-								},
-								alreadyReacted && {
-									backgroundColor: t.atoms.bg_contrast_100.backgroundColor,
-								},
-							])}
-						>
-							<Text style={[a.text_center, { fontSize: 28 }]} emoji>
-								{emoji}
-							</Text>
-						</DropdownMenu.Item>
-					);
-				})}
-				<DropdownMenu.Item asChild className="EmojiReactionPicker__PickerButton">
-					<Pressable
-						accessibilityRole="button"
-						role="button"
-						onPress={() => setExpanded(true)}
-						style={flatten([
-							a.rounded_full,
-							{ height: 34, width: 34 },
-							t.atoms.bg_contrast_50,
-							a.justify_center,
-							a.align_center,
-						])}
+			<Popover.Trigger render={render} />
+			<Popover.Portal>
+				<Popover.Positioner sideOffset={5} collisionPadding={{ bottom: 5, left: 5, right: 5 }}>
+					<Popover.Popup className={styles.popup}>
+						{expanded ? (
+							<EmojiMartPanel onEmojiSelect={(emoji) => handleSelect(emoji.native)} />
+						) : (
+							<QuickReactions message={message} onSelect={handleSelect} onExpand={() => setExpanded(true)} />
+						)}
+					</Popover.Popup>
+				</Popover.Positioner>
+			</Popover.Portal>
+		</Popover.Root>
+	);
+}
+
+function QuickReactions({
+	message,
+	onSelect,
+	onExpand,
+}: {
+	message: ChatBskyConvoDefs.MessageView;
+	onSelect: (emoji: string) => void;
+	onExpand: () => void;
+}) {
+	const { t: l } = useLingui();
+	const { currentAccount } = useSession();
+	const limitReached = hasReachedReactionLimit(message, currentAccount?.did);
+
+	return (
+		<div className={styles.quickRow}>
+			{QUICK_REACTIONS.map((emoji) => {
+				const alreadyReacted = hasAlreadyReacted(message, currentAccount?.did, emoji);
+				return (
+					<button
+						key={emoji}
+						type="button"
+						aria-label={emoji}
+						className={cx(
+							styles.reaction,
+							alreadyReacted && styles.reactionSelected,
+							limitReached && !alreadyReacted && styles.reactionDisabled,
+						)}
+						onClick={() => onSelect(emoji)}
 					>
-						<PlusIcon size="md" style={t.atoms.text_contrast_medium} />
-					</Pressable>
-				</DropdownMenu.Item>
-			</View>
-		</Menu.Outer>
+						{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text -- styled <span>, not RN text */}
+						<span className={styles.reactionGlyph}>{emoji}</span>
+					</button>
+				);
+			})}
+			<button type="button" aria-label={l`More emojis`} className={styles.expandButton} onClick={onExpand}>
+				<PlusIcon size="md" fill="currentColor" />
+			</button>
+		</div>
 	);
 }

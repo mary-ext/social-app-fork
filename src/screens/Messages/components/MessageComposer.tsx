@@ -12,16 +12,18 @@ import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-d
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
-import * as EmojiPicker from '#/components/EmojiPicker';
 import { GlassView } from '#/components/GlassView';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
+import * as EmojiPicker from '#/components/web/EmojiPicker';
 
 import { GlassContainer } from '#/shims/glass-effect';
 import { LinearGradient } from '#/shims/linear-gradient';
 import { useKeyboardHandler, useReanimatedKeyboardAnimation } from '#/shims/native-keyboard-controller';
+
+import * as styles from './MessageComposer.css';
 
 const MIN_HEIGHT = 40;
 
@@ -44,6 +46,7 @@ export function MessageComposer({
 	const { t: l } = useLingui();
 	const { getDraft, clearDraft } = useMessageDraft();
 	const composerInternalApiRef = useComposerInternalApiRef();
+	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
 
 	const [text, setText] = useState(getDraft);
 	useSaveMessageDraft(text);
@@ -98,42 +101,27 @@ export function MessageComposer({
 						{children}
 						<View style={[a.flex_1]}>
 							{loading ? null : (
-								<EmojiPicker.Root
-									onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
-									nextFocusRef={() => composerInternalApiRef.current?.input?.element}
-								>
-									<EmojiPicker.Trigger label={l`Open emoji picker`}>
-										{({ props, state, control }) => (
-											<Pressable
-												{...props}
-												style={[
-													a.overflow_hidden,
-													a.absolute,
-													a.rounded_full,
-													a.align_center,
-													a.justify_center,
-													a.z_30,
-													{
-														height: 20,
-														width: 20,
-														top: 10,
-														right: 10,
-													},
-												]}
-											>
-												<EmojiSmileIcon
-													size="md"
-													style={
-														state.hovered || state.focused || state.pressed || control.isOpen
-															? { color: t.palette.primary_500 }
-															: t.atoms.text_contrast_high
-													}
-												/>
-											</Pressable>
-										)}
+								<>
+									<EmojiPicker.Trigger
+										handle={emojiPickerHandle}
+										render={
+											<button
+												type="button"
+												aria-label={l`Open emoji picker`}
+												className={styles.emojiButton}
+											/>
+										}
+									>
+										<EmojiSmileIcon size="md" fill="currentColor" />
 									</EmojiPicker.Trigger>
-									<EmojiPicker.Picker />
-								</EmojiPicker.Root>
+									<EmojiPicker.Root
+										handle={emojiPickerHandle}
+										onEmojiSelect={(emoji) => composerInternalApiRef.current?.insert(emoji.native)}
+										nextFocusRef={() => composerInternalApiRef.current?.input?.element}
+									>
+										<EmojiPicker.Picker />
+									</EmojiPicker.Root>
+								</>
 							)}
 							<Composer
 								nativeID={textInputId}
