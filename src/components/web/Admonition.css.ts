@@ -4,11 +4,11 @@ import { vars } from '#/styles/contract.css';
 
 export const outer = style({
 	backgroundColor: vars.palette.contrast_0,
-	borderRadius: '8px',
+	borderRadius: 8,
 	borderStyle: 'solid',
-	borderWidth: '1px',
+	borderWidth: 1,
 	boxSizing: 'border-box',
-	padding: '12px',
+	padding: 12,
 	width: '100%',
 });
 
@@ -24,7 +24,7 @@ export const row = style({
 	alignItems: 'flex-start',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: '8px',
+	gap: 8,
 	width: '100%',
 });
 
@@ -45,8 +45,8 @@ export const content = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	gap: '8px',
+	gap: 8,
 	justifyContent: 'center',
-	minHeight: '20px',
-	paddingRight: '12px',
+	minHeight: 20,
+	paddingRight: 12,
 });

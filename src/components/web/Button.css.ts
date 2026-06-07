@@ -14,7 +14,7 @@ export const button = recipe(
 			alignItems: 'center',
 			appearance: 'none',
 			border: 'none',
-			borderRadius: '999px',
+			borderRadius: 999,
 			color: 'inherit',
 			cursor: 'pointer',
 			display: 'inline-flex',
@@ -29,7 +29,7 @@ export const button = recipe(
 			whiteSpace: 'nowrap',
 			selectors: {
 				'&:disabled': { cursor: 'default', opacity: 0.5 },
-				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: '2px' },
+				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 			},
 		},
 		compoundVariants: [
@@ -88,15 +88,15 @@ export const button = recipe(
 				variant: 'ghost',
 			},
 			// emitted after the `size` variant, so the square hit target wins over its padding.
-			{ shape: 'round', style: { height: '34px', padding: 0, width: '34px' } },
+			{ shape: 'round', style: { height: 34, padding: 0, width: 34 } },
 		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
 			color: { negative: {}, primary: {}, secondary: {} },
 			shape: { default: {}, round: {} },
 			size: {
-				large: { fontSize: fontSize.md, gap: '6px', paddingBlock: '12px', paddingInline: '24px' },
-				small: { fontSize: fontSize.sm, gap: '5px', paddingBlock: '8px', paddingInline: '14px' },
+				large: { fontSize: fontSize.md, gap: 6, paddingBlock: 12, paddingInline: 24 },
+				small: { fontSize: fontSize.sm, gap: 5, paddingBlock: 8, paddingInline: 14 },
 			},
 			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost colors come from the
 			// compound variants above.

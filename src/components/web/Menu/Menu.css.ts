@@ -14,14 +14,14 @@ export const positioner = style({
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: '8px',
+	borderRadius: 8,
 	boxShadow: vars.shadow.md,
 	boxSizing: 'border-box',
 	maxHeight: 'var(--available-height)',
 	maxWidth: 'min(var(--available-width), 320px)',
 	outline: 0,
 	overflowY: 'auto',
-	padding: '4px',
+	padding: 4,
 	transformOrigin: 'var(--transform-origin)',
 	transitionDuration: '150ms',
 	transitionProperty: 'opacity, transform',
@@ -33,19 +33,19 @@ export const popup = style({
 
 export const item = style({
 	alignItems: 'center',
-	borderRadius: '4px',
+	borderRadius: 4,
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_900,
 	cursor: 'pointer',
 	display: 'flex',
 	fontSize: fontSize.sm,
 	fontWeight: 600,
-	gap: '16px',
+	gap: 16,
 	lineHeight: 1,
-	minHeight: '32px',
+	minHeight: 32,
 	outline: 0,
-	paddingBlock: '8px',
-	paddingInline: '10px',
+	paddingBlock: 8,
+	paddingInline: 10,
 	userSelect: 'none',
 	vars: { [iconColor]: vars.palette.contrast_700 },
 	selectors: {
@@ -74,12 +74,12 @@ export const itemIcon = style({
 	color: iconColor,
 	display: 'flex',
 	flexShrink: 0,
-	marginLeft: '-2px',
+	marginLeft: -2,
 });
 
 export const itemIconRight = style({
-	marginLeft: '12px',
-	marginRight: '-2px',
+	marginLeft: 12,
+	marginRight: -2,
 });
 
 export const groupLabel = style({
@@ -88,14 +88,14 @@ export const groupLabel = style({
 	fontSize: fontSize.sm,
 	fontWeight: 600,
 	lineHeight: 1.3,
-	paddingBlock: '8px',
-	paddingInline: '10px',
+	paddingBlock: 8,
+	paddingInline: 10,
 });
 
 export const separator = style({
 	backgroundColor: vars.palette.contrast_100,
 	border: 0,
 	flexShrink: 0,
-	height: '1px',
-	marginBlock: '4px',
+	height: 1,
+	marginBlock: 4,
 });

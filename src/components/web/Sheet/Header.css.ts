@@ -10,10 +10,10 @@ export const outer = style({
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 0,
-	gap: '8px',
-	minHeight: '52px',
-	paddingBlock: '8px',
-	paddingInline: '12px',
+	gap: 8,
+	minHeight: 52,
+	paddingBlock: 8,
+	paddingInline: 12,
 });
 
 export const content = style({

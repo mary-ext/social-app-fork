@@ -9,9 +9,9 @@ import { borderRadius } from '#/styles/tokens.css';
  * low-contrast border; dark/dim use a higher-contrast border at 60% opacity.
  */
 export const base = style({
-	borderRadius: `${borderRadius.md}px`,
+	borderRadius: borderRadius.md,
 	borderStyle: 'solid',
-	borderWidth: '1px',
+	borderWidth: 1,
 	bottom: 0,
 	left: 0,
 	pointerEvents: 'none',
@@ -19,7 +19,7 @@ export const base = style({
 	right: 0,
 	top: 0,
 	'@media': {
-		'(min-resolution: 2dppx)': { borderWidth: '0.5px' },
+		'(min-resolution: 2dppx)': { borderWidth: 0.5 },
 	},
 	selectors: {
 		'.theme--light &': { borderColor: vars.palette.contrast_100, opacity: 1 },
@@ -37,6 +37,6 @@ export const opaque = style({
 /** Focus ring for the active carousel slide — a 2px border that wins over the hairline. */
 export const focused = style({
 	selectors: {
-		'&&': { borderWidth: '2px' },
+		'&&': { borderWidth: 2 },
 	},
 });

@@ -25,7 +25,7 @@ export const content = style({
 export const center = style({
 	boxSizing: 'border-box',
 	marginInline: 'auto',
-	maxWidth: `${CENTER_COLUMN_WIDTH}px`,
+	maxWidth: CENTER_COLUMN_WIDTH,
 	transform: `translateX(${columnOffsetVar}) ${scrollbarShift}`,
 	vars: { [columnOffsetVar]: '0px' },
 	width: '100%',
@@ -45,7 +45,7 @@ export const webBorders = style({
 	top: 0,
 	transform: `translateX(-50%) translateX(${columnOffsetVar}) ${scrollbarShift}`,
 	vars: { [columnOffsetVar]: '0px' },
-	width: '602px',
+	width: 602,
 });
 
 // defined last so it wins the cascade over the base `0px` on `center` / `webBorders`.

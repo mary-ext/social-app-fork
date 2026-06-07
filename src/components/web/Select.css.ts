@@ -7,18 +7,18 @@ export const trigger = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	border: `1px solid ${vars.palette.contrast_50}`,
-	borderRadius: '10px',
+	borderRadius: 10,
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_1000,
 	cursor: 'pointer',
 	display: 'flex',
 	fontSize: fontSize.sm,
-	gap: '8px',
+	gap: 8,
 	justifyContent: 'space-between',
-	maxWidth: '400px',
+	maxWidth: 400,
 	outline: 0,
-	paddingBlock: '8px',
-	paddingInline: '12px',
+	paddingBlock: 8,
+	paddingInline: 12,
 	width: '100%',
 	selectors: {
 		'&:focus-visible': { borderColor: vars.palette.primary_500 },
@@ -47,7 +47,7 @@ export const positioner = style({
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: '8px',
+	borderRadius: 8,
 	boxShadow: vars.shadow.md,
 	boxSizing: 'border-box',
 	maxHeight: 'var(--available-height)',
@@ -55,21 +55,21 @@ export const popup = style({
 });
 
 export const list = style({
-	padding: '4px',
+	padding: 4,
 });
 
 export const item = style({
 	alignItems: 'center',
-	borderRadius: '4px',
+	borderRadius: 4,
 	color: vars.palette.contrast_1000,
 	cursor: 'pointer',
 	display: 'flex',
 	fontSize: fontSize.sm,
-	minHeight: '25px',
+	minHeight: 25,
 	outline: 0,
-	paddingBlock: '2px',
-	paddingLeft: '30px',
-	paddingRight: '8px',
+	paddingBlock: 2,
+	paddingLeft: 30,
+	paddingRight: 8,
 	position: 'relative',
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color, color',
@@ -87,5 +87,5 @@ export const indicator = style({
 	justifyContent: 'center',
 	left: 0,
 	position: 'absolute',
-	width: '30px',
+	width: 30,
 });

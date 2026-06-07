@@ -17,7 +17,7 @@ export const trigger = style({
 	position: 'relative',
 	width: sizeVar,
 	selectors: {
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: '2px' },
+		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 	},
 });
 
@@ -34,14 +34,14 @@ export const editBadge = style({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
 	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: '12px',
+	borderRadius: 12,
 	bottom: 0,
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_1000,
 	display: 'flex',
-	height: '24px',
+	height: 24,
 	justifyContent: 'center',
 	position: 'absolute',
 	right: 0,
-	width: '24px',
+	width: 24,
 });

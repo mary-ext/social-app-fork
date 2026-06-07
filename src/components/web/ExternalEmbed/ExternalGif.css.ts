@@ -11,7 +11,7 @@ export const button = style({
 	borderBottomRightRadius: 0,
 	cursor: 'pointer',
 	display: 'block',
-	height: '300px',
+	height: 300,
 	margin: 0,
 	overflow: 'hidden',
 	padding: 0,

@@ -6,11 +6,11 @@ import { fontSize } from '#/styles/tokens.css';
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_200}`,
-	borderRadius: '20px',
+	borderRadius: 20,
 	boxShadow: vars.shadow.lg,
 	boxSizing: 'border-box',
-	maxWidth: '320px',
-	padding: '24px',
+	maxWidth: 320,
+	padding: 24,
 	position: 'relative',
 	transitionDuration: '200ms',
 	transitionProperty: 'opacity, transform',
@@ -27,7 +27,7 @@ export const title = style({
 	fontWeight: 600,
 	lineHeight: 1.3,
 	margin: 0,
-	paddingBottom: '4px',
+	paddingBottom: 4,
 });
 
 export const description = style({
@@ -35,12 +35,12 @@ export const description = style({
 	fontSize: fontSize.md,
 	lineHeight: 1.3,
 	margin: 0,
-	paddingBottom: '16px',
+	paddingBottom: 16,
 });
 
 export const actions = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: '8px',
+	gap: 8,
 	width: '100%',
 });

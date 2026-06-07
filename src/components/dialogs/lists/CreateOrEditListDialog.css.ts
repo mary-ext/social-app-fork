@@ -3,9 +3,9 @@ import { style } from '@vanilla-extract/css';
 export const fields = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: '20px',
-	paddingBlock: '20px',
-	paddingInline: '20px',
+	gap: 20,
+	paddingBlock: 20,
+	paddingInline: 20,
 });
 
 /** Left-aligns the avatar editor under its label. */
@@ -15,10 +15,10 @@ export const avatarWrap = style({
 });
 
 export const errorWrap = style({
-	marginTop: '20px',
-	paddingInline: '20px',
+	marginTop: 20,
+	paddingInline: 20,
 });
 
 export const errorText = style({
-	marginTop: '4px',
+	marginTop: 4,
 });

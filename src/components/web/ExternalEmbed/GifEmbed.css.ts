@@ -29,7 +29,7 @@ export const abs = style({
 export const box = style({
 	aspectRatio: ratioVar,
 	backgroundColor: '#000',
-	borderRadius: `${borderRadius.md}px`,
+	borderRadius: borderRadius.md,
 	boxSizing: 'border-box',
 	height: '100%',
 	overflow: 'hidden',
@@ -38,11 +38,11 @@ export const box = style({
 
 // RNW insets the inner layers by 2px on every edge to hide a sub-pixel clipping seam on web.
 export const inset = style({
-	bottom: '-2px',
-	left: '-2px',
+	bottom: -2,
+	left: -2,
 	position: 'absolute',
-	right: '-2px',
-	top: '-2px',
+	right: -2,
+	top: -2,
 });
 
 export const video = style({
@@ -89,21 +89,21 @@ export const dimOuter = style([dimBase, { opacity: 0.3 }]);
 const badge = style({
 	alignItems: 'center',
 	backgroundColor: 'rgba(0, 0, 0, 0.75)',
-	borderRadius: '6px',
-	bottom: '6px',
+	borderRadius: 6,
+	bottom: 6,
 	display: 'flex',
 	justifyContent: 'center',
-	paddingBlock: '3px',
-	paddingInline: '4px',
+	paddingBlock: 3,
+	paddingInline: 4,
 	position: 'absolute',
 	zIndex: 2,
 });
 
-export const gifBadge = style([badge, { left: '6px' }]);
+export const gifBadge = style([badge, { left: 6 }]);
 
 export const altBadge = style([
 	badge,
-	{ appearance: 'none', border: 0, cursor: 'pointer', margin: 0, right: '6px' },
+	{ appearance: 'none', border: 0, cursor: 'pointer', margin: 0, right: 6 },
 ]);
 
 export const badgeText = style({

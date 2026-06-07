@@ -32,7 +32,7 @@ export const abs = style({
 
 export const innerBox = style({
 	backgroundColor: vars.palette.contrast_25,
-	borderRadius: `${borderRadius.md}px`,
+	borderRadius: borderRadius.md,
 	boxSizing: 'border-box',
 	height: '100%',
 	overflow: 'hidden',
@@ -46,7 +46,7 @@ const pressableBase = style({
 	appearance: 'none',
 	background: 'transparent',
 	border: 0,
-	borderRadius: `${borderRadius.md}px`,
+	borderRadius: borderRadius.md,
 	boxSizing: 'border-box',
 	cursor: 'pointer',
 	display: 'block',

@@ -16,7 +16,7 @@ export const scroll = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: `${ITEM_GAP}px`,
+	gap: ITEM_GAP,
 	height: '100%',
 	// prevent horizontal trackpad/wheel swipes from triggering the browser's back/forward
 	// overscroll-navigation gesture. handles chrome and firefox; safari ignores this and is handled
@@ -36,7 +36,7 @@ export const item = style({
 	appearance: 'none',
 	background: vars.palette.contrast_25,
 	border: 0,
-	borderRadius: `${borderRadius.md}px`,
+	borderRadius: borderRadius.md,
 	// inherit the viewport's grab cursor instead of the button pointer
 	cursor: 'inherit',
 	display: 'block',

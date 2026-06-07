@@ -22,13 +22,13 @@ export const outer = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: '8px',
+	gap: 8,
 	marginInline: 'auto',
-	maxWidth: `${CENTER_COLUMN_WIDTH}px`,
-	minHeight: '52px',
-	paddingBottom: '4px',
-	paddingInline: '16px',
-	paddingTop: '4px',
+	maxWidth: CENTER_COLUMN_WIDTH,
+	minHeight: 52,
+	paddingBottom: 4,
+	paddingInline: 16,
+	paddingTop: 4,
 	position: 'sticky',
 	top: 0,
 	transform: `translateX(${offsetVar}) ${scrollbarShift}`,
@@ -37,7 +37,7 @@ export const outer = style({
 	zIndex: 10,
 	'@media': {
 		'screen and (min-width: 800px)': {
-			paddingInline: '20px',
+			paddingInline: 20,
 		},
 	},
 });
@@ -59,17 +59,17 @@ export const content = style({
 	flex: '1 1 0%',
 	flexDirection: 'column',
 	justifyContent: 'center',
-	minHeight: `${HEADER_SLOT_SIZE}px`,
+	minHeight: HEADER_SLOT_SIZE,
 });
 
 export const slot = style({
 	flexShrink: 0,
-	width: `${HEADER_SLOT_SIZE}px`,
+	width: HEADER_SLOT_SIZE,
 	zIndex: 50,
 });
 
 export const backButton = style({
-	marginLeft: `-${BUTTON_VISUAL_ALIGNMENT_OFFSET}px`,
+	marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET,
 });
 
 /** Header title: bumps from `lg` to `xl` past the mobile breakpoint. */

@@ -11,14 +11,14 @@ export const label = style({
 	fontFamily: FONT_FAMILY,
 	fontSize: fontSize.sm,
 	fontWeight: 500,
-	marginBottom: '8px',
+	marginBottom: 8,
 });
 
 export const input = style({
 	appearance: 'none',
 	backgroundColor: vars.palette.contrast_50,
 	border: '1px solid transparent',
-	borderRadius: '10px',
+	borderRadius: 10,
 	boxSizing: 'border-box',
 	color: vars.palette.contrast_1000,
 	display: 'block',
@@ -27,8 +27,8 @@ export const input = style({
 	lineHeight: 1.2,
 	margin: 0,
 	outline: 'none',
-	paddingBlock: '13px',
-	paddingInline: '12px',
+	paddingBlock: 13,
+	paddingInline: 12,
 	width: '100%',
 	selectors: {
 		'&::placeholder': { color: vars.palette.contrast_500 },
@@ -47,6 +47,6 @@ export const invalid = style({
 });
 
 export const multiline = style({
-	minHeight: '80px',
+	minHeight: 80,
 	resize: 'none',
 });

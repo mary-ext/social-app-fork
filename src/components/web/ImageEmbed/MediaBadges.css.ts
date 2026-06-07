@@ -4,24 +4,24 @@ import { vars } from '#/styles/contract.css';
 import { borderRadius } from '#/styles/tokens.css';
 
 const clusterBase = style({
-	bottom: '4px',
+	bottom: 4,
 	display: 'flex',
 	flexDirection: 'row',
 	position: 'absolute',
-	right: '4px',
+	right: 4,
 });
 
 export const cluster = styleVariants({
-	regular: [clusterBase, { gap: '3px' }],
-	large: [clusterBase, { gap: '4px' }],
+	regular: [clusterBase, { gap: 3 }],
+	large: [clusterBase, { gap: 4 }],
 });
 
 const countClusterBase = style({
 	display: 'flex',
 	flexDirection: 'row',
 	position: 'absolute',
-	right: '4px',
-	top: '4px',
+	right: 4,
+	top: 4,
 });
 
 /** The image-count badge sits top-right; the alt/crop cluster sits bottom-right. */
@@ -41,10 +41,10 @@ const boxBase = style({
 
 /** The single-image badge uses a 4px radius; the gallery badge uses 8px. Padding grows for the large badge. */
 export const box = styleVariants({
-	singleRegular: [boxBase, { borderRadius: `${borderRadius.xs}px`, padding: '3px' }],
-	singleLarge: [boxBase, { borderRadius: `${borderRadius.xs}px`, padding: '5px' }],
-	galleryRegular: [boxBase, { borderRadius: `${borderRadius.sm}px`, padding: '4px' }],
-	galleryLarge: [boxBase, { borderRadius: `${borderRadius.sm}px`, padding: '6px' }],
+	singleRegular: [boxBase, { borderRadius: borderRadius.xs, padding: 3 }],
+	singleLarge: [boxBase, { borderRadius: borderRadius.xs, padding: 5 }],
+	galleryRegular: [boxBase, { borderRadius: borderRadius.sm, padding: 4 }],
+	galleryLarge: [boxBase, { borderRadius: borderRadius.sm, padding: 6 }],
 });
 
 /** Fullscreen (cropped) icon; `currentColor` is resolved by the wrapper's `color`. */
@@ -55,5 +55,5 @@ export const icon = style({
 
 /** The non-large ALT label is 8px, which isn't a font token. */
 export const altSmall = style({
-	fontSize: '8px',
+	fontSize: 8,
 });

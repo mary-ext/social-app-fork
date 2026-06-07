@@ -32,10 +32,10 @@ export const viewport = style({
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_200}`,
-	borderRadius: '12px',
+	borderRadius: 12,
 	boxShadow: vars.shadow.lg,
 	boxSizing: 'border-box',
-	padding: '24px',
+	padding: 24,
 	position: 'relative',
 	transitionDuration: '200ms',
 	transitionProperty: 'opacity, transform',
@@ -47,8 +47,8 @@ export const popup = style({
 });
 
 export const popupSize = styleVariants({
-	default: { maxWidth: '600px' },
-	narrow: { maxWidth: '400px' },
+	default: { maxWidth: 600 },
+	narrow: { maxWidth: 400 },
 });
 
 export const closeBtn = style({
@@ -56,19 +56,19 @@ export const closeBtn = style({
 	appearance: 'none',
 	background: 'transparent',
 	border: 'none',
-	borderRadius: '999px',
+	borderRadius: 999,
 	color: vars.palette.contrast_600,
 	cursor: 'pointer',
 	display: 'inline-flex',
-	height: '34px',
+	height: 34,
 	justifyContent: 'center',
 	position: 'absolute',
-	right: '8px',
-	top: '8px',
-	width: '34px',
+	right: 8,
+	top: 8,
+	width: 34,
 	zIndex: 10,
 	selectors: {
 		'&:hover': { backgroundColor: vars.palette.contrast_50 },
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: '2px' },
+		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 	},
 });

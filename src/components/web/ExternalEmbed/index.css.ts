@@ -11,14 +11,14 @@ const transition = {
 	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
 } as const;
 
-export const wrapper = style({ marginTop: `${space.sm}px` });
+export const wrapper = style({ marginTop: space.sm });
 
 export const card = style({
 	...transition,
 	borderColor: vars.palette.contrast_100,
-	borderRadius: `${borderRadius.md}px`,
+	borderRadius: borderRadius.md,
 	borderStyle: 'solid',
-	borderWidth: '1px',
+	borderWidth: 1,
 	boxSizing: 'border-box',
 	color: 'inherit',
 	cursor: 'pointer',
@@ -45,8 +45,8 @@ export const body = style({
 	display: 'flex',
 	flexDirection: 'column',
 	flexGrow: 1,
-	gap: '3px',
-	paddingTop: `${space.sm}px`,
+	gap: 3,
+	paddingTop: space.sm,
 });
 
 /** Anchor reset for the player-card body (the `<a>` is the body itself, not the whole card). */
@@ -60,7 +60,7 @@ export const bodyWithMedia = style({
 	...transition,
 	borderTopColor: vars.palette.contrast_100,
 	borderTopStyle: 'solid',
-	borderTopWidth: '1px',
+	borderTopWidth: 1,
 	transitionProperty: 'border-color',
 	selectors: {
 		[`${card}:hover &`]: { borderTopColor: vars.palette.contrast_300 },
@@ -70,21 +70,21 @@ export const bodyWithMedia = style({
 export const titleBlock = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: '3px',
-	paddingBottom: `${space.xs}px`,
-	paddingLeft: `${space.md}px`,
-	paddingRight: `${space.md}px`,
+	gap: 3,
+	paddingBottom: space.xs,
+	paddingLeft: space.md,
+	paddingRight: space.md,
 });
 
 export const domainWrap = style({
-	paddingLeft: `${space.md}px`,
-	paddingRight: `${space.md}px`,
+	paddingLeft: space.md,
+	paddingRight: space.md,
 });
 
 export const divider = style({
 	borderTopColor: vars.palette.contrast_100,
 	borderTopStyle: 'solid',
-	borderTopWidth: '1px',
+	borderTopWidth: 1,
 	width: '100%',
 });
 
@@ -92,10 +92,10 @@ export const domainRow = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: `${space._2xs}px`,
-	paddingBottom: `${space.sm}px`,
+	gap: space._2xs,
+	paddingBottom: space.sm,
 	// off the divider; a hair more than the symmetric `pb_sm` below it (matches the RNW card).
-	paddingTop: '6px',
+	paddingTop: 6,
 });
 
 export const globe = style({
