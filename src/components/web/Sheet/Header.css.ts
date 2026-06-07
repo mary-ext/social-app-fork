@@ -11,9 +11,9 @@ export const outer = style({
 	flexDirection: 'row',
 	flexShrink: 0,
 	gap: 8,
-	minHeight: 52,
-	paddingBlock: 8,
-	paddingInline: 12,
+	minHeight: 50,
+	paddingBlock: 6,
+	paddingInline: 6,
 });
 
 export const content = style({
