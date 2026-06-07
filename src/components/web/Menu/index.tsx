@@ -28,6 +28,7 @@ export function Popup({
 	children,
 	label,
 	align = 'start',
+	minWidth,
 	side = 'bottom',
 	sideOffset = 5,
 }: {
@@ -35,6 +36,8 @@ export function Popup({
 	/** Accessible name for the menu. */
 	label?: string;
 	align?: BaseMenu.Positioner.Props['align'];
+	/** Floor on the popup width, so a short item list still reads as a menu rather than a tooltip. */
+	minWidth?: number;
 	side?: BaseMenu.Positioner.Props['side'];
 	sideOffset?: number;
 }) {
@@ -47,7 +50,11 @@ export function Popup({
 				sideOffset={sideOffset}
 				collisionPadding={5}
 			>
-				<BaseMenu.Popup aria-label={label} className={styles.popup}>
+				<BaseMenu.Popup
+					aria-label={label}
+					className={styles.popup}
+					style={minWidth ? { minWidth } : undefined}
+				>
 					{children}
 				</BaseMenu.Popup>
 			</BaseMenu.Positioner>

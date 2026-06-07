@@ -4,7 +4,6 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
@@ -21,9 +20,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { EventStopper } from '#/view/com/util/EventStopper';
-
-import { Button, ButtonIcon } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
 import { UserAddRemoveListsDialog } from '#/components/dialogs/lists/UserAddRemoveListsDialog';
 import { StarterPackDialog } from '#/components/dialogs/StarterPackDialog';
@@ -45,13 +41,14 @@ import {
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
 import { StarterPack } from '#/components/icons/StarterPack';
-import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { useFullVerificationState } from '#/components/verification';
 import { VerificationCreatePrompt } from '#/components/verification/VerificationCreatePrompt';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as Menu from '#/components/web/Menu';
 
 import { useActorStatus, useLiveNowConfig } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
@@ -223,35 +220,21 @@ let ProfileMenu = ({
 		}) ?? [];
 
 	return (
-		<EventStopper onKeyDown={false}>
+		<>
 			<Menu.Root>
-				<Menu.Trigger label={l`More options`}>
-					{({ props }) => {
-						return (
-							<>
-								<Button
-									{...props}
-									testID="profileHeaderDropdownBtn"
-									label={l`More options`}
-									hitSlop={HITSLOP_20}
-									variant="solid"
-									color="secondary"
-									size="small"
-									shape="round"
-								>
-									<ButtonIcon icon={Ellipsis} size="sm" />
-								</Button>
-							</>
-						);
-					}}
-				</Menu.Trigger>
+				<Menu.Trigger
+					render={
+						<Button label={l`More options`} variant="solid" color="secondary" size="small" shape="round">
+							<ButtonIcon icon={Ellipsis} size="sm" />
+						</Button>
+					}
+				/>
 
-				<Menu.Outer style={{ minWidth: 170 }}>
+				<Menu.Popup label={l`More options`} align="center" minWidth={170}>
 					<Menu.Group>
 						<Menu.Item
-							testID="profileHeaderDropdownShareBtn"
 							label={l`Copy link to profile`}
-							onPress={() => {
+							onClick={() => {
 								if (showLoggedOutWarning) {
 									loggedOutWarningPromptControl.open();
 								} else {
@@ -259,14 +242,12 @@ let ProfileMenu = ({
 								}
 							}}
 						>
-							<Menu.ItemText>{<Trans>Copy link to profile</Trans>}</Menu.ItemText>
+							<Menu.ItemText>
+								<Trans>Copy link to profile</Trans>
+							</Menu.ItemText>
 							<Menu.ItemIcon icon={ChainLinkIcon} />
 						</Menu.Item>
-						<Menu.Item
-							testID="profileHeaderDropdownSearchBtn"
-							label={l`Search posts`}
-							onPress={onPressSearch}
-						>
+						<Menu.Item label={l`Search posts`} onClick={onPressSearch}>
 							<Menu.ItemText>
 								<Trans>Search posts</Trans>
 							</Menu.ItemText>
@@ -276,15 +257,14 @@ let ProfileMenu = ({
 
 					{hasSession && (
 						<>
-							<Menu.Divider />
+							<Menu.Separator />
 							<Menu.Group>
 								{!isSelf && (
 									<>
 										{(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (
 											<Menu.Item
-												testID="profileHeaderDropdownFollowBtn"
 												label={isFollowing ? l`Unfollow account` : l`Follow account`}
-												onPress={isFollowing ? onPressUnfollowAccount : onPressFollowAccount}
+												onClick={isFollowing ? onPressUnfollowAccount : onPressFollowAccount}
 											>
 												<Menu.ItemText>
 													{isFollowing ? <Trans>Unfollow account</Trans> : <Trans>Follow account</Trans>}
@@ -294,21 +274,13 @@ let ProfileMenu = ({
 										)}
 									</>
 								)}
-								<Menu.Item
-									testID="profileHeaderDropdownStarterPackAddRemoveBtn"
-									label={l`Add to starter packs`}
-									onPress={onPressAddToStarterPacks}
-								>
+								<Menu.Item label={l`Add to starter packs`} onClick={onPressAddToStarterPacks}>
 									<Menu.ItemText>
 										<Trans>Add to starter packs</Trans>
 									</Menu.ItemText>
 									<Menu.ItemIcon icon={StarterPack} />
 								</Menu.Item>
-								<Menu.Item
-									testID="profileHeaderDropdownListAddRemoveBtn"
-									label={l`Add to lists`}
-									onPress={addToListsDialogControl.open}
-								>
+								<Menu.Item label={l`Add to lists`} onClick={addToListsDialogControl.open}>
 									<Menu.ItemText>
 										<Trans>Add to lists</Trans>
 									</Menu.ItemText>
@@ -316,7 +288,6 @@ let ProfileMenu = ({
 								</Menu.Item>
 								{isSelf && canGoLive && (
 									<Menu.Item
-										testID="profileHeaderDropdownListAddRemoveBtn"
 										label={
 											status.isDisabled
 												? l`Go live (disabled)`
@@ -324,7 +295,7 @@ let ProfileMenu = ({
 													? l`Edit live status`
 													: l`Go live`
 										}
-										onPress={() => {
+										onClick={() => {
 											if (status.isDisabled) {
 												goLiveDisabledDialogControl.open();
 											} else {
@@ -348,9 +319,8 @@ let ProfileMenu = ({
 									!verification.profile.isViewer &&
 									(verification.viewer.hasIssuedVerification ? (
 										<Menu.Item
-											testID="profileHeaderDropdownVerificationRemoveButton"
 											label={l`Remove verification`}
-											onPress={() => verificationRemovePromptControl.open()}
+											onClick={() => verificationRemovePromptControl.open()}
 										>
 											<Menu.ItemText>
 												<Trans>Remove verification</Trans>
@@ -359,9 +329,8 @@ let ProfileMenu = ({
 										</Menu.Item>
 									) : (
 										<Menu.Item
-											testID="profileHeaderDropdownVerificationCreateButton"
 											label={l`Verify account`}
-											onPress={() => verificationCreatePromptControl.open()}
+											onClick={() => verificationCreatePromptControl.open()}
 										>
 											<Menu.ItemText>
 												<Trans>Verify account</Trans>
@@ -373,9 +342,8 @@ let ProfileMenu = ({
 									<>
 										{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
 											<Menu.Item
-												testID="profileHeaderDropdownMuteBtn"
 												label={profile.viewer?.muted ? l`Unmute account` : l`Mute account`}
-												onPress={onPressMuteAccount}
+												onClick={onPressMuteAccount}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.muted ? (
@@ -389,9 +357,8 @@ let ProfileMenu = ({
 										)}
 										{!profile.viewer?.blockingByList && (
 											<Menu.Item
-												testID="profileHeaderDropdownBlockBtn"
 												label={profile.viewer ? l`Unblock account` : l`Block account`}
-												onPress={() => blockPromptControl.open()}
+												onClick={() => blockPromptControl.open()}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.blocking ? (
@@ -403,11 +370,7 @@ let ProfileMenu = ({
 												<Menu.ItemIcon icon={profile.viewer?.blocking ? PersonCheck : PersonX} />
 											</Menu.Item>
 										)}
-										<Menu.Item
-											testID="profileHeaderDropdownReportBtn"
-											label={l`Report account`}
-											onPress={onPressReportAccount}
-										>
+										<Menu.Item label={l`Report account`} onClick={onPressReportAccount}>
 											<Menu.ItemText>
 												<Trans>Report account</Trans>
 											</Menu.ItemText>
@@ -420,23 +383,15 @@ let ProfileMenu = ({
 					)}
 					{devModeEnabled ? (
 						<>
-							<Menu.Divider />
+							<Menu.Separator />
 							<Menu.Group>
-								<Menu.Item
-									testID="profileHeaderDropdownShareATURIBtn"
-									label={l`Copy at:// URI`}
-									onPress={onPressShareATUri}
-								>
+								<Menu.Item label={l`Copy at:// URI`} onClick={onPressShareATUri}>
 									<Menu.ItemText>
 										<Trans>Copy at:// URI</Trans>
 									</Menu.ItemText>
 									<Menu.ItemIcon icon={ClipboardIcon} />
 								</Menu.Item>
-								<Menu.Item
-									testID="profileHeaderDropdownShareDIDBtn"
-									label={l`Copy DID`}
-									onPress={onPressShareDID}
-								>
+								<Menu.Item label={l`Copy DID`} onClick={onPressShareDID}>
 									<Menu.ItemText>
 										<Trans>Copy DID</Trans>
 									</Menu.ItemText>
@@ -445,7 +400,7 @@ let ProfileMenu = ({
 							</Menu.Group>
 						</>
 					) : null}
-				</Menu.Outer>
+				</Menu.Popup>
 			</Menu.Root>
 			<StarterPackDialog control={addToStarterPacksDialogControl} targetDid={profile.did} />
 			<UserAddRemoveListsDialog
@@ -500,7 +455,7 @@ let ProfileMenu = ({
 			) : (
 				<GoLiveDialog control={goLiveDialogControl} profile={profile} />
 			)}
-		</EventStopper>
+		</>
 	);
 };
 
