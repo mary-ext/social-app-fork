@@ -1,10 +1,9 @@
 import { styleVariants } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
-import { recipe } from '#/components/web/css/recipe';
-
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
+import { recipe } from '#/styles/recipe';
 import { roundToDevicePx } from '#/styles/round';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 

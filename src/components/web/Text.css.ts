@@ -1,10 +1,9 @@
 import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
-import { recipe } from '#/components/web/css/recipe';
-
 import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
+import { recipe } from '#/styles/recipe';
 import { roundToDevicePx } from '#/styles/round';
 import { fontFamily, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 

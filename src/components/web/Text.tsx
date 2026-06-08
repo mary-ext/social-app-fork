@@ -2,8 +2,9 @@ import type { ComponentPropsWithoutRef } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
-import type { RecipeVariants } from '#/components/web/css/recipe';
 import * as styles from '#/components/web/Text.css';
+
+import type { RecipeVariants } from '#/styles/recipe';
 
 type TextVariants = RecipeVariants<typeof styles.text>;
 

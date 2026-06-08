@@ -11,7 +11,8 @@ import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/web/Button.css';
-import type { RecipeVariants } from '#/components/web/css/recipe';
+
+import type { RecipeVariants } from '#/styles/recipe';
 
 type ButtonVariants = RecipeVariants<typeof styles.button>;
 

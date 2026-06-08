@@ -6,7 +6,7 @@ import {
 	type RecipeFn,
 	type VariantValue,
 	createRuntimeFn,
-} from '#/components/web/css/recipe-runtime';
+} from '#/styles/recipe-runtime';
 
 // #region types
 
@@ -119,6 +119,6 @@ export const recipe = <Variants extends VariantGroups>(
 	return addFunctionSerializer<RecipeFn>(createRuntimeFn(config), {
 		args: [config],
 		importName: 'createRuntimeFn',
-		importPath: '#/components/web/css/recipe-runtime',
+		importPath: '#/styles/recipe-runtime',
 	}) as RecipeRuntimeFn<Variants>;
 };
