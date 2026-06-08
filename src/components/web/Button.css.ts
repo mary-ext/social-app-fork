@@ -158,3 +158,30 @@ export const button = recipe(
 export const textSize = styleVariants(fontSize, (value) => ({
 	'@layer': { [components]: { fontSize: value } },
 }));
+
+/** Box wrapping a {@link ButtonIcon}'s icon, normalizing its footprint to match the RNW Button. */
+export const iconBox = recipe(
+	{
+		base: {
+			alignItems: 'center',
+			display: 'inline-flex',
+			justifyContent: 'center',
+		},
+		compoundVariants: [
+			// `2xs` icons keep the full line-height box but a narrower width, matching upstream.
+			{ narrow: true, size: 'large', style: { width: 10 } },
+			{ narrow: true, size: 'small', style: { width: 10 } },
+		],
+		variants: {
+			narrow: { false: {}, true: {} },
+			// the icon hugs the button edge tighter than the text does: the flex gap is deliberately a
+			// touch wide and each icon is pulled back in with a negative margin. round icon-only buttons
+			// center a lone icon, so they skip the pull.
+			pull: { false: {}, true: { marginInline: -2 } },
+			// box edge length per button size, matching the rendered text line so a larger icon never
+			// grows the button height (`2xs` narrows the width via the compound variants above).
+			size: { large: { height: 20, width: 20 }, small: { height: 17, width: 17 } },
+		},
+	},
+	{ debugId: 'buttonIcon', layer: components },
+);

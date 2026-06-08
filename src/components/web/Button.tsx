@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ComponentType, ReactNode, Ref } from 'react';
+import { type ComponentPropsWithoutRef, type ComponentType, createContext, type ReactNode, type Ref, useContext } from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
 
 import type { Props as IconProps } from '#/components/icons/common';
@@ -20,15 +20,34 @@ export type ButtonProps = Omit<ComponentPropsWithoutRef<typeof BaseButton>, 'cla
 	ref?: Ref<HTMLButtonElement>;
 };
 
+// resolved (defaulted) geometry the Button shares with its ButtonIcon children. mirrors the recipe's
+// defaultVariants so ButtonIcon can size its box and negative margin without re-reading the recipe.
+type ButtonContextValue = {
+	shape: NonNullable<ButtonVariants['shape']>;
+	size: NonNullable<ButtonVariants['size']>;
+};
+
+const ButtonContext = createContext<ButtonContextValue | null>(null);
+ButtonContext.displayName = 'ButtonContext';
+
 /** The web-native button primitive, built on Base UI's headless `<button>`. */
-export function Button({ label, variant, color, size, shape, className, children, ...rest }: ButtonProps) {
+export function Button({
+	label,
+	variant,
+	color,
+	size = 'small',
+	shape = 'default',
+	className,
+	children,
+	...rest
+}: ButtonProps) {
 	return (
 		<BaseButton
 			aria-label={label}
 			className={cx(styles.button({ color, shape, size, variant }), className)}
 			{...rest}
 		>
-			{children}
+			<ButtonContext.Provider value={{ shape, size }}>{children}</ButtonContext.Provider>
 		</BaseButton>
 	);
 }
@@ -47,5 +66,19 @@ export type ButtonIconProps = {
 
 /** Renders an icon that inherits the button's text color via `currentColor`. */
 export function ButtonIcon({ icon: Icon, size = 'sm' }: ButtonIconProps) {
-	return <Icon size={size} fill="currentColor" />;
+	const ctx = useContext(ButtonContext);
+	if (!ctx) {
+		throw new Error('ButtonIcon must be rendered inside a Button');
+	}
+	return (
+		<span
+			className={styles.iconBox({
+				narrow: size === '2xs',
+				pull: ctx.shape !== 'round',
+				size: ctx.size,
+			})}
+		>
+			<Icon size={size} fill="currentColor" />
+		</span>
+	);
 }
