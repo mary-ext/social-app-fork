@@ -82,6 +82,25 @@ export const button = recipe(
 				variant: 'solid',
 			},
 			{
+				// inverted secondary: a high-contrast fill for the active state of toggle-like buttons (e.g.
+				// the GIF picker's category pills). `contrast_0` text reads as light-on-dark in light themes
+				// and dark-on-light in dark ones, matching upstream's `text_inverted`.
+				color: 'secondary_inverted',
+				style: {
+					backgroundColor: vars.palette.contrast_900,
+					color: vars.palette.contrast_0,
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.contrast_975 },
+						'&:disabled': {
+							backgroundColor: vars.palette.contrast_600,
+							color: vars.palette.contrast_300,
+							opacity: 1,
+						},
+					},
+				},
+				variant: 'solid',
+			},
+			{
 				// subtle destructive action (e.g. the composer's "Discard"): tinted fill rather than a
 				// full-strength negative button.
 				color: 'negative_subtle',
@@ -127,7 +146,7 @@ export const button = recipe(
 		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
-			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {} },
+			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {}, secondary_inverted: {} },
 			shape: { default: {}, round: {} },
 			size: {
 				large: {

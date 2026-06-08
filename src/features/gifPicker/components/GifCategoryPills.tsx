@@ -1,11 +1,7 @@
-import { View } from 'react-native';
 import type { MessageDescriptor } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
 import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import type { Props as SVGIconProps } from '#/components/icons/common';
@@ -16,6 +12,9 @@ import {
 import { Heart2_Stroke2_Corner0_Rounded as Heart } from '#/components/icons/Heart2';
 import { Shaka_Stroke2_Corner0_Rounded as Shaka } from '#/components/icons/Shaka';
 import { Trending3_Stroke2_Corner1_Rounded as Trending } from '#/components/icons/Trending';
+import { Button, ButtonIcon } from '#/components/web/Button';
+
+import * as styles from '#/features/gifPicker/components/GifCategoryPills.css';
 
 export type GifCategory = {
 	id: string;
@@ -110,10 +109,9 @@ export function GifCategoryPills({
 	hasRecents: boolean;
 }) {
 	const { i18n } = useLingui();
-	const t = useTheme();
 
 	return (
-		<View style={[a.flex_row, a.justify_between, a.align_center, a.gap_xs, a.pb_md, t.atoms.bg]}>
+		<div className={styles.row}>
 			{GIF_CATEGORIES.map((category) => {
 				if (category.id === 'recents' && !hasRecents) return null;
 				const isActive = category.id === activeId;
@@ -122,7 +120,7 @@ export function GifCategoryPills({
 						key={category.id}
 						label={i18n._(category.label)}
 						aria-current={isActive ? 'true' : undefined}
-						onPress={() => onSelect(category)}
+						onClick={() => onSelect(category)}
 						size="small"
 						color={isActive ? 'secondary_inverted' : 'secondary'}
 						shape="round"
@@ -131,6 +129,6 @@ export function GifCategoryPills({
 					</Button>
 				);
 			})}
-		</View>
+		</div>
 	);
 }

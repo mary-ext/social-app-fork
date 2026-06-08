@@ -1266,11 +1266,6 @@ msgstr ""
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
-#. Accessibility label for the dialog shown when the GIF picker hits an unexpected runtime error and falls back to its error boundary.
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:17
-msgid "An error has occurred"
-msgstr ""
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:424
 msgid "An error occurred"
 msgstr ""
@@ -2030,7 +2025,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #. Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:59
+#: src/features/gifPicker/components/GifPickerHeader.tsx:63
 msgid "Clear GIF search"
 msgstr "Clear GIF search"
 
@@ -2087,7 +2082,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:123
 #: src/components/verification/VerifierDialog.tsx:117
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:144
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:47
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:31
 #: src/features/liveNow/components/EditLiveDialog.tsx:185
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
 #: src/screens/Messages/components/InviteLinkDialog.tsx:459
@@ -2104,14 +2099,13 @@ msgstr ""
 msgid "Close banner"
 msgstr "Close banner"
 
-#. Accessibility label for the button that dismisses the GIF picker error dialog.
 #: src/components/dialogs/LanguageSelectDialog.tsx:203
 #: src/components/dialogs/LanguageSelectDialog.tsx:289
 #: src/components/dialogs/LanguageSelectDialog.tsx:309
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
 #: src/components/web/Dialog/index.tsx:124
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:29
 msgid "Close dialog"
 msgstr ""
 
@@ -2418,7 +2412,7 @@ msgid "Could not update notification settings"
 msgstr ""
 
 #. Title of the error screen shown when the GIF provider request fails.
-#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:51
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:36
 msgid "Couldn’t load GIFs"
 msgstr "Couldn’t load GIFs"
 
@@ -3919,6 +3913,8 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:138
 #: src/components/moderation/ScreenHider.tsx:148
 #: src/components/web/Layout/Header.tsx:70
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:79
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
 #: src/screens/ProfileList/components/ErrorScreen.tsx:39
 #: src/view/com/auth/LoggedOut.tsx:68
@@ -4090,7 +4086,7 @@ msgid "Handle or DID"
 msgstr "Handle or DID"
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to happy/joyful GIFs.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:66
+#: src/features/gifPicker/components/GifCategoryPills.tsx:65
 msgid "Happy GIFs"
 msgstr "Happy GIFs"
 
@@ -4853,7 +4849,7 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
-#: src/view/shell/Composer.tsx:50
+#: src/view/shell/Composer.tsx:44
 msgid "Loading"
 msgstr "Loading"
 
@@ -4866,6 +4862,11 @@ msgstr "Loading chat..."
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:84
 msgid "Loading GIF"
 msgstr "Loading GIF"
+
+#: src/features/gifPicker/components/GifPickerGrid.tsx:82
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:29
+msgid "Loading GIFs"
+msgstr "Loading GIFs"
 
 #: src/components/web/Lightbox/index.tsx:161
 msgid "Loading image"
@@ -4934,7 +4935,7 @@ msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>
 msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to GIFs about love/affection.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:56
+#: src/features/gifPicker/components/GifCategoryPills.tsx:55
 msgid "Love GIFs"
 msgstr "Love GIFs"
 
@@ -5485,12 +5486,12 @@ msgid "No followers yet"
 msgstr ""
 
 #. Empty-state message shown in the GIF picker when a search returns zero results. Placeholder is the user’s search query.
-#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:25
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:56
 msgid "No GIFs found for \"{query}\"."
 msgstr "No GIFs found for \"{query}\"."
 
 #. Empty-state message shown when the trending/featured GIF feed returns no results (rare, usually a transient provider issue).
-#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:36
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:67
 msgid "No GIFs to show right now. Try again in a moment."
 msgstr "No GIFs to show right now. Try again in a moment."
 
@@ -5568,7 +5569,7 @@ msgid "No quotes yet"
 msgstr ""
 
 #. Empty-state message shown in the GIF picker’s Recents tab before the user has selected any GIFs.
-#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:62
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
@@ -5712,7 +5713,7 @@ msgstr ""
 
 #. Title of the error screen shown when the GIF picker crashes unexpectedly.
 #: src/components/dialogs/LanguageSelectDialog.tsx:305
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:25
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:15
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -6058,7 +6059,7 @@ msgid "Page not found"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to celebration/party GIFs.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:84
+#: src/features/gifPicker/components/GifCategoryPills.tsx:83
 msgid "Party GIFs"
 msgstr "Party GIFs"
 
@@ -6593,7 +6594,7 @@ msgid "Receive push notifications"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that shows previously selected GIFs in the GIF picker.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:36
+#: src/features/gifPicker/components/GifCategoryPills.tsx:35
 msgid "Recent GIFs"
 msgstr "Recent GIFs"
 
@@ -7092,6 +7093,8 @@ msgstr ""
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:47
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:50
 #: src/components/StarterPack/ProfileStarterPacks.tsx:321
+#: src/features/gifPicker/components/GifPickerGrid.tsx:88
+#: src/features/gifPicker/components/GifPickerGrid.tsx:89
 #: src/screens/Messages/ChatList.tsx:305
 #: src/screens/Messages/components/MessageListError.tsx:26
 #: src/screens/Messages/Inbox.tsx:177
@@ -7129,7 +7132,7 @@ msgid "Returns to the previous step"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:75
+#: src/features/gifPicker/components/GifCategoryPills.tsx:74
 msgid "Sad GIFs"
 msgstr "Sad GIFs"
 
@@ -7300,7 +7303,7 @@ msgid "Search for posts, users, or feeds"
 msgstr ""
 
 #. Accessibility label for the GIF search input inside the GIF picker dialog.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:33
+#: src/features/gifPicker/components/GifPickerHeader.tsx:36
 msgid "Search GIFs"
 msgstr ""
 
@@ -7310,7 +7313,7 @@ msgid "Search is currently unavailable when logged out"
 msgstr ""
 
 #. Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:37
+#: src/features/gifPicker/components/GifPickerHeader.tsx:40
 msgid "Search KLIPY"
 msgstr "Search KLIPY"
 
@@ -7450,7 +7453,7 @@ msgstr ""
 
 #. Accessibility label for an individual GIF tile in the picker grid. The placeholder is the GIF’s title from the provider.
 #. placeholder {0}: gif.title
-#: src/features/gifPicker/components/GifPickerItem.tsx:24
+#: src/features/gifPicker/components/GifPickerItem.tsx:18
 msgid "Select GIF \"{0}\""
 msgstr ""
 
@@ -8377,7 +8380,7 @@ msgid "There is no invite link for this group chat."
 msgstr "There is no invite link for this group chat."
 
 #. Body message of the error screen shown when the GIF provider request fails. Encourages the user to retry.
-#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:55
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:42
 msgid "There was a problem loading GIFs. Check your connection and try again."
 msgstr "There was a problem loading GIFs. Check your connection and try again."
 
@@ -8464,7 +8467,7 @@ msgstr ""
 
 #. Body of the error screen shown when the GIF picker crashes unexpectedly. Encourages the user to report the issue.
 #: src/components/dialogs/LanguageSelectDialog.tsx:306
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:29
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:21
 #: src/view/com/util/ErrorBoundary.tsx:58
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
@@ -8868,7 +8871,7 @@ msgid "Trending"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that shows currently trending/featured GIFs in the GIF picker.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:46
+#: src/features/gifPicker/components/GifCategoryPills.tsx:45
 msgid "Trending GIFs"
 msgstr "Trending GIFs"
 
@@ -8888,6 +8891,11 @@ msgstr ""
 msgctxt "english-only-resource"
 msgid "Try a different search term, or <0>read about how to use search filters</0>."
 msgstr "Try a different search term, or <0>read about how to use search filters</0>."
+
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:48
+#: src/features/gifPicker/components/GifPickerPlaceholder.tsx:49
+msgid "Try again"
+msgstr "Try again"
 
 #: src/view/com/util/error/ErrorScreen.tsx:94
 msgctxt "action"
@@ -9732,7 +9740,7 @@ msgid "Write a post"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1296
-#: src/view/shell/Composer.tsx:38
+#: src/view/shell/Composer.tsx:39
 msgid "Write post"
 msgstr ""
 
@@ -9756,7 +9764,7 @@ msgid "www.mylivestream.tv"
 msgstr ""
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to affirmation/agreement GIFs.
-#: src/features/gifPicker/components/GifCategoryPills.tsx:94
+#: src/features/gifPicker/components/GifCategoryPills.tsx:93
 msgid "Yes GIFs"
 msgstr "Yes GIFs"
 

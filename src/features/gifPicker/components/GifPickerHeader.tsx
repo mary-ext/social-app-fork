@@ -1,34 +1,37 @@
 import type { Ref } from 'react';
-import { type TextInput, View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon } from '#/components/Button';
-import * as TextField from '#/components/forms/TextField';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
+import { Button, ButtonIcon } from '#/components/web/Button';
+import * as TextField from '#/components/web/TextField';
+
+import * as styles from '#/features/gifPicker/components/GifPickerHeader.css';
 
 export function GifPickerHeader({
 	inputRef,
+	value,
 	onChangeText,
 	onClear,
 	onEscape,
 	canClear,
 }: {
-	inputRef: Ref<TextInput>;
+	inputRef: Ref<HTMLInputElement>;
+	value: string;
 	onChangeText: (text: string) => void;
 	onClear: () => void;
 	onEscape: () => void;
 	canClear: boolean;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 
 	return (
-		<View style={[a.relative, a.pb_md, a.flex_row, a.align_center, t.atoms.bg]}>
-			<TextField.Root style={a.flex_1}>
-				<TextField.Icon icon={Search} />
+		<div className={styles.root}>
+			<div className={styles.field}>
+				<span className={styles.icon}>
+					<Search size="md" fill="currentColor" />
+				</span>
 				<TextField.Input
 					label={l({
 						message: 'Search GIFs',
@@ -39,23 +42,24 @@ export function GifPickerHeader({
 						comment:
 							'Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.',
 					})}
+					value={value}
 					onChangeText={onChangeText}
-					returnKeyType="search"
 					inputRef={inputRef}
 					maxLength={50}
-					onKeyPress={({ nativeEvent }) => {
-						if (nativeEvent.key === 'Escape') {
+					onKeyDown={(e) => {
+						if (e.key === 'Escape') {
 							onEscape();
 						}
 					}}
+					className={clsx(styles.input, canClear && styles.inputWithClear)}
 				/>
 				{canClear && (
 					<Button
-						size="tiny"
+						size="small"
 						color="secondary"
 						shape="round"
-						style={a.z_30}
-						onPress={onClear}
+						className={styles.clear}
+						onClick={onClear}
 						label={l({
 							message: 'Clear GIF search',
 							comment:
@@ -65,7 +69,7 @@ export function GifPickerHeader({
 						<ButtonIcon icon={X} size="sm" />
 					</Button>
 				)}
-			</TextField.Root>
-		</View>
+			</div>
+		</div>
 	);
 }

@@ -1,6 +1,10 @@
 import { useLingui } from '@lingui/react/macro';
 
-import { ListMaybePlaceholder } from '#/components/Lists';
+import { Button, ButtonText } from '#/components/web/Button';
+import { CenteredSpinner } from '#/components/web/CenteredSpinner';
+import { Text } from '#/components/web/Text';
+
+import * as styles from '#/features/gifPicker/components/GifPickerPlaceholder.css';
 
 export function GifPickerPlaceholder({
 	isLoading,
@@ -21,6 +25,33 @@ export function GifPickerPlaceholder({
 }) {
 	const { t: l } = useLingui();
 
+	if (isLoading) {
+		return <CenteredSpinner label={l`Loading GIFs`} size="2xl" fill />;
+	}
+
+	if (isError) {
+		return (
+			<div className={styles.center}>
+				<Text size="lg" weight="semiBold">
+					{l({
+						message: 'Couldn’t load GIFs',
+						comment: 'Title of the error screen shown when the GIF provider request fails.',
+					})}
+				</Text>
+				<Text size="sm" color="textContrastMedium">
+					{l({
+						message: 'There was a problem loading GIFs. Check your connection and try again.',
+						comment:
+							'Body message of the error screen shown when the GIF provider request fails. Encourages the user to retry.',
+					})}
+				</Text>
+				<Button label={l`Try again`} size="small" color="secondary" onClick={() => void onRetry()}>
+					<ButtonText>{l`Try again`}</ButtonText>
+				</Button>
+			</div>
+		);
+	}
+
 	const emptyMessage = isSearching
 		? l({
 				message: `No GIFs found for "${query}".`,
@@ -40,24 +71,15 @@ export function GifPickerPlaceholder({
 				});
 
 	return (
-		<ListMaybePlaceholder
-			isLoading={isLoading}
-			isError={isError}
-			onRetry={isError ? onRetry : undefined}
-			onGoBack={onGoBack}
-			emptyType="results"
-			sideBorders={false}
-			topBorder={false}
-			errorTitle={l({
-				message: 'Couldn’t load GIFs',
-				comment: 'Title of the error screen shown when the GIF provider request fails.',
-			})}
-			errorMessage={l({
-				message: 'There was a problem loading GIFs. Check your connection and try again.',
-				comment:
-					'Body message of the error screen shown when the GIF provider request fails. Encourages the user to retry.',
-			})}
-			emptyMessage={emptyMessage}
-		/>
+		<div className={styles.center}>
+			<Text size="sm" color="textContrastMedium">
+				{emptyMessage}
+			</Text>
+			{(isSearching || isRecentsEmpty) && (
+				<Button label={l`Go back`} size="small" color="secondary" onClick={onGoBack}>
+					<ButtonText>{l`Go back`}</ButtonText>
+				</Button>
+			)}
+		</div>
 	);
 }

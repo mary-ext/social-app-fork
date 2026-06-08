@@ -1,81 +1,100 @@
-import { forwardRef } from 'react';
-import { FlatList, useWindowDimensions, View } from 'react-native';
+import { type Ref, useEffect, useImperativeHandle, useRef } from 'react';
+import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
-import type { ListMethods } from '#/view/com/util/List';
+import { Button, ButtonText } from '#/components/web/Button';
+import { CenteredSpinner } from '#/components/web/CenteredSpinner';
+import { Text } from '#/components/web/Text';
 
-import { atoms as a, useBreakpoints } from '#/alf';
-
-import { ListFooter } from '#/components/Lists';
-
+import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';
 import type { Gif } from '#/features/gifPicker/types';
 
+export type GifPickerGridHandle = {
+	scrollToTop: () => void;
+};
+
 type Props = {
 	items: Gif[];
+	numColumns: number;
 	isFetchingNextPage: boolean;
 	error: unknown;
 	fetchNextPage: () => Promise<unknown>;
 	onEndReached: () => void;
 	onSelectGif: (gif: Gif) => void;
+	ref?: Ref<GifPickerGridHandle>;
 };
 
-export const GifPickerGrid = forwardRef<ListMethods, Props>(function GifPickerGrid(
-	{ items, isFetchingNextPage, error, fetchNextPage, onEndReached, onSelectGif },
+export function GifPickerGrid({
+	items,
+	numColumns,
+	isFetchingNextPage,
+	error,
+	fetchNextPage,
+	onEndReached,
+	onSelectGif,
 	ref,
-) {
-	const { gtMobile } = useBreakpoints();
-	useWindowDimensions();
-	const numColumns = gtMobile ? 3 : 2;
-	const padding = gtMobile ? a.px_2xl : a.px_xl;
+}: Props) {
+	const { t: l } = useLingui();
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const sentinelRef = useRef<HTMLDivElement>(null);
+
+	// keep the observer stable while always calling the latest handler — onEndReached closes over fresh
+	// pagination state on every render.
+	const onEndReachedRef = useRef(onEndReached);
+	onEndReachedRef.current = onEndReached;
+
+	useImperativeHandle(ref, () => ({ scrollToTop: () => scrollRef.current?.scrollTo({ top: 0 }) }), []);
+
+	useEffect(() => {
+		const sentinel = sentinelRef.current;
+		const root = scrollRef.current;
+		if (!sentinel || !root) return;
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					onEndReachedRef.current();
+				}
+			},
+			// prefetch roughly a screen ahead, mirroring the FlatList's onEndReachedThreshold of 1.
+			{ root, rootMargin: '600px 0px' },
+		);
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	}, []);
 
 	const columns = distributeIntoColumns(items, numColumns);
 
-	/**
-	 * The grid is a single FlatList row because the tiles are distributed into columns up front for masonry.
-	 * `onEndReached` still fires against the outer FlatList's scroll position, so pagination behaves the same
-	 * as a conventional grid.
-	 */
-	const data = [columns];
-
 	return (
-		<FlatList
-			ref={ref as React.Ref<FlatList>}
-			key={String(numColumns)}
-			data={data}
-			style={[a.flex_1, { minHeight: 0 }]}
-			contentContainerStyle={[padding]}
-			renderItem={({ item }: { item: Gif[][] }) => (
-				<View style={[a.flex_row, a.gap_sm]}>
-					{item.map((column, i) => (
-						<View key={i} style={[a.flex_1, a.gap_sm, { minWidth: 0 }]}>
+		<div ref={scrollRef} className={styles.scroll}>
+			<div className={styles.content}>
+				<div className={styles.columns}>
+					{columns.map((column, i) => (
+						<div key={i} className={styles.column}>
 							{column.map((gif) => (
 								<GifPickerItem key={gif.id} gif={gif} onSelectGif={onSelectGif} />
 							))}
-						</View>
+						</div>
 					))}
-				</View>
-			)}
-			keyExtractor={(_item, index) => `masonry-${index}`}
-			onEndReached={onEndReached}
-			onEndReachedThreshold={1}
-			// On web, "on-drag" blurs the focused input on ANY scroll event,
-			// including programmatic scrolls (e.g., content shrinking when search
-			// results swap in). That breaks search-while-scrolled — the blur fires
-			// mid-typing and subsequent keystrokes go nowhere.
-			keyboardDismissMode={'none'}
-			ListFooterComponent={
-				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
-					error={cleanError(error)}
-					onRetry={fetchNextPage}
-					style={{ borderTopWidth: 0 }}
-				/>
-			}
-		/>
+				</div>
+				{isFetchingNextPage ? (
+					<CenteredSpinner label={l`Loading GIFs`} size="xl" />
+				) : error ? (
+					<div className={styles.footer}>
+						<Text size="sm" color="textContrastMedium" align="center">
+							{cleanError(error)}
+						</Text>
+						<Button label={l`Retry`} size="small" color="secondary" onClick={() => void fetchNextPage()}>
+							<ButtonText>{l`Retry`}</ButtonText>
+						</Button>
+					</div>
+				) : null}
+				<div ref={sentinelRef} aria-hidden />
+			</div>
+		</div>
 	);
-});
+}
 
 /**
  * Walks `items` in order and pushes each one into the currently shortest column, tracking accumulated

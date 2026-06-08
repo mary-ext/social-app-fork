@@ -1,4 +1,13 @@
-import { type ChangeEvent, createContext, type ReactNode, useContext, useId, useMemo } from 'react';
+import {
+	type ChangeEvent,
+	createContext,
+	type KeyboardEventHandler,
+	type ReactNode,
+	type Ref,
+	useContext,
+	useId,
+	useMemo,
+} from 'react';
 import { clsx } from 'clsx';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -45,6 +54,11 @@ export type InputProps = {
 	multiline?: boolean;
 	/** Caps the autosizing height of a `multiline` input; further lines scroll within it. */
 	maxRows?: number;
+	/** Caps the number of characters accepted by a single-line input. */
+	maxLength?: number;
+	/** Ref to the underlying single-line `<input>` (e.g. to focus or clear it imperatively). */
+	inputRef?: Ref<HTMLInputElement>;
+	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 	id?: string;
 	className?: string;
 };
@@ -59,6 +73,9 @@ export function Input({
 	isInvalid,
 	multiline = false,
 	maxRows,
+	maxLength,
+	inputRef,
+	onKeyDown,
 	id,
 	className,
 }: InputProps) {
@@ -92,8 +109,11 @@ export function Input({
 			className={cls}
 			defaultValue={defaultValue}
 			id={inputId}
+			maxLength={maxLength}
 			onChange={onChange}
+			onKeyDown={onKeyDown}
 			placeholder={placeholder}
+			ref={inputRef}
 			type="text"
 			value={value}
 		/>
