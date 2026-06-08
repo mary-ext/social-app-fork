@@ -56,8 +56,8 @@ export const icon = style({
 });
 
 /**
- * The non-large ALT label is 8px, which isn't a font token. The `size` variant bakes line-height from its
- * own font-size, so overriding font-size here must re-pair the line-height — `round(8px * snug)` to match
+ * The non-large ALT label is 8px, which isn't a font token. The `size` variant bakes line-height from its own
+ * font-size, so overriding font-size here must re-pair the line-height — `round(8px * snug)` to match
  * upstream — or the badge keeps the taller `sm` line box around the shrunk glyphs.
  */
 export const altSmall = style({
