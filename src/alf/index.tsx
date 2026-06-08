@@ -13,7 +13,7 @@ import { themes } from '#/alf/themes';
 import { contrastRatio, darken, lighten, rgbToHex } from '#/alf/util/colorGeneration';
 
 import type { Device } from '#/storage';
-import { fontScale as fontScaleVar } from '#/styles/tokens.css';
+import { dprScale as dprScaleVar, fontScale as fontScaleVar } from '#/styles/tokens.css';
 
 export { atoms } from '#/alf/atoms';
 export { type TextStyleProp, type Theme, type ThemeName, type ViewStyleProp } from '#/alf/base';
@@ -88,6 +88,26 @@ export function ThemeProvider({
 			root.style.setProperty(prop, value);
 		}
 	}, [fontScaleMultiplier]);
+
+	useEffect(() => {
+		// publish window.devicePixelRatio as a CSS var so length calcs (e.g. line-height) can snap to the
+		// device-pixel grid. dpr changes on browser zoom or a monitor switch, so re-read on each change —
+		// matchMedia only fires for the resolution it was created with, hence the re-subscribe.
+		const root = document.documentElement;
+		let mql: MediaQueryList | undefined;
+		const apply = () => {
+			const dpr = window.devicePixelRatio || 1;
+			const inline = assignInlineVars({ [dprScaleVar]: String(dpr) });
+			for (const [prop, value] of Object.entries(inline)) {
+				root.style.setProperty(prop, value);
+			}
+			mql?.removeEventListener('change', apply);
+			mql = window.matchMedia(`(resolution: ${dpr}dppx)`);
+			mql.addEventListener('change', apply);
+		};
+		apply();
+		return () => mql?.removeEventListener('change', apply);
+	}, []);
 
 	const [fontFamily, setFontFamily] = useState<Alf['fonts']['family']>(() => getFontFamily());
 	const setFontFamilyAndPersist = useCallback<Alf['fonts']['setFontFamily']>(

@@ -1,7 +1,9 @@
 import { styleVariants } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 
 import { recipe } from '#/components/web/css/recipe';
 
+import { roundToDevicePx } from '#/styles/round';
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
@@ -21,7 +23,6 @@ export const button = recipe(
 			fontFamily: 'inherit',
 			fontWeight: fontWeight.medium,
 			justifyContent: 'center',
-			lineHeight: lineHeight.snug,
 			margin: 0,
 			textDecoration: 'none',
 			transitionDuration: '100ms',
@@ -107,8 +108,20 @@ export const button = recipe(
 			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {} },
 			shape: { default: {}, round: {} },
 			size: {
-				large: { fontSize: fontSize.md, gap: 6, paddingBlock: 12, paddingInline: 24 },
-				small: { fontSize: fontSize.sm, gap: 5, paddingBlock: 8, paddingInline: 14 },
+				large: {
+					fontSize: fontSize.md,
+					gap: 6,
+					lineHeight: roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug)),
+					paddingBlock: 12,
+					paddingInline: 24,
+				},
+				small: {
+					fontSize: fontSize.sm,
+					gap: 5,
+					lineHeight: roundToDevicePx(calc.multiply(fontSize.sm, lineHeight.snug)),
+					paddingBlock: 8,
+					paddingInline: 14,
+				},
 			},
 			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost colors come from the
 			// compound variants above.

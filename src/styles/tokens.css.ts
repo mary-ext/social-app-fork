@@ -50,6 +50,13 @@ export const fontFamily = `InterVariable, system-ui, -apple-system, BlinkMacSyst
 /** Runtime font-size multiplier; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`. */
 export const fontScale = createVar();
 
+/**
+ * Runtime `window.devicePixelRatio`; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`.
+ * Used to snap computed lengths (e.g. line-height) to the device-pixel grid, matching RNW's
+ * `PixelRatio.roundToNearestPixel` and avoiding the fractional CSS pixels Chrome renders poorly.
+ */
+export const dprScale = createVar();
+
 const scaled = (px: number) => `calc(${px}px * ${fallbackVar(fontScale, '1')})`;
 
 /**
