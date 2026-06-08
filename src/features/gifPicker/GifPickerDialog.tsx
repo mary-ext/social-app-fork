@@ -44,7 +44,7 @@ export function GifPickerDialog({
 				}
 			}}
 		>
-			<Sheet.Popup label="GIFs" outerClose>
+			<Sheet.Popup label="GIFs" fullHeight outerClose>
 				<ErrorBoundary
 					renderError={(error) => <GifPickerErrorBoundary handle={handle} details={String(error)} />}
 				>

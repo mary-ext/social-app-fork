@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
+import { clsx } from 'clsx';
 
 import {
 	Close,
@@ -26,10 +27,13 @@ export * as Header from '#/components/web/Sheet/Header';
 /** Portalled backdrop + viewport + a flex-column popup (header pinned, body scrolls). */
 export function Popup({
 	children,
+	fullHeight,
 	label,
 	outerClose,
 }: {
 	children: ReactNode;
+	/** Lock the popup to its max height so it doesn't shrink to fit transient loading/empty/error states. */
+	fullHeight?: boolean;
 	label?: string;
 	/** Render the close button at the screen corner (outside the popup) — for full-height dialogs. */
 	outerClose?: boolean;
@@ -40,7 +44,10 @@ export function Popup({
 			<BaseDialog.Backdrop className={dialogStyles.backdrop} forceRender />
 			<BaseDialog.Viewport className={dialogStyles.viewport}>
 				{outerClose && <Close outer />}
-				<BaseDialog.Popup aria-label={label} className={styles.popup}>
+				<BaseDialog.Popup
+					aria-label={label}
+					className={clsx(styles.popup, fullHeight && styles.popupFullHeight)}
+				>
 					{children}
 				</BaseDialog.Popup>
 			</BaseDialog.Viewport>
