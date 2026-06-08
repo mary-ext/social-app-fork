@@ -37,8 +37,8 @@ const leadingVariants = <Scale extends Record<string, number>>(
 
 /**
  * A `size` variant group setting `font-size` and a `line-height` snapped to the device-pixel grid —
- * `round(fontSize * leading, 1px / dpr)` — so it lands on whole device pixels like RNW rather than leaving
- * a fractional CSS value.
+ * `round(fontSize * leading, 1px / dpr)` — so it lands on whole device pixels like RNW rather than leaving a
+ * fractional CSS value.
  */
 const sizeVariants = <Scale extends Record<string, string>>(
 	scale: Scale,
