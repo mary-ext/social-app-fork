@@ -11,12 +11,12 @@ import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { Admonition } from '#/components/web/Admonition';
+import * as Toggle from '#/components/web/forms/Toggle';
 import * as Layout from '#/components/web/Layout';
 import { Select } from '#/components/web/Select';
 import * as SettingsList from '#/components/web/SettingsList';
 import { useSheetHandle } from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
-import * as Toggle from '#/components/web/forms/Toggle';
 
 import * as styles from './LanguageSettings.css';
 
