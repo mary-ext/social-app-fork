@@ -1,9 +1,9 @@
 import type { MouseEvent } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import type { LightboxControl, LightboxPayload } from '#/components/dialogs/Context';
-import { cx } from '#/components/web/cx';
 import * as Dialog from '#/components/web/Dialog';
 import * as styles from '#/components/web/ImageEmbed/AutoSizedImage.css';
 import { MediaBadges } from '#/components/web/ImageEmbed/MediaBadges';
@@ -58,7 +58,7 @@ export function AutoSizedImage({
 	const contents = (
 		<>
 			<img
-				className={cx(styles.image, isContain && styles.imageContain)}
+				className={clsx(styles.image, isContain && styles.imageContain)}
 				src={image.thumb}
 				alt={image.alt}
 				loading="lazy"
@@ -103,7 +103,10 @@ export function AutoSizedImage({
 			<div className={styles.sizer} style={assignInlineVars({ [styles.padVar]: pad })}>
 				<div className={styles.abs}>
 					<div
-						className={cx(styles.innerBox, fullBleed ? styles.innerBoxFullBleed : styles.innerBoxConstrained)}
+						className={clsx(
+							styles.innerBox,
+							fullBleed ? styles.innerBoxFullBleed : styles.innerBoxConstrained,
+						)}
 						style={fullBleed ? undefined : assignInlineVars({ [styles.ratioVar]: String(ratio) })}
 					>
 						<Dialog.Trigger

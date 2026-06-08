@@ -3,6 +3,7 @@ import { Pressable, View } from 'react-native';
 import type { AnyProfileView, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useConvoActive } from '#/state/messages/convo';
@@ -14,7 +15,6 @@ import { MessageContextMenu } from '#/components/dms/MessageContextMenu';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon } from '#/components/icons/DotGrid';
 import { EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import * as Toast from '#/components/Toast';
-import { cx } from '#/components/web/cx';
 
 import { EmojiReactionPicker } from './EmojiReactionPicker';
 import * as reactionStyles from './EmojiReactionPicker.css';
@@ -114,7 +114,7 @@ export function ActionsWrapper({
 								{...props}
 								type="button"
 								aria-label={l`Add emoji reaction`}
-								className={cx(props.className, reactionStyles.trigger)}
+								className={clsx(props.className, reactionStyles.trigger)}
 								style={{ ...props.style, opacity: showActions || state.open ? 1 : 0 }}
 							>
 								<EmojiSmileIcon size="md" style={t.atoms.text_contrast_medium} />

@@ -1,9 +1,9 @@
 import { type ReactNode, useId, useRef, useState } from 'react';
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Dialog/Dialog.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 
@@ -105,7 +105,10 @@ export function Popup({
 			{/* forceRender so a dialog opened inside another dialog (e.g. from the composer Sheet) still dims */}
 			<BaseDialog.Backdrop className={styles.backdrop} forceRender onClick={stopPropagation} />
 			<BaseDialog.Viewport className={styles.viewport} onClick={stopPropagation}>
-				<BaseDialog.Popup aria-label={label} className={cx(styles.popup, styles.popupSize[size], className)}>
+				<BaseDialog.Popup
+					aria-label={label}
+					className={clsx(styles.popup, styles.popupSize[size], className)}
+				>
 					{children}
 				</BaseDialog.Popup>
 			</BaseDialog.Viewport>
@@ -119,7 +122,7 @@ export function Close({ outer }: { outer?: boolean } = {}) {
 	return (
 		<BaseDialog.Close
 			aria-label={l`Close dialog`}
-			className={cx(styles.closeBtn, outer && styles.closeBtnOuter)}
+			className={clsx(styles.closeBtn, outer && styles.closeBtnOuter)}
 		>
 			{/* 18px matches the RNW `ButtonIcon size="md"` map (which differs from the raw icon `md`) */}
 			<TimesIcon width={18} height={18} fill="currentColor" />

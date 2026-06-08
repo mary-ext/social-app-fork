@@ -7,12 +7,11 @@ import {
 	useRef,
 	useState,
 } from 'react';
+import { clsx } from 'clsx';
 
 import { mergeRefs } from '#/lib/merge-refs';
 import { type Placement, useSift } from '#/lib/sift';
 import { type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
-
-import { cx } from '#/components/web/cx';
 
 import { fontSize, lineHeight } from '#/styles/tokens.css';
 
@@ -212,7 +211,7 @@ export function Composer({
 
 	return (
 		<>
-			<div className={cx(styles.root, className)}>
+			<div className={clsx(styles.root, className)}>
 				<div className={styles.overlay} aria-hidden inert>
 					<div ref={overlayInnerRef} className={styles.overlayInner} style={paddingStyle}>
 						{tapper.state.nodes.map((node, i) => {

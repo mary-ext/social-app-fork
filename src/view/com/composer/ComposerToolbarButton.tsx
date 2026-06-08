@@ -1,8 +1,8 @@
 import type { ComponentType } from 'react';
+import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import { Button, type ButtonProps } from '#/components/web/Button';
-import { cx } from '#/components/web/cx';
 
 import * as styles from './ComposerToolbarButton.css';
 
@@ -19,7 +19,7 @@ export function ComposerToolbarButton({
 	icon: ComponentType<IconProps>;
 }) {
 	return (
-		<Button variant="ghost" className={cx(styles.button, className)} {...props}>
+		<Button variant="ghost" className={clsx(styles.button, className)} {...props}>
 			<Icon size="lg" fill="currentColor" />
 		</Button>
 	);

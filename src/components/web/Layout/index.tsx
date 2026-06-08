@@ -1,10 +1,10 @@
 import { type ComponentPropsWithoutRef, memo, useContext, useMemo } from 'react';
+import { clsx } from 'clsx';
 
 import { useEnableMinimalShellModeForScreen } from '#/state/shell';
 
 import { useBreakpoints, useLayoutBreakpoints } from '#/alf/breakpoints';
 
-import { cx } from '#/components/web/cx';
 import { ScrollbarOffsetContext } from '#/components/web/Layout/context';
 import * as styles from '#/components/web/Layout/Layout.css';
 
@@ -28,7 +28,7 @@ export const Screen = memo(function Screen({
 	return (
 		<>
 			{gtMobile && <WebCenterBorders />}
-			<div className={cx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
+			<div className={clsx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
 				{children}
 			</div>
 		</>
@@ -47,7 +47,7 @@ export const Content = memo(function Content({
 	...rest
 }: ContentProps) {
 	return (
-		<div className={cx(styles.content, className)} {...rest}>
+		<div className={clsx(styles.content, className)} {...rest}>
 			<Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>{children}</Center>
 		</div>
 	);
@@ -70,7 +70,7 @@ export const Center = memo(function Center({
 	const applyColumnOffset = !isWithinOffsetView && centerColumnOffset && !ignoreTabletLayoutOffset;
 	return (
 		<div
-			className={cx(
+			className={clsx(
 				styles.center,
 				isWithinOffsetView && styles.centerNested,
 				applyColumnOffset && styles.columnOffset,
@@ -85,5 +85,5 @@ export const Center = memo(function Center({
 
 const WebCenterBorders = memo(function WebCenterBorders() {
 	const { centerColumnOffset } = useLayoutBreakpoints();
-	return <div className={cx(styles.webBorders, centerColumnOffset && styles.columnOffset)} />;
+	return <div className={clsx(styles.webBorders, centerColumnOffset && styles.columnOffset)} />;
 });

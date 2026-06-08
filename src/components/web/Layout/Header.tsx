@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
+import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
@@ -8,7 +9,6 @@ import { useLayoutBreakpoints } from '#/alf/breakpoints';
 
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Button, ButtonIcon } from '#/components/web/Button';
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Layout/Header.css';
 import { Text } from '#/components/web/Text';
 
@@ -24,7 +24,7 @@ export function Outer({
 	const { centerColumnOffset } = useLayoutBreakpoints();
 	return (
 		<div
-			className={cx(
+			className={clsx(
 				styles.outer,
 				noBottomBorder && styles.outerNoBorder,
 				!sticky && styles.outerStatic,

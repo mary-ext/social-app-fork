@@ -1,8 +1,8 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import type { RecipeVariants } from '#/components/web/css/recipe';
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Text.css';
 
 type TextVariants = RecipeVariants<typeof styles.text>;
@@ -36,7 +36,7 @@ export function Text({
 
 	return (
 		<span
-			className={cx(
+			className={clsx(
 				styles.text({ align, color, leading, size, weight }),
 				clamped && styles.clamp,
 				selectable === true && styles.userSelect.text,

@@ -7,12 +7,12 @@ import {
 	type Ref,
 	useContext,
 } from 'react';
+import { clsx } from 'clsx';
 
 import { atoms as a } from '#/alf';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/PostControls/PostControlButton.css';
-import { cx } from '#/components/web/cx';
 
 const PostControlContext = createContext<{ active?: boolean; big?: boolean }>({});
 PostControlContext.displayName = 'PostControlContext';
@@ -53,7 +53,7 @@ export function PostControlButton({
 		<button
 			type="button"
 			aria-label={label}
-			className={cx(styles.button, className)}
+			className={clsx(styles.button, className)}
 			style={active && activeColor ? { color: activeColor, ...style } : style}
 			// TODO: temporary. The post still sits inside an RNW feed-item row whose press handler catches
 			// this bubbling click and navigates. Stop it here until that row is ported off react-native-web.
@@ -81,7 +81,7 @@ export function PostControlButtonText({ children }: { children: ReactNode }) {
 	// renders a web <span> beside the icon — the RN unwrapped-text rule doesn't model this
 	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
-		<span className={cx(big ? styles.textBig : styles.textSmall, active && styles.textActive)}>
+		<span className={clsx(big ? styles.textBig : styles.textSmall, active && styles.textActive)}>
 			{children}
 		</span>
 	);

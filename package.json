@@ -57,6 +57,7 @@
 		"@vanilla-extract/dynamic": "^2.1.5",
 		"bcp-47": "^2.1.0",
 		"bcp-47-match": "^2.0.3",
+		"clsx": "^2.1.1",
 		"date-fns": "^4.4.0",
 		"emoji-mart": "^5.6.0",
 		"emoji-regex": "^10.6.0",

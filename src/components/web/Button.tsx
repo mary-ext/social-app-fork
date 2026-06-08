@@ -1,10 +1,17 @@
-import { type ComponentPropsWithoutRef, type ComponentType, createContext, type ReactNode, type Ref, useContext } from 'react';
+import {
+	type ComponentPropsWithoutRef,
+	type ComponentType,
+	createContext,
+	type ReactNode,
+	type Ref,
+	useContext,
+} from 'react';
 import { Button as BaseButton } from '@base-ui/react/button';
+import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/web/Button.css';
 import type { RecipeVariants } from '#/components/web/css/recipe';
-import { cx } from '#/components/web/cx';
 
 type ButtonVariants = RecipeVariants<typeof styles.button>;
 
@@ -44,7 +51,7 @@ export function Button({
 	return (
 		<BaseButton
 			aria-label={label}
-			className={cx(styles.button({ color, shape, size, variant }), className)}
+			className={clsx(styles.button({ color, shape, size, variant }), className)}
 			{...rest}
 		>
 			<ButtonContext.Provider value={{ shape, size }}>{children}</ButtonContext.Provider>

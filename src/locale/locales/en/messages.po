@@ -2111,7 +2111,7 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:309
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
-#: src/components/web/Dialog/index.tsx:121
+#: src/components/web/Dialog/index.tsx:124
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""

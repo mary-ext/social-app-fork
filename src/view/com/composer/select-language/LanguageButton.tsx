@@ -1,10 +1,11 @@
+import { clsx } from 'clsx';
+
 import { toPostLanguages, useLanguagePrefs } from '#/state/preferences/languages';
 
 import { codeToLanguageName } from '#/locale/helpers';
 
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Button, type ButtonProps } from '#/components/web/Button';
-import { cx } from '#/components/web/cx';
 
 import * as styles from './LanguageButton.css';
 
@@ -27,7 +28,7 @@ export function LanguageButton({
 	const languages = currentLanguages ?? toPostLanguages(langPrefs.postLanguage);
 
 	return (
-		<Button variant="bare" size="small" className={cx(styles.button, className)} {...props}>
+		<Button variant="bare" size="small" className={clsx(styles.button, className)} {...props}>
 			{nudgeAt > 0 && <span key={nudgeAt} className={styles.pulseOverlay} />}
 			{languages.length > 0 ? (
 				<span className={styles.langText}>

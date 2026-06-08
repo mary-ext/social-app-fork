@@ -1,6 +1,7 @@
 import { type MouseEvent, useMemo } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { parseAltFromGIFDescription } from '#/lib/gif-alt-text';
 import { exemptExternalEmbedSources, parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player';
@@ -9,7 +10,6 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 
 import { Earth_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
-import { cx } from '#/components/web/cx';
 import { ExternalGif } from '#/components/web/ExternalEmbed/ExternalGif';
 import { ExternalPlayer } from '#/components/web/ExternalEmbed/ExternalPlayer';
 import { GifEmbed } from '#/components/web/ExternalEmbed/GifEmbed';
@@ -79,7 +79,7 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 						<ExternalPlayer link={link} params={embedPlayerParams} />
 					)}
 					<a
-						className={cx(styles.body, styles.bodyWithMedia, styles.bodyLink)}
+						className={clsx(styles.body, styles.bodyWithMedia, styles.bodyLink)}
 						href={link.uri}
 						target="_blank"
 						rel="noopener noreferrer"
@@ -105,7 +105,7 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 				onClick={onClick}
 			>
 				{imageUri ? <img className={styles.thumb} src={imageUri} alt="" loading="lazy" /> : null}
-				<div className={cx(styles.body, imageUri && styles.bodyWithMedia)}>
+				<div className={clsx(styles.body, imageUri && styles.bodyWithMedia)}>
 					<CardBody link={link} niceUrl={niceUrl} />
 				</div>
 			</a>

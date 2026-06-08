@@ -1,8 +1,8 @@
 import { type ComponentType, type ReactNode, useState } from 'react';
 import { Menu as BaseMenu } from '@base-ui/react/menu';
+import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/Menu/Menu.css';
 
 // a dropdown menu built on Base UI's Menu. Root + Trigger associate the menu with its anchor; pass a
@@ -83,7 +83,7 @@ export function Item({
 }) {
 	return (
 		<BaseMenu.Item
-			className={cx(styles.item, destructive && styles.itemDestructive)}
+			className={clsx(styles.item, destructive && styles.itemDestructive)}
 			label={label}
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
@@ -109,7 +109,7 @@ export function ItemIcon({
 	position?: 'left' | 'right';
 }) {
 	return (
-		<span className={cx(styles.itemIcon, position === 'right' && styles.itemIconRight)}>
+		<span className={clsx(styles.itemIcon, position === 'right' && styles.itemIconRight)}>
 			<Icon size="md" fill="currentColor" />
 		</span>
 	);

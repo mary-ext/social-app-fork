@@ -8,6 +8,7 @@ import {
 	useLightbox,
 	useLightboxState,
 } from '@oomfware/lightbox';
+import { clsx } from 'clsx';
 
 import { saveImageToMediaLibrary } from '#/lib/media/manip';
 
@@ -21,7 +22,6 @@ import { DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as Toast from '#/components/Toast';
-import { cx } from '#/components/web/cx';
 import * as Dialog from '#/components/web/Dialog';
 import * as styles from '#/components/web/Lightbox/Lightbox.css';
 import * as Menu from '#/components/web/Menu';
@@ -124,7 +124,7 @@ function LightboxContents({
 				<BaseDialog.Popup aria-label={l`Image viewer`} className={styles.popup} initialFocus={viewportRef}>
 					<Lb.Viewport ref={viewportRef} className={styles.viewport} onTap={onTap}>
 						<Lb.Track>{renderSlide}</Lb.Track>
-						<div className={cx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
+						<div className={clsx(styles.chrome, !chromeVisible && styles.chromeHidden)}>
 							<Chrome />
 						</div>
 					</Lb.Viewport>
@@ -243,7 +243,7 @@ function Chrome() {
 			{canLeft && (
 				<button
 					type="button"
-					className={cx(styles.navButton, styles.navLeft)}
+					className={clsx(styles.navButton, styles.navLeft)}
 					aria-label={l`Previous image`}
 					onClick={prev}
 				>
@@ -253,7 +253,7 @@ function Chrome() {
 			{canRight && (
 				<button
 					type="button"
-					className={cx(styles.navButton, styles.navRight)}
+					className={clsx(styles.navButton, styles.navRight)}
 					aria-label={l`Next image`}
 					onClick={next}
 				>
@@ -285,7 +285,7 @@ function Chrome() {
 				</Menu.Root>
 			</div>
 
-			<BaseDialog.Close aria-label={l`Close image viewer`} className={cx(styles.circle, styles.topRight)}>
+			<BaseDialog.Close aria-label={l`Close image viewer`} className={clsx(styles.circle, styles.topRight)}>
 				<XIcon size="md" fill="currentColor" />
 			</BaseDialog.Close>
 

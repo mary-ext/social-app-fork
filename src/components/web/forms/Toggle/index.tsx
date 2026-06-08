@@ -3,10 +3,10 @@ import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { Radio } from '@base-ui/react/radio';
 import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
+import { clsx } from 'clsx';
 
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import type { Props as IconProps } from '#/components/icons/common';
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/forms/Toggle/Toggle.css';
 
 /**
@@ -136,7 +136,7 @@ export function Panel({
 	children: ReactNode;
 }) {
 	return (
-		<span className={cx(styles.panel, styles.panelAdjacent[adjacent], active && styles.panelActive)}>
+		<span className={clsx(styles.panel, styles.panelAdjacent[adjacent], active && styles.panelActive)}>
 			{children}
 		</span>
 	);

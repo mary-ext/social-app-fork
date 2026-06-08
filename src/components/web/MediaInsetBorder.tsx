@@ -1,4 +1,5 @@
-import { cx } from '#/components/web/cx';
+import { clsx } from 'clsx';
+
 import * as styles from '#/components/web/MediaInsetBorder.css';
 
 export type MediaInsetBorderProps = {
@@ -14,7 +15,7 @@ export function MediaInsetBorder({ opaque, focused, className }: MediaInsetBorde
 	return (
 		<div
 			aria-hidden
-			className={cx(styles.base, opaque && styles.opaque, focused && styles.focused, className)}
+			className={clsx(styles.base, opaque && styles.opaque, focused && styles.focused, className)}
 		/>
 	);
 }

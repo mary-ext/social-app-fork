@@ -1,4 +1,5 @@
 import { type CSSProperties, useCallback, useEffect, useRef, useState } from 'react';
+import { clsx } from 'clsx';
 import { createPortal } from 'react-dom';
 
 import { useKeyboardHandling } from '#/lib/sift/useKeyboardHandling';
@@ -8,7 +9,6 @@ import type { TapperActiveFacet } from '#/lib/tapper';
 import type { AutocompleteItem } from '#/components/Autocomplete/types';
 import { useAutocomplete } from '#/components/Autocomplete/useAutocomplete';
 import { parseAutocompleteItemType } from '#/components/Autocomplete/util';
-import { cx } from '#/components/web/cx';
 
 import * as styles from './Autocomplete.css';
 
@@ -160,7 +160,7 @@ function Row({ item, active, onSelect }: { item: AutocompleteItem; active: boole
 				type="button"
 				role="option"
 				aria-selected={active}
-				className={cx(styles.item, styles.profileItem, active && styles.itemActive)}
+				className={clsx(styles.item, styles.profileItem, active && styles.itemActive)}
 				onClick={onSelect}
 			>
 				<img className={styles.avatar} src={item.profile.avatar} alt="" />
@@ -178,7 +178,7 @@ function Row({ item, active, onSelect }: { item: AutocompleteItem; active: boole
 				type="button"
 				role="option"
 				aria-selected={active}
-				className={cx(styles.item, styles.emojiItem, active && styles.itemActive)}
+				className={clsx(styles.item, styles.emojiItem, active && styles.itemActive)}
 				onClick={onSelect}
 			>
 				<span className={styles.emojiGlyph}>{item.value}</span>

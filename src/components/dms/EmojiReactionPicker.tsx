@@ -2,12 +2,12 @@ import { type ComponentProps, useState } from 'react';
 import type { ChatBskyConvoDefs } from '@atcute/bluesky';
 import { Popover } from '@base-ui/react/popover';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import { cx } from '#/components/web/cx';
 import { EmojiMartPanel } from '#/components/web/EmojiPicker/EmojiMartPanel';
 
 import * as styles from './EmojiReactionPicker.css';
@@ -85,7 +85,7 @@ function QuickReactions({
 						key={emoji}
 						type="button"
 						aria-label={emoji}
-						className={cx(
+						className={clsx(
 							styles.reaction,
 							alreadyReacted && styles.reactionSelected,
 							limitReached && !alreadyReacted && styles.reactionDisabled,

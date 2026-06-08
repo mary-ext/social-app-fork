@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { clsx } from 'clsx';
 
 import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
 import * as styles from '#/lib/custom-animations/CountWheel.css';
 import { decideShouldRoll } from '#/lib/custom-animations/util';
-
-import { cx } from '#/components/web/cx';
 
 export function CountWheel({
 	count,
@@ -43,7 +42,7 @@ export function CountWheel({
 		<div className={styles.root}>
 			<div
 				key={roll?.key}
-				className={cx(styles.current, roll && (roll.up ? styles.enterUp : styles.enterDown))}
+				className={clsx(styles.current, roll && (roll.up ? styles.enterUp : styles.enterDown))}
 				onAnimationEnd={() => setRoll(null)}
 			>
 				{renderCount({ count })}

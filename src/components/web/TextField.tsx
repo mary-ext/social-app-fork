@@ -1,7 +1,7 @@
 import { type ChangeEvent, createContext, type ReactNode, useContext, useId, useMemo } from 'react';
+import { clsx } from 'clsx';
 import TextareaAutosize from 'react-textarea-autosize';
 
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/TextField.css';
 
 type FieldContextValue = {
@@ -67,7 +67,7 @@ export function Input({
 	const inputId = id ?? ctxId;
 	const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
 		onChangeText?.(e.currentTarget.value);
-	const cls = cx(styles.input, multiline && styles.multiline, invalid && styles.invalid, className);
+	const cls = clsx(styles.input, multiline && styles.multiline, invalid && styles.invalid, className);
 
 	if (multiline) {
 		return (

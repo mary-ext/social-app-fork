@@ -1,12 +1,12 @@
 import { type ComponentType, createContext, type ReactNode, useContext, useRef } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
+import { clsx } from 'clsx';
 
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import type { Props as IconProps } from '#/components/icons/common';
 import { type LinkProps, useLink } from '#/components/Link';
-import { cx } from '#/components/web/cx';
 import * as styles from '#/components/web/SettingsList.css';
 import { Text } from '#/components/web/Text';
 
@@ -60,7 +60,7 @@ export function Item({
 }) {
 	const resolved = useResolvedDestructive(destructive);
 	return (
-		<div className={cx(styles.item, iconInset && styles.itemIconInset)}>
+		<div className={clsx(styles.item, iconInset && styles.itemIconInset)}>
 			<ItemContext.Provider value={{ destructive: resolved }}>{children}</ItemContext.Provider>
 		</div>
 	);
@@ -91,7 +91,7 @@ export function CheckboxItem({
 			aria-label={label}
 			checked={value}
 			onCheckedChange={onChange}
-			className={cx(styles.item, styles.itemInteractive, flush && styles.itemFlush)}
+			className={clsx(styles.item, styles.itemInteractive, flush && styles.itemFlush)}
 		>
 			{children}
 		</BaseCheckbox.Root>
@@ -132,7 +132,12 @@ export function LinkItem({
 		<a
 			href={href}
 			aria-label={label}
-			className={cx(styles.item, styles.itemInteractive, styles.itemHover, iconInset && styles.itemIconInset)}
+			className={clsx(
+				styles.item,
+				styles.itemInteractive,
+				styles.itemHover,
+				iconInset && styles.itemIconInset,
+			)}
 			// useLink resolves navigation off a DOM-shaped MouseEvent; the RN type is nominal only here
 			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
 		>
@@ -188,7 +193,12 @@ export function PressableItem({
 			type="button"
 			aria-label={label}
 			aria-description={accessibilityHint}
-			className={cx(styles.item, styles.itemInteractive, styles.itemHover, iconInset && styles.itemIconInset)}
+			className={clsx(
+				styles.item,
+				styles.itemInteractive,
+				styles.itemHover,
+				iconInset && styles.itemIconInset,
+			)}
 			onClick={() => {
 				if (firedLongPress.current) {
 					firedLongPress.current = false;
@@ -208,7 +218,7 @@ export function PressableItem({
 export function ItemIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
 	const { destructive } = useContext(ItemContext);
 	return (
-		<span className={cx(styles.itemIcon, destructive && styles.destructiveIcon)}>
+		<span className={clsx(styles.itemIcon, destructive && styles.destructiveIcon)}>
 			<Icon size="lg" fill="currentColor" />
 		</span>
 	);
@@ -248,7 +258,7 @@ export function BadgeText({ children }: { children: ReactNode }) {
 export function Chevron() {
 	const { destructive } = useContext(ItemContext);
 	return (
-		<span className={cx(styles.chevron, destructive && styles.destructiveIcon)}>
+		<span className={clsx(styles.chevron, destructive && styles.destructiveIcon)}>
 			<ChevronRightIcon size="md" fill="currentColor" />
 		</span>
 	);
