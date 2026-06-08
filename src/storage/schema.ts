@@ -26,7 +26,6 @@ export type Device = {
 	pdsAddressHistory?: string[];
 	requireAltTextEnabled?: boolean;
 	subtitlesEnabled?: boolean;
-	threadgateNudged?: boolean;
 	trendingBetaEnabled: boolean;
 	trendingDisabled?: boolean;
 	trendingVideoDisabled?: boolean;

@@ -1627,7 +1627,6 @@ function ComposerPills({
 								threadgate: nextThreadgate,
 							});
 						}}
-						style={bottomBarAnimatedStyle}
 					/>
 				)}
 				{hasMedia || hasLink ? (

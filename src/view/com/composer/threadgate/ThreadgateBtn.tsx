@@ -1,11 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import { useMemo, useState } from 'react';
 import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
 
-import type { AnimatedStyle } from '#/lib/animations/reanimatedCompat';
 import { isNetworkError } from '#/lib/strings/errors';
 
 import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings';
@@ -19,16 +17,12 @@ import {
 
 import { logger } from '#/logger';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { PostInteractionSettingsControlledDialog } from '#/components/dialogs/PostInteractionSettingsDialog';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
-import * as Tooltip from '#/components/Tooltip';
-import { Text } from '#/components/Typography';
-import { useDialogHandle } from '#/components/web/Dialog';
-
-import { useThreadgateNudged } from '#/storage/hooks/threadgate-nudged';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 
 export function ThreadgateBtn({
 	postgate,
@@ -41,39 +35,12 @@ export function ThreadgateBtn({
 
 	threadgateAllowUISettings: ThreadgateAllowUISetting[];
 	onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void;
-
-	style?: StyleProp<AnimatedStyle<ViewStyle>>;
 }) {
 	const { t: l } = useLingui();
-	const control = useDialogHandle();
-	const [threadgateNudged, setThreadgateNudged] = useThreadgateNudged();
-	const [showTooltip, setShowTooltip] = useState(false);
-	const [_tooltipWasShown] = useState(!threadgateNudged);
-
-	useEffect(() => {
-		if (!threadgateNudged) {
-			const timeout = setTimeout(() => {
-				setShowTooltip(true);
-			}, 1000);
-			return () => clearTimeout(timeout);
-		}
-	}, [threadgateNudged]);
-
-	const onDismissTooltip = (visible: boolean) => {
-		if (visible) return;
-		setThreadgateNudged(true);
-		setShowTooltip(false);
-	};
+	const control = Dialog.useDialogHandle();
 
 	const { data: preferences } = usePreferencesQuery();
 	const [persist, setPersist] = useState(false);
-
-	const onPress = () => {
-		setShowTooltip(false);
-		setThreadgateNudged(true);
-
-		control.open(null);
-	};
 
 	const prefThreadgateAllowUISettings = threadgateRecordToAllowUISetting({
 		$type: 'app.bsky.feed.threadgate',
@@ -117,29 +84,16 @@ export function ThreadgateBtn({
 
 	return (
 		<>
-			<Tooltip.Outer visible={showTooltip} onVisibleChange={onDismissTooltip} position="top">
-				<Tooltip.Target>
-					<Button
-						color={showTooltip ? 'primary_subtle' : 'secondary'}
-						size="small"
-						testID="openReplyGateButton"
-						onPress={onPress}
-						label={label}
-						accessibilityHint={l`Opens a dialog to choose who can interact with this post`}
-					>
+			<Dialog.Trigger
+				handle={control}
+				render={
+					<Button color="secondary" size="small" label={label}>
 						<ButtonIcon icon={anyoneCanInteract ? EarthIcon : GroupIcon} />
-						<ButtonText numberOfLines={1} maxFontSizeMultiplier={2}>
-							{label}
-						</ButtonText>
+						<ButtonText>{label}</ButtonText>
 						<ButtonIcon icon={TinyChevronIcon} size="2xs" />
 					</Button>
-				</Tooltip.Target>
-				<Tooltip.TextBubble>
-					<Text>
-						<Trans>Psst! You can edit who can interact with this post.</Trans>
-					</Text>
-				</Tooltip.TextBubble>
-			</Tooltip.Outer>
+				}
+			/>
 			<PostInteractionSettingsControlledDialog
 				handle={control}
 				onSave={() => {

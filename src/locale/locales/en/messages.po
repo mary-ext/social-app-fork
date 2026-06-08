@@ -369,7 +369,7 @@ msgstr "{date} at {time}"
 msgid "{displayName}'s Starter Pack"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1752
+#: src/view/com/composer/Composer.tsx:1751
 msgid "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 msgstr "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 
@@ -994,7 +994,7 @@ msgstr ""
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1815
+#: src/view/com/composer/Composer.tsx:1814
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1371,7 +1371,7 @@ msgstr ""
 msgid "Anyone"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:116
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:83
 msgid "Anyone can interact"
 msgstr ""
 
@@ -2174,11 +2174,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2118
+#: src/view/com/composer/Composer.tsx:2117
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2120
+#: src/view/com/composer/Composer.tsx:2119
 msgid "Compressing video..."
 msgstr ""
 
@@ -2774,7 +2774,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2046
+#: src/view/com/composer/Composer.tsx:2045
 msgid "Dismiss error"
 msgstr ""
 
@@ -3104,7 +3104,7 @@ msgstr "Enter your handle or DID."
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2138
+#: src/view/com/composer/Composer.tsx:2137
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -3906,7 +3906,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2143
+#: src/view/com/composer/Composer.tsx:2142
 msgid "GIF uploaded"
 msgstr ""
 
@@ -4374,7 +4374,7 @@ msgstr "Inbox empty"
 msgid "Inbox zero!"
 msgstr ""
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:116
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:83
 msgid "Interaction limited"
 msgstr ""
 
@@ -4451,7 +4451,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2067
+#: src/view/com/composer/Composer.tsx:2066
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5841,7 +5841,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:110
-#: src/view/com/composer/Composer.tsx:1802
+#: src/view/com/composer/Composer.tsx:1801
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5927,10 +5927,6 @@ msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:51
 msgid "Opens a dialog to add a content warning to your post"
-msgstr ""
-
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:128
-msgid "Opens a dialog to choose who can interact with this post"
 msgstr ""
 
 #: src/screens/Log.tsx:69
@@ -6445,11 +6441,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2132
+#: src/view/com/composer/Composer.tsx:2131
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2134
+#: src/view/com/composer/Composer.tsx:2133
 msgid "Processing video..."
 msgstr ""
 
@@ -6478,10 +6474,6 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:222
 msgid "Promoting or selling prohibited items or services"
-msgstr ""
-
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:139
-msgid "Psst! You can edit who can interact with this post."
 msgstr ""
 
 #: src/view/com/lists/MyLists.tsx:84
@@ -9180,7 +9172,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2125
+#: src/view/com/composer/Composer.tsx:2124
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -9194,7 +9186,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2127
+#: src/view/com/composer/Composer.tsx:2126
 msgid "Uploading video..."
 msgstr ""
 
@@ -9341,7 +9333,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2145
+#: src/view/com/composer/Composer.tsx:2144
 msgid "Video uploaded"
 msgstr ""
 
