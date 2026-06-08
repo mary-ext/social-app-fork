@@ -1,5 +1,5 @@
-import type { KeyboardEvent, MouseEvent, ReactNode } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from 'react';
+import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import { sanitizeUrl } from '@braintree/sanitize-url';
 
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
@@ -19,6 +19,12 @@ type BlockLinkProps = {
 	 * keyboard/AT access (e.g. a feed item's timestamp link), to avoid an extra empty tab stop.
 	 */
 	label?: string;
+	/**
+	 * Forwarded to the inner `View` box. {@link GalleryBleed} clones this host to inject a ref and `onLayout`
+	 * for its width measurement; without forwarding them the bleed stays unmeasured (width 0, ref null).
+	 */
+	onLayout?: (e: LayoutChangeEvent) => void;
+	ref?: Ref<View>;
 	style?: StyleProp<ViewStyle>;
 	testID?: string;
 	onBeforePress?: () => void;
@@ -27,17 +33,19 @@ type BlockLinkProps = {
 };
 
 /**
- * A web-native clickable post-row region: navigates to `href` when its body is clicked, while letting
- * nested interactive elements and portalled popups (Base UI menus/dialogs) behave normally.
+ * A web-native clickable post-row region: navigates to `href` when its body is clicked, while letting nested
+ * interactive elements and portalled popups (Base UI menus/dialogs) behave normally.
  *
- * The press handler sits on a `display: contents` wrapper so the inner `View` keeps its own box and
- * styles, and it checks DOM containment: a portalled menu item is a React (fiber) descendant of the row
- * but not a DOM descendant, so its bubbling click is ignored here rather than triggering navigation.
+ * The press handler sits on a `display: contents` wrapper so the inner `View` keeps its own box and styles,
+ * and it checks DOM containment: a portalled menu item is a React (fiber) descendant of the row but not a DOM
+ * descendant, so its bubbling click is ignored here rather than triggering navigation.
  */
 export function BlockLink({
 	children,
 	href,
 	label,
+	onLayout,
+	ref,
 	style,
 	testID,
 	onBeforePress,
@@ -99,7 +107,14 @@ export function BlockLink({
 			onMouseDown={onMouseDown}
 			onMouseUp={onMouseUp}
 		>
-			<View testID={testID} style={style} onPointerEnter={onPointerEnter} onPointerLeave={onPointerLeave}>
+			<View
+				ref={ref}
+				testID={testID}
+				style={style}
+				onLayout={onLayout}
+				onPointerEnter={onPointerEnter}
+				onPointerLeave={onPointerLeave}
+			>
 				{children}
 			</View>
 		</div>
