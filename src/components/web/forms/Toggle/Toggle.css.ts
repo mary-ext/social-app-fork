@@ -1,4 +1,4 @@
-import { type StyleRule, style, styleVariants } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
@@ -6,7 +6,7 @@ import { componentStyle } from '#/styles/layers.css';
 import { roundToDevicePx } from '#/styles/round';
 import { fontSize } from '#/styles/tokens.css';
 
-const itemReset = {
+const itemReset = componentStyle({
 	alignItems: 'center',
 	appearance: 'none',
 	background: 'transparent',
@@ -23,13 +23,13 @@ const itemReset = {
 		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 		'&[data-disabled]': { cursor: 'default' },
 	},
-} satisfies StyleRule;
+});
 
 /** A clickable toggle row that stretches to fill its container (checkbox group member or standalone). */
-export const item = componentStyle({ ...itemReset, width: '100%' });
+export const item = componentStyle([itemReset, { width: '100%' }]);
 
 /** A clickable toggle that shares a flex row evenly with its siblings (the radio pair). */
-export const radioItem = componentStyle({ ...itemReset, flex: 1 });
+export const radioItem = componentStyle([itemReset, { flex: 1 }]);
 
 /** A vertical stack of panels with the hairline gap that produces the segmented look. */
 export const panelGroup = componentStyle({
@@ -111,11 +111,11 @@ export const panelIcon = componentStyle({
 });
 
 // #region indicators
-export const circle = componentStyle({
+/** Shared 24px frame behind the radio dot and the checkbox glyph; the two diverge only in corner rounding. */
+const indicatorBase = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
 	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 999,
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexShrink: 0,
@@ -131,6 +131,8 @@ export const circle = componentStyle({
 		},
 	},
 });
+
+export const circle = componentStyle([indicatorBase, { borderRadius: 999 }]);
 
 export const dot = componentStyle({
 	backgroundColor: vars.palette.white,
@@ -139,27 +141,7 @@ export const dot = componentStyle({
 	width: 12,
 });
 
-export const box = componentStyle({
-	alignItems: 'center',
-	backgroundColor: vars.palette.contrast_25,
-	border: `1px solid ${vars.palette.contrast_100}`,
-	borderRadius: 6,
-	boxSizing: 'border-box',
-	color: vars.palette.white,
-	display: 'flex',
-	flexShrink: 0,
-	height: 24,
-	justifyContent: 'center',
-	transitionDuration: '100ms',
-	transitionProperty: 'background-color, border-color',
-	width: 24,
-	selectors: {
-		'[data-checked] &': {
-			backgroundColor: vars.palette.primary_500,
-			borderColor: vars.palette.primary_500,
-		},
-	},
-});
+export const box = componentStyle([indicatorBase, { borderRadius: 6, color: vars.palette.white }]);
 
 export const check = componentStyle({
 	alignItems: 'center',

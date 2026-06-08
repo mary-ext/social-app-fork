@@ -1,4 +1,4 @@
-import { type StyleRule, layer, style } from '@vanilla-extract/css';
+import { type ComplexStyleRule, type StyleRule, layer, style } from '@vanilla-extract/css';
 
 /**
  * Cascade layer holding the global UA-default reset (see `reset.css.ts`). Declared first so it sits below
@@ -22,9 +22,22 @@ export const components = layer('components');
  * unlayered `className` an instance passes through outranks the component style without a specificity bump
  * (and the global reset, being a lower layer, never clobbers it).
  *
- * @param rule the style rule to emit into the `components` layer
+ * Accepts the same array form as `style` for composition: string members (composed class references) pass
+ * through untouched so they keep their own layer, while each object member is emitted into the `components`
+ * layer.
+ *
+ * @param rule the style rule, or array of rules/class references, to emit into the `components` layer
  * @param debugId optional identifier surfaced in the generated class name
  * @returns the generated class name
  */
-export const componentStyle = (rule: StyleRule, debugId?: string) =>
-	style({ '@layer': { [components]: rule } }, debugId);
+export const componentStyle = (rule: ComplexStyleRule, debugId?: string) => {
+	const intoLayer = (rule: StyleRule): StyleRule => ({ '@layer': { [components]: rule } });
+	return style(
+		Array.isArray(rule)
+			? rule.map((member) =>
+					Array.isArray(member) || typeof member === 'string' ? member : intoLayer(member),
+				)
+			: intoLayer(rule),
+		debugId,
+	);
+};
