@@ -1,4 +1,4 @@
-import { type ComplexStyleRule, type StyleRule, style, styleVariants } from '@vanilla-extract/css';
+import { type ComplexStyleRule, style, styleVariants } from '@vanilla-extract/css';
 import { addFunctionSerializer } from '@vanilla-extract/css/functionSerializer';
 
 import {
@@ -10,9 +10,7 @@ import {
 
 // #region types
 
-/** A variant's payload: a single style rule, or an array of rules composed together. */
-type RecipeStyleRule = StyleRule | StyleRule[];
-type VariantDefinitions = Record<string, RecipeStyleRule>;
+type VariantDefinitions = Record<string, ComplexStyleRule>;
 type VariantGroups = Record<string, VariantDefinitions>;
 
 /** Collapses `'true'`/`'false'` variant keys to `boolean`, mirroring cva's prop typing. */
@@ -31,11 +29,11 @@ type CompoundVariant<Variants extends VariantGroups> = {
 		| StringToBoolean<keyof Variants[Group]>
 		| StringToBoolean<keyof Variants[Group]>[];
 } & {
-	style: RecipeStyleRule;
+	style: ComplexStyleRule;
 };
 
 type RecipeDefinition<Variants extends VariantGroups> = {
-	base?: RecipeStyleRule;
+	base?: ComplexStyleRule;
 	compoundVariants?: CompoundVariant<Variants>[];
 	defaultVariants?: VariantSelection<Variants>;
 	variants?: Variants;
@@ -86,12 +84,14 @@ export const recipe = <Variants extends VariantGroups>(
 	const { debugId, layer } = options;
 	const { base, compoundVariants = [], defaultVariants = {}, variants = {} as Variants } = definition;
 
-	const layered = (rule: RecipeStyleRule): ComplexStyleRule => {
+	const layered = (rule: ComplexStyleRule): ComplexStyleRule => {
 		if (layer == null) {
 			return rule;
 		}
 		const rules = Array.isArray(rule) ? rule : [rule];
-		return rules.map((r) => ({ '@layer': { [layer]: r } }));
+		// composed class names (string or nested string arrays) pass through unlayered — they keep their own
+		// layer; only the inline style rules this recipe owns get wrapped.
+		return rules.map((r) => (typeof r === 'object' && !Array.isArray(r) ? { '@layer': { [layer]: r } } : r));
 	};
 
 	const defaultClassName = base == null ? style({}, debugId) : style(layered(base), debugId);
