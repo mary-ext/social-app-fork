@@ -1030,8 +1030,8 @@ msgstr "Add members"
 msgid "Add more details (optional)"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:173
-#: src/screens/Settings/LanguageSettings.tsx:177
+#: src/screens/Settings/LanguageSettings.tsx:178
+#: src/screens/Settings/LanguageSettings.tsx:184
 msgid "Add more languages…"
 msgstr "Add more languages…"
 
@@ -4260,7 +4260,7 @@ msgstr ""
 msgid "I understand"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:185
+#: src/screens/Settings/LanguageSettings.tsx:195
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
 
@@ -7436,7 +7436,7 @@ msgid "Select chat \"{name}\""
 msgstr "Select chat \"{name}\""
 
 #: src/screens/Settings/LanguageSettings.tsx:161
-#: src/screens/Settings/LanguageSettings.tsx:184
+#: src/screens/Settings/LanguageSettings.tsx:194
 msgid "Select content languages"
 msgstr ""
 

@@ -16,7 +16,7 @@ import { Select } from '#/components/web/Select';
 import * as SettingsList from '#/components/web/SettingsList';
 import { useSheetHandle } from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
-import * as Toggle from '#/components/web/Toggle';
+import * as Toggle from '#/components/web/forms/Toggle';
 
 import * as styles from './LanguageSettings.css';
 
@@ -162,20 +162,30 @@ export function LanguageSettingsScreen({}: Props) {
 									values={contentLanguages}
 									onChange={setContentLanguages}
 								>
-									{possibleLanguages.map((language) => (
-										<Toggle.Item
-											key={language.code2}
-											value={language.code2}
-											label={languageName(language, langPrefs.appLanguage)}
-										/>
-									))}
-									<Toggle.Action
-										label={l`Add more languages…`}
-										icon={PlusIcon}
-										onClick={() => contentLanguagePrefsControl.open(null)}
-									>
-										<Trans>Add more languages…</Trans>
-									</Toggle.Action>
+									<Toggle.PanelGroup>
+										{possibleLanguages.map((language, index) => {
+											const name = languageName(language, langPrefs.appLanguage);
+											return (
+												<Toggle.Item key={language.code2} name={language.code2} label={name}>
+													<Toggle.Panel adjacent={index === 0 ? 'trailing' : 'both'}>
+														<Toggle.CheckboxIndicator />
+														<Toggle.PanelText>{name}</Toggle.PanelText>
+													</Toggle.Panel>
+												</Toggle.Item>
+											);
+										})}
+										<Toggle.Action
+											label={l`Add more languages…`}
+											onClick={() => contentLanguagePrefsControl.open(null)}
+										>
+											<Toggle.Panel adjacent="leading">
+												<Toggle.PanelIcon icon={PlusIcon} />
+												<Toggle.PanelText>
+													<Trans>Add more languages…</Trans>
+												</Toggle.PanelText>
+											</Toggle.Panel>
+										</Toggle.Action>
+									</Toggle.PanelGroup>
 								</Toggle.Group>
 							</div>
 
