@@ -5,8 +5,9 @@ import { dprScale } from '#/styles/tokens.css';
 
 /**
  * Wraps a CSS length so it snaps to the device-pixel grid via {@link dprScale} — `round(length, 1px / dpr)`.
- * Use for derived lengths (e.g. line-height) that would otherwise resolve to fractional CSS pixels, which
- * Chrome renders poorly; this matches RNW's `PixelRatio.roundToNearestPixel`.
+ * Use for derived lengths (e.g. line-height) that would otherwise resolve to fractional CSS pixels, whose
+ * edges land between device pixels and snap inconsistently (a 1px divider can drop out); this matches RNW's
+ * `PixelRatio.roundToNearestPixel`.
  *
  * Lives in a plain module rather than a `*.css.ts` because vanilla-extract forbids function exports from
  * style files (it serializes their exports).

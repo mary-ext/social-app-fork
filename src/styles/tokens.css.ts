@@ -53,7 +53,8 @@ export const fontScale = createVar();
 /**
  * Runtime `window.devicePixelRatio`; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`.
  * Used to snap computed lengths (e.g. line-height) to the device-pixel grid, matching RNW's
- * `PixelRatio.roundToNearestPixel` and avoiding the fractional CSS pixels Chrome renders poorly.
+ * `PixelRatio.roundToNearestPixel` and avoiding fractional CSS pixels, whose edges land between device
+ * pixels and snap inconsistently (dropped hairlines, shifted alignment).
  */
 export const dprScale = createVar();
 
