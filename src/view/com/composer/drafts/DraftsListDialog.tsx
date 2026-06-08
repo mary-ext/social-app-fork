@@ -1,21 +1,17 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { FlatList, Keyboard, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Keyboard } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCallOnce } from '#/lib/once';
 
-import { EmptyState } from '#/view/com/util/EmptyState';
-
-import { atoms as a, select, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
 import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
-import { ListFooter } from '#/components/Lists';
-import { Loader } from '#/components/Loader';
-import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import { CenteredSpinner } from '#/components/web/CenteredSpinner';
 import * as Sheet from '#/components/web/Sheet';
+import { Text } from '#/components/web/Text';
 
 import { DraftItem } from './DraftItem';
+import * as styles from './DraftsListDialog.css';
 import { useDeleteDraftMutation, useDraftsQuery } from './state/queries';
 import type { DraftSummary } from './state/schema';
 
@@ -27,8 +23,6 @@ export function DraftsListDialog({
 	onSelectDraft: (draft: DraftSummary) => void;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
-	const { gtPhone } = useBreakpoints();
 	const { data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage } = useDraftsQuery();
 	const { mutate: deleteDraft } = useDeleteDraftMutation();
 
@@ -65,59 +59,40 @@ export function DraftsListDialog({
 		[deleteDraft],
 	);
 
-	const renderItem = useCallback(
-		({ item }: { item: DraftSummary }) => {
-			return (
-				<View style={[gtPhone ? [a.px_md, a.pt_md] : [a.px_sm, a.pt_sm]]}>
-					<DraftItem draft={item} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
-				</View>
-			);
-		},
-		[handleSelectDraft, handleDeleteDraft, gtPhone],
-	);
+	const scrollRef = useRef<HTMLDivElement>(null);
+	const sentinelRef = useRef<HTMLDivElement>(null);
 
+	// keep the observer stable while always calling the latest handler — it closes over fresh pagination state.
 	const onEndReached = useCallback(() => {
 		if (hasNextPage && !isFetchingNextPage) {
 			void fetchNextPage();
 		}
 	}, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+	const onEndReachedRef = useRef(onEndReached);
+	onEndReachedRef.current = onEndReached;
 
-	const emptyComponent = useMemo(() => {
-		if (isLoading) {
-			return (
-				<View style={[a.py_xl, a.align_center]}>
-					<Loader size="lg" />
-				</View>
-			);
+	const showList = !isLoading && drafts.length > 0;
+	useEffect(() => {
+		if (!showList) {
+			return;
 		}
-		return (
-			<EmptyState
-				icon={PageXIcon}
-				message={l`No drafts yet`}
-				style={[a.justify_center, { minHeight: 500 }]}
-			/>
+		const sentinel = sentinelRef.current;
+		const root = scrollRef.current;
+		if (!sentinel || !root) {
+			return;
+		}
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries.some((entry) => entry.isIntersecting)) {
+					onEndReachedRef.current();
+				}
+			},
+			// prefetch roughly a screen ahead, mirroring the old FlatList's onEndReachedThreshold.
+			{ root, rootMargin: '600px 0px' },
 		);
-	}, [isLoading, l]);
-
-	const footerComponent = useMemo(
-		() => (
-			<>
-				{drafts.length > 5 && (
-					<View style={[a.align_center, a.py_2xl]}>
-						<Text style={[a.text_center, t.atoms.text_contrast_medium]}>
-							<Trans>So many thoughts, you should post one</Trans>
-						</Text>
-					</View>
-				)}
-				<ListFooter
-					isFetchingNextPage={isFetchingNextPage}
-					hasNextPage={hasNextPage}
-					style={[a.border_transparent]}
-				/>
-			</>
-		),
-		[isFetchingNextPage, hasNextPage, drafts.length, t],
-	);
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	}, [showList]);
 
 	return (
 		<Sheet.Root handle={handle}>
@@ -126,12 +101,12 @@ export function DraftsListDialog({
 					<Sheet.Header.Slot>
 						<Button
 							label={l`Back`}
-							onPress={() => handle.close()}
+							onClick={() => handle.close()}
 							size="small"
 							color="primary"
 							variant="ghost"
 						>
-							<ButtonText style={[a.text_md]}>
+							<ButtonText size="md">
 								<Trans>Back</Trans>
 							</ButtonText>
 						</Button>
@@ -143,27 +118,39 @@ export function DraftsListDialog({
 					</Sheet.Header.Content>
 					<Sheet.Header.Slot />
 				</Sheet.Header.Outer>
-				<FlatList
-					data={drafts}
-					renderItem={renderItem}
-					keyExtractor={(item: DraftSummary) => item.id}
-					ListEmptyComponent={emptyComponent}
-					ListFooterComponent={footerComponent}
-					onEndReached={onEndReached}
-					onEndReachedThreshold={0.5}
-					style={[
-						a.flex_1,
-						{ minHeight: 0 },
-						{
-							backgroundColor: select(t.name, {
-								light: t.palette.contrast_50,
-								dark: t.palette.contrast_0,
-								dim: '#000000',
-							}),
-						},
-					]}
-					contentContainerStyle={[a.pb_xl]}
-				/>
+				<div ref={scrollRef} className={styles.list}>
+					{isLoading ? (
+						<div className={styles.loading}>
+							<CenteredSpinner label={l`Loading drafts`} size="lg" />
+						</div>
+					) : drafts.length === 0 ? (
+						<div className={styles.empty}>
+							<span className={styles.emptyIcon}>
+								<PageXIcon width={48} height={48} fill="currentColor" />
+							</span>
+							<Text size="md" weight="medium" color="textContrastHigh" align="center">
+								<Trans>No drafts yet</Trans>
+							</Text>
+						</div>
+					) : (
+						<div className={styles.listContent}>
+							{drafts.map((item) => (
+								<div key={item.id} className={styles.itemWrap}>
+									<DraftItem draft={item} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
+								</div>
+							))}
+							{drafts.length > 5 && (
+								<div className={styles.footerNote}>
+									<Text align="center" color="textContrastMedium">
+										<Trans>So many thoughts, you should post one</Trans>
+									</Text>
+								</div>
+							)}
+							{isFetchingNextPage && <CenteredSpinner label={l`Loading drafts`} size="lg" />}
+							<div ref={sentinelRef} aria-hidden />
+						</div>
+					)}
+				</div>
 			</Sheet.Popup>
 		</Sheet.Root>
 	);

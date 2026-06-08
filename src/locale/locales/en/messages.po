@@ -116,7 +116,7 @@ msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr ""
 
 #. placeholder {0}: draft.meta.replyCount
-#: src/view/com/composer/drafts/DraftItem.tsx:128
+#: src/view/com/composer/drafts/DraftItem.tsx:93
 msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
@@ -1534,8 +1534,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:198
 #: src/screens/Profile/Header/Shell.tsx:119
 #: src/screens/StarterPack/Wizard/index.tsx:281
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:128
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:135
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:103
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:110
 msgid "Back"
 msgstr ""
 
@@ -2723,8 +2723,8 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:1102
 #: src/view/com/composer/Composer.tsx:1140
 #: src/view/com/composer/Composer.tsx:1339
-#: src/view/com/composer/drafts/DraftItem.tsx:219
-#: src/view/com/composer/drafts/DraftsButton.tsx:114
+#: src/view/com/composer/drafts/DraftItem.tsx:133
+#: src/view/com/composer/drafts/DraftsButton.tsx:113
 msgid "Discard"
 msgstr ""
 
@@ -2734,8 +2734,8 @@ msgid "Discard changes?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1101
-#: src/view/com/composer/drafts/DraftItem.tsx:216
-#: src/view/com/composer/drafts/DraftsButton.tsx:86
+#: src/view/com/composer/drafts/DraftItem.tsx:130
+#: src/view/com/composer/drafts/DraftsButton.tsx:85
 msgid "Discard draft?"
 msgstr ""
 
@@ -2840,10 +2840,10 @@ msgstr "Download profile data"
 msgid "Doxxing"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:62
-#: src/view/com/composer/drafts/DraftsButton.tsx:72
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:124
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:141
+#: src/view/com/composer/drafts/DraftsButton.tsx:61
+#: src/view/com/composer/drafts/DraftsButton.tsx:71
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:99
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:116
 msgid "Drafts"
 msgstr ""
 
@@ -3896,6 +3896,7 @@ msgstr ""
 #: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:59
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:88
+#: src/view/com/composer/drafts/DraftItem.tsx:222
 msgid "GIF"
 msgstr ""
 
@@ -4480,7 +4481,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1141
 #: src/view/com/composer/Composer.tsx:1151
-#: src/view/com/composer/drafts/DraftsButton.tsx:115
+#: src/view/com/composer/drafts/DraftsButton.tsx:114
 msgid "Keep editing"
 msgstr ""
 
@@ -4858,6 +4859,11 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:124
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:149
+msgid "Loading drafts"
+msgstr "Loading drafts"
+
 #: src/components/web/ExternalEmbed/ExternalGif.tsx:67
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:84
 msgid "Loading GIF"
@@ -4980,11 +4986,11 @@ msgstr ""
 
 #. Example: "Media stored on John's iPhone"
 #. placeholder {0}: draft.draft.deviceName
-#: src/view/com/composer/drafts/DraftItem.tsx:114
+#: src/view/com/composer/drafts/DraftItem.tsx:79
 msgid "Media stored on {0}"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:113
+#: src/view/com/composer/drafts/DraftItem.tsx:78
 msgid "Media stored on another device"
 msgstr ""
 
@@ -5082,7 +5088,7 @@ msgstr ""
 msgid "Misleading"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:122
+#: src/view/com/composer/drafts/DraftItem.tsx:87
 msgid "Missing media"
 msgstr ""
 
@@ -5169,7 +5175,7 @@ msgid "More languages..."
 msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:126
-#: src/view/com/composer/drafts/DraftItem.tsx:171
+#: src/view/com/composer/drafts/DraftItem.tsx:120
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/profile/ProfileMenu.tsx:234
 msgid "More options"
@@ -5469,7 +5475,7 @@ msgstr ""
 msgid "No custom feeds yet"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:96
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:132
 msgid "No drafts yet"
 msgstr ""
 
@@ -5836,7 +5842,7 @@ msgstr "Open chat"
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
-#: src/view/com/composer/drafts/DraftItem.tsx:65
+#: src/view/com/composer/drafts/DraftItem.tsx:63
 msgid "Open draft"
 msgstr ""
 
@@ -5976,7 +5982,7 @@ msgstr "Opens the GIF picker dialog"
 msgid "Opens the post composer"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:66
+#: src/view/com/composer/drafts/DraftItem.tsx:64
 msgid "Opens this draft in the composer"
 msgstr ""
 
@@ -6522,7 +6528,7 @@ msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:69
 #: src/components/PostControls/RepostButton.tsx:72
-#: src/view/com/composer/drafts/DraftItem.tsx:124
+#: src/view/com/composer/drafts/DraftItem.tsx:89
 msgid "Quote post"
 msgstr ""
 
@@ -7160,22 +7166,22 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:108
 #: src/screens/SavedFeeds.tsx:112
 #: src/view/com/composer/Composer.tsx:1135
-#: src/view/com/composer/drafts/DraftsButton.tsx:109
+#: src/view/com/composer/drafts/DraftsButton.tsx:108
 msgid "Save changes"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1112
-#: src/view/com/composer/drafts/DraftsButton.tsx:81
+#: src/view/com/composer/drafts/DraftsButton.tsx:80
 msgid "Save changes?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1135
-#: src/view/com/composer/drafts/DraftsButton.tsx:109
+#: src/view/com/composer/drafts/DraftsButton.tsx:108
 msgid "Save draft"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1114
-#: src/view/com/composer/drafts/DraftsButton.tsx:83
+#: src/view/com/composer/drafts/DraftsButton.tsx:82
 msgid "Save draft?"
 msgstr ""
 
@@ -7880,7 +7886,7 @@ msgstr "slide"
 msgid "Smaller"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:108
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:145
 msgid "So many thoughts, you should post one"
 msgstr ""
 
@@ -8573,7 +8579,7 @@ msgstr "This conversation is locked."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:217
+#: src/view/com/composer/drafts/DraftItem.tsx:131
 msgid "This draft will be permanently deleted."
 msgstr ""
 
@@ -9726,7 +9732,7 @@ msgstr ""
 msgid "Would you like to block this user and/or leave this conversation?"
 msgstr "Would you like to block this user and/or leave this conversation?"
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:96
+#: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr ""
 
@@ -9857,7 +9863,7 @@ msgstr "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} pe
 msgid "You can only save drafts up to 1000 characters."
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:99
+#: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr ""
 
@@ -9975,7 +9981,7 @@ msgstr ""
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsButton.tsx:92
+#: src/view/com/composer/drafts/DraftsButton.tsx:91
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr ""
 

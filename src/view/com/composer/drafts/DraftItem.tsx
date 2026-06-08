@@ -1,25 +1,24 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import * as device from '#/lib/deviceName';
 
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
 
-import { atoms as a, select, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlusIcon } from '#/components/icons/CirclePlus';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/icons/DotGrid';
 import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import * as MediaPreview from '#/components/MediaPreview';
-import { RichText } from '#/components/RichText';
-import { Text } from '#/components/Typography';
+import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
+import { PlayButtonIcon } from '#/components/web/PlayButtonIcon';
 import * as Prompt from '#/components/web/Prompt';
+import { Text } from '#/components/web/Text';
 
+import * as styles from './DraftItem.css';
+import { DraftRichText } from './DraftRichText';
 import type { DraftPostDisplay, DraftSummary } from './state/schema';
 import * as storage from './state/storage';
 
@@ -33,7 +32,6 @@ export function DraftItem({
 	onDelete: (draft: DraftSummary) => void;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const discardPromptControl = Prompt.usePromptHandle();
 	const post = draft.posts[0]!;
 
@@ -44,8 +42,8 @@ export function DraftItem({
 	const isUnknownDevice = useMemo(() => {
 		const raw = draft.draft.deviceName;
 		switch (raw) {
-			case device.FALLBACK_IOS:
 			case device.FALLBACK_ANDROID:
+			case device.FALLBACK_IOS:
 			case device.FALLBACK_WEB:
 				return true;
 			default:
@@ -58,159 +56,75 @@ export function DraftItem({
 	}, [onDelete, draft]);
 
 	return (
-		<>
-			<View style={[a.relative]}>
-				<Pressable
-					accessibilityRole="button"
-					accessibilityLabel={l`Open draft`}
-					accessibilityHint={l`Opens this draft in the composer`}
-					onPress={() => onSelect(draft)}
-					style={({ pressed, hovered }) => [
-						a.rounded_md,
-						a.border,
-						t.atoms.shadow_sm,
-						pressed || hovered ? t.atoms.border_contrast_medium : t.atoms.border_contrast_low,
-						{
-							backgroundColor: select(t.name, {
-								light: t.atoms.bg.backgroundColor,
-								dark: t.atoms.bg_contrast_25.backgroundColor,
-								dim: t.atoms.bg_contrast_25.backgroundColor,
-							}),
-						},
-					]}
-				>
-					<View
-						style={[
-							a.rounded_md,
-							a.overflow_hidden,
-							a.p_lg,
-							a.pb_md,
-							a.gap_sm,
-							{
-								paddingTop: 20 + a.pt_md.paddingTop,
-							},
-						]}
-					>
-						{!!post.text.trim().length && (
-							<RichText
-								style={[a.text_md, a.leading_snug, a.pointer_events_none]}
-								numberOfLines={8}
-								value={post.text}
-								enableTags
-								disableMentionFacetValidation
+		<div className={styles.wrapper}>
+			<button
+				type="button"
+				className={styles.card}
+				aria-label={l`Open draft`}
+				aria-description={l`Opens this draft in the composer`}
+				onClick={() => onSelect(draft)}
+			>
+				{!!post.text.trim().length && <DraftRichText value={post.text} numberOfLines={8} />}
+
+				{!mediaExistsOnOtherDevice && <DraftMediaPreview post={post} />}
+
+				{hasMetadata && (
+					<div className={styles.metaList}>
+						{mediaExistsOnOtherDevice && (
+							<DraftMetadataTag
+								icon={WarningIcon}
+								text={
+									isUnknownDevice
+										? l`Media stored on another device`
+										: l({
+												message: `Media stored on ${draft.draft.deviceName}`,
+												comment: `Example: "Media stored on John's iPhone"`,
+											})
+								}
 							/>
 						)}
-
-						{!mediaExistsOnOtherDevice && <DraftMediaPreview post={post} />}
-
-						{hasMetadata && (
-							<View style={[a.gap_xs]}>
-								{mediaExistsOnOtherDevice && (
-									<DraftMetadataTag
-										icon={WarningIcon}
-										text={
-											isUnknownDevice
-												? l`Media stored on another device`
-												: l({
-														message: `Media stored on ${draft.draft.deviceName}`,
-														comment: `Example: "Media stored on John's iPhone"`,
-													})
-										}
-									/>
-								)}
-								{mediaIsMissing && (
-									<DraftMetadataTag display="warning" icon={WarningIcon} text={l`Missing media`} />
-								)}
-								{draft.meta.hasQuotes && <DraftMetadataTag icon={CloseQuoteIcon} text={l`Quote post`} />}
-								{draft.meta.replyCount > 0 && (
-									<DraftMetadataTag
-										icon={CirclePlusIcon}
-										text={plural(draft.meta.replyCount, {
-											one: '1 more post',
-											other: '# more posts',
-										})}
-									/>
-								)}
-							</View>
+						{mediaIsMissing && (
+							<DraftMetadataTag display="warning" icon={WarningIcon} text={l`Missing media`} />
 						)}
-					</View>
-				</Pressable>
+						{draft.meta.hasQuotes && <DraftMetadataTag icon={CloseQuoteIcon} text={l`Quote post`} />}
+						{draft.meta.replyCount > 0 && (
+							<DraftMetadataTag
+								icon={CirclePlusIcon}
+								text={plural(draft.meta.replyCount, {
+									one: '1 more post',
+									other: '# more posts',
+								})}
+							/>
+						)}
+					</div>
+				)}
+			</button>
 
-				{/* Timestamp */}
-				<View
-					pointerEvents="none"
-					style={[
-						a.absolute,
-						a.pointer_events_none,
-						{
-							top: a.pt_md.paddingTop,
-							left: a.pl_lg.paddingLeft,
-						},
-					]}
+			{/* Timestamp */}
+			<div className={styles.timestamp}>
+				<TimeElapsed timestamp={draft.updatedAt}>
+					{({ timeElapsed }) => (
+						<Text size="sm" color="textContrastMedium" leading="tight" numberOfLines={1}>
+							{timeElapsed}
+						</Text>
+					)}
+				</TimeElapsed>
+			</div>
+
+			{/* Menu button — a detached Trigger for the discard prompt; sits outside the card so its click
+			    never reaches the card's open handler. */}
+			<div className={styles.menuSlot}>
+				<Prompt.Trigger
+					handle={discardPromptControl}
+					className={styles.menuButton}
+					aria-label={l`More options`}
 				>
-					<TimeElapsed timestamp={draft.updatedAt}>
-						{({ timeElapsed }) => (
-							<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_tight]} numberOfLines={1}>
-								{timeElapsed}
-							</Text>
-						)}
-					</TimeElapsed>
-				</View>
+					<span className={styles.menuIcon}>
+						<DotsIcon width={16} height={16} fill="currentColor" />
+					</span>
+				</Prompt.Trigger>
+			</div>
 
-				{/* Menu button */}
-				<View
-					style={[
-						a.absolute,
-						{
-							top: a.pt_md.paddingTop,
-							right: a.pr_md.paddingRight,
-						},
-					]}
-				>
-					<Button
-						label={l`More options`}
-						hitSlop={8}
-						onPress={(e) => {
-							e.stopPropagation();
-							discardPromptControl.open(null);
-						}}
-						style={[
-							a.pointer,
-							a.rounded_full,
-							{
-								height: 20,
-								width: 20,
-							},
-						]}
-					>
-						{({ pressed, hovered }) => (
-							<>
-								<View
-									style={[
-										a.absolute,
-										a.rounded_full,
-										{
-											top: -4,
-											bottom: -4,
-											left: -4,
-											right: -4,
-											backgroundColor:
-												pressed || hovered
-													? select(t.name, {
-															light: t.atoms.bg_contrast_50.backgroundColor,
-															dark: t.atoms.bg_contrast_100.backgroundColor,
-															dim: t.atoms.bg_contrast_100.backgroundColor,
-														})
-													: 'transparent',
-										},
-									]}
-								/>
-								<DotsIcon width={16} fill={t.atoms.text_contrast_low.color} style={[a.z_20]} />
-							</>
-						)}
-					</Button>
-				</View>
-			</View>
 			<Prompt.Basic
 				handle={discardPromptControl}
 				title={l`Discard draft?`}
@@ -219,7 +133,7 @@ export function DraftItem({
 				confirmButtonCta={l`Discard`}
 				confirmButtonColor="negative"
 			/>
-		</>
+		</div>
 	);
 }
 
@@ -232,20 +146,15 @@ function DraftMetadataTag({
 	icon: React.ComponentType<SVGIconProps>;
 	text: string;
 }) {
-	const t = useTheme();
-	const color = {
-		info: t.atoms.text_contrast_medium.color,
-		warning: select(t.name, {
-			light: '#C99A00',
-			dark: t.palette.yellow,
-			dim: t.palette.yellow,
-		}),
-	}[display];
 	return (
-		<View style={[a.flex_row, a.align_center, a.gap_xs]}>
-			<Icon size="sm" fill={color} />
-			<Text style={[a.text_sm, a.leading_tight, { color }]}>{text}</Text>
-		</View>
+		<div className={clsx(styles.tagRow, display === 'warning' ? styles.tagWarning : styles.tagInfo)}>
+			<span className={styles.tagIcon}>
+				<Icon width={16} height={16} fill="currentColor" />
+			</span>
+			<Text size="sm" leading="tight" className={styles.tagText}>
+				{text}
+			</Text>
+		</div>
 	);
 }
 
@@ -255,8 +164,9 @@ type LoadedImage = {
 };
 
 function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
+	const { t: l } = useLingui();
 	const [loadedImages, setLoadedImages] = useState<LoadedImage[]>([]);
-	const [videoThumbnail, setVideoThumbnail] = useState<string | undefined>();
+	const [hasVideo, setHasVideo] = useState(false);
 
 	useEffect(() => {
 		const objectUrls: string[] = [];
@@ -270,17 +180,15 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 						const url = URL.createObjectURL(blob);
 						objectUrls.push(url);
 						loaded.push({ url, alt: image.altText || '' });
-					} catch (e) {
-						// Image doesn't exist locally, skip it
+					} catch {
+						// image doesn't exist locally, skip it
 					}
 				}
 				setLoadedImages(loaded);
 			}
 
-			if (post.video?.exists && post.video.localPath) {
-				// can't generate thumbnails on web
-				setVideoThumbnail("yep, there's a video");
-			}
+			// can't generate video thumbnails on web; flag presence so we render a placeholder tile.
+			setHasVideo(Boolean(post.video?.exists && post.video.localPath));
 		}
 
 		void loadMedia();
@@ -292,22 +200,57 @@ function DraftMediaPreview({ post }: { post: DraftPostDisplay }) {
 		};
 	}, [post.images, post.video]);
 
-	// Nothing to show
+	// nothing to show
 	if (loadedImages.length === 0 && !post.gif && !post.video) {
 		return null;
 	}
 
 	return (
-		<View style={[a.flex_row, a.flex_wrap, { marginLeft: -4, marginRight: -4 }]}>
+		<div className={styles.mediaRow}>
 			{loadedImages.map((image, i) => (
-				<View key={i} style={[a.p_2xs, { width: '20%' }]}>
-					<MediaPreview.ImageItem thumbnail={image.url} alt={image.alt} maxWidth={999} />
-				</View>
+				<div key={i} className={styles.imageTile}>
+					<MediaTile thumbnail={image.url} alt={image.alt} />
+				</div>
 			))}
-			{post.gif && <MediaPreview.GifItem thumbnail={post.gif.url} alt={post.gif.alt} />}
-			{post.video && videoThumbnail && (
-				<MediaPreview.VideoItem thumbnail={undefined} alt={post.video.altText} />
+			{post.gif && (
+				<div className={styles.mediaTile}>
+					<MediaTile thumbnail={post.gif.url} alt={post.gif.alt}>
+						<div className={styles.overlay} aria-hidden>
+							<PlayButtonIcon size={24} />
+						</div>
+						<div className={styles.gifBadge} aria-hidden>
+							<Text className={styles.gifBadgeText}>{l`GIF`}</Text>
+						</div>
+					</MediaTile>
+				</div>
 			)}
-		</View>
+			{post.video && hasVideo && (
+				<div className={styles.mediaTile}>
+					<MediaTile alt={post.video.altText}>
+						<div className={styles.overlay} aria-hidden>
+							<PlayButtonIcon size={24} />
+						</div>
+					</MediaTile>
+				</div>
+			)}
+		</div>
+	);
+}
+
+function MediaTile({
+	thumbnail,
+	alt,
+	children,
+}: {
+	thumbnail?: string;
+	alt?: string;
+	children?: React.ReactNode;
+}) {
+	return (
+		<div className={clsx(styles.square, !thumbnail && styles.squareEmpty)}>
+			{thumbnail && <img className={styles.image} src={thumbnail} alt={alt} />}
+			<MediaInsetBorder className={styles.insetRadius} />
+			{children}
+		</div>
 	);
 }

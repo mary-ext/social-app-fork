@@ -1,11 +1,10 @@
 import { useLingui, Trans } from '@lingui/react/macro';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Prompt from '#/components/web/Prompt';
 import * as Sheet from '#/components/web/Sheet';
 
+import * as styles from './DraftsButton.css';
 import { DraftsListDialog } from './DraftsListDialog';
 import { useSaveDraftMutation } from './state/queries';
 import type { DraftSummary } from './state/schema';
@@ -64,11 +63,11 @@ export function DraftsButton({
 				color="primary"
 				shape="default"
 				size="small"
-				style={[a.py_sm, a.px_md, a.mx_xs]}
+				className={styles.trigger}
 				disabled={isSaving}
-				onPress={handlePress}
+				onClick={handlePress}
 			>
-				<ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
+				<ButtonText size="md">
 					<Trans>Drafts</Trans>
 				</ButtonText>
 			</Button>
