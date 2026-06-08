@@ -61,6 +61,9 @@ export const popup = style(
 		boxShadow: vars.shadow.md,
 		boxSizing: 'border-box',
 		maxHeight: 'var(--available-height)',
+		// stretch the dropdown to the trigger's width (Base UI anchor) instead of shrinking to its
+		// content, while still growing past it for longer item labels
+		minWidth: 'var(--anchor-width)',
 		overflowY: 'auto',
 	}),
 );
