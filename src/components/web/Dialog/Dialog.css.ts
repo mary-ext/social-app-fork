@@ -77,7 +77,20 @@ export const closeBtn = style({
 
 // declared after `closeBtn` so it wins by source order: pins the button to the screen corner (outside the
 // popup card) — for full-height dialogs whose close floats over the backdrop, like the GIF picker.
+//
+// the inner close animates for free as a child of the popup (which fades+scales). the outer close sits
+// outside the popup, so it instead piggybacks on the viewport's transition: the viewport carries Base UI's
+// `data-starting-style`/`data-ending-style` and stays mounted through the closing transition, so as its
+// descendant the close can fade in/out off those attributes (matched to the popup's 200ms easing).
 export const closeBtnOuter = style({
 	position: 'fixed',
+	transitionDuration: '200ms',
+	transitionProperty: 'opacity',
+	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
 	zIndex: 11,
+	selectors: {
+		[`${viewport}[data-starting-style] &, ${viewport}[data-ending-style] &`]: {
+			opacity: 0,
+		},
+	},
 });
