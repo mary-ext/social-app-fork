@@ -38,6 +38,8 @@ export type RootProps<Payload = unknown> = {
 	 * one.
 	 */
 	id?: string;
+	/** Prevent clicks outside the popup from dismissing it (the close button and Escape still work). */
+	disablePointerDismissal?: boolean;
 	modal?: boolean | 'trap-focus';
 	open?: boolean;
 	defaultOpen?: boolean;
@@ -48,6 +50,7 @@ export function Root<Payload = unknown>({
 	children,
 	handle,
 	id: idProp,
+	disablePointerDismissal,
 	modal,
 	open,
 	defaultOpen,
@@ -62,6 +65,7 @@ export function Root<Payload = unknown>({
 		<BaseDialog.Root
 			actionsRef={actionsRef}
 			defaultOpen={defaultOpen}
+			disablePointerDismissal={disablePointerDismissal}
 			handle={handle}
 			modal={modal}
 			onOpenChange={(next, details) => {
