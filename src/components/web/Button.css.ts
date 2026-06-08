@@ -3,9 +3,9 @@ import { calc } from '@vanilla-extract/css-utils';
 
 import { recipe } from '#/components/web/css/recipe';
 
-import { roundToDevicePx } from '#/styles/round';
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
+import { roundToDevicePx } from '#/styles/round';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 const HOVER = '&:hover:not(:disabled)';
@@ -30,6 +30,8 @@ export const button = recipe(
 			transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
 			whiteSpace: 'nowrap',
 			selectors: {
+				// ghost/bare disabled treatment: dim the inherited color. solid colors override this with a
+				// muted fill at full opacity (see the per-color compound variants), matching upstream.
 				'&:disabled': { cursor: 'default', opacity: 0.5 },
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 			},
@@ -40,7 +42,14 @@ export const button = recipe(
 				style: {
 					backgroundColor: vars.palette.negative_500,
 					color: vars.palette.white,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_600 } },
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.negative_600 },
+						'&:disabled': {
+							backgroundColor: vars.palette.negative_700,
+							color: vars.palette.negative_300,
+							opacity: 1,
+						},
+					},
 				},
 				variant: 'solid',
 			},
@@ -49,7 +58,15 @@ export const button = recipe(
 				style: {
 					backgroundColor: vars.palette.primary_500,
 					color: vars.palette.white,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.primary_600 } },
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.primary_600 },
+						// `contrast_0` is white in light themes and dark in dark ones — upstream's white/text_inverted split.
+						'&:disabled': {
+							backgroundColor: vars.palette.primary_200,
+							color: vars.palette.contrast_0,
+							opacity: 1,
+						},
+					},
 				},
 				variant: 'solid',
 			},
@@ -58,7 +75,10 @@ export const button = recipe(
 				style: {
 					backgroundColor: vars.palette.contrast_50,
 					color: vars.palette.contrast_700,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.contrast_100 } },
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.contrast_100 },
+						'&:disabled': { color: vars.palette.contrast_300, opacity: 1 },
+					},
 				},
 				variant: 'solid',
 			},
@@ -69,7 +89,10 @@ export const button = recipe(
 				style: {
 					backgroundColor: vars.palette.negative_50,
 					color: vars.palette.negative_600,
-					selectors: { [HOVER]: { backgroundColor: vars.palette.negative_100 } },
+					selectors: {
+						[HOVER]: { backgroundColor: vars.palette.negative_100 },
+						'&:disabled': { color: vars.palette.negative_200, opacity: 1 },
+					},
 				},
 				variant: 'solid',
 			},
