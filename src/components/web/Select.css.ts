@@ -60,19 +60,58 @@ export const popup = style(
 		borderRadius: 8,
 		boxShadow: vars.shadow.md,
 		boxSizing: 'border-box',
+		// the list scrolls inside; the popup clips it (rounded corners) and anchors the scroll arrows
+		display: 'flex',
+		flexDirection: 'column',
 		maxHeight: 'var(--available-height)',
 		// stretch the dropdown to the trigger's width (Base UI anchor) instead of shrinking to its
 		// content, while still growing past it for longer item labels
 		minWidth: 'var(--anchor-width)',
-		overflowY: 'auto',
+		overflow: 'hidden',
+		position: 'relative',
 	}),
 );
 
 export const list = style(
 	layered(components, {
+		flex: 1,
+		// the scroll container the scroll arrows drive; `minHeight: 0` lets it shrink to scroll inside the flex popup
+		minHeight: 0,
+		overflowY: 'auto',
 		padding: 4,
 	}),
 );
+
+// the up/down hover-to-scroll affordances, fading the clipped list edge into the popup background.
+// shown only when the list overflows (Base UI mounts them on demand). Base UI sets `position: absolute`.
+const scrollArrow = style(
+	layered(components, {
+		alignItems: 'center',
+		color: vars.palette.contrast_1000,
+		display: 'flex',
+		height: 24,
+		justifyContent: 'center',
+		left: 0,
+		right: 0,
+		zIndex: 1,
+	}),
+);
+
+export const scrollUpArrow = style([
+	scrollArrow,
+	layered(components, {
+		background: `linear-gradient(to bottom, ${vars.palette.contrast_0}, transparent)`,
+		top: 0,
+	}),
+]);
+
+export const scrollDownArrow = style([
+	scrollArrow,
+	layered(components, {
+		background: `linear-gradient(to top, ${vars.palette.contrast_0}, transparent)`,
+		bottom: 0,
+	}),
+]);
 
 export const item = style(
 	layered(components, {

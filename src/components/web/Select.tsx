@@ -4,7 +4,10 @@ import { clsx } from 'clsx';
 
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
-import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
+import {
+	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
+} from '#/components/icons/Chevron';
 import * as styles from '#/components/web/Select.css';
 
 export type SelectItem = {
@@ -113,11 +116,17 @@ export function Content<T>({ items, renderItem, valueExtractor = defaultValueExt
 		<BaseSelect.Portal>
 			<BaseSelect.Positioner className={styles.positioner} sideOffset={5} alignItemWithTrigger={false}>
 				<BaseSelect.Popup className={styles.popup}>
+					<BaseSelect.ScrollUpArrow className={styles.scrollUpArrow}>
+						<ChevronUpIcon size="xs" fill="currentColor" />
+					</BaseSelect.ScrollUpArrow>
 					<BaseSelect.List className={styles.list}>
 						{items.map((item, index) => (
 							<Fragment key={valueExtractor(item)}>{renderItem(item, index, selectedValue)}</Fragment>
 						))}
 					</BaseSelect.List>
+					<BaseSelect.ScrollDownArrow className={styles.scrollDownArrow}>
+						<ChevronDownIcon size="xs" fill="currentColor" />
+					</BaseSelect.ScrollDownArrow>
 				</BaseSelect.Popup>
 			</BaseSelect.Positioner>
 		</BaseSelect.Portal>
