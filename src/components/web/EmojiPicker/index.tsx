@@ -74,9 +74,7 @@ export function Root({ children, handle, onEmojiSelect, preloadOnMount = true, n
 
 	return (
 		<EmojiPickerContext value={value}>
-			{/* non-modal so it doesn't double scroll-lock / fight a host dialog; the floating tree keeps focus +
-			    nested Escape working */}
-			<Popover.Root handle={handle} actionsRef={actionsRef} modal={false}>
+			<Popover.Root handle={handle} actionsRef={actionsRef} modal={true}>
 				{children}
 			</Popover.Root>
 		</EmojiPickerContext>
