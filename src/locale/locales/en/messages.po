@@ -951,8 +951,8 @@ msgstr "Add {0} to lists"
 msgid "Add {displayName} to starter pack"
 msgstr ""
 
+#: src/view/com/composer/labels/LabelsBtn.tsx:52
 #: src/view/com/composer/labels/LabelsBtn.tsx:85
-#: src/view/com/composer/labels/LabelsBtn.tsx:89
 msgid "Add a content warning"
 msgstr ""
 
@@ -1122,7 +1122,7 @@ msgstr ""
 msgid "Admin"
 msgstr "Admin"
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:129
+#: src/view/com/composer/labels/LabelsBtn.tsx:125
 msgid "Adult"
 msgstr ""
 
@@ -1133,7 +1133,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:125
 #: src/lib/moderation/useGlobalLabelStrings.ts:29
 #: src/lib/moderation/useModerationCauseDescription.ts:135
-#: src/view/com/composer/labels/LabelsBtn.tsx:102
+#: src/view/com/composer/labels/LabelsBtn.tsx:97
 msgid "Adult Content"
 msgstr ""
 
@@ -1145,8 +1145,7 @@ msgstr ""
 msgid "Adult content is disabled."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:107
-#: src/view/com/composer/labels/LabelsBtn.tsx:157
+#: src/view/com/composer/labels/LabelsBtn.tsx:100
 msgid "Adult Content labels"
 msgstr ""
 
@@ -1498,7 +1497,7 @@ msgstr ""
 msgid "Art"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:139
+#: src/view/com/composer/labels/LabelsBtn.tsx:136
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
@@ -2236,7 +2235,7 @@ msgstr ""
 msgid "Content Warning"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:50
+#: src/view/com/composer/labels/LabelsBtn.tsx:44
 msgid "Content warnings"
 msgstr ""
 
@@ -2809,8 +2808,8 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:216
 #: src/components/dms/AfterReportConversationDialog.tsx:146
 #: src/components/dms/AfterReportDialog.tsx:132
-#: src/view/com/composer/labels/LabelsBtn.tsx:181
-#: src/view/com/composer/labels/LabelsBtn.tsx:189
+#: src/view/com/composer/labels/LabelsBtn.tsx:173
+#: src/view/com/composer/labels/LabelsBtn.tsx:175
 #: src/view/com/composer/videos/SubtitleDialog.tsx:157
 #: src/view/com/composer/videos/SubtitleDialog.tsx:169
 msgid "Done"
@@ -4008,8 +4007,8 @@ msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:41
 #: src/lib/moderation/useGlobalLabelStrings.ts:45
-#: src/view/com/composer/labels/LabelsBtn.tsx:163
-#: src/view/com/composer/labels/LabelsBtn.tsx:166
+#: src/view/com/composer/labels/LabelsBtn.tsx:154
+#: src/view/com/composer/labels/LabelsBtn.tsx:158
 msgid "Graphic Media"
 msgstr ""
 
@@ -4502,12 +4501,12 @@ msgstr ""
 msgid "Labeled by the author."
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:55
+#: src/view/com/composer/labels/LabelsBtn.tsx:46
 #: src/view/screens/Profile.tsx:228
 msgid "Labels"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:55
+#: src/view/com/composer/labels/LabelsBtn.tsx:46
 msgid "Labels added"
 msgstr ""
 
@@ -4984,7 +4983,7 @@ msgstr ""
 msgid "Media stored on another device"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:172
+#: src/view/com/composer/labels/LabelsBtn.tsx:166
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
@@ -5696,8 +5695,8 @@ msgstr ""
 msgid "now"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:120
-#: src/view/com/composer/labels/LabelsBtn.tsx:123
+#: src/view/com/composer/labels/LabelsBtn.tsx:113
+#: src/view/com/composer/labels/LabelsBtn.tsx:117
 msgid "Nudity"
 msgstr ""
 
@@ -5925,10 +5924,6 @@ msgstr "Open this group chat"
 msgid "Opens {0} feed"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:51
-msgid "Opens a dialog to add a content warning to your post"
-msgstr ""
-
 #: src/screens/Log.tsx:69
 msgid "Opens additional details for a debug entry"
 msgstr ""
@@ -5992,7 +5987,7 @@ msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:237
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:241
-#: src/view/com/composer/labels/LabelsBtn.tsx:152
+#: src/view/com/composer/labels/LabelsBtn.tsx:146
 msgid "Other"
 msgstr ""
 
@@ -6011,6 +6006,10 @@ msgstr ""
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:118
 msgid "Other harassing or hateful content"
 msgstr ""
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:149
+msgid "Other labels"
+msgstr "Other labels"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:60
 msgid "Other misleading content"
@@ -6129,7 +6128,7 @@ msgstr ""
 msgid "Photography"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:137
+#: src/view/com/composer/labels/LabelsBtn.tsx:134
 msgid "Pictures meant for adults."
 msgstr ""
 
@@ -6208,7 +6207,7 @@ msgstr ""
 msgid "Plays the video"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:92
+#: src/view/com/composer/labels/LabelsBtn.tsx:88
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
@@ -6251,7 +6250,7 @@ msgstr ""
 msgid "Politics"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:126
+#: src/view/com/composer/labels/LabelsBtn.tsx:121
 msgid "Porn"
 msgstr ""
 
@@ -7614,7 +7613,7 @@ msgctxt "toast"
 msgid "Settings saved"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:141
+#: src/view/com/composer/labels/LabelsBtn.tsx:138
 msgid "Sexual activity or erotic nudity."
 msgstr ""
 
@@ -8152,8 +8151,8 @@ msgstr ""
 msgid "Suggested for you"
 msgstr ""
 
-#: src/view/com/composer/labels/LabelsBtn.tsx:114
-#: src/view/com/composer/labels/LabelsBtn.tsx:117
+#: src/view/com/composer/labels/LabelsBtn.tsx:105
+#: src/view/com/composer/labels/LabelsBtn.tsx:109
 msgid "Suggestive"
 msgstr ""
 
