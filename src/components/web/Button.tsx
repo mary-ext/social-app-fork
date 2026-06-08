@@ -72,12 +72,29 @@ export type ButtonIconProps = {
 	size?: IconProps['size'];
 };
 
+// pixel size per icon token for icons rendered inside a Button. mirrors the RNW ButtonIcon's own table,
+// which intentionally diverges from the raw icon scale (`md` is 18 here, 20 in `icons/common`) so button
+// icons track the rendered text. passed as an explicit width/height rather than the icon `size` prop so the
+// raw scale isn't consulted.
+const ICON_PX: Record<NonNullable<IconProps['size']>, number> = {
+	'2xl': 32,
+	'2xs': 8,
+	'3xl': 40,
+	'4xl': 48,
+	lg: 24,
+	md: 18,
+	sm: 16,
+	xl: 28,
+	xs: 12,
+};
+
 /** Renders an icon that inherits the button's text color via `currentColor`. */
 export function ButtonIcon({ icon: Icon, size = 'sm' }: ButtonIconProps) {
 	const ctx = useContext(ButtonContext);
 	if (!ctx) {
 		throw new Error('ButtonIcon must be rendered inside a Button');
 	}
+	const px = ICON_PX[size];
 	return (
 		<span
 			className={styles.iconBox({
@@ -86,7 +103,7 @@ export function ButtonIcon({ icon: Icon, size = 'sm' }: ButtonIconProps) {
 				size: ctx.size,
 			})}
 		>
-			<Icon size={size} fill="currentColor" />
+			<Icon width={px} height={px} fill="currentColor" />
 		</span>
 	);
 }

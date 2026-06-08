@@ -162,9 +162,11 @@ export const textSize = styleVariants(fontSize, (value) => ({
 export const iconBox = recipe(
 	{
 		base: {
-			alignItems: 'center',
-			display: 'inline-flex',
-			justifyContent: 'center',
+			// grid (not flex) centering: the box is intentionally narrower than some icons (an 18px `md` icon
+			// in a 17px small-button box), and a grid item overflows its track centered rather than being
+			// shrunk into a non-square smear the way a flex item would. mirrors RNW's absolute-centered icon.
+			display: 'inline-grid',
+			placeItems: 'center',
 		},
 		compoundVariants: [
 			// `2xs` icons keep the full line-height box but a narrower width, matching upstream.
