@@ -1,9 +1,8 @@
 import { type StyleRule, style, styleVariants } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
-import { layeredStyle } from '#/components/web/css/layered-style';
-
 import { vars } from '#/styles/contract.css';
+import { componentStyle } from '#/styles/layers.css';
 import { roundToDevicePx } from '#/styles/round';
 import { fontSize } from '#/styles/tokens.css';
 
@@ -27,20 +26,20 @@ const itemReset = {
 } satisfies StyleRule;
 
 /** A clickable toggle row that stretches to fill its container (checkbox group member or standalone). */
-export const item = layeredStyle({ ...itemReset, width: '100%' });
+export const item = componentStyle({ ...itemReset, width: '100%' });
 
 /** A clickable toggle that shares a flex row evenly with its siblings (the radio pair). */
-export const radioItem = layeredStyle({ ...itemReset, flex: 1 });
+export const radioItem = componentStyle({ ...itemReset, flex: 1 });
 
 /** A vertical stack of panels with the hairline gap that produces the segmented look. */
-export const panelGroup = layeredStyle({
+export const panelGroup = componentStyle({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 2,
 	width: '100%',
 });
 
-export const panel = layeredStyle({
+export const panel = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	boxSizing: 'border-box',
@@ -80,7 +79,7 @@ export const panelAdjacent = styleVariants({
 	},
 });
 
-export const panelTextWithIcon = layeredStyle({
+export const panelTextWithIcon = componentStyle({
 	alignItems: 'center',
 	display: 'flex',
 	flex: 1,
@@ -88,7 +87,7 @@ export const panelTextWithIcon = layeredStyle({
 	gap: 4,
 });
 
-export const panelText = layeredStyle({
+export const panelText = componentStyle({
 	color: vars.palette.contrast_700,
 	flex: 1,
 	fontSize: fontSize.md,
@@ -101,7 +100,7 @@ export const panelText = layeredStyle({
 	},
 });
 
-export const panelIcon = layeredStyle({
+export const panelIcon = componentStyle({
 	alignItems: 'center',
 	color: vars.palette.contrast_700,
 	display: 'flex',
@@ -112,7 +111,7 @@ export const panelIcon = layeredStyle({
 });
 
 // #region indicators
-export const circle = layeredStyle({
+export const circle = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
 	border: `1px solid ${vars.palette.contrast_100}`,
@@ -133,14 +132,14 @@ export const circle = layeredStyle({
 	},
 });
 
-export const dot = layeredStyle({
+export const dot = componentStyle({
 	backgroundColor: vars.palette.white,
 	borderRadius: 999,
 	height: 12,
 	width: 12,
 });
 
-export const box = layeredStyle({
+export const box = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
 	border: `1px solid ${vars.palette.contrast_100}`,
@@ -162,13 +161,13 @@ export const box = layeredStyle({
 	},
 });
 
-export const check = layeredStyle({
+export const check = componentStyle({
 	alignItems: 'center',
 	display: 'flex',
 	justifyContent: 'center',
 });
 
-export const switchTrack = layeredStyle({
+export const switchTrack = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_200,
 	borderRadius: 999,
@@ -185,7 +184,7 @@ export const switchTrack = layeredStyle({
 	},
 });
 
-export const switchThumb = layeredStyle({
+export const switchThumb = componentStyle({
 	backgroundColor: vars.palette.white,
 	borderRadius: 999,
 	height: 22,

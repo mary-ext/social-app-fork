@@ -1,9 +1,8 @@
-import { layeredStyle } from '#/components/web/css/layered-style';
-
 import { vars } from '#/styles/contract.css';
+import { componentStyle } from '#/styles/layers.css';
 import { fontFamily, fontSize } from '#/styles/tokens.css';
 
-export const label = layeredStyle({
+export const label = componentStyle({
 	color: vars.palette.contrast_700,
 	display: 'block',
 	fontFamily,
@@ -12,7 +11,7 @@ export const label = layeredStyle({
 	marginBottom: 8,
 });
 
-export const input = layeredStyle({
+export const input = componentStyle({
 	appearance: 'none',
 	backgroundColor: vars.palette.contrast_50,
 	border: '1px solid transparent',
@@ -35,7 +34,7 @@ export const input = layeredStyle({
 	},
 });
 
-export const invalid = layeredStyle({
+export const invalid = componentStyle({
 	backgroundColor: vars.palette.negative_25,
 	borderColor: vars.palette.negative_300,
 	selectors: {
@@ -44,7 +43,7 @@ export const invalid = layeredStyle({
 	},
 });
 
-export const multiline = layeredStyle({
+export const multiline = componentStyle({
 	minHeight: 80,
 	resize: 'none',
 });

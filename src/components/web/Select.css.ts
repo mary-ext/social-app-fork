@@ -1,9 +1,8 @@
-import { layeredStyle } from '#/components/web/css/layered-style';
-
 import { vars } from '#/styles/contract.css';
+import { componentStyle } from '#/styles/layers.css';
 import { fontSize } from '#/styles/tokens.css';
 
-export const trigger = layeredStyle({
+export const trigger = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	border: `1px solid ${vars.palette.contrast_50}`,
@@ -26,25 +25,25 @@ export const trigger = layeredStyle({
 	},
 });
 
-export const value = layeredStyle({
+export const value = componentStyle({
 	overflow: 'hidden',
 	textAlign: 'left',
 	textOverflow: 'ellipsis',
 	whiteSpace: 'nowrap',
 });
 
-export const icon = layeredStyle({
+export const icon = componentStyle({
 	alignItems: 'center',
 	color: vars.palette.contrast_1000,
 	display: 'flex',
 	flexShrink: 0,
 });
 
-export const positioner = layeredStyle({
+export const positioner = componentStyle({
 	zIndex: 10,
 });
 
-export const popup = layeredStyle({
+export const popup = componentStyle({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 8,
@@ -54,11 +53,11 @@ export const popup = layeredStyle({
 	overflowY: 'auto',
 });
 
-export const list = layeredStyle({
+export const list = componentStyle({
 	padding: 4,
 });
 
-export const item = layeredStyle({
+export const item = componentStyle({
 	alignItems: 'center',
 	borderRadius: 4,
 	color: vars.palette.contrast_1000,
@@ -80,7 +79,7 @@ export const item = layeredStyle({
 	},
 });
 
-export const indicator = layeredStyle({
+export const indicator = componentStyle({
 	alignItems: 'center',
 	color: vars.palette.primary_500,
 	display: 'flex',

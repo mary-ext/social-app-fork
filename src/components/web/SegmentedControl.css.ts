@@ -1,8 +1,7 @@
 import { createVar, fallbackVar } from '@vanilla-extract/css';
 
-import { layeredStyle } from '#/components/web/css/layered-style';
-
 import { vars } from '#/styles/contract.css';
+import { componentStyle } from '#/styles/layers.css';
 import { fontSize } from '#/styles/tokens.css';
 
 /** Number of segments; sizes the sliding indicator to an equal fraction of the track. */
@@ -10,7 +9,7 @@ export const countVar = createVar();
 /** Zero-based index of the selected segment; drives the indicator's horizontal offset. */
 export const indexVar = createVar();
 
-export const root = layeredStyle({
+export const root = componentStyle({
 	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 14,
@@ -22,7 +21,7 @@ export const root = layeredStyle({
 	width: '100%',
 });
 
-export const slider = layeredStyle({
+export const slider = componentStyle({
 	backgroundColor: vars.palette.contrast_0,
 	borderRadius: 10,
 	bottom: 4,
@@ -38,7 +37,7 @@ export const slider = layeredStyle({
 	width: `calc((100% - 8px) / ${fallbackVar(countVar, '1')})`,
 });
 
-export const item = layeredStyle({
+export const item = componentStyle({
 	alignItems: 'center',
 	appearance: 'none',
 	background: 'transparent',
@@ -65,7 +64,7 @@ export const item = layeredStyle({
 	},
 });
 
-export const text = layeredStyle({
+export const text = componentStyle({
 	fontSize: fontSize.md,
 	fontWeight: 500,
 	textAlign: 'center',

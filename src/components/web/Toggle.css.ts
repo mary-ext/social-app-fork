@@ -1,16 +1,15 @@
-import { layeredStyle } from '#/components/web/css/layered-style';
-
 import { vars } from '#/styles/contract.css';
+import { componentStyle } from '#/styles/layers.css';
 import { fontSize } from '#/styles/tokens.css';
 
-export const group = layeredStyle({
+export const group = componentStyle({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 2,
 	width: '100%',
 });
 
-export const row = layeredStyle({
+export const row = componentStyle({
 	alignItems: 'center',
 	appearance: 'none',
 	backgroundColor: vars.palette.contrast_50,
@@ -36,7 +35,7 @@ export const row = layeredStyle({
 	},
 });
 
-export const box = layeredStyle({
+export const box = componentStyle({
 	alignItems: 'center',
 	border: `1px solid ${vars.palette.contrast_300}`,
 	borderRadius: 6,
@@ -57,13 +56,13 @@ export const box = layeredStyle({
 	},
 });
 
-export const indicator = layeredStyle({
+export const indicator = componentStyle({
 	alignItems: 'center',
 	display: 'flex',
 	justifyContent: 'center',
 });
 
-export const text = layeredStyle({
+export const text = componentStyle({
 	flex: 1,
 	fontSize: fontSize.md,
 	selectors: {
@@ -74,7 +73,7 @@ export const text = layeredStyle({
 	},
 });
 
-export const actionIcon = layeredStyle({
+export const actionIcon = componentStyle({
 	alignItems: 'center',
 	color: 'inherit',
 	display: 'flex',
