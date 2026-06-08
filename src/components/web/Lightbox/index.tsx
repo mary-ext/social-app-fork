@@ -262,7 +262,7 @@ function Chrome() {
 			)}
 
 			<div className={styles.topLeft}>
-				<Menu.Root modal={false}>
+				<Menu.Root>
 					<Menu.Trigger className={styles.circle} aria-label={l`Image options`}>
 						<span className={styles.rotated}>
 							<EllipsisIcon size="md" fill="currentColor" />

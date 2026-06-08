@@ -68,7 +68,7 @@ export function EditableAvatar({
 
 	return (
 		<>
-			<Menu.Root modal={false}>
+			<Menu.Root>
 				<Menu.Trigger
 					aria-label={l`Edit avatar`}
 					className={styles.trigger}

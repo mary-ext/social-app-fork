@@ -59,7 +59,7 @@ export function EditableBanner({
 
 	return (
 		<>
-			<Menu.Root modal={false}>
+			<Menu.Root>
 				<Menu.Trigger aria-label={l`Edit banner`} className={styles.trigger}>
 					{banner && <img className={styles.image} src={banner} alt="" />}
 					<span className={styles.editBadge}>

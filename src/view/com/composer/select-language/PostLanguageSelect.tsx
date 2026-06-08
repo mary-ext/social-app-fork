@@ -71,7 +71,7 @@ export function PostLanguageSelect({
 
 	return (
 		<>
-			<Menu.Root modal={false}>
+			<Menu.Root>
 				<Menu.Trigger
 					render={
 						<LanguageButton
