@@ -141,8 +141,11 @@ export const button = recipe(
 				},
 				variant: 'ghost',
 			},
-			// emitted after the `size` variant, so the square hit target wins over its padding.
-			{ shape: 'round', style: { height: 34, padding: 0, width: 34 } },
+			// emitted after the `size` variant, so the square hit target wins over its padding. dimensions
+			// match upstream's rendered round-button sizes (a 34px box overflows the 33px header slot,
+			// nudging the centered icon off-axis).
+			{ shape: 'round', size: 'large', style: { height: 44, padding: 0, width: 44 } },
+			{ shape: 'round', size: 'small', style: { height: 33, padding: 0, width: 33 } },
 		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
@@ -184,8 +187,11 @@ export const iconBox = recipe(
 			// grid (not flex) centering: the box is intentionally narrower than some icons (an 18px `md` icon
 			// in a 17px small-button box), and a grid item overflows its track centered rather than being
 			// shrunk into a non-square smear the way a flex item would. mirrors RNW's absolute-centered icon.
+			// `place-content` (not `place-items`) does the centering: the single auto track grows to fit the
+			// icon, so it's the track that overflows the fixed box — `place-content` centers that track,
+			// whereas `place-items` only centers the icon within its already-grown track (a no-op here).
 			display: 'inline-grid',
-			placeItems: 'center',
+			placeContent: 'center',
 		},
 		compoundVariants: [
 			// `2xs` icons keep the full line-height box but a narrower width, matching upstream.

@@ -1,4 +1,5 @@
 import { createVar, style } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
@@ -9,7 +10,8 @@ import {
 } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens.css';
+import { roundToDevicePx } from '#/styles/round';
+import { fontSize, lineHeight } from '#/styles/tokens.css';
 
 const offsetVar = createVar();
 
@@ -72,12 +74,19 @@ export const backButton = style({
 	marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET,
 });
 
-/** Header title: bumps from `lg` to `xl` past the mobile breakpoint. */
+/**
+ * Header title: bumps from `lg` to `xl` past the mobile breakpoint. Overriding the font size detaches it from
+ * the `Text` recipe's `size` variant, which is what pairs the line-height to the font, so the matching
+ * `tight` line-height is recomputed here — otherwise the title keeps the default `sm` line-height and the
+ * `numberOfLines` clamp crops it.
+ */
 export const title = style({
 	fontSize: fontSize.lg,
+	lineHeight: roundToDevicePx(calc.multiply(fontSize.lg, lineHeight.tight)),
 	'@media': {
 		'screen and (min-width: 800px)': {
 			fontSize: fontSize.xl,
+			lineHeight: roundToDevicePx(calc.multiply(fontSize.xl, lineHeight.tight)),
 		},
 	},
 });
