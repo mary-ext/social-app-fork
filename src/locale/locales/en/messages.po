@@ -577,7 +577,7 @@ msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum nu
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:322
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:311
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr ""
 
@@ -851,7 +851,7 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:351
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:340
 #: src/screens/Messages/components/RequestButtons.tsx:86
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:108
 #: src/view/com/profile/ProfileMenu.tsx:160
@@ -872,7 +872,7 @@ msgstr ""
 msgid "Account is deactivated"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:382
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:371
 #: src/view/com/profile/ProfileMenu.tsx:132
 msgctxt "toast"
 msgid "Account muted"
@@ -914,7 +914,7 @@ msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:368
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
 #: src/view/com/profile/ProfileMenu.tsx:120
 msgctxt "toast"
 msgid "Account unmuted"
@@ -1496,8 +1496,8 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:481
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:482
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:456
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:457
 msgid "Assign topic for algo"
 msgstr ""
 
@@ -1556,7 +1556,7 @@ msgstr ""
 msgid "Banned user returning"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:658
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:633
 #: src/screens/Messages/components/ChatStatusInfo.tsx:65
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 #: src/screens/Messages/ConversationSettings/prompts.tsx:134
@@ -1571,8 +1571,8 @@ msgstr "Block {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:271
 #: src/components/dms/ConvoMenu.tsx:275
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:577
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:552
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:553
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/screens/Messages/components/RequestButtons.tsx:138
 #: src/view/com/profile/ProfileMenu.tsx:361
@@ -1584,7 +1584,7 @@ msgstr ""
 msgid "Block account?"
 msgstr "Block account?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:655
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
 #: src/view/com/profile/ProfileMenu.tsx:423
 msgid "Block Account?"
 msgstr ""
@@ -1654,7 +1654,7 @@ msgstr ""
 msgid "Blocked Accounts"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:656
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
 #: src/screens/Messages/ConversationSettings/prompts.tsx:132
 #: src/view/com/profile/ProfileMenu.tsx:429
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -1837,9 +1837,9 @@ msgstr ""
 msgid "Cancel search"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:87
-#: src/components/PostControls/index.tsx:116
-#: src/components/PostControls/index.tsx:144
+#: src/components/PostControls/index.tsx:85
+#: src/components/PostControls/index.tsx:114
+#: src/components/PostControls/index.tsx:142
 #: src/lib/hooks/useOpenComposer.tsx:83
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -1861,10 +1861,6 @@ msgstr "carousel"
 msgid "Cashtag {tag}"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:337
-msgid "Change"
-msgstr ""
-
 #: src/components/AppLanguageDropdown.tsx:42
 msgid "Change app language"
 msgstr "Change app language"
@@ -1880,10 +1876,6 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:351
 msgid "Change report reason"
 msgstr ""
-
-#: src/components/Post/Translated/index.tsx:332
-msgid "Change the source language"
-msgstr "Change the source language"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:148
 msgid "Changes saved"
@@ -2284,7 +2276,7 @@ msgstr ""
 #: src/components/dms/ChatInvite/Root.tsx:83
 #: src/components/dms/MessageContextMenu.tsx:48
 #: src/components/PostControls/DiscoverDebug.tsx:27
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:225
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:218
 #: src/lib/sharing.ts:17
 #: src/lib/sharing.ts:30
 msgid "Copied to clipboard"
@@ -2353,8 +2345,8 @@ msgstr ""
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:448
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:449
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:424
 msgid "Copy post text"
 msgstr ""
 
@@ -2557,7 +2549,7 @@ msgid "Default"
 msgstr ""
 
 #: src/components/dms/MessageOverlays.tsx:168
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:615
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:590
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:229
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 #: src/screens/StarterPack/StarterPackScreen.tsx:637
@@ -2602,8 +2594,8 @@ msgstr ""
 msgid "Delete message for me"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:600
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:575
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:576
 #: src/view/com/composer/Composer.tsx:1305
 msgid "Delete post"
 msgstr ""
@@ -2621,7 +2613,7 @@ msgstr ""
 msgid "Delete this list?"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:612
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:587
 msgid "Delete this post?"
 msgstr ""
 
@@ -2653,12 +2645,12 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:540
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:515
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
 msgid "Detach quote"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:641
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:616
 msgid "Detach quote post?"
 msgstr ""
 
@@ -2926,8 +2918,8 @@ msgstr "Edit group name"
 msgid "Edit image"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:593
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:597
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:568
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:572
 msgid "Edit interaction settings"
 msgstr ""
 
@@ -3317,7 +3309,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:190
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:183
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -3471,7 +3463,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:210
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:203
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -3543,8 +3535,8 @@ msgstr ""
 msgid "Feed unavailable"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:251
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:267
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:240
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:256
 msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
@@ -4129,7 +4121,7 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:125
 #: src/components/moderation/PostHider.tsx:121
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:623
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:598
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/lib/moderation/useLabelBehaviorDescription.ts:19
 #: src/lib/moderation/useLabelBehaviorDescription.ts:24
@@ -4151,36 +4143,29 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:517
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:489
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:492
 msgid "Hide post for me"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:498
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:514
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:517
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:489
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:492
 msgid "Hide reply for me"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
 msgid "Hide this post?"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:648
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:623
 msgid "Hide this reply?"
 msgstr ""
-
-#: src/components/Post/Translated/index.tsx:175
-#: src/components/Post/Translated/index.tsx:268
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:437
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:438
-msgid "Hide translation"
-msgstr "Hide translation"
 
 #: src/components/interstitials/Trending.tsx:70
 msgid "Hide trending topics"
@@ -4268,7 +4253,7 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:613
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:588
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -4382,7 +4367,7 @@ msgstr ""
 msgid "Invalid group chat code."
 msgstr "Invalid group chat code."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:327
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:316
 msgctxt "toast"
 msgid "Invalid interaction settings."
 msgstr ""
@@ -4650,7 +4635,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:240
+#: src/components/PostControls/index.tsx:238
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -5212,8 +5197,8 @@ msgstr ""
 msgid "Mute {0}"
 msgstr "Mute {0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:567
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:571
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:542
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:546
 #: src/view/com/profile/ProfileMenu.tsx:346
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Mute account"
@@ -5269,13 +5254,13 @@ msgstr ""
 msgid "Mute this word until you unmute it"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:496
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:468
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
 msgid "Mute thread"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:500
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:501
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:475
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:476
 msgid "Mute words & tags"
 msgstr ""
 
@@ -5895,7 +5880,7 @@ msgstr ""
 msgid "Open pack"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/index.tsx:52
+#: src/components/PostControls/PostMenu/index.tsx:50
 msgid "Open post options menu"
 msgstr ""
 
@@ -6159,8 +6144,8 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:403
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:407
 msgid "Pin to your profile"
 msgstr ""
 
@@ -6313,7 +6298,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:171
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:164
 msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
@@ -6323,8 +6308,8 @@ msgid "Post failed to upload. Please check your Internet connection and try agai
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:123
-#: src/screens/PostThread/components/ThreadItemPost.tsx:94
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:98
+#: src/screens/PostThread/components/ThreadItemPost.tsx:93
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:97
 msgid "Post has been deleted"
 msgstr ""
 
@@ -6361,7 +6346,7 @@ msgstr "Post link"
 msgid "Post not found"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:411
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "Post options"
 msgstr "Post options"
 
@@ -6532,11 +6517,11 @@ msgstr ""
 msgid "Quote post"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:283
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:283
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
 msgid "Quote post was successfully detached"
 msgstr ""
 
@@ -6555,8 +6540,8 @@ msgstr ""
 msgid "Quotes of this post"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:540
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:515
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
 msgid "Re-attach quote"
 msgstr ""
 
@@ -6875,7 +6860,7 @@ msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
-#: src/components/PostControls/index.tsx:198
+#: src/components/PostControls/index.tsx:196
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -6897,12 +6882,12 @@ msgstr ""
 msgid "Reply sorting"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:316
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:305
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:315
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:304
 msgid "Reply was successfully hidden"
 msgstr ""
 
@@ -6943,8 +6928,8 @@ msgstr ""
 msgid "Report message"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:583
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:584
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:558
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:559
 msgid "Report post"
 msgstr ""
 
@@ -7496,10 +7481,6 @@ msgstr ""
 msgid "Select primary language"
 msgstr ""
 
-#: src/components/Post/Translated/index.tsx:344
-msgid "Select the source language"
-msgstr "Select the source language"
-
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:49
 msgid "Select up to 3 languages used in this post"
 msgstr ""
@@ -7720,8 +7701,8 @@ msgstr "Show feed context debug"
 msgid "Show group chat updates"
 msgstr "Show group chat updates"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:470
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:445
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
 msgid "Show less like this"
 msgstr ""
 
@@ -7737,8 +7718,8 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:465
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:466
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:440
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:441
 msgid "Show more like this"
 msgstr ""
 
@@ -7764,8 +7745,8 @@ msgstr ""
 msgid "Show replies as"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:498
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:506
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -7838,8 +7819,8 @@ msgstr "Sign in to another account"
 msgid "Sign in to Bluesky"
 msgstr "Sign in to Bluesky"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:455
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:429
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:430
 msgid "Sign in to view post"
 msgstr ""
 
@@ -8437,9 +8418,9 @@ msgstr ""
 
 #. placeholder {0}: String(e)
 #. placeholder {0}: e.toString()
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:356
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:373
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:387
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:345
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:362
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:376
 #: src/screens/Messages/ConversationSettings/Member.tsx:61
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:100
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:113
@@ -8699,7 +8680,7 @@ msgstr ""
 msgid "This post was deleted by its author"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
@@ -8711,7 +8692,7 @@ msgstr ""
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:649
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:624
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -8785,7 +8766,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:617
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -8847,25 +8828,12 @@ msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:80
 #: src/components/dms/MessageContextMenu.tsx:84
-#: src/components/Post/Translated/index.tsx:124
-#: src/components/Post/Translated/index.tsx:130
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:443
+#: src/components/Post/Translated/index.tsx:37
+#: src/components/Post/Translated/index.tsx:43
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:418
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:419
 msgid "Translate"
 msgstr ""
-
-#: src/components/Post/Translated/index.tsx:250
-msgid "Translated"
-msgstr "Translated"
-
-#: src/components/Post/Translated/index.tsx:95
-msgid "Translating"
-msgstr "Translating"
-
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:432
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:433
-msgid "Translating…"
-msgstr "Translating…"
 
 #: src/screens/Settings/ThreadPreferences.tsx:70
 #: src/screens/Settings/ThreadPreferences.tsx:76
@@ -8907,11 +8875,6 @@ msgstr "Try again"
 msgctxt "action"
 msgid "Try again"
 msgstr ""
-
-#: src/components/Post/Translated/index.tsx:188
-#: src/components/Post/Translated/index.tsx:194
-msgid "Try Google Translate"
-msgstr "Try Google Translate"
 
 #: src/lib/interests.ts:73
 msgid "TV"
@@ -9045,7 +9008,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:232
+#: src/components/PostControls/index.tsx:230
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -9073,8 +9036,8 @@ msgstr ""
 msgid "Unmute {0}"
 msgstr "Unmute {0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:567
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:571
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:542
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:546
 #: src/view/com/profile/ProfileMenu.tsx:346
 #: src/view/com/profile/ProfileMenu.tsx:351
 msgid "Unmute account"
@@ -9093,8 +9056,8 @@ msgstr ""
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:496
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:468
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
 msgid "Unmute thread"
 msgstr ""
 
@@ -9119,8 +9082,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:403
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:407
 msgid "Unpin from profile"
 msgstr ""
 
@@ -9169,12 +9132,12 @@ msgstr ""
 msgid "Update invite link"
 msgstr "Update invite link"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:286
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:275
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:330
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:319
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
@@ -9778,11 +9741,11 @@ msgstr "Yes GIFs"
 msgid "Yes, delete this starter pack"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:644
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:619
 msgid "Yes, detach"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:651
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:626
 msgid "Yes, hide"
 msgstr ""
 
@@ -10058,11 +10021,11 @@ msgstr ""
 msgid "You will no longer receive notifications for {0}"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:204
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:197
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:201
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:194
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -10186,7 +10149,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/App.tsx:58
+#: src/App.tsx:57
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 

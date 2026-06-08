@@ -22,7 +22,6 @@ let PostMenuButton = ({
 	threadgateRecord,
 	onShowLess,
 	logContext,
-	forceGoogleTranslate,
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
@@ -33,7 +32,6 @@ let PostMenuButton = ({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
-	forceGoogleTranslate: boolean;
 }): React.ReactNode => {
 	const { t: l } = useLingui();
 	// the items run a stack of hooks; only mount them once the menu has been opened.
@@ -64,7 +62,6 @@ let PostMenuButton = ({
 					threadgateRecord={threadgateRecord}
 					onShowLess={onShowLess}
 					logContext={logContext}
-					forceGoogleTranslate={forceGoogleTranslate}
 				/>
 			)}
 		</Menu.Root>

@@ -40,7 +40,6 @@ import { Embed } from '#/components/Post/Embed';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
-import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { RichText } from '#/components/RichText';
@@ -424,8 +423,6 @@ let PostContent = ({
 }): React.ReactNode => {
 	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
 
-	const record = post.record as AppBskyFeedPost.Main;
-
 	const onPressShowMore = useCallback(() => {
 		setLimitLines(false);
 	}, [setLimitLines]);
@@ -455,7 +452,6 @@ let PostContent = ({
 					{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 				</View>
 			) : undefined}
-			{record && <TranslatedPost hideTranslateLink post={post} />}
 			{postEmbed ? (
 				<View
 					style={[

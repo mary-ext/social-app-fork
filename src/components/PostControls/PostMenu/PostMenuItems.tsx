@@ -10,6 +10,7 @@ import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
+import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getCurrentRoute } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -17,7 +18,6 @@ import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
 import { toShareUrl } from '#/lib/strings/url-helpers';
-import { useTranslate } from '#/lib/translation';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -38,8 +38,6 @@ import { useRequireAuth, useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 import { logger } from '#/logger';
-
-import { getPostLanguageTags } from '#/locale/helpers';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import {
@@ -88,7 +86,6 @@ let PostMenuItems = ({
 	threadgateRecord,
 	onShowLess,
 	logContext: _logContext,
-	forceGoogleTranslate,
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
@@ -98,7 +95,6 @@ let PostMenuItems = ({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
-	forceGoogleTranslate: boolean;
 }): React.ReactNode => {
 	const { hasSession, currentAccount } = useSession();
 	const { t: l } = useLingui();
@@ -111,10 +107,7 @@ let PostMenuItems = ({
 	const { hidePost } = useHiddenPostsApi();
 	const feedFeedback = useFeedFeedbackContext();
 	const openLink = useOpenLink();
-	const { clearTranslation, translate, translationState } = useTranslate({
-		key: post.uri,
-		forceGoogleTranslate,
-	});
+	const translate = useGoogleTranslate();
 	const navigation = useNavigation<NavigationProp>();
 	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
 	const blockPromptControl = Prompt.usePromptHandle();
@@ -228,11 +221,7 @@ let PostMenuItems = ({
 	};
 
 	const onPressTranslate = () => {
-		void translate({
-			text: record.text,
-			expectedTargetLanguage: langPrefs.primaryLanguage,
-			possibleSourceLanguages: getPostLanguageTags(post),
-		});
+		void translate(record.text, langPrefs.primaryLanguage);
 	};
 
 	const onHidePost = () => {
@@ -402,8 +391,6 @@ let PostMenuItems = ({
 
 	const onSignIn = () => requireSignIn(() => {});
 
-	const onPressHideTranslation = () => clearTranslation();
-
 	const isDiscoverDebugUser = debugFeedContextEnabled;
 
 	return (
@@ -428,22 +415,10 @@ let PostMenuItems = ({
 				<Menu.Group>
 					{!hideInPWI || hasSession ? (
 						<>
-							{translationState.status === 'loading' ? (
-								<Menu.Item label={l`Translating…`} onClick={() => {}}>
-									<Menu.ItemText>{l`Translating…`}</Menu.ItemText>
-									<Menu.ItemIcon icon={Translate} position="right" />
-								</Menu.Item>
-							) : translationState.status === 'success' ? (
-								<Menu.Item label={l`Hide translation`} onClick={onPressHideTranslation}>
-									<Menu.ItemText>{l`Hide translation`}</Menu.ItemText>
-									<Menu.ItemIcon icon={Translate} position="right" />
-								</Menu.Item>
-							) : (
-								<Menu.Item label={l`Translate`} onClick={onPressTranslate}>
-									<Menu.ItemText>{l`Translate`}</Menu.ItemText>
-									<Menu.ItemIcon icon={Translate} position="right" />
-								</Menu.Item>
-							)}
+							<Menu.Item label={l`Translate`} onClick={onPressTranslate}>
+								<Menu.ItemText>{l`Translate`}</Menu.ItemText>
+								<Menu.ItemIcon icon={Translate} position="right" />
+							</Menu.Item>
 
 							<Menu.Item label={l`Copy post text`} onClick={onCopyPostText}>
 								<Menu.ItemText>{l`Copy post text`}</Menu.ItemText>

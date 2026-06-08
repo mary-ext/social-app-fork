@@ -32,7 +32,6 @@ import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
-import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
@@ -330,7 +329,6 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 											{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 										</View>
 									) : null}
-									<TranslatedPost hideTranslateLink post={post} />
 									{post.embed && (
 										<View style={[a.pb_xs]}>
 											<Embed

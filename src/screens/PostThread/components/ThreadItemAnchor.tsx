@@ -365,7 +365,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 									authorHandle={post.author.handle}
 								/>
 							) : undefined}
-							<TranslatedPost post={post} postTextStyle={[a.text_lg]} />
+							<TranslatedPost post={post} />
 							{post.embed && (
 								<View style={[richText?.text ? a.py_xs : []]}>
 									<Embed

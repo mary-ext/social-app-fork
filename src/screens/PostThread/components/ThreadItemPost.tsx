@@ -33,7 +33,6 @@ import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
-import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
@@ -297,7 +296,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 								</View>
 							) : undefined}
-							<TranslatedPost hideTranslateLink post={post} />
 							{post.embed && (
 								<View
 									style={[

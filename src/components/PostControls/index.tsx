@@ -42,7 +42,6 @@ let PostControls = ({
 	onShowLess,
 	viaRepost,
 	variant,
-	forceGoogleTranslate = false,
 }: {
 	big?: boolean;
 	post: Shadow<AppBskyFeedDefs.PostView>;
@@ -58,7 +57,6 @@ let PostControls = ({
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	viaRepost?: { uri: string; cid: string };
 	variant?: 'compact' | 'normal' | 'large';
-	forceGoogleTranslate?: boolean;
 }): React.ReactNode => {
 	const t = useTheme();
 	const { t: l } = useLingui();
@@ -278,7 +276,6 @@ let PostControls = ({
 					threadgateRecord={threadgateRecord}
 					onShowLess={onShowLess}
 					logContext={logContext}
-					forceGoogleTranslate={forceGoogleTranslate}
 				/>
 			</View>
 		</View>

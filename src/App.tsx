@@ -10,7 +10,6 @@ import { Provider as HotkeysProvider } from '#/lib/hotkeys';
 import { initializeLanguageDetection } from '#/lib/language-detection';
 import { QueryProvider } from '#/lib/react-query';
 import { ThemeProvider } from '#/lib/ThemeContext';
-import { Provider as TranslateOnDeviceProvider } from '#/lib/translation';
 
 import { Provider as MutedThreadsProvider } from '#/state/cache/thread-mutes';
 import { Provider as DialogStateProvider } from '#/state/dialogs';
@@ -84,12 +83,10 @@ function InnerApp() {
 																			<ServiceConfigProvider>
 																				<HideBottomBarBorderProvider>
 																					<IntentDialogProvider>
-																						<TranslateOnDeviceProvider>
-																							<HotkeysProvider>
-																								<Shell />
-																								<ToastOutlet />
-																							</HotkeysProvider>
-																						</TranslateOnDeviceProvider>
+																						<HotkeysProvider>
+																							<Shell />
+																							<ToastOutlet />
+																						</HotkeysProvider>
 																					</IntentDialogProvider>
 																				</HideBottomBarBorderProvider>
 																			</ServiceConfigProvider>

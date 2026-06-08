@@ -4,7 +4,7 @@ import { useOpenLink } from '#/lib/hooks/useOpenLink';
 
 import { getTranslatorLink } from '#/locale/helpers';
 
-/** @deprecated Will always link out to Google Translate. Prefer `useTranslate`. */
+/** Opens the post or message text in Google Translate. */
 export function useGoogleTranslate() {
 	const openLink = useOpenLink();
 

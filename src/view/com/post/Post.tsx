@@ -32,7 +32,6 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
-import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
@@ -222,7 +221,6 @@ function PostInner({
 									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 								</View>
 							) : undefined}
-							<TranslatedPost hideTranslateLink post={post} />
 							{post.embed ? (
 								<View
 									style={maybeApplyGalleryOffsetStyles('embed', {
