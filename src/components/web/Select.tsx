@@ -1,13 +1,20 @@
-import { type ComponentType, createContext, Fragment, type ReactElement, type ReactNode, useContext } from 'react';
+import {
+	type ComponentType,
+	createContext,
+	Fragment,
+	type ReactElement,
+	type ReactNode,
+	useContext,
+} from 'react';
 import { Select as BaseSelect } from '@base-ui/react/select';
 import { clsx } from 'clsx';
 
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
 	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
+import type { Props as SVGIconProps } from '#/components/icons/common';
 import * as styles from '#/components/web/Select.css';
 
 export type SelectItem = {
@@ -48,8 +55,8 @@ export function Root({ children, disabled, items, onValueChange, value }: RootPr
 export type TriggerProps = {
 	children: ReactNode;
 	/**
-	 * Accessible name, applied as `aria-label` to the default trigger button. Omit when `render` supplies
-	 * an element that carries its own label.
+	 * Accessible name, applied as `aria-label` to the default trigger button. Omit when `render` supplies an
+	 * element that carries its own label.
 	 */
 	label?: string;
 	/**

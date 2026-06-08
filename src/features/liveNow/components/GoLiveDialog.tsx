@@ -18,8 +18,8 @@ import * as Dialog from '#/components/Dialog';
 import * as TextField from '#/components/forms/TextField';
 import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
-import * as Select from '#/components/web/Select';
 import { Text } from '#/components/Typography';
+import * as Select from '#/components/web/Select';
 
 import {
 	displayDuration,
