@@ -1,7 +1,6 @@
 import 'react-image-crop/dist/ReactCrop.css';
 
 import { type CSSProperties, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import ReactCrop, { type PercentCrop } from 'react-image-crop';
 
@@ -14,11 +13,11 @@ import {
 	manipulateImage,
 } from '#/state/gallery';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { Loader } from '#/components/Loader';
+import { Button, ButtonText } from '#/components/web/Button';
 import * as Sheet from '#/components/web/Sheet';
+import { Spinner } from '#/components/web/Spinner';
+
+import * as styles from './EditImageDialog.css';
 
 export type EditImageDialogProps = {
 	handle: Sheet.SheetHandle;
@@ -31,7 +30,7 @@ export type EditImageDialogProps = {
 export function EditImageDialog(props: EditImageDialogProps) {
 	const { t: l } = useLingui();
 	return (
-		<Sheet.Root handle={props.handle}>
+		<Sheet.Root disablePointerDismissal handle={props.handle}>
 			<Sheet.Popup label={l`Edit image`}>
 				<DialogInner {...props} />
 			</Sheet.Popup>
@@ -49,16 +48,14 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 			<Sheet.Header.Outer>
 				<Sheet.Header.Slot>
 					<Button
-						label={l`Cancel`}
-						disabled={pending}
-						onPress={() => handle.close()}
-						size="small"
 						color="primary"
+						disabled={pending}
+						label={l`Cancel`}
+						onClick={() => handle.close()}
+						size="small"
 						variant="ghost"
-						style={[a.rounded_full]}
-						testID="cropImageCancelBtn"
 					>
-						<ButtonText style={[a.text_md]}>
+						<ButtonText size="md">
 							<Trans>Cancel</Trans>
 						</ButtonText>
 					</Button>
@@ -70,41 +67,37 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 				</Sheet.Header.Content>
 				<Sheet.Header.Slot>
 					<Button
+						color="primary"
+						disabled={pending}
 						label={l`Save`}
-						onPress={async () => {
+						onClick={async () => {
 							setPending(true);
 							await ref.current?.save();
 							setPending(false);
 						}}
-						disabled={pending}
 						size="small"
-						color="primary"
 						variant="ghost"
-						style={[a.rounded_full]}
-						testID="cropImageSaveBtn"
 					>
-						<ButtonText style={[a.text_md]}>
+						<ButtonText size="md">
 							<Trans>Save</Trans>
 						</ButtonText>
-						{pending && <ButtonIcon icon={Loader} />}
+						{pending && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
 					</Button>
 				</Sheet.Header.Slot>
 			</Sheet.Header.Outer>
 
 			<Sheet.Body>
-				<View style={[a.p_xl]}>
-					{image && (
-						<EditImageInner
-							saveRef={ref}
-							handle={handle}
-							key={image.source.id}
-							image={image}
-							onChange={onChange}
-							circularCrop={circularCrop}
-							aspectRatio={aspectRatio}
-						/>
-					)}
-				</View>
+				{image && (
+					<EditImageInner
+						aspectRatio={aspectRatio}
+						circularCrop={circularCrop}
+						handle={handle}
+						image={image}
+						key={image.source.id}
+						onChange={onChange}
+						saveRef={ref}
+					/>
+				)}
 			</Sheet.Body>
 		</>
 	);
@@ -121,9 +114,6 @@ function EditImageInner({
 	Omit<EditImageDialogProps, 'image'> & {
 		saveRef: React.RefObject<{ save: () => Promise<void> } | null>;
 	}) {
-	const t = useTheme();
-	const [isDragging, setIsDragging] = useState(false);
-
 	const source = image.source;
 	const sourceUrl = useBlobUrl(source.blob);
 
@@ -163,39 +153,32 @@ function EditImageInner({
 	);
 
 	return (
-		<View
-			style={[
-				a.mx_auto,
-				a.border,
-				t.atoms.border_contrast_low,
-				a.rounded_xs,
-				a.overflow_hidden,
-				a.align_center,
-			]}
-		>
-			<ReactCrop
-				crop={crop}
-				aspect={aspectRatio}
-				circularCrop={circularCrop}
-				onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
-				className="ReactCrop--no-animate"
-				onDragStart={() => setIsDragging(true)}
-				onDragEnd={() => setIsDragging(false)}
-			>
-				<img alt="" src={sourceUrl} {...sourceDimensions} style={imageStyle} />
-			</ReactCrop>
-			{/* Eat clicks when dragging, otherwise mousing up over the backdrop
-        causes the dialog to close */}
-			{isDragging && <View style={[a.fixed, a.inset_0]} />}
-		</View>
+		<div className={styles.imageBox}>
+			<div className={styles.cropArea}>
+				<ReactCrop
+					aspect={aspectRatio}
+					circularCrop={circularCrop}
+					className="ReactCrop--no-animate"
+					crop={crop}
+					onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
+				>
+					<img alt="" src={sourceUrl} {...sourceDimensions} style={imageStyle} />
+				</ReactCrop>
+			</div>
+		</div>
 	);
 }
 
+// cap the image to the square frame (the `cropArea` query container), so the cropper hugs the image rather
+// than letting the crop overlay extend into the letterbox. `width`/`height: auto` override the intrinsic-size
+// attributes (spread from `sourceDimensions`) so the two `max-*` constraints preserve aspect ratio instead of
+// clamping each axis independently into a square
 const imageStyle = {
 	display: 'block',
 	height: 'auto',
-	maxHeight: '50vh',
-	maxWidth: '100%',
+	maxHeight: '100cqh',
+	maxWidth: '100cqw',
+	width: 'auto',
 } satisfies CSSProperties;
 
 const getInitialCrop = (
