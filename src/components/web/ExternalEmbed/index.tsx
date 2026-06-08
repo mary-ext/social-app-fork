@@ -1,4 +1,4 @@
-import { type MouseEvent, useMemo } from 'react';
+import { useMemo } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
@@ -41,10 +41,9 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 		}
 	}, [link.uri, externalEmbedPrefs]);
 
-	// Scope the press: the anchor opens the external link (default nav, new tab), but the click must not
-	// bubble to an ancestor post's thread link and navigate in-app. RN's press responder scopes this for free.
-	const onClick = (e: MouseEvent) => {
-		e.stopPropagation();
+	// the anchor opens the external link via default nav; an ancestor `BlockLink` ignores clicks that land on
+	// it (it's a real <a>), so we only need to fire the open-interaction callback here.
+	const onClick = () => {
 		onOpen?.();
 	};
 

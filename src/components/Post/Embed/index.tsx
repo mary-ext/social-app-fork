@@ -14,7 +14,6 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { Link } from '#/view/com/util/Link';
 import { PostMeta } from '#/view/com/util/PostMeta';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -28,6 +27,7 @@ import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/u
 import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
+import { BlockLink } from '#/components/web/BlockLink';
 import { ExternalEmbed } from '#/components/web/ExternalEmbed';
 import { ImageEmbed } from '#/components/web/ImageEmbed';
 
@@ -294,7 +294,6 @@ export function QuoteEmbed({
 	}, [queryClient, quote.author, onOpen]);
 
 	const { state: hover, onIn: onPointerEnter, onOut: onPointerLeave } = useInteractionState();
-	const { state: pressed, onIn: onPressIn, onOut: onPressOut } = useInteractionState();
 
 	const contents = (
 		<>
@@ -341,25 +340,20 @@ export function QuoteEmbed({
 				>
 					{({ active }) => (
 						<>
-							{!active && !linkDisabled && (
-								<SubtleHover native hover={hover || pressed} style={[a.rounded_md]} />
-							)}
+							{!active && !linkDisabled && <SubtleHover native hover={hover} style={[a.rounded_md]} />}
 							{linkDisabled ? (
 								<View style={[!active && a.p_md]} pointerEvents="none">
 									{contents}
 								</View>
 							) : (
-								<Link
+								<BlockLink
 									style={[!active && a.p_md]}
-									hoverStyle={t.atoms.border_contrast_high}
 									href={itemHref}
-									title={itemTitle}
+									label={itemTitle}
 									onBeforePress={onBeforePress}
-									onPressIn={onPressIn}
-									onPressOut={onPressOut}
 								>
 									{contents}
-								</Link>
+								</BlockLink>
 							)}
 						</>
 					)}

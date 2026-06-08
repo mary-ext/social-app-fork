@@ -4127,7 +4127,7 @@ msgstr ""
 #: src/components/interstitials/TrendingVideos.tsx:129
 #: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:125
-#: src/components/moderation/PostHider.tsx:130
+#: src/components/moderation/PostHider.tsx:121
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:623
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/lib/moderation/useLabelBehaviorDescription.ts:19
@@ -4204,7 +4204,7 @@ msgid "Hide verification badges"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:155
-#: src/components/moderation/PostHider.tsx:84
+#: src/components/moderation/PostHider.tsx:75
 msgid "Hides the content"
 msgstr ""
 
@@ -4563,7 +4563,7 @@ msgstr ""
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
-#: src/components/moderation/PostHider.tsx:106
+#: src/components/moderation/PostHider.tsx:97
 #: src/components/moderation/ScreenHider.tsx:109
 msgid "Learn more about this warning"
 msgstr ""
@@ -5873,7 +5873,7 @@ msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:76
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:108
-#: src/components/web/ExternalEmbed/index.tsx:51
+#: src/components/web/ExternalEmbed/index.tsx:50
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -7674,7 +7674,7 @@ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:127
-#: src/components/moderation/PostHider.tsx:130
+#: src/components/moderation/PostHider.tsx:121
 msgid "Show"
 msgstr ""
 
@@ -7790,7 +7790,7 @@ msgid "Shows other accounts you can switch to"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:156
-#: src/components/moderation/PostHider.tsx:84
+#: src/components/moderation/PostHider.tsx:75
 msgid "Shows the content"
 msgstr ""
 

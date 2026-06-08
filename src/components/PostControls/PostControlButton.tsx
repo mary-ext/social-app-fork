@@ -55,12 +55,7 @@ export function PostControlButton({
 			aria-label={label}
 			className={clsx(styles.button, className)}
 			style={active && activeColor ? { color: activeColor, ...style } : style}
-			// TODO: temporary. The post still sits inside an RNW feed-item row whose press handler catches
-			// this bubbling click and navigates. Stop it here until that row is ported off react-native-web.
-			onClick={(e) => {
-				e.stopPropagation();
-				onClick?.(e);
-			}}
+			onClick={onClick}
 			{...rest}
 		>
 			<PostControlContext.Provider value={{ active, big }}>{children}</PostControlContext.Provider>

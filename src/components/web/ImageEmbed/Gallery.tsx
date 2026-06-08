@@ -221,9 +221,6 @@ function GalleryImage({
 			tabIndex={index === 0 ? 0 : -1}
 			aria-roledescription={l`slide`}
 			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
-			// scope the press to the lightbox; don't bubble to an ancestor post link. the Trigger owns the open,
-			// so only stop propagation (preventDefault could suppress Base UI's open).
-			onClick={(e) => e.stopPropagation()}
 			onPointerDown={onPressIn}
 			onFocus={() => setFocused(true)}
 			onBlur={() => setFocused(false)}

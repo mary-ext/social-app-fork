@@ -1,4 +1,3 @@
-import type { MouseEvent } from 'react';
 import type { AppBskyEmbedImages } from '@atcute/bluesky';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -71,12 +70,6 @@ export function AutoSizedImage({
 	);
 
 	const onPointerDown = onPressIn ? () => onPressIn() : undefined;
-	// Scope the press to opening the lightbox: don't let the click bubble to an ancestor post link (a quote's
-	// pressable, or the feed item's thread link) and navigate away. Mirrors RN's press-responder scoping. The
-	// Trigger itself owns the open, so we only stop propagation (preventDefault could suppress Base UI's open).
-	const onClick = (e: MouseEvent) => {
-		e.stopPropagation();
-	};
 
 	if (cropDisabled) {
 		return (
@@ -87,7 +80,6 @@ export function AutoSizedImage({
 				className={styles.pressableBleed}
 				style={assignInlineVars({ [styles.maxRatioVar]: String(max ?? 1) })}
 				aria-label={image.alt || undefined}
-				onClick={onClick}
 				onPointerDown={onPointerDown}
 			>
 				{contents}
@@ -115,7 +107,6 @@ export function AutoSizedImage({
 							type="button"
 							className={styles.pressable}
 							aria-label={image.alt || undefined}
-							onClick={onClick}
 							onPointerDown={onPointerDown}
 						>
 							{contents}

@@ -20,7 +20,6 @@ import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-s
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
-import { Link } from '#/view/com/util/Link';
 import { PostMeta } from '#/view/com/util/PostMeta';
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
@@ -37,6 +36,7 @@ import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
+import { BlockLink } from '#/components/web/BlockLink';
 
 export function Post({
 	post,
@@ -147,7 +147,7 @@ function PostInner({
 
 	return (
 		<GalleryBleed>
-			<Link
+			<BlockLink
 				href={itemHref}
 				style={[styles.outer, t.atoms.border_contrast_low, !hideTopBorder && a.border_t, style]}
 				onBeforePress={onBeforePress}
@@ -244,7 +244,7 @@ function PostInner({
 						/>
 					</View>
 				</View>
-			</Link>
+			</BlockLink>
 		</GalleryBleed>
 	);
 }

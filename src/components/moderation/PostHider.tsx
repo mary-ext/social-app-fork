@@ -10,9 +10,6 @@ import { addStyle } from '#/lib/styles';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-// import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
-import { Link } from '#/view/com/util/Link';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import {
@@ -20,8 +17,9 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
+import { BlockLink } from '#/components/web/BlockLink';
 
-interface Props extends React.ComponentProps<typeof Link> {
+interface Props extends React.ComponentProps<typeof BlockLink> {
 	disabled: boolean;
 	iconSize: number;
 	iconStyles: StyleProp<ViewStyle>;
@@ -59,16 +57,9 @@ export function PostHider({
 
 	if (!blur || (disabled && !modui.noOverride)) {
 		return (
-			<Link
-				testID={testID}
-				style={style}
-				href={href}
-				accessible={false}
-				onBeforePress={onBeforePress}
-				{...props}
-			>
+			<BlockLink testID={testID} style={style} href={href} onBeforePress={onBeforePress} {...props}>
 				{children}
-			</Link>
+			</BlockLink>
 		);
 	}
 
@@ -132,9 +123,9 @@ export function PostHider({
 			)}
 		</Pressable>
 	) : (
-		<Link testID={testID} style={addStyle(style, styles.child)} href={href} accessible={false} {...props}>
+		<BlockLink testID={testID} style={addStyle(style, styles.child)} href={href} {...props}>
 			{children}
-		</Link>
+		</BlockLink>
 	);
 }
 

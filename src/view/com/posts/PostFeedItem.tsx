@@ -26,7 +26,6 @@ import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
-import { Link } from '#/view/com/util/Link';
 import { PostMeta } from '#/view/com/util/PostMeta';
 import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
@@ -46,6 +45,7 @@ import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
+import { BlockLink } from '#/components/web/BlockLink';
 
 import { useActorStatus } from '#/features/liveNow';
 
@@ -284,14 +284,11 @@ let FeedItemInner = ({
 
 	return (
 		<GalleryBleed>
-			<Link
+			<BlockLink
 				testID={`feedItem-by-${post.author.handle}`}
 				style={outerStyles}
 				href={href}
-				noFeedback
-				accessible={false}
 				onBeforePress={onBeforePress}
-				dataSet={{ feedContext }}
 				onPointerEnter={() => {
 					setHover(true);
 				}}
@@ -402,7 +399,7 @@ let FeedItemInner = ({
 
 					<DiscoverDebug feedContext={feedContext} />
 				</View>
-			</Link>
+			</BlockLink>
 		</GalleryBleed>
 	);
 };

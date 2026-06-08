@@ -275,7 +275,7 @@ const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/'];
 // this method copies from the onPress implementation but adds our
 // needed customizations
 // -prf
-function onPressInner(
+export function onPressInner(
 	navigation: DebouncedNavigationProp,
 	href: string,
 	navigationAction: 'push' | 'replace' | 'navigate' = 'push',
