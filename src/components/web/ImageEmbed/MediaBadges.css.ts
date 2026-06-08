@@ -1,6 +1,8 @@
 import { style, styleVariants } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
+import { roundToDevicePx } from '#/styles/round';
 import { borderRadius } from '#/styles/tokens.css';
 
 const clusterBase = style({
@@ -53,7 +55,12 @@ export const icon = style({
 	display: 'block',
 });
 
-/** The non-large ALT label is 8px, which isn't a font token. */
+/**
+ * The non-large ALT label is 8px, which isn't a font token. The `size` variant bakes line-height from its
+ * own font-size, so overriding font-size here must re-pair the line-height — `round(8px * snug)` to match
+ * upstream — or the badge keeps the taller `sm` line box around the shrunk glyphs.
+ */
 export const altSmall = style({
 	fontSize: 8,
+	lineHeight: roundToDevicePx(calc.multiply('8px', '1.3')),
 });
