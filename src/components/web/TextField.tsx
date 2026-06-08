@@ -36,24 +36,29 @@ export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?
 export type InputProps = {
 	/** Accessible name. */
 	label: string;
+	autoFocus?: boolean;
 	value?: string;
 	defaultValue?: string;
 	onChangeText?: (value: string) => void;
 	placeholder?: string;
 	isInvalid?: boolean;
 	multiline?: boolean;
+	/** Caps the autosizing height of a `multiline` input; further lines scroll within it. */
+	maxRows?: number;
 	id?: string;
 	className?: string;
 };
 
 export function Input({
 	label,
+	autoFocus,
 	value,
 	defaultValue,
 	onChangeText,
 	placeholder,
 	isInvalid,
 	multiline = false,
+	maxRows,
 	id,
 	className,
 }: InputProps) {
@@ -68,9 +73,11 @@ export function Input({
 		return (
 			<TextareaAutosize
 				aria-label={label}
+				autoFocus={autoFocus}
 				className={cls}
 				defaultValue={defaultValue}
 				id={inputId}
+				maxRows={maxRows}
 				onChange={onChange}
 				placeholder={placeholder}
 				value={value}
@@ -81,6 +88,7 @@ export function Input({
 	return (
 		<input
 			aria-label={label}
+			autoFocus={autoFocus}
 			className={cls}
 			defaultValue={defaultValue}
 			id={inputId}
