@@ -11,7 +11,7 @@ export function AltTextCounterWrapper({
 	children,
 }: {
 	altText?: string;
-	children: React.ReactNode;
+	children?: React.ReactNode;
 }) {
 	const t = useTheme();
 	return (

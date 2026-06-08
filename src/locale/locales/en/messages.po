@@ -972,10 +972,10 @@ msgstr ""
 #: src/view/com/composer/GifAltText.tsx:77
 #: src/view/com/composer/GifAltText.tsx:116
 #: src/view/com/composer/GifAltText.tsx:209
-#: src/view/com/composer/photos/Gallery.tsx:181
-#: src/view/com/composer/photos/Gallery.tsx:219
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:45
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
+#: src/view/com/composer/photos/Gallery.tsx:177
+#: src/view/com/composer/photos/Gallery.tsx:215
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:38
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:55
 msgid "Add alt text"
 msgstr ""
 
@@ -1238,13 +1238,14 @@ msgstr ""
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:135
 #: src/components/web/ImageEmbed/MediaBadges.tsx:71
 #: src/view/com/composer/GifAltText.tsx:100
-#: src/view/com/composer/photos/Gallery.tsx:192
+#: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:40
 #: src/view/com/composer/GifAltText.tsx:160
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:119
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:108
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:112
 #: src/view/com/composer/videos/SubtitleDialog.tsx:96
 #: src/view/com/composer/videos/SubtitleDialog.tsx:100
 msgid "Alt text"
@@ -1256,13 +1257,13 @@ msgid "Alt Text"
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:104
-#: src/view/com/composer/photos/Gallery.tsx:126
+#: src/view/com/composer/photos/Gallery.tsx:125
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
 #: src/view/com/composer/GifAltText.tsx:180
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:135
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:122
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
@@ -1830,8 +1831,10 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:238
 #: src/view/com/composer/Composer.tsx:1395
 #: src/view/com/composer/Composer.tsx:1404
-#: src/view/com/composer/photos/EditImageDialog.tsx:52
-#: src/view/com/composer/photos/EditImageDialog.tsx:62
+#: src/view/com/composer/photos/EditImageDialog.tsx:53
+#: src/view/com/composer/photos/EditImageDialog.tsx:59
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:43
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:49
 #: src/view/shell/desktop/LeftNav.tsx:215
 msgid "Cancel"
 msgstr ""
@@ -2108,7 +2111,7 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:309
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
-#: src/components/web/Dialog/index.tsx:117
+#: src/components/web/Dialog/index.tsx:121
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:38
 msgid "Close dialog"
 msgstr ""
@@ -2653,7 +2656,7 @@ msgid "Description"
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:156
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:115
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:103
 msgid "Descriptive alt text"
 msgstr ""
 
@@ -2924,9 +2927,9 @@ msgstr ""
 msgid "Edit group name"
 msgstr "Edit group name"
 
-#: src/view/com/composer/photos/EditImageDialog.tsx:35
-#: src/view/com/composer/photos/EditImageDialog.tsx:68
-#: src/view/com/composer/photos/Gallery.tsx:199
+#: src/view/com/composer/photos/EditImageDialog.tsx:34
+#: src/view/com/composer/photos/EditImageDialog.tsx:65
+#: src/view/com/composer/photos/Gallery.tsx:195
 msgid "Edit image"
 msgstr ""
 
@@ -6729,7 +6732,7 @@ msgstr ""
 msgid "Remove from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/photos/Gallery.tsx:209
+#: src/view/com/composer/photos/Gallery.tsx:205
 msgid "Remove image"
 msgstr ""
 
@@ -7147,10 +7150,10 @@ msgstr "Sad GIFs"
 #: src/screens/SavedFeeds.tsx:112
 #: src/view/com/composer/GifAltText.tsx:191
 #: src/view/com/composer/GifAltText.tsx:201
-#: src/view/com/composer/photos/EditImageDialog.tsx:73
-#: src/view/com/composer/photos/EditImageDialog.tsx:87
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:146
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:157
+#: src/view/com/composer/photos/EditImageDialog.tsx:72
+#: src/view/com/composer/photos/EditImageDialog.tsx:82
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:63
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:69
 msgid "Save"
 msgstr ""
 
@@ -7209,6 +7212,7 @@ msgid "Saved to your feeds"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:517
+#: src/view/com/composer/photos/EditImageDialog.tsx:84
 msgid "Saving"
 msgstr "Saving"
 

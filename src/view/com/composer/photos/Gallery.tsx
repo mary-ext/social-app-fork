@@ -26,7 +26,6 @@ import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icon
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
-import { useDialogHandle } from '#/components/web/Dialog';
 import { useSheetHandle } from '#/components/web/Sheet';
 
 import { Image } from '#/shims/image';
@@ -154,10 +153,8 @@ const GalleryItem = ({
 
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 
-	const altTextControl = useDialogHandle();
+	const altTextControl = useSheetHandle();
 	const editControl = useSheetHandle();
-
-	const altBtnRef = () => {};
 
 	const onImageEdit = () => {
 		editControl.open(null);
@@ -170,7 +167,6 @@ const GalleryItem = ({
 
 	return (
 		<View
-			ref={altBtnRef}
 			style={imageStyle as ViewStyle}
 			// Fixes ALT and icons appearing with half opacity when the post is inactive
 			renderToHardwareTextureAndroid
