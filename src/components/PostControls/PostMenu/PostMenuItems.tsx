@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { Platform, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 import type {
 	AnyProfileView,
 	AppBskyFeedDefs,
@@ -72,10 +71,10 @@ import {
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import { Loader } from '#/components/Loader';
-import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
+import * as Menu from '#/components/web/Menu';
+import * as Prompt from '#/components/web/Prompt';
 
 import * as Clipboard from '#/shims/clipboard';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
@@ -91,16 +90,11 @@ let PostMenuItems = ({
 	logContext: _logContext,
 	forceGoogleTranslate,
 }: {
-	testID: string;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	postFeedContext: string | undefined;
 	postReqId: string | undefined;
 	record: AppBskyFeedPost.Main;
 	richText: Richtext;
-	style?: StyleProp<ViewStyle>;
-	hitSlop?: PressableProps['hitSlop'];
-	size?: 'lg' | 'md' | 'sm';
-	timestamp: string;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
@@ -123,13 +117,13 @@ let PostMenuItems = ({
 	});
 	const navigation = useNavigation<NavigationProp>();
 	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
-	const blockPromptControl = useDialogControl();
+	const blockPromptControl = Prompt.usePromptHandle();
 	const reportDialogControl = useReportDialogControl();
-	const deletePromptControl = useDialogControl();
-	const hidePromptControl = useDialogControl();
+	const deletePromptControl = Prompt.usePromptHandle();
+	const hidePromptControl = Prompt.usePromptHandle();
 	const postInteractionSettingsDialogControl = useDialogControl();
-	const quotePostDetachConfirmControl = useDialogControl();
-	const hideReplyConfirmControl = useDialogControl();
+	const quotePostDetachConfirmControl = Prompt.usePromptHandle();
+	const hideReplyConfirmControl = Prompt.usePromptHandle();
 	const { mutateAsync: toggleReplyVisibility } = useToggleReplyVisibilityMutation();
 
 	const postUri = post.uri;
@@ -414,21 +408,20 @@ let PostMenuItems = ({
 
 	return (
 		<>
-			<Menu.Outer>
+			<Menu.Popup label={l`Post options`} align="end">
 				{isAuthor && (
 					<>
 						<Menu.Group>
 							<Menu.Item
-								testID="pinPostBtn"
 								label={isPinned ? l`Unpin from profile` : l`Pin to your profile`}
 								disabled={isPinPending}
-								onPress={onPressPin}
+								onClick={onPressPin}
 							>
 								<Menu.ItemText>{isPinned ? l`Unpin from profile` : l`Pin to your profile`}</Menu.ItemText>
 								<Menu.ItemIcon icon={isPinPending ? Loader : PinIcon} position="right" />
 							</Menu.Item>
 						</Menu.Group>
-						<Menu.Divider />
+						<Menu.Separator />
 					</>
 				)}
 
@@ -436,33 +429,29 @@ let PostMenuItems = ({
 					{!hideInPWI || hasSession ? (
 						<>
 							{translationState.status === 'loading' ? (
-								<Menu.Item testID="postDropdownTranslateBtn" label={l`Translating…`} onPress={() => {}}>
+								<Menu.Item label={l`Translating…`} onClick={() => {}}>
 									<Menu.ItemText>{l`Translating…`}</Menu.ItemText>
 									<Menu.ItemIcon icon={Translate} position="right" />
 								</Menu.Item>
 							) : translationState.status === 'success' ? (
-								<Menu.Item
-									testID="postDropdownTranslateBtn"
-									label={l`Hide translation`}
-									onPress={onPressHideTranslation}
-								>
+								<Menu.Item label={l`Hide translation`} onClick={onPressHideTranslation}>
 									<Menu.ItemText>{l`Hide translation`}</Menu.ItemText>
 									<Menu.ItemIcon icon={Translate} position="right" />
 								</Menu.Item>
 							) : (
-								<Menu.Item testID="postDropdownTranslateBtn" label={l`Translate`} onPress={onPressTranslate}>
+								<Menu.Item label={l`Translate`} onClick={onPressTranslate}>
 									<Menu.ItemText>{l`Translate`}</Menu.ItemText>
 									<Menu.ItemIcon icon={Translate} position="right" />
 								</Menu.Item>
 							)}
 
-							<Menu.Item testID="postDropdownCopyTextBtn" label={l`Copy post text`} onPress={onCopyPostText}>
+							<Menu.Item label={l`Copy post text`} onClick={onCopyPostText}>
 								<Menu.ItemText>{l`Copy post text`}</Menu.ItemText>
 								<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 							</Menu.Item>
 						</>
 					) : (
-						<Menu.Item testID="postDropdownSignInBtn" label={l`Sign in to view post`} onPress={onSignIn}>
+						<Menu.Item label={l`Sign in to view post`} onClick={onSignIn}>
 							<Menu.ItemText>{l`Sign in to view post`}</Menu.ItemText>
 							<Menu.ItemIcon icon={Eye} position="right" />
 						</Menu.Item>
@@ -471,22 +460,14 @@ let PostMenuItems = ({
 
 				{hasSession && feedFeedback.enabled && (
 					<>
-						<Menu.Divider />
+						<Menu.Separator />
 						<Menu.Group>
-							<Menu.Item
-								testID="postDropdownShowMoreBtn"
-								label={l`Show more like this`}
-								onPress={onPressShowMore}
-							>
+							<Menu.Item label={l`Show more like this`} onClick={onPressShowMore}>
 								<Menu.ItemText>{l`Show more like this`}</Menu.ItemText>
 								<Menu.ItemIcon icon={EmojiSmile} position="right" />
 							</Menu.Item>
 
-							<Menu.Item
-								testID="postDropdownShowLessBtn"
-								label={l`Show less like this`}
-								onPress={onPressShowLess}
-							>
+							<Menu.Item label={l`Show less like this`} onClick={onPressShowLess}>
 								<Menu.ItemText>{l`Show less like this`}</Menu.ItemText>
 								<Menu.ItemIcon icon={EmojiSad} position="right" />
 							</Menu.Item>
@@ -496,12 +477,8 @@ let PostMenuItems = ({
 
 				{isDiscoverDebugUser && (
 					<>
-						<Menu.Divider />
-						<Menu.Item
-							testID="postDropdownReportMisclassificationBtn"
-							label={l`Assign topic for algo`}
-							onPress={onReportMisclassification}
-						>
+						<Menu.Separator />
+						<Menu.Item label={l`Assign topic for algo`} onClick={onReportMisclassification}>
 							<Menu.ItemText>{l`Assign topic for algo`}</Menu.ItemText>
 							<Menu.ItemIcon icon={AtomIcon} position="right" />
 						</Menu.Item>
@@ -510,22 +487,17 @@ let PostMenuItems = ({
 
 				{hasSession && (
 					<>
-						<Menu.Divider />
+						<Menu.Separator />
 						<Menu.Group>
 							<Menu.Item
-								testID="postDropdownMuteThreadBtn"
 								label={isThreadMuted ? l`Unmute thread` : l`Mute thread`}
-								onPress={onToggleThreadMute}
+								onClick={onToggleThreadMute}
 							>
 								<Menu.ItemText>{isThreadMuted ? l`Unmute thread` : l`Mute thread`}</Menu.ItemText>
 								<Menu.ItemIcon icon={isThreadMuted ? Unmute : Mute} position="right" />
 							</Menu.Item>
 
-							<Menu.Item
-								testID="postDropdownMuteWordsBtn"
-								label={l`Mute words & tags`}
-								onPress={onToggleWordsAndTagsMute}
-							>
+							<Menu.Item label={l`Mute words & tags`} onClick={onToggleWordsAndTagsMute}>
 								<Menu.ItemText>{l`Mute words & tags`}</Menu.ItemText>
 								<Menu.ItemIcon icon={Filter} position="right" />
 							</Menu.Item>
@@ -535,13 +507,12 @@ let PostMenuItems = ({
 
 				{hasSession && (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
 					<>
-						<Menu.Divider />
+						<Menu.Separator />
 						<Menu.Group>
 							{canHidePostForMe && (
 								<Menu.Item
-									testID="postDropdownHideBtn"
 									label={isReply ? l`Hide reply for me` : l`Hide post for me`}
-									onPress={() => hidePromptControl.open()}
+									onClick={() => hidePromptControl.open(null)}
 								>
 									<Menu.ItemText>{isReply ? l`Hide reply for me` : l`Hide post for me`}</Menu.ItemText>
 									<Menu.ItemIcon icon={EyeSlash} position="right" />
@@ -549,10 +520,11 @@ let PostMenuItems = ({
 							)}
 							{canHideReplyForEveryone && (
 								<Menu.Item
-									testID="postDropdownHideBtn"
 									label={isReplyHiddenByThreadgate ? l`Show reply for everyone` : l`Hide reply for everyone`}
-									onPress={
-										isReplyHiddenByThreadgate ? onToggleReplyVisibility : () => hideReplyConfirmControl.open()
+									onClick={
+										isReplyHiddenByThreadgate
+											? onToggleReplyVisibility
+											: () => hideReplyConfirmControl.open(null)
 									}
 								>
 									<Menu.ItemText>
@@ -565,12 +537,11 @@ let PostMenuItems = ({
 							{canDetachQuote && (
 								<Menu.Item
 									disabled={isDetachPending}
-									testID="postDropdownHideBtn"
 									label={quoteEmbed.isDetached ? l`Re-attach quote` : l`Detach quote`}
-									onPress={
+									onClick={
 										quoteEmbed.isDetached
 											? onToggleQuotePostAttachment
-											: () => quotePostDetachConfirmControl.open()
+											: () => quotePostDetachConfirmControl.open(null)
 									}
 								>
 									<Menu.ItemText>
@@ -588,14 +559,13 @@ let PostMenuItems = ({
 
 				{hasSession && (
 					<>
-						<Menu.Divider />
+						<Menu.Separator />
 						<Menu.Group>
 							{!isAuthor && (
 								<>
 									<Menu.Item
-										testID="postDropdownMuteBtn"
 										label={postAuthor.viewer?.muted ? l`Unmute account` : l`Mute account`}
-										onPress={() => void onMuteAuthor()}
+										onClick={() => void onMuteAuthor()}
 									>
 										<Menu.ItemText>
 											{postAuthor.viewer?.muted ? l`Unmute account` : l`Mute account`}
@@ -604,21 +574,13 @@ let PostMenuItems = ({
 									</Menu.Item>
 
 									{!postAuthor.viewer?.blocking && (
-										<Menu.Item
-											testID="postDropdownBlockBtn"
-											label={l`Block account`}
-											onPress={() => blockPromptControl.open()}
-										>
+										<Menu.Item label={l`Block account`} onClick={() => blockPromptControl.open(null)}>
 											<Menu.ItemText>{l`Block account`}</Menu.ItemText>
 											<Menu.ItemIcon icon={PersonX} position="right" />
 										</Menu.Item>
 									)}
 
-									<Menu.Item
-										testID="postDropdownReportBtn"
-										label={l`Report post`}
-										onPress={() => reportDialogControl.open()}
-									>
+									<Menu.Item label={l`Report post`} onClick={() => reportDialogControl.open()}>
 										<Menu.ItemText>{l`Report post`}</Menu.ItemText>
 										<Menu.ItemIcon icon={Warning} position="right" />
 									</Menu.Item>
@@ -628,28 +590,14 @@ let PostMenuItems = ({
 							{isAuthor && (
 								<>
 									<Menu.Item
-										testID="postDropdownEditPostInteractions"
 										label={l`Edit interaction settings`}
-										onPress={() => postInteractionSettingsDialogControl.open()}
-										{...(isAuthor
-											? Platform.select({
-													web: {
-														onHoverIn: prefetchPostInteractionSettings,
-													},
-													native: {
-														onPressIn: prefetchPostInteractionSettings,
-													},
-												})
-											: {})}
+										onClick={() => postInteractionSettingsDialogControl.open()}
+										onMouseEnter={prefetchPostInteractionSettings}
 									>
 										<Menu.ItemText>{l`Edit interaction settings`}</Menu.ItemText>
 										<Menu.ItemIcon icon={Gear} position="right" />
 									</Menu.Item>
-									<Menu.Item
-										testID="postDropdownDeleteBtn"
-										label={l`Delete post`}
-										onPress={() => deletePromptControl.open()}
-									>
+									<Menu.Item label={l`Delete post`} onClick={() => deletePromptControl.open(null)}>
 										<Menu.ItemText>{l`Delete post`}</Menu.ItemText>
 										<Menu.ItemIcon icon={Trash} position="right" />
 									</Menu.Item>
@@ -658,9 +606,9 @@ let PostMenuItems = ({
 						</Menu.Group>
 					</>
 				)}
-			</Menu.Outer>
+			</Menu.Popup>
 			<Prompt.Basic
-				control={deletePromptControl}
+				handle={deletePromptControl}
 				title={l`Delete this post?`}
 				description={l`If you remove this post, you won't be able to recover it.`}
 				onConfirm={onDeletePost}
@@ -668,7 +616,7 @@ let PostMenuItems = ({
 				confirmButtonColor="negative"
 			/>
 			<Prompt.Basic
-				control={hidePromptControl}
+				handle={hidePromptControl}
 				title={isReply ? l`Hide this reply?` : l`Hide this post?`}
 				description={l`This post will be hidden from feeds and threads. This cannot be undone.`}
 				onConfirm={onHidePost}
@@ -689,21 +637,21 @@ let PostMenuItems = ({
 				initialThreadgateView={post.threadgate}
 			/>
 			<Prompt.Basic
-				control={quotePostDetachConfirmControl}
+				handle={quotePostDetachConfirmControl}
 				title={l`Detach quote post?`}
 				description={l`This will remove your post from this quote post for all users, and replace it with a placeholder.`}
 				onConfirm={() => void onToggleQuotePostAttachment()}
 				confirmButtonCta={l`Yes, detach`}
 			/>
 			<Prompt.Basic
-				control={hideReplyConfirmControl}
+				handle={hideReplyConfirmControl}
 				title={l`Hide this reply?`}
 				description={l`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`}
 				onConfirm={() => void onToggleReplyVisibility()}
 				confirmButtonCta={l`Yes, hide`}
 			/>
 			<Prompt.Basic
-				control={blockPromptControl}
+				handle={blockPromptControl}
 				title={l`Block Account?`}
 				description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
 				onConfirm={() => void onBlockAuthor()}

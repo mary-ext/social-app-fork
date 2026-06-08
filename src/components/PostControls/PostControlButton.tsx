@@ -1,120 +1,88 @@
-import { createContext, useContext, useMemo } from 'react';
-import type { GestureResponderEvent, Insets, View } from 'react-native';
+import {
+	type ComponentType,
+	createContext,
+	type CSSProperties,
+	type MouseEvent,
+	type ReactNode,
+	type Ref,
+	useContext,
+} from 'react';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
-import { Button, type ButtonProps } from '#/components/Button';
-import type { Props as SVGIconProps } from '#/components/icons/common';
-import { Text, type TextProps } from '#/components/Typography';
+import type { Props as IconProps } from '#/components/icons/common';
+import * as styles from '#/components/PostControls/PostControlButton.css';
+import { cx } from '#/components/web/cx';
 
-export const DEFAULT_HITSLOP = { top: 5, bottom: 10, left: 10, right: 10 };
-
-const PostControlContext = createContext<{
-	big?: boolean;
-	active?: boolean;
-	color?: { color: string };
-}>({});
+const PostControlContext = createContext<{ active?: boolean; big?: boolean }>({});
 PostControlContext.displayName = 'PostControlContext';
 
-// Base button style, which the the other ones extend
+export type PostControlButtonProps = {
+	/** Accessible name; becomes the `aria-label`. */
+	label: string;
+	children: ReactNode;
+	active?: boolean;
+	/** Color applied when `active`; icon + count inherit it via `currentColor`. */
+	activeColor?: string;
+	big?: boolean;
+	disabled?: boolean;
+	onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+	className?: string;
+	style?: CSSProperties;
+	ref?: Ref<HTMLButtonElement>;
+};
+
+/**
+ * The post-control action button (web-native): a plain `<button>` that can render standalone (pass `onClick`)
+ * or back a `Menu.Trigger render={...}`.
+ */
 export function PostControlButton({
-	ref,
-	onPress,
-	onLongPress,
-	children,
-	big,
 	active,
 	activeColor,
-	...props
-}: Omit<ButtonProps, 'hitSlop'> & {
-	ref?: React.Ref<View>;
-	active?: boolean;
-	big?: boolean;
-	color?: string;
-	activeColor?: string;
-	hitSlop?: Insets;
-}) {
-	const t = useTheme();
-
-	const ctx = useMemo(
-		() => ({
-			big,
-			active,
-			color: {
-				color: activeColor && active ? activeColor : t.palette.contrast_500,
-			},
-		}),
-		[big, active, activeColor, t.palette.contrast_500],
-	);
-
-	const style = useMemo(() => [a.flex_row, a.align_center, a.gap_xs, a.bg_transparent, { padding: 5 }], []);
-
-	const handlePress = useMemo(() => {
-		if (!onPress) return;
-		return (evt: GestureResponderEvent) => {
-			onPress(evt);
-		};
-	}, [onPress]);
-
-	const handleLongPress = useMemo(() => {
-		if (!onLongPress) return;
-		return (evt: GestureResponderEvent) => {
-			onLongPress(evt);
-		};
-	}, [onLongPress]);
-
-	return (
-		<Button
-			ref={ref}
-			onPress={handlePress}
-			onLongPress={handleLongPress}
-			style={style}
-			hoverStyle={t.atoms.bg_contrast_25}
-			shape="round"
-			variant="ghost"
-			color="secondary"
-			{...props}
-			hitSlop={{
-				...DEFAULT_HITSLOP,
-				...(props.hitSlop || {}),
-			}}
-		>
-			{typeof children === 'function' ? (
-				(args) => <PostControlContext.Provider value={ctx}>{children(args)}</PostControlContext.Provider>
-			) : (
-				<PostControlContext.Provider value={ctx}>{children}</PostControlContext.Provider>
-			)}
-		</Button>
-	);
-}
-
-export function PostControlButtonIcon({
-	icon: Comp,
+	big,
+	children,
+	className,
+	label,
+	onClick,
 	style,
 	...rest
-}: SVGIconProps & {
-	icon: React.ComponentType<SVGIconProps>;
-}) {
-	const { big, color } = useContext(PostControlContext);
-
-	return <Comp style={[color, a.pointer_events_none, style]} {...rest} width={big ? 22 : 18} />;
+}: PostControlButtonProps) {
+	return (
+		// Base UI's `Menu.Trigger render={...}` clones this with its own props (aria/data/handlers/id/ref)
+		// merged in, so spread them all onto the button — forwarding only the ref wouldn't open the menu.
+		<button
+			type="button"
+			aria-label={label}
+			className={cx(styles.button, className)}
+			style={active && activeColor ? { color: activeColor, ...style } : style}
+			// TODO: temporary. The post still sits inside an RNW feed-item row whose press handler catches
+			// this bubbling click and navigates. Stop it here until that row is ported off react-native-web.
+			onClick={(e) => {
+				e.stopPropagation();
+				onClick?.(e);
+			}}
+			{...rest}
+		>
+			<PostControlContext.Provider value={{ active, big }}>{children}</PostControlContext.Provider>
+		</button>
+	);
 }
 
-export function PostControlButtonText({ style, ...props }: TextProps) {
-	const { big, active, color } = useContext(PostControlContext);
+/** An icon sized to the button's density, inheriting the button color via `currentColor`. */
+export function PostControlButtonIcon({ icon: Icon }: { icon: ComponentType<IconProps> }) {
+	const { big } = useContext(PostControlContext);
+	const size = big ? 22 : 18;
+	return <Icon width={size} height={size} fill="currentColor" style={a.pointer_events_none} />;
+}
 
+/** A count/label beside the icon, inheriting the button color and bolding when active. */
+export function PostControlButtonText({ children }: { children: ReactNode }) {
+	const { active, big } = useContext(PostControlContext);
+	// renders a web <span> beside the icon — the RN unwrapped-text rule doesn't model this
+	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
-		<Text
-			style={[
-				color,
-				a.user_select_none,
-				big ? a.text_md : a.text_sm,
-				active && a.font_semi_bold,
-				// prevent layout shift on android
-				{ includeFontPadding: false, textAlignVertical: 'center' },
-				style,
-			]}
-			{...props}
-		/>
+		<span className={cx(big ? styles.textBig : styles.textSmall, active && styles.textActive)}>
+			{children}
+		</span>
 	);
 }

@@ -1,34 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
 
 import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
+import * as styles from '#/lib/custom-animations/CountWheel.css';
 import { decideShouldRoll } from '#/lib/custom-animations/util';
 
-const animationConfig = {
-	duration: 400,
-	easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-	fill: 'forwards' as FillMode,
-};
-
-const enteringUpKeyframe = [
-	{ opacity: 0, transform: 'translateY(18px)' },
-	{ opacity: 1, transform: 'translateY(0)' },
-];
-
-const enteringDownKeyframe = [
-	{ opacity: 0, transform: 'translateY(-18px)' },
-	{ opacity: 1, transform: 'translateY(0)' },
-];
-
-const exitingUpKeyframe = [
-	{ opacity: 1, transform: 'translateY(0)' },
-	{ opacity: 0, transform: 'translateY(-18px)' },
-];
-
-const exitingDownKeyframe = [
-	{ opacity: 1, transform: 'translateY(0)' },
-	{ opacity: 0, transform: 'translateY(18px)' },
-];
+import { cx } from '#/components/web/cx';
 
 export function CountWheel({
 	count,
@@ -42,50 +18,41 @@ export function CountWheel({
 	renderCount: (props: { count: number }) => React.ReactNode;
 }) {
 	const shouldAnimate = !useReducedMotion() && hasBeenToggled;
-	const shouldRoll = decideShouldRoll(isToggled, count);
 
-	const countView = useRef<HTMLDivElement>(null);
-	const prevCountView = useRef<HTMLDivElement>(null);
-
-	const [prevCount, setPrevCount] = useState(count);
 	const prevIsToggled = useRef(isToggled);
+	// the outgoing number + its direction during a roll; null at rest. `key` retriggers the CSS animation.
+	const [roll, setRoll] = useState<{ from: number; key: number; up: boolean } | null>(null);
+	const rollKey = useRef(0);
 
 	useEffect(() => {
 		if (isToggled === prevIsToggled.current) {
 			return;
 		}
-
-		const newPrevCount = isToggled ? count - 1 : count + 1;
-		if (shouldAnimate && shouldRoll) {
-			countView.current?.animate?.(isToggled ? enteringUpKeyframe : enteringDownKeyframe, animationConfig);
-			prevCountView.current?.animate?.(isToggled ? exitingUpKeyframe : exitingDownKeyframe, animationConfig);
-			setPrevCount(newPrevCount);
-		}
 		prevIsToggled.current = isToggled;
-	}, [isToggled, count, shouldAnimate, shouldRoll]);
+		if (shouldAnimate && decideShouldRoll(isToggled, count)) {
+			rollKey.current += 1;
+			setRoll({ from: isToggled ? count - 1 : count + 1, key: rollKey.current, up: isToggled });
+		}
+	}, [isToggled, count, shouldAnimate]);
 
 	if (count < 1) {
 		return null;
 	}
 
 	return (
-		<View>
-			<View
-				// @ts-expect-error is div
-				ref={countView}
+		<div className={styles.root}>
+			<div
+				key={roll?.key}
+				className={cx(styles.current, roll && (roll.up ? styles.enterUp : styles.enterDown))}
+				onAnimationEnd={() => setRoll(null)}
 			>
 				{renderCount({ count })}
-			</View>
-			{shouldAnimate && (count > 1 || !isToggled) ? (
-				<View
-					style={{ position: 'absolute', opacity: 0 }}
-					aria-disabled={true}
-					// @ts-expect-error is div
-					ref={prevCountView}
-				>
-					{renderCount({ count: prevCount })}
-				</View>
+			</div>
+			{roll ? (
+				<div aria-hidden className={roll.up ? styles.exitUp : styles.exitDown}>
+					{renderCount({ count: roll.from })}
+				</div>
 			) : null}
-		</View>
+		</div>
 	);
 }

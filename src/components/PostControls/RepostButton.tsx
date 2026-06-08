@@ -2,13 +2,11 @@ import { useLingui } from '@lingui/react/macro';
 
 import { useRequireAuth, useSession } from '#/state/session';
 
-import { EventStopper } from '#/view/com/util/EventStopper';
-
 import { useTheme } from '#/alf';
 
 import { CloseQuote_Stroke2_Corner1_Rounded as Quote } from '#/components/icons/Quote';
 import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost';
-import * as Menu from '#/components/Menu';
+import * as Menu from '#/components/web/Menu';
 
 import { PostControlButton, PostControlButtonIcon, PostControlButtonText } from './PostControlButton';
 import { useFormatPostStatCount } from './util';
@@ -36,65 +34,56 @@ export const RepostButton = ({
 	const requireAuth = useRequireAuth();
 	const formatPostStatCount = useFormatPostStatCount();
 
+	const count =
+		typeof repostCount !== 'undefined' && repostCount > 0 ? (
+			<PostControlButtonText>{formatPostStatCount(repostCount)}</PostControlButtonText>
+		) : null;
+
 	return hasSession ? (
-		<EventStopper onKeyDown={false}>
-			<Menu.Root>
-				<Menu.Trigger label={l`Repost or quote post`}>
-					{({ props }) => {
-						return (
-							<PostControlButton
-								testID="repostBtn"
-								active={isReposted}
-								activeColor={t.palette.positive_500}
-								label={props.accessibilityLabel}
-								big={big}
-								{...props}
-							>
-								<PostControlButtonIcon icon={Repost} />
-								{typeof repostCount !== 'undefined' && repostCount > 0 && (
-									<PostControlButtonText testID="repostCount">
-										{formatPostStatCount(repostCount)}
-									</PostControlButtonText>
-								)}
-							</PostControlButton>
-						);
-					}}
-				</Menu.Trigger>
-				<Menu.Outer style={{ minWidth: 170 }}>
-					<Menu.Item
-						label={isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}
-						testID="repostDropdownRepostBtn"
-						onPress={onRepost}
+		<Menu.Root>
+			<Menu.Trigger
+				render={
+					<PostControlButton
+						label={l`Repost or quote post`}
+						active={isReposted}
+						activeColor={t.palette.positive_500}
+						big={big}
 					>
-						<Menu.ItemText>
-							{isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}
-						</Menu.ItemText>
-						<Menu.ItemIcon icon={Repost} position="right" />
-					</Menu.Item>
-					<Menu.Item
-						disabled={embeddingDisabled}
-						label={embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
-						testID="repostDropdownQuoteBtn"
-						onPress={onQuote}
-					>
-						<Menu.ItemText>{embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}</Menu.ItemText>
-						<Menu.ItemIcon icon={Quote} position="right" />
-					</Menu.Item>
-				</Menu.Outer>
-			</Menu.Root>
-		</EventStopper>
+						<PostControlButtonIcon icon={Repost} />
+						{count}
+					</PostControlButton>
+				}
+			/>
+			<Menu.Popup label={l`Repost or quote post`} align="center" minWidth={170}>
+				<Menu.Item
+					label={isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}
+					onClick={onRepost}
+				>
+					<Menu.ItemText>
+						{isReposted ? l`Undo repost` : l({ message: `Repost`, context: `action` })}
+					</Menu.ItemText>
+					<Menu.ItemIcon icon={Repost} position="right" />
+				</Menu.Item>
+				<Menu.Item
+					disabled={embeddingDisabled}
+					label={embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
+					onClick={onQuote}
+				>
+					<Menu.ItemText>{embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}</Menu.ItemText>
+					<Menu.ItemIcon icon={Quote} position="right" />
+				</Menu.Item>
+			</Menu.Popup>
+		</Menu.Root>
 	) : (
 		<PostControlButton
-			onPress={() => requireAuth(() => {})}
+			onClick={() => requireAuth(() => {})}
 			active={isReposted}
 			activeColor={t.palette.positive_500}
 			label={l`Repost or quote post`}
 			big={big}
 		>
 			<PostControlButtonIcon icon={Repost} />
-			{typeof repostCount !== 'undefined' && repostCount > 0 && (
-				<PostControlButtonText testID="repostCount">{formatPostStatCount(repostCount)}</PostControlButtonText>
-			)}
+			{count}
 		</PostControlButton>
 	);
 };

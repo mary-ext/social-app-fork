@@ -1,96 +1,45 @@
-import { memo, useMemo, useState } from 'react';
-import type { Insets } from 'react-native';
-import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import { memo, useState } from 'react';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
-import type { Richtext } from '#/lib/strings/rich-text-facets';
-
 import type { Shadow } from '#/state/cache/post-shadow';
-import { useFeedFeedbackContext } from '#/state/feed-feedback';
-
-import { EventStopper } from '#/view/com/util/EventStopper';
 
 import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight';
-import * as Menu from '#/components/Menu';
-import { useMenuControl } from '#/components/Menu';
+import * as Menu from '#/components/web/Menu';
 
 import { PostControlButton, PostControlButtonIcon } from '../PostControlButton';
 import { ShareMenuItems } from './ShareMenuItems';
 
 let ShareMenuButton = ({
-	testID,
 	post,
 	big,
-	record,
-	richText,
-	timestamp,
-	threadgateRecord,
 	onShare,
-	hitSlop,
-	logContext,
 }: {
-	testID: string;
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	big?: boolean;
-	record: AppBskyFeedPost.Main;
-	richText: Richtext;
-	timestamp: string;
-	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShare: () => void;
-	hitSlop?: Insets;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
 }): React.ReactNode => {
 	const { t: l } = useLingui();
-	const { feedDescriptor } = useFeedFeedbackContext();
-
-	const menuControl = useMenuControl();
+	// the items run a stack of hooks; only mount them once the menu has been opened.
 	const [hasBeenOpen, setHasBeenOpen] = useState(false);
-	const lazyMenuControl = useMemo(
-		() => ({
-			...menuControl,
-			open() {
-				setHasBeenOpen(true);
-				// HACK. We need the state update to be flushed by the time
-				// menuControl.open() fires but RN doesn't expose flushSync.
-				setTimeout(menuControl.open);
-			},
-		}),
-		[menuControl, setHasBeenOpen, big, logContext, feedDescriptor, post.uri, post.author.did],
-	);
 
 	return (
-		<EventStopper onKeyDown={false}>
-			<Menu.Root control={lazyMenuControl}>
-				<Menu.Trigger label={l`Open share menu`}>
-					{({ props }) => {
-						return (
-							<PostControlButton
-								testID="postShareBtn"
-								big={big}
-								label={props.accessibilityLabel}
-								{...props}
-								onLongPress={undefined}
-								hitSlop={hitSlop}
-							>
-								<PostControlButtonIcon icon={ArrowShareRightIcon} />
-							</PostControlButton>
-						);
-					}}
-				</Menu.Trigger>
-				{hasBeenOpen && (
-					// Lazily initialized. Once mounted, they stay mounted.
-					<ShareMenuItems
-						testID={testID}
-						post={post}
-						record={record}
-						richText={richText}
-						timestamp={timestamp}
-						threadgateRecord={threadgateRecord}
-						onShare={onShare}
-					/>
-				)}
-			</Menu.Root>
-		</EventStopper>
+		<Menu.Root
+			onOpenChange={(open) => {
+				if (open) {
+					setHasBeenOpen(true);
+				}
+			}}
+		>
+			<Menu.Trigger
+				render={
+					<PostControlButton label={l`Open share menu`} big={big}>
+						<PostControlButtonIcon icon={ArrowShareRightIcon} />
+					</PostControlButton>
+				}
+			/>
+			{hasBeenOpen && <ShareMenuItems post={post} onShare={onShare} />}
+		</Menu.Root>
 	);
 };
 

@@ -66,6 +66,7 @@ export function Item({
 	children,
 	label,
 	onClick,
+	onMouseEnter,
 	closeOnClick,
 	destructive = false,
 	disabled,
@@ -74,6 +75,8 @@ export function Item({
 	/** Overrides the label used for keyboard typeahead (defaults to the item's text). */
 	label?: string;
 	onClick?: () => void;
+	/** Hover hook, e.g. to prefetch the data a dialog opened by the item will need. */
+	onMouseEnter?: () => void;
 	closeOnClick?: boolean;
 	destructive?: boolean;
 	disabled?: boolean;
@@ -83,6 +86,7 @@ export function Item({
 			className={cx(styles.item, destructive && styles.itemDestructive)}
 			label={label}
 			onClick={onClick}
+			onMouseEnter={onMouseEnter}
 			closeOnClick={closeOnClick}
 			disabled={disabled}
 		>
@@ -116,8 +120,12 @@ export function ItemRadio({ selected }: { selected: boolean }) {
 	return <span className={styles.itemRadio}>{selected && <span className={styles.itemRadioDot} />}</span>;
 }
 
-export function GroupLabel({ children }: { children: ReactNode }) {
-	return <BaseMenu.GroupLabel className={styles.groupLabel}>{children}</BaseMenu.GroupLabel>;
+export function LabelText({ children, maxWidth }: { children: ReactNode; maxWidth?: number }) {
+	return (
+		<BaseMenu.GroupLabel className={styles.groupLabel} style={maxWidth ? { maxWidth } : undefined}>
+			{children}
+		</BaseMenu.GroupLabel>
+	);
 }
 
 export function Separator() {

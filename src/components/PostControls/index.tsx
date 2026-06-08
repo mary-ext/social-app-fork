@@ -187,8 +187,7 @@ let PostControls = ({
 					]}
 				>
 					<PostControlButton
-						testID="replyBtn"
-						onPress={
+						onClick={
 							!replyDisabled
 								? () =>
 										requireAuth(() => {
@@ -224,11 +223,10 @@ let PostControls = ({
 				</View>
 				<View style={[a.flex_1, a.align_start]}>
 					<PostControlButton
-						testID="likeBtn"
 						big={big}
 						active={Boolean(post.viewer?.like)}
 						activeColor={t.palette.pink}
-						onPress={() => requireAuth(() => onPressToggleLike())}
+						onClick={() => requireAuth(() => onPressToggleLike())}
 						label={
 							post.viewer?.like
 								? l({
@@ -259,7 +257,7 @@ let PostControls = ({
 							isToggled={Boolean(post.viewer?.like)}
 							hasBeenToggled={hasLikeIconBeenToggled}
 							renderCount={({ count }) => (
-								<PostControlButtonText testID="likeCount">{formatPostStatCount(count)}</PostControlButtonText>
+								<PostControlButtonText>{formatPostStatCount(count)}</PostControlButtonText>
 							)}
 						/>
 					</PostControlButton>
@@ -268,43 +266,17 @@ let PostControls = ({
 				<View />
 			</View>
 			<View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
-				<BookmarkButton
-					post={post}
-					big={big}
-					logContext={logContext}
-					hitSlop={{
-						right: secondaryControlSpacingStyles.gap / 2,
-					}}
-				/>
-				<ShareMenuButton
-					testID="postShareBtn"
-					post={post}
-					big={big}
-					record={record}
-					richText={richText}
-					timestamp={post.indexedAt}
-					threadgateRecord={threadgateRecord}
-					onShare={onShare}
-					hitSlop={{
-						left: secondaryControlSpacingStyles.gap / 2,
-						right: secondaryControlSpacingStyles.gap / 2,
-					}}
-					logContext={logContext}
-				/>
+				<BookmarkButton post={post} big={big} logContext={logContext} />
+				<ShareMenuButton post={post} big={big} onShare={onShare} />
 				<PostMenuButton
-					testID="postDropdownBtn"
 					post={post}
 					postFeedContext={feedContext}
 					postReqId={reqId}
 					big={big}
 					record={record}
 					richText={richText}
-					timestamp={post.indexedAt}
 					threadgateRecord={threadgateRecord}
 					onShowLess={onShowLess}
-					hitSlop={{
-						left: secondaryControlSpacingStyles.gap / 2,
-					}}
 					logContext={logContext}
 					forceGoogleTranslate={forceGoogleTranslate}
 				/>

@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
-import type { AnyProfileView } from '@atcute/bluesky';
+import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { makeProfileLink } from '#/lib/routes/links';
@@ -9,6 +9,7 @@ import type { NavigationProp } from '#/lib/routes/types';
 import { shareText, shareUrl } from '#/lib/sharing';
 import { toShareUrl } from '#/lib/strings/url-helpers';
 
+import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useSession } from '#/state/session';
 
@@ -17,11 +18,14 @@ import { SendViaChatDialog } from '#/components/dms/dialogs/ShareViaChatDialog';
 import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { PaperPlane_Stroke2_Corner0_Rounded as Send } from '#/components/icons/PaperPlane';
-import * as Menu from '#/components/Menu';
+import * as Menu from '#/components/web/Menu';
 
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
-import type { ShareMenuItemsProps } from './ShareMenuItems.types';
+interface ShareMenuItemsProps {
+	onShare: () => void;
+	post: Shadow<AppBskyFeedDefs.PostView>;
+}
 
 let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): React.ReactNode => {
 	const { hasSession } = useSession();
@@ -64,7 +68,7 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	};
 
 	const copyLinkItem = (
-		<Menu.Item testID="postDropdownShareBtn" label={l`Copy link to post`} onPress={onCopyLink}>
+		<Menu.Item label={l`Copy link to post`} onClick={onCopyLink}>
 			<Menu.ItemText>
 				<Trans>Copy link to post</Trans>
 			</Menu.ItemText>
@@ -74,14 +78,13 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 
 	return (
 		<>
-			<Menu.Outer>
+			<Menu.Popup label={l`Share`} align="end">
 				{!hideInPWI && copyLinkItem}
 
 				{hasSession && (
 					<Menu.Item
-						testID="postDropdownSendViaDMBtn"
 						label={l`Send via direct message`}
-						onPress={() => {
+						onClick={() => {
 							sendViaChatControl.open();
 						}}
 					>
@@ -94,9 +97,9 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 
 				{hideInPWI && (
 					<>
-						{hasSession && <Menu.Divider />}
+						{hasSession && <Menu.Separator />}
 						{copyLinkItem}
-						<Menu.LabelText style={{ maxWidth: 220 }}>
+						<Menu.LabelText maxWidth={220}>
 							<Trans>Note: This post is only visible to logged-in users.</Trans>
 						</Menu.LabelText>
 					</>
@@ -104,14 +107,14 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 
 				{devModeEnabled && (
 					<>
-						<Menu.Divider />
-						<Menu.Item testID="postAtUriShareBtn" label={l`Copy post at:// URI`} onPress={onShareATURI}>
+						<Menu.Separator />
+						<Menu.Item label={l`Copy post at:// URI`} onClick={onShareATURI}>
 							<Menu.ItemText>
 								<Trans>Copy post at:// URI</Trans>
 							</Menu.ItemText>
 							<Menu.ItemIcon icon={ClipboardIcon} position="right" />
 						</Menu.Item>
-						<Menu.Item testID="postAuthorDIDShareBtn" label={l`Copy author DID`} onPress={onShareAuthorDID}>
+						<Menu.Item label={l`Copy author DID`} onClick={onShareAuthorDID}>
 							<Menu.ItemText>
 								<Trans>Copy author DID</Trans>
 							</Menu.ItemText>
@@ -119,7 +122,7 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 						</Menu.Item>
 					</>
 				)}
-			</Menu.Outer>
+			</Menu.Popup>
 			<SendViaChatDialog control={sendViaChatControl} onSelectChat={onSelectChatToShareTo} />
 		</>
 	);
