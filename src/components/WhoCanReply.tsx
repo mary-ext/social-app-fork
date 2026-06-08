@@ -24,6 +24,7 @@ import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/G
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 interface WhoCanReplyProps {
 	post: AppBskyFeedDefs.PostView;
@@ -35,7 +36,7 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const infoDialogControl = useDialogControl();
-	const editDialogControl = useDialogControl();
+	const editDialogHandle = useDialogHandle();
 
 	/*
 	 * `WhoCanReply` is only used for root posts atm, in case this changes
@@ -69,7 +70,7 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 			// wait on prefetch if it manages to resolve in under 200ms
 			// otherwise, proceed immediately and show the spinner -sfn
 			Promise.race([prefetchPromise.current, new Promise((res) => setTimeout(res, 200))]).finally(() => {
-				editDialogControl.open();
+				editDialogHandle.open(null);
 			});
 		} else {
 			infoDialogControl.open();
@@ -127,7 +128,7 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 				<PostInteractionSettingsDialog
 					postUri={post.uri}
 					rootPostUri={rootUri}
-					control={editDialogControl}
+					handle={editDialogHandle}
 					initialThreadgateView={post.threadgate}
 				/>
 			) : (

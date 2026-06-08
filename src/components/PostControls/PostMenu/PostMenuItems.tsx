@@ -41,7 +41,6 @@ import { logger } from '#/logger';
 
 import { getPostLanguageTags } from '#/locale/helpers';
 
-import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import {
 	PostInteractionSettingsDialog,
@@ -73,6 +72,7 @@ import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/W
 import { Loader } from '#/components/Loader';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
+import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -121,7 +121,7 @@ let PostMenuItems = ({
 	const reportDialogControl = useReportDialogControl();
 	const deletePromptControl = Prompt.usePromptHandle();
 	const hidePromptControl = Prompt.usePromptHandle();
-	const postInteractionSettingsDialogControl = useDialogControl();
+	const postInteractionSettingsHandle = useDialogHandle();
 	const quotePostDetachConfirmControl = Prompt.usePromptHandle();
 	const hideReplyConfirmControl = Prompt.usePromptHandle();
 	const { mutateAsync: toggleReplyVisibility } = useToggleReplyVisibilityMutation();
@@ -591,7 +591,7 @@ let PostMenuItems = ({
 								<>
 									<Menu.Item
 										label={l`Edit interaction settings`}
-										onClick={() => postInteractionSettingsDialogControl.open()}
+										onClick={() => postInteractionSettingsHandle.open(null)}
 										onMouseEnter={prefetchPostInteractionSettings}
 									>
 										<Menu.ItemText>{l`Edit interaction settings`}</Menu.ItemText>
@@ -631,7 +631,7 @@ let PostMenuItems = ({
 				onAfterSubmit={() => {}}
 			/>
 			<PostInteractionSettingsDialog
-				control={postInteractionSettingsDialogControl}
+				handle={postInteractionSettingsHandle}
 				postUri={post.uri}
 				rootPostUri={rootUri}
 				initialThreadgateView={post.threadgate}
