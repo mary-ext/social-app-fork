@@ -142,7 +142,7 @@ import {
 import { NO_VIDEO, type NoVideoState, processVideo, type VideoState } from './state/video';
 import type { TextInputRef } from './text-input/TextInput.types';
 
-type CancelRef = {
+export type CancelRef = {
 	/** Returns `true` if the composer should stay open, `false` if the caller should close it. */
 	onPressCancel: () => boolean;
 };
@@ -1822,10 +1822,6 @@ function ComposerFooter({
 			</View>
 		</View>
 	);
-}
-
-export function useComposerCancelRef() {
-	return useRef<CancelRef>(null);
 }
 
 function useScrollTracker({

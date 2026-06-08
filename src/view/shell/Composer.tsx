@@ -1,16 +1,25 @@
+import { lazy, Suspense, useRef } from 'react';
 import { useLingui } from '@lingui/react/macro';
 
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import * as Sheet from '#/components/web/Sheet';
+import { Spinner } from '#/components/web/Spinner';
 
-import { ComposePost, useComposerCancelRef } from '../com/composer/Composer';
+import { vars } from '#/styles/contract.css';
+
+import type { CancelRef } from '../com/composer/Composer';
+import * as styles from './Composer.css';
+
+// the composer pulls in a large subtree (gif/emoji pickers, reanimated, media metadata, drafts), so it
+// only loads when the dialog is first opened — the `payload && ...` guard already gates mounting.
+const ComposePost = lazy(() => import('../com/composer/Composer').then((m) => ({ default: m.ComposePost })));
 
 export function ComposerDialog() {
 	const { t: l } = useLingui();
 	const { composerDialogControl } = useGlobalDialogsControlContext();
-	const cancelRef = useComposerCancelRef();
+	const cancelRef = useRef<CancelRef>(null);
 
 	return (
 		<Sheet.Root
@@ -28,7 +37,17 @@ export function ComposerDialog() {
 		>
 			{({ payload }) => (
 				<Sheet.Popup label={l`Write post`}>
-					{payload && <ComposePost cancelRef={cancelRef} {...payload} />}
+					{payload && (
+						<Suspense
+							fallback={
+								<div className={styles.placeholder}>
+									<Spinner color={vars.palette.contrast_500} label={l`Loading`} />
+								</div>
+							}
+						>
+							<ComposePost cancelRef={cancelRef} {...payload} />
+						</Suspense>
+					)}
 				</Sheet.Popup>
 			)}
 		</Sheet.Root>
