@@ -18,10 +18,10 @@ import { Loader } from '#/components/Loader';
 import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import { EditableAvatar } from '#/components/web/EditableAvatar';
 import { EditableBanner } from '#/components/web/EditableBanner';
 import * as Prompt from '#/components/web/Prompt';
-import * as Sheet from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
 
@@ -33,7 +33,7 @@ export function EditProfileDialog({
 	onUpdate,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	onUpdate?: () => void;
 }) {
 	const { t: l } = useLingui();
@@ -42,7 +42,7 @@ export function EditProfileDialog({
 
 	return (
 		<>
-			<Sheet.Root
+			<Dialog.Root
 				handle={handle}
 				onOpenChange={(open, details) => {
 					// guard every non-imperative dismissal while dirty (escape/backdrop, and the focus-out
@@ -53,7 +53,7 @@ export function EditProfileDialog({
 					}
 				}}
 			>
-				<Sheet.Popup label={l`Edit profile`}>
+				<Dialog.Popup scroll="body" label={l`Edit profile`}>
 					<DialogInner
 						profile={profile}
 						handle={handle}
@@ -61,8 +61,8 @@ export function EditProfileDialog({
 						cancelHandle={cancelHandle}
 						setDirty={setDirty}
 					/>
-				</Sheet.Popup>
-			</Sheet.Root>
+				</Dialog.Popup>
+			</Dialog.Root>
 			<Prompt.Basic
 				handle={cancelHandle}
 				title={l`Discard changes?`}
@@ -83,7 +83,7 @@ function DialogInner({
 	setDirty,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	onUpdate?: () => void;
 	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
@@ -187,20 +187,20 @@ function DialogInner({
 
 	return (
 		<>
-			<Sheet.Header.Outer>
-				<Sheet.Header.Slot>
+			<Dialog.Header.Outer>
+				<Dialog.Header.Slot>
 					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
 						<ButtonText size="md">
 							<Trans>Cancel</Trans>
 						</ButtonText>
 					</Button>
-				</Sheet.Header.Slot>
-				<Sheet.Header.Content>
-					<Sheet.Header.TitleText>
+				</Dialog.Header.Slot>
+				<Dialog.Header.Content>
+					<Dialog.Header.TitleText>
 						<Trans>Edit profile</Trans>
-					</Sheet.Header.TitleText>
-				</Sheet.Header.Content>
-				<Sheet.Header.Slot>
+					</Dialog.Header.TitleText>
+				</Dialog.Header.Content>
+				<Dialog.Header.Slot>
 					<Button
 						label={l`Save`}
 						variant="ghost"
@@ -215,10 +215,10 @@ function DialogInner({
 						</ButtonText>
 						{isUpdatingProfile && <ButtonIcon icon={Loader} />}
 					</Button>
-				</Sheet.Header.Slot>
-			</Sheet.Header.Outer>
+				</Dialog.Header.Slot>
+			</Dialog.Header.Outer>
 
-			<Sheet.Body>
+			<Dialog.Body>
 				<div className={styles.bannerWrap}>
 					<EditableBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
 					<div className={styles.avatar}>
@@ -299,7 +299,7 @@ function DialogInner({
 						)}
 					</div>
 				</div>
-			</Sheet.Body>
+			</Dialog.Body>
 		</>
 	);
 }

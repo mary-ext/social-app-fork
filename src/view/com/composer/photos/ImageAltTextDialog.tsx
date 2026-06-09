@@ -11,14 +11,14 @@ import { AltTextCounterWrapper } from '#/view/com/composer/AltTextCounterWrapper
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
 
 import * as styles from './ImageAltTextDialog.css';
 
 type Props = {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	image: ComposerImage;
 	onChange: (next: ComposerImage) => void;
 };
@@ -34,10 +34,10 @@ export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.Re
 	};
 
 	return (
-		<Sheet.Root disablePointerDismissal handle={handle}>
-			<Sheet.Popup label={l`Add alt text`}>
-				<Sheet.Header.Outer>
-					<Sheet.Header.Slot>
+		<Dialog.Root disablePointerDismissal handle={handle}>
+			<Dialog.Popup scroll="body" label={l`Add alt text`}>
+				<Dialog.Header.Outer>
+					<Dialog.Header.Slot>
 						<Button
 							color="primary"
 							label={l`Cancel`}
@@ -49,13 +49,13 @@ export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.Re
 								<Trans>Cancel</Trans>
 							</ButtonText>
 						</Button>
-					</Sheet.Header.Slot>
-					<Sheet.Header.Content>
-						<Sheet.Header.TitleText>
+					</Dialog.Header.Slot>
+					<Dialog.Header.Content>
+						<Dialog.Header.TitleText>
 							<Trans>Add alt text</Trans>
-						</Sheet.Header.TitleText>
-					</Sheet.Header.Content>
-					<Sheet.Header.Slot>
+						</Dialog.Header.TitleText>
+					</Dialog.Header.Content>
+					<Dialog.Header.Slot>
 						<Button
 							className={dirty ? undefined : styles.inactiveSave}
 							color="primary"
@@ -69,12 +69,12 @@ export const ImageAltTextDialog = ({ handle, image, onChange }: Props): React.Re
 								<Trans>Save</Trans>
 							</ButtonText>
 						</Button>
-					</Sheet.Header.Slot>
-				</Sheet.Header.Outer>
+					</Dialog.Header.Slot>
+				</Dialog.Header.Outer>
 
 				<ImageAltTextInner altText={altText} image={image} setAltText={setAltText} />
-			</Sheet.Popup>
-		</Sheet.Root>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 };
 
@@ -91,7 +91,7 @@ const ImageAltTextInner = ({
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 
 	return (
-		<Sheet.Body>
+		<Dialog.Body>
 			<div className={styles.imageBox}>
 				<img alt="" className={styles.image} src={imageUrl} />
 			</div>
@@ -130,6 +130,6 @@ const ImageAltTextInner = ({
 
 				<AltTextCounterWrapper altText={altText} />
 			</div>
-		</Sheet.Body>
+		</Dialog.Body>
 	);
 };

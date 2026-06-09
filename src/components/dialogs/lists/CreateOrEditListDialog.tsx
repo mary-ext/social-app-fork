@@ -22,9 +22,9 @@ import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import { EditableAvatar } from '#/components/web/EditableAvatar';
 import * as Prompt from '#/components/web/Prompt';
-import * as Sheet from '#/components/web/Sheet';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
 
@@ -44,7 +44,7 @@ export function CreateOrEditListDialog({
 	onSave,
 	initialValues,
 }: {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	list?: AppBskyGraphDefs.ListView;
 	purpose?: AppBskyGraphDefs.ListPurpose;
 	onSave?: (uri: string) => void;
@@ -69,7 +69,7 @@ export function CreateOrEditListDialog({
 
 	return (
 		<>
-			<Sheet.Root
+			<Dialog.Root
 				handle={handle}
 				onOpenChange={(open, details) => {
 					// guard every non-imperative dismissal while dirty (escape/backdrop, and the focus-out caused
@@ -80,7 +80,7 @@ export function CreateOrEditListDialog({
 					}
 				}}
 			>
-				<Sheet.Popup label={l`Create or edit list`}>
+				<Dialog.Popup scroll="body" label={l`Create or edit list`}>
 					<DialogInner
 						list={list}
 						purpose={purpose}
@@ -90,8 +90,8 @@ export function CreateOrEditListDialog({
 						setDirty={setDirty}
 						initialValues={initialValues}
 					/>
-				</Sheet.Popup>
-			</Sheet.Root>
+				</Dialog.Popup>
+			</Dialog.Root>
 			<Prompt.Basic
 				handle={cancelHandle}
 				title={l`Discard changes?`}
@@ -116,7 +116,7 @@ function DialogInner({
 	list?: AppBskyGraphDefs.ListView;
 	purpose?: AppBskyGraphDefs.ListPurpose;
 	onSave?: (uri: string) => void;
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	cancelHandle: Prompt.PromptHandle;
 	setDirty: (dirty: boolean) => void;
 	initialValues?: InitialListValues;
@@ -309,18 +309,18 @@ function DialogInner({
 
 	return (
 		<>
-			<Sheet.Header.Outer>
-				<Sheet.Header.Slot>
+			<Dialog.Header.Outer>
+				<Dialog.Header.Slot>
 					<Button label={l`Cancel`} variant="ghost" color="primary" size="small" onClick={onRequestClose}>
 						<ButtonText size="md">
 							<Trans>Cancel</Trans>
 						</ButtonText>
 					</Button>
-				</Sheet.Header.Slot>
-				<Sheet.Header.Content>
-					<Sheet.Header.TitleText>{title}</Sheet.Header.TitleText>
-				</Sheet.Header.Content>
-				<Sheet.Header.Slot>
+				</Dialog.Header.Slot>
+				<Dialog.Header.Content>
+					<Dialog.Header.TitleText>{title}</Dialog.Header.TitleText>
+				</Dialog.Header.Content>
+				<Dialog.Header.Slot>
 					<Button
 						label={l`Save`}
 						variant="ghost"
@@ -334,10 +334,10 @@ function DialogInner({
 						</ButtonText>
 						{(isCreatingList || isUpdatingList) && <ButtonIcon icon={Loader} />}
 					</Button>
-				</Sheet.Header.Slot>
-			</Sheet.Header.Outer>
+				</Dialog.Header.Slot>
+			</Dialog.Header.Outer>
 
-			<Sheet.Body>
+			<Dialog.Body>
 				{isUpdateListError && (
 					<div className={styles.errorWrap}>
 						<ErrorMessage message={cleanError(updateListError)} />
@@ -421,7 +421,7 @@ function DialogInner({
 						)}
 					</div>
 				</div>
-			</Sheet.Body>
+			</Dialog.Body>
 		</>
 	);
 }

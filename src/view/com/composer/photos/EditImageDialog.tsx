@@ -14,13 +14,13 @@ import {
 } from '#/state/gallery';
 
 import { Button, ButtonText } from '#/components/web/Button';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 import { Spinner } from '#/components/web/Spinner';
 
 import * as styles from './EditImageDialog.css';
 
 export type EditImageDialogProps = {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	image?: ComposerImage;
 	onChange: (next: ComposerImage) => void;
 	aspectRatio?: number;
@@ -30,11 +30,11 @@ export type EditImageDialogProps = {
 export function EditImageDialog(props: EditImageDialogProps) {
 	const { t: l } = useLingui();
 	return (
-		<Sheet.Root disablePointerDismissal handle={props.handle}>
-			<Sheet.Popup label={l`Edit image`}>
+		<Dialog.Root disablePointerDismissal handle={props.handle}>
+			<Dialog.Popup scroll="body" label={l`Edit image`}>
 				<DialogInner {...props} />
-			</Sheet.Popup>
-		</Sheet.Root>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
@@ -45,8 +45,8 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 
 	return (
 		<>
-			<Sheet.Header.Outer>
-				<Sheet.Header.Slot>
+			<Dialog.Header.Outer>
+				<Dialog.Header.Slot>
 					<Button
 						color="primary"
 						disabled={pending}
@@ -59,13 +59,13 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 							<Trans>Cancel</Trans>
 						</ButtonText>
 					</Button>
-				</Sheet.Header.Slot>
-				<Sheet.Header.Content>
-					<Sheet.Header.TitleText>
+				</Dialog.Header.Slot>
+				<Dialog.Header.Content>
+					<Dialog.Header.TitleText>
 						<Trans>Edit image</Trans>
-					</Sheet.Header.TitleText>
-				</Sheet.Header.Content>
-				<Sheet.Header.Slot>
+					</Dialog.Header.TitleText>
+				</Dialog.Header.Content>
+				<Dialog.Header.Slot>
 					<Button
 						color="primary"
 						disabled={pending}
@@ -83,10 +83,10 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 						</ButtonText>
 						{pending && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
 					</Button>
-				</Sheet.Header.Slot>
-			</Sheet.Header.Outer>
+				</Dialog.Header.Slot>
+			</Dialog.Header.Outer>
 
-			<Sheet.Body>
+			<Dialog.Body>
 				{image && (
 					<EditImageInner
 						aspectRatio={aspectRatio}
@@ -98,7 +98,7 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 						saveRef={ref}
 					/>
 				)}
-			</Sheet.Body>
+			</Dialog.Body>
 		</>
 	);
 }
