@@ -4,7 +4,7 @@ import { useLingui } from '@lingui/react/macro';
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 import { Spinner } from '#/components/web/Spinner';
 
 import { vars } from '#/styles/contract.css';
@@ -22,7 +22,7 @@ export function ComposerDialog() {
 	const cancelRef = useRef<CancelRef>(null);
 
 	return (
-		<Sheet.Root
+		<Dialog.Root
 			handle={composerDialogControl}
 			id={COMPOSER_DIALOG_ID}
 			onOpenChange={(open, details) => {
@@ -36,7 +36,7 @@ export function ComposerDialog() {
 			}}
 		>
 			{({ payload }) => (
-				<Sheet.Popup label={l`Write post`}>
+				<Dialog.Popup scroll="body" label={l`Write post`}>
 					{payload && (
 						<Suspense
 							fallback={
@@ -48,8 +48,8 @@ export function ComposerDialog() {
 							<ComposePost cancelRef={cancelRef} {...payload} />
 						</Suspense>
 					)}
-				</Sheet.Popup>
+				</Dialog.Popup>
 			)}
-		</Sheet.Root>
+		</Dialog.Root>
 	);
 }

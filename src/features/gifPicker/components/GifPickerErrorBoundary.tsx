@@ -1,12 +1,18 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { Button, ButtonText } from '#/components/web/Button';
-import type * as Sheet from '#/components/web/Sheet';
+import type * as Dialog from '#/components/web/Dialog';
 import { Text } from '#/components/web/Text';
 
 import * as styles from '#/features/gifPicker/components/GifPickerErrorBoundary.css';
 
-export function GifPickerErrorBoundary({ handle, details }: { handle: Sheet.SheetHandle; details?: string }) {
+export function GifPickerErrorBoundary({
+	handle,
+	details,
+}: {
+	handle: Dialog.DialogHandle;
+	details?: string;
+}) {
 	const { t: l } = useLingui();
 
 	return (

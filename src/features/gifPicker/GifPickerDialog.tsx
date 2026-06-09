@@ -5,7 +5,7 @@ import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 import { useBreakpoints } from '#/alf';
 
 import { useThrottledValue } from '#/components/hooks/useThrottledValue';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 import {
 	GIF_CATEGORIES,
@@ -26,7 +26,7 @@ export function GifPickerDialog({
 	onClose,
 	onSelectGif: onSelectGifProp,
 }: {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	onClose?: () => void;
 	onSelectGif: (gif: Gif) => void;
 }) {
@@ -36,7 +36,7 @@ export function GifPickerDialog({
 	};
 
 	return (
-		<Sheet.Root
+		<Dialog.Root
 			handle={handle}
 			onOpenChange={(open) => {
 				if (!open) {
@@ -44,14 +44,14 @@ export function GifPickerDialog({
 				}
 			}}
 		>
-			<Sheet.Popup label="GIFs" fullHeight outerClose>
+			<Dialog.Popup scroll="body" label="GIFs" fullHeight outerClose>
 				<ErrorBoundary
 					renderError={(error) => <GifPickerErrorBoundary handle={handle} details={String(error)} />}
 				>
 					<GifPickerBody handle={handle} onSelectGif={onSelectGif} />
 				</ErrorBoundary>
-			</Sheet.Popup>
-		</Sheet.Root>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
@@ -59,7 +59,7 @@ function GifPickerBody({
 	handle,
 	onSelectGif,
 }: {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	onSelectGif: (gif: Gif) => void;
 }) {
 	const { gtMobile } = useBreakpoints();

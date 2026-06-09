@@ -112,9 +112,9 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 import * as EmojiPicker from '#/components/web/EmojiPicker';
 import * as Prompt from '#/components/web/Prompt';
-import * as Sheet from '#/components/web/Sheet';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
@@ -667,7 +667,7 @@ export const ComposePost = ({
 
 	useImperativeHandle(cancelRef, () => ({ onPressCancel }));
 
-	// The Cancel button drives the close itself (the Sheet's `onOpenChange` does it for Escape/backdrop).
+	// The Cancel button drives the close itself (the dialog's `onOpenChange` does it for Escape/backdrop).
 	const onRequestClose = useCallback(() => {
 		if (!onPressCancel()) {
 			onClose();
@@ -1041,7 +1041,7 @@ export const ComposePost = ({
 				textLength={thread.posts[0]!.text.length}
 			/>
 			{/* The composer owns its own scrolling (the `Animated.ScrollView` below); this body fills the
-			    height-bounded Sheet card while `minHeight: 0` lets the inner scroll view clip. */}
+			    height-bounded dialog card while `minHeight: 0` lets the inner scroll view clip. */}
 			<View style={[a.flex_1, { minHeight: 0 }]}>
 				{missingAltError && <AltTextReminder error={missingAltError} />}
 				<ErrorBanner
@@ -1470,10 +1470,10 @@ function ComposerTopBar({
 		);
 
 	return (
-		<Sheet.Header.Outer border={false}>
-			<Sheet.Header.Slot>{renderLeft()}</Sheet.Header.Slot>
-			<Sheet.Header.Slot>{renderRight()}</Sheet.Header.Slot>
-		</Sheet.Header.Outer>
+		<Dialog.Header.Outer border={false}>
+			<Dialog.Header.Slot>{renderLeft()}</Dialog.Header.Slot>
+			<Dialog.Header.Slot>{renderRight()}</Dialog.Header.Slot>
+		</Dialog.Header.Outer>
 	);
 }
 
