@@ -1282,7 +1282,7 @@ msgstr ""
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:221
+#: src/components/Post/Embed/VideoEmbed/index.tsx:222
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
@@ -3000,7 +3000,7 @@ msgstr ""
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
 msgstr ""
 
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:103
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:104
 msgid "Embedded player"
 msgstr "Embedded player"
 
@@ -4869,7 +4869,7 @@ msgstr ""
 msgid "Loading post interaction settings..."
 msgstr ""
 
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:86
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:87
 msgid "Loading video"
 msgstr "Loading video"
 
@@ -6189,7 +6189,7 @@ msgid "Play video"
 msgstr ""
 
 #: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:56
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:85
+#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:86
 msgid "Play Video"
 msgstr ""
 
@@ -8770,7 +8770,7 @@ msgstr ""
 msgid "This user isn't following anyone."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.tsx:220
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 
@@ -9335,7 +9335,7 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:216
+#: src/components/Post/Embed/VideoEmbed/index.tsx:217
 msgid "Video not found."
 msgstr ""
 

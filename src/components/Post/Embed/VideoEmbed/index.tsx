@@ -16,6 +16,7 @@ import {
 	VideoEmbedInnerWeb,
 	VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb';
+import { noRowLink } from '#/components/web/BlockLink';
 
 import { IS_WEB_FIREFOX } from '#/env';
 
@@ -89,7 +90,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 				backgroundPosition: 'center',
 				backgroundRepeat: 'no-repeat',
 			}}
-			onClick={(evt) => evt.stopPropagation()}
+			{...noRowLink}
 		>
 			<ErrorBoundary renderError={renderError} key={key}>
 				<OnlyNearScreen>

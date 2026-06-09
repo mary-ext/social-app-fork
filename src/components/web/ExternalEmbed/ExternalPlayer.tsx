@@ -1,4 +1,4 @@
-import { type MouseEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
@@ -7,6 +7,7 @@ import { type EmbedPlayerParams, getPlayerAspect } from '#/lib/strings/embed-pla
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
+import { noRowLink } from '#/components/web/BlockLink';
 import { useDialogHandle } from '#/components/web/Dialog';
 import { PlayButtonIcon } from '#/components/web/PlayButtonIcon';
 import { Spinner } from '#/components/web/Spinner';
@@ -87,7 +88,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 					</button>
 				) : null}
 				{isActive ? (
-					<div className={styles.iframeWrap} onClick={(e: MouseEvent) => e.stopPropagation()}>
+					<div className={styles.iframeWrap} {...noRowLink}>
 						{/*
 						 * keying on the src remounts the iframe for a new embed rather than navigating the existing one.
 						 * `allow="autoplay"` delegates the autoplay policy to the cross-origin frame, otherwise the
