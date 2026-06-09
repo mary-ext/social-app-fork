@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Keyboard } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -7,7 +7,7 @@ import { useCallOnce } from '#/lib/once';
 import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
 import { Button, ButtonText } from '#/components/web/Button';
 import { CenteredSpinner } from '#/components/web/CenteredSpinner';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 import { Text } from '#/components/web/Text';
 
 import { DraftItem } from './DraftItem';
@@ -19,7 +19,7 @@ export function DraftsListDialog({
 	handle,
 	onSelectDraft,
 }: {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	onSelectDraft: (draft: DraftSummary) => void;
 }) {
 	const { t: l } = useLingui();
@@ -59,46 +59,17 @@ export function DraftsListDialog({
 		[deleteDraft],
 	);
 
-	const scrollRef = useRef<HTMLDivElement>(null);
-	const sentinelRef = useRef<HTMLDivElement>(null);
-
-	// keep the observer stable while always calling the latest handler — it closes over fresh pagination state.
 	const onEndReached = useCallback(() => {
 		if (hasNextPage && !isFetchingNextPage) {
 			void fetchNextPage();
 		}
 	}, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-	const onEndReachedRef = useRef(onEndReached);
-	onEndReachedRef.current = onEndReached;
-
-	const showList = !isLoading && drafts.length > 0;
-	useEffect(() => {
-		if (!showList) {
-			return;
-		}
-		const sentinel = sentinelRef.current;
-		const root = scrollRef.current;
-		if (!sentinel || !root) {
-			return;
-		}
-		const observer = new IntersectionObserver(
-			(entries) => {
-				if (entries.some((entry) => entry.isIntersecting)) {
-					onEndReachedRef.current();
-				}
-			},
-			// prefetch roughly a screen ahead, mirroring the old FlatList's onEndReachedThreshold.
-			{ root, rootMargin: '600px 0px' },
-		);
-		observer.observe(sentinel);
-		return () => observer.disconnect();
-	}, [showList]);
 
 	return (
-		<Sheet.Root handle={handle}>
-			<Sheet.Popup label={l`Drafts`}>
-				<Sheet.Header.Outer>
-					<Sheet.Header.Slot>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup scroll="body" label={l`Drafts`}>
+				<Dialog.Header.Outer>
+					<Dialog.Header.Slot>
 						<Button
 							label={l`Back`}
 							onClick={() => handle.close()}
@@ -110,48 +81,53 @@ export function DraftsListDialog({
 								<Trans>Back</Trans>
 							</ButtonText>
 						</Button>
-					</Sheet.Header.Slot>
-					<Sheet.Header.Content>
-						<Sheet.Header.TitleText>
+					</Dialog.Header.Slot>
+					<Dialog.Header.Content>
+						<Dialog.Header.TitleText>
 							<Trans>Drafts</Trans>
-						</Sheet.Header.TitleText>
-					</Sheet.Header.Content>
-					<Sheet.Header.Slot />
-				</Sheet.Header.Outer>
-				<div ref={scrollRef} className={styles.list}>
-					{isLoading ? (
-						<div className={styles.loading}>
-							<CenteredSpinner label={l`Loading drafts`} size="lg" />
-						</div>
-					) : drafts.length === 0 ? (
-						<div className={styles.empty}>
-							<span className={styles.emptyIcon}>
-								<PageXIcon width={48} height={48} fill="currentColor" />
-							</span>
-							<Text size="md" weight="medium" color="textContrastHigh" align="center">
-								<Trans>No drafts yet</Trans>
-							</Text>
-						</div>
-					) : (
-						<div className={styles.listContent}>
-							{drafts.map((item) => (
-								<div key={item.id} className={styles.itemWrap}>
-									<DraftItem draft={item} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
-								</div>
-							))}
-							{drafts.length > 5 && (
-								<div className={styles.footerNote}>
-									<Text align="center" color="textContrastMedium">
-										<Trans>So many thoughts, you should post one</Trans>
-									</Text>
-								</div>
-							)}
-							{isFetchingNextPage && <CenteredSpinner label={l`Loading drafts`} size="lg" />}
-							<div ref={sentinelRef} aria-hidden />
+						</Dialog.Header.TitleText>
+					</Dialog.Header.Content>
+					<Dialog.Header.Slot />
+				</Dialog.Header.Outer>
+				<Dialog.List
+					className={styles.list}
+					data={drafts}
+					keyExtractor={(draft) => draft.id}
+					renderItem={(draft) => (
+						<div className={styles.itemWrap}>
+							<DraftItem draft={draft} onSelect={handleSelectDraft} onDelete={handleDeleteDraft} />
 						</div>
 					)}
-				</div>
-			</Sheet.Popup>
-		</Sheet.Root>
+					onEndReached={onEndReached}
+					isFetchingNextPage={isFetchingNextPage}
+					loadingLabel={l`Loading drafts`}
+					ListEmptyComponent={
+						isLoading ? (
+							<div className={styles.loading}>
+								<CenteredSpinner label={l`Loading drafts`} size="lg" />
+							</div>
+						) : (
+							<div className={styles.empty}>
+								<span className={styles.emptyIcon}>
+									<PageXIcon width={48} height={48} fill="currentColor" />
+								</span>
+								<Text size="md" weight="medium" color="textContrastHigh" align="center">
+									<Trans>No drafts yet</Trans>
+								</Text>
+							</div>
+						)
+					}
+					ListFooterComponent={
+						drafts.length > 5 ? (
+							<div className={styles.footerNote}>
+								<Text align="center" color="textContrastMedium">
+									<Trans>So many thoughts, you should post one</Trans>
+								</Text>
+							</div>
+						) : null
+					}
+				/>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }

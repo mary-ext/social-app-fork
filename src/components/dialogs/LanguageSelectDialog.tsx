@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { FlatList, View, type ViewStyle } from 'react-native';
+import { View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
@@ -17,7 +17,7 @@ import { SearchInput } from '#/components/forms/SearchInput';
 import * as Toggle from '#/components/forms/Toggle';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Text } from '#/components/Typography';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 type WebViewStyle = ViewStyle & {
 	display?: 'contents';
@@ -27,7 +27,7 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 	return style;
 };
 
-type FlatListItem =
+type ListEntry =
 	| {
 			type: 'header';
 			label: string;
@@ -46,7 +46,7 @@ export function LanguageSelectDialog({
 	onSelectLanguages,
 	maxLanguages,
 }: {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	titleText?: React.ReactNode;
 	subtitleText?: React.ReactNode;
 	/** Defaults to the primary language */
@@ -61,8 +61,8 @@ export function LanguageSelectDialog({
 	);
 
 	return (
-		<Sheet.Root handle={handle}>
-			<Sheet.Popup label={l`Choose languages`}>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup scroll="body" label={l`Choose languages`}>
 				<ErrorBoundary renderError={renderErrorBoundary}>
 					<DialogInner
 						handle={handle}
@@ -73,8 +73,8 @@ export function LanguageSelectDialog({
 						maxLanguages={maxLanguages}
 					/>
 				</ErrorBoundary>
-			</Sheet.Popup>
-		</Sheet.Root>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
@@ -86,7 +86,7 @@ export function DialogInner({
 	onSelectLanguages,
 	maxLanguages,
 }: {
-	handle: Sheet.SheetHandle;
+	handle: Dialog.DialogHandle;
 	titleText?: React.ReactNode;
 	subtitleText?: React.ReactNode;
 	currentLanguages?: string[];
@@ -226,7 +226,7 @@ export function DialogInner({
 
 	const isDisplayedLanguagesEmpty = displayedLanguages.all.length === 0;
 
-	const flatListData: FlatListItem[] = [
+	const listData: ListEntry[] = [
 		...(isCheckedRecentEmpty ? [{ type: 'header' as const, label: l`Recently used` }] : []),
 		...displayedLanguages.checkedRecent.map((lang) => ({
 			type: 'item' as const,
@@ -240,7 +240,7 @@ export function DialogInner({
 		...displayedLanguages.all.map((lang) => ({ type: 'item' as const, lang })),
 	];
 
-	const numItems = flatListData.length;
+	const numItems = listData.length;
 
 	return (
 		<Toggle.Group
@@ -252,16 +252,14 @@ export function DialogInner({
 			style={[webViewStyle(a.contents)]}
 		>
 			{listHeader}
-			<FlatList
-				data={flatListData}
-				contentContainerStyle={[a.gap_0, padding]}
-				style={[a.flex_1, { minHeight: 0 }]}
-				renderItem={({ item, index }: { item: FlatListItem; index: number }) => {
+			<Dialog.List
+				data={listData}
+				keyExtractor={(item) => (item.type === 'header' ? `header-${item.label}` : item.lang.code2)}
+				renderItem={(item, index) => {
 					if (item.type === 'header') {
 						return (
 							<Text
-								key={index}
-								style={[a.px_0, a.py_md, a.font_semi_bold, a.text_xs, t.atoms.text_contrast_low, a.pt_3xl]}
+								style={[padding, a.py_md, a.font_semi_bold, a.text_xs, t.atoms.text_contrast_low, a.pt_3xl]}
 							>
 								{item.label}
 							</Text>
@@ -274,10 +272,9 @@ export function DialogInner({
 
 					return (
 						<Toggle.Item
-							key={lang.code2}
 							name={lang.code2}
 							label={name}
-							style={[t.atoms.border_contrast_low, !isLastItem && a.border_b, a.rounded_0, a.px_0, a.py_md]}
+							style={[t.atoms.border_contrast_low, !isLastItem && a.border_b, a.rounded_0, padding, a.py_md]}
 						>
 							<Toggle.LabelText style={[a.flex_1]}>{name}</Toggle.LabelText>
 							<Toggle.Checkbox />
@@ -296,7 +293,7 @@ export function DialogInner({
 	);
 }
 
-function DialogError({ handle, details }: { handle: Sheet.SheetHandle; details?: string }) {
+function DialogError({ handle, details }: { handle: Dialog.DialogHandle; details?: string }) {
 	const { t: l } = useLingui();
 
 	return (

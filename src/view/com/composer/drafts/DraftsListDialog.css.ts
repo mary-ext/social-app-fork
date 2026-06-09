@@ -15,10 +15,6 @@ export const list = style({
 	},
 });
 
-export const listContent = style({
-	paddingBottom: space.xl,
-});
-
 // item gutters tighten on narrow viewports, matching the old `gtPhone` breakpoint.
 export const itemWrap = style({
 	paddingInline: space.sm,

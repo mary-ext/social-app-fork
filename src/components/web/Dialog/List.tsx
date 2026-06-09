@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode, useEffect, useRef } from 'react';
+import { clsx } from 'clsx';
 
 import { CenteredSpinner } from '#/components/web/CenteredSpinner';
 import * as styles from '#/components/web/Dialog/Popup.css';
@@ -7,6 +8,8 @@ export type ListProps<ItemT> = {
 	data: readonly ItemT[];
 	keyExtractor: (item: ItemT, index: number) => string;
 	renderItem: (item: ItemT, index: number) => ReactNode;
+	/** Extra classes on the scroll region (e.g. a min-height floor, content padding, or a tinted surface). */
+	className?: string;
 	/**
 	 * Fired when the end of the list scrolls into view, to load the next page. Detected with an
 	 * `IntersectionObserver` whose root is the scroll region (no effect unless `data` is non-empty).
@@ -14,10 +17,10 @@ export type ListProps<ItemT> = {
 	onEndReached?: () => void;
 	/** Distance (px) from the bottom edge at which `onEndReached` fires — i.e. the observer's `rootMargin`. */
 	onEndReachedMargin?: number;
-	/** Shown (as a centered spinner) below the items while the next page loads. */
+	/** Shown (as a centered spinner) below the items while the next page loads. Needs `loadingLabel`. */
 	isFetchingNextPage?: boolean;
-	/** Accessible label for the next-page spinner. */
-	loadingLabel: string;
+	/** Accessible label for the next-page spinner; pass it alongside `onEndReached`/`isFetchingNextPage`. */
+	loadingLabel?: string;
 	/** Rendered in place of the items when `data` is empty (e.g. an empty/loading/error state). */
 	ListEmptyComponent?: ReactNode;
 	/** Rendered after the items, scrolling with them (e.g. an end-of-list note). Hidden while empty. */
@@ -34,6 +37,7 @@ export function List<ItemT>({
 	data,
 	keyExtractor,
 	renderItem,
+	className,
 	onEndReached,
 	onEndReachedMargin = 600,
 	isFetchingNextPage,
@@ -74,7 +78,7 @@ export function List<ItemT>({
 	}, [isEmpty, onEndReachedMargin, data.length]);
 
 	return (
-		<div ref={scrollRef} className={styles.body}>
+		<div ref={scrollRef} className={clsx(styles.body, className)}>
 			{isEmpty ? (
 				ListEmptyComponent
 			) : (
@@ -83,7 +87,7 @@ export function List<ItemT>({
 						<Fragment key={keyExtractor(item, index)}>{renderItem(item, index)}</Fragment>
 					))}
 					{ListFooterComponent}
-					{isFetchingNextPage && <CenteredSpinner label={loadingLabel} size="lg" />}
+					{isFetchingNextPage && loadingLabel && <CenteredSpinner label={loadingLabel} size="lg" />}
 					<div ref={sentinelRef} aria-hidden />
 				</>
 			)}
