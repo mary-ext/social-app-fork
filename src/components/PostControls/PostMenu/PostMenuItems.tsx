@@ -68,6 +68,8 @@ import {
 import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash';
 import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning';
 import { Loader } from '#/components/Loader';
+import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
+import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Toast from '#/components/Toast';
 import { useDialogHandle } from '#/components/web/Dialog';
@@ -111,6 +113,7 @@ let PostMenuItems = ({
 	const navigation = useNavigation<NavigationProp>();
 	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
 	const blockPromptControl = Prompt.usePromptHandle();
+	const mutePromptControl = Prompt.usePromptHandle();
 	const reportDialogControl = useReportDialogControl();
 	const deletePromptControl = Prompt.usePromptHandle();
 	const hidePromptControl = Prompt.usePromptHandle();
@@ -540,7 +543,7 @@ let PostMenuItems = ({
 								<>
 									<Menu.Item
 										label={postAuthor.viewer?.muted ? l`Unmute account` : l`Mute account`}
-										onClick={() => void onMuteAuthor()}
+										onClick={() => mutePromptControl.open(null)}
 									>
 										<Menu.ItemText>
 											{postAuthor.viewer?.muted ? l`Unmute account` : l`Mute account`}
@@ -625,13 +628,16 @@ let PostMenuItems = ({
 				onConfirm={() => void onToggleReplyVisibility()}
 				confirmButtonCta={l`Yes, hide`}
 			/>
-			<Prompt.Basic
+			<BlockAccountPrompt
 				handle={blockPromptControl}
-				title={l`Block Account?`}
-				description={l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
+				isBlocking={!!postAuthor.viewer?.blocking}
+				isLabeler={!!postAuthor.associated?.labeler}
 				onConfirm={() => void onBlockAuthor()}
-				confirmButtonCta={l`Block`}
-				confirmButtonColor="negative"
+			/>
+			<MuteAccountPrompt
+				handle={mutePromptControl}
+				isMuted={!!postAuthor.viewer?.muted}
+				onConfirm={() => void onMuteAuthor()}
 			/>
 		</>
 	);

@@ -1,31 +1,47 @@
 import { style } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens.css';
+import { components } from '#/styles/layers.css';
+import { recipe } from '#/styles/recipe';
+import { roundToDevicePx } from '#/styles/round';
+import { fontSize, lineHeight } from '#/styles/tokens.css';
 
-export const popup = style({
-	backgroundColor: vars.palette.contrast_0,
-	border: `1px solid ${vars.palette.contrast_200}`,
-	borderRadius: 20,
-	boxShadow: vars.shadow.lg,
-	boxSizing: 'border-box',
-	maxWidth: 320,
-	padding: 24,
-	position: 'relative',
-	transitionDuration: '200ms',
-	transitionProperty: 'opacity, transform',
-	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-	width: '100%',
-	selectors: {
-		'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+export const popup = recipe(
+	{
+		base: {
+			backgroundColor: vars.palette.contrast_0,
+			border: `1px solid ${vars.palette.contrast_200}`,
+			borderRadius: 20,
+			boxShadow: vars.shadow.lg,
+			boxSizing: 'border-box',
+			padding: 24,
+			position: 'relative',
+			transitionDuration: '200ms',
+			transitionProperty: 'opacity, transform',
+			transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+			width: '100%',
+			selectors: {
+				'&[data-starting-style], &[data-ending-style]': { opacity: 0, transform: 'scale(0.95)' },
+			},
+		},
+		variants: {
+			// `wide` gives the icon-row explainer enough room to keep each row to one or two lines.
+			size: {
+				default: { maxWidth: 320 },
+				wide: { maxWidth: 420 },
+			},
+		},
+		defaultVariants: { size: 'default' },
 	},
-});
+	{ debugId: 'promptPopup', layer: components },
+);
 
 export const title = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize._2xl,
 	fontWeight: 600,
-	lineHeight: 1.3,
+	lineHeight: roundToDevicePx(calc.multiply(fontSize._2xl, lineHeight.snug)),
 	margin: 0,
 	paddingBottom: 4,
 });
@@ -33,13 +49,39 @@ export const title = style({
 export const description = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: 1.3,
+	lineHeight: roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug)),
 	margin: 0,
 	paddingBottom: 16,
 });
 
 export const content = style({
 	paddingBottom: 8,
+});
+
+export const rows = style({
+	display: 'flex',
+	flexDirection: 'column',
+	gap: 14,
+	paddingBottom: 16,
+});
+
+export const row = style({
+	alignItems: 'flex-start',
+	display: 'flex',
+	gap: 12,
+});
+
+export const rowIcon = style({
+	color: vars.palette.contrast_500,
+	flexShrink: 0,
+	lineHeight: 0,
+});
+
+export const rowText = style({
+	color: vars.palette.contrast_900,
+	fontSize: fontSize.md,
+	lineHeight: roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug)),
+	paddingBlock: 1,
 });
 
 export const actions = style({

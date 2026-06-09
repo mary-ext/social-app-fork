@@ -25,8 +25,18 @@ export function usePromptHandle<T = void>(): PromptHandle<T> {
 	return handle;
 }
 
+type Size = 'default' | 'wide';
+
 /** A confirmation dialog (no backdrop/Escape dismissal — an explicit action is required). */
-export function Outer({ children, handle }: { children: ReactNode; handle: PromptHandle }) {
+export function Outer({
+	children,
+	handle,
+	size = 'default',
+}: {
+	children: ReactNode;
+	handle: PromptHandle;
+	size?: Size;
+}) {
 	const id = useId();
 	const registerOpen = useRegisterDialog(id, () => handle.close());
 	return (
@@ -36,7 +46,7 @@ export function Outer({ children, handle }: { children: ReactNode; handle: Promp
 				    the prompt is rendered inside another open dialog like the composer Sheet). */}
 				<AlertDialog.Backdrop className={dialogStyles.backdrop} forceRender />
 				<AlertDialog.Viewport className={dialogStyles.viewport}>
-					<AlertDialog.Popup className={styles.popup}>{children}</AlertDialog.Popup>
+					<AlertDialog.Popup className={styles.popup({ size })}>{children}</AlertDialog.Popup>
 				</AlertDialog.Viewport>
 			</AlertDialog.Portal>
 		</AlertDialog.Root>
@@ -54,6 +64,23 @@ export function TitleText({ children }: { children: ReactNode }) {
 
 export function DescriptionText({ children }: { children: ReactNode }) {
 	return <AlertDialog.Description className={styles.description}>{children}</AlertDialog.Description>;
+}
+
+/** A vertical list of icon + text rows explaining what an action does (the "here's what happens" body). */
+export function Rows({ children }: { children: ReactNode }) {
+	return <div className={styles.rows}>{children}</div>;
+}
+
+/** A single explainer row: a muted leading icon beside its description. */
+export function Row({ children, icon: Icon }: { children: ReactNode; icon: ComponentType<IconProps> }) {
+	return (
+		<div className={styles.row}>
+			<span className={styles.rowIcon}>
+				<Icon width={22} height={22} fill="currentColor" />
+			</span>
+			<span className={styles.rowText}>{children}</span>
+		</div>
+	);
 }
 
 export function Actions({ children }: { children: ReactNode }) {

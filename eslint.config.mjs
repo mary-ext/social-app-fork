@@ -88,6 +88,7 @@ export default defineConfig(
 						'P',
 						'Admonition',
 						'Admonition.Admonition',
+						'Prompt.Row',
 						'Toast.Action',
 						'Toggle.Action',
 						'AgeAssuranceAdmonition',

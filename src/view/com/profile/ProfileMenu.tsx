@@ -41,6 +41,8 @@ import {
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker';
 import { StarterPack } from '#/components/icons/StarterPack';
+import { BlockAccountPrompt } from '#/components/moderation/block-account-prompt';
+import { MuteAccountPrompt } from '#/components/moderation/mute-account-prompt';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
@@ -87,6 +89,7 @@ let ProfileMenu = ({
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileMenu');
 
 	const blockPromptHandle = WebPrompt.usePromptHandle();
+	const mutePromptHandle = WebPrompt.usePromptHandle();
 	const loggedOutWarningPromptHandle = WebPrompt.usePromptHandle();
 	const goLiveDialogControl = useDialogControl();
 	const goLiveDisabledDialogControl = useDialogControl();
@@ -344,7 +347,7 @@ let ProfileMenu = ({
 										{!profile.viewer?.blocking && !profile.viewer?.mutedByList && (
 											<Menu.Item
 												label={profile.viewer?.muted ? l`Unmute account` : l`Mute account`}
-												onClick={onPressMuteAccount}
+												onClick={() => mutePromptHandle.open(null)}
 											>
 												<Menu.ItemText>
 													{profile.viewer?.muted ? (
@@ -418,19 +421,16 @@ let ProfileMenu = ({
 					} as unknown as Parameters<typeof ReportDialog>[0]['subject']
 				}
 			/>
-			<WebPrompt.Basic
+			<BlockAccountPrompt
 				handle={blockPromptHandle}
-				title={profile.viewer?.blocking ? l`Unblock Account?` : l`Block Account?`}
-				description={
-					profile.viewer?.blocking
-						? l`The account will be able to interact with you after unblocking.`
-						: profile.associated?.labeler
-							? l`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`
-							: l`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`
-				}
+				isBlocking={!!profile.viewer?.blocking}
+				isLabeler={!!profile.associated?.labeler}
 				onConfirm={blockAccount}
-				confirmButtonCta={profile.viewer?.blocking ? l`Unblock` : l`Block`}
-				confirmButtonColor={profile.viewer?.blocking ? undefined : 'negative'}
+			/>
+			<MuteAccountPrompt
+				handle={mutePromptHandle}
+				isMuted={!!profile.viewer?.muted}
+				onConfirm={onPressMuteAccount}
 			/>
 			<WebPrompt.Basic
 				handle={loggedOutWarningPromptHandle}
