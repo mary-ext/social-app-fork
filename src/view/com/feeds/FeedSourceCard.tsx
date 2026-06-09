@@ -18,7 +18,6 @@ import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { atoms as a, useTheme } from '#/alf';
 
 import { Link } from '#/components/Link';
-import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
@@ -28,10 +27,7 @@ type FeedSourceCardProps = {
 	feedUri: string;
 	feedData?: $type.enforce<AppBskyFeedDefs.GeneratorView> | $type.enforce<AppBskyGraphDefs.ListView>;
 	style?: StyleProp<ViewStyle>;
-	showSaveBtn?: boolean;
-	showDescription?: boolean;
 	showLikes?: boolean;
-	pinOnSave?: boolean;
 	showMinimalPlaceholder?: boolean;
 	hideTopBorder?: boolean;
 	link?: boolean;
@@ -63,7 +59,6 @@ export function FeedSourceCardLoaded({
 	feedUri,
 	feed,
 	style,
-	showDescription = false,
 	showLikes = false,
 	showMinimalPlaceholder,
 	hideTopBorder,
@@ -73,7 +68,6 @@ export function FeedSourceCardLoaded({
 	feedUri: string;
 	feed?: FeedSourceInfo;
 	style?: StyleProp<ViewStyle>;
-	showDescription?: boolean;
 	showLikes?: boolean;
 	showMinimalPlaceholder?: boolean;
 	hideTopBorder?: boolean;
@@ -127,13 +121,6 @@ export function FeedSourceCardLoaded({
 					</Text>
 				</View>
 			</View>
-			{showDescription && feed.description ? (
-				<RichText
-					style={[t.atoms.text_contrast_high, a.flex_1, a.flex_wrap]}
-					value={feed.description}
-					numberOfLines={3}
-				/>
-			) : null}
 			{showLikes && feed.type === 'feed' ? (
 				<Text style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium, a.leading_snug]}>
 					<Trans>
