@@ -1719,21 +1719,8 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:443
+#: src/components/FeedInterstitials.tsx:424
 msgid "Browse more accounts"
-msgstr ""
-
-#: src/components/FeedInterstitials.tsx:550
-msgid "Browse more feeds on the Explore page"
-msgstr ""
-
-#: src/components/FeedInterstitials.tsx:529
-#: src/components/FeedInterstitials.tsx:533
-msgid "Browse more suggestions"
-msgstr ""
-
-#: src/components/FeedInterstitials.tsx:560
-msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:98
@@ -2759,7 +2746,7 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:308
+#: src/components/FeedInterstitials.tsx:289
 msgid "Dismiss this suggestion"
 msgstr ""
 
@@ -7363,12 +7350,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:403
-#: src/components/FeedInterstitials.tsx:457
+#: src/components/FeedInterstitials.tsx:384
+#: src/components/FeedInterstitials.tsx:438
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:387
+#: src/components/FeedInterstitials.tsx:368
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -7873,10 +7860,6 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:518
-msgid "Some other feeds you might like"
-msgstr ""
-
 #: src/components/WhoCanReply.tsx:66
 msgid "Some people can reply"
 msgstr ""
@@ -8131,7 +8114,7 @@ msgstr "Suggested"
 msgid "Suggested accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:384
+#: src/components/FeedInterstitials.tsx:365
 msgid "Suggested for you"
 msgstr ""
 

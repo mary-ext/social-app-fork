@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, View, type ViewStyle } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useNavigation } from '@react-navigation/native';
 
 import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from '#/lib/animations/reanimatedCompat';
-import type { NavigationProp } from '#/lib/routes/types';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useGetPopularFeedsQuery } from '#/state/queries/feed';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
 import { useGetSuggestedUsersForDiscoverQuery } from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery';
@@ -22,11 +19,8 @@ import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf'
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useDialogControl } from '#/components/Dialog';
-import * as FeedCard from '#/components/FeedCard';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRight } from '#/components/icons/Arrow';
-import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag';
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times';
-import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
 import { Text } from '#/components/Typography';
@@ -84,19 +78,6 @@ export function SuggestedFollowPlaceholder() {
 
 				<ProfileCard.FollowButtonPlaceholder />
 			</ProfileCard.Outer>
-		</CardOuter>
-	);
-}
-
-export function SuggestedFeedsCardPlaceholder() {
-	return (
-		<CardOuter style={[a.gap_sm]}>
-			<FeedCard.Header>
-				<FeedCard.AvatarPlaceholder />
-				<FeedCard.TitleAndBylinePlaceholder creator />
-			</FeedCard.Header>
-
-			<FeedCard.DescriptionPlaceholder />
 		</CardOuter>
 	);
 }
@@ -457,118 +438,5 @@ function SeeMoreSuggestedProfilesCard({ onPress }: { onPress: () => void }) {
 				<Trans>See more</Trans>
 			</ButtonText>
 		</Button>
-	);
-}
-
-const numFeedsToDisplay = 3;
-export function SuggestedFeeds() {
-	const t = useTheme();
-	const { t: l } = useLingui();
-	const { data, isLoading, error } = useGetPopularFeedsQuery({
-		limit: numFeedsToDisplay,
-	});
-	const navigation = useNavigation<NavigationProp>();
-	const { gtMobile } = useBreakpoints();
-
-	const feeds = useMemo(() => {
-		const items: AppBskyFeedDefs.GeneratorView[] = [];
-
-		if (!data) return items;
-
-		for (const page of data.pages) {
-			for (const feed of page.feeds) {
-				items.push(feed);
-			}
-		}
-
-		return items;
-	}, [data]);
-
-	const content = isLoading ? (
-		Array(numFeedsToDisplay)
-			.fill(0)
-			.map((_, i) => <SuggestedFeedsCardPlaceholder key={i} />)
-	) : error || !feeds ? null : (
-		<>
-			{feeds.slice(0, numFeedsToDisplay).map((feed) => (
-				<FeedCard.Link key={feed.uri} view={feed} onPress={() => {}}>
-					{({ hovered, pressed }) => (
-						<CardOuter style={[(hovered || pressed) && t.atoms.border_contrast_high]}>
-							<FeedCard.Outer>
-								<FeedCard.Header>
-									<FeedCard.Avatar src={feed.avatar} />
-									<FeedCard.TitleAndByline
-										title={feed.displayName}
-										creator={feed.creator as AnyProfileView}
-									/>
-								</FeedCard.Header>
-								<FeedCard.Description description={feed.description} numberOfLines={3} />
-							</FeedCard.Outer>
-						</CardOuter>
-					)}
-				</FeedCard.Link>
-			))}
-		</>
-	);
-
-	return error ? null : (
-		<View style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
-			<View style={[a.pt_2xl, a.px_lg, a.flex_row, a.pb_xs]}>
-				<Text style={[a.flex_1, a.text_lg, a.font_semi_bold, t.atoms.text_contrast_medium]}>
-					<Trans>Some other feeds you might like</Trans>
-				</Text>
-				<Hashtag fill={t.atoms.text_contrast_low.color} />
-			</View>
-
-			{gtMobile ? (
-				<View style={[a.flex_1, a.px_lg, a.pt_md, a.pb_xl, a.gap_md]}>
-					{content}
-
-					<View style={[a.flex_row, a.justify_end, a.align_center, a.pt_xs, a.gap_md]}>
-						<InlineLinkText
-							label={l`Browse more suggestions`}
-							to="/search"
-							style={[t.atoms.text_contrast_medium]}
-						>
-							<Trans>Browse more suggestions</Trans>
-						</InlineLinkText>
-						<ArrowRight size="sm" fill={t.atoms.text_contrast_medium.color} />
-					</View>
-				</View>
-			) : (
-				<BlockDrawerGesture>
-					<ScrollView
-						horizontal
-						showsHorizontalScrollIndicator={false}
-						snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-						decelerationRate="fast"
-					>
-						<View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
-							{content}
-
-							<Button
-								label={l`Browse more feeds on the Explore page`}
-								onPress={() => {
-									navigation.navigate('SearchTab');
-								}}
-								style={[a.flex_col]}
-							>
-								<CardOuter>
-									<View style={[a.flex_1, a.justify_center]}>
-										<View style={[a.flex_row, a.px_lg]}>
-											<Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-												<Trans>Browse more suggestions on the Explore page</Trans>
-											</Text>
-
-											<ArrowRight size="xl" />
-										</View>
-									</View>
-								</CardOuter>
-							</Button>
-						</View>
-					</ScrollView>
-				</BlockDrawerGesture>
-			)}
-		</View>
 	);
 }
