@@ -139,6 +139,9 @@ export default defineConfig(({ envMode }) => {
 					config.plugins.push(
 						new RsdoctorRspackPlugin({
 							disableClientServer: !process.stdout.isTTY,
+							// the loader probe recurses to a stack overflow on vanilla-extract's virtual
+							// `extracted.js` modules; we only want bundle/chunk analysis anyway.
+							features: { bundle: true, loader: false, plugins: true, resolver: false, treeShaking: false },
 						}),
 					);
 				}
