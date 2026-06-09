@@ -10,7 +10,6 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
@@ -21,6 +20,7 @@ import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 type WebViewStyle = Omit<ViewStyle, 'position' | 'zIndex'> & {
 	position?: 'static';
@@ -180,7 +180,7 @@ export function AvatarStack({
 									avatar={item.profile.avatar}
 									type={item.profile.associated?.labeler ? 'labeler' : 'user'}
 									moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
-									style={[a.absolute, a.inset_0]}
+									style={{ inset: 0, position: 'absolute' }}
 								/>
 							) : (
 								<MediaInsetBorder style={[a.rounded_full]} />

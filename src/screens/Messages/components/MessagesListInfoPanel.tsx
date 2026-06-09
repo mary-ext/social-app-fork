@@ -10,8 +10,6 @@ import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
@@ -20,6 +18,7 @@ import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'direct' }> }) {
 	const navigation = useNavigation<NavigationProp>();

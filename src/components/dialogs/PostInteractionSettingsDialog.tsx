@@ -26,8 +26,6 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import * as styles from '#/components/dialogs/PostInteractionSettingsDialog.css';
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -41,6 +39,7 @@ import * as WebDialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 import { Spinner } from '#/components/web/Spinner';
 import { Text } from '#/components/web/Text';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export type PostInteractionSettingsFormProps = {
 	canSave?: boolean;

@@ -26,8 +26,6 @@ import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 import type { PostSource } from '#/state/unstable-post-source';
 
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
-
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 
@@ -53,6 +51,7 @@ import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';

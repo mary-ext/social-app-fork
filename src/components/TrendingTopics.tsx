@@ -7,7 +7,7 @@ import { useLingui } from '@lingui/react/macro';
 // import {feedUriToHref} from '#/lib/strings/url-helpers'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-// import {UserAvatar} from '#/view/com/util/UserAvatar'
+// import {UserAvatar} from '#/components/web/UserAvatar'
 import type { TrendingTopic } from '#/state/queries/trending/useTrendingTopics';
 
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';

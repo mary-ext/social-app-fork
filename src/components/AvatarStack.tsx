@@ -7,9 +7,9 @@ import { useProfilesQuery } from '#/state/queries/profile';
 
 import { logger } from '#/logger';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
+
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export function AvatarStack({
 	profiles,

@@ -24,7 +24,6 @@ import { useCloseAllActiveElements } from '#/state/util';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { PressableWithHover } from '#/view/com/util/PressableWithHover';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
 
 import { atoms as a, tokens, useBreakpoints, useLayoutBreakpoints, useTheme } from '#/alf';
@@ -74,6 +73,7 @@ import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH } from '#/components/Layout/c
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';

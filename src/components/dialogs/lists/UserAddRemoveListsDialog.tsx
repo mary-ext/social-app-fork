@@ -17,7 +17,6 @@ import {
 } from '#/state/queries/list-memberships';
 
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -29,6 +28,7 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export function UserAddRemoveListsDialog({
 	control,

@@ -15,11 +15,11 @@ import { emitSoftReset } from '#/state/events';
 import { TextLink } from '#/view/com/util/Link';
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { Text } from '#/view/com/util/text/Text';
-import { UserAvatar, type UserAvatarType } from '#/view/com/util/UserAvatar';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Layout from '#/components/Layout';
+import { UserAvatar, type UserAvatarType } from '#/components/web/UserAvatar';
 
 export function ProfileSubpageHeader({
 	isLoading,

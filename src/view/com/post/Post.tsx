@@ -21,7 +21,6 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, select, useTheme } from '#/alf';
 
@@ -36,6 +35,7 @@ import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import * as css from './Post.css';
 

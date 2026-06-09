@@ -23,7 +23,7 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { EditableAvatar } from '#/components/web/EditableAvatar';
+import { EditableUserAvatar } from '#/components/web/EditableUserAvatar';
 import * as Prompt from '#/components/web/Prompt';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
@@ -360,7 +360,7 @@ function DialogInner({
 							<Trans>List avatar</Trans>
 						</TextField.LabelText>
 						<div className={styles.avatarWrap}>
-							<EditableAvatar
+							<EditableUserAvatar
 								type="list"
 								size={80}
 								avatar={listAvatar}

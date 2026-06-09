@@ -29,8 +29,6 @@ import {
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
@@ -42,6 +40,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

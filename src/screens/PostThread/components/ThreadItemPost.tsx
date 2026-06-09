@@ -17,7 +17,6 @@ import { useSession } from '#/state/session';
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
 import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 
@@ -38,6 +37,7 @@ import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

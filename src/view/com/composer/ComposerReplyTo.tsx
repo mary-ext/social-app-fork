@@ -8,13 +8,12 @@ import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { QuoteEmbed } from '#/components/Post/Embed';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { Image } from '#/shims/image';
 import { parseEmbed } from '#/types/embed';

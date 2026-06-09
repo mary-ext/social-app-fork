@@ -7,8 +7,6 @@ import { useLingui } from '@lingui/react/macro';
 import { niceDate } from '#/lib/strings/time';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
 
 import { ButtonIcon, ButtonText } from '#/components/Button';
@@ -23,6 +21,7 @@ import { StandardSiteMetaRow } from '#/components/Post/Embed/StandardSiteEmbed/S
 import { StandardSiteThemeProvider } from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider';
 import { isStandardSitePublicationEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { Image } from '#/shims/image';
 
@@ -400,7 +399,7 @@ function PublicationIcon({
 				type="labeler"
 				size={size}
 				avatar={view.source.icon}
-				extraAviStyle={PUBLICATION_AVATAR_STYLE}
+				style={PUBLICATION_AVATAR_STYLE}
 			/>
 			<MediaInsetBorder opaque style={[a.rounded_sm]} />
 		</View>

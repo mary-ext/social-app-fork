@@ -19,7 +19,6 @@ import { useShellLayout } from '#/state/shell/shell-layout';
 import { useCloseAllActiveElements } from '#/state/util';
 
 import { Link } from '#/view/com/util/Link';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { Logo } from '#/view/icons/Logo';
 import { Logotype } from '#/view/icons/Logotype';
 
@@ -46,6 +45,7 @@ import {
 	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { styles } from './BottomBarStyles';
 

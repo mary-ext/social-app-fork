@@ -7,13 +7,12 @@ import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBor
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import { transparentifyColor } from '#/alf/util/colorGeneration';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 

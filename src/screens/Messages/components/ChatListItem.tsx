@@ -26,7 +26,6 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import * as tokens from '#/alf/tokens';
@@ -50,6 +49,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useIsWithinSplitView } from './splitView/context';
 

@@ -9,7 +9,6 @@ import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { formatCount } from '#/view/com/util/numeric/format';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 import { BLUE_HUE } from '#/alf/util/colorGeneration';
@@ -23,6 +22,7 @@ import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import * as Hider from '#/components/moderation/Hider';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { Image } from '#/shims/image';
 import { LinearGradient } from '#/shims/linear-gradient';

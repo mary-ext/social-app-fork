@@ -17,8 +17,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
@@ -29,6 +27,7 @@ import * as Prompt from '#/components/Prompt';
 import { RichText, type RichTextProps } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from './icons/Trash';
 

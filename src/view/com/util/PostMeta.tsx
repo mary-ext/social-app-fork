@@ -21,11 +21,11 @@ import { WebOnlyInlineLinkText } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 
 import { TimeElapsed } from './TimeElapsed';
-import { PreviewableUserAvatar } from './UserAvatar';
 
 type WebTextStyle = TextStyle & {
 	whiteSpace?: 'nowrap';

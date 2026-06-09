@@ -15,7 +15,6 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
 
 import { atoms as a } from '#/alf';
@@ -26,6 +25,7 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export function SearchHistory({
 	searchHistory,

@@ -11,11 +11,10 @@ import {
 
 import { useSession } from '#/state/session';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 type WebViewStyle = ViewStyle & {
 	transition?: string;

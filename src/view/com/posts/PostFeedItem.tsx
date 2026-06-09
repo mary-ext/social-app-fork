@@ -26,7 +26,6 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, select, useTheme } from '#/alf';
 
@@ -44,6 +43,7 @@ import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
 import { RichText } from '#/components/web/RichText';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

@@ -10,8 +10,6 @@ import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profi
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { BotBadge } from '#/components/BotBadge';
@@ -21,6 +19,7 @@ import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AutomationLabelSettings'>;
 export function AutomationLabelSettingsScreen({}: Props) {

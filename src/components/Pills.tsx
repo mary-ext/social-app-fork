@@ -6,8 +6,6 @@ import { Trans } from '@lingui/react/macro';
 import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button } from '#/components/Button';
@@ -16,6 +14,7 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export type AppModerationCause =
 	| ModerationCause

@@ -17,7 +17,6 @@ import { type SessionAccount, useSession } from '#/state/session';
 import { useSetDrawerOpen } from '#/state/shell';
 
 import { formatCount } from '#/view/com/util/numeric/format';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { NavSignInCard } from '#/view/shell/nav-sign-in-card';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -54,6 +53,7 @@ import {
 import { InlineLinkText } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { useKawaiiMode } from '#/storage/hooks/kawaii';
@@ -83,8 +83,6 @@ let DrawerProfileCard = ({
 			<UserAvatar
 				size={52}
 				avatar={profile?.avatar}
-				// See https://github.com/bluesky-social/social-app/pull/1801:
-				usePlainRNImage={true}
 				type={profile?.associated?.labeler ? 'labeler' : 'user'}
 				live={live}
 			/>

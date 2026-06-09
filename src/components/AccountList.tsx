@@ -9,8 +9,6 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession } from '#/state/session';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button } from '#/components/Button';
@@ -19,6 +17,7 @@ import { ChevronRight_Stroke2_Corner0_Rounded as ChevronIcon } from '#/component
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

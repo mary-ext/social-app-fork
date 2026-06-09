@@ -9,8 +9,6 @@ import { emitSoftReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
 import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
@@ -18,6 +16,7 @@ import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/comp
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 type WebViewStyle = ViewStyle & {
 	overflowY?: 'auto';

@@ -28,8 +28,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { useWizardState, type WizardStep } from '#/screens/StarterPack/Wizard/State';
 import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails';
 import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds';
@@ -45,6 +43,7 @@ import { Loader } from '#/components/Loader';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { Image } from '#/shims/image';
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';

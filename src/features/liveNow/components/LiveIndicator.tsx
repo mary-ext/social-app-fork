@@ -1,50 +1,27 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import type { CSSProperties } from 'react';
 import { Trans } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
-import { atoms as a, tokens, useTheme } from '#/alf';
+import { Text } from '#/components/web/Text';
 
-import { Text } from '#/components/Typography';
+import * as styles from '#/features/liveNow/components/LiveIndicator.css';
 
 export function LiveIndicator({
+	className,
 	size = 'small',
 	style,
 }: {
-	size?: 'tiny' | 'small' | 'large';
-	style?: StyleProp<ViewStyle>;
+	className?: string;
+	size?: 'large' | 'small' | 'tiny';
+	style?: CSSProperties;
 }) {
-	const t = useTheme();
-
-	const fontSize = {
-		tiny: { fontSize: 7, letterSpacing: tokens.TRACKING },
-		small: a.text_2xs,
-		large: a.text_xs,
-	}[size];
-
 	return (
-		<View
-			style={[
-				a.absolute,
-				a.w_full,
-				a.align_center,
-				a.pointer_events_none,
-				{ bottom: size === 'large' ? -8 : -5 },
-				style,
-			]}
-		>
-			<View
-				style={{
-					backgroundColor: t.palette.negative_500,
-					paddingVertical: size === 'large' ? 2 : 1,
-					paddingHorizontal: size === 'large' ? 4 : 3,
-					borderRadius: size === 'large' ? 5 : tokens.borderRadius.xs,
-				}}
-			>
-				<Text style={[a.text_center, a.font_semi_bold, fontSize, { color: t.palette.white }]}>
-					<Trans comment="Live status indicator on avatar. Should be extremely short, not much space for more than 4 characters">
-						LIVE
-					</Trans>
-				</Text>
-			</View>
-		</View>
+		<div className={clsx(styles.container({ size }), className)} style={style}>
+			<Text className={styles.pill({ size })} align="center" color="white" weight="semiBold">
+				<Trans comment="Live status indicator on avatar. Should be extremely short, not much space for more than 4 characters">
+					LIVE
+				</Trans>
+			</Text>
+		</div>
 	);
 }

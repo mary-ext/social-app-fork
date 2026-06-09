@@ -14,7 +14,6 @@ import { useMyLabelersQuery } from '#/state/queries/preferences';
 import { Logger } from '#/logger';
 
 import { CharProgress } from '#/view/com/composer/char-progress/CharProgress';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';
 
@@ -34,6 +33,7 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import { createStaticClick, InlineLinkText, Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useSubmitReportMutation } from './action';
 import {

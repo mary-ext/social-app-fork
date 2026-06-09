@@ -21,14 +21,6 @@ export const trigger = style({
 	},
 });
 
-export const image = style({
-	borderRadius: 'inherit',
-	display: 'block',
-	height: '100%',
-	objectFit: 'cover',
-	width: '100%',
-});
-
 /** Circular camera badge pinned to the bottom-right corner of the avatar. */
 export const editBadge = style({
 	alignItems: 'center',

@@ -19,8 +19,6 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import * as SettingsList from '#/screens/Settings/components/SettingsList';
 
 import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
@@ -54,6 +52,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';

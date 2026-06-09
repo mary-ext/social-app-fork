@@ -24,7 +24,6 @@ import { usePrefetchProfileQuery, useProfileQuery } from '#/state/queries/profil
 import { useSession } from '#/state/session';
 
 import { formatCount } from '#/view/com/util/numeric/format';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { ProfileHeaderHandle } from '#/screens/Profile/Header/Handle';
 
@@ -44,6 +43,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
 import { InlineLinkText } from '#/components/web/Link';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';

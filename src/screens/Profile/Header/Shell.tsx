@@ -14,7 +14,6 @@ import type { Shadow } from '#/state/cache/types';
 import { useSession } from '#/state/session';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 import { UserBanner } from '#/view/com/util/UserBanner';
 
 import { atoms as a, useTheme, utils } from '#/alf';
@@ -25,6 +24,7 @@ import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';

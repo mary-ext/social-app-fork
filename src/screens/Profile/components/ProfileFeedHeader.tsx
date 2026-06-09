@@ -21,7 +21,6 @@ import { useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { formatCount } from '#/view/com/util/numeric/format';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
@@ -49,6 +48,7 @@ import { ReportDialog, useReportDialogControl } from '#/components/moderation/Re
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 export function ProfileFeedHeaderSkeleton() {
 	const t = useTheme();

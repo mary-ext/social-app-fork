@@ -99,7 +99,6 @@ import { TextInput } from '#/view/com/composer/text-input/TextInput';
 import { ThreadgateBtn } from '#/view/com/composer/threadgate/ThreadgateBtn';
 import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog';
 import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
@@ -115,6 +114,7 @@ import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 import * as EmojiPicker from '#/components/web/EmojiPicker';
 import * as Prompt from '#/components/web/Prompt';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
@@ -1267,7 +1267,7 @@ let ComposerPost = memo(function ComposerPost({
 					avatar={currentProfile?.avatar}
 					size={42}
 					type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-					style={[a.mt_xs]}
+					style={{ marginTop: 4 }}
 				/>
 				<TextInput
 					ref={textInputRef}

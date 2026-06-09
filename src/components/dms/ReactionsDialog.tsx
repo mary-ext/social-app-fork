@@ -12,13 +12,13 @@ import { useSession } from '#/state/session';
 import type { SessionAccount } from '#/state/session/types';
 
 import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import * as Dialog from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 type Reaction = {
 	key: string;

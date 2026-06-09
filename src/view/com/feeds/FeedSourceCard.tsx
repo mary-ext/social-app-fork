@@ -14,13 +14,13 @@ import {
 } from '#/state/queries/feed';
 
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
-import { UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { Link } from '#/components/Link';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { MissingFeed } from './MissingFeed';
 

@@ -15,17 +15,17 @@ import {
 import { logger } from '#/logger';
 
 import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog';
-import { DefaultAvatar, type UserAvatarType } from '#/view/com/util/UserAvatar';
 
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as styles from '#/components/web/EditableAvatar.css';
+import * as styles from '#/components/web/EditableUserAvatar.css';
 import * as Menu from '#/components/web/Menu';
+import { UserAvatar, type UserAvatarType } from '#/components/web/UserAvatar';
 
 /** Web-native avatar editor: a menu-triggering avatar that crops uploads via {@link EditImageDialog}. */
-export function EditableAvatar({
+export function EditableUserAvatar({
 	type = 'user',
 	size,
 	avatar,
@@ -74,11 +74,13 @@ export function EditableAvatar({
 					className={styles.trigger}
 					style={assignInlineVars({ [styles.sizeVar]: `${size}px`, [styles.radiusVar]: radius })}
 				>
-					{avatar ? (
-						<img className={styles.image} src={avatar} alt="" />
-					) : (
-						<DefaultAvatar type={type} shape={circular ? 'circle' : 'square'} size={size} />
-					)}
+					<UserAvatar
+						type={type}
+						shape={circular ? 'circle' : 'square'}
+						size={size}
+						avatar={avatar}
+						noBorder
+					/>
 					<span className={styles.editBadge}>
 						<CameraFilledIcon width={14} height={14} fill="currentColor" />
 					</span>

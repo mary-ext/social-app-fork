@@ -19,8 +19,8 @@ import { useSimpleVerificationState } from '#/components/verification';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { EditableAvatar } from '#/components/web/EditableAvatar';
 import { EditableBanner } from '#/components/web/EditableBanner';
+import { EditableUserAvatar } from '#/components/web/EditableUserAvatar';
 import * as Prompt from '#/components/web/Prompt';
 import { Text } from '#/components/web/Text';
 import * as TextField from '#/components/web/TextField';
@@ -222,7 +222,7 @@ function DialogInner({
 				<div className={styles.bannerWrap}>
 					<EditableBanner banner={userBanner} onSelectNewBanner={onSelectNewBanner} />
 					<div className={styles.avatar}>
-						<EditableAvatar size={80} avatar={userAvatar} onSelectNewAvatar={onSelectNewAvatar} />
+						<EditableUserAvatar size={80} avatar={userAvatar} onSelectNewAvatar={onSelectNewAvatar} />
 					</div>
 				</div>
 

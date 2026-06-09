@@ -127,7 +127,13 @@ export function LiveStatus({
 							/>
 							<LiveIndicator
 								size="large"
-								style={[a.absolute, { top: tokens.space.lg, left: tokens.space.lg }, a.align_start]}
+								style={{
+									bottom: 'auto',
+									justifyContent: 'flex-start',
+									left: tokens.space.lg,
+									right: 'auto',
+									top: tokens.space.lg,
+								}}
 							/>
 						</View>
 					</Hider.Content>

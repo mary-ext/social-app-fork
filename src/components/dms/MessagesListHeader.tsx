@@ -18,8 +18,6 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
-
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -33,6 +31,7 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import type { ConvoWithDetails } from './util';
 

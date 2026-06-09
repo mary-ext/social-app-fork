@@ -16,8 +16,6 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useSession } from '#/state/session';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import type { WizardAction, WizardState } from '#/screens/StarterPack/Wizard/State';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -26,6 +24,7 @@ import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Checkbox } from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 function WizardListCard({
 	type,

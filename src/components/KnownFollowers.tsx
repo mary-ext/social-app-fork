@@ -12,12 +12,11 @@ import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
-import { UserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Link, type LinkProps } from '#/components/Link';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/web/UserAvatar';
 
 const AVI_SIZE = 30;
 const AVI_SIZE_SMALL = 20;

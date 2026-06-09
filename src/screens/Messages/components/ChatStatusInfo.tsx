@@ -11,8 +11,6 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import type { ActiveConvoStates } from '#/state/messages/convo';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
-import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt';
@@ -20,6 +18,7 @@ import { KnownFollowers } from '#/components/KnownFollowers';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 

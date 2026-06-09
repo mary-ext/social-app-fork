@@ -53,7 +53,6 @@ import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard';
 import { Post } from '#/view/com/post/Post';
 import { formatCount } from '#/view/com/util/numeric/format';
 import { TimeElapsed } from '#/view/com/util/TimeElapsed';
-import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -79,6 +78,7 @@ import { Notification as StarterPackCard } from '#/components/StarterPack/Starte
 import { SubtleHover } from '#/components/SubtleHover';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 const MAX_AUTHORS = 5;
 
