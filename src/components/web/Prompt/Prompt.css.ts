@@ -2,10 +2,43 @@ import { style } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
-import { components } from '#/styles/layers.css';
+import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToDevicePx } from '#/styles/round';
 import { fontSize, lineHeight } from '#/styles/tokens.css';
+
+export const backdrop = style(
+	layered(components, {
+		backgroundColor: 'rgba(0, 0, 0, 0.8)',
+		inset: 0,
+		position: 'fixed',
+		transitionDuration: '150ms',
+		transitionProperty: 'opacity',
+		zIndex: 10,
+		selectors: {
+			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
+		},
+	}),
+);
+
+// vertically centered with symmetric padding (vs the content Dialog's top-anchored 10vh viewport): a
+// confirmation prompt reads as a focal interruption, so it sits in the middle of the screen.
+export const viewport = style(
+	layered(components, {
+		alignItems: 'center',
+		bottom: 0,
+		boxSizing: 'border-box',
+		display: 'flex',
+		justifyContent: 'center',
+		left: 0,
+		overflowY: 'auto',
+		padding: 16,
+		position: 'fixed',
+		right: 0,
+		top: 0,
+		zIndex: 10,
+	}),
+);
 
 export const popup = recipe(
 	{

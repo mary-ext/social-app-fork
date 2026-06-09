@@ -5,7 +5,6 @@ import { useLingui } from '@lingui/react/macro';
 import type { Props as IconProps } from '#/components/icons/common';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as buttonStyles from '#/components/web/Button.css';
-import * as dialogStyles from '#/components/web/Dialog/Popup.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 import * as styles from '#/components/web/Prompt/Prompt.css';
 
@@ -44,8 +43,8 @@ export function Outer({
 			<AlertDialog.Portal>
 				{/* a confirmation must always dim its host; Base UI hides nested backdrops by default (e.g. when
 				    the prompt is rendered inside another open dialog like the composer Sheet). */}
-				<AlertDialog.Backdrop className={dialogStyles.backdrop} forceRender />
-				<AlertDialog.Viewport className={dialogStyles.viewport}>
+				<AlertDialog.Backdrop className={styles.backdrop} forceRender />
+				<AlertDialog.Viewport className={styles.viewport}>
 					<AlertDialog.Popup className={styles.popup({ size })}>{children}</AlertDialog.Popup>
 				</AlertDialog.Viewport>
 			</AlertDialog.Portal>
