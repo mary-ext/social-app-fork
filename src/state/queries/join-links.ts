@@ -24,6 +24,20 @@ export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSessio
 		persistedVersion: 1,
 	});
 
+/**
+ * Invalidate any join link preview queries whose `codes` include the given code. Use this when a link's state
+ * changes (e.g. it's enabled/disabled, or the viewer requests to join) so cached previews refetch and reflect
+ * the new state.
+ */
+export function invalidateJoinLinkPreviewsForCode(queryClient: QueryClient, code: string) {
+	return queryClient.invalidateQueries({
+		predicate: (query) => {
+			const [root, args] = query.queryKey as Partial<StructuredQueryKey<{ codes?: string[] }>>;
+			return root === joinLinkPreviewQueryKeyRoot && Array.isArray(args?.codes) && args.codes.includes(code);
+		},
+	});
+}
+
 async function fetchJoinLinkPreviews({ chat, codes }: { chat: Client | null; codes: string[] }) {
 	if (!chat) throw new Error('Not signed in');
 	return await ok(chat.get('chat.bsky.group.getJoinLinkPreviews', { params: { codes } }));

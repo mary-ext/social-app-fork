@@ -2,6 +2,7 @@ import type { ChatBskyGroupEnableJoinLink } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { invalidateJoinLinkPreviewsForCode } from '#/state/queries/join-links';
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
@@ -57,6 +58,7 @@ export function useEnableJoinLink(
 					};
 				});
 			}
+			void invalidateJoinLinkPreviewsForCode(queryClient, data.joinLink.code);
 			onSuccess?.(data);
 		},
 		onError: (e, _variables, context) => {
