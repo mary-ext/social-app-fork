@@ -47,10 +47,10 @@ import { useFormatPostStatCount } from '#/components/PostControls/util';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import * as Prompt from '#/components/Prompt';
-import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { RichText } from '#/components/web/RichText';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
@@ -362,7 +362,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 									enableTags
 									selectable
 									value={richText}
-									style={[a.flex_1, a.text_lg]}
+									size="lg"
 									authorHandle={post.author.handle}
 								/>
 							) : undefined}

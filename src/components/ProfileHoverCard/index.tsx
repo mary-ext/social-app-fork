@@ -40,9 +40,9 @@ import { Loader } from '#/components/Loader';
 import * as Pills from '#/components/Pills';
 import { Portal } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
 import { InlineLinkText } from '#/components/web/Link';
+import { RichText } from '#/components/web/RichText';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';

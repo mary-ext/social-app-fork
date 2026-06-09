@@ -36,10 +36,10 @@ import {
 } from '#/components/icons/Heart2';
 import { Link } from '#/components/Link';
 import * as Prompt from '#/components/Prompt';
-import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
+import { RichText } from '#/components/web/RichText';
 
 import { ProfileHeaderDisplayName } from './DisplayName';
 import { EditProfileDialog } from './EditProfileDialog';
@@ -126,8 +126,7 @@ let ProfileHeaderLabeler = ({
 						getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 							<View pointerEvents="auto">
 								<RichText
-									testID="profileHeaderDescription"
-									style={[a.text_md]}
+									size="md"
 									numberOfLines={15}
 									value={descriptionRT}
 									enableTags

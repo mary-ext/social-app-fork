@@ -45,9 +45,9 @@ import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
-import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { RichText } from '#/components/web/RichText';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
 export function ProfileFeedHeaderSkeleton() {
@@ -414,7 +414,7 @@ function DialogInner({
 					<ButtonIcon icon={Share} size="lg" />
 				</Button>
 			</View>
-			<RichText value={info.description} style={[a.text_md]} />
+			<RichText size="md" value={info.description} />
 			<View style={[a.flex_row, a.gap_sm, a.align_center]}>
 				{typeof likeCount === 'number' && (
 					<InlineLinkText

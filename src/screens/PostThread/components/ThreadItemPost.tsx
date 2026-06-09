@@ -33,10 +33,10 @@ import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
-import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+import { RichText } from '#/components/web/RichText';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -289,7 +289,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									<RichText
 										enableTags
 										value={richText}
-										style={[a.flex_1, a.text_md]}
+										size="md"
 										numberOfLines={limitLines ? MAX_POST_LINES : undefined}
 										authorHandle={post.author.handle}
 									/>

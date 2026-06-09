@@ -31,9 +31,9 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { Loader } from '#/components/Loader';
 import * as MediaPreview from '#/components/MediaPreview';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { RichText } from '#/components/web/RichText';
 
 /**
  * The embed staged in the message composer. A message can carry at most one embed: either a quoted post or a
@@ -214,9 +214,9 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 						{rt.text && (
 							<RichText
 								enableTags
-								testID="postText"
 								value={rt}
-								style={[a.text_sm, t.atoms.text_contrast_high]}
+								color="textContrastHigh"
+								size="sm"
 								authorHandle={post.author.handle}
 								numberOfLines={3}
 							/>

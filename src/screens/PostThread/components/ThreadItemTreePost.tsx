@@ -33,10 +33,10 @@ import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
-import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+import { RichText } from '#/components/web/RichText';
 
 /** Mimic the space in PostMeta */
 const TREE_AVI_PLUS_SPACE = TREE_AVI_WIDTH + a.gap_xs.gap;
@@ -322,7 +322,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 											<RichText
 												enableTags
 												value={richText}
-												style={[a.flex_1, a.text_md]}
+												size="md"
 												numberOfLines={limitLines ? MAX_POST_LINES : undefined}
 												authorHandle={post.author.handle}
 											/>

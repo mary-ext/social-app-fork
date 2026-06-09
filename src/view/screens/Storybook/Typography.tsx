@@ -2,8 +2,8 @@ import { View } from 'react-native';
 
 import { atoms as a } from '#/alf';
 
-import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+import { RichText } from '#/components/web/RichText';
 
 export function Typography() {
 	return (
@@ -39,8 +39,8 @@ export function Typography() {
 				selectable
 				// TODO: This only supports already resolved facets.
 				// Resolving them on read is bad anyway.
+				size="xl"
 				value={`This is rich text. It can have mentions like @bsky.app or links like https://bsky.social`}
-				style={[a.text_xl]}
 			/>
 		</View>
 	);

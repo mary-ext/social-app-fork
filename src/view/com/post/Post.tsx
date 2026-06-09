@@ -31,10 +31,10 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls } from '#/components/PostControls';
-import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { RichText } from '#/components/web/RichText';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import * as css from './Post.css';
@@ -213,12 +213,11 @@ function PostInner({
 							{richText.text ? (
 								<View style={[a.mb_2xs]}>
 									<RichText
-										enableTags
-										testID="postText"
-										value={richText}
-										numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-										style={[a.flex_1, a.text_md]}
 										authorHandle={post.author.handle}
+										enableTags
+										numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+										size="md"
+										value={richText}
 									/>
 									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
 								</View>

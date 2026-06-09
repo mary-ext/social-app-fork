@@ -52,7 +52,6 @@ import { Loader } from '#/components/Loader';
 import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
-import { RichText } from '#/components/RichText';
 import { FeedsList } from '#/components/StarterPack/Main/FeedsList';
 import { PostsList } from '#/components/StarterPack/Main/PostsList';
 import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList';
@@ -60,6 +59,7 @@ import { QrCodeDialog } from '#/components/StarterPack/QrCodeDialog';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { RichText } from '#/components/web/RichText';
 
 import { Image } from '#/shims/image';
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
@@ -414,7 +414,7 @@ function Header({
 			</ProfileSubpageHeader>
 			{!hasSession || richText || joinedAllTimeCount >= 25 ? (
 				<View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-					{richText ? <RichText value={richText} style={[a.text_md]} /> : null}
+					{richText ? <RichText size="md" value={richText} /> : null}
 					{!hasSession ? (
 						<Button
 							label={l`Sign in`}

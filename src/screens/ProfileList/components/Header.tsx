@@ -22,8 +22,8 @@ import { atoms as a } from '#/alf';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Loader } from '#/components/Loader';
-import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
+import { RichText } from '#/components/web/RichText';
 
 import { MoreOptionsMenu } from './MoreOptionsMenu';
 import { SubscribeMenu } from './SubscribeMenu';
@@ -175,7 +175,7 @@ export function Header({
 			</ProfileSubpageHeader>
 			{descriptionRT ? (
 				<View style={[a.px_lg, a.pt_sm, a.pb_sm, a.gap_md]}>
-					<RichText value={descriptionRT} style={[a.text_md]} />
+					<RichText size="md" value={descriptionRT} />
 				</View>
 			) : null}
 		</>

@@ -23,13 +23,13 @@ import { GalleryBleed } from '#/components/images/Gallery';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
-import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ExternalEmbed } from '#/components/web/ExternalEmbed';
 import { ImageEmbed } from '#/components/web/ImageEmbed';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { RichText } from '#/components/web/RichText';
 
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
@@ -310,7 +310,7 @@ export function QuoteEmbed({
 					style={[a.py_xs]}
 				/>
 			) : null}
-			{richText ? <RichText value={richText} style={a.text_md} numberOfLines={20} disableLinks /> : null}
+			{richText ? <RichText disableLinks numberOfLines={20} size="md" value={richText} /> : null}
 			{quote.embed && (
 				<Embed
 					embed={quote.embed}
