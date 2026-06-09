@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
 
-import * as styles from '#/components/web/Sheet/Header.css';
+import * as styles from '#/components/web/Dialog/Header.css';
 import { Text } from '#/components/web/Text';
 
 /** Sticky header row. Compose with `Slot` (edge buttons) + `Content`/`TitleText`, like `Layout.Header`. */

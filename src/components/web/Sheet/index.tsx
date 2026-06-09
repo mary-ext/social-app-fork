@@ -10,7 +10,7 @@ import {
 	Trigger,
 	useDialogHandle,
 } from '#/components/web/Dialog';
-import * as dialogStyles from '#/components/web/Dialog/Dialog.css';
+import * as dialogStyles from '#/components/web/Dialog/Popup.css';
 import * as styles from '#/components/web/Sheet/Sheet.css';
 
 // a Sheet is a header dialog: it reuses the basic Dialog's Root/Trigger/handle/registry and supplies a
@@ -22,7 +22,7 @@ export { Close, createHandle, Root, Trigger };
  */
 export type SheetHandle<T = void> = DialogHandle<T>;
 export const useSheetHandle = useDialogHandle;
-export * as Header from '#/components/web/Sheet/Header';
+export * as Header from '#/components/web/Dialog/Header';
 
 /** Portalled backdrop + viewport + a flex-column popup (header pinned, body scrolls). */
 export function Popup({

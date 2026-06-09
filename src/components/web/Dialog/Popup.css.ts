@@ -34,6 +34,8 @@ export const viewport = style(
 	}),
 );
 
+// the default body strategy (`scroll="viewport"`): a plain padded card that grows to its content while the
+// surrounding viewport scrolls. `bounded` overrides this into the height-bounded layout.
 export const popup = style(
 	layered(components, {
 		backgroundColor: vars.palette.contrast_0,
@@ -53,7 +55,24 @@ export const popup = style(
 	}),
 );
 
-export const popupSize = styleVariants(
+// the `scroll="body"` body strategy (orthogonal to `size` + the header slot): a height-bounded flex column
+// whose own `Body`/`List` child scrolls internally while the header/footer slots stay pinned. drops the base
+// card padding (the slots own their padding). declared after `popup` so it wins by source order.
+export const bounded = style(
+	layered(components, {
+		display: 'flex',
+		flexDirection: 'column',
+		maxHeight: '80vh',
+		overflow: 'hidden',
+		padding: 0,
+	}),
+);
+
+// lock a `bounded` popup to its max height regardless of content, so a full-height dialog (e.g. the GIF
+// picker) doesn't shrink to fit a transient loading/empty/error state.
+export const fullHeight = style(layered(components, { height: '80vh' }));
+
+export const size = styleVariants(
 	{
 		default: { maxWidth: 600 },
 		narrow: { maxWidth: 400 },
@@ -61,7 +80,28 @@ export const popupSize = styleVariants(
 	(rule) => layered(components, rule),
 );
 
-export const closeBtn = style(
+/** Scrollable content region of a `bounded` popup (below a pinned header, above a pinned footer). */
+export const body = style(
+	layered(components, {
+		flex: 1,
+		minHeight: 0,
+		overflowY: 'auto',
+	}),
+);
+
+/** Pinned action bar at the bottom of a `bounded` popup. */
+export const footer = style(
+	layered(components, {
+		backgroundColor: vars.palette.contrast_0,
+		borderTop: `1px solid ${vars.palette.contrast_200}`,
+		boxSizing: 'border-box',
+		flexShrink: 0,
+		paddingBlock: 12,
+		paddingInline: 16,
+	}),
+);
+
+export const close = style(
 	layered(components, {
 		alignItems: 'center',
 		appearance: 'none',
@@ -87,7 +127,7 @@ export const closeBtn = style(
 	}),
 );
 
-// declared after `closeBtn` so it wins by source order within the `components` layer: pins the button to the
+// declared after `close` so it wins by source order within the `components` layer: pins the button to the
 // screen corner (outside the popup card) — for full-height dialogs whose close floats over the backdrop,
 // like the GIF picker.
 //
@@ -95,7 +135,7 @@ export const closeBtn = style(
 // outside the popup, so it instead piggybacks on the viewport's transition: the viewport carries Base UI's
 // `data-starting-style`/`data-ending-style` and stays mounted through the closing transition, so as its
 // descendant the close can fade in/out off those attributes (matched to the popup's 200ms easing).
-export const closeBtnOuter = style(
+export const closeOuter = style(
 	layered(components, {
 		position: 'fixed',
 		transitionDuration: '200ms',

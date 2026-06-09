@@ -5,7 +5,7 @@ import { useLingui } from '@lingui/react/macro';
 import type { Props as IconProps } from '#/components/icons/common';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as buttonStyles from '#/components/web/Button.css';
-import * as dialogStyles from '#/components/web/Dialog/Dialog.css';
+import * as dialogStyles from '#/components/web/Dialog/Popup.css';
 import { useRegisterDialog } from '#/components/web/Dialog/registry';
 import * as styles from '#/components/web/Prompt/Prompt.css';
 
