@@ -33,8 +33,8 @@ type ContentHiderProps = {
 };
 
 /**
- * Web-native moderation gate: renders children directly when nothing blurs them, otherwise a blur card with
- * a Base UI {@link Collapsible} disclosure that reveals the content on demand.
+ * Web-native moderation gate: renders children directly when nothing blurs them, otherwise a blur card with a
+ * Base UI {@link Collapsible} disclosure that reveals the content on demand.
  */
 export function ContentHider({
 	modui,
@@ -180,7 +180,9 @@ function ContentHiderActive({
 					</Text>
 				</button>
 			)}
-			<Collapsible.Panel className={clsx(styles.panel, childContainerClassName)}>{children}</Collapsible.Panel>
+			<Collapsible.Panel className={clsx(styles.panel, childContainerClassName)}>
+				{children}
+			</Collapsible.Panel>
 		</Collapsible.Root>
 	);
 }
