@@ -4,7 +4,7 @@ import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import { clsx } from 'clsx';
 
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
-import { toShortUrl } from '#/lib/strings/url-helpers';
+import { definitelyUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
 import { isOnlyEmoji } from '#/alf/typography';
 
@@ -13,10 +13,6 @@ import { InlineLinkText, type InlineLinkTextProps } from '#/components/web/Link'
 import { content, emoji } from '#/components/web/RichText.css';
 import { RichTextTag } from '#/components/web/RichTextTag';
 import { Text, type TextProps } from '#/components/web/Text';
-
-// validates that a link facet's URI looks like a URL — lifted from the facet-detection regex, without its
-// `gm` flags so it tests a single value
-const URL_REGEX = /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i;
 
 type Feature = AppBskyRichtextFacet.Main['features'][number];
 
@@ -89,7 +85,10 @@ export function RichText({
 			features: for (const feature of segment.features ?? []) {
 				switch (feature.$type) {
 					case 'app.bsky.richtext.facet#link': {
-						const isValidLink = URL_REGEX.test(feature.uri);
+						// require a genuine http(s) URL with a real host — a loose match would render
+						// degenerate facet URIs (`https://` + a run of dots, `at://…`, other schemes) as
+						// clickable links whose visible text reveals nothing about where they lead
+						const isValidLink = definitelyUrl(feature.uri) != null;
 						if (!isValidLink || disableLinks) {
 							el = toShortUrl(segment.text);
 						} else {
