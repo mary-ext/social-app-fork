@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 
 import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
@@ -23,7 +23,9 @@ export function CountWheel({
 	const [roll, setRoll] = useState<{ from: number; key: number; up: boolean } | null>(null);
 	const rollKey = useRef(0);
 
-	useEffect(() => {
+	// layout effect, not a passive one: the roll must be set up before the browser paints, otherwise
+	// the new count flashes at rest for a frame before jumping off-screen to start its enter animation.
+	useLayoutEffect(() => {
 		if (isToggled === prevIsToggled.current) {
 			return;
 		}
