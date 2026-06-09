@@ -1,0 +1,15 @@
+{
+	"hooks": {
+		"PostToolUse": [
+			{
+				"matcher": "Edit|Write",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "file_path=$(jq -r '.tool_input.file_path') && pnpm oxfmt --no-error-on-unmatched-pattern \"$file_path\""
+					}
+				]
+			}
+		]
+	}
+}
