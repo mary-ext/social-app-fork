@@ -145,6 +145,14 @@ const indicatorBase = style(
 				backgroundColor: vars.palette.primary_500,
 				borderColor: vars.palette.primary_500,
 			},
+			'[data-disabled] &': {
+				backgroundColor: vars.palette.contrast_100,
+				borderColor: vars.palette.contrast_400,
+			},
+			'[data-checked][data-disabled] &': {
+				backgroundColor: vars.palette.primary_100,
+				borderColor: vars.palette.contrast_400,
+			},
 		},
 	}),
 );

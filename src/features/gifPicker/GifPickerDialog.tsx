@@ -146,7 +146,6 @@ function GifPickerBody({
 					value={rawSearch}
 					onChangeText={onChangeSearch}
 					onClear={onClearSearch}
-					canClear={rawSearch.length > 0}
 					onEscape={() => handle.close()}
 				/>
 				{showPills && (

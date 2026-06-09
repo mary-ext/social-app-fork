@@ -1172,7 +1172,7 @@ msgstr "All {0}"
 msgid "All accounts have been followed!"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:239
+#: src/components/dialogs/LanguageSelectDialog.tsx:173
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:60
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:83
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:85
@@ -1534,8 +1534,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:198
 #: src/screens/Profile/Header/Shell.tsx:119
 #: src/screens/StarterPack/Wizard/index.tsx:281
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:103
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:110
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:74
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:81
 msgid "Back"
 msgstr ""
 
@@ -1983,8 +1983,8 @@ msgstr ""
 msgid "Choose for me"
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:65
-#: src/components/dialogs/LanguageSelectDialog.tsx:185
+#: src/components/dialogs/LanguageSelectDialog.tsx:56
+#: src/components/dialogs/LanguageSelectDialog.tsx:192
 msgid "Choose languages"
 msgstr ""
 
@@ -2016,10 +2016,9 @@ msgstr ""
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
-#. Accessibility label for the X button inside the search input that clears the typed query and returns to the trending feed.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:63
-msgid "Clear GIF search"
-msgstr "Clear GIF search"
+#: src/components/web/forms/SearchInput.tsx:61
+msgid "Clear search"
+msgstr "Clear search"
 
 #: src/components/forms/SearchInput.tsx:70
 msgid "Clear search query"
@@ -2051,7 +2050,7 @@ msgid "Click to retry failed message"
 msgstr ""
 
 #. Visible label of the button that dismisses the GIF picker error dialog.
-#: src/components/dialogs/LanguageSelectDialog.tsx:311
+#: src/components/dialogs/LanguageSelectDialog.tsx:285
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:180
 #: src/components/dialogs/SearchablePeopleList.tsx:307
 #: src/components/dialogs/StarterPackDialog.tsx:156
@@ -2074,7 +2073,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:123
 #: src/components/verification/VerifierDialog.tsx:117
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:144
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:31
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
 #: src/features/liveNow/components/EditLiveDialog.tsx:185
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
 #: src/screens/Messages/components/InviteLinkDialog.tsx:459
@@ -2091,13 +2090,13 @@ msgstr ""
 msgid "Close banner"
 msgstr "Close banner"
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:203
-#: src/components/dialogs/LanguageSelectDialog.tsx:289
-#: src/components/dialogs/LanguageSelectDialog.tsx:309
+#: src/components/dialogs/LanguageSelectDialog.tsx:202
+#: src/components/dialogs/LanguageSelectDialog.tsx:260
+#: src/components/dialogs/LanguageSelectDialog.tsx:283
 #: src/components/verification/VerificationsDialog.tsx:114
 #: src/components/verification/VerifierDialog.tsx:109
 #: src/components/web/Dialog/Popup.tsx:80
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:29
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:35
 msgid "Close dialog"
 msgstr ""
 
@@ -2789,7 +2788,7 @@ msgstr ""
 msgid "Does not include nudity."
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:291
+#: src/components/dialogs/LanguageSelectDialog.tsx:265
 #: src/components/dialogs/ServerInput.tsx:213
 #: src/components/dialogs/ServerInput.tsx:216
 #: src/components/dms/AfterReportConversationDialog.tsx:146
@@ -2834,8 +2833,8 @@ msgstr ""
 
 #: src/view/com/composer/drafts/DraftsButton.tsx:61
 #: src/view/com/composer/drafts/DraftsButton.tsx:71
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:99
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:116
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:70
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:87
 msgid "Drafts"
 msgstr ""
 
@@ -4844,8 +4843,8 @@ msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:124
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:149
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:103
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:107
 msgid "Loading drafts"
 msgstr "Loading drafts"
 
@@ -5460,7 +5459,7 @@ msgstr ""
 msgid "No custom feeds yet"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:132
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:115
 msgid "No drafts yet"
 msgstr ""
 
@@ -5703,8 +5702,8 @@ msgid "Off"
 msgstr ""
 
 #. Title of the error screen shown when the GIF picker crashes unexpectedly.
-#: src/components/dialogs/LanguageSelectDialog.tsx:305
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:15
+#: src/components/dialogs/LanguageSelectDialog.tsx:279
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:21
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -6593,7 +6592,7 @@ msgstr "Recent GIFs"
 msgid "Recent searches"
 msgstr "Recent searches"
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:230
+#: src/components/dialogs/LanguageSelectDialog.tsx:170
 msgid "Recently used"
 msgstr ""
 
@@ -7294,7 +7293,7 @@ msgid "Search for posts, users, or feeds"
 msgstr ""
 
 #. Accessibility label for the GIF search input inside the GIF picker dialog.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:36
+#: src/features/gifPicker/components/GifPickerHeader.tsx:27
 msgid "Search GIFs"
 msgstr ""
 
@@ -7304,11 +7303,11 @@ msgid "Search is currently unavailable when logged out"
 msgstr ""
 
 #. Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.
-#: src/features/gifPicker/components/GifPickerHeader.tsx:40
+#: src/features/gifPicker/components/GifPickerHeader.tsx:39
 msgid "Search KLIPY"
 msgstr "Search KLIPY"
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:215
+#: src/components/dialogs/LanguageSelectDialog.tsx:212
 #: src/components/dialogs/LanguageSelectDialog.tsx:216
 msgid "Search languages"
 msgstr ""
@@ -7460,7 +7459,7 @@ msgstr ""
 msgid "Select language..."
 msgstr ""
 
-#: src/components/dialogs/LanguageSelectDialog.tsx:251
+#: src/components/dialogs/LanguageSelectDialog.tsx:182
 msgid "Select languages"
 msgstr ""
 
@@ -7863,7 +7862,7 @@ msgstr "slide"
 msgid "Smaller"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftsListDialog.tsx:145
+#: src/view/com/composer/drafts/DraftsListDialog.tsx:124
 msgid "So many thoughts, you should post one"
 msgstr ""
 
@@ -8449,8 +8448,8 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #. Body of the error screen shown when the GIF picker crashes unexpectedly. Encourages the user to report the issue.
-#: src/components/dialogs/LanguageSelectDialog.tsx:306
-#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:21
+#: src/components/dialogs/LanguageSelectDialog.tsx:280
+#: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:27
 #: src/view/com/util/ErrorBoundary.tsx:58
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""

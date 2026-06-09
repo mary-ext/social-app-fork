@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { useLanguagePrefs } from '#/state/preferences/languages';
 
@@ -10,22 +10,13 @@ import { type Language, LANGUAGES, LANGUAGES_MAP_CODE2 } from '#/locale/language
 import { ErrorScreen } from '#/view/com/util/error/ErrorScreen';
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import { SearchInput } from '#/components/forms/SearchInput';
-import * as Toggle from '#/components/forms/Toggle';
+import * as styles from '#/components/dialogs/LanguageSelectDialog.css';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-
-type WebViewStyle = ViewStyle & {
-	display?: 'contents';
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
+import { SearchInput } from '#/components/web/forms/SearchInput';
+import * as Toggle from '#/components/web/forms/Toggle';
+import { Text } from '#/components/web/Text';
 
 type ListEntry =
 	| {
@@ -40,11 +31,11 @@ type ListEntry =
 export function LanguageSelectDialog({
 	titleText,
 	subtitleText,
-	handle,
 	/** Optionally can be passed to show different values than what is saved in langPrefs. */
 	currentLanguages,
 	onSelectLanguages,
 	maxLanguages,
+	handle,
 }: {
 	handle: Dialog.DialogHandle;
 	titleText?: React.ReactNode;
@@ -78,13 +69,13 @@ export function LanguageSelectDialog({
 	);
 }
 
-export function DialogInner({
-	handle,
+function DialogInner({
 	titleText,
 	subtitleText,
 	currentLanguages,
 	onSelectLanguages,
 	maxLanguages,
+	handle,
 }: {
 	handle: Dialog.DialogHandle;
 	titleText?: React.ReactNode;
@@ -93,6 +84,9 @@ export function DialogInner({
 	onSelectLanguages?: (languages: string[]) => void;
 	maxLanguages?: number;
 }) {
+	const { t: l } = useLingui();
+	const langPrefs = useLanguagePrefs();
+
 	const allowedLanguages = useMemo(() => {
 		const uniqueLanguagesMap = LANGUAGES.filter((lang) => !!lang.code2).reduce(
 			(acc, lang) => {
@@ -105,16 +99,10 @@ export function DialogInner({
 		return Object.values(uniqueLanguagesMap);
 	}, []);
 
-	const langPrefs = useLanguagePrefs();
 	const [checkedLanguagesCode2, setCheckedLanguagesCode2] = useState<string[]>(
 		currentLanguages || [langPrefs.primaryLanguage],
 	);
 	const [search, setSearch] = useState('');
-
-	const t = useTheme();
-	const { t: l } = useLingui();
-	const { gtMobile } = useBreakpoints();
-	const padding = gtMobile ? a.px_2xl : a.px_xl;
 
 	const handleClose = () => {
 		onSelectLanguages?.(checkedLanguagesCode2);
@@ -174,69 +162,15 @@ export function DialogInner({
 		}
 	}, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2, langPrefs.appLanguage]);
 
-	const listHeader = (
-		<View style={[gtMobile ? a.pt_2xl : a.pt_xl, a.pb_xs, padding, t.atoms.bg]}>
-			<View style={[a.flex_row, a.w_full, a.justify_between]}>
-				<View>
-					<Text
-						nativeID="dialog-title"
-						style={[t.atoms.text, a.text_left, a.font_semi_bold, a.text_xl, a.mb_sm]}
-					>
-						{titleText ?? <Trans>Choose languages</Trans>}
-					</Text>
-					{subtitleText && (
-						<Text
-							nativeID="dialog-description"
-							style={[t.atoms.text_contrast_medium, a.text_left, a.text_md, a.mb_lg]}
-						>
-							{subtitleText}
-						</Text>
-					)}
-				</View>
-
-				{
-					<Button
-						variant="ghost"
-						size="small"
-						color="secondary"
-						shape="round"
-						label={l`Close dialog`}
-						onPress={handleClose}
-					>
-						<ButtonIcon icon={XIcon} />
-					</Button>
-				}
-			</View>
-
-			<View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs, a.pb_0]}>
-				<SearchInput
-					value={search}
-					onChangeText={setSearch}
-					placeholder={l`Search languages`}
-					label={l`Search languages`}
-					maxLength={50}
-					onClearText={() => setSearch('')}
-				/>
-			</View>
-		</View>
-	);
-
-	const isCheckedRecentEmpty =
+	const hasRecent =
 		displayedLanguages.checkedRecent.length > 0 || displayedLanguages.uncheckedRecent.length > 0;
-
-	const isDisplayedLanguagesEmpty = displayedLanguages.all.length === 0;
+	const hasAll = displayedLanguages.all.length > 0;
 
 	const listData: ListEntry[] = [
-		...(isCheckedRecentEmpty ? [{ type: 'header' as const, label: l`Recently used` }] : []),
-		...displayedLanguages.checkedRecent.map((lang) => ({
-			type: 'item' as const,
-			lang,
-		})),
-		...displayedLanguages.uncheckedRecent.map((lang) => ({
-			type: 'item' as const,
-			lang,
-		})),
-		...(isDisplayedLanguagesEmpty ? [] : [{ type: 'header' as const, label: l`All languages` }]),
+		...(hasRecent ? [{ type: 'header' as const, label: l`Recently used` }] : []),
+		...displayedLanguages.checkedRecent.map((lang) => ({ type: 'item' as const, lang })),
+		...displayedLanguages.uncheckedRecent.map((lang) => ({ type: 'item' as const, lang })),
+		...(hasAll ? [{ type: 'header' as const, label: l`All languages` }] : []),
 		...displayedLanguages.all.map((lang) => ({ type: 'item' as const, lang })),
 	];
 
@@ -244,51 +178,94 @@ export function DialogInner({
 
 	return (
 		<Toggle.Group
-			values={checkedLanguagesCode2}
+			className={styles.group}
+			label={l`Select languages`}
+			maxSelections={maxLanguages}
 			onChange={setCheckedLanguagesCode2}
 			type="checkbox"
-			maxSelections={maxLanguages}
-			label={l`Select languages`}
-			style={[webViewStyle(a.contents)]}
+			values={checkedLanguagesCode2}
 		>
-			{listHeader}
+			<div className={styles.header}>
+				<div className={styles.headerRow}>
+					<div className={styles.titleBlock}>
+						<Text size="xl" weight="semiBold">
+							{titleText ?? <Trans>Choose languages</Trans>}
+						</Text>
+						{subtitleText && (
+							<Text color="textContrastMedium" size="md">
+								{subtitleText}
+							</Text>
+						)}
+					</div>
+					<Button
+						color="secondary"
+						label={l`Close dialog`}
+						onClick={handleClose}
+						shape="round"
+						size="small"
+						variant="ghost"
+					>
+						<ButtonIcon icon={XIcon} />
+					</Button>
+				</div>
+				<SearchInput
+					label={l`Search languages`}
+					maxLength={50}
+					onChangeText={setSearch}
+					onClear={() => setSearch('')}
+					placeholder={l`Search languages`}
+					value={search}
+				/>
+			</div>
 			<Dialog.List
+				className={styles.list}
 				data={listData}
 				keyExtractor={(item) => (item.type === 'header' ? `header-${item.label}` : item.lang.code2)}
 				renderItem={(item, index) => {
 					if (item.type === 'header') {
 						return (
-							<Text
-								style={[padding, a.py_md, a.font_semi_bold, a.text_xs, t.atoms.text_contrast_low, a.pt_3xl]}
-							>
+							<Text className={styles.sectionHeader} color="textContrastLow" size="xs" weight="semiBold">
 								{item.label}
 							</Text>
 						);
 					}
 					const lang = item.lang;
 					const name = languageName(lang, langPrefs.appLanguage);
-
 					const isLastItem = index === numItems - 1;
 
 					return (
 						<Toggle.Item
-							name={lang.code2}
+							className={clsx(styles.row, !isLastItem && styles.rowBorder)}
 							label={name}
-							style={[t.atoms.border_contrast_low, !isLastItem && a.border_b, a.rounded_0, padding, a.py_md]}
+							name={lang.code2}
 						>
-							<Toggle.LabelText style={[a.flex_1]}>{name}</Toggle.LabelText>
-							<Toggle.Checkbox />
+							<Text
+								className={styles.rowLabel}
+								color="textContrastHigh"
+								leading="tight"
+								size="sm"
+								weight="semiBold"
+							>
+								{name}
+							</Text>
+							<Toggle.CheckboxIndicator />
 						</Toggle.Item>
 					);
 				}}
 			/>
-			<View style={[padding, a.py_md, a.border_t, t.atoms.border_contrast_low, t.atoms.bg]}>
-				<Button label={l`Close dialog`} onPress={handleClose} color="primary" size="large">
+			<Dialog.Footer>
+				<Button
+					className={styles.doneButton}
+					color="primary"
+					label={l`Close dialog`}
+					onClick={handleClose}
+					size="large"
+				>
 					<ButtonText>
 						<Trans>Done</Trans>
 					</ButtonText>
 				</Button>
-			</View>
+			</Dialog.Footer>
 		</Toggle.Group>
 	);
 }
@@ -297,17 +274,17 @@ function DialogError({ handle, details }: { handle: Dialog.DialogHandle; details
 	const { t: l } = useLingui();
 
 	return (
-		<View style={[a.gap_md, a.p_xl]}>
+		<div className={styles.error}>
 			<ErrorScreen
 				title={l`Oh no!`}
 				message={l`There was an unexpected issue in the application. Please let us know if this happened to you!`}
 				details={details}
 			/>
-			<Button label={l`Close dialog`} onPress={() => handle.close()} color="primary" size="large">
+			<Button label={l`Close dialog`} onClick={() => handle.close()} color="primary" size="large">
 				<ButtonText>
 					<Trans>Close</Trans>
 				</ButtonText>
 			</Button>
-		</View>
+		</div>
 	);
 }

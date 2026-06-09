@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import { type ComponentType, createContext, type ReactNode, useContext, useMemo } from 'react';
 import { Checkbox } from '@base-ui/react/checkbox';
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
 import { Radio } from '@base-ui/react/radio';
@@ -8,6 +8,14 @@ import { clsx } from 'clsx';
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/web/forms/Toggle/Toggle.css';
+
+type GroupContextValue = {
+	/** True once a {@link Group}'s `maxSelections` cap is reached; unchecked {@link Item}s read it to disable. */
+	maxReached: boolean;
+	values: string[];
+};
+
+const GroupContext = createContext<GroupContextValue>({ maxReached: false, values: [] });
 
 /**
  * A multi-select checkbox group (or single-select radio group) holding {@link Item}/{@link RadioItem} rows.
@@ -19,6 +27,7 @@ export function Group({
 	values,
 	onChange,
 	disabled,
+	maxSelections,
 	className,
 	children,
 }: {
@@ -27,44 +36,51 @@ export function Group({
 	values: string[];
 	onChange: (values: string[]) => void;
 	disabled?: boolean;
+	/** Caps how many entries can be selected; unchecked {@link Item}s disable once reached. Checkbox groups only. */
+	maxSelections?: number;
 	className?: string;
 	children: ReactNode;
 }) {
-	if (type === 'radio') {
-		return (
-			<BaseRadioGroup
-				aria-label={label}
-				className={className}
-				disabled={disabled}
-				onValueChange={(value) => onChange(value ? [String(value)] : [])}
-				value={values[0] ?? ''}
-			>
-				{children}
-			</BaseRadioGroup>
-		);
-	}
+	const maxReached = type === 'checkbox' && maxSelections != null && values.length >= maxSelections;
+	const context = useMemo(() => ({ maxReached, values }), [maxReached, values]);
+
 	return (
-		<CheckboxGroup
-			aria-label={label}
-			className={className}
-			disabled={disabled}
-			onValueChange={onChange}
-			value={values}
-		>
-			{children}
-		</CheckboxGroup>
+		<GroupContext.Provider value={context}>
+			{type === 'radio' ? (
+				<BaseRadioGroup
+					aria-label={label}
+					className={className}
+					disabled={disabled}
+					onValueChange={(value) => onChange(value ? [String(value)] : [])}
+					value={values[0] ?? ''}
+				>
+					{children}
+				</BaseRadioGroup>
+			) : (
+				<CheckboxGroup
+					aria-label={label}
+					className={className}
+					disabled={disabled}
+					onValueChange={onChange}
+					value={values}
+				>
+					{children}
+				</CheckboxGroup>
+			)}
+		</GroupContext.Provider>
 	);
 }
 
 /**
  * A checkbox toggle. Pass `name` to enrol it in the surrounding {@link Group}; pass `checked`/`onChange` to
- * drive it standalone.
+ * drive it standalone. Enrolled items auto-disable once the group's `maxSelections` cap is reached.
  */
 export function Item({
 	name,
 	checked,
 	onChange,
 	disabled,
+	className,
 	label,
 	children,
 }: {
@@ -72,15 +88,20 @@ export function Item({
 	checked?: boolean;
 	onChange?: (checked: boolean) => void;
 	disabled?: boolean;
+	className?: string;
 	label: string;
 	children: ReactNode;
 }) {
+	const { maxReached, values } = useContext(GroupContext);
+	const selected = name != null && values.includes(name);
+	const isDisabled = disabled || (maxReached && !selected);
+
 	return (
 		<Checkbox.Root
 			aria-label={label}
 			checked={checked}
-			className={styles.item}
-			disabled={disabled}
+			className={clsx(styles.item, className)}
+			disabled={isDisabled}
 			name={name}
 			onCheckedChange={(value) => onChange?.(value)}
 		>
