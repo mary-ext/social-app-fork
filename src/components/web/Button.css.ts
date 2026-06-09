@@ -146,11 +146,28 @@ export const button = recipe(
 			// nudging the centered icon off-axis).
 			{ shape: 'round', size: 'large', style: { height: 44, padding: 0, width: 44 } },
 			{ shape: 'round', size: 'small', style: { height: 33, padding: 0, width: 33 } },
+			// `rectangular` squares off the pill (use beside form fields), with tighter padding than the
+			// default shape. emitted after `size` so its padding/borderRadius/gap win.
+			{
+				shape: 'rectangular',
+				size: 'large',
+				style: { borderRadius: 10, gap: 3, paddingBlock: 12, paddingInline: 25 },
+			},
+			{
+				shape: 'rectangular',
+				size: 'small',
+				style: { borderRadius: 8, gap: 3, paddingBlock: 8, paddingInline: 13 },
+			},
+			{
+				shape: 'rectangular',
+				size: 'tiny',
+				style: { borderRadius: 6, gap: 2, paddingBlock: 5, paddingInline: 9 },
+			},
 		],
 		defaultVariants: { color: 'primary', shape: 'default', size: 'small', variant: 'solid' },
 		variants: {
 			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {}, secondary_inverted: {} },
-			shape: { default: {}, round: {} },
+			shape: { default: {}, rectangular: {}, round: {} },
 			size: {
 				large: {
 					fontSize: fontSize.md,
@@ -165,6 +182,13 @@ export const button = recipe(
 					lineHeight: roundToDevicePx(calc.multiply(fontSize.sm, lineHeight.snug)),
 					paddingBlock: 8,
 					paddingInline: 14,
+				},
+				tiny: {
+					fontSize: fontSize.xs,
+					gap: 3,
+					lineHeight: roundToDevicePx(calc.multiply(fontSize.xs, lineHeight.snug)),
+					paddingBlock: 5,
+					paddingInline: 10,
 				},
 			},
 			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost colors come from the
@@ -206,7 +230,11 @@ export const iconBox = recipe(
 			pull: { false: {}, true: { marginInline: -2 } },
 			// box edge length per button size, matching the rendered text line so a larger icon never
 			// grows the button height (`2xs` narrows the width via the compound variants above).
-			size: { large: { height: 20, width: 20 }, small: { height: 17, width: 17 } },
+			size: {
+				large: { height: 20, width: 20 },
+				small: { height: 17, width: 17 },
+				tiny: { height: 15, width: 15 },
+			},
 		},
 	},
 	{ debugId: 'buttonIcon', layer: components },
