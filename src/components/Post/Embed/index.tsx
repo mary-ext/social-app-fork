@@ -20,7 +20,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { GalleryBleed } from '#/components/images/Gallery';
-import { ContentHider } from '#/components/moderation/ContentHider';
+import { ContentHider as LegacyContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
@@ -30,11 +30,13 @@ import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ExternalEmbed } from '#/components/web/ExternalEmbed';
 import { ImageEmbed } from '#/components/web/ImageEmbed';
+import { ContentHider } from '#/components/web/moderation/ContentHider';
 
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 
 import { ChatInviteEmbed } from './ChatInviteEmbed';
 import { ModeratedFeedEmbed } from './FeedEmbed';
+import * as css from './index.css';
 import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
 import type { CommonProps, EmbedProps, PostEmbedViewContext } from './types';
@@ -90,7 +92,7 @@ function MediaEmbed({
 					modui={
 						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
 					}
-					activeStyle={[a.mt_sm]}
+					activeClassName={css.activeMargin}
 				>
 					<ImageEmbed embed={embed} {...rest} />
 				</ContentHider>
@@ -105,7 +107,7 @@ function MediaEmbed({
 								? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
 								: undefined
 						}
-						activeStyle={[a.mt_sm]}
+						activeClassName={css.activeMargin}
 					>
 						<StandardSiteEmbed
 							view={embed.view.external}
@@ -124,7 +126,7 @@ function MediaEmbed({
 								? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia)
 								: undefined
 						}
-						activeStyle={[a.mt_sm]}
+						activeClassName={css.activeMargin}
 					>
 						<ChatInviteEmbed
 							code={chatInviteCode}
@@ -140,7 +142,7 @@ function MediaEmbed({
 					modui={
 						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
 					}
-					activeStyle={[a.mt_sm]}
+					activeClassName={css.activeMargin}
 				>
 					<ExternalEmbed link={embed.view.external} onOpen={rest.onOpen} />
 				</ContentHider>
@@ -152,7 +154,7 @@ function MediaEmbed({
 					modui={
 						rest.moderation ? getDisplayRestrictions(rest.moderation, DisplayContext.ContentMedia) : undefined
 					}
-					activeStyle={[a.mt_sm]}
+					activeClassName={css.activeMargin}
 				>
 					<VideoEmbed embed={embed.view} />
 				</ContentHider>
@@ -332,7 +334,7 @@ export function QuoteEmbed({
 				onPointerEnter={linkDisabled ? undefined : onPointerEnter}
 				onPointerLeave={linkDisabled ? undefined : onPointerLeave}
 			>
-				<ContentHider
+				<LegacyContentHider
 					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
 					style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
 					activeStyle={[a.p_md, a.pt_sm]}
@@ -357,7 +359,7 @@ export function QuoteEmbed({
 							)}
 						</>
 					)}
-				</ContentHider>
+				</LegacyContentHider>
 			</View>
 		</GalleryBleed>
 	);

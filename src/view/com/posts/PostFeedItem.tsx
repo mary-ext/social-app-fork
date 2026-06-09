@@ -32,7 +32,6 @@ import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 import { atoms as a, select, useTheme } from '#/alf';
 
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
-import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
@@ -45,9 +44,11 @@ import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
+import { ContentHider } from '#/components/web/moderation/ContentHider';
 
 import { useActorStatus } from '#/features/liveNow';
 
+import * as css from './PostFeedItem.css';
 import { PostFeedReason } from './PostFeedReason';
 
 interface FeedItemProps {
@@ -429,10 +430,9 @@ let PostContent = ({
 
 	return (
 		<ContentHider
-			testID="contentHider-post"
 			modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 			ignoreMute
-			childContainerStyle={styles.contentHiderChild}
+			childContainerClassName={css.contentHiderChild}
 		>
 			<PostAlerts
 				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
@@ -502,9 +502,6 @@ const styles = StyleSheet.create({
 	alert: {
 		marginTop: 6,
 		marginBottom: 6,
-	},
-	contentHiderChild: {
-		marginTop: 6,
 	},
 	embed: {
 		marginBottom: 6,

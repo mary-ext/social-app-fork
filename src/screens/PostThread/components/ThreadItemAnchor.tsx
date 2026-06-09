@@ -39,7 +39,6 @@ import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/co
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { Link } from '#/components/Link';
-import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
@@ -53,9 +52,12 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
+import { ContentHider } from '#/components/web/moderation/ContentHider';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
 import { useActorStatus } from '#/features/liveNow';
+
+import * as css from './ThreadItemAnchor.css';
 
 export function ThreadItemAnchor({
 	item,
@@ -347,7 +349,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						<ContentHider
 							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 							ignoreMute
-							childContainerStyle={[a.pt_sm]}
+							childContainerClassName={css.contentHiderChild}
 						>
 							<PostAlerts
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}

@@ -26,7 +26,6 @@ import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar';
 import { atoms as a, select, useTheme } from '#/alf';
 
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
-import { ContentHider } from '#/components/moderation/ContentHider';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
@@ -36,6 +35,9 @@ import { PostControls } from '#/components/PostControls';
 import { RichText } from '#/components/RichText';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
+import { ContentHider } from '#/components/web/moderation/ContentHider';
+
+import * as css from './Post.css';
 
 export function Post({
 	post,
@@ -201,8 +203,8 @@ function PostInner({
 						<LabelsOnMyPost post={post} />
 						<ContentHider
 							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-							style={styles.contentHider}
-							childContainerStyle={styles.contentHiderChild}
+							className={css.contentHider}
+							childContainerClassName={css.contentHiderChild}
 						>
 							<PostAlerts
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
@@ -275,11 +277,5 @@ const styles = StyleSheet.create({
 		top: 70,
 		bottom: 0,
 		borderLeftWidth: 2,
-	},
-	contentHider: {
-		marginBottom: 2,
-	},
-	contentHiderChild: {
-		marginTop: 6,
 	},
 });
