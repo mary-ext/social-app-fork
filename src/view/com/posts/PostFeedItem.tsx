@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type {
-	AnyProfileView,
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
@@ -221,7 +220,7 @@ let FeedItemInner = ({
 			feedContext,
 			reqId,
 		});
-		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
+		unstableCacheProfileView(queryClient, post.author);
 		setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
 			feedSourceInfo,
 			post: {
@@ -252,7 +251,7 @@ let FeedItemInner = ({
 		? (rootPost.threadgate.record as AppBskyFeedThreadgate.Main)
 		: undefined;
 
-	const { isActive: live } = useActorStatus(post.author as AnyProfileView);
+	const { isActive: live } = useActorStatus(post.author);
 
 	const viaRepost = useMemo(() => {
 		if (reason?.$type === 'app.bsky.feed.defs#reasonRepost' && reason.uri && reason.cid) {
@@ -327,7 +326,7 @@ let FeedItemInner = ({
 					<View style={styles.layoutAvi}>
 						<PreviewableUserAvatar
 							size={42}
-							profile={post.author as AnyProfileView}
+							profile={post.author}
 							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 							onBeforePress={onOpenAuthor}
@@ -368,7 +367,7 @@ let FeedItemInner = ({
 						/>
 						{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
 							<PostRepliedTo
-								parentAuthor={parentAuthor as AnyProfileView | undefined}
+								parentAuthor={parentAuthor}
 								isParentBlocked={isParentBlocked}
 								isParentNotFound={isParentNotFound}
 							/>
