@@ -14,12 +14,12 @@ import { CenteredView } from '#/view/com/util/Views';
 
 import { atoms as a } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { useHeaderOffset } from '#/components/hooks/useHeaderOffset';
 import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import { LinkButton } from '#/components/web/Link';
 
 export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { t: l } = useLingui();
@@ -88,16 +88,22 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 						size="large"
 						variant="solid"
 						color="primary"
-						onPress={addRecommendedFeeds}
+						onClick={addRecommendedFeeds}
 					>
-						<ButtonIcon icon={Plus} position="left" />
+						<ButtonIcon icon={Plus} />
 						<ButtonText>{l`Add recommended feeds`}</ButtonText>
 					</Button>
 
-					<Link label={l`Browse other feeds`} to="/feeds" size="large" variant="solid" color="secondary">
-						<ButtonIcon icon={ListSparkle} position="left" />
+					<LinkButton
+						label={l`Browse other feeds`}
+						to="/feeds"
+						size="large"
+						variant="solid"
+						color="secondary"
+					>
+						<ButtonIcon icon={ListSparkle} />
 						<ButtonText>{l`Browse other feeds`}</ButtonText>
-					</Link>
+					</LinkButton>
 				</View>
 			</View>
 		</CenteredView>

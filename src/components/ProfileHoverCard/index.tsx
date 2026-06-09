@@ -36,13 +36,14 @@ import { useRichText } from '#/components/hooks/useRichText';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/KnownFollowers';
-import { InlineLinkText, Link } from '#/components/Link';
+import { Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import * as Pills from '#/components/Pills';
 import { Portal } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+import { InlineLinkText } from '#/components/web/Link';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
@@ -511,7 +512,7 @@ function Inner({
 						<InlineLinkText
 							to={makeProfileLink(profile, 'followers')}
 							label={`${followers} ${pluralizedFollowers}`}
-							style={[t.atoms.text]}
+							color="text"
 							onPress={hide}
 						>
 							<Text style={[a.text_md, a.font_semi_bold]}>{followers} </Text>
@@ -520,7 +521,7 @@ function Inner({
 						<InlineLinkText
 							to={makeProfileLink(profile, 'follows')}
 							label={l`${following} following`}
-							style={[t.atoms.text]}
+							color="text"
 							onPress={hide}
 						>
 							<Text style={[a.text_md, a.font_semi_bold]}>{following} </Text>

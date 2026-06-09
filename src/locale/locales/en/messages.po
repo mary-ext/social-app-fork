@@ -121,13 +121,13 @@ msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
-#: src/components/ProfileHoverCard/index.tsx:425
+#: src/components/ProfileHoverCard/index.tsx:426
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/components/ProfileHoverCard/index.tsx:429
+#: src/components/ProfileHoverCard/index.tsx:430
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -525,7 +525,7 @@ msgstr ""
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:522
+#: src/components/ProfileHoverCard/index.tsx:523
 msgid "{following} following"
 msgstr ""
 
@@ -1736,8 +1736,8 @@ msgstr ""
 msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
-#: src/screens/Home/NoFeedsPinned.tsx:97
-#: src/screens/Home/NoFeedsPinned.tsx:99
+#: src/screens/Home/NoFeedsPinned.tsx:98
+#: src/screens/Home/NoFeedsPinned.tsx:105
 msgid "Browse other feeds"
 msgstr ""
 
@@ -3611,8 +3611,8 @@ msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:487
-#: src/components/ProfileHoverCard/index.tsx:468
-#: src/components/ProfileHoverCard/index.tsx:473
+#: src/components/ProfileHoverCard/index.tsx:469
+#: src/components/ProfileHoverCard/index.tsx:474
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
@@ -3696,8 +3696,8 @@ msgstr ""
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:478
-#: src/components/ProfileHoverCard/index.tsx:468
-#: src/components/ProfileHoverCard/index.tsx:473
+#: src/components/ProfileHoverCard/index.tsx:469
+#: src/components/ProfileHoverCard/index.tsx:474
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:361
@@ -9386,7 +9386,7 @@ msgstr "View {publicationTitle}"
 msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
-#: src/components/ProfileHoverCard/index.tsx:454
+#: src/components/ProfileHoverCard/index.tsx:455
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -9434,9 +9434,9 @@ msgstr ""
 msgid "View post"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:440
-#: src/components/ProfileHoverCard/index.tsx:461
-#: src/components/ProfileHoverCard/index.tsx:477
+#: src/components/ProfileHoverCard/index.tsx:441
+#: src/components/ProfileHoverCard/index.tsx:462
+#: src/components/ProfileHoverCard/index.tsx:478
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
 #: src/view/com/util/PostMeta.tsx:97
 #: src/view/com/util/PostMeta.tsx:121
