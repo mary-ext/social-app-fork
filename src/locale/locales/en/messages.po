@@ -1861,7 +1861,7 @@ msgstr "carousel"
 msgid "Cashtag {tag}"
 msgstr ""
 
-#: src/components/AppLanguageDropdown.tsx:42
+#: src/components/AppLanguageDropdown.tsx:49
 msgid "Change app language"
 msgstr "Change app language"
 
@@ -7403,7 +7403,7 @@ msgstr ""
 msgid "Select a reason"
 msgstr ""
 
-#: src/components/AppLanguageDropdown.tsx:54
+#: src/components/AppLanguageDropdown.tsx:58
 msgid "Select an app language"
 msgstr "Select an app language"
 
@@ -7455,10 +7455,6 @@ msgstr "Select group chat members"
 #: src/components/dialogs/MutedWords.tsx:147
 msgid "Select how long to mute this word for."
 msgstr ""
-
-#: src/components/AppLanguageDropdown.tsx:62
-msgid "Select language"
-msgstr "Select language"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:223
 msgid "Select language..."

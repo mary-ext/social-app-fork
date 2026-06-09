@@ -8,13 +8,12 @@ import { resetPostsFeedQueries } from '#/state/queries/post-feed';
 import { sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES } from '#/locale/languages';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Button } from '#/components/web/Button';
+import * as Select from '#/components/web/Select';
 
-import { Button } from '#/components/Button';
-import * as Select from '#/components/Select';
+import * as styles from './AppLanguageDropdown.css';
 
 export function AppLanguageDropdown() {
-	const t = useTheme();
 	const { t: l } = useLingui();
 
 	const queryClient = useQueryClient();
@@ -37,39 +36,36 @@ export function AppLanguageDropdown() {
 		[queryClient, sanitizedLang, setLangPrefs],
 	);
 
+	const items = APP_LANGUAGES.map((language) => ({
+		label: language.name,
+		value: language.code2,
+	}));
+
 	return (
-		<Select.Root value={sanitizedLang} onValueChange={onChangeAppLanguage}>
-			<Select.Trigger label={l`Change app language`}>
-				{({ props }) => (
+		<Select.Root items={items} value={sanitizedLang} onValueChange={onChangeAppLanguage}>
+			<Select.Trigger
+				render={
 					<Button
-						{...props}
-						label={props.accessibilityLabel}
-						size="tiny"
+						label={l`Change app language`}
 						variant="ghost"
 						color="secondary"
+						size="tiny"
 						shape="rectangular"
-						style={[a.pr_xs, a.pl_sm, a.gap_sm, { alignSelf: 'flex-start' }]}
-					>
-						<Select.ValueText
-							placeholder={l`Select an app language`}
-							style={[t.atoms.text_contrast_medium]}
-						/>
-						<Select.Icon style={[t.atoms.text_contrast_medium]} />
-					</Button>
-				)}
+						className={styles.trigger}
+					/>
+				}
+			>
+				<Select.Value placeholder={l`Select an app language`} className={styles.value} />
+				<Select.Icon className={styles.icon} />
 			</Select.Trigger>
 			<Select.Content
-				label={l`Select language`}
+				items={items}
 				renderItem={({ label, value }) => (
 					<Select.Item value={value} label={label}>
 						<Select.ItemIndicator />
 						<Select.ItemText>{label}</Select.ItemText>
 					</Select.Item>
 				)}
-				items={APP_LANGUAGES.map((language) => ({
-					label: language.name,
-					value: language.code2,
-				}))}
 			/>
 		</Select.Root>
 	);

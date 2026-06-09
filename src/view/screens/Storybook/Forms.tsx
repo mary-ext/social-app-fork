@@ -13,8 +13,8 @@ import * as TextField from '#/components/forms/TextField';
 import * as Toggle from '#/components/forms/Toggle';
 import * as ToggleButton from '#/components/forms/ToggleButton';
 import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
-import * as Select from '#/components/Select';
 import { H1, H3 } from '#/components/Typography';
+import * as Select from '#/components/web/Select';
 
 export function Forms() {
 	const t = useTheme();
@@ -27,6 +27,7 @@ export function Forms() {
 	const [value, setValue] = useState('');
 	const [date, setDate] = useState('2001-01-01');
 	const [lang, setLang] = useState('en');
+	const langItems = APP_LANGUAGES.map((l) => ({ label: l.name, value: l.code2 }));
 
 	const inputRef = useRef<TextInput>(null);
 
@@ -54,23 +55,19 @@ export function Forms() {
 				/>
 			</View>
 
-			<Select.Root value={lang} onValueChange={setLang}>
+			<Select.Root items={langItems} value={lang} onValueChange={setLang}>
 				<Select.Trigger label="Select app language">
-					<Select.ValueText />
+					<Select.Value />
 					<Select.Icon />
 				</Select.Trigger>
 				<Select.Content
-					label="App language"
 					renderItem={({ label, value }) => (
 						<Select.Item value={value} label={label}>
 							<Select.ItemIndicator />
 							<Select.ItemText>{label}</Select.ItemText>
 						</Select.Item>
 					)}
-					items={APP_LANGUAGES.map((l) => ({
-						label: l.name,
-						value: l.code2,
-					}))}
+					items={langItems}
 				/>
 			</Select.Root>
 
