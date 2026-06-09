@@ -12,10 +12,10 @@ import { onPressInner } from '#/view/com/util/Link';
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-no-row-link]';
 
 /**
- * Spread onto any element to exempt clicks within it from {@link BlockLink}'s row navigation. For regions
- * that handle their own clicks but aren't semantic links/buttons — media players, embedded iframes. Only
- * catches clicks whose target is inside the element; a click dispatched on an ancestor (e.g. the post body,
- * after a drag that releases outside the region) still navigates.
+ * Spread onto any element to exempt clicks within it from {@link BlockLink}'s row navigation. For regions that
+ * handle their own clicks but aren't semantic links/buttons — media players, embedded iframes. Only catches
+ * clicks whose target is inside the element; a click dispatched on an ancestor (e.g. the post body, after a
+ * drag that releases outside the region) still navigates.
  */
 export const noRowLink = { 'data-no-row-link': '' };
 

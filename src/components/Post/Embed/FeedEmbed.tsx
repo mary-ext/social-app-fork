@@ -7,10 +7,11 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { atoms as a, useTheme } from '#/alf';
 
 import * as FeedCard from '#/components/FeedCard';
-import { ContentHider } from '#/components/moderation/ContentHider';
+import { ContentHider } from '#/components/web/moderation/ContentHider';
 
 import type { EmbedType } from '#/types/embed';
 
+import * as css from './index.css';
 import type { CommonProps } from './types';
 
 export function FeedEmbed({
@@ -44,7 +45,7 @@ export function ModeratedFeedEmbed({
 	return (
 		<ContentHider
 			modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
-			childContainerStyle={[a.pt_xs]}
+			childContainerClassName={css.revealedPadXs}
 		>
 			<FeedEmbed embed={embed} />
 		</ContentHider>

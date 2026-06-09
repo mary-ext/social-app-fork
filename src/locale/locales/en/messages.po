@@ -156,7 +156,6 @@ msgid "{0} · {1}"
 msgstr ""
 
 #. placeholder {0}: desc.name
-#: src/components/moderation/ContentHider.tsx:94
 #: src/components/web/moderation/ContentHider.tsx:94
 msgid "{0} (Account)"
 msgstr ""
@@ -1131,7 +1130,6 @@ msgstr ""
 msgid "Adult content"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:125
 #: src/components/web/moderation/ContentHider.tsx:125
 #: src/lib/moderation/useGlobalLabelStrings.ts:29
 #: src/lib/moderation/useModerationCauseDescription.ts:135
@@ -1638,7 +1636,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:226
+#: src/components/Post/Embed/index.tsx:225
 msgid "Blocked"
 msgstr ""
 
@@ -2611,7 +2609,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:219
+#: src/components/Post/Embed/index.tsx:218
 msgid "Deleted"
 msgstr ""
 
@@ -4117,7 +4115,6 @@ msgstr ""
 
 #: src/components/interstitials/Trending.tsx:89
 #: src/components/interstitials/TrendingVideos.tsx:129
-#: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:125
 #: src/components/moderation/PostHider.tsx:121
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
@@ -4189,7 +4186,6 @@ msgstr ""
 msgid "Hide verification badges"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:155
 #: src/components/moderation/PostHider.tsx:75
 msgid "Hides the content"
 msgstr ""
@@ -4475,12 +4471,10 @@ msgid "Keep me posted"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
-#: src/components/moderation/ContentHider.tsx:234
 #: src/components/web/moderation/ContentHider.tsx:175
 msgid "Labeled by {0}."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:232
 #: src/components/web/moderation/ContentHider.tsx:173
 msgid "Labeled by the author."
 msgstr ""
@@ -4546,8 +4540,6 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:153
-#: src/components/moderation/ContentHider.tsx:217
 #: src/components/web/moderation/ContentHider.tsx:168
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
@@ -4573,7 +4565,6 @@ msgid "Learn more about your Germ DM link"
 msgstr ""
 
 #: src/components/dialogs/ServerInput.tsx:201
-#: src/components/moderation/ContentHider.tsx:243
 #: src/components/web/moderation/ContentHider.tsx:178
 msgid "Learn more."
 msgstr ""
@@ -6769,11 +6760,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:245
+#: src/components/Post/Embed/index.tsx:244
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:245
+#: src/components/Post/Embed/index.tsx:244
 msgid "Removed by you"
 msgstr ""
 
@@ -7664,7 +7655,6 @@ msgstr ""
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:204
 #: src/components/moderation/LabelPreference.tsx:127
 #: src/components/moderation/PostHider.tsx:121
 #: src/components/web/moderation/ContentHider.tsx:160
@@ -7782,7 +7772,6 @@ msgstr ""
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:156
 #: src/components/moderation/PostHider.tsx:75
 msgid "Shows the content"
 msgstr ""

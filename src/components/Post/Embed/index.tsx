@@ -16,11 +16,10 @@ import { useSession } from '#/state/session';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { GalleryBleed } from '#/components/images/Gallery';
-import { ContentHider as LegacyContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
@@ -254,7 +253,6 @@ export function PostDetachedEmbed({ embed }: { embed: EmbedType<'post_detached'>
 export function QuoteEmbed({
 	embed,
 	onOpen,
-	style,
 	linkDisabled,
 	isWithinQuote: parentIsWithinQuote,
 	allowNestedQuotes: parentAllowNestedQuotes,
@@ -279,7 +277,6 @@ export function QuoteEmbed({
 		return moderationOpts ? moderatePost(quote, moderationOpts) : undefined;
 	}, [quote, moderationOpts]);
 
-	const t = useTheme();
 	const queryClient = useQueryClient();
 	const itemUrip = parseCanonicalResourceUri(quote.uri);
 	const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey);
@@ -334,11 +331,11 @@ export function QuoteEmbed({
 				onPointerEnter={linkDisabled ? undefined : onPointerEnter}
 				onPointerLeave={linkDisabled ? undefined : onPointerLeave}
 			>
-				<LegacyContentHider
+				<ContentHider
 					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
-					style={[a.rounded_md, a.border, t.atoms.border_contrast_low, style]}
-					activeStyle={[a.p_md, a.pt_sm]}
-					childContainerStyle={[a.pt_sm]}
+					className={css.quoteCard}
+					activeClassName={css.quoteActive}
+					childContainerClassName={css.quoteRevealed}
 				>
 					{({ active }) => (
 						<>
@@ -359,7 +356,7 @@ export function QuoteEmbed({
 							)}
 						</>
 					)}
-				</LegacyContentHider>
+				</ContentHider>
 			</View>
 		</GalleryBleed>
 	);
