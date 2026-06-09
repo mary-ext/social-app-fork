@@ -88,17 +88,26 @@ const ICON_PX: Record<NonNullable<IconProps['size']>, number> = {
 	xs: 12,
 };
 
+// default icon token per button size, so a large/tiny button's icon tracks its text rather than always
+// rendering at the `small` scale. mirrors the RNW ButtonIcon's own size table.
+const DEFAULT_ICON_SIZE: Record<ButtonContextValue['size'], NonNullable<IconProps['size']>> = {
+	large: 'md',
+	small: 'sm',
+	tiny: 'xs',
+};
+
 /** Renders an icon that inherits the button's text color via `currentColor`. */
-export function ButtonIcon({ icon: Icon, size = 'sm' }: ButtonIconProps) {
+export function ButtonIcon({ icon: Icon, size }: ButtonIconProps) {
 	const ctx = useContext(ButtonContext);
 	if (!ctx) {
 		throw new Error('ButtonIcon must be rendered inside a Button');
 	}
-	const px = ICON_PX[size];
+	const resolvedSize = size ?? DEFAULT_ICON_SIZE[ctx.size];
+	const px = ICON_PX[resolvedSize];
 	return (
 		<span
 			className={styles.iconBox({
-				narrow: size === '2xs',
+				narrow: resolvedSize === '2xs',
 				pull: ctx.shape !== 'round',
 				size: ctx.size,
 			})}
