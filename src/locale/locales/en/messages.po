@@ -4904,7 +4904,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:511
+#: src/view/shell/Drawer.tsx:496
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
 
@@ -6425,11 +6425,6 @@ msgstr ""
 
 #: src/view/screens/Storybook/Admonitions.tsx:75
 msgid "Privacy and Security settings"
-msgstr ""
-
-#: src/view/shell/Drawer.tsx:505
-#: src/view/shell/Drawer.tsx:507
-msgid "Privacy Policy"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:172
@@ -8253,11 +8248,6 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:64
 msgid "Tell us a little more"
-msgstr ""
-
-#: src/view/shell/Drawer.tsx:497
-#: src/view/shell/Drawer.tsx:500
-msgid "Terms of Service"
 msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:223

@@ -486,26 +486,11 @@ function MenuItem({ icon, label, count, bold, onPress }: MenuItemProps) {
 }
 
 function ExtraLinks() {
-	const { t: l } = useLingui();
 	const t = useTheme();
 	const kawaii = useKawaiiMode();
 
 	return (
 		<View style={[a.flex_col, a.gap_md, a.flex_wrap]}>
-			<InlineLinkText
-				style={[a.text_md]}
-				label={l`Terms of Service`}
-				to="https://bsky.social/about/support/tos"
-			>
-				<Trans>Terms of Service</Trans>
-			</InlineLinkText>
-			<InlineLinkText
-				style={[a.text_md]}
-				to="https://bsky.social/about/support/privacy-policy"
-				label={l`Privacy Policy`}
-			>
-				<Trans>Privacy Policy</Trans>
-			</InlineLinkText>
 			{kawaii && (
 				<Text style={t.atoms.text_contrast_medium}>
 					<Trans>
