@@ -29,7 +29,7 @@ import {
 } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/Button';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
@@ -37,9 +37,9 @@ import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Pl
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import * as Pills from '#/components/Pills';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { RichText, type RichTextProps } from '#/components/web/RichText';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -348,12 +348,14 @@ export function NamePlaceholder({ style }: ViewStyleProp) {
 
 export function Description({
 	profile: profileUnshadowed,
+	align,
+	color,
 	numberOfLines = 3,
-	style,
+	size,
 }: {
 	profile: AnyProfileView;
 	numberOfLines?: number;
-} & TextStyleProp) {
+} & Pick<RichTextProps, 'align' | 'color' | 'size'>) {
 	const profile = useProfileShadow(profileUnshadowed);
 	if (!('description' in profile) || !profile.description) return null;
 	if (
@@ -363,7 +365,14 @@ export function Description({
 		return null;
 	return (
 		<View style={[a.pt_xs]}>
-			<RichText value={profile.description} style={style} numberOfLines={numberOfLines} disableLinks />
+			<RichText
+				align={align}
+				color={color}
+				disableLinks
+				numberOfLines={numberOfLines}
+				size={size}
+				value={profile.description}
+			/>
 		</View>
 	);
 }

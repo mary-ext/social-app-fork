@@ -316,8 +316,10 @@ export function ProfileGrid({
 												<ProfileCard.Name profile={profile.actor} moderationOpts={moderationOpts} />
 												<ProfileCard.Description
 													profile={profile.actor}
+													align="center"
+													color="textContrastMedium"
 													numberOfLines={2}
-													style={[t.atoms.text_contrast_medium, a.text_center, a.text_xs]}
+													size="xs"
 												/>
 											</View>
 										</View>

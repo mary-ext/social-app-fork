@@ -28,7 +28,7 @@ export type RichTextProps = Pick<
 	enableTags?: boolean;
 	onLinkPress?: InlineLinkTextProps['onPress'];
 	/** The body-text sizes RichText renders (a subset of the full scale), each enlarged for emoji-only content. */
-	size?: 'lg' | 'md' | 'sm' | 'xl';
+	size?: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
 	value: Richtext | string;
 };
 
