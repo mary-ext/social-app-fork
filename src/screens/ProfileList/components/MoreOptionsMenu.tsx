@@ -28,7 +28,7 @@ import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 export function MoreOptionsMenu({
 	list,
@@ -39,7 +39,7 @@ export function MoreOptionsMenu({
 }) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
-	const editListHandle = Sheet.useSheetHandle();
+	const editListHandle = Dialog.useDialogHandle();
 	const deleteListPromptControl = useDialogControl();
 	const reportDialogControl = useReportDialogControl();
 	const navigation = useNavigation<NavigationProp>();

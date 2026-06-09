@@ -39,7 +39,7 @@ import * as Prompt from '#/components/Prompt';
 import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 import { ProfileHeaderDisplayName } from './DisplayName';
 import { EditProfileDialog } from './EditProfileDialog';
@@ -226,7 +226,7 @@ export function HeaderLabelerButtons({
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const requireAuth = useRequireAuth();
-	const editProfileHandle = Sheet.useSheetHandle();
+	const editProfileHandle = Dialog.useDialogHandle();
 	const { data: preferences } = usePreferencesQuery();
 	const { mutateAsync: toggleSubscription, variables, reset } = useLabelerSubscriptionMutation();
 	const isSubscribed =

@@ -20,9 +20,9 @@ import { DefaultAvatar, type UserAvatarType } from '#/view/com/util/UserAvatar';
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import { useDialogHandle } from '#/components/web/Dialog';
 import * as styles from '#/components/web/EditableAvatar.css';
 import * as Menu from '#/components/web/Menu';
-import { useSheetHandle } from '#/components/web/Sheet';
 
 /** Web-native avatar editor: a menu-triggering avatar that crops uploads via {@link EditImageDialog}. */
 export function EditableAvatar({
@@ -38,7 +38,7 @@ export function EditableAvatar({
 }) {
 	const { t: l } = useLingui();
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogControl = useSheetHandle();
+	const editImageDialogControl = useDialogHandle();
 
 	const circular = type !== 'algo' && type !== 'list';
 	const radius = circular ? '50%' : size > 32 ? '8px' : '3px';

@@ -26,7 +26,7 @@ import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icon
 import { TimesLarge_Stroke2_Corner0_Rounded as TimesIcon } from '#/components/icons/Times';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { Text } from '#/components/Typography';
-import { useSheetHandle } from '#/components/web/Sheet';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { Image } from '#/shims/image';
 
@@ -153,8 +153,8 @@ const GalleryItem = ({
 
 	const imageUrl = useBlobUrl((image.transformed ?? image.source).blob);
 
-	const altTextControl = useSheetHandle();
-	const editControl = useSheetHandle();
+	const altTextControl = useDialogHandle();
+	const editControl = useDialogHandle();
 
 	const onImageEdit = () => {
 		editControl.open(null);

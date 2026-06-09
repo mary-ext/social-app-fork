@@ -13,13 +13,13 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { CreateOrEditListDialog } from '#/components/dialogs/lists/CreateOrEditListDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Layout from '#/components/Layout';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>;
 export function ListsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
-	const createListHandle = Sheet.useSheetHandle();
+	const createListHandle = Dialog.useDialogHandle();
 
 	const onPressNewList = useCallback(() => {
 		createListHandle.open(null);

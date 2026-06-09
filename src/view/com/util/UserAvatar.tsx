@@ -45,7 +45,7 @@ import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import * as Menu from '#/components/Menu';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import { useSheetHandle } from '#/components/web/Sheet';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
@@ -349,7 +349,7 @@ let EditableUserAvatar = ({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogControl = useSheetHandle();
+	const editImageDialogControl = useDialogHandle();
 
 	const circular = type !== 'algo' && type !== 'list';
 

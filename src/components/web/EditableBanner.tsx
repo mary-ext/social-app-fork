@@ -18,9 +18,9 @@ import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog';
 import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon } from '#/components/icons/Camera';
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import { useDialogHandle } from '#/components/web/Dialog';
 import * as styles from '#/components/web/EditableBanner.css';
 import * as Menu from '#/components/web/Menu';
-import { useSheetHandle } from '#/components/web/Sheet';
 
 /** Web-native banner editor: a menu-triggering banner that crops uploads via {@link EditImageDialog}. */
 export function EditableBanner({
@@ -32,7 +32,7 @@ export function EditableBanner({
 }) {
 	const { t: l } = useLingui();
 	const [rawImage, setRawImage] = useState<ComposerImage | undefined>();
-	const editImageDialogControl = useSheetHandle();
+	const editImageDialogControl = useDialogHandle();
 
 	const onOpenLibrary = useCallback(async () => {
 		const file = await openImagePicker();

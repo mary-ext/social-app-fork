@@ -6,8 +6,8 @@ import { codeToLanguageName } from '#/locale/helpers';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
+import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
-import { useSheetHandle } from '#/components/web/Sheet';
 
 import { LanguageButton } from './LanguageButton';
 
@@ -28,7 +28,7 @@ export function PostLanguageSelect({
 	const { t: l } = useLingui();
 	const langPrefs = useLanguagePrefs();
 	const setLangPrefs = useLanguagePrefsApi();
-	const languageDialogControl = useSheetHandle();
+	const languageDialogControl = useDialogHandle();
 
 	const dedupedHistory = Array.from(new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]));
 

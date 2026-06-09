@@ -19,7 +19,7 @@ import * as Dialog from '#/components/Dialog';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import * as Sheet from '#/components/web/Sheet';
+import { useDialogHandle } from '#/components/web/Dialog';
 
 import { CreateOrEditListDialog } from './CreateOrEditListDialog';
 
@@ -35,7 +35,7 @@ export function CreateListFromStarterPackDialog({
 	const { currentAccount } = useSession();
 	const navigation = useNavigation<NavigationProp>();
 	const queryClient = useQueryClient();
-	const createListHandle = Sheet.useSheetHandle();
+	const createListHandle = useDialogHandle();
 	const loadingDialogControl = Dialog.useDialogControl();
 
 	const record = starterPack.record as AppBskyGraphStarterpack.Main;

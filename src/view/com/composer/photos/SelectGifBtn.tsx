@@ -4,7 +4,7 @@ import { useLingui } from '@lingui/react/macro';
 import { ComposerToolbarButton } from '#/view/com/composer/ComposerToolbarButton';
 
 import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 import { GifPickerDialog } from '#/features/gifPicker/GifPickerDialog';
 import type { Gif } from '#/features/gifPicker/types';
@@ -17,11 +17,11 @@ type Props = {
 
 export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
 	const { t: l } = useLingui();
-	const control = Sheet.useSheetHandle();
+	const control = Dialog.useDialogHandle();
 
 	return (
 		<>
-			<Sheet.Trigger
+			<Dialog.Trigger
 				handle={control}
 				render={
 					<ComposerToolbarButton

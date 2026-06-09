@@ -1,8 +1,8 @@
 import { useLingui, Trans } from '@lingui/react/macro';
 
 import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
-import * as Sheet from '#/components/web/Sheet';
 
 import * as styles from './DraftsButton.css';
 import { DraftsListDialog } from './DraftsListDialog';
@@ -29,7 +29,7 @@ export function DraftsButton({
 	textLength: number;
 }) {
 	const { t: l } = useLingui();
-	const draftsDialogControl = Sheet.useSheetHandle();
+	const draftsDialogControl = Dialog.useDialogHandle();
 	const savePromptControl = Prompt.usePromptHandle();
 	const { isPending: isSaving } = useSaveDraftMutation();
 

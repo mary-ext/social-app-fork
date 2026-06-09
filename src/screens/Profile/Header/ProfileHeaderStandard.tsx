@@ -36,7 +36,7 @@ import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
-import * as Sheet from '#/components/web/Sheet';
+import * as Dialog from '#/components/web/Dialog';
 
 import { useActorStatus } from '#/features/liveNow';
 
@@ -224,7 +224,7 @@ export function HeaderStandardButtons({
 	const requireAuth = useRequireAuth();
 	const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile, 'ProfileHeader');
 	const [, queueUnblock] = useProfileBlockMutationQueue(profile);
-	const editProfileHandle = Sheet.useSheetHandle();
+	const editProfileHandle = Dialog.useDialogHandle();
 	const unblockPromptControl = Prompt.usePromptControl();
 
 	const isMe = currentAccount?.did === profile.did;
@@ -306,14 +306,14 @@ export function HeaderStandardButtons({
 		<>
 			{isMe ? (
 				<>
-					<Sheet.Trigger
+					<Dialog.Trigger
 						handle={editProfileHandle}
 						render={<WebButton label={l`Edit profile`} color="secondary" size="small" />}
 					>
 						<WebButtonText>
 							<Trans>Edit Profile</Trans>
 						</WebButtonText>
-					</Sheet.Trigger>
+					</Dialog.Trigger>
 					<EditProfileDialog profile={profile} handle={editProfileHandle} />
 				</>
 			) : profile.viewer?.blocking ? (
