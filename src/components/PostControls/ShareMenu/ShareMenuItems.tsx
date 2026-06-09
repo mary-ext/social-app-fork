@@ -98,10 +98,12 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 				{hideInPWI && (
 					<>
 						{hasSession && <Menu.Separator />}
-						{copyLinkItem}
-						<Menu.LabelText maxWidth={220}>
-							<Trans>Note: This post is only visible to logged-in users.</Trans>
-						</Menu.LabelText>
+						<Menu.Group>
+							{copyLinkItem}
+							<Menu.LabelText maxWidth={220}>
+								<Trans>Note: This post is only visible to logged-in users.</Trans>
+							</Menu.LabelText>
+						</Menu.Group>
 					</>
 				)}
 

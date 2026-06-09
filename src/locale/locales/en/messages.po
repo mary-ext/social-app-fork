@@ -2296,8 +2296,8 @@ msgstr ""
 msgid "Copy at:// URI"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:117
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:119
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:121
 msgid "Copy author DID"
 msgstr ""
 
@@ -2340,8 +2340,8 @@ msgstr ""
 msgid "Copy message text"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:111
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:113
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:115
 msgid "Copy post at:// URI"
 msgstr ""
 
@@ -5660,7 +5660,7 @@ msgstr ""
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:103
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:104
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
