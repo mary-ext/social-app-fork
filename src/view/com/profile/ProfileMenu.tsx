@@ -234,7 +234,7 @@ let ProfileMenu = ({
 					}
 				/>
 
-				<Menu.Popup label={l`More options`} align="center" minWidth={170}>
+				<Menu.Popup label={l`More options`} align="end" minWidth={170}>
 					<Menu.Group>
 						<Menu.Item
 							label={l`Copy link to profile`}
