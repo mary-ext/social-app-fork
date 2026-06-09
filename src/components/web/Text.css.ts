@@ -19,48 +19,44 @@ const variantsFor = <Scale extends Record<string, number | string>, Property ext
 	return out as { [Key in keyof Scale]: Record<Property, Scale[Key]> };
 };
 
-// the line-height ratio is published as a var so the `size` variant can fold it into the device-snapped
-// line-height calc (leading and size are independent variants applied to the same element)
-const leadingVar = createVar();
-
-/** A `leading` variant group publishing each ratio onto {@link leadingVar} for the `size` calc to consume. */
-const leadingVariants = <Scale extends Record<string, number>>(
+/** Turns a token scale into a variant group assigning each token value to `cssVar`. */
+const varVariantsFor = <Scale extends Record<string, number | string>>(
 	scale: Scale,
+	cssVar: string,
 ): { [Key in keyof Scale]: { vars: Record<string, string> } } => {
 	const out: Record<string, { vars: Record<string, string> }> = {};
-	for (const [key, ratio] of Object.entries(scale)) {
-		out[key] = { vars: { [leadingVar]: String(ratio) } };
+	for (const [key, value] of Object.entries(scale)) {
+		out[key] = { vars: { [cssVar]: String(value) } };
 	}
 	return out as { [Key in keyof Scale]: { vars: Record<string, string> } };
 };
 
-/**
- * A `size` variant group setting `font-size` and a `line-height` snapped to the device-pixel grid —
- * `round(fontSize * leading, 1px / dpr)` — so it lands on whole device pixels like RNW rather than leaving a
- * fractional CSS value.
- */
-const sizeVariants = <Scale extends Record<string, string>>(
-	scale: Scale,
-): { [Key in keyof Scale]: { fontSize: string; lineHeight: string } } => {
-	const out: Record<string, { fontSize: string; lineHeight: string }> = {};
-	for (const [key, size] of Object.entries(scale)) {
-		out[key] = {
-			fontSize: size,
-			lineHeight: roundToDevicePx(calc.multiply(size, fallbackVar(leadingVar, '1.3'))),
-		};
-	}
-	return out as { [Key in keyof Scale]: { fontSize: string; lineHeight: string } };
-};
+// font-size and the line-height ratio are published as vars so the `size`/`leading` variants only assign
+// them and `base` derives the actual `font-size` and device-snapped `line-height` from both (they're
+// independent variants applied to the same element). `fontSizeVar` is exported so another recipe can resize
+// the text by overriding it alone, letting both derived properties follow.
+export const fontSizeVar = createVar();
+export const leadingVar = createVar();
+
+const fontSizeScale = fallbackVar(fontSizeVar, fontSize.sm);
 
 export const text = recipe(
 	{
-		base: { fontFamily, margin: 0, padding: 0 },
+		base: {
+			fontFamily,
+			fontSize: fontSizeScale,
+			// snap the derived line-height to the device-pixel grid — `round(fontSize * leading, 1px / dpr)` — so
+			// it lands on whole device pixels like RNW rather than a fractional CSS value
+			lineHeight: roundToDevicePx(calc.multiply(fontSizeScale, fallbackVar(leadingVar, '1.3'))),
+			margin: 0,
+			padding: 0,
+		},
 		defaultVariants: { color: 'text', leading: 'snug', size: 'sm' },
 		variants: {
 			align: { center: { textAlign: 'center' }, left: { textAlign: 'left' }, right: { textAlign: 'right' } },
 			color: variantsFor(colors, 'color'),
-			leading: leadingVariants(lineHeight),
-			size: sizeVariants(fontSize),
+			leading: varVariantsFor(lineHeight, leadingVar),
+			size: varVariantsFor(fontSize, fontSizeVar),
 			weight: variantsFor(fontWeight, 'fontWeight'),
 		},
 	},

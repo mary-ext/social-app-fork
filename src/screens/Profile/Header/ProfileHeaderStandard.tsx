@@ -32,11 +32,11 @@ import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Pl
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/KnownFollowers';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
-import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Button as WebButton, ButtonText as WebButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
+import { RichText } from '#/components/web/RichText';
 
 import { useActorStatus } from '#/features/liveNow';
 
@@ -157,13 +157,12 @@ let ProfileHeaderStandard = ({
 							getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 								<View pointerEvents="auto">
 									<RichText
-										testID="profileHeaderDescription"
-										style={[a.text_md]}
+										authorHandle={profile.handle}
+										enableTags
 										numberOfLines={15}
 										selectable
+										size="md"
 										value={descriptionRT}
-										enableTags
-										authorHandle={profile.handle}
 									/>
 								</View>
 							) : undefined}

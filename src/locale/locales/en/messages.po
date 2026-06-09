@@ -903,7 +903,7 @@ msgstr ""
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:95
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:81
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:282
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:281
 #: src/view/com/profile/ProfileMenu.tsx:151
 msgctxt "toast"
 msgid "Account unblocked"
@@ -1560,7 +1560,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatStatusInfo.tsx:65
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
 #: src/screens/Messages/ConversationSettings/prompts.tsx:134
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:191
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 msgid "Block"
 msgstr ""
 
@@ -1838,6 +1838,7 @@ msgid "carousel"
 msgstr "carousel"
 
 #: src/components/RichTextTag.tsx:47
+#: src/components/web/RichTextTag.tsx:60
 msgid "Cashtag {tag}"
 msgstr ""
 
@@ -2950,12 +2951,12 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:56
 #: src/screens/Profile/Header/EditProfileDialog.tsx:200
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:268
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:311
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 msgid "Edit profile"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:272
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:313
 msgid "Edit Profile"
 msgstr ""
 
@@ -3602,7 +3603,7 @@ msgstr "Focus the search field"
 #: src/components/ProfileHoverCard/index.tsx:474
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:365
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:364
 #: src/view/com/notifications/NotificationFeedItem.tsx:748
 #: src/view/com/notifications/NotificationFeedItem.tsx:755
 msgid "Follow"
@@ -3610,7 +3611,7 @@ msgstr ""
 
 #. placeholder {0}: profile.handle
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:119
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:355
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:354
 msgid "Follow {0}"
 msgstr ""
 
@@ -3631,7 +3632,7 @@ msgstr ""
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:483
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:363
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:362
 #: src/view/com/notifications/NotificationFeedItem.tsx:748
 #: src/view/com/notifications/NotificationFeedItem.tsx:755
 msgid "Follow back"
@@ -3687,7 +3688,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:474
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:361
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:360
 #: src/view/com/notifications/NotificationFeedItem.tsx:726
 #: src/view/com/notifications/NotificationFeedItem.tsx:743
 msgid "Following"
@@ -3703,7 +3704,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:439
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:238
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 #: src/view/com/notifications/NotificationFeedItem.tsx:686
 msgid "Following {0}"
 msgstr ""
@@ -4079,6 +4080,7 @@ msgid "Hashtag"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:47
+#: src/components/web/RichTextTag.tsx:60
 msgid "Hashtag {tag}"
 msgstr ""
 
@@ -5180,6 +5182,11 @@ msgstr ""
 msgid "Mute {0}"
 msgstr "Mute {0}"
 
+#: src/components/web/RichTextTag.tsx:109
+#: src/components/web/RichTextTag.tsx:120
+msgid "Mute {prefixedTag}"
+msgstr "Mute {prefixedTag}"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
 #: src/view/com/profile/ProfileMenu.tsx:349
@@ -5491,7 +5498,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:462
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:261
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:260
 #: src/view/com/notifications/NotificationFeedItem.tsx:702
 msgid "No longer following {0}"
 msgstr ""
@@ -7330,19 +7337,31 @@ msgstr ""
 msgid "See {0} posts by user"
 msgstr ""
 
+#: src/components/web/RichTextTag.tsx:89
+msgid "See {prefixedTag} posts"
+msgstr "See {prefixedTag} posts"
+
+#: src/components/web/RichTextTag.tsx:97
+msgid "See {prefixedTag} posts by user"
+msgstr "See {prefixedTag} posts by user"
+
 #: src/components/RichTextTag.tsx:103
+#: src/components/web/RichTextTag.tsx:91
 msgid "See {tag} posts"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:118
+#: src/components/web/RichTextTag.tsx:101
 msgid "See {tag} posts by user"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:103
+#: src/components/web/RichTextTag.tsx:91
 msgid "See #{tag} posts"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:118
+#: src/components/web/RichTextTag.tsx:101
 msgid "See #{tag} posts by user"
 msgstr ""
 
@@ -8261,8 +8280,8 @@ msgid "That's all, folks!"
 msgstr ""
 
 #: src/components/moderation/block-account-prompt.tsx:30
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:187
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:376
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:375
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
 
@@ -8395,9 +8414,9 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:92
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:105
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:86
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:247
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:271
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:287
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:246
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:270
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
 #: src/view/com/profile/ProfileMenu.tsx:127
 #: src/view/com/profile/ProfileMenu.tsx:139
 #: src/view/com/profile/ProfileMenu.tsx:155
@@ -8910,15 +8929,15 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/components/moderation/block-account-prompt.tsx:32
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:191
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:325
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:380
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:324
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:379
 #: src/screens/ProfileList/components/Header.tsx:144
 #: src/screens/ProfileList/components/Header.tsx:152
 msgid "Unblock"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:330
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:329
 msgctxt "action"
 msgid "Unblock"
 msgstr ""
@@ -8938,8 +8957,8 @@ msgstr ""
 msgid "Unblock account?"
 msgstr "Unblock account?"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:375
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:185
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:374
 msgid "Unblock Account?"
 msgstr ""
 
@@ -8964,7 +8983,7 @@ msgid "Undo repost"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:355
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:354
 msgid "Unfollow {0}"
 msgstr ""
 
@@ -9031,6 +9050,11 @@ msgstr ""
 #: src/components/RichTextTag.tsx:138
 msgid "Unmute {0}"
 msgstr "Unmute {0}"
+
+#: src/components/web/RichTextTag.tsx:109
+#: src/components/web/RichTextTag.tsx:120
+msgid "Unmute {prefixedTag}"
+msgstr "Unmute {prefixedTag}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
