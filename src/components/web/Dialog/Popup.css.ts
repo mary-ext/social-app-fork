@@ -26,11 +26,19 @@ export const viewport = style(
 		justifyContent: 'center',
 		left: 0,
 		overflowY: 'auto',
-		padding: '10vh 16px',
+		// mobile-first: top-anchored with a small inset on narrow screens; past the 800px breakpoint the
+		// vertical inset opens up to 10vh so the card floats lower on the screen.
+		paddingBlock: 20,
+		paddingInline: 20,
 		position: 'fixed',
 		right: 0,
 		top: 0,
 		zIndex: 10,
+		'@media': {
+			'(min-width: 800px)': {
+				paddingBlock: '10vh',
+			},
+		},
 	}),
 );
 
