@@ -1837,7 +1837,7 @@ msgid "carousel"
 msgstr "carousel"
 
 #: src/components/RichTextTag.tsx:47
-#: src/components/web/RichTextTag.tsx:60
+#: src/components/web/RichTextTag.tsx:62
 msgid "Cashtag {tag}"
 msgstr ""
 
@@ -4078,7 +4078,7 @@ msgid "Hashtag"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:47
-#: src/components/web/RichTextTag.tsx:60
+#: src/components/web/RichTextTag.tsx:62
 msgid "Hashtag {tag}"
 msgstr ""
 
@@ -5180,8 +5180,8 @@ msgstr ""
 msgid "Mute {0}"
 msgstr "Mute {0}"
 
-#: src/components/web/RichTextTag.tsx:109
-#: src/components/web/RichTextTag.tsx:120
+#: src/components/web/RichTextTag.tsx:114
+#: src/components/web/RichTextTag.tsx:125
 msgid "Mute {prefixedTag}"
 msgstr "Mute {prefixedTag}"
 
@@ -7328,31 +7328,31 @@ msgstr ""
 msgid "See {0} posts by user"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:89
+#: src/components/web/RichTextTag.tsx:94
 msgid "See {prefixedTag} posts"
 msgstr "See {prefixedTag} posts"
 
-#: src/components/web/RichTextTag.tsx:97
+#: src/components/web/RichTextTag.tsx:102
 msgid "See {prefixedTag} posts by user"
 msgstr "See {prefixedTag} posts by user"
 
 #: src/components/RichTextTag.tsx:103
-#: src/components/web/RichTextTag.tsx:91
+#: src/components/web/RichTextTag.tsx:96
 msgid "See {tag} posts"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:118
-#: src/components/web/RichTextTag.tsx:101
+#: src/components/web/RichTextTag.tsx:106
 msgid "See {tag} posts by user"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:103
-#: src/components/web/RichTextTag.tsx:91
+#: src/components/web/RichTextTag.tsx:96
 msgid "See #{tag} posts"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:118
-#: src/components/web/RichTextTag.tsx:101
+#: src/components/web/RichTextTag.tsx:106
 msgid "See #{tag} posts by user"
 msgstr ""
 
@@ -9042,8 +9042,8 @@ msgstr ""
 msgid "Unmute {0}"
 msgstr "Unmute {0}"
 
-#: src/components/web/RichTextTag.tsx:109
-#: src/components/web/RichTextTag.tsx:120
+#: src/components/web/RichTextTag.tsx:114
+#: src/components/web/RichTextTag.tsx:125
 msgid "Unmute {prefixedTag}"
 msgstr "Unmute {prefixedTag}"
 

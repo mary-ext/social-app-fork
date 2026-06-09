@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type MouseEvent, useMemo } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { clsx } from 'clsx';
@@ -22,6 +22,8 @@ import * as Menu from '#/components/web/Menu';
 import type { TextProps } from '#/components/web/Text';
 import * as textStyles from '#/components/web/Text.css';
 
+const preventDefault = (e: MouseEvent) => e.preventDefault();
+
 export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
 	authorHandle?: string;
 	display: string;
@@ -30,8 +32,8 @@ export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
 
 /**
  * An inline hashtag/cashtag within {@link RichText}: a link to the tag's feed that opens a context menu
- * (browse the tag, browse it by the post's author, mute/unmute) on click. Modified clicks fall through to the
- * anchor so the tag still opens in a new tab.
+ * (browse the tag, browse it by the post's author, mute/unmute) on click. A left-click always opens the menu;
+ * the anchor's href is kept so middle/right-click still open the tag's feed in a new tab.
  */
 export function RichTextTag({
 	authorHandle,
@@ -80,6 +82,9 @@ export function RichTextTag({
 					linkStyles.inlineLink({ underline: true }),
 				)}
 				nativeButton={false}
+				// the anchor exists only for its href (hover preview, middle/right-click "open in new tab"); a
+				// plain left-click always opens the menu, so suppress the native navigation it would trigger
+				onClick={preventDefault}
 				render={<a href={href} />}
 			>
 				{display}
