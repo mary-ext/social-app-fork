@@ -14,7 +14,6 @@ export function Text({
 	emoji,
 	style,
 	selectable,
-	title,
 	dataSet,
 	numberOfLines,
 	allowFontScaling = true,
@@ -44,7 +43,7 @@ export function Text({
 		selectable,
 		numberOfLines,
 		style: s,
-		dataSet: Object.assign({ tooltip: title }, dataSet || {}),
+		dataSet,
 		allowFontScaling,
 		...rest,
 	};

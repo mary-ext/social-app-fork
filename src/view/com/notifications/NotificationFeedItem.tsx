@@ -78,6 +78,8 @@ import { Notification as StarterPackCard } from '#/components/StarterPack/Starte
 import { SubtleHover } from '#/components/SubtleHover';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Text as WebText } from '#/components/web/Text';
+import { Tooltip } from '#/components/web/Tooltip';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 const MAX_AUTHORS = 5;
@@ -601,9 +603,11 @@ let NotificationFeedItem = ({
 										<>
 											{/* make sure there's whitespace around the middot -sfn */}
 											<Text style={[a.text_md, t.atoms.text_contrast_medium]}> &middot; </Text>
-											<Text style={[a.text_md, t.atoms.text_contrast_medium]} title={niceTimestamp}>
-												{timeElapsed}
-											</Text>
+											<Tooltip label={niceTimestamp}>
+												<WebText color="textContrastMedium" size="md">
+													{timeElapsed}
+												</WebText>
+											</Tooltip>
 										</>
 									)}
 								</TimeElapsed>

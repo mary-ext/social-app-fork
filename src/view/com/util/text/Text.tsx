@@ -12,7 +12,6 @@ import { childHasEmoji, type StringChild } from '#/alf/typography';
 export type CustomTextProps = Omit<TextProps, 'children'> & {
 	type?: TypographyVariant;
 	lineHeight?: number;
-	title?: string;
 	dataSet?: Record<string, string | number>;
 	selectable?: boolean;
 } & (
@@ -34,7 +33,6 @@ function Text_DEPRECATED({
 	emoji,
 	lineHeight,
 	style,
-	title,
 	dataSet,
 	selectable,
 	...props
@@ -72,21 +70,10 @@ function Text_DEPRECATED({
 		return {
 			selectable,
 			style: flattened,
-			dataSet: Object.assign({ tooltip: title }, dataSet || {}),
+			dataSet,
 			...props,
 		};
-	}, [
-		dataSet,
-		fonts.family,
-		fonts.scaleMultiplier,
-		lineHeight,
-		props,
-		selectable,
-		style,
-		theme,
-		title,
-		type,
-	]);
+	}, [dataSet, fonts.family, fonts.scaleMultiplier, lineHeight, props, selectable, style, theme, type]);
 
 	return <RNText {...textProps}>{children}</RNText>;
 }

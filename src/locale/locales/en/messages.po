@@ -367,155 +367,155 @@ msgstr ""
 msgid "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 msgstr "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:335
+#: src/view/com/notifications/NotificationFeedItem.tsx:337
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:363
+#: src/view/com/notifications/NotificationFeedItem.tsx:365
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:282
+#: src/view/com/notifications/NotificationFeedItem.tsx:284
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:458
+#: src/view/com/notifications/NotificationFeedItem.tsx:460
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:435
+#: src/view/com/notifications/NotificationFeedItem.tsx:437
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:304
+#: src/view/com/notifications/NotificationFeedItem.tsx:306
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:480
+#: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:385
+#: src/view/com/notifications/NotificationFeedItem.tsx:387
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:412
+#: src/view/com/notifications/NotificationFeedItem.tsx:414
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
+#: src/view/com/notifications/NotificationFeedItem.tsx:349
 msgid "{firstAuthorLink} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:326
+#: src/view/com/notifications/NotificationFeedItem.tsx:328
 msgid "{firstAuthorLink} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:375
+#: src/view/com/notifications/NotificationFeedItem.tsx:377
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:294
+#: src/view/com/notifications/NotificationFeedItem.tsx:296
 msgid "{firstAuthorLink} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:470
+#: src/view/com/notifications/NotificationFeedItem.tsx:472
 msgid "{firstAuthorLink} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:447
+#: src/view/com/notifications/NotificationFeedItem.tsx:449
 msgid "{firstAuthorLink} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:316
+#: src/view/com/notifications/NotificationFeedItem.tsx:318
 msgid "{firstAuthorLink} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:492
+#: src/view/com/notifications/NotificationFeedItem.tsx:494
 msgid "{firstAuthorLink} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:397
+#: src/view/com/notifications/NotificationFeedItem.tsx:399
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:424
+#: src/view/com/notifications/NotificationFeedItem.tsx:426
 msgid "{firstAuthorLink} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:329
+#: src/view/com/notifications/NotificationFeedItem.tsx:331
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:357
+#: src/view/com/notifications/NotificationFeedItem.tsx:359
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:276
+#: src/view/com/notifications/NotificationFeedItem.tsx:278
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:452
+#: src/view/com/notifications/NotificationFeedItem.tsx:454
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:429
+#: src/view/com/notifications/NotificationFeedItem.tsx:431
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:298
+#: src/view/com/notifications/NotificationFeedItem.tsx:300
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:474
+#: src/view/com/notifications/NotificationFeedItem.tsx:476
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:379
+#: src/view/com/notifications/NotificationFeedItem.tsx:381
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:406
+#: src/view/com/notifications/NotificationFeedItem.tsx:408
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:333
+#: src/view/com/notifications/NotificationFeedItem.tsx:335
 msgid "{firstAuthorName} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:325
+#: src/view/com/notifications/NotificationFeedItem.tsx:327
 msgid "{firstAuthorName} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:361
+#: src/view/com/notifications/NotificationFeedItem.tsx:363
 msgid "{firstAuthorName} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:280
+#: src/view/com/notifications/NotificationFeedItem.tsx:282
 msgid "{firstAuthorName} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:456
+#: src/view/com/notifications/NotificationFeedItem.tsx:458
 msgid "{firstAuthorName} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:433
+#: src/view/com/notifications/NotificationFeedItem.tsx:435
 msgid "{firstAuthorName} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:302
+#: src/view/com/notifications/NotificationFeedItem.tsx:304
 msgid "{firstAuthorName} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
+#: src/view/com/notifications/NotificationFeedItem.tsx:480
 msgid "{firstAuthorName} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:383
+#: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:410
+#: src/view/com/notifications/NotificationFeedItem.tsx:412
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
@@ -1330,8 +1330,8 @@ msgstr ""
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:457
 #: src/components/ProfileCard.tsx:479
-#: src/view/com/notifications/NotificationFeedItem.tsx:689
-#: src/view/com/notifications/NotificationFeedItem.tsx:705
+#: src/view/com/notifications/NotificationFeedItem.tsx:693
+#: src/view/com/notifications/NotificationFeedItem.tsx:709
 msgid "An issue occurred, please try again."
 msgstr ""
 
@@ -2097,11 +2097,11 @@ msgstr "Close this dialog"
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:554
+#: src/view/com/notifications/NotificationFeedItem.tsx:556
 msgid "Collapse list of users"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:832
+#: src/view/com/notifications/NotificationFeedItem.tsx:836
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
@@ -3131,7 +3131,7 @@ msgstr ""
 msgid "Expand alt text"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:554
+#: src/view/com/notifications/NotificationFeedItem.tsx:556
 msgid "Expand list of users"
 msgstr ""
 
@@ -3596,8 +3596,8 @@ msgstr "Focus the search field"
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:364
-#: src/view/com/notifications/NotificationFeedItem.tsx:748
-#: src/view/com/notifications/NotificationFeedItem.tsx:755
+#: src/view/com/notifications/NotificationFeedItem.tsx:752
+#: src/view/com/notifications/NotificationFeedItem.tsx:759
 msgid "Follow"
 msgstr ""
 
@@ -3625,8 +3625,8 @@ msgstr ""
 #: src/components/ProfileCard.tsx:491
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:362
-#: src/view/com/notifications/NotificationFeedItem.tsx:748
-#: src/view/com/notifications/NotificationFeedItem.tsx:755
+#: src/view/com/notifications/NotificationFeedItem.tsx:752
+#: src/view/com/notifications/NotificationFeedItem.tsx:759
 msgid "Follow back"
 msgstr ""
 
@@ -3681,8 +3681,8 @@ msgstr ""
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:360
-#: src/view/com/notifications/NotificationFeedItem.tsx:726
-#: src/view/com/notifications/NotificationFeedItem.tsx:743
+#: src/view/com/notifications/NotificationFeedItem.tsx:730
+#: src/view/com/notifications/NotificationFeedItem.tsx:747
 msgid "Following"
 msgstr ""
 
@@ -3697,7 +3697,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:447
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
-#: src/view/com/notifications/NotificationFeedItem.tsx:686
+#: src/view/com/notifications/NotificationFeedItem.tsx:690
 msgid "Following {0}"
 msgstr ""
 
@@ -3927,7 +3927,7 @@ msgstr ""
 msgid "Go live for"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:237
+#: src/view/com/notifications/NotificationFeedItem.tsx:239
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
@@ -4107,7 +4107,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:836
+#: src/view/com/notifications/NotificationFeedItem.tsx:840
 msgctxt "action"
 msgid "Hide"
 msgstr ""
@@ -4157,7 +4157,7 @@ msgstr ""
 msgid "Hide trending videos?"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:831
+#: src/view/com/notifications/NotificationFeedItem.tsx:835
 msgid "Hide user list"
 msgstr ""
 
@@ -5319,11 +5319,11 @@ msgctxt "action"
 msgid "New"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:518
+#: src/view/com/notifications/NotificationFeedItem.tsx:520
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:502
+#: src/view/com/notifications/NotificationFeedItem.tsx:504
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
@@ -5395,11 +5395,11 @@ msgctxt "action"
 msgid "New post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:507
+#: src/view/com/notifications/NotificationFeedItem.tsx:509
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
 msgstr "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:498
+#: src/view/com/notifications/NotificationFeedItem.tsx:500
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
@@ -5484,7 +5484,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
 #: src/components/ProfileCard.tsx:470
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:260
-#: src/view/com/notifications/NotificationFeedItem.tsx:702
+#: src/view/com/notifications/NotificationFeedItem.tsx:706
 msgid "No longer following {0}"
 msgstr ""
 
@@ -5947,7 +5947,7 @@ msgid "Opens this draft in the composer"
 msgstr ""
 
 #: src/components/dms/MessageItem.tsx:198
-#: src/view/com/notifications/NotificationFeedItem.tsx:907
+#: src/view/com/notifications/NotificationFeedItem.tsx:911
 msgid "Opens this profile"
 msgstr ""
 
@@ -7173,8 +7173,8 @@ msgid "Saving"
 msgstr "Saving"
 
 #: src/components/NewskieDialog.tsx:130
-#: src/view/com/notifications/NotificationFeedItem.tsx:778
-#: src/view/com/notifications/NotificationFeedItem.tsx:804
+#: src/view/com/notifications/NotificationFeedItem.tsx:782
+#: src/view/com/notifications/NotificationFeedItem.tsx:808
 msgid "Say hello!"
 msgstr ""
 
@@ -9323,7 +9323,7 @@ msgstr ""
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:394
 #: src/screens/Search/components/SearchProfileCard.tsx:39
-#: src/view/com/notifications/NotificationFeedItem.tsx:560
+#: src/view/com/notifications/NotificationFeedItem.tsx:562
 msgid "View {0}'s profile"
 msgstr ""
 
@@ -10073,11 +10073,11 @@ msgstr ""
 msgid "Your chats have been disabled"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:353
+#: src/view/com/notifications/NotificationFeedItem.tsx:355
 msgid "Your contact {firstAuthorLink} is on Bluesky"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:352
+#: src/view/com/notifications/NotificationFeedItem.tsx:354
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 

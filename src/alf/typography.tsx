@@ -43,8 +43,6 @@ export type TextProps = RNTextProps & {
 	selectable?: boolean;
 	/** Provides `data-*` attributes to the underlying text element on web only. */
 	dataSet?: Record<string, string | number | undefined>;
-	/** Appears as a small tooltip on web hover. */
-	title?: string;
 	/** Whether the children could possibly contain emoji. */
 	emoji?: boolean;
 };

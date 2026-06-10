@@ -319,7 +319,6 @@ export type InlineLinkProps = React.PropsWithChildren<
 		Pick<TextProps, 'selectable' | 'numberOfLines' | 'emoji'> &
 		Pick<ButtonProps, 'label' | 'accessibilityHint' | 'onFocus' | 'onBlur'> & {
 			disableUnderline?: boolean;
-			title?: TextProps['title'];
 		}
 >;
 

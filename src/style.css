@@ -67,49 +67,6 @@ a[role='link'][data-no-underline='1']:hover {
 	scrollbar-gutter: stable both-edges;
 }
 
-/* Tooltips */
-[data-tooltip] {
-	position: relative;
-	z-index: 10;
-}
-[data-tooltip]::after {
-	content: attr(data-tooltip);
-	display: none;
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	transform: translateY(100%) translateY(8px) translateX(-50%);
-	padding: 4px 10px;
-	border-radius: 10px;
-	background: var(--backgroundLight);
-	color: var(--text);
-	text-align: center;
-	white-space: nowrap;
-	font-size: 12px;
-	z-index: 10;
-	/* HACK: promote to its own layer so Safari's compositor doesn't latch the
-	   bubble's `display: block` state when SubtleHover (also promoted) sits in
-	   the same stacking context. Without this, hovering certain notification
-	   items can leave the bubble visible permanently until a relayout. -sfn */
-	will-change: transform;
-}
-[data-tooltip]::before {
-	content: '';
-	display: none;
-	position: absolute;
-	border-bottom: 6px solid var(--backgroundLight);
-	border-left: 6px solid transparent;
-	border-right: 6px solid transparent;
-	bottom: 0;
-	left: 50%;
-	transform: translateY(100%) translateY(2px) translateX(-50%);
-	z-index: 10;
-}
-[data-tooltip]:hover::after,
-[data-tooltip]:hover::before {
-	display: block;
-}
-
 /* NativeDropdown component */
 .radix-dropdown-item:focus,
 .nativeDropdown-item:focus {

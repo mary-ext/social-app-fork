@@ -163,7 +163,6 @@ export const TextLink = memo(function TextLink({
 	numberOfLines,
 	lineHeight,
 	dataSet: dataSetProp,
-	title,
 	onPress: onPressProp,
 	onBeforePress,
 	disableMismatchWarning,
@@ -179,7 +178,6 @@ export const TextLink = memo(function TextLink({
 	numberOfLines?: number;
 	lineHeight?: number;
 	dataSet?: DataSet;
-	title?: string;
 	disableMismatchWarning?: boolean;
 	navigationAction?: 'push' | 'replace' | 'navigate';
 	anchorNoUnderline?: boolean;
@@ -249,7 +247,6 @@ export const TextLink = memo(function TextLink({
 			numberOfLines={numberOfLines}
 			lineHeight={lineHeight}
 			dataSet={dataSet}
-			title={title}
 			// @ts-ignore web only -prf
 			hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
 			onPress={onPress}
