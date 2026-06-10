@@ -7,7 +7,7 @@
 		"dev": "rsbuild dev",
 		"build": "pnpm typecheck && rsbuild build",
 		"preview": "rsbuild preview",
-		"lint": "eslint --cache --quiet src",
+		"lint": "eslint --cache src",
 		"format": "oxfmt",
 		"format:check": "oxfmt --check",
 		"typecheck": "tsgo -b",
