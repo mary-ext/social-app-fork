@@ -128,7 +128,7 @@ export function useActorStatus(actor?: AnyProfileView) {
 					isDisabled: false,
 					isActive: true,
 					status: 'app.bsky.actor.status#live',
-					embed: shadowed.status.embed as AppBskyActorDefs.StatusView['embed'], // temp_isStatusValid asserts this
+					embed: shadowed.status.embed, // temp_isStatusValid asserts this
 					expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
 					record: shadowed.status.record,
 				} satisfies AppBskyActorDefs.StatusView;
@@ -139,7 +139,7 @@ export function useActorStatus(actor?: AnyProfileView) {
 				isDisabled,
 				isActive: false,
 				status: 'app.bsky.actor.status#live',
-				embed: shadowed.status.embed as AppBskyActorDefs.StatusView['embed'], // temp_isStatusValid asserts this
+				embed: shadowed.status.embed, // temp_isStatusValid asserts this
 				expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
 				record: shadowed.status.record,
 			} satisfies AppBskyActorDefs.StatusView;

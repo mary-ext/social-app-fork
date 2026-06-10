@@ -92,7 +92,7 @@ function QuickReactions({
 						)}
 						onClick={() => onSelect(emoji)}
 					>
-						{/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text -- styled <span>, not RN text */}
+						{}
 						<span className={styles.reactionGlyph}>{emoji}</span>
 					</button>
 				);

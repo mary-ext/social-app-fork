@@ -191,7 +191,7 @@ export function sortAndAnnotateThreadItems(
 									 * `repliesSeenCounter` later on, since `repliesSeenCounter`
 									 * is 1-indexed and `replyIndex` is 0-indexed.
 									 */
-									childMetadata!.replyIndex = childParentMetadata.repliesSeenCounter;
+									childMetadata.replyIndex = childParentMetadata.repliesSeenCounter;
 								}
 
 								const childPost = views.threadPost({

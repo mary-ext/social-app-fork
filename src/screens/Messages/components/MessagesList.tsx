@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
-import type { $type, Did, Handle } from '@atcute/lexicons';
+import type { $type, Handle } from '@atcute/lexicons';
 
 import {
 	runOnJS,
@@ -72,7 +72,7 @@ type WebViewStyle = ViewStyle & {
 };
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
+	return style;
 };
 
 function MaybeLoader({ isLoading }: { isLoading: boolean }) {
@@ -420,7 +420,7 @@ export function MessagesList({
 								params: { handle: handle as Handle },
 							}),
 						);
-						return res.did as Did;
+						return res.did;
 					} catch {
 						return undefined;
 					}

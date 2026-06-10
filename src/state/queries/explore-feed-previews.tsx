@@ -192,7 +192,7 @@ export function useFeedPreviews(
 							// apply moderation filters
 							item.items = item.items.filter((_, i) => {
 								const modui =
-									moderations[i] && getDisplayRestrictions(moderations[i]!, DisplayContext.ContentList);
+									moderations[i] && getDisplayRestrictions(moderations[i], DisplayContext.ContentList);
 								return !modui || modui.filters.length === 0;
 							});
 

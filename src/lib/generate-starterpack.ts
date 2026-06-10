@@ -146,8 +146,8 @@ function createListItem({
 		value: {
 			$type: 'app.bsky.graph.listitem',
 			createdAt: new Date().toISOString(),
-			list: listUri as ResourceUri,
-			subject: did as Did,
+			list: listUri,
+			subject: did,
 		},
 	};
 }

@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import type {
 	AnyProfileView,
-	AnyStarterPackView,
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
 	AppBskyFeedPost,
@@ -171,7 +170,7 @@ let NotificationFeedItem = ({
 				moderation: moderateProfile(item.notification.author, moderationOpts),
 			},
 			...(item.additional?.map(({ author }) => ({
-				profile: author as AppBskyActorDefs.ProfileView,
+				profile: author,
 				href: makeProfileLink(author),
 				moderation: moderateProfile(author as AnyProfileView, moderationOpts),
 			})) || []),
@@ -215,7 +214,7 @@ let NotificationFeedItem = ({
 		return (
 			<View testID={`feedItem-by-${item.notification.author.handle}`}>
 				<Post
-					post={item.subject as AppBskyFeedDefs.PostView}
+					post={item.subject}
 					style={
 						isHighlighted && {
 							backgroundColor: t.palette.primary_25,
@@ -615,7 +614,7 @@ let NotificationFeedItem = ({
 						</ExpandListPressable>
 						{(item.type === 'follow' && !hasMultipleAuthors && !isFollowBack) ||
 						(item.type === 'contact-match' && !item.notification.author.viewer?.following) ? (
-							<FollowBackButton profile={item.notification.author as AppBskyActorDefs.ProfileView} />
+							<FollowBackButton profile={item.notification.author} />
 						) : null}
 						{item.type === 'post-like' ||
 						item.type === 'repost' ||
@@ -623,7 +622,7 @@ let NotificationFeedItem = ({
 						item.type === 'repost-via-repost' ||
 						item.type === 'subscribed-post' ? (
 							<View style={[a.pt_2xs]}>
-								<AdditionalPostText post={item.subject as AppBskyFeedDefs.PostView} />
+								<AdditionalPostText post={item.subject} />
 							</View>
 						) : null}
 						{item.type === 'feedgen-like' && item.subjectUri ? (
@@ -637,7 +636,7 @@ let NotificationFeedItem = ({
 						{item.type === 'starterpack-joined' ? (
 							<View>
 								<View style={[a.border, a.p_sm, a.rounded_sm, a.mt_sm, t.atoms.border_contrast_low]}>
-									<StarterPackCard starterPack={item.subject as AnyStarterPackView} />
+									<StarterPackCard starterPack={item.subject} />
 								</View>
 							</View>
 						) : null}

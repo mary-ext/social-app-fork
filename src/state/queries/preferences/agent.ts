@@ -277,7 +277,7 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 				.map((did) => ({ did, labels: {} }))
 				.concat(pref.labelers.map((labeler) => ({ did: labeler.did, labels: {} })));
 		} else if (isSavedFeedsPrefV2(pref)) {
-			prefs.savedFeeds = pref.items as AtpActorDefs.SavedFeed[];
+			prefs.savedFeeds = pref.items;
 		} else if (isPersonalDetailsPref(pref)) {
 			if (pref.birthDate) {
 				prefs.birthDate = new Date(pref.birthDate);
@@ -298,19 +298,16 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 			prefs.moderationPrefs.mutedWords = pref.items.map((word) => ({
 				...word,
 				actorTarget: word.actorTarget || 'all',
-			})) as AtpActorDefs.MutedWord[];
+			}));
 		} else if (isHiddenPostsPref(pref)) {
 			prefs.moderationPrefs.hiddenPosts = [...pref.items];
 		} else if (isBskyAppStatePref(pref)) {
 			prefs.bskyAppState.queuedNudges = pref.queuedNudges || [];
-			prefs.bskyAppState.activeProgressGuide =
-				pref.activeProgressGuide as BskyPreferences['bskyAppState']['activeProgressGuide'];
-			prefs.bskyAppState.nuxs = (pref.nuxs ?? []) as AtpActorDefs.Nux[];
+			prefs.bskyAppState.activeProgressGuide = pref.activeProgressGuide;
+			prefs.bskyAppState.nuxs = pref.nuxs ?? [];
 		} else if (isPostInteractionSettingsPref(pref)) {
-			prefs.postInteractionSettings.threadgateAllowRules =
-				pref.threadgateAllowRules as BskyPreferences['postInteractionSettings']['threadgateAllowRules'];
-			prefs.postInteractionSettings.postgateEmbeddingRules =
-				pref.postgateEmbeddingRules as BskyPreferences['postInteractionSettings']['postgateEmbeddingRules'];
+			prefs.postInteractionSettings.threadgateAllowRules = pref.threadgateAllowRules;
+			prefs.postInteractionSettings.postgateEmbeddingRules = pref.postgateEmbeddingRules;
 		} else if (isVerificationPrefs(pref)) {
 			prefs.verificationPrefs = { hideBadges: pref.hideBadges ?? false };
 		} else if (isLiveEventPreferences(pref)) {
@@ -551,7 +548,7 @@ export async function upsertMutedWords(
 			actorTarget: mutedWord.actorTarget || 'all',
 			expiresAt: mutedWord.expiresAt || undefined,
 			id: TID.now(),
-			targets: (mutedWord.targets || []) as AppBskyActorDefs.MutedWord['targets'],
+			targets: mutedWord.targets || [],
 			value: sanitizedValue,
 		});
 	}
@@ -591,7 +588,7 @@ export async function updateMutedWord(pds: Client, mutedWord: AtpActorDefs.Muted
 				id: existingItem.id || TID.now(),
 				targets: updated.targets || [],
 				value: sanitizeMutedWordValue(updated.value) || existingItem.value,
-			} as AppBskyActorDefs.MutedWord;
+			};
 		});
 
 		const next: PrefOf<'app.bsky.actor.defs#mutedWordsPref'> = {
@@ -760,9 +757,7 @@ export async function setPersonalDetails(
 		const next: PrefOf<'app.bsky.actor.defs#personalDetailsPref'> = {
 			...existing,
 			$type: 'app.bsky.actor.defs#personalDetailsPref',
-			birthDate: (birthDate instanceof Date
-				? birthDate.toISOString()
-				: birthDate) as AppBskyActorDefs.PersonalDetailsPref['birthDate'],
+			birthDate: birthDate instanceof Date ? birthDate.toISOString() : birthDate,
 		};
 		return upsertPref(prefs, isPersonalDetailsPref, next);
 	});
@@ -784,10 +779,8 @@ export async function setPostInteractionSettings(
 			...existing,
 			$type: 'app.bsky.actor.defs#postInteractionSettingsPref',
 			// Matches handling of `threadgate.allow` where `undefined` means "everyone"
-			postgateEmbeddingRules:
-				settings.postgateEmbeddingRules as AppBskyActorDefs.PostInteractionSettingsPref['postgateEmbeddingRules'],
-			threadgateAllowRules:
-				settings.threadgateAllowRules as AppBskyActorDefs.PostInteractionSettingsPref['threadgateAllowRules'],
+			postgateEmbeddingRules: settings.postgateEmbeddingRules,
+			threadgateAllowRules: settings.threadgateAllowRules,
 		};
 		return upsertPref(prefs, isPostInteractionSettingsPref, next);
 	});

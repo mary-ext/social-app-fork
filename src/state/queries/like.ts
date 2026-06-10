@@ -1,4 +1,4 @@
-import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation } from '@tanstack/react-query';
 
@@ -16,7 +16,7 @@ export function useLikeMutation() {
 				record: {
 					$type: 'app.bsky.feed.like',
 					createdAt: new Date().toISOString(),
-					subject: { cid: cid as Cid, uri: uri as ResourceUri },
+					subject: { cid: cid, uri: uri as ResourceUri },
 				},
 				repo: currentAccount!.did as Did,
 			});

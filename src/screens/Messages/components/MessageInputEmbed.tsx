@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
-import type { AnyProfileView, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -191,7 +191,7 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 						<View style={[a.flex_1, a.pb_xs]}>
 							<PostMeta
 								showAvatar
-								author={post.author as AnyProfileView}
+								author={post.author}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={itemHref}

@@ -10,7 +10,7 @@ type WebViewStyle = ViewStyle & {
 };
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
+	return style;
 };
 
 export function ControlButton({

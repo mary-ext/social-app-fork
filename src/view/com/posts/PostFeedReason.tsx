@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs } from '@atcute/bluesky';
+import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui, Trans } from '@lingui/react/macro';
 
@@ -58,7 +58,7 @@ export function PostFeedReason({
 		const by = reason.by;
 		const isOwner = by.did === currentAccount?.did;
 		const reposter = createSanitizedDisplayName(
-			by as AnyProfileView,
+			by,
 			false,
 			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 		);

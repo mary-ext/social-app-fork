@@ -32,7 +32,7 @@ export function SegmentedControl<T extends string>({
 		<RadioGroup
 			aria-label={label}
 			value={value}
-			onValueChange={(next) => onValueChange(next as T)}
+			onValueChange={(next) => onValueChange(next)}
 			className={styles.root}
 			style={assignInlineVars({
 				[styles.countVar]: String(items.length),

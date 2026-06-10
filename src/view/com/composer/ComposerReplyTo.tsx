@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
-import type { AnyProfileView, AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
+import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
@@ -23,7 +23,7 @@ type WebViewStyle = ViewStyle & {
 };
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
+	return style;
 };
 
 export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
@@ -61,7 +61,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		? parseEmbed({
 				$type: 'app.bsky.embed.record#view',
 				...quoteEmbed,
-			} as Parameters<typeof parseEmbed>[0])
+			})
 		: null;
 
 	const images = useMemo(() => {
@@ -98,7 +98,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 		>
 			<PreviewableUserAvatar
 				size={42}
-				profile={replyTo.author as AnyProfileView}
+				profile={replyTo.author}
 				moderation={
 					replyTo.moderation
 						? getDisplayRestrictions(replyTo.moderation, DisplayContext.ProfileMedia)
@@ -112,7 +112,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 					<Text style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]} numberOfLines={1} emoji>
 						{sanitizeDisplayName(replyTo.author.displayName || sanitizeHandle(replyTo.author.handle))}
 					</Text>
-					<ProfileBadges profile={replyTo.author as AnyProfileView} size="sm" style={[a.pl_xs]} />
+					<ProfileBadges profile={replyTo.author} size="sm" style={[a.pl_xs]} />
 				</View>
 				<View style={[a.flex_row, a.gap_md]}>
 					<View style={[a.flex_1, a.flex_grow]}>

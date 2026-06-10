@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type StyleProp, type TextStyle, TouchableWithoutFeedback, View, type ViewStyle } from 'react-native';
+import { type StyleProp, TouchableWithoutFeedback, View, type ViewStyle } from 'react-native';
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -18,10 +18,6 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
-
-type WebTextStyle = TextStyle & {
-	cursor?: 'pointer';
-};
 
 export function ScreenHider({
 	testID,
@@ -118,7 +114,7 @@ export function ScreenHider({
 									},
 									{
 										cursor: 'pointer',
-									} as WebTextStyle,
+									},
 								]}
 							>
 								<Trans>Learn More</Trans>

@@ -11,7 +11,7 @@ import type {
 	AppBskyFeedPost,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { $type, Blob as AtpBlob, Cid, Did, GenericUri, Handle, ResourceUri } from '@atcute/lexicons';
+import type { $type, Blob as AtpBlob, Did, GenericUri, Handle, ResourceUri } from '@atcute/lexicons';
 import * as TID from '@atcute/tid';
 import { t } from '@lingui/core/macro';
 import type { QueryClient } from '@tanstack/react-query';
@@ -137,14 +137,14 @@ export async function post({ appview, did, pds }: PostClients, queryClient: Quer
 					...thread.postgate,
 					$type: 'app.bsky.feed.postgate',
 					createdAt: now.toISOString(),
-					post: uri as ResourceUri,
+					post: uri,
 				},
 			});
 		}
 
 		// Prepare a ref to the current post for the next post in the thread.
 		const ref: ComAtprotoRepoStrongRef.Main = {
-			cid: (await serializeRecordCid(record)) as Cid,
+			cid: await serializeRecordCid(record),
 			uri: uri as ResourceUri,
 		};
 		replyPromise = {

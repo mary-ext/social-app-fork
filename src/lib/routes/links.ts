@@ -8,8 +8,8 @@ export function makeProfileLink(info: { did: string }, ...segments: string[]) {
 export function makeCustomFeedLink(
 	did: string,
 	rkey: string,
-	segment?: string | undefined,
-	feedCacheKey?: 'discover' | 'explore' | undefined,
+	segment?: string,
+	feedCacheKey?: 'discover' | 'explore',
 ) {
 	return (
 		[`/profile`, did, 'feed', rkey, ...(segment ? [segment] : [])].join('/') +

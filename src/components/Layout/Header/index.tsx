@@ -33,7 +33,7 @@ import { ScrollbarOffsetContext } from '#/components/Layout/context';
 import { Text } from '#/components/Typography';
 
 const webViewStyle = (style: unknown): ViewStyle => {
-	return style as unknown as ViewStyle;
+	return style as ViewStyle;
 };
 
 export function Outer({

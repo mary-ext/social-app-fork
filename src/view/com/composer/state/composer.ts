@@ -1,4 +1,4 @@
-import type { AppBskyDraftDefs, AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyDraftDefs, AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -285,13 +285,13 @@ export function composerReducer(state: ComposerState, action: ComposerAction): C
 					posts,
 					postgate: createPostgateRecord({
 						post: '' as ResourceUri,
-						embeddingRules: postgateEmbeddingRules as AppBskyFeedPostgate.Main['embeddingRules'],
+						embeddingRules: postgateEmbeddingRules,
 					}),
 					threadgate: threadgateRecordToAllowUISetting({
 						$type: 'app.bsky.feed.threadgate',
 						post: '' as ResourceUri,
 						createdAt: new Date().toString(),
-						allow: threadgateAllow as AppBskyFeedThreadgate.Main['allow'],
+						allow: threadgateAllow,
 					}),
 				},
 			};
@@ -662,14 +662,13 @@ export function createComposerState({
 			],
 			postgate: createPostgateRecord({
 				post: '' as ResourceUri,
-				embeddingRules: (initInteractionSettings?.postgateEmbeddingRules ||
-					[]) as AppBskyFeedPostgate.Main['embeddingRules'],
+				embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
 			}),
 			threadgate: threadgateRecordToAllowUISetting({
 				$type: 'app.bsky.feed.threadgate',
 				post: '' as ResourceUri,
 				createdAt: new Date().toString(),
-				allow: initInteractionSettings?.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
+				allow: initInteractionSettings?.threadgateAllowRules,
 			}),
 		},
 	};

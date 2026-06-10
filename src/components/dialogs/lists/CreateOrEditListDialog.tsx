@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Did, Handle } from '@atcute/lexicons';
+import type { Handle } from '@atcute/lexicons';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
@@ -227,7 +227,7 @@ function DialogInner({
 								params: { handle: h as Handle },
 							}),
 						);
-						return res.did as Did;
+						return res.did;
 					} catch {
 						return undefined;
 					}

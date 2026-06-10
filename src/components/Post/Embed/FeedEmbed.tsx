@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateFeedGenerator } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -26,7 +25,7 @@ export function FeedEmbed({
 			<FeedCard.Outer>
 				<FeedCard.Header>
 					<FeedCard.Avatar src={view.avatar} size={48} />
-					<FeedCard.TitleAndByline title={view.displayName} creator={view.creator as AnyProfileView} />
+					<FeedCard.TitleAndByline title={view.displayName} creator={view.creator} />
 				</FeedCard.Header>
 			</FeedCard.Outer>
 		</FeedCard.Link>

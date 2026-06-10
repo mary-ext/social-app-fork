@@ -21,7 +21,7 @@ type WebViewStyle = ViewStyle & {
 };
 
 const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as ViewStyle;
+	return style;
 };
 
 type Layout = {

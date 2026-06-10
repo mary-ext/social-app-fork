@@ -167,7 +167,7 @@ export function useProfileUpdateMutation() {
 			if (newUserBanner) {
 				newUserBannerPromise = uploadBlob(pds!, newUserBanner.blob, newUserBanner.blob.type);
 			}
-			await upsertProfile(pds!, profile.did as Did, async (existing) => {
+			await upsertProfile(pds!, profile.did, async (existing) => {
 				let next: ProfileRecordWrite = existing || {};
 				if (typeof updates === 'function') {
 					next = updates(next);
@@ -308,7 +308,7 @@ export function useProfileFollowMutationQueue(
 			if (finalFollowingUri) {
 				void ok(
 					appview.get('app.bsky.graph.getSuggestedFollowsByActor', {
-						params: { actor: did as ActorIdentifier },
+						params: { actor: did },
 					}),
 				).then((data) => {
 					const dids = data.suggestions

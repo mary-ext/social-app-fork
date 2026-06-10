@@ -48,7 +48,7 @@ function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, underline, ..
 	// the ref lands on a different element per branch (`<span>` vs `<a>`); Base UI hands us a generic
 	// element ref either way, so narrow it at the boundary.
 	if (disabled) {
-		return <Text ref={ref as Ref<HTMLSpanElement>} {...text} />;
+		return <Text ref={ref} {...text} />;
 	}
 	return (
 		<InlineLinkText

@@ -1,5 +1,4 @@
 import type {
-	AnyProfileView,
 	AppBskyFeedDefs,
 	AppBskyFeedLike,
 	AppBskyFeedPost,
@@ -87,7 +86,7 @@ export async function fetchPage({
 				} else {
 					notif.subject = subjects.posts.get(notif.subjectUri);
 					if (notif.subject) {
-						precacheProfile(queryClient, notif.subject.author as AnyProfileView);
+						precacheProfile(queryClient, notif.subject.author);
 					}
 				}
 			}
@@ -117,9 +116,7 @@ export function shouldFilterNotif(
 	notif: AppBskyNotificationListNotifications.Notification,
 	moderationOpts: ModerationOptions | undefined,
 ): boolean {
-	const containsImperative = !!notif.author.labels?.some((label) =>
-		labelIsHideableOffense(label as unknown as Parameters<typeof labelIsHideableOffense>[0]),
-	);
+	const containsImperative = !!notif.author.labels?.some((label) => labelIsHideableOffense(label));
 	if (containsImperative) {
 		return true;
 	}

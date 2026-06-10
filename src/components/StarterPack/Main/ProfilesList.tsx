@@ -1,6 +1,6 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import type { AnyProfileView, AppBskyActorDefs, AppBskyGraphGetList } from '@atcute/bluesky';
+import type { AppBskyActorDefs, AppBskyGraphGetList } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
@@ -51,9 +51,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 		?.map((p) => p.subject)
 		.filter(
 			(profile): profile is AppBskyActorDefs.ProfileView =>
-				profile !== undefined &&
-				!isBlockedOrBlocking(profile as AnyProfileView) &&
-				!profile.associated?.labeler,
+				profile !== undefined && !isBlockedOrBlocking(profile) && !profile.associated?.labeler,
 		)
 		.reverse();
 	const isOwn = parseCanonicalResourceUri(listUri).repo === currentAccount?.did;
@@ -82,11 +80,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
 		return (
 			<View style={[a.p_lg, t.atoms.border_contrast_low, a.border_t]}>
-				<ProfileCard
-					profile={item as AnyProfileView}
-					moderationOpts={moderationOpts}
-					logContext="StarterPackProfilesList"
-				/>
+				<ProfileCard profile={item} moderationOpts={moderationOpts} logContext="StarterPackProfilesList" />
 			</View>
 		);
 	};

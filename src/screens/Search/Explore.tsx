@@ -875,7 +875,7 @@ export function Explore({
 							feedContext={slice.feedContext}
 							reqId={slice.reqId}
 							moderation={subItem.moderation}
-							parentAuthor={subItem.parentAuthor as AppBskyActorDefs.ProfileViewBasic | undefined}
+							parentAuthor={subItem.parentAuthor}
 							showReplyTo={item.showReplyTo}
 							isThreadParent={isThreadParentAt(slice.items, indexInSlice)}
 							isThreadChild={isThreadChildAt(slice.items, indexInSlice)}

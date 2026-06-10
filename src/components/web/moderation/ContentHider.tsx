@@ -172,7 +172,7 @@ function ContentHiderActive({
 						{desc.sourceType === 'user' ? (
 							<Trans>Labeled by the author.</Trans>
 						) : (
-							<Trans>Labeled by {sanitizeDisplayName(desc.source!)}.</Trans>
+							<Trans>Labeled by {sanitizeDisplayName(desc.source)}.</Trans>
 						)}{' '}
 						<Text color="primary_500" className={styles.learnMoreLink}>
 							<Trans>Learn more.</Trans>

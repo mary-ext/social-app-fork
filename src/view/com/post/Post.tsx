@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
 	getDisplayRestrictions,
@@ -140,7 +140,7 @@ function PostInner({
 	}, [setLimitLines]);
 
 	const onBeforePress = useCallback(() => {
-		unstableCacheProfileView(queryClient, post.author as AnyProfileView);
+		unstableCacheProfileView(queryClient, post.author);
 		outerOnBeforePress?.();
 	}, [queryClient, post.author, outerOnBeforePress]);
 
@@ -178,7 +178,7 @@ function PostInner({
 					<View style={styles.layoutAvi}>
 						<PreviewableUserAvatar
 							size={42}
-							profile={post.author as AnyProfileView}
+							profile={post.author}
 							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 						/>
@@ -195,7 +195,7 @@ function PostInner({
 					>
 						<View style={[a.pb_xs]}>
 							<PostMeta
-								author={post.author as AnyProfileView}
+								author={post.author}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={itemHref}

@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 import type {
-	AnyProfileView,
 	AppBskyActorDefs,
 	AppBskyActorGetSuggestions,
 	AppBskyGraphGetSuggestedFollowsByActor,
@@ -74,7 +73,7 @@ export function useSuggestedFollowsByActorWithDismiss({
 
 	const profiles = useMemo(() => {
 		return (data?.suggestions ?? []).map((profile) => ({
-			actor: profile as AnyProfileView,
+			actor: profile,
 			recId: data?.recId,
 		}));
 	}, [data?.suggestions, data?.recId]);

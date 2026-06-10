@@ -117,7 +117,7 @@ export function useListMetadataMutation() {
 			// get the current record
 			const { value: record } = await getRecord(pds!, {
 				collection: 'app.bsky.graph.list',
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				rkey,
 			});
 
@@ -133,7 +133,7 @@ export function useListMetadataMutation() {
 			const res = await putRecord(pds!, {
 				collection: 'app.bsky.graph.list',
 				record,
-				repo: currentAccount.did as Did,
+				repo: currentAccount.did,
 				rkey,
 			});
 

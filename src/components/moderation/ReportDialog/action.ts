@@ -1,6 +1,6 @@
 import type { ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import { ok } from '@atcute/client';
-import type { Cid, Did, ResourceUri } from '@atcute/lexicons';
+import type { Did, ResourceUri } from '@atcute/lexicons';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 import { useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
@@ -71,7 +71,7 @@ export function useSubmitReportMutation() {
 						subject: {
 							$type: 'com.atproto.repo.strongRef',
 							uri: subject.uri as ResourceUri,
-							cid: subject.cid as Cid,
+							cid: subject.cid,
 						},
 					};
 					break;

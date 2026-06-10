@@ -22,7 +22,7 @@ export function RadioGroup<T extends string>({ label, items, value, onValueChang
 		<BaseRadioGroup
 			aria-label={label}
 			value={value}
-			onValueChange={(next) => onValueChange(next as T)}
+			onValueChange={(next) => onValueChange(next)}
 			className={styles.group}
 		>
 			{items.map((item) => (

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { AppBskyFeedPostgate, AppBskyFeedThreadgate } from '@atcute/bluesky';
+import type { AppBskyFeedPostgate } from '@atcute/bluesky';
 import type { ResourceUri } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
@@ -46,12 +46,11 @@ export function ThreadgateBtn({
 		$type: 'app.bsky.feed.threadgate',
 		post: '' as ResourceUri,
 		createdAt: new Date().toISOString(),
-		allow: preferences?.postInteractionSettings.threadgateAllowRules as AppBskyFeedThreadgate.Main['allow'],
+		allow: preferences?.postInteractionSettings.threadgateAllowRules,
 	});
 	const prefPostgate = createPostgateRecord({
 		post: '' as ResourceUri,
-		embeddingRules: (preferences?.postInteractionSettings?.postgateEmbeddingRules ||
-			[]) as AppBskyFeedPostgate.Main['embeddingRules'],
+		embeddingRules: preferences?.postInteractionSettings?.postgateEmbeddingRules || [],
 	});
 
 	const isDirty = useMemo(() => {

@@ -57,36 +57,36 @@ export function dateDiff(
 	if (diffSeconds < NOW) {
 		diff = {
 			value: 0,
-			unit: 'now' as DateDiff['unit'],
+			unit: 'now',
 		};
 	} else if (diffSeconds < MINUTE) {
 		diff = {
 			value: diffSeconds,
-			unit: 'second' as DateDiff['unit'],
+			unit: 'second',
 		};
 	} else if (diffSeconds < HOUR) {
 		const value = rounding === 'up' ? Math.ceil(diffSeconds / MINUTE) : Math.floor(diffSeconds / MINUTE);
 		diff = {
 			value,
-			unit: 'minute' as DateDiff['unit'],
+			unit: 'minute',
 		};
 	} else if (diffSeconds < DAY) {
 		const value = rounding === 'up' ? Math.ceil(diffSeconds / HOUR) : Math.floor(diffSeconds / HOUR);
 		diff = {
 			value,
-			unit: 'hour' as DateDiff['unit'],
+			unit: 'hour',
 		};
 	} else if (diffSeconds < MONTH_30) {
 		const value = rounding === 'up' ? Math.ceil(diffSeconds / DAY) : Math.floor(diffSeconds / DAY);
 		diff = {
 			value,
-			unit: 'day' as DateDiff['unit'],
+			unit: 'day',
 		};
 	} else {
 		const value = rounding === 'up' ? Math.ceil(diffSeconds / MONTH_30) : Math.floor(diffSeconds / MONTH_30);
 		diff = {
 			value,
-			unit: 'month' as DateDiff['unit'],
+			unit: 'month',
 		};
 	}
 

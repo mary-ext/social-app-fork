@@ -167,7 +167,7 @@ const GalleryItem = ({
 
 	return (
 		<View
-			style={imageStyle as ViewStyle}
+			style={imageStyle}
 			// Fixes ALT and icons appearing with half opacity when the post is inactive
 			renderToHardwareTextureAndroid
 		>

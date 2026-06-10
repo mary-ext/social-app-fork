@@ -55,7 +55,7 @@ export function KnownFollowers({
 	 * displayed.
 	 */
 	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
-		cache.current.set(profile.did, profile.viewer.knownFollowers as AppBskyActorDefs.KnownFollowers);
+		cache.current.set(profile.did, profile.viewer.knownFollowers);
 	}
 
 	const cachedKnownFollowers = cache.current.get(profile.did);

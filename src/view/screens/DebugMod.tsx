@@ -82,20 +82,19 @@ const makeProfileViewBasic = (
 		// not a real ProfileViewBasic field, but the dev screen renders it as the profile bio
 		description?: string;
 	},
-): AppBskyActorDefs.ProfileViewBasic => props as AppBskyActorDefs.ProfileViewBasic;
+): AppBskyActorDefs.ProfileViewBasic => props;
 
 const makePostView = (
 	props: Partial<AppBskyFeedDefs.PostView> & {
 		author: AppBskyActorDefs.ProfileViewBasic;
 		record: AppBskyFeedPost.Main;
 	},
-): AppBskyFeedDefs.PostView =>
-	({
-		cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
-		indexedAt: '1970-01-01T00:00:00.000Z',
-		uri: `at://${props.author.did}/app.bsky.feed.post/fake`,
-		...props,
-	}) as AppBskyFeedDefs.PostView;
+): AppBskyFeedDefs.PostView => ({
+	cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
+	indexedAt: '1970-01-01T00:00:00.000Z',
+	uri: `at://${props.author.did}/app.bsky.feed.post/fake`,
+	...props,
+});
 
 export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams, 'DebugMod'>) => {
 	const t = useTheme();
@@ -152,7 +151,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 				blocking: scenario[0] === 'block' ? `at://did:web:alice.test/app.bsky.actor.block/fake` : undefined,
 				following: isFollowing ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234` : undefined,
 				muted: scenario[0] === 'mute',
-			} as AppBskyActorDefs.ViewerState,
+			},
 		});
 	}, [scenario, target, label, isSelfLabel, did, isFollowing, currentAccount]);
 
@@ -172,7 +171,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 					: undefined,
 			embed:
 				target[0] === 'embed'
-					? ({
+					? {
 							$type: 'app.bsky.embed.record#view',
 							record: {
 								$type: 'app.bsky.embed.record#viewRecord',
@@ -192,8 +191,8 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 								uri: `at://${did}/app.bsky.feed.post/embed`,
 								value: makePostRecord('Embed'),
 							},
-						} as AppBskyFeedDefs.PostView['embed'])
-					: ({
+						}
+					: {
 							$type: 'app.bsky.embed.images#view',
 							images: [
 								{
@@ -202,7 +201,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 									thumb: 'https://bsky.social/about/images/social-card-default-gradient.png',
 								},
 							],
-						} as AppBskyFeedDefs.PostView['embed']),
+						},
 		});
 	}, [scenario, label, target, profile, isSelfLabel, did]);
 
@@ -258,7 +257,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 
 	const modOpts = useMemo<ModerationOptions>(() => {
 		return {
-			viewerDid: (isLoggedOut ? undefined : isTargetMe ? did : 'did:web:alice.test') as Did | undefined,
+			viewerDid: isLoggedOut ? undefined : isTargetMe ? did : 'did:web:alice.test',
 			prefs: {
 				adultContentEnabled: !noAdult,
 				globalLabelPrefs: { [label[0]!]: visibility[0] as LabelPreference },
@@ -475,17 +474,13 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 							{view[0] === 'post' && (
 								<>
 									<Heading title="Post" subtitle="in feed" />
-									<MockPostFeedItem post={post as AppBskyFeedDefs.PostView} moderation={postModeration} />
+									<MockPostFeedItem post={post} moderation={postModeration} />
 
 									<Heading title="Post" subtitle="viewed directly" />
-									<MockPostThreadItem post={post as AppBskyFeedDefs.PostView} moderationOpts={modOpts} />
+									<MockPostThreadItem post={post} moderationOpts={modOpts} />
 
 									<Heading title="Post" subtitle="reply in thread" />
-									<MockPostThreadItem
-										post={post as AppBskyFeedDefs.PostView}
-										moderationOpts={modOpts}
-										isReply
-									/>
+									<MockPostThreadItem post={post} moderationOpts={modOpts} isReply />
 								</>
 							)}
 
@@ -502,14 +497,11 @@ export const DebugModScreen = ({}: NativeStackScreenProps<CommonNavigatorParams,
 							{view[0] === 'account' && (
 								<>
 									<Heading title="Account" subtitle="in listing" />
-									<MockAccountCard
-										profile={profile as unknown as AppBskyActorDefs.ProfileViewBasic}
-										moderation={profileModeration}
-									/>
+									<MockAccountCard profile={profile} moderation={profileModeration} />
 
 									<Heading title="Account" subtitle="viewing directly" />
 									<MockAccountScreen
-										profile={profile as unknown as AppBskyActorDefs.ProfileViewBasic}
+										profile={profile}
 										moderation={profileModeration}
 										moderationOpts={modOpts}
 									/>
@@ -743,7 +735,7 @@ function MockPostThreadItem({
 		value: {
 			$type: 'app.bsky.unspecced.defs#threadItemPost',
 			// TODO(atcute Phase 3.1): drop cast once usePostThread views flip to @atcute
-			post: post as unknown as Parameters<typeof threadPost>[0]['value']['post'],
+			post: post,
 			moreParents: false,
 			moreReplies: 0,
 			opThread: false,

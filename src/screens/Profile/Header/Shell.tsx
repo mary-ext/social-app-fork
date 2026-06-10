@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -165,7 +164,7 @@ let ProfileHeaderShell = ({
 				(isMe ? (
 					<LabelsOnMe
 						type="account"
-						labels={profile.labels as ComAtprotoLabelDefs.Label[] | undefined}
+						labels={profile.labels}
 						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
 					/>
 				) : (

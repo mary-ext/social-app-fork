@@ -293,14 +293,14 @@ export function* findAllProfilesInQueryData(
 					(item.type === 'follow' || item.type === 'contact-match') &&
 					item.notification.author.did === did
 				) {
-					yield item.notification.author as AnyProfileView;
+					yield item.notification.author;
 				} else if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
-					yield item.subject.author as AnyProfileView;
+					yield item.subject.author;
 				}
 				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
 					const quotedPost = getEmbeddedPost(item.subject?.embed);
 					if (quotedPost?.author.did === did) {
-						yield quotedPost.author as AnyProfileView;
+						yield quotedPost.author;
 					}
 				}
 			}

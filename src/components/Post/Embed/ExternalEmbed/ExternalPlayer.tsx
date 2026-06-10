@@ -1,4 +1,4 @@
-import { type CSSProperties, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
 	ActivityIndicator,
 	type GestureResponderEvent,
@@ -90,7 +90,7 @@ function Player({
 				onLoad={onLoad}
 				allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
 				allowFullScreen
-				style={StyleSheet.flatten([styles.iframe, a.bg_transparent]) as CSSProperties}
+				style={StyleSheet.flatten([styles.iframe, a.bg_transparent])}
 			/>
 		</EventStopper>
 	);

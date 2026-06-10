@@ -112,7 +112,7 @@ export const recipe = <Variants extends VariantGroups>(
 	const config: RecipeConfig = {
 		compoundVariants: compounds,
 		defaultClassName,
-		defaultVariants: defaultVariants as RecipeConfig['defaultVariants'],
+		defaultVariants: defaultVariants,
 		variantClassNames,
 	};
 

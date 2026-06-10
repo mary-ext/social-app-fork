@@ -62,7 +62,7 @@ export function parseReportSubject(subject: ReportSubject): ParsedReportSubject 
 		};
 	} else if (subject?.$type === 'app.bsky.feed.defs#postView') {
 		const record = subject.record as AppBskyFeedPost.Main;
-		const embed = parseEmbed(subject.embed as Parameters<typeof parseEmbed>[0]);
+		const embed = parseEmbed(subject.embed);
 		return {
 			type: 'post',
 			uri: subject.uri,

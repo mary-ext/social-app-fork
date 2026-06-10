@@ -504,7 +504,7 @@ export async function draftToComposerPosts(
 									tinygif: mediaObject,
 									preview: mediaObject,
 								},
-							} as Gif,
+							},
 							alt: gifData.alt,
 						};
 						break;

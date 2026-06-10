@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Cid, Did, Handle, ResourceUri } from '@atcute/lexicons';
+import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -197,8 +197,8 @@ function usePostLikeMutation(
 				record: {
 					$type: 'app.bsky.feed.like',
 					createdAt: new Date().toISOString(),
-					subject: { cid: cid as Cid, uri: uri as ResourceUri },
-					via: via && { cid: via.cid as Cid, uri: via.uri as ResourceUri },
+					subject: { cid: cid, uri: uri as ResourceUri },
+					via: via && { cid: via.cid, uri: via.uri as ResourceUri },
 				},
 				repo: currentAccount!.did as Did,
 			});
@@ -302,8 +302,8 @@ function usePostRepostMutation(
 				record: {
 					$type: 'app.bsky.feed.repost',
 					createdAt: new Date().toISOString(),
-					subject: { cid: cid as Cid, uri: uri as ResourceUri },
-					via: via && { cid: via.cid as Cid, uri: via.uri as ResourceUri },
+					subject: { cid: cid, uri: uri as ResourceUri },
+					via: via && { cid: via.cid, uri: via.uri as ResourceUri },
 				},
 				repo: currentAccount!.did as Did,
 			});

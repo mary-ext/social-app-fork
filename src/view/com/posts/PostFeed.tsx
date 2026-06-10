@@ -793,7 +793,7 @@ let PostFeed = ({
 				const actor = post.author;
 				if (
 					actor.status &&
-					isStatusValidForViewers(actor.status as AppBskyActorDefs.StatusView, liveNowConfig) &&
+					isStatusValidForViewers(actor.status, liveNowConfig) &&
 					isStatusStillActive(actor.status.expiresAt)
 				) {
 					if (!seenActorWithStatusRef.current.has(actor.did)) {

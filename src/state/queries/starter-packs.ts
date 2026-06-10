@@ -7,7 +7,7 @@ import type {
 	AppBskyRichtextFacet,
 } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import type { Cid, Did, Handle, ResourceUri } from '@atcute/lexicons';
+import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import chunk from 'lodash.chunk';
@@ -223,7 +223,7 @@ export function useEditStarterPackMutation({
 										$type: 'app.bsky.graph.listitem',
 										createdAt: new Date().toISOString(),
 										list: currentStarterPack.list!.uri,
-										subject: p.did as Did,
+										subject: p.did,
 									},
 								})),
 							},
@@ -362,7 +362,7 @@ export function precacheStarterPack(
 
 	let starterPackView: AppBskyGraphDefs.StarterPackView | undefined;
 	if (starterPack.$type === 'app.bsky.graph.defs#starterPackView') {
-		starterPackView = starterPack as AppBskyGraphDefs.StarterPackView;
+		starterPackView = starterPack;
 	} else if (starterPack.$type === 'app.bsky.graph.defs#starterPackViewBasic') {
 		// note: the field claims to be `FeedItem`, but the appview returns un$typed `GeneratorView`
 		// objects here -sfn
@@ -370,7 +370,7 @@ export function precacheStarterPack(
 
 		const listView: AppBskyGraphDefs.ListViewBasic = {
 			// This will be populated once the data from server is fetched
-			cid: '' as Cid,
+			cid: '',
 			name: record.name,
 			purpose: 'app.bsky.graph.defs#referencelist',
 			uri: record.list,

@@ -1,6 +1,6 @@
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier, Did } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useMutation } from '@tanstack/react-query';
 
@@ -51,7 +51,7 @@ export function useVerificationsRemoveMutation() {
 				() =>
 					ok(
 						appview.get('app.bsky.actor.getProfile', {
-							params: { actor: (profile.did ?? '') as ActorIdentifier },
+							params: { actor: profile.did ?? '' },
 						}),
 					),
 			);

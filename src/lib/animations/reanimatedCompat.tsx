@@ -151,9 +151,7 @@ function createSharedValue<Value>(initial: Value): SharedValue<Value> {
 		get: () => sharedValue.value,
 		set: (value) => {
 			sharedValue.value =
-				typeof value === 'function'
-					? (value as (previous: Value) => Value)(sharedValue.value)
-					: (value as Value);
+				typeof value === 'function' ? (value as (previous: Value) => Value)(sharedValue.value) : value;
 			listeners.forEach((listener) => listener(sharedValue.value));
 		},
 		addListener: (listener) => {

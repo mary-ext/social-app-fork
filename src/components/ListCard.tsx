@@ -63,9 +63,7 @@ export function Default(props: Props & Omit<LinkProps, 'to' | 'label' | 'childre
 						purpose={view.purpose}
 						modUi={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : undefined}
 					/>
-					{showPinButton && view.purpose === CURATELIST && (
-						<SaveButton view={view as unknown as Parameters<typeof SaveButton>[0]['view']} pin />
-					)}
+					{showPinButton && view.purpose === CURATELIST && <SaveButton view={view} pin />}
 				</Header>
 				<Description description={view.description} />
 			</Outer>
@@ -81,7 +79,7 @@ export function Link({ view, children, ...props }: Props & Omit<LinkProps, 'to' 
 	}, [view]);
 
 	useEffect(() => {
-		precacheList(queryClient, view as unknown as Parameters<typeof precacheList>[1]);
+		precacheList(queryClient, view);
 	}, [view, queryClient]);
 
 	return (

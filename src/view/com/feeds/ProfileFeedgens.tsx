@@ -189,7 +189,7 @@ export function ProfileFeedgens({
 			if (preferences) {
 				return (
 					<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
-						<FeedCard.Default view={item as unknown as Parameters<typeof FeedCard.Default>[0]['view']} />
+						<FeedCard.Default view={item} />
 					</View>
 				);
 			}

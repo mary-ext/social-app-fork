@@ -40,7 +40,7 @@ export function StarterPackCard({ view }: { view: AppBskyGraphDefs.StarterPackVi
 	const record = view.record as AppBskyGraphStarterpack.Main;
 
 	const profileCount = gtPhone ? 11 : 8;
-	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject as AnyProfileView);
+	const profiles = view.listItemsSample?.slice(0, profileCount).map((item) => item.subject);
 
 	return (
 		<Link to={link.to} label={link.label} onHoverIn={link.precache} onPress={link.precache}>

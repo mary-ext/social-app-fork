@@ -1,6 +1,6 @@
 import type { AnyProfileView } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { ActorIdentifier, Did, Handle } from '@atcute/lexicons';
+import type { Did } from '@atcute/lexicons';
 import { useMutation } from '@tanstack/react-query';
 
 import { createRecord } from '#/lib/api/records';
@@ -26,8 +26,8 @@ export function useVerificationCreateMutation() {
 					$type: 'app.bsky.graph.verification',
 					createdAt: new Date().toISOString(),
 					displayName: profile.displayName || '',
-					handle: profile.handle as Handle,
-					subject: profile.did as Did,
+					handle: profile.handle,
+					subject: profile.did,
 				},
 				repo: currentAccount.did as Did,
 			});
@@ -44,7 +44,7 @@ export function useVerificationCreateMutation() {
 				() =>
 					ok(
 						appview.get('app.bsky.actor.getProfile', {
-							params: { actor: (profile.did ?? '') as ActorIdentifier },
+							params: { actor: profile.did ?? '' },
 						}),
 					),
 			);

@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import type { Cid, ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useMutation } from '@tanstack/react-query';
 
@@ -69,8 +68,8 @@ export function DialogInner({
 							reasonType: OzoneReason.REASONAPPEAL,
 							subject: {
 								$type: 'com.atproto.repo.strongRef',
-								uri: status.uri as ResourceUri,
-								cid: status.cid as Cid,
+								uri: status.uri,
+								cid: status.cid,
 							},
 							reason: details,
 						},

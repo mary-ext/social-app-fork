@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import type { AnyProfileView, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
@@ -288,7 +288,7 @@ export function QuoteEmbed({
 	}, [quote.record]);
 
 	const onBeforePress = useCallback(() => {
-		unstableCacheProfileView(queryClient, quote.author as AnyProfileView);
+		unstableCacheProfileView(queryClient, quote.author);
 		onOpen?.();
 	}, [queryClient, quote.author, onOpen]);
 
@@ -298,7 +298,7 @@ export function QuoteEmbed({
 		<>
 			<View style={[a.pb_xs]}>
 				<PostMeta
-					author={quote.author as AnyProfileView}
+					author={quote.author}
 					moderation={moderation}
 					showAvatar
 					postHref={itemHref}
