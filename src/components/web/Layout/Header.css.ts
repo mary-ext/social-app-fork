@@ -1,5 +1,4 @@
 import { createVar, style } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
@@ -8,10 +7,10 @@ import {
 	HEADER_SLOT_SIZE,
 	SCROLLBAR_OFFSET,
 } from '#/components/web/Layout/const';
+import { fontSizeVar } from '#/components/web/Text.css';
 
 import { vars } from '#/styles/contract.css';
-import { roundToDevicePx } from '#/styles/round';
-import { fontSize, lineHeight } from '#/styles/tokens.css';
+import { fontSize } from '#/styles/tokens.css';
 
 const offsetVar = createVar();
 
@@ -75,18 +74,13 @@ export const backButton = style({
 });
 
 /**
- * Header title: bumps from `lg` to `xl` past the mobile breakpoint. Overriding the font size detaches it from
- * the `Text` recipe's `size` variant, which is what pairs the line-height to the font, so the matching
- * `tight` line-height is recomputed here — otherwise the title keeps the default `sm` line-height and the
- * `numberOfLines` clamp crops it.
+ * Header title: bumps from `lg` to `xl` past the mobile breakpoint. Drives the `Text` recipe's `fontSizeVar`
+ * (unlayered, so it beats the layered `size` variant) instead of overriding `font-size` directly — the recipe
+ * then re-derives the device-snapped line-height from the title's `tight` leading, keeping the two paired.
  */
 export const title = style({
-	fontSize: fontSize.lg,
-	lineHeight: roundToDevicePx(calc.multiply(fontSize.lg, lineHeight.tight)),
+	vars: { [fontSizeVar]: fontSize.lg },
 	'@media': {
-		'screen and (min-width: 800px)': {
-			fontSize: fontSize.xl,
-			lineHeight: roundToDevicePx(calc.multiply(fontSize.xl, lineHeight.tight)),
-		},
+		'screen and (min-width: 800px)': { vars: { [fontSizeVar]: fontSize.xl } },
 	},
 });
