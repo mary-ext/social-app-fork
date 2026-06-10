@@ -256,25 +256,14 @@ function MessageInputInviteEmbed({ code, onRemove }: { code: string; onRemove: (
 }
 
 function MessageInputInviteEmbedBody() {
-	const t = useTheme();
-	const { loading, preview } = ChatInvite.useChatInvite();
+	const { status } = ChatInvite.useChatInvite();
 
-	if (loading) {
-		return (
-			<View style={[{ minHeight: 64 }, a.justify_center, a.align_center]}>
-				<Loader />
-			</View>
-		);
+	if (status === 'loading') {
+		return <ChatInvite.Loading style={{ minHeight: 64 }} />;
 	}
 
-	if (!preview) {
-		return (
-			<View style={[{ minHeight: 64 }, a.justify_center, a.align_center]}>
-				<Text style={[a.text_center, t.atoms.text_contrast_medium, a.italic]}>
-					<Trans>Could not load invite</Trans>
-				</Text>
-			</View>
-		);
+	if (status !== 'available') {
+		return <ChatInvite.Unavailable style={{ minHeight: 64 }} />;
 	}
 
 	return <ChatInvite.Card size="small" />;

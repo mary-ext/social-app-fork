@@ -21,7 +21,7 @@ import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
 
-import { type ChatInviteAction, ChatInviteProvider } from './Context';
+import { type ChatInviteAction, ChatInviteProvider, type ChatInviteStatus } from './Context';
 
 /**
  * Headless data + state owner for a chat invite. Fetches the join link preview by code and derives the
@@ -61,7 +61,18 @@ export function Root({
 	});
 
 	const preview = data?.joinLinkPreviews[0];
-	const loading = isPending && !preview;
+
+	let status: ChatInviteStatus;
+	if (isPending && !preview) {
+		status = 'loading';
+	} else if (error) {
+		status = 'error';
+	} else if (preview) {
+		status = 'available';
+	} else {
+		// Resolved to a disabled/invalid/unrecognized preview — nothing to join.
+		status = 'unavailable';
+	}
 
 	let action: ChatInviteAction | undefined;
 	if (preview) {
@@ -138,7 +149,7 @@ export function Root({
 	}
 
 	return (
-		<ChatInviteProvider value={{ code, loading, error: !!error, preview, action, hasFixedHeight }}>
+		<ChatInviteProvider value={{ code, status, preview, action, hasFixedHeight }}>
 			{children}
 			<GroupChatJoinDialog control={joinDialogControl} code={code} />
 		</ChatInviteProvider>
