@@ -594,8 +594,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/web/UserAvatar.tsx:251
-#: src/components/web/UserAvatar.tsx:268
+#: src/components/web/UserAvatar.tsx:254
+#: src/components/web/UserAvatar.tsx:272
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 
@@ -9398,8 +9398,8 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:462
 #: src/components/ProfileHoverCard/index.tsx:478
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
-#: src/view/com/util/PostMeta.tsx:115
-#: src/view/com/util/PostMeta.tsx:135
+#: src/view/com/util/PostMeta.tsx:125
+#: src/view/com/util/PostMeta.tsx:145
 msgid "View profile"
 msgstr ""
 

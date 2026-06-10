@@ -1,4 +1,4 @@
-import { memo, type ReactNode, useCallback } from 'react';
+import { memo, type ReactNode, type Ref, useCallback } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -18,6 +18,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { type InlineLinkUnderline, InlineLinkText } from '#/components/web/Link';
 import { Text, type TextProps } from '#/components/web/Text';
+import { Tooltip } from '#/components/web/Tooltip';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -27,13 +28,15 @@ import { TimeElapsed } from './TimeElapsed';
 
 type AuthorLinkProps = Pick<
 	TextProps,
-	'align' | 'className' | 'color' | 'leading' | 'numberOfLines' | 'size' | 'title' | 'weight'
+	'align' | 'className' | 'color' | 'leading' | 'numberOfLines' | 'size' | 'weight'
 > & {
 	children: ReactNode;
 	/** When set, render as inert text instead of a navigable link. */
 	disabled: boolean;
 	label: string;
 	onPress: () => void;
+	/** Forwarded to the host node (`<a>`, or `<span>` when inert) so it can back a headless trigger. */
+	ref?: Ref<HTMLElement>;
 	/** Sets the link's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
 	tabIndex?: number;
 	to: string;
@@ -41,15 +44,18 @@ type AuthorLinkProps = Pick<
 };
 
 /** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
-function AuthorLink({ disabled, label, onPress, tabIndex, to, underline, ...text }: AuthorLinkProps) {
+function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, underline, ...text }: AuthorLinkProps) {
+	// the ref lands on a different element per branch (`<span>` vs `<a>`); Base UI hands us a generic
+	// element ref either way, so narrow it at the boundary.
 	if (disabled) {
-		return <Text {...text} />;
+		return <Text ref={ref as Ref<HTMLSpanElement>} {...text} />;
 	}
 	return (
 		<InlineLinkText
 			disableMismatchWarning
 			label={label}
 			onPress={onPress}
+			ref={ref as Ref<HTMLAnchorElement>}
 			tabIndex={tabIndex}
 			to={to}
 			underline={underline}
@@ -154,21 +160,22 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 					{({ timeElapsed }) => (
 						<span className={css.timestamp}>
 							<Text aria-hidden color="textContrastMedium" leading="tight" size="md">
-								·{' '}
+								·{NON_BREAKING_SPACE}
 							</Text>
-							<AuthorLink
-								align="right"
-								color="textContrastMedium"
-								disabled={disabled}
-								label={timestampLabel}
-								leading="tight"
-								onPress={onBeforePressPost}
-								size="md"
-								title={timestampLabel}
-								to={opts.postHref}
-							>
-								{timeElapsed}
-							</AuthorLink>
+							<Tooltip label={timestampLabel}>
+								<AuthorLink
+									align="right"
+									color="textContrastMedium"
+									disabled={disabled}
+									label={timestampLabel}
+									leading="tight"
+									onPress={onBeforePressPost}
+									size="md"
+									to={opts.postHref}
+								>
+									{timeElapsed}
+								</AuthorLink>
+							</Tooltip>
 						</span>
 					)}
 				</TimeElapsed>

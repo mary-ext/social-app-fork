@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, Ref } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
@@ -16,6 +16,8 @@ export type TextProps = Omit<ComponentPropsWithoutRef<'span'>, 'color' | 'style'
 	leading?: TextVariants['leading'];
 	/** Clamp to this many lines with an ellipsis. */
 	numberOfLines?: number;
+	/** Forwarded to the `<span>` so the text can back a headless trigger (e.g. a Base UI tooltip). */
+	ref?: Ref<HTMLSpanElement>;
 	/** Tri-state text selection: omit for the browser default, `true` to force selectable, `false` to lock. */
 	selectable?: boolean;
 };

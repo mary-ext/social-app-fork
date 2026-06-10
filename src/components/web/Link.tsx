@@ -1,4 +1,4 @@
-import type { MouseEvent, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, MouseEvent, ReactNode, Ref } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
@@ -37,17 +37,17 @@ const anchorAttrs = ({ download, isExternal }: { download?: string; isExternal: 
 export type InlineLinkUnderline = 'always' | 'hover' | 'none';
 
 export type InlineLinkTextProps = LinkNavProps &
-	Pick<TextProps, 'align' | 'color' | 'leading' | 'numberOfLines' | 'selectable' | 'size' | 'weight'> & {
+	Pick<TextProps, 'align' | 'color' | 'leading' | 'numberOfLines' | 'selectable' | 'size' | 'weight'> &
+	// the rest of the anchor attributes pass straight through, so a headless trigger (e.g. a Base UI
+	// tooltip) can inject its event handlers, `aria-describedby`, `data-*`, and ref onto the `<a>`.
+	Omit<ComponentPropsWithoutRef<'a'>, 'color' | 'download' | 'href' | 'onClick' | 'style'> & {
 		children: ReactNode;
-		className?: string;
 		/** Skip the warning shown when external link text doesn't match its href. */
 		disableMismatchWarning?: boolean;
 		/** Accessible name; becomes the anchor's `aria-label`. */
 		label?: string;
-		/** Sets the anchor's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
-		tabIndex?: number;
-		/** Native tooltip text; becomes the anchor's `title`. */
-		title?: string;
+		/** Forwarded to the `<a>` so the link can back a headless trigger (e.g. a Base UI tooltip). */
+		ref?: Ref<HTMLAnchorElement>;
 		/** Underline timing; defaults to `hover`. */
 		underline?: InlineLinkUnderline;
 	};
@@ -71,11 +71,10 @@ export function InlineLinkText({
 	onPress: outerOnPress,
 	selectable,
 	size,
-	tabIndex,
-	title,
 	to,
 	underline = 'hover',
 	weight,
+	...rest
 }: InlineLinkTextProps) {
 	const { href, isExternal, onPress } = useLink({
 		action,
@@ -90,6 +89,7 @@ export function InlineLinkText({
 	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
 		<a
+			{...rest}
 			aria-label={label}
 			className={clsx(
 				textStyles.text({ align, color, leading, size, weight }),
@@ -106,8 +106,6 @@ export function InlineLinkText({
 					: (e: MouseEvent<HTMLAnchorElement>) => onPress(e as unknown as GestureResponderEvent)
 			}
 			style={clamped ? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) }) : undefined}
-			tabIndex={tabIndex}
-			title={title}
 			{...anchorAttrs({ download, isExternal })}
 		>
 			{children}
