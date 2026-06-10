@@ -611,11 +611,11 @@ msgstr "{name}'s starter pack"
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:110
+#: src/components/web/NewskieDialog.tsx:94
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:108
+#: src/components/web/NewskieDialog.tsx:92
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
@@ -746,7 +746,7 @@ msgstr "<0>Sign in</0><1> </1><2>to search for news, sports, politics, and every
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr ""
 
-#: src/screens/Profile/Header/Handle.tsx:62
+#: src/screens/Profile/Header/Handle.tsx:41
 msgid "⚠Invalid Handle"
 msgstr ""
 
@@ -3716,7 +3716,7 @@ msgid "Following Feed Preferences"
 msgstr ""
 
 #: src/components/Pills.tsx:165
-#: src/screens/Profile/Header/Handle.tsx:44
+#: src/screens/Profile/Header/Handle.tsx:30
 msgid "Follows you"
 msgstr ""
 
@@ -5407,7 +5407,7 @@ msgstr ""
 msgid "New starter pack"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:116
+#: src/components/web/NewskieDialog.tsx:47
 msgid "New user info dialog"
 msgstr ""
 
@@ -7172,7 +7172,7 @@ msgstr ""
 msgid "Saving"
 msgstr "Saving"
 
-#: src/components/NewskieDialog.tsx:130
+#: src/components/web/NewskieDialog.tsx:106
 #: src/view/com/notifications/NotificationFeedItem.tsx:800
 #: src/view/com/notifications/NotificationFeedItem.tsx:809
 msgid "Say hello!"
@@ -8715,7 +8715,7 @@ msgstr ""
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:49
+#: src/components/web/NewskieDialog.tsx:41
 msgid "This user is new here. Press for more info about when they joined."
 msgstr ""
 
@@ -9593,7 +9593,7 @@ msgstr ""
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:130
+#: src/components/web/NewskieDialog.tsx:106
 msgid "Welcome, friend!"
 msgstr ""
 
@@ -9946,11 +9946,11 @@ msgstr ""
 msgid "You hid this reply."
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:104
+#: src/components/web/NewskieDialog.tsx:88
 msgid "You joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:102
+#: src/components/web/NewskieDialog.tsx:86
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 

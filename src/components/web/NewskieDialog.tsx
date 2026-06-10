@@ -1,25 +1,20 @@
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInSeconds } from 'date-fns';
 
-import { HITSLOP_10 } from '#/lib/constants';
 import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { useDialogControl } from '#/components/Dialog';
 import { Newskie } from '#/components/icons/Newskie';
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard';
-import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
+import * as styles from '#/components/web/NewskieDialog.css';
+import { Text } from '#/components/web/Text';
 
 export function NewskieDialog({
 	profile,
@@ -28,12 +23,10 @@ export function NewskieDialog({
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	disabled?: boolean;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
-	const control = useDialogControl();
+	const handle = Dialog.useDialogHandle();
 
 	const createdAt = profile.createdAt;
-
 	const [now] = useState(() => Date.now());
 	const daysOld = useMemo(() => {
 		if (!createdAt) return Infinity;
@@ -43,28 +36,19 @@ export function NewskieDialog({
 	if (!createdAt || daysOld > 7) return null;
 
 	return (
-		<View style={[a.pr_2xs]}>
-			<Button
+		<Dialog.Root handle={handle}>
+			<Dialog.Trigger
+				aria-label={l`This user is new here. Press for more info about when they joined.`}
+				className={styles.trigger}
 				disabled={disabled}
-				label={l`This user is new here. Press for more info about when they joined.`}
-				hitSlop={HITSLOP_10}
-				onPress={control.open}
 			>
-				{({ hovered, pressed }) => (
-					<Newskie
-						size="lg"
-						fill={t.palette.yellow}
-						style={{
-							opacity: hovered || pressed ? 0.5 : 1,
-						}}
-					/>
-				)}
-			</Button>
-			<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-				<Dialog.Handle />
-				<DialogInner profile={profile} createdAt={createdAt} now={now} />
-			</Dialog.Outer>
-		</View>
+				<Newskie width={24} height={24} fill="currentColor" />
+			</Dialog.Trigger>
+			<Dialog.Popup size="narrow" label={l`New user info dialog`}>
+				<DialogInner profile={profile} createdAt={createdAt} now={now} onClose={() => handle.close()} />
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
@@ -72,14 +56,14 @@ function DialogInner({
 	profile,
 	createdAt,
 	now,
+	onClose,
 }: {
 	profile: AppBskyActorDefs.ProfileViewDetailed;
 	createdAt: string;
 	now: number;
+	onClose: () => void;
 }) {
-	const control = Dialog.useDialogContext();
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const moderationOpts = useModerationOpts();
 	const { currentAccount } = useSession();
 	const timeAgo = useGetTimeAgo();
@@ -113,33 +97,25 @@ function DialogInner({
 	};
 
 	return (
-		<Dialog.ScrollableInner label={l`New user info dialog`} style={{ maxWidth: 400 }}>
-			<View style={[a.gap_md]}>
-				<View style={[a.align_center]}>
-					<View
-						style={[
-							{
-								height: 60,
-								width: 64,
-							},
-						]}
-					>
-						<Newskie width={64} height={64} fill={t.palette.yellow} style={[a.absolute, a.inset_0]} />
-					</View>
-					<Text style={[a.font_semi_bold, a.text_xl]}>
-						{isMe ? <Trans>Welcome, friend!</Trans> : <Trans>Say hello!</Trans>}
-					</Text>
-				</View>
-				<Text style={[a.text_md, a.text_center, a.leading_snug]}>{getJoinMessage()}</Text>
-				{profile.joinedViaStarterPack ? (
-					<StarterPackCard.Link starterPack={profile.joinedViaStarterPack} onPress={() => control.close()}>
-						<View style={[a.w_full, a.mt_sm, a.p_lg, a.border, a.rounded_sm, t.atoms.border_contrast_low]}>
-							<StarterPackCard.Card starterPack={profile.joinedViaStarterPack} />
-						</View>
-					</StarterPackCard.Link>
-				) : null}
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+		<div className={styles.content}>
+			<div className={styles.header}>
+				<div className={styles.icon}>
+					<Newskie width={64} height={64} fill="currentColor" />
+				</div>
+				<Text size="xl" weight="semiBold">
+					{isMe ? <Trans>Welcome, friend!</Trans> : <Trans>Say hello!</Trans>}
+				</Text>
+			</div>
+			<Text size="md" align="center" leading="snug">
+				{getJoinMessage()}
+			</Text>
+			{profile.joinedViaStarterPack ? (
+				<StarterPackCard.Link starterPack={profile.joinedViaStarterPack} onPress={onClose}>
+					<div className={styles.starterPack}>
+						<StarterPackCard.Card starterPack={profile.joinedViaStarterPack} />
+					</div>
+				</StarterPackCard.Link>
+			) : null}
+		</div>
 	);
 }

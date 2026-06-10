@@ -1,25 +1,15 @@
-import { type TextStyle, View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
 import type { Shadow } from '#/state/cache/types';
 
-import { atoms as a, useTheme } from '#/alf';
+import { NewskieDialog } from '#/components/web/NewskieDialog';
+import { Text } from '#/components/web/Text';
 
-import { NewskieDialog } from '#/components/NewskieDialog';
-import { Text } from '#/components/Typography';
-
-type WebTextStyle = TextStyle & {
-	direction?: 'ltr';
-	unicodeBidi?: 'isolate';
-	wordBreak?: 'break-all';
-};
-
-const webTextStyle = (style: WebTextStyle): TextStyle => {
-	return style;
-};
+import * as styles from './Handle.css';
 
 export function ProfileHeaderHandle({
 	profile,
@@ -28,39 +18,28 @@ export function ProfileHeaderHandle({
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
 	disableTaps?: boolean;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const invalidHandle = isInvalidHandle(profile.handle);
 	const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy;
 	return (
-		<View
-			style={[a.flex_row, a.gap_sm, a.align_center, { maxWidth: '100%' }]}
-			pointerEvents={disableTaps ? 'none' : 'box-none'}
-		>
+		<div className={clsx(styles.row, disableTaps && styles.noTaps)}>
 			<NewskieDialog profile={profile} disabled={disableTaps} />
 			{profile.viewer?.followedBy && !blockHide ? (
-				<View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
-					<Text style={[t.atoms.text, a.text_sm]}>
+				<div className={styles.followsYou}>
+					<Text size="sm" color="text">
 						<Trans>Follows you</Trans>
 					</Text>
-				</View>
+				</div>
 			) : undefined}
 			<Text
-				emoji
 				numberOfLines={1}
-				style={[
-					invalidHandle
-						? [a.border, a.text_xs, a.px_sm, a.py_xs, a.rounded_xs, { borderColor: t.palette.contrast_200 }]
-						: [a.text_md, a.leading_snug, t.atoms.text_contrast_medium],
-					webTextStyle({
-						wordBreak: 'break-all',
-						direction: 'ltr',
-						unicodeBidi: 'isolate',
-					}),
-				]}
+				size={invalidHandle ? 'xs' : 'md'}
+				leading={invalidHandle ? undefined : 'snug'}
+				color={invalidHandle ? undefined : 'textContrastMedium'}
+				className={clsx(styles.handle, invalidHandle && styles.invalidHandle)}
 			>
 				{invalidHandle ? l`⚠Invalid Handle` : sanitizeHandle(profile.handle, '@', false)}
 			</Text>
-		</View>
+		</div>
 	);
 }
