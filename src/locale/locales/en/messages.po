@@ -79,7 +79,7 @@ msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map((g) => g.value).join(' ')
-#: src/components/dms/MessageItem.tsx:234
+#: src/components/dms/MessageItem.tsx:235
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
@@ -189,7 +189,7 @@ msgid "{0} following"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:528
+#: src/components/dms/MessageItem.tsx:524
 msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
@@ -232,7 +232,7 @@ msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(memberSender)
 #. placeholder {1}: reaction.value
-#: src/components/dms/MessageItem.tsx:229
+#: src/components/dms/MessageItem.tsx:230
 msgid "{0} reacted {1}"
 msgstr ""
 
@@ -265,18 +265,18 @@ msgstr "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
 #. placeholder {2}: feed.likeCount || 0
-#: src/view/com/feeds/FeedSourceCard.tsx:153
+#: src/view/com/feeds/FeedSourceCard.tsx:140
 msgid "{0}, a feed by {1}, liked by {2}"
 msgstr ""
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
-#: src/view/com/feeds/FeedSourceCard.tsx:154
+#: src/view/com/feeds/FeedSourceCard.tsx:141
 msgid "{0}, a list by {1}"
 msgstr ""
 
 #. placeholder {0}: createSanitizedDisplayName(profile)
-#: src/components/dms/MessageItem.tsx:196
+#: src/components/dms/MessageItem.tsx:197
 msgid "{0}’s avatar"
 msgstr "{0}’s avatar"
 
@@ -1328,8 +1328,8 @@ msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
-#: src/components/ProfileCard.tsx:448
-#: src/components/ProfileCard.tsx:470
+#: src/components/ProfileCard.tsx:457
+#: src/components/ProfileCard.tsx:479
 #: src/view/com/notifications/NotificationFeedItem.tsx:689
 #: src/view/com/notifications/NotificationFeedItem.tsx:705
 msgid "An issue occurred, please try again."
@@ -1718,7 +1718,7 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:424
+#: src/components/FeedInterstitials.tsx:426
 msgid "Browse more accounts"
 msgstr ""
 
@@ -1836,8 +1836,7 @@ msgstr ""
 msgid "carousel"
 msgstr "carousel"
 
-#: src/components/RichTextTag.tsx:47
-#: src/components/web/RichTextTag.tsx:62
+#: src/components/web/RichTextTag.tsx:65
 msgid "Cashtag {tag}"
 msgstr ""
 
@@ -2020,12 +2019,7 @@ msgstr "Click here to create or manage an invite link for this group chat"
 msgid "Click here to view the invite link for this group chat"
 msgstr "Click here to view the invite link for this group chat"
 
-#. placeholder {0}: isCashtag ? tag : `#${tag}`
-#: src/components/RichTextTag.tsx:48
-msgid "Click to open tag menu for {0}"
-msgstr ""
-
-#: src/components/dms/MessageItem.tsx:456
+#: src/components/dms/MessageItem.tsx:452
 msgid "Click to retry failed message"
 msgstr ""
 
@@ -2780,7 +2774,7 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:369
+#: src/components/dms/MessageItem.tsx:370
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
@@ -2948,12 +2942,12 @@ msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:56
 #: src/screens/Profile/Header/EditProfileDialog.tsx:200
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:268
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 msgid "Edit profile"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:272
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:271
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:313
 msgid "Edit Profile"
 msgstr ""
@@ -3489,7 +3483,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
 #: src/components/FeedCard.tsx:114
 #: src/state/queries/feed.ts:120
-#: src/view/com/feeds/FeedSourceCard.tsx:123
+#: src/view/com/feeds/FeedSourceCard.tsx:117
 msgid "Feed by {0}"
 msgstr ""
 
@@ -3596,7 +3590,7 @@ msgid "Focus the search field"
 msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:486
+#: src/components/ProfileCard.tsx:495
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
@@ -3628,7 +3622,7 @@ msgid "Follow all"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:482
+#: src/components/ProfileCard.tsx:491
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:362
 #: src/view/com/notifications/NotificationFeedItem.tsx:748
@@ -3681,7 +3675,7 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:477
+#: src/components/ProfileCard.tsx:486
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
 #: src/Navigation.tsx:603
@@ -3701,7 +3695,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:438
+#: src/components/ProfileCard.tsx:447
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 #: src/view/com/notifications/NotificationFeedItem.tsx:686
 msgid "Following {0}"
@@ -4077,8 +4071,7 @@ msgstr ""
 msgid "Hashtag"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:47
-#: src/components/web/RichTextTag.tsx:62
+#: src/components/web/RichTextTag.tsx:65
 msgid "Hashtag {tag}"
 msgstr ""
 
@@ -4625,7 +4618,7 @@ msgstr ""
 msgid "Like this feed"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:145
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:144
 msgid "Like this labeler"
 msgstr ""
 
@@ -4643,14 +4636,14 @@ msgstr ""
 #. placeholder {0}: count || 0
 #. placeholder {0}: feed.likeCount || 0
 #: src/components/FeedCard.tsx:173
-#: src/view/com/feeds/FeedSourceCard.tsx:139
+#: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:73
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:426
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:165
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:164
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:178
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
@@ -4694,7 +4687,7 @@ msgstr ""
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(feed.creatorHandle, '@')
 #: src/components/ListCard.tsx:131
-#: src/view/com/feeds/FeedSourceCard.tsx:125
+#: src/view/com/feeds/FeedSourceCard.tsx:119
 msgid "List by {0}"
 msgstr ""
 
@@ -5008,7 +5001,7 @@ msgctxt "toast"
 msgid "Message deleted"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:450
+#: src/components/dms/MessageItem.tsx:446
 msgid "Message failed to send."
 msgstr "Message failed to send."
 
@@ -5039,11 +5032,11 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:535
+#: src/components/dms/MessageItem.tsx:531
 msgid "Messages from this person are hidden while they are blocking you."
 msgstr "Messages from this person are hidden while they are blocking you."
 
-#: src/components/dms/MessageItem.tsx:533
+#: src/components/dms/MessageItem.tsx:529
 msgid "Messages from this person are hidden while you are blocking them."
 msgstr "Messages from this person are hidden while you are blocking them."
 
@@ -5173,12 +5166,6 @@ msgstr "Mute"
 msgctxt "video"
 msgid "Mute"
 msgstr ""
-
-#. placeholder {0}: isCashtag ? tag : `#${tag}`
-#: src/components/RichTextTag.tsx:126
-#: src/components/RichTextTag.tsx:138
-msgid "Mute {0}"
-msgstr "Mute {0}"
 
 #: src/components/web/RichTextTag.tsx:114
 #: src/components/web/RichTextTag.tsx:125
@@ -5495,7 +5482,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:461
+#: src/components/ProfileCard.tsx:470
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:260
 #: src/view/com/notifications/NotificationFeedItem.tsx:702
 msgid "No longer following {0}"
@@ -5701,14 +5688,14 @@ msgstr ""
 msgid "Oh no!"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:211
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:210
 msgid "OK"
 msgstr ""
 
 #: src/components/BotAccountAlert.tsx:53
 #: src/components/BotAccountAlert.tsx:55
 #: src/components/dms/InitiateChatFlow.tsx:623
-#: src/components/dms/MessageItem.tsx:539
+#: src/components/dms/MessageItem.tsx:535
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:571
 msgid "Okay"
 msgstr ""
@@ -5959,7 +5946,7 @@ msgstr ""
 msgid "Opens this draft in the composer"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:197
+#: src/components/dms/MessageItem.tsx:198
 #: src/view/com/notifications/NotificationFeedItem.tsx:907
 msgid "Opens this profile"
 msgstr ""
@@ -7318,16 +7305,6 @@ msgstr ""
 msgid "Searches for profiles"
 msgstr ""
 
-#. placeholder {0}: isCashtag ? tag : `#${tag}`
-#: src/components/RichTextTag.tsx:95
-msgid "See {0} posts"
-msgstr ""
-
-#. placeholder {0}: isCashtag ? tag : `#${tag}`
-#: src/components/RichTextTag.tsx:109
-msgid "See {0} posts by user"
-msgstr ""
-
 #: src/components/web/RichTextTag.tsx:94
 msgid "See {prefixedTag} posts"
 msgstr "See {prefixedTag} posts"
@@ -7336,22 +7313,18 @@ msgstr "See {prefixedTag} posts"
 msgid "See {prefixedTag} posts by user"
 msgstr "See {prefixedTag} posts by user"
 
-#: src/components/RichTextTag.tsx:103
 #: src/components/web/RichTextTag.tsx:96
 msgid "See {tag} posts"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:118
 #: src/components/web/RichTextTag.tsx:106
 msgid "See {tag} posts by user"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:103
 #: src/components/web/RichTextTag.tsx:96
 msgid "See #{tag} posts"
 msgstr ""
 
-#: src/components/RichTextTag.tsx:118
 #: src/components/web/RichTextTag.tsx:106
 msgid "See #{tag} posts by user"
 msgstr ""
@@ -7360,12 +7333,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:384
-#: src/components/FeedInterstitials.tsx:438
+#: src/components/FeedInterstitials.tsx:386
+#: src/components/FeedInterstitials.tsx:440
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:368
+#: src/components/FeedInterstitials.tsx:370
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -7891,7 +7864,7 @@ msgid "Someone left the group"
 msgstr "Someone left the group"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:231
+#: src/components/dms/MessageItem.tsx:232
 msgid "Someone reacted {0}"
 msgstr ""
 
@@ -8095,11 +8068,11 @@ msgstr ""
 msgid "Subscribe to account activity"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:313
 msgid "Subscribe to Labeler"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:283
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:282
 msgid "Subscribe to this labeler"
 msgstr ""
 
@@ -8124,7 +8097,7 @@ msgstr "Suggested"
 msgid "Suggested accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:365
+#: src/components/FeedInterstitials.tsx:367
 msgid "Suggested for you"
 msgstr ""
 
@@ -8175,7 +8148,7 @@ msgstr ""
 msgid "Tags only"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:496
+#: src/components/dms/MessageItem.tsx:492
 msgid "Tap for details"
 msgstr "Tap for details"
 
@@ -8210,7 +8183,7 @@ msgstr "Tap to remove your {0} reaction"
 msgid "Tap to request access to join this group chat"
 msgstr "Tap to request access to join this group chat"
 
-#: src/components/dms/MessageItem.tsx:461
+#: src/components/dms/MessageItem.tsx:457
 msgid "Tap to retry"
 msgstr "Tap to retry"
 
@@ -8223,7 +8196,7 @@ msgstr "Tap to show {0} reactions"
 msgid "Tap to show all reactions"
 msgstr "Tap to show all reactions"
 
-#: src/components/dms/MessageItem.tsx:249
+#: src/components/dms/MessageItem.tsx:250
 msgid "Tap to view reactions"
 msgstr "Tap to view reactions"
 
@@ -8646,13 +8619,13 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:494
-#: src/components/dms/MessageItem.tsx:517
+#: src/components/dms/MessageItem.tsx:490
+#: src/components/dms/MessageItem.tsx:513
 msgid "This message is hidden because this user is blocking you."
 msgstr "This message is hidden because this user is blocking you."
 
-#: src/components/dms/MessageItem.tsx:493
-#: src/components/dms/MessageItem.tsx:515
+#: src/components/dms/MessageItem.tsx:489
+#: src/components/dms/MessageItem.tsx:511
 msgid "This message is hidden because you are blocking this user."
 msgstr "This message is hidden because you are blocking this user."
 
@@ -8915,7 +8888,7 @@ msgstr "Unable to start sign in. Please try again."
 msgid "Unavailable feed information"
 msgstr ""
 
-#: src/components/dms/MessageItem.tsx:541
+#: src/components/dms/MessageItem.tsx:537
 #: src/components/dms/MessagesListBlockedFooter.tsx:94
 #: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/components/moderation/block-account-prompt.tsx:32
@@ -9036,12 +9009,6 @@ msgctxt "video"
 msgid "Unmute"
 msgstr ""
 
-#. placeholder {0}: isCashtag ? tag : `#${tag}`
-#: src/components/RichTextTag.tsx:126
-#: src/components/RichTextTag.tsx:138
-msgid "Unmute {0}"
-msgstr "Unmute {0}"
-
 #: src/components/web/RichTextTag.tsx:114
 #: src/components/web/RichTextTag.tsx:125
 msgid "Unmute {prefixedTag}"
@@ -9120,7 +9087,7 @@ msgstr ""
 msgid "Unpinned list"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:313
 msgid "Unsubscribe"
 msgstr ""
 
@@ -9129,7 +9096,7 @@ msgstr ""
 msgid "Unsubscribe from list"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:283
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:282
 msgid "Unsubscribe from this labeler"
 msgstr ""
 
@@ -9622,7 +9589,7 @@ msgstr ""
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:205
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:204
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
@@ -9768,7 +9735,7 @@ msgid "You are a trusted verifier"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
-#: src/components/dms/MessageItem.tsx:526
+#: src/components/dms/MessageItem.tsx:522
 msgid "You are blocking {0}"
 msgstr "You are blocking {0}"
 
@@ -10012,7 +9979,7 @@ msgid "You must be signed in to submit a report"
 msgstr "You must be signed in to submit a report"
 
 #. placeholder {0}: reaction.value
-#: src/components/dms/MessageItem.tsx:224
+#: src/components/dms/MessageItem.tsx:225
 msgid "You reacted {0}"
 msgstr ""
 
