@@ -238,8 +238,11 @@ let FeedItemInner = ({
 		styles.outer,
 		{
 			borderColor: pal.colors.border,
-			paddingBottom: isThreadLastChild || (!isThreadChild && !isThreadParent) ? 8 : undefined,
 			borderTopWidth: hideTopBorder || isThreadChild ? 0 : StyleSheet.hairlineWidth,
+			paddingBottom: isThreadLastChild || (!isThreadChild && !isThreadParent) ? 8 : undefined,
+			// the feed's first post hides its top border (the sticky header already separates
+			// it), so reclaim the removed hairline as padding to keep content from shifting up 1px
+			paddingTop: hideTopBorder ? StyleSheet.hairlineWidth : undefined,
 		},
 	];
 
