@@ -253,7 +253,7 @@ export function SelectMediaButton({
 			}[error];
 		});
 
-		onSelectAssets({ type, images, video, errors });
+		void onSelectAssets({ type, images, video, errors });
 	}, [l, onSelectAssets, selectionCountRemaining, allowedAssetTypes]);
 
 	useEffect(() => {
@@ -266,7 +266,7 @@ export function SelectMediaButton({
 	return (
 		<ComposerToolbarButton
 			icon={ImageIcon}
-			onClick={onPressSelectMedia}
+			onClick={() => void onPressSelectMedia()}
 			label={l({
 				message: `Add media to post`,
 				comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,

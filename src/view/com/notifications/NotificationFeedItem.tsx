@@ -739,7 +739,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 					color="secondary"
 					size="small"
 					style={[a.self_start]}
-					onPress={onPressUnfollow}
+					onPress={(e) => void onPressUnfollow(e)}
 				>
 					<ButtonIcon icon={CheckIcon} />
 					<ButtonText>
@@ -752,7 +752,7 @@ function FollowBackButton({ profile }: { profile: AppBskyActorDefs.ProfileView }
 					color="primary"
 					size="small"
 					style={[a.self_start]}
-					onPress={onPressFollow}
+					onPress={(e) => void onPressFollow(e)}
 				>
 					<ButtonIcon icon={PlusIcon} />
 					<ButtonText>{isFollowedBy ? <Trans>Follow back</Trans> : <Trans>Follow</Trans>}</ButtonText>
@@ -769,6 +769,25 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 	const navigation = useNavigation<NavigationProp>();
 	const [isLoading, setIsLoading] = useState(false);
 
+	const onPressSayHello = async () => {
+		if (!chat || !currentAccount) return;
+		try {
+			setIsLoading(true);
+			const data = await ok(
+				chat.get('chat.bsky.convo.getConvoForMembers', {
+					params: { members: [profile.did, currentAccount.did as Did] },
+				}),
+			);
+			navigation.navigate('MessagesConversation', {
+				conversation: data.convo.id,
+			});
+		} catch (e) {
+			logger.error('Failed to get conversation', { safeMessage: e });
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	if (
 		profile.associated?.chat?.allowIncoming === 'none' ||
 		(profile.associated?.chat?.allowIncoming === 'following' && !profile.viewer?.followedBy)
@@ -784,24 +803,7 @@ function SayHelloBtn({ profile }: { profile: AppBskyActorDefs.ProfileView }) {
 			size="small"
 			style={[a.self_center, { marginLeft: 'auto' }]}
 			disabled={isLoading}
-			onPress={async () => {
-				if (!chat || !currentAccount) return;
-				try {
-					setIsLoading(true);
-					const data = await ok(
-						chat.get('chat.bsky.convo.getConvoForMembers', {
-							params: { members: [profile.did, currentAccount.did as Did] },
-						}),
-					);
-					navigation.navigate('MessagesConversation', {
-						conversation: data.convo.id,
-					});
-				} catch (e) {
-					logger.error('Failed to get conversation', { safeMessage: e });
-				} finally {
-					setIsLoading(false);
-				}
-			}}
+			onPress={() => void onPressSayHello()}
 		>
 			<ButtonText>
 				<Trans>Say hello!</Trans>

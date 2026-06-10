@@ -82,7 +82,7 @@ function ListFooterMaybeError({ error, onRetry }: { error?: string; onRetry?: ()
 					variant="solid"
 					label={l`Press to retry`}
 					style={[a.align_center, a.justify_center, a.rounded_sm, a.overflow_hidden, a.px_md, a.py_sm]}
-					onPress={onRetry}
+					onPress={() => void onRetry?.()}
 				>
 					<ButtonText>
 						<Trans>Retry</Trans>

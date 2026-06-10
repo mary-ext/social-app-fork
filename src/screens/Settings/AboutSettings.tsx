@@ -58,7 +58,7 @@ export function AboutSettingsScreen({}: Props) {
 							);
 						}}
 						onPress={() => {
-							setStringAsync(
+							void setStringAsync(
 								`Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${'web'}; Platform version: ${Platform.Version}; Device ID: ${getDeviceId()}`,
 							);
 							Toast.show(l`Copied build version to clipboard`);

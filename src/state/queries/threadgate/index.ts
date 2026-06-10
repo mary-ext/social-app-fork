@@ -244,10 +244,10 @@ export function useSetThreadgateAllowMutation() {
 
 			if (data) updatePostThreadThreadgate(data);
 
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: [threadgateRecordQueryKeyRoot],
 			});
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: [threadgateViewQueryKeyRoot],
 			});
 		},
@@ -302,7 +302,7 @@ export function useToggleReplyVisibilityMutation() {
 			);
 		},
 		onSuccess() {
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: [threadgateRecordQueryKeyRoot],
 			});
 		},

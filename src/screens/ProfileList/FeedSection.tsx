@@ -52,7 +52,7 @@ export function FeedSection({
 			animated: false,
 			offset: -headerHeight,
 		});
-		queryClient.resetQueries({ queryKey: FEED_RQKEY(feed) });
+		void queryClient.resetQueries({ queryKey: FEED_RQKEY(feed) });
 		setHasNew(false);
 	}, [scrollElRef, headerHeight, queryClient, feed, setHasNew]);
 	useImperativeHandle(ref, () => ({

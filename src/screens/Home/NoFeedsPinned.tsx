@@ -88,7 +88,7 @@ export function NoFeedsPinned({ preferences }: { preferences: UsePreferencesQuer
 						size="large"
 						variant="solid"
 						color="primary"
-						onClick={addRecommendedFeeds}
+						onClick={() => void addRecommendedFeeds()}
 					>
 						<ButtonIcon icon={Plus} />
 						<ButtonText>{l`Add recommended feeds`}</ButtonText>

@@ -71,7 +71,7 @@ export function VerificationCreatePrompt({
 							color="primary"
 							size={gtMobile ? 'small' : 'large'}
 							label={l`Verify account`}
-							onPress={onConfirm}
+							onPress={() => void onConfirm()}
 						>
 							<ButtonText>{l`Verify account`}</ButtonText>
 							{isPending && <ButtonIcon icon={Loader} />}

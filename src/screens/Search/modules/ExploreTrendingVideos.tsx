@@ -39,7 +39,7 @@ export function ExploreTrendingVideos() {
 		return () => {
 			const query = queryClient.getQueryCache().find({ queryKey: RQKEY(FEED_DESC, FEED_PARAMS) });
 			if (query && query.getObserversCount() <= 1) {
-				query.fetch();
+				void query.fetch();
 			}
 		};
 	});

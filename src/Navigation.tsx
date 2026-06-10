@@ -993,7 +993,7 @@ function navigate<K extends keyof AllNavigatorParams>(name: K, params?: AllNavig
 
 function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'MessagesTab' | 'NotificationsTab') {
 	if (navigationRef.isReady()) {
-		navigate(tabName);
+		void navigate(tabName);
 		if (navigationRef.canGoBack()) {
 			navigationRef.dispatch(StackActions.popToTop()); //we need to check .canGoBack() before calling it
 		}

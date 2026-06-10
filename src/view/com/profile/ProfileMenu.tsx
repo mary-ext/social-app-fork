@@ -103,7 +103,7 @@ let ProfileMenu = ({
 	}, [currentAccount, profile]);
 
 	const invalidateProfileQuery = useCallback(() => {
-		queryClient.invalidateQueries({
+		void queryClient.invalidateQueries({
 			queryKey: profileQueryKey(profile.did),
 		});
 	}, [queryClient, profile.did]);
@@ -113,7 +113,7 @@ let ProfileMenu = ({
 	}, [addToStarterPacksDialogControl]);
 
 	const onPressShare = useCallback(() => {
-		shareUrl(toShareUrl(makeProfileLink(profile)));
+		void shareUrl(toShareUrl(makeProfileLink(profile)));
 	}, [profile]);
 
 	const onPressMuteAccount = useCallback(async () => {
@@ -205,11 +205,11 @@ let ProfileMenu = ({
 	}, [reportDialogControl]);
 
 	const onPressShareATUri = useCallback(() => {
-		shareText(`at://${profile.did}`);
+		void shareText(`at://${profile.did}`);
 	}, [profile.did]);
 
 	const onPressShareDID = useCallback(() => {
-		shareText(profile.did);
+		void shareText(profile.did);
 	}, [profile.did]);
 
 	const onPressSearch = useCallback(() => {
@@ -268,7 +268,7 @@ let ProfileMenu = ({
 										{(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (
 											<Menu.Item
 												label={isFollowing ? l`Unfollow account` : l`Follow account`}
-												onClick={isFollowing ? onPressUnfollowAccount : onPressFollowAccount}
+												onClick={() => void (isFollowing ? onPressUnfollowAccount() : onPressFollowAccount())}
 											>
 												<Menu.ItemText>
 													{isFollowing ? <Trans>Unfollow account</Trans> : <Trans>Follow account</Trans>}
@@ -425,12 +425,12 @@ let ProfileMenu = ({
 				handle={blockPromptHandle}
 				isBlocking={!!profile.viewer?.blocking}
 				isLabeler={!!profile.associated?.labeler}
-				onConfirm={blockAccount}
+				onConfirm={() => void blockAccount()}
 			/>
 			<MuteAccountPrompt
 				handle={mutePromptHandle}
 				isMuted={!!profile.viewer?.muted}
-				onConfirm={onPressMuteAccount}
+				onConfirm={() => void onPressMuteAccount()}
 			/>
 			<WebPrompt.Basic
 				handle={loggedOutWarningPromptHandle}

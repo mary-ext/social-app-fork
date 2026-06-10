@@ -181,7 +181,7 @@ function WizardInner({
 
 	const onSuccessCreate = (data: { uri: string; cid: string }) => {
 		const rkey = parseCanonicalResourceUri(data.uri).rkey;
-		Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)]);
+		void Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)]);
 		dispatch({ type: 'SetProcessing', processing: false });
 
 		if (fromDialog) {
@@ -251,7 +251,7 @@ function WizardInner({
 
 	const onNext = () => {
 		if (state.currentStep === 'Feeds') {
-			submit();
+			void submit();
 			return;
 		}
 

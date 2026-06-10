@@ -87,14 +87,14 @@ export function SubscribeMenu({ list }: { list: AppBskyGraphDefs.ListView }) {
 				control={subscribeMutePromptControl}
 				title={l`Mute these accounts?`}
 				description={l`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`}
-				onConfirm={onSubscribeMute}
+				onConfirm={() => void onSubscribeMute()}
 				confirmButtonCta={l`Mute list`}
 			/>
 			<Prompt.Basic
 				control={subscribeBlockPromptControl}
 				title={l`Block these accounts?`}
 				description={l`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`}
-				onConfirm={onSubscribeBlock}
+				onConfirm={() => void onSubscribeBlock()}
 				confirmButtonCta={l`Block list`}
 				confirmButtonColor="negative"
 			/>

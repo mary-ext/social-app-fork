@@ -41,7 +41,7 @@ export function NoSavedFeedsOfAnyType({ onAddRecommendedFeeds }: { onAddRecommen
 				label={l`Apply default recommended feeds`}
 				size="small"
 				color="primary_subtle"
-				onPress={addRecommendedFeeds}
+				onPress={() => void addRecommendedFeeds()}
 			>
 				<ButtonIcon icon={Plus} />
 				<ButtonText>{l`Use recommended`}</ButtonText>

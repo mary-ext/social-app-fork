@@ -269,7 +269,7 @@ function Chrome() {
 						</span>
 					</Menu.Trigger>
 					<Menu.Popup label={l`Image options`}>
-						<Menu.Item label={l`Share image`} onClick={onShare}>
+						<Menu.Item label={l`Share image`} onClick={() => void onShare()}>
 							<Menu.ItemText>
 								<Trans>Share image</Trans>
 							</Menu.ItemText>

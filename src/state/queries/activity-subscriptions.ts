@@ -94,7 +94,7 @@ export function useNotificationDeclarationMutation() {
 		},
 		onError: () => {
 			Toast.show(t`Failed to update notification declaration`);
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: RQKEY_getNotificationDeclaration,
 			});
 		},

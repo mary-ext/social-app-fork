@@ -100,7 +100,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 						size="small"
 						label={l`Remove feed`}
 						disabled={isProcessing}
-						onPress={onRemoveFeed}
+						onPress={() => void onRemoveFeed()}
 					>
 						<ButtonText>
 							<Trans>Remove feed</Trans>
@@ -114,7 +114,7 @@ export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
 							size="small"
 							label={l`Replace with Discover`}
 							disabled={isProcessing}
-							onPress={onReplaceFeed}
+							onPress={() => void onReplaceFeed()}
 						>
 							<ButtonText>
 								<Trans>Replace with Discover</Trans>

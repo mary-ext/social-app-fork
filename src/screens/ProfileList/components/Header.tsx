@@ -128,7 +128,7 @@ export function Header({
 						testID={isPinned ? 'unpinBtn' : 'pinBtn'}
 						color={isPinned ? 'secondary' : 'primary_subtle'}
 						label={isPinned ? l`Unpin` : l`Pin to home`}
-						onPress={onTogglePinned}
+						onPress={() => void onTogglePinned()}
 						disabled={isPending}
 						size="small"
 						style={[a.rounded_full]}
@@ -142,7 +142,7 @@ export function Header({
 							testID="unblockBtn"
 							color="secondary"
 							label={l`Unblock`}
-							onPress={onUnsubscribeBlock}
+							onPress={() => void onUnsubscribeBlock()}
 							size="small"
 							style={[a.rounded_full]}
 							disabled={isBlockPending}
@@ -157,7 +157,7 @@ export function Header({
 							testID="unmuteBtn"
 							color="secondary"
 							label={l`Unmute`}
-							onPress={onUnsubscribeMute}
+							onPress={() => void onUnsubscribeMute()}
 							size="small"
 							style={[a.rounded_full]}
 							disabled={isMutePending}

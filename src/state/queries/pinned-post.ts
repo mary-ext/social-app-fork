@@ -62,10 +62,10 @@ export function usePinnedPostMutation() {
 					Toast.show(l({ message: 'Post unpinned', context: 'toast' }));
 				}
 
-				queryClient.invalidateQueries({
+				void queryClient.invalidateQueries({
 					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_and_author_threads`),
 				});
-				queryClient.invalidateQueries({
+				void queryClient.invalidateQueries({
 					queryKey: FEED_RQKEY(`author|${currentAccount.did}|posts_with_replies`),
 				});
 			} catch (e) {

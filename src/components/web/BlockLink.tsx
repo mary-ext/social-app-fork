@@ -66,7 +66,7 @@ export function BlockLink({
 
 	const go = (e?: MouseEvent<HTMLDivElement>) => {
 		onBeforePress?.();
-		onPressInner(navigation, sanitizeUrl(href), 'push', openLink, e);
+		onPressInner(navigation, sanitizeUrl(href), 'push', (href) => void openLink(href), e);
 	};
 
 	const onClick = (e: MouseEvent<HTMLDivElement>) => {

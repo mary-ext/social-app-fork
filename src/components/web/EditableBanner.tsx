@@ -67,7 +67,7 @@ export function EditableBanner({
 					</span>
 				</Menu.Trigger>
 				<Menu.Popup label={l`Edit banner`} align="center">
-					<Menu.Item onClick={onOpenLibrary}>
+					<Menu.Item onClick={() => void onOpenLibrary()}>
 						<Menu.ItemText>
 							<Trans>Upload from Files</Trans>
 						</Menu.ItemText>
@@ -89,7 +89,7 @@ export function EditableBanner({
 			<EditImageDialog
 				handle={editImageDialogControl}
 				image={rawImage}
-				onChange={onChangeEditImage}
+				onChange={(image) => void onChangeEditImage(image)}
 				aspectRatio={3}
 			/>
 		</>

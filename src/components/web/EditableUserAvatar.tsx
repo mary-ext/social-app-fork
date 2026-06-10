@@ -86,7 +86,7 @@ export function EditableUserAvatar({
 					</span>
 				</Menu.Trigger>
 				<Menu.Popup label={l`Edit avatar`}>
-					<Menu.Item onClick={onOpenLibrary}>
+					<Menu.Item onClick={() => void onOpenLibrary()}>
 						<Menu.ItemText>
 							<Trans>Upload from Files</Trans>
 						</Menu.ItemText>
@@ -108,7 +108,7 @@ export function EditableUserAvatar({
 			<EditImageDialog
 				handle={editImageDialogControl}
 				image={rawImage}
-				onChange={onChangeEditImage}
+				onChange={(image) => void onChangeEditImage(image)}
 				aspectRatio={1}
 				circularCrop={circular}
 			/>

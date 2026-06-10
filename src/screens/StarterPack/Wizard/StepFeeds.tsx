@@ -85,7 +85,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				data={query ? searchedFeeds : suggestedFeeds}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
-				onEndReached={!query ? () => fetchNextPage() : undefined}
+				onEndReached={!query ? () => void fetchNextPage() : undefined}
 				onEndReachedThreshold={2}
 				keyboardDismissMode="on-drag"
 				renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}

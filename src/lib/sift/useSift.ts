@@ -54,9 +54,9 @@ export function useSift({
 		window,
 	};
 
-	const update = useCallback(async () => {
+	const update = useCallback(() => {
 		if (!inputRef.current || !popoverRef.current) return;
-		const styles = await computeStyles(
+		const styles = computeStyles(
 			{
 				anchor: anchorRef.current || inputRef.current,
 				input: inputRef.current,

@@ -45,7 +45,7 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 	const onShare = useCallback(() => {
 		const url = new URL('https://bsky.app');
 		url.pathname = `/topic/${topic}`;
-		shareUrl(url.toString());
+		void shareUrl(url.toString());
 	}, [topic]);
 
 	const [activeTab, setActiveTab] = useState(0);
@@ -140,7 +140,7 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 
 	const onEndReached = useCallback(() => {
 		if (isFetchingNextPage || !hasNextPage || error) return;
-		fetchNextPage();
+		void fetchNextPage();
 	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
 
 	return (
@@ -159,7 +159,7 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					refreshing={isPTR}
-					onRefresh={onRefresh}
+					onRefresh={() => void onRefresh()}
 					onEndReached={onEndReached}
 					onEndReachedThreshold={4}
 					onItemSeen={trackPostView}

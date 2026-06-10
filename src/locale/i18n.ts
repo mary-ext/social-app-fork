@@ -23,7 +23,7 @@ export function useLocaleLanguage() {
 		const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage);
 
 		document.documentElement.lang = sanitizedLanguage;
-		dynamicActivate(sanitizedLanguage).then((locale) => {
+		void dynamicActivate(sanitizedLanguage).then((locale) => {
 			setDateLocale(locale);
 		});
 	}, [appLanguage]);

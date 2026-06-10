@@ -86,7 +86,7 @@ export function useListCreateMutation() {
 		},
 		onSuccess() {
 			invalidateMyLists(queryClient);
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
 			});
 		},
@@ -145,13 +145,13 @@ export function useListMetadataMutation() {
 		},
 		onSuccess(_data, variables) {
 			invalidateMyLists(queryClient);
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
 			});
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: RQKEY(variables.uri),
 			});
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: [FEED_INFO_RQKEY_ROOT],
 			});
 		},
@@ -216,7 +216,7 @@ export function useListDeleteMutation() {
 		},
 		onSuccess() {
 			invalidateMyLists(queryClient);
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: PROFILE_LISTS_RQKEY(currentAccount!.did),
 			});
 			// TODO!! /* dont await */ this.rootStore.preferences.removeSavedFeed(this.uri)
@@ -241,7 +241,7 @@ export function useListMuteMutation() {
 			});
 		},
 		onSuccess(_data, variables) {
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: RQKEY(variables.uri),
 			});
 		},
@@ -288,7 +288,7 @@ export function useListBlockMutation() {
 			});
 		},
 		onSuccess(_data, variables) {
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: RQKEY(variables.uri),
 			});
 		},

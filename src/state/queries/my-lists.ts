@@ -71,8 +71,8 @@ export function useMyListsQuery(filter: MyListsFilter) {
 
 export function invalidate(qc: QueryClient, filter?: MyListsFilter) {
 	if (filter) {
-		qc.invalidateQueries({ queryKey: RQKEY(filter) });
+		void qc.invalidateQueries({ queryKey: RQKEY(filter) });
 	} else {
-		qc.invalidateQueries({ queryKey: [RQKEY_ROOT] });
+		void qc.invalidateQueries({ queryKey: [RQKEY_ROOT] });
 	}
 }

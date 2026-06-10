@@ -151,8 +151,8 @@ function BookmarksInner() {
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}
-			onRefresh={onRefresh}
-			onEndReached={onEndReached}
+			onRefresh={() => void onRefresh()}
+			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
 			onItemSeen={(item) => {
 				if (item.type === 'bookmark') {
@@ -227,7 +227,7 @@ function BookmarkNotFound({
 					<Trans>This post was deleted by its author</Trans>
 				</Text>
 			</View>
-			<Button label={l`Remove from saved posts`} size="tiny" color="secondary" onPress={remove}>
+			<Button label={l`Remove from saved posts`} size="tiny" color="secondary" onPress={() => void remove()}>
 				<ButtonIcon icon={BookmarkFilled} />
 				<ButtonText>
 					<Trans>Remove</Trans>

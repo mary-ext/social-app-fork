@@ -91,7 +91,7 @@ export function useListMembershipAddMutation({
 			// invalidate the members queries (used for rendering the listings)
 			// use a timeout to wait for the appview (see above)
 			setTimeout(() => {
-				queryClient.invalidateQueries({
+				void queryClient.invalidateQueries({
 					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
 				});
 			}, 1e3);
@@ -197,7 +197,7 @@ export function useListMembershipRemoveMutation({
 			// invalidate the members queries (used for rendering the listings)
 			// use a timeout to wait for the appview (see above)
 			setTimeout(() => {
-				queryClient.invalidateQueries({
+				void queryClient.invalidateQueries({
 					queryKey: LIST_MEMBERS_RQKEY(variables.listUri),
 				});
 			}, 1e3);

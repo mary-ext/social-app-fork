@@ -304,22 +304,25 @@ function handleTransferItems(
 		const type = item.type;
 
 		if (type === 'text/plain') {
-			item.getAsString(async (itemString) => {
-				if (!isUriImage(itemString)) {
-					return;
-				}
+			item.getAsString(
+				(itemString) =>
+					void (async () => {
+						if (!isUriImage(itemString)) {
+							return;
+						}
 
-				try {
-					const response = await fetch(itemString);
-					const blob = await response.blob();
+						try {
+							const response = await fetch(itemString);
+							const blob = await response.blob();
 
-					if (blob.type.startsWith('image/') || blob.type.startsWith('video/')) {
-						onMedia(blob);
-					}
-				} catch (err) {
-					onError(String(err));
-				}
-			});
+							if (blob.type.startsWith('image/') || blob.type.startsWith('video/')) {
+								onMedia(blob);
+							}
+						} catch (err) {
+							onError(String(err));
+						}
+					})(),
+			);
 		} else if (type.startsWith('image/') || type.startsWith('video/')) {
 			const file = item.getAsFile();
 

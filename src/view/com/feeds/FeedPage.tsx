@@ -85,7 +85,7 @@ export function FeedPage({
 			getTabState(getRootNavigation(navigation).getState(), 'Home') === TabState.InsideAtRoot;
 		if (isScreenFocused && isPageFocused) {
 			scrollToTop();
-			truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+			void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 			setHasNew(false);
 		}
 	}, [navigation, isPageFocused, scrollToTop, queryClient, feed]);
@@ -104,7 +104,7 @@ export function FeedPage({
 
 	const onPressLoadLatest = useCallback(() => {
 		scrollToTop();
-		truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 		setHasNew(false);
 	}, [scrollToTop, feed, queryClient]);
 

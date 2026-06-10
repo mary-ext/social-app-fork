@@ -87,7 +87,7 @@ export function ModerationBlockedAccounts({}: Props) {
 					<View>
 						<Info style={[a.border_b]} />
 						{isError ? (
-							<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={refetch} />
+							<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
 						) : (
 							<Empty />
 						)}
@@ -97,8 +97,8 @@ export function ModerationBlockedAccounts({}: Props) {
 						data={profiles}
 						keyExtractor={(item: ActorDefs.ProfileView) => item.did}
 						refreshing={isPTRing}
-						onRefresh={onRefresh}
-						onEndReached={onEndReached}
+						onRefresh={() => void onRefresh()}
+						onEndReached={() => void onEndReached()}
 						renderItem={renderItem}
 						initialNumToRender={15}
 						// FIXME(dan)

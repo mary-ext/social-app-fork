@@ -72,7 +72,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
 	const onPointerMove = () => {
 		if (!prefetchedProfile.current) {
 			prefetchedProfile.current = true;
-			prefetchProfileQuery(props.did);
+			void prefetchProfileQuery(props.did);
 		}
 	};
 
@@ -266,13 +266,13 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 	const prefetchIfNeeded = useCallback(async () => {
 		if (!prefetchedProfile.current) {
 			prefetchedProfile.current = true;
-			prefetchProfileQuery(props.did);
+			void prefetchProfileQuery(props.did);
 		}
 	}, [prefetchProfileQuery, props.did]);
 
 	const didFireHover = useRef(false);
 	const onPointerMoveTarget = useCallback(() => {
-		prefetchIfNeeded();
+		void prefetchIfNeeded();
 		// Conceptually we want something like onPointerEnter,
 		// but we want to ignore entering only due to scrolling.
 		// So instead we hover on the first onPointerMove.

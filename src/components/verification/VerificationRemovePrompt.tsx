@@ -44,7 +44,7 @@ export function VerificationRemovePrompt({
 		<Prompt.Basic
 			control={control}
 			title={l`Remove your verification for this account?`}
-			onConfirm={onConfirm}
+			onConfirm={() => void onConfirm()}
 			confirmButtonCta={l`Remove verification`}
 			confirmButtonColor="negative"
 		/>

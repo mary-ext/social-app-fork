@@ -171,7 +171,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 							editable={!isSubmitting}
 							label={l`Handle or DID`}
 							onChangeText={setIdentifier}
-							onSubmitEditing={onSubmit}
+							onSubmitEditing={() => void onSubmit()}
 							placeholder={l`e.g. alice.bsky.social`}
 							value={identifier}
 						/>
@@ -182,7 +182,7 @@ function NewAccountScreen({ initialHandle, onBack }: { initialHandle: string; on
 					color="primary"
 					disabled={isSubmitting}
 					label={l`Sign in`}
-					onPress={onSubmit}
+					onPress={() => void onSubmit()}
 					size="large"
 					variant="solid"
 				>

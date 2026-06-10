@@ -186,7 +186,7 @@ export function Button({
 	return (
 		<Pressable
 			style={getStyle}
-			onPress={onPressWrapped}
+			onPress={(event) => void onPressWrapped(event)}
 			disabled={disabled || isLoading}
 			testID={testID}
 			accessibilityRole="button"

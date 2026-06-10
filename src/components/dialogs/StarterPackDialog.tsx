@@ -193,7 +193,7 @@ function StarterPackList({
 			data={isLoading ? [{ type: 'starter_pack_dialog_loader' }] : membershipItems}
 			renderItem={renderItem}
 			keyExtractor={(item) => ('type' in item ? item.type : item.starterPack.uri)}
-			onEndReached={onEndReached}
+			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={0.1}
 			ListHeaderComponent={listHeader}
 			ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}

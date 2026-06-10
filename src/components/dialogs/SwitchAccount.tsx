@@ -24,7 +24,7 @@ export function SwitchAccountDialog({ control }: { control: Dialog.DialogControl
 		(account: SessionAccount) => {
 			if (account.did !== currentAccount?.did) {
 				control.close(() => {
-					onPressSwitchAccount(account);
+					void onPressSwitchAccount(account);
 				});
 			} else {
 				control.close();

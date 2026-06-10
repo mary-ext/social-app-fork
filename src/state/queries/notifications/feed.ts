@@ -102,7 +102,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 
 			if (filter === 'all' && !pageParam) {
 				// if the first page has an unread, mark all read
-				unreads.markAllRead();
+				void unreads.markAllRead();
 			}
 
 			return page;
@@ -232,7 +232,7 @@ export function useNotificationFeedQuery(opts: { enabled?: boolean; filter: 'all
 			if (itemCount < wantedItemCount.current) {
 				autoPaginationAttemptCount.current++;
 				if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
-					query.fetchNextPage();
+					void query.fetchNextPage();
 				}
 			} else {
 				autoPaginationAttemptCount.current = 0;

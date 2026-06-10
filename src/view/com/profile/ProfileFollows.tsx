@@ -171,8 +171,8 @@ export function ProfileFollows({ name }: { name: string }) {
 			renderItem={renderItemWithContext}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}
-			onRefresh={onRefresh}
-			onEndReached={onEndReached}
+			onRefresh={() => void onRefresh()}
+			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
 			onItemSeen={onItemSeen}
 			ListFooterComponent={

@@ -48,7 +48,7 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 
 	const onCopyLink = () => {
 		const url = toShareUrl(href);
-		shareUrl(url);
+		void shareUrl(url);
 		onShareProp();
 	};
 
@@ -60,11 +60,11 @@ let ShareMenuItems = ({ post, onShare: onShareProp }: ShareMenuItemsProps): Reac
 	};
 
 	const onShareATURI = () => {
-		shareText(postUri);
+		void shareText(postUri);
 	};
 
 	const onShareAuthorDID = () => {
-		shareText(postAuthor.did);
+		void shareText(postAuthor.did);
 	};
 
 	const copyLinkItem = (

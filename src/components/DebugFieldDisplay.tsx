@@ -37,7 +37,7 @@ export function DebugFieldDisplay<T extends { debug?: { [x: string]: unknown } }
 				cancelButtonCta="Close"
 				confirmButtonCta="Copy"
 				onConfirm={() => {
-					Clipboard.setStringAsync(JSON.stringify(subject.debug, null, 2));
+					void Clipboard.setStringAsync(JSON.stringify(subject.debug, null, 2));
 					Toast.show('Copied to clipboard', { type: 'success' });
 				}}
 			/>

@@ -61,7 +61,7 @@ export function CreateListFromStarterPackDialog({
 		try {
 			// Fetch all members and add them, with minimum 3s duration for UX
 
-			queryClient.invalidateQueries({ queryKey: ['list-members', listUri] });
+			void queryClient.invalidateQueries({ queryKey: ['list-members', listUri] });
 		} catch (e) {
 			logger.error('Failed to add members to list', { safeMessage: e });
 			Toast.show(l`List created, but failed to add some members`, {
@@ -74,7 +74,7 @@ export function CreateListFromStarterPackDialog({
 
 	const onListCreated = (listUri: string) => {
 		loadingDialogControl.open();
-		addMembersAndNavigate(listUri);
+		void addMembersAndNavigate(listUri);
 	};
 
 	return (

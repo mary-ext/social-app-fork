@@ -88,7 +88,13 @@ export const Link = memo(function Link({
 		(e?: Event) => {
 			onBeforePress?.();
 			if (typeof href === 'string') {
-				return onPressInner(navigation, sanitizeUrl(href), navigationAction, openLink, e);
+				return onPressInner(
+					navigation,
+					sanitizeUrl(href),
+					navigationAction,
+					(href) => void openLink(href),
+					e,
+				);
 			}
 		},
 		[navigation, navigationAction, href, openLink, onBeforePress],
@@ -214,7 +220,7 @@ export const TextLink = memo(function TextLink({
 				// @ts-expect-error function signature differs by platform -prf
 				return onPressProp();
 			}
-			return onPressInner(navigation, sanitizeUrl(href), navigationAction, openLink, e);
+			return onPressInner(navigation, sanitizeUrl(href), navigationAction, (href) => void openLink(href), e);
 		},
 		[
 			onBeforePress,

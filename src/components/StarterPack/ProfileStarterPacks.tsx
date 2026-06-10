@@ -155,8 +155,8 @@ export function ProfileStarterPacks({
 				}}
 				removeClippedSubviews={true}
 				desktopFixedHeight
-				onEndReached={onEndReached}
-				onRefresh={onRefresh}
+				onEndReached={() => void onEndReached()}
+				onRefresh={() => void onRefresh()}
 				ListEmptyComponent={data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder}
 				ListFooterComponent={!!data && items?.length !== 0 && isMe ? CreateAnother : undefined}
 			/>

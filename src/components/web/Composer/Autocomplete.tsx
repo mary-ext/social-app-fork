@@ -81,7 +81,7 @@ function List({
 
 	useEffect(() => {
 		setActiveIndex(0);
-		updateRef.current();
+		void updateRef.current();
 	}, [items.length]);
 
 	const next = useCallback(() => {

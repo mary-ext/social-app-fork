@@ -72,7 +72,7 @@ export function ListHiddenScreen({
 				return;
 			}
 		}
-		queryClient.invalidateQueries({
+		void queryClient.invalidateQueries({
 			queryKey: [listQueryRoot],
 		});
 		Toast.show(l`Unsubscribed from list`);
@@ -140,7 +140,7 @@ export function ListHiddenScreen({
 							color="secondary"
 							size="large"
 							label={l`Remove from saved feeds`}
-							onPress={onRemoveList}
+							onPress={() => void onRemoveList()}
 							disabled={isProcessing}
 						>
 							<ButtonText>
@@ -170,9 +170,9 @@ export function ListHiddenScreen({
 							label={l`Unsubscribe from list`}
 							onPress={() => {
 								if (isModList) {
-									onUnsubscribe();
+									void onUnsubscribe();
 								} else {
-									onRemoveList();
+									void onRemoveList();
 								}
 							}}
 							disabled={isProcessing}

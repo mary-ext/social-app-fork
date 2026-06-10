@@ -67,8 +67,8 @@ export function AutomationLabelSettingsScreen({}: Props) {
 			},
 			{
 				onSuccess() {
-					queryClient.invalidateQueries({ queryKey: [POST_FEED_RQKEY_ROOT] });
-					queryClient.invalidateQueries({ queryKey: [postThreadQueryKeyRoot] });
+					void queryClient.invalidateQueries({ queryKey: [POST_FEED_RQKEY_ROOT] });
+					void queryClient.invalidateQueries({ queryKey: [postThreadQueryKeyRoot] });
 				},
 			},
 		);

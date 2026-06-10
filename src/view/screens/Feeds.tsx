@@ -149,7 +149,7 @@ export function FeedsScreen(_props: Props) {
 			if (text.length > 1) {
 				debouncedSearch(text);
 			} else {
-				refetchPopularFeeds();
+				void refetchPopularFeeds();
 				resetSearch();
 			}
 		},
@@ -157,7 +157,7 @@ export function FeedsScreen(_props: Props) {
 	);
 	const onPressCancelSearch = useCallback(() => {
 		setQuery('');
-		refetchPopularFeeds();
+		void refetchPopularFeeds();
 		resetSearch();
 	}, [refetchPopularFeeds, setQuery, resetSearch]);
 	const onSubmitQuery = useCallback(() => {
@@ -173,7 +173,7 @@ export function FeedsScreen(_props: Props) {
 	}, [setIsPTR, refetchSavedFeeds, refetchPopularFeeds]);
 	const onEndReached = useCallback(() => {
 		if (isPopularFeedsFetching || isUserSearching || !hasNextPopularFeedsPage || popularFeedsError) return;
-		fetchNextPopularFeedsPage();
+		void fetchNextPopularFeedsPage();
 	}, [
 		isPopularFeedsFetching,
 		isUserSearching,
@@ -501,7 +501,7 @@ export function FeedsScreen(_props: Props) {
 					contentContainerStyle={styles.contentContainer}
 					renderItem={renderItem}
 					refreshing={isPTR}
-					onRefresh={isUserSearching ? undefined : onPullToRefresh}
+					onRefresh={isUserSearching ? undefined : () => void onPullToRefresh()}
 					initialNumToRender={10}
 					onEndReached={onEndReached}
 					desktopFixedHeight

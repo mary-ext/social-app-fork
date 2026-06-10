@@ -530,7 +530,7 @@ export const ComposePost = ({
 			// This is async but we don't await - videos process in the background
 			for (const [postIndex, videoInfo] of restoredVideos) {
 				const postId = posts[postIndex]!.id;
-				restoreVideo(postId, videoInfo);
+				void restoreVideo(postId, videoInfo);
 			}
 		},
 		[composerDispatch, restoreVideo],
@@ -855,7 +855,7 @@ export const ComposePost = ({
 		setLangPrefs.savePostLanguageToHistory();
 		if (initQuote) {
 			// We want to wait for the quote count to update before we call `onPost`, which will refetch data
-			whenAppViewReady(appview, initQuote.uri, (res) => {
+			void whenAppViewReady(appview, initQuote.uri, (res) => {
 				const anchor = res.thread.at(0);
 				if (
 					anchor?.value.$type === 'app.bsky.unspecced.defs#threadItemPost' &&
@@ -1030,8 +1030,8 @@ export const ComposePost = ({
 				isThread={thread.posts.length > 1}
 				publishingStage={publishingStage}
 				onCancel={onRequestClose}
-				onPublish={onPressPublish}
-				onSelectDraft={handleSelectDraft}
+				onPublish={() => void onPressPublish()}
+				onSelectDraft={(draftSummary) => void handleSelectDraft(draftSummary)}
 				onSaveDraft={saveCurrentDraft}
 				onDiscard={handleClearComposer}
 				isEmpty={isComposerEmpty}
@@ -1133,7 +1133,7 @@ export const ComposePost = ({
 						{allPostsWithinLimit && (
 							<Prompt.Action
 								cta={composerState.draftId ? l`Save changes` : l`Save draft`}
-								onPress={handleSaveDraft}
+								onPress={() => void handleSaveDraft()}
 								color="primary"
 							/>
 						)}
@@ -1289,7 +1289,7 @@ let ComposerPost = memo(function ComposerPost({
 							postId: post.id,
 						});
 					}}
-					onPhotoPasted={onPhotoPasted}
+					onPhotoPasted={(blob) => void onPhotoPasted(blob)}
 					onNewLink={onNewLink}
 					onError={onError}
 					onPressPublish={onPublish}

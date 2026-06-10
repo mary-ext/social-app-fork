@@ -256,7 +256,7 @@ function Inner(props: ReportDialogProps) {
 								<Admonition.Button
 									color="negative_subtle"
 									label={l`Retry loading report options`}
-									onPress={() => refetchLabelers()}
+									onPress={() => void refetchLabelers()}
 								>
 									<ButtonText>
 										<Trans>Retry</Trans>
@@ -527,7 +527,7 @@ function Inner(props: ReportDialogProps) {
 								variant="solid"
 								color="primary"
 								disabled={isPending || isSuccess}
-								onPress={onSubmit}
+								onPress={() => void onSubmit()}
 							>
 								<ButtonText>
 									<Trans>Submit report</Trans>

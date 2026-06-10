@@ -139,7 +139,7 @@ function MutedWordsInner() {
 							}
 							setField(value);
 						}}
-						onSubmitEditing={submit}
+						onSubmitEditing={() => void submit()}
 					/>
 				</View>
 				<View style={[a.pb_xl, a.gap_sm]}>
@@ -270,7 +270,7 @@ function MutedWordsInner() {
 							size="large"
 							color="primary"
 							variant="solid"
-							onPress={submit}
+							onPress={() => void submit()}
 						>
 							<ButtonText>
 								<Trans>Add</Trans>
@@ -349,11 +349,11 @@ function MutedWordRow({ style, word }: ViewStyleProp & { word: AppBskyActorDefs.
 
 	const remove = useCallback(async () => {
 		control.close();
-		removeMutedWord(word);
+		void removeMutedWord(word);
 	}, [removeMutedWord, word, control]);
 
 	const renew = (days?: number) => {
-		updateMutedWord({
+		void updateMutedWord({
 			...word,
 			expiresAt: days ? new Date(Date.now() + days * ONE_DAY).toISOString() : undefined,
 		});
@@ -365,7 +365,7 @@ function MutedWordRow({ style, word }: ViewStyleProp & { word: AppBskyActorDefs.
 				control={control}
 				title={l`Are you sure?`}
 				description={l`This will delete "${word.value}" from your muted words. You can always add it back later.`}
-				onConfirm={remove}
+				onConfirm={() => void remove()}
 				confirmButtonCta={l`Remove`}
 				confirmButtonColor="negative"
 			/>

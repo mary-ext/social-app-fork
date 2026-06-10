@@ -35,7 +35,7 @@ export class MessagesEventBus {
 		this.id = nanoid(3);
 		this.chat = params.chat;
 
-		this.init();
+		void this.init();
 	}
 
 	requestPollInterval(interval: number) {
@@ -211,7 +211,7 @@ export class MessagesEventBus {
 						// basically reset
 						this.status = MessagesEventBusStatus.Initializing;
 						this.latestRev = undefined;
-						this.init();
+						void this.init();
 						break;
 					}
 					case MessagesEventBusDispatchEvent.Resume: {
@@ -304,11 +304,11 @@ export class MessagesEventBus {
 	}
 
 	private startPoll() {
-		if (!this.isPolling) this.poll();
+		if (!this.isPolling) void this.poll();
 
 		this.pollIntervalRef = setInterval(() => {
 			if (this.isPolling) return;
-			this.poll();
+			void this.poll();
 		}, this.pollInterval);
 	}
 

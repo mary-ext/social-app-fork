@@ -110,7 +110,7 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			<PostInteractionSettingsForm
 				canSave={wasEdited}
 				isSaving={isPending}
-				onSave={onSave}
+				onSave={() => void onSave()}
 				postgate={maybeEditedPostgate}
 				onChangePostgate={setEditedPostgate}
 				threadgateAllowUISettings={maybeEditedAllowUI}

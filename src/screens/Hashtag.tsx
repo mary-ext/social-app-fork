@@ -69,7 +69,7 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 		if (author) {
 			url.searchParams.set('author', author);
 		}
-		shareUrl(url.toString());
+		void shareUrl(url.toString());
 	}, [tag, author]);
 
 	const [activeTab, setActiveTab] = useState(0);
@@ -186,7 +186,7 @@ function HashtagScreenTab({
 
 	const onEndReached = useCallback(() => {
 		if (isFetchingNextPage || !hasNextPage || error) return;
-		fetchNextPage();
+		void fetchNextPage();
 	}, [isFetchingNextPage, hasNextPage, error, fetchNextPage]);
 
 	const closeAllActiveElements = useCloseAllActiveElements();
@@ -231,7 +231,7 @@ function HashtagScreenTab({
 					renderItem={renderItem}
 					keyExtractor={keyExtractor}
 					refreshing={isPTR}
-					onRefresh={onRefresh}
+					onRefresh={() => void onRefresh()}
 					onEndReached={onEndReached}
 					onEndReachedThreshold={4}
 					onItemSeen={trackPostView}

@@ -145,7 +145,7 @@ function DoneStep({
 	const onPressPrimaryAction = () => {
 		control.close(() => {
 			if (actions.includes('block')) {
-				queueBlock();
+				void queueBlock();
 			}
 			if (actions.includes('leave')) {
 				leaveConvo();

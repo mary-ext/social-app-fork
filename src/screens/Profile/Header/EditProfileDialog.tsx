@@ -208,7 +208,7 @@ function DialogInner({
 						size="small"
 						className={!dirty ? styles.inactiveSave : undefined}
 						disabled={!dirty || isUpdatingProfile || displayNameTooLong || descriptionTooLong}
-						onClick={onPressSave}
+						onClick={() => void onPressSave()}
 					>
 						<ButtonText size="md">
 							<Trans>Save</Trans>

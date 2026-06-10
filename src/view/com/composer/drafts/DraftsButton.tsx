@@ -106,7 +106,7 @@ export function DraftsButton({
 					{canSaveDraft && (
 						<Prompt.Action
 							cta={isEditingDraft ? l`Save changes` : l`Save draft`}
-							onPress={handleSaveAndOpen}
+							onPress={() => void handleSaveAndOpen()}
 							color="primary"
 						/>
 					)}

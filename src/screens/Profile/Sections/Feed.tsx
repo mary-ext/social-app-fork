@@ -59,7 +59,7 @@ export function ProfileFeedSection({
 			animated: false,
 			offset: -headerHeight,
 		});
-		truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
+		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 		setHasNew(false);
 	}, [scrollElRef, headerHeight, queryClient, feed, setHasNew]);
 

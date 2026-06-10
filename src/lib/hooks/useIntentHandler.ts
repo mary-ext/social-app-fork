@@ -47,7 +47,7 @@ export function useIntentHandler() {
 			if (previousIntentUrl === incomingUrl) {
 				return;
 			}
-			handleIncomingURL(incomingUrl);
+			void handleIncomingURL(incomingUrl);
 			previousIntentUrl = incomingUrl;
 		}
 	}, [incomingUrl, composeIntent, currentAccount]);

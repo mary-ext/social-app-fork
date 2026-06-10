@@ -9,7 +9,7 @@ export function useOpenLink() {
 			url = createBskyAppAbsoluteUrl(url);
 		}
 
-		Linking.openURL(url);
+		void Linking.openURL(url);
 	}, []);
 
 	return openLink;

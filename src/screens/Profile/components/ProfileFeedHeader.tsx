@@ -269,7 +269,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 										<Menu.Item
 											disabled={isFeedStateChangePending}
 											label={l`Unpin from home`}
-											onPress={onTogglePinned}
+											onPress={() => void onTogglePinned()}
 										>
 											<Menu.ItemText>{l`Unpin from home`}</Menu.ItemText>
 											<Menu.ItemIcon icon={X} position="right" />
@@ -277,7 +277,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 										<Menu.Item
 											disabled={isFeedStateChangePending}
 											label={isSaved ? l`Remove from my feeds` : l`Save to my feeds`}
-											onPress={onToggleSaved}
+											onPress={() => void onToggleSaved()}
 										>
 											<Menu.ItemText>{isSaved ? l`Remove from my feeds` : l`Save to my feeds`}</Menu.ItemText>
 											<Menu.ItemIcon icon={isSaved ? Trash : Plus} position="right" />
@@ -291,7 +291,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 									variant="ghost"
 									shape="square"
 									color="secondary"
-									onPress={onTogglePinned}
+									onPress={() => void onTogglePinned()}
 								>
 									<ButtonIcon icon={Pin} size="lg" />
 								</Button>
@@ -312,7 +312,7 @@ export function ProfileFeedHeader({ info }: { info: FeedSourceFeedInfo }) {
 						setLikeUri={setLikeUri}
 						likeCount={likeCount}
 						isPinned={isPinned}
-						onTogglePinned={onTogglePinned}
+						onTogglePinned={() => void onTogglePinned()}
 						isFeedStateChangePending={isFeedStateChangePending}
 					/>
 				</Dialog.ScrollableInner>
@@ -371,7 +371,7 @@ function DialogInner({
 
 	const onPressShare = useCallback(() => {
 		const url = toShareUrl(info.route.href);
-		shareUrl(url);
+		void shareUrl(url);
 	}, [info]);
 
 	const onPressReport = useCallback(() => {
@@ -437,7 +437,7 @@ function DialogInner({
 							label={l`Like this feed`}
 							size="small"
 							color="secondary"
-							onPress={onToggleLiked}
+							onPress={() => void onToggleLiked()}
 							style={[a.flex_1]}
 						>
 							{isLiked ? <HeartFilled size="sm" fill={t.palette.pink} /> : <ButtonIcon icon={Heart} />}

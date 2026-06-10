@@ -127,7 +127,7 @@ export function Outer({ children, control, onClose, webOptions }: React.PropsWit
 						<Pressable
 							accessibilityHint={undefined}
 							accessibilityLabel={l`Close active dialog`}
-							onPress={handleBackgroundPress}
+							onPress={(e) => void handleBackgroundPress(e)}
 						>
 							<View
 								style={[

@@ -128,7 +128,7 @@ export function ListMembers({
 	}, [isFetching, hasNextPage, isError, fetchNextPage]);
 
 	const onPressRetryLoadMore = useCallback(() => {
-		fetchNextPage();
+		void fetchNextPage();
 	}, [fetchNextPage]);
 
 	// rendering
@@ -186,13 +186,13 @@ export function ListMembers({
 				ListHeaderComponent={!isEmpty ? renderHeader : undefined}
 				ListFooterComponent={renderFooter}
 				refreshing={isRefreshing}
-				onRefresh={onRefresh}
+				onRefresh={() => void onRefresh()}
 				headerOffset={headerOffset}
 				contentContainerStyle={{
 					minHeight: Dimensions.get('window').height * 1.5,
 				}}
 				onScrolledDownChange={onScrolledDownChange}
-				onEndReached={onEndReached}
+				onEndReached={() => void onEndReached()}
 				onEndReachedThreshold={0.6}
 				removeClippedSubviews={true}
 				desktopFixedHeight={true}

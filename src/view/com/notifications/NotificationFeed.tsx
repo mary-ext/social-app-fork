@@ -114,7 +114,7 @@ export function NotificationFeed({
 	}, [isFetching, hasNextPage, isError, fetchNextPage]);
 
 	const onPressRetryLoadMore = useCallback(() => {
-		fetchNextPage();
+		void fetchNextPage();
 	}, [fetchNextPage]);
 
 	const renderItem = useCallback(
@@ -175,8 +175,8 @@ export function NotificationFeed({
 				ListHeaderComponent={ListHeaderComponent}
 				ListFooterComponent={FeedFooter}
 				refreshing={isPTRing}
-				onRefresh={onRefresh}
-				onEndReached={onEndReached}
+				onRefresh={() => void onRefresh()}
+				onEndReached={() => void onEndReached()}
 				onEndReachedThreshold={2}
 				onScrolledDownChange={onScrolledDownChange}
 				onItemSeen={(item) => {

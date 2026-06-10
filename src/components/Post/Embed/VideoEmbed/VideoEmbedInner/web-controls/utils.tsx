@@ -144,7 +144,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
 		ref.current.addEventListener('error', handleError, {
 			signal: abortController.signal,
 		});
-		ref.current.addEventListener('canplay', handleCanPlay, {
+		ref.current.addEventListener('canplay', () => void handleCanPlay(), {
 			signal: abortController.signal,
 		});
 		ref.current.addEventListener('canplaythrough', handleCanPlayThrough, {

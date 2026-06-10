@@ -23,7 +23,7 @@ export function DiscoverDebug({ feedContext }: { feedContext: string | undefined
 				style={[a.absolute, { zIndex: 1000, maxWidth: 65, bottom: -4 }, a.left_0]}
 				onPress={(e) => {
 					e.stopPropagation();
-					Clipboard.setStringAsync(feedContext);
+					void Clipboard.setStringAsync(feedContext);
 					Toast.show(t`Copied to clipboard`);
 				}}
 			>

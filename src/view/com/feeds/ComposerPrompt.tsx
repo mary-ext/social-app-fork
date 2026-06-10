@@ -90,7 +90,7 @@ export function ComposerPrompt() {
 					<Button
 						onPress={(e) => {
 							e.stopPropagation();
-							onPressImage();
+							void onPressImage();
 						}}
 						label={l`Add image`}
 						accessibilityHint={l`Opens image picker`}

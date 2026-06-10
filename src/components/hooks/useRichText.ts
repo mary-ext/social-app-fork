@@ -36,7 +36,7 @@ export function useRichText(text: string): [Richtext, boolean] {
 				setResolvedRT(resolvedRT);
 			}
 		}
-		resolveRTFacets();
+		void resolveRTFacets();
 		return () => {
 			ignore = true;
 		};

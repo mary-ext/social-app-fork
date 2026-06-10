@@ -143,7 +143,7 @@ let ProfileHeaderLabeler = ({
 									shape="round"
 									label={l`Like this labeler`}
 									disabled={!hasSession || isLikePending || isUnlikePending}
-									onPress={onToggleLiked}
+									onPress={() => void onToggleLiked()}
 								>
 									{likeUri ? (
 										<HeartFilled fill={t.palette.negative_400} />

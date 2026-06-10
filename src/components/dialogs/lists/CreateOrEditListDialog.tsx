@@ -327,7 +327,7 @@ function DialogInner({
 						color="primary"
 						size="small"
 						disabled={!dirty || isCreatingList || isUpdatingList || displayNameTooLong || descriptionTooLong}
-						onClick={onPressSave}
+						onClick={() => void onPressSave()}
 					>
 						<ButtonText size="md">
 							<Trans>Save</Trans>

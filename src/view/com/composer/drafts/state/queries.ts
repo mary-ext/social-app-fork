@@ -242,7 +242,7 @@ export function useDeleteDraftMutation() {
 					}
 				}
 			}
-			queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
+			void queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
 		},
 	});
 }
@@ -279,7 +279,7 @@ export function useCleanupPublishedDraftMutation() {
 				});
 				await storage.deleteMediaFromLocal(localRef);
 			}
-			queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
+			void queryClient.invalidateQueries({ queryKey: DRAFTS_QUERY_KEY });
 			logger.debug('cleanup after publish complete');
 		},
 		onError: (error) => {

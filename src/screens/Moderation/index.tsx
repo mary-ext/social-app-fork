@@ -270,7 +270,7 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 							disabled={adultContentUIDisabled}
 							name="adultContent"
 							value={adultContentEnabled}
-							onChange={onToggleAdultContentEnabled}
+							onChange={(selected) => void onToggleAdultContentEnabled(selected)}
 						>
 							<View style={[a.flex_row, a.align_center, a.gap_sm]}>
 								<Text style={[t.atoms.text_contrast_medium]}>
@@ -290,7 +290,7 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 										to=""
 										onPress={(evt) => {
 											evt.preventDefault();
-											Linking.openURL('https://bsky.app/');
+											void Linking.openURL('https://bsky.app/');
 											return false;
 										}}
 									>
@@ -331,7 +331,7 @@ export function ModerationScreenInner({ preferences }: { preferences: UsePrefere
 						<Admonition.Button
 							color="primary_subtle"
 							label={l`Remove unavailable moderation services`}
-							onPress={handleCleanup}
+							onPress={() => void handleCleanup()}
 							disabled={isRemovingLabelers}
 						>
 							<ButtonText>

@@ -167,7 +167,7 @@ function ProfileListScreenLoaded({
 
 	const onChangeMembers = () => {
 		if (isCurateList) {
-			truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`));
+			void truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`));
 		}
 	};
 

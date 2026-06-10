@@ -76,7 +76,7 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 				disableFullWindowScroll={true}
 				sideBorders={false}
 				style={[a.flex_1]}
-				onEndReached={!query ? () => fetchNextPage() : undefined}
+				onEndReached={!query ? () => void fetchNextPage() : undefined}
 				onEndReachedThreshold={0.25}
 				keyboardDismissMode="on-drag"
 				ListEmptyComponent={

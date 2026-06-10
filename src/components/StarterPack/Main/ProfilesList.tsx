@@ -73,6 +73,12 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 		});
 	}, [scrollElRef, headerHeight]);
 
+	const onRefresh = async () => {
+		setIsPTRing(true);
+		await refetch();
+		setIsPTRing(false);
+	};
+
 	useImperativeHandle(ref, () => ({
 		scrollToTop: onScrollToTop,
 	}));
@@ -106,11 +112,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 				desktopFixedHeight
 				initialNumToRender={initialNumToRender}
 				refreshing={isPTRing}
-				onRefresh={async () => {
-					setIsPTRing(true);
-					await refetch();
-					setIsPTRing(false);
-				}}
+				onRefresh={() => void onRefresh()}
 			/>
 		);
 });

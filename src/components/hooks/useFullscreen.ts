@@ -14,12 +14,12 @@ export function useFullscreen(ref?: React.RefObject<HTMLElement | null>) {
 
 	const toggleFullscreen = useCallback(() => {
 		if (isFullscreen) {
-			document.exitFullscreen();
+			void document.exitFullscreen();
 		} else {
 			if (!ref) throw new Error('No ref provided');
 			if (!ref.current) return;
 			scrollYRef.current = window.scrollY;
-			ref.current.requestFullscreen();
+			void ref.current.requestFullscreen();
 		}
 	}, [isFullscreen, ref]);
 

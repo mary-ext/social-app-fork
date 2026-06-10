@@ -40,7 +40,7 @@ export function ExternalGif({
 
 	const load = useCallback(() => {
 		setIsPlayerActive(true);
-		Image.prefetch(params.playerUri).then(() => {
+		void Image.prefetch(params.playerUri).then(() => {
 			// Replace the image once it's fetched
 			setIsPrefetched(true);
 		});

@@ -268,7 +268,7 @@ export function Composer({
 	 * Sift popover positioning
 	 */
 	const updateAutocompletePosition = () => {
-		sift.updatePosition();
+		void sift.updatePosition();
 	};
 
 	const textContent = (

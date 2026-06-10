@@ -73,8 +73,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		if (!hasSession || !checkUnreadRef.current) {
 			return;
 		}
-		checkUnreadRef.current(); // fire on init
-		const interval = setInterval(() => checkUnreadRef.current?.({ isPoll: true }), UPDATE_INTERVAL);
+		void checkUnreadRef.current(); // fire on init
+		const interval = setInterval(() => void checkUnreadRef.current?.({ isPoll: true }), UPDATE_INTERVAL);
 		return () => clearInterval(interval);
 	}, [hasSession]);
 
@@ -164,8 +164,8 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 					// update & broadcast
 					setNumUnread(unreadCountStr);
 					if (invalidate) {
-						truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
-						truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
+						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'));
+						void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'));
 					}
 					broadcast.postMessage({ event: unreadCountStr });
 				} finally {

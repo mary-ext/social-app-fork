@@ -69,7 +69,7 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 		if (isThreadAuthor) {
 			// wait on prefetch if it manages to resolve in under 200ms
 			// otherwise, proceed immediately and show the spinner -sfn
-			Promise.race([prefetchPromise.current, new Promise((res) => setTimeout(res, 200))]).finally(() => {
+			void Promise.race([prefetchPromise.current, new Promise((res) => setTimeout(res, 200))]).finally(() => {
 				editDialogHandle.open(null);
 			});
 		} else {

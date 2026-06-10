@@ -138,7 +138,7 @@ function Inner({
 
 	const onChangeInterests = async (interests: string[]) => {
 		setInterests(interests);
-		saveInterests(interests);
+		void saveInterests(interests);
 	};
 
 	return (
@@ -150,7 +150,7 @@ function Inner({
 			)}
 			<Toggle.Group
 				values={interests}
-				onChange={onChangeInterests}
+				onChange={(interests) => void onChangeInterests(interests)}
 				label={l`Select your interests from the options below`}
 			>
 				<View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>

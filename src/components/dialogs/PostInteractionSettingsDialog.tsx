@@ -225,7 +225,7 @@ function PostInteractionSettingsDialogInner({ handle, ...props }: PostInteractio
 			<PostInteractionSettingsForm
 				replySettingsDisabled={!isThreadgateOwnedByViewer}
 				isSaving={isSaving}
-				onSave={onSave}
+				onSave={() => void onSave()}
 				postgate={postgateValue}
 				onChangePostgate={setEditedPostgate}
 				threadgateAllowUISettings={allowUIValue}

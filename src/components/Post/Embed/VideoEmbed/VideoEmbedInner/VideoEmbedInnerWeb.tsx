@@ -139,7 +139,7 @@ const promiseForHls = import(
 	'hls.js/dist/hls.min'
 ).then((mod) => mod.default) as CachedPromise<typeof HlsTypes.default>;
 promiseForHls.value = undefined;
-promiseForHls.then((Hls) => {
+void promiseForHls.then((Hls) => {
 	promiseForHls.value = Hls;
 });
 
@@ -160,7 +160,7 @@ function useHLS({
 	useEffect(() => {
 		if (!Hls) {
 			setHlsLoading(true);
-			promiseForHls.then((loadedHls) => {
+			void promiseForHls.then((loadedHls) => {
 				setHls(() => loadedHls);
 				setHlsLoading(false);
 			});

@@ -469,7 +469,7 @@ export function PostThread({ uri }: { uri: string }) {
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			{thread.state.error ? (
-				<ThreadError error={thread.state.error} onRetry={thread.actions.refetch} />
+				<ThreadError error={thread.state.error} onRetry={() => void thread.actions.refetch()} />
 			) : (
 				<List
 					ref={listRef}

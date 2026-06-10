@@ -90,8 +90,8 @@ export function LikedByList({ uri }: { uri: string }) {
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}
-			onRefresh={onRefresh}
-			onEndReached={onEndReached}
+			onRefresh={() => void onRefresh()}
+			onEndReached={() => void onEndReached()}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}

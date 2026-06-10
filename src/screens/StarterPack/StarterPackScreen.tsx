@@ -176,7 +176,7 @@ function StarterPackScreenLoaded({
 
 	const onOpenShareDialog = useCallback(() => {
 		const rkey = parseCanonicalResourceUri(starterPack.uri).rkey;
-		shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then((res) => {
+		void shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then((res) => {
 			setLink(res.url);
 		});
 		Image.prefetch(getStarterPackOgCard(starterPack))
@@ -395,7 +395,7 @@ function Header({
 								color="primary"
 								size="small"
 								disabled={isProcessing}
-								onPress={onFollowAll}
+								onPress={() => void onFollowAll()}
 								style={[a.flex_row, a.gap_xs, a.align_center]}
 							>
 								<ButtonText>
@@ -631,7 +631,7 @@ function OverflowMenu({
 						color="negative"
 						size={gtMobile ? 'small' : 'large'}
 						label={l`Yes, delete this starter pack`}
-						onPress={onDeleteStarterPack}
+						onPress={() => void onDeleteStarterPack()}
 					>
 						<ButtonText>
 							<Trans>Delete</Trans>

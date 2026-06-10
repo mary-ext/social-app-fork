@@ -76,7 +76,7 @@ export function useToggleMutationQueue<TServerState>({
 				queue.queuedTask.reject(createAbortError());
 			}
 			queue.queuedTask = { isOn, resolve, reject };
-			processQueue();
+			void processQueue();
 		});
 	}
 

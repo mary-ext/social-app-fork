@@ -18,7 +18,7 @@ export function NoFollowingFeed({ onAddFeed }: { onAddFeed?: () => void }) {
 	const addRecommendedFeeds = (e: GestureResponderEvent) => {
 		e.preventDefault();
 
-		addSavedFeeds([
+		void addSavedFeeds([
 			{
 				...TIMELINE_SAVED_FEED,
 				pinned: true,

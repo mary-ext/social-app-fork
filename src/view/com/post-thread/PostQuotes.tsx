@@ -102,8 +102,8 @@ export function PostQuotes({ uri }: { uri: string }) {
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
 			refreshing={isPTRing}
-			onRefresh={onRefresh}
-			onEndReached={onEndReached}
+			onRefresh={() => void onRefresh()}
+			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
 			onItemSeen={(item) => trackPostView(item.post)}
 			ListFooterComponent={

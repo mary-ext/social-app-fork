@@ -86,7 +86,7 @@ export function useAcceptConversation(
 			return { prevAcceptedPages, prevInboxPages };
 		},
 		onSuccess: (data) => {
-			queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
+			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
 			onSuccess?.(data);
 		},
 		onError: (error, _, context) => {
@@ -111,7 +111,7 @@ export function useAcceptConversation(
 					};
 				},
 			);
-			queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
+			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
 			onError?.(error);
 		},
 	});

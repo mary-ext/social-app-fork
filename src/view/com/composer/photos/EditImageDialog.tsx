@@ -43,6 +43,12 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 	const [pending, setPending] = useState(false);
 	const ref = useRef<{ save: () => Promise<void> }>(null);
 
+	const onPressSave = async () => {
+		setPending(true);
+		await ref.current?.save();
+		setPending(false);
+	};
+
 	return (
 		<>
 			<Dialog.Header.Outer>
@@ -70,11 +76,7 @@ function DialogInner({ handle, image, onChange, circularCrop, aspectRatio }: Edi
 						color="primary"
 						disabled={pending}
 						label={l`Save`}
-						onClick={async () => {
-							setPending(true);
-							await ref.current?.save();
-							setPending(false);
-						}}
+						onClick={() => void onPressSave()}
 						size="small"
 						variant="ghost"
 					>

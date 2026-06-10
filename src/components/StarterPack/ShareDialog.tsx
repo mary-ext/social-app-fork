@@ -43,7 +43,7 @@ function ShareDialogInner({ starterPack, link, imageLoaded, qrDialogControl, con
 
 	const onShareLink = async () => {
 		if (!link) return;
-		shareUrl(link);
+		void shareUrl(link);
 		control.close();
 	};
 
@@ -77,7 +77,12 @@ function ShareDialogInner({ starterPack, link, imageLoaded, qrDialogControl, con
 							accessibilityIgnoresInvertColors={true}
 						/>
 						<View style={[a.gap_md, gtMobile && [a.gap_sm, a.justify_center, a.flex_row, a.flex_wrap]]}>
-							<Button label={l`Copy link`} color="primary_subtle" size="large" onPress={onShareLink}>
+							<Button
+								label={l`Copy link`}
+								color="primary_subtle"
+								size="large"
+								onPress={() => void onShareLink()}
+							>
 								<ButtonIcon icon={ChainLinkIcon} />
 								<ButtonText>{<Trans>Copy Link</Trans>}</ButtonText>
 							</Button>

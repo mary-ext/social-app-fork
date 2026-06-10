@@ -59,7 +59,7 @@ export function MoreOptionsMenu({
 	const onPressShare = () => {
 		const { rkey } = parseCanonicalResourceUri(list.uri);
 		const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`);
-		shareUrl(url);
+		void shareUrl(url);
 	};
 
 	const onRemoveFromSavedFeeds = async () => {
@@ -144,7 +144,7 @@ export function MoreOptionsMenu({
 							<Menu.ItemIcon position="right" icon={ChainLink} />
 						</Menu.Item>
 						{savedFeedConfig && (
-							<Menu.Item label={l`Remove from my feeds`} onPress={onRemoveFromSavedFeeds}>
+							<Menu.Item label={l`Remove from my feeds`} onPress={() => void onRemoveFromSavedFeeds()}>
 								<Menu.ItemText>
 									<Trans>Remove from my feeds</Trans>
 								</Menu.ItemText>
@@ -185,7 +185,7 @@ export function MoreOptionsMenu({
 						<>
 							<Menu.Divider />
 							<Menu.Group>
-								<Menu.Item label={l`Unpin moderation list`} onPress={onUnpinModList}>
+								<Menu.Item label={l`Unpin moderation list`} onPress={() => void onUnpinModList()}>
 									<Menu.ItemText>
 										<Trans>Unpin moderation list</Trans>
 									</Menu.ItemText>
@@ -200,7 +200,7 @@ export function MoreOptionsMenu({
 							<Menu.Divider />
 							<Menu.Group>
 								{isBlocking && (
-									<Menu.Item label={l`Unblock list`} onPress={onUnsubscribeBlock}>
+									<Menu.Item label={l`Unblock list`} onPress={() => void onUnsubscribeBlock()}>
 										<Menu.ItemText>
 											<Trans>Unblock list</Trans>
 										</Menu.ItemText>
@@ -208,7 +208,7 @@ export function MoreOptionsMenu({
 									</Menu.Item>
 								)}
 								{isMuting && (
-									<Menu.Item label={l`Unmute list`} onPress={onUnsubscribeMute}>
+									<Menu.Item label={l`Unmute list`} onPress={() => void onUnsubscribeMute()}>
 										<Menu.ItemText>
 											<Trans>Unmute list</Trans>
 										</Menu.ItemText>
@@ -225,7 +225,7 @@ export function MoreOptionsMenu({
 				control={deleteListPromptControl}
 				title={l`Delete this list?`}
 				description={l`If you delete this list, you won't be able to recover it.`}
-				onConfirm={onPressDelete}
+				onConfirm={() => void onPressDelete()}
 				confirmButtonCta={l`Delete`}
 				confirmButtonColor="negative"
 			/>

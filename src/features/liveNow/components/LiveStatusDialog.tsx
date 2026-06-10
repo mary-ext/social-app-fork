@@ -159,7 +159,7 @@ export function LiveStatus({
 					color="primary"
 					variant="solid"
 					onPress={() => {
-						openLink(embed.external.uri);
+						void openLink(embed.external.uri);
 					}}
 				>
 					<ButtonText>

@@ -55,7 +55,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 						<Trans>Post saved</Trans>
 					</toast.Text>
 					{!disableUndo && (
-						<toast.Action label={undoLabel} onPress={() => remove({ disableUndo: true })}>
+						<toast.Action label={undoLabel} onPress={() => void remove({ disableUndo: true })}>
 							{undoLabel}
 						</toast.Action>
 					)}
@@ -86,7 +86,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 						<Trans>Removed from saved posts</Trans>
 					</toast.Text>
 					{!disableUndo && (
-						<toast.Action label={undoLabel} onPress={() => save({ disableUndo: true })}>
+						<toast.Action label={undoLabel} onPress={() => void save({ disableUndo: true })}>
 							{undoLabel}
 						</toast.Action>
 					)}

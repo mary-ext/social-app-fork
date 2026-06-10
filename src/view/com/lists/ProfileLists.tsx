@@ -115,7 +115,7 @@ export function ProfileLists({
 			animated: false,
 			offset: -headerOffset,
 		});
-		queryClient.invalidateQueries({ queryKey: RQKEY(did) });
+		void queryClient.invalidateQueries({ queryKey: RQKEY(did) });
 	}, [scrollElRef, queryClient, headerOffset, did]);
 
 	useImperativeHandle(ref, () => ({
@@ -143,7 +143,7 @@ export function ProfileLists({
 	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
 
 	const onPressRetryLoadMore = useCallback(() => {
-		fetchNextPage();
+		void fetchNextPage();
 	}, [fetchNextPage]);
 
 	// rendering
@@ -153,7 +153,7 @@ export function ProfileLists({
 		({ item }: ListRenderItemInfo<ProfileListItem>) => {
 			if (isProfileListSentinel(item)) {
 				if (item === ERROR_ITEM) {
-					return <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />;
+					return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void refetch()} />;
 				}
 				if (item === LOAD_MORE_ERROR_ITEM) {
 					return (
@@ -222,12 +222,12 @@ export function ProfileLists({
 				renderItem={renderItem}
 				ListFooterComponent={ProfileListsFooter}
 				refreshing={isPTRing}
-				onRefresh={onRefresh}
+				onRefresh={() => void onRefresh()}
 				headerOffset={headerOffset}
 				progressViewOffset={undefined}
 				removeClippedSubviews={true}
 				desktopFixedHeight
-				onEndReached={onEndReached}
+				onEndReached={() => void onEndReached()}
 				contentContainerStyle={{ minHeight: height + headerOffset }}
 			/>
 		</View>

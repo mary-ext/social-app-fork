@@ -62,7 +62,7 @@ export function Sift<Item extends { key: string }>({
 
 	useEffect(() => {
 		if (activeIndexRef.current !== 0) setActiveIndex(0);
-		updateRef.current();
+		void updateRef.current();
 	}, [data.length]);
 
 	const next = useCallback(() => {

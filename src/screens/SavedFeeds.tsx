@@ -104,7 +104,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 					testID="saveChangesBtn"
 					size="small"
 					color={hasUnsavedChanges ? 'primary' : 'secondary'}
-					onPress={onSaveChanges}
+					onPress={() => void onSaveChanges()}
 					label={l`Save changes`}
 					disabled={isOverwritePending || !hasUnsavedChanges}
 				>

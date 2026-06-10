@@ -77,7 +77,7 @@ export function useUpdateAllRead(
 			return { prevPages };
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) });
+			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) });
 			onSuccess?.();
 		},
 		onError: (error, _, context) => {
@@ -92,8 +92,8 @@ export function useUpdateAllRead(
 					};
 				},
 			);
-			queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) });
-			queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY('all', 'unread') });
+			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) });
+			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY('all', 'unread') });
 			onError?.(error);
 		},
 	});

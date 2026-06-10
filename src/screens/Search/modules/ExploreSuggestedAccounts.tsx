@@ -42,7 +42,7 @@ export function useLoadEnoughProfiles({
 	useEffect(() => {
 		if (shouldFetchMore && !isAnyLoading) {
 			logger.info('Not enough suggested accounts - fetching more');
-			fetchNextPage();
+			void fetchNextPage();
 		}
 	}, [shouldFetchMore, fetchNextPage, isAnyLoading, interest]);
 

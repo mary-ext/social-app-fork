@@ -91,7 +91,7 @@ export function ModerationMutedAccounts({}: Props) {
 					<View>
 						<Info style={[a.border_b]} />
 						{isError ? (
-							<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={refetch} />
+							<ErrorScreen title="Oops!" message={cleanError(error)} onPressTryAgain={() => void refetch()} />
 						) : (
 							<Empty />
 						)}
@@ -101,8 +101,8 @@ export function ModerationMutedAccounts({}: Props) {
 						data={profiles}
 						keyExtractor={(item) => item.did}
 						refreshing={isPTRing}
-						onRefresh={onRefresh}
-						onEndReached={onEndReached}
+						onRefresh={() => void onRefresh()}
+						onEndReached={() => void onEndReached()}
 						renderItem={renderItem}
 						initialNumToRender={15}
 						// FIXME(dan)

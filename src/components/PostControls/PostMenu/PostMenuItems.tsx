@@ -570,7 +570,7 @@ let PostMenuItems = ({
 									<Menu.Item
 										label={l`Edit interaction settings`}
 										onClick={() => postInteractionSettingsHandle.open(null)}
-										onMouseEnter={prefetchPostInteractionSettings}
+										onMouseEnter={() => void prefetchPostInteractionSettings()}
 									>
 										<Menu.ItemText>{l`Edit interaction settings`}</Menu.ItemText>
 										<Menu.ItemIcon icon={Gear} position="right" />

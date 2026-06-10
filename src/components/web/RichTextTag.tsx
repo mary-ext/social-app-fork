@@ -115,10 +115,10 @@ export function RichTextTag({
 					onClick={() => {
 						if (isMuted) {
 							resetUpsert();
-							removeMutedWords(removeableMuteWords);
+							void removeMutedWords(removeableMuteWords);
 						} else {
 							resetRemove();
-							upsertMutedWord([{ actorTarget: 'all', targets: ['tag'], value: tag }]);
+							void upsertMutedWord([{ actorTarget: 'all', targets: ['tag'], value: tag }]);
 						}
 					}}
 				>

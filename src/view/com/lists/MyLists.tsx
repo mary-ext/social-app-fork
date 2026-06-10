@@ -108,7 +108,7 @@ export function MyLists({
 		({ item, index }: { item: MyListItem; index: number }) => {
 			if (isMyListSentinel(item)) {
 				if (item === ERROR_ITEM) {
-					return <ErrorMessage message={cleanError(error)} onPressTryAgain={onRefresh} />;
+					return <ErrorMessage message={cleanError(error)} onPressTryAgain={() => void onRefresh()} />;
 				}
 				if (item === LOADING) {
 					return (
@@ -172,7 +172,7 @@ export function MyLists({
 						refreshControl={
 							<RefreshControl
 								refreshing={isPTRing}
-								onRefresh={onRefresh}
+								onRefresh={() => void onRefresh()}
 								tintColor={pal.colors.text}
 								titleColor={pal.colors.text}
 							/>
@@ -193,7 +193,7 @@ export function MyLists({
 						keyExtractor={(item) => (isMyListSentinel(item) ? item._reactKey : item.uri)}
 						renderItem={renderItemInner}
 						refreshing={isPTRing}
-						onRefresh={onRefresh}
+						onRefresh={() => void onRefresh()}
 						contentContainerStyle={[s.contentContainer]}
 						removeClippedSubviews={true}
 						desktopFixedHeight

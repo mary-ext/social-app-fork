@@ -157,7 +157,7 @@ export function useWritePostgateMutation() {
 			});
 		},
 		onSuccess(_, { postUri }) {
-			queryClient.invalidateQueries({
+			void queryClient.invalidateQueries({
 				queryKey: createPostgateQueryKey(postUri),
 			});
 		},
