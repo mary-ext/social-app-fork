@@ -2,6 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
 	Animated,
 	type GestureResponderEvent,
+	type LayoutChangeEvent,
 	Pressable,
 	StyleSheet,
 	TouchableOpacity,
@@ -36,7 +37,6 @@ import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
 import { forceLTR } from '#/lib/strings/bidi';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { niceDate } from '#/lib/strings/time';
 import { s } from '#/lib/styles';
 
@@ -72,6 +72,7 @@ import { VerifiedCheck } from '#/components/icons/VerifiedCheck';
 import { InlineLinkText, Link } from '#/components/Link';
 import * as MediaPreview from '#/components/MediaPreview';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import * as ProfileCard from '#/components/ProfileCard';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
@@ -79,11 +80,9 @@ import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Text as WebText } from '#/components/web/Text';
 import { Tooltip } from '#/components/web/Tooltip';
-import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 const MAX_AUTHORS = 5;
-
-const EXPANDED_AUTHOR_EL_HEIGHT = 35;
 
 interface Author {
 	profile: AppBskyActorDefs.ProfileView;
@@ -106,6 +105,7 @@ let NotificationFeedItem = ({
 	const t = useTheme();
 	const { t: l, i18n } = useLingui();
 	const [isAuthorsExpanded, setIsAuthorsExpanded] = useState<boolean>(false);
+	const [isHoveringAuthorsList, setIsHoveringAuthorsList] = useState(false);
 	const itemHref = useMemo(() => {
 		switch (item.type) {
 			case 'post-like':
@@ -563,7 +563,7 @@ let NotificationFeedItem = ({
 		>
 			{({ hovered }) => (
 				<>
-					<SubtleHover hover={hovered} />
+					<SubtleHover hover={hovered && !isHoveringAuthorsList} />
 					<View style={[styles.layoutIcon, a.pr_sm]}>
 						{/* TODO: Prevent conditional rendering and move toward composable
           notifications for clearer accessibility labeling */}
@@ -573,6 +573,8 @@ let NotificationFeedItem = ({
 						<ExpandListPressable
 							hasMultipleAuthors={hasMultipleAuthors}
 							onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+							onHoverIn={() => setIsHoveringAuthorsList(true)}
+							onHoverOut={() => setIsHoveringAuthorsList(false)}
 						>
 							<CondensedAuthorsList
 								visible={!isAuthorsExpanded}
@@ -580,7 +582,11 @@ let NotificationFeedItem = ({
 								onToggleAuthorsExpanded={onToggleAuthorsExpanded}
 								showDmButton={item.type === 'starterpack-joined'}
 							/>
-							<ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
+							<ExpandedAuthorsList
+								visible={isAuthorsExpanded}
+								authors={authors}
+								moderationOpts={moderationOpts}
+							/>
 							<Text
 								style={[a.flex_row, a.flex_wrap, { paddingTop: 6 }, a.self_start, a.text_md, a.leading_snug]}
 								accessibilityHint=""
@@ -643,14 +649,24 @@ function ExpandListPressable({
 	hasMultipleAuthors,
 	children,
 	onToggleAuthorsExpanded,
+	onHoverIn,
+	onHoverOut,
 }: {
 	hasMultipleAuthors: boolean;
 	children: React.ReactNode;
 	onToggleAuthorsExpanded: (e: GestureResponderEvent) => void;
+	onHoverIn?: () => void;
+	onHoverOut?: () => void;
 }) {
 	if (hasMultipleAuthors) {
 		return (
-			<Pressable onPress={onToggleAuthorsExpanded} style={[styles.expandedAuthorsTrigger]} accessible={false}>
+			<Pressable
+				onPress={onToggleAuthorsExpanded}
+				onHoverIn={onHoverIn}
+				onHoverOut={onHoverOut}
+				style={[styles.expandedAuthorsTrigger]}
+				accessible={false}
+			>
 				{children}
 			</Pressable>
 		);
@@ -871,12 +887,17 @@ function CondensedAuthorsList({
 	);
 }
 
-function ExpandedAuthorsList({ visible, authors }: { visible: boolean; authors: Author[] }) {
+function ExpandedAuthorsList({
+	visible,
+	authors,
+	moderationOpts,
+}: {
+	visible: boolean;
+	authors: Author[];
+	moderationOpts: ModerationOptions;
+}) {
 	const heightInterp = useAnimatedValue(visible ? 1 : 0);
-	const targetHeight = authors.length * (EXPANDED_AUTHOR_EL_HEIGHT + 10); /*10=margin*/
-	const heightStyle = {
-		height: Animated.multiply(heightInterp, targetHeight),
-	};
+	const [measuredHeight, setMeasuredHeight] = useState(0);
 	useEffect(() => {
 		Animated.timing(heightInterp, {
 			toValue: visible ? 1 : 0,
@@ -884,56 +905,55 @@ function ExpandedAuthorsList({ visible, authors }: { visible: boolean; authors: 
 			useNativeDriver: false,
 		}).start();
 	}, [heightInterp, visible]);
+	const onInnerLayout = (e: LayoutChangeEvent) => {
+		if (measuredHeight === 0) {
+			setMeasuredHeight(e.nativeEvent.layout.height);
+		}
+	};
 
+	const heightStyle = {
+		height: Animated.multiply(heightInterp, measuredHeight),
+		opacity: heightInterp,
+	};
 	return (
 		<Animated.View style={[a.overflow_hidden, heightStyle]}>
-			{visible && authors.map((author) => <ExpandedAuthorCard key={author.profile.did} author={author} />)}
+			<View onLayout={onInnerLayout} style={[a.pt_sm, a.pb_md]}>
+				{authors.map((author, i) => (
+					<ExpandedAuthorProfileCard
+						key={author.profile.did}
+						author={author}
+						moderationOpts={moderationOpts}
+						isLast={i === authors.length - 1}
+					/>
+				))}
+			</View>
 		</Animated.View>
 	);
 }
 
-function ExpandedAuthorCard({ author }: { author: Author }) {
-	const t = useTheme();
-	const { t: l } = useLingui();
+function ExpandedAuthorProfileCard({
+	author,
+	moderationOpts,
+	isLast,
+}: {
+	author: Author;
+	moderationOpts: ModerationOptions;
+	isLast: boolean;
+}) {
 	return (
-		<Link
-			key={author.profile.did}
-			label={author.profile.displayName || author.profile.handle}
-			accessibilityHint={l`Opens this profile`}
-			to={makeProfileLink({ did: author.profile.did })}
-			style={styles.expandedAuthor}
-		>
-			<View style={[a.mr_sm]}>
-				<ProfileHoverCard did={author.profile.did}>
-					<UserAvatar
-						size={35}
-						avatar={author.profile.avatar}
-						moderation={getDisplayRestrictions(author.moderation, DisplayContext.ProfileMedia)}
-						type={author.profile.associated?.labeler ? 'labeler' : 'user'}
+		<ProfileCard.Link profile={author.profile} style={isLast ? undefined : a.pb_md}>
+			<ProfileCard.Outer>
+				<ProfileCard.Header>
+					<ProfileCard.Avatar profile={author.profile} moderationOpts={moderationOpts} />
+					<ProfileCard.NameAndHandle profile={author.profile} moderationOpts={moderationOpts} />
+					<ProfileCard.FollowButton
+						profile={author.profile}
+						moderationOpts={moderationOpts}
+						logContext="ProfileCard"
 					/>
-				</ProfileHoverCard>
-			</View>
-			<View style={[a.flex_1]}>
-				<View style={[a.flex_row, a.align_end]}>
-					<Text
-						numberOfLines={1}
-						emoji
-						style={[a.text_md, a.font_semi_bold, a.leading_tight, { maxWidth: '70%' }]}
-					>
-						{sanitizeDisplayName(author.profile.displayName || author.profile.handle)}
-					</Text>
-					<View style={[a.pl_2xs, a.self_center]}>
-						<ProfileBadges profile={author.profile} size="md" />
-					</View>
-					<Text
-						numberOfLines={1}
-						style={[a.pl_xs, a.text_md, a.leading_tight, a.flex_shrink, t.atoms.text_contrast_medium]}
-					>
-						{sanitizeHandle(author.profile.handle, '@')}
-					</Text>
-				</View>
-			</View>
-		</Link>
+				</ProfileCard.Header>
+			</ProfileCard.Outer>
+		</ProfileCard.Link>
 	);
 }
 
@@ -991,11 +1011,5 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingTop: 10,
 		paddingBottom: 6,
-	},
-	expandedAuthor: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginTop: 10,
-		height: EXPANDED_AUTHOR_EL_HEIGHT,
 	},
 });
