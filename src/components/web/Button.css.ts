@@ -1,4 +1,4 @@
-import { styleVariants } from '@vanilla-extract/css';
+import { createVar, fallbackVar, styleVariants } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
@@ -8,6 +8,11 @@ import { roundToDevicePx } from '#/styles/round';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 const HOVER = '&:hover:not(:disabled)';
+
+// `size` variants publish only their font-size through this var; `base` derives the device-snapped line-height
+// from it so the snug pairing lives in one place (mirrors the `Text` recipe).
+const fontSizeVar = createVar();
+const fontSizeScale = fallbackVar(fontSizeVar, fontSize.sm);
 
 export const button = recipe(
 	{
@@ -20,8 +25,10 @@ export const button = recipe(
 			cursor: 'pointer',
 			display: 'inline-flex',
 			fontFamily: 'inherit',
+			fontSize: fontSizeScale,
 			fontWeight: fontWeight.medium,
 			justifyContent: 'center',
+			lineHeight: roundToDevicePx(calc.multiply(fontSizeScale, lineHeight.snug)),
 			margin: 0,
 			textDecoration: 'none',
 			transitionDuration: '100ms',
@@ -169,27 +176,9 @@ export const button = recipe(
 			color: { negative: {}, negative_subtle: {}, primary: {}, secondary: {}, secondary_inverted: {} },
 			shape: { default: {}, rectangular: {}, round: {} },
 			size: {
-				large: {
-					fontSize: fontSize.md,
-					gap: 6,
-					lineHeight: roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug)),
-					paddingBlock: 12,
-					paddingInline: 24,
-				},
-				small: {
-					fontSize: fontSize.sm,
-					gap: 5,
-					lineHeight: roundToDevicePx(calc.multiply(fontSize.sm, lineHeight.snug)),
-					paddingBlock: 8,
-					paddingInline: 14,
-				},
-				tiny: {
-					fontSize: fontSize.xs,
-					gap: 3,
-					lineHeight: roundToDevicePx(calc.multiply(fontSize.xs, lineHeight.snug)),
-					paddingBlock: 5,
-					paddingInline: 10,
-				},
+				large: { gap: 6, paddingBlock: 12, paddingInline: 24, vars: { [fontSizeVar]: fontSize.md } },
+				small: { gap: 5, paddingBlock: 8, paddingInline: 14, vars: { [fontSizeVar]: fontSize.sm } },
+				tiny: { gap: 3, paddingBlock: 5, paddingInline: 10, vars: { [fontSizeVar]: fontSize.xs } },
 			},
 			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost colors come from the
 			// compound variants above.
