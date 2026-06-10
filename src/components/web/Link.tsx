@@ -33,16 +33,19 @@ const anchorAttrs = ({ download, isExternal }: { download?: string; isExternal: 
 	target: download ? undefined : isExternal ? '_blank' : undefined,
 });
 
+/** Underline timing for an inline link: `hover` (default), `always`, or `none`. */
+export type InlineLinkUnderline = 'always' | 'hover' | 'none';
+
 export type InlineLinkTextProps = LinkNavProps &
 	Pick<TextProps, 'align' | 'color' | 'leading' | 'numberOfLines' | 'selectable' | 'size' | 'weight'> & {
 		children: ReactNode;
 		className?: string;
 		/** Skip the warning shown when external link text doesn't match its href. */
 		disableMismatchWarning?: boolean;
-		/** Render without the hover/focus underline. */
-		disableUnderline?: boolean;
 		/** Accessible name; becomes the anchor's `aria-label`. */
 		label?: string;
+		/** Underline timing; defaults to `hover`. */
+		underline?: InlineLinkUnderline;
 	};
 
 /**
@@ -57,7 +60,6 @@ export function InlineLinkText({
 	className,
 	color = 'primary_500',
 	disableMismatchWarning,
-	disableUnderline,
 	download,
 	label,
 	leading,
@@ -66,6 +68,7 @@ export function InlineLinkText({
 	selectable,
 	size,
 	to,
+	underline = 'hover',
 	weight,
 }: InlineLinkTextProps) {
 	const { href, isExternal, onPress } = useLink({
@@ -84,7 +87,7 @@ export function InlineLinkText({
 			aria-label={label}
 			className={clsx(
 				textStyles.text({ align, color, leading, size, weight }),
-				styles.inlineLink({ underline: !disableUnderline }),
+				styles.inlineLink({ underline }),
 				clamped && textStyles.clamp,
 				selectable === true && textStyles.userSelect.text,
 				selectable === false && textStyles.userSelect.none,

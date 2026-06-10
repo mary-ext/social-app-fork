@@ -9,7 +9,7 @@ import { definitelyUrl, toShortUrl } from '#/lib/strings/url-helpers';
 import { isOnlyEmoji } from '#/alf/typography';
 
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import { InlineLinkText, type InlineLinkTextProps } from '#/components/web/Link';
+import { InlineLinkText, type InlineLinkTextProps, type InlineLinkUnderline } from '#/components/web/Link';
 import { content, emoji } from '#/components/web/RichText.css';
 import { RichTextTag } from '#/components/web/RichTextTag';
 import { Text, type TextProps } from '#/components/web/Text';
@@ -26,6 +26,8 @@ export type RichTextProps = Pick<
 	/** Enlargement applied to emoji-only content: `normal` (1.85×) or `large` (3×). */
 	emojiScale?: 'large' | 'normal';
 	enableTags?: boolean;
+	/** Underline timing for inline links, mentions, and tags; defaults to `hover`. */
+	linkUnderline?: InlineLinkUnderline;
 	onLinkPress?: InlineLinkTextProps['onPress'];
 	/** The body-text sizes RichText renders (a subset of the full scale), each enlarged for emoji-only content. */
 	size?: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
@@ -46,6 +48,7 @@ export function RichText({
 	emojiScale = 'normal',
 	enableTags = false,
 	leading,
+	linkUnderline,
 	numberOfLines,
 	onLinkPress,
 	selectable,
@@ -101,6 +104,7 @@ export function RichText({
 									selectable={selectable}
 									size={size}
 									to={feature.uri}
+									underline={linkUnderline}
 									weight={weight}
 								>
 									{toShortUrl(segment.text)}
@@ -120,6 +124,7 @@ export function RichText({
 										selectable={selectable}
 										size={size}
 										to={`/profile/${feature.did}`}
+										underline={linkUnderline}
 										weight={weight}
 									>
 										{segment.text}
@@ -140,6 +145,7 @@ export function RichText({
 									leading={leading}
 									size={size}
 									tag={feature.tag}
+									underline={linkUnderline}
 								/>
 							);
 						}

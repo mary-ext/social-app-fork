@@ -17,6 +17,7 @@ import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute';
 import { Person_Stroke2_Corner0_Rounded as Person } from '#/components/icons/Person';
 import { useLink } from '#/components/Link';
 import { Loader } from '#/components/Loader';
+import type { InlineLinkUnderline } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
 import * as Menu from '#/components/web/Menu';
 import type { TextProps } from '#/components/web/Text';
@@ -28,6 +29,7 @@ export type RichTextTagProps = Pick<TextProps, 'color' | 'leading' | 'size'> & {
 	authorHandle?: string;
 	display: string;
 	tag: string;
+	underline?: InlineLinkUnderline;
 };
 
 /**
@@ -42,6 +44,7 @@ export function RichTextTag({
 	leading,
 	size,
 	tag,
+	underline = 'hover',
 }: RichTextTagProps) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
@@ -77,10 +80,7 @@ export function RichTextTag({
 		<Menu.Root>
 			<Menu.Trigger
 				aria-label={label}
-				className={clsx(
-					textStyles.text({ color, leading, size }),
-					linkStyles.inlineLink({ underline: true }),
-				)}
+				className={clsx(textStyles.text({ color, leading, size }), linkStyles.inlineLink({ underline }))}
 				nativeButton={false}
 				// the anchor exists only for its href (hover preview, middle/right-click "open in new tab"); a
 				// plain left-click always opens the menu, so suppress the native navigation it would trigger
