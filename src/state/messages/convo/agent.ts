@@ -886,15 +886,25 @@ export class Convo {
 						ev.$type === 'chat.bsky.convo.defs#logCreateMessage' &&
 						ev.message.$type === 'chat.bsky.convo.defs#messageView'
 					) {
-						/**
-						 * If this message is already in new messages, it was added by our sending logic, and is based on
-						 * client-ordering. When we receive the "committed" event from the log, we should replace this
-						 * reference and re-insert in order to respect the order we received from the log.
+						/*
+						 * If this message is already in past messages, the initial
+						 * history fetch raced this log event and already returned it.
+						 * Update in place rather than inserting a duplicate into new
+						 * messages.
 						 */
-						if (this.newMessages.has(ev.message.id)) {
-							this.newMessages.delete(ev.message.id);
+						if (this.pastMessages.has(ev.message.id)) {
+							this.pastMessages.set(ev.message.id, ev.message);
+						} else {
+							/**
+							 * If this message is already in new messages, it was added by our sending logic, and is based
+							 * on client-ordering. When we receive the "committed" event from the log, we should replace
+							 * this reference and re-insert in order to respect the order we received from the log.
+							 */
+							if (this.newMessages.has(ev.message.id)) {
+								this.newMessages.delete(ev.message.id);
+							}
+							this.newMessages.set(ev.message.id, ev.message);
 						}
-						this.newMessages.set(ev.message.id, ev.message);
 						needsCommit = true;
 					} else if (
 						ev.$type === 'chat.bsky.convo.defs#logDeleteMessage' &&
@@ -928,7 +938,12 @@ export class Convo {
 					} else {
 						const systemView = toSystemMessageView(ev);
 						if (systemView) {
-							this.newMessages.set(systemView.id, systemView);
+							// same as above: avoid duplicating if history fetch won the race
+							if (this.pastMessages.has(systemView.id)) {
+								this.pastMessages.set(systemView.id, systemView);
+							} else {
+								this.newMessages.set(systemView.id, systemView);
+							}
 							needsCommit = true;
 						}
 					}
