@@ -34,18 +34,19 @@ import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/KnownFollowers';
 import { useLink } from '#/components/Link';
-import { Loader } from '#/components/Loader';
 import * as Pills from '#/components/Pills';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { InlineLinkText, LinkButton } from '#/components/web/Link';
 import * as css from '#/components/web/ProfileHoverCard.css';
 import { RichText } from '#/components/web/RichText';
+import { Spinner } from '#/components/web/Spinner';
 import { Text } from '#/components/web/Text';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { LiveStatus } from '#/features/liveNow/components/LiveStatus';
+import { vars } from '#/styles/contract.css';
 
 export type ProfileHoverCardProps = {
 	/**
@@ -118,6 +119,7 @@ function CardLink({
 }
 
 const Card = memo(function Card({ did }: { did: string }) {
+	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
 	const profile = useProfileQuery({ did });
 	const moderationOpts = useModerationOpts();
@@ -152,7 +154,7 @@ const Card = memo(function Card({ did }: { did: string }) {
 
 	return (
 		<div className={clsx(css.card, css.loading)}>
-			<Loader size="xl" />
+			<Spinner color={vars.palette.contrast_500} label={l`Loading`} size="xl" />
 		</div>
 	);
 });
