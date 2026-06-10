@@ -13,7 +13,6 @@ import { useClients, useSession } from '#/state/session';
 import { parseConvoView } from '#/components/dms/util';
 
 import { RQKEY as CONVO_KEY } from './conversation';
-import { useLeftConvos } from './leave-conversation';
 import { listConvoMembersQueryKey } from './list-convo-members';
 
 const DEFAULT_LIMIT = 10;
@@ -105,7 +104,6 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 	const queryClient = useQueryClient();
 	const { currentConvoId } = useCurrentConvoId();
 	const { currentAccount } = useSession();
-	const leftConvos = useLeftConvos();
 
 	const debouncedRefetch = useMemo(() => {
 		const refetchAndInvalidate = () => {
@@ -541,13 +539,12 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 	}, [messagesBus, currentConvoId, queryClient, currentAccount?.did, debouncedRefetch]);
 
 	const ctx = useMemo(() => {
-		const convos =
-			data?.pages.flatMap((page) => page.convos).filter((convo) => !leftConvos.includes(convo.id)) ?? [];
+		const convos = data?.pages.flatMap((page) => page.convos) ?? [];
 		return {
 			accepted: convos.filter((conv) => conv.status === 'accepted'),
 			request: convos.filter((conv) => conv.status === 'request'),
 		};
-	}, [data, leftConvos]);
+	}, [data]);
 
 	return <ListConvosContext.Provider value={ctx}>{children}</ListConvosContext.Provider>;
 }

@@ -1,13 +1,12 @@
-import { useMemo } from 'react';
-import type { ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyConvoLeaveConvo } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
+import { type ConvoListQueryData, RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
 
 const RQKEY_ROOT = 'leave-convo';
 export function RQKEY(convoId: string | undefined) {
@@ -44,25 +43,21 @@ export function useLeaveConvo(
 			return data;
 		},
 		onMutate: () => {
-			let prevPages: ChatBskyConvoListConvos.$output[] = [];
-			queryClient.setQueryData(
-				[CONVO_LIST_KEY],
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					prevPages = old.pages;
-					return {
-						...old,
-						pages: old.pages.map((page) => {
-							return {
-								...page,
-								convos: page.convos.filter((convo) => convo.id !== convoId),
-							};
-						}),
-					};
-				},
-			);
+			const prevConvoListQueries = queryClient.getQueriesData<ConvoListQueryData>({
+				queryKey: [CONVO_LIST_KEY],
+			});
+			queryClient.setQueriesData<ConvoListQueryData>({ queryKey: [CONVO_LIST_KEY] }, (old) => {
+				if (!old) return old;
+				return {
+					...old,
+					pages: old.pages.map((page) => ({
+						...page,
+						convos: page.convos.filter((convo) => convo.id !== convoId),
+					})),
+				};
+			});
 			onMutate?.();
-			return { prevPages };
+			return { prevConvoListQueries };
 		},
 		onSuccess: (data) => {
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
@@ -70,35 +65,13 @@ export function useLeaveConvo(
 		},
 		onError: (error, _, context) => {
 			logger.error(error);
-			queryClient.setQueryData(
-				[CONVO_LIST_KEY],
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					return {
-						...old,
-						pages: context?.prevPages || old.pages,
-					};
-				},
-			);
+			if (context?.prevConvoListQueries) {
+				for (const [queryKey, prevData] of context.prevConvoListQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+			}
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
 			onError?.(error);
 		},
 	});
-}
-
-/**
- * Gets currently pending and successful leave convo mutations
- *
- * @returns Array of `convoId`
- */
-export function useLeftConvos() {
-	const pending = useMutationState({
-		filters: { mutationKey: [RQKEY_ROOT], status: 'pending' },
-		select: (mutation) => mutation.options.mutationKey?.[1] as string | undefined,
-	});
-	const success = useMutationState({
-		filters: { mutationKey: [RQKEY_ROOT], status: 'success' },
-		select: (mutation) => mutation.options.mutationKey?.[1] as string | undefined,
-	});
-	return useMemo(() => [...pending, ...success].filter((id) => id !== undefined), [pending, success]);
 }

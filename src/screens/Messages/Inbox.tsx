@@ -12,7 +12,6 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';
-import { useLeftConvos } from '#/state/queries/messages/leave-conversation';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
@@ -49,19 +48,14 @@ export function MessagesInboxScreenInner({}: Props) {
 	const listConvosQuery = useListConvosQuery({ status: 'request' });
 	const { data } = listConvosQuery;
 
-	const leftConvos = useLeftConvos();
-
 	const conversations = useMemo(() => {
 		if (data?.pages) {
-			const convos = data.pages
-				.flatMap((page) => page.convos)
-				// filter out convos that are actively being left
-				.filter((convo) => !leftConvos.includes(convo.id));
+			const convos = data.pages.flatMap((page) => page.convos);
 
 			return convos;
 		}
 		return [];
-	}, [data, leftConvos]);
+	}, [data]);
 
 	const hasUnreadConvos = useMemo(() => {
 		return conversations.some(
