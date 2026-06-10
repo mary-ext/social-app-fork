@@ -157,8 +157,11 @@ function ConvoProviderInner({
 					if (data.kind.joinLink !== convo.convo.details.joinLink) {
 						convo.updateJoinLink(data.kind.joinLink);
 					}
-					if (data.kind.lockStatus !== convo.convo.details.lockStatus) {
-						convo.updateLockStatus(data.kind.lockStatus);
+					if (
+						data.kind.lockStatus !== convo.convo.details.lockStatus ||
+						data.kind.lockStatusModerationOverride !== convo.convo.details.lockStatusModerationOverride
+					) {
+						convo.updateLockStatus(data.kind.lockStatus, data.kind.lockStatusModerationOverride);
 					}
 				}
 				if (

@@ -33,18 +33,19 @@ export function ChatFooter({
 					style={[
 						a.flex_row,
 						a.align_center,
+						a.flex_1,
 						{
 							minHeight: 32,
 						},
 					]}
 				>
 					<Icon size="md" fill={t.atoms.text_contrast_medium.color} style={[a.mr_sm]} />
-					<View>
+					<View style={[a.flex_1]}>
 						<Text numberOfLines={1} style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
 							{heading}
 						</Text>
 						{subheading ? (
-							<Text numberOfLines={1} style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+							<Text numberOfLines={2} style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
 								{subheading}
 							</Text>
 						) : null}

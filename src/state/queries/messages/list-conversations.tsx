@@ -478,6 +478,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 										}
 									: { ...convo, rev: logRef.rev },
 							);
+							// the log event doesn't say whether the lock is forced by a
+							// moderation override, so refetch to pick up the flag.
+							void queryClient.invalidateQueries({ queryKey: CONVO_KEY(logRef.convoId) });
 							break;
 						}
 						case 'chat.bsky.convo.defs#logUnlockConvo': {
@@ -486,7 +489,12 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
 									? {
 											...convo,
-											kind: { ...convo.kind, lockStatus: 'unlocked' },
+											kind: {
+												...convo.kind,
+												lockStatus: 'unlocked',
+												// an unlocked convo cannot be moderation-locked.
+												lockStatusModerationOverride: false,
+											},
 											rev: logRef.rev,
 										}
 									: { ...convo, rev: logRef.rev },
