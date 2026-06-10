@@ -21,6 +21,7 @@ export const button = recipe(
 			appearance: 'none',
 			border: 'none',
 			borderRadius: 999,
+			boxSizing: 'border-box',
 			color: 'inherit',
 			cursor: 'pointer',
 			display: 'inline-flex',
