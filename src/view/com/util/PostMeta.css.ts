@@ -18,21 +18,27 @@ export const avatar = style({
 	marginRight: space._2xs,
 });
 
+// every shrinkable item below also sets `minWidth: 0` to defeat the `min-width: auto` flex default, which
+// otherwise floors each item at its min-content width — a long, unbroken name or handle would overrun its
+// constraint and run offscreen instead of ellipsizing.
 export const author = style({
 	alignItems: 'flex-end',
 	display: 'flex',
 	flexDirection: 'row',
 	flexShrink: 1,
+	minWidth: 0,
 });
 
 // the display name holds its intrinsic width but never exceeds 70% so the handle always keeps room.
 export const name = style({
 	flexShrink: 0,
 	maxWidth: '70%',
+	minWidth: 0,
 });
 
 export const handle = style({
 	flexShrink: 10,
+	minWidth: 0,
 });
 
 // a flex item by virtue of `.author`; without this it blockifies to a line box whose strut is sized by
