@@ -311,9 +311,7 @@ export function InviteLinkDialog({
 									onPress={() => setStep(Step.GENERATE)}
 								>
 									<View style={[a.flex_1]}>
-										<Text numberOfLines={1} style={[a.text_sm]}>
-											{ownerValue}
-										</Text>
+										<Text style={[a.text_sm]}>{ownerValue}</Text>
 									</View>
 								</EditTextButton>
 							</View>
