@@ -491,6 +491,10 @@ export function useProfileBlockMutationQueue(profile: Shadow<AnyProfileView>) {
 			updateProfileShadow(queryClient, did, {
 				blockingUri: finalBlockingUri,
 			});
+			// the shadow only reaches components that read profiles through shadow
+			// hooks. the convo list is also read raw (e.g. the unread badge's
+			// calculateCount, getMessageInfo), and blocks emit no chat log event,
+			// so without a refetch that data stays stale indefinitely.
 			void queryClient.invalidateQueries({ queryKey: [RQKEY_LIST_CONVOS] });
 		},
 	});

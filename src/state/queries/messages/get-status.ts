@@ -11,12 +11,12 @@ export function useChatActorStatusQuery() {
 	const { chat } = useClients();
 
 	return useQuery({
+		gcTime: STALE.INFINITY,
+		staleTime: STALE.SECONDS.FIFTEEN,
 		queryKey: chatActorStatusQueryKey(),
 		queryFn: async () => {
 			if (!chat) throw new Error('Not signed in');
 			return await ok(chat.get('chat.bsky.actor.getStatus', {}));
 		},
-		staleTime: STALE.INFINITY,
-		gcTime: STALE.INFINITY,
 	});
 }

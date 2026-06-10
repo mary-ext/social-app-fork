@@ -388,7 +388,7 @@ function SettingsHeader({
 		<>
 			<View style={[a.px_xl, a.py_4xl, a.border_b, t.atoms.border_contrast_low]}>
 				<View style={[a.align_center, a.justify_center]}>
-					<AvatarBubbles profiles={convo.members} moderationOpts={moderationOpts} />
+					<AvatarBubbles profiles={convo.members} />
 				</View>
 				<Text style={[a.text_2xl, a.font_bold, a.text_center, a.pt_lg, t.atoms.text]}>{groupName}</Text>
 				<Text style={[a.text_sm, a.text_center, a.pt_xs, a.px_xl, t.atoms.text_contrast_high]}>

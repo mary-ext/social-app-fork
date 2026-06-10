@@ -197,13 +197,7 @@ function GroupChatItem({
 	return (
 		<BaseChatItem
 			convo={convo}
-			avatar={
-				<AvatarBubbles
-					profiles={convo.members}
-					size={isWithinLeftPanel ? 48 : 52}
-					moderationOpts={moderationOpts}
-				/>
-			}
+			avatar={<AvatarBubbles profiles={convo.members} size={isWithinLeftPanel ? 48 : 52} />}
 			title={chatName}
 			accessibilityHint={l`Go to the group chat named "${chatName}"`}
 			primaryProfile={groupOwner}

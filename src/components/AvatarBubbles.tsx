@@ -1,14 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
-import {
-	type DisplayRestrictions,
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	type ModerationOptions,
-} from '@atcute/bluesky-moderation';
+import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
+import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
+import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -42,25 +38,14 @@ type Props = {
 	 */
 	self?: boolean;
 	size?: number;
-	moderationOpts?: ModerationOptions;
 };
 
-export function AvatarBubbles({
-	animate = false,
-	profiles: allProfiles,
-	self = false,
-	size = 120,
-	moderationOpts,
-}: Props) {
+export function AvatarBubbles({ animate = false, profiles: allProfiles, self = false, size = 120 }: Props) {
 	const { currentAccount } = useSession();
 	const profiles =
 		!self && allProfiles.length > 2
 			? allProfiles.filter((p) => p?.did != null && p.did !== currentAccount?.did)
 			: allProfiles;
-	const moderations = useMemo(() => {
-		if (!moderationOpts) return [];
-		return profiles.map((p) => (p ? moderateProfile(p, moderationOpts) : undefined));
-	}, [profiles, moderationOpts]);
 
 	const scale = size / 120;
 	const marginOffset = size < 120 ? -2 : 0;
@@ -97,9 +82,6 @@ export function AvatarBubbles({
 						y={layout.y}
 						zIndex={layout.zIndex}
 						includeProfileBorder={layout.border}
-						moderation={
-							moderations[i] ? getDisplayRestrictions(moderations[i], DisplayContext.ProfileMedia) : undefined
-						}
 					/>
 				))}
 			</View>
@@ -108,7 +90,7 @@ export function AvatarBubbles({
 }
 
 function AvatarBubble({
-	profile,
+	profile: profileUnshadowed,
 	scale,
 	transitionDelay,
 	size,
@@ -116,7 +98,6 @@ function AvatarBubble({
 	y,
 	zIndex,
 	includeProfileBorder,
-	moderation,
 }: {
 	profile?: AnyProfileView;
 	scale: number;
@@ -126,9 +107,10 @@ function AvatarBubble({
 	y: number;
 	zIndex?: number;
 	includeProfileBorder?: boolean;
-	moderation?: DisplayRestrictions;
 }) {
 	const t = useTheme();
+	const profile = useMaybeProfileShadow(profileUnshadowed);
+	const moderationOpts = useModerationOpts();
 
 	const transformStyle: WebViewStyle = {
 		transform: [{ translateX: x }, { translateY: y }, { scale }],
@@ -152,14 +134,17 @@ function AvatarBubble({
 				webViewStyle(transformStyle),
 			]}
 		>
-			{profile ? (
+			{profile && moderationOpts ? (
 				<UserAvatar
 					avatar={profile.avatar}
 					size={size}
 					type="user"
 					hideLiveBadge
 					noBorder
-					moderation={moderation}
+					moderation={getDisplayRestrictions(
+						moderateProfile(profile, moderationOpts),
+						DisplayContext.ProfileMedia,
+					)}
 				/>
 			) : (
 				<AvatarPlaceholder size={size} />
