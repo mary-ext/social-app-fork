@@ -594,8 +594,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/web/UserAvatar.tsx:251
-#: src/components/web/UserAvatar.tsx:268
+#: src/components/web/UserAvatar.tsx:253
+#: src/components/web/UserAvatar.tsx:270
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 

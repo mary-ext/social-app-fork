@@ -21,16 +21,31 @@ export const root = style({
 	width: sizeVar,
 });
 
-export const image = style({
+// a CSS `filter: blur()` is the element's final paint step, so its own `border-radius` can't clip the
+// halo the blur spreads past the edge. this wrapper clips it instead: `overflow: hidden` on a parent
+// (with no filter of its own) bounds the blurred child to the avatar's shape. the opaque fill backs the
+// blurred image's translucent rim (blur samples transparent pixels past the edge) with a solid color.
+export const imageClip = style({
 	backgroundColor: vars.palette.contrast_25,
 	borderRadius: 'inherit',
+	display: 'block',
+	height: '100%',
+	overflow: 'hidden',
+	width: '100%',
+});
+
+// no `border-radius` here on purpose: `filter: blur()` paints after an element's own corner clip, so a
+// rounded image would have its whole perimeter smeared into the transparent corners (a faded, translucent
+// rim). leaving the image square lets `imageClip` carve the circle from the opaque interior of the blur.
+// the backdrop fill lives on `imageClip` (behind the image), not here, so it isn't blurred away at the rim.
+export const image = style({
 	display: 'block',
 	height: '100%',
 	objectFit: 'cover',
 	width: '100%',
 });
 
-/** Applied to the image when moderation requires blurring the avatar. */
+/** Applied to the image when moderation requires blurring the avatar; clipped to shape by {@link imageClip}. */
 export const blurred = style({ filter: 'blur(5px)' });
 
 export const fallback = style({

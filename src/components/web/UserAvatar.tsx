@@ -173,15 +173,17 @@ export const UserAvatar = memo(function UserAvatar({
 			}}
 		>
 			{avatar && (
-				<Avatar.Image
-					className={clsx(styles.image, moderation?.blurs.length && styles.blurred)}
-					src={hackModifyThumbnailPath(avatar, size < 90)}
-					onLoadingStatusChange={(status) => {
-						if (status === 'loaded') {
-							onLoad?.();
-						}
-					}}
-				/>
+				<span className={styles.imageClip}>
+					<Avatar.Image
+						className={clsx(styles.image, moderation?.blurs.length && styles.blurred)}
+						src={hackModifyThumbnailPath(avatar, size < 90)}
+						onLoadingStatusChange={(status) => {
+							if (status === 'loaded') {
+								onLoad?.();
+							}
+						}}
+					/>
+				</span>
 			)}
 			<Avatar.Fallback className={styles.fallback} delay={avatar ? 600 : undefined}>
 				<DefaultAvatar type={type} shape={finalShape} size={size} />
