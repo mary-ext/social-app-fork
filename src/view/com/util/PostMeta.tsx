@@ -152,24 +152,24 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 
 				<TimeElapsed timestamp={opts.timestamp}>
 					{({ timeElapsed }) => (
-						<AuthorLink
-							align="right"
-							className={css.timestamp}
-							color="textContrastMedium"
-							disabled={disabled}
-							label={timestampLabel}
-							leading="tight"
-							onPress={onBeforePressPost}
-							size="md"
-							title={timestampLabel}
-							to={opts.postHref}
-							underline="none"
-						>
+						<span className={css.timestamp}>
 							<Text aria-hidden color="textContrastMedium" leading="tight" size="md">
 								·{' '}
 							</Text>
-							{timeElapsed}
-						</AuthorLink>
+							<AuthorLink
+								align="right"
+								color="textContrastMedium"
+								disabled={disabled}
+								label={timestampLabel}
+								leading="tight"
+								onPress={onBeforePressPost}
+								size="md"
+								title={timestampLabel}
+								to={opts.postHref}
+							>
+								{timeElapsed}
+							</AuthorLink>
+						</span>
 					)}
 				</TimeElapsed>
 			</div>
