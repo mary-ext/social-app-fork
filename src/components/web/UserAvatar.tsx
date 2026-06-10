@@ -73,16 +73,15 @@ const squareRadius = (size: number) => (size > 32 ? 8 : 3);
 /** Vector fallback shown when an avatar has no image, keyed by actor type and shape. */
 const DefaultAvatar = memo(function DefaultAvatar({
 	type,
-	shape: overrideShape,
+	shape,
 	size,
 }: {
 	type: UserAvatarType;
-	shape?: 'circle' | 'square';
+	shape: 'circle' | 'square';
 	size: number;
 }) {
-	const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square');
 	const squareStyle =
-		finalShape === 'square' ? { borderRadius: squareRadius(size), overflow: 'hidden' as const } : undefined;
+		shape === 'square' ? { borderRadius: squareRadius(size), overflow: 'hidden' as const } : undefined;
 
 	if (type === 'algo') {
 		// Font Awesome Pro 6.4.0 by @fontawesome — https://fontawesome.com/license (Commercial License)
@@ -118,7 +117,7 @@ const DefaultAvatar = memo(function DefaultAvatar({
 	if (type === 'labeler') {
 		return (
 			<svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={squareStyle}>
-				{finalShape === 'square' ? (
+				{shape === 'square' ? (
 					<rect x="0" y="0" width="32" height="32" rx="3" fill={LABELER_PURPLE} />
 				) : (
 					<circle cx="16" cy="16" r="16" fill={LABELER_PURPLE} />
