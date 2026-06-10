@@ -40,10 +40,11 @@ import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { InlineLinkText, Link } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
-import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
+import { RichText } from '#/components/web/RichText';
 
 import { DateDivider } from './DateDivider';
+import * as css from './MessageItem.css';
 import { MessageItemEmbed } from './MessageItemEmbed';
 import { MessageItemInviteEmbed } from './MessageItemInviteEmbed';
 import { groupReactions } from './ReactionsDialog';
@@ -387,23 +388,18 @@ let MessageItem = ({
 										]}
 									>
 										<RichText
-											value={rt}
-											style={[
-												a.text_md,
-												isFromSelf && { color: t.palette.white },
-												// Emoji-only: add top leading to avoid clipping the
-												// glyph, then pull the bottom up by the same amount so
-												// the glyph bottom-aligns with the avatar instead of
-												// sitting above its line-box baseline.
-												isOnlyEmoji(message.text) && [
-													a.leading_tight,
-													// Visually align bottom of the emoji with the avatar
-													!isFromSelf && { marginBottom: -a.mb_sm.marginBottom },
-												],
-											]}
-											interactiveStyle={a.underline}
+											// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
+											// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
+											className={
+												isOnlyEmoji(message.text) && !isFromSelf ? css.emojiBaselineNudge : undefined
+											}
+											color={isFromSelf ? 'white' : undefined}
+											emojiScale="large"
 											enableTags
-											emojiMultiplier={3}
+											leading={isOnlyEmoji(message.text) ? 'tight' : undefined}
+											linkUnderline="always"
+											size="md"
+											value={rt}
 										/>
 									</Animated.View>
 								)}
