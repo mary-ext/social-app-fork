@@ -15,6 +15,7 @@ import throttle from 'lodash.throttle';
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
 import { useClients, useSession } from '#/state/session';
 
 import { parseConvoView } from '#/components/dms/util';
@@ -240,6 +241,10 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
 								optimisticDelete(log.convoId, old),
 							);
+							// The viewer is no longer in this convo (they left on another device, or were
+							// removed — removed members receive a logLeaveConvo, not a logRemoveMember). Refetch
+							// any cached join link preview so its viewer state reflects the lost membership.
+							void invalidateJoinLinkPreviewsForConvo(queryClient, log.convoId);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logDeleteMessage': {

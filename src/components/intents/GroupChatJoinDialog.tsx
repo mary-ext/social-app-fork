@@ -12,7 +12,11 @@ import { isNetworkError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { setJoinLinkPreviewRequestedForCode, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
+import {
+	invalidateJoinLinkPreviewsForCode,
+	setJoinLinkPreviewRequestedForCode,
+	useJoinLinkPreviewsQuery,
+} from '#/state/queries/join-links';
 import { useRequestJoinGroupChat } from '#/state/queries/messages/request-join-group-chat';
 import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdraw-join-group-chat';
 import { useSession } from '#/state/session';
@@ -100,6 +104,9 @@ function GroupChatJoinDialogContent({
 					});
 					break;
 				case 'joined': {
+					// Membership changed — refetch any cached previews of this link (e.g. a DM embed) so
+					// their viewer state reflects that the viewer is now a member.
+					if (code) void invalidateJoinLinkPreviewsForCode(queryClient, code);
 					if (data.convo && data.convo.id) {
 						control.close(() => {
 							Toast.show(l`Successfully joined the group chat!`);

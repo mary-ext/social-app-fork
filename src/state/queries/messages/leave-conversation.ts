@@ -2,6 +2,7 @@ import type { ChatBskyConvoLeaveConvo } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
@@ -61,6 +62,9 @@ export function useLeaveConvo(
 		},
 		onSuccess: (data) => {
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
+			if (convoId) {
+				void invalidateJoinLinkPreviewsForConvo(queryClient, convoId);
+			}
 			onSuccess?.(data);
 		},
 		onError: (error, _, context) => {
