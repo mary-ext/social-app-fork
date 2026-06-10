@@ -49,6 +49,7 @@ import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import * as Prompt from '#/components/Prompt';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
+import { InlineLinkText } from '#/components/web/Link';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
 import { RichText } from '#/components/web/RichText';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
@@ -306,39 +307,46 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								onBeforePress={onOpenAuthor}
 							/>
 						</View>
-						<Link
-							to={authorHref}
-							style={[a.flex_1]}
-							label={sanitizeDisplayName(
-								post.author.displayName || sanitizeHandle(post.author.handle),
-								getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-							)}
-							onPress={onOpenAuthor}
-						>
-							<View style={[a.flex_1, a.align_start]}>
-								<ProfileHoverCard did={post.author.did} style={[a.w_full]}>
-									<View style={[a.flex_row, a.align_center]}>
-										<Text
-											emoji
-											style={[a.flex_shrink, a.text_lg, a.font_semi_bold, a.leading_snug]}
-											numberOfLines={1}
-										>
-											{sanitizeDisplayName(
-												post.author.displayName || sanitizeHandle(post.author.handle),
-												getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-											)}
-										</Text>
-
-										<View style={[a.pl_xs]}>
-											<ProfileBadges profile={authorShadow} size="md" interactive />
-										</View>
-									</View>
-									<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
-										{sanitizeHandle(post.author.handle, '@')}
-									</Text>
+						<div className={css.header}>
+							<div className={css.nameRow}>
+								<ProfileHoverCard did={post.author.did} style={[{ minWidth: 0 }]}>
+									<InlineLinkText
+										color="text"
+										label={l`View profile`}
+										leading="snug"
+										numberOfLines={1}
+										onPress={onOpenAuthor}
+										size="lg"
+										to={authorHref}
+										weight="semiBold"
+									>
+										{sanitizeDisplayName(
+											post.author.displayName || sanitizeHandle(post.author.handle),
+											getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+										)}
+									</InlineLinkText>
 								</ProfileHoverCard>
-							</View>
-						</Link>
+								<div className={css.badges}>
+									<ProfileBadges profile={authorShadow} size="md" interactive />
+								</div>
+							</div>
+							<ProfileHoverCard did={post.author.did} style={[a.self_start, a.max_w_full]}>
+								<InlineLinkText
+									className={css.handle}
+									color="textContrastMedium"
+									label={l`View profile`}
+									leading="snug"
+									numberOfLines={1}
+									onPress={onOpenAuthor}
+									size="md"
+									tabIndex={-1}
+									to={authorHref}
+									underline="none"
+								>
+									{sanitizeHandle(post.author.handle, '@')}
+								</InlineLinkText>
+							</ProfileHoverCard>
+						</div>
 						<View collapsable={false} style={[a.self_center]}>
 							<ThreadItemAnchorFollowButton did={post.author.did} enabled={showFollowButton} />
 						</View>
