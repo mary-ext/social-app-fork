@@ -29,10 +29,15 @@ export const card = style({
 	transitionProperty: 'border-color',
 	width: '100%',
 	selectors: {
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+		'&:focus-visible': {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: 2,
+		},
 		'&:hover': { borderColor: vars.palette.contrast_200 },
 		'.theme--light &': { backgroundColor: vars.palette.contrast_0 },
-		'.theme--dark &, .theme--dim &': { backgroundColor: vars.palette.contrast_25 },
+		'.theme--dark &, .theme--dim &': {
+			backgroundColor: vars.palette.contrast_25,
+		},
 	},
 });
 
@@ -74,8 +79,13 @@ export const menuButton = style({
 			transitionDuration: '100ms',
 			transitionProperty: 'background-color',
 		},
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
-		'.theme--light &:hover::before': { backgroundColor: vars.palette.contrast_50 },
+		'&:focus-visible': {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: 2,
+		},
+		'.theme--light &:hover::before': {
+			backgroundColor: vars.palette.contrast_50,
+		},
 		'.theme--dark &:hover::before, .theme--dim &:hover::before': {
 			backgroundColor: vars.palette.contrast_100,
 		},
@@ -163,11 +173,7 @@ export const image = style({
 });
 
 // the shared inset border defaults to the 12px media radius; these small tiles round at 4px.
-export const insetRadius = style({
-	selectors: {
-		'&&': { borderRadius: borderRadius.xs },
-	},
-});
+export const insetRadius = style({ borderRadius: borderRadius.xs });
 
 export const overlay = style({
 	alignItems: 'center',

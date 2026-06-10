@@ -60,9 +60,7 @@ export const fallback = style({
 });
 
 /** Overrides the web `MediaInsetBorder`'s fixed `md` radius so the hairline tracks the avatar's shape. */
-export const border = style({
-	selectors: { '&&': { borderRadius: 'inherit' } },
-});
+export const border = style({ borderRadius: 'inherit' });
 
 /** Red inset border shown for live avatars, replacing the hairline. */
 export const liveBorder = style({
@@ -106,6 +104,9 @@ export const preview = style({
 	padding: 0,
 	textDecoration: 'none',
 	selectors: {
-		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
+		'&:focus-visible': {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: 2,
+		},
 	},
 });
