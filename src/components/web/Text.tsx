@@ -36,17 +36,22 @@ export function Text({
 	...rest
 }: TextProps) {
 	const clamped = numberOfLines != null;
+	const singleLine = numberOfLines === 1;
 
 	return (
 		<span
 			className={clsx(
 				styles.text({ align, color, leading, size, weight }),
-				clamped && styles.clamp,
+				clamped && (singleLine ? styles.clampSingleLine : styles.clampMultiLine),
 				selectable === true && styles.userSelect.text,
 				selectable === false && styles.userSelect.none,
 				className,
 			)}
-			style={clamped ? assignInlineVars({ [styles.lineClampVar]: String(numberOfLines) }) : undefined}
+			style={
+				clamped && !singleLine
+					? assignInlineVars({ [styles.lineClampVar]: String(numberOfLines) })
+					: undefined
+			}
 			{...rest}
 		>
 			{children}

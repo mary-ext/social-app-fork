@@ -66,11 +66,23 @@ export const text = recipe(
 /** Set per-instance via `assignInlineVars` — the only value that can't be known at build time. */
 export const lineClampVar = createVar();
 
-export const clamp = style({
+export const clampSingleLine = style({
+	'@layer': {
+		[components]: {
+			maxWidth: '100%',
+			overflow: 'hidden',
+			textOverflow: 'ellipsis',
+			whiteSpace: 'nowrap',
+		},
+	},
+});
+
+export const clampMultiLine = style({
 	'@layer': {
 		[components]: {
 			display: '-webkit-box',
 			overflow: 'hidden',
+			textOverflow: 'ellipsis',
 			WebkitBoxOrient: 'vertical',
 			WebkitLineClamp: lineClampVar,
 		},

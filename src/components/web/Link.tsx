@@ -84,6 +84,7 @@ export function InlineLinkText({
 		to,
 	});
 	const clamped = numberOfLines != null;
+	const singleLine = numberOfLines === 1;
 
 	// the anchor is itself the text host, so the *Text-must-return-<Text> rule (a React Native concept) doesn't apply
 	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
@@ -94,7 +95,7 @@ export function InlineLinkText({
 			className={clsx(
 				textStyles.text({ align, color, leading, size, weight }),
 				styles.inlineLink({ underline }),
-				clamped && textStyles.clamp,
+				clamped && (singleLine ? textStyles.clampSingleLine : textStyles.clampMultiLine),
 				selectable === true && textStyles.userSelect.text,
 				selectable === false && textStyles.userSelect.none,
 				className,
@@ -105,7 +106,11 @@ export function InlineLinkText({
 					? undefined
 					: (e: MouseEvent<HTMLAnchorElement>) => onPress(e as unknown as GestureResponderEvent)
 			}
-			style={clamped ? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) }) : undefined}
+			style={
+				clamped && !singleLine
+					? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) })
+					: undefined
+			}
 			{...anchorAttrs({ download, isExternal })}
 		>
 			{children}
