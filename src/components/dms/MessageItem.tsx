@@ -20,7 +20,6 @@ import Animated, {
 } from '#/lib/animations/reanimatedCompat';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
-import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
@@ -37,7 +36,7 @@ import { isOnlyEmoji } from '#/alf/typography';
 import { Button } from '#/components/Button';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
-import { InlineLinkText, Link } from '#/components/Link';
+import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
@@ -192,20 +191,12 @@ let MessageItem = ({
 
 	const avatar =
 		profile && moderationOpts ? (
-			<Link
-				style={[a.rounded_full]}
-				label={l`${createSanitizedDisplayName(profile)}’s avatar`}
-				accessibilityHint={l`Opens this profile`}
-				to={makeProfileLink({ did: profile.did })}
+			<ProfileCard.Avatar
+				profile={profile}
+				size={AVATAR_SIZE}
+				moderationOpts={moderationOpts}
 				onPress={() => unstableCacheProfileView(queryClient, profile)}
-			>
-				<ProfileCard.Avatar
-					profile={profile}
-					size={AVATAR_SIZE}
-					moderationOpts={moderationOpts}
-					disabledPreview
-				/>
-			</Link>
+			/>
 		) : (
 			<ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
 		);
