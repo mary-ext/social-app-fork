@@ -15,8 +15,8 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-import { useDialogControl } from '#/components/Dialog';
 import { useLink } from '#/components/Link';
+import * as Dialog from '#/components/web/Dialog';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Text } from '#/components/web/Text';
@@ -25,7 +25,7 @@ import * as styles from '#/components/web/UserAvatar.css';
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
 
 export type UserAvatarType = 'algo' | 'labeler' | 'list' | 'user';
 
@@ -225,7 +225,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const status = useActorStatus(profile);
-	const liveControl = useDialogControl();
+	const liveHandle = Dialog.useDialogHandle();
 
 	const { href, onPress } = useLink({
 		displayText: '',
@@ -262,7 +262,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 			className={styles.preview}
 			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
 			tabIndex={tabIndex}
-			onClick={() => liveControl.open()}
+			onClick={() => liveHandle.open(null)}
 		>
 			{avatarEl}
 		</button>
@@ -284,10 +284,10 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 			{disableHoverCard ? trigger : <ProfileHoverCard did={profile.did}>{trigger}</ProfileHoverCard>}
 			{!disableNavigation && isTouchLive && (
 				<LiveStatusDialog
-					control={liveControl}
+					embed={status.embed as AppBskyEmbedExternal.View}
+					handle={liveHandle}
 					profile={profile}
 					status={status}
-					embed={status.embed as AppBskyEmbedExternal.View}
 				/>
 			)}
 		</>

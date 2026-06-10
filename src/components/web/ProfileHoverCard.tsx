@@ -45,7 +45,7 @@ import { Text } from '#/components/web/Text';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
-import { LiveStatus } from '#/features/liveNow/components/LiveStatusDialog';
+import { LiveStatus } from '#/features/liveNow/components/LiveStatus';
 
 export type ProfileHoverCardProps = {
 	/**
