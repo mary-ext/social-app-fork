@@ -34,12 +34,14 @@ type AuthorLinkProps = Pick<
 	disabled: boolean;
 	label: string;
 	onPress: () => void;
+	/** Sets the link's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
+	tabIndex?: number;
 	to: string;
 	underline?: InlineLinkUnderline;
 };
 
 /** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
-function AuthorLink({ disabled, label, onPress, to, underline, ...text }: AuthorLinkProps) {
+function AuthorLink({ disabled, label, onPress, tabIndex, to, underline, ...text }: AuthorLinkProps) {
 	if (disabled) {
 		return <Text {...text} />;
 	}
@@ -48,6 +50,7 @@ function AuthorLink({ disabled, label, onPress, to, underline, ...text }: Author
 			disableMismatchWarning
 			label={label}
 			onPress={onPress}
+			tabIndex={tabIndex}
 			to={to}
 			underline={underline}
 			{...text}
@@ -102,6 +105,7 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 						live={live}
 						hideLiveBadge
 						disableNavigation={disabled}
+						tabIndex={-1}
 					/>
 				</div>
 			)}
@@ -137,6 +141,7 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 							numberOfLines={1}
 							onPress={onBeforePressAuthor}
 							size="md"
+							tabIndex={-1}
 							to={profileLink}
 							underline="none"
 						>

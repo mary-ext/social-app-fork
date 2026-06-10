@@ -44,6 +44,8 @@ export type InlineLinkTextProps = LinkNavProps &
 		disableMismatchWarning?: boolean;
 		/** Accessible name; becomes the anchor's `aria-label`. */
 		label?: string;
+		/** Sets the anchor's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
+		tabIndex?: number;
 		/** Native tooltip text; becomes the anchor's `title`. */
 		title?: string;
 		/** Underline timing; defaults to `hover`. */
@@ -69,6 +71,7 @@ export function InlineLinkText({
 	onPress: outerOnPress,
 	selectable,
 	size,
+	tabIndex,
 	title,
 	to,
 	underline = 'hover',
@@ -103,6 +106,7 @@ export function InlineLinkText({
 					: (e: MouseEvent<HTMLAnchorElement>) => onPress(e as unknown as GestureResponderEvent)
 			}
 			style={clamped ? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) }) : undefined}
+			tabIndex={tabIndex}
 			title={title}
 			{...anchorAttrs({ download, isExternal })}
 		>

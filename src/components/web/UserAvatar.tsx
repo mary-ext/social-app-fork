@@ -55,6 +55,8 @@ type PreviewableUserAvatarProps = BaseUserAvatarProps & {
 	disableHoverCard?: boolean;
 	disableNavigation?: boolean;
 	onBeforePress?: () => void;
+	/** Sets the link/button's `tabindex`; pass `-1` to keep it clickable but out of the tab order. */
+	tabIndex?: number;
 };
 
 // labeler shield fill — mirrors the `temp_purple` labeler token.
@@ -210,6 +212,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	disableNavigation,
 	onBeforePress,
 	live,
+	tabIndex,
 	...props
 }: PreviewableUserAvatarProps) {
 	const { t: l } = useLingui();
@@ -251,6 +254,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 						aria-label={l`${name}'s avatar`}
 						className={styles.preview}
 						style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
+						tabIndex={tabIndex}
 						onClick={() => liveControl.open()}
 					>
 						{avatarEl}
@@ -268,6 +272,7 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 					aria-label={l`${name}'s avatar`}
 					className={styles.preview}
 					style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
+					tabIndex={tabIndex}
 					onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
 				>
 					{avatarEl}
