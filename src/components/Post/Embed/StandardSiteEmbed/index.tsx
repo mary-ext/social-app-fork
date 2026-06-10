@@ -16,6 +16,7 @@ import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/co
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
+import * as styles from '#/components/Post/Embed/StandardSiteEmbed/index.css';
 import { matchStandardSitePublisher } from '#/components/Post/Embed/StandardSiteEmbed/publishers';
 import { StandardSiteMetaRow } from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow';
 import { StandardSiteThemeProvider } from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider';
@@ -29,10 +30,6 @@ export type ThemeColors = {
 	custom: boolean;
 	accent: string;
 	accentForeground: string;
-};
-
-const PUBLICATION_AVATAR_STYLE = {
-	borderRadius: a.rounded_sm.borderRadius,
 };
 
 export const StandardSiteEmbed = ({
@@ -399,7 +396,7 @@ function PublicationIcon({
 				type="labeler"
 				size={size}
 				avatar={view.source.icon}
-				style={PUBLICATION_AVATAR_STYLE}
+				className={styles.publicationAvatar}
 			/>
 			<MediaInsetBorder opaque style={[a.rounded_sm]} />
 		</View>

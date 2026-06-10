@@ -1,4 +1,4 @@
-import { type CSSProperties, memo } from 'react';
+import { memo } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -42,9 +42,11 @@ type UserAvatarProps = BaseUserAvatarProps & {
 	moderation?: DisplayRestrictions;
 	noBorder?: boolean;
 	onLoad?: () => void;
+	/**
+	 * Styling escape hatch merged onto the root. The root's own styles sit in the `components` cascade layer,
+	 * so an (unlayered) class here outranks them — a `border-radius` set this way is inherited by every layer.
+	 */
 	className?: string;
-	/** Escape hatch merged onto the root; overrides the computed `border-radius` (inherited by every layer). */
-	style?: CSSProperties;
 };
 
 type PreviewableUserAvatarProps = BaseUserAvatarProps & {
@@ -154,7 +156,6 @@ export const UserAvatar = memo(function UserAvatar({
 	hideLiveBadge,
 	noBorder,
 	className,
-	style,
 }: UserAvatarProps) {
 	const finalShape = shape ?? (type === 'user' ? 'circle' : 'square');
 	const radius = finalShape === 'circle' ? '50%' : `${squareRadius(size)}px`;
@@ -162,15 +163,12 @@ export const UserAvatar = memo(function UserAvatar({
 	return (
 		<Avatar.Root
 			className={clsx(styles.root, className)}
-			style={{
-				...assignInlineVars({
-					[styles.alertScaleVar]: String(size / 42),
-					[styles.borderWidthVar]: `${size > 16 ? 2 : 1}px`,
-					[styles.radiusVar]: radius,
-					[styles.sizeVar]: `${size}px`,
-				}),
-				...style,
-			}}
+			style={assignInlineVars({
+				[styles.alertScaleVar]: String(size / 42),
+				[styles.borderWidthVar]: `${size > 16 ? 2 : 1}px`,
+				[styles.radiusVar]: radius,
+				[styles.sizeVar]: `${size}px`,
+			})}
 		>
 			{avatar && (
 				<span className={styles.imageClip}>

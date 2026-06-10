@@ -1,6 +1,7 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { components, layered } from '#/styles/layers.css';
 
 export const sizeVar = createVar();
 export const radiusVar = createVar();
@@ -11,15 +12,17 @@ export const alertScaleVar = createVar();
 /** Corner radius of the `PreviewableUserAvatar` link wrapper (circle vs squared). */
 export const previewRadiusVar = createVar();
 
-// the shape radius lives on the root so children inherit it and a consumer `style.borderRadius` can override
-// every layer at once.
-export const root = style({
-	borderRadius: radiusVar,
-	display: 'block',
-	height: sizeVar,
-	position: 'relative',
-	width: sizeVar,
-});
+// the shape radius lives on the root so children inherit it; root sits in the `components` layer so a
+// consumer's (unlayered) `className` border-radius outranks it and overrides every layer at once.
+export const root = style(
+	layered(components, {
+		borderRadius: radiusVar,
+		display: 'block',
+		height: sizeVar,
+		position: 'relative',
+		width: sizeVar,
+	}),
+);
 
 // a CSS `filter: blur()` is the element's final paint step, so its own `border-radius` can't clip the
 // halo the blur spreads past the edge. this wrapper clips it instead: `overflow: hidden` on a parent

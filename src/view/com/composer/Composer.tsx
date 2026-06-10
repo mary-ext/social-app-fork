@@ -1263,12 +1263,13 @@ let ComposerPost = memo(function ComposerPost({
 	return (
 		<View style={[a.mx_lg, a.mb_sm, !isActive && isLastPost && a.mb_lg, !isActive && styles.inactivePost]}>
 			<View style={[a.flex_row]}>
-				<UserAvatar
-					avatar={currentProfile?.avatar}
-					size={42}
-					type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-					style={{ marginTop: 4 }}
-				/>
+				<View style={[a.mt_xs]}>
+					<UserAvatar
+						avatar={currentProfile?.avatar}
+						size={42}
+						type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+					/>
+				</View>
 				<TextInput
 					ref={textInputRef}
 					style={[a.pt_xs]}

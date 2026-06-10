@@ -105,7 +105,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:163
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:160
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -363,7 +363,7 @@ msgstr "{date} at {time}"
 msgid "{displayName}'s Starter Pack"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1751
+#: src/view/com/composer/Composer.tsx:1752
 msgid "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 msgstr "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 
@@ -594,8 +594,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/web/UserAvatar.tsx:253
-#: src/components/web/UserAvatar.tsx:270
+#: src/components/web/UserAvatar.tsx:251
+#: src/components/web/UserAvatar.tsx:268
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 
@@ -653,7 +653,7 @@ msgid "{userName}'s verifications"
 msgstr ""
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
-#: src/screens/Search/components/StarterPackCard.tsx:236
+#: src/screens/Search/components/StarterPackCard.tsx:237
 msgid "+{computedTotal}"
 msgstr ""
 
@@ -993,7 +993,7 @@ msgstr ""
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1814
+#: src/view/com/composer/Composer.tsx:1815
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1475,7 +1475,7 @@ msgstr "Are you sure you want to leave this conversation? Your messages will be 
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1332
+#: src/view/com/composer/Composer.tsx:1333
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1802,8 +1802,8 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:194
 #: src/screens/Search/Shell.tsx:354
 #: src/screens/Settings/Settings.tsx:237
-#: src/view/com/composer/Composer.tsx:1395
-#: src/view/com/composer/Composer.tsx:1404
+#: src/view/com/composer/Composer.tsx:1396
+#: src/view/com/composer/Composer.tsx:1405
 #: src/view/com/composer/photos/EditImageDialog.tsx:53
 #: src/view/com/composer/photos/EditImageDialog.tsx:59
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:43
@@ -2093,7 +2093,7 @@ msgstr "Close the incoming requests banner"
 msgid "Close this dialog"
 msgstr "Close this dialog"
 
-#: src/view/com/composer/Composer.tsx:1401
+#: src/view/com/composer/Composer.tsx:1402
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2124,7 +2124,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1297
+#: src/view/com/composer/Composer.tsx:1298
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2132,11 +2132,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2113
+#: src/view/com/composer/Composer.tsx:2114
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2115
+#: src/view/com/composer/Composer.tsx:2116
 msgid "Compressing video..."
 msgstr ""
 
@@ -2569,7 +2569,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:579
-#: src/view/com/composer/Composer.tsx:1305
+#: src/view/com/composer/Composer.tsx:1306
 msgid "Delete post"
 msgstr ""
 
@@ -2687,7 +2687,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:71
 #: src/view/com/composer/Composer.tsx:1102
 #: src/view/com/composer/Composer.tsx:1140
-#: src/view/com/composer/Composer.tsx:1339
+#: src/view/com/composer/Composer.tsx:1340
 #: src/view/com/composer/drafts/DraftItem.tsx:133
 #: src/view/com/composer/drafts/DraftsButton.tsx:113
 msgid "Discard"
@@ -2705,7 +2705,7 @@ msgid "Discard draft?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1117
-#: src/view/com/composer/Composer.tsx:1331
+#: src/view/com/composer/Composer.tsx:1332
 msgid "Discard post?"
 msgstr ""
 
@@ -2732,7 +2732,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2041
+#: src/view/com/composer/Composer.tsx:2042
 msgid "Dismiss error"
 msgstr ""
 
@@ -3061,7 +3061,7 @@ msgstr "Enter your handle or DID."
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2133
+#: src/view/com/composer/Composer.tsx:2134
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -3864,7 +3864,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2138
+#: src/view/com/composer/Composer.tsx:2139
 msgid "GIF uploaded"
 msgstr ""
 
@@ -4408,7 +4408,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2062
+#: src/view/com/composer/Composer.tsx:2063
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5815,7 +5815,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:110
-#: src/view/com/composer/Composer.tsx:1801
+#: src/view/com/composer/Composer.tsx:1802
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5842,7 +5842,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:76
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:107
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:104
 #: src/components/web/ExternalEmbed/index.tsx:50
 msgid "Open link to {niceUrl}"
 msgstr ""
@@ -6231,7 +6231,7 @@ msgstr ""
 msgid "Post"
 msgstr "Post"
 
-#: src/view/com/composer/Composer.tsx:1465
+#: src/view/com/composer/Composer.tsx:1466
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -6251,7 +6251,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1463
+#: src/view/com/composer/Composer.tsx:1464
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -6405,11 +6405,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2127
+#: src/view/com/composer/Composer.tsx:2128
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2129
+#: src/view/com/composer/Composer.tsx:2130
 msgid "Processing video..."
 msgstr ""
 
@@ -6445,22 +6445,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1449
+#: src/view/com/composer/Composer.tsx:1450
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1445
+#: src/view/com/composer/Composer.tsx:1446
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1436
+#: src/view/com/composer/Composer.tsx:1437
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1440
+#: src/view/com/composer/Composer.tsx:1441
 msgid "Publish reply"
 msgstr ""
 
@@ -6820,7 +6820,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1461
+#: src/view/com/composer/Composer.tsx:1462
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -8049,13 +8049,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:326
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:330
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:323
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:327
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:325
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:322
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -9129,7 +9129,7 @@ msgstr ""
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2120
+#: src/view/com/composer/Composer.tsx:2121
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -9143,7 +9143,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2122
+#: src/view/com/composer/Composer.tsx:2123
 msgid "Uploading video..."
 msgstr ""
 
@@ -9290,7 +9290,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2140
+#: src/view/com/composer/Composer.tsx:2141
 msgid "Video uploaded"
 msgstr ""
 
@@ -9308,8 +9308,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:241
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:463
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:238
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:460
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9337,7 +9337,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:328
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:325
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -9407,10 +9407,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:241
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:329
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:330
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:463
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:238
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:326
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:327
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:460
 msgid "View publication"
 msgstr "View publication"
 
@@ -9685,7 +9685,7 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1296
+#: src/view/com/composer/Composer.tsx:1297
 #: src/view/shell/Composer.tsx:39
 msgid "Write post"
 msgstr ""

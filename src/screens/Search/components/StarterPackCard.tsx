@@ -175,13 +175,14 @@ export function AvatarStack({
 							]}
 						>
 							{size && item.profile ? (
-								<UserAvatar
-									size={size}
-									avatar={item.profile.avatar}
-									type={item.profile.associated?.labeler ? 'labeler' : 'user'}
-									moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
-									style={{ inset: 0, position: 'absolute' }}
-								/>
+								<View style={[a.absolute, a.inset_0]}>
+									<UserAvatar
+										size={size}
+										avatar={item.profile.avatar}
+										type={item.profile.associated?.labeler ? 'labeler' : 'user'}
+										moderation={getDisplayRestrictions(item.moderation, DisplayContext.ProfileMedia)}
+									/>
+								</View>
 							) : (
 								<MediaInsetBorder style={[a.rounded_full]} />
 							)}
