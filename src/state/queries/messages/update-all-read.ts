@@ -1,4 +1,3 @@
-import type { ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -6,7 +5,11 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { RQKEY as CONVO_LIST_KEY } from './list-conversations';
+import {
+	type ConvoListQueryData,
+	RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
+	RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+} from './list-conversations';
 
 export function useUpdateAllRead(
 	status: 'accepted' | 'request',
@@ -35,65 +38,54 @@ export function useUpdateAllRead(
 			return data;
 		},
 		onMutate: () => {
-			let prevPages: ChatBskyConvoListConvos.$output[] = [];
-			queryClient.setQueryData(
-				CONVO_LIST_KEY(status),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					prevPages = old.pages;
-					return {
-						...old,
-						pages: old.pages.map((page) => {
-							return {
-								...page,
-								convos: page.convos.map((convo) => {
-									return {
-										...convo,
-										unreadCount: 0,
-									};
-								}),
-							};
-						}),
-					};
-				},
-			);
-			// remove unread convos from the badge query
-			queryClient.setQueryData(
-				CONVO_LIST_KEY('all', 'unread'),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
+			// snapshot every convo-list cache up front so onError can restore them
+			// all by their exact keys
+			const prevConvoListQueries = queryClient.getQueriesData<ConvoListQueryData>({
+				queryKey: [CONVO_LIST_ROOT_KEY],
+			});
+			queryClient.setQueriesData({ queryKey: CONVO_LIST_PARTIAL_KEY(status) }, (old?: ConvoListQueryData) => {
+				if (!old) return old;
+				return {
+					...old,
+					pages: old.pages.map((page) => ({
+						...page,
+						convos: page.convos.map((convo) => ({
+							...convo,
+							unreadCount: 0,
+						})),
+					})),
+				};
+			});
+			// remove unread convos from the badge queries
+			queryClient.setQueriesData(
+				{ queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread') },
+				(old?: ConvoListQueryData) => {
 					if (!old) return old;
 					return {
 						...old,
-						pages: old.pages.map((page) => {
-							return {
-								...page,
-								convos: page.convos.filter((convo) => convo.status !== status),
-							};
-						}),
+						pages: old.pages.map((page) => ({
+							...page,
+							convos: page.convos.filter((convo) => convo.status !== status),
+						})),
 					};
 				},
 			);
 			onMutate?.();
-			return { prevPages };
+			return { prevConvoListQueries };
 		},
 		onSuccess: () => {
-			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) });
+			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY(status) });
+			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread') });
 			onSuccess?.();
 		},
 		onError: (error, _, context) => {
 			logger.error(error);
-			queryClient.setQueryData(
-				CONVO_LIST_KEY(status),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					return {
-						...old,
-						pages: context?.prevPages || old.pages,
-					};
-				},
-			);
-			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) });
-			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY('all', 'unread') });
+			if (context?.prevConvoListQueries) {
+				for (const [queryKey, prevData] of context.prevConvoListQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+			}
+			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
 			onError?.(error);
 		},
 	});

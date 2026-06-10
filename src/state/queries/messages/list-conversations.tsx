@@ -2,7 +2,14 @@ import { createContext, useCallback, useContext, useEffect, useMemo } from 'reac
 import type { ChatBskyActorDefs, ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
 import { moderateProfile, ModerationCauseType, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import {
+	type InfiniteData,
+	type Query,
+	type QueryClient,
+	type QueryKey,
+	useInfiniteQuery,
+	useQueryClient,
+} from '@tanstack/react-query';
 import throttle from 'lodash.throttle';
 
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
@@ -25,7 +32,53 @@ export const RQKEY = (
 	kind: 'all' | 'group' | 'direct' = 'all',
 	lockStatus: 'unlocked' | 'locked' | 'locked-permanently' | undefined = undefined,
 	limit?: number,
-) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit];
+) => [RQKEY_ROOT, status, readState, kind, lockStatus, limit] as const;
+
+export type ConvoListItem = ChatBskyConvoListConvos.$output['convos'][number];
+
+/**
+ * Prefix key matching every convo-list query with the given status (and optionally readState), regardless of
+ * the remaining params (kind, lockStatus, limit). Only valid with prefix-matching APIs (setQueriesData,
+ * getQueriesData, invalidateQueries) — exact-match APIs (getQueryData, setQueryData) hash the full key and
+ * will never match a prefix.
+ */
+export const RQKEY_PARTIAL = (status: 'accepted' | 'request' | 'all', readState?: 'all' | 'unread') =>
+	readState ? [RQKEY_ROOT, status, readState] : [RQKEY_ROOT, status];
+
+/**
+ * Whether a convo satisfies the filters encoded in a convo-list query key. Caches are server-filtered, so
+ * optimistic inserts must apply the same filters client-side or convos leak into lists that should exclude
+ * them.
+ */
+export function convoMatchesQueryKey(convo: ConvoListItem, queryKey: QueryKey): boolean {
+	const [, status, readState, kind, lockStatus] = queryKey as ReturnType<typeof RQKEY>;
+	if (status !== 'all' && status !== convo.status) return false;
+	if (readState === 'unread' && convo.unreadCount === 0) return false;
+	if (convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo') {
+		if (kind === 'direct') return false;
+		if (lockStatus && convo.kind.lockStatus !== lockStatus) return false;
+	} else {
+		if (kind === 'group') return false;
+		// direct convos are never locked
+		if (lockStatus && lockStatus !== 'unlocked') return false;
+	}
+	return true;
+}
+
+/**
+ * Query predicate for optimistically upserting a convo into convo-list caches. Targets caches whose filters
+ * the convo satisfies, plus caches the convo is already in — those get updated in place even if the convo no
+ * longer matches (e.g. unreadCount dropped to 0), mirroring how read/mute log events update convos in place
+ * everywhere.
+ */
+export function convoListQueryPredicate(convo: ConvoListItem) {
+	return (query: Query): boolean => {
+		const data = query.state.data as ConvoListQueryData | undefined;
+		if (data && getConvoFromQueryData(convo.id, data)) return true;
+		return convoMatchesQueryKey(convo, query.queryKey);
+	};
+}
+
 type RQPageParam = string | undefined;
 
 export function useListConvosQuery({
@@ -283,20 +336,37 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 									}),
 								};
 							}
-							// always update the unread one
-							queryClient.setQueriesData({ queryKey: RQKEY('all', 'unread') }, (old?: ConvoListQueryData) =>
-								old
-									? updateFn(old)
-									: ({
-											pageParams: [undefined],
-											pages: [{ convos: [updatedConvo], cursor: undefined }],
-										} satisfies ConvoListQueryData),
+							// always update the unread ones, where the convo qualifies
+							queryClient.setQueriesData(
+								{
+									queryKey: RQKEY_PARTIAL('all', 'unread'),
+									predicate: convoListQueryPredicate(updatedConvo),
+								},
+								(old?: ConvoListQueryData) =>
+									old
+										? updateFn(old)
+										: ({
+												pageParams: [undefined],
+												pages: [{ convos: [updatedConvo], cursor: undefined }],
+											} satisfies ConvoListQueryData),
 							);
 							// update the other ones based on status of the incoming message
 							if (updatedConvo.status === 'accepted') {
-								queryClient.setQueriesData({ queryKey: RQKEY('accepted') }, updateFn);
+								queryClient.setQueriesData(
+									{
+										queryKey: RQKEY_PARTIAL('accepted'),
+										predicate: convoListQueryPredicate(updatedConvo),
+									},
+									updateFn,
+								);
 							} else if (updatedConvo.status === 'request') {
-								queryClient.setQueriesData({ queryKey: RQKEY('request') }, updateFn);
+								queryClient.setQueriesData(
+									{
+										queryKey: RQKEY_PARTIAL('request'),
+										predicate: convoListQueryPredicate(updatedConvo),
+									},
+									updateFn,
+								);
 							}
 							break;
 						}
@@ -324,37 +394,53 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logAcceptConvo': {
 							const logRef: ChatBskyConvoDefs.LogAcceptConvo = log;
-							const requests = queryClient.getQueryData<ConvoListQueryData>(RQKEY('request'));
-							if (!requests) {
+							const requestQueries = queryClient.getQueriesData<ConvoListQueryData>({
+								queryKey: RQKEY_PARTIAL('request'),
+							});
+							let foundConvo: ConvoListItem | null = null;
+							for (const [, data] of requestQueries) {
+								if (!data) continue;
+								foundConvo = getConvoFromQueryData(logRef.convoId, data);
+								if (foundConvo) break;
+							}
+							if (!foundConvo) {
 								debouncedRefetch();
 								return;
 							}
-							const acceptedConvo = getConvoFromQueryData(log.convoId, requests);
-							if (!acceptedConvo) {
-								debouncedRefetch();
-								return;
-							}
-							queryClient.setQueryData(RQKEY('request'), (old?: ConvoListQueryData) =>
+							const acceptedConvo: ConvoListItem = {
+								...foundConvo,
+								status: 'accepted',
+							};
+							queryClient.setQueriesData({ queryKey: RQKEY_PARTIAL('request') }, (old?: ConvoListQueryData) =>
 								optimisticDelete(logRef.convoId, old),
 							);
-							queryClient.setQueriesData({ queryKey: RQKEY('accepted') }, (old?: ConvoListQueryData) => {
-								if (!old) {
-									debouncedRefetch();
-									return old;
-								}
-								return {
-									...old,
-									pages: old.pages.map((page, i) => {
-										if (i === 0) {
+							queryClient.setQueriesData(
+								{
+									queryKey: RQKEY_PARTIAL('accepted'),
+									predicate: convoListQueryPredicate(acceptedConvo),
+								},
+								(old?: ConvoListQueryData) => {
+									if (!old) {
+										debouncedRefetch();
+										return old;
+									}
+									return {
+										...old,
+										pages: old.pages.map((page, i) => {
+											if (i === 0) {
+												return {
+													...page,
+													convos: [acceptedConvo, ...page.convos.filter((c) => c.id !== logRef.convoId)],
+												};
+											}
 											return {
 												...page,
-												convos: [{ ...acceptedConvo, status: 'accepted' }, ...page.convos],
+												convos: page.convos.filter((c) => c.id !== logRef.convoId),
 											};
-										}
-										return page;
-									}),
-								};
-							});
+										}),
+									};
+								},
+							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logMuteConvo': {
@@ -717,7 +803,7 @@ function addMemberToConvoView(
 	};
 }
 
-function optimisticDelete(chatId: string, old?: ConvoListQueryData) {
+export function optimisticDelete(chatId: string, old?: ConvoListQueryData) {
 	if (!old) return old;
 
 	return {

@@ -1,4 +1,4 @@
-import type { ChatBskyConvoAcceptConvo, ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyConvoAcceptConvo } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -6,7 +6,15 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { RQKEY as CONVO_LIST_KEY, RQKEY_ROOT as CONVO_LIST_ROOT_KEY } from './list-conversations';
+import {
+	type ConvoListItem,
+	type ConvoListQueryData,
+	convoListQueryPredicate,
+	getConvoFromQueryData,
+	optimisticDelete,
+	RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
+	RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+} from './list-conversations';
 
 export function useAcceptConversation(
 	convoId: string,
@@ -31,86 +39,62 @@ export function useAcceptConversation(
 			return data;
 		},
 		onMutate: () => {
-			let prevAcceptedPages: ChatBskyConvoListConvos.$output[] = [];
-			let prevInboxPages: ChatBskyConvoListConvos.$output[] = [];
-			let convoBeingAccepted: ChatBskyConvoListConvos.$output['convos'][number] | undefined;
-			queryClient.setQueryData(
-				CONVO_LIST_KEY('request'),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					prevInboxPages = old.pages;
-					return {
-						...old,
-						pages: old.pages.map((page) => {
-							const found = page.convos.find((convo) => convo.id === convoId);
-							if (found) {
-								convoBeingAccepted = found;
-								return {
-									...page,
-									convos: page.convos.filter((convo) => convo.id !== convoId),
-								};
-							}
-							return page;
-						}),
-					};
-				},
+			// snapshot every convo-list cache up front so onError can restore them
+			// all by their exact keys
+			const prevConvoListQueries = queryClient.getQueriesData<ConvoListQueryData>({
+				queryKey: [CONVO_LIST_ROOT_KEY],
+			});
+			let convoBeingAccepted: ConvoListItem | null = null;
+			for (const [, data] of queryClient.getQueriesData<ConvoListQueryData>({
+				queryKey: CONVO_LIST_PARTIAL_KEY('request'),
+			})) {
+				if (!data) continue;
+				convoBeingAccepted = getConvoFromQueryData(convoId, data);
+				if (convoBeingAccepted) break;
+			}
+			queryClient.setQueriesData(
+				{ queryKey: CONVO_LIST_PARTIAL_KEY('request') },
+				(old?: ConvoListQueryData) => optimisticDelete(convoId, old),
 			);
-			queryClient.setQueryData(
-				CONVO_LIST_KEY('accepted'),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					prevAcceptedPages = old.pages;
-					if (convoBeingAccepted) {
+			if (convoBeingAccepted) {
+				const acceptedConvo: ConvoListItem = {
+					...convoBeingAccepted,
+					status: 'accepted',
+				};
+				queryClient.setQueriesData(
+					{
+						queryKey: CONVO_LIST_PARTIAL_KEY('accepted'),
+						predicate: convoListQueryPredicate(acceptedConvo),
+					},
+					(old?: ConvoListQueryData) => {
+						if (!old) return old;
 						return {
 							...old,
-							pages: [
-								{
-									...old.pages[0],
-									convos: [
-										{
-											...convoBeingAccepted,
-											status: 'accepted',
-										},
-										...old.pages[0]!.convos,
-									],
-								},
-								...old.pages.slice(1),
-							],
+							pages: old.pages.map((page, i) => {
+								const convos = page.convos.filter((c) => c.id !== convoId);
+								if (i === 0) {
+									return { ...page, convos: [acceptedConvo, ...convos] };
+								}
+								return { ...page, convos };
+							}),
 						};
-					} else {
-						return old;
-					}
-				},
-			);
+					},
+				);
+			}
 			onMutate?.();
-			return { prevAcceptedPages, prevInboxPages };
+			return { prevConvoListQueries };
 		},
 		onSuccess: (data) => {
-			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
+			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
 			onSuccess?.(data);
 		},
 		onError: (error, _, context) => {
 			logger.error(error);
-			queryClient.setQueryData(
-				CONVO_LIST_KEY('accepted'),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					return {
-						...old,
-						pages: context?.prevAcceptedPages || old.pages,
-					};
-				},
-			);
-			queryClient.setQueryData(
-				CONVO_LIST_KEY('request'),
-				(old?: { pageParams: Array<string | undefined>; pages: Array<ChatBskyConvoListConvos.$output> }) => {
-					if (!old) return old;
-					return {
-						...old,
-						pages: context?.prevInboxPages || old.pages,
-					};
-				},
-			);
+			if (context?.prevConvoListQueries) {
+				for (const [queryKey, prevData] of context.prevConvoListQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+			}
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
 			onError?.(error);
 		},
