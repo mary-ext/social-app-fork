@@ -193,12 +193,14 @@ function PostInner({
 							}),
 						]}
 					>
-						<PostMeta
-							author={post.author as AnyProfileView}
-							moderation={moderation}
-							timestamp={post.indexedAt}
-							postHref={itemHref}
-						/>
+						<View style={[a.pb_xs]}>
+							<PostMeta
+								author={post.author as AnyProfileView}
+								moderation={moderation}
+								timestamp={post.indexedAt}
+								postHref={itemHref}
+							/>
+						</View>
 						{replyAuthorDid !== '' && <PostRepliedTo parentAuthor={replyAuthorDid} />}
 						<LabelsOnMyPost post={post} />
 						<ContentHider

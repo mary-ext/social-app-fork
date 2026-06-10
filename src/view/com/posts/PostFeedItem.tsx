@@ -358,13 +358,15 @@ let FeedItemInner = ({
 							}),
 						]}
 					>
-						<PostMeta
-							author={post.author}
-							moderation={moderation}
-							timestamp={post.indexedAt}
-							postHref={href}
-							onOpenAuthor={onOpenAuthor}
-						/>
+						<View style={[a.pb_xs]}>
+							<PostMeta
+								author={post.author}
+								moderation={moderation}
+								timestamp={post.indexedAt}
+								postHref={href}
+								onOpenAuthor={onOpenAuthor}
+							/>
+						</View>
 						{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
 							<PostRepliedTo
 								parentAuthor={parentAuthor}

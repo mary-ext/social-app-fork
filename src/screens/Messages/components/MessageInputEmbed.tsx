@@ -188,14 +188,16 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 					style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}
 				>
 					<View style={[a.flex_1, a.flex_row, a.gap_sm]}>
-						<PostMeta
-							showAvatar
-							author={post.author as AnyProfileView}
-							moderation={moderation}
-							timestamp={post.indexedAt}
-							postHref={itemHref}
-							linkDisabled
-						/>
+						<View style={[a.flex_1, a.pb_xs]}>
+							<PostMeta
+								showAvatar
+								author={post.author as AnyProfileView}
+								moderation={moderation}
+								timestamp={post.indexedAt}
+								postHref={itemHref}
+								linkDisabled
+							/>
+						</View>
 						<Button
 							label={l`Remove embed`}
 							onPress={onRemove}

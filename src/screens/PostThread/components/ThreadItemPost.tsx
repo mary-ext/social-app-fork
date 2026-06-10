@@ -264,11 +264,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 						</View>
 
 						<View style={[a.flex_1]}>
-							<PostMeta
-								author={post.author}
-								moderation={moderation}
-								timestamp={post.indexedAt}
-								postHref={postHref}
+							<View
 								style={[
 									a.pb_xs,
 									maybeApplyGalleryOffsetStyles('meta', {
@@ -277,7 +273,14 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 										additionalCauses: additionalPostAlerts,
 									}),
 								]}
-							/>
+							>
+								<PostMeta
+									author={post.author}
+									moderation={moderation}
+									timestamp={post.indexedAt}
+									postHref={postHref}
+								/>
+							</View>
 							<LabelsOnMyPost post={post} style={[a.pb_xs]} />
 							<PostAlerts
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}

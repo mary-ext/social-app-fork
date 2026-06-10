@@ -2349,7 +2349,7 @@ msgstr ""
 msgid "Could not load feed"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:270
+#: src/screens/Messages/components/MessageInputEmbed.tsx:272
 msgid "Could not load invite"
 msgstr "Could not load invite"
 
@@ -6640,9 +6640,9 @@ msgstr ""
 msgid "Remove caption file"
 msgstr "Remove caption file"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:200
-#: src/screens/Messages/components/MessageInputEmbed.tsx:242
-#: src/screens/Messages/components/MessageInputEmbed.tsx:299
+#: src/screens/Messages/components/MessageInputEmbed.tsx:202
+#: src/screens/Messages/components/MessageInputEmbed.tsx:244
+#: src/screens/Messages/components/MessageInputEmbed.tsx:301
 msgid "Remove embed"
 msgstr ""
 
@@ -9398,8 +9398,8 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:462
 #: src/components/ProfileHoverCard/index.tsx:478
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
-#: src/view/com/util/PostMeta.tsx:97
-#: src/view/com/util/PostMeta.tsx:121
+#: src/view/com/util/PostMeta.tsx:115
+#: src/view/com/util/PostMeta.tsx:135
 msgid "View profile"
 msgstr ""
 

@@ -296,14 +296,16 @@ export function QuoteEmbed({
 
 	const contents = (
 		<>
-			<PostMeta
-				author={quote.author as AnyProfileView}
-				moderation={moderation}
-				showAvatar
-				postHref={itemHref}
-				timestamp={quote.indexedAt}
-				linkDisabled
-			/>
+			<View style={[a.pb_xs]}>
+				<PostMeta
+					author={quote.author as AnyProfileView}
+					moderation={moderation}
+					showAvatar
+					postHref={itemHref}
+					timestamp={quote.indexedAt}
+					linkDisabled
+				/>
+			</View>
 			{moderation ? (
 				<PostAlerts
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}

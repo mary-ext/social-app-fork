@@ -44,6 +44,8 @@ export type InlineLinkTextProps = LinkNavProps &
 		disableMismatchWarning?: boolean;
 		/** Accessible name; becomes the anchor's `aria-label`. */
 		label?: string;
+		/** Native tooltip text; becomes the anchor's `title`. */
+		title?: string;
 		/** Underline timing; defaults to `hover`. */
 		underline?: InlineLinkUnderline;
 	};
@@ -67,6 +69,7 @@ export function InlineLinkText({
 	onPress: outerOnPress,
 	selectable,
 	size,
+	title,
 	to,
 	underline = 'hover',
 	weight,
@@ -100,6 +103,7 @@ export function InlineLinkText({
 					: (e: MouseEvent<HTMLAnchorElement>) => onPress(e as unknown as GestureResponderEvent)
 			}
 			style={clamped ? assignInlineVars({ [textStyles.lineClampVar]: String(numberOfLines) }) : undefined}
+			title={title}
 			{...anchorAttrs({ download, isExternal })}
 		>
 			{children}

@@ -1,5 +1,4 @@
-import { memo, useCallback } from 'react';
-import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
+import { memo, type ReactNode, useCallback } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
@@ -15,25 +14,46 @@ import { niceDate } from '#/lib/strings/time';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { WebOnlyInlineLinkText } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import { Text } from '#/components/Typography';
+import { type InlineLinkUnderline, InlineLinkText } from '#/components/web/Link';
+import { Text, type TextProps } from '#/components/web/Text';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 
+import * as css from './PostMeta.css';
 import { TimeElapsed } from './TimeElapsed';
 
-type WebTextStyle = TextStyle & {
-	whiteSpace?: 'nowrap';
+type AuthorLinkProps = Pick<
+	TextProps,
+	'align' | 'className' | 'color' | 'leading' | 'numberOfLines' | 'size' | 'title' | 'weight'
+> & {
+	children: ReactNode;
+	/** When set, render as inert text instead of a navigable link. */
+	disabled: boolean;
+	label: string;
+	onPress: () => void;
+	to: string;
+	underline?: InlineLinkUnderline;
 };
 
-const webTextStyle = (style: WebTextStyle): TextStyle => {
-	return style;
-};
+/** A link in the meta row that collapses to plain {@link Text} when the surrounding row is non-interactive. */
+function AuthorLink({ disabled, label, onPress, to, underline, ...text }: AuthorLinkProps) {
+	if (disabled) {
+		return <Text {...text} />;
+	}
+	return (
+		<InlineLinkText
+			disableMismatchWarning
+			label={label}
+			onPress={onPress}
+			to={to}
+			underline={underline}
+			{...text}
+		/>
+	);
+}
 
 interface PostMetaOpts {
 	author: AnyProfileView;
@@ -44,11 +64,9 @@ interface PostMetaOpts {
 	showAvatar?: boolean;
 	avatarSize?: number;
 	onOpenAuthor?: () => void;
-	style?: StyleProp<ViewStyle>;
 }
 
-let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
-	const t = useTheme();
+let PostMeta = (opts: PostMetaOpts): ReactNode => {
 	const { i18n, t: l } = useLingui();
 
 	const author = useProfileShadow(opts.author);
@@ -68,12 +86,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 	const timestampLabel = niceDate(i18n, opts.timestamp);
 	const { isActive: live } = useActorStatus(author);
 
-	const MaybeLinkText = opts.linkDisabled ? Text : WebOnlyInlineLinkText;
+	const disabled = opts.linkDisabled ?? false;
 
 	return (
-		<View style={[a.flex_1, a.flex_row, a.align_center, a.pb_xs, a.gap_xs, a.z_20, opts.style]}>
+		<div className={css.row}>
 			{opts.showAvatar && (
-				<View style={[a.self_center, a.mr_2xs]}>
+				<div className={css.avatar}>
 					<PreviewableUserAvatar
 						size={opts.avatarSize || 16}
 						profile={author}
@@ -83,28 +101,24 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 						type={author.associated?.labeler ? 'labeler' : 'user'}
 						live={live}
 						hideLiveBadge
-						disableNavigation={opts.linkDisabled}
+						disableNavigation={disabled}
 					/>
-				</View>
+				</div>
 			)}
-			<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+			<div className={css.author}>
 				<ProfileHoverCard did={author.did}>
-					<View style={[a.flex_row, a.align_end, a.flex_shrink]}>
-						<MaybeLinkText
-							emoji
-							numberOfLines={1}
-							to={profileLink}
+					<div className={css.author}>
+						<AuthorLink
+							className={css.name}
+							color="text"
+							disabled={disabled}
 							label={l`View profile`}
-							disableMismatchWarning
-							onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
-							style={[
-								a.text_md,
-								a.font_semi_bold,
-								t.atoms.text,
-								a.leading_tight,
-								a.flex_shrink_0,
-								{ maxWidth: '70%' },
-							]}
+							leading="tight"
+							numberOfLines={1}
+							onPress={onBeforePressAuthor}
+							size="md"
+							to={profileLink}
+							weight="semiBold"
 						>
 							{forceLTR(
 								sanitizeDisplayName(
@@ -112,54 +126,49 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
 									opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileBio),
 								),
 							)}
-						</MaybeLinkText>
-						<ProfileBadges profile={author} size="sm" style={[a.pl_2xs, a.self_center]} />
-						<MaybeLinkText
-							emoji
-							numberOfLines={1}
-							to={profileLink}
+						</AuthorLink>
+						<ProfileBadges profile={author} size="sm" style={{ alignSelf: 'center', paddingLeft: 2 }} />
+						<AuthorLink
+							className={css.handle}
+							color="textContrastMedium"
+							disabled={disabled}
 							label={l`View profile`}
-							disableMismatchWarning
-							disableUnderline
-							onPress={opts.linkDisabled ? undefined : onBeforePressAuthor}
-							style={[a.text_md, t.atoms.text_contrast_medium, a.leading_tight, { flexShrink: 10 }]}
+							leading="tight"
+							numberOfLines={1}
+							onPress={onBeforePressAuthor}
+							size="md"
+							to={profileLink}
+							underline="none"
 						>
 							{NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-						</MaybeLinkText>
-					</View>
+						</AuthorLink>
+					</div>
 				</ProfileHoverCard>
 
 				<TimeElapsed timestamp={opts.timestamp}>
 					{({ timeElapsed }) => (
-						<MaybeLinkText
-							to={opts.postHref}
+						<AuthorLink
+							align="right"
+							className={css.timestamp}
+							color="textContrastMedium"
+							disabled={disabled}
 							label={timestampLabel}
+							leading="tight"
+							onPress={onBeforePressPost}
+							size="md"
 							title={timestampLabel}
-							disableMismatchWarning
-							disableUnderline
-							onPress={opts.linkDisabled ? undefined : onBeforePressPost}
-							style={[
-								a.pl_xs,
-								a.text_md,
-								a.leading_tight,
-								a.text_right,
-								t.atoms.text_contrast_medium,
-								webTextStyle({
-									whiteSpace: 'nowrap',
-								}),
-							]}
+							to={opts.postHref}
+							underline="none"
 						>
-							{
-								<Text style={[a.text_md, a.leading_tight, t.atoms.text_contrast_medium]} accessible={false}>
-									·{' '}
-								</Text>
-							}
+							<Text aria-hidden color="textContrastMedium" leading="tight" size="md">
+								·{' '}
+							</Text>
 							{timeElapsed}
-						</MaybeLinkText>
+						</AuthorLink>
 					)}
 				</TimeElapsed>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 };
 PostMeta = memo(PostMeta);
