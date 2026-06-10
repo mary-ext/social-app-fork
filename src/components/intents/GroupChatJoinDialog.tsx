@@ -183,7 +183,7 @@ function GroupChatJoinDialogContent({
 		return (
 			<>
 				<ChainLinkBrokenIcon fill={t.palette.primary_500} size="3xl" />
-				<Text style={[a.text_center, a.text_lg, a.font_semi_bold, t.atoms.text]}>
+				<Text style={[a.text_center, a.text_lg, a.font_semi_bold]}>
 					<Trans>This invite link is invalid</Trans>
 				</Text>
 				<Button
@@ -261,21 +261,21 @@ function GroupChatJoinDialogContent({
 
 	return (
 		<>
-			<View style={[a.py_lg, a.align_center]}>
+			<View style={[a.w_full, a.py_lg, a.align_center]}>
 				<AvatarBubbles
 					profiles={[joinLinkPreview.owner, ...Array(joinLinkPreview.memberCount - 1).fill(undefined)]}
 					self
 					size={135}
 				/>
-				<View style={[a.gap_sm, a.align_center, a.mt_lg]}>
+				<View style={[a.w_full, a.gap_sm, a.align_center, a.mt_lg]}>
 					<View>
 						<Text style={[a.mb_2xs, a.text_center, a.text_sm, a.font_medium, t.atoms.text_contrast_high]}>
 							<Trans>Group chat</Trans>
 						</Text>
-						<Text style={[a.text_center, a.text_3xl, a.font_bold, t.atoms.text]}>{joinLinkPreview.name}</Text>
+						<Text style={[a.text_center, a.text_3xl, a.font_bold]}>{joinLinkPreview.name}</Text>
 					</View>
 					<View style={[a.flex_row, a.align_center]}>
-						<Text style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text]}>
+						<Text style={[a.text_center, a.text_xs, a.leading_snug]}>
 							<Trans comment="The number of active group chat members out of the total number allowed.">
 								{joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit} members
 							</Trans>
@@ -283,22 +283,31 @@ function GroupChatJoinDialogContent({
 						<View style={[a.flex_row, a.ml_md]}>
 							<PersonGroupIcon size="xs" style={[a.mr_xs, t.atoms.text, { marginTop: -2 }]} />
 						</View>
-						<Text style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text]}>
+						<Text style={[a.text_center, a.text_xs, a.leading_snug]}>
 							{joinLinkPreview.joinRule === 'followedByOwner' ? l`Followers can join` : l`Anyone can join`}
 						</Text>
 					</View>
-					<View>
-						<View style={[a.flex_row, a.gap_xs, a.align_center, a.justify_center]}>
-							<Text
-								emoji
-								style={[a.mb_2xs, a.text_center, a.text_sm, a.leading_snug, a.font_semi_bold, t.atoms.text]}
-							>
+					<View style={[a.px_2xl, a.w_full, a.flex_row, a.gap_xs, a.align_center, a.justify_center]}>
+						<Text
+							emoji
+							style={[
+								a.flex_shrink,
+								a.text_center,
+								a.text_sm,
+								a.leading_snug,
+								a.font_semi_bold,
+								{ minWidth: 0 },
+							]}
+							numberOfLines={1}
+						>
+							<Trans comment="The group chat creator, in the format 'By {displayName}'.">
 								By{' '}
 								<InlineLinkText
 									label={`@${joinLinkPreview.owner.handle}`}
 									to={makeProfileLink(joinLinkPreview.owner)}
 									style={[
-										a.mb_2xs,
+										a.flex_shrink,
+										a.leading_snug,
 										a.text_sm,
 										a.font_semi_bold,
 										t.atoms.text,
@@ -323,12 +332,22 @@ function GroupChatJoinDialogContent({
 										),
 									)}
 								</InlineLinkText>
-							</Text>
-							<View style={{ marginTop: -3 }}>
-								<ProfileBadges profile={data.joinLinkPreviews[0]!.owner} size="sm" />
-							</View>
+							</Trans>
+						</Text>
+						<View style={{ marginTop: -3 }}>
+							<ProfileBadges profile={data.joinLinkPreviews[0]!.owner} size="sm" />
 						</View>
-						<Text style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text_contrast_high]}>
+						<Text
+							style={[
+								a.flex_shrink,
+								a.text_center,
+								a.leading_snug,
+								a.text_sm,
+								t.atoms.text_contrast_high,
+								{ minWidth: 0 },
+							]}
+							numberOfLines={1}
+						>
 							{sanitizeHandle(joinLinkPreview.owner.handle, '@')}
 						</Text>
 					</View>
