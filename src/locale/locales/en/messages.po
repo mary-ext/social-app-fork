@@ -122,12 +122,14 @@ msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
 #: src/components/ProfileHoverCard/index.tsx:426
+#: src/components/web/ProfileHoverCard.tsx:180
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/components/ProfileHoverCard/index.tsx:430
+#: src/components/web/ProfileHoverCard.tsx:181
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -520,6 +522,7 @@ msgid "{firstAuthorName} verified you"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.tsx:523
+#: src/components/web/ProfileHoverCard.tsx:263
 msgid "{following} following"
 msgstr ""
 
@@ -594,8 +597,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/web/UserAvatar.tsx:254
-#: src/components/web/UserAvatar.tsx:272
+#: src/components/web/UserAvatar.tsx:262
+#: src/components/web/UserAvatar.tsx:273
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 
@@ -688,28 +691,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:438
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:439
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:426
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:427
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:414
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:415
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:449
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:450
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -1437,12 +1440,12 @@ msgid "Apply default recommended feeds"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:556
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:557
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:531
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:565
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:532
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:566
 msgid "Archived post"
 msgstr ""
 
@@ -1677,7 +1680,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:575
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:576
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -3593,6 +3596,8 @@ msgstr "Focus the search field"
 #: src/components/ProfileCard.tsx:495
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
+#: src/components/web/ProfileHoverCard.tsx:214
+#: src/components/web/ProfileHoverCard.tsx:220
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:364
@@ -3678,6 +3683,8 @@ msgstr ""
 #: src/components/ProfileCard.tsx:486
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
+#: src/components/web/ProfileHoverCard.tsx:214
+#: src/components/web/ProfileHoverCard.tsx:220
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:360
@@ -4658,7 +4665,7 @@ msgstr ""
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:436
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:437
 msgid "Likes on this post"
 msgstr ""
 
@@ -5696,7 +5703,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:55
 #: src/components/dms/InitiateChatFlow.tsx:623
 #: src/components/dms/MessageItem.tsx:535
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:579
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:580
 msgid "Okay"
 msgstr ""
 
@@ -6505,7 +6512,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:424
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:425
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6982,7 +6989,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:412
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:413
 msgid "Reposts of this post"
 msgstr ""
 
@@ -7729,7 +7736,7 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:532
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:533
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -8643,7 +8650,7 @@ msgstr "This person is blocking you"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:568
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:569
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -9347,6 +9354,7 @@ msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
 #: src/components/ProfileHoverCard/index.tsx:455
+#: src/components/web/ProfileHoverCard.tsx:204
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -9397,11 +9405,14 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:441
 #: src/components/ProfileHoverCard/index.tsx:462
 #: src/components/ProfileHoverCard/index.tsx:478
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:315
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:337
+#: src/components/web/ProfileHoverCard.tsx:190
+#: src/components/web/ProfileHoverCard.tsx:209
+#: src/components/web/ProfileHoverCard.tsx:225
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:316
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:338
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
-#: src/view/com/util/PostMeta.tsx:125
-#: src/view/com/util/PostMeta.tsx:145
+#: src/view/com/util/PostMeta.tsx:124
+#: src/view/com/util/PostMeta.tsx:146
 msgid "View profile"
 msgstr ""
 

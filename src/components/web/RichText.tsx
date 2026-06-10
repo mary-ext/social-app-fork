@@ -8,8 +8,8 @@ import { definitelyUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
 import { isOnlyEmoji } from '#/alf/typography';
 
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { InlineLinkText, type InlineLinkTextProps, type InlineLinkUnderline } from '#/components/web/Link';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { content, emoji } from '#/components/web/RichText.css';
 import { RichTextTag } from '#/components/web/RichTextTag';
 import { Text, type TextProps } from '#/components/web/Text';
@@ -116,7 +116,7 @@ export function RichText({
 					case 'app.bsky.richtext.facet#mention': {
 						if (!disableLinks && feature.did.startsWith('did:')) {
 							el = (
-								<ProfileHoverCard key={key} did={feature.did} inline>
+								<ProfileHoverCard key={key} did={feature.did}>
 									<InlineLinkText
 										color={color}
 										leading={leading}

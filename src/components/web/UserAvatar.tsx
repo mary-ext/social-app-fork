@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { type ComponentPropsWithoutRef, memo, type Ref } from 'react';
 import type { GestureResponderEvent } from 'react-native';
 import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -17,8 +17,8 @@ import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache
 
 import { useDialogControl } from '#/components/Dialog';
 import { useLink } from '#/components/Link';
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Text } from '#/components/web/Text';
 import * as styles from '#/components/web/UserAvatar.css';
 
@@ -38,16 +38,22 @@ type BaseUserAvatarProps = {
 	hideLiveBadge?: boolean;
 };
 
-type UserAvatarProps = BaseUserAvatarProps & {
-	moderation?: DisplayRestrictions;
-	noBorder?: boolean;
-	onLoad?: () => void;
-	/**
-	 * Styling escape hatch merged onto the root. The root's own styles sit in the `components` cascade layer,
-	 * so an (unlayered) class here outranks them — a `border-radius` set this way is inherited by every layer.
-	 */
-	className?: string;
-};
+type UserAvatarProps = BaseUserAvatarProps &
+	// remaining span attributes pass straight through to the host, so a headless trigger (e.g. a hover card)
+	// can inject its hover handlers, `aria-*`, `data-*`, and ref onto a bare avatar.
+	Omit<ComponentPropsWithoutRef<'span'>, 'color' | 'onLoad' | 'style'> & {
+		moderation?: DisplayRestrictions;
+		noBorder?: boolean;
+		onLoad?: () => void;
+		/**
+		 * Styling escape hatch merged onto the root. The root's own styles sit in the `components` cascade layer,
+		 * so an (unlayered) class here outranks them — a `border-radius` set this way is inherited by every
+		 * layer.
+		 */
+		className?: string;
+		/** Forwarded to the avatar host so it can back a headless trigger (e.g. a hover card). */
+		ref?: Ref<HTMLSpanElement>;
+	};
 
 type PreviewableUserAvatarProps = BaseUserAvatarProps & {
 	moderation?: DisplayRestrictions;
@@ -158,6 +164,7 @@ export const UserAvatar = memo(function UserAvatar({
 	hideLiveBadge,
 	noBorder,
 	className,
+	...rest
 }: UserAvatarProps) {
 	const finalShape = shape ?? (type === 'user' ? 'circle' : 'square');
 	const radius = finalShape === 'circle' ? '50%' : `${squareRadius(size)}px`;
@@ -171,6 +178,7 @@ export const UserAvatar = memo(function UserAvatar({
 				[styles.radiusVar]: radius,
 				[styles.sizeVar]: `${size}px`,
 			})}
+			{...rest}
 		>
 			{avatar && (
 				<span className={styles.imageClip}>
@@ -243,41 +251,46 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 		/>
 	);
 
+	// live status on touch opens a dialog on tap (there's no hover); elsewhere the avatar links to the profile.
+	const isTouchLive = status.isActive && IS_WEB_TOUCH_DEVICE;
+
+	const trigger = disableNavigation ? (
+		avatarEl
+	) : isTouchLive ? (
+		<button
+			type="button"
+			aria-label={l`${name}'s avatar`}
+			className={styles.preview}
+			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
+			tabIndex={tabIndex}
+			onClick={() => liveControl.open()}
+		>
+			{avatarEl}
+		</button>
+	) : (
+		<a
+			href={href}
+			aria-label={l`${name}'s avatar`}
+			className={styles.preview}
+			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
+			tabIndex={tabIndex}
+			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
+		>
+			{avatarEl}
+		</a>
+	);
+
 	return (
-		<ProfileHoverCard did={profile.did} disable={disableHoverCard}>
-			{disableNavigation ? (
-				avatarEl
-			) : status.isActive && IS_WEB_TOUCH_DEVICE ? (
-				<>
-					<button
-						type="button"
-						aria-label={l`${name}'s avatar`}
-						className={styles.preview}
-						style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
-						tabIndex={tabIndex}
-						onClick={() => liveControl.open()}
-					>
-						{avatarEl}
-					</button>
-					<LiveStatusDialog
-						control={liveControl}
-						profile={profile}
-						status={status}
-						embed={status.embed as AppBskyEmbedExternal.View}
-					/>
-				</>
-			) : (
-				<a
-					href={href}
-					aria-label={l`${name}'s avatar`}
-					className={styles.preview}
-					style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
-					tabIndex={tabIndex}
-					onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
-				>
-					{avatarEl}
-				</a>
+		<>
+			{disableHoverCard ? trigger : <ProfileHoverCard did={profile.did}>{trigger}</ProfileHoverCard>}
+			{!disableNavigation && isTouchLive && (
+				<LiveStatusDialog
+					control={liveControl}
+					profile={profile}
+					status={status}
+					embed={status.embed as AppBskyEmbedExternal.View}
+				/>
 			)}
-		</ProfileHoverCard>
+		</>
 	);
 });

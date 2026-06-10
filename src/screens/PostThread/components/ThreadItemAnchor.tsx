@@ -45,12 +45,12 @@ import { TranslatedPost } from '#/components/Post/Translated';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import { useFormatPostStatCount } from '#/components/PostControls/util';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import * as Prompt from '#/components/Prompt';
 import * as Skele from '#/components/Skeleton';
 import { Text } from '#/components/Typography';
 import { InlineLinkText } from '#/components/web/Link';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { RichText } from '#/components/web/RichText';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 import { WhoCanReply } from '#/components/WhoCanReply';
@@ -309,8 +309,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						</View>
 						<div className={css.header}>
 							<div className={css.nameRow}>
-								<ProfileHoverCard did={post.author.did} style={[{ minWidth: 0 }]}>
+								<ProfileHoverCard did={post.author.did}>
 									<InlineLinkText
+										className={css.displayName}
 										color="text"
 										label={l`View profile`}
 										leading="snug"
@@ -330,7 +331,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 									<ProfileBadges profile={authorShadow} size="md" interactive />
 								</div>
 							</div>
-							<ProfileHoverCard did={post.author.did} style={[a.self_start, a.max_w_full]}>
+							<ProfileHoverCard did={post.author.did}>
 								<InlineLinkText
 									className={css.handle}
 									color="textContrastMedium"

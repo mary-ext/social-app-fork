@@ -15,8 +15,8 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { ProfileBadges } from '#/components/ProfileBadges';
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { type InlineLinkUnderline, InlineLinkText } from '#/components/web/Link';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Text, type TextProps } from '#/components/web/Text';
 import { Tooltip } from '#/components/web/Tooltip';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
@@ -117,43 +117,43 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 			)}
 			<div className={css.author}>
 				<ProfileHoverCard did={author.did}>
-					<div className={css.author}>
-						<AuthorLink
-							className={css.name}
-							color="text"
-							disabled={disabled}
-							label={l`View profile`}
-							leading="tight"
-							numberOfLines={1}
-							onPress={onBeforePressAuthor}
-							size="md"
-							to={profileLink}
-							weight="semiBold"
-						>
-							{forceLTR(
-								sanitizeDisplayName(
-									displayName,
-									opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileBio),
-								),
-							)}
-						</AuthorLink>
-						<ProfileBadges profile={author} size="sm" style={{ alignSelf: 'center', paddingLeft: 2 }} />
-						<AuthorLink
-							className={css.handle}
-							color="textContrastMedium"
-							disabled={disabled}
-							label={l`View profile`}
-							leading="tight"
-							numberOfLines={1}
-							onPress={onBeforePressAuthor}
-							size="md"
-							tabIndex={-1}
-							to={profileLink}
-							underline="none"
-						>
-							{NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
-						</AuthorLink>
-					</div>
+					<AuthorLink
+						className={css.name}
+						color="text"
+						disabled={disabled}
+						label={l`View profile`}
+						leading="tight"
+						numberOfLines={1}
+						onPress={onBeforePressAuthor}
+						size="md"
+						to={profileLink}
+						weight="semiBold"
+					>
+						{forceLTR(
+							sanitizeDisplayName(
+								displayName,
+								opts.moderation && getDisplayRestrictions(opts.moderation, DisplayContext.ProfileBio),
+							),
+						)}
+					</AuthorLink>
+				</ProfileHoverCard>
+				<ProfileBadges profile={author} size="sm" style={{ alignSelf: 'center', paddingLeft: 2 }} />
+				<ProfileHoverCard did={author.did}>
+					<AuthorLink
+						className={css.handle}
+						color="textContrastMedium"
+						disabled={disabled}
+						label={l`View profile`}
+						leading="tight"
+						numberOfLines={1}
+						onPress={onBeforePressAuthor}
+						size="md"
+						tabIndex={-1}
+						to={profileLink}
+						underline="none"
+					>
+						{NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+					</AuthorLink>
 				</ProfileHoverCard>
 
 				<TimeElapsed timestamp={opts.timestamp}>

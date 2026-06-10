@@ -27,8 +27,16 @@ export const badges = style({
 	paddingLeft: space.xs,
 });
 
-// isolate the handle's bidi so an RTL display name above it can't flip the `@handle`.
+// the display name shrinks within the name row so its clamp ellipsizes instead of shoving the badges out.
+export const displayName = style({
+	minWidth: 0,
+});
+
+// isolate the handle's bidi so an RTL display name above it can't flip the `@handle`. hugs its content
+// (rather than stretching the header column) and never exceeds the column width.
 export const handle = style({
+	alignSelf: 'flex-start',
 	direction: 'ltr',
+	maxWidth: '100%',
 	unicodeBidi: 'isolate',
 });
