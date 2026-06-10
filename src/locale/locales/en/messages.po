@@ -651,6 +651,12 @@ msgstr ""
 msgid "{userName}'s verifications"
 msgstr ""
 
+#. Number of images beyond the first 3
+#. placeholder {0}: totalNumber - 3
+#: src/view/com/composer/ComposerReplyTo.tsx:265
+msgid "+{0}"
+msgstr "+{0}"
+
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
 #: src/screens/Search/components/StarterPackCard.tsx:237
 msgid "+{computedTotal}"
@@ -3138,7 +3144,7 @@ msgstr ""
 msgid "Expand list of users"
 msgstr ""
 
-#: src/view/com/composer/ComposerReplyTo.tsx:96
+#: src/view/com/composer/ComposerReplyTo.tsx:97
 msgid "Expand or collapse the full post you are replying to"
 msgstr ""
 

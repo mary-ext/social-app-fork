@@ -2,13 +2,13 @@ import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, Pressable, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedGallery, AppBskyEmbedImages } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { ComposerOptsPostRef } from '#/lib/hooks/useOpenComposer';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a, useTheme, utils } from '#/alf';
 
 import { QuoteEmbed } from '#/components/Post/Embed';
 import { ProfileBadges } from '#/components/ProfileBadges';
@@ -64,18 +64,19 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 			})
 		: null;
 
-	const images = useMemo(() => {
+	const { images, totalNumber } = useMemo(() => {
 		if (embed?.$type === 'app.bsky.embed.images#view') {
-			return embed.images;
+			return { images: embed.images, totalNumber: embed.images.length };
 		} else if (embed?.$type === 'app.bsky.embed.gallery#view') {
-			return galleryItemsToImages(embed.items);
+			return { images: galleryItemsToImages(embed.items), totalNumber: embed.items.length };
 		} else if (embed?.$type === 'app.bsky.embed.recordWithMedia#view') {
 			if (embed.media?.$type === 'app.bsky.embed.images#view') {
-				return embed.media.images;
+				return { images: embed.media.images, totalNumber: embed.media.images.length };
 			} else if (embed.media?.$type === 'app.bsky.embed.gallery#view') {
-				return galleryItemsToImages(embed.media.items);
+				return { images: galleryItemsToImages(embed.media.items), totalNumber: embed.media.items.length };
 			}
 		}
+		return { images: [], totalNumber: 0 };
 	}, [embed]);
 
 	return (
@@ -130,7 +131,7 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 						!(
 							replyTo.moderation &&
 							getDisplayRestrictions(replyTo.moderation, DisplayContext.ContentMedia).blurs.length > 0
-						) && <ComposerReplyToImages images={images} showFull={showFull} />}
+						) && <ComposerReplyToImages images={images} totalNumber={totalNumber} />}
 				</View>
 				{showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
 					<QuoteEmbed embed={parsedQuoteEmbed} linkDisabled />
@@ -150,7 +151,15 @@ function galleryItemsToImages(items: AppBskyEmbedGallery.ViewImage[]): AppBskyEm
 	}));
 }
 
-function ComposerReplyToImages({ images }: { images: AppBskyEmbedImages.ViewImage[]; showFull: boolean }) {
+function ComposerReplyToImages({
+	images,
+	totalNumber,
+}: {
+	images: AppBskyEmbedImages.ViewImage[];
+	totalNumber: number;
+}) {
+	const t = useTheme();
+
 	return (
 		<View
 			style={[
@@ -235,12 +244,29 @@ function ComposerReplyToImages({ images }: { images: AppBskyEmbedImages.ViewImag
 								cachePolicy="memory-disk"
 								accessibilityIgnoresInvertColors
 							/>
-							<Image
-								source={{ uri: images[3]!.thumb }}
-								style={[a.flex_1]}
-								cachePolicy="memory-disk"
-								accessibilityIgnoresInvertColors
-							/>
+							<View style={[a.relative, a.flex_1]}>
+								<Image
+									source={{ uri: images[3]!.thumb }}
+									style={[a.flex_1]}
+									cachePolicy="memory-disk"
+									accessibilityIgnoresInvertColors
+								/>
+								{totalNumber > 4 && (
+									<View
+										style={[
+											a.absolute,
+											a.inset_0,
+											a.align_center,
+											a.justify_center,
+											{ backgroundColor: utils.alpha(t.palette.black, 0.6) },
+										]}
+									>
+										<Text style={[a.text_xs, a.text_center, t.atoms.shadow_sm, { color: t.palette.white }]}>
+											<Trans comment="Number of images beyond the first 3">+{totalNumber - 3}</Trans>
+										</Text>
+									</View>
+								)}
+							</View>
 						</View>
 					</View>
 				))}
