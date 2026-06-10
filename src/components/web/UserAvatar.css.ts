@@ -55,7 +55,10 @@ export const fallback = style({
 	borderRadius: 'inherit',
 	display: 'block',
 	height: '100%',
+	left: 0,
 	overflow: 'hidden',
+	position: 'absolute',
+	top: 0,
 	width: '100%',
 });
 
