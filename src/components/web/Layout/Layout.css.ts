@@ -10,6 +10,9 @@ const columnOffsetVar = createVar();
 const scrollbarShift = `translateX(${SCROLLBAR_OFFSET})`;
 
 export const screen = style({
+	// don't let the surrounding viewport-height flex shell shrink the screen below its content: it must
+	// grow to its full content height so a sticky header stays stuck the whole way down a long page.
+	flexShrink: 0,
 	minHeight: '100dvh',
 	paddingTop: 'env(safe-area-inset-top, 0px)',
 });
