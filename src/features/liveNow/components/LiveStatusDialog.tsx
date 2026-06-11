@@ -25,8 +25,8 @@ import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon 
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as Hider from '#/components/moderation/Hider';
 import { useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
-import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
+import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { Image } from '#/shims/image';
