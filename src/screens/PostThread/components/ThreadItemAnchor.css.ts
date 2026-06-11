@@ -1,6 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+
+import { colors } from '#/styles/colors';
+import { borderRadius, space } from '#/styles/tokens.css';
 
 export const contentHiderChild = style({
 	paddingTop: 8,
@@ -48,3 +51,149 @@ export const labelsOnMe = style({
 export const postAlerts = style({
 	paddingBottom: space.sm,
 });
+
+// #region parent reply line
+export const parentLineRow = style({
+	display: 'flex',
+	flexDirection: 'row',
+	height: space.lg,
+	paddingBottom: space.xs,
+	paddingLeft: space.lg,
+});
+
+export const parentLineColumn = style({
+	display: 'flex',
+	flexDirection: 'column',
+	width: LINEAR_AVI_WIDTH,
+});
+
+export const parentLine = style({
+	backgroundColor: colors.borderContrastLow,
+	flexGrow: 1,
+	marginLeft: 'auto',
+	marginRight: 'auto',
+	width: REPLY_LINE_WIDTH,
+});
+// #endregion
+
+// #region header row
+export const avatarRow = style({
+	display: 'flex',
+	flexDirection: 'row',
+	gap: space.md,
+	paddingBottom: space.md,
+});
+
+/** Vertically centers the follow button against the avatar/identity block. */
+export const followCell = style({
+	alignSelf: 'center',
+});
+
+/** The post body below the header row. */
+export const body = style({
+	display: 'flex',
+	flexDirection: 'column',
+	paddingBottom: space.sm,
+});
+
+/** Trailing room around the embed when there's post text above it. */
+export const embedPad = style({
+	paddingBottom: space.xs,
+	paddingTop: space.xs,
+});
+// #endregion
+
+// #region engagement stats
+export const statsRow = style({
+	alignItems: 'center',
+	borderBottomColor: colors.borderContrastLow,
+	borderBottomStyle: 'solid',
+	borderBottomWidth: 1,
+	borderTopColor: colors.borderContrastLow,
+	borderTopStyle: 'solid',
+	borderTopWidth: 1,
+	columnGap: space.lg,
+	display: 'flex',
+	flexDirection: 'row',
+	flexWrap: 'wrap',
+	marginTop: space.md,
+	paddingBottom: space.md,
+	paddingTop: space.md,
+	rowGap: space.sm,
+});
+
+/** Nudges the big control bar left so the leading icon optically aligns with the text above. */
+export const controlsWrap = style({
+	marginLeft: -5,
+	paddingBottom: space._2xs,
+	paddingTop: space.sm,
+});
+// #endregion
+
+// #region expanded details
+export const expandedDetails = style({
+	alignItems: 'flex-start',
+	display: 'flex',
+	flexDirection: 'column',
+	gap: space.md,
+	paddingTop: space.md,
+});
+
+export const expandedDetailsRow = style({
+	alignItems: 'center',
+	display: 'flex',
+	flexDirection: 'row',
+	flexWrap: 'wrap',
+	gap: space.sm,
+});
+
+export const archivedPill = style({
+	alignItems: 'center',
+	backgroundColor: colors.contrast_25,
+	borderRadius: borderRadius.full,
+	display: 'flex',
+	flexDirection: 'row',
+	gap: 3,
+	paddingBottom: 3,
+	paddingLeft: 6,
+	paddingRight: 6,
+	paddingTop: 3,
+});
+
+export const archivedPillActive = style({
+	backgroundColor: colors.contrast_50,
+});
+// #endregion
+
+// #region deleted
+export const deletedOuter = style({
+	display: 'flex',
+	flexDirection: 'column',
+	paddingBottom: OUTER_SPACE,
+	paddingLeft: OUTER_SPACE,
+	paddingRight: OUTER_SPACE,
+});
+
+export const deletedOuterRoot = style({
+	paddingTop: space.lg,
+});
+
+export const deletedRow = style({
+	alignItems: 'center',
+	backgroundColor: colors.contrast_25,
+	borderRadius: borderRadius.sm,
+	display: 'flex',
+	flexDirection: 'row',
+	paddingBottom: space.md,
+	paddingTop: space.md,
+});
+
+export const deletedIcon = style({
+	alignItems: 'center',
+	color: colors.textContrastMedium,
+	display: 'flex',
+	flexDirection: 'row',
+	justifyContent: 'center',
+	width: LINEAR_AVI_WIDTH,
+});
+// #endregion

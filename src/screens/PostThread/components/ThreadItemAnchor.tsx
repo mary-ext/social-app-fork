@@ -9,6 +9,7 @@ import type {
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
@@ -27,7 +28,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 import type { PostSource } from '#/state/unstable-post-source';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
-import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+import { OUTER_SPACE } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -36,7 +37,6 @@ import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
-import { Link } from '#/components/Link';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
@@ -47,11 +47,11 @@ import { useFormatPostStatCount } from '#/components/PostControls/util';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import * as Skele from '#/components/Skeleton';
-import { Text } from '#/components/Typography';
 import { InlineLinkText } from '#/components/web/Link';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { RichText } from '#/components/web/RichText';
+import { Text } from '#/components/web/Text';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 import { WhoCanReply } from '#/components/WhoCanReply';
 
@@ -93,62 +93,31 @@ export function ThreadItemAnchor({
 }
 
 function ThreadItemAnchorDeleted({ isRoot }: { isRoot: boolean }) {
-	const t = useTheme();
-
 	return (
 		<>
 			<ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 
-			<View
-				style={[
-					{
-						paddingHorizontal: OUTER_SPACE,
-						paddingBottom: OUTER_SPACE,
-					},
-					isRoot && [a.pt_lg],
-				]}
-			>
-				<View style={[a.flex_row, a.align_center, a.py_md, a.rounded_sm, t.atoms.bg_contrast_25]}>
-					<View
-						style={[
-							a.flex_row,
-							a.align_center,
-							a.justify_center,
-							{
-								width: LINEAR_AVI_WIDTH,
-							},
-						]}
-					>
-						<TrashIcon style={[t.atoms.text_contrast_medium]} />
-					</View>
-					<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+			<div className={clsx(css.deletedOuter, isRoot && css.deletedOuterRoot)}>
+				<div className={css.deletedRow}>
+					<div className={css.deletedIcon}>
+						<TrashIcon fill="currentColor" />
+					</div>
+					<Text size="md" weight="semiBold" color="textContrastMedium">
 						<Trans>Post has been deleted</Trans>
 					</Text>
-				</View>
-			</View>
+				</div>
+			</div>
 		</>
 	);
 }
 
 function ThreadItemAnchorParentReplyLine({ isRoot }: { isRoot: boolean }) {
-	const t = useTheme();
-
 	return !isRoot ? (
-		<View style={[a.pl_lg, a.flex_row, a.pb_xs, { height: a.pt_lg.paddingTop }]}>
-			<View style={{ width: 42 }}>
-				<View
-					style={[
-						{
-							width: REPLY_LINE_WIDTH,
-							marginLeft: 'auto',
-							marginRight: 'auto',
-							flexGrow: 1,
-							backgroundColor: t.atoms.border_contrast_low.borderColor,
-						},
-					]}
-				/>
-			</View>
-		</View>
+		<div className={css.parentLineRow}>
+			<div className={css.parentLineColumn}>
+				<div className={css.parentLine} />
+			</div>
+		</div>
 	) : null;
 }
 
@@ -167,7 +136,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	postSource?: PostSource;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount, hasSession } = useSession();
@@ -296,8 +264,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						isRoot && [a.pt_lg],
 					]}
 				>
-					<View style={[a.flex_row, a.gap_md, a.pb_md]}>
-						<View collapsable={false}>
+					<div className={css.avatarRow}>
+						<div>
 							<PreviewableUserAvatar
 								size={42}
 								profile={post.author}
@@ -306,7 +274,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								live={live}
 								onBeforePress={onOpenAuthor}
 							/>
-						</View>
+						</div>
 						<div className={css.header}>
 							<div className={css.nameRow}>
 								<ProfileHoverCard did={post.author.did}>
@@ -348,11 +316,11 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								</InlineLinkText>
 							</ProfileHoverCard>
 						</div>
-						<View collapsable={false} style={[a.self_center]}>
+						<div className={css.followCell}>
 							<ThreadItemAnchorFollowButton did={post.author.did} enabled={showFollowButton} />
-						</View>
-					</View>
-					<View style={[a.pb_sm]}>
+						</div>
+					</div>
+					<div className={css.body}>
 						<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 						<ContentHider
 							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
@@ -376,14 +344,14 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 							) : undefined}
 							<TranslatedPost post={post} />
 							{post.embed && (
-								<View style={[richText?.text ? a.py_xs : []]}>
+								<div className={richText?.text ? css.embedPad : undefined}>
 									<Embed
 										embed={post.embed}
 										moderation={moderation}
 										viewContext={PostEmbedViewContext.ThreadHighlighted}
 										onOpen={onOpenEmbed}
 									/>
-								</View>
+								</div>
 							)}
 						</ContentHider>
 						<ExpandedPostDetails post={item.value.post} isThreadAuthor={isThreadAuthor} />
@@ -392,79 +360,71 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						post.quoteCount !== 0 ||
 						post.bookmarkCount !== 0 ? (
 							// Show this section unless we're *sure* it has no engagement.
-							<View
-								style={[
-									a.flex_row,
-									a.flex_wrap,
-									a.align_center,
-									{
-										rowGap: a.gap_sm.gap,
-										columnGap: a.gap_lg.gap,
-									},
-									a.border_t,
-									a.border_b,
-									a.mt_md,
-									a.py_md,
-									t.atoms.border_contrast_low,
-								]}
-							>
+							<div className={css.statsRow}>
 								{post.repostCount != null && post.repostCount !== 0 ? (
-									<Link to={repostsHref} label={l`Reposts of this post`}>
-										<Text testID="repostCount-expanded" style={[a.text_md, t.atoms.text_contrast_medium]}>
-											<Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
-												<Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-													{formatPostStatCount(post.repostCount)}
-												</Text>{' '}
-												<Plural value={post.repostCount} one="repost" other="reposts" />
-											</Trans>
-										</Text>
-									</Link>
+									<InlineLinkText
+										color="textContrastMedium"
+										data-testid="repostCount-expanded"
+										label={l`Reposts of this post`}
+										size="md"
+										to={repostsHref}
+										underline="none"
+									>
+										<Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
+											<Text color="text" size="md" weight="semiBold">
+												{formatPostStatCount(post.repostCount)}
+											</Text>{' '}
+											<Plural value={post.repostCount} one="repost" other="reposts" />
+										</Trans>
+									</InlineLinkText>
 								) : null}
 								{post.quoteCount != null && post.quoteCount !== 0 && !post.viewer?.embeddingDisabled ? (
-									<Link to={quotesHref} label={l`Quotes of this post`}>
-										<Text testID="quoteCount-expanded" style={[a.text_md, t.atoms.text_contrast_medium]}>
-											<Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
-												<Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-													{formatPostStatCount(post.quoteCount)}
-												</Text>{' '}
-												<Plural value={post.quoteCount} one="quote" other="quotes" />
-											</Trans>
-										</Text>
-									</Link>
+									<InlineLinkText
+										color="textContrastMedium"
+										data-testid="quoteCount-expanded"
+										label={l`Quotes of this post`}
+										size="md"
+										to={quotesHref}
+										underline="none"
+									>
+										<Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
+											<Text color="text" size="md" weight="semiBold">
+												{formatPostStatCount(post.quoteCount)}
+											</Text>{' '}
+											<Plural value={post.quoteCount} one="quote" other="quotes" />
+										</Trans>
+									</InlineLinkText>
 								) : null}
 								{post.likeCount != null && post.likeCount !== 0 ? (
-									<Link to={likesHref} label={l`Likes on this post`}>
-										<Text testID="likeCount-expanded" style={[a.text_md, t.atoms.text_contrast_medium]}>
-											<Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-												<Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
-													{formatPostStatCount(post.likeCount)}
-												</Text>{' '}
-												<Plural value={post.likeCount} one="like" other="likes" />
-											</Trans>
-										</Text>
-									</Link>
+									<InlineLinkText
+										color="textContrastMedium"
+										data-testid="likeCount-expanded"
+										label={l`Likes on this post`}
+										size="md"
+										to={likesHref}
+										underline="none"
+									>
+										<Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
+											<Text color="text" size="md" weight="semiBold">
+												{formatPostStatCount(post.likeCount)}
+											</Text>{' '}
+											<Plural value={post.likeCount} one="like" other="likes" />
+										</Trans>
+									</InlineLinkText>
 								) : null}
 								{post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
-									<Text testID="bookmarkCount-expanded" style={[a.text_md, t.atoms.text_contrast_medium]}>
+									<Text data-testid="bookmarkCount-expanded" size="md" color="textContrastMedium">
 										<Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
-											<Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+											<Text color="text" size="md" weight="semiBold">
 												{formatPostStatCount(post.bookmarkCount)}
 											</Text>{' '}
 											<Plural value={post.bookmarkCount} one="save" other="saves" />
 										</Trans>
 									</Text>
 								) : null}
-							</View>
+							</div>
 						) : null}
-						<View
-							style={[
-								a.pt_sm,
-								a.pb_2xs,
-								{
-									marginLeft: -5,
-								},
-							]}
-						>
+						<div className={css.controlsWrap}>
 							<FeedFeedbackProvider value={feedFeedback}>
 								<PostControls
 									big
@@ -479,9 +439,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 									viaRepost={viaRepost}
 								/>
 							</FeedFeedbackProvider>
-						</View>
+						</div>
 						<DebugFieldDisplay subject={post} />
-					</View>
+					</div>
 				</View>
 			</GalleryBleed>
 		</>
@@ -495,20 +455,19 @@ function ExpandedPostDetails({
 	post: Extract<ThreadItem, { type: 'threadPost' }>['value']['post'];
 	isThreadAuthor: boolean;
 }) {
-	const t = useTheme();
 	const { i18n } = useLingui();
 	const isRootPost = !('reply' in post.record);
 
 	return (
-		<View style={[a.gap_md, a.pt_md, a.align_start]}>
+		<div className={css.expandedDetails}>
 			<BackdatedPostIndicator post={post} />
-			<View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-				<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+			<div className={css.expandedDetailsRow}>
+				<Text size="sm" color="textContrastMedium">
 					{niceDate(i18n, post.indexedAt, 'dot separated')}
 				</Text>
 				{isRootPost && <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
@@ -537,25 +496,12 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				}}
 			>
 				{({ hovered, pressed }) => (
-					<View
-						style={[
-							a.flex_row,
-							a.align_center,
-							a.rounded_full,
-							t.atoms.bg_contrast_25,
-							(hovered || pressed) && t.atoms.bg_contrast_50,
-							{
-								gap: 3,
-								paddingHorizontal: 6,
-								paddingVertical: 3,
-							},
-						]}
-					>
+					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
 						<CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
-						<Text style={[a.text_xs, a.font_semi_bold, a.leading_tight, t.atoms.text_contrast_medium]}>
+						<Text size="xs" weight="semiBold" leading="tight" color="textContrastMedium">
 							<Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
 						</Text>
-					</View>
+					</div>
 				)}
 			</Button>
 
