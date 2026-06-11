@@ -6,6 +6,9 @@ export const reasonRow = style({
 	flexDirection: 'row',
 	gap: 10,
 	paddingLeft: 8,
+	// the content row below is positioned (for DiscoverDebug), so it paints above the absolute
+	// SubtleHover overlay; match it here so the overlay doesn't dim the reason on hover
+	position: 'relative',
 });
 
 /** Fixed-width slot above the avatar that carries the thread reply-spine up to the parent. */
