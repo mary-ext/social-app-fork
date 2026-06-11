@@ -54,6 +54,9 @@ export const postAlerts = style({
 
 // #region parent reply line
 export const parentLineRow = style({
+	// border-box so `height` is the outer 16px (12px line + 4px paddingBottom),
+	// matching RN's always-border-box box model. content-box renders it 20px.
+	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'row',
 	height: space.lg,
