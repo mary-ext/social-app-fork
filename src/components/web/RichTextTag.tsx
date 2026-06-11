@@ -20,6 +20,7 @@ import { Loader } from '#/components/Loader';
 import type { InlineLinkUnderline } from '#/components/web/Link';
 import * as linkStyles from '#/components/web/Link.css';
 import * as Menu from '#/components/web/Menu';
+import { atomicSegment } from '#/components/web/RichText.css';
 import type { TextProps } from '#/components/web/Text';
 import * as textStyles from '#/components/web/Text.css';
 
@@ -80,7 +81,11 @@ export function RichTextTag({
 		<Menu.Root>
 			<Menu.Trigger
 				aria-label={label}
-				className={clsx(textStyles.text({ color, leading, size }), linkStyles.inlineLink({ underline }))}
+				className={clsx(
+					textStyles.text({ color, leading, size }),
+					linkStyles.inlineLink({ underline }),
+					atomicSegment,
+				)}
 				nativeButton={false}
 				// the anchor exists only for its href (hover preview, middle/right-click "open in new tab"); a
 				// plain left-click always opens the menu, so suppress the native navigation it would trigger

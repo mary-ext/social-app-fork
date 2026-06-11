@@ -10,7 +10,7 @@ import { isOnlyEmoji } from '#/alf/typography';
 
 import { InlineLinkText, type InlineLinkTextProps, type InlineLinkUnderline } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
-import { content, emoji } from '#/components/web/RichText.css';
+import { atomicSegment, content, emoji } from '#/components/web/RichText.css';
 import { RichTextTag } from '#/components/web/RichTextTag';
 import { Text, type TextProps } from '#/components/web/Text';
 
@@ -118,6 +118,7 @@ export function RichText({
 							el = (
 								<ProfileHoverCard key={key} did={feature.did}>
 									<InlineLinkText
+										className={atomicSegment}
 										color={color}
 										leading={leading}
 										onPress={onLinkPress}

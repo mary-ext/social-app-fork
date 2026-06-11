@@ -17,6 +17,15 @@ export const content = style(
 	}),
 );
 
+// mentions and tags render as atomic inline-blocks so they wrap to the next line whole rather than
+// breaking mid-handle at an internal hyphen/dot. a handle wider than the column still wraps within it
+// (capped by max-width) instead of overflowing. links keep the inherited break-anywhere behaviour, since
+// long urls should break.
+export const atomicSegment = style({
+	display: 'inline-block',
+	maxWidth: '100%',
+});
+
 // emoji-only text renders the glyphs enlarged. it overrides the `text` recipe's `fontSizeVar` to `base size
 // × scale` — so font-size and the derived line-height both follow from `text`'s `base` — carrying both halves
 // as vars lets `scale` flip a multiplier rather than producing a class per (size, multiplier) pair. emitted

@@ -1844,7 +1844,7 @@ msgstr ""
 msgid "carousel"
 msgstr "carousel"
 
-#: src/components/web/RichTextTag.tsx:65
+#: src/components/web/RichTextTag.tsx:66
 msgid "Cashtag {tag}"
 msgstr ""
 
@@ -4082,7 +4082,7 @@ msgstr ""
 msgid "Hashtag"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:65
+#: src/components/web/RichTextTag.tsx:66
 msgid "Hashtag {tag}"
 msgstr ""
 
@@ -5177,8 +5177,8 @@ msgctxt "video"
 msgid "Mute"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:114
-#: src/components/web/RichTextTag.tsx:125
+#: src/components/web/RichTextTag.tsx:119
+#: src/components/web/RichTextTag.tsx:130
 msgid "Mute {prefixedTag}"
 msgstr "Mute {prefixedTag}"
 
@@ -7322,27 +7322,27 @@ msgstr ""
 msgid "Searches for profiles"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:94
+#: src/components/web/RichTextTag.tsx:99
 msgid "See {prefixedTag} posts"
 msgstr "See {prefixedTag} posts"
 
-#: src/components/web/RichTextTag.tsx:102
+#: src/components/web/RichTextTag.tsx:107
 msgid "See {prefixedTag} posts by user"
 msgstr "See {prefixedTag} posts by user"
 
-#: src/components/web/RichTextTag.tsx:96
+#: src/components/web/RichTextTag.tsx:101
 msgid "See {tag} posts"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:106
+#: src/components/web/RichTextTag.tsx:111
 msgid "See {tag} posts by user"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:96
+#: src/components/web/RichTextTag.tsx:101
 msgid "See #{tag} posts"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:106
+#: src/components/web/RichTextTag.tsx:111
 msgid "See #{tag} posts by user"
 msgstr ""
 
@@ -9033,8 +9033,8 @@ msgctxt "video"
 msgid "Unmute"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:114
-#: src/components/web/RichTextTag.tsx:125
+#: src/components/web/RichTextTag.tsx:119
+#: src/components/web/RichTextTag.tsx:130
 msgid "Unmute {prefixedTag}"
 msgstr "Unmute {prefixedTag}"
 
