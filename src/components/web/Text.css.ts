@@ -70,6 +70,7 @@ export const clampSingleLine = style({
 	'@layer': {
 		[components]: {
 			maxWidth: '100%',
+			minWidth: 0,
 			overflow: 'hidden',
 			textOverflow: 'ellipsis',
 			whiteSpace: 'nowrap',

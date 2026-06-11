@@ -13,6 +13,7 @@ export const nameAndHandle = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
+	minWidth: 0,
 });
 
 export const nameRow = style({
