@@ -15,6 +15,9 @@ export const guide = style({
 	borderRightColor: colors.borderContrastLow,
 	borderRightStyle: 'solid',
 	borderRightWidth: REPLY_LINE_WIDTH,
+	// border-box + no-shrink so the indent matches the tree posts above (RNW parity); see ThreadItemTreePost.css
+	boxSizing: 'border-box',
+	flexShrink: 0,
 	left: 1,
 	position: 'relative',
 	width: TREE_INDENT + TREE_AVI_WIDTH / 2,
@@ -34,6 +37,7 @@ export const connectorBase = style({
 	borderLeftColor: colors.borderContrastLow,
 	borderLeftStyle: 'solid',
 	borderLeftWidth: REPLY_LINE_WIDTH,
+	boxSizing: 'border-box',
 	height: 18, // magic, the Link beside it is 38px tall
 });
 
