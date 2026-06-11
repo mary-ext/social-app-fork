@@ -1,16 +1,15 @@
-import type { StyleProp, ViewStyle } from 'react-native';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
 import { getModerationCauseKey, unique } from '#/lib/moderation';
 
-import * as Pills from '#/components/Pills';
+import * as Pills from '#/components/web/Pills';
 
 export function ProfileHeaderAlerts({
+	className,
 	moderation,
-	style,
 }: {
+	className?: string;
 	moderation: ModerationDecision;
-	style?: StyleProp<ViewStyle>;
 }) {
 	const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileView);
 	if (modui.alerts.length === 0 && modui.informs.length === 0) {
@@ -18,12 +17,12 @@ export function ProfileHeaderAlerts({
 	}
 
 	return (
-		<Pills.Row size="lg" style={style}>
+		<Pills.Row className={className} size="lg">
 			{modui.alerts.filter(unique).map((cause) => (
-				<Pills.Label size="lg" key={getModerationCauseKey(cause)} cause={cause} />
+				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} size="lg" />
 			))}
 			{modui.informs.filter(unique).map((cause) => (
-				<Pills.Label size="lg" key={getModerationCauseKey(cause)} cause={cause} />
+				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} size="lg" />
 			))}
 		</Pills.Row>
 	);

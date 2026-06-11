@@ -32,6 +32,7 @@ import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog
 
 import { GrowableAvatar } from './GrowableAvatar';
 import { GrowableBanner } from './GrowableBanner';
+import * as css from './Shell.css';
 
 interface Props {
 	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
@@ -168,10 +169,7 @@ let ProfileHeaderShell = ({
 						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
 					/>
 				) : (
-					<ProfileHeaderAlerts
-						moderation={moderation}
-						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
-					/>
+					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
 				))}
 			<GrowableAvatar style={[a.absolute, { top: 104, left: 10 }]}>
 				<Pressable
