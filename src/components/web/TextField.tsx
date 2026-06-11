@@ -1,6 +1,8 @@
 import {
 	type ChangeEvent,
+	type ComponentPropsWithoutRef,
 	createContext,
+	type FocusEventHandler,
 	type KeyboardEventHandler,
 	type ReactNode,
 	type Ref,
@@ -11,6 +13,7 @@ import {
 import { clsx } from 'clsx';
 import TextareaAutosize from 'react-textarea-autosize';
 
+import { LabelText as BaseLabelText } from '#/components/web/Text';
 import * as styles from '#/components/web/TextField.css';
 
 type FieldContextValue = {
@@ -25,20 +28,36 @@ const FieldContext = createContext<FieldContextValue>({ id: undefined, isInvalid
  * Groups a field's label + input, sharing a generated id so the {@link LabelText} is associated with the
  * {@link Input}, and propagating the invalid state to the input.
  */
-export function Root({ isInvalid = false, children }: { isInvalid?: boolean; children: ReactNode }) {
+export function Root({
+	children,
+	className,
+	isInvalid = false,
+}: {
+	children: ReactNode;
+	className?: string;
+	isInvalid?: boolean;
+}) {
 	const id = useId();
 	const value = useMemo(() => ({ id, isInvalid }), [id, isInvalid]);
-	return <FieldContext.Provider value={value}>{children}</FieldContext.Provider>;
+	return (
+		<FieldContext.Provider value={value}>
+			<div className={clsx(styles.root, className)}>{children}</div>
+		</FieldContext.Provider>
+	);
 }
 
 export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?: string }) {
 	const { id } = useContext(FieldContext);
-	// renders a semantic web <label>, not RN <Text> — the unwrapped-text rule doesn't model this
-	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
-		<label className={styles.label} htmlFor={htmlFor ?? id}>
+		<BaseLabelText
+			className={styles.label}
+			color="textContrastMedium"
+			htmlFor={htmlFor ?? id}
+			size="sm"
+			weight="medium"
+		>
 			{children}
-		</label>
+		</BaseLabelText>
 	);
 }
 
@@ -61,6 +80,12 @@ export type InputProps = {
 	/** Ref to the underlying single-line `<input>` (e.g. to focus or clear it imperatively). */
 	inputRef?: Ref<HTMLInputElement>;
 	onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+	onBlur?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+	onFocus?: FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+	/** Autofill hint for the single-line `<input>` (e.g. `url`). */
+	autoComplete?: ComponentPropsWithoutRef<'input'>['autoComplete'];
+	/** Auto-capitalization behaviour for the single-line `<input>`. */
+	autoCapitalize?: ComponentPropsWithoutRef<'input'>['autoCapitalize'];
 	id?: string;
 	className?: string;
 };
@@ -79,6 +104,10 @@ export function Input({
 	maxLength,
 	inputRef,
 	onKeyDown,
+	onBlur,
+	onFocus,
+	autoComplete,
+	autoCapitalize,
 	id,
 	className,
 }: InputProps) {
@@ -100,7 +129,9 @@ export function Input({
 				maxLength={maxLength}
 				maxRows={maxRows}
 				minRows={minRows}
+				onBlur={onBlur}
 				onChange={onChange}
+				onFocus={onFocus}
 				placeholder={placeholder}
 				value={value}
 			/>
@@ -110,12 +141,16 @@ export function Input({
 	return (
 		<input
 			aria-label={label}
+			autoCapitalize={autoCapitalize}
+			autoComplete={autoComplete}
 			autoFocus={autoFocus}
 			className={cls}
 			defaultValue={defaultValue}
 			id={inputId}
 			maxLength={maxLength}
+			onBlur={onBlur}
 			onChange={onChange}
+			onFocus={onFocus}
 			onKeyDown={onKeyDown}
 			placeholder={placeholder}
 			ref={inputRef}

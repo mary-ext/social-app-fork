@@ -4,16 +4,21 @@ import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { fontFamily, fontSize } from '#/styles/tokens.css';
 
-export const label = style(
+// the field group: stacks the label, input, and any inline error/helper as one cohesive box (like the RNW
+// `Root` View), so a parent `gap` spaces whole fields rather than splitting a label from its input.
+export const root = style(
 	layered(components, {
-		color: vars.palette.contrast_700,
-		display: 'block',
-		fontFamily,
-		fontSize: fontSize.sm,
-		fontWeight: 500,
-		marginBottom: 8,
+		display: 'flex',
+		flexDirection: 'column',
 	}),
 );
+
+// spacing only — the text styling (size/weight/color/snug line-height) comes from the `Text` `Label`. unlayered
+// so `marginBottom` wins over the recipe's `components`-layered `margin: 0`.
+export const label = style({
+	display: 'block',
+	marginBottom: 8,
+});
 
 export const input = style(
 	layered(components, {

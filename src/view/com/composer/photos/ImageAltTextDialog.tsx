@@ -97,21 +97,19 @@ const ImageAltTextInner = ({
 			</div>
 
 			<div className={styles.form}>
-				<div>
-					<TextField.Root>
-						<TextField.LabelText>
-							<Trans>Descriptive alt text</Trans>
-						</TextField.LabelText>
-						<TextField.Input
-							autoFocus
-							defaultValue={altText}
-							label={l`Alt text`}
-							maxRows={8}
-							multiline
-							onChangeText={setAltText}
-							placeholder={l`Alt text`}
-						/>
-					</TextField.Root>
+				<TextField.Root>
+					<TextField.LabelText>
+						<Trans>Descriptive alt text</Trans>
+					</TextField.LabelText>
+					<TextField.Input
+						autoFocus
+						defaultValue={altText}
+						label={l`Alt text`}
+						maxRows={8}
+						multiline
+						onChangeText={setAltText}
+						placeholder={l`Alt text`}
+					/>
 
 					{altText.length > MAX_ALT_TEXT && (
 						<div className={styles.warningRow}>
@@ -126,7 +124,7 @@ const ImageAltTextInner = ({
 							</Text>
 						</div>
 					)}
-				</div>
+				</TextField.Root>
 
 				<AltTextCounterWrapper altText={altText} />
 			</div>

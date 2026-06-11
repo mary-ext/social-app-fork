@@ -238,18 +238,16 @@ function DialogInner({
 				)}
 
 				<div className={styles.fields}>
-					<div>
-						<TextField.Root isInvalid={displayNameTooLong}>
-							<TextField.LabelText>
-								<Trans>Display name</Trans>
-							</TextField.LabelText>
-							<TextField.Input
-								defaultValue={displayName}
-								onChangeText={setDisplayName}
-								label={l`Display name`}
-								placeholder={l`e.g. Alice Lastname`}
-							/>
-						</TextField.Root>
+					<TextField.Root isInvalid={displayNameTooLong}>
+						<TextField.LabelText>
+							<Trans>Display name</Trans>
+						</TextField.LabelText>
+						<TextField.Input
+							defaultValue={displayName}
+							onChangeText={setDisplayName}
+							label={l`Display name`}
+							placeholder={l`e.g. Alice Lastname`}
+						/>
 						{displayNameTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
 								<Plural
@@ -258,7 +256,7 @@ function DialogInner({
 								/>
 							</Text>
 						)}
-					</div>
+					</TextField.Root>
 
 					{verification.isVerified &&
 						verification.role === 'default' &&
@@ -276,19 +274,17 @@ function DialogInner({
 							</Admonition>
 						)}
 
-					<div>
-						<TextField.Root isInvalid={descriptionTooLong}>
-							<TextField.LabelText>
-								<Trans>Description</Trans>
-							</TextField.LabelText>
-							<TextField.Input
-								defaultValue={description}
-								onChangeText={setDescription}
-								multiline
-								label={l`Description`}
-								placeholder={l`Tell us a bit about yourself`}
-							/>
-						</TextField.Root>
+					<TextField.Root isInvalid={descriptionTooLong}>
+						<TextField.LabelText>
+							<Trans>Description</Trans>
+						</TextField.LabelText>
+						<TextField.Input
+							defaultValue={description}
+							onChangeText={setDescription}
+							multiline
+							label={l`Description`}
+							placeholder={l`Tell us a bit about yourself`}
+						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="semiBold" color="negative_400" className={styles.errorText}>
 								<Plural
@@ -297,7 +293,7 @@ function DialogInner({
 								/>
 							</Text>
 						)}
-					</div>
+					</TextField.Root>
 				</div>
 			</Dialog.Body>
 		</>

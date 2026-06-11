@@ -369,18 +369,16 @@ function DialogInner({
 						</div>
 					</div>
 
-					<div>
-						<TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
-							<TextField.LabelText>
-								<Trans>List name</Trans>
-							</TextField.LabelText>
-							<TextField.Input
-								defaultValue={displayName}
-								onChangeText={onChangeDisplayName}
-								label={l`Name`}
-								placeholder={displayNamePlaceholder}
-							/>
-						</TextField.Root>
+					<TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
+						<TextField.LabelText>
+							<Trans>List name</Trans>
+						</TextField.LabelText>
+						<TextField.Input
+							defaultValue={displayName}
+							onChangeText={onChangeDisplayName}
+							label={l`Name`}
+							placeholder={displayNamePlaceholder}
+						/>
 						{(displayNameTooLong || displayNameTooShort) && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
 								{displayNameTooLong ? (
@@ -396,21 +394,19 @@ function DialogInner({
 								)}
 							</Text>
 						)}
-					</div>
+					</TextField.Root>
 
-					<div>
-						<TextField.Root isInvalid={descriptionTooLong}>
-							<TextField.LabelText>
-								<Trans>List description</Trans>
-							</TextField.LabelText>
-							<TextField.Input
-								defaultValue={descriptionText}
-								onChangeText={setDescriptionText}
-								multiline
-								label={l`Description`}
-								placeholder={descriptionPlaceholder}
-							/>
-						</TextField.Root>
+					<TextField.Root isInvalid={descriptionTooLong}>
+						<TextField.LabelText>
+							<Trans>List description</Trans>
+						</TextField.LabelText>
+						<TextField.Input
+							defaultValue={descriptionText}
+							onChangeText={setDescriptionText}
+							multiline
+							label={l`Description`}
+							placeholder={descriptionPlaceholder}
+						/>
 						{descriptionTooLong && (
 							<Text size="sm" weight="bold" color="negative_400" className={styles.errorText}>
 								<Trans>
@@ -419,7 +415,7 @@ function DialogInner({
 								</Trans>
 							</Text>
 						)}
-					</div>
+					</TextField.Root>
 				</div>
 			</Dialog.Body>
 		</>
