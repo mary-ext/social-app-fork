@@ -445,24 +445,20 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logMuteConvo': {
 							const logRef: ChatBskyConvoDefs.LogMuteConvo = log;
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => ({
-									...convo,
-									muted: true,
-									rev: logRef.rev,
-								})),
-							);
+							mutateConvoView(logRef.convoId, (convo) => ({
+								...convo,
+								muted: true,
+								rev: logRef.rev,
+							}));
 							break;
 						}
 						case 'chat.bsky.convo.defs#logUnmuteConvo': {
 							const logRef: ChatBskyConvoDefs.LogUnmuteConvo = log;
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => ({
-									...convo,
-									muted: false,
-									rev: logRef.rev,
-								})),
-							);
+							mutateConvoView(logRef.convoId, (convo) => ({
+								...convo,
+								muted: false,
+								rev: logRef.rev,
+							}));
 							break;
 						}
 						case 'chat.bsky.convo.defs#logLockConvo': {
