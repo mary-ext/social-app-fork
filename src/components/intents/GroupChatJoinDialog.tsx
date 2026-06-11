@@ -239,9 +239,9 @@ function GroupChatJoinDialogContent({
 		);
 	}
 
-	const convoId = joinLinkPreview.convo?.id;
+	const convoId = joinLinkPreview.convoId;
 	const isFollowing = joinLinkPreview.owner.viewer?.followedBy ?? false;
-	const hasRequested = !convoId && joinLinkPreview.viewer?.requestedAt != null;
+	const hasRequested = !joinLinkPreview.convo && joinLinkPreview.viewer?.requestedAt != null;
 
 	let canJoin = true;
 	let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon;
@@ -357,7 +357,7 @@ function GroupChatJoinDialogContent({
 					</View>
 				</View>
 			</View>
-			{convoId ? (
+			{joinLinkPreview.convo ? (
 				<Button
 					testID="openButton"
 					onPress={() => {
