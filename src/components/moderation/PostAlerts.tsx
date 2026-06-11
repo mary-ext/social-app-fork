@@ -1,36 +1,37 @@
-import type { StyleProp, ViewStyle } from 'react-native';
 import type { DisplayRestrictions, ModerationCause } from '@atcute/bluesky-moderation';
+import { clsx } from 'clsx';
 
 import { getModerationCauseKey, unique } from '#/lib/moderation';
 
-import * as Pills from '#/components/Pills';
+import * as Pills from '#/components/web/Pills';
+
+import * as styles from './PostAlerts.css';
 
 export function PostAlerts({
+	additionalCauses,
+	className,
 	modui,
 	size = 'sm',
-	style,
-	additionalCauses,
 }: {
+	additionalCauses?: ModerationCause[] | Pills.AppModerationCause[];
+	className?: string;
 	modui: DisplayRestrictions;
 	size?: Pills.CommonProps['size'];
-	includeMute?: boolean;
-	style?: StyleProp<ViewStyle>;
-	additionalCauses?: ModerationCause[] | Pills.AppModerationCause[];
 }) {
 	if (modui.alerts.length === 0 && modui.informs.length === 0 && !additionalCauses?.length) {
 		return null;
 	}
 
 	return (
-		<Pills.Row size={size} style={[size === 'sm' && { marginLeft: -3 }, style]}>
+		<Pills.Row className={clsx(size === 'sm' && styles.smOffset, className)} size={size}>
 			{modui.alerts.filter(unique).map((cause) => (
-				<Pills.Label key={getModerationCauseKey(cause)} cause={cause} size={size} noBg={size === 'sm'} />
+				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} noBg={size === 'sm'} size={size} />
 			))}
 			{modui.informs.filter(unique).map((cause) => (
-				<Pills.Label key={getModerationCauseKey(cause)} cause={cause} size={size} noBg={size === 'sm'} />
+				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} noBg={size === 'sm'} size={size} />
 			))}
 			{additionalCauses?.map((cause) => (
-				<Pills.Label key={getModerationCauseKey(cause)} cause={cause} size={size} noBg={size === 'sm'} />
+				<Pills.Label cause={cause} key={getModerationCauseKey(cause)} noBg={size === 'sm'} size={size} />
 			))}
 		</Pills.Row>
 	);

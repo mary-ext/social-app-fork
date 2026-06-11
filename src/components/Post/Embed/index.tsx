@@ -308,8 +308,8 @@ export function QuoteEmbed({
 			</View>
 			{moderation ? (
 				<PostAlerts
+					className={css.postAlerts}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-					style={[a.py_xs]}
 				/>
 			) : null}
 			{richText ? <RichText disableLinks numberOfLines={20} size="md" value={richText} /> : null}

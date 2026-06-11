@@ -1,9 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
-export const contentHiderChild = style({
-	marginTop: 6,
-});
+import { space } from '#/styles/tokens.css';
 
 export const postAlerts = style({
-	paddingBottom: 4,
+	paddingBottom: space._2xs,
 });

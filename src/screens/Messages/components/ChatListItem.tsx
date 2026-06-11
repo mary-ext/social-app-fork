@@ -51,6 +51,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
+import * as css from './ChatListItem.css';
 import { useIsWithinSplitView } from './splitView/context';
 
 export const ChatListItemPortal = createPortalGroup();
@@ -157,9 +158,9 @@ function DirectChatItem({
 			postAlerts={
 				isWithinLeftPanel ? null : (
 					<PostAlerts
+						className={css.postAlerts}
 						modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 						size="sm"
-						style={[a.pb_2xs, a.max_w_full, a.overflow_hidden]}
 					/>
 				)
 			}

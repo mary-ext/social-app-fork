@@ -439,9 +439,9 @@ let PostContent = ({
 			childContainerClassName={css.contentHiderChild}
 		>
 			<PostAlerts
-				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-				style={[a.pb_xs]}
 				additionalCauses={additionalPostAlerts}
+				className={css.postAlerts}
+				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 			/>
 			{richText.text ? (
 				<View style={[a.mb_2xs]}>

@@ -35,6 +35,8 @@ import { Text } from '#/components/Typography';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
 import { RichText } from '#/components/web/RichText';
 
+import * as css from './MessageInputEmbed.css';
+
 /**
  * The embed staged in the message composer. A message can carry at most one embed: either a quoted post or a
  * group chat invite link.
@@ -209,8 +211,8 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 					</View>
 					<ContentHider modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}>
 						<PostAlerts
+							className={css.postAlerts}
 							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-							style={a.py_xs}
 							size="sm"
 						/>
 						{rt.text && (

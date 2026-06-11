@@ -6,6 +6,10 @@ export const activeMargin = style({
 	marginTop: 8,
 });
 
+export const postAlerts = style({
+	paddingBlock: 4,
+});
+
 // ModeratedFeedEmbed / ModeratedListEmbed: lift the revealed card off the blur toggle.
 export const revealedPadXs = style({
 	paddingTop: 4,

@@ -209,8 +209,8 @@ function PostInner({
 							childContainerClassName={css.contentHiderChild}
 						>
 							<PostAlerts
+								className={css.postAlerts}
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-								style={[a.pb_xs]}
 							/>
 							{richText.text ? (
 								<View style={[a.mb_2xs]}>

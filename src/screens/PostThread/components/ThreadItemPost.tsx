@@ -41,6 +41,8 @@ import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 
+import * as css from './ThreadItemPost.css';
+
 export type ThreadItemPostProps = {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 	overrides?: {
@@ -283,9 +285,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 							</View>
 							<LabelsOnMyPost post={post} style={[a.pb_xs]} />
 							<PostAlerts
-								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-								style={[a.pb_2xs]}
 								additionalCauses={additionalPostAlerts}
+								className={css.postAlerts}
+								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 							/>
 							{richText?.text ? (
 								<View style={[a.mb_2xs]}>

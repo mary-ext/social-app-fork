@@ -38,6 +38,8 @@ import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
 import { RichText } from '#/components/web/RichText';
 
+import * as css from './ThreadItemTreePost.css';
+
 /** Mimic the space in PostMeta */
 const TREE_AVI_PLUS_SPACE = TREE_AVI_WIDTH + a.gap_xs.gap;
 
@@ -312,9 +314,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 								<View style={[a.flex_1, a.pl_2xs]}>
 									<LabelsOnMyPost post={post} style={[a.pb_2xs]} />
 									<PostAlerts
-										modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-										style={[a.pb_2xs]}
 										additionalCauses={additionalPostAlerts}
+										className={css.postAlerts}
+										modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 									/>
 									{richText?.text ? (
 										<View style={[a.mb_2xs]}>

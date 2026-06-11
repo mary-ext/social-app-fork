@@ -360,11 +360,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 							childContainerClassName={css.contentHiderChild}
 						>
 							<PostAlerts
+								additionalCauses={additionalPostAlerts}
+								className={css.postAlerts}
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 								size="lg"
-								includeMute
-								style={[a.pb_sm]}
-								additionalCauses={additionalPostAlerts}
 							/>
 							{richText?.text ? (
 								<RichText

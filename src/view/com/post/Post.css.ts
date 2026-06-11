@@ -7,3 +7,7 @@ export const contentHider = style({
 export const contentHiderChild = style({
 	marginTop: 6,
 });
+
+export const postAlerts = style({
+	paddingBottom: 4,
+});

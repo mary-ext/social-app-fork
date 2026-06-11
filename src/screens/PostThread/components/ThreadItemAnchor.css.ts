@@ -40,3 +40,7 @@ export const handle = style({
 	maxWidth: '100%',
 	unicodeBidi: 'isolate',
 });
+
+export const postAlerts = style({
+	paddingBottom: space.sm,
+});
