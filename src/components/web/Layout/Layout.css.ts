@@ -39,6 +39,9 @@ export const centerNested = style({
 export const webBorders = style({
 	borderLeft: `1px solid ${vars.palette.contrast_100}`,
 	borderRight: `1px solid ${vars.palette.contrast_100}`,
+	// border-box so the 602 width is the outer frame (600 column + 2px borders),
+	// matching RN's always-border-box View. content-box would render 2px wider.
+	boxSizing: 'border-box',
 	bottom: 0,
 	left: '50%',
 	position: 'fixed',
