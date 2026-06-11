@@ -298,9 +298,15 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								logRef.message.$type === 'chat.bsky.convo.defs#messageView' ||
 								logRef.message.$type === 'chat.bsky.convo.defs#deletedMessageView';
 
+							// add relatedProfiles to members list, but making sure to dedupe
+							const relatedProfilesSansMembers = (logRef.relatedProfiles ?? []).filter(
+								(profile) => !foundConvo.members.some((member) => member.did === profile.did),
+							);
+
 							// Update the convo
 							const updatedConvo = {
 								...foundConvo,
+								members: [...foundConvo.members, ...relatedProfilesSansMembers],
 								rev: logRef.rev,
 								lastMessage: logRef.message,
 								unreadCount:
@@ -530,15 +536,22 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							if (logRef.message.$type !== 'chat.bsky.convo.defs#messageView') break;
 							const message = logRef.message;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => ({
-									...convo,
-									lastReaction: {
-										$type: 'chat.bsky.convo.defs#messageAndReactionView',
-										reaction: logRef.reaction,
-										message,
-									},
-									rev: logRef.rev,
-								})),
+								optimisticUpdate(logRef.convoId, old, (convo) => {
+									// add relatedProfiles to members list, but making sure to dedupe
+									const relatedProfilesSansMembers = (logRef.relatedProfiles ?? []).filter(
+										(profile) => !convo.members.some((member) => member.did === profile.did),
+									);
+									return {
+										...convo,
+										members: [...convo.members, ...relatedProfilesSansMembers],
+										lastReaction: {
+											$type: 'chat.bsky.convo.defs#messageAndReactionView',
+											reaction: logRef.reaction,
+											message,
+										},
+										rev: logRef.rev,
+									};
+								}),
 							);
 							break;
 						}
