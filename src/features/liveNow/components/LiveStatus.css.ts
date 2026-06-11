@@ -78,21 +78,6 @@ export const divider = style({
 	width: '100%',
 });
 
-export const header = style({
-	alignItems: 'center',
-	display: 'flex',
-	flexDirection: 'row',
-	gap: space.sm,
-	width: '100%',
-});
-
-export const headerName = style({
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'column',
-	minWidth: 100,
-});
-
 export const betaRow = style({
 	alignItems: 'center',
 	display: 'flex',

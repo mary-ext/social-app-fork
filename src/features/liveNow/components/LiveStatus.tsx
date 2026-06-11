@@ -1,18 +1,12 @@
 import { useCallback, useMemo } from 'react';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
-import {
-	DisplayContext,
-	getDisplayRestrictions,
-	moderateProfile,
-	moderateStatus,
-} from '@atcute/bluesky-moderation';
+import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
@@ -27,8 +21,8 @@ import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { LinkButton } from '#/components/web/Link';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
+import * as ProfileCard from '#/components/web/ProfileCard';
 import { Text } from '#/components/web/Text';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatus.css';
@@ -97,10 +91,6 @@ export function LiveStatus({
 	const moderationOpts = useModerationOpts();
 	const reportDialogControl = useGlobalReportDialogControl();
 
-	const moderation = useMemo(() => {
-		if (!moderationOpts) return undefined;
-		return moderateProfile(profile, moderationOpts);
-	}, [moderationOpts, profile]);
 	const statusModeration = useMemo(() => {
 		if (!moderationOpts) return undefined;
 		return moderateStatus(profile, moderationOpts);
@@ -167,24 +157,14 @@ export function LiveStatus({
 				<div className={css.divider} />
 
 				{moderationOpts && (
-					<div className={css.header}>
-						<UserAvatar
-							avatar={profile.avatar}
-							moderation={moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-							size={40}
-							type={profile.associated?.labeler ? 'labeler' : 'user'}
+					<ProfileCard.Header>
+						<ProfileCard.Avatar
+							disabledPreview
+							liveOverride={false}
+							moderationOpts={moderationOpts}
+							profile={profile}
 						/>
-						<div className={css.headerName}>
-							<Text leading="snug" numberOfLines={1} size="md" weight="semiBold">
-								{sanitizeDisplayName(
-									profile.displayName || sanitizeHandle(profile.handle),
-									moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-								)}
-							</Text>
-							<Text color="textContrastMedium" leading="snug" numberOfLines={1}>
-								@{sanitizeHandle(profile.handle)}
-							</Text>
-						</div>
+						<ProfileCard.NameAndHandle moderationOpts={moderationOpts} profile={profile} />
 						<Button
 							color="secondary"
 							label={l`Open profile`}
@@ -199,7 +179,7 @@ export function LiveStatus({
 								<Trans>Open profile</Trans>
 							</ButtonText>
 						</Button>
-					</div>
+					</ProfileCard.Header>
 				)}
 
 				<div className={css.betaRow}>

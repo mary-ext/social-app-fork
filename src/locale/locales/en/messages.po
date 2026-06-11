@@ -196,7 +196,7 @@ msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
-#: src/features/liveNow/components/LiveStatus.tsx:61
+#: src/features/liveNow/components/LiveStatus.tsx:55
 #: src/features/liveNow/components/LiveStatusDialog.tsx:78
 msgid "{0} is live"
 msgstr ""
@@ -4794,7 +4794,7 @@ msgstr ""
 msgid "LIVE"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:211
+#: src/features/liveNow/components/LiveStatus.tsx:191
 #: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Live feature is in beta"
 msgstr ""
@@ -5882,8 +5882,8 @@ msgstr ""
 msgid "Open post options menu"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:190
-#: src/features/liveNow/components/LiveStatus.tsx:199
+#: src/features/liveNow/components/LiveStatus.tsx:170
+#: src/features/liveNow/components/LiveStatus.tsx:179
 #: src/features/liveNow/components/LiveStatusDialog.tsx:179
 #: src/features/liveNow/components/LiveStatusDialog.tsx:189
 msgid "Open profile"
@@ -6884,7 +6884,7 @@ msgid "Reply was successfully hidden"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:113
-#: src/features/liveNow/components/LiveStatus.tsx:216
+#: src/features/liveNow/components/LiveStatus.tsx:196
 #: src/features/liveNow/components/LiveStatusDialog.tsx:221
 #: src/screens/Messages/ConversationSettings/index.tsx:450
 msgid "Report"
@@ -9550,8 +9550,8 @@ msgstr ""
 msgid "Warn content and filter from feeds"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:156
-#: src/features/liveNow/components/LiveStatus.tsx:162
+#: src/features/liveNow/components/LiveStatus.tsx:146
+#: src/features/liveNow/components/LiveStatus.tsx:152
 #: src/features/liveNow/components/LiveStatusDialog.tsx:157
 #: src/features/liveNow/components/LiveStatusDialog.tsx:166
 msgid "Watch now"
