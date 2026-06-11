@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
@@ -18,7 +19,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { OUTER_SPACE, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
+import { OUTER_SPACE, TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -34,14 +35,11 @@ import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
-import { Text } from '#/components/Typography';
 import { PostHider } from '#/components/web/moderation/PostHider';
 import { RichText } from '#/components/web/RichText';
+import { Text } from '#/components/web/Text';
 
 import * as css from './ThreadItemTreePost.css';
-
-/** Mimic the space in PostMeta */
-const TREE_AVI_PLUS_SPACE = TREE_AVI_WIDTH + a.gap_xs.gap;
 
 export function ThreadItemTreePost({
 	item,
@@ -77,31 +75,16 @@ export function ThreadItemTreePost({
 }
 
 function ThreadItemTreePostDeleted({ item }: { item: Extract<ThreadItem, { type: 'threadPost' }> }) {
-	const t = useTheme();
 	return (
 		<ThreadItemTreePostOuterWrapper item={item}>
 			<ThreadItemTreePostInnerWrapper item={item}>
-				<View
-					style={[
-						a.flex_row,
-						a.align_center,
-						a.rounded_sm,
-						t.atoms.bg_contrast_25,
-						{
-							gap: 6,
-							paddingHorizontal: OUTER_SPACE / 2,
-							height: TREE_AVI_WIDTH,
-						},
-					]}
-				>
-					<TrashIcon style={[t.atoms.text]} width={14} />
-					<Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
+				<div className={css.deletedRow}>
+					<TrashIcon fill="currentColor" width={14} />
+					<Text color="textContrastMedium" className={css.deletedText}>
 						<Trans>Post has been deleted</Trans>
 					</Text>
-				</View>
-				{item.ui.isLastChild && !item.ui.precedesChildReadMore && (
-					<View style={{ height: OUTER_SPACE / 2 }} />
-				)}
+				</div>
+				{item.ui.isLastChild && !item.ui.precedesChildReadMore && <div className={css.deletedSpacer} />}
 			</ThreadItemTreePostInnerWrapper>
 		</ThreadItemTreePostOuterWrapper>
 	);
@@ -117,6 +100,8 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 	const t = useTheme();
 	const indents = Math.max(0, item.ui.indent - 1);
 
+	// stays an RNW `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
+	// `View` ref), which a plain `<div>` can't accept. the indent guides + web layout sit inside.
 	return (
 		<GalleryBleed>
 			<View
@@ -128,16 +113,9 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 				{Array.from(Array(indents)).map((_, n: number) => {
 					const isSkipped = item.ui.skippedIndentIndices.has(n);
 					return (
-						<View
+						<div
 							key={`${item.value.post.uri}-padding-${n}`}
-							style={[
-								t.atoms.border_contrast_low,
-								{
-									borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-									width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-									left: 1,
-								},
-							]}
+							className={clsx(css.guide, isSkipped && css.guideSkipped)}
 						/>
 					);
 				})}
@@ -154,46 +132,21 @@ const ThreadItemTreePostInnerWrapper = memo(function ThreadItemTreePostInnerWrap
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 	children: React.ReactNode;
 }) {
-	const t = useTheme();
 	return (
-		<View
-			style={[
-				a.flex_1, // TODO check on ios
-				{
-					paddingHorizontal: OUTER_SPACE,
-					paddingTop: OUTER_SPACE / 2,
-				},
-				item.ui.indent === 1 && [
-					!item.ui.showParentReplyLine && { paddingTop: OUTER_SPACE / 1.5 },
-					!item.ui.showChildReplyLine && a.pb_sm,
-				],
-				item.ui.isLastChild &&
-					!item.ui.precedesChildReadMore && [
-						{
-							paddingBottom: OUTER_SPACE / 2,
-						},
-					],
-			]}
-		>
-			{item.ui.indent > 1 && (
-				<View
-					style={[
-						a.absolute,
-						t.atoms.border_contrast_low,
-						{
-							left: -1,
-							top: 0,
-							height: TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
-							width: OUTER_SPACE,
-							borderLeftWidth: REPLY_LINE_WIDTH,
-							borderBottomWidth: REPLY_LINE_WIDTH,
-							borderBottomLeftRadius: a.rounded_sm.borderRadius,
-						},
-					]}
-				/>
+		<div
+			className={clsx(
+				css.innerWrapper,
+				item.ui.indent === 1 && !item.ui.showParentReplyLine
+					? css.innerWrapperPadTopLoose
+					: css.innerWrapperPadTop,
+				((item.ui.indent === 1 && !item.ui.showChildReplyLine) ||
+					(item.ui.isLastChild && !item.ui.precedesChildReadMore)) &&
+					css.innerWrapperPadBottom,
 			)}
+		>
+			{item.ui.indent > 1 && <div className={css.connector} />}
 			{children}
-		</View>
+		</div>
 	);
 });
 
@@ -202,15 +155,10 @@ const ThreadItemTreeReplyChildReplyLine = memo(function ThreadItemTreeReplyChild
 }: {
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 }) {
-	const t = useTheme();
 	return (
-		<View style={[a.relative, a.pt_2xs, { width: TREE_AVI_PLUS_SPACE }]}>
-			{item.ui.showChildReplyLine && (
-				<View
-					style={[a.flex_1, t.atoms.border_contrast_low, { borderRightWidth: 2, width: '50%', left: -1 }]}
-				/>
-			)}
-		</View>
+		<div className={css.replyChildLineColumn}>
+			{item.ui.showChildReplyLine && <div className={css.replyChildLine} />}
+		</div>
 	);
 });
 
@@ -300,7 +248,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 					interpretFilterAsBlur
 				>
 					<ThreadItemTreePostInnerWrapper item={item}>
-						<View style={[a.flex_1]}>
+						<div className={css.bodyColumn}>
 							<PostMeta
 								author={post.author}
 								moderation={moderation}
@@ -309,9 +257,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 								avatarSize={TREE_AVI_WIDTH}
 								showAvatar
 							/>
-							<View style={[a.flex_row]}>
+							<div className={css.bodyRow}>
 								<ThreadItemTreeReplyChildReplyLine item={item} />
-								<View style={[a.flex_1, a.pl_2xs]}>
+								<div className={css.contentColumn}>
 									<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 									<PostAlerts
 										additionalCauses={additionalPostAlerts}
@@ -319,7 +267,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 										modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 									/>
 									{richText?.text ? (
-										<View style={[a.mb_2xs]}>
+										<div className={css.richText}>
 											<RichText
 												enableTags
 												value={richText}
@@ -328,16 +276,16 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 												authorHandle={post.author.handle}
 											/>
 											{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
-										</View>
+										</div>
 									) : null}
 									{post.embed && (
-										<View style={[a.pb_xs]}>
+										<div className={css.embed}>
 											<Embed
 												embed={post.embed}
 												moderation={moderation}
 												viewContext={PostEmbedViewContext.Feed}
 											/>
-										</View>
+										</div>
 									)}
 									<PostControls
 										variant="compact"
@@ -349,9 +297,9 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 										threadgateRecord={threadgateRecord}
 									/>
 									<DebugFieldDisplay subject={post} />
-								</View>
-							</View>
-						</View>
+								</div>
+							</div>
+						</div>
 					</ThreadItemTreePostInnerWrapper>
 				</PostHider>
 			</SubtleHoverWrapper>
@@ -362,10 +310,10 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 function SubtleHoverWrapper({ children }: { children: React.ReactNode }) {
 	const { state: hover, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 	return (
-		<View onPointerEnter={onHoverIn} onPointerLeave={onHoverOut} style={[a.flex_1, a.pointer]}>
+		<div className={css.hoverWrapper} onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
 			<SubtleHover hover={hover} />
 			{children}
-		</View>
+		</div>
 	);
 }
 
