@@ -18,6 +18,7 @@ export const root = style(
 	layered(components, {
 		borderRadius: radiusVar,
 		display: 'block',
+		flexShrink: 0,
 		height: sizeVar,
 		position: 'relative',
 		width: sizeVar,
@@ -103,6 +104,7 @@ export const preview = style({
 	color: 'inherit',
 	cursor: 'pointer',
 	display: 'block',
+	flexShrink: 0,
 	outline: 0,
 	padding: 0,
 	textDecoration: 'none',
