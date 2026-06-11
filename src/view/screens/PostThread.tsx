@@ -8,7 +8,7 @@ import { usePostQuery } from '#/state/queries/post';
 
 import { PostThread } from '#/screens/PostThread';
 
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>;
 export function PostThreadScreen({ route }: Props) {
@@ -20,7 +20,7 @@ export function PostThreadScreen({ route }: Props) {
 	useSetTitle(post ? l`Post by @${post.author.handle}` : undefined);
 
 	return (
-		<Layout.Screen testID="postThreadScreen">
+		<Layout.Screen>
 			<PostThread uri={uri} />
 		</Layout.Screen>
 	);

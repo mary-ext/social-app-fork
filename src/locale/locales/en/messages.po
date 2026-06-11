@@ -3892,7 +3892,7 @@ msgstr ""
 #: src/components/Layout/Header/index.tsx:127
 #: src/components/moderation/ScreenHider.tsx:134
 #: src/components/moderation/ScreenHider.tsx:144
-#: src/components/web/Layout/Header.tsx:70
+#: src/components/web/Layout/Header.tsx:73
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:79
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
@@ -6248,7 +6248,7 @@ msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:459
+#: src/screens/PostThread/index.tsx:446
 msgctxt "description"
 msgid "Post"
 msgstr ""

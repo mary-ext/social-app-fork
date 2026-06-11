@@ -15,15 +15,18 @@ import { Text } from '#/components/web/Text';
 export function Outer({
 	children,
 	noBottomBorder,
+	ref,
 	sticky = true,
 }: {
 	children: React.ReactNode;
 	noBottomBorder?: boolean;
+	ref?: React.Ref<HTMLDivElement>;
 	sticky?: boolean;
 }) {
 	const { centerColumnOffset } = useLayoutBreakpoints();
 	return (
 		<div
+			ref={ref}
 			className={clsx(
 				styles.outer,
 				noBottomBorder && styles.outerNoBorder,
