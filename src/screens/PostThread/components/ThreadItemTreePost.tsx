@@ -312,7 +312,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 							<View style={[a.flex_row]}>
 								<ThreadItemTreeReplyChildReplyLine item={item} />
 								<View style={[a.flex_1, a.pl_2xs]}>
-									<LabelsOnMyPost post={post} style={[a.pb_2xs]} />
+									<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 									<PostAlerts
 										additionalCauses={additionalPostAlerts}
 										className={css.postAlerts}

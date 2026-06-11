@@ -1,26 +1,27 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { ComAtprotoLabelDefs } from '@atcute/atproto';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
-import { useLingui, Plural, Trans } from '@lingui/react/macro';
+import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
-import { atoms as a } from '#/alf';
-
-import { Button, ButtonIcon, type ButtonSize, ButtonText } from '#/components/Button';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { LabelsOnMeDialog, useLabelsOnMeDialogControl } from '#/components/moderation/LabelsOnMeDialog';
+import { Button, ButtonIcon, type ButtonProps, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+
+import * as styles from './LabelsOnMe.css';
 
 export function LabelsOnMe({
-	type,
+	className,
 	labels,
 	size,
-	style,
+	type,
 }: {
-	type: 'account' | 'content';
+	className?: string;
 	labels: ComAtprotoLabelDefs.Label[] | undefined;
-	size?: ButtonSize;
-	style?: StyleProp<ViewStyle>;
+	size?: ButtonProps['size'];
+	type: 'account' | 'content';
 }) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
@@ -29,52 +30,50 @@ export function LabelsOnMe({
 	if (!labels || !currentAccount) {
 		return null;
 	}
-	labels = labels.filter((l) => !l.val.startsWith('!') && !(l.val === 'bot' && l.src === currentAccount.did));
-	if (!labels.length) {
+	const filtered = labels.filter(
+		(label) => !label.val.startsWith('!') && !(label.val === 'bot' && label.src === currentAccount.did),
+	);
+	if (!filtered.length) {
 		return null;
 	}
 
 	return (
-		<View style={[a.flex_row, style]}>
-			<LabelsOnMeDialog control={control} labels={labels} type={type} />
-			<Button
-				variant="solid"
-				color="secondary"
-				size={size || 'small'}
-				label={l`View information about these labels`}
-				onPress={() => {
-					control.open();
-				}}
-			>
-				<ButtonIcon position="left" icon={CircleInfo} />
-				<ButtonText style={[a.leading_snug]}>
-					{type === 'account' ? (
-						<Trans>
-							<Plural value={labels.length} one="# label has" other="# labels have" /> been placed on this
-							account
-						</Trans>
-					) : (
-						<Trans>
-							<Plural value={labels.length} one="# label has" other="# labels have" /> been placed on this
-							content
-						</Trans>
-					)}
-				</ButtonText>
-			</Button>
-		</View>
+		<div className={clsx(styles.row, className)}>
+			<LabelsOnMeDialog control={control} labels={filtered} type={type} />
+			<Dialog.Trigger
+				handle={control}
+				render={
+					<Button
+						color="secondary"
+						label={l`View information about these labels`}
+						size={size ?? 'small'}
+						variant="solid"
+					>
+						<ButtonIcon icon={CircleInfo} />
+						<ButtonText>
+							{type === 'account' ? (
+								<Trans>
+									<Plural value={filtered.length} one="# label has" other="# labels have" /> been placed on
+									this account
+								</Trans>
+							) : (
+								<Trans>
+									<Plural value={filtered.length} one="# label has" other="# labels have" /> been placed on
+									this content
+								</Trans>
+							)}
+						</ButtonText>
+					</Button>
+				}
+			/>
+		</div>
 	);
 }
 
-export function LabelsOnMyPost({
-	post,
-	style,
-}: {
-	post: AppBskyFeedDefs.PostView;
-	style?: StyleProp<ViewStyle>;
-}) {
+export function LabelsOnMyPost({ className, post }: { className?: string; post: AppBskyFeedDefs.PostView }) {
 	const { currentAccount } = useSession();
 	if (post.author.did !== currentAccount?.did) {
 		return null;
 	}
-	return <LabelsOnMe type="content" labels={post.labels} size="tiny" style={style} />;
+	return <LabelsOnMe className={className} labels={post.labels} size="tiny" type="content" />;
 }

@@ -283,7 +283,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									postHref={postHref}
 								/>
 							</View>
-							<LabelsOnMyPost post={post} style={[a.pb_xs]} />
+							<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 							<PostAlerts
 								additionalCauses={additionalPostAlerts}
 								className={css.postAlerts}

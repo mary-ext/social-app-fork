@@ -353,7 +353,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						</View>
 					</View>
 					<View style={[a.pb_sm]}>
-						<LabelsOnMyPost post={post} style={[a.pb_sm]} />
+						<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 						<ContentHider
 							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
 							ignoreMute

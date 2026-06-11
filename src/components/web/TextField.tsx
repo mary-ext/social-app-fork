@@ -54,7 +54,9 @@ export type InputProps = {
 	multiline?: boolean;
 	/** Caps the autosizing height of a `multiline` input; further lines scroll within it. */
 	maxRows?: number;
-	/** Caps the number of characters accepted by a single-line input. */
+	/** Initial (and minimum) row count for a `multiline` input; it grows from here. */
+	minRows?: number;
+	/** Caps the number of characters accepted. */
 	maxLength?: number;
 	/** Ref to the underlying single-line `<input>` (e.g. to focus or clear it imperatively). */
 	inputRef?: Ref<HTMLInputElement>;
@@ -73,6 +75,7 @@ export function Input({
 	isInvalid,
 	multiline = false,
 	maxRows,
+	minRows,
 	maxLength,
 	inputRef,
 	onKeyDown,
@@ -94,7 +97,9 @@ export function Input({
 				className={cls}
 				defaultValue={defaultValue}
 				id={inputId}
+				maxLength={maxLength}
 				maxRows={maxRows}
+				minRows={minRows}
 				onChange={onChange}
 				placeholder={placeholder}
 				value={value}

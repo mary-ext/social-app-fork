@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type { ComAtprotoLabelDefs, ComAtprotoModerationCreateReport } from '@atcute/atproto';
 import { ClientResponseError, ok } from '@atcute/client';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
@@ -17,66 +16,67 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { InlineLinkText } from '#/components/Link';
+import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { InlineLinkText } from '#/components/web/Link';
+import { Text } from '#/components/web/Text';
+import * as TextField from '#/components/web/TextField';
 
-import { Admonition } from '../Admonition';
-import { Divider } from '../Divider';
-import { Loader } from '../Loader';
+import * as styles from './LabelsOnMeDialog.css';
 
-export { useDialogControl as useLabelsOnMeDialogControl } from '#/components/Dialog';
+export { useDialogHandle as useLabelsOnMeDialogControl } from '#/components/web/Dialog';
 
 export interface LabelsOnMeDialogProps {
-	control: Dialog.DialogOuterProps['control'];
+	control: Dialog.DialogHandle;
 	labels: ComAtprotoLabelDefs.Label[];
 	type: 'account' | 'content';
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
+	const { t: l } = useLingui();
+	const isAccount = props.type === 'account';
 	return (
-		<Dialog.Outer control={props.control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle />
-			<LabelsOnMeDialogInner {...props} />
-		</Dialog.Outer>
+		<Dialog.Root handle={props.control}>
+			<Dialog.Popup
+				label={
+					isAccount
+						? l`The following labels were applied to your account.`
+						: l`The following labels were applied to your content.`
+				}
+			>
+				<LabelsOnMeDialogInner {...props} />
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
-function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
-	const { t: l } = useLingui();
+function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps) {
 	const { currentAccount } = useSession();
 	const [appealingLabel, setAppealingLabel] = useState<ComAtprotoLabelDefs.Label | undefined>(undefined);
-	const { labels } = props;
-	const isAccount = props.type === 'account';
+	const isAccount = type === 'account';
 	const containsSelfLabel = useMemo(
-		() => labels.some((l) => l.src === currentAccount?.did),
+		() => labels.some((label) => label.src === currentAccount?.did),
 		[currentAccount?.did, labels],
 	);
 
 	return (
-		<Dialog.ScrollableInner
-			label={
-				isAccount
-					? l`The following labels were applied to your account.`
-					: l`The following labels were applied to your content.`
-			}
-		>
+		<div className={styles.main}>
 			{appealingLabel ? (
 				<AppealForm
+					control={control}
 					label={appealingLabel}
-					control={props.control}
 					onPressBack={() => setAppealingLabel(undefined)}
 				/>
 			) : (
 				<>
-					<Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+					<Text className={styles.title} leading="tight" size="_2xl" weight="bold">
 						{isAccount ? <Trans>Labels on your account</Trans> : <Trans>Labels on your content</Trans>}
 					</Text>
-					<Text style={[a.text_md, a.leading_snug]}>
+					<Text leading="snug" size="md">
 						{containsSelfLabel ? (
 							<Trans>You may appeal non-self labels if you feel they were placed in error.</Trans>
 						) : (
@@ -84,113 +84,108 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
 						)}
 					</Text>
 
-					<View style={[a.py_lg, a.gap_md]}>
+					<div className={styles.list}>
 						{labels.map((label) => (
 							<Label
 								key={`${label.val}-${label.src}`}
-								label={label}
+								control={control}
 								isSelfLabel={label.src === currentAccount?.did}
-								control={props.control}
+								label={label}
 								onPressAppeal={setAppealingLabel}
 							/>
 						))}
-					</View>
+					</div>
 				</>
 			)}
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+		</div>
 	);
 }
 
 function Label({
-	label,
-	isSelfLabel,
 	control,
+	isSelfLabel,
+	label,
 	onPressAppeal,
 }: {
-	label: ComAtprotoLabelDefs.Label;
+	control: Dialog.DialogHandle;
 	isSelfLabel: boolean;
-	control: Dialog.DialogOuterProps['control'];
+	label: ComAtprotoLabelDefs.Label;
 	onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { labeler, strings } = useLabelInfo(label);
 	const sourceName = labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src;
 	const timeDiff = useGetTimeAgo({ future: true });
+	const [now] = useState(() => Date.now());
+
 	return (
-		<View style={[a.border, t.atoms.border_contrast_low, a.rounded_sm, a.overflow_hidden]}>
-			<View style={[a.p_md, a.gap_sm, a.flex_row]}>
-				<View style={[a.flex_1, a.gap_xs]}>
-					<Text emoji style={[a.font_semi_bold, a.text_md]}>
+		<div className={styles.card}>
+			<div className={styles.cardTop}>
+				<div className={styles.cardInfo}>
+					<Text size="md" weight="semiBold">
 						{strings.name}
 					</Text>
-					<Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+					<Text color="textContrastMedium" leading="snug">
 						{strings.description}
 					</Text>
-				</View>
+				</div>
 				{!isSelfLabel && (
-					<View>
-						<Button
-							variant="solid"
-							color="secondary"
-							size="small"
-							label={l`Appeal`}
-							onPress={() => onPressAppeal(label)}
-						>
-							<ButtonText>
-								<Trans>Appeal</Trans>
-							</ButtonText>
-						</Button>
-					</View>
+					<Button
+						color="secondary"
+						label={l`Appeal`}
+						onClick={() => onPressAppeal(label)}
+						size="small"
+						variant="solid"
+					>
+						<ButtonText>
+							<Trans>Appeal</Trans>
+						</ButtonText>
+					</Button>
 				)}
-			</View>
-			<Divider />
-			<View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
+			</div>
+			<div className={styles.divider} />
+			<div className={styles.band}>
 				{isSelfLabel ? (
-					<Text style={[t.atoms.text_contrast_medium]}>
+					<Text color="textContrastMedium">
 						<Trans>This label was applied by you.</Trans>
 					</Text>
 				) : (
-					<View style={[a.flex_row, a.justify_between, a.gap_xl, { paddingBottom: 1 }]}>
-						<Text style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
+					<div className={styles.sourceRow}>
+						<Text className={styles.sourceText} color="textContrastMedium" leading="snug" numberOfLines={1}>
 							<Trans>
 								Source:{' '}
 								<InlineLinkText
 									label={sourceName}
-									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 									onPress={() => control.close()}
+									to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 								>
 									{sourceName}
 								</InlineLinkText>
 							</Trans>
 						</Text>
 						{label.exp && (
-							<View>
-								<Text style={[a.leading_snug, a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-									<Trans>Expires in {timeDiff(Date.now(), label.exp)}</Trans>
-								</Text>
-							</View>
+							<Text className={styles.expires} color="textContrastMedium" leading="snug" size="sm">
+								<Trans>Expires in {timeDiff(now, label.exp)}</Trans>
+							</Text>
 						)}
-					</View>
+					</div>
 				)}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
 function AppealForm({
-	label,
 	control,
+	label,
 	onPressBack,
 }: {
+	control: Dialog.DialogHandle;
 	label: ComAtprotoLabelDefs.Label;
-	control: Dialog.DialogOuterProps['control'];
 	onPressBack: () => void;
 }) {
 	const { t: l } = useLingui();
 	const { labeler, strings } = useLabelInfo(label);
-	const { gtMobile } = useBreakpoints();
 	const [details, setDetails] = useState('');
 	const { subject } = useLabelSubject({ label });
 	const isAccountReport = 'did' in subject;
@@ -235,70 +230,54 @@ function AppealForm({
 
 	return (
 		<>
-			<View>
-				<Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
+			<div className={styles.appealHeader}>
+				<Text className={styles.title} leading="tight" size="_2xl" weight="semiBold">
 					<Trans>Appeal "{strings.name}" label</Trans>
 				</Text>
-				<Text style={[a.text_md, a.leading_snug]}>
+				<Text leading="snug" size="md">
 					<Trans>
 						This appeal will be sent to{' '}
 						<InlineLinkText
 							label={sourceName}
-							to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
+							leading="snug"
 							onPress={() => control.close()}
-							style={[a.text_md, a.leading_snug]}
+							size="md"
+							to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}
 						>
 							{sourceName}
 						</InlineLinkText>
 						.
 					</Trans>
 				</Text>
-			</View>
+			</div>
 			{error && (
-				<Admonition type="error" style={[a.mt_sm]}>
+				<Admonition className={styles.appealError} type="error">
 					{error}
 				</Admonition>
 			)}
-			<View style={[a.my_md]}>
-				<Dialog.Input
+			<div className={styles.appealInput}>
+				<TextField.Input
+					autoFocus
 					label={l`Text input field`}
+					maxLength={300}
+					minRows={3}
+					multiline
+					onChangeText={setDetails}
 					placeholder={l`Please explain why you think this label was incorrectly applied by ${
 						labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
 					}`}
 					value={details}
-					onChangeText={setDetails}
-					autoFocus={true}
-					numberOfLines={3}
-					multiline
-					maxLength={300}
 				/>
-			</View>
-			<View
-				style={gtMobile ? [a.flex_row, a.justify_between] : [{ flexDirection: 'column-reverse' }, a.gap_sm]}
-			>
-				<Button
-					testID="backBtn"
-					variant="solid"
-					color="secondary"
-					size="large"
-					onPress={onPressBack}
-					label={l`Back`}
-				>
+			</div>
+			<div className={styles.appealActions}>
+				<Button color="secondary" label={l`Back`} onClick={onPressBack} size="large" variant="solid">
 					<ButtonText>{l`Back`}</ButtonText>
 				</Button>
-				<Button
-					testID="submitBtn"
-					variant="solid"
-					color="primary"
-					size="large"
-					onPress={onSubmit}
-					label={l`Submit`}
-				>
+				<Button color="primary" label={l`Submit`} onClick={onSubmit} size="large" variant="solid">
 					<ButtonText>{l`Submit`}</ButtonText>
 					{isPending && <ButtonIcon icon={Loader} />}
 				</Button>
-			</View>
-			{false}
+			</div>
 		</>
 	);
 }

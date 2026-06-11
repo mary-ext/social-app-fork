@@ -42,13 +42,13 @@ msgstr ""
 msgid "{0, plural, one {# hour} other {# hours}}"
 msgstr ""
 
-#. placeholder {0}: labels.length
-#: src/components/moderation/LabelsOnMe.tsx:52
+#. placeholder {0}: filtered.length
+#: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
 msgstr ""
 
-#. placeholder {0}: labels.length
-#: src/components/moderation/LabelsOnMe.tsx:57
+#. placeholder {0}: filtered.length
+#: src/components/moderation/LabelsOnMe.tsx:60
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgid "{0, plural, one {# month} other {# months}}"
 msgstr ""
 
 #. placeholder {0}: convo.details.unreadJoinRequestCount
-#: src/screens/Messages/components/ChatListItem.tsx:219
+#: src/screens/Messages/components/ChatListItem.tsx:220
 msgid "{0, plural, one {# new join request} other {# new join requests}}"
 msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 
@@ -553,7 +553,7 @@ msgstr ""
 msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 
-#: src/screens/Messages/components/ChatListItem.tsx:215
+#: src/screens/Messages/components/ChatListItem.tsx:216
 msgctxt "Displayed when there are more than 20 requests to join a group chat"
 msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
@@ -692,28 +692,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:439
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:438
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:427
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:426
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:415
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:414
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:450
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:449
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -1404,13 +1404,13 @@ msgstr "Anyone who has it will no longer be able to join or request to join. You
 msgid "App language"
 msgstr "App language"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:138
-#: src/components/moderation/LabelsOnMeDialog.tsx:142
+#: src/components/moderation/LabelsOnMeDialog.tsx:135
+#: src/components/moderation/LabelsOnMeDialog.tsx:141
 msgid "Appeal"
 msgstr ""
 
 #. placeholder {0}: strings.name
-#: src/components/moderation/LabelsOnMeDialog.tsx:240
+#: src/components/moderation/LabelsOnMeDialog.tsx:235
 msgid "Appeal \"{0}\" label"
 msgstr ""
 
@@ -1418,7 +1418,7 @@ msgstr ""
 msgid "Appeal livestream suspension"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:230
+#: src/components/moderation/LabelsOnMeDialog.tsx:225
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:87
 #: src/screens/Messages/components/ChatDisabled.tsx:121
 msgctxt "toast"
@@ -1445,12 +1445,12 @@ msgid "Apply default recommended feeds"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:557
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:556
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:532
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:566
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:531
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:565
 msgid "Archived post"
 msgstr ""
 
@@ -1532,14 +1532,14 @@ msgstr ""
 #: src/components/dms/AddMembersFlow.tsx:437
 #: src/components/dms/InitiateChatFlow.tsx:643
 #: src/components/dms/InitiateChatFlow.tsx:647
-#: src/components/moderation/LabelsOnMeDialog.tsx:285
-#: src/components/moderation/LabelsOnMeDialog.tsx:287
+#: src/components/moderation/LabelsOnMeDialog.tsx:273
+#: src/components/moderation/LabelsOnMeDialog.tsx:274
 #: src/screens/Messages/components/ChatDisabled.tsx:155
 #: src/screens/Messages/components/ChatDisabled.tsx:158
 #: src/screens/Messages/components/InviteLinkDialog.tsx:235
 #: src/screens/Messages/components/InviteLinkDialog.tsx:260
 #: src/screens/Messages/Inbox.tsx:198
-#: src/screens/Profile/Header/Shell.tsx:118
+#: src/screens/Profile/Header/Shell.tsx:119
 #: src/screens/StarterPack/Wizard/index.tsx:280
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:81
@@ -1685,7 +1685,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:576
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:575
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -2229,7 +2229,7 @@ msgstr ""
 msgid "Continue to group name"
 msgstr "Continue to group name"
 
-#: src/screens/Messages/components/ChatListItem.tsx:315
+#: src/screens/Messages/components/ChatListItem.tsx:316
 msgid "Conversation deleted"
 msgstr ""
 
@@ -2340,7 +2340,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:174
+#: src/screens/Messages/components/MessageInputEmbed.tsx:176
 msgid "Could not fetch post"
 msgstr "Could not fetch post"
 
@@ -2358,7 +2358,7 @@ msgstr ""
 msgid "Could not load feed"
 msgstr ""
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:272
+#: src/screens/Messages/components/MessageInputEmbed.tsx:274
 msgid "Could not load invite"
 msgstr "Could not load invite"
 
@@ -2604,7 +2604,7 @@ msgid "Deleted"
 msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:104
-#: src/screens/Messages/components/ChatListItem.tsx:124
+#: src/screens/Messages/components/ChatListItem.tsx:125
 #: src/screens/Messages/ConversationSettings/Member.tsx:77
 msgid "Deleted Account"
 msgstr ""
@@ -3169,10 +3169,10 @@ msgstr ""
 msgid "Expires {0}"
 msgstr ""
 
-#. placeholder {0}: timeDiff(Date.now(), label.exp)
 #. placeholder {0}: timeDiff(Date.now(), modcause.label.exp)
+#. placeholder {0}: timeDiff(now, label.exp)
 #. placeholder {0}: timeDiff(now, modcause.label.exp)
-#: src/components/moderation/LabelsOnMeDialog.tsx:171
+#: src/components/moderation/LabelsOnMeDialog.tsx:168
 #: src/components/moderation/ModerationDetailsDialog.tsx:181
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:161
 msgid "Expires in {0}"
@@ -3440,7 +3440,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:224
+#: src/components/moderation/LabelsOnMeDialog.tsx:219
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:81
 #: src/screens/Messages/components/ChatDisabled.tsx:115
 msgid "Failed to submit appeal, please try again."
@@ -3947,7 +3947,7 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.handle
-#: src/screens/Messages/components/ChatListItem.tsx:147
+#: src/screens/Messages/components/ChatListItem.tsx:148
 msgid "Go to conversation with {0}"
 msgstr ""
 
@@ -3963,7 +3963,7 @@ msgstr ""
 msgid "Go to profile"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:207
+#: src/screens/Messages/components/ChatListItem.tsx:208
 msgid "Go to the group chat named \"{chatName}\""
 msgstr "Go to the group chat named \"{chatName}\""
 
@@ -4673,7 +4673,7 @@ msgstr ""
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:437
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:436
 msgid "Likes on this post"
 msgstr ""
 
@@ -5009,7 +5009,7 @@ msgstr ""
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
-#: src/screens/Messages/components/ChatListItem.tsx:315
+#: src/screens/Messages/components/ChatListItem.tsx:316
 msgid "Message deleted"
 msgstr ""
 
@@ -5511,7 +5511,7 @@ msgstr ""
 msgid "No media yet"
 msgstr ""
 
-#: src/screens/Messages/components/ChatListItem.tsx:303
+#: src/screens/Messages/components/ChatListItem.tsx:304
 msgid "No messages yet"
 msgstr ""
 
@@ -5715,7 +5715,7 @@ msgstr ""
 #: src/components/BotAccountAlert.tsx:55
 #: src/components/dms/InitiateChatFlow.tsx:623
 #: src/components/dms/MessageItem.tsx:535
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:580
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:579
 msgid "Okay"
 msgstr ""
 
@@ -6211,7 +6211,7 @@ msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
 #. placeholder {0}: labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
-#: src/components/moderation/LabelsOnMeDialog.tsx:265
+#: src/components/moderation/LabelsOnMeDialog.tsx:266
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr ""
 
@@ -6303,8 +6303,8 @@ msgid "Post failed to upload. Please check your Internet connection and try agai
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:125
-#: src/screens/PostThread/components/ThreadItemPost.tsx:93
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:97
+#: src/screens/PostThread/components/ThreadItemPost.tsx:95
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:99
 msgid "Post has been deleted"
 msgstr ""
 
@@ -6451,7 +6451,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:110
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
@@ -6528,7 +6528,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:425
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:424
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6663,9 +6663,9 @@ msgstr ""
 msgid "Remove caption file"
 msgstr "Remove caption file"
 
-#: src/screens/Messages/components/MessageInputEmbed.tsx:202
-#: src/screens/Messages/components/MessageInputEmbed.tsx:244
-#: src/screens/Messages/components/MessageInputEmbed.tsx:301
+#: src/screens/Messages/components/MessageInputEmbed.tsx:204
+#: src/screens/Messages/components/MessageInputEmbed.tsx:246
+#: src/screens/Messages/components/MessageInputEmbed.tsx:303
 msgid "Remove embed"
 msgstr ""
 
@@ -7008,7 +7008,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:413
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:412
 msgid "Reposts of this post"
 msgstr ""
 
@@ -7755,7 +7755,7 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:533
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:532
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7968,7 +7968,7 @@ msgstr ""
 msgid "Source code"
 msgstr "Source code"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:157
+#: src/components/moderation/LabelsOnMeDialog.tsx:155
 #: src/components/moderation/ModerationDetailsDialog.tsx:167
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:148
 msgid "Source: <0>{sourceName}</0>"
@@ -8056,8 +8056,8 @@ msgstr ""
 msgid "Storybook"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:295
-#: src/components/moderation/LabelsOnMeDialog.tsx:297
+#: src/components/moderation/LabelsOnMeDialog.tsx:276
+#: src/components/moderation/LabelsOnMeDialog.tsx:277
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:130
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:132
 #: src/screens/Messages/components/ChatDisabled.tsx:167
@@ -8247,7 +8247,7 @@ msgstr ""
 msgid "Text & tags"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:264
+#: src/components/moderation/LabelsOnMeDialog.tsx:261
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:115
 #: src/screens/Messages/components/ChatDisabled.tsx:138
 msgid "Text input field"
@@ -8294,11 +8294,11 @@ msgstr ""
 msgid "The feed has been replaced with Discover."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:64
+#: src/components/moderation/LabelsOnMeDialog.tsx:46
 msgid "The following labels were applied to your account."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:65
+#: src/components/moderation/LabelsOnMeDialog.tsx:47
 msgid "The following labels were applied to your content."
 msgstr ""
 
@@ -8502,7 +8502,7 @@ msgstr "This account is not active."
 msgid "This action can be undone at any time."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:243
+#: src/components/moderation/LabelsOnMeDialog.tsx:238
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
 
@@ -8529,7 +8529,7 @@ msgstr "This chat has ended"
 msgid "This chat is full"
 msgstr "This chat is full"
 
-#: src/screens/Messages/components/ChatListItem.tsx:360
+#: src/screens/Messages/components/ChatListItem.tsx:361
 #: src/screens/Messages/components/ChatLocked.tsx:61
 msgid "This chat is locked"
 msgstr "This chat is locked"
@@ -8559,7 +8559,7 @@ msgstr ""
 msgid "This conversation is locked."
 msgstr "This conversation is locked."
 
-#: src/screens/Messages/components/ChatListItem.tsx:148
+#: src/screens/Messages/components/ChatListItem.tsx:149
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
@@ -8623,7 +8623,7 @@ msgstr "This label lets the world know that this account is automated. If turned
 msgid "This label was applied by the author."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:152
+#: src/components/moderation/LabelsOnMeDialog.tsx:150
 msgid "This label was applied by you."
 msgstr ""
 
@@ -8673,7 +8673,7 @@ msgstr "This person is blocking you"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:569
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:568
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -9350,7 +9350,7 @@ msgid "View {0}"
 msgstr "View {0}"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/Shell.tsx:181
+#: src/screens/Profile/Header/Shell.tsx:175
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -9412,7 +9412,7 @@ msgstr "View incoming requests"
 msgid "View incoming requests to join this group chat"
 msgstr "View incoming requests to join this group chat"
 
-#: src/components/moderation/LabelsOnMe.tsx:44
+#: src/components/moderation/LabelsOnMe.tsx:48
 msgid "View information about these labels"
 msgstr ""
 
@@ -9445,7 +9445,7 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:110
+#: src/screens/Profile/Header/Shell.tsx:111
 msgid "View profile banner"
 msgstr "View profile banner"
 
@@ -10073,7 +10073,7 @@ msgstr ""
 msgid "You'll start seeing posts and replies from this account again."
 msgstr "You'll start seeing posts and replies from this account again."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:222
+#: src/components/moderation/LabelsOnMeDialog.tsx:217
 msgid "You've already appealed this label and it's being reviewed by our moderation team."
 msgstr ""
 

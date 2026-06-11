@@ -41,6 +41,10 @@ export const handle = style({
 	unicodeBidi: 'isolate',
 });
 
+export const labelsOnMe = style({
+	paddingBottom: space.sm,
+});
+
 export const postAlerts = style({
 	paddingBottom: space.sm,
 });

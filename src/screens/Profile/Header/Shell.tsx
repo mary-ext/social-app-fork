@@ -163,11 +163,7 @@ let ProfileHeaderShell = ({
 			{children}
 			{!isPlaceholderProfile &&
 				(isMe ? (
-					<LabelsOnMe
-						type="account"
-						labels={profile.labels}
-						style={[a.px_lg, a.pt_xs, a.pb_sm, { pointerEvents: 'box-none' }]}
-					/>
+					<LabelsOnMe className={css.headerAlerts} labels={profile.labels} type="account" />
 				) : (
 					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
 				))}
