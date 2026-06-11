@@ -3,6 +3,7 @@ import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute
 import { ClientResponseError } from '@atcute/client';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -11,7 +12,7 @@ import { isNetworkError } from '#/lib/strings/errors';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
+import { setJoinLinkPreviewRequestedForCode, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useRequestJoinGroupChat } from '#/state/queries/messages/request-join-group-chat';
 import { useWithdrawJoinGroupChatRequest } from '#/state/queries/messages/withdraw-join-group-chat';
 import { useSession } from '#/state/session';
@@ -78,6 +79,7 @@ function GroupChatJoinDialogContent({
 	const { hasSession } = useSession();
 	const moderationOpts = useModerationOpts();
 	const navigation = useNavigation<NavigationProp>();
+	const queryClient = useQueryClient();
 
 	const { data, error, isLoading } = useJoinLinkPreviewsQuery({
 		codes: code ? [code] : undefined,
@@ -89,6 +91,10 @@ function GroupChatJoinDialogContent({
 		onSuccess: (data) => {
 			switch (data.status) {
 				case 'pending':
+					// Optimistically mark the link as requested so any invite cards backed by the preview cache
+					// (e.g. the DM embed) flip to "Requested" right away, rather than waiting on a server refetch
+					// that can lag behind the write.
+					if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, true);
 					control.close(() => {
 						Toast.show(l`Access requested! The group owner will review your request.`);
 					});
@@ -143,6 +149,9 @@ function GroupChatJoinDialogContent({
 
 	const { mutate: withdrawRequest, isPending: isWithdrawPending } = useWithdrawJoinGroupChatRequest({
 		onSuccess: () => {
+			// Optimistically clear the requested state so invite cards backed by the preview cache flip back to
+			// "Request to join" right away.
+			if (code) setJoinLinkPreviewRequestedForCode(queryClient, code, false);
 			control.close(() => {
 				Toast.show(l`Join request rescinded.`);
 			});

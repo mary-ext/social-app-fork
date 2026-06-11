@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import type { ChatBskyGroupDefs, ChatBskyGroupGetJoinLinkPreviews } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { createQueryKey } from '#/state/queries/util';
+import { createQueryKey, type StructuredQueryKey } from '#/state/queries/util';
 import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
@@ -98,5 +98,46 @@ export function useGetJoinLinkPreview() {
 			}
 		},
 		[chat, queryClient],
+	);
+}
+
+/**
+ * Optimistically set whether the viewer has requested to join the link with the given code, across any cached
+ * join link preview queries. Used right after a successful join request (requested = true) or withdrawal
+ * (requested = false) so the UI ("Requested" vs "Request to join") updates immediately, without waiting on a
+ * server refetch that can lag behind the write.
+ */
+export function setJoinLinkPreviewRequestedForCode(
+	queryClient: QueryClient,
+	code: string,
+	requested: boolean,
+) {
+	queryClient.setQueriesData<ChatBskyGroupGetJoinLinkPreviews.$output>(
+		{
+			predicate: (query) => {
+				const [root, args] = query.queryKey as Partial<StructuredQueryKey<{ codes?: string[] }>>;
+				return (
+					root === joinLinkPreviewQueryKeyRoot && Array.isArray(args?.codes) && args.codes.includes(code)
+				);
+			},
+		},
+		(old) => {
+			if (!old) return old;
+			return {
+				...old,
+				joinLinkPreviews: old.joinLinkPreviews.map((preview) => {
+					if (preview.code === code) {
+						return {
+							...preview,
+							viewer: {
+								...preview.viewer,
+								requestedAt: requested ? new Date().toISOString() : undefined,
+							},
+						};
+					}
+					return preview;
+				}),
+			};
+		},
 	);
 }
