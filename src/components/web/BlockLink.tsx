@@ -80,6 +80,11 @@ export function BlockLink({
 		if ((interactive && interactive !== e.currentTarget) || e.defaultPrevented) {
 			return;
 		}
+		// the click ending a drag-to-select gesture lands here; don't navigate while the user is selecting text
+		const selection = window.getSelection();
+		if (selection && !selection.isCollapsed && e.currentTarget.contains(selection.anchorNode)) {
+			return;
+		}
 		go(e);
 	};
 
