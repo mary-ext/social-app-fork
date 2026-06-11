@@ -50,6 +50,7 @@ import { useFullVerificationState } from '#/components/verification';
 import { VerificationCreatePrompt } from '#/components/verification/VerificationCreatePrompt';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 import { Button, ButtonIcon } from '#/components/web/Button';
+import { useDialogHandle } from '#/components/web/Dialog';
 import * as Menu from '#/components/web/Menu';
 import * as WebPrompt from '#/components/web/Prompt';
 
@@ -91,7 +92,7 @@ let ProfileMenu = ({
 	const blockPromptHandle = WebPrompt.usePromptHandle();
 	const mutePromptHandle = WebPrompt.usePromptHandle();
 	const loggedOutWarningPromptHandle = WebPrompt.usePromptHandle();
-	const goLiveDialogControl = useDialogControl();
+	const goLiveDialogHandle = useDialogHandle();
 	const goLiveDisabledDialogControl = useDialogControl();
 	const addToStarterPacksDialogControl = useDialogControl();
 
@@ -303,7 +304,7 @@ let ProfileMenu = ({
 											if (status.isDisabled) {
 												goLiveDisabledDialogControl.open();
 											} else {
-												goLiveDialogControl.open();
+												goLiveDialogHandle.open(null);
 											}
 										}}
 									>
@@ -449,12 +450,12 @@ let ProfileMenu = ({
 				<GoLiveDisabledDialog control={goLiveDisabledDialogControl} status={status} />
 			) : status.isActive ? (
 				<EditLiveDialog
-					control={goLiveDialogControl}
-					status={status}
 					embed={status.embed as AppBskyEmbedExternal.View}
+					handle={goLiveDialogHandle}
+					status={status}
 				/>
 			) : (
-				<GoLiveDialog control={goLiveDialogControl} profile={profile} />
+				<GoLiveDialog handle={goLiveDialogHandle} profile={profile} />
 			)}
 		</>
 	);

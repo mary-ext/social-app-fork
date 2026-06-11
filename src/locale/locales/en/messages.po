@@ -567,11 +567,11 @@ msgstr ""
 msgid "{MAX_ALT_TEXT, plural, other {Alt text must be less than # characters.}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:294
+#: src/screens/Profile/Header/EditProfileDialog.tsx:290
 msgid "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum number of characters is #.}}"
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:255
+#: src/screens/Profile/Header/EditProfileDialog.tsx:253
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
@@ -857,12 +857,12 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:343
 #: src/screens/Messages/components/RequestButtons.tsx:86
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:108
-#: src/view/com/profile/ProfileMenu.tsx:163
+#: src/view/com/profile/ProfileMenu.tsx:164
 msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:178
+#: src/view/com/profile/ProfileMenu.tsx:179
 msgctxt "toast"
 msgid "Account followed"
 msgstr ""
@@ -876,7 +876,7 @@ msgid "Account is deactivated"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
-#: src/view/com/profile/ProfileMenu.tsx:135
+#: src/view/com/profile/ProfileMenu.tsx:136
 msgctxt "toast"
 msgid "Account muted"
 msgstr ""
@@ -910,18 +910,18 @@ msgstr ""
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:95
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:81
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:281
-#: src/view/com/profile/ProfileMenu.tsx:151
+#: src/view/com/profile/ProfileMenu.tsx:152
 msgctxt "toast"
 msgid "Account unblocked"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:192
+#: src/view/com/profile/ProfileMenu.tsx:193
 msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:360
-#: src/view/com/profile/ProfileMenu.tsx:123
+#: src/view/com/profile/ProfileMenu.tsx:124
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
@@ -962,7 +962,7 @@ msgstr ""
 msgid "Add a content warning"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:107
+#: src/features/liveNow/components/GoLiveDialog.tsx:99
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
 msgstr ""
 
@@ -1076,8 +1076,8 @@ msgstr ""
 msgid "Add this feed to your feeds"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:287
-#: src/view/com/profile/ProfileMenu.tsx:289
+#: src/view/com/profile/ProfileMenu.tsx:288
+#: src/view/com/profile/ProfileMenu.tsx:290
 msgid "Add to lists"
 msgstr ""
 
@@ -1086,8 +1086,8 @@ msgid "Add to saved posts"
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:153
-#: src/view/com/profile/ProfileMenu.tsx:281
-#: src/view/com/profile/ProfileMenu.tsx:283
+#: src/view/com/profile/ProfileMenu.tsx:282
+#: src/view/com/profile/ProfileMenu.tsx:284
 msgid "Add to starter packs"
 msgstr ""
 
@@ -1249,8 +1249,8 @@ msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:40
 #: src/view/com/composer/GifAltText.tsx:160
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:108
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:112
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:111
 #: src/view/com/composer/videos/SubtitleDialog.tsx:96
 #: src/view/com/composer/videos/SubtitleDialog.tsx:100
 msgid "Alt text"
@@ -1268,7 +1268,7 @@ msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
 #: src/view/com/composer/GifAltText.tsx:180
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:122
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:120
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
@@ -1539,7 +1539,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:235
 #: src/screens/Messages/components/InviteLinkDialog.tsx:260
 #: src/screens/Messages/Inbox.tsx:198
-#: src/screens/Profile/Header/Shell.tsx:119
+#: src/screens/Profile/Header/Shell.tsx:114
 #: src/screens/StarterPack/Wizard/index.tsx:280
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:81
@@ -1581,8 +1581,8 @@ msgstr "Block {displayName}"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/screens/Messages/components/RequestButtons.tsx:138
-#: src/view/com/profile/ProfileMenu.tsx:364
-#: src/view/com/profile/ProfileMenu.tsx:371
+#: src/view/com/profile/ProfileMenu.tsx:365
+#: src/view/com/profile/ProfileMenu.tsx:372
 msgid "Block account"
 msgstr ""
 
@@ -1800,8 +1800,8 @@ msgstr ""
 #: src/components/Prompt.tsx:121
 #: src/components/Prompt.tsx:122
 #: src/components/web/Prompt/index.tsx:132
-#: src/features/liveNow/components/GoLiveDialog.tsx:226
-#: src/features/liveNow/components/GoLiveDialog.tsx:233
+#: src/features/liveNow/components/GoLiveDialog.tsx:214
+#: src/features/liveNow/components/GoLiveDialog.tsx:220
 #: src/screens/Messages/components/InviteLinkDialog.tsx:435
 #: src/screens/Messages/components/InviteLinkDialog.tsx:440
 #: src/screens/Messages/ConversationSettings/prompts.tsx:89
@@ -2056,7 +2056,7 @@ msgstr ""
 #: src/components/verification/VerifierDialog.tsx:117
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:144
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
-#: src/features/liveNow/components/EditLiveDialog.tsx:185
+#: src/features/liveNow/components/EditLiveDialog.tsx:186
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
 #: src/screens/Messages/components/InviteLinkDialog.tsx:459
 #: src/screens/Messages/components/InviteLinkDialog.tsx:461
@@ -2273,8 +2273,8 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:392
-#: src/view/com/profile/ProfileMenu.tsx:394
+#: src/view/com/profile/ProfileMenu.tsx:393
+#: src/view/com/profile/ProfileMenu.tsx:395
 msgid "Copy at:// URI"
 msgstr ""
 
@@ -2283,8 +2283,8 @@ msgstr ""
 msgid "Copy author DID"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:398
-#: src/view/com/profile/ProfileMenu.tsx:400
+#: src/view/com/profile/ProfileMenu.tsx:399
+#: src/view/com/profile/ProfileMenu.tsx:401
 msgid "Copy DID"
 msgstr ""
 
@@ -2308,8 +2308,8 @@ msgstr ""
 msgid "Copy link to post"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:240
-#: src/view/com/profile/ProfileMenu.tsx:250
+#: src/view/com/profile/ProfileMenu.tsx:241
+#: src/view/com/profile/ProfileMenu.tsx:251
 msgid "Copy link to profile"
 msgstr ""
 
@@ -2616,14 +2616,14 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:410
-#: src/screens/Profile/Header/EditProfileDialog.tsx:282
-#: src/screens/Profile/Header/EditProfileDialog.tsx:288
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
+#: src/screens/Profile/Header/EditProfileDialog.tsx:279
+#: src/screens/Profile/Header/EditProfileDialog.tsx:285
 msgid "Description"
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:156
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:103
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:102
 msgid "Descriptive alt text"
 msgstr ""
 
@@ -2758,8 +2758,8 @@ msgstr ""
 msgid "Display larger alt text badges"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:244
-#: src/screens/Profile/Header/EditProfileDialog.tsx:249
+#: src/screens/Profile/Header/EditProfileDialog.tsx:243
+#: src/screens/Profile/Header/EditProfileDialog.tsx:248
 msgid "Display name"
 msgstr ""
 
@@ -2829,7 +2829,7 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:250
+#: src/screens/Profile/Header/EditProfileDialog.tsx:249
 msgid "e.g. Alice Lastname"
 msgstr ""
 
@@ -2922,8 +2922,8 @@ msgstr "Edit link settings"
 msgid "Edit list details"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:299
-#: src/view/com/profile/ProfileMenu.tsx:314
+#: src/view/com/profile/ProfileMenu.tsx:300
+#: src/view/com/profile/ProfileMenu.tsx:315
 msgid "Edit live status"
 msgstr ""
 
@@ -3180,7 +3180,7 @@ msgstr ""
 
 #. placeholder {0}: displayDuration(i18n, minutesUntilExpiry)
 #. placeholder {1}: i18n.date(expiryDateTime, { hour: 'numeric', minute: '2-digit', hour12: true, })
-#: src/features/liveNow/components/EditLiveDialog.tsx:113
+#: src/features/liveNow/components/EditLiveDialog.tsx:116
 msgid "Expires in {0} at {1}"
 msgstr ""
 
@@ -3624,8 +3624,8 @@ msgstr ""
 msgid "Follow {displayName}"
 msgstr "Follow {displayName}"
 
-#: src/view/com/profile/ProfileMenu.tsx:270
-#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:271
+#: src/view/com/profile/ProfileMenu.tsx:275
 msgid "Follow account"
 msgstr ""
 
@@ -3921,24 +3921,24 @@ msgstr ""
 msgid "Go home"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:300
-#: src/view/com/profile/ProfileMenu.tsx:316
+#: src/view/com/profile/ProfileMenu.tsx:301
+#: src/view/com/profile/ProfileMenu.tsx:317
 msgid "Go live"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:100
-#: src/features/liveNow/components/GoLiveDialog.tsx:104
-#: src/features/liveNow/components/GoLiveDialog.tsx:212
-#: src/features/liveNow/components/GoLiveDialog.tsx:220
+#: src/features/liveNow/components/GoLiveDialog.tsx:36
+#: src/features/liveNow/components/GoLiveDialog.tsx:96
+#: src/features/liveNow/components/GoLiveDialog.tsx:201
+#: src/features/liveNow/components/GoLiveDialog.tsx:207
 msgid "Go Live"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:297
-#: src/view/com/profile/ProfileMenu.tsx:312
+#: src/view/com/profile/ProfileMenu.tsx:298
+#: src/view/com/profile/ProfileMenu.tsx:313
 msgid "Go live (disabled)"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:164
+#: src/features/liveNow/components/GoLiveDialog.tsx:153
 msgid "Go live for"
 msgstr ""
 
@@ -4518,7 +4518,7 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:139
 #: src/components/verification/VerifierDialog.tsx:105
 #: src/screens/Moderation/VerificationSettings.tsx:47
-#: src/screens/Profile/Header/EditProfileDialog.tsx:270
+#: src/screens/Profile/Header/EditProfileDialog.tsx:268
 msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
@@ -4727,11 +4727,11 @@ msgctxt "toast"
 msgid "List deleted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:404
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:401
 msgid "List description"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:416
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:412
 msgid "List description is too long. {DESCRIPTION_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
@@ -4743,7 +4743,7 @@ msgstr ""
 msgid "List Hidden"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:395
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:393
 msgid "List must have a name."
 msgstr ""
 
@@ -4752,11 +4752,11 @@ msgctxt "toast"
 msgid "List muted"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:375
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:374
 msgid "List name"
 msgstr ""
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:387
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:385
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
 msgstr ""
 
@@ -4799,10 +4799,10 @@ msgstr ""
 msgid "Live feature is in beta"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:130
-#: src/features/liveNow/components/EditLiveDialog.tsx:134
-#: src/features/liveNow/components/GoLiveDialog.tsx:127
-#: src/features/liveNow/components/GoLiveDialog.tsx:131
+#: src/features/liveNow/components/EditLiveDialog.tsx:133
+#: src/features/liveNow/components/EditLiveDialog.tsx:138
+#: src/features/liveNow/components/GoLiveDialog.tsx:119
+#: src/features/liveNow/components/GoLiveDialog.tsx:124
 msgid "Live link"
 msgstr ""
 
@@ -5155,8 +5155,8 @@ msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:126
 #: src/view/com/composer/drafts/DraftItem.tsx:120
-#: src/view/com/profile/ProfileMenu.tsx:231
-#: src/view/com/profile/ProfileMenu.tsx:237
+#: src/view/com/profile/ProfileMenu.tsx:232
+#: src/view/com/profile/ProfileMenu.tsx:238
 msgid "More options"
 msgstr ""
 
@@ -5193,8 +5193,8 @@ msgstr "Mute {prefixedTag}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
-#: src/view/com/profile/ProfileMenu.tsx:349
-#: src/view/com/profile/ProfileMenu.tsx:356
+#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:357
 msgid "Mute account"
 msgstr ""
 
@@ -5304,7 +5304,7 @@ msgstr ""
 msgid "My starter pack"
 msgstr "My starter pack"
 
-#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:380
+#: src/components/dialogs/lists/CreateOrEditListDialog.tsx:379
 msgid "Name"
 msgstr ""
 
@@ -5462,7 +5462,7 @@ msgstr ""
 msgid "No drafts yet"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:122
+#: src/features/liveNow/components/EditLiveDialog.tsx:125
 msgid "No expiry set"
 msgstr ""
 
@@ -5484,7 +5484,7 @@ msgstr "No GIFs found for \"{query}\"."
 msgid "No GIFs to show right now. Try again in a moment."
 msgstr "No GIFs to show right now. Try again in a moment."
 
-#: src/features/liveNow/components/LinkPreview.tsx:63
+#: src/features/liveNow/components/LinkPreview.tsx:40
 msgid "No image"
 msgstr ""
 
@@ -5650,7 +5650,7 @@ msgstr "Not followed by anyone you’re following"
 msgid "Not Found"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:437
+#: src/view/com/profile/ProfileMenu.tsx:438
 msgid "Note about sharing"
 msgstr ""
 
@@ -6451,7 +6451,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:111
+#: src/screens/Profile/Header/Shell.tsx:106
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
@@ -6713,7 +6713,7 @@ msgstr ""
 msgid "Remove image"
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:197
+#: src/features/liveNow/components/EditLiveDialog.tsx:199
 #: src/features/liveNow/components/EditLiveDialog.tsx:205
 msgid "Remove live status"
 msgstr ""
@@ -6741,8 +6741,8 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:207
-#: src/view/com/profile/ProfileMenu.tsx:326
-#: src/view/com/profile/ProfileMenu.tsx:330
+#: src/view/com/profile/ProfileMenu.tsx:327
+#: src/view/com/profile/ProfileMenu.tsx:331
 msgid "Remove verification"
 msgstr ""
 
@@ -6890,8 +6890,8 @@ msgstr ""
 msgid "Report"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:377
-#: src/view/com/profile/ProfileMenu.tsx:379
+#: src/view/com/profile/ProfileMenu.tsx:378
+#: src/view/com/profile/ProfileMenu.tsx:380
 msgid "Report account"
 msgstr ""
 
@@ -7124,7 +7124,7 @@ msgstr "Sad GIFs"
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:333
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:509
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:514
-#: src/features/liveNow/components/EditLiveDialog.tsx:171
+#: src/features/liveNow/components/EditLiveDialog.tsx:173
 #: src/features/liveNow/components/EditLiveDialog.tsx:179
 #: src/screens/Messages/ConversationSettings/prompts.tsx:66
 #: src/screens/Profile/Header/EditProfileDialog.tsx:205
@@ -7310,8 +7310,8 @@ msgstr ""
 msgid "Search my posts"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:254
-#: src/view/com/profile/ProfileMenu.tsx:256
+#: src/view/com/profile/ProfileMenu.tsx:255
+#: src/view/com/profile/ProfileMenu.tsx:257
 msgid "Search posts"
 msgstr ""
 
@@ -7416,7 +7416,7 @@ msgstr "Select chat \"{name}\""
 msgid "Select content languages"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:167
+#: src/features/liveNow/components/GoLiveDialog.tsx:156
 msgid "Select duration"
 msgstr ""
 
@@ -7611,7 +7611,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:440
+#: src/view/com/profile/ProfileMenu.tsx:441
 msgid "Share anyway"
 msgstr ""
 
@@ -8235,7 +8235,7 @@ msgstr ""
 msgid "Tech"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:289
+#: src/screens/Profile/Header/EditProfileDialog.tsx:286
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -8302,7 +8302,7 @@ msgstr ""
 msgid "The following labels were applied to your content."
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:154
+#: src/features/liveNow/components/GoLiveDialog.tsx:143
 msgid "The following services are enabled for your account: {allowedServices}"
 msgstr ""
 
@@ -8409,12 +8409,12 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:246
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:270
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:286
-#: src/view/com/profile/ProfileMenu.tsx:127
-#: src/view/com/profile/ProfileMenu.tsx:139
-#: src/view/com/profile/ProfileMenu.tsx:155
-#: src/view/com/profile/ProfileMenu.tsx:167
-#: src/view/com/profile/ProfileMenu.tsx:182
-#: src/view/com/profile/ProfileMenu.tsx:196
+#: src/view/com/profile/ProfileMenu.tsx:128
+#: src/view/com/profile/ProfileMenu.tsx:140
+#: src/view/com/profile/ProfileMenu.tsx:156
+#: src/view/com/profile/ProfileMenu.tsx:168
+#: src/view/com/profile/ProfileMenu.tsx:183
+#: src/view/com/profile/ProfileMenu.tsx:197
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -8610,7 +8610,7 @@ msgid "This invite link is invalid"
 msgstr "This invite link is invalid"
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:158
-#: src/features/liveNow/components/GoLiveDialog.tsx:150
+#: src/features/liveNow/components/GoLiveDialog.tsx:139
 msgid "This is not a valid link"
 msgstr ""
 
@@ -8693,7 +8693,7 @@ msgstr ""
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:438
+#: src/view/com/profile/ProfileMenu.tsx:439
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
@@ -8945,8 +8945,8 @@ msgstr "Unblock {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:271
 #: src/components/dms/ConvoMenu.tsx:275
-#: src/view/com/profile/ProfileMenu.tsx:364
-#: src/view/com/profile/ProfileMenu.tsx:369
+#: src/view/com/profile/ProfileMenu.tsx:365
+#: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Unblock account"
 msgstr ""
 
@@ -8984,8 +8984,8 @@ msgstr ""
 msgid "Unfollow {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:270
-#: src/view/com/profile/ProfileMenu.tsx:274
+#: src/view/com/profile/ProfileMenu.tsx:271
+#: src/view/com/profile/ProfileMenu.tsx:275
 msgid "Unfollow account"
 msgstr ""
 
@@ -9049,8 +9049,8 @@ msgstr "Unmute {prefixedTag}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
-#: src/view/com/profile/ProfileMenu.tsx:349
-#: src/view/com/profile/ProfileMenu.tsx:354
+#: src/view/com/profile/ProfileMenu.tsx:350
+#: src/view/com/profile/ProfileMenu.tsx:355
 msgid "Unmute account"
 msgstr ""
 
@@ -9289,8 +9289,8 @@ msgstr ""
 
 #: src/components/verification/VerificationCreatePrompt.tsx:73
 #: src/components/verification/VerificationCreatePrompt.tsx:76
-#: src/view/com/profile/ProfileMenu.tsx:336
-#: src/view/com/profile/ProfileMenu.tsx:340
+#: src/view/com/profile/ProfileMenu.tsx:337
+#: src/view/com/profile/ProfileMenu.tsx:341
 msgid "Verify account"
 msgstr ""
 
@@ -9350,7 +9350,7 @@ msgid "View {0}"
 msgstr "View {0}"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/Shell.tsx:175
+#: src/screens/Profile/Header/Shell.tsx:170
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -9445,7 +9445,7 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:111
+#: src/screens/Profile/Header/Shell.tsx:106
 msgid "View profile banner"
 msgstr "View profile banner"
 
@@ -9748,8 +9748,8 @@ msgstr ""
 msgid "Wrong kind of conversation"
 msgstr "Wrong kind of conversation"
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:135
-#: src/features/liveNow/components/GoLiveDialog.tsx:132
+#: src/features/liveNow/components/EditLiveDialog.tsx:152
+#: src/features/liveNow/components/GoLiveDialog.tsx:133
 msgid "www.mylivestream.tv"
 msgstr ""
 
@@ -9795,8 +9795,8 @@ msgstr "You are blocking this person"
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:103
-#: src/features/liveNow/components/EditLiveDialog.tsx:107
+#: src/features/liveNow/components/EditLiveDialog.tsx:42
+#: src/features/liveNow/components/EditLiveDialog.tsx:108
 msgid "You are Live"
 msgstr ""
 
@@ -9820,7 +9820,7 @@ msgstr ""
 msgid "You are verified"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:267
+#: src/screens/Profile/Header/EditProfileDialog.tsx:265
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 

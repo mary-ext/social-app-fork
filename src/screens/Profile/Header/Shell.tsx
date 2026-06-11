@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
@@ -18,17 +18,17 @@ import { UserBanner } from '#/view/com/util/UserBanner';
 import { atoms as a, useTheme, utils } from '#/alf';
 
 import { Button } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
+import { useDialogHandle } from '#/components/web/Dialog';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
-import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatusDialog';
+import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
 
 import { GrowableAvatar } from './GrowableAvatar';
 import { GrowableBanner } from './GrowableBanner';
@@ -54,7 +54,7 @@ let ProfileHeaderShell = ({
 	const { lightboxControl } = useGlobalDialogsControlContext();
 	const navigation = useNavigation<NavigationProp>();
 	useSafeAreaInsets();
-	const liveStatusControl = useDialogControl();
+	const liveStatusHandle = useDialogHandle();
 
 	const onPressBack = useCallback(() => {
 		if (navigation.canGoBack()) {
@@ -78,14 +78,9 @@ let ProfileHeaderShell = ({
 
 	const live = useActorStatus(profile);
 
-	useEffect(() => {
-		if (live.isActive) {
-		}
-	}, [live.isActive, profile.did]);
-
 	const onPressAvi = useCallback(() => {
 		if (live.isActive) {
-			liveStatusControl.open();
+			liveStatusHandle.open(null);
 		} else {
 			const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
 			const avatar = profile.avatar;
@@ -93,7 +88,7 @@ let ProfileHeaderShell = ({
 				_openLightbox(avatar);
 			}
 		}
-	}, [profile, moderation, _openLightbox, liveStatusControl, live]);
+	}, [profile, moderation, _openLightbox, liveStatusHandle, live]);
 
 	const onPressBanner = useCallback(() => {
 		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
@@ -204,15 +199,15 @@ let ProfileHeaderShell = ({
 			{live.isActive &&
 				(isMe ? (
 					<EditLiveDialog
-						control={liveStatusControl}
-						status={live}
 						embed={live.embed as AppBskyEmbedExternal.View}
+						handle={liveStatusHandle}
+						status={live}
 					/>
 				) : (
 					<LiveStatusDialog
-						control={liveStatusControl}
-						status={live}
 						embed={live.embed as AppBskyEmbedExternal.View}
+						handle={liveStatusHandle}
+						status={live}
 						profile={profile}
 					/>
 				))}

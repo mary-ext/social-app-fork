@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyActorDefs, AppBskyActorStatus, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { differenceInMinutes } from 'date-fns';
@@ -10,15 +9,13 @@ import { definitelyUrl } from '#/lib/strings/url-helpers';
 
 import { useTickEveryMinute } from '#/state/shell';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import * as TextField from '#/components/forms/TextField';
 import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock';
 import { Loader } from '#/components/Loader';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { Text } from '#/components/web/Text';
+import * as TextField from '#/components/web/TextField';
 
 import {
 	displayDuration,
@@ -28,33 +25,38 @@ import {
 } from '#/features/liveNow';
 import { LinkPreview } from '#/features/liveNow/components/LinkPreview';
 
+import * as styles from './EditLiveDialog.css';
+
 export function EditLiveDialog({
-	control,
-	status,
 	embed,
+	handle,
+	status,
 }: {
-	control: Dialog.DialogControlProps;
-	status: AppBskyActorDefs.StatusView;
 	embed: AppBskyEmbedExternal.View;
+	handle: Dialog.DialogHandle;
+	status: AppBskyActorDefs.StatusView;
 }) {
+	const { t: l } = useLingui();
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle />
-			<DialogInner status={status} embed={embed} />
-		</Dialog.Outer>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={styles.popup} label={l`You are Live`}>
+				<DialogInner embed={embed} handle={handle} status={status} />
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
 function DialogInner({
-	status,
 	embed,
+	handle,
+	status,
 }: {
-	status: AppBskyActorDefs.StatusView;
 	embed: AppBskyEmbedExternal.View;
+	handle: Dialog.DialogHandle;
+	status: AppBskyActorDefs.StatusView;
 }) {
-	const control = Dialog.useDialogContext();
 	const { t: l, i18n } = useLingui();
-	const t = useTheme();
 
 	const [liveLink, setLiveLink] = useState<string>(embed.external.uri);
 	const [liveLinkError, setLiveLinkError] = useState('');
@@ -100,115 +102,111 @@ function DialogInner({
 		isGoingLive || !hasValidLinkMeta || debouncedUrl !== liveLinkUrl || isRemovingLiveStatus;
 
 	return (
-		<Dialog.ScrollableInner label={l`You are Live`} style={{ maxWidth: 420 }}>
-			<View style={[a.gap_lg]}>
-				<View style={[a.gap_sm]}>
-					<Text style={[a.font_semi_bold, a.text_2xl]}>
-						<Trans>You are Live</Trans>
+		<div className={styles.container}>
+			<div className={styles.header}>
+				<Text size="_2xl" weight="semiBold">
+					<Trans>You are Live</Trans>
+				</Text>
+				<div className={styles.expiryRow}>
+					<span className={styles.clockIcon}>
+						<ClockIcon fill="currentColor" size="sm" />
+					</span>
+					<Text color="textContrastHigh" leading="snug" size="md">
+						{typeof record?.durationMinutes === 'number' ? (
+							<Trans>
+								Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}
+								{i18n.date(expiryDateTime, {
+									hour: 'numeric',
+									minute: '2-digit',
+									hour12: true,
+								})}
+							</Trans>
+						) : (
+							<Trans>No expiry set</Trans>
+						)}
 					</Text>
-					<View style={[a.flex_row, a.align_center, a.gap_xs]}>
-						<ClockIcon style={[t.atoms.text_contrast_high]} size="sm" />
-						<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-							{typeof record?.durationMinutes === 'number' ? (
-								<Trans>
-									Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}
-									{i18n.date(expiryDateTime, {
-										hour: 'numeric',
-										minute: '2-digit',
-										hour12: true,
-									})}
-								</Trans>
-							) : (
-								<Trans>No expiry set</Trans>
-							)}
-						</Text>
-					</View>
-				</View>
-				<View style={[a.gap_sm]}>
-					<View>
-						<TextField.LabelText>
-							<Trans>Live link</Trans>
-						</TextField.LabelText>
-						<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
-							<TextField.Input
-								label={l`Live link`}
-								placeholder={l`www.mylivestream.tv`}
-								value={liveLink}
-								onChangeText={setLiveLink}
-								onFocus={() => setLiveLinkError('')}
-								onBlur={() => {
-									if (!definitelyUrl(liveLink)) {
-										setLiveLinkError('Invalid URL');
-									}
-								}}
-								returnKeyType="done"
-								autoCapitalize="none"
-								autoComplete="url"
-								autoCorrect={false}
-								onSubmitEditing={() => {
-									if (isDirty && !submitDisabled) {
-										goLive();
-									}
-								}}
-							/>
-						</TextField.Root>
-					</View>
-					{(liveLinkError || linkMetaError) && (
-						<Admonition type="error">
-							{liveLinkError ? <Trans>This is not a valid link</Trans> : cleanError(linkMetaError)}
-						</Admonition>
-					)}
+				</div>
+			</div>
+			<div className={styles.fields}>
+				<TextField.Root isInvalid={!!liveLinkError || !!linkMetaError}>
+					<TextField.LabelText>
+						<Trans>Live link</Trans>
+					</TextField.LabelText>
+					<TextField.Input
+						autoCapitalize="none"
+						autoComplete="url"
+						label={l`Live link`}
+						onBlur={() => {
+							// don't nag about an empty field — only flag a non-empty, non-URL value
+							if (liveLink.trim() && !definitelyUrl(liveLink)) {
+								setLiveLinkError('Invalid URL');
+							}
+						}}
+						onChangeText={setLiveLink}
+						onFocus={() => setLiveLinkError('')}
+						onKeyDown={(e) => {
+							if (e.key === 'Enter' && isDirty && !submitDisabled) {
+								goLive();
+							}
+						}}
+						placeholder={l`www.mylivestream.tv`}
+						value={liveLink}
+					/>
+				</TextField.Root>
+				{(liveLinkError || linkMetaError) && (
+					<Admonition type="error">
+						{liveLinkError ? <Trans>This is not a valid link</Trans> : cleanError(linkMetaError)}
+					</Admonition>
+				)}
 
-					<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
-				</View>
+				<LinkPreview linkMeta={linkMeta} loading={linkMetaLoading} />
+			</div>
 
-				{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
-				{removeLiveStatusError && <Admonition type="error">{cleanError(removeLiveStatusError)}</Admonition>}
+			{goLiveError && <Admonition type="error">{cleanError(goLiveError)}</Admonition>}
+			{removeLiveStatusError && <Admonition type="error">{cleanError(removeLiveStatusError)}</Admonition>}
 
-				<View style={[a.flex_row_reverse, a.gap_md, a.align_center]}>
-					{isDirty ? (
-						<Button
-							label={l`Save`}
-							size={'small'}
-							color="primary"
-							variant="solid"
-							onPress={() => goLive()}
-							disabled={submitDisabled}
-						>
-							<ButtonText>
-								<Trans>Save</Trans>
-							</ButtonText>
-							{isGoingLive && <ButtonIcon icon={Loader} />}
-						</Button>
-					) : (
-						<Button
-							label={l`Close`}
-							size={'small'}
-							color="primary"
-							variant="solid"
-							onPress={() => control.close()}
-						>
-							<ButtonText>
-								<Trans>Close</Trans>
-							</ButtonText>
-						</Button>
-					)}
+			<div className={styles.actions}>
+				{isDirty ? (
 					<Button
-						label={l`Remove live status`}
-						onPress={() => removeLiveStatus()}
-						size={'small'}
-						color="negative_subtle"
+						color="primary"
+						disabled={submitDisabled}
+						label={l`Save`}
+						onClick={() => goLive()}
+						size="small"
 						variant="solid"
-						disabled={isRemovingLiveStatus || isGoingLive}
 					>
 						<ButtonText>
-							<Trans>Remove live status</Trans>
+							<Trans>Save</Trans>
 						</ButtonText>
-						{isRemovingLiveStatus && <ButtonIcon icon={Loader} />}
+						{isGoingLive && <ButtonIcon icon={Loader} />}
 					</Button>
-				</View>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+				) : (
+					<Button
+						color="primary"
+						label={l`Close`}
+						onClick={() => handle.close()}
+						size="small"
+						variant="solid"
+					>
+						<ButtonText>
+							<Trans>Close</Trans>
+						</ButtonText>
+					</Button>
+				)}
+				<Button
+					color="negative_subtle"
+					disabled={isRemovingLiveStatus || isGoingLive}
+					label={l`Remove live status`}
+					onClick={() => removeLiveStatus()}
+					size="small"
+					variant="solid"
+				>
+					<ButtonText>
+						<Trans>Remove live status</Trans>
+					</ButtonText>
+					{isRemovingLiveStatus && <ButtonIcon icon={Loader} />}
+				</Button>
+			</div>
+		</div>
 	);
 }
