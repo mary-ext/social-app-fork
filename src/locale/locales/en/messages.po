@@ -158,7 +158,7 @@ msgid "{0} · {1}"
 msgstr ""
 
 #. placeholder {0}: desc.name
-#: src/components/web/moderation/ContentHider.tsx:94
+#: src/components/web/moderation/ContentHider.tsx:95
 msgid "{0} (Account)"
 msgstr ""
 
@@ -883,12 +883,15 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:92
 #: src/components/moderation/ModerationDetailsDialog.tsx:96
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:94
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:98
 #: src/lib/moderation/useModerationCauseDescription.ts:95
 #: src/lib/moderation/useModerationCauseDescription.ts:102
 msgid "Account Muted"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:81
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:83
 msgid "Account Muted by List"
 msgstr ""
 
@@ -1133,7 +1136,7 @@ msgstr ""
 msgid "Adult content"
 msgstr ""
 
-#: src/components/web/moderation/ContentHider.tsx:125
+#: src/components/web/moderation/ContentHider.tsx:126
 #: src/lib/moderation/useGlobalLabelStrings.ts:29
 #: src/lib/moderation/useModerationCauseDescription.ts:135
 #: src/view/com/composer/labels/LabelsBtn.tsx:97
@@ -1340,6 +1343,7 @@ msgid "An issue occurred, please try again."
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:119
 #: src/lib/moderation/useModerationCauseDescription.ts:131
 msgid "an unknown labeler"
 msgstr ""
@@ -2193,6 +2197,7 @@ msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:52
 #: src/components/moderation/ScreenHider.tsx:87
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:54
 #: src/lib/moderation/useGlobalLabelStrings.ts:21
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "Content Warning"
@@ -3166,8 +3171,10 @@ msgstr ""
 
 #. placeholder {0}: timeDiff(Date.now(), label.exp)
 #. placeholder {0}: timeDiff(Date.now(), modcause.label.exp)
+#. placeholder {0}: timeDiff(now, modcause.label.exp)
 #: src/components/moderation/LabelsOnMeDialog.tsx:171
 #: src/components/moderation/ModerationDetailsDialog.tsx:181
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:161
 msgid "Expires in {0}"
 msgstr ""
 
@@ -4106,7 +4113,7 @@ msgstr ""
 #: src/components/moderation/LabelPreference.tsx:125
 #: src/components/moderation/PostHider.tsx:121
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
-#: src/components/web/moderation/ContentHider.tsx:160
+#: src/components/web/moderation/ContentHider.tsx:147
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/lib/moderation/useLabelBehaviorDescription.ts:19
 #: src/lib/moderation/useLabelBehaviorDescription.ts:24
@@ -4459,11 +4466,11 @@ msgid "Keep me posted"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(desc.source)
-#: src/components/web/moderation/ContentHider.tsx:175
+#: src/components/web/moderation/ContentHider.tsx:180
 msgid "Labeled by {0}."
 msgstr ""
 
-#: src/components/web/moderation/ContentHider.tsx:173
+#: src/components/web/moderation/ContentHider.tsx:178
 msgid "Labeled by the author."
 msgstr ""
 
@@ -4528,7 +4535,7 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
-#: src/components/web/moderation/ContentHider.tsx:168
+#: src/components/web/moderation/ContentHider.tsx:174
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
@@ -4553,7 +4560,7 @@ msgid "Learn more about your Germ DM link"
 msgstr ""
 
 #: src/components/dialogs/ServerInput.tsx:201
-#: src/components/web/moderation/ContentHider.tsx:178
+#: src/components/web/moderation/ContentHider.tsx:183
 msgid "Learn more."
 msgstr ""
 
@@ -5073,6 +5080,7 @@ msgid "Moderation and content filters"
 msgstr "Moderation and content filters"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:121
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:36
 msgid "Moderation details"
 msgstr ""
 
@@ -5126,6 +5134,7 @@ msgid "Moderation tools"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:53
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:55
 #: src/lib/moderation/useModerationCauseDescription.ts:49
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
@@ -6300,11 +6309,13 @@ msgid "Post has been deleted"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:99
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:101
 #: src/lib/moderation/useModerationCauseDescription.ts:109
 msgid "Post Hidden by Muted Word"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:102
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:104
 #: src/lib/moderation/useModerationCauseDescription.ts:116
 msgid "Post Hidden by You"
 msgstr ""
@@ -6844,11 +6855,13 @@ msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:56
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:58
 #: src/lib/moderation/useModerationCauseDescription.ts:58
 msgid "Reply Hidden by Thread Author"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:56
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:58
 #: src/lib/moderation/useModerationCauseDescription.ts:58
 msgid "Reply Hidden by You"
 msgstr ""
@@ -7635,7 +7648,7 @@ msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:127
 #: src/components/moderation/PostHider.tsx:121
-#: src/components/web/moderation/ContentHider.tsx:160
+#: src/components/web/moderation/ContentHider.tsx:147
 msgid "Show"
 msgstr ""
 
@@ -7957,6 +7970,7 @@ msgstr "Source code"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:157
 #: src/components/moderation/ModerationDetailsDialog.tsx:167
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:148
 msgid "Source: <0>{sourceName}</0>"
 msgstr ""
 
@@ -8263,6 +8277,7 @@ msgid "The account will be able to interact with you after unblocking."
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:59
 #: src/lib/moderation/useModerationCauseDescription.ts:59
 msgid "The author of this thread has hidden this reply."
 msgstr ""
@@ -8604,6 +8619,7 @@ msgid "This label lets the world know that this account is automated. If turned 
 msgstr "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:161
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:143
 msgid "This label was applied by the author."
 msgstr ""
 
@@ -8647,6 +8663,7 @@ msgid "This moderation service is unavailable. See below for more details. If th
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:139
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:133
 msgid "This moderation was applied to the entire user account and will appear on all posts."
 msgstr "This moderation was applied to the entire user account and will appear on all posts."
 
@@ -8706,6 +8723,7 @@ msgid "This user has blocked you and cannot be messaged."
 msgstr "This user has blocked you and cannot be messaged."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:77
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:79
 #: src/lib/moderation/useModerationCauseDescription.ts:82
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
@@ -8720,11 +8738,13 @@ msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/moderation/ModerationDetailsDialog.tsx:63
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:65
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
 msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/moderation/ModerationDetailsDialog.tsx:83
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:85
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr ""
 
@@ -9175,6 +9195,7 @@ msgid "User blocked"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:72
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:74
 #: src/lib/moderation/useModerationCauseDescription.ts:74
 msgid "User Blocked"
 msgstr ""
@@ -9189,6 +9210,7 @@ msgid "User blocked by list"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:61
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:63
 msgid "User Blocked by List"
 msgstr ""
 
@@ -9197,6 +9219,7 @@ msgid "User Blocking You"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:76
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:78
 msgid "User Blocks You"
 msgstr ""
 
@@ -9881,6 +9904,7 @@ msgid "You have been previously removed from this group and can’t join it usin
 msgstr "You have been previously removed from this group and can’t join it using this link."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:73
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:75
 #: src/lib/moderation/useModerationCauseDescription.ts:69
 #: src/lib/moderation/useModerationCauseDescription.ts:75
 msgid "You have blocked this user. You cannot view their content."
@@ -9895,6 +9919,7 @@ msgid "You have hidden this post"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:103
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:105
 msgid "You have hidden this post."
 msgstr ""
 
@@ -9904,6 +9929,8 @@ msgstr "You have marked this account as automated. You can remove it at any time
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/components/moderation/ModerationDetailsDialog.tsx:97
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:95
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:99
 #: src/lib/moderation/useModerationCauseDescription.ts:96
 #: src/lib/moderation/useModerationCauseDescription.ts:103
 msgid "You have muted this account."
@@ -9963,6 +9990,7 @@ msgid "You haven't muted any words or tags yet"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:57
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:59
 #: src/lib/moderation/useModerationCauseDescription.ts:59
 msgid "You hid this reply."
 msgstr ""
@@ -10050,6 +10078,7 @@ msgid "You've already appealed this label and it's being reviewed by our moderat
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:100
+#: src/components/web/moderation/ModerationDetailsDialog.tsx:102
 #: src/lib/moderation/useModerationCauseDescription.ts:110
 msgid "You've chosen to hide a word or tag within this post."
 msgstr ""

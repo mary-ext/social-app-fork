@@ -12,10 +12,11 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { useLabelDefinitions } from '#/state/preferences';
 
+import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog';
+} from '#/components/web/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/web/Text';
 
 import * as styles from './ContentHider.css';
@@ -133,40 +134,44 @@ function ContentHiderActive({
 		return [...new Set(selfBlurNames)].join(', ');
 	}, [l, modui?.blurs, blur, desc.name, desc.isSubjectAccount, labelDefs, i18n.locale, globalLabelStrings]);
 
+	const triggerInner = (
+		<>
+			<span className={styles.iconWrap}>
+				<desc.icon size="md" fill="currentColor" />
+			</span>
+			<Text weight="semiBold" color="textContrastMedium" numberOfLines={2} className={styles.labelText}>
+				{labelName}
+			</Text>
+			{!modui.noOverride && (
+				<Text weight="semiBold" color="textContrastHigh" className={styles.toggleText}>
+					{override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
+				</Text>
+			)}
+		</>
+	);
+
 	return (
 		<Collapsible.Root
 			open={override}
-			onOpenChange={(open, details) => {
-				// noOverride content can never be revealed; the trigger opens the details dialog instead of toggling.
-				if (modui.noOverride) {
-					details.cancel();
-					control.open();
-					return;
-				}
-				setOverride(open);
-			}}
+			onOpenChange={(open) => setOverride(open)}
 			className={clsx(styles.activeOuter, className, activeClassName)}
 		>
 			<ModerationDetailsDialog control={control} modcause={blur} />
-			<Collapsible.Trigger className={styles.blurButton} aria-label={desc.name}>
-				<span className={styles.iconWrap}>
-					<desc.icon size="md" fill="currentColor" />
-				</span>
-				<Text weight="semiBold" color="textContrastMedium" numberOfLines={2} className={styles.labelText}>
-					{labelName}
-				</Text>
-				{!modui.noOverride && (
-					<Text weight="semiBold" color="textContrastHigh" className={styles.toggleText}>
-						{override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
-					</Text>
-				)}
-			</Collapsible.Trigger>
+			{modui.noOverride ? (
+				// noOverride content can never be revealed; its trigger opens the details dialog instead of toggling.
+				<Dialog.Trigger handle={control} className={styles.blurButton} aria-label={desc.name}>
+					{triggerInner}
+				</Dialog.Trigger>
+			) : (
+				<Collapsible.Trigger className={styles.blurButton} aria-label={desc.name}>
+					{triggerInner}
+				</Collapsible.Trigger>
+			)}
 			{desc.source && blur.type === ModerationCauseType.Label && !override && (
-				<button
-					type="button"
+				<Dialog.Trigger
+					handle={control}
 					className={styles.learnMoreButton}
 					aria-label={l`Learn more about the moderation applied to this content`}
-					onClick={() => control.open()}
 				>
 					<Text color="textContrastMedium">
 						{desc.sourceType === 'user' ? (
@@ -178,7 +183,7 @@ function ContentHiderActive({
 							<Trans>Learn more.</Trans>
 						</Text>
 					</Text>
-				</button>
+				</Dialog.Trigger>
 			)}
 			<Collapsible.Panel className={clsx(styles.panel, childContainerClassName)}>
 				{children}
