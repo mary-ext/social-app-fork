@@ -4,8 +4,8 @@ import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { fontFamily, fontSize } from '#/styles/tokens.css';
 
-// the field group: stacks the label, input, and any inline error/helper as one cohesive box (like the RNW
-// `Root` View), so a parent `gap` spaces whole fields rather than splitting a label from its input.
+// the field group: stacks the label, input, and any inline error/helper as one cohesive box, so a parent
+// `gap` spaces whole fields rather than splitting a label from its input.
 export const root = style(
 	layered(components, {
 		display: 'flex',

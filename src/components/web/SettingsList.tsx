@@ -12,7 +12,7 @@ import { Text } from '#/components/web/Text';
 
 /**
  * Carries the `destructive` flag down a row so its {@link ItemIcon}/{@link ItemText}/{@link Chevron} render in
- * the negative tint, mirroring the RNW list's item context.
+ * the negative tint.
  */
 const ItemContext = createContext<{ destructive: boolean }>({ destructive: false });
 
@@ -26,8 +26,8 @@ export function Container({ children }: { children: ReactNode }) {
 }
 
 /**
- * A titled settings section. Unlike the RNW original, this does not teleport icons/title into a header row —
- * children render in order, so write the `ItemText` heading first.
+ * A titled settings section. children render in order (no teleporting of icons/title into a header row), so
+ * write the `ItemText` heading first.
  */
 export function Group({
 	children,
@@ -35,7 +35,7 @@ export function Group({
 }: {
 	children: ReactNode;
 	destructive?: boolean;
-	/** Accepted for API parity with the RNW list; a no-op here since this slice renders no item icons. */
+	/** Accepted for API compatibility; a no-op here since this slice renders no item icons. */
 	iconInset?: boolean;
 }) {
 	return (
@@ -234,8 +234,8 @@ export function ItemText({ children }: { children: ReactNode }) {
 }
 
 /**
- * The semibold label for an interactive control (checkbox/radio row), mirroring the RNW `Toggle.LabelText`.
- * Defaults to the small text size; pass `size="md"` for rows that read as primary settings items.
+ * The semibold label for an interactive control (checkbox/radio row). Defaults to the small text size; pass
+ * `size="md"` for rows that read as primary settings items.
  */
 export function LabelText({ children, size = 'sm' }: { children: ReactNode; size?: 'md' | 'sm' }) {
 	return (

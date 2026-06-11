@@ -2,8 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 /**
  * The avatar + content columns side by side. `gap` owns the avatar→content spacing for both the feed and
- * standalone surfaces (the feed previously baked it into the avatar column's `paddingRight` instead — same
- * 10px net).
+ * standalone surfaces.
  */
 export const row = style({
 	boxSizing: 'border-box',
@@ -23,8 +22,8 @@ export const avatarColumn = style({
 });
 
 /**
- * The flex-1 content column. `minWidth: 0` (which RNW flex nodes defaulted to, plain CSS flex items don't)
- * lets long names/text ellipsize instead of overflowing the row.
+ * The flex-1 content column. `minWidth: 0` lets long names/text ellipsize instead of overflowing the row
+ * (plain CSS flex items default to `min-width: auto`).
  */
 export const content = style({
 	boxSizing: 'border-box',
@@ -35,8 +34,8 @@ export const content = style({
 });
 
 /**
- * Below-row rhythm for the spacing-free `PostMeta` leaf (the parent owns the spacing). `display: flex` (as
- * the RNW `View` it replaced was) so the wrapper hugs the row instead of inflating it with the font strut.
+ * Below-row rhythm for the spacing-free `PostMeta` leaf (the parent owns the spacing). `display: flex` so the
+ * wrapper hugs the row instead of inflating it with the font strut.
  */
 export const metaSpacing = style({
 	display: 'flex',

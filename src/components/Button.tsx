@@ -59,7 +59,7 @@ export type VariantProps = {
 	 * - `default`: Pill shaped. Most buttons should use this shape.
 	 * - `round`: Circular. For icon-only buttons.
 	 * - `square`: Square. For icon-only buttons.
-	 * - `rectangular`: Rectangular. Matches previous style, use when adjacent to form fields.
+	 * - `rectangular`: Rectangular. Use when adjacent to form fields.
 	 */
 	shape?: ButtonShape;
 };

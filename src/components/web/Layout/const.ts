@@ -1,5 +1,4 @@
-// duplicated from `#/components/Layout/const` so the web layout owns its config independent of the RNW
-// layout it replaces.
+// the web layout owns its own copy of these constants, independent of `#/components/Layout/const`.
 
 /** Visually aligns header icon buttons with the content below them. */
 export const BUTTON_VISUAL_ALIGNMENT_OFFSET = 3;

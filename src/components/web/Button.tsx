@@ -72,10 +72,9 @@ export type ButtonIconProps = {
 	size?: IconProps['size'];
 };
 
-// pixel size per icon token for icons rendered inside a Button. mirrors the RNW ButtonIcon's own table,
-// which intentionally diverges from the raw icon scale (`md` is 18 here, 20 in `icons/common`) so button
-// icons track the rendered text. passed as an explicit width/height rather than the icon `size` prop so the
-// raw scale isn't consulted.
+// pixel size per icon token for icons rendered inside a Button. intentionally diverges from the raw icon
+// scale (`md` is 18 here, 20 in `icons/common`) so button icons track the rendered text. passed as an
+// explicit width/height rather than the icon `size` prop so the raw scale isn't consulted.
 const ICON_PX: Record<NonNullable<IconProps['size']>, number> = {
 	'2xl': 32,
 	'2xs': 8,
@@ -89,7 +88,7 @@ const ICON_PX: Record<NonNullable<IconProps['size']>, number> = {
 };
 
 // default icon token per button size, so a large/tiny button's icon tracks its text rather than always
-// rendering at the `small` scale. mirrors the RNW ButtonIcon's own size table.
+// rendering at the `small` scale.
 const DEFAULT_ICON_SIZE: Record<ButtonContextValue['size'], NonNullable<IconProps['size']>> = {
 	large: 'md',
 	small: 'sm',

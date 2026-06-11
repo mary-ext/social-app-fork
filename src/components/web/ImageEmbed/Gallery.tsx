@@ -28,7 +28,7 @@ export type GalleryProps = {
 	viewContext?: PostEmbedViewContext;
 };
 
-/** Resolve the carousel's content height from the viewport width, matching the RNW breakpoint heights. */
+/** Resolve the carousel's content height from the viewport width via breakpoints. */
 function useContentHeight(isWithinChat: boolean) {
 	const [height, setHeight] = useState(() => measureContentHeight(isWithinChat));
 	useEffect(() => {
@@ -65,8 +65,8 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 	const hideBadges = isWithinQuote;
 	const contentHeight = useContentHeight(isWithinChat);
 
-	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor so it can extend past the
-	// post's content column. The RNW version uses `measureLayout`; on the DOM we diff bounding rects.
+	// Bleed overflow: measure this strip's offset within the GalleryBleed ancestor (by diffing bounding
+	// rects) so it can extend past the post's content column.
 	const { bleedRef, bleedWidth } = useGalleryBleed();
 	const contentRef = useRef<HTMLDivElement>(null);
 	const [contentDims, setContentDims] = useState<{ x: number; width: number }>();

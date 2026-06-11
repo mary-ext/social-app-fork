@@ -30,7 +30,7 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt }
 	const [isPlaying, setIsPlaying] = useState(!autoplayDisabled);
 	const [isLoaded, setIsLoaded] = useState(false);
 
-	// resume playback when the tab returns to the foreground (parity with the old gif-view shim).
+	// resume playback when the tab returns to the foreground.
 	useEffect(() => {
 		const onVisibilityChange = () => {
 			const video = videoRef.current;

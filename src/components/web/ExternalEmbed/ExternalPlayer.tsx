@@ -35,8 +35,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 		width: window.innerWidth,
 	});
 
-	// deactivate when scrolled out of the viewport (parity with RNW's frame-callback visibility check, which
-	// stops twitch/youtube audio continuing off-screen).
+	// deactivate when scrolled out of the viewport, so twitch/youtube audio doesn't continue off-screen.
 	useEffect(() => {
 		if (!isActive) {
 			return;

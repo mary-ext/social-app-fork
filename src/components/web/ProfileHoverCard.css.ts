@@ -12,7 +12,7 @@ export const positioner = style({
 });
 
 // the positioning/animation layer only; the visual chrome lives on the card so its fixed width is the full
-// card width (border included), matching the original.
+// card width (border included).
 export const popup = style({
 	maxWidth: '100%',
 	transformOrigin: 'var(--transform-origin)',

@@ -65,8 +65,8 @@ export function AvatarBubbles({
 	const scale = size / 120;
 	const marginOffset = size < 120 ? -2 : 0;
 
-	// Drive the entrance scale from React state so the CSS transition (below) actually re-renders.
-	// Real reanimated animated this on the UI thread, but our web compat shim snaps shared values.
+	// Drive the entrance scale from React state so the CSS transition (below) actually re-renders; the web
+	// compat shim snaps shared values, so they can't drive the transition.
 	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
 		if (animate) {
@@ -134,7 +134,7 @@ function AvatarBubble({
 		transform: [{ translateX: x }, { translateY: y }, { scale }],
 	};
 	if (transitionDelay != null) {
-		// approximate upstream's Easing.out(Easing.back(1.75)) scale-in with the canonical ease-out-back curve
+		// ease-out-back scale-in: the curve overshoots past the final scale, then settles back to it
 		transformStyle.transition = `transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1) ${transitionDelay}ms`;
 	}
 

@@ -12,8 +12,8 @@ export const wrap = style({
 	placeItems: 'center',
 });
 
-// RNW flips bg/fg by theme name; the palette also inverts, so the net result is a light circle with a dark
-// glyph in every theme. reproduced here with the theme selectors rather than a runtime `t.name` check.
+// bg/fg flip by theme name while the palette also inverts, so the net result is a light circle with a dark
+// glyph in every theme. done with the theme selectors below.
 export const circle = style({
 	borderRadius: 9999,
 	boxShadow: '0 0 32px rgba(0, 0, 0, 0.5)',

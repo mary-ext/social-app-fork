@@ -44,7 +44,7 @@ export const textarea = style({
 	appearance: 'none',
 	background: 'transparent',
 	border: 0,
-	// so the `minHeight` calc (content + padding) matches the rendered height, like the RNW textarea
+	// so the `minHeight` calc (content + padding) matches the rendered height
 	boxSizing: 'border-box',
 	// the preview owns the visible glyphs; the textarea contributes only the caret + selection.
 	caretColor: vars.palette.contrast_1000,

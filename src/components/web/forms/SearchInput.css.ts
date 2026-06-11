@@ -9,7 +9,7 @@ export const field = style({
 });
 
 // leading search icon, vertically centered and non-interactive so clicks fall through to the input. its
-// color tracks the input's interaction state, mirroring the RNW TextField icon (accent on focus).
+// color tracks the input's interaction state (accent on focus).
 export const icon = style({
 	alignItems: 'center',
 	color: vars.palette.contrast_500,

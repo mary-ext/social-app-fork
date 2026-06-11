@@ -244,7 +244,7 @@ export function Item({ children, label, onPress, style, destructive = false, ...
 					onPress(e);
 
 					/**
-					 * Ported forward from Radix
+					 * close the menu on select unless the handler prevented default.
 					 *
 					 * @see https://www.radix-ui.com/primitives/docs/components/dropdown-menu#item
 					 */

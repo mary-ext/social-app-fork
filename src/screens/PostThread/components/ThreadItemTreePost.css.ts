@@ -20,17 +20,16 @@ export const postAlerts = style({
 });
 
 // #region indent spine
-// these boxes set `box-sizing: border-box` to match RNW (globally border-box, no reset on the web side):
-// their widths/heights are the total box, so the borders that draw the spine land on the avatar centers
-// rather than 2px outside them.
+// these boxes set `box-sizing: border-box` so their widths/heights are the total box, letting the borders
+// that draw the spine land on the avatar centers rather than 2px outside them.
 /** One per ancestor level; its right border draws that ancestor's vertical reply line. */
 export const guide = style({
 	borderRightColor: colors.borderContrastLow,
 	borderRightStyle: 'solid',
 	borderRightWidth: REPLY_LINE_WIDTH,
 	boxSizing: 'border-box',
-	// RNW flex items default to flex-shrink:0; plain CSS defaults to 1. without this the indent guides
-	// shrink on crowded rows and the post lands at the wrong depth.
+	// pin flex-shrink:0; without it the indent guides shrink on crowded rows and the post lands at the
+	// wrong depth.
 	flexShrink: 0,
 	left: 1,
 	position: 'relative',
@@ -64,7 +63,7 @@ export const replyChildLineColumn = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
-	// fixed-width gutter aligning the child line under the inline avatar; must not shrink (RNW default).
+	// fixed-width gutter aligning the child line under the inline avatar; must not shrink.
 	flexShrink: 0,
 	paddingTop: space._2xs,
 	position: 'relative',
@@ -90,8 +89,8 @@ export const innerWrapper = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	// RNW flex nodes default to min-width:0; restate it down the whole width chain so a wide embed
-	// (image gallery) stays clamped to the row instead of growing the column unbounded.
+	// restate min-width:0 down the whole width chain so a wide embed (image gallery) stays clamped to the
+	// row instead of growing the column unbounded.
 	minWidth: 0,
 	paddingLeft: OUTER_SPACE,
 	paddingRight: OUTER_SPACE,
@@ -143,7 +142,7 @@ export const bodyRow = style({
 	minWidth: 0,
 });
 
-/** `minWidth: 0` (which RNW flex nodes defaulted to) lets the clamped text ellipsize. */
+/** `minWidth: 0` lets the clamped text ellipsize. */
 export const contentColumn = style({
 	boxSizing: 'border-box',
 	display: 'flex',

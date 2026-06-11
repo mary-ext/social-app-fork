@@ -100,7 +100,7 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
 	const t = useTheme();
 	const showTopBorder = !item.ui.showParentReplyLine && overrides?.topBorder !== true;
 
-	// stays an RNW `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
+	// stays a `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
 	// `View` ref), which a plain `<div>` can't accept. the web layout lives inside.
 	return (
 		<GalleryBleed>

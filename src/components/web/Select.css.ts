@@ -45,7 +45,7 @@ export const icon = style(
 		display: 'flex',
 		flexShrink: 0,
 		// taller than the 12px chevron so the icon (not the text) sets the trigger's content row to 20px,
-		// giving the 38px trigger height the upstream select has. the chevron stays centered at its natural size.
+		// giving a 38px trigger height. the chevron stays centered at its natural size.
 		height: 20,
 	}),
 );

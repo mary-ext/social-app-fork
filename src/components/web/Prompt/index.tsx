@@ -52,7 +52,7 @@ export function Outer({
 	);
 }
 
-/** Groups the title + description above the actions (matches the ALF `Prompt.Content`). */
+/** Groups the title + description above the actions. */
 export function Content({ children }: { children: ReactNode }) {
 	return <div className={styles.content}>{children}</div>;
 }

@@ -94,8 +94,8 @@ export const appealInput = style({
 	marginBlock: 12,
 });
 
-// Back/Submit row: stacked (reversed, so Submit sits on top) on mobile; split across the row past the 800px
-// `gtMobile` breakpoint.
+// Back/Submit row: stacked (reversed, so Submit sits on top) on narrow viewports; split across the row past
+// the 800px breakpoint.
 export const appealActions = style({
 	display: 'flex',
 	flexDirection: 'column-reverse',

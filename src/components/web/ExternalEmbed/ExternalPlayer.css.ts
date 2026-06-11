@@ -20,7 +20,7 @@ export const thumb = style({
 	width: '100%',
 });
 
-// RNW darkens the thumbnail/placeholder behind the play affordance at 0.3 opacity.
+// darkens the thumbnail/placeholder behind the play affordance at 0.3 opacity.
 export const dim = style({
 	bottom: 0,
 	left: 0,

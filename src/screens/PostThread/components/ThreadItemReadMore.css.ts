@@ -15,7 +15,7 @@ export const guide = style({
 	borderRightColor: colors.borderContrastLow,
 	borderRightStyle: 'solid',
 	borderRightWidth: REPLY_LINE_WIDTH,
-	// border-box + no-shrink so the indent matches the tree posts above (RNW parity); see ThreadItemTreePost.css
+	// border-box + no-shrink so the indent matches the tree posts above; see ThreadItemTreePost.css
 	boxSizing: 'border-box',
 	flexShrink: 0,
 	left: 1,

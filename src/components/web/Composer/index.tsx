@@ -78,8 +78,8 @@ const NO_PADDING: ContentPadding = { bottom: 0, left: 0, right: 0, top: 0 };
 
 /**
  * Web-native rich composer input: a transparent autosizing `<textarea>` over a facet-colored preview. Built
- * on the platform-neutral Tapper (text model) + Sift (autocomplete positioning); no RNW `TextInput`, so
- * keydown bubbling (Escape → dialog close) is not suppressed.
+ * on the platform-neutral Tapper (text model) + Sift (autocomplete positioning). keydown bubbling (Escape →
+ * dialog close) is not suppressed.
  */
 export function Composer({
 	placeholder,

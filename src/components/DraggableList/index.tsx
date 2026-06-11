@@ -23,10 +23,7 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 	return style;
 };
 
-/**
- * Web implementation of SortableList using pointer events. See SortableList.tsx for the native version using
- * gesture-handler + Reanimated.
- */
+/** Sortable list driven by pointer events. */
 
 interface SortableListProps<T> {
 	data: T[];

@@ -72,7 +72,7 @@ export const avatarColumn = style({
 	flexDirection: 'column',
 });
 
-/** `minWidth: 0` (which RNW flex nodes defaulted to) lets the clamped text/name ellipsize. */
+/** `minWidth: 0` lets the clamped text/name ellipsize. */
 export const content = style({
 	display: 'flex',
 	flex: 1,
@@ -80,7 +80,7 @@ export const content = style({
 	minWidth: 0,
 });
 
-/** Below-meta rhythm. `display: flex` (as the RNW `View` was) so the wrapper doesn't inflate the line box. */
+/** Below-meta rhythm. `display: flex` so the wrapper doesn't inflate the line box. */
 export const metaSpacing = style({
 	display: 'flex',
 	flexDirection: 'column',

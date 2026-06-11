@@ -46,7 +46,7 @@ export const text = recipe(
 			fontFamily,
 			fontSize: fontSizeScale,
 			// snap the derived line-height to the device-pixel grid — `round(fontSize * leading, 1px / dpr)` — so
-			// it lands on whole device pixels like RNW rather than a fractional CSS value
+			// it lands on whole device pixels rather than a fractional CSS value
 			lineHeight: roundToDevicePx(calc.multiply(fontSizeScale, fallbackVar(leadingVar, '1.3'))),
 			margin: 0,
 			padding: 0,

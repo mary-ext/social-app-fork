@@ -113,8 +113,8 @@ export const close = style(
 	layered(components, {
 		alignItems: 'center',
 		appearance: 'none',
-		// solid surface bg (matches the RNW ghost-secondary close): blends into a card, but reads as a circle
-		// over a backdrop (e.g. the GIF picker's outer close).
+		// solid surface bg: blends into a card, but reads as a circle over a backdrop (e.g. the GIF
+		// picker's outer close).
 		backgroundColor: vars.palette.contrast_0,
 		border: 'none',
 		borderRadius: 999,

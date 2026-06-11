@@ -36,7 +36,7 @@ export const box = style({
 	position: 'relative',
 });
 
-// RNW insets the inner layers by 2px on every edge to hide a sub-pixel clipping seam on web.
+// inset the inner layers by 2px on every edge to hide a sub-pixel clipping seam.
 export const inset = style({
 	bottom: -2,
 	left: -2,
@@ -82,7 +82,7 @@ const dimBase = style({
 	},
 });
 
-// RNW darkens a paused gif with two stacked overlays (0.2 from the controls + 0.3 outside them).
+// a paused gif is darkened by two stacked overlays (0.2 from the controls + 0.3 outside them).
 export const dimInner = style([dimBase, { opacity: 0.2 }]);
 export const dimOuter = style([dimBase, { opacity: 0.3 }]);
 

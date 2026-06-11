@@ -5,7 +5,7 @@ import { CARD_ASPECT_RATIO } from '#/lib/constants';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// matches the RNW `transition_color` atom (border/color hover swaps on the card).
+// shared timing for the card's border/color hover swaps.
 const transition = {
 	transitionDuration: '100ms',
 	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
@@ -94,7 +94,7 @@ export const domainRow = style({
 	flexDirection: 'row',
 	gap: space._2xs,
 	paddingBottom: space.sm,
-	// off the divider; a hair more than the symmetric `pb_sm` below it (matches the RNW card).
+	// off the divider; a hair more than the symmetric `pb_sm` below it.
 	paddingTop: 6,
 });
 

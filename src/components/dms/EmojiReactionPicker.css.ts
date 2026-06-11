@@ -23,7 +23,7 @@ export const trigger = style({
 
 // the Base UI popup is just a positioning shell — the quick-reaction pill and the emoji-mart panel each bring
 // their own surface chrome (so the expanded picker isn't trapped in a pill). scale+fade on open/close, keyed
-// off Base UI's starting/ending-style attributes + `--transform-origin` (matches the web emoji picker).
+// off Base UI's starting/ending-style attributes + `--transform-origin`.
 export const popup = style({
 	outline: 0,
 	transformOrigin: 'var(--transform-origin)',
@@ -69,7 +69,7 @@ export const reactionSelected = style({
 	backgroundColor: vars.palette.contrast_100,
 });
 
-// limit reached and not yet a reaction of ours: dimmed and inert-looking (the tap is still a no-op upstream).
+// limit reached and not yet a reaction of ours: dimmed and inert-looking (the tap is still a no-op).
 export const reactionDisabled = style({
 	opacity: 0.7,
 	selectors: {

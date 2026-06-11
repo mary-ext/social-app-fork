@@ -8,10 +8,10 @@ import * as styles from '#/components/web/Dialog/Popup.css';
 
 // the portalled backdrop/viewport are rendered into `document.body`, but React still routes their
 // events up the *component* tree — so a click would bubble into whatever owns the dialog (e.g. the
-// RNW `Link` wrapping an external embed) and trigger it. stop it at the portal boundary.
+// `Link` wrapping an external embed) and trigger it. stop it at the portal boundary.
 //
-// TODO: revisit when we redo router/navigation — the leak stems from the RNW `Link`/`<a>` press
-// handler sitting above the portal on the component tree, and this guard may become unnecessary.
+// TODO: revisit when we redo router/navigation — the leak stems from a `Link`/`<a>` press handler
+// sitting above the portal on the component tree, and this guard may become unnecessary.
 const stopPropagation = (e: { stopPropagation: () => void }) => e.stopPropagation();
 
 /** Portalled backdrop + scrollable viewport + themed popup card. Put dialog content inside. */
@@ -78,7 +78,7 @@ export function Close({ outer }: { outer?: boolean } = {}) {
 	const { t: l } = useLingui();
 	return (
 		<BaseDialog.Close aria-label={l`Close dialog`} className={clsx(styles.close, outer && styles.closeOuter)}>
-			{/* 18px matches the RNW `ButtonIcon size="md"` map (which differs from the raw icon `md`) */}
+			{/* 18px is the button-icon `md` size, which differs from the raw icon `md` (20px) */}
 			<TimesIcon width={18} height={18} fill="currentColor" />
 		</BaseDialog.Close>
 	);

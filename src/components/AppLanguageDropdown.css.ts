@@ -5,7 +5,7 @@ import { vars } from '#/styles/contract.css';
 import { roundToDevicePx } from '#/styles/round';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
-// subtle app-language switcher mirroring upstream: tighten the rectangular/tiny web Button around the value
+// subtle app-language switcher: tighten the rectangular/tiny web Button around the value
 // + chevron, and start-align the content (the Button base centers it). unlayered (like LanguageButton.css)
 // so it wins over the Button recipe and the Select value/icon defaults.
 export const trigger = style({
@@ -26,7 +26,7 @@ export const value = style({
 	lineHeight: roundToDevicePx(calc.multiply(fontSize.sm, lineHeight.snug)),
 });
 
-// match upstream's 20px chevron line box (the Select icon is a flex span, so size it explicitly) so the
+// 20px chevron line box (the Select icon is a flex span, so size it explicitly) so the
 // button stands 30px tall; the chevron stays at the trigger's medium tone (only the value text is full
 // contrast).
 export const icon = style({

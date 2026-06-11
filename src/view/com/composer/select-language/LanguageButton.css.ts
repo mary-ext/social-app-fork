@@ -28,7 +28,7 @@ export const langText = style({
 	whiteSpace: 'nowrap',
 });
 
-// two ease-in-out fade pulses (≈300ms in / 500ms out, twice) — mirrors the RNW reanimated hint.
+// two ease-in-out fade pulses (≈300ms in / 500ms out, twice) to hint at the language suggestion.
 const pulse = keyframes({
 	'0%': { opacity: 0 },
 	'18.75%': { opacity: 1 },

@@ -38,7 +38,7 @@ export const button = recipe(
 			whiteSpace: 'nowrap',
 			selectors: {
 				// ghost/bare disabled treatment: dim the inherited color. solid colors override this with a
-				// muted fill at full opacity (see the per-color compound variants), matching upstream.
+				// muted fill at full opacity (see the per-color compound variants).
 				'&:disabled': { cursor: 'default', opacity: 0.5 },
 				'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 			},
@@ -67,7 +67,7 @@ export const button = recipe(
 					color: vars.palette.white,
 					selectors: {
 						[HOVER]: { backgroundColor: vars.palette.primary_600 },
-						// `contrast_0` is white in light themes and dark in dark ones — upstream's white/text_inverted split.
+						// `contrast_0` is white in light themes and dark in dark ones.
 						'&:disabled': {
 							backgroundColor: vars.palette.primary_200,
 							color: vars.palette.contrast_0,
@@ -92,7 +92,7 @@ export const button = recipe(
 			{
 				// inverted secondary: a high-contrast fill for the active state of toggle-like buttons (e.g.
 				// the GIF picker's category pills). `contrast_0` text reads as light-on-dark in light themes
-				// and dark-on-light in dark ones, matching upstream's `text_inverted`.
+				// and dark-on-light in dark ones.
 				color: 'secondary_inverted',
 				style: {
 					backgroundColor: vars.palette.contrast_900,
@@ -149,9 +149,8 @@ export const button = recipe(
 				},
 				variant: 'ghost',
 			},
-			// emitted after the `size` variant, so the square hit target wins over its padding. dimensions
-			// match upstream's rendered round-button sizes (a 34px box overflows the 33px header slot,
-			// nudging the centered icon off-axis).
+			// emitted after the `size` variant, so the square hit target wins over its padding. these exact
+			// dimensions matter: a 34px box overflows the 33px header slot, nudging the centered icon off-axis.
 			{ shape: 'round', size: 'large', style: { height: 44, padding: 0, width: 44 } },
 			{ shape: 'round', size: 'small', style: { height: 33, padding: 0, width: 33 } },
 			// `rectangular` squares off the pill (use beside form fields), with tighter padding than the
@@ -194,13 +193,16 @@ export const textSize = styleVariants(fontSize, (value) => ({
 	'@layer': { [components]: { fontSize: value } },
 }));
 
-/** Box wrapping a {@link ButtonIcon}'s icon, normalizing its footprint to match the RNW Button. */
+/**
+ * Box wrapping a {@link ButtonIcon}'s icon at a fixed per-size footprint, so icons of different intrinsic
+ * sizes occupy the same box and a larger icon never grows the button height.
+ */
 export const iconBox = recipe(
 	{
 		base: {
 			// grid (not flex) centering: the box is intentionally narrower than some icons (an 18px `md` icon
 			// in a 17px small-button box), and a grid item overflows its track centered rather than being
-			// shrunk into a non-square smear the way a flex item would. mirrors RNW's absolute-centered icon.
+			// shrunk into a non-square smear the way a flex item would.
 			// `place-content` (not `place-items`) does the centering: the single auto track grows to fit the
 			// icon, so it's the track that overflows the fixed box — `place-content` centers that track,
 			// whereas `place-items` only centers the icon within its already-grown track (a no-op here).
@@ -208,7 +210,7 @@ export const iconBox = recipe(
 			placeContent: 'center',
 		},
 		compoundVariants: [
-			// `2xs` icons keep the full line-height box but a narrower width, matching upstream.
+			// `2xs` icons keep the full line-height box but a narrower width.
 			{ narrow: true, size: 'large', style: { width: 10 } },
 			{ narrow: true, size: 'small', style: { width: 10 } },
 		],

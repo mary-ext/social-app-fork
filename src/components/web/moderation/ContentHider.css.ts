@@ -2,8 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 
-// RN `View` defaults a bare DOM box doesn't get: column stacking + border-box. ContentHider stands in for an
-// RNW `<View>`, so its boxes must restate these to lay children out identically.
+// shared box defaults for the wrappers: column stacking + border-box.
 const viewBase = {
 	boxSizing: 'border-box',
 	display: 'flex',
@@ -23,7 +22,7 @@ export const activeOuter = style({
 export const panel = style(viewBase);
 
 // the blur toggle row (Collapsible.Trigger). a bare <button> reset plus the contrast fill that lifts on
-// hover/press; widens its padding past the `gtMobile` (800px) breakpoint to match the RNW original.
+// hover/press; widens its padding past the 800px breakpoint.
 export const blurButton = style({
 	alignItems: 'center',
 	appearance: 'none',

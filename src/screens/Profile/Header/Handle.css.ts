@@ -16,8 +16,7 @@ export const noTaps = style({
 });
 
 // flex so the inline Text span doesn't inherit the wrapper's font strut and inflate the line box.
-// `flex-shrink: 0` keeps the label on one line (the handle beside it shrinks instead) — matching the
-// original, where it was a React Native View, whose flex children never shrink by default.
+// `flex-shrink: 0` keeps the label on one line (the handle beside it shrinks instead).
 export const followsYou = style({
 	backgroundColor: vars.palette.contrast_50,
 	borderRadius: 4,

@@ -13,9 +13,8 @@ const borderColorVar = createVar();
 const borderOpacityVar = createVar();
 
 /**
- * Thin inset border overlay matching the RNW `MediaInsetBorder`: a hairline that thins to 0.5px on hi-dpi
- * screens (the `@media` query replaces the runtime `IS_HIGH_DPI` check). Light theme uses a solid
- * low-contrast border; dark/dim use a higher-contrast border at 60% opacity.
+ * Thin inset border overlay: a hairline that thins to 0.5px on hi-dpi screens via the `@media` query. Light
+ * theme uses a solid low-contrast border; dark/dim use a higher-contrast border at 60% opacity.
  *
  * Sits in the `components` layer so the sibling modifiers below — and any (unlayered) consumer `className`
  * override — win over it without a specificity bump.

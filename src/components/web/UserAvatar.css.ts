@@ -5,7 +5,7 @@ import { components, layered } from '#/styles/layers.css';
 
 export const sizeVar = createVar();
 export const radiusVar = createVar();
-/** Live-border thickness (2px above 16px avatars, else 1px), mirroring the RNW `UserAvatar`. */
+/** Live-border thickness (2px above 16px avatars, else 1px). */
 export const borderWidthVar = createVar();
 /** Alert-badge scale factor (`size / 42`), keeping the badge proportional to the avatar. */
 export const alertScaleVar = createVar();

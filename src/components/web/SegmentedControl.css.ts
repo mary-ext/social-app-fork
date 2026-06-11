@@ -28,7 +28,7 @@ export const slider = style(
 		backgroundColor: vars.palette.contrast_0,
 		borderRadius: 10,
 		bottom: 4,
-		// matches the original segmented control's hardcoded indicator shadow
+		// hardcoded indicator shadow
 		boxShadow: '0px 2px 4px 0px #0000000D',
 		left: 4,
 		position: 'absolute',

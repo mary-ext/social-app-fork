@@ -8,8 +8,8 @@ export const group = style({
 	display: 'contents',
 });
 
-// pinned header above the scrolling list: title block + search field. the 16px column gap reproduces the
-// original subtitle-to-search spacing (RNW `mb_lg`); the tight bottom padding is the original `pb_xs`.
+// pinned header above the scrolling list: title block + search field. the 16px column gap sets the
+// subtitle-to-search spacing; the tight bottom padding keeps it close to the list.
 export const header = style({
 	backgroundColor: vars.palette.contrast_0,
 	boxSizing: 'border-box',
@@ -36,9 +36,8 @@ export const titleBlock = style({
 	gap: 8,
 });
 
-// the scroll region carries the 24px horizontal inset so rows (and their dividers) stop short of the edges,
-// matching the original's inset list. the matching bottom padding gives the last rows a little breathing room
-// above the pinned footer.
+// the scroll region carries the 24px horizontal inset so rows (and their dividers) stop short of the edges.
+// the matching bottom padding gives the last rows a little breathing room above the pinned footer.
 export const list = style({
 	paddingBottom: 24,
 	paddingInline: 24,
@@ -70,7 +69,7 @@ export const rowLabel = style({
 	},
 });
 
-// the Done button stretches the full footer width, matching the RNW large button's default block layout.
+// the Done button stretches the full footer width.
 export const doneButton = style({
 	width: '100%',
 });

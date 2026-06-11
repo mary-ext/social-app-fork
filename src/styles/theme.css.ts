@@ -12,7 +12,7 @@ const alpha = (hex: string, opacity: number) => {
 const shadows = (palette: Palette, opacity: number) => {
 	const c = alpha(palette.black, opacity);
 	return {
-		// the soft, offsetless glow shared by every modal surface (mirrors `shadowRadius: 30` in the RNW dialog).
+		// the soft, offsetless glow shared by every modal surface.
 		dialog: `0 0 30px ${c}`,
 		lg: `0 20px 25px -5px ${c}, 0 8px 10px -6px ${c}`,
 		md: `0 10px 15px -3px ${c}, 0 4px 6px -4px ${c}`,
@@ -26,9 +26,9 @@ const themeValues = (palette: Palette, shadowOpacity: number) => ({
 	shadow: shadows(palette, shadowOpacity),
 });
 
-// assign onto the selectors `useColorModeTheme.ts` / `web/index.html` already toggle on <html>, so the
-// new DOM components recolor alongside the RNW ones with no extra switching machinery. mirrors the
-// palette inversion + shadow opacity from `createTheme` in `#/alf/base/themes`.
+// assign onto the selectors `useColorModeTheme.ts` / `web/index.html` already toggle on <html>, so
+// components recolor by class with no extra switching machinery. dark/dim invert the palette and run a
+// heavier shadow opacity.
 globalStyle('.theme--light', { vars: assignVars(vars, themeValues(DEFAULT_PALETTE, 0.1)) });
 globalStyle('.theme--dark', { vars: assignVars(vars, themeValues(invertPalette(DEFAULT_PALETTE), 0.4)) });
 globalStyle('.theme--dim', {

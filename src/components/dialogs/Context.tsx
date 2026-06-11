@@ -31,7 +31,7 @@ export type SigninDialogPayload = {
 
 type ControlsContext = {
 	/**
-	 * The composer's Base UI {@link DialogHandle}-backed dialog. Opened from RNW triggers all over the app (no
+	 * The composer's Base UI {@link DialogHandle}-backed dialog. Opened from triggers all over the app (no
 	 * declarative Trigger), so callers drive it imperatively — `openWithPayload(opts)` to open with the
 	 * composer state, `isOpen` to test, `close()` to close — and read the active opts in the dialog tree via
 	 * the `Dialog.Root` payload render-prop. The registry id is the constant `COMPOSER_DIALOG_ID`.

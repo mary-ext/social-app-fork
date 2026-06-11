@@ -15,8 +15,8 @@ export const outer = style({ width: '100%' });
 export const sizer = style({
 	overflow: 'hidden',
 	paddingTop: padVar,
-	// RNW Views default to position:relative; the absolute `abs` child must anchor to this padded box, not
-	// escape to a further-up positioned ancestor (which would lift the image up into the top margin).
+	// the absolute `abs` child must anchor to this padded box, not escape to a further-up positioned
+	// ancestor (which would lift the image up into the top margin).
 	position: 'relative',
 });
 

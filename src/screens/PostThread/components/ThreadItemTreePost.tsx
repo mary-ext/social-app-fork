@@ -100,7 +100,7 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 	const t = useTheme();
 	const indents = Math.max(0, item.ui.indent - 1);
 
-	// stays an RNW `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
+	// stays a `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
 	// `View` ref), which a plain `<div>` can't accept. the indent guides + web layout sit inside.
 	return (
 		<GalleryBleed>

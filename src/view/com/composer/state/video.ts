@@ -304,7 +304,7 @@ export async function processVideo(
 		signal,
 	});
 
-	// Job-status polling runs unauthenticated, matching upstream — the service does not require auth here,
+	// Job-status polling runs unauthenticated — the service does not require auth here,
 	// which also avoids a minted token expiring mid-poll on a long upload.
 	const videoClient = createVideoClient();
 

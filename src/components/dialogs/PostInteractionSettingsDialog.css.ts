@@ -46,7 +46,7 @@ export const radioRow = style({
 	gap: 8,
 });
 
-// matches the original's column `justify_center`: vertically centre the row's content within the min height
+// vertically centre the row's content within the min height.
 export const persistRow = style({
 	display: 'flex',
 	flexDirection: 'column',

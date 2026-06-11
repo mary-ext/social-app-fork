@@ -70,7 +70,7 @@ export const menuButton = style({
 	position: 'relative',
 	width: 20,
 	selectors: {
-		// the hover halo extends past the small icon box, matching the RNW inset.
+		// the hover halo extends past the small icon box via a negative inset.
 		'&::before': {
 			borderRadius: borderRadius.full,
 			content: '""',

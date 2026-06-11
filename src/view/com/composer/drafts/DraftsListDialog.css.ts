@@ -3,8 +3,8 @@ import { style } from '@vanilla-extract/css';
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
-// floored at 500 like the RNW InnerFlatList so the dialog keeps a stable height instead of shrinking to a
-// short list; shrinks + scrolls within the popup's 80vh cap when the list outgrows it.
+// floored at 500 so the dialog keeps a stable height instead of shrinking to a short list; shrinks +
+// scrolls within the popup's 80vh cap when the list outgrows it.
 export const list = style({
 	minHeight: 500,
 	overflowY: 'auto',
@@ -15,7 +15,7 @@ export const list = style({
 	},
 });
 
-// item gutters tighten on narrow viewports, matching the old `gtPhone` breakpoint.
+// item gutters tighten on narrow viewports below the 500px breakpoint.
 export const itemWrap = style({
 	paddingInline: space.sm,
 	paddingTop: space.sm,

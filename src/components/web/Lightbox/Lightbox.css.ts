@@ -45,7 +45,7 @@ export const popup = style({
 	},
 });
 
-/** Positioned ancestor for the absolutely-placed chrome (RNW Views default to relative, plain divs do not). */
+/** Positioned ancestor so the absolutely-placed chrome anchors here. */
 export const viewport = style({
 	position: 'relative',
 	cursor: 'default',

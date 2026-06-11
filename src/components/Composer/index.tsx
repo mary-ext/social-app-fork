@@ -139,7 +139,7 @@ export function Composer({
 	const [activeFacet, setActiveFacet] = useState<TapperActiveFacet | null>(null);
 
 	/*
-	 * Reanimated shared value for syncing scroll on all platforms.
+	 * Reanimated shared value for syncing scroll.
 	 */
 	const inputScrollSharedValue = useSharedValue(0);
 
