@@ -47,7 +47,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 		},
 		{
 			name: 'following',
-			label: l({ context: 'allow messages from', message: `Users I follow` }),
+			label: l({ context: 'allow messages from', message: `People I follow` }),
 		},
 		{
 			name: 'none',
@@ -64,7 +64,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 			name: 'following',
 			label: l({
 				context: 'allow group chat invites from',
-				message: `Users I follow`,
+				message: `People I follow`,
 			}),
 		},
 		{
