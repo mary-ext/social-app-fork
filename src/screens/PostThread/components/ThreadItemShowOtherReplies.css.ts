@@ -41,4 +41,6 @@ export const iconCircle = style({
 
 export const label = style({
 	flex: 1,
+	// the RNW Button centers its content; keep the row's label text left-aligned.
+	textAlign: 'left',
 });

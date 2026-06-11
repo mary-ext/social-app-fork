@@ -1,6 +1,8 @@
 import { useLingui } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
+import { atoms as a } from '#/alf';
+
 import { Button } from '#/components/Button';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
 import { Text } from '#/components/web/Text';
@@ -17,6 +19,7 @@ export function ThreadItemShowOtherReplies({ onPress }: { onPress: () => void })
 				onPress();
 			}}
 			label={label}
+			style={a.w_full}
 		>
 			{({ hovered, pressed }) => (
 				<div className={clsx(css.row, hovered || pressed ? css.rowActive : css.rowIdle)}>
