@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens.css';
 
 /**
  * Shared chrome for the post-control action buttons (reply/repost/like/bookmark/share/overflow): a
@@ -31,12 +30,12 @@ export const button = style({
 	},
 });
 
-const text = style({
+/**
+ * Overrides for the count/label, which renders through the web {@link Text} primitive (for its device-snapped
+ * snug line-height — a raw span's `line-height: normal` sits ~1px short of it). `inherit` lets the count pick
+ * up the button's resting/active color via `currentColor`; the count never wraps.
+ */
+export const text = style({
 	color: 'inherit',
-	userSelect: 'none',
 	whiteSpace: 'nowrap',
 });
-
-export const textSmall = style([text, { fontSize: fontSize.sm }]);
-export const textBig = style([text, { fontSize: fontSize.md }]);
-export const textActive = style({ fontWeight: 600 });

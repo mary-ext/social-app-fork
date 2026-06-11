@@ -13,6 +13,7 @@ import { atoms as a } from '#/alf';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/PostControls/PostControlButton.css';
+import { Text } from '#/components/web/Text';
 
 const PostControlContext = createContext<{ active?: boolean; big?: boolean }>({});
 PostControlContext.displayName = 'PostControlContext';
@@ -73,11 +74,14 @@ export function PostControlButtonIcon({ icon: Icon }: { icon: ComponentType<Icon
 /** A count/label beside the icon, inheriting the button color and bolding when active. */
 export function PostControlButtonText({ children }: { children: ReactNode }) {
 	const { active, big } = useContext(PostControlContext);
-	// renders a web <span> beside the icon — the RN unwrapped-text rule doesn't model this
-	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
 	return (
-		<span className={clsx(big ? styles.textBig : styles.textSmall, active && styles.textActive)}>
+		<Text
+			className={styles.text}
+			selectable={false}
+			size={big ? 'md' : 'sm'}
+			weight={active ? 'semiBold' : undefined}
+		>
 			{children}
-		</span>
+		</Text>
 	);
 }
