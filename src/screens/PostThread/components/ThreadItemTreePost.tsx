@@ -28,7 +28,6 @@ import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/T
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
@@ -36,6 +35,7 @@ import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+import { PostHider } from '#/components/web/moderation/PostHider';
 import { RichText } from '#/components/web/RichText';
 
 import * as css from './ThreadItemTreePost.css';
@@ -295,7 +295,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 					disabled={overrides?.moderation === true}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 					iconSize={42}
-					iconStyles={{ marginLeft: 2, marginRight: 2 }}
+					iconClassName={css.hiderIcon}
 					profile={post.author}
 					interpretFilterAsBlur
 				>

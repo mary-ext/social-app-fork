@@ -4107,7 +4107,6 @@ msgstr ""
 #: src/components/interstitials/Trending.tsx:89
 #: src/components/interstitials/TrendingVideos.tsx:129
 #: src/components/moderation/LabelPreference.tsx:125
-#: src/components/moderation/PostHider.tsx:121
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
 #: src/components/web/moderation/ContentHider.tsx:147
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
@@ -4175,10 +4174,6 @@ msgstr ""
 #: src/screens/Moderation/VerificationSettings.tsx:80
 #: src/screens/Moderation/VerificationSettings.tsx:90
 msgid "Hide verification badges"
-msgstr ""
-
-#: src/components/moderation/PostHider.tsx:75
-msgid "Hides the content"
 msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:106
@@ -4535,8 +4530,8 @@ msgstr ""
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
-#: src/components/moderation/PostHider.tsx:97
 #: src/components/moderation/ScreenHider.tsx:105
+#: src/components/web/moderation/PostHider.tsx:86
 msgid "Learn more about this warning"
 msgstr ""
 
@@ -7643,8 +7638,8 @@ msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:127
-#: src/components/moderation/PostHider.tsx:121
 #: src/components/web/moderation/ContentHider.tsx:147
+#: src/components/web/moderation/PostHider.tsx:108
 msgid "Show"
 msgstr ""
 
@@ -7743,6 +7738,10 @@ msgstr ""
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
+#: src/components/web/moderation/PostHider.tsx:102
+msgid "Show the content"
+msgstr "Show the content"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:57
 msgid "Show warning"
 msgstr ""
@@ -7757,10 +7756,6 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:99
 msgid "Shows other accounts you can switch to"
-msgstr ""
-
-#: src/components/moderation/PostHider.tsx:75
-msgid "Shows the content"
 msgstr ""
 
 #: src/components/dialogs/Signin.tsx:107

@@ -28,7 +28,6 @@ import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/T
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
@@ -36,6 +35,7 @@ import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
+import { PostHider } from '#/components/web/moderation/PostHider';
 import { RichText } from '#/components/web/RichText';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
@@ -232,9 +232,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					href={postHref}
 					disabled={overrides?.moderation === true}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-					hiderStyle={[a.pl_0, a.pr_2xs, a.bg_transparent]}
+					hiderClassName={css.hider}
 					iconSize={LINEAR_AVI_WIDTH}
-					iconStyles={[a.mr_xs]}
+					iconClassName={css.hiderIcon}
 					profile={post.author}
 					interpretFilterAsBlur
 				>
