@@ -3,9 +3,14 @@ import { style } from '@vanilla-extract/css';
 import { colors } from '#/styles/colors';
 import { space } from '#/styles/tokens.css';
 
-/** `position: relative` anchors the mobile fade gradient (absolute inset-0). */
+/**
+ * flex column (default `align-items: stretch`) makes the pressable span the full width, matching the original
+ * RNW `View`. `position: relative` anchors the mobile fade gradient (absolute inset-0).
+ */
 export const outer = style({
 	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'column',
 	paddingLeft: space.sm,
 	paddingRight: space.sm,
 	position: 'relative',
