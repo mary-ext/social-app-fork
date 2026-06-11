@@ -1,16 +1,16 @@
 import { memo } from 'react';
-import { View } from 'react-native';
 import { useLingui, Plural, Trans } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import type { PostThreadParams, ThreadItem } from '#/state/queries/usePostThread';
-
-import { LINEAR_AVI_WIDTH, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlus } from '#/components/icons/CirclePlus';
 import { Link } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/web/Text';
+
+import * as css from './ThreadItemReadMore.css';
 
 export const ThreadItemReadMore = memo(function ThreadItemReadMore({
 	item,
@@ -28,39 +28,15 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
 		? Array.from(Array(indent)).map((_, n: number) => {
 				const isSkipped = item.skippedIndentIndices.has(n);
 				return (
-					<View
-						key={`${item.key}-padding-${n}`}
-						style={[
-							t.atoms.border_contrast_low,
-							{
-								borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-								width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-								left: 1,
-							},
-						]}
-					/>
+					<div key={`${item.key}-padding-${n}`} className={clsx(css.guide, isSkipped && css.guideSkipped)} />
 				);
 			})
 		: null;
 
 	return (
-		<View style={[a.flex_row]}>
+		<div className={css.outer}>
 			{spacers}
-			<View
-				style={[
-					t.atoms.border_contrast_low,
-					{
-						marginLeft: isTreeView
-							? TREE_INDENT + TREE_AVI_WIDTH / 2 - 1
-							: (LINEAR_AVI_WIDTH - REPLY_LINE_WIDTH) / 2 + 16,
-						borderLeftWidth: 2,
-						borderBottomWidth: 2,
-						borderBottomLeftRadius: a.rounded_sm.borderRadius,
-						height: 18, // magic, Link below is 38px tall
-						width: isTreeView ? TREE_INDENT : LINEAR_AVI_WIDTH / 2 + 10,
-					},
-				]}
-			/>
+			<div className={clsx(css.connectorBase, isTreeView ? css.connectorTree : css.connectorLinear)} />
 			<Link label={l`Read more replies`} to={item.href} style={[a.pt_sm, a.pb_md, a.gap_xs]}>
 				{({ hovered, pressed }) => {
 					const interacted = hovered || pressed;
@@ -70,7 +46,7 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
 								fill={interacted ? t.atoms.text_contrast_high.color : t.atoms.text_contrast_low.color}
 								width={18}
 							/>
-							<Text style={[a.text_sm, t.atoms.text_contrast_medium, interacted && a.underline]}>
+							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
 								<Trans>
 									Read <Plural one="# more reply" other="# more replies" value={item.moreReplies} />
 								</Trans>
@@ -79,6 +55,6 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
 					);
 				}}
 			</Link>
-		</View>
+		</div>
 	);
 });

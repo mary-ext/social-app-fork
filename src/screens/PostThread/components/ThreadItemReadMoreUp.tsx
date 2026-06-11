@@ -1,16 +1,17 @@
 import { memo } from 'react';
-import { View } from 'react-native';
 import { useLingui, Trans } from '@lingui/react/macro';
 
 import type { ThreadItem } from '#/state/queries/usePostThread';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+import { OUTER_SPACE } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowTopCircle_Stroke2_Corner0_Rounded as UpIcon } from '#/components/icons/ArrowTopCircle';
 import { Link } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/web/Text';
+
+import * as css from './ThreadItemReadMoreUp.css';
 
 export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
 	item,
@@ -35,45 +36,22 @@ export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
 			{({ hovered, pressed }) => {
 				const interacted = hovered || pressed;
 				return (
-					<View>
-						<View style={[a.flex_row, a.align_center, a.gap_md]}>
-							<View
-								style={[
-									a.align_center,
-									{
-										width: LINEAR_AVI_WIDTH,
-									},
-								]}
-							>
+					<div>
+						<div className={css.rowTop}>
+							<div className={css.iconCell}>
 								<UpIcon
 									fill={interacted ? t.atoms.text_contrast_high.color : t.atoms.text_contrast_low.color}
 									width={24}
 								/>
-							</View>
-							<Text style={[a.text_sm, t.atoms.text_contrast_medium, interacted && [a.underline]]}>
+							</div>
+							<Text size="sm" color="textContrastMedium" className={interacted ? css.underline : undefined}>
 								<Trans>Continue thread...</Trans>
 							</Text>
-						</View>
-						<View
-							style={[
-								a.align_center,
-								{
-									width: LINEAR_AVI_WIDTH,
-								},
-							]}
-						>
-							<View
-								style={[
-									a.mt_xs,
-									{
-										height: OUTER_SPACE / 2,
-										width: REPLY_LINE_WIDTH,
-										backgroundColor: t.atoms.border_contrast_low.borderColor,
-									},
-								]}
-							/>
-						</View>
-					</View>
+						</div>
+						<div className={css.iconCell}>
+							<div className={css.lineStub} />
+						</div>
+					</div>
 				);
 			}}
 		</Link>

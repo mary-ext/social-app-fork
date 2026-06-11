@@ -2216,11 +2216,11 @@ msgstr ""
 msgid "Continue as {0} (currently signed in)"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:25
+#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:26
 msgid "Continue thread"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:54
+#: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:48
 msgid "Continue thread..."
 msgstr ""
 
@@ -3075,7 +3075,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadError.tsx:22
+#: src/screens/PostThread/components/ThreadError.tsx:18
 msgid "Error loading post"
 msgstr ""
 
@@ -6272,7 +6272,7 @@ msgstr ""
 msgid "Post anyway"
 msgstr "Post anyway"
 
-#: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:23
+#: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:19
 msgid "Post blocked"
 msgstr ""
 
@@ -6329,8 +6329,8 @@ msgstr ""
 msgid "Post link"
 msgstr "Post link"
 
-#: src/screens/PostThread/components/ThreadError.tsx:28
-#: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:26
+#: src/screens/PostThread/components/ThreadError.tsx:24
+#: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:22
 msgid "Post not found"
 msgstr ""
 
@@ -6542,7 +6542,7 @@ msgid "Reactions"
 msgstr "Reactions"
 
 #. placeholder {0}: item.moreReplies
-#: src/screens/PostThread/components/ThreadItemReadMore.tsx:74
+#: src/screens/PostThread/components/ThreadItemReadMore.tsx:50
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr ""
 
@@ -6551,7 +6551,7 @@ msgctxt "english-only-resource"
 msgid "read about how to use search filters"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemReadMore.tsx:64
+#: src/screens/PostThread/components/ThreadItemReadMore.tsx:40
 msgid "Read more replies"
 msgstr ""
 
@@ -7074,8 +7074,8 @@ msgstr ""
 #: src/screens/Messages/components/MessageListError.tsx:26
 #: src/screens/Messages/Inbox.tsx:177
 #: src/screens/Messages/JoinRequests.tsx:306
-#: src/screens/PostThread/components/ThreadError.tsx:63
-#: src/screens/PostThread/components/ThreadError.tsx:65
+#: src/screens/PostThread/components/ThreadError.tsx:43
+#: src/screens/PostThread/components/ThreadError.tsx:45
 #: src/view/com/util/error/ErrorMessage.tsx:42
 #: src/view/com/util/error/ErrorScreen.tsx:89
 #: src/view/screens/Storybook/Admonitions.tsx:53
@@ -7701,7 +7701,7 @@ msgstr ""
 msgid "Show more like this"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:13
+#: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:12
 msgid "Show more replies"
 msgstr ""
 
@@ -7930,7 +7930,7 @@ msgstr ""
 msgid "Something went wrong!"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadError.tsx:23
+#: src/screens/PostThread/components/ThreadError.tsx:19
 msgid "Something went wrong. Please try again in a moment."
 msgstr ""
 

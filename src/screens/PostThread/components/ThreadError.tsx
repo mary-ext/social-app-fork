@@ -1,20 +1,16 @@
 import { useMemo } from 'react';
-import { View } from 'react-native';
 import { useLingui, Trans } from '@lingui/react/macro';
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 
-import { OUTER_SPACE } from '#/screens/PostThread/const';
-
-import { atoms as a, useTheme } from '#/alf';
-
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import * as Layout from '#/components/Layout';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/web/Text';
+
+import * as css from './ThreadError.css';
 
 export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => void }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const cleanError = useCleanError();
 
@@ -34,40 +30,24 @@ export function ThreadError({ error, onRetry }: { error: Error; onRetry: () => v
 
 	return (
 		<Layout.Center>
-			<View
-				style={[
-					a.w_full,
-					a.align_center,
-					{
-						padding: OUTER_SPACE,
-						paddingTop: OUTER_SPACE * 2,
-					},
-				]}
-			>
-				<View
-					style={[
-						a.w_full,
-						a.align_center,
-						a.gap_xl,
-						{
-							maxWidth: 260,
-						},
-					]}
-				>
-					<View style={[a.gap_xs]}>
-						<Text style={[a.text_center, a.text_lg, a.font_semi_bold, a.leading_snug]}>{title}</Text>
-						<Text style={[a.text_center, a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+			<div className={css.outer}>
+				<div className={css.inner}>
+					<div className={css.textGroup}>
+						<Text align="center" size="lg" weight="semiBold">
+							{title}
+						</Text>
+						<Text align="center" size="sm" color="textContrastMedium">
 							{message}
 						</Text>
-					</View>
+					</div>
 					<Button label={l`Retry`} size="small" variant="solid" color="secondary_inverted" onPress={onRetry}>
 						<ButtonText>
 							<Trans>Retry</Trans>
 						</ButtonText>
 						<ButtonIcon icon={RetryIcon} position="right" />
 					</Button>
-				</View>
-			</View>
+				</div>
+			</div>
 		</Layout.Center>
 	);
 }
