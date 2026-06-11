@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -10,10 +10,8 @@ import {
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
-import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -22,32 +20,28 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { atoms as a, select, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
-import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
-import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls } from '#/components/PostControls';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
-import { ContentHider } from '#/components/web/moderation/ContentHider';
-import { RichText } from '#/components/web/RichText';
+import { PostContent } from '#/components/web/PostContent';
+import * as PostRow from '#/components/web/PostRow';
+import * as postRowCss from '#/components/web/PostRow.css';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import * as css from './Post.css';
 
 export function Post({
 	post,
-	showReplyLine,
 	hideTopBorder,
 	style,
 	onBeforePress,
 }: {
 	post: AppBskyFeedDefs.PostView;
-	showReplyLine?: boolean;
 	hideTopBorder?: boolean;
 	style?: StyleProp<ViewStyle>;
 	onBeforePress?: () => void;
@@ -79,7 +73,6 @@ export function Post({
 				record={record}
 				richText={richText}
 				moderation={moderation}
-				showReplyLine={showReplyLine}
 				hideTopBorder={hideTopBorder}
 				style={style}
 				onBeforePress={onBeforePress}
@@ -94,7 +87,6 @@ function PostInner({
 	record,
 	richText,
 	moderation,
-	showReplyLine,
 	hideTopBorder,
 	style,
 	onBeforePress: outerOnBeforePress,
@@ -103,7 +95,6 @@ function PostInner({
 	record: AppBskyFeedPost.Main;
 	richText: Richtext;
 	moderation: ModerationDecision;
-	showReplyLine?: boolean;
 	hideTopBorder?: boolean;
 	style?: StyleProp<ViewStyle>;
 	onBeforePress?: () => void;
@@ -111,7 +102,6 @@ function PostInner({
 	const queryClient = useQueryClient();
 	const t = useTheme();
 	const { openComposer } = useOpenComposer();
-	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
 	const itemUrip = parseCanonicalResourceUri(post.uri);
 	const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
 	let replyAuthorDid = '';
@@ -135,10 +125,6 @@ function PostInner({
 		});
 	}, [openComposer, post, record, moderation]);
 
-	const onPressShowMore = useCallback(() => {
-		setLimitLines(false);
-	}, [setLimitLines]);
-
 	const onBeforePress = useCallback(() => {
 		unstableCacheProfileView(queryClient, post.author);
 		outerOnBeforePress?.();
@@ -160,84 +146,41 @@ function PostInner({
 				}}
 			>
 				<SubtleHover hover={hover} />
-				{showReplyLine && (
-					<View
-						style={[
-							styles.replyLine,
-							{
-								backgroundColor: select(t.name, {
-									light: t.palette.contrast_100,
-									dim: t.palette.contrast_200,
-									dark: t.palette.contrast_200,
-								}),
-							},
-						]}
-					/>
-				)}
-				<View style={styles.layout}>
-					<View style={styles.layoutAvi}>
+				<PostRow.Row>
+					<PostRow.AvatarColumn>
 						<PreviewableUserAvatar
 							size={42}
 							profile={post.author}
 							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 						/>
-					</View>
-					<View
-						style={[
-							styles.layoutContent,
-							maybeApplyGalleryOffsetStyles('meta', {
-								post,
-								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-								additionalCauses: [],
-							}),
-						]}
+					</PostRow.AvatarColumn>
+					<PostRow.Content
+						style={maybeApplyGalleryOffsetStyles('meta', {
+							post,
+							modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+							additionalCauses: [],
+						})}
 					>
-						<View style={[a.pb_xs]}>
+						<div className={postRowCss.metaSpacing}>
 							<PostMeta
 								author={post.author}
 								moderation={moderation}
 								timestamp={post.indexedAt}
 								postHref={itemHref}
 							/>
-						</View>
+						</div>
 						{replyAuthorDid !== '' && (
-							<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
+							<PostRepliedTo parentAuthor={replyAuthorDid} className={postRowCss.repliedTo} />
 						)}
 						<LabelsOnMyPost post={post} />
-						<ContentHider
-							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-							className={css.contentHider}
-							childContainerClassName={css.contentHiderChild}
-						>
-							<PostAlerts
-								className={css.postAlerts}
-								modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
-							/>
-							{richText.text ? (
-								<View style={[a.mb_2xs]}>
-									<RichText
-										authorHandle={post.author.handle}
-										enableTags
-										numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-										size="md"
-										value={richText}
-									/>
-									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
-								</View>
-							) : undefined}
-							{post.embed ? (
-								<View
-									style={maybeApplyGalleryOffsetStyles('embed', {
-										post,
-										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-										additionalCauses: [],
-									})}
-								>
-									<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
-								</View>
-							) : null}
-						</ContentHider>
+						<PostContent
+							className={css.contentBottom}
+							displayContext="view"
+							moderation={moderation}
+							post={post}
+							richText={richText}
+						/>
 						<PostControls
 							post={post}
 							record={record}
@@ -245,8 +188,8 @@ function PostInner({
 							onPressReply={onPressReply}
 							logContext="Post"
 						/>
-					</View>
-				</View>
+					</PostRow.Content>
+				</PostRow.Row>
 			</BlockLink>
 		</GalleryBleed>
 	);
@@ -258,27 +201,6 @@ const styles = StyleSheet.create({
 		paddingRight: 15,
 		paddingBottom: 5,
 		paddingLeft: 10,
-		// @ts-ignore web only -prf
 		cursor: 'pointer',
-	},
-	layout: {
-		flexDirection: 'row',
-		gap: 10,
-	},
-	layoutAvi: {
-		paddingLeft: 8,
-	},
-	layoutContent: {
-		flex: 1,
-	},
-	alert: {
-		marginBottom: 6,
-	},
-	replyLine: {
-		position: 'absolute',
-		left: 36,
-		top: 70,
-		bottom: 0,
-		borderLeftWidth: 2,
 	},
 });

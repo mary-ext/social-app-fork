@@ -1,17 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-export const contentHider = style({
+/** The standalone surface's trailing space below the gated content, before the controls. */
+export const contentBottom = style({
 	marginBottom: 2,
-});
-
-export const contentHiderChild = style({
-	marginTop: 6,
-});
-
-export const postAlerts = style({
-	paddingBottom: 4,
-});
-
-export const repliedTo = style({
-	paddingBottom: 4,
 });

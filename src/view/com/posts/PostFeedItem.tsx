@@ -1,5 +1,5 @@
-import { memo, useCallback, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { memo, useMemo, useState } from 'react';
+import { StyleSheet } from 'react-native';
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -9,13 +9,12 @@ import type {
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import type { ReasonFeedSource } from '#/lib/api/feed/types';
-import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { makeProfileLink } from '#/lib/routes/links';
-import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -27,22 +26,19 @@ import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { atoms as a, select, useTheme } from '#/alf';
+import { select, useTheme } from '#/alf';
 
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
-import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
-import { Embed } from '#/components/Post/Embed';
-import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
-import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
 import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
-import { ContentHider } from '#/components/web/moderation/ContentHider';
-import { RichText } from '#/components/web/RichText';
+import { PostContent } from '#/components/web/PostContent';
+import * as PostRow from '#/components/web/PostRow';
+import * as postRowCss from '#/components/web/PostRow.css';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -284,6 +280,12 @@ let FeedItemInner = ({
 			: [];
 	}, [post, currentAccount?.did, threadgateHiddenReplies]);
 
+	const spineColor = select(t.name, {
+		light: t.palette.contrast_100,
+		dim: t.palette.contrast_200,
+		dark: t.palette.contrast_200,
+	});
+
 	return (
 		<GalleryBleed>
 			<BlockLink
@@ -299,34 +301,24 @@ let FeedItemInner = ({
 				}}
 			>
 				<SubtleHover hover={hover} />
-				<View style={{ flexDirection: 'row', gap: 10, paddingLeft: 8 }}>
-					<View style={{ width: 42 }}>
+				<div className={css.reasonRow}>
+					<div className={css.spineSlot}>
 						{isThreadChild && (
-							<View
-								style={[
-									styles.replyLine,
-									{
-										backgroundColor: select(t.name, {
-											light: t.palette.contrast_100,
-											dim: t.palette.contrast_200,
-											dark: t.palette.contrast_200,
-										}),
-										marginBottom: 4,
-									},
-								]}
+							<div
+								className={clsx(css.replyLine, css.replyLineTop)}
+								style={{ backgroundColor: spineColor }}
 							/>
 						)}
-					</View>
-
-					<View style={[a.pt_sm, a.flex_shrink]}>
+					</div>
+					<div className={css.reason}>
 						{reason && (
 							<PostFeedReason reason={reason} moderation={moderation} onOpenReposter={onOpenReposter} />
 						)}
-					</View>
-				</View>
+					</div>
+				</div>
 
-				<View style={styles.layout}>
-					<View style={styles.layoutAvi}>
+				<PostRow.Row className={css.layoutRow}>
+					<PostRow.AvatarColumn>
 						<PreviewableUserAvatar
 							size={42}
 							profile={post.author}
@@ -336,32 +328,20 @@ let FeedItemInner = ({
 							live={live}
 						/>
 						{isThreadParent && (
-							<View
-								style={[
-									styles.replyLine,
-									{
-										backgroundColor: select(t.name, {
-											light: t.palette.contrast_100,
-											dim: t.palette.contrast_200,
-											dark: t.palette.contrast_200,
-										}),
-										marginTop: live ? 8 : 4,
-									},
-								]}
+							<div
+								className={css.replyLine}
+								style={{ backgroundColor: spineColor, marginTop: live ? 8 : 4 }}
 							/>
 						)}
-					</View>
-					<View
-						style={[
-							styles.layoutContent,
-							maybeApplyGalleryOffsetStyles('meta', {
-								post,
-								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-								additionalCauses: additionalPostAlerts,
-							}),
-						]}
+					</PostRow.AvatarColumn>
+					<PostRow.Content
+						style={maybeApplyGalleryOffsetStyles('meta', {
+							post,
+							modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+							additionalCauses: additionalPostAlerts,
+						})}
 					>
-						<View style={[a.pb_xs]}>
+						<div className={postRowCss.metaSpacing}>
 							<PostMeta
 								author={post.author}
 								moderation={moderation}
@@ -369,24 +349,25 @@ let FeedItemInner = ({
 								postHref={href}
 								onOpenAuthor={onOpenAuthor}
 							/>
-						</View>
+						</div>
 						{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
 							<PostRepliedTo
 								parentAuthor={parentAuthor}
 								isParentBlocked={isParentBlocked}
 								isParentNotFound={isParentNotFound}
-								className={css.repliedTo}
+								className={postRowCss.repliedTo}
 							/>
 						)}
 						<LabelsOnMyPost post={post} />
 						<PostContent
+							additionalCauses={additionalPostAlerts}
+							displayContext="list"
+							embedClassName={css.embedSpacing}
+							ignoreMute
 							moderation={moderation}
-							richText={richText}
-							postEmbed={post.embed}
-							postAuthor={post.author}
 							onOpenEmbed={onOpenEmbed}
 							post={post}
-							additionalPostAlerts={additionalPostAlerts}
+							richText={richText}
 						/>
 						<PostControls
 							post={post}
@@ -400,117 +381,20 @@ let FeedItemInner = ({
 							onShowLess={onShowLess}
 							viaRepost={viaRepost}
 						/>
-					</View>
+					</PostRow.Content>
 
 					<DiscoverDebug feedContext={feedContext} />
-				</View>
+				</PostRow.Row>
 			</BlockLink>
 		</GalleryBleed>
 	);
 };
 FeedItemInner = memo(FeedItemInner);
 
-let PostContent = ({
-	post,
-	moderation,
-	richText,
-	postEmbed,
-	postAuthor,
-	onOpenEmbed,
-	additionalPostAlerts,
-}: {
-	moderation: ModerationDecision;
-	richText: Richtext;
-	postEmbed: AppBskyFeedDefs.PostView['embed'];
-	postAuthor: AppBskyFeedDefs.PostView['author'];
-	onOpenEmbed: () => void;
-	post: AppBskyFeedDefs.PostView;
-	additionalPostAlerts?: AppModerationCause[];
-}): React.ReactNode => {
-	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
-
-	const onPressShowMore = useCallback(() => {
-		setLimitLines(false);
-	}, [setLimitLines]);
-
-	return (
-		<ContentHider
-			modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-			ignoreMute
-			childContainerClassName={css.contentHiderChild}
-		>
-			<PostAlerts
-				additionalCauses={additionalPostAlerts}
-				className={css.postAlerts}
-				modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
-			/>
-			{richText.text ? (
-				<View style={[a.mb_2xs]}>
-					<RichText
-						authorHandle={postAuthor.handle}
-						enableTags
-						numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-						size="md"
-						value={richText}
-					/>
-					{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
-				</View>
-			) : undefined}
-			{postEmbed ? (
-				<View
-					style={[
-						a.pb_xs,
-						maybeApplyGalleryOffsetStyles('embed', {
-							post,
-							modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-							additionalCauses: additionalPostAlerts,
-						}),
-					]}
-				>
-					<Embed
-						embed={postEmbed}
-						moderation={moderation}
-						onOpen={onOpenEmbed}
-						viewContext={PostEmbedViewContext.Feed}
-					/>
-				</View>
-			) : null}
-		</ContentHider>
-	);
-};
-PostContent = memo(PostContent);
-
 const styles = StyleSheet.create({
 	outer: {
 		paddingLeft: 10,
 		paddingRight: 15,
 		cursor: 'pointer',
-	},
-	replyLine: {
-		flexGrow: 1,
-		width: 2,
-		marginLeft: 'auto',
-		marginRight: 'auto',
-	},
-	layout: {
-		flexDirection: 'row',
-		marginTop: 1,
-	},
-	layoutAvi: {
-		paddingLeft: 8,
-		paddingRight: 10,
-	},
-	layoutContent: {
-		flex: 1,
-	},
-	alert: {
-		marginTop: 6,
-		marginBottom: 6,
-	},
-	embed: {
-		marginBottom: 6,
-	},
-	translateLink: {
-		marginBottom: 6,
 	},
 });
