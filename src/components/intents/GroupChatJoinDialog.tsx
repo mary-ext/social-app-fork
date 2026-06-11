@@ -240,7 +240,7 @@ function GroupChatJoinDialogContent({
 	}
 
 	const convoId = joinLinkPreview.convo?.id;
-	const isFollowing = joinLinkPreview.owner.viewer?.following ?? false;
+	const isFollowing = joinLinkPreview.owner.viewer?.followedBy ?? false;
 	const hasRequested = !convoId && joinLinkPreview.viewer?.requestedAt != null;
 
 	let canJoin = true;
