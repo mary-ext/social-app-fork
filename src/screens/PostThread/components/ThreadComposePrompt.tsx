@@ -1,5 +1,5 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBorder';
@@ -11,18 +11,14 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import { transparentifyColor } from '#/alf/util/colorGeneration';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/web/Text';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 
-export function ThreadComposePrompt({
-	onPressCompose,
-	style,
-}: {
-	onPressCompose: () => void;
-	style?: StyleProp<ViewStyle>;
-}) {
+import * as css from './ThreadComposePrompt.css';
+
+export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => void }) {
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const { t: l } = useLingui();
@@ -33,13 +29,7 @@ export function ThreadComposePrompt({
 	useHideBottomBarBorderForScreen();
 
 	return (
-		<View
-			style={[
-				a.px_sm,
-				gtMobile ? [a.py_xs, a.border_t, t.atoms.border_contrast_low, t.atoms.bg] : [a.pb_2xs],
-				style,
-			]}
-		>
+		<div className={clsx(css.outer, gtMobile ? css.outerDesktop : css.outerMobile)}>
 			{!gtMobile && (
 				<LinearGradient
 					key={t.name} // android does not update when you change the colors. sigh.
@@ -75,10 +65,10 @@ export function ThreadComposePrompt({
 					avatar={profile?.avatar}
 					type={profile?.associated?.labeler ? 'labeler' : 'user'}
 				/>
-				<Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+				<Text size="md" color="textContrastMedium">
 					<Trans>Write your reply</Trans>
 				</Text>
 			</PressableScale>
-		</View>
+		</div>
 	);
 }

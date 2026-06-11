@@ -2136,7 +2136,7 @@ msgstr ""
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadComposePrompt.tsx:55
+#: src/screens/PostThread/components/ThreadComposePrompt.tsx:45
 msgid "Compose reply"
 msgstr ""
 
@@ -5919,7 +5919,7 @@ msgstr ""
 msgid "Opens captions and alt text dialog"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadComposePrompt.tsx:56
+#: src/screens/PostThread/components/ThreadComposePrompt.tsx:46
 msgid "Opens composer"
 msgstr ""
 
@@ -9725,7 +9725,7 @@ msgstr ""
 msgid "Write post"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadComposePrompt.tsx:79
+#: src/screens/PostThread/components/ThreadComposePrompt.tsx:69
 #: src/view/com/composer/Composer.tsx:1198
 msgid "Write your reply"
 msgstr ""
