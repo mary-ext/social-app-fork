@@ -14,11 +14,17 @@ import { Text } from '#/components/Typography';
 export function EditNamePrompt({
 	control,
 	value,
+	inputKey,
 	onChangeText,
 	onConfirm,
 }: {
 	control: Dialog.DialogOuterProps['control'];
 	value: string;
+	/**
+	 * Bump this whenever the prompt is opened to remount the (uncontrolled) input and reseed it from `value`.
+	 * Required because the bottom sheet keeps its children mounted across opens.
+	 */
+	inputKey: number;
 	onChangeText: (value: string) => void;
 	onConfirm: () => void;
 }) {
@@ -40,9 +46,10 @@ export function EditNamePrompt({
 					<View style={[a.my_sm]}>
 						<TextField.Root isInvalid={nameTooLong}>
 							<TextField.Input
+								key={inputKey}
 								label={l`Edit group name`}
 								placeholder={l`Group name`}
-								value={value}
+								defaultValue={value}
 								onChangeText={onChangeText}
 								returnKeyType="done"
 								autoCapitalize="none"
