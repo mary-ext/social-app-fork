@@ -219,7 +219,7 @@ function GroupChatJoinDialogContent({
 				<View style={[a.py_lg, a.align_center]}>
 					<View style={[a.gap_sm, a.align_center, a.mt_lg]}>
 						<WarningIcon size="3xl" fill={t.atoms.text_contrast_high.color} />
-						<Text style={[a.mb_2xs, a.text_center, a.text_sm, a.font_medium, t.atoms.text_contrast_high]}>
+						<Text style={[a.mb_2xs, a.text_center, a.text_lg, a.font_medium, t.atoms.text_contrast_high]}>
 							<Trans>Chat invite link no longer available</Trans>
 						</Text>
 					</View>
