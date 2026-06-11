@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui, Trans } from '@lingui/react/macro';
@@ -6,18 +5,27 @@ import { useLingui, Trans } from '@lingui/react/macro';
 import { isReasonFeedSource, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
+import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
+import { useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { useSession } from '#/state/session';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
-import { Link } from '#/components/Link';
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import { Text } from '#/components/Typography';
+import { InlineLinkText } from '#/components/web/Link';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
+import { Text } from '#/components/web/Text';
 
-import { FeedNameText } from '../util/FeedInfoText';
+import { LoadingPlaceholder } from '../util/LoadingPlaceholder';
+import * as css from './PostFeedReason.css';
+
+// every reason line shares one look: low-contrast, medium-weight, clamped to a single line.
+const reasonText = {
+	color: 'textContrastMedium',
+	leading: 'snug',
+	numberOfLines: 1,
+	weight: 'medium',
+} as const;
 
 export function PostFeedReason({
 	reason,
@@ -28,33 +36,23 @@ export function PostFeedReason({
 	moderation?: ModerationDecision;
 	onOpenReposter?: () => void;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 
 	const { currentAccount } = useSession();
 
 	if (isReasonFeedSource(reason)) {
+		// the feed-name link carries the navigation; the surrounding "From" sentence stays inert so a
+		// nested `<a>` (invalid markup) is never produced.
 		return (
-			<Link label={l`Go to feed`} to={reason.href}>
-				<Text
-					style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug, a.leading_snug]}
-					numberOfLines={1}
-				>
-					<Trans context="from-feed">
-						From{' '}
-						<FeedNameText
-							uri={reason.uri}
-							href={reason.href}
-							style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug]}
-							numberOfLines={1}
-						/>
-					</Trans>
-				</Text>
-			</Link>
+			<Text {...reasonText}>
+				<Trans context="from-feed">
+					From <FeedName uri={reason.uri} href={reason.href} />
+				</Trans>
+			</Text>
 		);
 	}
 
-	if (reason?.$type === 'app.bsky.feed.defs#reasonRepost') {
+	if (reason.$type === 'app.bsky.feed.defs#reasonRepost') {
 		const by = reason.by;
 		const isOwner = by.did === currentAccount?.did;
 		const reposter = createSanitizedDisplayName(
@@ -63,39 +61,46 @@ export function PostFeedReason({
 			moderation && getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 		);
 		return (
-			<Link
-				style={styles.includeReason}
-				to={makeProfileLink(by)}
-				label={isOwner ? l`Reposted by you` : l`Reposted by ${reposter}`}
-				onPress={onOpenReposter}
-			>
-				<RepostIcon style={[t.atoms.text_contrast_medium, { marginRight: 3 }]} width={13} height={13} />
+			<div className={css.includeReason}>
+				<RepostIcon fill="currentColor" width={13} height={13} />
 				<ProfileHoverCard did={by.did}>
-					<Text style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug]} numberOfLines={1}>
+					<InlineLinkText
+						{...reasonText}
+						onPress={onOpenReposter}
+						to={makeProfileLink(by)}
+						label={isOwner ? l`Reposted by you` : l`Reposted by ${reposter}`}
+					>
 						{isOwner ? <Trans>Reposted by you</Trans> : <Trans>Reposted by {reposter}</Trans>}
-					</Text>
+					</InlineLinkText>
 				</ProfileHoverCard>
-			</Link>
+			</div>
 		);
 	}
 
-	if (reason?.$type === 'app.bsky.feed.defs#reasonPin') {
+	if (reason.$type === 'app.bsky.feed.defs#reasonPin') {
 		return (
-			<View style={styles.includeReason}>
-				<PinIcon style={[t.atoms.text_contrast_medium, { marginRight: 3 }]} width={13} height={13} />
-				<Text style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug]} numberOfLines={1}>
+			<div className={css.includeReason}>
+				<PinIcon fill="currentColor" width={13} height={13} />
+				<Text {...reasonText}>
 					<Trans>Pinned</Trans>
 				</Text>
-			</View>
+			</div>
 		);
 	}
 }
 
-const styles = StyleSheet.create({
-	includeReason: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		marginBottom: 2,
-		marginLeft: -16,
-	},
-});
+/** Resolves a feed's display name and renders it as an inline link, with a placeholder while loading. */
+function FeedName({ href, uri }: { href: string; uri: string }) {
+	const { data, isError } = useFeedSourceInfoQuery({ uri });
+
+	if (data || isError) {
+		const displayName = data?.displayName || uri.split('/').pop() || '';
+		return (
+			<InlineLinkText {...reasonText} to={href} label={displayName}>
+				{sanitizeDisplayName(displayName)}
+			</InlineLinkText>
+		);
+	}
+
+	return <LoadingPlaceholder width={80} height={8} style={{ marginLeft: 2, top: -1 }} />;
+}

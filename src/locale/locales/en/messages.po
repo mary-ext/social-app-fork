@@ -3770,7 +3770,7 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:43
+#: src/view/com/posts/PostFeedReason.tsx:48
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -3949,10 +3949,6 @@ msgstr ""
 #. placeholder {0}: profile.handle
 #: src/screens/Messages/components/ChatListItem.tsx:148
 msgid "Go to conversation with {0}"
-msgstr ""
-
-#: src/view/com/posts/PostFeedReason.tsx:38
-msgid "Go to feed"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:255
@@ -6144,7 +6140,7 @@ msgstr ""
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:87
+#: src/view/com/posts/PostFeedReason.tsx:85
 msgid "Pinned"
 msgstr ""
 
@@ -6993,13 +6989,13 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:69
-#: src/view/com/posts/PostFeedReason.tsx:75
+#: src/view/com/posts/PostFeedReason.tsx:71
+#: src/view/com/posts/PostFeedReason.tsx:73
 msgid "Reposted by {reposter}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:69
-#: src/view/com/posts/PostFeedReason.tsx:75
+#: src/view/com/posts/PostFeedReason.tsx:71
+#: src/view/com/posts/PostFeedReason.tsx:73
 msgid "Reposted by you"
 msgstr ""
 
