@@ -326,6 +326,7 @@ let FeedItemInner = ({
 							type={post.author.associated?.labeler ? 'labeler' : 'user'}
 							onBeforePress={onOpenAuthor}
 							live={live}
+							tabIndex={-1}
 						/>
 						{isThreadParent && (
 							<div
