@@ -92,7 +92,9 @@ export function List<ItemT>({
 	const isEmpty = !data || data.length === 0;
 
 	return (
-		<div ref={containerRef} className={css.container}>
+		// the container grows with its content and carries no min-height: short content stays at the host's
+		// height (the screen already fills the viewport) so the document doesn't scroll into empty space.
+		<div ref={containerRef}>
 			{onStartReached && !isEmpty && (
 				<EdgeVisibility
 					containerRef={containerRef}
