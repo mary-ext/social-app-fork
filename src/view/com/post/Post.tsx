@@ -201,7 +201,9 @@ function PostInner({
 								postHref={itemHref}
 							/>
 						</View>
-						{replyAuthorDid !== '' && <PostRepliedTo parentAuthor={replyAuthorDid} />}
+						{replyAuthorDid !== '' && (
+							<PostRepliedTo parentAuthor={replyAuthorDid} className={css.repliedTo} />
+						)}
 						<LabelsOnMyPost post={post} />
 						<ContentHider
 							modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}

@@ -375,6 +375,7 @@ let FeedItemInner = ({
 								parentAuthor={parentAuthor}
 								isParentBlocked={isParentBlocked}
 								isParentNotFound={isParentNotFound}
+								className={css.repliedTo}
 							/>
 						)}
 						<LabelsOnMyPost post={post} />

@@ -11,3 +11,7 @@ export const contentHiderChild = style({
 export const postAlerts = style({
 	paddingBottom: 4,
 });
+
+export const repliedTo = style({
+	paddingBottom: 4,
+});

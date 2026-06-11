@@ -6807,22 +6807,22 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:41
+#: src/components/Post/PostRepliedTo.tsx:47
 msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:31
+#: src/components/Post/PostRepliedTo.tsx:37
 msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:33
+#: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
 msgid "Replied to a post"
 msgstr ""
 
-#: src/components/Post/PostRepliedTo.tsx:38
+#: src/components/Post/PostRepliedTo.tsx:44
 msgctxt "description"
 msgid "Replied to you"
 msgstr ""

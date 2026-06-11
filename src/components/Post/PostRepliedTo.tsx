@@ -1,30 +1,36 @@
-import { View } from 'react-native';
+import type { Ref } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
+import { makeProfileLink } from '#/lib/routes/links';
+import { sanitizeDisplayName } from '#/lib/strings/display-names';
+import { sanitizeHandle } from '#/lib/strings/handles';
+
+import { STALE } from '#/state/queries';
+import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { UserInfoText } from '#/view/com/util/UserInfoText';
-
-import { atoms as a, useTheme } from '#/alf';
-
 import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
-import { ProfileHoverCard } from '#/components/ProfileHoverCard';
-import { Text } from '#/components/Typography';
+import { InlineLinkText } from '#/components/web/Link';
+import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
+import { Text } from '#/components/web/Text';
+
+import * as css from './PostRepliedTo.css';
 
 export function PostRepliedTo({
 	parentAuthor,
 	isParentBlocked,
 	isParentNotFound,
+	className,
 }: {
 	parentAuthor: string | AnyProfileView | undefined;
 	isParentBlocked?: boolean;
 	isParentNotFound?: boolean;
+	/** Spacing escape hatch for the row's host; callers own the rhythm around it. */
+	className?: string;
 }) {
-	const t = useTheme();
 	const { currentAccount } = useSession();
-
-	const textStyle = [a.text_sm, t.atoms.text_contrast_medium, a.leading_snug];
 
 	let label;
 	if (isParentBlocked) {
@@ -41,7 +47,7 @@ export function PostRepliedTo({
 				<Trans context="description">
 					Replied to{' '}
 					<ProfileHoverCard did={did}>
-						<UserInfoText did={did} attr="displayName" style={textStyle} />
+						<ParentAuthorName did={did} />
 					</ProfileHoverCard>
 				</Trans>
 			);
@@ -49,16 +55,60 @@ export function PostRepliedTo({
 	}
 
 	if (!label) {
-		// Should not happen.
+		// should not happen.
 		return null;
 	}
 
 	return (
-		<View style={[a.flex_row, a.align_center, a.pb_xs, a.gap_xs]}>
-			<ArrowCornerDownRightIcon size="xs" style={[t.atoms.text_contrast_medium, { top: -1 }]} />
-			<Text style={[a.flex_1, textStyle]} numberOfLines={1}>
+		<div className={clsx(css.row, className)}>
+			<span className={css.icon}>
+				<ArrowCornerDownRightIcon fill="currentColor" size="xs" />
+			</span>
+			<Text className={css.label} color="textContrastMedium" leading="snug" numberOfLines={1} size="sm">
 				{label}
 			</Text>
-		</View>
+		</div>
 	);
+}
+
+// only the `did` is ours; the rest (ref, hover/pointer handlers, aria/data attributes) is injected at runtime
+// by the ProfileHoverCard trigger and forwarded to whichever host this resolves to.
+type ParentAuthorNameProps = {
+	did: string;
+	ref?: Ref<HTMLElement>;
+};
+
+/**
+ * The replied-to author's display name as an inline profile link, falling back to a shimmer while loading and
+ * to plain text on error.
+ */
+function ParentAuthorName({ did, ref, ...rest }: ParentAuthorNameProps) {
+	const { data: profile, isError } = useProfileQuery({ did, staleTime: STALE.INFINITY });
+
+	if (isError) {
+		return (
+			<Text {...rest} ref={ref} color="textContrastMedium" leading="snug" size="sm">
+				user
+			</Text>
+		);
+	}
+
+	if (profile) {
+		const name = sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle));
+		return (
+			<InlineLinkText
+				{...rest}
+				ref={ref as Ref<HTMLAnchorElement>}
+				color="textContrastMedium"
+				label={name}
+				leading="snug"
+				size="sm"
+				to={makeProfileLink(profile)}
+			>
+				{name}
+			</InlineLinkText>
+		);
+	}
+
+	return <span {...rest} ref={ref} className={css.loadingName} />;
 }
