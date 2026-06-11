@@ -6248,7 +6248,7 @@ msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:446
+#: src/screens/PostThread/index.tsx:448
 msgctxt "description"
 msgid "Post"
 msgstr ""
@@ -7701,7 +7701,7 @@ msgstr ""
 msgid "Show more like this"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:12
+#: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:14
 msgid "Show more replies"
 msgstr ""
 
