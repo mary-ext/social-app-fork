@@ -1,4 +1,3 @@
-import type { Ref } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
@@ -45,10 +44,7 @@ export function PostRepliedTo({
 		} else {
 			label = (
 				<Trans context="description">
-					Replied to{' '}
-					<ProfileHoverCard did={did}>
-						<ParentAuthorName did={did} />
-					</ProfileHoverCard>
+					Replied to <ParentAuthorName did={did} />
 				</Trans>
 			);
 		}
@@ -71,23 +67,17 @@ export function PostRepliedTo({
 	);
 }
 
-// only the `did` is ours; the rest (ref, hover/pointer handlers, aria/data attributes) is injected at runtime
-// by the ProfileHoverCard trigger and forwarded to whichever host this resolves to.
-type ParentAuthorNameProps = {
-	did: string;
-	ref?: Ref<HTMLElement>;
-};
-
 /**
- * The replied-to author's display name as an inline profile link, falling back to a shimmer while loading and
- * to plain text on error.
+ * The replied-to author's display name as an inline profile link wrapped in a hover card, falling back to a
+ * shimmer while loading and to plain text on error. The hover card only arms once the profile resolves, so
+ * the loading and error states stay inert.
  */
-function ParentAuthorName({ did, ref, ...rest }: ParentAuthorNameProps) {
+function ParentAuthorName({ did }: { did: string }) {
 	const { data: profile, isError } = useProfileQuery({ did, staleTime: STALE.INFINITY });
 
 	if (isError) {
 		return (
-			<Text {...rest} ref={ref} color="textContrastMedium" leading="snug" size="sm">
+			<Text color="textContrastMedium" leading="snug" size="sm">
 				user
 			</Text>
 		);
@@ -96,19 +86,19 @@ function ParentAuthorName({ did, ref, ...rest }: ParentAuthorNameProps) {
 	if (profile) {
 		const name = sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle));
 		return (
-			<InlineLinkText
-				{...rest}
-				ref={ref as Ref<HTMLAnchorElement>}
-				color="textContrastMedium"
-				label={name}
-				leading="snug"
-				size="sm"
-				to={makeProfileLink(profile)}
-			>
-				{name}
-			</InlineLinkText>
+			<ProfileHoverCard did={did}>
+				<InlineLinkText
+					color="textContrastMedium"
+					label={name}
+					leading="snug"
+					size="sm"
+					to={makeProfileLink(profile)}
+				>
+					{name}
+				</InlineLinkText>
+			</ProfileHoverCard>
 		);
 	}
 
-	return <span {...rest} ref={ref} className={css.loadingName} />;
+	return <span className={css.loadingName} />;
 }
