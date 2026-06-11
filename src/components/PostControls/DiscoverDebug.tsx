@@ -1,42 +1,35 @@
-import { Pressable } from 'react-native';
 import { t } from '@lingui/core/macro';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/web/Text';
 
 import * as Clipboard from '#/shims/clipboard';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
+import * as css from './DiscoverDebug.css';
+
 export function DiscoverDebug({ feedContext }: { feedContext: string | undefined }) {
 	const [debugFeedContextEnabled] = useDebugFeedContextEnabled();
-	const isDiscoverDebugUser = debugFeedContextEnabled;
-	const theme = useTheme();
+
+	if (!debugFeedContextEnabled || !feedContext) {
+		return null;
+	}
 
 	return (
-		isDiscoverDebugUser &&
-		feedContext && (
-			<Pressable
-				accessible={false}
-				hitSlop={10}
-				style={[a.absolute, { zIndex: 1000, maxWidth: 65, bottom: -4 }, a.left_0]}
-				onPress={(e) => {
-					e.stopPropagation();
-					void Clipboard.setStringAsync(feedContext);
-					Toast.show(t`Copied to clipboard`);
-				}}
-			>
-				<Text
-					numberOfLines={1}
-					style={{
-						color: theme.palette.contrast_400,
-						fontSize: 7,
-					}}
-				>
-					{feedContext}
-				</Text>
-			</Pressable>
-		)
+		// stopPropagation exempts the click from BlockLink's row navigation (it handles the press on an
+		// ancestor); aria-hidden keeps this debug-only affordance out of the accessibility tree
+		<div
+			aria-hidden
+			className={css.label}
+			onClick={(e) => {
+				e.stopPropagation();
+				void Clipboard.setStringAsync(feedContext);
+				Toast.show(t`Copied to clipboard`);
+			}}
+		>
+			<Text className={css.text} color="contrast_400" numberOfLines={1}>
+				{feedContext}
+			</Text>
+		</div>
 	);
 }

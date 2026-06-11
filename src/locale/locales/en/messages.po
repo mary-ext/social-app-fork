@@ -1824,9 +1824,9 @@ msgstr ""
 msgid "Cancel search"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:85
-#: src/components/PostControls/index.tsx:114
-#: src/components/PostControls/index.tsx:142
+#: src/components/PostControls/index.tsx:84
+#: src/components/PostControls/index.tsx:113
+#: src/components/PostControls/index.tsx:141
 #: src/lib/hooks/useOpenComposer.tsx:83
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -4621,7 +4621,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:238
+#: src/components/PostControls/index.tsx:236
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -6846,7 +6846,7 @@ msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
-#: src/components/PostControls/index.tsx:196
+#: src/components/PostControls/index.tsx:194
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -9015,7 +9015,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:230
+#: src/components/PostControls/index.tsx:228
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 

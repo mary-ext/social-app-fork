@@ -1,8 +1,8 @@
 import { memo, useMemo, useState } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { CountWheel } from '#/lib/custom-animations/CountWheel';
 import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon';
@@ -14,7 +14,7 @@ import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { usePostLikeMutationQueue, usePostRepostMutationQueue } from '#/state/queries/post';
 import { useRequireAuth } from '#/state/session';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { useBreakpoints, useTheme } from '#/alf';
 
 import { Reply as Bubble } from '#/components/icons/Reply';
 import { useFormatPostStatCount } from '#/components/PostControls/util';
@@ -22,6 +22,7 @@ import * as Skele from '#/components/Skeleton';
 import * as Toast from '#/components/Toast';
 
 import { BookmarkButton } from './BookmarkButton';
+import * as css from './index.css';
 import { PostControlButton, PostControlButtonIcon, PostControlButtonText } from './PostControlButton';
 import { PostMenuButton } from './PostMenu';
 import { RepostButton } from './RepostButton';
@@ -34,7 +35,6 @@ let PostControls = ({
 	richText,
 	feedContext,
 	reqId,
-	style,
 	onPressReply,
 	onPostReply,
 	logContext,
@@ -49,7 +49,6 @@ let PostControls = ({
 	richText: Richtext;
 	feedContext?: string | undefined;
 	reqId?: string | undefined;
-	style?: StyleProp<ViewStyle>;
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
 	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
@@ -174,15 +173,14 @@ let PostControls = ({
 	});
 
 	return (
-		<View style={[a.flex_row, a.justify_between, a.align_center, !big && a.pt_2xs, a.gap_md, style]}>
-			<View style={[a.flex_row, a.flex_1, { maxWidth: 320 }]}>
-				<View
-					style={[
-						a.flex_1,
-						a.align_start,
-						{ marginLeft: big ? -2 : -6 },
-						replyDisabled ? { opacity: 0.6 } : undefined,
-					]}
+		<div className={clsx(css.outer, !big && css.outerPad)}>
+			<div className={css.primaryGroup}>
+				<div
+					className={clsx(
+						css.primaryItem,
+						big ? css.replyOffsetBig : css.replyOffset,
+						replyDisabled && css.replyDisabled,
+					)}
 				>
 					<PostControlButton
 						onClick={
@@ -208,8 +206,8 @@ let PostControls = ({
 							<PostControlButtonText>{formatPostStatCount(post.replyCount)}</PostControlButtonText>
 						)}
 					</PostControlButton>
-				</View>
-				<View style={[a.flex_1, a.align_start]}>
+				</div>
+				<div className={css.primaryItem}>
 					<RepostButton
 						isReposted={!!post.viewer?.repost}
 						repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
@@ -218,8 +216,8 @@ let PostControls = ({
 						big={big}
 						embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
 					/>
-				</View>
-				<View style={[a.flex_1, a.align_start]}>
+				</div>
+				<div className={css.primaryItem}>
 					<PostControlButton
 						big={big}
 						active={Boolean(post.viewer?.like)}
@@ -259,11 +257,9 @@ let PostControls = ({
 							)}
 						/>
 					</PostControlButton>
-				</View>
-				{/* Spacer! */}
-				<View />
-			</View>
-			<View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+				</div>
+			</div>
+			<div className={css.secondaryGroup} style={secondaryControlSpacingStyles}>
 				<BookmarkButton post={post} big={big} logContext={logContext} />
 				<ShareMenuButton post={post} big={big} onShare={onShare} />
 				<PostMenuButton
@@ -277,8 +273,8 @@ let PostControls = ({
 					onShowLess={onShowLess}
 					logContext={logContext}
 				/>
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 };
 PostControls = memo(PostControls);
@@ -286,11 +282,9 @@ export { PostControls };
 
 export function PostControlsSkeleton({
 	big,
-	style,
 	variant,
 }: {
 	big?: boolean;
-	style?: StyleProp<ViewStyle>;
 	variant?: 'compact' | 'normal' | 'large';
 }) {
 	const { gtPhone } = useBreakpoints();
@@ -305,37 +299,31 @@ export function PostControlsSkeleton({
 		gtPhone,
 	});
 
-	const itemStyles = {
-		padding,
-	};
-
 	return (
-		<Skele.Row style={[a.flex_row, a.justify_between, a.align_center, a.gap_md, style]}>
-			<View style={[a.flex_row, a.flex_1, { maxWidth: 320 }]}>
-				<View style={[itemStyles, a.flex_1, a.align_start, { marginLeft: -padding }]}>
+		<div className={css.outer}>
+			<div className={css.primaryGroup}>
+				<div className={css.primaryItem} style={{ marginLeft: -padding, padding }}>
 					<Skele.Pill blend size={size} />
-				</View>
-
-				<View style={[itemStyles, a.flex_1, a.align_start]}>
+				</div>
+				<div className={css.primaryItem} style={{ padding }}>
 					<Skele.Pill blend size={size} />
-				</View>
-
-				<View style={[itemStyles, a.flex_1, a.align_start]}>
+				</div>
+				<div className={css.primaryItem} style={{ padding }}>
 					<Skele.Pill blend size={size} />
-				</View>
-			</View>
-			<View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
-				<View style={itemStyles}>
+				</div>
+			</div>
+			<div className={css.secondaryGroup} style={secondaryControlSpacingStyles}>
+				<div style={{ padding }}>
 					<Skele.Circle blend size={size} />
-				</View>
-				<View style={itemStyles}>
+				</div>
+				<div style={{ padding }}>
 					<Skele.Circle blend size={size} />
-				</View>
-				<View style={itemStyles}>
+				</div>
+				<div style={{ padding }}>
 					<Skele.Circle blend size={size} />
-				</View>
-			</View>
-		</Skele.Row>
+				</div>
+			</div>
+		</div>
 	);
 }
 
@@ -350,8 +338,8 @@ function useSecondaryControlSpacingStyles({
 }) {
 	return useMemo(() => {
 		let gap = 0; // default, we want `gap` to be defined on the resulting object
-		if (variant !== 'compact') gap = a.gap_xs.gap;
-		if (big || gtPhone) gap = a.gap_sm.gap;
+		if (variant !== 'compact') gap = 4;
+		if (big || gtPhone) gap = 8;
 		return { gap };
 	}, [variant, big, gtPhone]);
 }
