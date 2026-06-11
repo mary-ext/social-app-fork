@@ -6294,7 +6294,7 @@ msgid "Post failed to upload. Please check your Internet connection and try agai
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:125
-#: src/screens/PostThread/components/ThreadItemPost.tsx:95
+#: src/screens/PostThread/components/ThreadItemPost.tsx:84
 #: src/screens/PostThread/components/ThreadItemTreePost.tsx:99
 msgid "Post has been deleted"
 msgstr ""

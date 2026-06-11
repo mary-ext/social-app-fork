@@ -18,7 +18,7 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -34,9 +34,9 @@ import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
 import { SubtleHover } from '#/components/SubtleHover';
-import { Text } from '#/components/Typography';
 import { PostHider } from '#/components/web/moderation/PostHider';
 import { RichText } from '#/components/web/RichText';
+import { Text } from '#/components/web/Text';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -72,31 +72,20 @@ export function ThreadItemPost({ item, overrides, onPostSuccess, threadgateRecor
 }
 
 function ThreadItemPostDeleted({ item, overrides }: Pick<ThreadItemPostProps, 'item' | 'overrides'>) {
-	const t = useTheme();
-
 	return (
 		<ThreadItemPostOuterWrapper item={item} overrides={overrides}>
 			<ThreadItemPostParentReplyLine item={item} />
 
-			<View style={[a.flex_row, a.align_center, a.py_md, a.rounded_sm, t.atoms.bg_contrast_25]}>
-				<View
-					style={[
-						a.flex_row,
-						a.align_center,
-						a.justify_center,
-						{
-							width: LINEAR_AVI_WIDTH,
-						},
-					]}
-				>
-					<TrashIcon style={[t.atoms.text_contrast_medium]} />
-				</View>
-				<Text style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+			<div className={css.deletedRow}>
+				<div className={css.deletedIcon}>
+					<TrashIcon fill="currentColor" />
+				</div>
+				<Text size="md" weight="semiBold" color="textContrastMedium">
 					<Trans>Post has been deleted</Trans>
 				</Text>
-			</View>
+			</div>
 
-			<View style={[{ height: 4 }]} />
+			<div className={css.deletedSpacer} />
 		</ThreadItemPostOuterWrapper>
 	);
 }
@@ -111,6 +100,8 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
 	const t = useTheme();
 	const showTopBorder = !item.ui.showParentReplyLine && overrides?.topBorder !== true;
 
+	// stays an RNW `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
+	// `View` ref), which a plain `<div>` can't accept. the web layout lives inside.
 	return (
 		<GalleryBleed>
 			<View
@@ -134,25 +125,12 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
 const ThreadItemPostParentReplyLine = memo(function ThreadItemPostParentReplyLine({
 	item,
 }: Pick<ThreadItemPostProps, 'item'>) {
-	const t = useTheme();
 	return (
-		<View style={[a.flex_row, { height: 12 }]}>
-			<View style={{ width: LINEAR_AVI_WIDTH }}>
-				{item.ui.showParentReplyLine && (
-					<View
-						style={[
-							a.mx_auto,
-							a.flex_1,
-							a.mb_xs,
-							{
-								width: REPLY_LINE_WIDTH,
-								backgroundColor: t.atoms.border_contrast_low.borderColor,
-							},
-						]}
-					/>
-				)}
-			</View>
-		</View>
+		<div className={css.parentLineRow}>
+			<div className={css.parentLineColumn}>
+				{item.ui.showParentReplyLine && <div className={css.parentLine} />}
+			</div>
+		</div>
 	);
 });
 
@@ -165,7 +143,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 }: ThreadItemPostProps & {
 	postShadow: Shadow<AppBskyFeedDefs.PostView>;
 }) {
-	const t = useTheme();
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
 
@@ -240,8 +217,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 				>
 					<ThreadItemPostParentReplyLine item={item} />
 
-					<View style={[a.flex_row, a.gap_md]}>
-						<View>
+					<div className={css.row}>
+						<div className={css.avatarColumn}>
 							<PreviewableUserAvatar
 								size={LINEAR_AVI_WIDTH}
 								profile={post.author}
@@ -251,30 +228,18 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 							/>
 
 							{(item.ui.showChildReplyLine || item.ui.precedesChildReadMore) && (
-								<View
-									style={[
-										a.mx_auto,
-										a.mt_xs,
-										a.flex_1,
-										{
-											width: REPLY_LINE_WIDTH,
-											backgroundColor: t.atoms.border_contrast_low.borderColor,
-										},
-									]}
-								/>
+								<div className={css.childLine} />
 							)}
-						</View>
+						</div>
 
-						<View style={[a.flex_1]}>
-							<View
-								style={[
-									a.pb_xs,
-									maybeApplyGalleryOffsetStyles('meta', {
-										post: post,
-										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-										additionalCauses: additionalPostAlerts,
-									}),
-								]}
+						<div className={css.content}>
+							<div
+								className={css.metaSpacing}
+								style={maybeApplyGalleryOffsetStyles('meta', {
+									post: post,
+									modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+									additionalCauses: additionalPostAlerts,
+								})}
 							>
 								<PostMeta
 									author={post.author}
@@ -282,7 +247,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 									timestamp={post.indexedAt}
 									postHref={postHref}
 								/>
-							</View>
+							</div>
 							<LabelsOnMyPost className={css.labelsOnMe} post={post} />
 							<PostAlerts
 								additionalCauses={additionalPostAlerts}
@@ -290,7 +255,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 							/>
 							{richText?.text ? (
-								<View style={[a.mb_2xs]}>
+								<div className={css.richText}>
 									<RichText
 										enableTags
 										value={richText}
@@ -299,21 +264,19 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 										authorHandle={post.author.handle}
 									/>
 									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
-								</View>
+								</div>
 							) : undefined}
 							{post.embed && (
-								<View
-									style={[
-										maybeApplyGalleryOffsetStyles('embed', {
-											post: post,
-											modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-											additionalCauses: additionalPostAlerts,
-										}),
-										a.pb_xs,
-									]}
+								<div
+									className={css.embed}
+									style={maybeApplyGalleryOffsetStyles('embed', {
+										post: post,
+										modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+										additionalCauses: additionalPostAlerts,
+									})}
 								>
 									<Embed embed={post.embed} moderation={moderation} viewContext={PostEmbedViewContext.Feed} />
-								</View>
+								</div>
 							)}
 							<PostControls
 								post={postShadow}
@@ -324,8 +287,8 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 								threadgateRecord={threadgateRecord}
 							/>
 							<DebugFieldDisplay subject={post} />
-						</View>
-					</View>
+						</div>
+					</div>
 				</PostHider>
 			</ThreadItemPostOuterWrapper>
 		</SubtleHoverWrapper>
@@ -335,10 +298,10 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 function SubtleHoverWrapper({ children }: { children: ReactNode }) {
 	const { state: hover, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
 	return (
-		<View onPointerEnter={onHoverIn} onPointerLeave={onHoverOut} style={a.pointer}>
+		<div className={css.hoverWrapper} onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
 			<SubtleHover hover={hover} />
 			{children}
-		</View>
+		</div>
 	);
 }
 
