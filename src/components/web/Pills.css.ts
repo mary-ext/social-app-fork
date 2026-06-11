@@ -25,6 +25,9 @@ const pillBase = style({
 	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
+	flexShrink: 0,
+	maxWidth: '100%',
+	minWidth: 0,
 	selectors: {
 		'&:active': { backgroundColor: vars.palette.contrast_50 },
 		'&:hover': { backgroundColor: vars.palette.contrast_50 },
@@ -40,7 +43,6 @@ export const pillBg = style({
 	backgroundColor: vars.palette.contrast_25,
 });
 
-// the label text keeps the RN original's extra 3px gutter inside the pill's right padding.
 export const pillText = style({
 	paddingRight: 3,
 });

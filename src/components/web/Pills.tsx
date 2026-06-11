@@ -61,6 +61,7 @@ export function Label({ cause, noBg, size = 'sm' }: LabelProps) {
 					className={styles.pillText}
 					color="textContrastMedium"
 					leading="tight"
+					numberOfLines={1}
 					size={size === 'lg' ? 'sm' : 'xs'}
 					weight="semiBold"
 				>
