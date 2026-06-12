@@ -435,9 +435,7 @@ export function PostThread({ uri }: { uri: string }) {
 		[thread, optimisticOnPostReply, onReplyToAnchor, gtMobile, anchorPostSource, setAnchorNode],
 	);
 
-	// trailing spacer that reserves scroll room to pin the anchor at the top. half the viewport is enough
-	// for that without leaving a huge empty gap below long threads; a parentless thread needs almost none.
-	const footerHeight = hasParents ? '50svh' : FALLBACK_FOOTER_HEIGHT;
+	const defaultListFooterHeight = hasParents ? window.innerHeight - 200 : undefined;
 
 	return (
 		<PostThreadContextProvider context={thread.context}>
@@ -474,7 +472,7 @@ export function PostThread({ uri }: { uri: string }) {
 						ListFooterComponent={
 							<div
 								className={clsx(css.footer, isTombstoneView && css.footerNoBorder)}
-								style={{ height: footerHeight }}
+								style={{ height: defaultListFooterHeight ?? FALLBACK_FOOTER_HEIGHT }}
 							/>
 						}
 					/>
