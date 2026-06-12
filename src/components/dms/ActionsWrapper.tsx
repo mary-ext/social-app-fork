@@ -22,14 +22,12 @@ import { canReact, hasReachedReactionLimit } from './util';
 
 export function ActionsWrapper({
 	message,
-	hasReactions,
 	isFromSelf,
 	senderProfile,
 	moderationOpts,
 	children,
 }: {
 	message: ChatBskyConvoDefs.MessageView;
-	hasReactions?: boolean;
 	isFromSelf: boolean;
 	senderProfile?: AnyProfileView;
 	moderationOpts: ModerationOptions | undefined;
@@ -102,7 +100,6 @@ export function ActionsWrapper({
 					isFromSelf
 						? [a.mr_xs, { marginLeft: 'auto' }, a.flex_row_reverse]
 						: [a.ml_xs, { marginRight: 'auto' }],
-					hasReactions ? [a.mb_2xl] : undefined,
 				]}
 			>
 				{reactionsAvailable && (

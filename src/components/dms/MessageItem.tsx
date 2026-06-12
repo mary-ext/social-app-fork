@@ -13,6 +13,8 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import Animated, {
+	FadeIn,
+	FadeOut,
 	LayoutAnimationConfig,
 	useAnimatedStyle,
 	useSharedValue,
@@ -238,8 +240,16 @@ let MessageItem = ({
 	const appliedReactions = (
 		<LayoutAnimationConfig skipEntering skipExiting>
 			{hasReactions ? (
-				<View
-					style={[a.relative, a.bottom_0, isFromSelf ? [a.align_end] : [a.ml_sm, a.align_start], a.px_sm]}
+				<Animated.View
+					entering={FadeIn}
+					exiting={FadeOut}
+					style={[
+						a.absolute,
+						{ top: '100%' },
+						isFromSelf ? [a.right_0] : [a.left_0, isGroupChat && a.ml_sm],
+						a.px_sm,
+						a.z_10,
+					]}
 				>
 					<Pressable
 						accessible={true}
@@ -249,23 +259,21 @@ let MessageItem = ({
 							a.flex_row,
 							a.gap_2xs,
 							isFromSelf ? a.justify_end : a.justify_start,
-							a.flex_wrap,
 							a.rounded_lg,
 							a.border,
 							t.atoms.border_contrast_low,
 							t.atoms.shadow_xs,
+							a.px_sm,
 							hasSelfReacted ? { backgroundColor: t.palette.primary_100 } : t.atoms.bg_contrast_25,
 							{
 								paddingTop: 3,
 								paddingBottom: 3,
-								paddingLeft: 6,
-								paddingRight: 6,
-								transform: [{ translateY: -8 }],
+								transform: [{ translateY: -6 }],
 							},
 						]}
 						onPress={isGroupChat ? () => openReactions(message) : undefined}
 					>
-						{groupedReactions.map((group) => (
+						{groupedReactions.slice(0, 10).map((group) => (
 							<Animated.View
 								entering={undefined}
 								exiting={groupedReactions.length > 1 ? undefined : undefined}
@@ -278,7 +286,8 @@ let MessageItem = ({
 								</Text>
 							</Animated.View>
 						))}
-						{groupedReactions.length !== reactions.length && reactions.length > 1 ? (
+						{(groupedReactions.length !== reactions.length || groupedReactions.length > 10) &&
+						reactions.length > 1 ? (
 							<View style={[a.p_2xs, a.pl_0, a.justify_center]}>
 								<Text
 									style={[
@@ -293,7 +302,7 @@ let MessageItem = ({
 							</View>
 						) : null}
 					</Pressable>
-				</View>
+				</Animated.View>
 			) : null}
 		</LayoutAnimationConfig>
 	);
@@ -303,23 +312,16 @@ let MessageItem = ({
 	return (
 		<>
 			{hasLargeGapFromPrev && <DateDivider date={message.sentAt} />}
-			<View style={[messageInset, isFirstInCluster ? a.mt_md : { marginTop: CLUSTERED_MESSAGE_GAP }]}>
+			<View
+				style={[
+					messageInset,
+					isFirstInCluster ? a.mt_md : { marginTop: CLUSTERED_MESSAGE_GAP },
+					hasReactions && { paddingBottom: 26 },
+				]}
+			>
 				<View style={[a.relative]}>
-					{showAvatar ? (
-						<View
-							style={[
-								a.absolute,
-								a.bottom_0,
-								a.z_50,
-								hasReactions && {
-									transform: [{ translateY: -27 }],
-								},
-							]}
-						>
-							{avatar}
-						</View>
-					) : null}
-					<View style={[a.flex_grow, !isFromSelf && isGroupChat && { paddingLeft: AVATAR_SIZE }]}>
+					{showAvatar ? <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View> : null}
+					<View style={[a.relative, a.flex_grow, !isFromSelf && isGroupChat && { paddingLeft: AVATAR_SIZE }]}>
 						{displayName && showDisplayName ? (
 							<Text
 								style={[
@@ -337,71 +339,72 @@ let MessageItem = ({
 						{profile && isBlockedOrBlocking(profile) && isGroupChat ? (
 							<BlockedPlaceholder profile={profile} style={borderRadiusStyle} />
 						) : (
-							<ActionsWrapper
-								hasReactions={hasReactions}
-								isFromSelf={isFromSelf}
-								message={message}
-								senderProfile={profile}
-								moderationOpts={moderationOpts}
-							>
-								{message.embed?.$type === 'app.bsky.embed.record#view' && (
-									<MessageItemEmbed
-										embed={message.embed}
-										isFromSelf={isFromSelf}
-										isGroupChat={isGroupChat}
-										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-										squaredTopCorner={squaredTopCorner}
-									/>
-								)}
-								{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
-									<MessageItemInviteEmbed
-										embed={message.embed}
-										isFromSelf={isFromSelf}
-										isGroupChat={isGroupChat}
-										squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
-										squaredTopCorner={squaredTopCorner}
-									/>
-								)}
-								{rt.text.length > 0 && (
-									<Animated.View
-										accessibilityHint={l`Double tap or long press the message to add a reaction`}
-										style={[
-											!isFromSelf && isGroupChat && a.ml_sm,
-											!isOnlyEmoji(message.text) && [
-												a.rounded_xl,
-												a.py_sm,
-												a.px_md,
-												{
-													marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
-													backgroundColor: isFromSelf
-														? isPending
-															? pendingColor
-															: t.palette.primary_500
-														: t.palette.contrast_50,
-												},
-												isFromSelf ? a.self_end : a.self_start,
-												borderRadiusStyle,
-											],
-										]}
-									>
-										<RichText
-											// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
-											// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
-											className={
-												isOnlyEmoji(message.text) && !isFromSelf ? css.emojiBaselineNudge : undefined
-											}
-											color={isFromSelf ? 'white' : undefined}
-											emojiScale="large"
-											enableTags
-											leading={isOnlyEmoji(message.text) ? 'none' : undefined}
-											linkUnderline="always"
-											size="md"
-											value={rt}
+							<View style={[a.relative]}>
+								<ActionsWrapper
+									isFromSelf={isFromSelf}
+									message={message}
+									senderProfile={profile}
+									moderationOpts={moderationOpts}
+								>
+									{message.embed?.$type === 'app.bsky.embed.record#view' && (
+										<MessageItemEmbed
+											embed={message.embed}
+											isFromSelf={isFromSelf}
+											isGroupChat={isGroupChat}
+											squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+											squaredTopCorner={squaredTopCorner}
 										/>
-									</Animated.View>
-								)}
+									)}
+									{message.embed?.$type === 'chat.bsky.embed.joinLink#view' && (
+										<MessageItemInviteEmbed
+											embed={message.embed}
+											isFromSelf={isFromSelf}
+											isGroupChat={isGroupChat}
+											squaredBottomCorner={squaredBottomCorner || hasEmbedAndText}
+											squaredTopCorner={squaredTopCorner}
+										/>
+									)}
+									{rt.text.length > 0 && (
+										<Animated.View
+											accessibilityHint={l`Double tap or long press the message to add a reaction`}
+											style={[
+												!isFromSelf && isGroupChat && a.ml_sm,
+												!isOnlyEmoji(message.text) && [
+													a.rounded_xl,
+													a.py_sm,
+													a.px_md,
+													{
+														marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
+														backgroundColor: isFromSelf
+															? isPending
+																? pendingColor
+																: t.palette.primary_500
+															: t.palette.contrast_50,
+													},
+													isFromSelf ? a.self_end : a.self_start,
+													borderRadiusStyle,
+												],
+											]}
+										>
+											<RichText
+												// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
+												// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
+												className={
+													isOnlyEmoji(message.text) && !isFromSelf ? css.emojiBaselineNudge : undefined
+												}
+												color={isFromSelf ? 'white' : undefined}
+												emojiScale="large"
+												enableTags
+												leading={isOnlyEmoji(message.text) ? 'none' : undefined}
+												linkUnderline="always"
+												size="md"
+												value={rt}
+											/>
+										</Animated.View>
+									)}
+								</ActionsWrapper>
 								{appliedReactions}
-							</ActionsWrapper>
+							</View>
 						)}
 					</View>
 				</View>
