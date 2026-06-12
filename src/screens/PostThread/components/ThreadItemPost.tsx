@@ -1,4 +1,4 @@
-import { memo, type ReactNode, useCallback, useMemo, useState } from 'react';
+import { memo, type ReactNode, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
@@ -6,10 +6,8 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
-import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
-import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
 import { POST_TOMBSTONE, type Shadow, usePostShadow } from '#/state/cache/post-shadow';
@@ -30,11 +28,10 @@ import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
-import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
+import { ClampedPostText } from '#/components/web/ClampedPostText';
 import { PostHider } from '#/components/web/moderation/PostHider';
-import { RichText } from '#/components/web/RichText';
 import { Text } from '#/components/web/Text';
 import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
@@ -149,7 +146,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 		}),
 		[record],
 	);
-	const [limitLines, setLimitLines] = useState(() => countLines(richText?.text) >= MAX_POST_LINES);
 	const threadRootUri = record.reply?.root?.uri || post.uri;
 	const postHref = useMemo(() => {
 		const urip = parseCanonicalResourceUri(post.uri);
@@ -187,10 +183,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 			logContext: 'PostReply',
 		});
 	}, [openComposer, post, record, onPostSuccess, moderation]);
-
-	const onPressShowMore = useCallback(() => {
-		setLimitLines(false);
-	}, [setLimitLines]);
 
 	const { isActive: live } = useActorStatus(post.author);
 
@@ -247,16 +239,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 								modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
 							/>
 							{richText?.text ? (
-								<div className={css.richText}>
-									<RichText
-										enableTags
-										value={richText}
-										size="md"
-										numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-										authorHandle={post.author.handle}
-									/>
-									{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
-								</div>
+								<ClampedPostText authorHandle={post.author.handle} richText={richText} />
 							) : undefined}
 							{post.embed && (
 								<div

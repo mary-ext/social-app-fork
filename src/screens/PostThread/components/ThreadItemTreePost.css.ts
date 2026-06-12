@@ -172,13 +172,6 @@ export const contentColumn = style({
 	paddingLeft: space._2xs,
 });
 
-/** `display: flex` so the post-text strut doesn't push the embed below down a few px. */
-export const richText = style({
-	display: 'flex',
-	flexDirection: 'column',
-	marginBottom: space._2xs,
-});
-
 export const embed = style({
 	paddingBottom: space.xs,
 });

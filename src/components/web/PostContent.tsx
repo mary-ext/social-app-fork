@@ -1,20 +1,15 @@
-import { memo, useCallback, useState } from 'react';
+import { memo } from 'react';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 
-import { MAX_POST_LINES } from '#/lib/constants';
-import { countLines } from '#/lib/strings/helpers';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
-
-import { atoms as a } from '#/alf';
 
 import { maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
-import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
+import { ClampedPostText } from '#/components/web/ClampedPostText';
 import { ContentHider } from '#/components/web/moderation/ContentHider';
-import { RichText } from '#/components/web/RichText';
 
 import * as css from './PostContent.css';
 
@@ -49,12 +44,6 @@ let PostContent = ({
 	/** Forwarded to the embed wrapper (e.g. the feed surface's trailing padding). */
 	embedClassName?: string;
 }): React.ReactNode => {
-	const [limitLines, setLimitLines] = useState(() => countLines(richText.text) >= MAX_POST_LINES);
-
-	const onPressShowMore = useCallback(() => {
-		setLimitLines(false);
-	}, []);
-
 	const listModui = getDisplayRestrictions(moderation, DisplayContext.ContentList);
 	const bodyModui =
 		displayContext === 'view' ? getDisplayRestrictions(moderation, DisplayContext.ContentView) : listModui;
@@ -67,18 +56,7 @@ let PostContent = ({
 			childContainerClassName={css.childContainer}
 		>
 			<PostAlerts additionalCauses={additionalCauses} className={css.alerts} modui={bodyModui} />
-			{richText.text ? (
-				<div className={css.richText}>
-					<RichText
-						authorHandle={post.author.handle}
-						enableTags
-						numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-						size="md"
-						value={richText}
-					/>
-					{limitLines && <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />}
-				</div>
-			) : undefined}
+			{richText.text ? <ClampedPostText authorHandle={post.author.handle} richText={richText} /> : undefined}
 			{post.embed ? (
 				<div
 					className={embedClassName}
