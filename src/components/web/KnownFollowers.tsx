@@ -1,5 +1,4 @@
 import { useRef } from 'react';
-import type { GestureResponderEvent } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -13,8 +12,8 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
-import { useLink } from '#/components/Link';
 import * as css from '#/components/web/KnownFollowers.css';
+import { Link } from '#/components/web/Link';
 import { Text } from '#/components/web/Text';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
@@ -69,10 +68,6 @@ function KnownFollowersInner({
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
-	const { href, onPress } = useLink({
-		displayText: '',
-		to: makeProfileLink(profile, 'known-followers'),
-	});
 
 	const slice = cachedKnownFollowers.followers.slice(0, 3).map((f) => {
 		const moderation = moderateProfile(f, moderationOpts);
@@ -96,11 +91,10 @@ function KnownFollowersInner({
 	}
 
 	return (
-		<a
-			aria-label={l`Press to view followers of this account that you also follow`}
+		<Link
 			className={css.link}
-			href={href}
-			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
+			label={l`Press to view followers of this account that you also follow`}
+			to={makeProfileLink(profile, 'known-followers')}
 		>
 			<div className={css.avatars}>
 				{slice.map(({ moderation, profile: prof }, i) => (
@@ -163,6 +157,6 @@ function KnownFollowersInner({
 					</Trans>
 				)}
 			</Text>
-		</a>
+		</Link>
 	);
 }
