@@ -1,6 +1,6 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
 
-import { type JoinLinkPreview } from '#/state/queries/join-links';
+import type { JoinLinkPreview } from '#/state/queries/join-links';
 
 import { atoms as a, useTheme } from '#/alf';
 
