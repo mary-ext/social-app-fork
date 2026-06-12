@@ -254,10 +254,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 		<>
 			<ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 			<GalleryBleed>
-				<div
-					data-testid={`postThreadItem-by-${post.author.handle}`}
-					className={clsx(css.outer, isRoot && css.outerRootPad)}
-				>
+				<div className={clsx(css.outer, isRoot && css.outerRootPad)}>
 					<div className={css.avatarRow}>
 						<div>
 							<PreviewableUserAvatar

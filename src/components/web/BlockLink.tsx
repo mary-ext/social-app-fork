@@ -30,7 +30,6 @@ const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-n
 export const noRowLink = { 'data-no-row-link': '' };
 
 type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
-	'data-testid'?: string;
 	ref?: Ref<HTMLElement>;
 };
 
@@ -46,7 +45,6 @@ type BlockLinkProps = {
 	label?: string;
 	className?: string;
 	ref?: Ref<HTMLElement>;
-	testID?: string;
 	onBeforePress?: () => void;
 	onPointerEnter?: () => void;
 	onPointerLeave?: () => void;
@@ -68,7 +66,6 @@ export function BlockLink({
 	label,
 	className,
 	ref,
-	testID,
 	onBeforePress,
 	onPointerEnter,
 	onPointerLeave,
@@ -131,7 +128,6 @@ export function BlockLink({
 	return cloneElement(node, {
 		'aria-label': label,
 		className: clsx(node.props.className, className),
-		'data-testid': testID,
 		onClick,
 		onKeyDown: label ? onKeyDown : undefined,
 		onMouseDown,

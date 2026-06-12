@@ -38,7 +38,6 @@ type Props = ComponentProps<typeof BlockLink> & {
  * post. `noOverride` causes can't be revealed — only the dialog is reachable.
  */
 export function PostHider({
-	testID,
 	href,
 	disabled,
 	modui,
@@ -66,7 +65,7 @@ export function PostHider({
 		// which clones a single DOM child to inject the press handlers — needs a real element to land them on,
 		// without adding a layout box.
 		return (
-			<BlockLink testID={testID} href={href} onBeforePress={onBeforePress} {...props}>
+			<BlockLink href={href} onBeforePress={onBeforePress} {...props}>
 				<div style={{ display: 'contents' }}>{children}</div>
 			</BlockLink>
 		);

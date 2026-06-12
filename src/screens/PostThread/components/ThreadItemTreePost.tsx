@@ -233,7 +233,6 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 		<ThreadItemTreePostOuterWrapper item={item}>
 			<div className={css.hoverable}>
 				<PostHider
-					testID={`postThreadItem-by-${post.author.handle}`}
 					href={postHref}
 					disabled={overrides?.moderation === true}
 					modui={getDisplayRestrictions(moderation, DisplayContext.ContentList)}
