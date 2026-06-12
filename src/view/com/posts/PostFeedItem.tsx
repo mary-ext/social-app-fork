@@ -12,7 +12,6 @@ import { clsx } from 'clsx';
 
 import type { ReasonFeedSource } from '#/lib/api/feed/types';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
-import { usePalette } from '#/lib/hooks/usePalette';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 
@@ -24,8 +23,6 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 import { buildPostSourceKey, setUnstablePostSource } from '#/state/unstable-post-source';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
-
-import { select, useTheme } from '#/alf';
 
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -147,8 +144,6 @@ let FeedItemInner = ({
 }): React.ReactNode => {
 	const queryClient = useQueryClient();
 	const { openComposer } = useOpenComposer();
-	const pal = usePalette('default');
-	const t = useTheme();
 	const { currentAccount } = useSession();
 
 	const [href] = useMemo(() => {
@@ -264,35 +259,19 @@ let FeedItemInner = ({
 			: [];
 	}, [post, currentAccount?.did, threadgateHiddenReplies]);
 
-	const spineColor = select(t.name, {
-		light: t.palette.contrast_100,
-		dim: t.palette.contrast_200,
-		dark: t.palette.contrast_200,
-	});
-
 	return (
 		<GalleryBleed>
 			<BlockLink testID={`feedItem-by-${post.author.handle}`} href={href} onBeforePress={onBeforePress}>
 				<div
-					className={css.outer}
-					style={{
-						borderTopColor: pal.colors.border,
-						borderTopStyle: 'solid',
-						borderTopWidth: hideTopBorder || isThreadChild ? 0 : 1,
-						paddingBottom: isThreadLastChild || (!isThreadChild && !isThreadParent) ? 8 : undefined,
-						// the feed's first post hides its top border (the sticky header already separates it), so
-						// reclaim the removed hairline as padding to keep content from shifting up 1px
-						paddingTop: hideTopBorder ? 1 : undefined,
-					}}
+					className={css.outer({
+						bottomSpace: isThreadLastChild || (!isThreadChild && !isThreadParent),
+						reclaimBorder: hideTopBorder,
+						topBorder: !(hideTopBorder || isThreadChild),
+					})}
 				>
 					<div className={css.reasonRow}>
 						<div className={css.spineSlot}>
-							{isThreadChild && (
-								<div
-									className={clsx(css.replyLine, css.replyLineTop)}
-									style={{ backgroundColor: spineColor }}
-								/>
-							)}
+							{isThreadChild && <div className={clsx(css.replyLine, css.replyLineTop)} />}
 						</div>
 						<div className={css.reason}>
 							{reason && (
@@ -312,12 +291,7 @@ let FeedItemInner = ({
 								live={live}
 								tabIndex={-1}
 							/>
-							{isThreadParent && (
-								<div
-									className={css.replyLine}
-									style={{ backgroundColor: spineColor, marginTop: live ? 8 : 4 }}
-								/>
-							)}
+							{isThreadParent && <div className={css.replyLine} style={{ marginTop: live ? 8 : 4 }} />}
 						</PostRow.AvatarColumn>
 						<PostRow.Content
 							style={maybeApplyGalleryOffsetStyles('meta', {

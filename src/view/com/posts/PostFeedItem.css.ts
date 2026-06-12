@@ -3,22 +3,37 @@ import { style } from '@vanilla-extract/css';
 import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
+import { recipe } from '#/styles/recipe';
 
 /**
- * The feed post row; GalleryBleed measures this host and clips the image-carousel bleed to it. The dynamic
- * top border + reclaimed padding are applied inline since they vary per slice position.
+ * The feed post row; GalleryBleed measures this host and clips the image-carousel bleed to it. The top border
+ * and reclaimed padding vary by the slice's position in the thread, so they're recipe variants the component
+ * toggles per render.
  */
-export const outer = style({
-	boxSizing: 'border-box',
-	cursor: 'pointer',
-	display: 'flex',
-	flexDirection: 'column',
-	paddingLeft: 10,
-	paddingRight: 15,
-	selectors: {
-		'&:hover': {
-			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+export const outer = recipe({
+	base: {
+		borderTopColor: vars.palette.contrast_100,
+		borderTopStyle: 'solid',
+		borderTopWidth: 0,
+		boxSizing: 'border-box',
+		cursor: 'pointer',
+		display: 'flex',
+		flexDirection: 'column',
+		paddingLeft: 10,
+		paddingRight: 15,
+		selectors: {
+			'&:hover': {
+				backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+			},
 		},
+	},
+	variants: {
+		// trailing space below a thread's last child, and below standalone posts
+		bottomSpace: { true: { paddingBottom: 8 } },
+		// the feed's first post hides its top border (the sticky header already separates it), so reclaim the
+		// removed hairline as padding to keep content from shifting up 1px
+		reclaimBorder: { true: { paddingTop: 1 } },
+		topBorder: { true: { borderTopWidth: 1 } },
 	},
 });
 
@@ -49,10 +64,16 @@ export const reason = style({
 
 /** The thread reply-spine: a 2px vertical bar centered in the avatar column. */
 export const replyLine = style({
+	backgroundColor: vars.palette.contrast_100,
 	flexGrow: 1,
 	marginLeft: 'auto',
 	marginRight: 'auto',
 	width: 2,
+	selectors: {
+		'.theme--dark &, .theme--dim &': {
+			backgroundColor: vars.palette.contrast_200,
+		},
+	},
 });
 
 /** Extra gap below the spine segment that sits above the avatar (in the reason row). */
