@@ -1,12 +1,12 @@
-import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
+import { clsx } from 'clsx';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 
-import { atoms as a, useAlf, type ViewStyleProp } from '#/alf';
-import { useNativeFontScale } from '#/alf/util/dimensions';
+import { useAlf } from '#/alf';
 
 import { BotBadge, BotBadgeButton, isBotAccount } from '#/components/BotBadge';
+import * as css from '#/components/ProfileBadges.css';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
 import { VerificationCheckButton } from '#/components/verification/VerificationCheckButton';
@@ -14,52 +14,48 @@ import { VerificationCheckButton } from '#/components/verification/VerificationC
 export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 const verificationIconSizes: Record<Size, number> = {
-	xs: 10,
-	sm: 12,
-	md: 14,
 	lg: 18,
+	md: 14,
+	sm: 12,
 	xl: 22,
+	xs: 10,
 } as const;
 
 const botIconSizes: Record<Size, number> = {
-	xs: 11,
-	sm: 13,
-	md: 15,
 	lg: 19,
+	md: 15,
+	sm: 13,
 	xl: 23,
+	xs: 11,
 } as const;
 
 export function ProfileBadges({
-	profile,
+	className,
 	interactive = false,
+	profile,
 	size,
-	style,
-	allowFontScaling = true,
-}: ViewStyleProp & {
-	profile: AnyProfileView;
+}: {
+	className?: string;
 	interactive?: boolean;
+	profile: AnyProfileView;
 	size: Size;
-	allowFontScaling?: boolean;
 }) {
 	const shadowed = useProfileShadow(profile);
 	const verification = useSimpleVerificationState({ profile });
-	const nativeScaleMultiplier = useNativeFontScale();
 	const {
-		fonts: { scaleMultiplier: alfScaleMultiplier },
+		fonts: { scaleMultiplier },
 	} = useAlf();
 
 	// if nothing to show, don't render the container at all
 	if (!verification.showBadge && !isBotAccount(shadowed)) return null;
 
-	const isOnTheSmallSide = size === 'xs' || size === 'sm';
-
-	const scaleMultiplier = allowFontScaling ? nativeScaleMultiplier * alfScaleMultiplier : 1;
+	const isOnTheSmallSide = size === 'sm' || size === 'xs';
 
 	const verificationIconWidth = verificationIconSizes[size] * scaleMultiplier;
 	const botIconWidth = botIconSizes[size] * scaleMultiplier;
 
 	return (
-		<View style={[a.flex_row, a.align_center, isOnTheSmallSide ? a.gap_2xs : a.gap_xs, style]}>
+		<div className={clsx(css.container({ small: isOnTheSmallSide }), className)}>
 			{interactive ? (
 				<>
 					<VerificationCheckButton profile={shadowed} width={verificationIconWidth} />
@@ -73,6 +69,6 @@ export function ProfileBadges({
 					<BotBadge profile={shadowed} width={botIconWidth} />
 				</>
 			)}
-		</View>
+		</div>
 	);
 }

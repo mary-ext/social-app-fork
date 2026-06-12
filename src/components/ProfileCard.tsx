@@ -239,7 +239,9 @@ function InlineNameAndHandle({
 			>
 				{forceLTR(name)}
 			</Text>
-			<ProfileBadges profile={profile} size="md" style={[a.pl_2xs, a.self_center, { marginTop: 0 }]} />
+			<View style={[a.pl_2xs, a.self_center, { marginTop: 0 }]}>
+				<ProfileBadges profile={profile} size="md" />
+			</View>
 			<Text
 				emoji
 				style={[a.leading_tight, t.atoms.text_contrast_medium, { flexShrink: 10 }]}
@@ -276,7 +278,9 @@ export function Name({
 			>
 				{name}
 			</Text>
-			<ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+			<View style={[a.pl_xs]}>
+				<ProfileBadges profile={profile} size="md" />
+			</View>
 		</View>
 	);
 }

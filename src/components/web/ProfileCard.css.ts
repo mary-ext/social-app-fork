@@ -1,6 +1,48 @@
 import { style } from '@vanilla-extract/css';
 
-import { space } from '#/styles/tokens.css';
+import { colors } from '#/styles/colors';
+import { borderRadius, space } from '#/styles/tokens.css';
+
+export const outer = style({
+	display: 'flex',
+	flex: 1,
+	flexDirection: 'column',
+	gap: space.xs,
+	width: '100%',
+});
+
+/** Block link wrapping a card row; the caller supplies the row layout (direction/alignment/gap). */
+export const link = style({
+	color: 'inherit',
+	display: 'flex',
+	textDecoration: 'none',
+});
+
+export const avatarPlaceholder = style({
+	background: colors.contrast_50,
+	borderRadius: borderRadius.full,
+});
+
+export const nameAndHandlePlaceholder = style({
+	display: 'flex',
+	flex: 1,
+	flexDirection: 'column',
+	gap: space.xs,
+});
+
+export const namePlaceholderBar = style({
+	background: colors.contrast_50,
+	borderRadius: borderRadius.xs,
+	height: 14,
+	width: '60%',
+});
+
+export const handlePlaceholderBar = style({
+	background: colors.contrast_50,
+	borderRadius: borderRadius.xs,
+	height: 10,
+	width: '40%',
+});
 
 export const header = style({
 	alignItems: 'center',

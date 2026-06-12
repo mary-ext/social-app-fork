@@ -218,7 +218,7 @@ let ProfileMenu = ({
 	}, [navigation, profile.did]);
 
 	const verificationCreatePromptControl = Prompt.usePromptControl();
-	const verificationRemovePromptControl = Prompt.usePromptControl();
+	const verificationRemovePromptControl = WebPrompt.usePromptHandle();
 	const currentAccountVerifications =
 		profile.verification?.verifications?.filter((v) => {
 			return v.issuer === currentAccount?.did;
@@ -325,7 +325,7 @@ let ProfileMenu = ({
 									(verification.viewer.hasIssuedVerification ? (
 										<Menu.Item
 											label={l`Remove verification`}
-											onClick={() => verificationRemovePromptControl.open()}
+											onClick={() => verificationRemovePromptControl.open(null)}
 										>
 											<Menu.ItemText>
 												<Trans>Remove verification</Trans>
@@ -442,7 +442,7 @@ let ProfileMenu = ({
 			/>
 			<VerificationCreatePrompt control={verificationCreatePromptControl} profile={profile} />
 			<VerificationRemovePrompt
-				control={verificationRemovePromptControl}
+				handle={verificationRemovePromptControl}
 				profile={profile}
 				verifications={currentAccountVerifications}
 			/>

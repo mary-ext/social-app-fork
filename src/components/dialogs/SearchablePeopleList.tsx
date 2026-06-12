@@ -461,7 +461,9 @@ function ExistingChatCard({
 									{name}
 								</Text>
 								{convo.kind === 'direct' && (
-									<ProfileBadges profile={convo.primaryMember} size="md" style={[a.pl_xs]} />
+									<View style={[a.pl_xs]}>
+										<ProfileBadges profile={convo.primaryMember} size="md" />
+									</View>
 								)}
 							</View>
 							{convo.kind === 'direct' ? (

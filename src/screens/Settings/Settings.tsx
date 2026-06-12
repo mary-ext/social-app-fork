@@ -276,16 +276,9 @@ function ProfilePreview({ profile }: { profile: AppBskyActorDefs.ProfileViewDeta
 				>
 					{displayName}
 				</Text>
-				<ProfileBadges
-					profile={shadow}
-					size="xl"
-					interactive
-					style={[
-						{
-							marginTop: 8,
-						},
-					]}
-				/>
+				<View style={[{ marginTop: 8 }]}>
+					<ProfileBadges profile={shadow} size="xl" interactive />
+				</View>
 			</View>
 			<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
 				{sanitizeHandle(profile.handle, '@')}

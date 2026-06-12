@@ -137,7 +137,7 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 						)}
 					</AuthorLink>
 				</ProfileHoverCard>
-				<ProfileBadges profile={author} size="sm" style={{ alignSelf: 'center', paddingLeft: 2 }} />
+				<ProfileBadges className={css.badges} profile={author} size="sm" />
 				<ProfileHoverCard did={author.did}>
 					<AuthorLink
 						className={css.handle}

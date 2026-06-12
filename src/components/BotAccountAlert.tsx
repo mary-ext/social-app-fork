@@ -1,27 +1,24 @@
-import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
+import * as css from '#/components/BotAccountAlert.css';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
-import { Text } from '#/components/Typography';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { Text } from '#/components/web/Text';
 
 import { navigate } from '#/Navigation';
 
 export function BotAccountAlert({
-	control,
+	handle,
 	profile,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const { currentAccount } = useSession();
 
 	const isSelf = profile.did === currentAccount?.did;
@@ -30,49 +27,39 @@ export function BotAccountAlert({
 		: l`This account has been marked as automated by its owner.`;
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.ScrollableInner label={l`Automated account`} style={[{ maxWidth: 320 }]}>
-				<View style={[a.align_center, a.pb_md, a.shadow_sm]}>
-					<RobotIcon width={48} fill={t.atoms.text_contrast_medium.color} />
-				</View>
-				<View style={[a.align_center]}>
-					<Text
-						style={[
-							a.leading_snug,
-							a.text_center,
-							a.pb_xl,
-							a.text_md,
-							t.atoms.text_contrast_high,
-							{ maxWidth: 300 },
-						]}
-					>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={l`Automated account`} size="narrow">
+				<div className={css.body}>
+					<span className={css.icon}>
+						<RobotIcon width={48} fill="currentColor" />
+					</span>
+					<Text align="center" className={css.text} color="textContrastHigh" leading="snug" size="md">
 						{description}
 					</Text>
-				</View>
-				<View style={[a.w_full, a.gap_sm]}>
-					<Button label={l`Okay`} onPress={() => control.close()} color="primary" size="large">
-						<ButtonText>
-							<Trans>Okay</Trans>
-						</ButtonText>
-					</Button>
-					{isSelf ? (
-						<Button
-							label={l`Open settings`}
-							onPress={() => {
-								control.close(() => {
-									void navigate('AutomationLabelSettings');
-								});
-							}}
-							color="secondary"
-							size="large"
-						>
+					<div className={css.actions}>
+						<Button color="primary" label={l`Okay`} onClick={() => handle.close()} size="large">
 							<ButtonText>
-								<Trans>Open settings</Trans>
+								<Trans>Okay</Trans>
 							</ButtonText>
 						</Button>
-					) : null}
-				</View>
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+						{isSelf && (
+							<Button
+								color="secondary"
+								label={l`Open settings`}
+								onClick={() => {
+									handle.close();
+									void navigate('AutomationLabelSettings');
+								}}
+								size="large"
+							>
+								<ButtonText>
+									<Trans>Open settings</Trans>
+								</ButtonText>
+							</Button>
+						)}
+					</div>
+				</div>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }

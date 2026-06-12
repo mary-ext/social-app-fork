@@ -112,7 +112,9 @@ export function ComposerReplyTo({ replyTo }: { replyTo: ComposerOptsPostRef }) {
 					<Text style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]} numberOfLines={1} emoji>
 						{sanitizeDisplayName(replyTo.author.displayName || sanitizeHandle(replyTo.author.handle))}
 					</Text>
-					<ProfileBadges profile={replyTo.author} size="sm" style={[a.pl_xs]} />
+					<View style={[a.pl_xs]}>
+						<ProfileBadges profile={replyTo.author} size="sm" />
+					</View>
 				</View>
 				<View style={[a.flex_row, a.gap_md]}>
 					<View style={[a.flex_1, a.flex_grow]}>

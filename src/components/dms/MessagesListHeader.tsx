@@ -136,7 +136,9 @@ function ProfileHeaderReady({
 							<Text style={[a.text_lg, a.font_semi_bold, a.flex_shrink]} numberOfLines={1}>
 								{displayName}
 							</Text>
-							<ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
+							<View style={[a.pl_xs]}>
+								<ProfileBadges profile={profile} size="md" />
+							</View>
 							<MuteStatus muted={convo.view.muted} />
 						</View>
 						{handle ? (

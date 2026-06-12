@@ -484,16 +484,9 @@ function Inner({
 								getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
 							)}
 						</Text>
-						<ProfileBadges
-							profile={profile}
-							size="md"
-							style={[
-								a.pl_xs,
-								{
-									marginTop: -1,
-								},
-							]}
-						/>
+						<View style={[a.pl_xs, { marginTop: -1 }]}>
+							<ProfileBadges profile={profile} size="md" />
+						</View>
 					</View>
 
 					<ProfileHeaderHandle profile={profileShadow} disableTaps />

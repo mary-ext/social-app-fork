@@ -136,7 +136,9 @@ function InviterHeader({
 						<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
 							{displayName}
 						</Text>
-						<ProfileBadges profile={profile} size="sm" style={[a.pl_xs]} />
+						<View style={[a.pl_xs]}>
+							<ProfileBadges profile={profile} size="sm" />
+						</View>
 						<Text style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]} numberOfLines={1}>
 							{' '}
 							added you

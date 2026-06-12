@@ -6,22 +6,19 @@ import { useVerificationsRemoveMutation } from '#/state/queries/verification/use
 
 import { logger } from '#/logger';
 
-import type { DialogControlProps } from '#/components/Dialog';
-import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
-
-export { useDialogControl as usePromptControl } from '#/components/Dialog';
+import * as Prompt from '#/components/web/Prompt';
 
 export function VerificationRemovePrompt({
-	control,
+	handle,
+	onConfirm: onConfirmInner,
 	profile,
 	verifications,
-	onConfirm: onConfirmInner,
 }: {
-	control: DialogControlProps;
+	handle: Prompt.PromptHandle;
+	onConfirm?: () => void;
 	profile: AnyProfileView;
 	verifications: AppBskyActorDefs.VerificationView[];
-	onConfirm?: () => void;
 }) {
 	const { t: l } = useLingui();
 	const { mutateAsync: remove } = useVerificationsRemoveMutation();
@@ -42,11 +39,11 @@ export function VerificationRemovePrompt({
 
 	return (
 		<Prompt.Basic
-			control={control}
-			title={l`Remove your verification for this account?`}
-			onConfirm={() => void onConfirm()}
-			confirmButtonCta={l`Remove verification`}
 			confirmButtonColor="negative"
+			confirmButtonCta={l`Remove verification`}
+			handle={handle}
+			onConfirm={() => void onConfirm()}
+			title={l`Remove your verification for this account?`}
 		/>
 	);
 }

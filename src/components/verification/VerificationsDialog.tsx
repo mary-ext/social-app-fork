@@ -1,6 +1,5 @@
-import { View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { getUserDisplayName } from '#/lib/getUserDisplayName';
@@ -9,52 +8,31 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { useDialogControl } from '#/components/Dialog';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
-import { Link } from '#/components/Link';
-import * as ProfileCard from '#/components/ProfileCard';
-import { Text } from '#/components/Typography';
 import type { FullVerificationState } from '#/components/verification';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
-
-export { useDialogControl } from '#/components/Dialog';
+import * as css from '#/components/verification/VerificationsDialog.css';
+import { Admonition } from '#/components/web/Admonition';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { LinkButton } from '#/components/web/Link';
+import * as ProfileCard from '#/components/web/ProfileCard';
+import * as Prompt from '#/components/web/Prompt';
+import { Text } from '#/components/web/Text';
 
 export function VerificationsDialog({
-	control,
+	handle,
 	profile,
 	verificationState,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	profile: AnyProfileView;
 	verificationState: FullVerificationState;
 }) {
-	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle />
-			<Inner control={control} profile={profile} verificationState={verificationState} />
-		</Dialog.Outer>
-	);
-}
-
-function Inner({
-	profile,
-	control,
-	verificationState: state,
-}: {
-	control: Dialog.DialogControlProps;
-	profile: AnyProfileView;
-	verificationState: FullVerificationState;
-}) {
-	const t = useTheme();
 	const { t: l } = useLingui();
-	const { gtMobile } = useBreakpoints();
 
 	const userName = getUserDisplayName(profile);
+	const state = verificationState;
 	const label = state.profile.isViewer
 		? state.profile.isVerified
 			? l`You are verified`
@@ -62,160 +40,136 @@ function Inner({
 		: state.profile.isVerified
 			? l`${userName} is verified`
 			: l({
-					message: `${userName}'s verifications`,
 					comment: `Possessive, meaning "the verifications of {userName}"`,
+					message: `${userName}'s verifications`,
 				});
 
 	return (
-		<Dialog.ScrollableInner
-			label={label}
-			style={[gtMobile ? { width: 'auto', maxWidth: 400, minWidth: 200 } : a.w_full]}
-		>
-			<View style={[a.gap_sm, a.pb_lg]}>
-				<Text style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>{label}</Text>
-				<Text style={[a.text_md, a.leading_snug]}>
-					{state.profile.isVerified ? (
-						<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
-					) : (
-						<Trans>
-							This account has one or more attempted verifications, but it is not currently verified.
-						</Trans>
-					)}
-				</Text>
-			</View>
-			{profile.verification ? (
-				<View style={[a.pb_xl, a.gap_md]}>
-					<Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-						<Trans>Verified by:</Trans>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup label={label} size="narrow">
+				<div className={css.header}>
+					<Text className={css.title} leading="tight" size="_2xl" weight="semiBold">
+						{label}
 					</Text>
+					<Text leading="snug" size="md">
+						{state.profile.isVerified ? (
+							<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
+						) : (
+							<Trans>
+								This account has one or more attempted verifications, but it is not currently verified.
+							</Trans>
+						)}
+					</Text>
+				</div>
+				{profile.verification ? (
+					<div className={css.section}>
+						<Text color="textContrastMedium" size="sm">
+							<Trans>Verified by:</Trans>
+						</Text>
 
-					<View style={[a.gap_lg]}>
-						{profile.verification.verifications.map((v) => (
-							<VerifierCard key={v.uri} verification={v} subject={profile} outerDialogControl={control} />
-						))}
-					</View>
+						<div className={css.list}>
+							{profile.verification.verifications.map((v) => (
+								<VerifierCard key={v.uri} outerHandle={handle} subject={profile} verification={v} />
+							))}
+						</div>
 
-					{profile.verification.verifications.some((v) => !v.isValid) && state.profile.isViewer && (
-						<Admonition type="warning" style={[a.mt_xs]}>
-							<Trans>Some of your verifications are invalid.</Trans>
-						</Admonition>
-					)}
-				</View>
-			) : null}
-			<View
-				style={[
-					a.w_full,
-					a.gap_sm,
-					a.justify_end,
-					gtMobile ? [a.flex_row, a.flex_row_reverse, a.justify_start] : [a.flex_col],
-				]}
-			>
-				<Button
-					label={l`Close dialog`}
-					size="small"
-					variant="solid"
-					color="primary"
-					onPress={() => {
-						control.close();
-					}}
-				>
-					<ButtonText>
-						<Trans>Close</Trans>
-					</ButtonText>
-				</Button>
-				<Link
-					to={urls.website.blog.initialVerificationAnnouncement}
-					label={l({
-						message: `Learn more about verification on Bluesky`,
-						context: `english-only-resource`,
-					})}
-					size="small"
-					variant="solid"
-					color="secondary"
-					style={[a.justify_center]}
-					onPress={() => {}}
-				>
-					<ButtonText>
-						<Trans context="english-only-resource">Learn more</Trans>
-					</ButtonText>
-				</Link>
-			</View>
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
+						{profile.verification.verifications.some((v) => !v.isValid) && state.profile.isViewer && (
+							<Admonition className={css.admonitionSpacing} type="warning">
+								<Trans>Some of your verifications are invalid.</Trans>
+							</Admonition>
+						)}
+					</div>
+				) : null}
+				<div className={css.actions}>
+					<Button color="primary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
+						<ButtonText>
+							<Trans>Close</Trans>
+						</ButtonText>
+					</Button>
+					<LinkButton
+						color="secondary"
+						label={l({
+							context: `english-only-resource`,
+							message: `Learn more about verification on Bluesky`,
+						})}
+						size="small"
+						to={urls.website.blog.initialVerificationAnnouncement}
+					>
+						<ButtonText>
+							<Trans context="english-only-resource">Learn more</Trans>
+						</ButtonText>
+					</LinkButton>
+				</div>
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
 function VerifierCard({
-	verification,
+	outerHandle,
 	subject,
-	outerDialogControl,
+	verification,
 }: {
-	verification: AppBskyActorDefs.VerificationView;
+	outerHandle: Dialog.DialogHandle;
 	subject: AnyProfileView;
-	outerDialogControl: Dialog.DialogControlProps;
+	verification: AppBskyActorDefs.VerificationView;
 }) {
-	const t = useTheme();
-	const { t: l, i18n } = useLingui();
+	const { i18n, t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const moderationOpts = useModerationOpts();
 	const { data: profile, error } = useProfileQuery({ did: verification.issuer });
-	const verificationRemovePromptControl = useDialogControl();
+	const verificationRemovePromptControl = Prompt.usePromptHandle();
 	const canAdminister = verification.issuer === currentAccount?.did;
 
 	return (
-		<View
-			style={{
-				opacity: verification.isValid ? 1 : 0.5,
-			}}
-		>
+		<div style={{ opacity: verification.isValid ? 1 : 0.5 }}>
 			<ProfileCard.Outer>
 				<ProfileCard.Header>
 					{error ? (
 						<>
 							<ProfileCard.AvatarPlaceholder />
-							<View style={[a.flex_1]}>
-								<Text style={[a.text_md, a.font_semi_bold, a.leading_snug]} numberOfLines={1}>
+							<div className={css.nameColumn}>
+								<Text leading="snug" numberOfLines={1} size="md" weight="semiBold">
 									<Trans>Unknown verifier</Trans>
 								</Text>
-								<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
+								<Text color="textContrastMedium" leading="snug" numberOfLines={1}>
 									{verification.issuer}
 								</Text>
-							</View>
+							</div>
 						</>
 					) : profile && moderationOpts ? (
 						<>
 							<ProfileCard.Link
-								profile={profile}
-								style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}
+								className={css.cardRow}
 								onPress={() => {
-									outerDialogControl.close();
+									outerHandle.close();
 								}}
+								profile={profile}
 							>
-								<ProfileCard.Avatar profile={profile} moderationOpts={moderationOpts} disabledPreview />
-								<View style={[a.flex_1]}>
-									<ProfileCard.Name profile={profile} moderationOpts={moderationOpts} />
-									<Text emoji style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
+								<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
+								<div className={css.nameColumn}>
+									<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
+									<Text color="textContrastMedium" leading="snug" numberOfLines={1}>
 										{i18n.date(new Date(verification.createdAt), {
 											dateStyle: 'long',
 										})}
 									</Text>
-								</View>
+								</div>
 							</ProfileCard.Link>
 							{canAdminister && (
-								<View>
-									<Button
-										label={l`Remove verification`}
-										size="small"
-										variant="outline"
-										color="negative"
-										shape="round"
-										onPress={() => {
-											verificationRemovePromptControl.open();
-										}}
-									>
-										<ButtonIcon icon={TrashIcon} />
-									</Button>
-								</View>
+								<Button
+									color="negative"
+									label={l`Remove verification`}
+									onClick={() => {
+										verificationRemovePromptControl.open(null);
+									}}
+									shape="round"
+									size="small"
+									variant="ghost"
+								>
+									<ButtonIcon icon={TrashIcon} />
+								</Button>
 							)}
 						</>
 					) : (
@@ -227,11 +181,11 @@ function VerifierCard({
 				</ProfileCard.Header>
 			</ProfileCard.Outer>
 			<VerificationRemovePrompt
-				control={verificationRemovePromptControl}
+				handle={verificationRemovePromptControl}
+				onConfirm={() => outerHandle.close()}
 				profile={subject}
 				verifications={[verification]}
-				onConfirm={() => outerDialogControl.close()}
 			/>
-		</View>
+		</div>
 	);
 }

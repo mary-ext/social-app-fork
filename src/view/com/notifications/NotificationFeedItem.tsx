@@ -240,21 +240,9 @@ let NotificationFeedItem = ({
 				label={l`Go to ${firstAuthorName}'s profile`}
 			>
 				{forceLTR(firstAuthorName)}
-				<ProfileBadges
-					profile={firstAuthor.profile}
-					size="md"
-					style={[
-						a.relative,
-						{
-							// weird stuff here
-							paddingTop: undefined,
-							marginBottom: undefined,
-							top: 2,
-							paddingLeft: 3,
-							paddingRight: 2,
-						},
-					]}
-				/>
+				<View style={[a.relative, { paddingLeft: 3, paddingRight: 2, top: 2 }]}>
+					<ProfileBadges profile={firstAuthor.profile} size="md" />
+				</View>
 			</InlineLinkText>
 		</ProfileHoverCard>
 	);
@@ -934,7 +922,9 @@ function ExpandedAuthorCard({ author }: { author: Author }) {
 					>
 						{sanitizeDisplayName(author.profile.displayName || author.profile.handle)}
 					</Text>
-					<ProfileBadges profile={author.profile} size="md" style={[a.pl_2xs, a.self_center]} />
+					<View style={[a.pl_2xs, a.self_center]}>
+						<ProfileBadges profile={author.profile} size="md" />
+					</View>
 					<Text
 						numberOfLines={1}
 						style={[a.pl_xs, a.text_md, a.leading_tight, a.flex_shrink, t.atoms.text_contrast_medium]}

@@ -18,6 +18,11 @@ export const avatar = style({
 	marginRight: space._2xs,
 });
 
+export const badges = style({
+	alignSelf: 'center',
+	paddingLeft: 2,
+});
+
 // every shrinkable item below also sets `minWidth: 0` to defeat the `min-width: auto` flex default, which
 // otherwise floors each item at its min-content width — a long, unbroken name or handle would overrun its
 // constraint and run offscreen instead of ellipsizing.

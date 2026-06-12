@@ -1,44 +1,38 @@
-import { View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { BotAccountAlert } from '#/components/BotAccountAlert';
-import { Button } from '#/components/Button';
-import { useDialogControl } from '#/components/Dialog';
+import * as css from '#/components/BotBadge.css';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
+import * as Dialog from '#/components/web/Dialog';
 
 export function isBotAccount(profile: { did: string; labels?: { src: string; val: string }[] }): boolean {
 	return profile.labels?.some((l) => l.val === 'bot' && l.src === profile.did) ?? false;
 }
 
 export function BotBadge({
-	profile,
 	alwaysShow = false,
+	profile,
 	width,
 }: {
-	profile: AnyProfileView;
 	alwaysShow?: boolean;
+	profile: AnyProfileView;
 	width: number;
 }) {
-	const t = useTheme();
-
 	if (!isBotAccount(profile) && !alwaysShow) {
 		return null;
 	}
 
 	return (
-		<View>
-			<RobotIcon width={width} fill={t.atoms.text_contrast_medium.color} />
-		</View>
+		<span className={css.icon}>
+			<RobotIcon width={width} fill="currentColor" />
+		</span>
 	);
 }
 
 export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; width: number }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
-	const control = useDialogControl();
+	const control = Dialog.useDialogHandle();
 
 	if (!isBotAccount(profile)) {
 		return null;
@@ -46,32 +40,15 @@ export function BotBadgeButton({ profile, width }: { profile: AnyProfileView; wi
 
 	return (
 		<>
-			<Button
-				label={l`Automated account`}
-				hitSlop={20}
-				onPress={(evt) => {
-					evt.preventDefault();
-					control.open();
-				}}
+			<Dialog.Trigger
+				aria-label={l`Automated account`}
+				className={css.button}
+				handle={control}
+				onClick={(e) => e.stopPropagation()}
 			>
-				{({ hovered }) => (
-					<View
-						style={[
-							a.justify_end,
-							a.align_end,
-							a.transition_transform,
-							{
-								width: width,
-								height: width,
-								transform: [{ scale: hovered ? 1.1 : 1 }],
-							},
-						]}
-					>
-						<RobotIcon width={width} fill={t.atoms.text_contrast_medium.color} />
-					</View>
-				)}
-			</Button>
-			<BotAccountAlert control={control} profile={profile} />
+				<RobotIcon width={width} fill="currentColor" />
+			</Dialog.Trigger>
+			<BotAccountAlert handle={control} profile={profile} />
 		</>
 	);
 }

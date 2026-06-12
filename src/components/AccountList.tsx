@@ -159,7 +159,11 @@ function AccountItem({
 							<Text emoji style={[a.font_medium, a.leading_tight, a.text_md]} numberOfLines={1}>
 								{sanitizeDisplayName(profile?.displayName || profile?.handle || account.handle)}
 							</Text>
-							{profile && <ProfileBadges profile={profile} size="sm" style={[{ marginTop: -2 }]} />}
+							{profile && (
+								<View style={[{ marginTop: -2 }]}>
+									<ProfileBadges profile={profile} size="sm" />
+								</View>
+							)}
 						</View>
 						<Text style={[a.leading_tight, t.atoms.text_contrast_medium, a.text_sm]}>
 							{sanitizeHandle(account.handle, '@')}

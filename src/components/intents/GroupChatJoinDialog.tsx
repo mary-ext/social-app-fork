@@ -324,7 +324,9 @@ function GroupChatJoinDialogContent({
 									)}
 								</InlineLinkText>
 							</Text>
-							<ProfileBadges profile={data.joinLinkPreviews[0]!.owner} size="sm" style={{ marginTop: -3 }} />
+							<View style={{ marginTop: -3 }}>
+								<ProfileBadges profile={data.joinLinkPreviews[0]!.owner} size="sm" />
+							</View>
 						</View>
 						<Text style={[a.text_center, a.text_xs, a.leading_snug, t.atoms.text_contrast_high]}>
 							{sanitizeHandle(joinLinkPreview.owner.handle, '@')}

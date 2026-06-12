@@ -511,7 +511,9 @@ function BaseChatItem({
 										</View>
 
 										{showProfileBadges && primaryProfile && (
-											<ProfileBadges profile={primaryProfile} size="sm" style={[a.pl_xs, a.self_center]} />
+											<View style={[a.pl_xs, a.self_center]}>
+												<ProfileBadges profile={primaryProfile} size="sm" />
+											</View>
 										)}
 
 										{lastMessageSentAt && (

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -6,12 +6,16 @@ import {
 	moderateProfile,
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
+import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
+import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
 import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
+import { useLink } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as css from '#/components/web/ProfileCard.css';
 import { Text } from '#/components/web/Text';
@@ -19,9 +23,49 @@ import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 
+/** Vertical card container: stacks the header, labels, and description. */
+export function Outer({ children }: { children: ReactNode }) {
+	return <div className={css.outer}>{children}</div>;
+}
+
 /** Horizontal row laying out an avatar, name/handle, and trailing action. */
 export function Header({ children }: { children: ReactNode }) {
 	return <div className={css.header}>{children}</div>;
+}
+
+/** Block link to a profile wrapping a card row; `className` supplies the row layout. */
+export function Link({
+	children,
+	className,
+	onPress,
+	profile,
+}: {
+	children: ReactNode;
+	className?: string;
+	onPress?: () => void;
+	profile: AnyProfileView;
+}) {
+	const { t: l } = useLingui();
+	const { href, onPress: navigate } = useLink({
+		displayText: profile.displayName || sanitizeHandle(profile.handle),
+		onPress: () => {
+			onPress?.();
+		},
+		to: makeProfileLink({ did: profile.did }),
+	});
+	return (
+		<a
+			aria-label={l`View ${profile.displayName || sanitizeHandle(profile.handle)}’s profile`}
+			className={clsx(css.link, className)}
+			href={href}
+			onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+				e.stopPropagation();
+				navigate(e as never);
+			}}
+		>
+			{children}
+		</a>
+	);
 }
 
 /** A profile avatar; previewable on hover unless `disabledPreview` is set. */
@@ -143,5 +187,20 @@ export function Handle({ profile }: { profile: AnyProfileView }) {
 		<Text color="textContrastMedium" numberOfLines={1}>
 			{handle}
 		</Text>
+	);
+}
+
+/** Skeleton circle standing in for an avatar while a profile loads. */
+export function AvatarPlaceholder({ size = 40 }: { size?: number }) {
+	return <div className={css.avatarPlaceholder} style={{ height: size, width: size }} />;
+}
+
+/** Skeleton name + handle bars standing in for the name column while a profile loads. */
+export function NameAndHandlePlaceholder() {
+	return (
+		<div className={css.nameAndHandlePlaceholder}>
+			<div className={css.namePlaceholderBar} />
+			<div className={css.handlePlaceholderBar} />
+		</div>
 	);
 }

@@ -78,7 +78,7 @@ export function Card({ size }: { size: 'large' | 'small' }) {
 							</SimpleInlineLinkText>
 						</Trans>
 					</Text>
-					<ProfileBadges profile={preview.owner} size="sm" allowFontScaling={!hasFixedHeight} />
+					<ProfileBadges profile={preview.owner} size="sm" />
 					<Text
 						style={[a.flex_shrink, t.atoms.text_contrast_medium]}
 						numberOfLines={1}

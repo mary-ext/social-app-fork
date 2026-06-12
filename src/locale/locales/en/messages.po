@@ -58,7 +58,7 @@ msgid "{0, plural, one {# like} other {# likes}}"
 msgstr ""
 
 #. placeholder {0}: convo.members.length
-#: src/components/dialogs/SearchablePeopleList.tsx:473
+#: src/components/dialogs/SearchablePeopleList.tsx:475
 msgid "{0, plural, one {# member} other {# members}}"
 msgstr "{0, plural, one {# member} other {# members}}"
 
@@ -370,159 +370,159 @@ msgstr ""
 msgid "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 msgstr "{failed, plural, one {An image couldn't be added to your post.} other {# images couldn't be added to your post.}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
+#: src/view/com/notifications/NotificationFeedItem.tsx:326
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:366
+#: src/view/com/notifications/NotificationFeedItem.tsx:354
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:285
+#: src/view/com/notifications/NotificationFeedItem.tsx:273
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:461
+#: src/view/com/notifications/NotificationFeedItem.tsx:449
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:438
+#: src/view/com/notifications/NotificationFeedItem.tsx:426
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:307
+#: src/view/com/notifications/NotificationFeedItem.tsx:295
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:483
+#: src/view/com/notifications/NotificationFeedItem.tsx:471
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:388
+#: src/view/com/notifications/NotificationFeedItem.tsx:376
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:415
+#: src/view/com/notifications/NotificationFeedItem.tsx:403
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:350
+#: src/view/com/notifications/NotificationFeedItem.tsx:338
 msgid "{firstAuthorLink} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:329
+#: src/view/com/notifications/NotificationFeedItem.tsx:317
 msgid "{firstAuthorLink} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:378
+#: src/view/com/notifications/NotificationFeedItem.tsx:366
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:297
+#: src/view/com/notifications/NotificationFeedItem.tsx:285
 msgid "{firstAuthorLink} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:473
+#: src/view/com/notifications/NotificationFeedItem.tsx:461
 msgid "{firstAuthorLink} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:450
+#: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorLink} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:319
+#: src/view/com/notifications/NotificationFeedItem.tsx:307
 msgid "{firstAuthorLink} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:495
+#: src/view/com/notifications/NotificationFeedItem.tsx:483
 msgid "{firstAuthorLink} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:400
+#: src/view/com/notifications/NotificationFeedItem.tsx:388
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:427
+#: src/view/com/notifications/NotificationFeedItem.tsx:415
 msgid "{firstAuthorLink} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:332
+#: src/view/com/notifications/NotificationFeedItem.tsx:320
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:360
+#: src/view/com/notifications/NotificationFeedItem.tsx:348
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:279
+#: src/view/com/notifications/NotificationFeedItem.tsx:267
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:455
+#: src/view/com/notifications/NotificationFeedItem.tsx:443
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:432
+#: src/view/com/notifications/NotificationFeedItem.tsx:420
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:301
+#: src/view/com/notifications/NotificationFeedItem.tsx:289
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:477
+#: src/view/com/notifications/NotificationFeedItem.tsx:465
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:382
+#: src/view/com/notifications/NotificationFeedItem.tsx:370
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:409
+#: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:336
+#: src/view/com/notifications/NotificationFeedItem.tsx:324
 msgid "{firstAuthorName} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:328
+#: src/view/com/notifications/NotificationFeedItem.tsx:316
 msgid "{firstAuthorName} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:364
+#: src/view/com/notifications/NotificationFeedItem.tsx:352
 msgid "{firstAuthorName} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:283
+#: src/view/com/notifications/NotificationFeedItem.tsx:271
 msgid "{firstAuthorName} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:459
+#: src/view/com/notifications/NotificationFeedItem.tsx:447
 msgid "{firstAuthorName} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:436
+#: src/view/com/notifications/NotificationFeedItem.tsx:424
 msgid "{firstAuthorName} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:305
+#: src/view/com/notifications/NotificationFeedItem.tsx:293
 msgid "{firstAuthorName} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:481
+#: src/view/com/notifications/NotificationFeedItem.tsx:469
 msgid "{firstAuthorName} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:386
+#: src/view/com/notifications/NotificationFeedItem.tsx:374
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:413
+#: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:523
+#: src/components/ProfileHoverCard/index.tsx:516
 #: src/components/web/ProfileHoverCard.tsx:265
 msgid "{following} following"
 msgstr ""
@@ -643,16 +643,16 @@ msgstr "{requestCount}+ requests"
 msgid "{type}h ago"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:56
+#: src/components/verification/VerifierDialog.tsx:32
 msgid "{userName} is a trusted verifier"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:63
+#: src/components/verification/VerificationsDialog.tsx:41
 msgid "{userName} is verified"
 msgstr ""
 
 #. Possessive, meaning "the verifications of {userName}"
-#: src/components/verification/VerificationsDialog.tsx:64
+#: src/components/verification/VerificationsDialog.tsx:42
 msgid "{userName}'s verifications"
 msgstr ""
 
@@ -692,28 +692,28 @@ msgstr ""
 #. Like count display, the <0> tags enclose the number of likes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.likeCount)
 #. placeholder {1}: post.likeCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:401
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:398
 msgid "<0>{0}</0> {1, plural, one {like} other {likes}}"
 msgstr ""
 
 #. Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.quoteCount)
 #. placeholder {1}: post.quoteCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:384
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:381
 msgid "<0>{0}</0> {1, plural, one {quote} other {quotes}}"
 msgstr ""
 
 #. Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.repostCount)
 #. placeholder {1}: post.repostCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:367
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:364
 msgid "<0>{0}</0> {1, plural, one {repost} other {reposts}}"
 msgstr ""
 
 #. Save count display, the <0> tags enclose the number of saves in bold (will never be 0)
 #. placeholder {0}: formatPostStatCount(post.bookmarkCount)
 #. placeholder {1}: post.bookmarkCount
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:411
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:408
 msgid "<0>{0}</0> {1, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -737,8 +737,8 @@ msgstr ""
 
 #. Text identifying the person who added you to a group chat
 #: src/screens/Messages/components/ChatStatusInfo.tsx:135
-msgid "<0>{displayName}</0><1/><2> added you</2>"
-msgstr "<0>{displayName}</0><1/><2> added you</2>"
+msgid "<0>{displayName}</0><1><2/></1><3> added you</3>"
+msgstr "<0>{displayName}</0><1><2/></1><3> added you</3>"
 
 #: src/screens/Hashtag.tsx:204
 #: src/screens/Search/SearchResults.tsx:288
@@ -895,7 +895,7 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:446
+#: src/screens/Settings/Settings.tsx:439
 msgid "Account options"
 msgstr ""
 
@@ -903,7 +903,7 @@ msgstr ""
 msgid "Account provider"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:479
+#: src/screens/Settings/Settings.tsx:472
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -926,7 +926,7 @@ msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:80
+#: src/components/verification/VerifierDialog.tsx:51
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr ""
 
@@ -989,8 +989,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:388
-#: src/screens/Settings/Settings.tsx:391
+#: src/screens/Settings/Settings.tsx:381
+#: src/screens/Settings/Settings.tsx:384
 #: src/view/shell/desktop/LeftNav.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:262
 msgid "Add another account"
@@ -1309,7 +1309,7 @@ msgstr ""
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:73
+#: src/components/verification/VerifierDialog.tsx:40
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
@@ -1335,10 +1335,10 @@ msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
-#: src/components/ProfileCard.tsx:457
-#: src/components/ProfileCard.tsx:479
-#: src/view/com/notifications/NotificationFeedItem.tsx:694
-#: src/view/com/notifications/NotificationFeedItem.tsx:710
+#: src/components/ProfileCard.tsx:461
+#: src/components/ProfileCard.tsx:483
+#: src/view/com/notifications/NotificationFeedItem.tsx:682
+#: src/view/com/notifications/NotificationFeedItem.tsx:698
 msgid "An issue occurred, please try again."
 msgstr ""
 
@@ -1445,12 +1445,12 @@ msgid "Apply default recommended feeds"
 msgstr ""
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:496
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:493
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:484
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:505
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:481
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:502
 msgid "Archived post"
 msgstr ""
 
@@ -1508,8 +1508,8 @@ msgstr ""
 msgid "Assign topic for algo"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:34
-#: src/components/BotBadge.tsx:50
+#: src/components/BotAccountAlert.tsx:31
+#: src/components/BotBadge.tsx:44
 msgid "Automated account"
 msgstr "Automated account"
 
@@ -1685,7 +1685,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:515
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:512
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1995,11 +1995,11 @@ msgstr ""
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:366
+#: src/screens/Settings/Settings.tsx:359
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:368
+#: src/screens/Settings/Settings.tsx:361
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -2052,8 +2052,8 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
 #: src/components/suggested-follows-dialog.tsx:356
-#: src/components/verification/VerificationsDialog.tsx:123
-#: src/components/verification/VerifierDialog.tsx:117
+#: src/components/verification/VerificationsDialog.tsx:86
+#: src/components/verification/VerifierDialog.tsx:77
 #: src/components/web/ExternalEmbed/GifEmbed.tsx:144
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
 #: src/features/liveNow/components/EditLiveDialog.tsx:186
@@ -2075,8 +2075,8 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:202
 #: src/components/dialogs/LanguageSelectDialog.tsx:260
 #: src/components/dialogs/LanguageSelectDialog.tsx:283
-#: src/components/verification/VerificationsDialog.tsx:114
-#: src/components/verification/VerifierDialog.tsx:109
+#: src/components/verification/VerificationsDialog.tsx:84
+#: src/components/verification/VerifierDialog.tsx:75
 #: src/components/web/Dialog/Popup.tsx:80
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:35
 msgid "Close dialog"
@@ -2105,11 +2105,11 @@ msgstr "Close this dialog"
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:557
+#: src/view/com/notifications/NotificationFeedItem.tsx:545
 msgid "Collapse list of users"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:839
+#: src/view/com/notifications/NotificationFeedItem.tsx:827
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
@@ -2514,7 +2514,7 @@ msgstr ""
 msgid "Dark theme"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:345
+#: src/screens/Settings/Settings.tsx:338
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2544,7 +2544,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:353
+#: src/screens/Settings/Settings.tsx:346
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -3140,7 +3140,7 @@ msgstr ""
 msgid "Expand alt text"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:557
+#: src/view/com/notifications/NotificationFeedItem.tsx:545
 msgid "Expand list of users"
 msgstr ""
 
@@ -3415,7 +3415,7 @@ msgstr ""
 msgid "Failed to remove group chat member"
 msgstr "Failed to remove group chat member"
 
-#: src/components/verification/VerificationRemovePrompt.tsx:34
+#: src/components/verification/VerificationRemovePrompt.tsx:31
 msgid "Failed to remove verification"
 msgstr ""
 
@@ -3601,7 +3601,7 @@ msgid "Focus the search field"
 msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:495
+#: src/components/ProfileCard.tsx:499
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
 #: src/components/web/ProfileHoverCard.tsx:216
@@ -3609,8 +3609,8 @@ msgstr "Focus the search field"
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:364
-#: src/view/com/notifications/NotificationFeedItem.tsx:753
-#: src/view/com/notifications/NotificationFeedItem.tsx:760
+#: src/view/com/notifications/NotificationFeedItem.tsx:741
+#: src/view/com/notifications/NotificationFeedItem.tsx:748
 msgid "Follow"
 msgstr ""
 
@@ -3635,11 +3635,11 @@ msgid "Follow all"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:491
+#: src/components/ProfileCard.tsx:495
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:362
-#: src/view/com/notifications/NotificationFeedItem.tsx:753
-#: src/view/com/notifications/NotificationFeedItem.tsx:760
+#: src/view/com/notifications/NotificationFeedItem.tsx:741
+#: src/view/com/notifications/NotificationFeedItem.tsx:748
 msgid "Follow back"
 msgstr ""
 
@@ -3688,7 +3688,7 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:486
+#: src/components/ProfileCard.tsx:490
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
 #: src/components/web/ProfileHoverCard.tsx:216
@@ -3696,8 +3696,8 @@ msgstr ""
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:360
-#: src/view/com/notifications/NotificationFeedItem.tsx:731
-#: src/view/com/notifications/NotificationFeedItem.tsx:748
+#: src/view/com/notifications/NotificationFeedItem.tsx:719
+#: src/view/com/notifications/NotificationFeedItem.tsx:736
 msgid "Following"
 msgstr ""
 
@@ -3710,9 +3710,9 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:447
+#: src/components/ProfileCard.tsx:451
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
-#: src/view/com/notifications/NotificationFeedItem.tsx:691
+#: src/view/com/notifications/NotificationFeedItem.tsx:679
 msgid "Following {0}"
 msgstr ""
 
@@ -4037,7 +4037,7 @@ msgstr "Group chat unmuted"
 msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr "Group chats can only have a maximum of {0, plural, other {# people}}."
 
-#: src/components/dialogs/SearchablePeopleList.tsx:477
+#: src/components/dialogs/SearchablePeopleList.tsx:479
 msgid "Group is locked"
 msgstr "Group is locked"
 
@@ -4117,7 +4117,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:843
+#: src/view/com/notifications/NotificationFeedItem.tsx:831
 msgctxt "action"
 msgid "Hide"
 msgstr ""
@@ -4167,7 +4167,7 @@ msgstr ""
 msgid "Hide trending videos?"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:838
+#: src/view/com/notifications/NotificationFeedItem.tsx:826
 msgid "Hide user list"
 msgstr ""
 
@@ -4429,7 +4429,7 @@ msgid "Join"
 msgstr "Join"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:60
-#: src/components/intents/GroupChatJoinDialog.tsx:361
+#: src/components/intents/GroupChatJoinDialog.tsx:363
 msgid "Join group chat"
 msgstr "Join group chat"
 
@@ -4506,8 +4506,8 @@ msgstr ""
 msgid "Latest"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:139
-#: src/components/verification/VerifierDialog.tsx:105
+#: src/components/verification/VerificationsDialog.tsx:99
+#: src/components/verification/VerifierDialog.tsx:72
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 msgctxt "english-only-resource"
@@ -4531,12 +4531,12 @@ msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
 #: src/components/moderation/ScreenHider.tsx:105
-#: src/components/web/moderation/PostHider.tsx:81
+#: src/components/web/moderation/PostHider.tsx:80
 msgid "Learn more about this warning"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:128
-#: src/components/verification/VerifierDialog.tsx:95
+#: src/components/verification/VerificationsDialog.tsx:91
+#: src/components/verification/VerifierDialog.tsx:64
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
@@ -4664,7 +4664,7 @@ msgstr ""
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:396
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:393
 msgid "Likes on this post"
 msgstr ""
 
@@ -5329,11 +5329,11 @@ msgctxt "action"
 msgid "New"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:521
+#: src/view/com/notifications/NotificationFeedItem.tsx:509
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:505
+#: src/view/com/notifications/NotificationFeedItem.tsx:493
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
@@ -5405,11 +5405,11 @@ msgctxt "action"
 msgid "New post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:510
+#: src/view/com/notifications/NotificationFeedItem.tsx:498
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
 msgstr "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:501
+#: src/view/com/notifications/NotificationFeedItem.tsx:489
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
@@ -5492,9 +5492,9 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:470
+#: src/components/ProfileCard.tsx:474
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:260
-#: src/view/com/notifications/NotificationFeedItem.tsx:707
+#: src/view/com/notifications/NotificationFeedItem.tsx:695
 msgid "No longer following {0}"
 msgstr ""
 
@@ -5702,11 +5702,11 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:53
-#: src/components/BotAccountAlert.tsx:55
+#: src/components/BotAccountAlert.tsx:40
+#: src/components/BotAccountAlert.tsx:42
 #: src/components/dms/InitiateChatFlow.tsx:623
 #: src/components/dms/MessageItem.tsx:535
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:519
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:516
 msgid "Okay"
 msgstr ""
 
@@ -5808,7 +5808,7 @@ msgid "Oops!"
 msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:88
-#: src/components/intents/GroupChatJoinDialog.tsx:353
+#: src/components/intents/GroupChatJoinDialog.tsx:355
 msgid "Open chat"
 msgstr "Open chat"
 
@@ -5842,12 +5842,12 @@ msgstr ""
 msgid "Open Germ DM"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:345
+#: src/components/intents/GroupChatJoinDialog.tsx:347
 msgid "Open group chat"
 msgstr "Open group chat"
 
-#: src/components/dms/MessagesListHeader.tsx:179
-#: src/components/dms/MessagesListHeader.tsx:213
+#: src/components/dms/MessagesListHeader.tsx:181
+#: src/components/dms/MessagesListHeader.tsx:215
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -5857,7 +5857,7 @@ msgstr "Open group chat settings"
 msgid "Open link to {niceUrl}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:342
+#: src/screens/Settings/Settings.tsx:335
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5880,8 +5880,8 @@ msgstr ""
 msgid "Open profile"
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:60
-#: src/components/BotAccountAlert.tsx:70
+#: src/components/BotAccountAlert.tsx:48
+#: src/components/BotAccountAlert.tsx:56
 msgid "Open settings"
 msgstr "Open settings"
 
@@ -5893,16 +5893,16 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:335
-#: src/screens/Settings/Settings.tsx:350
+#: src/screens/Settings/Settings.tsx:328
+#: src/screens/Settings/Settings.tsx:343
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:330
+#: src/screens/Settings/Settings.tsx:323
 msgid "Open system log"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:346
+#: src/components/intents/GroupChatJoinDialog.tsx:348
 msgid "Open this group chat"
 msgstr "Open this group chat"
 
@@ -5959,7 +5959,7 @@ msgid "Opens this draft in the composer"
 msgstr ""
 
 #: src/components/dms/MessageItem.tsx:198
-#: src/view/com/notifications/NotificationFeedItem.tsx:914
+#: src/view/com/notifications/NotificationFeedItem.tsx:902
 msgid "Opens this profile"
 msgstr ""
 
@@ -6519,7 +6519,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:379
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:376
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6612,7 +6612,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
 #: src/screens/Bookmarks/index.tsx:233
 #: src/screens/Moderation/index.tsx:338
-#: src/screens/Settings/Settings.tsx:481
+#: src/screens/Settings/Settings.tsx:474
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
 msgstr ""
@@ -6633,8 +6633,8 @@ msgstr "Remove {displayName} from this group chat"
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:463
-#: src/screens/Settings/Settings.tsx:465
+#: src/screens/Settings/Settings.tsx:456
+#: src/screens/Settings/Settings.tsx:458
 msgid "Remove account"
 msgstr ""
 
@@ -6682,7 +6682,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:475
+#: src/screens/Settings/Settings.tsx:468
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6713,7 +6713,7 @@ msgstr ""
 msgid "Remove mute word from your list"
 msgstr ""
 
-#: src/screens/Search/components/SearchHistory.tsx:167
+#: src/screens/Search/components/SearchHistory.tsx:169
 msgid "Remove profile"
 msgstr ""
 
@@ -6730,8 +6730,8 @@ msgstr ""
 msgid "Remove user from list"
 msgstr ""
 
-#: src/components/verification/VerificationRemovePrompt.tsx:48
-#: src/components/verification/VerificationsDialog.tsx:207
+#: src/components/verification/VerificationRemovePrompt.tsx:43
+#: src/components/verification/VerificationsDialog.tsx:163
 #: src/view/com/profile/ProfileMenu.tsx:327
 #: src/view/com/profile/ProfileMenu.tsx:331
 msgid "Remove verification"
@@ -6777,7 +6777,7 @@ msgstr ""
 msgid "Removed unavailable services"
 msgstr ""
 
-#: src/components/verification/VerificationRemovePrompt.tsx:32
+#: src/components/verification/VerificationRemovePrompt.tsx:29
 msgid "Removed verification"
 msgstr ""
 
@@ -6999,7 +6999,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:362
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:359
 msgid "Reposts of this post"
 msgstr ""
 
@@ -7008,7 +7008,7 @@ msgstr ""
 msgid "Reposts of your reposts"
 msgstr ""
 
-#: src/components/intents/GroupChatJoinDialog.tsx:361
+#: src/components/intents/GroupChatJoinDialog.tsx:363
 msgid "Request access to group chat"
 msgstr "Request access to group chat"
 
@@ -7052,8 +7052,8 @@ msgstr ""
 msgid "Rescind request"
 msgstr "Rescind request"
 
-#: src/screens/Settings/Settings.tsx:359
-#: src/screens/Settings/Settings.tsx:362
+#: src/screens/Settings/Settings.tsx:352
+#: src/screens/Settings/Settings.tsx:355
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -7190,8 +7190,8 @@ msgid "Saving"
 msgstr "Saving"
 
 #: src/components/web/NewskieDialog.tsx:106
-#: src/view/com/notifications/NotificationFeedItem.tsx:802
-#: src/view/com/notifications/NotificationFeedItem.tsx:811
+#: src/view/com/notifications/NotificationFeedItem.tsx:790
+#: src/view/com/notifications/NotificationFeedItem.tsx:799
 msgid "Say hello!"
 msgstr ""
 
@@ -7220,7 +7220,7 @@ msgstr ""
 msgid "Scroll to top"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:542
+#: src/components/dialogs/SearchablePeopleList.tsx:544
 #: src/components/forms/SearchInput.tsx:44
 #: src/components/forms/SearchInput.tsx:46
 #: src/Navigation.tsx:618
@@ -7306,7 +7306,7 @@ msgstr ""
 msgid "Search posts"
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:562
+#: src/components/dialogs/SearchablePeopleList.tsx:564
 #: src/components/dms/components/UserSearchInput.tsx:60
 #: src/components/suggested-follows-dialog.tsx:565
 msgid "Search profiles"
@@ -7316,7 +7316,7 @@ msgstr ""
 msgid "Search..."
 msgstr ""
 
-#: src/components/dialogs/SearchablePeopleList.tsx:563
+#: src/components/dialogs/SearchablePeopleList.tsx:565
 #: src/components/dms/components/UserSearchInput.tsx:61
 #: src/components/suggested-follows-dialog.tsx:566
 msgid "Searches for profiles"
@@ -7639,7 +7639,7 @@ msgstr ""
 
 #: src/components/moderation/LabelPreference.tsx:127
 #: src/components/web/moderation/ContentHider.tsx:147
-#: src/components/web/moderation/PostHider.tsx:103
+#: src/components/web/moderation/PostHider.tsx:102
 msgid "Show"
 msgstr ""
 
@@ -7670,8 +7670,8 @@ msgstr ""
 msgid "Show badge and filter from feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:319
-#: src/screens/Settings/Settings.tsx:325
+#: src/screens/Settings/Settings.tsx:312
+#: src/screens/Settings/Settings.tsx:318
 msgid "Show feed context debug"
 msgstr "Show feed context debug"
 
@@ -7738,7 +7738,7 @@ msgstr ""
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
-#: src/components/web/moderation/PostHider.tsx:97
+#: src/components/web/moderation/PostHider.tsx:96
 msgid "Show the content"
 msgstr "Show the content"
 
@@ -7750,7 +7750,7 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:485
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:482
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7856,7 +7856,7 @@ msgstr ""
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:100
+#: src/components/verification/VerificationsDialog.tsx:78
 msgid "Some of your verifications are invalid."
 msgstr ""
 
@@ -8038,12 +8038,12 @@ msgstr ""
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:308
+#: src/screens/Settings/Settings.tsx:301
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
 #: src/Navigation.tsx:658
-#: src/screens/Settings/Settings.tsx:337
+#: src/screens/Settings/Settings.tsx:330
 msgid "Storybook"
 msgstr ""
 
@@ -8136,7 +8136,7 @@ msgstr "Suspended accounts cannot participate in chat."
 #: src/components/dialogs/SwitchAccount.tsx:48
 #: src/screens/Settings/Settings.tsx:98
 #: src/screens/Settings/Settings.tsx:109
-#: src/screens/Settings/Settings.tsx:423
+#: src/screens/Settings/Settings.tsx:416
 #: src/view/shell/desktop/LeftNav.tsx:249
 msgid "Switch account"
 msgstr ""
@@ -8158,7 +8158,7 @@ msgstr ""
 #: src/screens/Log.tsx:45
 #: src/screens/Settings/AboutSettings.tsx:36
 #: src/screens/Settings/AboutSettings.tsx:39
-#: src/screens/Settings/Settings.tsx:332
+#: src/screens/Settings/Settings.tsx:325
 msgid "System log"
 msgstr ""
 
@@ -8179,7 +8179,7 @@ msgid "Tap to copy this invite link"
 msgstr "Tap to copy this invite link"
 
 #: src/components/dms/ChatInvite/Root.tsx:129
-#: src/components/intents/GroupChatJoinDialog.tsx:365
+#: src/components/intents/GroupChatJoinDialog.tsx:367
 msgid "Tap to join this group chat immediately"
 msgstr "Tap to join this group chat immediately"
 
@@ -8197,7 +8197,7 @@ msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
 #: src/components/dms/ChatInvite/Root.tsx:128
-#: src/components/intents/GroupChatJoinDialog.tsx:364
+#: src/components/intents/GroupChatJoinDialog.tsx:366
 msgid "Tap to request access to join this group chat"
 msgstr "Tap to request access to join this group chat"
 
@@ -8465,15 +8465,15 @@ msgstr "They won't know they've been muted"
 msgid "This {screenDescription} has been flagged:"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:78
+#: src/components/verification/VerificationsDialog.tsx:56
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:30
+#: src/components/BotAccountAlert.tsx:27
 msgid "This account has been marked as automated by its owner."
 msgstr "This account has been marked as automated by its owner."
 
-#: src/components/verification/VerificationsDialog.tsx:80
+#: src/components/verification/VerificationsDialog.tsx:58
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr ""
 
@@ -8664,7 +8664,7 @@ msgstr "This person is blocking you"
 
 #. placeholder {0}: niceDate(i18n, createdAt)
 #. placeholder {1}: niceDate(i18n, indexedAt)
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:508
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:505
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -8761,7 +8761,7 @@ msgid "This will delete \"{0}\" from your muted words. You can always add it bac
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/Settings.tsx:476
+#: src/screens/Settings/Settings.tsx:469
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -8992,7 +8992,7 @@ msgstr "Uninvite"
 msgid "Uninvite {displayName} from this group chat"
 msgstr "Uninvite {displayName} from this group chat"
 
-#: src/components/verification/VerificationsDialog.tsx:178
+#: src/components/verification/VerificationsDialog.tsx:134
 msgid "Unknown verifier"
 msgstr ""
 
@@ -9274,7 +9274,7 @@ msgstr ""
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:89
+#: src/components/verification/VerificationsDialog.tsx:67
 msgid "Verified by:"
 msgstr ""
 
@@ -9350,12 +9350,13 @@ msgstr ""
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:394
 #: src/screens/Search/components/SearchProfileCard.tsx:39
-#: src/view/com/notifications/NotificationFeedItem.tsx:563
+#: src/view/com/notifications/NotificationFeedItem.tsx:551
 msgid "View {0}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
 #: src/components/ProfileCard.tsx:134
+#: src/components/web/ProfileCard.tsx:58
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
@@ -9428,8 +9429,8 @@ msgstr ""
 #: src/components/web/ProfileHoverCard.tsx:192
 #: src/components/web/ProfileHoverCard.tsx:211
 #: src/components/web/ProfileHoverCard.tsx:227
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:278
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:300
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:297
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
 #: src/view/com/util/PostMeta.tsx:124
 #: src/view/com/util/PostMeta.tsx:146
@@ -9460,7 +9461,7 @@ msgstr "View the invite link for this group chat"
 msgid "View the labeling service provided by @{0}"
 msgstr ""
 
-#: src/components/verification/VerificationCheckButton.tsx:83
+#: src/components/verification/VerificationCheckButton.tsx:88
 msgid "View this user's verifications"
 msgstr ""
 
@@ -9493,7 +9494,7 @@ msgstr ""
 msgid "View your muted accounts"
 msgstr ""
 
-#: src/components/verification/VerificationCheckButton.tsx:83
+#: src/components/verification/VerificationCheckButton.tsx:88
 msgid "View your verifications"
 msgstr ""
 
@@ -9765,7 +9766,7 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:56
+#: src/components/verification/VerifierDialog.tsx:32
 msgid "You are a trusted verifier"
 msgstr ""
 
@@ -9807,7 +9808,7 @@ msgstr ""
 msgid "You are now live!"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:60
+#: src/components/verification/VerificationsDialog.tsx:38
 msgid "You are verified"
 msgstr ""
 
@@ -9914,7 +9915,7 @@ msgstr ""
 msgid "You have hidden this post."
 msgstr ""
 
-#: src/components/BotAccountAlert.tsx:29
+#: src/components/BotAccountAlert.tsx:26
 msgid "You have marked this account as automated. You can remove it at any time from your account settings."
 msgstr "You have marked this account as automated. You can remove it at any time from your account settings."
 
@@ -10114,11 +10115,11 @@ msgstr ""
 msgid "Your chats have been disabled"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:356
+#: src/view/com/notifications/NotificationFeedItem.tsx:344
 msgid "Your contact {firstAuthorLink} is on Bluesky"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:355
+#: src/view/com/notifications/NotificationFeedItem.tsx:343
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 
@@ -10179,6 +10180,6 @@ msgstr "Your session expired. Please sign in again."
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 
-#: src/components/verification/VerificationsDialog.tsx:61
+#: src/components/verification/VerificationsDialog.tsx:39
 msgid "Your verifications"
 msgstr ""
