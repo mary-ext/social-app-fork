@@ -1,5 +1,4 @@
-import { memo, type ReactElement, type ReactNode, useCallback, useRef } from 'react';
-import type { GestureResponderEvent } from 'react-native';
+import { memo, type ReactElement, useCallback, useRef } from 'react';
 import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -33,11 +32,10 @@ import { useRichText } from '#/components/hooks/useRichText';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/KnownFollowers';
-import { useLink } from '#/components/Link';
 import * as Pills from '#/components/Pills';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
-import { InlineLinkText, LinkButton } from '#/components/web/Link';
+import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
 import * as css from '#/components/web/ProfileHoverCard.css';
 import { RichText } from '#/components/web/RichText';
 import { Spinner } from '#/components/web/Spinner';
@@ -90,31 +88,6 @@ export function ProfileHoverCard({ children, did }: ProfileHoverCardProps) {
 				</PreviewCard.Positioner>
 			</PreviewCard.Portal>
 		</PreviewCard.Root>
-	);
-}
-
-/** An anchor that navigates to a profile. */
-function CardLink({
-	children,
-	className,
-	label,
-	to,
-}: {
-	children: ReactNode;
-	className?: string;
-	label: string;
-	to: string;
-}) {
-	const { href, onPress: handlePress } = useLink({ displayText: '', to });
-	return (
-		<a
-			aria-label={label}
-			className={className}
-			href={href}
-			onClick={(e) => handlePress(e as unknown as GestureResponderEvent)}
-		>
-			{children}
-		</a>
 	);
 }
 
@@ -189,14 +162,14 @@ function Inner({
 	return (
 		<div>
 			<div className={css.headerRow}>
-				<CardLink className={css.avatarLink} label={l`View profile`} to={profileURL}>
+				<Link className={css.avatarLink} label={l`View profile`} to={profileURL}>
 					<UserAvatar
 						avatar={profile.avatar}
 						moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 						size={64}
 						type={isLabeler ? 'labeler' : 'user'}
 					/>
-				</CardLink>
+				</Link>
 
 				{!isMe &&
 					!isLabeler &&
@@ -224,7 +197,7 @@ function Inner({
 					))}
 			</div>
 
-			<CardLink className={css.nameLink} label={l`View profile`} to={profileURL}>
+			<Link className={css.nameLink} label={l`View profile`} to={profileURL}>
 				<div className={css.nameRow}>
 					<Text leading="snug" numberOfLines={1} size="lg" weight="semiBold">
 						{sanitizeDisplayName(
@@ -237,7 +210,7 @@ function Inner({
 					</div>
 				</div>
 				<ProfileHeaderHandle disableTaps profile={profileShadow} />
-			</CardLink>
+			</Link>
 
 			{isBlockedUser ? (
 				<div className={css.pills}>

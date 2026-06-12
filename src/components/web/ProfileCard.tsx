@@ -1,4 +1,4 @@
-import type { MouseEvent, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -15,8 +15,8 @@ import { NON_BREAKING_SPACE } from '#/lib/strings/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import { useLink } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { Link as WebLink } from '#/components/web/Link';
 import * as css from '#/components/web/ProfileCard.css';
 import { Text } from '#/components/web/Text';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
@@ -46,25 +46,19 @@ export function Link({
 	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
-	const { href, onPress: navigate } = useLink({
-		displayText: profile.displayName || sanitizeHandle(profile.handle),
-		onPress: () => {
-			onPress?.();
-		},
-		to: makeProfileLink({ did: profile.did }),
-	});
 	return (
-		<a
-			aria-label={l`View ${profile.displayName || sanitizeHandle(profile.handle)}’s profile`}
+		<WebLink
 			className={clsx(css.link, className)}
-			href={href}
-			onClick={(e: MouseEvent<HTMLAnchorElement>) => {
+			label={l`View ${profile.displayName || sanitizeHandle(profile.handle)}’s profile`}
+			onPress={(e) => {
+				// the card row can be nested in other clickable surfaces; keep the click from bubbling
 				e.stopPropagation();
-				navigate(e as never);
+				onPress?.();
 			}}
+			to={makeProfileLink({ did: profile.did })}
 		>
 			{children}
-		</a>
+		</WebLink>
 	);
 }
 

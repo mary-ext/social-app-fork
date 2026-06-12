@@ -33,6 +33,55 @@ const anchorAttrs = ({ download, isExternal }: { download?: string; isExternal: 
 	target: download ? undefined : isExternal ? '_blank' : undefined,
 });
 
+export type LinkProps = LinkNavProps &
+	// the rest of the anchor attributes pass straight through, so a headless trigger (e.g. a Base UI hover
+	// card) can inject its event handlers, `aria-*`, `data-*`, and ref onto the `<a>`.
+	Omit<ComponentPropsWithoutRef<'a'>, 'download' | 'href' | 'onClick'> & {
+		children: ReactNode;
+		/** Accessible name; becomes the anchor's `aria-label`. */
+		label?: string;
+		/** Forwarded to the `<a>` so the link can back a headless trigger (e.g. a hover card). */
+		ref?: Ref<HTMLAnchorElement>;
+	};
+
+/**
+ * A web-native block link: an `<a>` wrapping arbitrary children (an avatar, a card row, …) with no styling of
+ * its own — pass `className` for layout. Internal `to` targets navigate through `react-navigation`; external
+ * ones open in a new tab. To cancel navigation (e.g. to open a dialog instead), call `e.preventDefault()` and
+ * return `false` from `onPress`.
+ */
+export function Link({
+	action = 'push',
+	children,
+	download,
+	label,
+	onPress: outerOnPress,
+	to,
+	...rest
+}: LinkProps) {
+	const { href, isExternal, onPress } = useLink({
+		action,
+		displayText: '',
+		onPress: outerOnPress,
+		to,
+	});
+	return (
+		<a
+			{...rest}
+			aria-label={label}
+			href={href}
+			onClick={
+				download
+					? undefined
+					: (e: MouseEvent<HTMLAnchorElement>) => onPress(e as unknown as GestureResponderEvent)
+			}
+			{...anchorAttrs({ download, isExternal })}
+		>
+			{children}
+		</a>
+	);
+}
+
 /** Underline timing for an inline link: `hover` (default), `always`, or `none`. */
 export type InlineLinkUnderline = 'always' | 'hover' | 'none';
 

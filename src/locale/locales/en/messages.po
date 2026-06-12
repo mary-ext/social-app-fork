@@ -122,14 +122,14 @@ msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
 #: src/components/ProfileHoverCard/index.tsx:426
-#: src/components/web/ProfileHoverCard.tsx:182
+#: src/components/web/ProfileHoverCard.tsx:155
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/components/ProfileHoverCard/index.tsx:430
-#: src/components/web/ProfileHoverCard.tsx:183
+#: src/components/web/ProfileHoverCard.tsx:156
 #: src/screens/Profile/Header/Metrics.tsx:24
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -523,7 +523,7 @@ msgid "{firstAuthorName} verified you"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.tsx:516
-#: src/components/web/ProfileHoverCard.tsx:265
+#: src/components/web/ProfileHoverCard.tsx:238
 msgid "{following} following"
 msgstr ""
 
@@ -598,8 +598,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/web/UserAvatar.tsx:261
-#: src/components/web/UserAvatar.tsx:272
+#: src/components/web/UserAvatar.tsx:251
+#: src/components/web/UserAvatar.tsx:262
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 
@@ -2716,8 +2716,8 @@ msgstr ""
 msgid "Discard post?"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:239
-#: src/screens/Profile/components/GermButton.tsx:247
+#: src/screens/Profile/components/GermButton.tsx:232
+#: src/screens/Profile/components/GermButton.tsx:240
 msgid "Disconnect Germ DM"
 msgstr ""
 
@@ -3302,7 +3302,7 @@ msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
 #. placeholder {0}: error?.message
-#: src/screens/Profile/components/GermButton.tsx:185
+#: src/screens/Profile/components/GermButton.tsx:178
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
@@ -3395,7 +3395,7 @@ msgstr "Failed to mute group chat"
 msgid "Failed to pin post"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:156
+#: src/screens/Profile/components/GermButton.tsx:149
 msgid "Failed to reconnect Germ DM. Error: {message}"
 msgstr "Failed to reconnect Germ DM. Error: {message}"
 
@@ -3601,8 +3601,8 @@ msgstr "Focus the search field"
 #: src/components/ProfileCard.tsx:499
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
-#: src/components/web/ProfileHoverCard.tsx:216
-#: src/components/web/ProfileHoverCard.tsx:222
+#: src/components/web/ProfileHoverCard.tsx:189
+#: src/components/web/ProfileHoverCard.tsx:195
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/Actions.tsx:39
@@ -3692,8 +3692,8 @@ msgstr ""
 #: src/components/ProfileCard.tsx:490
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
-#: src/components/web/ProfileHoverCard.tsx:216
-#: src/components/web/ProfileHoverCard.tsx:222
+#: src/components/web/ProfileHoverCard.tsx:189
+#: src/components/web/ProfileHoverCard.tsx:195
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/Actions.tsx:35
@@ -3794,21 +3794,21 @@ msgstr "Generate new invite link"
 msgid "Generate new link"
 msgstr "Generate new link"
 
-#: src/screens/Profile/components/GermButton.tsx:90
-#: src/screens/Profile/components/GermButton.tsx:207
+#: src/screens/Profile/components/GermButton.tsx:83
+#: src/screens/Profile/components/GermButton.tsx:200
 msgid "Germ DM"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:173
+#: src/screens/Profile/components/GermButton.tsx:166
 msgid "Germ DM disconnected"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:212
-#: src/screens/Profile/components/GermButton.tsx:216
+#: src/screens/Profile/components/GermButton.tsx:205
+#: src/screens/Profile/components/GermButton.tsx:209
 msgid "Germ DM Link"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:153
+#: src/screens/Profile/components/GermButton.tsx:146
 msgid "Germ DM reconnected"
 msgstr ""
 
@@ -3974,8 +3974,8 @@ msgstr ""
 msgid "Going live is currently disabled for your account"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:229
-#: src/screens/Profile/components/GermButton.tsx:235
+#: src/screens/Profile/components/GermButton.tsx:222
+#: src/screens/Profile/components/GermButton.tsx:228
 msgid "Got it"
 msgstr ""
 
@@ -4548,7 +4548,7 @@ msgstr ""
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:199
+#: src/screens/Profile/components/GermButton.tsx:192
 msgid "Learn more about your Germ DM link"
 msgstr ""
 
@@ -4819,7 +4819,7 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
-#: src/components/web/ProfileHoverCard.tsx:157
+#: src/components/web/ProfileHoverCard.tsx:130
 #: src/view/shell/Composer.tsx:44
 msgid "Loading"
 msgstr "Loading"
@@ -5841,7 +5841,7 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:81
+#: src/screens/Profile/components/GermButton.tsx:71
 msgid "Open Germ DM"
 msgstr ""
 
@@ -8509,7 +8509,7 @@ msgstr ""
 msgid "This author has chosen to make their posts visible only to people who are signed in."
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:221
+#: src/screens/Profile/components/GermButton.tsx:214
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
 msgstr ""
 
@@ -8955,8 +8955,8 @@ msgstr ""
 msgid "Unblock list"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:176
-#: src/screens/Profile/components/GermButton.tsx:177
+#: src/screens/Profile/components/GermButton.tsx:169
+#: src/screens/Profile/components/GermButton.tsx:170
 msgid "Undo"
 msgstr ""
 
@@ -9356,7 +9356,7 @@ msgstr ""
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
 #: src/components/ProfileCard.tsx:134
-#: src/components/web/ProfileCard.tsx:58
+#: src/components/web/ProfileCard.tsx:52
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
@@ -9375,7 +9375,7 @@ msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
 #: src/components/ProfileHoverCard/index.tsx:455
-#: src/components/web/ProfileHoverCard.tsx:206
+#: src/components/web/ProfileHoverCard.tsx:179
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -9426,9 +9426,9 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:441
 #: src/components/ProfileHoverCard/index.tsx:462
 #: src/components/ProfileHoverCard/index.tsx:478
-#: src/components/web/ProfileHoverCard.tsx:192
-#: src/components/web/ProfileHoverCard.tsx:211
-#: src/components/web/ProfileHoverCard.tsx:227
+#: src/components/web/ProfileHoverCard.tsx:165
+#: src/components/web/ProfileHoverCard.tsx:184
+#: src/components/web/ProfileHoverCard.tsx:200
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:297
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152

@@ -1,5 +1,4 @@
 import { type ComponentPropsWithoutRef, memo, type Ref } from 'react';
-import type { GestureResponderEvent } from 'react-native';
 import type { AnyProfileView, AppBskyEmbedExternal } from '@atcute/bluesky';
 import type { DisplayRestrictions } from '@atcute/bluesky-moderation';
 import { Avatar } from '@base-ui/react/avatar';
@@ -15,8 +14,8 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
-import { useLink } from '#/components/Link';
 import * as Dialog from '#/components/web/Dialog';
+import { Link } from '#/components/web/Link';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 import { Text } from '#/components/web/Text';
@@ -227,15 +226,6 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 	const status = useActorStatus(profile);
 	const liveHandle = Dialog.useDialogHandle();
 
-	const { href, onPress } = useLink({
-		displayText: '',
-		onPress: () => {
-			onBeforePress?.();
-			unstableCacheProfileView(queryClient, profile);
-		},
-		to: makeProfileLink({ did: profile.did }),
-	});
-
 	const name = sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle));
 	const circular = props.type !== 'algo' && props.type !== 'list';
 	const radius = circular ? '50%' : props.size > 32 ? '8px' : '3px';
@@ -267,16 +257,19 @@ export const PreviewableUserAvatar = memo(function PreviewableUserAvatar({
 			{avatarEl}
 		</button>
 	) : (
-		<a
-			href={href}
-			aria-label={l`${name}'s avatar`}
+		<Link
 			className={styles.preview}
+			label={l`${name}'s avatar`}
+			onPress={() => {
+				onBeforePress?.();
+				unstableCacheProfileView(queryClient, profile);
+			}}
 			style={assignInlineVars({ [styles.previewRadiusVar]: radius })}
 			tabIndex={tabIndex}
-			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
+			to={makeProfileLink({ did: profile.did })}
 		>
 			{avatarEl}
-		</a>
+		</Link>
 	);
 
 	return (

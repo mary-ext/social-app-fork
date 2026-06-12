@@ -1,4 +1,4 @@
-import { View, type GestureResponderEvent } from 'react-native';
+import { View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did } from '@atcute/lexicons';
@@ -20,10 +20,10 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
-import { useLink } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Link } from '#/components/web/Link';
 import { Text as WebText } from '#/components/web/Text';
 
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
@@ -63,27 +63,20 @@ export function GermButton({
 function GermLink({ url }: { url: string }) {
 	const { t: l } = useLingui();
 	const linkWarningControl = Dialog.useDialogControl();
-	const { href, isExternal, onPress } = useLink({
-		displayText: '',
-		onPress: (evt) => {
-			if (isCustomGermDomain(url)) {
-				evt.preventDefault();
-				linkWarningControl.open();
-				return false;
-			}
-		},
-		to: url,
-	});
 
 	return (
 		<>
-			<a
-				aria-label={l`Open Germ DM`}
+			<Link
 				className={css.pill}
-				href={href}
-				onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
-				rel={isExternal ? 'noopener noreferrer' : undefined}
-				target={isExternal ? '_blank' : undefined}
+				label={l`Open Germ DM`}
+				onPress={(evt) => {
+					if (isCustomGermDomain(url)) {
+						evt.preventDefault();
+						linkWarningControl.open();
+						return false;
+					}
+				}}
+				to={url}
 			>
 				<GermLogo size="small" />
 				<WebText className={css.label} size="sm" weight="medium">
@@ -92,7 +85,7 @@ function GermLink({ url }: { url: string }) {
 				<span className={css.arrow}>
 					<ArrowTopRightIcon width={14} height={14} fill="currentColor" />
 				</span>
-			</a>
+			</Link>
 			<CustomLinkWarningDialog
 				control={linkWarningControl}
 				link={{
