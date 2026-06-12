@@ -1,37 +1,33 @@
 import { useEffect, useRef } from 'react';
-import { View } from 'react-native';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
-
-import { useTheme } from '#/alf';
+import * as styles from '#/lib/custom-animations/LikeIcon.css';
 
 import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
 	Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2';
 
-const animationConfig = {
+const animationConfig: KeyframeAnimationOptions = {
 	duration: 600,
 	easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-	fill: 'forwards' as FillMode,
+	fill: 'forwards',
 };
-
-const keyframe = [
+const scaleKeyframes: Keyframe[] = [
 	{ transform: 'scale(1)' },
 	{ transform: 'scale(0.7)' },
 	{ transform: 'scale(1.2)' },
 	{ transform: 'scale(1)' },
 ];
-
-const circle1Keyframe = [
+const circle1Keyframes: Keyframe[] = [
 	{ opacity: 0, transform: 'scale(0)' },
 	{ opacity: 0.4 },
 	{ transform: 'scale(1.5)' },
 	{ opacity: 0.4 },
 	{ opacity: 0, transform: 'scale(1.5)' },
 ];
-
-const circle2Keyframe = [
+const circle2Keyframes: Keyframe[] = [
 	{ opacity: 0, transform: 'scale(0)' },
 	{ opacity: 1 },
 	{ transform: 'scale(0)' },
@@ -48,12 +44,11 @@ export function AnimatedLikeIcon({
 	big?: boolean;
 	hasBeenToggled: boolean;
 }) {
-	const t = useTheme();
 	const size = big ? 22 : 18;
 	const shouldAnimate = !useReducedMotion() && hasBeenToggled;
 	const prevIsLiked = useRef(isLiked);
 
-	const likeIconRef = useRef<HTMLDivElement>(null);
+	const heartRef = useRef<HTMLDivElement>(null);
 	const circle1Ref = useRef<HTMLDivElement>(null);
 	const circle2Ref = useRef<HTMLDivElement>(null);
 
@@ -61,60 +56,25 @@ export function AnimatedLikeIcon({
 		if (prevIsLiked.current === isLiked) {
 			return;
 		}
-
-		if (shouldAnimate && isLiked) {
-			likeIconRef.current?.animate?.(keyframe, animationConfig);
-			circle1Ref.current?.animate?.(circle1Keyframe, animationConfig);
-			circle2Ref.current?.animate?.(circle2Keyframe, animationConfig);
-		}
 		prevIsLiked.current = isLiked;
+		if (shouldAnimate && isLiked) {
+			heartRef.current?.animate(scaleKeyframes, animationConfig);
+			circle1Ref.current?.animate(circle1Keyframes, animationConfig);
+			circle2Ref.current?.animate(circle2Keyframes, animationConfig);
+		}
 	}, [shouldAnimate, isLiked]);
 
 	return (
-		<View>
+		<div className={styles.root} style={assignInlineVars({ [styles.sizeVar]: `${size}px` })}>
 			{isLiked ? (
-				// @ts-expect-error is div
-				<View ref={likeIconRef}>
-					<HeartIconFilled style={{ color: t.palette.pink }} width={size} />
-				</View>
+				<div ref={heartRef} className={styles.heart}>
+					<HeartIconFilled fill="currentColor" width={size} />
+				</div>
 			) : (
-				<HeartIconOutline
-					style={[{ color: t.palette.contrast_500 }, { pointerEvents: 'none' }]}
-					width={size}
-				/>
+				<HeartIconOutline fill="currentColor" width={size} />
 			)}
-			<View
-				// @ts-expect-error is div
-				ref={circle1Ref}
-				style={{
-					position: 'absolute',
-					backgroundColor: t.palette.pink,
-					top: 0,
-					left: 0,
-					width: size,
-					height: size,
-					zIndex: -1,
-					pointerEvents: 'none',
-					borderRadius: size / 2,
-					opacity: 0,
-				}}
-			/>
-			<View
-				// @ts-expect-error is div
-				ref={circle2Ref}
-				style={{
-					position: 'absolute',
-					backgroundColor: t.atoms.bg.backgroundColor,
-					top: 0,
-					left: 0,
-					width: size,
-					height: size,
-					zIndex: -1,
-					pointerEvents: 'none',
-					borderRadius: size / 2,
-					opacity: 0,
-				}}
-			/>
-		</View>
+			<div ref={circle1Ref} className={styles.circle1} />
+			<div ref={circle2Ref} className={styles.circle2} />
+		</div>
 	);
 }
