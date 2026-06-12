@@ -30,7 +30,7 @@ type Layout = {
 
 type Props = {
 	animate?: boolean;
-	profiles: (AnyProfileView | undefined)[];
+	profiles: AnyProfileView[];
 	/**
 	 * By default, when there are more than 2 profiles, the current user is filtered out (so you don't see
 	 * yourself among your own group's members). Set this to `true` for cases where every passed profile should
@@ -38,14 +38,26 @@ type Props = {
 	 */
 	self?: boolean;
 	size?: number;
+	/**
+	 * The true number of members, used to decide how many bubbles to render when it exceeds the number of
+	 * `profiles` we have on hand (e.g. an invite preview that only carries a few member profiles for a much
+	 * larger group). Slots without a profile render as placeholders. Defaults to `profiles.length`.
+	 */
+	count?: number;
 };
 
-export function AvatarBubbles({ animate = false, profiles: allProfiles, self = false, size = 120 }: Props) {
+export function AvatarBubbles({
+	animate = false,
+	profiles: allProfiles,
+	self = false,
+	size = 120,
+	count,
+}: Props) {
 	const { currentAccount } = useSession();
 	const profiles =
-		!self && allProfiles.length > 2
-			? allProfiles.filter((p) => p?.did != null && p.did !== currentAccount?.did)
-			: allProfiles;
+		!self && allProfiles.length > 2 ? allProfiles.filter((p) => p.did !== currentAccount?.did) : allProfiles;
+
+	const bubbleCount = Math.max(profiles.length, count ?? 0);
 
 	const scale = size / 120;
 	const marginOffset = size < 120 ? -2 : 0;
@@ -59,7 +71,7 @@ export function AvatarBubbles({ animate = false, profiles: allProfiles, self = f
 		}
 	}, [animate]);
 
-	const layouts = getLayouts(profiles.length);
+	const layouts = getLayouts(bubbleCount);
 
 	return (
 		<View style={[a.p_2xs, { height: size, width: size }]}>
