@@ -36,19 +36,14 @@ export const nameBlockDefault = style({
 	paddingTop: space._2xs,
 });
 
-export const nameRow = style({
-	alignItems: 'center',
-	display: 'flex',
-	flex: 1,
-	flexDirection: 'row',
-	gap: space.xs,
-});
-
-// centering the badges on the name's line box sits them 1px above the upstream inline-in-text
-// placement; nudge down 1px to match.
+// `vertical-align: middle` anchors to baseline + half x-height, which sits ~5px below the name's
+// optical center; lift it back onto the line so it reads centered like the rest of the text.
 export const badges = style({
+	display: 'inline-flex',
+	marginLeft: space.xs,
 	position: 'relative',
-	top: 1,
+	top: -5,
+	verticalAlign: 'middle',
 });
 
 export const section = style({
