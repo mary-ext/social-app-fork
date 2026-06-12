@@ -1,14 +1,33 @@
 import { style } from '@vanilla-extract/css';
 
+import { colorMix } from '#/styles/color-mix';
+import { colors } from '#/styles/colors';
+import { vars } from '#/styles/contract.css';
+
+/**
+ * The feed post row; GalleryBleed measures this host and clips the image-carousel bleed to it. The dynamic
+ * top border + reclaimed padding are applied inline since they vary per slice position.
+ */
+export const outer = style({
+	boxSizing: 'border-box',
+	cursor: 'pointer',
+	display: 'flex',
+	flexDirection: 'column',
+	paddingLeft: 10,
+	paddingRight: 15,
+	selectors: {
+		'&:hover': {
+			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+		},
+	},
+});
+
 /** The repost/pin reason header row above the post; aligns the reason text with the post body. */
 export const reasonRow = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 10,
 	paddingLeft: 8,
-	// the content row below is positioned (for DiscoverDebug), so it paints above the absolute
-	// SubtleHover overlay; match it here so the overlay doesn't dim the reason on hover
-	position: 'relative',
 });
 
 /** Fixed-width slot above the avatar that carries the thread reply-spine up to the parent. */

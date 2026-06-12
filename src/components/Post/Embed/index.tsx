@@ -6,6 +6,7 @@ import type { $type } from '@atcute/lexicons';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { getChatInviteCodeFromUrl } from '#/lib/strings/url-helpers';
@@ -18,13 +19,11 @@ import { PostMeta } from '#/view/com/util/PostMeta';
 
 import { atoms as a } from '#/alf';
 
-import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
 import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
-import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ExternalEmbed } from '#/components/web/ExternalEmbed';
 import { ImageEmbed } from '#/components/web/ImageEmbed';
@@ -292,8 +291,6 @@ export function QuoteEmbed({
 		onOpen?.();
 	}, [queryClient, quote.author, onOpen]);
 
-	const { state: hover, onIn: onPointerEnter, onOut: onPointerLeave } = useInteractionState();
-
 	const contents = (
 		<>
 			<View style={[a.pb_xs]}>
@@ -328,38 +325,26 @@ export function QuoteEmbed({
 
 	return (
 		<GalleryBleed>
-			<View
-				style={[a.mt_sm]}
-				onPointerEnter={linkDisabled ? undefined : onPointerEnter}
-				onPointerLeave={linkDisabled ? undefined : onPointerLeave}
-			>
+			<div className={css.quoteOuter}>
 				<ContentHider
 					modui={moderation ? getDisplayRestrictions(moderation, DisplayContext.ContentList) : undefined}
-					className={css.quoteCard}
+					className={clsx(css.quoteCard, !linkDisabled && css.quoteCardHover)}
 					activeClassName={css.quoteActive}
 					childContainerClassName={css.quoteRevealed}
 				>
-					{({ active }) => (
-						<>
-							{!active && !linkDisabled && <SubtleHover native hover={hover} style={[a.rounded_md]} />}
-							{linkDisabled ? (
-								<View style={[!active && a.p_md]} pointerEvents="none">
-									{contents}
-								</View>
-							) : (
-								<BlockLink
-									style={[!active && a.p_md]}
-									href={itemHref}
-									label={itemTitle}
-									onBeforePress={onBeforePress}
-								>
-									{contents}
-								</BlockLink>
-							)}
-						</>
-					)}
+					{({ active }) =>
+						linkDisabled ? (
+							<div className={clsx(css.quoteBody, !active && css.quotePad)} style={{ pointerEvents: 'none' }}>
+								{contents}
+							</div>
+						) : (
+							<BlockLink href={itemHref} label={itemTitle} onBeforePress={onBeforePress}>
+								<div className={clsx(css.quoteBody, !active && css.quotePad)}>{contents}</div>
+							</BlockLink>
+						)
+					}
 				</ContentHider>
-			</View>
+			</div>
 		</GalleryBleed>
 	);
 }

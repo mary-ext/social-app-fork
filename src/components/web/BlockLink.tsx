@@ -1,9 +1,19 @@
-import type { KeyboardEvent, MouseEvent, ReactNode, Ref } from 'react';
-import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native';
+import {
+	cloneElement,
+	type HTMLAttributes,
+	isValidElement,
+	type KeyboardEvent,
+	type MouseEvent,
+	type ReactElement,
+	type ReactNode,
+	type Ref,
+} from 'react';
 import { sanitizeUrl } from '@braintree/sanitize-url';
+import { clsx } from 'clsx';
 
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
+import { mergeRefs } from '#/lib/merge-refs';
 
 import { onPressInner } from '#/view/com/util/Link';
 
@@ -19,7 +29,13 @@ const INTERACTIVE_SELECTOR = 'a, button, [role="button"], [role="link"], [data-n
  */
 export const noRowLink = { 'data-no-row-link': '' };
 
+type BlockLinkChildProps = HTMLAttributes<HTMLElement> & {
+	'data-testid'?: string;
+	ref?: Ref<HTMLElement>;
+};
+
 type BlockLinkProps = {
+	/** The single host element to make clickable; its own box becomes the row. */
 	children: ReactNode;
 	href: string;
 	/**
@@ -28,13 +44,8 @@ type BlockLinkProps = {
 	 * keyboard/AT access (e.g. a feed item's timestamp link), to avoid an extra empty tab stop.
 	 */
 	label?: string;
-	/**
-	 * Forwarded to the inner `View` box. {@link GalleryBleed} clones this host to inject a ref and `onLayout`
-	 * for its width measurement; without forwarding them the bleed stays unmeasured (width 0, ref null).
-	 */
-	onLayout?: (e: LayoutChangeEvent) => void;
-	ref?: Ref<View>;
-	style?: StyleProp<ViewStyle>;
+	className?: string;
+	ref?: Ref<HTMLElement>;
 	testID?: string;
 	onBeforePress?: () => void;
 	onPointerEnter?: () => void;
@@ -45,17 +56,18 @@ type BlockLinkProps = {
  * A web-native clickable post-row region: navigates to `href` when its body is clicked, while letting nested
  * interactive elements and portalled popups (Base UI menus/dialogs) behave normally.
  *
- * The press handler sits on a `display: contents` wrapper so the inner `View` keeps its own box and styles,
- * and it checks DOM containment: a portalled menu item is a React (fiber) descendant of the row but not a DOM
- * descendant, so its bubbling click is ignored here rather than triggering navigation.
+ * Renders no element of its own — it clones its single child (which must be a DOM element) and attaches the
+ * press behavior, keyboard/AT affordances, and forwarded ref/className directly to it, so the child's own box
+ * is the row. The click handler checks DOM containment: a portalled menu item is a React (fiber) descendant
+ * of the row but not a DOM descendant, so its bubbling click is ignored here rather than triggering
+ * navigation.
  */
 export function BlockLink({
 	children,
 	href,
 	label,
-	onLayout,
+	className,
 	ref,
-	style,
 	testID,
 	onBeforePress,
 	onPointerEnter,
@@ -64,12 +76,12 @@ export function BlockLink({
 	const navigation = useNavigationDeduped();
 	const openLink = useOpenLink();
 
-	const go = (e?: MouseEvent<HTMLDivElement>) => {
+	const go = (e?: MouseEvent<HTMLElement>) => {
 		onBeforePress?.();
 		onPressInner(navigation, sanitizeUrl(href), 'push', (href) => void openLink(href), e);
 	};
 
-	const onClick = (e: MouseEvent<HTMLDivElement>) => {
+	const onClick = (e: MouseEvent<HTMLElement>) => {
 		const target = e.target as HTMLElement;
 		// a portalled popup's click bubbles up the component tree but its DOM node lives elsewhere
 		if (!e.currentTarget.contains(target)) {
@@ -89,7 +101,7 @@ export function BlockLink({
 	};
 
 	// only fires when `label` makes the row a focusable link; activate on Enter when the row itself is focused
-	const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+	const onKeyDown = (e: KeyboardEvent<HTMLElement>) => {
 		if (e.key === 'Enter' && e.target === e.currentTarget) {
 			go();
 		}
@@ -97,12 +109,12 @@ export function BlockLink({
 
 	// middle-click opens a new tab. mirrors WebAuxClickWrapper: swallow the middle-click autoscroll, then
 	// synthesise a meta-click so the same `onClick` path takes over (links handle their own middle-click).
-	const onMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+	const onMouseDown = (e: MouseEvent<HTMLElement>) => {
 		if (e.button === 1) {
 			e.preventDefault();
 		}
 	};
-	const onMouseUp = (e: MouseEvent<HTMLDivElement>) => {
+	const onMouseUp = (e: MouseEvent<HTMLElement>) => {
 		const target = e.target as HTMLElement;
 		if (e.button !== 1 || target.closest('a')) {
 			return;
@@ -110,27 +122,24 @@ export function BlockLink({
 		target.dispatchEvent(new MouseEvent('click', { bubbles: true, metaKey: true }));
 	};
 
-	return (
-		<div
-			style={{ display: 'contents' }}
-			role={label ? 'link' : undefined}
-			tabIndex={label ? 0 : undefined}
-			aria-label={label}
-			onClick={onClick}
-			onKeyDown={label ? onKeyDown : undefined}
-			onMouseDown={onMouseDown}
-			onMouseUp={onMouseUp}
-		>
-			<View
-				ref={ref}
-				testID={testID}
-				style={style}
-				onLayout={onLayout}
-				onPointerEnter={onPointerEnter}
-				onPointerLeave={onPointerLeave}
-			>
-				{children}
-			</View>
-		</div>
-	);
+	if (!isValidElement(children)) {
+		throw new Error('BlockLink children must be a single React element');
+	}
+
+	const node = children as ReactElement<BlockLinkChildProps>;
+
+	return cloneElement(node, {
+		'aria-label': label,
+		className: clsx(node.props.className, className),
+		'data-testid': testID,
+		onClick,
+		onKeyDown: label ? onKeyDown : undefined,
+		onMouseDown,
+		onMouseUp,
+		onPointerEnter,
+		onPointerLeave,
+		ref: mergeRefs([ref, node.props.ref]),
+		role: label ? 'link' : undefined,
+		tabIndex: label ? 0 : undefined,
+	});
 }

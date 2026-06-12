@@ -1,9 +1,32 @@
 import { style } from '@vanilla-extract/css';
 
-import { LINEAR_AVI_WIDTH, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
+import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostThread/const';
 
+import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
+
+/** The post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
+export const outerRow = style({
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'column',
+	paddingLeft: OUTER_SPACE,
+	paddingRight: OUTER_SPACE,
+});
+
+/** Top border separating a post from the one above when no parent reply line bridges them. */
+export const outerRowBorder = style({
+	borderTopColor: colors.borderContrastLow,
+	borderTopStyle: 'solid',
+	borderTopWidth: 1,
+});
+
+/** Trailing space below a post with no following child. */
+export const outerRowPadBottom = style({
+	paddingBottom: OUTER_SPACE / 2,
+});
 
 /** Chrome for the PostHider warning row on the linear thread surface. */
 export const hider = style({
@@ -18,10 +41,14 @@ export const hiderIcon = style({
 });
 
 // #region wrappers
-/** Hosts the `SubtleHover` overlay (`position: absolute; inset: 0`), which anchors to this box. */
-export const hoverWrapper = style({
+/** Whole-row hover target; tints translucently behind content so text stays crisp. */
+export const hoverable = style({
 	cursor: 'pointer',
-	position: 'relative',
+	selectors: {
+		'&:hover': {
+			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+		},
+	},
 });
 // #endregion
 

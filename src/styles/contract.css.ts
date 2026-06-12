@@ -12,4 +12,6 @@ import { DEFAULT_PALETTE } from '#/styles/palette';
 export const vars = createThemeContract({
 	palette: DEFAULT_PALETTE,
 	shadow: { dialog: null, lg: null, md: null, sm: null, xs: null },
+	/** Tint strengths, as CSS percentages, for translucent state layers (e.g. the `:hover` background). */
+	opacity: { hover: null },
 });

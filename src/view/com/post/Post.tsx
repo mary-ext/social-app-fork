@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
+import { type CSSProperties, useCallback, useMemo } from 'react';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -9,6 +8,7 @@ import {
 } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
@@ -20,13 +20,10 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { PostControls } from '#/components/PostControls';
-import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { PostContent } from '#/components/web/PostContent';
 import * as PostRow from '#/components/web/PostRow';
@@ -43,7 +40,8 @@ export function Post({
 }: {
 	post: AppBskyFeedDefs.PostView;
 	hideTopBorder?: boolean;
-	style?: StyleProp<ViewStyle>;
+	/** Chrome override merged onto the row (e.g. the unread-notification highlight). */
+	style?: CSSProperties;
 	onBeforePress?: () => void;
 }) {
 	const moderationOpts = useModerationOpts();
@@ -96,11 +94,10 @@ function PostInner({
 	richText: Richtext;
 	moderation: ModerationDecision;
 	hideTopBorder?: boolean;
-	style?: StyleProp<ViewStyle>;
+	style?: CSSProperties;
 	onBeforePress?: () => void;
 }) {
 	const queryClient = useQueryClient();
-	const t = useTheme();
 	const { openComposer } = useOpenComposer();
 	const itemUrip = parseCanonicalResourceUri(post.uri);
 	const itemHref = makeProfileLink(post.author, 'post', itemUrip.rkey);
@@ -130,77 +127,56 @@ function PostInner({
 		outerOnBeforePress?.();
 	}, [queryClient, post.author, outerOnBeforePress]);
 
-	const [hover, setHover] = useState(false);
-
 	return (
 		<GalleryBleed>
-			<BlockLink
-				href={itemHref}
-				style={[styles.outer, t.atoms.border_contrast_low, !hideTopBorder && a.border_t, style]}
-				onBeforePress={onBeforePress}
-				onPointerEnter={() => {
-					setHover(true);
-				}}
-				onPointerLeave={() => {
-					setHover(false);
-				}}
-			>
-				<SubtleHover hover={hover} />
-				<PostRow.Row>
-					<PostRow.AvatarColumn>
-						<PreviewableUserAvatar
-							size={42}
-							profile={post.author}
-							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-							type={post.author.associated?.labeler ? 'labeler' : 'user'}
-						/>
-					</PostRow.AvatarColumn>
-					<PostRow.Content
-						style={maybeApplyGalleryOffsetStyles('meta', {
-							post,
-							modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-							additionalCauses: [],
-						})}
-					>
-						<div className={postRowCss.metaSpacing}>
-							<PostMeta
-								author={post.author}
-								moderation={moderation}
-								timestamp={post.indexedAt}
-								postHref={itemHref}
+			<BlockLink href={itemHref} onBeforePress={onBeforePress}>
+				<div className={clsx(css.outer, !hideTopBorder && css.outerBorder)} style={style}>
+					<PostRow.Row>
+						<PostRow.AvatarColumn>
+							<PreviewableUserAvatar
+								size={42}
+								profile={post.author}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 							/>
-						</div>
-						{replyAuthorDid !== '' && (
-							<PostRepliedTo parentAuthor={replyAuthorDid} className={postRowCss.repliedTo} />
-						)}
-						<LabelsOnMyPost post={post} />
-						<PostContent
-							className={css.contentBottom}
-							displayContext="view"
-							moderation={moderation}
-							post={post}
-							richText={richText}
-						/>
-						<PostControls
-							post={post}
-							record={record}
-							richText={richText}
-							onPressReply={onPressReply}
-							logContext="Post"
-						/>
-					</PostRow.Content>
-				</PostRow.Row>
+						</PostRow.AvatarColumn>
+						<PostRow.Content
+							style={maybeApplyGalleryOffsetStyles('meta', {
+								post,
+								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+								additionalCauses: [],
+							})}
+						>
+							<div className={postRowCss.metaSpacing}>
+								<PostMeta
+									author={post.author}
+									moderation={moderation}
+									timestamp={post.indexedAt}
+									postHref={itemHref}
+								/>
+							</div>
+							{replyAuthorDid !== '' && (
+								<PostRepliedTo parentAuthor={replyAuthorDid} className={postRowCss.repliedTo} />
+							)}
+							<LabelsOnMyPost post={post} />
+							<PostContent
+								className={css.contentBottom}
+								displayContext="view"
+								moderation={moderation}
+								post={post}
+								richText={richText}
+							/>
+							<PostControls
+								post={post}
+								record={record}
+								richText={richText}
+								onPressReply={onPressReply}
+								logContext="Post"
+							/>
+						</PostRow.Content>
+					</PostRow.Row>
+				</div>
 			</BlockLink>
 		</GalleryBleed>
 	);
 }
-
-const styles = StyleSheet.create({
-	outer: {
-		paddingTop: 10,
-		paddingRight: 15,
-		paddingBottom: 5,
-		paddingLeft: 10,
-		cursor: 'pointer',
-	},
-});

@@ -24,7 +24,6 @@ import { OUTER_SPACE, TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 import { atoms as a, useTheme } from '#/alf';
 
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
-import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -34,7 +33,6 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
-import { SubtleHover } from '#/components/SubtleHover';
 import { PostHider } from '#/components/web/moderation/PostHider';
 import { RichText } from '#/components/web/RichText';
 import { Text } from '#/components/web/Text';
@@ -97,18 +95,15 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 	item: Extract<ThreadItem, { type: 'threadPost' }>;
 	children: React.ReactNode;
 }) {
-	const t = useTheme();
 	const indents = Math.max(0, item.ui.indent - 1);
 
-	// stays a `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
-	// `View` ref), which a plain `<div>` can't accept. the indent guides + web layout sit inside.
 	return (
 		<GalleryBleed>
-			<View
-				style={[
-					a.flex_row,
-					item.ui.indent === 1 && !item.ui.showParentReplyLine && [a.border_t, t.atoms.border_contrast_low],
-				]}
+			<div
+				className={clsx(
+					css.outerRow,
+					item.ui.indent === 1 && !item.ui.showParentReplyLine && css.outerRowBorder,
+				)}
 			>
 				{Array.from(Array(indents)).map((_, n: number) => {
 					const isSkipped = item.ui.skippedIndentIndices.has(n);
@@ -120,7 +115,7 @@ const ThreadItemTreePostOuterWrapper = memo(function ThreadItemTreePostOuterWrap
 					);
 				})}
 				{children}
-			</View>
+			</div>
 		</GalleryBleed>
 	);
 });
@@ -236,7 +231,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 
 	return (
 		<ThreadItemTreePostOuterWrapper item={item}>
-			<SubtleHoverWrapper>
+			<div className={css.hoverable}>
 				<PostHider
 					testID={`postThreadItem-by-${post.author.handle}`}
 					href={postHref}
@@ -302,20 +297,10 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 						</div>
 					</ThreadItemTreePostInnerWrapper>
 				</PostHider>
-			</SubtleHoverWrapper>
+			</div>
 		</ThreadItemTreePostOuterWrapper>
 	);
 });
-
-function SubtleHoverWrapper({ children }: { children: React.ReactNode }) {
-	const { state: hover, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
-	return (
-		<div className={css.hoverWrapper} onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
-			<SubtleHover hover={hover} />
-			{children}
-		</div>
-	);
-}
 
 export function ThreadItemTreePostSkeleton({ index }: { index: number }) {
 	const t = useTheme();

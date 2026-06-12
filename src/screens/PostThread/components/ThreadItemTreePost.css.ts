@@ -2,8 +2,24 @@ import { style } from '@vanilla-extract/css';
 
 import { OUTER_SPACE, REPLY_LINE_WIDTH, TREE_AVI_WIDTH, TREE_INDENT } from '#/screens/PostThread/const';
 
+import { colorMix } from '#/styles/color-mix';
 import { colors } from '#/styles/colors';
+import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
+
+/** The post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
+export const outerRow = style({
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'row',
+});
+
+/** Top border on a root-level reply with no parent reply line above it. */
+export const outerRowBorder = style({
+	borderTopColor: colors.borderContrastLow,
+	borderTopStyle: 'solid',
+	borderTopWidth: 1,
+});
 
 /** Margin on the PostHider icon circle on the tree thread surface. */
 export const hiderIcon = style({
@@ -111,18 +127,22 @@ export const innerWrapperPadBottom = style({
 });
 
 /**
- * Hosts the `SubtleHover` overlay (`position: absolute; inset: 0`), which anchors to this box. Sits inside
- * the (overflow-clipped) GalleryBleed row as `flex: 1`, so it needs `min-width: 0` — otherwise it grows to
- * the gallery's intrinsic width, which the bleed re-measures and feeds back into an unbounded width loop.
+ * The post hover target; tints translucently behind content so text stays crisp. Sits inside the
+ * (overflow-clipped) GalleryBleed row as `flex: 1`, so it needs `min-width: 0` — otherwise it grows to the
+ * gallery's intrinsic width, which the bleed re-measures and feeds back into an unbounded width loop.
  */
-export const hoverWrapper = style({
+export const hoverable = style({
 	boxSizing: 'border-box',
 	cursor: 'pointer',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
 	minWidth: 0,
-	position: 'relative',
+	selectors: {
+		'&:hover': {
+			backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
+		},
+	},
 });
 // #endregion
 

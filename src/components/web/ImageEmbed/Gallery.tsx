@@ -74,7 +74,7 @@ export function Gallery({ images, control, lightboxImages, onPressIn, viewContex
 	// descendant's layout phase. Measuring post-commit (and re-running when `bleedWidth` settles) sees it.
 	useEffect(() => {
 		const measure = () => {
-			const bleedEl = bleedRef.current as unknown as HTMLElement | null;
+			const bleedEl = bleedRef.current;
 			if (contentRef.current && bleedEl) {
 				const c = contentRef.current.getBoundingClientRect();
 				const b = bleedEl.getBoundingClientRect();

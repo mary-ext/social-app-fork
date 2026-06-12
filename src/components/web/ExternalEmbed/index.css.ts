@@ -2,6 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
+import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
@@ -15,6 +16,8 @@ export const wrapper = style({ marginTop: space.sm });
 
 export const card = style({
 	...transition,
+	// opaque post background so the row's hover tint doesn't bleed through the card
+	backgroundColor: colors.bg,
 	borderColor: vars.palette.contrast_100,
 	borderRadius: borderRadius.md,
 	borderStyle: 'solid',

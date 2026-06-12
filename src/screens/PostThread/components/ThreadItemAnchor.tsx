@@ -28,7 +28,6 @@ import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-repl
 import type { PostSource } from '#/state/unstable-post-source';
 
 import { ThreadItemAnchorFollowButton } from '#/screens/PostThread/components/ThreadItemAnchorFollowButton';
-import { OUTER_SPACE } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -255,14 +254,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 		<>
 			<ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 			<GalleryBleed>
-				<View
-					testID={`postThreadItem-by-${post.author.handle}`}
-					style={[
-						{
-							paddingHorizontal: OUTER_SPACE,
-						},
-						isRoot && [a.pt_lg],
-					]}
+				<div
+					data-testid={`postThreadItem-by-${post.author.handle}`}
+					className={clsx(css.outer, isRoot && css.outerRootPad)}
 				>
 					<div className={css.avatarRow}>
 						<div>
@@ -442,7 +436,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 						</div>
 						<DebugFieldDisplay subject={post} />
 					</div>
-				</View>
+				</div>
 			</GalleryBleed>
 		</>
 	);

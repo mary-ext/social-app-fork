@@ -5,6 +5,20 @@ import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH } from '#/screens/PostT
 import { colors } from '#/styles/colors';
 import { borderRadius, space } from '#/styles/tokens.css';
 
+/** The anchor post row; GalleryBleed measures this host and clips the image-carousel bleed to it. */
+export const outer = style({
+	boxSizing: 'border-box',
+	display: 'flex',
+	flexDirection: 'column',
+	paddingLeft: OUTER_SPACE,
+	paddingRight: OUTER_SPACE,
+});
+
+/** Extra top space when the anchor is the thread root. */
+export const outerRootPad = style({
+	paddingTop: space.lg,
+});
+
 export const contentHiderChild = style({
 	paddingTop: 8,
 });

@@ -4,6 +4,7 @@ import type { AppBskyFeedDefs, AppBskyFeedThreadgate } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { MAX_POST_LINES } from '#/lib/constants';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
@@ -20,10 +21,9 @@ import { PostMeta } from '#/view/com/util/PostMeta';
 
 import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a } from '#/alf';
 
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
-import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
@@ -33,7 +33,6 @@ import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
-import { SubtleHover } from '#/components/SubtleHover';
 import { PostHider } from '#/components/web/moderation/PostHider';
 import { RichText } from '#/components/web/RichText';
 import { Text } from '#/components/web/Text';
@@ -97,26 +96,20 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
 }: Pick<ThreadItemPostProps, 'item' | 'overrides'> & {
 	children: ReactNode;
 }) {
-	const t = useTheme();
 	const showTopBorder = !item.ui.showParentReplyLine && overrides?.topBorder !== true;
 
-	// stays a `View`: it's the element `GalleryBleed` clones to measure (array `style` + `onLayout` + a
-	// `View` ref), which a plain `<div>` can't accept. the web layout lives inside.
 	return (
 		<GalleryBleed>
-			<View
-				style={[
-					showTopBorder && [a.border_t, t.atoms.border_contrast_low],
-					{ paddingHorizontal: OUTER_SPACE },
+			<div
+				className={clsx(
+					css.outerRow,
+					showTopBorder && css.outerRowBorder,
 					// If there's no next child, add a little padding to bottom
-					!item.ui.showChildReplyLine &&
-						!item.ui.precedesChildReadMore && {
-							paddingBottom: OUTER_SPACE / 2,
-						},
-				]}
+					!item.ui.showChildReplyLine && !item.ui.precedesChildReadMore && css.outerRowPadBottom,
+				)}
 			>
 				{children}
-			</View>
+			</div>
 		</GalleryBleed>
 	);
 });
@@ -202,7 +195,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 	const { isActive: live } = useActorStatus(post.author);
 
 	return (
-		<SubtleHoverWrapper>
+		<div className={css.hoverable}>
 			<ThreadItemPostOuterWrapper item={item} overrides={overrides}>
 				<PostHider
 					testID={`postThreadItem-by-${post.author.handle}`}
@@ -291,19 +284,9 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 					</div>
 				</PostHider>
 			</ThreadItemPostOuterWrapper>
-		</SubtleHoverWrapper>
-	);
-});
-
-function SubtleHoverWrapper({ children }: { children: ReactNode }) {
-	const { state: hover, onIn: onHoverIn, onOut: onHoverOut } = useInteractionState();
-	return (
-		<div className={css.hoverWrapper} onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
-			<SubtleHover hover={hover} />
-			{children}
 		</div>
 	);
-}
+});
 
 export function ThreadItemPostSkeleton({ index }: { index: number }) {
 	const even = index % 2 === 0;

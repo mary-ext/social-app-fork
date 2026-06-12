@@ -216,10 +216,12 @@ let NotificationFeedItem = ({
 				<Post
 					post={item.subject}
 					style={
-						isHighlighted && {
-							backgroundColor: t.palette.primary_25,
-							borderColor: t.palette.primary_100,
-						}
+						isHighlighted
+							? {
+									backgroundColor: t.palette.primary_25,
+									borderColor: t.palette.primary_100,
+								}
+							: undefined
 					}
 					hideTopBorder={hideTopBorder}
 				/>

@@ -1,5 +1,4 @@
-import { memo, useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { memo, useMemo } from 'react';
 import type {
 	AppBskyActorDefs,
 	AppBskyFeedDefs,
@@ -34,7 +33,6 @@ import type { AppModerationCause } from '#/components/Pills';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
 import { PostControls } from '#/components/PostControls';
 import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug';
-import { SubtleHover } from '#/components/SubtleHover';
 import { BlockLink } from '#/components/web/BlockLink';
 import { PostContent } from '#/components/web/PostContent';
 import * as PostRow from '#/components/web/PostRow';
@@ -153,8 +151,6 @@ let FeedItemInner = ({
 	const t = useTheme();
 	const { currentAccount } = useSession();
 
-	const [hover, setHover] = useState(false);
-
 	const [href] = useMemo(() => {
 		const urip = parseCanonicalResourceUri(post.uri);
 		return [makeProfileLink(post.author, 'post', urip.rkey), urip.rkey];
@@ -230,18 +226,6 @@ let FeedItemInner = ({
 		});
 	};
 
-	const outerStyles = [
-		styles.outer,
-		{
-			borderColor: pal.colors.border,
-			borderTopWidth: hideTopBorder || isThreadChild ? 0 : StyleSheet.hairlineWidth,
-			paddingBottom: isThreadLastChild || (!isThreadChild && !isThreadParent) ? 8 : undefined,
-			// the feed's first post hides its top border (the sticky header already separates
-			// it), so reclaim the removed hairline as padding to keep content from shifting up 1px
-			paddingTop: hideTopBorder ? StyleSheet.hairlineWidth : undefined,
-		},
-	];
-
 	/**
 	 * If `post[0]` in this slice is the actual root post (not an orphan thread), then we may have a threadgate
 	 * record to reference
@@ -288,114 +272,107 @@ let FeedItemInner = ({
 
 	return (
 		<GalleryBleed>
-			<BlockLink
-				testID={`feedItem-by-${post.author.handle}`}
-				style={outerStyles}
-				href={href}
-				onBeforePress={onBeforePress}
-				onPointerEnter={() => {
-					setHover(true);
-				}}
-				onPointerLeave={() => {
-					setHover(false);
-				}}
-			>
-				<SubtleHover hover={hover} />
-				<div className={css.reasonRow}>
-					<div className={css.spineSlot}>
-						{isThreadChild && (
-							<div
-								className={clsx(css.replyLine, css.replyLineTop)}
-								style={{ backgroundColor: spineColor }}
-							/>
-						)}
-					</div>
-					<div className={css.reason}>
-						{reason && (
-							<PostFeedReason reason={reason} moderation={moderation} onOpenReposter={onOpenReposter} />
-						)}
-					</div>
-				</div>
-
-				<PostRow.Row className={css.layoutRow}>
-					<PostRow.AvatarColumn>
-						<PreviewableUserAvatar
-							size={42}
-							profile={post.author}
-							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-							type={post.author.associated?.labeler ? 'labeler' : 'user'}
-							onBeforePress={onOpenAuthor}
-							live={live}
-							tabIndex={-1}
-						/>
-						{isThreadParent && (
-							<div
-								className={css.replyLine}
-								style={{ backgroundColor: spineColor, marginTop: live ? 8 : 4 }}
-							/>
-						)}
-					</PostRow.AvatarColumn>
-					<PostRow.Content
-						style={maybeApplyGalleryOffsetStyles('meta', {
-							post,
-							modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
-							additionalCauses: additionalPostAlerts,
-						})}
-					>
-						<div className={postRowCss.metaSpacing}>
-							<PostMeta
-								author={post.author}
-								moderation={moderation}
-								timestamp={post.indexedAt}
-								postHref={href}
-								onOpenAuthor={onOpenAuthor}
-							/>
+			<BlockLink testID={`feedItem-by-${post.author.handle}`} href={href} onBeforePress={onBeforePress}>
+				<div
+					className={css.outer}
+					style={{
+						borderTopColor: pal.colors.border,
+						borderTopStyle: 'solid',
+						borderTopWidth: hideTopBorder || isThreadChild ? 0 : 1,
+						paddingBottom: isThreadLastChild || (!isThreadChild && !isThreadParent) ? 8 : undefined,
+						// the feed's first post hides its top border (the sticky header already separates it), so
+						// reclaim the removed hairline as padding to keep content from shifting up 1px
+						paddingTop: hideTopBorder ? 1 : undefined,
+					}}
+				>
+					<div className={css.reasonRow}>
+						<div className={css.spineSlot}>
+							{isThreadChild && (
+								<div
+									className={clsx(css.replyLine, css.replyLineTop)}
+									style={{ backgroundColor: spineColor }}
+								/>
+							)}
 						</div>
-						{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
-							<PostRepliedTo
-								parentAuthor={parentAuthor}
-								isParentBlocked={isParentBlocked}
-								isParentNotFound={isParentNotFound}
-								className={postRowCss.repliedTo}
-							/>
-						)}
-						<LabelsOnMyPost post={post} />
-						<PostContent
-							additionalCauses={additionalPostAlerts}
-							displayContext="list"
-							embedClassName={css.embedSpacing}
-							ignoreMute
-							moderation={moderation}
-							onOpenEmbed={onOpenEmbed}
-							post={post}
-							richText={richText}
-						/>
-						<PostControls
-							post={post}
-							record={record}
-							richText={richText}
-							onPressReply={onPressReply}
-							logContext="FeedItem"
-							feedContext={feedContext}
-							reqId={reqId}
-							threadgateRecord={threadgateRecord}
-							onShowLess={onShowLess}
-							viaRepost={viaRepost}
-						/>
-					</PostRow.Content>
+						<div className={css.reason}>
+							{reason && (
+								<PostFeedReason reason={reason} moderation={moderation} onOpenReposter={onOpenReposter} />
+							)}
+						</div>
+					</div>
 
-					<DiscoverDebug feedContext={feedContext} />
-				</PostRow.Row>
+					<PostRow.Row className={css.layoutRow}>
+						<PostRow.AvatarColumn>
+							<PreviewableUserAvatar
+								size={42}
+								profile={post.author}
+								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+								type={post.author.associated?.labeler ? 'labeler' : 'user'}
+								onBeforePress={onOpenAuthor}
+								live={live}
+								tabIndex={-1}
+							/>
+							{isThreadParent && (
+								<div
+									className={css.replyLine}
+									style={{ backgroundColor: spineColor, marginTop: live ? 8 : 4 }}
+								/>
+							)}
+						</PostRow.AvatarColumn>
+						<PostRow.Content
+							style={maybeApplyGalleryOffsetStyles('meta', {
+								post,
+								modui: getDisplayRestrictions(moderation, DisplayContext.ContentList),
+								additionalCauses: additionalPostAlerts,
+							})}
+						>
+							<div className={postRowCss.metaSpacing}>
+								<PostMeta
+									author={post.author}
+									moderation={moderation}
+									timestamp={post.indexedAt}
+									postHref={href}
+									onOpenAuthor={onOpenAuthor}
+								/>
+							</div>
+							{showReplyTo && (parentAuthor || isParentBlocked || isParentNotFound) && (
+								<PostRepliedTo
+									parentAuthor={parentAuthor}
+									isParentBlocked={isParentBlocked}
+									isParentNotFound={isParentNotFound}
+									className={postRowCss.repliedTo}
+								/>
+							)}
+							<LabelsOnMyPost post={post} />
+							<PostContent
+								additionalCauses={additionalPostAlerts}
+								displayContext="list"
+								embedClassName={css.embedSpacing}
+								ignoreMute
+								moderation={moderation}
+								onOpenEmbed={onOpenEmbed}
+								post={post}
+								richText={richText}
+							/>
+							<PostControls
+								post={post}
+								record={record}
+								richText={richText}
+								onPressReply={onPressReply}
+								logContext="FeedItem"
+								feedContext={feedContext}
+								reqId={reqId}
+								threadgateRecord={threadgateRecord}
+								onShowLess={onShowLess}
+								viaRepost={viaRepost}
+							/>
+						</PostRow.Content>
+
+						<DiscoverDebug feedContext={feedContext} />
+					</PostRow.Row>
+				</div>
 			</BlockLink>
 		</GalleryBleed>
 	);
 };
 FeedItemInner = memo(FeedItemInner);
-
-const styles = StyleSheet.create({
-	outer: {
-		paddingLeft: 10,
-		paddingRight: 15,
-		cursor: 'pointer',
-	},
-});

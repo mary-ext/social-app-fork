@@ -21,16 +21,19 @@ const shadows = (palette: Palette, opacity: number) => {
 	};
 };
 
-const themeValues = (palette: Palette, shadowOpacity: number) => ({
+const themeValues = (palette: Palette, shadowOpacity: number, hoverOpacity: string) => ({
+	opacity: { hover: hoverOpacity },
 	palette,
 	shadow: shadows(palette, shadowOpacity),
 });
 
 // assign onto the selectors `useColorModeTheme.ts` / `web/index.html` already toggle on <html>, so
 // components recolor by class with no extra switching machinery. dark/dim invert the palette and run a
-// heavier shadow opacity.
-globalStyle('.theme--light', { vars: assignVars(vars, themeValues(DEFAULT_PALETTE, 0.1)) });
-globalStyle('.theme--dark', { vars: assignVars(vars, themeValues(invertPalette(DEFAULT_PALETTE), 0.4)) });
+// heavier shadow opacity. the hover tint also lightens as the surface darkens.
+globalStyle('.theme--light', { vars: assignVars(vars, themeValues(DEFAULT_PALETTE, 0.1, '50%')) });
+globalStyle('.theme--dark', {
+	vars: assignVars(vars, themeValues(invertPalette(DEFAULT_PALETTE), 0.4, '40%')),
+});
 globalStyle('.theme--dim', {
-	vars: assignVars(vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4)),
+	vars: assignVars(vars, themeValues(invertPalette(DEFAULT_SUBDUED_PALETTE), 0.4, '45%')),
 });

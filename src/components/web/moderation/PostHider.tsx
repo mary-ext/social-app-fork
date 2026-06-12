@@ -61,18 +61,13 @@ export function PostHider({
 		unstableCacheProfileView(queryClient, profile);
 	}, [queryClient, profile]);
 
-	if (!blur || (disabled && !modui.noOverride)) {
+	if (!blur || (disabled && !modui.noOverride) || override) {
+		// `display: contents` host: post bodies arrive as a component (or multiple elements), so BlockLink —
+		// which clones a single DOM child to inject the press handlers — needs a real element to land them on,
+		// without adding a layout box.
 		return (
 			<BlockLink testID={testID} href={href} onBeforePress={onBeforePress} {...props}>
-				{children}
-			</BlockLink>
-		);
-	}
-
-	if (override) {
-		return (
-			<BlockLink testID={testID} href={href} onBeforePress={onBeforePress} {...props}>
-				{children}
+				<div style={{ display: 'contents' }}>{children}</div>
 			</BlockLink>
 		);
 	}
