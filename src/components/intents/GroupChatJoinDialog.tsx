@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { ClientResponseError } from '@atcute/client';
-import { Trans, useLingui } from '@lingui/react/macro';
+import { Plural, Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -288,8 +288,9 @@ function GroupChatJoinDialogContent({
 					</View>
 					<View style={[a.flex_row, a.align_center]}>
 						<Text style={[a.text_center, a.text_xs, a.leading_snug]}>
-							<Trans comment="The number of active group chat members out of the total number allowed.">
-								{joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit} members
+							<Trans comment="The number of members in a group chat, in the format '{members}/{total} members'.">
+								{joinLinkPreview.memberCount}/{joinLinkPreview.memberLimit}{' '}
+								<Plural value={joinLinkPreview.memberLimit} one="member" other="members" />
 							</Trans>
 						</Text>
 						<View style={[a.flex_row, a.ml_md]}>
