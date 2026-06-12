@@ -289,12 +289,15 @@ export function* findAllProfilesInQueryData(
 		}
 		for (const page of queryData?.pages) {
 			for (const item of page.items) {
-				if (
-					(item.type === 'follow' || item.type === 'contact-match') &&
-					item.notification.author.did === did
-				) {
+				if (item.notification.author.did === did) {
 					yield item.notification.author;
-				} else if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
+				}
+				for (const notification of item.additional ?? []) {
+					if (notification.author.did === did) {
+						yield notification.author;
+					}
+				}
+				if (item.type !== 'starterpack-joined' && item.subject?.author.did === did) {
 					yield item.subject.author;
 				}
 				if (item.subject?.$type === 'app.bsky.feed.defs#postView') {
