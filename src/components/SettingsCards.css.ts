@@ -1,13 +1,16 @@
 import { style } from '@vanilla-extract/css';
+import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
+import { roundToDevicePx } from '#/styles/round';
 import { fontSize, lineHeight, space } from '#/styles/tokens.css';
 
 /**
- * Height of a {@link label} title line (size `md` × snug leading), used to center single-line trailing content
- * on it.
+ * The rendered height of a {@link label} title line — `Text`'s own `roundToDevicePx(size × leading)` formula
+ * for size `md` × snug leading. Matches it exactly (device-pixel snap included) so trailing content centers
+ * on the title line rather than a fraction off it.
  */
-const titleLineHeight = `calc(${fontSize.md} * ${lineHeight.snug})`;
+const titleLineHeight = roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug));
 
 // #region layout
 /** The scroll body: a stack of {@link section} cards with vertical rhythm between them. */
