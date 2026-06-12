@@ -1,7 +1,8 @@
-import type { ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { AnyProfileView, ChatBskyActorDefs, ChatBskyConvoDefs } from '@atcute/bluesky';
 import type { I18n } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 
+import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { postUriToRelativePath, toBskyAppUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
@@ -10,6 +11,29 @@ export type UserMessageInfo = {
 	sentAt: string;
 	reportableMessage?: ChatBskyConvoDefs.MessageView;
 };
+
+/**
+ * Resolves whether the given did is blocked (in either direction) within a convo. Prefers the passed-in
+ * shadowed `primaryProfile` so optimistic blocks reflect immediately, before the convo list refetches - the
+ * raw `members` fetched with the convo are invisible to the profile shadow cache. Group members other than
+ * the owner fall back to the raw (potentially stale) member.
+ */
+export function isDidBlockedInConvo({
+	did,
+	members,
+	primaryProfile,
+}: {
+	did: string | undefined;
+	members: ChatBskyActorDefs.ProfileViewBasic[];
+	primaryProfile?: AnyProfileView;
+}): boolean {
+	if (!did) return false;
+	if (primaryProfile && primaryProfile.did === did) {
+		return !!isBlockedOrBlocking(primaryProfile);
+	}
+	const member = members.find((m) => m.did === did);
+	return member ? !!isBlockedOrBlocking(member) : false;
+}
 
 export function getMessageInfo({
 	convo,

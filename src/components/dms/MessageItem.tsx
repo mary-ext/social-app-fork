@@ -47,7 +47,7 @@ import * as css from './MessageItem.css';
 import { MessageItemEmbed } from './MessageItemEmbed';
 import { MessageItemInviteEmbed } from './MessageItemInviteEmbed';
 import { groupReactions } from './ReactionsDialog';
-import { CLUSTERED_MESSAGE_THRESHOLD_MS, MESSAGE_GAP_THRESHOLD_MS } from './util';
+import { CLUSTERED_MESSAGE_THRESHOLD_MS, filterBlockedReactions, MESSAGE_GAP_THRESHOLD_MS } from './util';
 
 const AVATAR_SIZE = 28;
 const CLUSTERED_MESSAGE_GAP = 2;
@@ -142,8 +142,14 @@ let MessageItem = ({
 	const isInCluster = !(isFirstInCluster && isLastInCluster);
 	const isInMiddleOfCluster = isInCluster && !isFirstInCluster && !isLastInCluster;
 
-	const hasReactions = message.reactions && message.reactions.length > 0;
-	const prevHasReactions = prevIsMessage && prevMessage.reactions && prevMessage.reactions.length > 0;
+	const visibleReactions = useMemo(
+		() => filterBlockedReactions(message.reactions, relatedProfiles),
+		[message.reactions, relatedProfiles],
+	);
+
+	const hasReactions = visibleReactions.length > 0;
+	const prevHasReactions =
+		prevIsMessage && filterBlockedReactions(prevMessage.reactions, relatedProfiles).length > 0;
 	const isNextEmojiOnly = nextIsMessage && isOnlyEmoji(nextMessage.text);
 	const isPrevEmojiOnly = prevIsMessage && isOnlyEmoji(prevMessage.text);
 	const squaredBottomCorner =
@@ -201,9 +207,9 @@ let MessageItem = ({
 			<ProfileCard.AvatarPlaceholder size={AVATAR_SIZE} />
 		);
 
-	const groupedReactions = useMemo(() => groupReactions(message.reactions), [message.reactions]);
+	const groupedReactions = useMemo(() => groupReactions(visibleReactions), [visibleReactions]);
 
-	const reactions = useMemo(() => message.reactions ?? [], [message.reactions]);
+	const reactions = visibleReactions;
 
 	const hasSelfReacted = reactions.some((r) => r.sender.did === currentAccount?.did);
 

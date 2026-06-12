@@ -329,9 +329,14 @@ function BaseChatItem({
 			const info = getReactionInfo({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
+				primaryProfile,
 				i18n,
 			});
-			if (info && (!lastMessageSentAt || new Date(lastMessageSentAt) < new Date(info.createdAt))) {
+			if (
+				info &&
+				!info.isBlocked &&
+				(!lastMessageSentAt || new Date(lastMessageSentAt) < new Date(info.createdAt))
+			) {
 				lastMessage = info.message;
 				lastMessageSentAt = info.createdAt;
 			}
@@ -362,7 +367,7 @@ function BaseChatItem({
 			lastMessageSentAt,
 			latestReportableMessage,
 		};
-	}, [l, convo, currentAccount?.did, isDeletedAccount, i18n]);
+	}, [l, convo, currentAccount?.did, isDeletedAccount, primaryProfile, i18n]);
 
 	const [showActions, setShowActions] = useState(false);
 
