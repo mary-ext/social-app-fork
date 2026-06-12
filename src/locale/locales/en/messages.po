@@ -122,14 +122,14 @@ msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
 #: src/components/ProfileHoverCard/index.tsx:426
-#: src/components/web/ProfileHoverCard.tsx:155
+#: src/components/web/ProfileHoverCard.tsx:153
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/components/ProfileHoverCard/index.tsx:430
-#: src/components/web/ProfileHoverCard.tsx:156
+#: src/components/web/ProfileHoverCard.tsx:154
 #: src/screens/Profile/Header/Metrics.tsx:24
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -523,7 +523,7 @@ msgid "{firstAuthorName} verified you"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.tsx:516
-#: src/components/web/ProfileHoverCard.tsx:238
+#: src/components/web/ProfileHoverCard.tsx:226
 msgid "{following} following"
 msgstr ""
 
@@ -3601,8 +3601,8 @@ msgstr "Focus the search field"
 #: src/components/ProfileCard.tsx:499
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
-#: src/components/web/ProfileHoverCard.tsx:189
-#: src/components/web/ProfileHoverCard.tsx:195
+#: src/components/web/ProfileHoverCard.tsx:187
+#: src/components/web/ProfileHoverCard.tsx:193
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
 #: src/screens/Profile/Header/Actions.tsx:39
@@ -3692,8 +3692,8 @@ msgstr ""
 #: src/components/ProfileCard.tsx:490
 #: src/components/ProfileHoverCard/index.tsx:469
 #: src/components/ProfileHoverCard/index.tsx:474
-#: src/components/web/ProfileHoverCard.tsx:189
-#: src/components/web/ProfileHoverCard.tsx:195
+#: src/components/web/ProfileHoverCard.tsx:187
+#: src/components/web/ProfileHoverCard.tsx:193
 #: src/Navigation.tsx:603
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
 #: src/screens/Profile/Header/Actions.tsx:35
@@ -4819,7 +4819,7 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
-#: src/components/web/ProfileHoverCard.tsx:130
+#: src/components/web/ProfileHoverCard.tsx:128
 #: src/view/shell/Composer.tsx:44
 msgid "Loading"
 msgstr "Loading"
@@ -9375,7 +9375,7 @@ msgid "View @{0}'s profile"
 msgstr "View @{0}'s profile"
 
 #: src/components/ProfileHoverCard/index.tsx:455
-#: src/components/web/ProfileHoverCard.tsx:179
+#: src/components/web/ProfileHoverCard.tsx:177
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -9426,9 +9426,9 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.tsx:441
 #: src/components/ProfileHoverCard/index.tsx:462
 #: src/components/ProfileHoverCard/index.tsx:478
-#: src/components/web/ProfileHoverCard.tsx:165
-#: src/components/web/ProfileHoverCard.tsx:184
-#: src/components/web/ProfileHoverCard.tsx:200
+#: src/components/web/ProfileHoverCard.tsx:163
+#: src/components/web/ProfileHoverCard.tsx:182
+#: src/components/web/ProfileHoverCard.tsx:198
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:297
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152

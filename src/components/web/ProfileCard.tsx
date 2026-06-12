@@ -18,7 +18,7 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Link as WebLink } from '#/components/web/Link';
 import * as css from '#/components/web/ProfileCard.css';
-import { Text } from '#/components/web/Text';
+import { Text, type TextProps } from '#/components/web/Text';
 import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
@@ -149,13 +149,17 @@ function InlineNameAndHandle({
 	);
 }
 
-/** Display name with trailing verification/badge cluster. */
+/** Display name with trailing verification/badge cluster; `size`/`leading` tune the name text. */
 export function Name({
+	leading,
 	moderationOpts,
 	profile,
+	size = 'md',
 }: {
+	leading?: TextProps['leading'];
 	moderationOpts: ModerationOptions;
 	profile: AnyProfileView;
+	size?: TextProps['size'];
 }) {
 	const moderation = moderateProfile(profile, moderationOpts);
 	const name = sanitizeDisplayName(
@@ -164,7 +168,7 @@ export function Name({
 	);
 	return (
 		<div className={css.nameRow}>
-			<Text className={css.nameText} numberOfLines={1} size="md" weight="semiBold">
+			<Text className={css.nameText} leading={leading} numberOfLines={1} size={size} weight="semiBold">
 				{name}
 			</Text>
 			<div className={css.badges}>

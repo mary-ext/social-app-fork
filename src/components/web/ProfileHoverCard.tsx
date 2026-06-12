@@ -15,8 +15,6 @@ import { clsx } from 'clsx';
 import { getModerationCauseKey } from '#/lib/moderation';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { NavigationProp } from '#/lib/routes/types';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
-import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -32,10 +30,10 @@ import { useRichText } from '#/components/hooks/useRichText';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import * as Pills from '#/components/Pills';
-import { ProfileBadges } from '#/components/ProfileBadges';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import { KnownFollowers, shouldShowKnownFollowers } from '#/components/web/KnownFollowers';
 import { InlineLinkText, Link, LinkButton } from '#/components/web/Link';
+import * as ProfileCard from '#/components/web/ProfileCard';
 import * as css from '#/components/web/ProfileHoverCard.css';
 import { RichText } from '#/components/web/RichText';
 import { Spinner } from '#/components/web/Spinner';
@@ -198,17 +196,7 @@ function Inner({
 			</div>
 
 			<Link className={css.nameLink} label={l`View profile`} to={profileURL}>
-				<div className={css.nameRow}>
-					<Text leading="snug" numberOfLines={1} size="lg" weight="semiBold">
-						{sanitizeDisplayName(
-							profile.displayName || sanitizeHandle(profile.handle),
-							getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-						)}
-					</Text>
-					<div className={css.badges}>
-						<ProfileBadges profile={profile} size="md" />
-					</div>
-				</div>
+				<ProfileCard.Name leading="snug" moderationOpts={moderationOpts} profile={profile} size="lg" />
 				<ProfileHeaderHandle disableTaps profile={profileShadow} />
 			</Link>
 

@@ -68,21 +68,11 @@ export const avatarLink = style({
 export const nameLink = style({
 	display: 'flex',
 	flexDirection: 'column',
+	// the spacing that the inlined name row used to carry: above the name, between name and handle, below
+	gap: space.xs,
 	paddingBottom: space.sm,
-	textDecoration: 'none',
-});
-
-export const nameRow = style({
-	alignItems: 'center',
-	display: 'flex',
-	flexDirection: 'row',
-	paddingBottom: space.xs,
 	paddingTop: space.md,
-});
-
-export const badges = style({
-	marginTop: -1,
-	paddingLeft: space.xs,
+	textDecoration: 'none',
 });
 
 export const statsRow = style({
