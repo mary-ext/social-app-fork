@@ -105,7 +105,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:161
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:110
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -1642,7 +1642,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:223
+#: src/components/Post/Embed/index.tsx:221
 msgid "Blocked"
 msgstr ""
 
@@ -1774,7 +1774,7 @@ msgid "By {0}"
 msgstr ""
 
 #. placeholder {0}: authorProfile.handle
-#: src/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow.tsx:67
+#: src/components/Post/Embed/StandardSiteEmbed/MetaRow.tsx:58
 msgid "by @{0}"
 msgstr "by @{0}"
 
@@ -2595,7 +2595,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:216
+#: src/components/Post/Embed/index.tsx:214
 msgid "Deleted"
 msgstr ""
 
@@ -5853,7 +5853,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:76
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:105
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:76
 #: src/components/web/ExternalEmbed/index.tsx:50
 msgid "Open link to {niceUrl}"
 msgstr ""
@@ -6748,11 +6748,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:242
+#: src/components/Post/Embed/index.tsx:240
 msgid "Removed by you"
 msgstr ""
 
@@ -8075,13 +8075,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:324
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:328
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:300
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:304
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:323
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:299
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -9338,8 +9338,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:239
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:486
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:152
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:206
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9368,7 +9368,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:326
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:302
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -9439,10 +9439,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:239
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:327
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:328
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:486
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:152
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:206
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:303
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:304
 msgid "View publication"
 msgstr "View publication"
 

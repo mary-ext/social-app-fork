@@ -12,6 +12,11 @@ export const recordCardGap = style({
 	marginTop: 8,
 });
 
+// top gap above a standard-site link/publication card.
+export const standardSiteGap = style({
+	marginTop: 8,
+});
+
 // post-with-media wrapper: stacks the media embed above the quoted record.
 export const postWithMedia = style({
 	display: 'flex',

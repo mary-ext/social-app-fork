@@ -16,12 +16,8 @@ import { useSession } from '#/state/session';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
-import { atoms as a } from '#/alf';
-
 import { GalleryBleed } from '#/components/images/Gallery';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
-import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
-import { isStandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { BlockLink } from '#/components/web/BlockLink';
 import { ExternalEmbed } from '#/components/web/ExternalEmbed';
@@ -36,6 +32,8 @@ import { ModeratedFeedEmbed } from './FeedEmbed';
 import * as css from './index.css';
 import { ModeratedListEmbed } from './ListEmbed';
 import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder';
+import { StandardSiteEmbed } from './StandardSiteEmbed';
+import { isStandardSiteEmbed } from './StandardSiteEmbed/utils';
 import type { CommonProps, EmbedProps, PostEmbedViewContext } from './types';
 import { VideoEmbed } from './VideoEmbed';
 
@@ -109,7 +107,7 @@ function MediaEmbed({
 						<StandardSiteEmbed
 							view={embed.view.external}
 							onOpen={rest.onOpen}
-							style={[a.mt_sm, rest.style]}
+							className={css.standardSiteGap}
 						/>
 					</ContentHider>
 				);

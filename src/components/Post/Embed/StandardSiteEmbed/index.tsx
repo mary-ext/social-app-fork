@@ -1,320 +1,296 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { niceDate } from '#/lib/strings/time';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
-import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
+import { contrastRatio, darken, rgbToHex } from '#/alf/util/colorGeneration';
 
-import { ButtonIcon, ButtonText } from '#/components/Button';
-import { Divider } from '#/components/Divider';
-import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { StandardSite } from '#/components/icons/community/StandardSite';
-import { Link } from '#/components/Link';
-import { MediaInsetBorder } from '#/components/MediaInsetBorder';
-import * as styles from '#/components/Post/Embed/StandardSiteEmbed/index.css';
-import { matchStandardSitePublisher } from '#/components/Post/Embed/StandardSiteEmbed/publishers';
-import { StandardSiteMetaRow } from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow';
-import { StandardSiteThemeProvider } from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider';
-import { isStandardSitePublicationEmbed } from '#/components/Post/Embed/StandardSiteEmbed/utils';
-import { Text } from '#/components/Typography';
+import { ButtonIcon, ButtonText } from '#/components/web/Button';
+import { Link, LinkButton } from '#/components/web/Link';
+import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
+import { Text } from '#/components/web/Text';
 import { UserAvatar } from '#/components/web/UserAvatar';
 
-import { Image } from '#/shims/image';
+import { colors } from '#/styles/colors';
+import { vars } from '#/styles/contract.css';
 
-export type ThemeColors = {
-	custom: boolean;
-	accent: string;
-	accentForeground: string;
+import * as styles from './index.css';
+import { MetaRow } from './MetaRow';
+import { matchStandardSitePublisher } from './publishers';
+import { isStandardSitePublicationEmbed } from './utils';
+
+type StandardSiteEmbedProps = {
+	className?: string;
+	onOpen?: () => void;
+	/** Renders the card non-interactive for the composer preview. */
+	preview?: boolean;
+	view: AppBskyEmbedExternal.ViewExternal;
 };
 
-export const StandardSiteEmbed = ({
-	onOpen,
-	preview,
-	style,
-	view,
-}: {
-	onOpen?: () => void;
-	preview?: boolean;
-	style?: StyleProp<ViewStyle>;
-	view: AppBskyEmbedExternal.ViewExternal;
-}) => {
-	const { t: l, i18n } = useLingui();
-	const t = useTheme();
+type ThemeColors = { accent: string; accentForeground: string };
+
+/** Resolves a site's custom accent pair, falling back to the themed text colors. */
+function themeColorsFor(view: AppBskyEmbedExternal.ViewExternal): ThemeColors {
+	const { accentForegroundRGB, accentRGB } = view.source?.theme || {};
+	if (accentRGB && accentForegroundRGB) {
+		return {
+			accent: rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b),
+			accentForeground: rgbToHex(accentForegroundRGB.r, accentForegroundRGB.g, accentForegroundRGB.b),
+		};
+	}
+	return { accent: colors.text, accentForeground: colors.textInverted };
+}
+
+/**
+ * Embed for a [standard site](https://standard.site) link: an article card, an article card with a
+ * publication footer, or a standalone publication card.
+ */
+export function StandardSiteEmbed(props: StandardSiteEmbedProps) {
+	if (isStandardSitePublicationEmbed(props.view)) {
+		return <PublicationCard {...props} />;
+	}
+	return <ArticleCard {...props} />;
+}
+
+function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
+	const { i18n, t: l } = useLingui();
 	const niceUrl = toNiceDomain(view.uri);
-	const imageUri = view.thumb;
-	const hasMedia = Boolean(imageUri);
+	const hasMedia = Boolean(view.thumb);
 	const isStandard = view.associatedRefs?.some((ref) =>
 		parseCanonicalResourceUri(ref.uri).collection.startsWith('site.standard.'),
 	);
-	const isStandardPublication = isStandardSitePublicationEmbed(view);
-	let themeColors: ThemeColors = {
-		custom: false,
-		accent: t.atoms.text.color,
-		accentForeground: t.atoms.text_inverted.color,
-	};
-	const { accentRGB, accentForegroundRGB } = view.source?.theme || {};
-	if (accentRGB && accentForegroundRGB) {
-		themeColors = {
-			custom: true,
-			accent: utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b),
-			accentForeground: utils.rgbToHex(accentForegroundRGB.r, accentForegroundRGB.g, accentForegroundRGB.b),
-		};
-	}
-
-	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
-
-	const onPress = () => {
-		onOpen?.();
-	};
-
-	if (isStandardPublication) {
-		return (
-			<PublicationCard
-				preview={preview}
-				view={view}
-				onPress={onPress}
-				style={style}
-				themeColors={themeColors}
-			/>
-		);
-	}
+	const open = () => onOpen?.();
 
 	return (
-		<View
-			style={[
-				a.flex_col,
-				a.rounded_lg,
-				a.overflow_hidden,
-				a.w_full,
-				a.border,
-				t.atoms.bg,
-				interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
-				preview && a.pointer_events_none,
-				style,
-			]}
-		>
+		<div className={clsx(styles.card, preview && styles.previewLock, className)}>
 			<Link
-				shouldProxy
-				to={view.uri}
+				className={styles.bodyLink}
 				label={view.title || l`Open link to ${niceUrl}`}
-				onPress={onPress}
-				style={[a.absolute, a.inset_0, a.z_10]}
-				onMouseEnter={onInteract}
-				onMouseLeave={onInteractOut}
-				onFocus={onInteract}
-				onBlur={onInteractOut}
+				onPress={open}
+				to={view.uri}
 			>
-				<></>
-			</Link>
+				{view.thumb ? <img alt="" className={styles.thumb} loading="lazy" src={view.thumb} /> : null}
 
-			<View style={[a.w_full, a.z_10, a.pointer_events_none, interacted && [t.atoms.bg_contrast_25]]}>
-				{imageUri ? (
-					<Image
-						style={[a.aspect_card]}
-						source={{ uri: imageUri }}
-						accessibilityIgnoresInvertColors
-						loading="lazy"
-					/>
-				) : undefined}
-
-				<View
-					style={[
-						a.flex_1,
-						a.pt_sm,
-						hasMedia && a.border_t,
-						interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
-						{ gap: 3 },
-						isStandard && a.pt_md,
-					]}
-				>
-					<View style={[a.pb_xs, a.px_md, { gap: 3 }, isStandard && [{ gap: 5 }, a.pb_sm]]}>
+				<div className={clsx(styles.body, isStandard && styles.bodyStandard, hasMedia && styles.bodyMedia)}>
+					<div className={clsx(styles.textBlock, isStandard && styles.textBlockStandard)}>
 						<Text
-							emoji
+							leading="snug"
 							numberOfLines={3}
-							style={[a.text_md, a.font_semi_bold, a.leading_snug, isStandard && [a.text_lg, a.font_bold]]}
+							size={isStandard ? 'lg' : 'md'}
+							weight={isStandard ? 'bold' : 'semiBold'}
 						>
 							{view.title}
 						</Text>
+
 						{view.description ? (
-							<Text emoji numberOfLines={view.thumb ? 2 : 4} style={[a.text_sm, a.leading_snug]}>
+							<Text leading="snug" numberOfLines={view.thumb ? 2 : 4} size="sm">
 								{view.description}
 							</Text>
-						) : undefined}
+						) : null}
 
-						{isStandard && (view.createdAt || view.readingTime) && (
-							<View style={[a.flex_row, a.align_center, a.gap_md, { paddingTop: 2 }]}>
-								{view.createdAt && (
-									<Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+						{isStandard && (view.createdAt || view.readingTime) ? (
+							<div className={styles.metaInline}>
+								{view.createdAt ? (
+									<Text color="textContrastMedium" leading="snug" size="xs">
 										{niceDate(i18n, view.createdAt, 'long', 'none')}
 									</Text>
-								)}
-								{view.readingTime && (
-									<View style={[a.flex_row, a.align_center, a.gap_2xs]}>
-										<Clock size="xs" style={t.atoms.text_contrast_medium} />
-										<Text style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+								) : null}
+								{view.readingTime ? (
+									<span className={styles.readingTime}>
+										<Clock size="xs" fill="currentColor" />
+										<Text color="textContrastMedium" leading="snug" size="xs">
 											{l({
-												message: plural(view.readingTime, {
-													one: '#m',
-													other: '#m',
-												}),
 												comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
+												message: plural(view.readingTime, { one: '#m', other: '#m' }),
 											})}
 										</Text>
-									</View>
-								)}
-							</View>
-						)}
-					</View>
-				</View>
+									</span>
+								) : null}
+							</div>
+						) : null}
+					</div>
 
-				{!view.source && (
-					<View style={[a.px_md]}>
-						<Divider />
-						<View style={[a.py_sm]}>
-							<StandardSiteMetaRow preview={preview} view={view} />
-						</View>
-					</View>
-				)}
-			</View>
-
-			{view.source && (
-				<View style={[a.z_20]}>
-					<Divider />
-					<PublicationFooter
-						preview={preview}
-						view={view}
-						onPress={onPress}
-						themeColors={themeColors}
-						interactedOuter={interacted}
-					/>
-				</View>
-			)}
-		</View>
-	);
-};
-
-export function PublicationCard({
-	preview,
-	view,
-	onPress,
-	themeColors,
-	style,
-}: {
-	preview?: boolean;
-	view: AppBskyEmbedExternal.ViewExternal;
-	onPress?: () => void;
-	themeColors: ThemeColors;
-	style?: StyleProp<ViewStyle>;
-}) {
-	const t = useTheme();
-	const { t: l } = useLingui();
-	const { gtPhone } = useBreakpoints();
-	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
-
-	if (!view.source) return null;
-
-	return (
-		<View
-			style={[
-				a.rounded_lg,
-				a.overflow_hidden,
-				a.w_full,
-				a.border,
-				a.p_md,
-				interacted
-					? [t.atoms.bg_contrast_25, t.atoms.border_contrast_high]
-					: [t.atoms.bg, t.atoms.border_contrast_low],
-				style,
-			]}
-		>
-			<Link
-				shouldProxy
-				to={view.source.uri}
-				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
-				onPress={onPress}
-				onMouseEnter={onInteract}
-				onMouseLeave={onInteractOut}
-				onFocus={onInteract}
-				onBlur={onInteractOut}
-				style={[a.absolute, a.inset_0]}
-			>
-				<></>
+					{!view.source ? (
+						<div className={styles.metaSection}>
+							<div className={styles.divider} />
+							<div className={styles.metaRowPad}>
+								<MetaRow view={view} />
+							</div>
+						</div>
+					) : null}
+				</div>
 			</Link>
 
-			<View
-				style={[
-					a.flex_1,
-					a.align_center,
-					a.justify_between,
-					a.gap_md,
-					a.pointer_events_none,
-					gtPhone && [a.flex_row, a.gap_sm],
-				]}
-			>
-				<View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm, gtPhone && a.flex_1]}>
-					<PublicationIcon view={view} size={40} themeColors={themeColors} />
-					<View style={[a.flex_1, a.gap_2xs]}>
-						<Text numberOfLines={1} style={[a.text_md, a.font_semi_bold, a.leading_snug, t.atoms.text]}>
-							{view.source?.title}
-						</Text>
-						<StandardSiteMetaRow preview={preview} type="publication" view={view} />
-					</View>
-				</View>
-
-				{gtPhone && (
-					<SubscribeButton
-						preview={preview}
-						view={view}
-						style={[!gtPhone && [a.w_full, a.justify_center]]}
-						onPress={onPress}
-					/>
-				)}
-			</View>
-
-			<View style={[a.pointer_events_none]}>
-				{view.description && (
-					<View style={[a.pt_sm]}>
-						<Text style={[a.text_sm, a.leading_snug]} numberOfLines={3}>
-							{view.description}
-						</Text>
-					</View>
-				)}
-
-				{!gtPhone && (
-					<View style={[a.pt_sm]}>
-						<SubscribeButton
-							preview={preview}
-							view={view}
-							style={[!gtPhone && [a.w_full, a.justify_center]]}
-							onPress={onPress}
-						/>
-					</View>
-				)}
-			</View>
-		</View>
+			{view.source ? (
+				<>
+					<div className={styles.divider} />
+					<PublicationFooter onOpen={onOpen} view={view} />
+				</>
+			) : null}
+		</div>
 	);
 }
 
-export function SubscribeButton({
-	preview,
+function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
+	const { t: l } = useLingui();
+	if (!view.source) return null;
+	const themeColors = themeColorsFor(view);
+	const open = () => onOpen?.();
+
+	return (
+		<div className={clsx(styles.pubCard, preview && styles.previewLock, className)}>
+			<Link
+				className={styles.pubFill}
+				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
+				onPress={open}
+				to={view.source.uri}
+			>
+				{null}
+			</Link>
+
+			<div className={styles.pubTopRow}>
+				<div className={styles.pubIdentity}>
+					<PublicationIcon size="lg" themeColors={themeColors} view={view} />
+					<div className={styles.identityText}>
+						<Text color="text" leading="snug" numberOfLines={1} size="md" weight="semiBold">
+							{view.source.title}
+						</Text>
+						<MetaRow type="publication" view={view} />
+					</div>
+				</div>
+
+				<SubscribeButton className={styles.hideOnPhone} onOpen={onOpen} view={view} />
+			</div>
+
+			{view.description ? (
+				<div className={styles.pubDescription}>
+					<Text leading="snug" numberOfLines={3} size="sm">
+						{view.description}
+					</Text>
+				</div>
+			) : null}
+
+			<SubscribeButton
+				className={clsx(styles.pubSubscribeStacked, styles.hideOnGtPhone)}
+				onOpen={onOpen}
+				view={view}
+			/>
+		</div>
+	);
+}
+
+function PublicationFooter({
+	onOpen,
 	view,
-	onPress,
-	style,
 }: {
-	preview?: boolean;
+	onOpen?: () => void;
 	view: AppBskyEmbedExternal.ViewExternal;
-	onPress?: () => void;
-	style?: StyleProp<ViewStyle>;
+}) {
+	const { t: l } = useLingui();
+	if (!view.source) return null;
+	const themeColors = themeColorsFor(view);
+	const open = () => onOpen?.();
+
+	return (
+		<div className={styles.footer}>
+			<Link
+				className={styles.footerFill}
+				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
+				onPress={open}
+				to={view.source.uri}
+			>
+				{null}
+			</Link>
+
+			<div className={styles.footerIdentity}>
+				<PublicationIcon size="sm" themeColors={themeColors} view={view} />
+				<div className={styles.identityText}>
+					<Text
+						className={styles.footerTitle}
+						color="text"
+						leading="tight"
+						numberOfLines={1}
+						size="sm"
+						weight="medium"
+					>
+						{view.source.title}
+					</Text>
+					<MetaRow type="publication" view={view} />
+				</div>
+			</div>
+
+			<SubscribeButton onOpen={onOpen} view={view} />
+		</div>
+	);
+}
+
+function PublicationIcon({
+	size,
+	themeColors,
+	view,
+}: {
+	size: 'lg' | 'sm';
+	themeColors: ThemeColors;
+	view: AppBskyEmbedExternal.ViewExternal;
+}) {
+	if (!view.source) return null;
+	const px = size === 'lg' ? 40 : 32;
+
+	return (
+		<div className={styles.iconRoot}>
+			<div className={styles.standardBadge}>
+				<StandardSite size="xs" fill="currentColor" />
+				<MediaInsetBorder className={styles.insetRoundedFull} />
+			</div>
+
+			{view.source.icon ? (
+				<div className={styles.avatarWrap}>
+					<UserAvatar
+						avatar={view.source.icon}
+						className={styles.publicationAvatar}
+						noBorder
+						size={px}
+						type="labeler"
+					/>
+					<MediaInsetBorder className={styles.insetRoundedSm} opaque />
+				</div>
+			) : (
+				<div
+					className={clsx(styles.letterBox, size === 'lg' ? styles.letterBoxLg : styles.letterBoxSm)}
+					style={assignInlineVars({
+						[styles.accentForegroundVar]: themeColors.accentForeground,
+						[styles.accentVar]: themeColors.accent,
+					})}
+				>
+					<Text className={styles.letterText} size="xl" weight="bold">
+						{[...view.source.title][0] ?? ''}
+					</Text>
+					<MediaInsetBorder className={styles.insetRoundedSm} opaque />
+				</div>
+			)}
+		</div>
+	);
+}
+
+function SubscribeButton({
+	className,
+	onOpen,
+	view,
+}: {
+	className?: string;
+	onOpen?: () => void;
+	view: AppBskyEmbedExternal.ViewExternal;
 }) {
 	const { t: l } = useLingui();
 	const highlightedPublisher = matchStandardSitePublisher(view);
-
 	if (!view.source) return null;
 
 	const publicationTitle = view.source.title;
@@ -328,40 +304,40 @@ export function SubscribeButton({
 	const cta = highlightedPublisher ? l`Subscribe on ${highlightedPublisher.name}` : l`View publication`;
 
 	/*
-	 * The custom site theme paints the button background with `accent` and the
-	 * text with `accentForeground`. Only honor it when that pairing clears WCAG
-	 * AAA (4.5:1) for large text, which the button's bold label qualifies as.
-	 * Otherwise we fall through to the default `secondary_inverted` styling,
-	 * which is guaranteed to be legible.
+	 * The custom site theme paints the button background with `accent` and the text with `accentForeground`.
+	 * Only honor it when that pairing clears WCAG AAA (4.5:1) for large text, which the button's bold label
+	 * qualifies as. Otherwise fall through to the default `secondary_inverted` styling, which is guaranteed to
+	 * be legible.
 	 */
-	const { accentRGB, accentForegroundRGB } = view.source.theme || {};
-	let useCustomTheme = false;
+	const { accentForegroundRGB, accentRGB } = view.source.theme || {};
+	let themeStyle: ReturnType<typeof assignInlineVars> | undefined;
 	if (accentRGB && accentForegroundRGB) {
-		const accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b);
-		const accentForeground = utils.rgbToHex(
-			accentForegroundRGB.r,
-			accentForegroundRGB.g,
-			accentForegroundRGB.b,
-		);
-		const ratio = utils.contrastRatio(accent, accentForeground);
-		useCustomTheme = ratio !== null && ratio >= 4.5;
+		const accent = rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b);
+		const accentForeground = rgbToHex(accentForegroundRGB.r, accentForegroundRGB.g, accentForegroundRGB.b);
+		const ratio = contrastRatio(accent, accentForeground);
+		if (ratio !== null && ratio >= 4.5) {
+			themeStyle = assignInlineVars({
+				// override the three palette vars the `secondary_inverted` button reads: idle bg, hover bg, text.
+				[vars.palette.contrast_0]: accentForeground,
+				[vars.palette.contrast_900]: accent,
+				[vars.palette.contrast_975]: darken(accent, 5),
+			});
+		}
 	}
 
-	const button = (
-		<Link
-			shouldProxy
-			to={view.source.uri}
-			label={label}
-			size="small"
+	return (
+		<LinkButton
+			className={clsx(styles.subscribe, className)}
 			color="secondary_inverted"
-			style={[style, a.gap_sm, preview ? a.pointer_events_none : a.pointer_events_auto]}
-			onPress={onPress}
+			label={label}
+			onPress={() => onOpen?.()}
+			size="small"
+			style={themeStyle}
+			to={view.source.uri}
 		>
 			{highlightedPublisher ? (
 				<>
-					<View style={[a.flex_row, a.align_center, { gap: 7 }]}>
-						<ButtonIcon icon={highlightedPublisher.Icon} size="md" />
-					</View>
+					<ButtonIcon icon={highlightedPublisher.Icon} size="md" />
 					<ButtonText>{cta}</ButtonText>
 				</>
 			) : (
@@ -370,151 +346,6 @@ export function SubscribeButton({
 					<ButtonIcon icon={ArrowTopRightIcon} />
 				</>
 			)}
-		</Link>
-	);
-
-	if (!useCustomTheme) {
-		return button;
-	}
-
-	return <StandardSiteThemeProvider view={view}>{button}</StandardSiteThemeProvider>;
-}
-
-function PublicationIcon({
-	view,
-	size,
-	themeColors,
-}: {
-	view: AppBskyEmbedExternal.ViewExternal;
-	size: number;
-	themeColors: ThemeColors;
-}) {
-	const t = useTheme();
-	if (!view.source) return null;
-	const icon = view.source?.icon ? (
-		<View>
-			<UserAvatar
-				noBorder
-				type="labeler"
-				size={size}
-				avatar={view.source.icon}
-				className={styles.publicationAvatar}
-			/>
-			<MediaInsetBorder opaque style={[a.rounded_sm]} />
-		</View>
-	) : (
-		<View
-			style={[
-				a.align_center,
-				a.justify_center,
-				a.rounded_sm,
-				{
-					width: size,
-					height: size,
-					backgroundColor: themeColors.accent,
-				},
-			]}
-		>
-			<Text emoji style={[a.text_xl, a.font_bold, { color: themeColors.accentForeground }]}>
-				{[...view.source.title][0] ?? ''}
-			</Text>
-			<MediaInsetBorder opaque style={[a.rounded_sm]} />
-		</View>
-	);
-	return (
-		<View style={[a.relative]}>
-			<View
-				style={[
-					a.absolute,
-					a.rounded_full,
-					a.z_10,
-					a.justify_center,
-					a.align_center,
-					t.atoms.bg,
-					{
-						width: 16,
-						height: 16,
-						top: -6,
-						left: -6,
-					},
-				]}
-			>
-				<StandardSite size="xs" fill={t.atoms.text_contrast_medium.color} />
-				<MediaInsetBorder />
-			</View>
-			{icon}
-		</View>
-	);
-}
-
-export function PublicationFooter({
-	preview,
-	view,
-	themeColors,
-	onPress,
-	interactedOuter,
-}: {
-	preview?: boolean;
-	view: AppBskyEmbedExternal.ViewExternal;
-	themeColors: ThemeColors;
-	onPress?: () => void;
-	interactedOuter?: boolean;
-}) {
-	const t = useTheme();
-	const { t: l } = useLingui();
-	const { gtPhone } = useBreakpoints();
-	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
-
-	if (!view.source) return null;
-
-	return (
-		<View
-			style={[
-				a.flex_1,
-				a.align_center,
-				a.justify_between,
-				a.p_md,
-				a.gap_md,
-				gtPhone && [a.flex_row, a.gap_sm],
-				interactedOuter && t.atoms.bg_contrast_25,
-				preview && a.pointer_events_none,
-			]}
-		>
-			<Link
-				shouldProxy
-				to={view.source.uri}
-				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
-				onPress={onPress}
-				style={[a.absolute, a.inset_0]}
-				onMouseEnter={onInteract}
-				onMouseLeave={onInteractOut}
-				onFocus={onInteract}
-				onBlur={onInteractOut}
-			>
-				<></>
-			</Link>
-
-			<View
-				style={[a.w_full, a.flex_row, a.align_center, a.gap_sm, gtPhone && a.flex_1, a.pointer_events_none]}
-			>
-				<PublicationIcon view={view} size={32} themeColors={themeColors} />
-				<View style={[a.flex_1, a.gap_2xs]}>
-					<Text
-						numberOfLines={1}
-						style={[a.text_sm, a.font_medium, a.leading_tight, t.atoms.text, interacted && a.underline]}
-					>
-						{view.source?.title}
-					</Text>
-					<StandardSiteMetaRow preview={preview} type="publication" view={view} />
-				</View>
-			</View>
-
-			<SubscribeButton
-				preview={preview}
-				view={view}
-				style={[a.z_10, !gtPhone && [a.w_full, a.justify_center]]}
-				onPress={onPress}
-			/>
-		</View>
+		</LinkButton>
 	);
 }
