@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -160,7 +160,6 @@ export function ProfileGrid({
 	totalProfileCount,
 	viewContext = 'feed',
 	onDismiss,
-	isVisible = true,
 	onRequestHide,
 }: {
 	isSuggestionsLoading: boolean;
@@ -170,7 +169,6 @@ export function ProfileGrid({
 	error: Error | null;
 	viewContext: 'profile' | 'profileHeader' | 'feed';
 	onDismiss?: (did: string) => void;
-	isVisible?: boolean;
 	onRequestHide?: () => void;
 }) {
 	const t = useTheme();
@@ -184,65 +182,6 @@ export function ProfileGrid({
 
 	const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6;
 	const minLength = gtMobile ? 3 : 4;
-
-	// Track seen profiles
-	const seenProfilesRef = useRef<Set<string>>(new Set());
-	const containerRef = useRef<View>(null);
-	const hasTrackedRef = useRef(false);
-	// Callback to fire seen events
-	const fireSeen = useCallback(() => {
-		if (isLoading || error || !profiles.length) return;
-		if (hasTrackedRef.current) return;
-		hasTrackedRef.current = true;
-
-		const profilesToShow = profiles.slice(0, maxLength);
-		profilesToShow.forEach((profile, _index) => {
-			if (!seenProfilesRef.current.has(profile.actor.did)) {
-				seenProfilesRef.current.add(profile.actor.did);
-			}
-		});
-	}, [isLoading, error, profiles, maxLength]);
-
-	// For profile header, fire when isVisible becomes true
-	useEffect(() => {
-		if (isProfileHeaderContext) {
-			if (!isVisible) {
-				hasTrackedRef.current = false;
-				return;
-			}
-			fireSeen();
-		}
-	}, [isVisible, isProfileHeaderContext, fireSeen]);
-
-	// For feed interstitials, use IntersectionObserver to detect actual visibility
-	useEffect(() => {
-		if (isProfileHeaderContext) return; // handled above
-		if (isLoading || error || !profiles.length) return;
-
-		const node = containerRef.current;
-		if (!node) return;
-
-		// Use IntersectionObserver on web to detect when actually visible
-		if (typeof IntersectionObserver !== 'undefined') {
-			const observer = new IntersectionObserver(
-				(entries) => {
-					if (entries[0]?.isIntersecting) {
-						fireSeen();
-						observer.disconnect();
-					}
-				},
-				{ threshold: 0.5 },
-			);
-			observer.observe(node as unknown as Element);
-			return () => observer.disconnect();
-		} else {
-			// On native, delay slightly to account for layout shifts during hydration
-			const timeout = setTimeout(() => {
-				fireSeen();
-			}, 500);
-			return () => clearTimeout(timeout);
-		}
-	}, [isProfileHeaderContext, isLoading, error, profiles.length, fireSeen]);
 
 	const content = isLoading
 		? Array(maxLength)
@@ -355,7 +294,6 @@ export function ProfileGrid({
 
 	return (
 		<View
-			ref={containerRef}
 			style={[!isProfileHeaderContext && a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}
 			pointerEvents={'box-none'}
 		>

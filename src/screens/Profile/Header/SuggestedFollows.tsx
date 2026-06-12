@@ -28,7 +28,6 @@ export function ProfileHeaderSuggestedFollows({
 					error={error}
 					viewContext="profileHeader"
 					onDismiss={onDismiss}
-					isVisible={isExpanded}
 					onRequestHide={onRequestHide}
 				/>
 			</Collapsible.Panel>

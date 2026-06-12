@@ -1724,7 +1724,7 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:426
+#: src/components/FeedInterstitials.tsx:364
 msgid "Browse more accounts"
 msgstr ""
 
@@ -2747,7 +2747,7 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:289
+#: src/components/FeedInterstitials.tsx:228
 msgid "Dismiss this suggestion"
 msgstr ""
 
@@ -7355,12 +7355,12 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:386
-#: src/components/FeedInterstitials.tsx:440
+#: src/components/FeedInterstitials.tsx:324
+#: src/components/FeedInterstitials.tsx:378
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:370
+#: src/components/FeedInterstitials.tsx:308
 msgid "See more suggested profiles"
 msgstr ""
 
@@ -8120,7 +8120,7 @@ msgstr "Suggested"
 msgid "Suggested accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:367
+#: src/components/FeedInterstitials.tsx:305
 msgid "Suggested for you"
 msgstr ""
 
