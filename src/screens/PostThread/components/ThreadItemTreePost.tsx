@@ -21,18 +21,18 @@ import { OUTER_SPACE, TREE_AVI_WIDTH } from '#/screens/PostThread/const';
 
 import { atoms as a, useTheme } from '#/alf';
 
+import { ClampedPostText } from '#/components/ClampedPostText';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
-import { ClampedPostText } from '#/components/web/ClampedPostText';
-import { PostHider } from '#/components/web/moderation/PostHider';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as css from './ThreadItemTreePost.css';
 

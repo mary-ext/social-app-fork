@@ -12,10 +12,10 @@ import type { Props as SVGIconProps } from '#/components/icons/common';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsIcon } from '#/components/icons/DotGrid';
 import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
+import { PlayButtonIcon } from '#/components/PlayButtonIcon';
+import { Text } from '#/components/Text';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
-import { PlayButtonIcon } from '#/components/web/PlayButtonIcon';
 import * as Prompt from '#/components/web/Prompt';
-import { Text } from '#/components/web/Text';
 
 import * as styles from './DraftItem.css';
 import { DraftRichText } from './DraftRichText';

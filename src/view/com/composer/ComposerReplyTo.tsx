@@ -13,7 +13,7 @@ import { atoms as a, useTheme, utils } from '#/alf';
 import { QuoteEmbed } from '#/components/Post/Embed';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { Image } from '#/shims/image';
 import { parseEmbed } from '#/types/embed';

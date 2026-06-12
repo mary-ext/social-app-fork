@@ -5,7 +5,7 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useBreakpoints } from '#/alf';
 
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import { useProfileHeader } from './Context';
 import * as css from './DisplayName.css';

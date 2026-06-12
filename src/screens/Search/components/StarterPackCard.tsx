@@ -20,7 +20,7 @@ import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 type WebViewStyle = Omit<ViewStyle, 'position' | 'zIndex'> & {
 	position?: 'static';

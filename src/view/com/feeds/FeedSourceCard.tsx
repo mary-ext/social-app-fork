@@ -19,7 +19,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { MissingFeed } from './MissingFeed';
 

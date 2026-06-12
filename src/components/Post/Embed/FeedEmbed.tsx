@@ -6,7 +6,7 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { atoms as a, useTheme } from '#/alf';
 
 import * as FeedCard from '#/components/FeedCard';
-import { ContentHider } from '#/components/web/moderation/ContentHider';
+import { ContentHider } from '#/components/moderation/ContentHider';
 
 import type { EmbedType } from '#/types/embed';
 

@@ -6,9 +6,9 @@ import { clsx } from 'clsx';
 
 import { useSession } from '#/state/session';
 
+import { EmojiMartPanel } from '#/components/EmojiPicker/EmojiMartPanel';
 import { useWebPreloadEmoji } from '#/components/EmojiPicker/preload';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import { EmojiMartPanel } from '#/components/web/EmojiPicker/EmojiMartPanel';
 
 import * as styles from './EmojiReactionPicker.css';
 import { hasAlreadyReacted, hasReachedReactionLimit } from './util';

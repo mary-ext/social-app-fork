@@ -45,10 +45,10 @@ import * as Layout from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import * as Menu from '#/components/Menu';
 import { ReportDialog, useReportDialogControl } from '#/components/moderation/ReportDialog';
+import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { RichText } from '#/components/web/RichText';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export function ProfileFeedHeaderSkeleton() {
 	const t = useTheme();

@@ -53,7 +53,7 @@ import {
 import { InlineLinkText } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { useKawaiiMode } from '#/storage/hooks/kawaii';

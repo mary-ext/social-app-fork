@@ -37,10 +37,10 @@ import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Pl
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import * as Pills from '#/components/Pills';
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { RichText, type RichTextProps } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { RichText, type RichTextProps } from '#/components/web/RichText';
-import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
+import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

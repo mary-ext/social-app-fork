@@ -13,7 +13,7 @@ import { atoms as a } from '#/alf';
 
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/PostControls/PostControlButton.css';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 const PostControlContext = createContext<{ active?: boolean; big?: boolean }>({});
 PostControlContext.displayName = 'PostControlContext';

@@ -17,13 +17,13 @@ import { useClients, useSession } from '#/state/session';
 import { logger } from '#/logger';
 
 import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
-import { Text } from '#/components/web/Text';
-import * as TextField from '#/components/web/TextField';
 
 import * as styles from './LabelsOnMeDialog.css';
 

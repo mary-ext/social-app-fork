@@ -1,92 +1,46 @@
-import { useCallback, useEffect, useState } from 'react';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { useLingui } from '@lingui/react/macro';
 
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 
-import { Button, ButtonIcon } from '#/components/Button';
+import { SubscribeProfileDialog } from '#/components/activity-notifications/SubscribeProfileDialog';
 import { useDialogControl } from '#/components/Dialog';
 import { BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon } from '#/components/icons/BellPlus';
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
-import * as Tooltip from '#/components/Tooltip';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon } from '#/components/web/Button';
 
-import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
-
-import { SubscribeProfileDialog } from './SubscribeProfileDialog';
-
+/** Round bell button opening the activity-subscription dialog. */
 export function SubscribeProfileButton({
-	profile,
 	moderationOpts,
-	disableHint,
+	profile,
 }: {
-	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
-	disableHint?: boolean;
+	profile: AnyProfileView;
 }) {
 	const { t: l } = useLingui();
 	const subscribeDialogControl = useDialogControl();
-	const [activitySubscriptionsNudged, setActivitySubscriptionsNudged] = useActivitySubscriptionsNudged();
-	const [showTooltip, setShowTooltip] = useState(false);
-
-	useEffect(() => {
-		if (!activitySubscriptionsNudged) {
-			const timeout = setTimeout(() => {
-				setShowTooltip(true);
-			}, 500);
-			return () => clearTimeout(timeout);
-		}
-	}, [activitySubscriptionsNudged]);
-
-	const onDismissTooltip = (visible: boolean) => {
-		if (visible) return;
-
-		setShowTooltip(false);
-		setActivitySubscriptionsNudged(true);
-	};
-
-	const onPress = useCallback(() => {
-		subscribeDialogControl.open();
-	}, [subscribeDialogControl]);
 
 	const name = createSanitizedDisplayName(profile, true);
-
-	const wrappedOnPress = onPress;
-
 	const isSubscribed =
 		profile.viewer?.activitySubscription?.post || profile.viewer?.activitySubscription?.reply;
-
 	const Icon = isSubscribed ? BellRingingIcon : BellPlusIcon;
-
-	const tooltipVisible = showTooltip && !disableHint;
 
 	return (
 		<>
-			<Tooltip.Outer visible={tooltipVisible} onVisibleChange={onDismissTooltip} position="bottom">
-				<Tooltip.Target>
-					<Button
-						accessibilityRole="button"
-						testID="dmBtn"
-						size="small"
-						color={tooltipVisible ? 'primary_subtle' : 'secondary'}
-						shape="round"
-						label={l`Get notified when ${name} posts`}
-						onPress={wrappedOnPress}
-					>
-						<ButtonIcon icon={Icon} size="md" />
-					</Button>
-				</Tooltip.Target>
-				<Tooltip.TextBubble>
-					<Text>
-						<Trans>Get notified about new posts</Trans>
-					</Text>
-				</Tooltip.TextBubble>
-			</Tooltip.Outer>
+			<Button
+				color="secondary"
+				label={l`Get notified when ${name} posts`}
+				onClick={() => subscribeDialogControl.open()}
+				shape="round"
+				size="small"
+			>
+				<ButtonIcon icon={Icon} size="md" />
+			</Button>
 			<SubscribeProfileDialog
 				control={subscribeDialogControl}
-				profile={profile}
 				moderationOpts={moderationOpts}
+				profile={profile}
 			/>
 		</>
 	);

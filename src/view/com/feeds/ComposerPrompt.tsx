@@ -12,7 +12,7 @@ import { Button } from '#/components/Button';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { SubtleHover } from '#/components/SubtleHover';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 type WebViewStyle = ViewStyle & {
 	cursor?: 'pointer';

@@ -5,9 +5,9 @@ import { useSession } from '#/state/session';
 
 import * as css from '#/components/BotAccountAlert.css';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
+import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { Text } from '#/components/web/Text';
 
 import { navigate } from '#/Navigation';
 

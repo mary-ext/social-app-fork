@@ -4,11 +4,11 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useCallOnce } from '#/lib/once';
 
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import { PageX_Stroke2_Corner0_Rounded_Large as PageXIcon } from '#/components/icons/PageX';
+import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
-import { CenteredSpinner } from '#/components/web/CenteredSpinner';
 import * as Dialog from '#/components/web/Dialog';
-import { Text } from '#/components/web/Text';
 
 import { DraftItem } from './DraftItem';
 import * as styles from './DraftsListDialog.css';

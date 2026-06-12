@@ -5,10 +5,10 @@ import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels } from 
 
 import { useSetExternalEmbedPref } from '#/state/preferences';
 
+import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { Text } from '#/components/web/Text';
 
 import * as styles from './EmbedConsent.css';
 

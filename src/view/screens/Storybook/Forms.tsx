@@ -13,8 +13,8 @@ import * as TextField from '#/components/forms/TextField';
 import * as Toggle from '#/components/forms/Toggle';
 import * as ToggleButton from '#/components/forms/ToggleButton';
 import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe';
+import * as Select from '#/components/Select';
 import { H1, H3 } from '#/components/Typography';
-import * as Select from '#/components/web/Select';
 
 export function Forms() {
 	const t = useTheme();

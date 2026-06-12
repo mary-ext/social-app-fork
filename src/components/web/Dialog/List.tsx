@@ -1,7 +1,7 @@
 import { Fragment, type ReactNode, useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
 
-import { CenteredSpinner } from '#/components/web/CenteredSpinner';
+import { CenteredSpinner } from '#/components/CenteredSpinner';
 import * as styles from '#/components/web/Dialog/Popup.css';
 
 export type ListProps<ItemT> = {

@@ -18,7 +18,7 @@ import { KnownFollowers } from '#/components/KnownFollowers';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { usePromptControl } from '#/components/Prompt';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 

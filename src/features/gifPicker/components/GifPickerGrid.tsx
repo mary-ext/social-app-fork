@@ -3,9 +3,9 @@ import { useLingui } from '@lingui/react/macro';
 
 import { cleanError } from '#/lib/strings/errors';
 
+import { CenteredSpinner } from '#/components/CenteredSpinner';
+import { Text } from '#/components/Text';
 import { Button, ButtonText } from '#/components/web/Button';
-import { CenteredSpinner } from '#/components/web/CenteredSpinner';
-import { Text } from '#/components/web/Text';
 
 import * as styles from '#/features/gifPicker/components/GifPickerGrid.css';
 import { GifPickerItem } from '#/features/gifPicker/components/GifPickerItem';

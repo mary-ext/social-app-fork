@@ -13,11 +13,11 @@ import { contrastRatio, darken, rgbToHex } from '#/alf/util/colorGeneration';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { StandardSite } from '#/components/icons/community/StandardSite';
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { Link, LinkButton } from '#/components/web/Link';
 import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
-import { Text } from '#/components/web/Text';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';

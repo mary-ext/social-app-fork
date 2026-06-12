@@ -16,14 +16,14 @@ import { useSession } from '#/state/session';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
+import { BlockLink } from '#/components/BlockLink';
+import { ExternalEmbed } from '#/components/ExternalEmbed';
+import { ImageEmbed } from '#/components/ImageEmbed';
 import { GalleryBleed } from '#/components/images/Gallery';
+import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { RichText } from '#/components/RichText';
 import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
-import { BlockLink } from '#/components/web/BlockLink';
-import { ExternalEmbed } from '#/components/web/ExternalEmbed';
-import { ImageEmbed } from '#/components/web/ImageEmbed';
-import { ContentHider } from '#/components/web/moderation/ContentHider';
-import { RichText } from '#/components/web/RichText';
 
 import { type Embed as TEmbed, type EmbedType, parseEmbed } from '#/types/embed';
 

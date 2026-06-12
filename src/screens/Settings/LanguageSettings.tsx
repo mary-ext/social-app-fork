@@ -10,13 +10,13 @@ import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
+import { Select } from '#/components/Select';
+import * as SettingsList from '#/components/SettingsList';
+import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import { useDialogHandle } from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
 import * as Layout from '#/components/web/Layout';
-import { Select } from '#/components/web/Select';
-import * as SettingsList from '#/components/web/SettingsList';
-import { Text } from '#/components/web/Text';
 
 import * as styles from './LanguageSettings.css';
 

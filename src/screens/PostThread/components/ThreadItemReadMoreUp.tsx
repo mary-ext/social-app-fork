@@ -9,7 +9,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowTopCircle_Stroke2_Corner0_Rounded as UpIcon } from '#/components/icons/ArrowTopCircle';
 import { Link } from '#/components/Link';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as css from './ThreadItemReadMoreUp.css';
 

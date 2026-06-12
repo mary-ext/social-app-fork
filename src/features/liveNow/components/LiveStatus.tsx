@@ -16,13 +16,13 @@ import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
+import { ContentHider } from '#/components/moderation/ContentHider';
 import { useGlobalReportDialogControl } from '#/components/moderation/ReportDialog';
+import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { LinkButton } from '#/components/web/Link';
-import { ContentHider } from '#/components/web/moderation/ContentHider';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import { Text } from '#/components/web/Text';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import * as css from '#/features/liveNow/components/LiveStatus.css';

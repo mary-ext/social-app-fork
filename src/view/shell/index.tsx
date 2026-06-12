@@ -19,9 +19,9 @@ import { atoms as a, select, useBreakpoints, useTheme } from '#/alf';
 import { LinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { MutedWordsDialog } from '#/components/dialogs/MutedWords';
 import { SigninDialog } from '#/components/dialogs/Signin';
+import { Lightbox } from '#/components/Lightbox';
 import { GlobalReportDialog } from '#/components/moderation/ReportDialog';
 import { Outlet as PortalOutlet } from '#/components/Portal';
-import { Lightbox } from '#/components/web/Lightbox';
 
 import { FlatNavigator, RoutesContainer } from '#/Navigation';
 

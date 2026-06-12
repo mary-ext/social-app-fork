@@ -12,8 +12,8 @@ import { Home_Stroke2_Corner2_Rounded as HomeIcon } from '#/components/icons/Hom
 import { Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon } from '#/components/icons/Macintosh';
 import { Play_Stroke2_Corner2_Rounded as PlayIcon } from '#/components/icons/Play';
 import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending';
+import * as SettingsList from '#/components/SettingsList';
 import * as Layout from '#/components/web/Layout';
-import * as SettingsList from '#/components/web/SettingsList';
 
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
 import { useTrendingSettings, useTrendingSettingsApi } from '#/storage/hooks/trending';

@@ -1,5 +1,6 @@
 import { createVar, style } from '@vanilla-extract/css';
 
+import { fontSizeVar } from '#/components/Text.css';
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
 	CENTER_COLUMN_OFFSET,
@@ -7,7 +8,6 @@ import {
 	HEADER_SLOT_SIZE,
 	SCROLLBAR_OFFSET,
 } from '#/components/web/Layout/const';
-import { fontSizeVar } from '#/components/web/Text.css';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';

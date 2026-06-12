@@ -10,10 +10,10 @@ import type { ComposerImage } from '#/state/gallery';
 import { AltTextCounterWrapper } from '#/view/com/composer/AltTextCounterWrapper';
 
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { Text } from '#/components/web/Text';
-import * as TextField from '#/components/web/TextField';
 
 import * as styles from './ImageAltTextDialog.css';
 

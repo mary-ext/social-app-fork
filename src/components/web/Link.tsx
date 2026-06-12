@@ -4,10 +4,10 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { useLink } from '#/components/Link';
+import type { TextProps } from '#/components/Text';
+import * as textStyles from '#/components/Text.css';
 import { Button, type ButtonProps } from '#/components/web/Button';
 import * as styles from '#/components/web/Link.css';
-import type { TextProps } from '#/components/web/Text';
-import * as textStyles from '#/components/web/Text.css';
 
 /** The `to` accepted by {@link useLink}: a route path string or a navigator screen/params object. */
 type To = Parameters<typeof useLink>[0]['to'];

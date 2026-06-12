@@ -6,7 +6,7 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as styles from './LinkPreview.css';
 

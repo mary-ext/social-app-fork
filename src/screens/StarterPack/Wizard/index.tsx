@@ -43,7 +43,7 @@ import { Loader } from '#/components/Loader';
 import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { Image } from '#/shims/image';
 import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';

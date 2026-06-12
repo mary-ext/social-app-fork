@@ -39,8 +39,8 @@ import { useMessageDialogs } from '#/components/dms/MessageOverlays';
 import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
+import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
-import { RichText } from '#/components/web/RichText';
 
 import { DateDivider } from './DateDivider';
 import * as css from './MessageItem.css';

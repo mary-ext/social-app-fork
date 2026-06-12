@@ -8,8 +8,8 @@ import { resetPostsFeedQueries } from '#/state/queries/post-feed';
 import { sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES } from '#/locale/languages';
 
+import * as Select from '#/components/Select';
 import { Button } from '#/components/web/Button';
-import * as Select from '#/components/web/Select';
 
 import * as styles from './AppLanguageDropdown.css';
 

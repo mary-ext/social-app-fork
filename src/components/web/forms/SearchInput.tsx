@@ -4,9 +4,9 @@ import { clsx } from 'clsx';
 
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlassIcon } from '#/components/icons/MagnifyingGlass';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import * as TextField from '#/components/TextField';
 import { Button, ButtonIcon } from '#/components/web/Button';
 import * as styles from '#/components/web/forms/SearchInput.css';
-import * as TextField from '#/components/web/TextField';
 
 /**
  * A web-native search field: a leading magnifying-glass icon, a {@link TextField.Input}, and a trailing clear

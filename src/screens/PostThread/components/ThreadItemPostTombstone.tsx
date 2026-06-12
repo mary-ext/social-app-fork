@@ -3,7 +3,7 @@ import { useLingui } from '@lingui/react/macro';
 
 import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as css from './ThreadItemPostTombstone.css';
 

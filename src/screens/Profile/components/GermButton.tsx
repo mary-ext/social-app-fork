@@ -21,10 +21,10 @@ import * as Dialog from '#/components/Dialog';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Loader } from '#/components/Loader';
+import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { Link } from '#/components/web/Link';
-import { Text as WebText } from '#/components/web/Text';
 
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
 import * as css from './GermButton.css';

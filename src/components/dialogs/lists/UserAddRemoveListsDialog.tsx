@@ -28,7 +28,7 @@ import { Loader } from '#/components/Loader';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export function UserAddRemoveListsDialog({
 	control,

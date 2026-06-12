@@ -14,6 +14,7 @@ import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWeb
 
 import { atoms as a, useAlf } from '#/alf';
 
+import type { Emoji } from '#/components/EmojiPicker';
 import { Portal } from '#/components/Portal';
 import { Text } from '#/components/Typography';
 import {
@@ -21,7 +22,6 @@ import {
 	type SubmitRequest,
 	useComposerInternalApiRef,
 } from '#/components/web/Composer';
-import type { Emoji } from '#/components/web/EmojiPicker';
 
 import * as styles from './TextInput.css';
 import type { TextInputProps } from './TextInput.types';

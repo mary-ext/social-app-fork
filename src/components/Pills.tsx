@@ -14,7 +14,7 @@ import {
 	useModerationDetailsDialogControl,
 } from '#/components/moderation/ModerationDetailsDialog';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export type AppModerationCause =
 	| ModerationCause

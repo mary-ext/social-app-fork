@@ -18,7 +18,7 @@ import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export function MessagesListInfoPanel({ convo }: { convo: Extract<ConvoWithDetails, { kind: 'direct' }> }) {
 	const navigation = useNavigation<NavigationProp>();

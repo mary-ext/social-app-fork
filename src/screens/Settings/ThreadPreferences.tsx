@@ -11,10 +11,10 @@ import {
 
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { Tree_Stroke2_Corner0_Rounded as TreeIcon } from '#/components/icons/Tree';
+import { RadioGroup } from '#/components/RadioGroup';
+import * as SettingsList from '#/components/SettingsList';
+import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
-import { RadioGroup } from '#/components/web/RadioGroup';
-import * as SettingsList from '#/components/web/SettingsList';
-import { Text } from '#/components/web/Text';
 
 import * as styles from './ThreadPreferences.css';
 

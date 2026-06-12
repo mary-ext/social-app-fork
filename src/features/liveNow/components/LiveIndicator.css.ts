@@ -1,4 +1,4 @@
-import { fontSizeVar } from '#/components/web/Text.css';
+import { fontSizeVar } from '#/components/Text.css';
 
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';

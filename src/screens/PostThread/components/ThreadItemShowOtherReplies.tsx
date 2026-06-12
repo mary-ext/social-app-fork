@@ -5,7 +5,7 @@ import { atoms as a } from '#/alf';
 
 import { Button } from '#/components/Button';
 import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as css from './ThreadItemShowOtherReplies.css';
 

@@ -49,7 +49,7 @@ import { PostAlerts } from '#/components/moderation/PostAlerts';
 import { createPortalGroup } from '#/components/Portal';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import * as css from './ChatListItem.css';
 import { useIsWithinSplitView } from './splitView/context';

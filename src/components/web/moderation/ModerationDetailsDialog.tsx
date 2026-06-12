@@ -10,10 +10,10 @@ import { listUriToHref } from '#/lib/strings/url-helpers';
 import { useSession } from '#/state/session';
 
 import type { AppModerationCause } from '#/components/Pills';
+import { Text } from '#/components/Text';
 import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
 import { InlineLinkText } from '#/components/web/Link';
-import { Text } from '#/components/web/Text';
 
 import * as styles from './ModerationDetailsDialog.css';
 

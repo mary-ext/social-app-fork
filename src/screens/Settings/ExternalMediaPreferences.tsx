@@ -9,9 +9,9 @@ import {
 
 import { useExternalEmbedsPrefs, useSetExternalEmbedPref } from '#/state/preferences';
 
+import * as SettingsList from '#/components/SettingsList';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
-import * as SettingsList from '#/components/web/SettingsList';
 
 import * as styles from './ExternalMediaPreferences.css';
 

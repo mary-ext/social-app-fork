@@ -33,13 +33,13 @@ import {
 } from '#/components/icons/Chevron';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon } from '#/components/icons/Quote';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
+import { UserAvatar } from '#/components/UserAvatar';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as WebDialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
-import { Spinner } from '#/components/web/Spinner';
-import { Text } from '#/components/web/Text';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 export type PostInteractionSettingsFormProps = {
 	canSave?: boolean;

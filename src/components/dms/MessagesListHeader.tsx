@@ -31,7 +31,7 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import type { ConvoWithDetails } from './util';
 

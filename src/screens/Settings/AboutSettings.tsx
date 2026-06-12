@@ -7,9 +7,9 @@ import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon } from '#/components/icons/CodeLines';
 import { Wrench_Stroke2_Corner2_Rounded as WrenchIcon } from '#/components/icons/Wrench';
+import * as SettingsList from '#/components/SettingsList';
 import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
-import * as SettingsList from '#/components/web/SettingsList';
 
 import * as env from '#/env';
 import { setStringAsync } from '#/shims/clipboard';

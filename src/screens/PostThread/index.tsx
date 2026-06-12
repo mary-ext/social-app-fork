@@ -33,8 +33,8 @@ import * as css from '#/screens/PostThread/index.css';
 
 import { atoms as a, useBreakpoints } from '#/alf';
 
+import { List, type ListMethods } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';
-import { List, type ListMethods } from '#/components/web/List/List';
 
 const PARENT_CHUNK_SIZE = 20;
 const CHILDREN_CHUNK_SIZE = 50;

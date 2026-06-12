@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { clsx } from 'clsx';
 
+import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Dialog/Header.css';
-import { Text } from '#/components/web/Text';
 
 /** Sticky header row. Compose with `Slot` (edge buttons) + `Content`/`TitleText`, like `Layout.Header`. */
 export function Outer({ border = true, children }: { border?: boolean; children: ReactNode }) {

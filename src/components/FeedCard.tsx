@@ -24,10 +24,10 @@ import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import * as Prompt from '#/components/Prompt';
+import { RichText } from '#/components/RichText';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { RichText } from '#/components/web/RichText';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from './icons/Trash';
 

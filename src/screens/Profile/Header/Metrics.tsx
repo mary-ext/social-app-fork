@@ -5,8 +5,8 @@ import { makeProfileLink } from '#/lib/routes/links';
 
 import { formatCount } from '#/view/com/util/numeric/format';
 
+import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
-import { Text } from '#/components/web/Text';
 
 import { useProfileHeader } from './Context';
 import * as css from './Metrics.css';

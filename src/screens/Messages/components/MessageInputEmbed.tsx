@@ -30,10 +30,10 @@ import * as ChatInvite from '#/components/dms/ChatInvite';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import { Loader } from '#/components/Loader';
 import * as MediaPreview from '#/components/MediaPreview';
+import { ContentHider } from '#/components/moderation/ContentHider';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
-import { ContentHider } from '#/components/web/moderation/ContentHider';
-import { RichText } from '#/components/web/RichText';
 
 import * as css from './MessageInputEmbed.css';
 

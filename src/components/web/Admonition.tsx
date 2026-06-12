@@ -5,8 +5,8 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/componen
 import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX';
 import { EmojiSad_Stroke2_Corner0_Rounded as EmojiSadIcon } from '#/components/icons/Emoji';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
+import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Admonition.css';
-import { Text } from '#/components/web/Text';
 
 type AdmonitionType = 'apology' | 'error' | 'info' | 'tip' | 'warning';
 

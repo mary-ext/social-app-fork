@@ -8,7 +8,7 @@ import { toShortUrl } from '#/lib/strings/url-helpers';
 
 import { isOnlyEmoji } from '#/alf/typography';
 
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as styles from './DraftRichText.css';
 

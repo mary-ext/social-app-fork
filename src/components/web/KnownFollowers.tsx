@@ -12,10 +12,10 @@ import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
 import * as css from '#/components/web/KnownFollowers.css';
 import { Link } from '#/components/web/Link';
-import { Text } from '#/components/web/Text';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 const AVI_SIZE = 30;
 

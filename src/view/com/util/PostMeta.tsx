@@ -16,11 +16,11 @@ import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { Text, type TextProps } from '#/components/Text';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { type InlineLinkUnderline, InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
-import { Text, type TextProps } from '#/components/web/Text';
 import { Tooltip } from '#/components/web/Tooltip';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

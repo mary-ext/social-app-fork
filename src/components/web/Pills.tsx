@@ -6,14 +6,14 @@ import { BSKY_LABELER_DID } from '#/lib/moderation/const';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 
 import type { AppModerationCause } from '#/components/Pills';
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
 import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,
 } from '#/components/web/moderation/ModerationDetailsDialog';
 import * as styles from '#/components/web/Pills.css';
-import { Text } from '#/components/web/Text';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 export type { AppModerationCause };
 

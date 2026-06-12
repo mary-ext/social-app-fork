@@ -4,8 +4,8 @@ import { useLingui } from '@lingui/react/macro';
 import { COMPOSER_DIALOG_ID } from '#/lib/hooks/useOpenComposer';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
+import { Spinner } from '#/components/Spinner';
 import * as Dialog from '#/components/web/Dialog';
-import { Spinner } from '#/components/web/Spinner';
 
 import { vars } from '#/styles/contract.css';
 

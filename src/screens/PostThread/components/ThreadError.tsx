@@ -6,7 +6,7 @@ import { useCleanError } from '#/lib/hooks/useCleanError';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotate';
 import * as Layout from '#/components/Layout';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as css from './ThreadError.css';
 

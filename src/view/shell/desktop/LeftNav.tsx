@@ -73,7 +73,7 @@ import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH } from '#/components/Layout/c
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 import { router } from '#/routes';

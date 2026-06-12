@@ -13,9 +13,9 @@ import {
 	manipulateImage,
 } from '#/state/gallery';
 
+import { Spinner } from '#/components/Spinner';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { Spinner } from '#/components/web/Spinner';
 
 import * as styles from './EditImageDialog.css';
 

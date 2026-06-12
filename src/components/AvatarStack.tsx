@@ -9,7 +9,7 @@ import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export function AvatarStack({
 	profiles,

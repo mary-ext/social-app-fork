@@ -10,13 +10,13 @@ import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useTickEveryMinute } from '#/state/shell';
 
 import { Loader } from '#/components/Loader';
+import * as Select from '#/components/Select';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as ProfileCard from '#/components/web/ProfileCard';
-import * as Select from '#/components/web/Select';
-import { Text } from '#/components/web/Text';
-import * as TextField from '#/components/web/TextField';
 
 import {
 	displayDuration,

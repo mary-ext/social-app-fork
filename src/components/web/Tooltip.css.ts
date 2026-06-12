@@ -1,8 +1,8 @@
 import { style } from '@vanilla-extract/css';
 
-import { vars } from '#/styles/contract.css';
+import { fontSizeVar } from '#/components/Text.css';
 
-import { fontSizeVar } from './Text.css';
+import { vars } from '#/styles/contract.css';
 
 export const positioner = style({
 	// sit above dialogs (zIndex 10) and menus (zIndex 11) so a tooltip on a trigger inside either still shows

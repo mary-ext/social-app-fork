@@ -11,9 +11,9 @@ import { atoms as a, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag';
 import { Link as InternalLink, type LinkProps } from '#/components/Link';
+import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
-import { RichText } from '#/components/web/RichText';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '../icons/Chevron';
 

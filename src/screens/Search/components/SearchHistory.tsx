@@ -25,7 +25,7 @@ import * as Layout from '#/components/Layout';
 import { Link } from '#/components/Link';
 import { ProfileBadges } from '#/components/ProfileBadges';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export function SearchHistory({
 	searchHistory,

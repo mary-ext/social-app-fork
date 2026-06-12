@@ -3,11 +3,11 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { ProfileMenu } from '#/view/com/profile/ProfileMenu';
 
+import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton';
+import { MessageProfileButton } from '#/components/dms/MessageProfileButton';
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { SubscribeProfileButton } from '#/components/web/activity-notifications/SubscribeProfileButton';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { MessageProfileButton } from '#/components/web/dms/MessageProfileButton';
 import * as Prompt from '#/components/web/Prompt';
 
 import { useProfileHeader } from './Context';

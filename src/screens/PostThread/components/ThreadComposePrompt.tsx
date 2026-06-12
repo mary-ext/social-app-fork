@@ -11,8 +11,8 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 import { transparentifyColor } from '#/alf/util/colorGeneration';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
-import { Text } from '#/components/web/Text';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { Text } from '#/components/Text';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { LinearGradient } from '#/shims/linear-gradient';
 

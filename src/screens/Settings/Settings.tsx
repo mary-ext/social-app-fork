@@ -52,7 +52,7 @@ import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';

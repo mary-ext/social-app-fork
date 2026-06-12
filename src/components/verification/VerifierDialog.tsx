@@ -7,12 +7,12 @@ import { getUserDisplayName } from '#/lib/getUserDisplayName';
 import { useSession } from '#/state/session';
 
 import { VerifierCheck } from '#/components/icons/VerifierCheck';
+import { Text } from '#/components/Text';
 import type { FullVerificationState } from '#/components/verification';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import { LinkButton } from '#/components/web/Link';
-import { Text } from '#/components/web/Text';
 
 import announcementImage from '../../../assets/images/initial_verification_announcement_1.png';
 

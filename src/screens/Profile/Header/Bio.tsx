@@ -1,6 +1,6 @@
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
-import { RichText } from '#/components/web/RichText';
+import { RichText } from '#/components/RichText';
 
 import { useProfileHeader } from './Context';
 

@@ -12,12 +12,12 @@ import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-d
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
+import * as EmojiPicker from '#/components/EmojiPicker';
 import { GlassView } from '#/components/GlassView';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon } from '#/components/icons/PaperPlane';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
-import * as EmojiPicker from '#/components/web/EmojiPicker';
 
 import { GlassContainer } from '#/shims/glass-effect';
 import { LinearGradient } from '#/shims/linear-gradient';

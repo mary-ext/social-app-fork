@@ -76,11 +76,11 @@ import * as ProfileCard from '#/components/ProfileCard';
 import { ProfileHoverCard } from '#/components/ProfileHoverCard';
 import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { SubtleHover } from '#/components/SubtleHover';
+import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { Text as WebText } from '#/components/web/Text';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 import { Tooltip } from '#/components/web/Tooltip';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
 
 const MAX_AUTHORS = 5;
 

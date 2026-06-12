@@ -158,7 +158,7 @@ msgid "{0} · {1}"
 msgstr ""
 
 #. placeholder {0}: desc.name
-#: src/components/web/moderation/ContentHider.tsx:95
+#: src/components/moderation/ContentHider.tsx:95
 msgid "{0} (Account)"
 msgstr ""
 
@@ -593,8 +593,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/web/UserAvatar.tsx:251
-#: src/components/web/UserAvatar.tsx:262
+#: src/components/UserAvatar.tsx:251
+#: src/components/UserAvatar.tsx:262
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 
@@ -610,11 +610,11 @@ msgstr "{name}'s starter pack"
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:94
+#: src/components/NewskieDialog.tsx:94
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:92
+#: src/components/NewskieDialog.tsx:92
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
@@ -1136,7 +1136,7 @@ msgstr ""
 msgid "Adult content"
 msgstr ""
 
-#: src/components/web/moderation/ContentHider.tsx:126
+#: src/components/moderation/ContentHider.tsx:126
 #: src/lib/moderation/useGlobalLabelStrings.ts:29
 #: src/lib/moderation/useModerationCauseDescription.ts:135
 #: src/view/com/composer/labels/LabelsBtn.tsx:97
@@ -1238,10 +1238,10 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
+#: src/components/ExternalEmbed/GifEmbed.tsx:135
+#: src/components/ImageEmbed/MediaBadges.tsx:71
 #: src/components/images/AutoSizedImage.tsx:174
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:135
-#: src/components/web/ImageEmbed/MediaBadges.tsx:71
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1256,8 +1256,8 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
+#: src/components/ExternalEmbed/GifEmbed.tsx:140
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:140
 msgid "Alt Text"
 msgstr ""
 
@@ -1734,15 +1734,15 @@ msgstr ""
 msgid "Browse other feeds"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:173
+#: src/components/TrendingTopics.tsx:168
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:181
+#: src/components/TrendingTopics.tsx:176
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:190
+#: src/components/TrendingTopics.tsx:185
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
@@ -1751,7 +1751,7 @@ msgstr ""
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:227
+#: src/components/TrendingTopics.tsx:222
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -1842,11 +1842,11 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/web/ImageEmbed/Gallery.tsx:148
+#: src/components/ImageEmbed/Gallery.tsx:148
 msgid "carousel"
 msgstr "carousel"
 
-#: src/components/web/RichTextTag.tsx:66
+#: src/components/RichTextTag.tsx:66
 msgid "Cashtag {tag}"
 msgstr ""
 
@@ -2046,6 +2046,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:200
 #: src/components/dms/AfterReportDialog.tsx:202
 #: src/components/dms/InitiateChatFlow.tsx:493
+#: src/components/ExternalEmbed/GifEmbed.tsx:144
 #: src/components/intents/GroupChatJoinDialog.tsx:207
 #: src/components/intents/GroupChatJoinDialog.tsx:236
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
@@ -2054,7 +2055,6 @@ msgstr ""
 #: src/components/suggested-follows-dialog.tsx:356
 #: src/components/verification/VerificationsDialog.tsx:86
 #: src/components/verification/VerifierDialog.tsx:77
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:144
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:37
 #: src/features/liveNow/components/EditLiveDialog.tsx:186
 #: src/features/liveNow/components/EditLiveDialog.tsx:192
@@ -2086,7 +2086,7 @@ msgstr ""
 msgid "Close drawer menu"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:288
+#: src/components/Lightbox/index.tsx:288
 msgid "Close image viewer"
 msgstr ""
 
@@ -2792,8 +2792,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/web/Lightbox/index.tsx:278
-#: src/components/web/Lightbox/index.tsx:280
+#: src/components/Lightbox/index.tsx:278
+#: src/components/Lightbox/index.tsx:280
 msgid "Download image"
 msgstr "Download image"
 
@@ -2870,13 +2870,13 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
-#: src/components/web/EditableUserAvatar.tsx:73
-#: src/components/web/EditableUserAvatar.tsx:88
+#: src/components/EditableUserAvatar.tsx:73
+#: src/components/EditableUserAvatar.tsx:88
 msgid "Edit avatar"
 msgstr ""
 
-#: src/components/web/EditableBanner.tsx:63
-#: src/components/web/EditableBanner.tsx:69
+#: src/components/EditableBanner.tsx:63
+#: src/components/EditableBanner.tsx:69
 msgid "Edit banner"
 msgstr "Edit banner"
 
@@ -2983,7 +2983,7 @@ msgstr ""
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
 msgstr ""
 
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:103
+#: src/components/ExternalEmbed/ExternalPlayer.tsx:103
 msgid "Embedded player"
 msgstr "Embedded player"
 
@@ -3130,7 +3130,7 @@ msgstr ""
 msgid "Exit fullscreen"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:297
+#: src/components/Lightbox/index.tsx:297
 msgid "Expand alt text"
 msgstr ""
 
@@ -3258,12 +3258,11 @@ msgstr "Failed to add members"
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:225
+#: src/components/Lightbox/index.tsx:225
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
 
-#: src/components/dms/MessageProfileButton.tsx:30
-#: src/components/web/dms/MessageProfileButton.tsx:25
+#: src/components/dms/MessageProfileButton.tsx:25
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:63
 msgid "Failed to create conversation"
 msgstr ""
@@ -3422,7 +3421,7 @@ msgstr "Failed to rescind your request. Please try again."
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:237
+#: src/components/Lightbox/index.tsx:237
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -3850,10 +3849,6 @@ msgstr "Get notifications when people repost your reposts."
 msgid "Get notifications when there's activity on posts you're subscribed to."
 msgstr "Get notifications when there's activity on posts you're subscribed to."
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:82
-msgid "Get notified about new posts"
-msgstr ""
-
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:183
 msgid "Get notified of new posts from {name}"
 msgstr ""
@@ -3862,8 +3857,7 @@ msgstr ""
 msgid "Get notified of this account’s activity"
 msgstr ""
 
-#: src/components/activity-notifications/SubscribeProfileButton.tsx:74
-#: src/components/web/activity-notifications/SubscribeProfileButton.tsx:33
+#: src/components/activity-notifications/SubscribeProfileButton.tsx:33
 msgid "Get notified when {name} posts"
 msgstr ""
 
@@ -3872,9 +3866,9 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
+#: src/components/ExternalEmbed/GifEmbed.tsx:88
 #: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:59
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:88
 #: src/view/com/composer/drafts/DraftItem.tsx:222
 msgid "GIF"
 msgstr ""
@@ -4082,7 +4076,7 @@ msgstr ""
 msgid "Hashtag"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:66
+#: src/components/RichTextTag.tsx:66
 msgid "Hashtag {tag}"
 msgstr ""
 
@@ -4106,9 +4100,9 @@ msgstr ""
 
 #: src/components/interstitials/Trending.tsx:89
 #: src/components/interstitials/TrendingVideos.tsx:129
+#: src/components/moderation/ContentHider.tsx:147
 #: src/components/moderation/LabelPreference.tsx:125
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
-#: src/components/web/moderation/ContentHider.tsx:147
 #: src/lib/moderation/useLabelBehaviorDescription.ts:14
 #: src/lib/moderation/useLabelBehaviorDescription.ts:19
 #: src/lib/moderation/useLabelBehaviorDescription.ts:24
@@ -4259,17 +4253,17 @@ msgstr "Ignore join request"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: images.length
-#: src/components/web/Lightbox/index.tsx:318
+#: src/components/Lightbox/index.tsx:318
 msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/web/ImageEmbed/Gallery.tsx:223
+#: src/components/ImageEmbed/Gallery.tsx:223
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/web/ImageEmbed/Gallery.tsx:149
+#: src/components/ImageEmbed/Gallery.tsx:149
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -4283,16 +4277,16 @@ msgstr "Image is hidden due to your moderation settings."
 msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
-#: src/components/web/Lightbox/index.tsx:266
-#: src/components/web/Lightbox/index.tsx:271
+#: src/components/Lightbox/index.tsx:266
+#: src/components/Lightbox/index.tsx:271
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/web/Lightbox/index.tsx:236
+#: src/components/Lightbox/index.tsx:236
 msgid "Image saved"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:124
+#: src/components/Lightbox/index.tsx:124
 msgid "Image viewer"
 msgstr ""
 
@@ -4457,11 +4451,11 @@ msgid "Keep me posted"
 msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName(desc.source)
-#: src/components/web/moderation/ContentHider.tsx:180
+#: src/components/moderation/ContentHider.tsx:180
 msgid "Labeled by {0}."
 msgstr ""
 
-#: src/components/web/moderation/ContentHider.tsx:178
+#: src/components/moderation/ContentHider.tsx:178
 msgid "Labeled by the author."
 msgstr ""
 
@@ -4526,12 +4520,12 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
-#: src/components/web/moderation/ContentHider.tsx:174
+#: src/components/moderation/ContentHider.tsx:174
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
+#: src/components/moderation/PostHider.tsx:80
 #: src/components/moderation/ScreenHider.tsx:105
-#: src/components/web/moderation/PostHider.tsx:80
 msgid "Learn more about this warning"
 msgstr ""
 
@@ -4551,7 +4545,7 @@ msgid "Learn more about your Germ DM link"
 msgstr ""
 
 #: src/components/dialogs/ServerInput.tsx:201
-#: src/components/web/moderation/ContentHider.tsx:183
+#: src/components/moderation/ContentHider.tsx:183
 msgid "Learn more."
 msgstr ""
 
@@ -4673,7 +4667,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:223
+#: src/components/Lightbox/index.tsx:223
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -4832,8 +4826,8 @@ msgstr "Loading chat..."
 msgid "Loading drafts"
 msgstr "Loading drafts"
 
-#: src/components/web/ExternalEmbed/ExternalGif.tsx:67
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:84
+#: src/components/ExternalEmbed/ExternalGif.tsx:67
+#: src/components/ExternalEmbed/GifEmbed.tsx:84
 msgid "Loading GIF"
 msgstr "Loading GIF"
 
@@ -4842,7 +4836,7 @@ msgstr "Loading GIF"
 msgid "Loading GIFs"
 msgstr "Loading GIFs"
 
-#: src/components/web/Lightbox/index.tsx:161
+#: src/components/Lightbox/index.tsx:161
 msgid "Loading image"
 msgstr "Loading image"
 
@@ -4855,7 +4849,7 @@ msgstr ""
 msgid "Loading post interaction settings..."
 msgstr ""
 
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:86
+#: src/components/ExternalEmbed/ExternalPlayer.tsx:86
 msgid "Loading video"
 msgstr "Loading video"
 
@@ -4992,8 +4986,7 @@ msgid "Message"
 msgstr "Message"
 
 #. placeholder {0}: profile.handle
-#: src/components/dms/MessageProfileButton.tsx:84
-#: src/components/web/dms/MessageProfileButton.tsx:59
+#: src/components/dms/MessageProfileButton.tsx:59
 msgid "Message {0}"
 msgstr ""
 
@@ -5178,8 +5171,8 @@ msgctxt "video"
 msgid "Mute"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:119
-#: src/components/web/RichTextTag.tsx:130
+#: src/components/RichTextTag.tsx:119
+#: src/components/RichTextTag.tsx:130
 msgid "Mute {prefixedTag}"
 msgstr "Mute {prefixedTag}"
 
@@ -5418,7 +5411,7 @@ msgstr ""
 msgid "New starter pack"
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:47
+#: src/components/NewskieDialog.tsx:47
 msgid "New user info dialog"
 msgstr ""
 
@@ -5442,7 +5435,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:257
+#: src/components/Lightbox/index.tsx:257
 msgid "Next image"
 msgstr ""
 
@@ -5852,9 +5845,9 @@ msgstr "Open group chat"
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
+#: src/components/ExternalEmbed/index.tsx:50
 #: src/components/Post/Embed/ExternalEmbed/index.tsx:76
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:76
-#: src/components/web/ExternalEmbed/index.tsx:50
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -6040,8 +6033,8 @@ msgstr "Party GIFs"
 msgid "Pause"
 msgstr ""
 
+#: src/components/ExternalEmbed/GifEmbed.tsx:81
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:81
 msgid "Pause GIF"
 msgstr ""
 
@@ -6164,13 +6157,13 @@ msgid "Play"
 msgstr ""
 
 #. placeholder {0}: link.title
+#: src/components/ExternalEmbed/ExternalGif.tsx:60
 #: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:92
-#: src/components/web/ExternalEmbed/ExternalGif.tsx:60
 msgid "Play {0}"
 msgstr ""
 
+#: src/components/ExternalEmbed/GifEmbed.tsx:81
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:81
 msgid "Play GIF"
 msgstr ""
 
@@ -6178,8 +6171,8 @@ msgstr ""
 msgid "Play video"
 msgstr ""
 
+#: src/components/ExternalEmbed/ExternalPlayer.tsx:85
 #: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:56
-#: src/components/web/ExternalEmbed/ExternalPlayer.tsx:85
 msgid "Play Video"
 msgstr ""
 
@@ -6398,7 +6391,7 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:247
+#: src/components/Lightbox/index.tsx:247
 msgid "Previous image"
 msgstr ""
 
@@ -6649,11 +6642,11 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/components/web/EditableUserAvatar.tsx:100
+#: src/components/EditableUserAvatar.tsx:100
 msgid "Remove Avatar"
 msgstr ""
 
-#: src/components/web/EditableBanner.tsx:81
+#: src/components/EditableBanner.tsx:81
 msgid "Remove Banner"
 msgstr ""
 
@@ -7197,7 +7190,7 @@ msgstr ""
 msgid "Saving"
 msgstr "Saving"
 
-#: src/components/web/NewskieDialog.tsx:106
+#: src/components/NewskieDialog.tsx:106
 #: src/view/com/notifications/NotificationFeedItem.tsx:806
 #: src/view/com/notifications/NotificationFeedItem.tsx:815
 msgid "Say hello!"
@@ -7330,27 +7323,27 @@ msgstr ""
 msgid "Searches for profiles"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:99
+#: src/components/RichTextTag.tsx:99
 msgid "See {prefixedTag} posts"
 msgstr "See {prefixedTag} posts"
 
-#: src/components/web/RichTextTag.tsx:107
+#: src/components/RichTextTag.tsx:107
 msgid "See {prefixedTag} posts by user"
 msgstr "See {prefixedTag} posts by user"
 
-#: src/components/web/RichTextTag.tsx:101
+#: src/components/RichTextTag.tsx:101
 msgid "See {tag} posts"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:111
+#: src/components/RichTextTag.tsx:111
 msgid "See {tag} posts by user"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:101
+#: src/components/RichTextTag.tsx:101
 msgid "See #{tag} posts"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:111
+#: src/components/RichTextTag.tsx:111
 msgid "See #{tag} posts by user"
 msgstr ""
 
@@ -7614,8 +7607,8 @@ msgstr ""
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/web/Lightbox/index.tsx:272
-#: src/components/web/Lightbox/index.tsx:274
+#: src/components/Lightbox/index.tsx:272
+#: src/components/Lightbox/index.tsx:274
 msgid "Share image"
 msgstr "Share image"
 
@@ -7645,14 +7638,14 @@ msgstr ""
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
+#: src/components/moderation/ContentHider.tsx:147
 #: src/components/moderation/LabelPreference.tsx:127
-#: src/components/web/moderation/ContentHider.tsx:147
-#: src/components/web/moderation/PostHider.tsx:102
+#: src/components/moderation/PostHider.tsx:102
 msgid "Show"
 msgstr ""
 
+#: src/components/ExternalEmbed/GifEmbed.tsx:131
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:76
-#: src/components/web/ExternalEmbed/GifEmbed.tsx:131
 msgid "Show alt text"
 msgstr ""
 
@@ -7746,7 +7739,7 @@ msgstr ""
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
-#: src/components/web/moderation/PostHider.tsx:96
+#: src/components/moderation/PostHider.tsx:96
 msgid "Show the content"
 msgstr "Show the content"
 
@@ -7844,7 +7837,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/web/ImageEmbed/Gallery.tsx:222
+#: src/components/ImageEmbed/Gallery.tsx:222
 msgid "slide"
 msgstr "slide"
 
@@ -8754,7 +8747,7 @@ msgstr ""
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:41
+#: src/components/NewskieDialog.tsx:41
 msgid "This user is new here. Press for more info about when they joined."
 msgstr ""
 
@@ -9046,8 +9039,8 @@ msgctxt "video"
 msgid "Unmute"
 msgstr ""
 
-#: src/components/web/RichTextTag.tsx:119
-#: src/components/web/RichTextTag.tsx:130
+#: src/components/RichTextTag.tsx:119
+#: src/components/RichTextTag.tsx:130
 msgid "Unmute {prefixedTag}"
 msgstr "Unmute {prefixedTag}"
 
@@ -9161,8 +9154,8 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
 
-#: src/components/web/EditableBanner.tsx:72
-#: src/components/web/EditableUserAvatar.tsx:91
+#: src/components/EditableBanner.tsx:72
+#: src/components/EditableUserAvatar.tsx:91
 msgid "Upload from Files"
 msgstr ""
 
@@ -9627,7 +9620,7 @@ msgstr ""
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:106
+#: src/components/NewskieDialog.tsx:106
 msgid "Welcome, friend!"
 msgstr ""
 
@@ -9985,11 +9978,11 @@ msgstr ""
 msgid "You hid this reply."
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:88
+#: src/components/NewskieDialog.tsx:88
 msgid "You joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/web/NewskieDialog.tsx:86
+#: src/components/NewskieDialog.tsx:86
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 

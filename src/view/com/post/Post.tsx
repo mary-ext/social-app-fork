@@ -20,15 +20,15 @@ import { unstableCacheProfileView } from '#/state/queries/profile';
 
 import { PostMeta } from '#/view/com/util/PostMeta';
 
+import { BlockLink } from '#/components/BlockLink';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostRepliedTo } from '#/components/Post/PostRepliedTo';
+import { PostContent } from '#/components/PostContent';
 import { PostControls } from '#/components/PostControls';
-import { BlockLink } from '#/components/web/BlockLink';
-import { PostContent } from '#/components/web/PostContent';
-import * as PostRow from '#/components/web/PostRow';
-import * as postRowCss from '#/components/web/PostRow.css';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
+import * as PostRow from '#/components/PostRow';
+import * as postRowCss from '#/components/PostRow.css';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import * as css from './Post.css';
 

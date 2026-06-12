@@ -22,7 +22,7 @@ import { Link } from '#/components/Link';
 import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import * as Hider from '#/components/moderation/Hider';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { Image } from '#/shims/image';
 import { LinearGradient } from '#/shims/linear-gradient';

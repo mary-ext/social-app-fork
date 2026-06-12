@@ -6,8 +6,8 @@ import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles';
 
 import type { Shadow } from '#/state/cache/types';
 
-import { NewskieDialog } from '#/components/web/NewskieDialog';
-import { Text } from '#/components/web/Text';
+import { NewskieDialog } from '#/components/NewskieDialog';
+import { Text } from '#/components/Text';
 
 import * as styles from './Handle.css';
 

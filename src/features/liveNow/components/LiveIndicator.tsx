@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as styles from '#/features/liveNow/components/LiveIndicator.css';
 

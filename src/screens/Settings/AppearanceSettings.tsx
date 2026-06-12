@@ -12,10 +12,10 @@ import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moo
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
 import { TextSize_Stroke2_Corner0_Rounded as TextSize } from '#/components/icons/TextSize';
 import { TitleCase_Stroke2_Corner0_Rounded as Aa } from '#/components/icons/TitleCase';
+import { SegmentedControl, type SegmentedControlItem } from '#/components/SegmentedControl';
+import * as SettingsList from '#/components/SettingsList';
+import { Text } from '#/components/Text';
 import * as Layout from '#/components/web/Layout';
-import { SegmentedControl, type SegmentedControlItem } from '#/components/web/SegmentedControl';
-import * as SettingsList from '#/components/web/SettingsList';
-import { Text } from '#/components/web/Text';
 
 import * as styles from './AppearanceSettings.css';
 

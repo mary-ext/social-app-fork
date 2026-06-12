@@ -12,9 +12,9 @@ import { useSession } from '#/state/session';
 
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
 import { Repost_Stroke2_Corner3_Rounded as RepostIcon } from '#/components/icons/Repost';
+import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
-import { Text } from '#/components/web/Text';
 
 import { LoadingPlaceholder } from '../util/LoadingPlaceholder';
 import * as css from './PostFeedReason.css';

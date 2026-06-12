@@ -4,8 +4,8 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
+import * as SettingsList from '#/components/SettingsList';
 import * as Layout from '#/components/web/Layout';
-import * as SettingsList from '#/components/web/SettingsList';
 
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';

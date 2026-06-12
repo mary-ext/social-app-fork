@@ -104,6 +104,7 @@ import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import * as EmojiPicker from '#/components/EmojiPicker';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
@@ -111,10 +112,9 @@ import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/UserAvatar';
 import * as Dialog from '#/components/web/Dialog';
-import * as EmojiPicker from '#/components/web/EmojiPicker';
 import * as Prompt from '#/components/web/Prompt';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';

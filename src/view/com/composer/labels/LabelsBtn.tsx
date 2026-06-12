@@ -13,10 +13,10 @@ import * as styles from '#/view/com/composer/labels/LabelsBtn.css';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronIcon } from '#/components/icons/Chevron';
 import { Shield_Stroke2_Corner0_Rounded } from '#/components/icons/Shield';
+import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Toggle from '#/components/web/forms/Toggle';
-import { Text } from '#/components/web/Text';
 
 export function LabelsBtn({ labels, onChange }: { labels: SelfLabel[]; onChange: (v: SelfLabel[]) => void }) {
 	const control = Dialog.useDialogHandle();

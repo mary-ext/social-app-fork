@@ -1,7 +1,7 @@
 import { t } from '@lingui/core/macro';
 
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/web/Text';
 
 import * as Clipboard from '#/shims/clipboard';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';

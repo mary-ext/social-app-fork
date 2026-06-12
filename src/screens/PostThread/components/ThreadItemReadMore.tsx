@@ -8,7 +8,7 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { CirclePlus_Stroke2_Corner0_Rounded as CirclePlus } from '#/components/icons/CirclePlus';
 import { Link } from '#/components/Link';
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as css from './ThreadItemReadMore.css';
 

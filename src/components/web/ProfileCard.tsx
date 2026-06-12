@@ -16,10 +16,10 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { ProfileBadges } from '#/components/ProfileBadges';
+import { Text, type TextProps } from '#/components/Text';
+import { PreviewableUserAvatar, UserAvatar } from '#/components/UserAvatar';
 import { Link as WebLink } from '#/components/web/Link';
 import * as css from '#/components/web/ProfileCard.css';
-import { Text, type TextProps } from '#/components/web/Text';
-import { PreviewableUserAvatar, UserAvatar } from '#/components/web/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

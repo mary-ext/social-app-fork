@@ -11,9 +11,9 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
+import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
-import { Text } from '#/components/web/Text';
 
 import * as css from './PostRepliedTo.css';
 

@@ -13,9 +13,9 @@ import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
+import { UserAvatar } from '#/components/UserAvatar';
+import { UserBanner } from '#/components/UserBanner';
 import { useDialogHandle } from '#/components/web/Dialog';
-import { UserAvatar } from '#/components/web/UserAvatar';
-import { UserBanner } from '#/components/web/UserBanner';
 
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';

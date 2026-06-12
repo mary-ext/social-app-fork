@@ -13,7 +13,7 @@ import { sizes as iconSizes } from '#/components/icons/common';
 import { MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass';
 import { Link } from '#/components/Link';
 import { Text, type TextProps } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 export function Container({
 	style,

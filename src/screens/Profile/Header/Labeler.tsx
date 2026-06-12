@@ -21,11 +21,11 @@ import {
 	Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 	Heart2_Stroke2_Corner0_Rounded as Heart,
 } from '#/components/icons/Heart2';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button } from '#/components/web/Button';
 import { InlineLinkText } from '#/components/web/Link';
 import * as Prompt from '#/components/web/Prompt';
-import { Text } from '#/components/web/Text';
 
 import { EditProfileButton } from './Actions';
 import { ProfileHeaderBio } from './Bio';

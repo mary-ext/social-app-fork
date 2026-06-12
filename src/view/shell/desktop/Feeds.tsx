@@ -16,7 +16,7 @@ import { FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline } from '#/comp
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
 import { Link } from '#/components/Link';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 type WebViewStyle = ViewStyle & {
 	overflowY?: 'auto';

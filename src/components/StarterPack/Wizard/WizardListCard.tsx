@@ -24,7 +24,7 @@ import { Button, ButtonText } from '#/components/Button';
 import * as Toggle from '#/components/forms/Toggle';
 import { Checkbox } from '#/components/forms/Toggle';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 function WizardListCard({
 	type,

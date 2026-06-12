@@ -17,9 +17,9 @@ import * as Toggle from '#/components/forms/Toggle';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
 import * as Layout from '#/components/Layout';
 import { Text } from '#/components/Typography';
+import { UserAvatar } from '#/components/UserAvatar';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
-import { UserAvatar } from '#/components/web/UserAvatar';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AutomationLabelSettings'>;
 export function AutomationLabelSettingsScreen({}: Props) {

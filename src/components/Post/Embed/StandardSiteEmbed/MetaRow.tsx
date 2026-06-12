@@ -5,7 +5,7 @@ import { Trans } from '@lingui/react/macro';
 
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
-import { Text } from '#/components/web/Text';
+import { Text } from '#/components/Text';
 
 import * as styles from './index.css';
 import { matchStandardSitePublisher, matchStandardSitePublisherByUri } from './publishers';

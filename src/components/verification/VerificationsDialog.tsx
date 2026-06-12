@@ -9,6 +9,7 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
+import { Text } from '#/components/Text';
 import type { FullVerificationState } from '#/components/verification';
 import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt';
 import * as css from '#/components/verification/VerificationsDialog.css';
@@ -18,7 +19,6 @@ import * as Dialog from '#/components/web/Dialog';
 import { LinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import * as Prompt from '#/components/web/Prompt';
-import { Text } from '#/components/web/Text';
 
 export function VerificationsDialog({
 	handle,

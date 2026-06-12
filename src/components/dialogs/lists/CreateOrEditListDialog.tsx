@@ -19,14 +19,14 @@ import { logger } from '#/logger';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
 
 import * as styles from '#/components/dialogs/lists/CreateOrEditListDialog.css';
+import { EditableUserAvatar } from '#/components/EditableUserAvatar';
 import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Text';
+import * as TextField from '#/components/TextField';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { EditableUserAvatar } from '#/components/web/EditableUserAvatar';
 import * as Prompt from '#/components/web/Prompt';
-import { Text } from '#/components/web/Text';
-import * as TextField from '#/components/web/TextField';
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64;
 const DESCRIPTION_MAX_GRAPHEMES = 300;

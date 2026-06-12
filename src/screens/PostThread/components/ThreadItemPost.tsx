@@ -21,19 +21,19 @@ import { LINEAR_AVI_WIDTH, OUTER_SPACE } from '#/screens/PostThread/const';
 
 import { atoms as a } from '#/alf';
 
+import { ClampedPostText } from '#/components/ClampedPostText';
 import { DebugFieldDisplay } from '#/components/DebugFieldDisplay';
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash';
 import { GalleryBleed, maybeApplyGalleryOffsetStyles } from '#/components/images/Gallery';
 import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe';
 import { PostAlerts } from '#/components/moderation/PostAlerts';
+import { PostHider } from '#/components/moderation/PostHider';
 import type { AppModerationCause } from '#/components/Pills';
 import { Embed, PostEmbedViewContext } from '#/components/Post/Embed';
 import { PostControls, PostControlsSkeleton } from '#/components/PostControls';
 import * as Skele from '#/components/Skeleton';
-import { ClampedPostText } from '#/components/web/ClampedPostText';
-import { PostHider } from '#/components/web/moderation/PostHider';
-import { Text } from '#/components/web/Text';
-import { PreviewableUserAvatar } from '#/components/web/UserAvatar';
+import { Text } from '#/components/Text';
+import { PreviewableUserAvatar } from '#/components/UserAvatar';
 
 import { useActorStatus } from '#/features/liveNow';
 

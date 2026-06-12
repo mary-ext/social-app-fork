@@ -18,7 +18,7 @@ import { atoms as a, useTheme } from '#/alf';
 import * as Dialog from '#/components/Dialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 type Reaction = {
 	key: string;

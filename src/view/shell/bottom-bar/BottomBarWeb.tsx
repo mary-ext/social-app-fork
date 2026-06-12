@@ -45,7 +45,7 @@ import {
 	Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message';
 import { Text } from '#/components/Typography';
-import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserAvatar } from '#/components/UserAvatar';
 
 import { styles } from './BottomBarStyles';
 

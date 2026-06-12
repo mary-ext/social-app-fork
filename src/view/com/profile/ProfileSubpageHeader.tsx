@@ -19,7 +19,7 @@ import { Text } from '#/view/com/util/text/Text';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { StarterPack } from '#/components/icons/StarterPack';
 import * as Layout from '#/components/Layout';
-import { UserAvatar, type UserAvatarType } from '#/components/web/UserAvatar';
+import { UserAvatar, type UserAvatarType } from '#/components/UserAvatar';
 
 export function ProfileSubpageHeader({
 	isLoading,

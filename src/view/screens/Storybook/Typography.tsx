@@ -2,8 +2,8 @@ import { View } from 'react-native';
 
 import { atoms as a } from '#/alf';
 
+import { RichText } from '#/components/RichText';
 import { Text } from '#/components/Typography';
-import { RichText } from '#/components/web/RichText';
 
 export function Typography() {
 	return (
