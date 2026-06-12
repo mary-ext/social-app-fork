@@ -13,7 +13,6 @@ import { ExportCarDialog } from '#/screens/Settings/components/ExportCarDialog';
 
 import { atoms as a, useTheme } from '#/alf';
 
-import * as Dialog from '#/components/Dialog';
 import { Divider } from '#/components/Divider';
 import { resolveAllowGroupInvites } from '#/components/dms/util';
 import * as Toggle from '#/components/forms/Toggle';
@@ -22,6 +21,7 @@ import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/comp
 import * as Layout from '#/components/Layout';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import * as Dialog from '#/components/web/Dialog';
 
 type AllowIncoming = 'all' | 'none' | 'following';
 
@@ -38,7 +38,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 	const { data: profile } = useProfileQuery({
 		did: currentAccount!.did,
 	});
-	const exportCarControl = Dialog.useDialogControl();
+	const exportCarHandle = Dialog.useDialogHandle();
 
 	const allowMessagesFromOptions: { name: AllowIncoming; label: string }[] = [
 		{
@@ -165,7 +165,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 							name="exportChatData"
 							style={[a.flex_row, a.align_center, a.justify_between]}
 							onChange={() => {
-								exportCarControl.open();
+								exportCarHandle.open(null);
 							}}
 						>
 							<CarIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
@@ -178,7 +178,7 @@ export function MessagesSettingsScreenInner({}: Props) {
 					<Divider style={{ marginVertical: 10 }} />
 				</View>
 			</Layout.Content>
-			<ExportCarDialog control={exportCarControl} />
+			<ExportCarDialog handle={exportCarHandle} />
 		</Layout.Screen>
 	);
 }

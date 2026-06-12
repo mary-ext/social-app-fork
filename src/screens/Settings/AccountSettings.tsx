@@ -7,10 +7,10 @@ import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
 import { isBotAccount } from '#/components/BotBadge';
-import { useDialogControl } from '#/components/Dialog';
 import { Bot_Stroke as RobotIcon } from '#/components/icons/Bot';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
 import * as SettingsList from '#/components/SettingsList';
+import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
 import { ExportCarDialog } from './components/ExportCarDialog';
@@ -20,7 +20,7 @@ export function AccountSettingsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
-	const exportCarControl = useDialogControl();
+	const exportCarHandle = Dialog.useDialogHandle();
 
 	return (
 		<Layout.Screen>
@@ -45,7 +45,7 @@ export function AccountSettingsScreen({}: Props) {
 						)}
 					</SettingsList.LinkItem>
 					<SettingsList.Divider />
-					<SettingsList.PressableItem label={l`Export my data`} onPress={() => exportCarControl.open()}>
+					<SettingsList.PressableItem label={l`Export my data`} onPress={() => exportCarHandle.open(null)}>
 						<SettingsList.ItemIcon icon={CarIcon} />
 						<SettingsList.ItemText>
 							<Trans>Export my data</Trans>
@@ -54,7 +54,7 @@ export function AccountSettingsScreen({}: Props) {
 					</SettingsList.PressableItem>
 				</SettingsList.Container>
 			</Layout.Content>
-			<ExportCarDialog control={exportCarControl} />
+			<ExportCarDialog handle={exportCarHandle} />
 		</Layout.Screen>
 	);
 }

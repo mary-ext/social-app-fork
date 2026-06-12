@@ -2784,11 +2784,11 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:128
+#: src/screens/Settings/components/ExportCarDialog.tsx:118
 msgid "Download chat data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:134
+#: src/screens/Settings/components/ExportCarDialog.tsx:124
 msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
@@ -2798,11 +2798,11 @@ msgstr "Download chat data"
 msgid "Download image"
 msgstr "Download image"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:105
+#: src/screens/Settings/components/ExportCarDialog.tsx:95
 msgid "Download profile data"
 msgstr "Download profile data"
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:111
+#: src/screens/Settings/components/ExportCarDialog.tsx:101
 msgctxt "button"
 msgid "Download profile data"
 msgstr "Download profile data"
@@ -3082,8 +3082,8 @@ msgstr ""
 msgid "Error message"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:49
-#: src/screens/Settings/components/ExportCarDialog.tsx:73
+#: src/screens/Settings/components/ExportCarDialog.tsx:47
+#: src/screens/Settings/components/ExportCarDialog.tsx:71
 msgid "Error occurred while saving file"
 msgstr ""
 
@@ -3200,7 +3200,7 @@ msgid "Export chat data"
 msgstr "Export chat data"
 
 #: src/screens/Messages/Settings.tsx:164
-#: src/screens/Settings/components/ExportCarDialog.tsx:116
+#: src/screens/Settings/components/ExportCarDialog.tsx:106
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
@@ -3209,7 +3209,8 @@ msgstr "Export my chat data"
 msgid "Export my data"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:89
+#: src/screens/Settings/components/ExportCarDialog.tsx:79
+#: src/screens/Settings/components/ExportCarDialog.tsx:82
 msgid "Export my profile data"
 msgstr "Export my profile data"
 
@@ -3544,8 +3545,8 @@ msgstr ""
 msgid "Feeds we think you might like."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:45
-#: src/screens/Settings/components/ExportCarDialog.tsx:69
+#: src/screens/Settings/components/ExportCarDialog.tsx:43
+#: src/screens/Settings/components/ExportCarDialog.tsx:67
 msgid "File saved successfully!"
 msgstr ""
 
@@ -8575,7 +8576,7 @@ msgstr ""
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:139
+#: src/screens/Settings/components/ExportCarDialog.tsx:129
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
@@ -9379,7 +9380,7 @@ msgstr "View {publicationTitle}"
 msgid "View blocked user's profile"
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:142
+#: src/screens/Settings/components/ExportCarDialog.tsx:132
 msgid "View blogpost for more details"
 msgstr ""
 
@@ -9821,7 +9822,7 @@ msgstr ""
 msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:119
+#: src/screens/Settings/components/ExportCarDialog.tsx:109
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
 msgstr ""
 
@@ -10107,7 +10108,7 @@ msgstr "Your account is too new"
 msgid "Your account must be at least 7 days old to create a new group chat."
 msgstr "Your account must be at least 7 days old to create a new group chat."
 
-#: src/screens/Settings/components/ExportCarDialog.tsx:95
+#: src/screens/Settings/components/ExportCarDialog.tsx:85
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 

@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { View } from 'react-native';
 import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -10,22 +9,21 @@ import { useClients, useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
 import { Download_Stroke2_Corner0_Rounded as DownloadIcon } from '#/components/icons/Download';
-import { InlineLinkText } from '#/components/Link';
 import { Loader } from '#/components/Loader';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
+import { InlineLinkText } from '#/components/web/Link';
 
-export function ExportCarDialog({ control }: { control: Dialog.DialogControlProps }) {
+import * as styles from './ExportCarDialog.css';
+
+export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const { chat, pds } = useClients();
 	const { currentAccount } = useSession();
-	const [loading, setLoading] = useState<'repo' | 'chat' | false>(false);
+	const [loading, setLoading] = useState<'chat' | 'repo' | false>(false);
 
 	const download = useCallback(async () => {
 		if (!currentAccount || !pds) {
@@ -77,21 +75,13 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 	}, [l, chat]);
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle />
-			<Dialog.ScrollableInner
-				accessibilityDescribedBy="dialog-description"
-				accessibilityLabelledBy="dialog-title"
-				style={{ maxWidth: 500 }}
-			>
-				<View style={[a.relative, a.w_full]}>
-					<Text nativeID="dialog-title" style={[a.mb_sm, a.text_2xl, a.font_bold]}>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={styles.popup} label={l`Export my profile data`}>
+				<div className={styles.content}>
+					<Text className={styles.title} size="_2xl" weight="bold">
 						<Trans>Export my profile data</Trans>
 					</Text>
-					<Text
-						nativeID="dialog-description"
-						style={[a.mb_lg, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}
-					>
+					<Text className={styles.body} color="textContrastHigh" leading="snug" size="sm">
 						<Trans>
 							Your account repository, containing all public data records, can be downloaded as a "CAR" file.
 							This file does not include media embeds, such as images, or your private data, which must be
@@ -101,10 +91,10 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 
 					<Button
 						color="primary"
-						size="large"
-						label={l`Download profile data`}
 						disabled={!!loading}
-						onPress={() => void download()}
+						label={l`Download profile data`}
+						onClick={() => void download()}
+						size="large"
 					>
 						<ButtonIcon icon={loading === 'repo' ? Loader : DownloadIcon} />
 						<ButtonText>
@@ -112,10 +102,10 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 						</ButtonText>
 					</Button>
 
-					<Text nativeID="dialog-title" style={[a.mt_2xl, a.mb_sm, a.text_2xl, a.font_bold]}>
+					<Text className={styles.heading} size="_2xl" weight="bold">
 						<Trans>Export my chat data</Trans>
 					</Text>
-					<Text style={[a.mb_lg, a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
+					<Text className={styles.body} color="textContrastHigh" leading="snug" size="sm">
 						<Trans>
 							You can also download your chat data as a "JSONL" file. This file only includes chat messages
 							that you have sent and does not include chat messages that you have received.
@@ -124,10 +114,10 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 
 					<Button
 						color="primary"
-						size="large"
-						label={l`Download chat data`}
 						disabled={!!loading}
-						onPress={() => void downloadChatData()}
+						label={l`Download chat data`}
+						onClick={() => void downloadChatData()}
+						size="large"
 					>
 						<ButtonIcon icon={loading === 'chat' ? Loader : DownloadIcon} />
 						<ButtonText>
@@ -135,22 +125,22 @@ export function ExportCarDialog({ control }: { control: Dialog.DialogControlProp
 						</ButtonText>
 					</Button>
 
-					<Text style={[a.flex_1, a.mt_2xl, a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+					<Text className={styles.footnote} color="textContrastMedium" leading="snug" size="sm">
 						<Trans>
 							This feature is in beta. You can read more about repository exports in{' '}
 							<InlineLinkText
 								label={l`View blogpost for more details`}
+								size="sm"
 								to="https://docs.bsky.app/blog/repo-export"
-								style={[a.text_sm]}
 							>
 								this blogpost
 							</InlineLinkText>
 							.
 						</Trans>
 					</Text>
-				</View>
+				</div>
 				<Dialog.Close />
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
