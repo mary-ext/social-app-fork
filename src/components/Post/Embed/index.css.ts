@@ -44,6 +44,7 @@ export const quoteCard = style({
 // Hover tint for a clickable quote card; sits behind content (clipped to the radius) so the quoted text
 // isn't darkened the way an overlay would.
 export const quoteCardHover = style({
+	cursor: 'pointer',
 	selectors: {
 		'&:hover': {
 			backgroundColor: colorMix(vars.palette.contrast_50, vars.opacity.hover),
