@@ -49,7 +49,7 @@ export function JoinRequestEmbedBody({
 	const t = useTheme();
 	const { status } = ChatInvite.useChatInvite();
 
-	const box = [a.border, a.rounded_lg, t.atoms.border_contrast_high, { height: JOIN_REQUEST_EMBED_HEIGHT }];
+	const box = [a.border, a.rounded_lg, t.atoms.border_contrast_low, { height: JOIN_REQUEST_EMBED_HEIGHT }];
 
 	if (status === 'loading') {
 		return <ChatInvite.Loading style={[box, a.p_lg, style]} />;
