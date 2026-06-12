@@ -7,6 +7,17 @@ export const activeMargin = style({
 	marginTop: 8,
 });
 
+// top gap above an embedded record card (feed / list / starter-pack).
+export const recordCardGap = style({
+	marginTop: 8,
+});
+
+// post-with-media wrapper: stacks the media embed above the quoted record.
+export const postWithMedia = style({
+	display: 'flex',
+	flexDirection: 'column',
+});
+
 // QuoteEmbed bleed host: GalleryBleed measures this and clips the image-carousel bleed to it.
 export const quoteOuter = style({
 	boxSizing: 'border-box',
@@ -33,6 +44,11 @@ export const quoteBodyDisabled = style({
 
 export const postAlerts = style({
 	paddingBlock: 4,
+});
+
+// spacing below the quote card's author meta row.
+export const quoteMetaPad = style({
+	paddingBottom: 4,
 });
 
 // ModeratedFeedEmbed / ModeratedListEmbed: lift the revealed card off the blur toggle.

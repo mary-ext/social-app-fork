@@ -1,15 +1,13 @@
 import { useMemo } from 'react';
-import { View } from 'react-native';
 
 import { createEmbedViewRecordFromPost } from '#/state/queries/postgate/util';
 import { useResolveLinkQuery } from '#/state/queries/resolve-link';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { QuoteEmbed } from '#/components/Post/Embed';
 
+import * as css from './LazyQuoteEmbed.css';
+
 export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisabled?: boolean }) {
-	const t = useTheme();
 	const { data } = useResolveLinkQuery(uri);
 
 	const view = useMemo(() => {
@@ -26,15 +24,6 @@ export function LazyQuoteEmbed({ uri, linkDisabled }: { uri: string; linkDisable
 			linkDisabled={linkDisabled}
 		/>
 	) : (
-		<View
-			style={[
-				a.w_full,
-				a.rounded_md,
-				t.atoms.bg_contrast_25,
-				{
-					height: 68,
-				},
-			]}
-		/>
+		<div className={css.skeleton} />
 	);
 }

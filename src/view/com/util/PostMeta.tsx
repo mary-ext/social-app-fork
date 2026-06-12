@@ -3,6 +3,7 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
+import { clsx } from 'clsx';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { forceLTR } from '#/lib/strings/bidi';
@@ -66,6 +67,7 @@ function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, underline, ..
 
 interface PostMetaOpts {
 	author: AnyProfileView;
+	className?: string;
 	moderation: ModerationDecision | undefined;
 	postHref: string;
 	timestamp: string;
@@ -98,7 +100,7 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 	const disabled = opts.linkDisabled ?? false;
 
 	return (
-		<div className={css.row}>
+		<div className={clsx(css.row, opts.className)}>
 			{opts.showAvatar && (
 				<div className={css.avatar}>
 					<PreviewableUserAvatar

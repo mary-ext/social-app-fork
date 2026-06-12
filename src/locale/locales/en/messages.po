@@ -1642,7 +1642,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:224
+#: src/components/Post/Embed/index.tsx:223
 msgid "Blocked"
 msgstr ""
 
@@ -2595,7 +2595,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:217
+#: src/components/Post/Embed/index.tsx:216
 msgid "Deleted"
 msgstr ""
 
@@ -6748,11 +6748,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:243
+#: src/components/Post/Embed/index.tsx:242
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:243
+#: src/components/Post/Embed/index.tsx:242
 msgid "Removed by you"
 msgstr ""
 
@@ -9435,8 +9435,8 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:275
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:297
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
-#: src/view/com/util/PostMeta.tsx:124
-#: src/view/com/util/PostMeta.tsx:146
+#: src/view/com/util/PostMeta.tsx:126
+#: src/view/com/util/PostMeta.tsx:148
 msgid "View profile"
 msgstr ""
 

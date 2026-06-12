@@ -1,5 +1,4 @@
 import { useCallback, useMemo } from 'react';
-import { View } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import type { $type } from '@atcute/lexicons';
@@ -64,10 +63,10 @@ export function Embed({ embed: rawEmbed, ...rest }: EmbedProps) {
 		}
 		case 'post_with_media': {
 			return (
-				<View style={rest.style}>
+				<div className={css.postWithMedia}>
 					<MediaEmbed embed={embed.media} {...rest} />
 					<RecordEmbed embed={embed.view} {...rest} />
-				</View>
+				</div>
 			);
 		}
 		default: {
@@ -173,23 +172,23 @@ function RecordEmbed({
 	switch (embed.type) {
 		case 'feed': {
 			return (
-				<View style={a.mt_sm}>
+				<div className={css.recordCardGap}>
 					<ModeratedFeedEmbed embed={embed} {...rest} />
-				</View>
+				</div>
 			);
 		}
 		case 'list': {
 			return (
-				<View style={a.mt_sm}>
+				<div className={css.recordCardGap}>
 					<ModeratedListEmbed embed={embed} />
-				</View>
+				</div>
 			);
 		}
 		case 'starter_pack': {
 			return (
-				<View style={a.mt_sm}>
+				<div className={css.recordCardGap}>
 					<StarterPackCard starterPack={embed.view} />
-				</View>
+				</div>
 			);
 		}
 		case 'labeler': {
@@ -293,16 +292,15 @@ export function QuoteEmbed({
 
 	const contents = (
 		<>
-			<View style={[a.pb_xs]}>
-				<PostMeta
-					author={quote.author}
-					moderation={moderation}
-					showAvatar
-					postHref={itemHref}
-					timestamp={quote.indexedAt}
-					linkDisabled
-				/>
-			</View>
+			<PostMeta
+				author={quote.author}
+				className={css.quoteMetaPad}
+				moderation={moderation}
+				showAvatar
+				postHref={itemHref}
+				timestamp={quote.indexedAt}
+				linkDisabled
+			/>
 			{moderation ? (
 				<PostAlerts
 					className={css.postAlerts}
