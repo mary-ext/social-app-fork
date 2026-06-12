@@ -73,6 +73,14 @@ let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.Re
 	return (
 		<div className={css.frame}>
 			<div className={css.bannerRegion}>
+				{/* first in source order so it tabs first; absolute positioning keeps it painted over the banner */}
+				{!hideBackButton && (
+					<button type="button" className={css.backButton} aria-label={l`Back`} onClick={onPressBack}>
+						<span className={css.backButtonInner}>
+							<ArrowLeftIcon size="lg" fill="white" />
+						</span>
+					</button>
+				)}
 				{isPlaceholderProfile ? (
 					<LoadingPlaceholder width="100%" height="100%" style={{ borderRadius: 0 }} />
 				) : (
@@ -89,24 +97,9 @@ let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.Re
 						/>
 					</button>
 				)}
-				{!hideBackButton && (
-					<button type="button" className={css.backButton} aria-label={l`Back`} onClick={onPressBack}>
-						<span className={css.backButtonInner}>
-							<ArrowLeftIcon size="lg" fill="white" />
-						</span>
-					</button>
-				)}
 			</div>
 
-			{children}
-
-			{!isPlaceholderProfile &&
-				(isMe ? (
-					<LabelsOnMe className={css.headerAlerts} labels={profile.labels} type="account" />
-				) : (
-					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
-				))}
-
+			{/* placed before the header body so its tab order matches its visual spot (top-left, over the banner edge) */}
 			<div className={css.avatarAnchor}>
 				<button
 					type="button"
@@ -134,6 +127,15 @@ let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.Re
 					</span>
 				</button>
 			</div>
+
+			{children}
+
+			{!isPlaceholderProfile &&
+				(isMe ? (
+					<LabelsOnMe className={css.headerAlerts} labels={profile.labels} type="account" />
+				) : (
+					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
+				))}
 
 			{live.isActive &&
 				(isMe ? (

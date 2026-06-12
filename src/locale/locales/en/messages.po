@@ -1538,7 +1538,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:235
 #: src/screens/Messages/components/InviteLinkDialog.tsx:260
 #: src/screens/Messages/Inbox.tsx:198
-#: src/screens/Profile/Header/Shell.tsx:93
+#: src/screens/Profile/Header/Shell.tsx:78
 #: src/screens/StarterPack/Wizard/index.tsx:280
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:81
@@ -6446,7 +6446,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:82
+#: src/screens/Profile/Header/Shell.tsx:90
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
@@ -9342,7 +9342,7 @@ msgid "View {0}"
 msgstr "View {0}"
 
 #. placeholder {0}: profile.handle
-#: src/screens/Profile/Header/Shell.tsx:114
+#: src/screens/Profile/Header/Shell.tsx:107
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -9438,7 +9438,7 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:82
+#: src/screens/Profile/Header/Shell.tsx:90
 msgid "View profile banner"
 msgstr "View profile banner"
 
