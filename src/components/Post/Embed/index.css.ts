@@ -26,6 +26,11 @@ export const quotePad = style({
 	padding: 12,
 });
 
+// non-interactive quote body: the card is shown without a link, so it shouldn't swallow pointer events.
+export const quoteBodyDisabled = style({
+	pointerEvents: 'none',
+});
+
 export const postAlerts = style({
 	paddingBlock: 4,
 });

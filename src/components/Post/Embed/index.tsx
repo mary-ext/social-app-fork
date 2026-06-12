@@ -334,7 +334,7 @@ export function QuoteEmbed({
 				>
 					{({ active }) =>
 						linkDisabled ? (
-							<div className={clsx(css.quoteBody, !active && css.quotePad)} style={{ pointerEvents: 'none' }}>
+							<div className={clsx(css.quoteBody, css.quoteBodyDisabled, !active && css.quotePad)}>
 								{contents}
 							</div>
 						) : (
