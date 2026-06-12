@@ -1,6 +1,5 @@
-import { View } from 'react-native';
 import type { AppBskyNotificationDeclaration } from '@atcute/bluesky';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
@@ -9,20 +8,20 @@ import {
 	useNotificationDeclarationQuery,
 } from '#/state/queries/activity-subscriptions';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import * as Toggle from '#/components/forms/Toggle';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
-import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
+import * as SettingsList from '#/components/SettingsList';
+import { Spinner } from '#/components/Spinner';
+import { Admonition } from '#/components/web/Admonition';
+import * as Toggle from '#/components/web/forms/Toggle';
+import * as Layout from '#/components/web/Layout';
 
-import * as SettingsList from './components/SettingsList';
+import * as styles from './ActivityPrivacySettings.css';
 import { ItemTextWithSubtitle } from './NotificationSettings/components/ItemTextWithSubtitle';
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'ActivityPrivacySettings'>;
 export function ActivityPrivacySettingsScreen({}: Props) {
-	const { data: notificationDeclaration, isPending, isError } = useNotificationDeclarationQuery();
+	const { t: l } = useLingui();
+	const { data: notificationDeclaration, isError, isPending } = useNotificationDeclarationQuery();
 
 	return (
 		<Layout.Screen>
@@ -37,32 +36,32 @@ export function ActivityPrivacySettingsScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<SettingsList.Container>
-					<SettingsList.Item style={[a.align_start]}>
+					<SettingsList.Item align="start">
 						<SettingsList.ItemIcon icon={BellRingingIcon} />
 						<ItemTextWithSubtitle
 							bold
-							titleText={<Trans>Allow others to be notified of your posts</Trans>}
 							subtitleText={
 								<Trans>
 									This feature allows users to receive notifications for your new posts and replies. Who do
 									you want to enable this for?
 								</Trans>
 							}
+							titleText={<Trans>Allow others to be notified of your posts</Trans>}
 						/>
 					</SettingsList.Item>
-					<View style={[a.px_xl, a.pt_md]}>
+					<div className={styles.body}>
 						{isError ? (
 							<Admonition type="error">
 								<Trans>Failed to load preference.</Trans>
 							</Admonition>
 						) : isPending ? (
-							<View style={[a.w_full, a.pt_5xl, a.align_center]}>
-								<Loader size="xl" />
-							</View>
+							<div className={styles.loaderWrap}>
+								<Spinner color="currentColor" label={l`Loading`} size="xl" />
+							</div>
 						) : (
 							<Inner notificationDeclaration={notificationDeclaration} />
 						)}
-					</View>
+					</div>
 				</SettingsList.Container>
 			</Layout.Content>
 		</Layout.Screen>
@@ -73,12 +72,11 @@ export function Inner({
 	notificationDeclaration,
 }: {
 	notificationDeclaration: {
-		uri?: string;
 		cid?: string;
+		uri?: string;
 		value: AppBskyNotificationDeclaration.Main;
 	};
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { mutate } = useNotificationDeclarationMutation();
 
@@ -91,43 +89,36 @@ export function Inner({
 
 	return (
 		<Toggle.Group
-			type="radio"
+			className={styles.radioList}
 			label={l`Filter who can opt to receive notifications for your activity`}
-			values={[notificationDeclaration.value.allowSubscriptions]}
 			onChange={onChangeFilter}
+			type="radio"
+			values={[notificationDeclaration.value.allowSubscriptions]}
 		>
-			<View style={[a.gap_sm]}>
-				<Toggle.Item
-					label={l`Anyone who follows me`}
-					name="followers"
-					style={[a.flex_row, a.py_xs, a.gap_sm]}
-				>
-					<Toggle.Radio />
-					<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
+			<Toggle.RadioItem label={l`Anyone who follows me`} value="followers">
+				<Toggle.Panel>
+					<Toggle.RadioIndicator />
+					<Toggle.PanelText>
 						<Trans>Anyone who follows me</Trans>
-					</Toggle.LabelText>
-				</Toggle.Item>
-				<Toggle.Item
-					label={l`Only followers who I follow`}
-					name="mutuals"
-					style={[a.flex_row, a.py_xs, a.gap_sm]}
-				>
-					<Toggle.Radio />
-					<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
+					</Toggle.PanelText>
+				</Toggle.Panel>
+			</Toggle.RadioItem>
+			<Toggle.RadioItem label={l`Only followers who I follow`} value="mutuals">
+				<Toggle.Panel>
+					<Toggle.RadioIndicator />
+					<Toggle.PanelText>
 						<Trans>Only followers who I follow</Trans>
-					</Toggle.LabelText>
-				</Toggle.Item>
-				<Toggle.Item
-					label={l({ context: 'enable for', message: `No one` })}
-					name="none"
-					style={[a.flex_row, a.py_xs, a.gap_sm]}
-				>
-					<Toggle.Radio />
-					<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
+					</Toggle.PanelText>
+				</Toggle.Panel>
+			</Toggle.RadioItem>
+			<Toggle.RadioItem label={l({ context: 'enable for', message: `No one` })} value="none">
+				<Toggle.Panel>
+					<Toggle.RadioIndicator />
+					<Toggle.PanelText>
 						<Trans context="enable for">No one</Trans>
-					</Toggle.LabelText>
-				</Toggle.Item>
-			</View>
+					</Toggle.PanelText>
+				</Toggle.Panel>
+			</Toggle.RadioItem>
 		</Toggle.Group>
 	);
 }

@@ -1,17 +1,15 @@
 import { useCallback } from 'react';
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Text } from '#/components/Text';
+import * as Toggle from '#/components/web/forms/Toggle';
 
-import * as Toggle from '#/components/forms/Toggle';
-import { Text } from '#/components/Typography';
+import * as styles from './PwiOptOut.css';
 
 export function PwiOptOut() {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
@@ -53,26 +51,25 @@ export function PwiOptOut() {
 	}, [updateProfile, profile, isOptedOut]);
 
 	return (
-		<View style={[a.flex_1, a.gap_sm]}>
+		<div className={styles.container}>
 			<Toggle.Item
-				name="logged_out_visibility"
+				checked={!!isOptedOut}
+				className={styles.row}
 				disabled={!canToggle || updateProfile.isPending}
-				value={isOptedOut}
-				onChange={onToggleOptOut}
 				label={l`Discourage apps from showing my account to logged-out users`}
-				style={[a.w_full]}
+				onChange={onToggleOptOut}
 			>
-				<Toggle.LabelText style={[a.flex_1]}>
+				<Text className={styles.label} size="md">
 					<Trans>Discourage apps from showing my account to logged-out users</Trans>
-				</Toggle.LabelText>
-				<Toggle.Platform />
+				</Text>
+				<Toggle.Switch />
 			</Toggle.Item>
-			<Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
+			<Text color="textContrastHigh" leading="snug">
 				<Trans>
 					Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this
 					request. This does not make your account private.
 				</Trans>
 			</Text>
-		</View>
+		</div>
 	);
 }

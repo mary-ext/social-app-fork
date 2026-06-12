@@ -1,32 +1,33 @@
-import { View } from 'react-native';
+import type { ReactNode } from 'react';
+import { clsx } from 'clsx';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Text } from '#/components/Text';
 
-import * as Skele from '#/components/Skeleton';
-import { Text } from '#/components/Typography';
-
-import * as SettingsList from '../../components/SettingsList';
+import * as styles from './ItemTextWithSubtitle.css';
 
 export function ItemTextWithSubtitle({
-	titleText,
-	subtitleText,
 	bold = false,
 	showSkeleton = false,
+	subtitleText,
+	titleText,
 }: {
-	titleText: React.ReactNode;
-	subtitleText: React.ReactNode;
 	bold?: boolean;
 	showSkeleton?: boolean;
+	subtitleText: ReactNode;
+	titleText: ReactNode;
 }) {
-	const t = useTheme();
 	return (
-		<View style={[a.flex_1, bold ? a.gap_xs : a.gap_2xs]}>
-			<SettingsList.ItemText style={bold && [a.font_semi_bold, a.text_lg]}>{titleText}</SettingsList.ItemText>
+		<div className={clsx(styles.container, bold && styles.containerBold)}>
+			<Text size={bold ? 'lg' : 'md'} weight={bold ? 'semiBold' : 'normal'}>
+				{titleText}
+			</Text>
 			{showSkeleton ? (
-				<Skele.Text style={[a.text_sm, { width: 120 }]} />
+				<div className={styles.skeleton} />
 			) : (
-				<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>{subtitleText}</Text>
+				<Text color="textContrastMedium" leading="snug" size="sm">
+					{subtitleText}
+				</Text>
 			)}
-		</View>
+		</div>
 	);
 }

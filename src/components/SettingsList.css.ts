@@ -26,6 +26,11 @@ export const itemIconInset = style({
 	paddingLeft: 52,
 });
 
+/** Top-aligns a row's content, for rows whose text wraps to multiple lines so the icon sits by the first line. */
+export const itemAlignStart = style({
+	alignItems: 'flex-start',
+});
+
 /**
  * Strips a row's own padding and min-height, for a compact control row nested in a {@link group} (which
  * supplies the horizontal padding and surrounding rhythm).

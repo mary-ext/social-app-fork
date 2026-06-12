@@ -849,7 +849,7 @@ msgid "Accessibility Settings"
 msgstr ""
 
 #: src/Navigation.tsx:725
-#: src/screens/Settings/AccountSettings.tsx:32
+#: src/screens/Settings/AccountSettings.tsx:31
 #: src/screens/Settings/Settings.tsx:144
 #: src/screens/Settings/Settings.tsx:147
 msgid "Account"
@@ -1207,7 +1207,7 @@ msgstr "Allow direct messages from"
 msgid "Allow group chat invites from"
 msgstr "Allow group chat invites from"
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:44
+#: src/screens/Settings/ActivityPrivacySettings.tsx:49
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Allow others to be notified of your posts"
 msgstr ""
@@ -1390,9 +1390,9 @@ msgstr "Anyone can join instantly"
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:101
-#: src/screens/Settings/ActivityPrivacySettings.tsx:107
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:109
+#: src/screens/Settings/ActivityPrivacySettings.tsx:98
+#: src/screens/Settings/ActivityPrivacySettings.tsx:102
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:102
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -1513,8 +1513,8 @@ msgstr ""
 msgid "Automated account"
 msgstr "Automated account"
 
-#: src/screens/Settings/AccountSettings.tsx:39
-#: src/screens/Settings/AccountSettings.tsx:42
+#: src/screens/Settings/AccountSettings.tsx:38
+#: src/screens/Settings/AccountSettings.tsx:41
 msgid "Automation label"
 msgstr "Automation label"
 
@@ -1700,7 +1700,7 @@ msgstr ""
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
-#: src/screens/Settings/components/PwiOptOut.tsx:71
+#: src/screens/Settings/components/PwiOptOut.tsx:68
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr ""
 
@@ -2265,7 +2265,6 @@ msgid "Copied to clipboard"
 msgstr ""
 
 #: src/screens/Messages/components/CopyTextButton.tsx:55
-#: src/screens/Settings/components/CopyButton.tsx:50
 msgid "Copied!"
 msgstr ""
 
@@ -2719,8 +2718,8 @@ msgstr ""
 msgid "Disconnect Germ DM"
 msgstr ""
 
-#: src/screens/Settings/components/PwiOptOut.tsx:62
-#: src/screens/Settings/components/PwiOptOut.tsx:66
+#: src/screens/Settings/components/PwiOptOut.tsx:59
+#: src/screens/Settings/components/PwiOptOut.tsx:63
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
@@ -3073,7 +3072,7 @@ msgstr ""
 msgid "Error loading post"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:100
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:93
 msgid "Error loading preference"
 msgstr ""
 
@@ -3203,8 +3202,8 @@ msgstr "Export chat data"
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
-#: src/screens/Settings/AccountSettings.tsx:49
-#: src/screens/Settings/AccountSettings.tsx:52
+#: src/screens/Settings/AccountSettings.tsx:48
+#: src/screens/Settings/AccountSettings.tsx:51
 msgid "Export my data"
 msgstr ""
 
@@ -3357,7 +3356,7 @@ msgstr ""
 msgid "Failed to load past messages"
 msgstr ""
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:56
+#: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "Failed to load preference."
 msgstr ""
 
@@ -3560,7 +3559,7 @@ msgstr ""
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr ""
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:95
+#: src/screens/Settings/ActivityPrivacySettings.tsx:93
 msgid "Filter who can opt to receive notifications for your activity"
 msgstr ""
 
@@ -4535,8 +4534,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:73
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -4812,6 +4811,7 @@ msgid "Load new posts"
 msgstr ""
 
 #: src/components/web/ProfileHoverCard.tsx:128
+#: src/screens/Settings/ActivityPrivacySettings.tsx:59
 #: src/view/shell/Composer.tsx:44
 msgid "Loading"
 msgstr "Loading"
@@ -4877,7 +4877,7 @@ msgstr "Locked"
 msgid "Log"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:56
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:55
 msgid "Logged-out visibility"
 msgstr ""
 
@@ -5514,9 +5514,9 @@ msgctxt "allow messages from"
 msgid "No one"
 msgstr ""
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:121
-#: src/screens/Settings/ActivityPrivacySettings.tsx:127
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:106
+#: src/screens/Settings/ActivityPrivacySettings.tsx:114
+#: src/screens/Settings/ActivityPrivacySettings.tsx:118
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 msgctxt "enable for"
 msgid "No one"
 msgstr ""
@@ -5639,7 +5639,7 @@ msgstr ""
 msgid "Note about sharing"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:66
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:64
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
@@ -5680,7 +5680,7 @@ msgid "Nudity"
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:10
-#: src/screens/Settings/AccountSettings.tsx:45
+#: src/screens/Settings/AccountSettings.tsx:44
 #: src/screens/Settings/NotificationSettings/index.tsx:312
 msgid "Off"
 msgstr ""
@@ -5710,7 +5710,7 @@ msgstr ""
 msgid "Oldest replies first"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:45
+#: src/screens/Settings/AccountSettings.tsx:44
 msgid "On"
 msgstr "On"
 
@@ -5775,9 +5775,9 @@ msgstr "Only admins can ignore join requests."
 msgid "Only followers can join this group chat."
 msgstr "Only followers can join this group chat."
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:111
-#: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:104
+#: src/screens/Settings/ActivityPrivacySettings.tsx:106
+#: src/screens/Settings/ActivityPrivacySettings.tsx:110
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:97
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -6406,8 +6406,8 @@ msgstr ""
 
 #: src/Navigation.tsx:741
 #: src/Navigation.tsx:749
-#: src/screens/Settings/ActivityPrivacySettings.tsx:33
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:33
+#: src/screens/Settings/ActivityPrivacySettings.tsx:32
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:31
 msgid "Privacy and Security"
 msgstr ""
 
@@ -7541,7 +7541,7 @@ msgstr ""
 msgid "Settings for activity from others"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:41
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:40
 msgid "Settings for allowing others to be notified of your posts"
 msgstr ""
 
@@ -8562,7 +8562,7 @@ msgstr ""
 msgid "This draft will be permanently deleted."
 msgstr ""
 
-#: src/screens/Settings/ActivityPrivacySettings.tsx:46
+#: src/screens/Settings/ActivityPrivacySettings.tsx:44
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 msgstr ""
 

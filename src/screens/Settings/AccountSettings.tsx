@@ -6,13 +6,12 @@ import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import * as SettingsList from '#/screens/Settings/components/SettingsList';
-
 import { isBotAccount } from '#/components/BotBadge';
 import { useDialogControl } from '#/components/Dialog';
 import { Bot_Stroke as RobotIcon } from '#/components/icons/Bot';
 import { Car_Stroke2_Corner2_Rounded as CarIcon } from '#/components/icons/Car';
-import * as Layout from '#/components/Layout';
+import * as SettingsList from '#/components/SettingsList';
+import * as Layout from '#/components/web/Layout';
 
 import { ExportCarDialog } from './components/ExportCarDialog';
 

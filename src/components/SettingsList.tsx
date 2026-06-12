@@ -50,17 +50,25 @@ export function Group({
  * sibling {@link LinkItem}/{@link PressableItem} rows.
  */
 export function Item({
+	align,
 	children,
 	destructive,
 	iconInset,
 }: {
+	align?: 'start';
 	children?: ReactNode;
 	destructive?: boolean;
 	iconInset?: boolean;
 }) {
 	const resolved = useResolvedDestructive(destructive);
 	return (
-		<div className={clsx(styles.item, iconInset && styles.itemIconInset)}>
+		<div
+			className={clsx(
+				styles.item,
+				iconInset && styles.itemIconInset,
+				align === 'start' && styles.itemAlignStart,
+			)}
+		>
 			<ItemContext.Provider value={{ destructive: resolved }}>{children}</ItemContext.Provider>
 		</div>
 	);
@@ -114,12 +122,14 @@ export function CheckboxBox() {
  * with {@link ItemIcon}/{@link ItemText}/{@link BadgeText} children.
  */
 export function LinkItem({
+	align,
 	to,
 	label,
 	children,
 	destructive,
 	iconInset,
 }: {
+	align?: 'start';
 	to: LinkProps['to'];
 	label: string;
 	children: ReactNode;
@@ -137,6 +147,7 @@ export function LinkItem({
 				styles.itemInteractive,
 				styles.itemHover,
 				iconInset && styles.itemIconInset,
+				align === 'start' && styles.itemAlignStart,
 			)}
 			// useLink resolves navigation off a DOM-shaped MouseEvent; the RN type is nominal only here
 			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
