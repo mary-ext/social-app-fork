@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
-import { type TextStyle, View, type ViewStyle } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Checkbox } from '@base-ui/react/checkbox';
+import { CheckboxGroup } from '@base-ui/react/checkbox-group';
+import { Trans, useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash.debounce';
 
-import { type Interest, interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
+import { interests as allInterests, useInterestsDisplayNames } from '#/lib/interests';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 
 import { preferencesQueryKey, usePreferencesQuery } from '#/state/queries/preferences';
@@ -18,20 +19,17 @@ import { createGetSuggestedUsersForSeeMoreQueryKey } from '#/state/queries/trend
 import { createSuggestedStarterPacksQueryKey } from '#/state/queries/useSuggestedStarterPacksQuery';
 import { useClients } from '#/state/session';
 
-import { atoms as a, useGutters, useTheme } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import { Divider } from '#/components/Divider';
-import * as Toggle from '#/components/forms/Toggle';
-import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
+import { Admonition } from '#/components/web/Admonition';
+import * as Layout from '#/components/web/Layout';
+
+import * as styles from './InterestsSettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'InterestsSettings'>;
 export function InterestsSettingsScreen({}: Props) {
-	const t = useTheme();
-	const gutters = useGutters(['base']);
+	const { t: l } = useLingui();
 	const { data: preferences } = usePreferencesQuery();
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -44,24 +42,26 @@ export function InterestsSettingsScreen({}: Props) {
 						<Trans>Your interests</Trans>
 					</Layout.Header.TitleText>
 				</Layout.Header.Content>
-				<Layout.Header.Slot>{isSaving && <Loader />}</Layout.Header.Slot>
+				<Layout.Header.Slot>
+					{isSaving && <Spinner color="currentColor" label={l`Saving`} size="sm" />}
+				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<View style={[gutters, a.gap_lg]}>
-					<Text style={[a.flex_1, a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+				<div className={styles.body}>
+					<Text color="textContrastMedium" leading="snug" size="sm">
 						<Trans>Your selected interests help us serve you content you care about.</Trans>
 					</Text>
 
-					<Divider />
+					<div className={styles.divider} />
 
 					{preferences ? (
 						<Inner preferences={preferences} setIsSaving={setIsSaving} />
 					) : (
-						<View style={[a.flex_row, a.justify_center, a.p_lg]}>
-							<Loader size="xl" />
-						</View>
+						<div className={styles.loaderWrap}>
+							<Spinner color="currentColor" label={l`Loading`} size="xl" />
+						</div>
 					)}
-				</View>
+				</div>
 			</Layout.Content>
 		</Layout.Screen>
 	);
@@ -136,7 +136,7 @@ function Inner({
 		}, 1500);
 	}, [l, pds, setIsSaving, qc, preselectedInterests]);
 
-	const onChangeInterests = async (interests: string[]) => {
+	const onChangeInterests = (interests: string[]) => {
 		setInterests(interests);
 		void saveInterests(interests);
 	};
@@ -148,76 +148,24 @@ function Inner({
 					<Trans>We recommend selecting at least two interests.</Trans>
 				</Admonition>
 			)}
-			<Toggle.Group
-				values={interests}
-				onChange={(interests) => void onChangeInterests(interests)}
-				label={l`Select your interests from the options below`}
+			<CheckboxGroup
+				aria-label={l`Select your interests from the options below`}
+				className={styles.chipWrap}
+				onValueChange={(value) => void onChangeInterests(value)}
+				value={interests}
 			>
-				<View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-					{allInterests.map((interest) => {
-						const name = interestsDisplayNames[interest];
-						if (!name) return null;
-						return (
-							<Toggle.Item key={interest} name={interest} label={name}>
-								<InterestButton interest={interest} />
-							</Toggle.Item>
-						);
-					})}
-				</View>
-			</Toggle.Group>
+				{allInterests.map((interest) => {
+					const name = interestsDisplayNames[interest];
+					if (!name) return null;
+					return (
+						<Checkbox.Root aria-label={name} className={styles.chip} key={interest} name={interest}>
+							<Text className={styles.chipText} selectable={false} weight="semiBold">
+								{name}
+							</Text>
+						</Checkbox.Root>
+					);
+				})}
+			</CheckboxGroup>
 		</>
-	);
-}
-
-export function InterestButton({ interest }: { interest: Interest }) {
-	const t = useTheme();
-	const interestsDisplayNames = useInterestsDisplayNames();
-	const ctx = Toggle.useItemContext();
-
-	const styles = useMemo(() => {
-		const hovered: ViewStyle[] = [t.atoms.bg_contrast_100];
-		const focused: ViewStyle[] = [];
-		const pressed: ViewStyle[] = [];
-		const selected: ViewStyle[] = [t.atoms.bg_contrast_900];
-		const selectedHover: ViewStyle[] = [t.atoms.bg_contrast_975];
-		const textSelected: TextStyle[] = [t.atoms.text_inverted];
-
-		return {
-			hovered,
-			focused,
-			pressed,
-			selected,
-			selectedHover,
-			textSelected,
-		};
-	}, [t]);
-
-	return (
-		<View
-			style={[
-				a.rounded_full,
-				a.py_md,
-				a.px_xl,
-				t.atoms.bg_contrast_50,
-				ctx.hovered ? styles.hovered : {},
-				ctx.focused ? styles.hovered : {},
-				ctx.pressed ? styles.hovered : {},
-				ctx.selected ? styles.selected : {},
-				ctx.selected && (ctx.hovered || ctx.focused || ctx.pressed) ? styles.selectedHover : {},
-			]}
-		>
-			<Text
-				selectable={false}
-				style={[
-					{
-						color: t.palette.contrast_900,
-					},
-					a.font_semi_bold,
-					ctx.selected ? styles.textSelected : {},
-				]}
-			>
-				{interestsDisplayNames[interest]}
-			</Text>
-		</View>
 	);
 }

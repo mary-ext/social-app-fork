@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,20 +9,19 @@ import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profi
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { BotBadge } from '#/components/BotBadge';
-import * as Toggle from '#/components/forms/Toggle';
 import { Bot_Filled as RobotIcon } from '#/components/icons/Bot';
-import * as Layout from '#/components/Layout';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { useSimpleVerificationState } from '#/components/verification';
 import { VerificationCheck } from '#/components/verification/VerificationCheck';
+import * as Toggle from '#/components/web/forms/Toggle';
+import * as Layout from '#/components/web/Layout';
+
+import * as styles from './AutomationLabelSettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AutomationLabelSettings'>;
 export function AutomationLabelSettingsScreen({}: Props) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { currentAccount } = useSession();
@@ -86,89 +84,64 @@ export function AutomationLabelSettingsScreen({}: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<View style={[a.p_xl, a.gap_xl]}>
+				<div className={styles.body}>
 					{profile && (
-						<View
-							style={[
-								a.flex_row,
-								a.justify_center,
-								a.align_center,
-								a.gap_sm,
-								a.rounded_lg,
-								a.border,
-								t.atoms.bg_contrast_50,
-								t.atoms.border_contrast_low,
-								{
-									height: 160,
-									paddingRight: 20, // helps visually center
-								},
-							]}
-						>
+						<div className={styles.card}>
 							<UserAvatar
-								size={42}
 								avatar={profile.avatar}
+								size={42}
 								type={profile.associated?.labeler ? 'labeler' : 'user'}
 							/>
-							<View>
-								<View style={[a.flex_row, a.align_baseline]}>
-									<View style={[a.flex_row, a.align_center, a.gap_xs]}>
-										<Text
-											emoji
-											style={[a.text_xl, a.font_semi_bold, a.flex_shrink, a.leading_tight]}
-											numberOfLines={1}
-										>
-											{profile.displayName || profile.handle}
-										</Text>
-										{verification.isVerified && (
-											<VerificationCheck verifier={verification.role === 'verifier'} size="sm" />
-										)}
-										<View style={{ top: undefined }}>
-											<BotBadge profile={profile} alwaysShow width={17} />
-										</View>
-									</View>
-								</View>
-								<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={1}>
+							<div className={styles.identity}>
+								<div className={styles.nameRow}>
+									<Text
+										className={styles.displayName}
+										leading="tight"
+										numberOfLines={1}
+										size="xl"
+										weight="semiBold"
+									>
+										{profile.displayName || profile.handle}
+									</Text>
+									{verification.isVerified && (
+										<VerificationCheck size="sm" verifier={verification.role === 'verifier'} />
+									)}
+									<BotBadge alwaysShow profile={profile} width={17} />
+								</div>
+								<Text color="textContrastMedium" leading="snug" numberOfLines={1} size="md">
 									@{profile.handle}
 								</Text>
-							</View>
-						</View>
+							</div>
+						</div>
 					)}
-					<View style={[a.gap_sm]}>
-						<Text style={[a.text_2xl, a.font_bold]}>
+					<div className={styles.heading}>
+						<Text size="_2xl" weight="bold">
 							<Trans>Add automation label to account</Trans>
 						</Text>
-						<Text style={[a.text_md, a.leading_snug]}>
+						<Text leading="snug" size="md">
 							<Trans>
 								This label lets the world know that this account is automated. If turned on, this label
 								appears next to the account's name on their profile and posts. It can be turned on or off at
 								any time.
 							</Trans>
 						</Text>
-					</View>
+					</div>
 					<Toggle.Item
-						name="automation_label"
+						checked={isBotLabeled}
+						className={styles.toggleRow}
 						disabled={!canToggle || updateProfile.isPending}
-						value={isBotLabeled}
-						onChange={onToggle}
 						label={l`Show automation label`}
-						style={[
-							a.w_full,
-							a.p_md,
-							a.rounded_lg,
-							a.border,
-							t.atoms.border_contrast_low,
-							t.atoms.bg_contrast_50,
-						]}
+						onChange={onToggle}
 					>
-						<View style={[a.pr_xs]}>
-							<RobotIcon width={24} fill={t.atoms.text_contrast_medium.color} />
-						</View>
-						<Toggle.LabelText style={[a.flex_1, a.text_md, a.font_medium]}>
+						<span className={styles.robotIcon}>
+							<RobotIcon fill="currentColor" width={24} />
+						</span>
+						<Text className={styles.toggleLabel} size="md" weight="medium">
 							<Trans>Show automation label</Trans>
-						</Toggle.LabelText>
-						<Toggle.Platform />
+						</Text>
+						<Toggle.Switch />
 					</Toggle.Item>
-				</View>
+				</div>
 			</Layout.Content>
 		</Layout.Screen>
 	);

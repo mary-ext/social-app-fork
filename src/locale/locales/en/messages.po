@@ -791,7 +791,7 @@ msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
 
 #: src/Navigation.tsx:781
-#: src/screens/Settings/AboutSettings.tsx:29
+#: src/screens/Settings/AboutSettings.tsx:28
 #: src/screens/Settings/Settings.tsx:192
 #: src/screens/Settings/Settings.tsx:195
 msgid "About"
@@ -1004,7 +1004,7 @@ msgstr ""
 msgid "Add another post to thread"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:138
+#: src/screens/Settings/AutomationLabelSettings.tsx:119
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
@@ -1519,7 +1519,7 @@ msgid "Automation label"
 msgstr "Automation label"
 
 #: src/Navigation.tsx:733
-#: src/screens/Settings/AutomationLabelSettings.tsx:83
+#: src/screens/Settings/AutomationLabelSettings.tsx:81
 msgid "Automation Label"
 msgstr "Automation Label"
 
@@ -2251,7 +2251,7 @@ msgstr "Conversation left"
 msgid "Conversation not found."
 msgstr "Conversation not found."
 
-#: src/screens/Settings/AboutSettings.tsx:64
+#: src/screens/Settings/AboutSettings.tsx:63
 msgid "Copied build version to clipboard"
 msgstr ""
 
@@ -2268,7 +2268,7 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:44
+#: src/screens/Settings/AboutSettings.tsx:43
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -2631,12 +2631,12 @@ msgstr ""
 msgid "Detach quote post?"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:54
+#: src/screens/Settings/AboutSettings.tsx:53
 msgctxt "toast"
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:50
+#: src/screens/Settings/AboutSettings.tsx:49
 msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
@@ -4812,6 +4812,7 @@ msgstr ""
 
 #: src/components/web/ProfileHoverCard.tsx:128
 #: src/screens/Settings/ActivityPrivacySettings.tsx:59
+#: src/screens/Settings/InterestsSettings.tsx:61
 #: src/view/shell/Composer.tsx:44
 msgid "Loading"
 msgstr "Loading"
@@ -7186,6 +7187,7 @@ msgid "Saved to your feeds"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:516
+#: src/screens/Settings/InterestsSettings.tsx:46
 #: src/view/com/composer/photos/EditImageDialog.tsx:86
 msgid "Saving"
 msgstr "Saving"
@@ -7476,7 +7478,7 @@ msgstr "Select which language to use for the app's user interface."
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:154
+#: src/screens/Settings/InterestsSettings.tsx:152
 msgid "Select your interests from the options below"
 msgstr ""
 
@@ -7657,8 +7659,8 @@ msgstr ""
 msgid "Show anyway"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:153
-#: src/screens/Settings/AutomationLabelSettings.tsx:167
+#: src/screens/Settings/AutomationLabelSettings.tsx:133
+#: src/screens/Settings/AutomationLabelSettings.tsx:140
 msgid "Show automation label"
 msgstr "Show automation label"
 
@@ -8157,8 +8159,8 @@ msgid "System"
 msgstr ""
 
 #: src/screens/Log.tsx:45
-#: src/screens/Settings/AboutSettings.tsx:36
-#: src/screens/Settings/AboutSettings.tsx:39
+#: src/screens/Settings/AboutSettings.tsx:35
+#: src/screens/Settings/AboutSettings.tsx:38
 #: src/screens/Settings/Settings.tsx:325
 msgid "System log"
 msgstr ""
@@ -8613,7 +8615,7 @@ msgstr "This invite link is invalid"
 msgid "This is not a valid link"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:141
+#: src/screens/Settings/AutomationLabelSettings.tsx:122
 msgid "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 msgstr "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 
@@ -9286,8 +9288,8 @@ msgid "Verify this account?"
 msgstr ""
 
 #. placeholder {0}: env.APP_VERSION
-#: src/screens/Settings/AboutSettings.tsx:43
-#: src/screens/Settings/AboutSettings.tsx:69
+#: src/screens/Settings/AboutSettings.tsx:42
+#: src/screens/Settings/AboutSettings.tsx:68
 msgid "Version {0}"
 msgstr ""
 
@@ -10125,7 +10127,7 @@ msgstr ""
 #: src/Navigation.tsx:773
 #: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/ContentAndMediaSettings.tsx:69
-#: src/screens/Settings/InterestsSettings.tsx:44
+#: src/screens/Settings/InterestsSettings.tsx:42
 msgid "Your interests"
 msgstr ""
 
