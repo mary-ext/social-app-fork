@@ -191,11 +191,11 @@ export function LiveStatus({
 							<Trans>Live feature is in beta</Trans>
 						</Text>
 					</div>
-					<button className={css.reportButton} onClick={onReport} type="button">
+					<Button className={css.reportButton} label={l`Report`} onClick={onReport} variant="bare">
 						<Text color="textContrastMedium" size="sm">
 							<Trans>Report</Trans>
 						</Text>
-					</button>
+					</Button>
 				</div>
 			</div>
 		</>

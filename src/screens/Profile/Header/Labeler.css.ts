@@ -36,9 +36,7 @@ export const likeRow = style({
 
 export const subscribeButton = style({
 	alignItems: 'center',
-	border: 0,
 	borderRadius: 6,
-	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 6,

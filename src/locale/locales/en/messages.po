@@ -6879,6 +6879,7 @@ msgid "Reply was successfully hidden"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:113
+#: src/features/liveNow/components/LiveStatus.tsx:194
 #: src/features/liveNow/components/LiveStatus.tsx:196
 #: src/features/liveNow/components/LiveStatusDialog.tsx:221
 #: src/screens/Messages/ConversationSettings/index.tsx:450
@@ -8094,7 +8095,7 @@ msgstr ""
 msgid "Subscribe to Labeler"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:101
+#: src/screens/Profile/Header/Labeler.tsx:102
 msgid "Subscribe to this labeler"
 msgstr ""
 
@@ -9120,7 +9121,7 @@ msgstr ""
 msgid "Unsubscribe from list"
 msgstr ""
 
-#: src/screens/Profile/Header/Labeler.tsx:101
+#: src/screens/Profile/Header/Labeler.tsx:102
 msgid "Unsubscribe from this labeler"
 msgstr ""
 

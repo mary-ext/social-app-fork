@@ -104,8 +104,6 @@ export const betaIcon = style({
 // block) so its height tracks the inner Text rather than the button's own larger line-height strut
 export const reportButton = style({
 	background: 'none',
-	border: 'none',
-	cursor: 'pointer',
 	display: 'flex',
 	padding: 0,
 	textDecoration: 'underline',

@@ -97,11 +97,11 @@ function SubscribeLabelerButton() {
 
 	return (
 		<>
-			<button
-				aria-label={isSubscribed ? l`Unsubscribe from this labeler` : l`Subscribe to this labeler`}
+			<Button
 				className={clsx(css.subscribeButton, isSubscribed ? css.subscribed : css.unsubscribed)}
+				label={isSubscribed ? l`Unsubscribe from this labeler` : l`Subscribe to this labeler`}
 				onClick={onPressSubscribe}
-				type="button"
+				variant="bare"
 			>
 				<Text
 					align="center"
@@ -111,7 +111,7 @@ function SubscribeLabelerButton() {
 				>
 					{isSubscribed ? <Trans>Unsubscribe</Trans> : <Trans>Subscribe to Labeler</Trans>}
 				</Text>
-			</button>
+			</Button>
 			<CantSubscribePrompt handle={cantSubscribePrompt} />
 		</>
 	);
