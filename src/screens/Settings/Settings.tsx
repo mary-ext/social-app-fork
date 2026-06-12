@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { LayoutAnimation, Pressable, View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
 import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
@@ -19,15 +17,10 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import * as SettingsList from '#/screens/Settings/components/SettingsList';
-
-import { atoms as a, tokens, useBreakpoints, useTheme } from '#/alf';
+import { useBreakpoints } from '#/alf';
 
 import { AvatarStackWithFetch } from '#/components/AvatarStack';
-import { useDialogControl } from '#/components/Dialog';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
-import { SwitchAccountDialog } from '#/components/dialogs/SwitchAccount';
-import * as Toggle from '#/components/forms/Toggle';
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
 import { Bell_Stroke2_Corner0_Rounded as NotificationIcon } from '#/components/icons/Bell';
 import { BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon } from '#/components/icons/BubbleInfo';
@@ -45,14 +38,15 @@ import {
 } from '#/components/icons/Person';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import { Window_Stroke2_Corner2_Rounded as WindowIcon } from '#/components/icons/Window';
-import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
-import * as Menu from '#/components/Menu';
 import { ProfileBadges } from '#/components/ProfileBadges';
-import * as Prompt from '#/components/Prompt';
+import * as SettingsList from '#/components/SettingsList';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
-import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+import * as Layout from '#/components/web/Layout';
+import * as Menu from '#/components/web/Menu';
+import * as Prompt from '#/components/web/Prompt';
 
 import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
@@ -60,19 +54,19 @@ import { account, auth, device } from '#/storage';
 import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
+import * as styles from './Settings.css';
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>;
 export function SettingsScreen({}: Props) {
 	const { t: l } = useLingui();
-	const reducedMotion = useReducedMotion();
 	const { logoutEveryAccount } = useSessionApi();
 	const { accounts, currentAccount } = useSession();
-	const switchAccountControl = useDialogControl();
-	const signOutPromptControl = Prompt.usePromptControl();
+	const signOutPromptHandle = Prompt.usePromptHandle();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
 	const { data: otherProfiles } = useProfilesQuery({
 		handles: accounts.filter((acc) => acc.did !== currentAccount?.did).map((acc) => acc.handle),
 	});
-	const { pendingDid, onPressSwitchAccount } = useAccountSwitcher();
+	const { onPressSwitchAccount, pendingDid } = useAccountSwitcher();
 	const [showAccounts, setShowAccounts] = useState(false);
 	const [showDevOptions, setShowDevOptions] = useState(false);
 
@@ -89,27 +83,22 @@ export function SettingsScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<SettingsList.Container>
-					<View style={[a.px_xl, a.pt_md, a.pb_md, a.w_full, a.gap_2xs, a.align_center, { minHeight: 160 }]}>
-						{profile && <ProfilePreview profile={profile} />}
-					</View>
+					<div className={styles.profileWrap}>{profile && <ProfilePreview profile={profile} />}</div>
 					{accounts.length > 1 ? (
 						<>
 							<SettingsList.PressableItem
-								label={l`Switch account`}
 								accessibilityHint={l`Shows other accounts you can switch to`}
-								onPress={() => {
-									if (!reducedMotion) {
-										LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-									}
-									setShowAccounts((s) => !s);
-								}}
+								label={l`Switch account`}
+								onPress={() => setShowAccounts((s) => !s)}
 							>
 								<SettingsList.ItemIcon icon={PersonGroupIcon} />
 								<SettingsList.ItemText>
 									<Trans>Switch account</Trans>
 								</SettingsList.ItemText>
 								{showAccounts ? (
-									<SettingsList.ItemIcon icon={ChevronUpIcon} size="md" />
+									<span className={styles.chevron}>
+										<ChevronUpIcon fill="currentColor" size="md" />
+									</span>
 								) : (
 									<AvatarStackWithFetch
 										profiles={accounts
@@ -126,11 +115,11 @@ export function SettingsScreen({}: Props) {
 										.filter((acc) => acc.did !== currentAccount?.did)
 										.map((account) => (
 											<AccountRow
-												key={account.did}
 												account={account}
-												profile={otherProfiles?.profiles?.find((p) => p.did === account.did)}
-												pendingDid={pendingDid}
+												key={account.did}
 												onPressSwitchAccount={(account) => void onPressSwitchAccount(account)}
+												pendingDid={pendingDid}
+												profile={otherProfiles?.profiles?.find((p) => p.did === account.did)}
 											/>
 										))}
 									<AddAccountRow />
@@ -141,55 +130,55 @@ export function SettingsScreen({}: Props) {
 						<AddAccountRow />
 					)}
 					<SettingsList.Divider />
-					<SettingsList.LinkItem to="/settings/account" label={l`Account`}>
+					<SettingsList.LinkItem label={l`Account`} to="/settings/account">
 						<SettingsList.ItemIcon icon={PersonIcon} />
 						<SettingsList.ItemText>
 							<Trans>Account</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/privacy-and-security" label={l`Privacy and security`}>
+					<SettingsList.LinkItem label={l`Privacy and security`} to="/settings/privacy-and-security">
 						<SettingsList.ItemIcon icon={LockIcon} />
 						<SettingsList.ItemText>
 							<Trans>Privacy and security</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/moderation" label={l`Moderation and content filters`}>
+					<SettingsList.LinkItem label={l`Moderation and content filters`} to="/moderation">
 						<SettingsList.ItemIcon icon={HandIcon} />
 						<SettingsList.ItemText>
 							<Trans>Moderation and content filters</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/notifications" label={l`Notifications`}>
+					<SettingsList.LinkItem label={l`Notifications`} to="/settings/notifications">
 						<SettingsList.ItemIcon icon={NotificationIcon} />
 						<SettingsList.ItemText>
 							<Trans>Notifications</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/content-and-media" label={l`Content and media`}>
+					<SettingsList.LinkItem label={l`Content and media`} to="/settings/content-and-media">
 						<SettingsList.ItemIcon icon={WindowIcon} />
 						<SettingsList.ItemText>
 							<Trans>Content and media</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/appearance" label={l`Appearance`}>
+					<SettingsList.LinkItem label={l`Appearance`} to="/settings/appearance">
 						<SettingsList.ItemIcon icon={PaintRollerIcon} />
 						<SettingsList.ItemText>
 							<Trans>Appearance</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/accessibility" label={l`Accessibility`}>
+					<SettingsList.LinkItem label={l`Accessibility`} to="/settings/accessibility">
 						<SettingsList.ItemIcon icon={AccessibilityIcon} />
 						<SettingsList.ItemText>
 							<Trans>Accessibility</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/language" label={l`Languages`}>
+					<SettingsList.LinkItem label={l`Languages`} to="/settings/language">
 						<SettingsList.ItemIcon icon={EarthIcon} />
 						<SettingsList.ItemText>
 							<Trans>Languages</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
-					<SettingsList.LinkItem to="/settings/about" label={l`About`}>
+					<SettingsList.LinkItem label={l`About`} to="/settings/about">
 						<SettingsList.ItemIcon icon={BubbleInfoIcon} />
 						<SettingsList.ItemText>
 							<Trans>About</Trans>
@@ -198,8 +187,8 @@ export function SettingsScreen({}: Props) {
 					<SettingsList.Divider />
 					<SettingsList.PressableItem
 						destructive
-						onPress={() => signOutPromptControl.open()}
 						label={l`Sign out`}
+						onPress={() => signOutPromptHandle.open(null)}
 					>
 						<SettingsList.ItemText>
 							<Trans>Sign out</Trans>
@@ -209,13 +198,8 @@ export function SettingsScreen({}: Props) {
 						<>
 							<SettingsList.Divider />
 							<SettingsList.PressableItem
-								onPress={() => {
-									if (!reducedMotion) {
-										LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-									}
-									setShowDevOptions((d) => !d);
-								}}
 								label={l`Developer options`}
+								onPress={() => setShowDevOptions((d) => !d)}
 							>
 								<SettingsList.ItemIcon icon={CodeBracketsIcon} />
 								<SettingsList.ItemText>
@@ -229,22 +213,19 @@ export function SettingsScreen({}: Props) {
 			</Layout.Content>
 
 			<Prompt.Basic
-				control={signOutPromptControl}
-				title={l`Sign out?`}
-				description={l`You will be signed out of all your accounts.`}
-				onConfirm={() => logoutEveryAccount()}
-				confirmButtonCta={l`Sign out`}
 				cancelButtonCta={l`Cancel`}
 				confirmButtonColor="negative"
+				confirmButtonCta={l`Sign out`}
+				description={l`You will be signed out of all your accounts.`}
+				handle={signOutPromptHandle}
+				onConfirm={() => logoutEveryAccount()}
+				title={l`Sign out?`}
 			/>
-
-			<SwitchAccountDialog control={switchAccountControl} />
 		</Layout.Screen>
 	);
 }
 
 function ProfilePreview({ profile }: { profile: AppBskyActorDefs.ProfileViewDetailed }) {
-	const t = useTheme();
 	const { gtMobile } = useBreakpoints();
 	const shadow = useProfileShadow(profile);
 	const moderationOpts = useModerationOpts();
@@ -261,26 +242,26 @@ function ProfilePreview({ profile }: { profile: AppBskyActorDefs.ProfileViewDeta
 	return (
 		<>
 			<UserAvatar
-				size={80}
 				avatar={shadow.avatar}
-				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-				type={shadow.associated?.labeler ? 'labeler' : 'user'}
 				live={live}
+				moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+				size={80}
+				type={shadow.associated?.labeler ? 'labeler' : 'user'}
 			/>
-			<View style={[a.flex_row, a.gap_xs, a.align_center, a.justify_center, a.w_full]}>
+			<div className={styles.nameRow}>
 				<Text
-					emoji
-					testID="profileHeaderDisplayName"
+					className={styles.displayName}
 					numberOfLines={1}
-					style={[a.pt_sm, t.atoms.text, gtMobile ? a.text_4xl : a.text_3xl, a.font_bold]}
+					size={gtMobile ? '_4xl' : '_3xl'}
+					weight="bold"
 				>
 					{displayName}
 				</Text>
-				<View style={[{ marginTop: 8 }]}>
-					<ProfileBadges profile={shadow} size="xl" interactive />
-				</View>
-			</View>
-			<Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
+				<div className={styles.badges}>
+					<ProfileBadges interactive profile={shadow} size="xl" />
+				</div>
+			</div>
+			<Text color="textContrastMedium" leading="snug" size="md">
 				{sanitizeHandle(profile.handle, '@')}
 			</Text>
 		</>
@@ -307,40 +288,37 @@ function DevOptions() {
 
 	return (
 		<>
-			<Toggle.Item
-				name="debug_feed_context"
+			<SettingsList.CheckboxItem
 				label={l`Show feed context debug`}
-				value={debugFeedContextEnabled}
 				onChange={setDebugFeedContextEnabled}
+				value={debugFeedContextEnabled}
 			>
-				<SettingsList.Item>
-					<SettingsList.ItemText>
-						<Trans>Show feed context debug</Trans>
-					</SettingsList.ItemText>
-					<Toggle.Platform />
-				</SettingsList.Item>
-			</Toggle.Item>
-			<SettingsList.PressableItem onPress={() => navigation.navigate('Log')} label={l`Open system log`}>
+				<SettingsList.ItemText>
+					<Trans>Show feed context debug</Trans>
+				</SettingsList.ItemText>
+				<SettingsList.CheckboxBox />
+			</SettingsList.CheckboxItem>
+			<SettingsList.PressableItem label={l`Open system log`} onPress={() => navigation.navigate('Log')}>
 				<SettingsList.ItemText>
 					<Trans>System log</Trans>
 				</SettingsList.ItemText>
 			</SettingsList.PressableItem>
-			<SettingsList.PressableItem onPress={() => navigation.navigate('Debug')} label={l`Open storybook page`}>
+			<SettingsList.PressableItem label={l`Open storybook page`} onPress={() => navigation.navigate('Debug')}>
 				<SettingsList.ItemText>
 					<Trans>Storybook</Trans>
 				</SettingsList.ItemText>
 			</SettingsList.PressableItem>
 			<SettingsList.PressableItem
-				onPress={() => navigation.navigate('DebugMod')}
 				label={l`Open moderation debug page`}
+				onPress={() => navigation.navigate('DebugMod')}
 			>
 				<SettingsList.ItemText>
 					<Trans>Debug Moderation</Trans>
 				</SettingsList.ItemText>
 			</SettingsList.PressableItem>
 			<SettingsList.PressableItem
+				label={l`Delete chat declaration record`}
 				onPress={() => deleteChatDeclarationRecord()}
-				label={l`Open storybook page`}
 			>
 				<SettingsList.ItemText>
 					<Trans>Delete chat declaration record</Trans>
@@ -348,21 +326,19 @@ function DevOptions() {
 			</SettingsList.PressableItem>
 			{actyNotifNudged && (
 				<SettingsList.PressableItem
-					onPress={onPressActySubsUnNudge}
 					label={l`Reset activity subscription nudge`}
+					onPress={onPressActySubsUnNudge}
 				>
 					<SettingsList.ItemText>
 						<Trans>Reset activity subscription nudge</Trans>
 					</SettingsList.ItemText>
 				</SettingsList.PressableItem>
 			)}
-			<SettingsList.PressableItem onPress={() => void clearAllStorage()} label={l`Clear all storage data`}>
+			<SettingsList.PressableItem label={l`Clear all storage data`} onPress={() => void clearAllStorage()}>
 				<SettingsList.ItemText>
 					<Trans>Clear all storage data (restart after this)</Trans>
 				</SettingsList.ItemText>
 			</SettingsList.PressableItem>
-			{null}
-			{null}
 		</>
 	);
 }
@@ -378,7 +354,7 @@ function AddAccountRow() {
 	};
 
 	return (
-		<SettingsList.PressableItem onPress={onAddAnotherAccount} label={l`Add another account`}>
+		<SettingsList.PressableItem label={l`Add another account`} onPress={onAddAnotherAccount}>
 			<SettingsList.ItemIcon icon={PersonPlusIcon} />
 			<SettingsList.ItemText>
 				<Trans>Add another account</Trans>
@@ -388,21 +364,19 @@ function AddAccountRow() {
 }
 
 function AccountRow({
-	profile,
 	account,
-	pendingDid,
 	onPressSwitchAccount,
+	pendingDid,
+	profile,
 }: {
-	profile?: AppBskyActorDefs.ProfileViewDetailed;
 	account: SessionAccount;
-	pendingDid: string | null;
 	onPressSwitchAccount: (account: SessionAccount) => void;
+	pendingDid: string | null;
+	profile?: AppBskyActorDefs.ProfileViewDetailed;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
-
 	const moderationOpts = useModerationOpts();
-	const removePromptControl = Prompt.usePromptControl();
+	const removePromptHandle = Prompt.usePromptHandle();
 	const { removeAccount } = useSessionApi();
 	const { isActive: live } = useActorStatus(profile);
 
@@ -412,68 +386,57 @@ function AccountRow({
 	};
 
 	return (
-		<View style={[a.relative]}>
-			<SettingsList.PressableItem onPress={onSwitchAccount} label={l`Switch account`}>
+		<div className={styles.accountRow}>
+			<SettingsList.PressableItem label={l`Switch account`} onPress={onSwitchAccount}>
 				{moderationOpts && profile ? (
 					<UserAvatar
-						size={28}
 						avatar={profile.avatar}
+						hideLiveBadge
+						live={live}
 						moderation={getDisplayRestrictions(
 							moderateProfile(profile, moderationOpts),
 							DisplayContext.ProfileMedia,
 						)}
+						size={28}
 						type={profile.associated?.labeler ? 'labeler' : 'user'}
-						live={live}
-						hideLiveBadge
 					/>
 				) : (
-					<View style={[{ width: 28 }]} />
+					<div className={styles.avatarPlaceholder} />
 				)}
-				<SettingsList.ItemText numberOfLines={1} style={[a.pr_2xl, a.leading_snug]}>
+				<Text className={styles.handle} numberOfLines={1} size="md">
 					{sanitizeHandle(account.handle, '@')}
-				</SettingsList.ItemText>
-				{pendingDid === account.did && <SettingsList.ItemIcon icon={Loader} />}
+				</Text>
+				{pendingDid === account.did && (
+					<Spinner color="currentColor" label={l`Switching account`} size="sm" />
+				)}
 			</SettingsList.PressableItem>
 			{!pendingDid && (
 				<Menu.Root>
-					<Menu.Trigger label={l`Account options`}>
-						{({ props, state }) => (
-							<Pressable
-								{...props}
-								style={[
-									a.absolute,
-									{ top: 10, right: tokens.space.lg },
-									a.p_xs,
-									a.rounded_full,
-									(state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-								]}
-							>
-								<DotsHorizontal size="md" style={t.atoms.text} />
-							</Pressable>
-						)}
+					<Menu.Trigger aria-label={l`Account options`} className={styles.menuTrigger}>
+						<DotsHorizontal fill="currentColor" size="md" />
 					</Menu.Trigger>
-					<Menu.Outer showCancel>
-						<Menu.Item label={l`Remove account`} onPress={() => removePromptControl.open()}>
+					<Menu.Popup label={l`Account options`}>
+						<Menu.Item label={l`Remove account`} onClick={() => removePromptHandle.open(null)}>
 							<Menu.ItemText>
 								<Trans>Remove account</Trans>
 							</Menu.ItemText>
 							<Menu.ItemIcon icon={PersonXIcon} />
 						</Menu.Item>
-					</Menu.Outer>
+					</Menu.Popup>
 				</Menu.Root>
 			)}
 
 			<Prompt.Basic
-				control={removePromptControl}
-				title={l`Remove from quick access?`}
+				confirmButtonColor="negative"
+				confirmButtonCta={l`Remove`}
 				description={l`This will remove @${account.handle} from the quick access list.`}
+				handle={removePromptHandle}
 				onConfirm={() => {
 					removeAccount(account);
 					Toast.show(l`Account removed from quick access`);
 				}}
-				confirmButtonCta={l`Remove`}
-				confirmButtonColor="negative"
+				title={l`Remove from quick access?`}
 			/>
-		</View>
+		</div>
 	);
 }
