@@ -109,7 +109,9 @@ export const reportButton = style({
 	display: 'flex',
 	padding: 0,
 	textDecoration: 'underline',
-	textUnderlineOffset: 2,
+	// the label is a child <Text color="textContrastMedium">; pin the underline to the same color so it
+	// doesn't inherit the dialog's default (lighter) text color and mismatch the text it sits under.
+	textDecorationColor: vars.palette.contrast_700,
 });
 
 // touch-only live dialog: drop the popup's own padding so the media bleeds to its rounded edges
