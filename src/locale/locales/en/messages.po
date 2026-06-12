@@ -4164,8 +4164,8 @@ msgstr ""
 msgid "Hide user list"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:80
-#: src/screens/Moderation/VerificationSettings.tsx:90
+#: src/screens/Moderation/VerificationSettings.tsx:74
+#: src/screens/Moderation/VerificationSettings.tsx:82
 msgid "Hide verification badges"
 msgstr ""
 
@@ -4501,7 +4501,7 @@ msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:99
 #: src/components/verification/VerifierDialog.tsx:72
-#: src/screens/Moderation/VerificationSettings.tsx:47
+#: src/screens/Moderation/VerificationSettings.tsx:42
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 msgctxt "english-only-resource"
 msgid "Learn more"
@@ -4811,6 +4811,7 @@ msgid "Load new posts"
 msgstr ""
 
 #: src/components/web/ProfileHoverCard.tsx:128
+#: src/screens/Moderation/VerificationSettings.tsx:57
 #: src/screens/Settings/ActivityPrivacySettings.tsx:59
 #: src/screens/Settings/InterestsSettings.tsx:61
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:36
@@ -9265,11 +9266,11 @@ msgid "Verification settings"
 msgstr ""
 
 #: src/Navigation.tsx:573
-#: src/screens/Moderation/VerificationSettings.tsx:34
+#: src/screens/Moderation/VerificationSettings.tsx:30
 msgid "Verification Settings"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:43
+#: src/screens/Moderation/VerificationSettings.tsx:39
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 

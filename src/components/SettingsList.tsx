@@ -85,12 +85,14 @@ export function CheckboxItem({
 	label,
 	value,
 	onChange,
+	disabled,
 	flush,
 	children,
 }: {
 	label: string;
 	value: boolean;
 	onChange: (value: boolean) => void;
+	disabled?: boolean;
 	flush?: boolean;
 	children: ReactNode;
 }) {
@@ -98,6 +100,7 @@ export function CheckboxItem({
 		<BaseCheckbox.Root
 			aria-label={label}
 			checked={value}
+			disabled={disabled}
 			onCheckedChange={onChange}
 			className={clsx(styles.item, styles.itemInteractive, flush && styles.itemFlush)}
 		>

@@ -1,32 +1,28 @@
-import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 
 import {
-	usePreferencesQuery,
 	type UsePreferencesQueryResponse,
+	usePreferencesQuery,
 	useSetVerificationPrefsMutation,
 } from '#/state/queries/preferences';
 
-import * as SettingsList from '#/screens/Settings/components/SettingsList';
-
-import { atoms as a, useGutters } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import * as Toggle from '#/components/forms/Toggle';
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
-import * as Layout from '#/components/Layout';
-import { InlineLinkText } from '#/components/Link';
-import { Loader } from '#/components/Loader';
+import * as SettingsList from '#/components/SettingsList';
+import { Spinner } from '#/components/Spinner';
+import { Admonition } from '#/components/web/Admonition';
+import * as Layout from '#/components/web/Layout';
+import { InlineLinkText } from '#/components/web/Link';
+
+import * as styles from './VerificationSettings.css';
 
 export function Screen() {
 	const { t: l } = useLingui();
-	const gutters = useGutters(['base']);
 	const { data: preferences } = usePreferencesQuery();
 
 	return (
-		<Layout.Screen testID="ModerationVerificationSettingsScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
@@ -39,16 +35,15 @@ export function Screen() {
 			<Layout.Content>
 				<SettingsList.Container>
 					<SettingsList.Item>
-						<Admonition type="tip" style={[a.flex_1]}>
+						<Admonition type="tip">
 							<Trans>
 								Verifications on Bluesky work differently than on other platforms.{' '}
 								<InlineLinkText
-									to={urls.website.blog.initialVerificationAnnouncement}
 									label={l({
-										message: `Learn more`,
 										context: `english-only-resource`,
+										message: `Learn more`,
 									})}
-									onPress={() => {}}
+									to={urls.website.blog.initialVerificationAnnouncement}
 								>
 									Learn more here.
 								</InlineLinkText>
@@ -58,9 +53,9 @@ export function Screen() {
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
-						<View style={[gutters, a.justify_center, a.align_center]}>
-							<Loader size="xl" />
-						</View>
+						<div className={styles.loaderWrap}>
+							<Spinner color="currentColor" label={l`Loading`} size="xl" />
+						</div>
 					)}
 				</SettingsList.Container>
 			</Layout.Content>
@@ -71,26 +66,22 @@ export function Screen() {
 function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { t: l } = useLingui();
 	const { hideBadges } = preferences.verificationPrefs;
-	const { mutate: setVerificationPrefs, isPending } = useSetVerificationPrefsMutation();
+	const { isPending, mutate: setVerificationPrefs } = useSetVerificationPrefsMutation();
 
 	return (
-		<Toggle.Item
-			type="checkbox"
-			name="hideBadges"
-			label={l`Hide verification badges`}
-			value={hideBadges}
+		<SettingsList.CheckboxItem
 			disabled={isPending}
+			label={l`Hide verification badges`}
 			onChange={(value) => {
 				setVerificationPrefs({ hideBadges: value });
 			}}
+			value={hideBadges}
 		>
-			<SettingsList.Item>
-				<SettingsList.ItemIcon icon={CircleCheck} />
-				<SettingsList.ItemText>
-					<Trans>Hide verification badges</Trans>
-				</SettingsList.ItemText>
-				<Toggle.Platform />
-			</SettingsList.Item>
-		</Toggle.Item>
+			<SettingsList.ItemIcon icon={CircleCheck} />
+			<SettingsList.ItemText>
+				<Trans>Hide verification badges</Trans>
+			</SettingsList.ItemText>
+			<SettingsList.CheckboxBox />
+		</SettingsList.CheckboxItem>
 	);
 }
