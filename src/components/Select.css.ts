@@ -82,6 +82,13 @@ export const popup = style(
 	}),
 );
 
+// opt-out of the `--anchor-width` floor so the popup hugs its content instead of a wide trigger
+export const popupFitContent = style(
+	layered(components, {
+		minWidth: 'fit-content',
+	}),
+);
+
 export const list = style(
 	layered(components, {
 		flex: 1,

@@ -108,8 +108,16 @@ export function Icon({ className }: IconProps) {
 }
 
 export type ContentProps<T> = {
+	/** How the popup aligns to the trigger along its width. Defaults to Base UI's `center`. */
+	align?: 'center' | 'end' | 'start';
 	/** The options to render. Recommended shape `{ label, value }`; otherwise pass `valueExtractor`. */
 	items: T[];
+	/**
+	 * Stretch the popup to at least the trigger's width (default). Pass `false` to size it to its content
+	 * instead — for a wide trigger (e.g. a full-row settings select) that shouldn't drag the popup out to
+	 * match.
+	 */
+	matchTriggerWidth?: boolean;
 	/** Renders one option; receives the current selection so an item can style itself against it. */
 	renderItem: (item: T, index: number, selectedValue: string | null) => ReactElement;
 	/** Extracts an item's value. Defaults to `item => item.value`. */
@@ -117,12 +125,23 @@ export type ContentProps<T> = {
 };
 
 /** The portalled, positioned popup that holds the option list. */
-export function Content<T>({ items, renderItem, valueExtractor = defaultValueExtractor }: ContentProps<T>) {
+export function Content<T>({
+	align,
+	items,
+	matchTriggerWidth = true,
+	renderItem,
+	valueExtractor = defaultValueExtractor,
+}: ContentProps<T>) {
 	const selectedValue = useContext(SelectedValueContext);
 	return (
 		<BaseSelect.Portal>
-			<BaseSelect.Positioner className={styles.positioner} sideOffset={5} alignItemWithTrigger={false}>
-				<BaseSelect.Popup className={styles.popup}>
+			<BaseSelect.Positioner
+				className={styles.positioner}
+				align={align}
+				sideOffset={5}
+				alignItemWithTrigger={false}
+			>
+				<BaseSelect.Popup className={clsx(styles.popup, !matchTriggerWidth && styles.popupFitContent)}>
 					<BaseSelect.ScrollUpArrow className={styles.scrollUpArrow}>
 						<ChevronUpIcon size="xs" fill="currentColor" />
 					</BaseSelect.ScrollUpArrow>

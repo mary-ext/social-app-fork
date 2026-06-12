@@ -7,17 +7,12 @@ import { useSetThemePrefs, useThemePrefs } from '#/state/shell';
 
 import { type Alf, useAlf } from '#/alf';
 
-import type { Props as SVGIconProps } from '#/components/icons/common';
 import { Moon_Stroke2_Corner0_Rounded as MoonIcon } from '#/components/icons/Moon';
 import { Phone_Stroke2_Corner0_Rounded as PhoneIcon } from '#/components/icons/Phone';
 import { TextSize_Stroke2_Corner0_Rounded as TextSize } from '#/components/icons/TextSize';
 import { TitleCase_Stroke2_Corner0_Rounded as Aa } from '#/components/icons/TitleCase';
-import { SegmentedControl, type SegmentedControlItem } from '#/components/SegmentedControl';
-import * as SettingsList from '#/components/SettingsList';
-import { Text } from '#/components/Text';
+import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
-
-import * as styles from './AppearanceSettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>;
 export function AppearanceSettingsScreen({}: Props) {
@@ -41,13 +36,6 @@ export function AppearanceSettingsScreen({}: Props) {
 		[setDarkTheme],
 	);
 
-	const onChangeFontFamily = useCallback(
-		(value: 'system' | 'theme') => {
-			fonts.setFontFamily(value);
-		},
-		[fonts],
-	);
-
 	const onChangeFontScale = useCallback(
 		(value: Alf['fonts']['scale']) => {
 			fonts.setFontScale(value);
@@ -67,90 +55,67 @@ export function AppearanceSettingsScreen({}: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<SettingsList.Container>
-					<AppearanceGroup
-						title={l`Color mode`}
-						icon={PhoneIcon}
-						items={[
-							{ label: l`System`, value: 'system' },
-							{ label: l`Light`, value: 'light' },
-							{ label: l`Dark`, value: 'dark' },
-						]}
-						value={colorMode}
-						onValueChange={onChangeAppearance}
-					/>
-
-					{colorMode !== 'light' && (
-						<AppearanceGroup
-							title={l`Dark theme`}
-							icon={MoonIcon}
+				<Settings.List>
+					<Settings.Section titleText={<Trans>Theme</Trans>}>
+						<Settings.SelectRow
+							label={l`Color mode`}
+							value={colorMode}
+							onValueChange={onChangeAppearance}
 							items={[
-								{ label: l`Dim`, value: 'dim' },
+								{ label: l`System`, value: 'system' },
+								{ label: l`Light`, value: 'light' },
 								{ label: l`Dark`, value: 'dark' },
 							]}
-							value={darkTheme ?? 'dim'}
-							onValueChange={onChangeDarkTheme}
-						/>
-					)}
+						>
+							<Settings.Icon icon={PhoneIcon} />
+							<Settings.Label titleText={<Trans>Color mode</Trans>} />
+						</Settings.SelectRow>
 
-					<SettingsList.Divider />
-					<AppearanceGroup
-						title={l`Font`}
-						description={l`For the best experience, we recommend using the theme font.`}
-						icon={Aa}
-						items={[
-							{ label: l`System`, value: 'system' },
-							{ label: l`Theme`, value: 'theme' },
-						]}
-						value={fonts.family}
-						onValueChange={onChangeFontFamily}
-					/>
-					<AppearanceGroup
-						title={l`Font size`}
-						icon={TextSize}
-						items={[
-							{ label: l`Smaller`, value: '-1' },
-							{ label: l`Default`, value: '0' },
-							{ label: l`Larger`, value: '1' },
-						]}
-						value={fonts.scale}
-						onValueChange={onChangeFontScale}
-					/>
-				</SettingsList.Container>
+						{colorMode !== 'light' && (
+							<Settings.SelectRow
+								label={l`Dark theme`}
+								value={darkTheme ?? 'dim'}
+								onValueChange={onChangeDarkTheme}
+								items={[
+									{ label: l`Dim`, value: 'dim' },
+									{ label: l`Dark`, value: 'dark' },
+								]}
+							>
+								<Settings.Icon icon={MoonIcon} />
+								<Settings.Label titleText={<Trans>Dark theme</Trans>} />
+							</Settings.SelectRow>
+						)}
+					</Settings.Section>
+
+					<Settings.Section titleText={<Trans>Font</Trans>}>
+						<Settings.SwitchRow
+							label={l`Use theme font`}
+							value={fonts.family === 'theme'}
+							onChange={(checked) => fonts.setFontFamily(checked ? 'theme' : 'system')}
+						>
+							<Settings.Icon icon={Aa} />
+							<Settings.Label
+								titleText={<Trans>Use theme font</Trans>}
+								subtitleText={<Trans>We recommend the theme font for the best experience.</Trans>}
+							/>
+						</Settings.SwitchRow>
+
+						<Settings.SelectRow
+							label={l`Font size`}
+							value={fonts.scale}
+							onValueChange={onChangeFontScale}
+							items={[
+								{ label: l`Smaller`, value: '-1' },
+								{ label: l`Default`, value: '0' },
+								{ label: l`Larger`, value: '1' },
+							]}
+						>
+							<Settings.Icon icon={TextSize} />
+							<Settings.Label titleText={<Trans>Font size</Trans>} />
+						</Settings.SelectRow>
+					</Settings.Section>
+				</Settings.List>
 			</Layout.Content>
 		</Layout.Screen>
-	);
-}
-
-function AppearanceGroup<T extends string>({
-	title,
-	description,
-	icon,
-	items,
-	value,
-	onValueChange,
-}: {
-	title: string;
-	description?: string;
-	icon: React.ComponentType<SVGIconProps>;
-	items: SegmentedControlItem<T>[];
-	value: T;
-	onValueChange: (value: T) => void;
-}) {
-	return (
-		<SettingsList.Group>
-			<div className={styles.groupBody}>
-				<div className={styles.headerRow}>
-					<SettingsList.ItemIcon icon={icon} />
-					<SettingsList.ItemText>{title}</SettingsList.ItemText>
-				</div>
-				{description && (
-					<Text size="sm" leading="snug" color="textContrastMedium">
-						{description}
-					</Text>
-				)}
-				<SegmentedControl label={title} items={items} value={value} onValueChange={onValueChange} />
-			</div>
-		</SettingsList.Group>
 	);
 }
