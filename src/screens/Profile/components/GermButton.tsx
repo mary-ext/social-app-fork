@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, type GestureResponderEvent } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import type { ActorIdentifier, Did } from '@atcute/lexicons';
@@ -20,12 +20,14 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { CustomLinkWarningDialog } from '#/components/dialogs/LinkWarning';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
-import { Link } from '#/components/Link';
+import { useLink } from '#/components/Link';
 import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { Text as WebText } from '#/components/web/Text';
 
-import { Image } from '#/shims/image';
+import germLogoUrl from '../../../../assets/images/germ_logo.webp';
+import * as css from './GermButton.css';
 
 export function GermButton({
 	germ,
@@ -34,10 +36,7 @@ export function GermButton({
 	germ: AppBskyActorDefs.ProfileAssociatedGerm;
 	profile: AnyProfileView;
 }) {
-	const t = useTheme();
-	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
-	const linkWarningControl = Dialog.useDialogControl();
 
 	// exclude `none` and all unknown values
 	if (!(germ.showButtonTo === 'everyone' || germ.showButtonTo === 'usersIFollow')) {
@@ -58,31 +57,47 @@ export function GermButton({
 		return null;
 	}
 
+	return <GermLink url={url} />;
+}
+
+function GermLink({ url }: { url: string }) {
+	const { t: l } = useLingui();
+	const linkWarningControl = Dialog.useDialogControl();
+	const { href, isExternal, onPress } = useLink({
+		displayText: '',
+		onPress: (evt) => {
+			if (isCustomGermDomain(url)) {
+				evt.preventDefault();
+				linkWarningControl.open();
+				return false;
+			}
+		},
+		to: url,
+	});
+
 	return (
 		<>
-			<Link
-				to={url}
-				onPress={(evt) => {
-					if (isCustomGermDomain(url)) {
-						evt.preventDefault();
-						linkWarningControl.open();
-						return false;
-					}
-				}}
-				label={l`Open Germ DM`}
-				style={[t.atoms.bg_contrast_50, a.rounded_full, a.self_start, { padding: 6 }]}
+			<a
+				aria-label={l`Open Germ DM`}
+				className={css.pill}
+				href={href}
+				onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
+				rel={isExternal ? 'noopener noreferrer' : undefined}
+				target={isExternal ? '_blank' : undefined}
 			>
 				<GermLogo size="small" />
-				<Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+				<WebText className={css.label} size="sm" weight="medium">
 					<Trans>Germ DM</Trans>
-				</Text>
-				<ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
-			</Link>
+				</WebText>
+				<span className={css.arrow}>
+					<ArrowTopRightIcon width={14} height={14} fill="currentColor" />
+				</span>
+			</a>
 			<CustomLinkWarningDialog
 				control={linkWarningControl}
 				link={{
-					href: url,
 					displayText: '',
+					href: url,
 					share: false,
 				}}
 			/>
@@ -90,15 +105,9 @@ export function GermButton({
 	);
 }
 
-function GermLogo({ size }: { size: 'small' | 'large' }) {
-	return (
-		<Image
-			source={require('../../../../assets/images/germ_logo.webp')}
-			accessibilityIgnoresInvertColors={false}
-			contentFit="cover"
-			style={[a.rounded_full, size === 'large' ? { width: 32, height: 32 } : { width: 16, height: 16 }]}
-		/>
-	);
+function GermLogo({ size }: { size: 'large' | 'small' }) {
+	const px = size === 'large' ? 32 : 16;
+	return <img alt="" className={css.logo} height={px} src={germLogoUrl} width={px} />;
 }
 
 function GermSelfButton({ did }: { did: string }) {

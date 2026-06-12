@@ -35,7 +35,7 @@ import { CenteredView, ScrollView } from '#/view/com/util/Views';
 
 import { ThreadItemAnchor } from '#/screens/PostThread/components/ThreadItemAnchor';
 import { ThreadItemPost } from '#/screens/PostThread/components/ThreadItemPost';
-import { ProfileHeaderStandard } from '#/screens/Profile/Header/ProfileHeaderStandard';
+import { StandardProfileHeader } from '#/screens/Profile/Header/Standard';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -800,7 +800,7 @@ function MockAccountScreen({
 				screenDescription={l`profile`}
 				modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 			>
-				<ProfileHeaderStandard
+				<StandardProfileHeader
 					// @ts-ignore ProfileViewBasic is close enough -prf
 					profile={profile}
 					moderationOpts={moderationOpts}

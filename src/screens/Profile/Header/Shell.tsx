@@ -1,60 +1,52 @@
-import { memo, useCallback, useMemo } from 'react';
-import { Pressable, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
+import { memo, useCallback } from 'react';
+import type { AppBskyEmbedExternal } from '@atcute/bluesky';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
+import { clsx } from 'clsx';
 
-import { BACK_HITSLOP } from '#/lib/constants';
 import type { NavigationProp } from '#/lib/routes/types';
 
-import type { Shadow } from '#/state/cache/types';
-import { useSession } from '#/state/session';
-
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
-import { UserBanner } from '#/view/com/util/UserBanner';
 
-import { atoms as a, useTheme, utils } from '#/alf';
-
-import { Button } from '#/components/Button';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow';
 import { LabelsOnMe } from '#/components/moderation/LabelsOnMe';
 import { ProfileHeaderAlerts } from '#/components/moderation/ProfileHeaderAlerts';
 import { useDialogHandle } from '#/components/web/Dialog';
 import { UserAvatar } from '#/components/web/UserAvatar';
+import { UserBanner } from '#/components/web/UserBanner';
 
-import { useActorStatus } from '#/features/liveNow';
 import { EditLiveDialog } from '#/features/liveNow/components/EditLiveDialog';
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { LiveStatusDialog } from '#/features/liveNow/components/LiveStatus';
 
-import { GrowableAvatar } from './GrowableAvatar';
-import { GrowableBanner } from './GrowableBanner';
+import { useProfileHeader } from './Context';
 import * as css from './Shell.css';
 
-interface Props {
-	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
-	moderation: ModerationDecision;
-	hideBackButton?: boolean;
-	isPlaceholderProfile?: boolean;
-}
-
-let ProfileHeaderShell = ({
-	children,
-	profile,
-	moderation,
-	hideBackButton = false,
-	isPlaceholderProfile,
-}: React.PropsWithChildren<Props>): React.ReactNode => {
-	const t = useTheme();
-	const { currentAccount } = useSession();
+/**
+ * The fixed profile-header scaffold: banner with back button, the overlapping avatar with its live ring, and
+ * the moderation alerts. Variants pass the header body as `children`.
+ */
+let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.ReactNode => {
 	const { t: l } = useLingui();
+	const {
+		meta: { hideBackButton, isMe, isPlaceholderProfile, live },
+		state: { moderation, profile },
+	} = useProfileHeader();
 	const { lightboxControl } = useGlobalDialogsControlContext();
 	const navigation = useNavigation<NavigationProp>();
-	useSafeAreaInsets();
 	const liveStatusHandle = useDialogHandle();
+
+	const mediaModeration = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
+	const isLabeler = !!profile.associated?.labeler;
+
+	const openLightbox = useCallback(
+		(uri: string) => {
+			lightboxControl.openWithPayload({ images: [{ src: uri }], index: 0 });
+		},
+		[lightboxControl],
+	);
 
 	const onPressBack = useCallback(() => {
 		if (navigation.canGoBack()) {
@@ -64,138 +56,85 @@ let ProfileHeaderShell = ({
 		}
 	}, [navigation]);
 
-	const _openLightbox = useCallback(
-		(uri: string) => {
-			lightboxControl.openWithPayload({
-				images: [{ src: uri }],
-				index: 0,
-			});
-		},
-		[lightboxControl],
-	);
-
-	const isMe = useMemo(() => currentAccount?.did === profile.did, [currentAccount, profile]);
-
-	const live = useActorStatus(profile);
+	const onPressBanner = useCallback(() => {
+		if (profile.banner && !(mediaModeration.blurs.length > 0 && mediaModeration.noOverride)) {
+			openLightbox(profile.banner);
+		}
+	}, [profile.banner, mediaModeration, openLightbox]);
 
 	const onPressAvi = useCallback(() => {
 		if (live.isActive) {
 			liveStatusHandle.open(null);
-		} else {
-			const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
-			const avatar = profile.avatar;
-			if (avatar && !(modui.blurs.length > 0 && modui.noOverride)) {
-				_openLightbox(avatar);
-			}
+		} else if (profile.avatar && !(mediaModeration.blurs.length > 0 && mediaModeration.noOverride)) {
+			openLightbox(profile.avatar);
 		}
-	}, [profile, moderation, _openLightbox, liveStatusHandle, live]);
-
-	const onPressBanner = useCallback(() => {
-		const modui = getDisplayRestrictions(moderation, DisplayContext.ProfileMedia);
-		const banner = profile.banner;
-		if (banner && !(modui.blurs.length > 0 && modui.noOverride)) {
-			_openLightbox(banner);
-		}
-	}, [profile.banner, moderation, _openLightbox]);
+	}, [live.isActive, liveStatusHandle, profile.avatar, mediaModeration, openLightbox]);
 
 	return (
-		<View style={t.atoms.bg} pointerEvents={'box-none'}>
-			<View pointerEvents={'box-none'} style={[a.relative, { height: 150 }]}>
-				<GrowableBanner
-					testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
-					label={profile.banner ? l`View profile banner` : l`Profile banner placeholder`}
-					onPress={isPlaceholderProfile ? undefined : onPressBanner}
-					backButton={
-						!hideBackButton && (
-							<Button
-								testID="profileHeaderBackBtn"
-								onPress={onPressBack}
-								hitSlop={BACK_HITSLOP}
-								label={l`Back`}
-								style={[
-									a.absolute,
-									a.pointer,
-									{
-										top: 10,
-										left: 18,
-									},
-								]}
-							>
-								{({ hovered }) => (
-									<View
-										style={[
-											a.align_center,
-											a.justify_center,
-											a.rounded_full,
-											{
-												width: 31,
-												height: 31,
-												backgroundColor: utils.alpha('#000', 0.5),
-											},
-											hovered && {
-												backgroundColor: utils.alpha('#000', 0.75),
-											},
-										]}
-									>
-										<ArrowLeftIcon size="lg" fill="white" />
-									</View>
-								)}
-							</Button>
-						)
-					}
-				>
-					{isPlaceholderProfile ? (
-						<LoadingPlaceholder width="100%" height="100%" style={{ borderRadius: 0 }} />
-					) : (
+		<div className={css.frame}>
+			<div className={css.bannerRegion}>
+				{isPlaceholderProfile ? (
+					<LoadingPlaceholder width="100%" height="100%" style={{ borderRadius: 0 }} />
+				) : (
+					<button
+						type="button"
+						className={css.bannerButton}
+						aria-label={profile.banner ? l`View profile banner` : l`Profile banner placeholder`}
+						onClick={onPressBanner}
+					>
 						<UserBanner
-							type={profile.associated?.labeler ? 'labeler' : 'default'}
+							type={isLabeler ? 'labeler' : 'default'}
 							banner={profile.banner}
-							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+							moderation={mediaModeration}
 						/>
-					)}
-				</GrowableBanner>
-			</View>
+					</button>
+				)}
+				{!hideBackButton && (
+					<button type="button" className={css.backButton} aria-label={l`Back`} onClick={onPressBack}>
+						<span className={css.backButtonInner}>
+							<ArrowLeftIcon size="lg" fill="white" />
+						</span>
+					</button>
+				)}
+			</div>
+
 			{children}
+
 			{!isPlaceholderProfile &&
 				(isMe ? (
 					<LabelsOnMe className={css.headerAlerts} labels={profile.labels} type="account" />
 				) : (
 					<ProfileHeaderAlerts className={css.headerAlerts} moderation={moderation} />
 				))}
-			<GrowableAvatar style={[a.absolute, { top: 104, left: 10 }]}>
-				<Pressable
-					testID="profileHeaderAviButton"
-					onPress={onPressAvi}
-					accessibilityRole="image"
-					accessibilityLabel={l`View ${profile.handle}'s avatar`}
-					accessibilityHint=""
+
+			<div className={css.avatarAnchor}>
+				<button
+					type="button"
+					className={css.avatarButton}
+					aria-label={l`View ${profile.handle}'s avatar`}
+					onClick={onPressAvi}
 				>
-					<View
-						style={[
-							t.atoms.bg,
-							a.rounded_full,
-							{
-								width: 94,
-								height: 94,
-								borderWidth: live.isActive ? 3 : 2,
-								borderColor: live.isActive ? t.palette.negative_500 : t.atoms.bg.backgroundColor,
-							},
-							profile.associated?.labeler && a.rounded_md,
-						]}
+					<span
+						className={clsx(
+							css.avatarRing,
+							live.isActive && css.avatarRingLive,
+							isLabeler && css.avatarRingLabeler,
+						)}
 					>
-						<View>
+						<span className={css.avatarInner}>
 							<UserAvatar
-								type={profile.associated?.labeler ? 'labeler' : 'user'}
+								type={isLabeler ? 'labeler' : 'user'}
 								size={live.isActive ? 88 : 90}
 								avatar={profile.avatar}
-								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+								moderation={mediaModeration}
 								noBorder
 							/>
 							{live.isActive && <LiveIndicator size="large" />}
-						</View>
-					</View>
-				</Pressable>
-			</GrowableAvatar>
+						</span>
+					</span>
+				</button>
+			</div>
+
 			{live.isActive &&
 				(isMe ? (
 					<EditLiveDialog
@@ -211,7 +150,7 @@ let ProfileHeaderShell = ({
 						profile={profile}
 					/>
 				))}
-		</View>
+		</div>
 	);
 };
 

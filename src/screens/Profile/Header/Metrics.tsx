@@ -1,59 +1,60 @@
-import { View } from 'react-native';
-import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
 import { makeProfileLink } from '#/lib/routes/links';
 
-import type { Shadow } from '#/state/cache/types';
-
 import { formatCount } from '#/view/com/util/numeric/format';
 
-import { atoms as a, useTheme } from '#/alf';
+import { InlineLinkText } from '#/components/web/Link';
+import { Text } from '#/components/web/Text';
 
-import { InlineLinkText } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import { useProfileHeader } from './Context';
+import * as css from './Metrics.css';
 
-export function ProfileHeaderMetrics({ profile }: { profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> }) {
-	const t = useTheme();
+/** Follower / following / post counts, the first two linking to their respective lists. */
+export function ProfileHeaderMetrics() {
 	const { t: l, i18n } = useLingui();
-	const following = formatCount(i18n, profile.followsCount || 0);
+	const {
+		state: { profile },
+	} = useProfileHeader();
+
 	const followers = formatCount(i18n, profile.followersCount || 0);
-	const pluralizedFollowers = plural(profile.followersCount || 0, {
-		one: 'follower',
-		other: 'followers',
-	});
-	const pluralizedFollowings = plural(profile.followsCount || 0, {
-		one: 'following',
-		other: 'following',
-	});
+	const following = formatCount(i18n, profile.followsCount || 0);
+	const pluralizedFollowers = plural(profile.followersCount || 0, { one: 'follower', other: 'followers' });
+	const pluralizedFollowings = plural(profile.followsCount || 0, { one: 'following', other: 'following' });
 
 	return (
-		<View style={[a.flex_row, a.gap_sm, a.align_center]} pointerEvents="box-none">
+		<div className={css.row}>
 			<InlineLinkText
-				testID="profileHeaderFollowersButton"
-				style={[a.flex_row, t.atoms.text]}
-				to={makeProfileLink(profile, 'followers')}
+				color="text"
 				label={`${profile.followersCount || 0} ${pluralizedFollowers}`}
+				to={makeProfileLink(profile, 'followers')}
 			>
-				<Text style={[a.font_semi_bold, a.text_md]}>{followers} </Text>
-				<Text style={[t.atoms.text_contrast_medium, a.text_md]}>{pluralizedFollowers}</Text>
+				<Text size="md" weight="semiBold">
+					{followers}{' '}
+				</Text>
+				<Text color="textContrastMedium" size="md">
+					{pluralizedFollowers}
+				</Text>
 			</InlineLinkText>
 			<InlineLinkText
-				testID="profileHeaderFollowsButton"
-				style={[a.flex_row, t.atoms.text]}
-				to={makeProfileLink(profile, 'follows')}
+				color="text"
 				label={l`${profile.followsCount || 0} following`}
+				to={makeProfileLink(profile, 'follows')}
 			>
-				<Text style={[a.font_semi_bold, a.text_md]}>{following} </Text>
-				<Text style={[t.atoms.text_contrast_medium, a.text_md]}>{pluralizedFollowings}</Text>
+				<Text size="md" weight="semiBold">
+					{following}{' '}
+				</Text>
+				<Text color="textContrastMedium" size="md">
+					{pluralizedFollowings}
+				</Text>
 			</InlineLinkText>
-			<Text style={[a.font_semi_bold, t.atoms.text, a.text_md]}>
+			<Text color="text" size="md" weight="semiBold">
 				{formatCount(i18n, profile.postsCount || 0)}{' '}
-				<Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
+				<Text color="textContrastMedium" size="md" weight="normal">
 					{plural(profile.postsCount || 0, { one: 'post', other: 'posts' })}
 				</Text>
 			</Text>
-		</View>
+		</div>
 	);
 }

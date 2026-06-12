@@ -1,0 +1,168 @@
+import { useRef } from 'react';
+import type { GestureResponderEvent } from 'react-native';
+import type { AnyProfileView, AppBskyActorDefs } from '@atcute/bluesky';
+import {
+	DisplayContext,
+	getDisplayRestrictions,
+	moderateProfile,
+	type ModerationOptions,
+} from '@atcute/bluesky-moderation';
+import { Plural, Trans, useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+
+import { makeProfileLink } from '#/lib/routes/links';
+import { sanitizeDisplayName } from '#/lib/strings/display-names';
+
+import { useLink } from '#/components/Link';
+import * as css from '#/components/web/KnownFollowers.css';
+import { Text } from '#/components/web/Text';
+import { UserAvatar } from '#/components/web/UserAvatar';
+
+const AVI_SIZE = 30;
+
+/**
+ * Whether to render {@link KnownFollowers}. Counts the returned followers rather than the `count` field, since
+ * `count` includes blocked users that `followers` omits.
+ */
+export function shouldShowKnownFollowers(knownFollowers?: AppBskyActorDefs.KnownFollowers) {
+	return knownFollowers && knownFollowers.followers.length > 0;
+}
+
+/** "Followed by X, Y and N others" — a row of overlapping avatars linking to the shared followers. */
+export function KnownFollowers({
+	moderationOpts,
+	profile,
+}: {
+	moderationOpts: ModerationOptions;
+	profile: AnyProfileView;
+}) {
+	const cache = useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(new Map());
+
+	// `knownFollowers` isn't sorted stably, so revalidation can flash a reordered list. Cache the first
+	// value seen for this profile so an in-memory screen keeps a stable order.
+	if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
+		cache.current.set(profile.did, profile.viewer.knownFollowers);
+	}
+
+	const cachedKnownFollowers = cache.current.get(profile.did);
+
+	if (cachedKnownFollowers && shouldShowKnownFollowers(cachedKnownFollowers)) {
+		return (
+			<KnownFollowersInner
+				cachedKnownFollowers={cachedKnownFollowers}
+				moderationOpts={moderationOpts}
+				profile={profile}
+			/>
+		);
+	}
+
+	return null;
+}
+
+function KnownFollowersInner({
+	cachedKnownFollowers,
+	moderationOpts,
+	profile,
+}: {
+	cachedKnownFollowers: AppBskyActorDefs.KnownFollowers;
+	moderationOpts: ModerationOptions;
+	profile: AnyProfileView;
+}) {
+	const { t: l } = useLingui();
+	const { href, onPress } = useLink({
+		displayText: '',
+		to: makeProfileLink(profile, 'known-followers'),
+	});
+
+	const slice = cachedKnownFollowers.followers.slice(0, 3).map((f) => {
+		const moderation = moderateProfile(f, moderationOpts);
+		return {
+			moderation,
+			profile: {
+				...f,
+				displayName: sanitizeDisplayName(
+					f.displayName || f.handle,
+					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+				),
+			},
+		};
+	});
+
+	// Does not have blocks applied. Always >= slice.length
+	const serverCount = cachedKnownFollowers.count;
+
+	if (slice.length === 0) {
+		return null;
+	}
+
+	return (
+		<a
+			aria-label={l`Press to view followers of this account that you also follow`}
+			className={css.link}
+			href={href}
+			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
+		>
+			<div className={css.avatars}>
+				{slice.map(({ moderation, profile: prof }, i) => (
+					<div
+						key={prof.did}
+						className={css.avatarWrap}
+						style={assignInlineVars({ [css.stackOrder]: String(slice.length - i) })}
+					>
+						<UserAvatar
+							avatar={prof.avatar}
+							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
+							noBorder
+							size={AVI_SIZE}
+							type={prof.associated?.labeler ? 'labeler' : 'user'}
+						/>
+					</div>
+				))}
+			</div>
+
+			<Text className={css.text} color="textContrastMedium" leading="snug" numberOfLines={2} size="sm">
+				{slice.length >= 2 ? (
+					serverCount > 2 ? (
+						<Trans>
+							Followed by{' '}
+							<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
+								{slice[0]!.profile.displayName}
+							</Text>
+							,{' '}
+							<Text key={slice[1]!.profile.did} color="textContrastMedium" size="sm">
+								{slice[1]!.profile.displayName}
+							</Text>
+							, and <Plural value={serverCount - 2} one="# other" other="# others" />
+						</Trans>
+					) : (
+						<Trans>
+							Followed by{' '}
+							<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
+								{slice[0]!.profile.displayName}
+							</Text>{' '}
+							and{' '}
+							<Text key={slice[1]!.profile.did} color="textContrastMedium" size="sm">
+								{slice[1]!.profile.displayName}
+							</Text>
+						</Trans>
+					)
+				) : serverCount > 1 ? (
+					<Trans>
+						Followed by{' '}
+						<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
+							{slice[0]!.profile.displayName}
+						</Text>{' '}
+						and <Plural value={serverCount - 1} one="# other" other="# others" />
+					</Trans>
+				) : (
+					<Trans>
+						Followed by{' '}
+						<Text key={slice[0]!.profile.did} color="textContrastMedium" size="sm">
+							{slice[0]!.profile.displayName}
+						</Text>
+					</Trans>
+				)}
+			</Text>
+		</a>
+	);
+}

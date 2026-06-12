@@ -1,38 +1,34 @@
-import { View } from 'react-native';
-import type { AppBskyActorDefs } from '@atcute/bluesky';
-import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
+import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
 
-import type { Shadow } from '#/state/cache/types';
+import { useBreakpoints } from '#/alf';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { Text } from '#/components/web/Text';
 
-import { Text } from '#/components/Typography';
+import { useProfileHeader } from './Context';
+import * as css from './DisplayName.css';
 
-export function ProfileHeaderDisplayName({
-	profile,
-	moderation,
-}: {
-	profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>;
-	moderation: ModerationDecision;
-}) {
-	const t = useTheme();
+/** The large profile display name. `leading` defaults to `snug`; the standard header tightens it. */
+export function ProfileHeaderDisplayName({ leading = 'snug' }: { leading?: 'snug' | 'tight' }) {
 	const { gtMobile } = useBreakpoints();
+	const {
+		state: { moderation, profile },
+	} = useProfileHeader();
 
 	return (
-		<View pointerEvents="none">
-			<Text
-				emoji
-				testID="profileHeaderDisplayName"
-				style={[t.atoms.text, gtMobile ? a.text_4xl : a.text_3xl, a.self_start, a.font_bold]}
-			>
-				{sanitizeDisplayName(
-					profile.displayName || sanitizeHandle(profile.handle),
-					getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
-				)}
-			</Text>
-		</View>
+		<Text
+			className={css.displayName}
+			color="text"
+			leading={leading}
+			size={gtMobile ? '_4xl' : '_3xl'}
+			weight="bold"
+		>
+			{sanitizeDisplayName(
+				profile.displayName || sanitizeHandle(profile.handle),
+				getDisplayRestrictions(moderation, DisplayContext.ProfileBio),
+			)}
+		</Text>
 	);
 }
