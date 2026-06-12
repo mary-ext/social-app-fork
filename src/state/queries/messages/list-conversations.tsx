@@ -214,8 +214,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
 							?.some((m) => m.did === did) ?? false;
 					mutateMembers(convoId, (list) => (list.some((m) => m.did === did) ? list : list.concat(newMember)));
-					mutateConvoView(convoId, (convo) =>
-						addMemberToConvoView(convo, newMember, rev, alreadyKnownMember),
+					mutateConvoView(
+						convoId,
+						withRevGuard(rev, (convo) => addMemberToConvoView(convo, newMember, rev, alreadyKnownMember)),
 					);
 				}
 
@@ -226,8 +227,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							.getQueryData<ChatBskyActorDefs.ProfileViewBasic[]>(listConvoMembersQueryKey(convoId))
 							?.some((m) => m.did === did) === false;
 					mutateMembers(convoId, (list) => list.filter((m) => m.did !== did));
-					mutateConvoView(convoId, (convo) =>
-						removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember),
+					mutateConvoView(
+						convoId,
+						withRevGuard(rev, (convo) => removeMemberFromConvoView(convo, did, rev, alreadyRemovedMember)),
 					);
 				}
 
@@ -249,27 +251,31 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logDeleteMessage': {
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(log.convoId, old, (convo) => {
-									const logMessage = log.message;
-									const lastMessage = convo.lastMessage;
-									const isLoggedMessageOrDeleted =
-										logMessage.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
-										logMessage.$type === 'chat.bsky.convo.defs#messageView';
-									const isLastMessageOrDeleted =
-										lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
-										lastMessage?.$type === 'chat.bsky.convo.defs#messageView';
-									if (isLoggedMessageOrDeleted && isLastMessageOrDeleted) {
-										return logMessage.id === lastMessage.id
-											? {
-													...convo,
-													rev: log.rev,
-													lastMessage: logMessage,
-												}
-											: convo;
-									} else {
-										return convo;
-									}
-								}),
+								optimisticUpdate(
+									log.convoId,
+									old,
+									withRevGuard(log.rev, (convo) => {
+										const logMessage = log.message;
+										const lastMessage = convo.lastMessage;
+										const isLoggedMessageOrDeleted =
+											logMessage.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
+											logMessage.$type === 'chat.bsky.convo.defs#messageView';
+										const isLastMessageOrDeleted =
+											lastMessage?.$type === 'chat.bsky.convo.defs#deletedMessageView' ||
+											lastMessage?.$type === 'chat.bsky.convo.defs#messageView';
+										if (isLoggedMessageOrDeleted && isLastMessageOrDeleted) {
+											return logMessage.id === lastMessage.id
+												? {
+														...convo,
+														rev: log.rev,
+														lastMessage: logMessage,
+													}
+												: convo;
+										} else {
+											return convo;
+										}
+									}),
+								),
 							);
 							break;
 						}
@@ -298,6 +304,9 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								debouncedRefetch();
 								return;
 							}
+
+							// Drop stale out-of-order events whose rev isn't newer than what we already have.
+							if (logRef.rev <= foundConvo.rev) break;
 
 							const messageIsMessageOrDeleted =
 								logRef.message.$type === 'chat.bsky.convo.defs#messageView' ||
@@ -384,22 +393,30 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						case 'chat.bsky.convo.defs#logReadMessage': {
 							const logRef: ChatBskyConvoDefs.LogReadMessage = log;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => ({
-									...convo,
-									unreadCount: 0,
-									rev: logRef.rev,
-								})),
+								optimisticUpdate(
+									logRef.convoId,
+									old,
+									withRevGuard(logRef.rev, (convo) => ({
+										...convo,
+										unreadCount: 0,
+										rev: logRef.rev,
+									})),
+								),
 							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logReadConvo': {
 							const logRef: ChatBskyConvoDefs.LogReadConvo = log;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => ({
-									...convo,
-									unreadCount: 0,
-									rev: logRef.rev,
-								})),
+								optimisticUpdate(
+									logRef.convoId,
+									old,
+									withRevGuard(logRef.rev, (convo) => ({
+										...convo,
+										unreadCount: 0,
+										rev: logRef.rev,
+									})),
+								),
 							);
 							break;
 						}
@@ -456,32 +473,41 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logMuteConvo': {
 							const logRef: ChatBskyConvoDefs.LogMuteConvo = log;
-							mutateConvoView(logRef.convoId, (convo) => ({
-								...convo,
-								muted: true,
-								rev: logRef.rev,
-							}));
+							mutateConvoView(
+								logRef.convoId,
+								withRevGuard(logRef.rev, (convo) => ({
+									...convo,
+									muted: true,
+									rev: logRef.rev,
+								})),
+							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logUnmuteConvo': {
 							const logRef: ChatBskyConvoDefs.LogUnmuteConvo = log;
-							mutateConvoView(logRef.convoId, (convo) => ({
-								...convo,
-								muted: false,
-								rev: logRef.rev,
-							}));
+							mutateConvoView(
+								logRef.convoId,
+								withRevGuard(logRef.rev, (convo) => ({
+									...convo,
+									muted: false,
+									rev: logRef.rev,
+								})),
+							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logLockConvo': {
 							const logRef: ChatBskyConvoDefs.LogLockConvo = log;
-							mutateConvoView(logRef.convoId, (convo) =>
-								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
-									? {
-											...convo,
-											kind: { ...convo.kind, lockStatus: 'locked' },
-											rev: logRef.rev,
-										}
-									: { ...convo, rev: logRef.rev },
+							mutateConvoView(
+								logRef.convoId,
+								withRevGuard(logRef.rev, (convo) =>
+									convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
+										? {
+												...convo,
+												kind: { ...convo.kind, lockStatus: 'locked' },
+												rev: logRef.rev,
+											}
+										: { ...convo, rev: logRef.rev },
+								),
 							);
 							// the log event doesn't say whether the lock is forced by a
 							// moderation override, so refetch to pick up the flag.
@@ -490,32 +516,38 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logUnlockConvo': {
 							const logRef: ChatBskyConvoDefs.LogUnlockConvo = log;
-							mutateConvoView(logRef.convoId, (convo) =>
-								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
-									? {
-											...convo,
-											kind: {
-												...convo.kind,
-												lockStatus: 'unlocked',
-												// an unlocked convo cannot be moderation-locked.
-												lockStatusModerationOverride: false,
-											},
-											rev: logRef.rev,
-										}
-									: { ...convo, rev: logRef.rev },
+							mutateConvoView(
+								logRef.convoId,
+								withRevGuard(logRef.rev, (convo) =>
+									convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
+										? {
+												...convo,
+												kind: {
+													...convo.kind,
+													lockStatus: 'unlocked',
+													// an unlocked convo cannot be moderation-locked.
+													lockStatusModerationOverride: false,
+												},
+												rev: logRef.rev,
+											}
+										: { ...convo, rev: logRef.rev },
+								),
 							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logLockConvoPermanently': {
 							const logRef: ChatBskyConvoDefs.LogLockConvoPermanently = log;
-							mutateConvoView(logRef.convoId, (convo) =>
-								convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
-									? {
-											...convo,
-											kind: { ...convo.kind, lockStatus: 'locked-permanently' },
-											rev: logRef.rev,
-										}
-									: { ...convo, rev: logRef.rev },
+							mutateConvoView(
+								logRef.convoId,
+								withRevGuard(logRef.rev, (convo) =>
+									convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo'
+										? {
+												...convo,
+												kind: { ...convo.kind, lockStatus: 'locked-permanently' },
+												rev: logRef.rev,
+											}
+										: { ...convo, rev: logRef.rev },
+								),
 							);
 							break;
 						}
@@ -549,22 +581,26 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							if (logRef.message.$type !== 'chat.bsky.convo.defs#messageView') break;
 							const message = logRef.message;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => {
-									// add relatedProfiles to members list, but making sure to dedupe
-									const relatedProfilesSansMembers = (logRef.relatedProfiles ?? []).filter(
-										(profile) => !convo.members.some((member) => member.did === profile.did),
-									);
-									return {
-										...convo,
-										members: [...convo.members, ...relatedProfilesSansMembers],
-										lastReaction: {
-											$type: 'chat.bsky.convo.defs#messageAndReactionView',
-											reaction: logRef.reaction,
-											message,
-										},
-										rev: logRef.rev,
-									};
-								}),
+								optimisticUpdate(
+									logRef.convoId,
+									old,
+									withRevGuard(logRef.rev, (convo) => {
+										// add relatedProfiles to members list, but making sure to dedupe
+										const relatedProfilesSansMembers = (logRef.relatedProfiles ?? []).filter(
+											(profile) => !convo.members.some((member) => member.did === profile.did),
+										);
+										return {
+											...convo,
+											members: [...convo.members, ...relatedProfilesSansMembers],
+											lastReaction: {
+												$type: 'chat.bsky.convo.defs#messageAndReactionView',
+												reaction: logRef.reaction,
+												message,
+											},
+											rev: logRef.rev,
+										};
+									}),
+								),
 							);
 							break;
 						}
@@ -609,28 +645,32 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						case 'chat.bsky.convo.defs#logRemoveReaction': {
 							const logRef: ChatBskyConvoDefs.LogRemoveReaction = log;
 							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								optimisticUpdate(logRef.convoId, old, (convo) => {
-									if (
-										// if the convo is the same
-										logRef.convoId === convo.id &&
-										convo.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView' &&
-										logRef.message.$type === 'chat.bsky.convo.defs#messageView' &&
-										// ...and the message is the same
-										convo.lastReaction.message.id === logRef.message.id &&
-										// ...and the reaction is the same
-										convo.lastReaction.reaction.sender.did === logRef.reaction.sender.did &&
-										convo.lastReaction.reaction.value === logRef.reaction.value
-									) {
-										return {
-											...convo,
-											// ...remove the reaction. hopefully they didn't react twice in a row!
-											lastReaction: undefined,
-											rev: logRef.rev,
-										};
-									} else {
-										return convo;
-									}
-								}),
+								optimisticUpdate(
+									logRef.convoId,
+									old,
+									withRevGuard(logRef.rev, (convo) => {
+										if (
+											// if the convo is the same
+											logRef.convoId === convo.id &&
+											convo.lastReaction?.$type === 'chat.bsky.convo.defs#messageAndReactionView' &&
+											logRef.message.$type === 'chat.bsky.convo.defs#messageView' &&
+											// ...and the message is the same
+											convo.lastReaction.message.id === logRef.message.id &&
+											// ...and the reaction is the same
+											convo.lastReaction.reaction.sender.did === logRef.reaction.sender.did &&
+											convo.lastReaction.reaction.value === logRef.reaction.value
+										) {
+											return {
+												...convo,
+												// ...remove the reaction. hopefully they didn't react twice in a row!
+												lastReaction: undefined,
+												rev: logRef.rev,
+											};
+										} else {
+											return convo;
+										}
+									}),
+								),
 							);
 							break;
 						}
@@ -745,6 +785,18 @@ export function useOnMarkAsRead() {
 	);
 }
 
+/**
+ * Wraps a convo-view update so it's skipped when the incoming event's `rev` is not newer than the convo's
+ * current `rev`. Firehose events can arrive out of order (e.g. a retried poll replays an older event after a
+ * newer one already landed); applying a stale event would clobber newer state.
+ */
+function withRevGuard(
+	rev: string,
+	fn: (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView,
+): (convo: ChatBskyConvoDefs.ConvoView) => ChatBskyConvoDefs.ConvoView {
+	return (convo) => (rev <= convo.rev ? convo : fn(convo));
+}
+
 function optimisticUpdate(
 	chatId: string,
 	old?: ConvoListQueryData,
@@ -766,22 +818,26 @@ function updateGroupConvoJoinRequestCount(
 	old: ConvoListQueryData | undefined,
 	delta: 1 | -1,
 ) {
-	return optimisticUpdate(log.convoId, old, (convo) => {
-		// join requests are only meaningful for group convos
-		if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
-			return { ...convo, rev: log.rev };
-		}
-		const current = convo.kind.joinRequestCount ?? 0;
-		const next = Math.max(0, current + delta);
-		return {
-			...convo,
-			kind: {
-				...convo.kind,
-				joinRequestCount: next === 0 ? undefined : next,
-			},
-			rev: log.rev,
-		};
-	});
+	return optimisticUpdate(
+		log.convoId,
+		old,
+		withRevGuard(log.rev, (convo) => {
+			// join requests are only meaningful for group convos
+			if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+				return { ...convo, rev: log.rev };
+			}
+			const current = convo.kind.joinRequestCount ?? 0;
+			const next = Math.max(0, current + delta);
+			return {
+				...convo,
+				kind: {
+					...convo.kind,
+					joinRequestCount: next === 0 ? undefined : next,
+				},
+				rev: log.rev,
+			};
+		}),
+	);
 }
 
 function removeMemberFromConvoView(
