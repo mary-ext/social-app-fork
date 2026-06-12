@@ -1,87 +1,85 @@
-import { View } from 'react-native';
+import type { ReactNode } from 'react';
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 
-import * as SettingsList from '#/screens/Settings/components/SettingsList';
 import { PreferenceControls } from '#/screens/Settings/NotificationSettings/components/PreferenceControls';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Text } from '#/components/Text';
+import { Admonition } from '#/components/web/Admonition';
+import * as Dialog from '#/components/web/Dialog';
 
-import { Admonition } from '#/components/Admonition';
-import * as Dialog from '#/components/Dialog';
-import type { Props as SVGIconProps } from '#/components/icons/common';
-import { Text } from '#/components/Typography';
+import * as styles from './NotificationSettingsDialog.css';
 
 type NotificationSettingsDialogProps = {
-	control: Dialog.DialogControlProps;
-	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
-	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
-	icon: React.ComponentType<SVGIconProps>;
-	titleText: React.ReactNode;
-	subtitleText: React.ReactNode;
 	allowDisableInApp?: boolean;
+	handle: Dialog.DialogHandle;
+	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
+	subtitleText: ReactNode;
+	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
+	titleText: ReactNode;
 };
 
 export function NotificationSettingsDialog({
-	control,
+	allowDisableInApp = true,
+	handle,
 	name,
+	subtitleText,
 	syncOthers,
 	titleText,
-	subtitleText,
-	allowDisableInApp = true,
 }: NotificationSettingsDialogProps) {
+	const { t: l } = useLingui();
+
 	return (
-		<Dialog.Outer control={control}>
-			<NotificationSettingsDialogInner
-				name={name}
-				syncOthers={syncOthers}
-				titleText={titleText}
-				subtitleText={subtitleText}
-				allowDisableInApp={allowDisableInApp}
-			/>
-		</Dialog.Outer>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup className={styles.popup} label={l`Notification settings`}>
+				<Inner
+					allowDisableInApp={allowDisableInApp}
+					name={name}
+					subtitleText={subtitleText}
+					syncOthers={syncOthers}
+					titleText={titleText}
+				/>
+				<Dialog.Close />
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
-function NotificationSettingsDialogInner({
+function Inner({
+	allowDisableInApp,
 	name,
+	subtitleText,
 	syncOthers,
 	titleText,
-	subtitleText,
-	allowDisableInApp,
-}: Omit<NotificationSettingsDialogProps, 'control' | 'icon'>) {
-	const t = useTheme();
-	const { t: l } = useLingui();
+}: Omit<NotificationSettingsDialogProps, 'handle'>) {
 	const { data: preferences, isError } = useNotificationSettingsQuery();
 
 	return (
 		<>
-			<Dialog.Handle />
-			<Dialog.ScrollableInner label={l`Notification settings`} style={{ maxWidth: 400 }}>
-				<SettingsList.Container>
-					<View style={[a.flex_1, a.gap_xs, a.mb_md]}>
-						<Text style={[a.font_semi_bold, a.text_lg]}>{titleText}</Text>
-						<Text style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>{subtitleText}</Text>
-					</View>
-					{isError ? (
-						<View style={[a.mt_md]}>
-							<Admonition type="error">
-								<Trans>Failed to load notification settings.</Trans>
-							</Admonition>
-						</View>
-					) : (
-						<PreferenceControls
-							name={name}
-							syncOthers={syncOthers}
-							preference={preferences?.[name]}
-							allowDisableInApp={allowDisableInApp}
-						/>
-					)}
-				</SettingsList.Container>
-				<Dialog.Close />
-			</Dialog.ScrollableInner>
+			<div className={styles.header}>
+				<Text size="lg" weight="semiBold">
+					{titleText}
+				</Text>
+				<Text color="textContrastMedium" leading="snug" size="sm">
+					{subtitleText}
+				</Text>
+			</div>
+			{isError ? (
+				<div className={styles.errorWrap}>
+					<Admonition type="error">
+						<Trans>Failed to load notification settings.</Trans>
+					</Admonition>
+				</div>
+			) : (
+				<PreferenceControls
+					allowDisableInApp={allowDisableInApp}
+					name={name}
+					preference={preferences?.[name]}
+					syncOthers={syncOthers}
+				/>
+			)}
 		</>
 	);
 }

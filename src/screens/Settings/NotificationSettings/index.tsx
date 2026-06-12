@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
@@ -6,10 +5,6 @@ import type { AllNavigatorParams, NativeStackScreenProps } from '#/lib/routes/ty
 
 import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings';
 
-import { atoms as a } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
-import * as Dialog from '#/components/Dialog';
 import { NotificationSettingsDialog } from '#/components/dialogs/NotificationSettingsDialog';
 import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At';
 import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging';
@@ -25,26 +20,29 @@ import {
 	RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
 } from '#/components/icons/Repost';
 import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes';
-import * as Layout from '#/components/Layout';
+import * as SettingsList from '#/components/SettingsList';
+import { Admonition } from '#/components/web/Admonition';
+import * as Dialog from '#/components/web/Dialog';
+import * as Layout from '#/components/web/Layout';
 
-import * as SettingsList from '../components/SettingsList';
 import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle';
+import * as styles from './index.css';
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>;
 export function NotificationSettingsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const { data: settings, isError } = useNotificationSettingsQuery();
 
-	const likeDialogControl = Dialog.useDialogControl();
-	const followDialogControl = Dialog.useDialogControl();
-	const replyDialogControl = Dialog.useDialogControl();
-	const mentionDialogControl = Dialog.useDialogControl();
-	const quoteDialogControl = Dialog.useDialogControl();
-	const repostDialogControl = Dialog.useDialogControl();
-	const activityDialogControl = Dialog.useDialogControl();
-	const likeRepostDialogControl = Dialog.useDialogControl();
-	const repostRepostDialogControl = Dialog.useDialogControl();
-	const miscDialogControl = Dialog.useDialogControl();
+	const likeHandle = Dialog.useDialogHandle();
+	const followHandle = Dialog.useDialogHandle();
+	const replyHandle = Dialog.useDialogHandle();
+	const mentionHandle = Dialog.useDialogHandle();
+	const quoteHandle = Dialog.useDialogHandle();
+	const repostHandle = Dialog.useDialogHandle();
+	const activityHandle = Dialog.useDialogHandle();
+	const likeRepostHandle = Dialog.useDialogHandle();
+	const repostRepostHandle = Dialog.useDialogHandle();
+	const miscHandle = Dialog.useDialogHandle();
 
 	return (
 		<Layout.Screen>
@@ -60,212 +58,202 @@ export function NotificationSettingsScreen({}: Props) {
 			<Layout.Content>
 				<SettingsList.Container>
 					{isError && (
-						<View style={[a.px_lg, a.pb_md]}>
+						<div className={styles.errorWrap}>
 							<Admonition type="error">
 								<Trans>Failed to load notification settings.</Trans>
 							</Admonition>
-						</View>
+						</div>
 					)}
-					<View style={[a.gap_sm]}>
+					<div className={styles.list}>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for like notifications`}
-							onPress={likeDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => likeHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={HeartIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Likes</Trans>}
-								subtitleText={<SettingPreview preference={settings?.like} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.like} />}
+								titleText={<Trans>Likes</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for new follower notifications`}
-							onPress={followDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => followHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={PersonPlusIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>New followers</Trans>}
-								subtitleText={<SettingPreview preference={settings?.follow} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.follow} />}
+								titleText={<Trans>New followers</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for reply notifications`}
-							onPress={replyDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => replyHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={BubbleIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Replies</Trans>}
-								subtitleText={<SettingPreview preference={settings?.reply} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.reply} />}
+								titleText={<Trans>Replies</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for mention notifications`}
-							onPress={mentionDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => mentionHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={AtIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Mentions</Trans>}
-								subtitleText={<SettingPreview preference={settings?.mention} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.mention} />}
+								titleText={<Trans>Mentions</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for quote notifications`}
-							onPress={quoteDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => quoteHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={CloseQuoteIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Quotes</Trans>}
-								subtitleText={<SettingPreview preference={settings?.quote} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.quote} />}
+								titleText={<Trans>Quotes</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for repost notifications`}
-							onPress={repostDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => repostHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={RepostIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Reposts</Trans>}
-								subtitleText={<SettingPreview preference={settings?.repost} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.repost} />}
+								titleText={<Trans>Reposts</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for activity from others`}
-							onPress={activityDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => activityHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={BellRingingIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Activity from others</Trans>}
-								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
+								titleText={<Trans>Activity from others</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for notifications for likes of your reposts`}
-							onPress={likeRepostDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => likeRepostHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={LikeRepostIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Likes of your reposts</Trans>}
-								subtitleText={<SettingPreview preference={settings?.likeViaRepost} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.likeViaRepost} />}
+								titleText={<Trans>Likes of your reposts</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for notifications for reposts of your reposts`}
-							onPress={repostRepostDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => repostRepostHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={RepostRepostIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Reposts of your reposts</Trans>}
-								subtitleText={<SettingPreview preference={settings?.repostViaRepost} />}
 								showSkeleton={!settings}
+								subtitleText={<SettingPreview preference={settings?.repostViaRepost} />}
+								titleText={<Trans>Reposts of your reposts</Trans>}
 							/>
 						</SettingsList.PressableItem>
 						<SettingsList.PressableItem
+							align="start"
 							label={l`Settings for notifications for everything else`}
-							onPress={miscDialogControl.open}
-							contentContainerStyle={[a.align_start]}
+							onPress={() => miscHandle.open(null)}
 						>
 							<SettingsList.ItemIcon icon={ShapesIcon} />
 							<ItemTextWithSubtitle
-								titleText={<Trans>Everything else</Trans>}
+								showSkeleton={!settings}
 								// technically a bundle of several settings, but since they're set together
 								// and are most likely in sync we'll just show the state of one of them
 								subtitleText={<SettingPreview preference={settings?.starterpackJoined} />}
-								showSkeleton={!settings}
+								titleText={<Trans>Everything else</Trans>}
 							/>
 						</SettingsList.PressableItem>
-					</View>
+					</div>
 				</SettingsList.Container>
 			</Layout.Content>
 			<NotificationSettingsDialog
-				control={likeDialogControl}
+				handle={likeHandle}
 				name="like"
-				icon={HeartIcon}
-				titleText={<Trans>Likes</Trans>}
 				subtitleText={<Trans>Get notifications when people like your posts.</Trans>}
+				titleText={<Trans>Likes</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={followDialogControl}
+				handle={followHandle}
 				name="follow"
-				icon={PersonPlusIcon}
-				titleText={<Trans>New followers</Trans>}
 				subtitleText={<Trans>Get notifications when people follow you.</Trans>}
+				titleText={<Trans>New followers</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={replyDialogControl}
+				handle={replyHandle}
 				name="reply"
-				icon={BubbleIcon}
-				titleText={<Trans>Replies</Trans>}
 				subtitleText={<Trans>Get notifications when people reply to your posts.</Trans>}
+				titleText={<Trans>Replies</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={mentionDialogControl}
+				handle={mentionHandle}
 				name="mention"
-				icon={AtIcon}
-				titleText={<Trans>Mentions</Trans>}
 				subtitleText={<Trans>Get notifications when people mention you.</Trans>}
+				titleText={<Trans>Mentions</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={quoteDialogControl}
+				handle={quoteHandle}
 				name="quote"
-				icon={CloseQuoteIcon}
-				titleText={<Trans>Quotes</Trans>}
 				subtitleText={<Trans>Get notifications when people quote your posts.</Trans>}
+				titleText={<Trans>Quotes</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={repostDialogControl}
+				handle={repostHandle}
 				name="repost"
-				icon={RepostIcon}
-				titleText={<Trans>Reposts</Trans>}
 				subtitleText={<Trans>Get notifications when people repost your posts.</Trans>}
+				titleText={<Trans>Reposts</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={activityDialogControl}
-				name="subscribedPost"
-				icon={BellRingingIcon}
-				titleText={<Trans>Activity from others</Trans>}
-				subtitleText={<Trans>Get notifications when there's activity on posts you're subscribed to.</Trans>}
 				allowDisableInApp={false}
+				handle={activityHandle}
+				name="subscribedPost"
+				subtitleText={<Trans>Get notifications when there's activity on posts you're subscribed to.</Trans>}
+				titleText={<Trans>Activity from others</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={likeRepostDialogControl}
+				handle={likeRepostHandle}
 				name="likeViaRepost"
-				icon={LikeRepostIcon}
-				titleText={<Trans>Likes of your reposts</Trans>}
 				subtitleText={<Trans>Get notifications when people like your reposts.</Trans>}
+				titleText={<Trans>Likes of your reposts</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={repostRepostDialogControl}
+				handle={repostRepostHandle}
 				name="repostViaRepost"
-				icon={RepostRepostIcon}
-				titleText={<Trans>Reposts of your reposts</Trans>}
 				subtitleText={<Trans>Get notifications when people repost your reposts.</Trans>}
+				titleText={<Trans>Reposts of your reposts</Trans>}
 			/>
 			<NotificationSettingsDialog
-				control={miscDialogControl}
+				allowDisableInApp={false}
+				handle={miscHandle}
 				name="starterpackJoined"
-				syncOthers={['verified', 'unverified']}
-				icon={ShapesIcon}
-				titleText={<Trans>Everything else</Trans>}
 				subtitleText={
 					<Trans>Get notifications for starter pack joins, verification, and other activity.</Trans>
 				}
-				allowDisableInApp={false}
+				syncOthers={['verified', 'unverified']}
+				titleText={<Trans>Everything else</Trans>}
 			/>
 		</Layout.Screen>
 	);
@@ -274,7 +262,7 @@ export function NotificationSettingsScreen({}: Props) {
 function SettingPreview({
 	preference,
 }: {
-	preference?: AppBskyNotificationDefs.Preference | AppBskyNotificationDefs.FilterablePreference;
+	preference?: AppBskyNotificationDefs.FilterablePreference | AppBskyNotificationDefs.Preference;
 }) {
 	const { t: l } = useLingui();
 	if (!preference) {

@@ -1,68 +1,67 @@
 import { useMemo } from 'react';
-import { View } from 'react-native';
 import type { AppBskyNotificationDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useNotificationSettingsUpdateMutation } from '#/state/queries/notifications/settings';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
+import * as Toggle from '#/components/web/forms/Toggle';
 
-import * as Toggle from '#/components/forms/Toggle';
-import { Loader } from '#/components/Loader';
-import { Text } from '#/components/Typography';
-
-import { Divider } from '../../components/SettingsList';
+import * as styles from './PreferenceControls.css';
 
 export function PreferenceControls({
-	name,
-	syncOthers,
-	preference,
 	allowDisableInApp = true,
+	name,
+	preference,
+	syncOthers,
 }: {
+	allowDisableInApp?: boolean;
 	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
+	preference?:
+		| AppBskyNotificationDefs.ChatPreference
+		| AppBskyNotificationDefs.FilterablePreference
+		| AppBskyNotificationDefs.Preference;
 	/**
 	 * Keep other prefs in sync with `name`. For use in the "everything else" category which groups starterpack
 	 * joins + verified + unverified notifications into a single toggle.
 	 */
 	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
-	preference?:
-		| AppBskyNotificationDefs.ChatPreference
-		| AppBskyNotificationDefs.FilterablePreference
-		| AppBskyNotificationDefs.Preference;
-	allowDisableInApp?: boolean;
 }) {
-	if (!preference)
+	const { t: l } = useLingui();
+
+	if (!preference) {
 		return (
-			<View style={[a.w_full, a.pt_5xl, a.align_center]}>
-				<Loader size="xl" />
-			</View>
+			<div className={styles.loaderWrap}>
+				<Spinner color="currentColor" label={l`Loading`} size="xl" />
+			</div>
 		);
+	}
 
 	return (
 		<Inner
-			name={name}
-			syncOthers={syncOthers}
-			preference={preference}
 			allowDisableInApp={allowDisableInApp}
+			name={name}
+			preference={preference}
+			syncOthers={syncOthers}
 		/>
 	);
 }
 
 export function Inner({
-	name,
-	syncOthers = [],
-	preference,
 	allowDisableInApp,
+	name,
+	preference,
+	syncOthers = [],
 }: {
+	allowDisableInApp: boolean;
 	name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>;
-	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
 	preference:
 		| AppBskyNotificationDefs.ChatPreference
 		| AppBskyNotificationDefs.FilterablePreference
 		| AppBskyNotificationDefs.Preference;
-	allowDisableInApp: boolean;
+	syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[];
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const { mutate } = useNotificationSettingsUpdateMutation();
 
@@ -101,70 +100,73 @@ export function Inner({
 	};
 
 	return (
-		<View style={[a.gap_sm]}>
+		<div className={styles.container}>
 			<Toggle.Group
-				type="checkbox"
+				className={styles.channels}
 				label={l`Select your preferred notification channels`}
-				values={channels}
 				onChange={onChangeChannels}
+				type="checkbox"
+				values={channels}
 			>
-				<View style={[a.gap_sm]}>
-					<Toggle.Item
-						label={l`Receive push notifications`}
-						name="push"
-						style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}
-					>
-						<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-							<Trans>Push notifications</Trans>
-						</Toggle.LabelText>
-						<Toggle.Platform />
+				<Toggle.Item className={styles.switchRow} label={l`Receive push notifications`} name="push">
+					<Text className={styles.switchLabel} size="md">
+						<Trans>Push notifications</Trans>
+					</Text>
+					<Toggle.Switch />
+				</Toggle.Item>
+				{allowDisableInApp && (
+					<Toggle.Item className={styles.switchRow} label={l`Receive in-app notifications`} name="list">
+						<Text className={styles.switchLabel} size="md">
+							<Trans>In-app notifications</Trans>
+						</Text>
+						<Toggle.Switch />
 					</Toggle.Item>
-					{allowDisableInApp && (
-						<Toggle.Item
-							label={l`Receive in-app notifications`}
-							name="list"
-							style={[a.py_xs, a.flex_row_reverse, a.gap_sm]}
-						>
-							<Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
-								<Trans>In-app notifications</Trans>
-							</Toggle.LabelText>
-							<Toggle.Platform />
-						</Toggle.Item>
-					)}
-				</View>
+				)}
 			</Toggle.Group>
 			{'include' in preference && (
 				<>
-					<Divider />
-					<Text style={[a.font_semi_bold, a.text_md]}>
+					<div className={styles.divider} />
+					<Text size="md" weight="semiBold">
 						<Trans>From</Trans>
 					</Text>
 					<Toggle.Group
-						type="radio"
-						label={l`Filter who you receive notifications from`}
-						values={[preference.include]}
-						onChange={onChangeFilter}
+						className={styles.radioList}
 						disabled={channels.length === 0}
+						label={l`Filter who you receive notifications from`}
+						onChange={onChangeFilter}
+						type="radio"
+						values={[preference.include]}
 					>
-						<View style={[a.gap_sm]}>
-							<Toggle.Item highlightRow label={l`Everyone`} name="all">
-								{({ selected }) => <Toggle.RadioWithLabel label={l`Everyone`} selected={selected} />}
-							</Toggle.Item>
-							{name === 'chat' ? (
-								<Toggle.Item highlightRow label={l`Accepted conversations`} name="accepted">
-									{({ selected }) => (
-										<Toggle.RadioWithLabel label={l`Accepted conversations`} selected={selected} />
-									)}
-								</Toggle.Item>
-							) : (
-								<Toggle.Item highlightRow label={l`People I follow`} name="follows">
-									{({ selected }) => <Toggle.RadioWithLabel label={l`People I follow`} selected={selected} />}
-								</Toggle.Item>
-							)}
-						</View>
+						<Toggle.RadioItem label={l`Everyone`} value="all">
+							<Toggle.Panel>
+								<Toggle.RadioIndicator />
+								<Toggle.PanelText>
+									<Trans>Everyone</Trans>
+								</Toggle.PanelText>
+							</Toggle.Panel>
+						</Toggle.RadioItem>
+						{name === 'chat' ? (
+							<Toggle.RadioItem label={l`Accepted conversations`} value="accepted">
+								<Toggle.Panel>
+									<Toggle.RadioIndicator />
+									<Toggle.PanelText>
+										<Trans>Accepted conversations</Trans>
+									</Toggle.PanelText>
+								</Toggle.Panel>
+							</Toggle.RadioItem>
+						) : (
+							<Toggle.RadioItem label={l`People I follow`} value="follows">
+								<Toggle.Panel>
+									<Toggle.RadioIndicator />
+									<Toggle.PanelText>
+										<Trans>People I follow</Trans>
+									</Toggle.PanelText>
+								</Toggle.Panel>
+							</Toggle.RadioItem>
+						)}
 					</Toggle.Group>
 				</>
 			)}
-		</View>
+		</div>
 	);
 }

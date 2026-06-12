@@ -165,6 +165,7 @@ export function LinkItem({
  * {@link ItemIcon}/{@link ItemText}/{@link BadgeText}/{@link Chevron} children.
  */
 export function PressableItem({
+	align,
 	children,
 	label,
 	accessibilityHint,
@@ -173,6 +174,7 @@ export function PressableItem({
 	onPress,
 	onLongPress,
 }: {
+	align?: 'start';
 	children: ReactNode;
 	label: string;
 	accessibilityHint?: string;
@@ -209,6 +211,7 @@ export function PressableItem({
 				styles.itemInteractive,
 				styles.itemHover,
 				iconInset && styles.itemIconInset,
+				align === 'start' && styles.itemAlignStart,
 			)}
 			onClick={() => {
 				if (firedLongPress.current) {
