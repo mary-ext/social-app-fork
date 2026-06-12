@@ -1,5 +1,6 @@
 import { type StyleProp, View, type ViewStyle } from 'react-native';
-import type { ChatBskyGroupDefs } from '@atcute/bluesky';
+
+import { type JoinLinkPreview } from '#/state/queries/join-links';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -19,7 +20,7 @@ export function JoinRequestEmbed({
 	onOpen,
 }: {
 	code?: string;
-	preview?: ChatBskyGroupDefs.JoinLinkPreviewView;
+	preview?: JoinLinkPreview;
 	style?: StyleProp<ViewStyle>;
 	onOpen?: () => void;
 }) {

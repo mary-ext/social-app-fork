@@ -22,11 +22,11 @@ importers:
         specifier: 4.0.2
         version: 4.0.2(@atcute/lexicons@2.0.0)
       '@atcute/bluesky':
-        specifier: 4.0.6
-        version: 4.0.6(@atcute/lexicons@2.0.0)
+        specifier: 4.0.9
+        version: 4.0.9(@atcute/lexicons@2.0.0)
       '@atcute/bluesky-moderation':
         specifier: ^4.2.0
-        version: 4.2.0(@atcute/atproto@4.0.2(@atcute/lexicons@2.0.0))(@atcute/bluesky@4.0.6(@atcute/lexicons@2.0.0))(@atcute/lexicons@2.0.0)
+        version: 4.2.0(@atcute/atproto@4.0.2(@atcute/lexicons@2.0.0))(@atcute/bluesky@4.0.9(@atcute/lexicons@2.0.0))(@atcute/lexicons@2.0.0)
       '@atcute/bluesky-richtext-builder':
         specifier: ^4.0.0
         version: 4.0.0(@atcute/lexicons@2.0.0)
@@ -390,8 +390,8 @@ packages:
   '@atcute/bluesky-richtext-segmenter@3.0.0':
     resolution: {integrity: sha512-NhZTUKtFpeBBbILwAcxj5u4RobIoHOmGw3CAaaEFNebKYSvmTecrXJ7XufHw5DFOUdr8SiKXQVRQxGAxulMNWg==}
 
-  '@atcute/bluesky@4.0.6':
-    resolution: {integrity: sha512-h0q6cSkil85MpISJ958fFbEhMWBaiujEwOSmgF7iz+Y8ZeZGHycOD2mjXaQ1CnpHb3yWul6nn8rBwRRrGE3RsA==}
+  '@atcute/bluesky@4.0.9':
+    resolution: {integrity: sha512-xSecUOyy0T0zsKAZ2GT/0YgzfwiPraI48hpX8KfJh7dAFekFFq7b9/tHN0rzwhqDQxAcyOH5I0kgjpmX2jL4yw==}
     peerDependencies:
       '@atcute/lexicons': ^2.0.0
 
@@ -5652,15 +5652,15 @@ snapshots:
     dependencies:
       '@atcute/lexicons': 2.0.0
 
-  '@atcute/bluesky-moderation@4.2.0(@atcute/atproto@4.0.2(@atcute/lexicons@2.0.0))(@atcute/bluesky@4.0.6(@atcute/lexicons@2.0.0))(@atcute/lexicons@2.0.0)':
+  '@atcute/bluesky-moderation@4.2.0(@atcute/atproto@4.0.2(@atcute/lexicons@2.0.0))(@atcute/bluesky@4.0.9(@atcute/lexicons@2.0.0))(@atcute/lexicons@2.0.0)':
     dependencies:
       '@atcute/atproto': 4.0.2(@atcute/lexicons@2.0.0)
-      '@atcute/bluesky': 4.0.6(@atcute/lexicons@2.0.0)
+      '@atcute/bluesky': 4.0.9(@atcute/lexicons@2.0.0)
       '@atcute/lexicons': 2.0.0
 
   '@atcute/bluesky-richtext-builder@4.0.0(@atcute/lexicons@2.0.0)':
     dependencies:
-      '@atcute/bluesky': 4.0.6(@atcute/lexicons@2.0.0)
+      '@atcute/bluesky': 4.0.9(@atcute/lexicons@2.0.0)
       '@atcute/lexicons': 2.0.0
       '@atcute/uint8array': 1.1.2
 
@@ -5668,7 +5668,7 @@ snapshots:
 
   '@atcute/bluesky-richtext-segmenter@3.0.0': {}
 
-  '@atcute/bluesky@4.0.6(@atcute/lexicons@2.0.0)':
+  '@atcute/bluesky@4.0.9(@atcute/lexicons@2.0.0)':
     dependencies:
       '@atcute/atproto': 4.0.2(@atcute/lexicons@2.0.0)
       '@atcute/lexicons': 2.0.0
@@ -5765,7 +5765,7 @@ snapshots:
   '@atcute/ozone@4.0.1(@atcute/lexicons@2.0.0)':
     dependencies:
       '@atcute/atproto': 4.0.2(@atcute/lexicons@2.0.0)
-      '@atcute/bluesky': 4.0.6(@atcute/lexicons@2.0.0)
+      '@atcute/bluesky': 4.0.9(@atcute/lexicons@2.0.0)
       '@atcute/lexicons': 2.0.0
 
   '@atcute/tid@1.1.2':

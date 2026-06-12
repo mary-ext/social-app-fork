@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { ChatBskyGroupDefs, ChatBskyGroupGetJoinLinkPreviews } from '@atcute/bluesky';
+import type { ChatBskyGroupGetJoinLinkPreviews } from '@atcute/bluesky';
 import { type Client, ok } from '@atcute/client';
 import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -11,6 +11,13 @@ import { logger } from '#/logger';
 import { STALE } from '.';
 
 const joinLinkPreviewQueryKeyRoot = 'join-link-preview';
+
+/**
+ * A single entry from a join link preview response. A variant — the link may resolve to a usable
+ * `joinLinkPreviewView`, or to a `disabled`/`invalid` placeholder that only carries the code. Narrow on
+ * `$type === 'chat.bsky.group.defs#joinLinkPreviewView'` before reading link details.
+ */
+export type JoinLinkPreview = ChatBskyGroupGetJoinLinkPreviews.$output['joinLinkPreviews'][number];
 
 export const createJoinLinkPreviewQueryKey = (args: { codes: string[]; hasSession: boolean }) =>
 	createQueryKey(joinLinkPreviewQueryKeyRoot, args, {
@@ -84,7 +91,7 @@ export function useGetJoinLinkPreview() {
 		}: {
 			code: string;
 			hasSession: boolean;
-		}): Promise<ChatBskyGroupDefs.JoinLinkPreviewView | undefined> => {
+		}): Promise<JoinLinkPreview | undefined> => {
 			try {
 				const data = await queryClient.fetchQuery({
 					queryKey: createJoinLinkPreviewQueryKey({ codes: [code], hasSession }),
@@ -126,7 +133,7 @@ export function setJoinLinkPreviewRequestedForCode(
 			return {
 				...old,
 				joinLinkPreviews: old.joinLinkPreviews.map((preview) => {
-					if (preview.code === code) {
+					if (preview.$type === 'chat.bsky.group.defs#joinLinkPreviewView' && preview.code === code) {
 						return {
 							...preview,
 							viewer: {

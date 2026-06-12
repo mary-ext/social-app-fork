@@ -213,7 +213,7 @@ function GroupChatJoinDialogContent({
 
 	const joinLinkPreview = data.joinLinkPreviews[0];
 
-	if (!joinLinkPreview) {
+	if (joinLinkPreview?.$type !== 'chat.bsky.group.defs#joinLinkPreviewView') {
 		return (
 			<>
 				<View style={[a.py_lg, a.align_center]}>
@@ -247,12 +247,7 @@ function GroupChatJoinDialogContent({
 	let ButtonIconImage = isJoinPending || isWithdrawPending ? Loader : JoinIcon;
 	let buttonText = joinLinkPreview.requireApproval ? l`Request to join` : l`Join`;
 	let buttonColor: ButtonColor = 'primary';
-	if (joinLinkPreview.enabledStatus !== 'enabled') {
-		canJoin = false;
-		ButtonIconImage = WarningIcon;
-		buttonText = l`Chat invite link no longer available`;
-		buttonColor = 'secondary';
-	} else if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
+	if (joinLinkPreview.memberCount >= joinLinkPreview.memberLimit) {
 		canJoin = false;
 		ButtonIconImage = HandIcon;
 		buttonText = l`This chat is full`;
@@ -344,7 +339,7 @@ function GroupChatJoinDialogContent({
 							</Trans>
 						</Text>
 						<View style={{ marginTop: -3 }}>
-							<ProfileBadges profile={data.joinLinkPreviews[0]!.owner} size="sm" />
+							<ProfileBadges profile={joinLinkPreview.owner} size="sm" />
 						</View>
 						<Text
 							style={[

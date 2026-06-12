@@ -1,10 +1,9 @@
-import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
+import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
 import type { ButtonColor } from '#/components/Button';
@@ -15,7 +14,6 @@ import { ChainLink_Stroke2_Corner0_Rounded as LinkIcon } from '#/components/icon
 import { CheckThick_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import type { Props as SVGIconProps } from '#/components/icons/common';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
-import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { GroupChatJoinDialog } from '#/components/intents/GroupChatJoinDialog';
 import * as Toast from '#/components/Toast';
 
@@ -39,7 +37,7 @@ export function Root({
 	children,
 }: {
 	code: string;
-	initialPreview?: ChatBskyGroupDefs.JoinLinkPreviewView;
+	initialPreview?: JoinLinkPreview;
 	/**
 	 * The convo this invite is being viewed within, if any. When the invite links to the same chat, the action
 	 * becomes "Copy link" instead of open/join (you're already here).
@@ -60,10 +58,11 @@ export function Root({
 		initialData: initialPreview ? { joinLinkPreviews: [initialPreview] } : undefined,
 	});
 
-	const preview = data?.joinLinkPreviews[0];
+	const rawPreview = data?.joinLinkPreviews[0];
+	const preview = rawPreview?.$type === 'chat.bsky.group.defs#joinLinkPreviewView' ? rawPreview : undefined;
 
 	let status: ChatInviteStatus;
-	if (isPending && !preview) {
+	if (isPending && !rawPreview) {
 		status = 'loading';
 	} else if (error) {
 		status = 'error';
@@ -111,12 +110,7 @@ export function Root({
 			let icon: React.ComponentType<SVGIconProps> = JoinIcon;
 			let label = preview.requireApproval ? l`Request to join` : l`Join`;
 			let color: ButtonColor = 'primary';
-			if (preview.enabledStatus !== 'enabled') {
-				canJoin = false;
-				icon = WarningIcon;
-				label = l`Chat invite link no longer available`;
-				color = 'secondary';
-			} else if (preview.memberCount >= preview.memberLimit) {
+			if (preview.memberCount >= preview.memberLimit) {
 				canJoin = false;
 				icon = HandIcon;
 				label = l`This chat is full`;
