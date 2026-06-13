@@ -5,7 +5,7 @@ import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToDevicePx } from '#/styles/round';
-import { fontSize, lineHeight } from '#/styles/tokens.css';
+import { fontSize, lineHeight, zIndex } from '#/styles/tokens.css';
 
 export const backdrop = style(
 	layered(components, {
@@ -14,7 +14,7 @@ export const backdrop = style(
 		position: 'fixed',
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
-		zIndex: 10,
+		zIndex: zIndex.dialog,
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 		},
@@ -36,7 +36,7 @@ export const viewport = style(
 		position: 'fixed',
 		right: 0,
 		top: 0,
-		zIndex: 10,
+		zIndex: zIndex.dialog,
 	}),
 );
 

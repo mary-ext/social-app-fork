@@ -1,14 +1,14 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, space, zIndex } from '#/styles/tokens.css';
 
-// sit above dialogs (zIndex 10) and menus (11) so a card anchored to a trigger inside either still shows,
+// sit above dialogs and menus so a card anchored to a trigger inside either still shows,
 // and clamp to the space Base UI measures so a tall/wide card can't overflow the viewport
 export const positioner = style({
 	maxHeight: 'var(--available-height)',
 	maxWidth: 'var(--available-width)',
-	zIndex: 12,
+	zIndex: zIndex.tooltip,
 });
 
 // the positioning/animation layer only; the visual chrome lives on the card so its fixed width is the full

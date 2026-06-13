@@ -2,6 +2,7 @@ import { style, styleVariants } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
+import { zIndex } from '#/styles/tokens.css';
 
 export const backdrop = style(
 	layered(components, {
@@ -10,7 +11,7 @@ export const backdrop = style(
 		position: 'fixed',
 		transitionDuration: '150ms',
 		transitionProperty: 'opacity',
-		zIndex: 10,
+		zIndex: zIndex.dialog,
 		selectors: {
 			'&[data-starting-style], &[data-ending-style]': { opacity: 0 },
 		},
@@ -33,7 +34,7 @@ export const viewport = style(
 		position: 'fixed',
 		right: 0,
 		top: 0,
-		zIndex: 10,
+		zIndex: zIndex.dialog,
 		'@media': {
 			'(min-width: 800px)': {
 				paddingBlock: '10vh',
@@ -127,7 +128,7 @@ export const close = style(
 		right: 12,
 		top: 12,
 		width: 33,
-		zIndex: 10,
+		zIndex: zIndex.dialog,
 		selectors: {
 			'&:hover': { backgroundColor: vars.palette.contrast_50 },
 			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
@@ -149,7 +150,7 @@ export const closeOuter = style(
 		transitionDuration: '200ms',
 		transitionProperty: 'opacity',
 		transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-		zIndex: 11,
+		zIndex: zIndex.menu,
 		selectors: {
 			[`${viewport}[data-starting-style] &, ${viewport}[data-ending-style] &`]: {
 				opacity: 0,

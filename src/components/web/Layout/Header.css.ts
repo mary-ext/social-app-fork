@@ -8,7 +8,7 @@ import {
 } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, zIndex } from '#/styles/tokens.css';
 
 export const outer = style({
 	alignItems: 'center',
@@ -27,7 +27,7 @@ export const outer = style({
 	position: 'sticky',
 	top: 0,
 	width: '100%',
-	zIndex: 10,
+	zIndex: zIndex.sticky,
 	'@media': {
 		'screen and (min-width: 800px)': {
 			paddingInline: 20,
@@ -54,7 +54,7 @@ export const content = style({
 export const slot = style({
 	flexShrink: 0,
 	width: HEADER_SLOT_SIZE,
-	zIndex: 50,
+	zIndex: zIndex.stickyRaised,
 });
 
 export const backButton = style({

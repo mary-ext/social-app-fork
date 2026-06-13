@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
+import { zIndex } from '#/styles/tokens.css';
 
 /** Center column plus its 1px left/right borders. */
 const CENTER_COLUMN_FRAME = CENTER_COLUMN_WIDTH + 2;
@@ -95,5 +96,5 @@ export const bottomBar = style({
 	bottom: 0,
 	position: 'sticky',
 	width: '100%',
-	zIndex: 10,
+	zIndex: zIndex.sticky,
 });

@@ -1,14 +1,14 @@
 import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, zIndex } from '#/styles/tokens.css';
 
 /** Icon tint, kept one notch lighter than the item text and overridden for destructive/disabled items. */
 export const iconColor = createVar();
 
 export const positioner = style({
-	// sit above the dialog viewport (zIndex 10); a menu opened from inside a dialog must overlay it
-	zIndex: 11,
+	// sit above the dialog viewport; a menu opened from inside a dialog must overlay it
+	zIndex: zIndex.menu,
 });
 
 export const popup = style({

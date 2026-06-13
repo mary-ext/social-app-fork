@@ -1,9 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize } from '#/styles/tokens.css';
+import { fontSize, zIndex } from '#/styles/tokens.css';
 
-// sits above the Base UI Sheet (whose backdrop/viewport are zIndex 10), like the web Menu popup.
+// sits above the Base UI Sheet (the dialog tier), like the web Menu popup.
 export const popup = style({
 	backgroundColor: vars.palette.contrast_0,
 	border: `1px solid ${vars.palette.contrast_100}`,
@@ -13,7 +13,7 @@ export const popup = style({
 	maxWidth: 300,
 	overflowX: 'hidden',
 	overflowY: 'auto',
-	zIndex: 11,
+	zIndex: zIndex.menu,
 });
 
 export const item = style({

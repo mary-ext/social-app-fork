@@ -47,6 +47,24 @@ export const fontWeight = {
 
 export const fontFamily = `InterVariable, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
 
+/**
+ * z-index scale. Two stacking spaces that don't directly compete — in-flow chrome (rendered in the document)
+ * and portaled overlays (rendered late in `<body>`, already above the document) — but they're banded apart so
+ * the global order is explicit and in-flow content (which should stay at `base`) can't accidentally outrank
+ * chrome or an overlay. Component-local stacking (e.g. the composer's textarea over its preview, overlapping
+ * avatars) is not part of this scale.
+ */
+export const zIndex = {
+	base: 0,
+	// in-flow chrome over page content
+	sticky: 10, // sticky header, bottom bar
+	stickyRaised: 20, // action slot within the sticky header
+	// portaled overlays, each tier provably above the previous
+	dialog: 100, // dialog backdrop / viewport / close, prompt
+	menu: 110, // menus & autocomplete, and a dialog's outer close — over a dialog
+	tooltip: 120, // tooltip & hover card — over dialogs and menus
+} as const;
+
 /** Runtime font-size multiplier; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`. */
 export const fontScale = createVar();
 

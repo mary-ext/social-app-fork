@@ -3,10 +3,11 @@ import { style } from '@vanilla-extract/css';
 import { fontSizeVar } from '#/components/Text.css';
 
 import { vars } from '#/styles/contract.css';
+import { zIndex } from '#/styles/tokens.css';
 
 export const positioner = style({
-	// sit above dialogs (zIndex 10) and menus (zIndex 11) so a tooltip on a trigger inside either still shows
-	zIndex: 12,
+	// sit above dialogs and menus so a tooltip on a trigger inside either still shows
+	zIndex: zIndex.tooltip,
 });
 
 export const popup = style({
