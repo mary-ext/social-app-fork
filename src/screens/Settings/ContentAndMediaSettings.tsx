@@ -65,10 +65,6 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 							<Settings.Icon icon={HashtagIcon} />
 							<Settings.Label titleText={<Trans>Manage saved feeds</Trans>} />
 						</Settings.LinkRow>
-						<Settings.LinkRow label={l`External media`} to="/settings/external-embeds">
-							<Settings.Icon icon={MacintoshIcon} />
-							<Settings.Label titleText={<Trans>External media</Trans>} />
-						</Settings.LinkRow>
 						<Settings.LinkRow label={l`Your interests`} to="/settings/interests">
 							<Settings.Icon icon={CircleInfo} />
 							<Settings.Label titleText={<Trans>Your interests</Trans>} />
@@ -76,6 +72,10 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 					</Settings.Section>
 
 					<Settings.Section titleText={<Trans>Media</Trans>}>
+						<Settings.LinkRow label={l`External media`} to="/settings/external-embeds">
+							<Settings.Icon icon={MacintoshIcon} />
+							<Settings.Label titleText={<Trans>External media</Trans>} />
+						</Settings.LinkRow>
 						<Settings.SwitchRow
 							label={l`Autoplay videos and GIFs`}
 							onChange={(value) => setAutoplayDisabledPref(!value)}
