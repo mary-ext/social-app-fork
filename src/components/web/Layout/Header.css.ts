@@ -1,20 +1,14 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { fontSizeVar } from '#/components/Text.css';
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
-	CENTER_COLUMN_OFFSET,
 	CENTER_COLUMN_WIDTH,
 	HEADER_SLOT_SIZE,
-	SCROLLBAR_OFFSET,
 } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
 import { fontSize } from '#/styles/tokens.css';
-
-const offsetVar = createVar();
-
-const scrollbarShift = `translateX(${SCROLLBAR_OFFSET})`;
 
 export const outer = style({
 	alignItems: 'center',
@@ -32,8 +26,6 @@ export const outer = style({
 	paddingTop: 4,
 	position: 'sticky',
 	top: 0,
-	transform: `translateX(${offsetVar}) ${scrollbarShift}`,
-	vars: { [offsetVar]: '0px' },
 	width: '100%',
 	zIndex: 10,
 	'@media': {
@@ -49,10 +41,6 @@ export const outerNoBorder = style({
 
 export const outerStatic = style({
 	position: 'static',
-});
-
-export const outerOffset = style({
-	vars: { [offsetVar]: `${CENTER_COLUMN_OFFSET}px` },
 });
 
 export const content = style({

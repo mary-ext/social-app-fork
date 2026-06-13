@@ -2,15 +2,13 @@ import { style } from '@vanilla-extract/css';
 
 import { space } from '#/styles/tokens.css';
 
-// the row carries no external spacing of its own — callers own the rhythm around it. zIndex keeps the author
-// links (and the hover card they anchor) above adjacent post content.
+// the row carries no external spacing of its own — callers own the rhythm around it.
 export const row = style({
 	alignItems: 'center',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',
 	gap: space.xs,
-	zIndex: 20,
 });
 
 export const avatar = style({

@@ -5,8 +5,6 @@ import { clsx } from 'clsx';
 
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { useLayoutBreakpoints } from '#/alf/breakpoints';
-
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon } from '#/components/web/Button';
@@ -23,16 +21,10 @@ export function Outer({
 	ref?: React.Ref<HTMLDivElement>;
 	sticky?: boolean;
 }) {
-	const { centerColumnOffset } = useLayoutBreakpoints();
 	return (
 		<div
 			ref={ref}
-			className={clsx(
-				styles.outer,
-				noBottomBorder && styles.outerNoBorder,
-				!sticky && styles.outerStatic,
-				centerColumnOffset && styles.outerOffset,
-			)}
+			className={clsx(styles.outer, noBottomBorder && styles.outerNoBorder, !sticky && styles.outerStatic)}
 		>
 			{children}
 		</div>
