@@ -96,7 +96,7 @@ let PostMenuItems = ({
 	richText: Richtext;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
+	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 }): React.ReactNode => {
 	const { hasSession, currentAccount } = useSession();
 	const { t: l } = useLingui();

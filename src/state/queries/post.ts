@@ -18,7 +18,7 @@ import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes';
 const RQKEY_ROOT = 'post';
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri];
 
-export type PostActionLogContext = 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
+export type PostActionLogContext = 'FeedItem' | 'PostThreadItem' | 'Post';
 
 export function usePostQuery(uri: string | undefined) {
 	const { appview } = useClients();

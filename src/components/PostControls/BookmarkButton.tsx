@@ -24,7 +24,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 }: {
 	post: Shadow<AppBskyFeedDefs.PostView>;
 	big?: boolean;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
+	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 }): React.ReactNode {
 	const t = useTheme();
 	const { t: l } = useLingui();

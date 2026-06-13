@@ -1,4 +1,4 @@
-import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
@@ -62,9 +62,6 @@ export function FeedPage({
 	const scrollElRef = useRef<ListMethods>(null);
 	const [hasNew, setHasNew] = useState(false);
 	const setHomeBadge = useSetHomeBadge();
-	const isVideoFeed = useMemo(() => {
-		return false;
-	}, [feedInfo]);
 	const t = useTheme();
 
 	useEffect(() => {
@@ -132,7 +129,6 @@ export function FeedPage({
 						renderEndOfFeed={renderEndOfFeed}
 						headerOffset={headerOffset}
 						savedFeedConfig={savedFeedConfig}
-						isVideoFeed={isVideoFeed}
 					/>
 				</FeedFeedbackProvider>
 			</MainScrollProvider>

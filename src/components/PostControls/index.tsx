@@ -51,7 +51,7 @@ let PostControls = ({
 	reqId?: string | undefined;
 	onPressReply: () => void;
 	onPostReply?: (postUri: string | undefined) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
+	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
 	viaRepost?: { uri: string; cid: string };

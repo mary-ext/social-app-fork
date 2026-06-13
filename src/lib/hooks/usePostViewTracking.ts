@@ -5,7 +5,6 @@ export type PostViewLogContext =
 	| 'FeedItem'
 	| 'PostThreadItem'
 	| 'Post'
-	| 'ImmersiveVideo'
 	| 'SearchResults'
 	| 'Bookmarks'
 	| 'Notifications'

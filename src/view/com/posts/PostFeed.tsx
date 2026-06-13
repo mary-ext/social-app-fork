@@ -41,18 +41,10 @@ import { List, type ListRef } from '#/view/com/util/List';
 import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
-import { useBreakpoints } from '#/alf';
-
 import { SuggestedFollows } from '#/components/FeedInterstitials';
-import {
-	PostFeedVideoGridRow,
-	PostFeedVideoGridRowPlaceholder,
-} from '#/components/feeds/PostFeedVideoGridRow';
 import { TrendingInterstitial } from '#/components/interstitials/Trending';
-import { TrendingVideos as TrendingVideosInterstitial } from '#/components/interstitials/TrendingVideos';
 
 import { isStatusStillActive, isStatusValidForViewers, useLiveNowConfig } from '#/features/liveNow';
-import { useTrendingSettings } from '#/storage/hooks/trending';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { DiscoverFallbackHeader } from './DiscoverFallbackHeader';
@@ -95,18 +87,6 @@ export type FeedRow =
 			showReplyTo: boolean;
 	  }
 	| {
-			type: 'videoGridRowPlaceholder';
-			key: string;
-	  }
-	| {
-			type: 'videoGridRow';
-			key: string;
-			items: FeedPostSliceItem[];
-			sourceFeedUri: string;
-			feedContexts: (string | undefined)[];
-			reqIds: (string | undefined)[];
-	  }
-	| {
 			type: 'sliceViewFullThread';
 			key: string;
 			uri: string;
@@ -117,10 +97,6 @@ export type FeedRow =
 	  }
 	| {
 			type: 'interstitialTrending';
-			key: string;
-	  }
-	| {
-			type: 'interstitialTrendingVideos';
 			key: string;
 	  }
 	| {
@@ -142,12 +118,6 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 			item,
 			feedContext: feedRow.slice.feedContext,
 			reqId: feedRow.slice.reqId,
-		}));
-	} else if (feedRow.type === 'videoGridRow') {
-		return feedRow.items.map((item, i) => ({
-			item,
-			feedContext: feedRow.feedContexts[i],
-			reqId: feedRow.reqIds[i],
 		}));
 	} else {
 		return [];
@@ -179,7 +149,6 @@ let PostFeed = ({
 	extraData,
 	savedFeedConfig,
 	initialNumToRender: initialNumToRenderOverride,
-	isVideoFeed = false,
 }: {
 	feed: FeedDescriptor;
 	feedParams?: FeedParams;
@@ -201,7 +170,6 @@ let PostFeed = ({
 	extraData?: unknown;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
 	initialNumToRender?: number;
-	isVideoFeed?: boolean;
 	lastFetchDate?: () => number;
 }): React.ReactNode => {
 	const { t: l } = useLingui();
@@ -213,8 +181,6 @@ let PostFeed = ({
 	// eslint-disable-next-line react-hooks/purity
 	const lastFetchRef = useRef<number>(Date.now());
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
-	const { gtMobile } = useBreakpoints();
-	const areVideoFeedsEnabled = false;
 
 	const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(() => new Set<string>());
 	const onPressShowLess = useCallback((interaction: AppBskyFeedDefs.Interaction) => {
@@ -225,7 +191,6 @@ let PostFeed = ({
 		}
 	}, []);
 
-	const feedCacheKey = feedParams?.feedCacheKey;
 	const opts = useMemo(() => ({ enabled, ignoreFilterFor }), [enabled, ignoreFilterFor]);
 	const {
 		data,
@@ -330,8 +295,6 @@ let PostFeed = ({
 		};
 	}, [pollInterval, checkForNew]);
 
-	const { trendingVideoDisabled } = useTrendingSettings();
-
 	const blockedOrMutedAuthors = usePostAuthorShadowFilter(
 		// author feeds have their own handling
 		feed.startsWith('author|') ? undefined : data?.pages,
@@ -352,7 +315,7 @@ let PostFeed = ({
 			}
 		};
 
-		let feedKind: 'following' | 'discover' | 'profile' | 'thevids' | undefined;
+		let feedKind: 'following' | 'discover' | 'profile' | undefined;
 		if (feedType === 'following') {
 			feedKind = 'following';
 		} else if (feedUriOrActorDid === DISCOVER_FEED_URI) {
@@ -385,165 +348,101 @@ let PostFeed = ({
 			} else if (data) {
 				let sliceIndex = -1;
 
-				if (isVideoFeed) {
-					const videos: {
-						item: FeedPostSliceItem;
-						feedContext: string | undefined;
-						reqId: string | undefined;
-					}[] = [];
-					for (const page of data.pages) {
-						for (const slice of page.slices) {
-							const item = slice.items.find((item) => item.uri === slice.feedPostUri);
-							if (
-								item &&
-								item.post.embed?.$type === 'app.bsky.embed.video#view' &&
-								!blockedOrMutedAuthors.includes(item.post.author.did)
-							) {
-								videos.push({
-									item,
-									feedContext: slice.feedContext,
-									reqId: slice.reqId,
-								});
-							}
-						}
-					}
-
-					const rows: {
-						item: FeedPostSliceItem;
-						feedContext: string | undefined;
-						reqId: string | undefined;
-					}[][] = [];
-					for (let i = 0; i < videos.length; i++) {
-						const video = videos[i]!;
-						const item = video.item;
-						const cols = gtMobile ? 3 : 2;
-						const rowItem = {
-							item,
-							feedContext: video.feedContext,
-							reqId: video.reqId,
-						};
-						if (i % cols === 0) {
-							rows.push([rowItem]);
-						} else {
-							rows[rows.length - 1]!.push(rowItem);
-						}
-					}
-
-					for (const row of rows) {
+				for (const page of data?.pages) {
+					for (const slice of page.slices) {
 						sliceIndex++;
-						arr.push({
-							type: 'videoGridRow',
-							key: row.map((r) => r.item._reactKey).join('-'),
-							items: row.map((r) => r.item),
-							sourceFeedUri: feedUriOrActorDid,
-							feedContexts: row.map((r) => r.feedContext),
-							reqIds: row.map((r) => r.reqId),
-						});
-					}
-				} else {
-					for (const page of data?.pages) {
-						for (const slice of page.slices) {
-							sliceIndex++;
 
-							if (hasSession) {
-								if (feedKind === 'discover') {
-									if (sliceIndex === 0) {
-										// Show composer prompt for Discover and Following feeds
-										if (hasSession && (feedUriOrActorDid === DISCOVER_FEED_URI || feed === 'following')) {
-											arr.push({
-												type: 'composerPrompt',
-												key: 'composerPrompt-' + sliceIndex,
-											});
-										}
-									} else if (sliceIndex === 15) {
-										if (areVideoFeedsEnabled && !trendingVideoDisabled) {
-											arr.push({
-												type: 'interstitialTrendingVideos',
-												key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
-											});
-										}
-									} else if (sliceIndex === 30) {
+						if (hasSession) {
+							if (feedKind === 'discover') {
+								if (sliceIndex === 0) {
+									// Show composer prompt for Discover and Following feeds
+									if (hasSession && (feedUriOrActorDid === DISCOVER_FEED_URI || feed === 'following')) {
 										arr.push({
-											type: 'interstitialFollows',
-											key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+											type: 'composerPrompt',
+											key: 'composerPrompt-' + sliceIndex,
 										});
 									}
-								} else if (feedKind === 'following') {
-									if (sliceIndex === 0) {
-										// Show composer prompt for Following feed
-										if (hasSession) {
-											arr.push({
-												type: 'composerPrompt',
-												key: 'composerPrompt-' + sliceIndex,
-											});
-										}
-									}
-								} else if (feedKind === 'profile') {
-									if (sliceIndex === 5) {
+								} else if (sliceIndex === 30) {
+									arr.push({
+										type: 'interstitialFollows',
+										key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+									});
+								}
+							} else if (feedKind === 'following') {
+								if (sliceIndex === 0) {
+									// Show composer prompt for Following feed
+									if (hasSession) {
 										arr.push({
-											type: 'interstitialFollows',
-											key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+											type: 'composerPrompt',
+											key: 'composerPrompt-' + sliceIndex,
 										});
 									}
+								}
+							} else if (feedKind === 'profile') {
+								if (sliceIndex === 5) {
+									arr.push({
+										type: 'interstitialFollows',
+										key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
+									});
 								}
 							}
+						}
 
-							if (slice.isFallbackMarker) {
-								arr.push({
-									type: 'fallbackMarker',
-									key: 'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
-								});
-							} else if (slice.items.some((item) => blockedOrMutedAuthors.includes(item.post.author.did))) {
-								// skip
-							} else if (slice.isIncompleteThread && slice.items.length >= 3) {
-								const beforeLast = slice.items.length - 2;
-								const last = slice.items.length - 1;
+						if (slice.isFallbackMarker) {
+							arr.push({
+								type: 'fallbackMarker',
+								key: 'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
+							});
+						} else if (slice.items.some((item) => blockedOrMutedAuthors.includes(item.post.author.did))) {
+							// skip
+						} else if (slice.isIncompleteThread && slice.items.length >= 3) {
+							const beforeLast = slice.items.length - 2;
+							const last = slice.items.length - 1;
+							arr.push(
+								sliceItem({
+									type: 'sliceItem',
+									key: slice.items[0]!._reactKey,
+									slice: slice,
+									indexInSlice: 0,
+									showReplyTo: false,
+								}),
+							);
+							arr.push({
+								type: 'sliceViewFullThread',
+								key: slice._reactKey + '-viewFullThread',
+								uri: slice.items[0]!.uri,
+							});
+							arr.push(
+								sliceItem({
+									type: 'sliceItem',
+									key: slice.items[beforeLast]!._reactKey,
+									slice: slice,
+									indexInSlice: beforeLast,
+									showReplyTo:
+										slice.items[beforeLast]!.parentAuthor?.did !== slice.items[beforeLast]!.post.author.did,
+								}),
+							);
+							arr.push(
+								sliceItem({
+									type: 'sliceItem',
+									key: slice.items[last]!._reactKey,
+									slice: slice,
+									indexInSlice: last,
+									showReplyTo: false,
+								}),
+							);
+						} else {
+							for (let i = 0; i < slice.items.length; i++) {
+								const item = slice.items[i]!;
 								arr.push(
 									sliceItem({
 										type: 'sliceItem',
-										key: slice.items[0]!._reactKey,
+										key: item._reactKey,
 										slice: slice,
-										indexInSlice: 0,
-										showReplyTo: false,
+										indexInSlice: i,
+										showReplyTo: i === 0,
 									}),
 								);
-								arr.push({
-									type: 'sliceViewFullThread',
-									key: slice._reactKey + '-viewFullThread',
-									uri: slice.items[0]!.uri,
-								});
-								arr.push(
-									sliceItem({
-										type: 'sliceItem',
-										key: slice.items[beforeLast]!._reactKey,
-										slice: slice,
-										indexInSlice: beforeLast,
-										showReplyTo:
-											slice.items[beforeLast]!.parentAuthor?.did !== slice.items[beforeLast]!.post.author.did,
-									}),
-								);
-								arr.push(
-									sliceItem({
-										type: 'sliceItem',
-										key: slice.items[last]!._reactKey,
-										slice: slice,
-										indexInSlice: last,
-										showReplyTo: false,
-									}),
-								);
-							} else {
-								for (let i = 0; i < slice.items.length; i++) {
-									const item = slice.items[i]!;
-									arr.push(
-										sliceItem({
-											type: 'sliceItem',
-											key: item._reactKey,
-											slice: slice,
-											indexInSlice: i,
-											showReplyTo: i === 0,
-										}),
-									);
-								}
 							}
 						}
 					}
@@ -556,17 +455,10 @@ let PostFeed = ({
 				});
 			}
 		} else {
-			if (isVideoFeed) {
-				arr.push({
-					type: 'videoGridRowPlaceholder',
-					key: 'videoGridRowPlaceholder',
-				});
-			} else {
-				arr.push({
-					type: 'loading',
-					key: 'loading',
-				});
-			}
+			arr.push({
+				type: 'loading',
+				key: 'loading',
+			});
 		}
 
 		return arr;
@@ -581,10 +473,6 @@ let PostFeed = ({
 		feedUriOrActorDid,
 		feedTab,
 		hasSession,
-		trendingVideoDisabled,
-		gtMobile,
-		isVideoFeed,
-		areVideoFeedsEnabled,
 		hasPressedShowLessUris,
 		blockedOrMutedAuthors,
 	]);
@@ -657,8 +545,6 @@ let PostFeed = ({
 				return <TrendingInterstitial />;
 			} else if (row.type === 'composerPrompt') {
 				return <ComposerPrompt />;
-			} else if (row.type === 'interstitialTrendingVideos') {
-				return <TrendingVideosInterstitial />;
 			} else if (row.type === 'fallbackMarker') {
 				// HACK
 				// tell the user we fell back to discover
@@ -693,16 +579,6 @@ let PostFeed = ({
 				);
 			} else if (row.type === 'sliceViewFullThread') {
 				return <ViewFullThread uri={row.uri} />;
-			} else if (row.type === 'videoGridRowPlaceholder') {
-				return (
-					<View>
-						<PostFeedVideoGridRowPlaceholder />
-						<PostFeedVideoGridRowPlaceholder />
-						<PostFeedVideoGridRowPlaceholder />
-					</View>
-				);
-			} else if (row.type === 'videoGridRow') {
-				return <PostFeedVideoGridRow items={row.items} />;
 			} else if (row.type === 'showLessFollowup') {
 				return <ShowLessFollowup />;
 			} else {
@@ -720,7 +596,6 @@ let PostFeed = ({
 			feedType,
 			feedUriOrActorDid,
 			feedTab,
-			feedCacheKey,
 			onPressShowLess,
 		],
 	);
@@ -764,9 +639,6 @@ let PostFeed = ({
 					if (row.indexInSlice === 0) {
 						position++;
 					}
-				} else if (row.type === 'videoGridRow') {
-					// Count each video in the grid row
-					position += row.items.length;
 				}
 			}
 			return position;
@@ -798,16 +670,6 @@ let PostFeed = ({
 				) {
 					if (!seenActorWithStatusRef.current.has(actor.did)) {
 						seenActorWithStatusRef.current.add(actor.did);
-					}
-				}
-			} else if (item.type === 'videoGridRow') {
-				// Track each video in the grid row
-				for (let i = 0; i < item.items.length; i++) {
-					const postItem = item.items[i]!;
-					const post = postItem.post;
-
-					if (!seenPostUrisRef.current.has(post.uri)) {
-						seenPostUrisRef.current.add(post.uri);
 					}
 				}
 			}

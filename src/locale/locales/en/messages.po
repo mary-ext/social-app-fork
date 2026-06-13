@@ -1765,7 +1765,7 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:52
 #: src/components/moderation/ReportDialog/index.tsx:772
 #: src/screens/Search/components/StarterPackCard.tsx:91
-#: src/screens/Search/Explore.tsx:855
+#: src/screens/Search/Explore.tsx:847
 msgid "By {0}"
 msgstr ""
 
@@ -2350,7 +2350,7 @@ msgstr ""
 msgid "Could not leave chat"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:56
+#: src/screens/Profile/ProfileFeed/index.tsx:53
 msgid "Could not load feed"
 msgstr ""
 
@@ -2722,7 +2722,7 @@ msgstr ""
 msgid "Discover new custom feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:407
+#: src/screens/Search/Explore.tsx:402
 msgid "Discover new feeds"
 msgstr ""
 
@@ -2732,10 +2732,6 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:2042
 msgid "Dismiss error"
-msgstr ""
-
-#: src/components/interstitials/TrendingVideos.tsx:79
-msgid "Dismiss this section"
 msgstr ""
 
 #: src/components/FeedInterstitials.tsx:228
@@ -3023,16 +3019,11 @@ msgstr ""
 msgid "Enable trending topics"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:99
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
-msgid "Enable trending videos in your Discover feed"
-msgstr ""
-
 #: src/screens/Moderation/index.tsx:277
 msgid "Enabled"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:116
+#: src/screens/Profile/Sections/Feed.tsx:114
 msgid "End of feed"
 msgstr ""
 
@@ -3325,16 +3316,16 @@ msgstr "Failed to leave group chat"
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:483
-#: src/screens/Search/Explore.tsx:528
-#: src/screens/Search/Explore.tsx:574
+#: src/screens/Search/Explore.tsx:478
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:569
 msgid "Failed to load feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:443
-#: src/screens/Search/Explore.tsx:497
-#: src/screens/Search/Explore.tsx:542
-#: src/screens/Search/Explore.tsx:588
+#: src/screens/Search/Explore.tsx:438
+#: src/screens/Search/Explore.tsx:492
+#: src/screens/Search/Explore.tsx:537
+#: src/screens/Search/Explore.tsx:583
 msgid "Failed to load feeds preferences"
 msgstr ""
 
@@ -3355,14 +3346,14 @@ msgstr "Failed to load preference."
 msgid "Failed to load profiles"
 msgstr "Failed to load profiles"
 
-#: src/screens/Search/Explore.tsx:436
-#: src/screens/Search/Explore.tsx:490
-#: src/screens/Search/Explore.tsx:535
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:431
+#: src/screens/Search/Explore.tsx:485
+#: src/screens/Search/Explore.tsx:530
+#: src/screens/Search/Explore.tsx:576
 msgid "Failed to load suggested feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:345
+#: src/screens/Search/Explore.tsx:340
 msgid "Failed to load suggested follows"
 msgstr ""
 
@@ -3708,7 +3699,7 @@ msgstr ""
 msgid "Following {displayName}"
 msgstr "Following {displayName}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:138
+#: src/screens/Settings/ContentAndMediaSettings.tsx:128
 msgid "Following feed"
 msgstr "Following feed"
 
@@ -4070,17 +4061,11 @@ msgstr ""
 msgid "Here's what happens if you do:"
 msgstr "Here's what happens if you do:"
 
-#: src/components/VideoPostCard.tsx:150
-#: src/components/VideoPostCard.tsx:407
-msgid "Hidden"
-msgstr ""
-
 #: src/components/ListCard.tsx:116
 msgid "Hidden list"
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:89
-#: src/components/interstitials/TrendingVideos.tsx:129
 #: src/components/moderation/ContentHider.tsx:147
 #: src/components/moderation/LabelPreference.tsx:125
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
@@ -4136,10 +4121,6 @@ msgstr ""
 #: src/components/interstitials/Trending.tsx:87
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
 msgid "Hide trending topics?"
-msgstr ""
-
-#: src/components/interstitials/TrendingVideos.tsx:127
-msgid "Hide trending videos?"
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:842
@@ -4775,12 +4756,12 @@ msgstr ""
 msgid "Live link"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:77
+#: src/screens/Search/Explore.tsx:76
 msgid "Load more"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:472
-#: src/screens/Search/Explore.tsx:563
+#: src/screens/Search/Explore.tsx:467
+#: src/screens/Search/Explore.tsx:558
 msgid "Load more suggested feeds"
 msgstr ""
 
@@ -4788,10 +4769,10 @@ msgstr ""
 msgid "Load new notifications"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:172
-#: src/screens/Profile/Sections/Feed.tsx:104
+#: src/screens/Profile/ProfileFeed/index.tsx:149
+#: src/screens/Profile/Sections/Feed.tsx:102
 #: src/screens/ProfileList/FeedSection.tsx:100
-#: src/view/com/feeds/FeedPage.tsx:140
+#: src/view/com/feeds/FeedPage.tsx:136
 msgid "Load new posts"
 msgstr ""
 
@@ -4964,7 +4945,7 @@ msgstr ""
 msgid "Mentions"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:172
+#: src/screens/Settings/ContentAndMediaSettings.tsx:162
 msgid "Merge saved feeds"
 msgstr "Merge saved feeds"
 
@@ -5373,7 +5354,7 @@ msgstr "New group chat with:"
 msgid "New list"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:180
+#: src/screens/Profile/ProfileFeed/index.tsx:157
 #: src/screens/ProfileList/index.tsx:232
 #: src/screens/ProfileList/index.tsx:270
 #: src/view/screens/Feeds.tsx:519
@@ -5382,7 +5363,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:148
+#: src/view/com/feeds/FeedPage.tsx:144
 #: src/view/shell/desktop/LeftNav.tsx:555
 msgctxt "action"
 msgid "New post"
@@ -5406,7 +5387,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:94
 #: src/screens/PostThread/components/HeaderDropdown.tsx:100
-#: src/screens/Settings/ContentAndMediaSettings.tsx:114
+#: src/screens/Settings/ContentAndMediaSettings.tsx:104
 msgid "Newest replies first"
 msgstr ""
 
@@ -5522,7 +5503,7 @@ msgstr "No one can send messages"
 msgid "No posts here"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:77
+#: src/screens/Profile/Sections/Feed.tsx:76
 #: src/view/screens/Profile.tsx:417
 msgid "No posts yet"
 msgstr ""
@@ -5552,7 +5533,7 @@ msgid "No results"
 msgstr ""
 
 #. placeholder {0}: interestsDisplayNames[selectedInterest]
-#: src/screens/Search/Explore.tsx:754
+#: src/screens/Search/Explore.tsx:746
 msgid "No results for \"{0}\"."
 msgstr ""
 
@@ -5569,7 +5550,7 @@ msgstr ""
 msgid "No results found for “<0>{query}</0>”."
 msgstr "No results found for “<0>{query}</0>”."
 
-#: src/screens/Search/Explore.tsx:756
+#: src/screens/Search/Explore.tsx:748
 msgid "No results."
 msgstr ""
 
@@ -5694,7 +5675,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:83
 #: src/screens/PostThread/components/HeaderDropdown.tsx:89
-#: src/screens/Settings/ContentAndMediaSettings.tsx:113
+#: src/screens/Settings/ContentAndMediaSettings.tsx:103
 msgid "Oldest replies first"
 msgstr ""
 
@@ -7239,11 +7220,11 @@ msgstr ""
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:332
+#: src/screens/Search/Explore.tsx:327
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:410
+#: src/screens/Search/Explore.tsx:405
 msgid "Search for more feeds"
 msgstr ""
 
@@ -7682,17 +7663,17 @@ msgstr ""
 msgid "Show others that this account is automated."
 msgstr "Show others that this account is automated."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:130
+#: src/screens/Settings/ContentAndMediaSettings.tsx:120
 msgid "Show post replies in a threaded tree view"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:157
-#: src/screens/Settings/ContentAndMediaSettings.tsx:162
+#: src/screens/Settings/ContentAndMediaSettings.tsx:147
+#: src/screens/Settings/ContentAndMediaSettings.tsx:152
 msgid "Show quote posts"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:141
-#: src/screens/Settings/ContentAndMediaSettings.tsx:146
+#: src/screens/Settings/ContentAndMediaSettings.tsx:131
+#: src/screens/Settings/ContentAndMediaSettings.tsx:136
 msgid "Show replies"
 msgstr ""
 
@@ -7705,13 +7686,13 @@ msgstr ""
 msgid "Show reply for everyone"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:149
-#: src/screens/Settings/ContentAndMediaSettings.tsx:154
+#: src/screens/Settings/ContentAndMediaSettings.tsx:139
+#: src/screens/Settings/ContentAndMediaSettings.tsx:144
 msgid "Show reposts"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:165
-#: src/screens/Settings/ContentAndMediaSettings.tsx:171
+#: src/screens/Settings/ContentAndMediaSettings.tsx:155
+#: src/screens/Settings/ContentAndMediaSettings.tsx:161
 msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
@@ -7919,8 +7900,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:116
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
+#: src/screens/Settings/ContentAndMediaSettings.tsx:106
+#: src/screens/Settings/ContentAndMediaSettings.tsx:111
 msgid "Sort replies"
 msgstr ""
 
@@ -7991,7 +7972,7 @@ msgstr ""
 msgid "Starter pack is invalid"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:617
+#: src/screens/Search/Explore.tsx:612
 #: src/view/screens/Profile.tsx:236
 msgid "Starter Packs"
 msgstr ""
@@ -8081,7 +8062,7 @@ msgstr ""
 msgid "Suggested"
 msgstr "Suggested"
 
-#: src/screens/Search/Explore.tsx:329
+#: src/screens/Search/Explore.tsx:324
 msgid "Suggested accounts"
 msgstr ""
 
@@ -8334,8 +8315,8 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:898
-#: src/view/com/posts/PostFeed.tsx:646
+#: src/screens/Search/Explore.tsx:890
+#: src/view/com/posts/PostFeed.tsx:534
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -8404,7 +8385,7 @@ msgstr ""
 msgid "These are your default settings"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:137
+#: src/screens/Settings/ContentAndMediaSettings.tsx:127
 msgid "These settings only apply to the Following feed."
 msgstr ""
 
@@ -8559,7 +8540,7 @@ msgid "This feed is empty! You may need to follow more users or tune your langua
 msgstr ""
 
 #: src/components/StarterPack/Main/PostsList.tsx:40
-#: src/screens/Profile/ProfileFeed/index.tsx:147
+#: src/screens/Profile/ProfileFeed/index.tsx:130
 #: src/screens/ProfileList/FeedSection.tsx:72
 msgid "This feed is empty."
 msgstr ""
@@ -8750,7 +8731,7 @@ msgstr ""
 msgid "Thread options"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:109
+#: src/screens/Settings/ContentAndMediaSettings.tsx:99
 msgid "Thread preferences"
 msgstr ""
 
@@ -8784,7 +8765,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:72
 #: src/screens/PostThread/components/HeaderDropdown.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:112
+#: src/screens/Settings/ContentAndMediaSettings.tsx:102
 msgid "Top replies first"
 msgstr ""
 
@@ -8801,8 +8782,8 @@ msgstr ""
 msgid "Translate"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:124
-#: src/screens/Settings/ContentAndMediaSettings.tsx:131
+#: src/screens/Settings/ContentAndMediaSettings.tsx:114
+#: src/screens/Settings/ContentAndMediaSettings.tsx:121
 msgid "Tree view"
 msgstr ""
 
@@ -8817,10 +8798,6 @@ msgstr "Trending GIFs"
 
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:51
 msgid "Trending options"
-msgstr ""
-
-#: src/components/interstitials/TrendingVideos.tsx:76
-msgid "Trending Videos"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:102
@@ -9259,11 +9236,6 @@ msgstr ""
 msgid "Video failed to process"
 msgstr ""
 
-#. placeholder {0}: author.handle
-#: src/components/VideoPostCard.tsx:100
-msgid "Video from {0}: {text}"
-msgstr ""
-
 #: src/lib/interests.ts:61
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:178
 msgid "Video Games"
@@ -9363,17 +9335,6 @@ msgstr "View incoming requests to join this group chat"
 msgid "View information about these labels"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:171
-#: src/components/interstitials/TrendingVideos.tsx:195
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:172
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:187
-msgid "View more"
-msgstr ""
-
-#: src/components/interstitials/TrendingVideos.tsx:197
-msgid "View more trending videos"
-msgstr ""
-
 #: src/view/com/composer/Composer.tsx:888
 msgid "View post"
 msgstr ""
@@ -9424,10 +9385,6 @@ msgstr ""
 msgid "View users who like this feed"
 msgstr ""
 
-#: src/components/VideoPostCard.tsx:352
-msgid "View video"
-msgstr ""
-
 #: src/screens/Moderation/index.tsx:223
 msgid "View your blocked accounts"
 msgstr ""
@@ -9456,10 +9413,6 @@ msgstr ""
 #: src/components/images/AutoSizedImage.tsx:191
 #: src/components/images/AutoSizedImage.tsx:220
 msgid "Views full image"
-msgstr ""
-
-#: src/components/VideoPostCard.tsx:99
-msgid "Views video in immersive mode"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:125
@@ -9619,11 +9572,6 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:277
 #: src/screens/Messages/Inbox.tsx:149
 msgid "Whoops!"
-msgstr ""
-
-#: src/components/interstitials/TrendingVideos.tsx:117
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:106
-msgid "Whoops! Trending videos failed to load."
 msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:49
@@ -9820,7 +9768,6 @@ msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in to
 msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 
 #: src/components/interstitials/Trending.tsx:88
-#: src/components/interstitials/TrendingVideos.tsx:128
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
 msgid "You can update this later from your settings."
 msgstr ""

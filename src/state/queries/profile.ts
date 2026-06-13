@@ -64,7 +64,6 @@ export type ProfileFollowLogContext =
 	| 'StarterPackProfilesList'
 	| 'FeedInterstitial'
 	| 'SuggestedFollowsDialog'
-	| 'ImmersiveVideo'
 	| 'ExploreSuggestedAccounts'
 	| 'GroupChat';
 

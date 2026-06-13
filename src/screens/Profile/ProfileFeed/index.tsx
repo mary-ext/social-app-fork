@@ -14,7 +14,7 @@ import { makeRecordUri } from '#/lib/strings/url-helpers';
 import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { type FeedSourceFeedInfo, useFeedSourceInfoQuery } from '#/state/queries/feed';
-import { type FeedDescriptor, type FeedParams, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { usePreferencesQuery, type UsePreferencesQueryResponse } from '#/state/queries/preferences';
 import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
@@ -40,9 +40,6 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
 export function ProfileFeedScreen(props: Props) {
 	const { rkey, name: handleOrDid } = props.route.params;
 
-	const feedParams: FeedParams | undefined = props.route.params.feedCacheKey
-		? { feedCacheKey: props.route.params.feedCacheKey }
-		: undefined;
 	const { t: l } = useLingui();
 
 	const uri = useMemo(() => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey), [rkey, handleOrDid]);
@@ -63,7 +60,7 @@ export function ProfileFeedScreen(props: Props) {
 
 	return resolvedUri ? (
 		<Layout.Screen testID="profileFeedScreen">
-			<ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} feedParams={feedParams} />
+			<ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
 		</Layout.Screen>
 	) : (
 		<Layout.Screen testID="profileFeedScreen">
@@ -75,13 +72,7 @@ export function ProfileFeedScreen(props: Props) {
 	);
 }
 
-function ProfileFeedScreenIntermediate({
-	feedUri,
-	feedParams,
-}: {
-	feedUri: string;
-	feedParams: FeedParams | undefined;
-}) {
+function ProfileFeedScreenIntermediate({ feedUri }: { feedUri: string }) {
 	const { data: preferences } = usePreferencesQuery();
 	const { data: info } = useFeedSourceInfoQuery({ uri: feedUri });
 
@@ -94,22 +85,14 @@ function ProfileFeedScreenIntermediate({
 		);
 	}
 
-	return (
-		<ProfileFeedScreenInner
-			preferences={preferences}
-			feedInfo={info as FeedSourceFeedInfo}
-			feedParams={feedParams}
-		/>
-	);
+	return <ProfileFeedScreenInner preferences={preferences} feedInfo={info as FeedSourceFeedInfo} />;
 }
 
 export function ProfileFeedScreenInner({
 	feedInfo,
-	feedParams,
 }: {
 	preferences: UsePreferencesQueryResponse;
 	feedInfo: FeedSourceFeedInfo;
-	feedParams: FeedParams | undefined;
 }) {
 	const { t: l } = useLingui();
 	const { hasSession } = useSession();
@@ -147,10 +130,6 @@ export function ProfileFeedScreenInner({
 		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={l`This feed is empty.`} />;
 	}, [l]);
 
-	const isVideoFeed = useMemo(() => {
-		return false;
-	}, [feedInfo]);
-
 	return (
 		<>
 			<ProfileFeedHeader info={feedInfo} />
@@ -158,14 +137,12 @@ export function ProfileFeedScreenInner({
 				<PostFeed
 					enabled
 					feed={feed}
-					feedParams={feedParams}
 					pollInterval={60e3}
 					disablePoll={hasNew}
 					onHasNew={setHasNew}
 					scrollElRef={scrollElRef}
 					onScrolledDownChange={setIsScrolledDown}
 					renderEmptyState={renderPostsEmpty}
-					isVideoFeed={isVideoFeed}
 				/>
 			</FeedFeedbackProvider>
 			{(isScrolledDown || hasNew) && (

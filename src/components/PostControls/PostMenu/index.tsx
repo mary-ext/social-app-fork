@@ -31,7 +31,7 @@ let PostMenuButton = ({
 	richText: Richtext;
 	threadgateRecord?: AppBskyFeedThreadgate.Main;
 	onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void;
-	logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo';
+	logContext: 'FeedItem' | 'PostThreadItem' | 'Post';
 }): React.ReactNode => {
 	const { t: l } = useLingui();
 	// the items run a stack of hooks; only mount them once the menu has been opened.

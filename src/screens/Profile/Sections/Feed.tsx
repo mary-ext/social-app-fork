@@ -50,7 +50,6 @@ export function ProfileFeedSection({
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads');
-	const isVideoFeed = false;
 	const adjustedInitialNumToRender = useInitialNumToRender({
 		screenHeightOffset: headerHeight,
 	});
@@ -95,10 +94,9 @@ export function ProfileFeedSection({
 				renderEmptyState={renderPostsEmpty}
 				headerOffset={headerHeight}
 				progressViewOffset={undefined}
-				renderEndOfFeed={isVideoFeed ? undefined : ProfileEndOfFeed}
+				renderEndOfFeed={ProfileEndOfFeed}
 				ignoreFilterFor={ignoreFilterFor}
 				initialNumToRender={shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined}
-				isVideoFeed={isVideoFeed}
 			/>
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn onPress={onScrollToTop} label={l`Load new posts`} showIndicator={hasNew} />

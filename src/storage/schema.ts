@@ -28,7 +28,6 @@ export type Device = {
 	subtitlesEnabled?: boolean;
 	trendingBetaEnabled: boolean;
 	trendingDisabled?: boolean;
-	trendingVideoDisabled?: boolean;
 };
 
 export type LanguagePrefs = {

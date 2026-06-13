@@ -41,7 +41,6 @@ import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 import { StarterPackCard, StarterPackCardSkeleton } from '#/screens/Search/components/StarterPackCard';
 import { ExploreRecommendations } from '#/screens/Search/modules/ExploreRecommendations';
 import { ExploreTrendingTopics } from '#/screens/Search/modules/ExploreTrendingTopics';
-import { ExploreTrendingVideos } from '#/screens/Search/modules/ExploreTrendingVideos';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -124,10 +123,6 @@ type ExploreScreenItems =
 	  }
 	| {
 			type: 'trendingTopics';
-			key: string;
-	  }
-	| {
-			type: 'trendingVideos';
 			key: string;
 	  }
 	| {
@@ -730,9 +725,6 @@ export function Explore({
 						</View>
 					);
 				}
-				case 'trendingVideos': {
-					return <ExploreTrendingVideos />;
-				}
 				case 'recommendations': {
 					return <ExploreRecommendations />;
 				}
@@ -924,7 +916,7 @@ export function Explore({
 	const onItemSeen = useCallback(
 		(item: ExploreScreenItems) => {
 			let module: string;
-			if (item.type === 'trendingTopics' || item.type === 'trendingVideos') {
+			if (item.type === 'trendingTopics') {
 				module = item.type;
 			} else if (item.type === 'profile') {
 				module = 'suggestedAccounts';

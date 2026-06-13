@@ -33,8 +33,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 
 	const [autoplayDisabledPref, setAutoplayDisabledPref] = useAutoplayDisabled();
 	const { enabled: trendingEnabled } = useTrendingConfig();
-	const { trendingDisabled, trendingVideoDisabled } = useTrendingSettings();
-	const { setTrendingDisabled, setTrendingVideoDisabled } = useTrendingSettingsApi();
+	const { trendingDisabled } = useTrendingSettings();
+	const { setTrendingDisabled } = useTrendingSettingsApi();
 
 	const { sort, setSort, view, setView } = useThreadPreferences({ save: true });
 
@@ -92,16 +92,6 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 							>
 								<Settings.Icon icon={Graph} />
 								<Settings.Label titleText={<Trans>Enable trending topics</Trans>} />
-							</Settings.SwitchRow>
-						)}
-						{trendingEnabled && (
-							<Settings.SwitchRow
-								label={l`Enable trending videos in your Discover feed`}
-								onChange={(value) => setTrendingVideoDisabled(!value)}
-								value={!trendingVideoDisabled}
-							>
-								<Settings.Icon icon={Graph} />
-								<Settings.Label titleText={<Trans>Enable trending videos in your Discover feed</Trans>} />
 							</Settings.SwitchRow>
 						)}
 					</Settings.Section>
