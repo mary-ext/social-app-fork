@@ -82,7 +82,10 @@ export const row = style({
 	width: '100%',
 });
 
-/** Element reset + hover tint + focus ring for a row that is itself an `<a>`/`<button>`/switch/select trigger. */
+/**
+ * Element reset + hover tint + focus ring for a row that is itself an `<a>`/`<button>`/switch/select trigger.
+ * A disabled row (including one frozen mid-write via `loading`) greys out and drops its hover tint.
+ */
 export const rowInteractive = style({
 	appearance: 'none',
 	background: 'transparent',
@@ -92,13 +95,17 @@ export const rowInteractive = style({
 	font: 'inherit',
 	textDecoration: 'none',
 	transitionDuration: '100ms',
-	transitionProperty: 'background-color',
+	transitionProperty: 'background-color, opacity',
 	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
 	selectors: {
-		'&:hover': { backgroundColor: vars.palette.contrast_50 },
+		'&:hover:not(:disabled):not([data-disabled])': { backgroundColor: vars.palette.contrast_50 },
 		'&:focus-visible': {
 			outline: `2px solid ${vars.palette.primary_500}`,
 			outlineOffset: -2,
+		},
+		'&:disabled, &[data-disabled]': {
+			cursor: 'default',
+			opacity: 0.5,
 		},
 	},
 });
