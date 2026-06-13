@@ -11,6 +11,7 @@ import type { Props as IconProps } from '#/components/icons/common';
 import { type LinkProps, useLink } from '#/components/Link';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
+import * as Skele from '#/components/Skeleton';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
@@ -98,7 +99,9 @@ export function Label({
 				{titleText}
 			</Text>
 			{loading ? (
-				<div className={styles.subtitleSkeleton} />
+				<div className={styles.subtitle}>
+					<Skele.Text style={{ width: 140 }} />
+				</div>
 			) : (
 				subtitleText != null && (
 					<Text className={styles.subtitle} size="sm" color="textContrastMedium" leading="snug">

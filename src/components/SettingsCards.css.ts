@@ -147,19 +147,6 @@ export const subtitle = style({
 	minWidth: 0,
 });
 
-/** Placeholder bar shown in the subtitle's place while a row's value is still loading. */
-export const subtitleSkeleton = style([
-	subtitle,
-	{
-		backgroundColor: vars.palette.contrast_100,
-		borderRadius: 6,
-		height: 12,
-		justifySelf: 'start',
-		marginBlock: 3,
-		width: 140,
-	},
-]);
-
 /** Wraps a trailing value next to its chevron so they stay together, centered on the title's line. */
 export const trailing = style({
 	alignItems: 'center',
