@@ -2,7 +2,6 @@ import { startTransition, useCallback, useEffect, useMemo, useRef, useState } fr
 import { Trans } from '@lingui/react/macro';
 import { clsx } from 'clsx';
 
-import Animated, { useAnimatedStyle } from '#/lib/animations/reanimatedCompat';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useOpenComposer, type OnPostSuccessData } from '#/lib/hooks/useOpenComposer';
 
@@ -10,7 +9,6 @@ import { useFeedFeedback } from '#/state/feed-feedback';
 import type { ThreadViewOption } from '#/state/queries/preferences/useThreadPreferences';
 import { PostThreadContextProvider, type ThreadItem, usePostThread } from '#/state/queries/usePostThread';
 import { useSession } from '#/state/session';
-import { useShellLayout } from '#/state/shell/shell-layout';
 import { useUnstablePostSource } from '#/state/unstable-post-source';
 
 import { HeaderDropdown } from '#/screens/PostThread/components/HeaderDropdown';
@@ -31,7 +29,7 @@ import {
 } from '#/screens/PostThread/components/ThreadItemTreePost';
 import * as css from '#/screens/PostThread/index.css';
 
-import { atoms as a, useBreakpoints } from '#/alf';
+import { useBreakpoints } from '#/alf';
 
 import { List, type ListMethods } from '#/components/List/List';
 import * as Layout from '#/components/web/Layout';
@@ -484,18 +482,13 @@ export function PostThread({ uri }: { uri: string }) {
 }
 
 function MobileComposePrompt({ onPressReply }: { onPressReply: () => unknown }) {
-	const { footerHeight } = useShellLayout();
-
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			bottom: footerHeight.get(),
-		};
-	});
-
+	// sit just above the in-flow bottom bar, whose measured height the shell publishes as a CSS var
 	return (
-		<Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
+		<div
+			style={{ bottom: 'var(--bottom-bar-height, 0px)', left: 0, position: 'fixed', right: 0, zIndex: 10 }}
+		>
 			<ThreadComposePrompt onPressCompose={onPressReply} />
-		</Animated.View>
+		</div>
 	);
 }
 

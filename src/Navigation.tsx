@@ -33,7 +33,6 @@ import {
 
 import { timeout } from '#/lib/async/timeout';
 import { useColorSchemeStyle } from '#/lib/hooks/useColorSchemeStyle';
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useWebScrollRestoration } from '#/lib/hooks/useWebScrollRestoration';
 import { useCallOnce } from '#/lib/once';
 import { buildStateObject } from '#/lib/routes/helpers';
@@ -50,9 +49,6 @@ import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useSession } from '#/state/session';
 
 import { LoggedOut } from '#/view/com/auth/LoggedOut';
-import { BottomBarWeb } from '#/view/shell/bottom-bar/BottomBarWeb';
-import { DesktopLeftNav } from '#/view/shell/desktop/LeftNav';
-import { DesktopRightNav } from '#/view/shell/desktop/RightNav';
 import { RouteLoadingScreen } from '#/view/shell/route-loading-screen';
 
 import {
@@ -60,7 +56,9 @@ import {
 	MessagesSplitViewColumnLoadingScreen,
 } from '#/screens/Messages/components/splitView/messages-route-loading-screen';
 
-import { atoms as a, type Theme, useLayoutBreakpoints, useTheme } from '#/alf';
+import { type Theme, useTheme } from '#/alf';
+
+import { WebShell } from '#/components/web/Shell';
 
 import { router } from '#/routes';
 
@@ -375,8 +373,6 @@ function FlatNavigatorLayout({
 	const activeRoute = state.routes[state.index]!;
 	const activeDescriptor = descriptors[activeRoute.key]!;
 	const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false;
-	const { isMobile } = useWebMediaQueries();
-	const { leftNavMinimal } = useLayoutBreakpoints();
 	const focusedKey = activeRoute.key;
 	const [lruKeys, setLruKeys] = useState<string[]>([]);
 
@@ -411,19 +407,10 @@ function FlatNavigatorLayout({
 		}
 	}
 
-	const showBottomBar = hasSession ? isMobile : leftNavMinimal;
 	const content = (
-		<>
-			<View role="main" style={a.flex_1}>
-				<MountedRouteKeysContext.Provider value={mountedRouteKeys}>
-					{children}
-				</MountedRouteKeysContext.Provider>
-			</View>
-			<>
-				{showBottomBar ? <BottomBarWeb /> : <DesktopLeftNav routeName={activeRoute.name} />}
-				{!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
-			</>
-		</>
+		<WebShell routeName={activeRoute.name}>
+			<MountedRouteKeysContext.Provider value={mountedRouteKeys}>{children}</MountedRouteKeysContext.Provider>
+		</WebShell>
 	);
 
 	if (outerLayout) {

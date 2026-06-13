@@ -2,7 +2,6 @@ import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import Animated from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import type { NavigationProp } from '#/lib/routes/types';
@@ -11,7 +10,6 @@ import { emitSoftReset } from '#/state/events';
 import { useSession } from '#/state/session';
 import { useShellLayout } from '#/state/shell/shell-layout';
 
-import { useHomeHeaderTransform } from '#/view/com/util/MainScrollProvider';
 import { Logo } from '#/view/icons/Logo';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -32,12 +30,11 @@ export function HomeHeaderLayoutMobile({
 	const t = useTheme();
 	const { t: l } = useLingui();
 	const { headerHeight } = useShellLayout();
-	const headerMinimalShellTransform = useHomeHeaderTransform();
 	const { hasSession } = useSession();
 	const { navigate } = useNavigation<NavigationProp>();
 
 	return (
-		<Animated.View
+		<View
 			style={[
 				a.fixed,
 				a.z_10,
@@ -47,7 +44,6 @@ export function HomeHeaderLayoutMobile({
 					left: 0,
 					right: 0,
 				},
-				headerMinimalShellTransform,
 			]}
 			onLayout={(e) => {
 				headerHeight.set(e.nativeEvent.layout.height);
@@ -96,6 +92,6 @@ export function HomeHeaderLayoutMobile({
 				</Layout.Header.Slot>
 			</Layout.Header.Outer>
 			{children}
-		</Animated.View>
+		</View>
 	);
 }

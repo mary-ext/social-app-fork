@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,22 +12,11 @@ import { SidebarTrendingTopics } from '#/view/shell/desktop/SidebarTrendingTopic
 import { atoms as a, useGutters, useLayoutBreakpoints, useTheme } from '#/alf';
 
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown';
-import { CENTER_COLUMN_OFFSET } from '#/components/Layout';
 import { InlineLinkText } from '#/components/Link';
 import { Text } from '#/components/Typography';
 
 import { SOURCE_CODE_URL } from '#/env/common';
 import { useKawaiiMode } from '#/storage/hooks/kawaii';
-
-type WebViewStyle = Omit<ViewStyle, 'maxHeight' | 'position' | 'transform'> & {
-	maxHeight?: string;
-	position?: 'fixed';
-	transform?: (NonNullable<ViewStyle['transform']>[number] | { translateX: number | string })[];
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
 
 function useWebQueryParams() {
 	const navigation = useNavigation();
@@ -71,19 +60,8 @@ export function DesktopRightNav({ routeName }: { routeName: string }) {
 				gutters,
 				a.gap_lg,
 				a.pr_2xs,
-				webViewStyle({
-					position: 'fixed',
-					left: '50%',
-					transform: [
-						{
-							translateX: 300 + (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0),
-						},
-						...a.scrollbar_offset.transform,
-					],
-					/** Compensate for the right padding above (2px) to retain intended width. */
-					width: width + gutters.paddingLeft + 2,
-					maxHeight: '100vh',
-				}),
+				/** Compensate for the right padding above (2px) to retain intended width. */
+				{ width: width + gutters.paddingLeft + 2 },
 			]}
 		>
 			{!isSearchScreen && <DesktopSearch />}

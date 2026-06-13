@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { View, type ViewStyle } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -69,7 +69,6 @@ import {
 	UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
 	UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle';
-import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
 import * as Menu from '#/components/Menu';
 import * as Prompt from '#/components/Prompt';
 import { Text } from '#/components/Typography';
@@ -568,7 +567,7 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 	// splitview uses the minimal variant of the leftnav. unfortunately there's no easy
 	// way to thread this data through because of the view hierarchy, so just check the route name
 	const isMessagesRelatedScreen = routeName.startsWith('Messages');
-	const { leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset } = useLayoutBreakpoints();
+	const { leftNavMinimal: leftNavMinimalBreakpoint } = useLayoutBreakpoints();
 	const numUnreadNotifications = useUnreadNotifications();
 	const numUnreadMessages = useUnreadMessageCount();
 
@@ -582,31 +581,14 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 		<View
 			role="navigation"
 			style={[
-				a.fixed,
-				a.top_0,
 				a.p_lg,
-				styles.leftNav,
+				{ width: LEFT_NAV_STANDARD_WIDTH },
 				!hasSession && !leftNavMinimal && { width: LEFT_NAV_PWI_WIDTH },
 				leftNavMinimal && [
 					{ width: LEFT_NAV_MINIMAL_WIDTH },
-					a.h_full,
 					a.align_center,
 					webViewStyle({ overflowX: 'hidden' }),
 				],
-				{
-					transform: [
-						{
-							translateX:
-								-(CENTER_COLUMN_WIDTH / 2) +
-								(centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
-								(isMessagesRelatedScreen && !leftNavMinimalBreakpoint
-									? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
-									: 0),
-						},
-						{ translateX: '-100%' },
-						...a.scrollbar_offset.transform,
-					],
-				},
 			]}
 		>
 			{hasSession ? (
@@ -712,14 +694,3 @@ export function DesktopLeftNav({ routeName }: { routeName: string }) {
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	leftNav: {
-		left: '50%',
-		width: LEFT_NAV_STANDARD_WIDTH,
-		// @ts-expect-error web only
-		maxHeight: '100vh',
-		overflowY: 'auto',
-		scrollbarWidth: 'thin',
-	},
-});

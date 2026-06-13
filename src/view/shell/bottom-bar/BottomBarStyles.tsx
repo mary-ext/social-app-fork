@@ -1,19 +1,14 @@
 import { StyleSheet } from 'react-native';
 
-import { atoms as a, tokens } from '#/alf';
+import { tokens } from '#/alf';
 
 export const styles = StyleSheet.create({
 	bottomBar: {
-		position: 'absolute',
-		bottom: 0,
-		left: 0,
-		right: 0,
 		flexDirection: 'row',
 		borderTopWidth: StyleSheet.hairlineWidth,
 		paddingLeft: tokens.space.sm,
 		paddingRight: tokens.space.sm,
 	},
-	bottomBarWeb: a.fixed,
 	ctrl: {
 		flex: 1,
 		paddingTop: 13,

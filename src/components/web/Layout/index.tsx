@@ -1,11 +1,8 @@
-import { type ComponentPropsWithoutRef, memo, useContext, useMemo } from 'react';
+import { type ComponentPropsWithoutRef, memo } from 'react';
 import { clsx } from 'clsx';
 
 import { useEnableMinimalShellModeForScreen } from '#/state/shell';
 
-import { useBreakpoints, useLayoutBreakpoints } from '#/alf/breakpoints';
-
-import { ScrollbarOffsetContext } from '#/components/web/Layout/context';
 import * as styles from '#/components/web/Layout/Layout.css';
 
 export * as Header from '#/components/web/Layout/Header';
@@ -23,75 +20,32 @@ export const Screen = memo(function Screen({
 	children,
 	...rest
 }: ScreenProps) {
-	const { gtMobile } = useBreakpoints();
 	useEnableMinimalShellModeForScreen({ enabled: minimalShell });
 	return (
-		<>
-			{gtMobile && <WebCenterBorders />}
-			<div
-				className={clsx(
-					styles.screen,
-					noInsetTop && styles.screenNoInset,
-					!gtMobile && styles.screenBottomBarInset,
-					className,
-				)}
-				{...rest}
-			>
-				{children}
-			</div>
-		</>
+		<div className={clsx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
+			{children}
+		</div>
 	);
 });
 
-export type ContentProps = ComponentPropsWithoutRef<'div'> & {
-	ignoreTabletLayoutOffset?: boolean;
-};
+export type ContentProps = ComponentPropsWithoutRef<'div'>;
 
 /** Default content region for simple pages. */
-export const Content = memo(function Content({
-	ignoreTabletLayoutOffset,
-	className,
-	children,
-	...rest
-}: ContentProps) {
+export const Content = memo(function Content({ className, children, ...rest }: ContentProps) {
 	return (
 		<div className={clsx(styles.content, className)} {...rest}>
-			<Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>{children}</Center>
+			<Center>{children}</Center>
 		</div>
 	);
 });
 
-export type CenterProps = ComponentPropsWithoutRef<'div'> & {
-	ignoreTabletLayoutOffset?: boolean;
-};
+export type CenterProps = ComponentPropsWithoutRef<'div'>;
 
-/** Centers content within the screen, accounting for the nav rail and scrollbar gutter. */
-export const Center = memo(function Center({
-	ignoreTabletLayoutOffset,
-	className,
-	children,
-	...rest
-}: CenterProps) {
-	const { isWithinOffsetView } = useContext(ScrollbarOffsetContext);
-	const { centerColumnOffset } = useLayoutBreakpoints();
-	const ctx = useMemo(() => ({ isWithinOffsetView: true }), []);
-	const applyColumnOffset = !isWithinOffsetView && centerColumnOffset && !ignoreTabletLayoutOffset;
+/** Centers content within the shell's center column. */
+export const Center = memo(function Center({ className, children, ...rest }: CenterProps) {
 	return (
-		<div
-			className={clsx(
-				styles.center,
-				isWithinOffsetView && styles.centerNested,
-				applyColumnOffset && styles.columnOffset,
-				className,
-			)}
-			{...rest}
-		>
-			<ScrollbarOffsetContext.Provider value={ctx}>{children}</ScrollbarOffsetContext.Provider>
+		<div className={clsx(styles.center, className)} {...rest}>
+			{children}
 		</div>
 	);
-});
-
-const WebCenterBorders = memo(function WebCenterBorders() {
-	const { centerColumnOffset } = useLayoutBreakpoints();
-	return <div className={clsx(styles.webBorders, centerColumnOffset && styles.columnOffset)} />;
 });

@@ -4,9 +4,7 @@ import { plural } from '@lingui/core/macro';
 import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigationState } from '@react-navigation/native';
 
-import Animated from '#/lib/animations/reanimatedCompat';
 import { useHideBottomBarBorder } from '#/lib/hooks/useHideBottomBarBorder';
-import { useMinimalShellFooterTransform } from '#/lib/hooks/useMinimalShellTransform';
 import { getCurrentRoute, isTab } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -15,7 +13,6 @@ import { useUnreadMessageCount } from '#/state/queries/messages/list-conversatio
 import { useUnreadNotifications } from '#/state/queries/notifications/unread';
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
-import { useShellLayout } from '#/state/shell/shell-layout';
 import { useCloseAllActiveElements } from '#/state/util';
 
 import { Link } from '#/view/com/util/Link';
@@ -53,10 +50,8 @@ export function BottomBarWeb() {
 	const { t: l } = useLingui();
 	const { hasSession, currentAccount } = useSession();
 	const t = useTheme();
-	const footerMinimalShellTransform = useMinimalShellFooterTransform();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 	const closeAllActiveElements = useCloseAllActiveElements();
-	const { footerHeight } = useShellLayout();
 	const hideBorder = useHideBottomBarBorder();
 	const accountSwitchControl = useDialogControl();
 	const { data: profile } = useProfileQuery({ did: currentAccount?.did });
@@ -78,16 +73,13 @@ export function BottomBarWeb() {
 	return (
 		<>
 			<SwitchAccountDialog control={accountSwitchControl} />
-			<Animated.View
+			<View
 				role="navigation"
 				style={[
 					styles.bottomBar,
-					styles.bottomBarWeb,
 					t.atoms.bg,
 					hideBorder ? { borderColor: t.atoms.bg.backgroundColor } : t.atoms.border_contrast_low,
-					footerMinimalShellTransform,
 				]}
-				onLayout={(event) => footerHeight.set(event.nativeEvent.layout.height)}
 			>
 				{hasSession ? (
 					<>
@@ -214,7 +206,7 @@ export function BottomBarWeb() {
 						</View>
 					</>
 				)}
-			</Animated.View>
+			</View>
 		</>
 	);
 }

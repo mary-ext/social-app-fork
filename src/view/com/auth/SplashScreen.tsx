@@ -48,7 +48,7 @@ export const SplashScreen = ({
 					<TimesIcon width={24} style={t.atoms.text} />
 				</Pressable>
 			)}
-			<Layout.Center style={[a.h_full, a.flex_1]} ignoreTabletLayoutOffset>
+			<Layout.Center style={[a.h_full, a.flex_1]}>
 				<View
 					testID="noSessionView"
 					style={[
