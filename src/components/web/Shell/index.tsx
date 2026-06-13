@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { clsx } from 'clsx';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 
@@ -28,9 +29,15 @@ export type WebShellProps = {
 export function WebShell({ children, routeName }: WebShellProps) {
 	const { hasSession } = useSession();
 	const { isMobile } = useWebMediaQueries();
-	const { leftNavMinimal } = useLayoutBreakpoints();
+	const { leftNavMinimal, rightNavVisible } = useLayoutBreakpoints();
 
 	const showBottomBar = hasSession ? isMobile : leftNavMinimal;
+
+	// chat is a fixed-viewport layout (inner columns scroll). The wide split view (messages screens past the
+	// right-nav breakpoint) also widens the center track to fit the chat-list + conversation columns; below it,
+	// only a single conversation needs the viewport bound.
+	const isSplitView = routeName.startsWith('Messages') && rightNavVisible;
+	const fixedViewport = isSplitView || (routeName === 'MessagesConversation' && !rightNavVisible);
 
 	const rootRef = useRef<HTMLDivElement>(null);
 	const barRef = useRef<HTMLDivElement>(null);
@@ -52,12 +59,15 @@ export function WebShell({ children, routeName }: WebShellProps) {
 	}, [showBottomBar]);
 
 	return (
-		<div ref={rootRef} className={styles.root}>
-			<div className={styles.body}>
+		<div ref={rootRef} className={clsx(styles.root, fixedViewport && styles.rootFixed)}>
+			<div className={clsx(styles.body, fixedViewport && styles.bodyFixed, isSplitView && styles.bodyWide)}>
 				<div className={`${styles.rail} ${styles.railLeft}`}>
 					{!showBottomBar && <DesktopLeftNav routeName={routeName} />}
 				</div>
-				<main role="main" className={styles.main}>
+				<main
+					role="main"
+					className={clsx(styles.main, fixedViewport && styles.mainFixed, isSplitView && styles.mainPlain)}
+				>
 					{children}
 				</main>
 				<div className={`${styles.rail} ${styles.railRight}`}>

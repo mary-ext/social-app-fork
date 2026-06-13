@@ -13,7 +13,6 @@ import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
 
 import { useDialogControl } from '#/components/Dialog';
 import { NewChat } from '#/components/dms/dialogs/NewChatDialog';
-import { SCROLLBAR_OFFSET } from '#/components/Layout/const';
 import { LockScroll } from '#/components/LockScroll';
 
 import { ChatList, Header as ChatListHeader } from '../../ChatList';
@@ -70,22 +69,14 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 			? route.params.conversation
 			: undefined;
 
-	const { centerColumnWidth, containerWidth, leftColumnWidth, offset } = getMessagesSplitViewLayoutDimensions(
-		{ centerColumnOffset },
-	);
+	const { centerColumnWidth, containerWidth, leftColumnWidth } = getMessagesSplitViewLayoutDimensions({
+		centerColumnOffset,
+	});
 
 	return (
-		<View
-			style={[
-				a.flex_1,
-				a.flex_row,
-				a.mx_auto,
-				{ maxWidth: containerWidth },
-				{
-					transform: [{ translateX: offset }, { translateX: SCROLLBAR_OFFSET ?? 0 }],
-				},
-			]}
-		>
+		// fill the shell's center cell exactly (it's sized to this width); the grid centers + offsets the whole
+		// column (the minimal nav included), so the split view itself carries no centering or offset.
+		<View style={[a.flex_1, a.flex_row, { width: containerWidth }]}>
 			{isFocused && <LockScroll />}
 			<SplitViewProvider side="left">
 				<View style={[a.border_l, t.atoms.border_contrast_low, { width: leftColumnWidth }]}>

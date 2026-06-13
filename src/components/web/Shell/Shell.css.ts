@@ -98,3 +98,60 @@ export const bottomBar = style({
 	width: '100%',
 	zIndex: zIndex.sticky,
 });
+
+// #region chat (messages) mode
+// chat screens (the wide split view, and a narrow single conversation) are a fixed-viewport layout: the
+// shell doesn't scroll, the message list / chat list scroll inside their own bounded columns. These
+// modifiers are applied last so they win the cascade over the base scrolling layout.
+
+/** Pin the shell to the viewport instead of growing with content, so inner columns own the scroll. */
+export const rootFixed = style({
+	height: '100dvh',
+	overflow: 'hidden',
+});
+
+/** Bound the grid to the viewport (a single row that fills it) so the chat column can size to it. */
+export const bodyFixed = style({
+	flex: 1,
+	gridTemplateRows: '1fr',
+	minHeight: 0,
+});
+
+/**
+ * Size the center cell to the split view (its width is definite) and viewport-center it, then nudge the whole
+ * column — minimal nav included, so the nav stays glued to the chat list — right by `halfLeftNavWidth/2` (or
+ * `halfLeftNavWidth` in the tablet band, where the split view is narrower) to balance the nav, matching
+ * upstream. Wrapped in media queries so it wins over `body`'s `@media` 602 track (VE emits media rules
+ * last).
+ */
+export const bodyWide = style({
+	'@media': {
+		'screen and (min-width: 800px)': {
+			gridTemplateColumns: '1fr auto 1fr',
+			transform: 'translateX(20px)',
+		},
+		'screen and (min-width: 1100px) and (max-width: 1300px)': {
+			transform: 'translateX(40px)',
+		},
+	},
+});
+
+/** Center cell in fixed mode: clip overflow so the inner list scrolls instead of growing the cell. */
+export const mainFixed = style({
+	minHeight: 0,
+	overflow: 'hidden',
+});
+
+/**
+ * The split view draws its own column borders, so drop the center cell's (wrapped to beat `main`'s media
+ * rule).
+ */
+export const mainPlain = style({
+	'@media': {
+		'screen and (min-width: 800px)': {
+			borderLeft: 'none',
+			borderRight: 'none',
+		},
+	},
+});
+// #endregion
