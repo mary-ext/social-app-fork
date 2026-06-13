@@ -2,7 +2,6 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { ActivityIndicator, StyleSheet } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
-import { withSpring } from '#/lib/animations/reanimatedCompat';
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
@@ -22,7 +21,6 @@ import { Pager, type PagerRef, type RenderTabBarFnProps } from '#/view/com/pager
 import { CustomFeedEmptyState } from '#/view/com/posts/CustomFeedEmptyState';
 import { FollowingEmptyState } from '#/view/com/posts/FollowingEmptyState';
 import { FollowingEndOfFeed } from '#/view/com/posts/FollowingEndOfFeed';
-import { HomeHeaderModeProvider, useHomeHeaderMode } from '#/view/com/util/MainScrollProvider';
 
 import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 
@@ -50,9 +48,7 @@ export function HomeScreen(props: Props) {
 	if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
 		return (
 			<Layout.Screen testID="HomeScreen" noInsetTop={false}>
-				<HomeHeaderModeProvider>
-					<HomeScreenReady {...props} preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
-				</HomeHeaderModeProvider>
+				<HomeScreenReady {...props} preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
 			</Layout.Screen>
 		);
 	} else {
@@ -95,17 +91,6 @@ function HomeScreenReady({
 	}, [selectedIndex]);
 
 	const { hasSession } = useSession();
-	const headerMode = useHomeHeaderMode();
-	const showHeader = useCallback(() => {
-		'worklet';
-		headerMode.set(() => withSpring(0, { overshootClamping: true }));
-	}, [headerMode]);
-
-	useFocusEffect(
-		useCallback(() => {
-			return () => showHeader();
-		}, [showHeader]),
-	);
 
 	useFocusEffect(
 		useNonReactiveCallback(() => {
@@ -116,33 +101,19 @@ function HomeScreenReady({
 
 	const onPageSelected = useCallback(
 		(index: number) => {
-			showHeader();
 			const maybeFeed = allFeeds[index];
 
 			// Mutate the ref before setting state to avoid the imperative syncing effect
 			// above from starting a loop on Android when swiping back and forth.
 			lastPagerReportedIndexRef.current = index;
 			setSelectedFeed(maybeFeed!);
-
-			if (maybeFeed) {
-			}
 		},
-		[setSelectedFeed, showHeader, allFeeds],
+		[setSelectedFeed, allFeeds],
 	);
 
 	const onPressSelected = useCallback(() => {
 		emitSoftReset();
 	}, []);
-
-	const onPageScrollStateChanged = useCallback(
-		(state: 'idle' | 'dragging' | 'settling') => {
-			'worklet';
-			if (state === 'dragging') {
-				showHeader();
-			}
-		},
-		[showHeader],
-	);
 
 	const [demoMode] = useDemoMode();
 
@@ -226,7 +197,6 @@ function HomeScreenReady({
 			testID="homeScreen"
 			initialPage={selectedIndex}
 			onPageSelected={onPageSelected}
-			onPageScrollStateChanged={onPageScrollStateChanged}
 			renderTabBar={renderTabBar}
 		>
 			{pinnedFeedInfos.length ? (
@@ -266,12 +236,7 @@ function HomeScreenReady({
 			)}
 		</Pager>
 	) : (
-		<Pager
-			testID="homeScreen"
-			onPageSelected={onPageSelected}
-			onPageScrollStateChanged={onPageScrollStateChanged}
-			renderTabBar={renderTabBar}
-		>
+		<Pager testID="homeScreen" onPageSelected={onPageSelected} renderTabBar={renderTabBar}>
 			<FeedPage
 				testID="customFeedPage"
 				isPageFocused

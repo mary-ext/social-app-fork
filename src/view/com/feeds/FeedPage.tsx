@@ -22,7 +22,6 @@ import { PostFeed } from '#/view/com/posts/PostFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
 import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
-import { MainScrollProvider } from '#/view/com/util/MainScrollProvider';
 
 import { useTheme } from '#/alf';
 
@@ -113,25 +112,23 @@ export function FeedPage({
 			// @ts-expect-error web only -sfn
 			dataSet={{ nosnippet: isDiscoverFeed ? '' : undefined }}
 		>
-			<MainScrollProvider>
-				<FeedFeedbackProvider value={feedFeedback}>
-					<PostFeed
-						testID={testID ? `${testID}-feed` : undefined}
-						enabled={isPageFocused || shouldPrefetch}
-						feed={feed}
-						feedParams={feedParams}
-						pollInterval={POLL_FREQ}
-						disablePoll={hasNew || !isPageFocused}
-						scrollElRef={scrollElRef}
-						onScrolledDownChange={setIsScrolledDown}
-						onHasNew={setHasNew}
-						renderEmptyState={renderEmptyState}
-						renderEndOfFeed={renderEndOfFeed}
-						headerOffset={headerOffset}
-						savedFeedConfig={savedFeedConfig}
-					/>
-				</FeedFeedbackProvider>
-			</MainScrollProvider>
+			<FeedFeedbackProvider value={feedFeedback}>
+				<PostFeed
+					testID={testID ? `${testID}-feed` : undefined}
+					enabled={isPageFocused || shouldPrefetch}
+					feed={feed}
+					feedParams={feedParams}
+					pollInterval={POLL_FREQ}
+					disablePoll={hasNew || !isPageFocused}
+					scrollElRef={scrollElRef}
+					onScrolledDownChange={setIsScrolledDown}
+					onHasNew={setHasNew}
+					renderEmptyState={renderEmptyState}
+					renderEndOfFeed={renderEndOfFeed}
+					headerOffset={headerOffset}
+					savedFeedConfig={savedFeedConfig}
+				/>
+			</FeedFeedbackProvider>
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn onPress={onPressLoadLatest} label={l`Load new posts`} showIndicator={hasNew} />
 			)}

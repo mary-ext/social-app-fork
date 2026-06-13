@@ -5,7 +5,6 @@ import { useLingui } from '@lingui/react/macro';
 import { HITSLOP_10 } from '#/lib/constants';
 
 import { useSession } from '#/state/session';
-import { useShellLayout } from '#/state/shell/shell-layout';
 
 import { HomeHeaderLayoutMobile } from '#/view/com/home/HomeHeaderLayoutMobile';
 import { Logo } from '#/view/icons/Logo';
@@ -39,7 +38,6 @@ function HomeHeaderLayoutDesktopAndTablet({
 	tabBarAnchor: JSX.Element | null | undefined;
 }) {
 	const t = useTheme();
-	const { headerHeight } = useShellLayout();
 	const { hasSession } = useSession();
 	const { t: l } = useLingui();
 	const kawaii = useKawaiiMode();
@@ -70,12 +68,7 @@ function HomeHeaderLayoutDesktopAndTablet({
 				</Layout.Center>
 			)}
 			{tabBarAnchor}
-			<Layout.Center
-				style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, { top: 0 }]}
-				onLayout={(e) => {
-					headerHeight.set(e.nativeEvent.layout.height);
-				}}
-			>
+			<Layout.Center style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, { top: 0 }]}>
 				{children}
 			</Layout.Center>
 		</>

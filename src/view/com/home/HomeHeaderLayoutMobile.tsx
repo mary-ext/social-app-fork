@@ -8,7 +8,6 @@ import type { NavigationProp } from '#/lib/routes/types';
 
 import { emitSoftReset } from '#/state/events';
 import { useSession } from '#/state/session';
-import { useShellLayout } from '#/state/shell/shell-layout';
 
 import { Logo } from '#/view/icons/Logo';
 
@@ -29,7 +28,6 @@ export function HomeHeaderLayoutMobile({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const { headerHeight } = useShellLayout();
 	const { hasSession } = useSession();
 	const { navigate } = useNavigation<NavigationProp>();
 
@@ -45,9 +43,6 @@ export function HomeHeaderLayoutMobile({
 					right: 0,
 				},
 			]}
-			onLayout={(e) => {
-				headerHeight.set(e.nativeEvent.layout.height);
-			}}
 		>
 			<Layout.Header.Outer noBottomBorder>
 				<Layout.Header.Slot>
