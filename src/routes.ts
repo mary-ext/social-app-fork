@@ -40,8 +40,6 @@ export const router = new Router<AllNavigatableRoutes>({
 	Log: '/sys/log',
 	// settings
 	LanguageSettings: '/settings/language',
-	PreferencesFollowingFeed: '/settings/following-feed',
-	PreferencesThreads: '/settings/threads',
 	PreferencesExternalEmbeds: '/settings/external-embeds',
 	AccessibilitySettings: '/settings/accessibility',
 	AppearanceSettings: '/settings/appearance',

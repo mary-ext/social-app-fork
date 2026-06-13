@@ -1,4 +1,5 @@
 import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode } from 'react';
+import type { GestureResponderEvent } from 'react-native';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
@@ -7,6 +8,7 @@ import {
 	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
 } from '#/components/icons/Chevron';
 import type { Props as IconProps } from '#/components/icons/common';
+import { type LinkProps, useLink } from '#/components/Link';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
 import { Spinner } from '#/components/Spinner';
@@ -137,6 +139,40 @@ export function ButtonRow({
 				</span>
 			</span>
 		</button>
+	);
+}
+
+/**
+ * A row that navigates on press, rendered as an `<a>`; the whole row is the link, with a trailing forward
+ * chevron.
+ */
+export function LinkRow({
+	children,
+	className,
+	label,
+	to,
+}: {
+	children: ReactNode;
+	className?: string;
+	label: string;
+	to: LinkProps['to'];
+}) {
+	const { href, onPress } = useLink({ to, displayText: label });
+	return (
+		<a
+			href={href}
+			aria-label={label}
+			className={clsx(styles.row, styles.rowInteractive, className)}
+			// useLink resolves navigation off a DOM-shaped MouseEvent; the RN type is nominal only here
+			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
+		>
+			{children}
+			<span className={styles.trailing}>
+				<span className={styles.chevron}>
+					<ChevronRightIcon size="sm" fill="currentColor" />
+				</span>
+			</span>
+		</a>
 	);
 }
 

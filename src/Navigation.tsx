@@ -103,11 +103,6 @@ const ExternalMediaPreferencesScreen = lazy(() =>
 	})),
 );
 const FeedsScreen = lazy(() => import('#/view/screens/Feeds').then((m) => ({ default: m.FeedsScreen })));
-const FollowingFeedPreferencesScreen = lazy(() =>
-	import('#/screens/Settings/FollowingFeedPreferences').then((m) => ({
-		default: m.FollowingFeedPreferencesScreen,
-	})),
-);
 const HashtagScreen = lazy(() => import('#/screens/Hashtag').then((m) => ({ default: m.default })));
 const HomeScreen = lazy(() => import('#/view/screens/Home').then((m) => ({ default: m.HomeScreen })));
 const InterestsSettingsScreen = lazy(() =>
@@ -288,11 +283,6 @@ const StarterPackScreenShort = lazy(() =>
 );
 const StorybookScreen = lazy(() =>
 	import('#/view/screens/Storybook').then((m) => ({ default: m.StorybookScreen })),
-);
-const ThreadPreferencesScreen = lazy(() =>
-	import('#/screens/Settings/ThreadPreferences').then((m) => ({
-		default: m.ThreadPreferencesScreen,
-	})),
 );
 const TopicScreen = lazy(() => import('#/screens/Topic').then((m) => ({ default: m.default })));
 const Wizard = lazy(() => import('#/screens/StarterPack/Wizard').then((m) => ({ default: m.Wizard })));
@@ -660,22 +650,6 @@ const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Na
 				getComponent={() => SavedFeeds}
 				options={{
 					title: title(defineMessage`Edit My Feeds`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="PreferencesFollowingFeed"
-				getComponent={() => FollowingFeedPreferencesScreen}
-				options={{
-					title: title(defineMessage`Following Feed Preferences`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="PreferencesThreads"
-				getComponent={() => ThreadPreferencesScreen}
-				options={{
-					title: title(defineMessage`Threads Preferences`),
 					requireAuth: true,
 				}}
 			/>

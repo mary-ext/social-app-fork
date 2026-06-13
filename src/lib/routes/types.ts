@@ -39,8 +39,6 @@ export type CommonNavigatorParams = {
 	Log: undefined;
 	LanguageSettings: undefined;
 	SavedFeeds: undefined;
-	PreferencesFollowingFeed: undefined;
-	PreferencesThreads: undefined;
 	PreferencesExternalEmbeds: undefined;
 	AccessibilitySettings: undefined;
 	AppearanceSettings: undefined;
