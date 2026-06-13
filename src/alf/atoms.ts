@@ -93,14 +93,6 @@ export const atoms = {
 	zoom_out: webStyle({
 		animation: 'zoomOut ease-out 0.1s',
 	}),
-	slide_in_left: webStyle({
-		// exponential easing function
-		animation: 'slideInLeft cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
-	}),
-	slide_out_left: webStyle({
-		animation: 'slideOutLeft ease-in 0.15s',
-		animationFillMode: 'forwards',
-	}),
 	// special composite animation for dialogs
 	zoom_fade_in: webStyle({
 		animation: `zoomIn ${EXP_CURVE} 0.3s, fadeIn ${EXP_CURVE} 0.3s`,

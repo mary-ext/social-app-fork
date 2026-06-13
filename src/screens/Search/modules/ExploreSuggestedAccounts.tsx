@@ -11,8 +11,6 @@ import { usePreferencesQuery } from '#/state/queries/preferences';
 
 import { logger } from '#/logger';
 
-import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { boostInterests, InterestTabs } from '#/components/InterestTabs';
@@ -71,23 +69,21 @@ export function SuggestedAccountsTabBar({
 		.sort(boostInterests(personalizedInterests));
 
 	return (
-		<BlockDrawerGesture>
-			<InterestTabs
-				interests={hideDefaultTab ? interests : ['all', ...interests]}
-				selectedInterest={selectedInterest || (hideDefaultTab ? interests[0]! : 'all')}
-				onSelectTab={(tab) => {
-					onSelectInterest(tab === 'all' ? null : tab);
-				}}
-				interestsDisplayNames={
-					hideDefaultTab
-						? interestsDisplayNames
-						: {
-								all: defaultTabLabel || l`For You`,
-								...interestsDisplayNames,
-							}
-				}
-			/>
-		</BlockDrawerGesture>
+		<InterestTabs
+			interests={hideDefaultTab ? interests : ['all', ...interests]}
+			selectedInterest={selectedInterest || (hideDefaultTab ? interests[0]! : 'all')}
+			onSelectTab={(tab) => {
+				onSelectInterest(tab === 'all' ? null : tab);
+			}}
+			interestsDisplayNames={
+				hideDefaultTab
+					? interestsDisplayNames
+					: {
+							all: defaultTabLabel || l`For You`,
+							...interestsDisplayNames,
+						}
+			}
+		/>
 	);
 }
 

@@ -4,7 +4,6 @@ import {
 	createContext,
 	lazy,
 	Suspense,
-	useCallback,
 	useContext,
 	useEffect,
 	useRef,
@@ -360,15 +359,7 @@ function stringArraysEqual(a: string[], b: string[]) {
 	return a.every((value, index) => value === b[index]);
 }
 
-function FlatNavigatorLayout({
-	children,
-	descriptors,
-	navigation,
-	outerLayout,
-	state,
-}: FlatNavigatorLayoutProps & {
-	outerLayout: ComponentProps<typeof Flat.Navigator>['layout'];
-}) {
+function FlatNavigatorLayout({ children, descriptors, state }: FlatNavigatorLayoutProps) {
 	const { hasSession } = useSession();
 	const activeRoute = state.routes[state.index]!;
 	const activeDescriptor = descriptors[activeRoute.key]!;
@@ -407,22 +398,15 @@ function FlatNavigatorLayout({
 		}
 	}
 
-	const content = (
+	return (
 		<WebShell routeName={activeRoute.name}>
 			<MountedRouteKeysContext.Provider value={mountedRouteKeys}>{children}</MountedRouteKeysContext.Provider>
 		</WebShell>
 	);
+}
 
-	if (outerLayout) {
-		return outerLayout({
-			children: content,
-			descriptors,
-			navigation,
-			state,
-		});
-	}
-
-	return content;
+function renderFlatNavigatorLayout(props: FlatNavigatorLayoutProps) {
+	return <FlatNavigatorLayout {...props} />;
 }
 
 function screenOptions(t: Theme) {
@@ -434,19 +418,15 @@ function screenOptions(t: Theme) {
 }
 
 /** The FlatNavigator is used by Web to represent the routes in a single ("flat") stack. */
-const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Navigator>['layout'] }) => {
+const FlatNavigator = () => {
 	const t = useTheme();
 	const numUnread = useUnreadNotifications();
 	const screenListeners = useWebScrollRestoration();
 	const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread);
-	const renderNavigatorLayout = useCallback(
-		(props: FlatNavigatorLayoutProps) => <FlatNavigatorLayout {...props} outerLayout={layout} />,
-		[layout],
-	);
 
 	return (
 		<Flat.Navigator
-			layout={renderNavigatorLayout}
+			layout={renderFlatNavigatorLayout}
 			screenListeners={screenListeners}
 			screenOptions={screenOptions(t)}
 			screenLayout={renderRouteScreenLayout}

@@ -6,7 +6,6 @@ import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics';
 import { useTrendingConfig } from '#/state/service-config';
 
 import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
-import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
 
 import { atoms as a, useGutters, useTheme } from '#/alf';
 
@@ -40,47 +39,45 @@ export function Inner() {
 
 	return error || noTopics ? null : (
 		<View style={[t.atoms.border_contrast_low, a.border_t, a.border_b]}>
-			<BlockDrawerGesture>
-				<ScrollView horizontal showsHorizontalScrollIndicator={false} decelerationRate="fast">
-					<View style={[gutters, a.flex_row, a.align_center, a.gap_lg]}>
-						<View style={{ paddingLeft: 4, paddingRight: 2 }}>
-							<Graph size="sm" />
-						</View>
-						{isLoading ? (
-							<View style={[a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
-								<LoadingPlaceholder width={80} height={undefined} style={{ alignSelf: 'stretch' }} />
-								<LoadingPlaceholder width={50} height={undefined} style={{ alignSelf: 'stretch' }} />
-								<LoadingPlaceholder width={120} height={undefined} style={{ alignSelf: 'stretch' }} />
-								<LoadingPlaceholder width={30} height={undefined} style={{ alignSelf: 'stretch' }} />
-								<LoadingPlaceholder width={180} height={undefined} style={{ alignSelf: 'stretch' }} />
-								<Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semi_bold]}> </Text>
-							</View>
-						) : !trending?.topics ? null : (
-							<>
-								{trending.topics.map((topic) => (
-									<TrendingTopicLink key={topic.link} topic={topic} onPress={() => {}}>
-										<View style={[a.py_lg]}>
-											<Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semi_bold]}>
-												{topic.topic}
-											</Text>
-										</View>
-									</TrendingTopicLink>
-								))}
-								<Button
-									label={l`Hide trending topics`}
-									size="tiny"
-									variant="ghost"
-									color="secondary"
-									shape="round"
-									onPress={() => trendingPrompt.open()}
-								>
-									<ButtonIcon icon={X} />
-								</Button>
-							</>
-						)}
+			<ScrollView horizontal showsHorizontalScrollIndicator={false} decelerationRate="fast">
+				<View style={[gutters, a.flex_row, a.align_center, a.gap_lg]}>
+					<View style={{ paddingLeft: 4, paddingRight: 2 }}>
+						<Graph size="sm" />
 					</View>
-				</ScrollView>
-			</BlockDrawerGesture>
+					{isLoading ? (
+						<View style={[a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
+							<LoadingPlaceholder width={80} height={undefined} style={{ alignSelf: 'stretch' }} />
+							<LoadingPlaceholder width={50} height={undefined} style={{ alignSelf: 'stretch' }} />
+							<LoadingPlaceholder width={120} height={undefined} style={{ alignSelf: 'stretch' }} />
+							<LoadingPlaceholder width={30} height={undefined} style={{ alignSelf: 'stretch' }} />
+							<LoadingPlaceholder width={180} height={undefined} style={{ alignSelf: 'stretch' }} />
+							<Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semi_bold]}> </Text>
+						</View>
+					) : !trending?.topics ? null : (
+						<>
+							{trending.topics.map((topic) => (
+								<TrendingTopicLink key={topic.link} topic={topic} onPress={() => {}}>
+									<View style={[a.py_lg]}>
+										<Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semi_bold]}>
+											{topic.topic}
+										</Text>
+									</View>
+								</TrendingTopicLink>
+							))}
+							<Button
+								label={l`Hide trending topics`}
+								size="tiny"
+								variant="ghost"
+								color="secondary"
+								shape="round"
+								onPress={() => trendingPrompt.open()}
+							>
+								<ButtonIcon icon={X} />
+							</Button>
+						</>
+					)}
+				</View>
+			</ScrollView>
 
 			<Prompt.Basic
 				control={trendingPrompt}

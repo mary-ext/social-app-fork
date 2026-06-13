@@ -9,6 +9,7 @@ import { useSession } from '#/state/session';
 import { BottomBarWeb } from '#/view/shell/bottom-bar/BottomBarWeb';
 import { DesktopLeftNav } from '#/view/shell/desktop/LeftNav';
 import { DesktopRightNav } from '#/view/shell/desktop/RightNav';
+import { Drawer } from '#/view/shell/Drawer';
 
 import { useLayoutBreakpoints } from '#/alf';
 
@@ -76,6 +77,7 @@ export function WebShell({ children, routeName }: WebShellProps) {
 					<BottomBarWeb />
 				</div>
 			)}
+			<Drawer />
 		</div>
 	);
 }

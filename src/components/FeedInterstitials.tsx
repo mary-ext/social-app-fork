@@ -13,8 +13,6 @@ import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
-
 import { atoms as a, useBreakpoints, useTheme, type ViewStyleProp } from '#/alf';
 
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
@@ -333,23 +331,21 @@ export function ProfileGrid({
 						<View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>{content}</View>
 					</View>
 				) : (
-					<BlockDrawerGesture>
-						<ScrollView
-							horizontal
-							showsHorizontalScrollIndicator={false}
-							contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
-							snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-							decelerationRate="fast"
-						>
-							{content}
+					<ScrollView
+						horizontal
+						showsHorizontalScrollIndicator={false}
+						contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
+						snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+						decelerationRate="fast"
+					>
+						{content}
 
-							<SeeMoreSuggestedProfilesCard
-								onPress={() => {
-									followDialogControl.open();
-								}}
-							/>
-						</ScrollView>
-					</BlockDrawerGesture>
+						<SeeMoreSuggestedProfilesCard
+							onPress={() => {
+								followDialogControl.open();
+							}}
+						/>
+					</ScrollView>
 				)}
 			</LayoutAnimationConfig>
 		</View>

@@ -15,8 +15,6 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
-import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture';
-
 import { atoms as a } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
@@ -58,27 +56,25 @@ export function SearchHistory({
 
 				{selectedProfiles.length > 0 && (
 					<View>
-						<BlockDrawerGesture>
-							<ScrollView
-								horizontal
-								keyboardShouldPersistTaps="handled"
-								showsHorizontalScrollIndicator={false}
-								contentContainerStyle={[a.px_lg, a.flex_row, a.flex_nowrap, a.gap_xl]}
-							>
-								{moderationOpts &&
-									selectedProfiles.map((profile, _index) => (
-										<RecentProfileItem
-											key={profile.did}
-											profile={profile}
-											moderationOpts={moderationOpts}
-											onPress={() => {
-												onProfileClick(profile);
-											}}
-											onRemove={() => onRemoveProfileClick(profile)}
-										/>
-									))}
-							</ScrollView>
-						</BlockDrawerGesture>
+						<ScrollView
+							horizontal
+							keyboardShouldPersistTaps="handled"
+							showsHorizontalScrollIndicator={false}
+							contentContainerStyle={[a.px_lg, a.flex_row, a.flex_nowrap, a.gap_xl]}
+						>
+							{moderationOpts &&
+								selectedProfiles.map((profile, _index) => (
+									<RecentProfileItem
+										key={profile.did}
+										profile={profile}
+										moderationOpts={moderationOpts}
+										onPress={() => {
+											onProfileClick(profile);
+										}}
+										onRemove={() => onRemoveProfileClick(profile)}
+									/>
+								))}
+						</ScrollView>
 					</View>
 				)}
 
