@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext } from 'react';
+import { createContext, useCallback } from 'react';
 import { type GestureResponderEvent, Keyboard, View, type ViewStyle } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -10,26 +10,16 @@ import { useSetDrawerOpen } from '#/state/shell';
 
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 
-import {
-	atoms as a,
-	type TextStyleProp,
-	useBreakpoints,
-	useGutters,
-	useLayoutBreakpoints,
-	useTheme,
-} from '#/alf';
+import { atoms as a, type TextStyleProp, useBreakpoints, useGutters, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps } from '#/components/Button';
 import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow';
 import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu';
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
-	CENTER_COLUMN_OFFSET,
 	CENTER_COLUMN_WIDTH,
 	HEADER_SLOT_SIZE,
-	SCROLLBAR_OFFSET,
 } from '#/components/Layout/const';
-import { ScrollbarOffsetContext } from '#/components/Layout/context';
 import { Text } from '#/components/Typography';
 
 const webViewStyle = (style: unknown): ViewStyle => {
@@ -50,9 +40,7 @@ export function Outer({
 	const t = useTheme();
 	const gutters = useGutters([0, 'base']);
 	const { gtMobile } = useBreakpoints();
-	const { isWithinOffsetView } = useContext(ScrollbarOffsetContext);
-	const { centerColumnOffset } = useLayoutBreakpoints();
-	const { isWithinLeftPanel, isWithinSplitView } = useIsWithinSplitView();
+	const { isWithinLeftPanel } = useIsWithinSplitView();
 
 	return (
 		<View
@@ -69,13 +57,6 @@ export function Outer({
 				{ minHeight: 52 },
 				t.atoms.border_contrast_low,
 				gtMobile && [a.mx_auto, { maxWidth: CENTER_COLUMN_WIDTH }],
-				!isWithinOffsetView &&
-					!isWithinSplitView && {
-						transform: [
-							{ translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0 },
-							{ translateX: SCROLLBAR_OFFSET ?? 0 },
-						],
-					},
 			]}
 		>
 			{children}

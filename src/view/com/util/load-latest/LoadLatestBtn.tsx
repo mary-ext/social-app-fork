@@ -11,11 +11,10 @@ import { clamp } from '#/lib/numbers';
 
 import { useSession } from '#/state/session';
 
-import { atoms as a, useLayoutBreakpoints, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon } from '#/components/icons/Arrow';
-import { CENTER_COLUMN_OFFSET } from '#/components/Layout';
 import { SubtleHover } from '#/components/SubtleHover';
 
 type WebViewStyle = Omit<ViewStyle, 'left'> & {
@@ -37,7 +36,6 @@ export function LoadLatestBtn({
 }) {
 	const { hasSession } = useSession();
 	const { isDesktop, isTablet, isMobile, isTabletOrMobile } = useWebMediaQueries();
-	const { centerColumnOffset } = useLayoutBreakpoints();
 	const fabMinimalShellTransform = useMinimalShellFabTransform();
 	const insets = useSafeAreaInsets();
 	const t = useTheme();
@@ -60,7 +58,7 @@ export function LoadLatestBtn({
 				a.z_20,
 				{ left: 18 },
 				isDesktop && (isTallViewport ? styles.loadLatestOutOfLine : styles.loadLatestInline),
-				isTablet && (centerColumnOffset ? styles.loadLatestInlineOffset : styles.loadLatestInline),
+				isTablet && styles.loadLatestInline,
 				bottomPosition,
 				showBottomBar && fabMinimalShellTransform,
 			]}
@@ -99,9 +97,6 @@ export function LoadLatestBtn({
 const styles = StyleSheet.create({
 	loadLatestInline: webViewStyle({
 		left: 'calc(50vw - 282px)',
-	}),
-	loadLatestInlineOffset: webViewStyle({
-		left: `calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`,
 	}),
 	loadLatestOutOfLine: webViewStyle({
 		left: 'calc(50vw - 382px)',

@@ -17,10 +17,7 @@ import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { addStyle } from '#/lib/styles';
 
-import { useLayoutBreakpoints } from '#/alf';
-
-import { useDialogContext } from '#/components/Dialog';
-import { CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
+import { CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
 
 /** @deprecated use `Layout` components */
 export const CenteredView = forwardRef(function CenteredView(
@@ -33,13 +30,8 @@ export const CenteredView = forwardRef(function CenteredView(
 ) {
 	const pal = usePalette('default');
 	const { isMobile } = useWebMediaQueries();
-	const { centerColumnOffset } = useLayoutBreakpoints();
-	const { isWithinDialog } = useDialogContext();
 	if (!isMobile) {
 		style = addStyle(style, styles.container);
-	}
-	if (centerColumnOffset && !isWithinDialog) {
-		style = addStyle(style, styles.containerOffset);
 	}
 	if (topBorder) {
 		style = addStyle(style, {
@@ -56,12 +48,8 @@ export const ScrollView = forwardRef(function ScrollViewImpl(
 	ref: React.Ref<AnimatedScrollView>,
 ) {
 	const { isMobile } = useWebMediaQueries();
-	const { centerColumnOffset } = useLayoutBreakpoints();
 	if (!isMobile) {
 		contentContainerStyle = addStyle(contentContainerStyle, styles.containerScroll);
-	}
-	if (centerColumnOffset) {
-		contentContainerStyle = addStyle(contentContainerStyle, styles.containerOffset);
 	}
 	return (
 		<Animated.ScrollView
@@ -82,9 +70,6 @@ const styles = StyleSheet.create({
 		maxWidth: CENTER_COLUMN_WIDTH,
 		marginLeft: 'auto',
 		marginRight: 'auto',
-	},
-	containerOffset: {
-		transform: [{ translateX: CENTER_COLUMN_OFFSET }],
 	},
 	containerScroll: {
 		width: '100%',

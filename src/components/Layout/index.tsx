@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo } from 'react';
 import { type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,7 +14,6 @@ import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/co
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { CENTER_COLUMN_WIDTH } from '#/components/Layout/const';
-import { ScrollbarOffsetContext } from '#/components/Layout/context';
 
 export * from '#/components/Layout/const';
 export * as Header from '#/components/Layout/Header';
@@ -104,7 +103,6 @@ export const Content = memo(
 export const Center = memo(function LayoutCenter({ children, style, ...props }: ViewProps) {
 	const { gtMobile } = useBreakpoints();
 	const { isWithinSplitView } = useIsWithinSplitView();
-	const ctx = useMemo(() => ({ isWithinOffsetView: true }), []);
 	return (
 		<View
 			style={[
@@ -117,7 +115,7 @@ export const Center = memo(function LayoutCenter({ children, style, ...props }: 
 			]}
 			{...props}
 		>
-			<ScrollbarOffsetContext.Provider value={ctx}>{children}</ScrollbarOffsetContext.Provider>
+			{children}
 		</View>
 	);
 });
