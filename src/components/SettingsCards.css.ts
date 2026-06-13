@@ -1,4 +1,4 @@
-import { globalStyle, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
@@ -147,6 +147,19 @@ export const subtitle = style({
 	minWidth: 0,
 });
 
+/** Placeholder bar shown in the subtitle's place while a row's value is still loading. */
+export const subtitleSkeleton = style([
+	subtitle,
+	{
+		backgroundColor: vars.palette.contrast_100,
+		borderRadius: 6,
+		height: 12,
+		justifySelf: 'start',
+		marginBlock: 3,
+		width: 140,
+	},
+]);
+
 /** Wraps a trailing value next to its chevron so they stay together, centered on the title's line. */
 export const trailing = style({
 	alignItems: 'center',
@@ -167,37 +180,6 @@ export const chevron = style({
 	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
-});
-
-/**
- * Marks a row whose trailing value is wide text (a {@link SelectRow}). On narrow viewports its value can't
- * share the title's line, so below 800px the value + chevron drop to their own right-aligned line beneath the
- * subtitle, freeing the title and subtitle to span the full width. Compact-trailing rows (switch, chevron)
- * keep the inline layout at every width.
- */
-export const rowSelect = style({});
-
-globalStyle(`.${rowSelect} .${title}`, {
-	'@media': {
-		'(max-width: 799px)': { gridColumn: '2 / 4' },
-	},
-});
-
-globalStyle(`.${rowSelect} .${trailing}`, {
-	'@media': {
-		'(max-width: 799px)': {
-			gridColumn: '2 / 4',
-			gridRow: 3,
-			justifySelf: 'end',
-			marginTop: space.xs,
-		},
-	},
-});
-
-globalStyle(`.${rowSelect} .${value}`, {
-	'@media': {
-		'(max-width: 799px)': { maxWidth: 'min(280px, 70vw)' },
-	},
 });
 // #endregion
 

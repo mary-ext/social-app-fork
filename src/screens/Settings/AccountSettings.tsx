@@ -5,10 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 
-import {
-	useNotificationDeclarationMutation,
-	useNotificationDeclarationQuery,
-} from '#/state/queries/activity-subscriptions';
+import { useNotificationDeclarationQuery } from '#/state/queries/activity-subscriptions';
 import { RQKEY_ROOT as POST_FEED_RQKEY_ROOT } from '#/state/queries/post-feed';
 import { useProfileQuery, useProfileUpdateMutation } from '#/state/queries/profile';
 import { postThreadQueryKeyRoot } from '#/state/queries/usePostThread/types';
@@ -23,6 +20,7 @@ import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 import { InlineLinkText } from '#/components/web/Link';
 
+import { ActivitySubscriptionDialog } from './components/ActivitySubscriptionDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
 
 type AllowSubscriptions = AppBskyNotificationDeclaration.Main['allowSubscriptions'];
@@ -31,15 +29,12 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>;
 export function AccountSettingsScreen({}: Props) {
 	const { t: l } = useLingui();
 	const exportCarHandle = Dialog.useDialogHandle();
+	const activityHandle = Dialog.useDialogHandle();
 
 	const automation = useSelfLabelToggle({ value: 'bot', invalidateFeeds: true });
 	const pwi = useSelfLabelToggle({ value: '!no-unauthenticated' });
 
 	const { data: declaration, isError, isPending } = useNotificationDeclarationQuery();
-	const { mutate: setDeclaration } = useNotificationDeclarationMutation();
-	const onChangeAllowSubscriptions = (allowSubscriptions: AllowSubscriptions) => {
-		setDeclaration({ $type: 'app.bsky.notification.declaration', allowSubscriptions });
-	};
 
 	return (
 		<Layout.Screen>
@@ -78,8 +73,9 @@ export function AccountSettingsScreen({}: Props) {
 					<Settings.Section
 						footnoteText={
 							<Trans>
-								Bluesky is an open, public network. This only limits your content in the Bluesky app and
-								website; other apps may not respect it.{' '}
+								Bluesky is an open and public network. Logged-out visibility only limits your content on the
+								Bluesky app and website; other apps may not respect it, and your content may still be shown to
+								logged-out users elsewhere.{' '}
 								<InlineLinkText
 									label={l`Learn more about what is public on Bluesky.`}
 									to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
@@ -90,24 +86,19 @@ export function AccountSettingsScreen({}: Props) {
 						}
 						titleText={<Trans>Privacy</Trans>}
 					>
-						<Settings.SelectRow<AllowSubscriptions>
-							disabled={isError}
+						<Settings.ButtonRow
 							label={l`Allow others to be notified of your posts`}
-							loading={isPending}
-							onValueChange={onChangeAllowSubscriptions}
-							value={declaration?.value?.allowSubscriptions ?? 'followers'}
-							items={[
-								{ label: l`Anyone who follows me`, value: 'followers' },
-								{ label: l`Only followers who I follow`, value: 'mutuals' },
-								{ label: l({ context: 'enable for', message: `No one` }), value: 'none' },
-							]}
+							onPress={() => activityHandle.open(null)}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
 							<Settings.Label
-								subtitleText={<Trans>Who can subscribe to your posts and replies.</Trans>}
+								loading={isPending}
+								subtitleText={
+									<AllowSubscriptionsValue isError={isError} value={declaration?.value?.allowSubscriptions} />
+								}
 								titleText={<Trans>Allow others to be notified of your posts</Trans>}
 							/>
-						</Settings.SelectRow>
+						</Settings.ButtonRow>
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}
@@ -118,7 +109,11 @@ export function AccountSettingsScreen({}: Props) {
 						>
 							<Settings.Icon icon={EyeSlashIcon} />
 							<Settings.Label
-								subtitleText={<Trans>Discourage apps from showing your account to signed-out users.</Trans>}
+								subtitleText={
+									<Trans>
+										Discourage apps from showing your profile and posts to people who aren't signed in.
+									</Trans>
+								}
 								titleText={<Trans>Hide my account from logged-out users</Trans>}
 							/>
 						</Settings.SwitchRow>
@@ -126,8 +121,25 @@ export function AccountSettingsScreen({}: Props) {
 				</Settings.List>
 			</Layout.Content>
 			<ExportCarDialog handle={exportCarHandle} />
+			<ActivitySubscriptionDialog handle={activityHandle} />
 		</Layout.Screen>
 	);
+}
+
+/** The current activity-subscription selection, rendered as the drill-in row's value line. */
+function AllowSubscriptionsValue({ isError, value }: { isError: boolean; value?: AllowSubscriptions }) {
+	if (isError) {
+		return <Trans>Error loading preference</Trans>;
+	}
+	switch (value) {
+		case 'mutuals':
+			return <Trans>Only followers who I follow</Trans>;
+		case 'none':
+			return <Trans context="enable for">No one</Trans>;
+		case 'followers':
+		default:
+			return <Trans>Anyone who follows me</Trans>;
+	}
 }
 
 /**

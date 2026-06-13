@@ -849,7 +849,7 @@ msgid "Accessibility Settings"
 msgstr ""
 
 #: src/Navigation.tsx:710
-#: src/screens/Settings/AccountSettings.tsx:50
+#: src/screens/Settings/AccountSettings.tsx:45
 #: src/screens/Settings/Settings.tsx:135
 msgid "Account & privacy"
 msgstr "Account & privacy"
@@ -1211,8 +1211,10 @@ msgstr "Allow direct messages from"
 msgid "Allow group chat invites from"
 msgstr "Allow group chat invites from"
 
-#: src/screens/Settings/AccountSettings.tsx:95
-#: src/screens/Settings/AccountSettings.tsx:108
+#: src/screens/Settings/AccountSettings.tsx:90
+#: src/screens/Settings/AccountSettings.tsx:99
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:20
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:41
 msgid "Allow others to be notified of your posts"
 msgstr "Allow others to be notified of your posts"
 
@@ -1394,7 +1396,9 @@ msgstr "Anyone can join instantly"
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
-#: src/screens/Settings/AccountSettings.tsx:100
+#: src/screens/Settings/AccountSettings.tsx:141
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:66
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:70
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -1515,7 +1519,7 @@ msgstr ""
 msgid "Automated account"
 msgstr "Automated account"
 
-#: src/screens/Settings/AccountSettings.tsx:68
+#: src/screens/Settings/AccountSettings.tsx:63
 msgid "Automation label"
 msgstr "Automation label"
 
@@ -1684,6 +1688,10 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
+#: src/screens/Settings/AccountSettings.tsx:75
+msgid "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
+msgstr "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
+
 #: src/components/dialogs/ServerInput.tsx:192
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr ""
@@ -1691,10 +1699,6 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:143
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr ""
-
-#: src/screens/Settings/AccountSettings.tsx:80
-msgid "Bluesky is an open, public network. This only limits your content in the Bluesky app and website; other apps may not respect it. <0>Learn more about what is public on Bluesky.</0>"
-msgstr "Bluesky is an open, public network. This only limits your content in the Bluesky app and website; other apps may not respect it. <0>Learn more about what is public on Bluesky.</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -2717,9 +2721,9 @@ msgstr ""
 msgid "Disconnect Germ DM"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:121
-msgid "Discourage apps from showing your account to signed-out users."
-msgstr "Discourage apps from showing your account to signed-out users."
+#: src/screens/Settings/AccountSettings.tsx:113
+msgid "Discourage apps from showing your profile and posts to people who aren't signed in."
+msgstr "Discourage apps from showing your profile and posts to people who aren't signed in."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:50
 #: src/view/com/posts/FollowingEndOfFeed.tsx:46
@@ -3070,6 +3074,10 @@ msgstr ""
 msgid "Error loading post"
 msgstr ""
 
+#: src/screens/Settings/AccountSettings.tsx:132
+msgid "Error loading preference"
+msgstr "Error loading preference"
+
 #: src/view/com/feeds/MissingFeed.tsx:146
 msgid "Error message"
 msgstr ""
@@ -3196,8 +3204,8 @@ msgstr "Export chat data"
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
-#: src/screens/Settings/AccountSettings.tsx:72
-#: src/screens/Settings/AccountSettings.tsx:74
+#: src/screens/Settings/AccountSettings.tsx:67
+#: src/screens/Settings/AccountSettings.tsx:69
 msgid "Export my data"
 msgstr ""
 
@@ -3350,6 +3358,10 @@ msgstr ""
 #: src/screens/Messages/components/MessageListError.tsx:24
 msgid "Failed to load past messages"
 msgstr ""
+
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:52
+msgid "Failed to load preference."
+msgstr "Failed to load preference."
 
 #: src/components/dialogs/SearchablePeopleList.tsx:280
 msgid "Failed to load profiles"
@@ -3549,6 +3561,10 @@ msgstr ""
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 msgid "Filter search by language (currently: {currentLanguageLabel})"
 msgstr ""
+
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:61
+msgid "Filter who can opt to receive notifications for your activity"
+msgstr "Filter who can opt to receive notifications for your activity"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:135
 msgid "Filter who you receive notifications from"
@@ -4107,8 +4123,8 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:114
-#: src/screens/Settings/AccountSettings.tsx:122
+#: src/screens/Settings/AccountSettings.tsx:105
+#: src/screens/Settings/AccountSettings.tsx:117
 msgid "Hide my account from logged-out users"
 msgstr "Hide my account from logged-out users"
 
@@ -4523,7 +4539,7 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:84
+#: src/screens/Settings/AccountSettings.tsx:80
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -4800,6 +4816,7 @@ msgstr ""
 
 #: src/components/web/ProfileHoverCard.tsx:128
 #: src/screens/Moderation/VerificationSettings.tsx:57
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:56
 #: src/screens/Settings/InterestsSettings.tsx:61
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:36
 #: src/view/shell/Composer.tsx:44
@@ -5500,7 +5517,9 @@ msgctxt "allow messages from"
 msgid "No one"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:102
+#: src/screens/Settings/AccountSettings.tsx:138
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:82
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:86
 msgctxt "enable for"
 msgid "No one"
 msgstr ""
@@ -5750,7 +5769,9 @@ msgstr "Only admins can ignore join requests."
 msgid "Only followers can join this group chat."
 msgstr "Only followers can join this group chat."
 
-#: src/screens/Settings/AccountSettings.tsx:101
+#: src/screens/Settings/AccountSettings.tsx:136
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:74
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:78
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -6371,7 +6392,7 @@ msgstr ""
 msgid "Primary language"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:91
+#: src/screens/Settings/AccountSettings.tsx:87
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -7614,7 +7635,7 @@ msgstr ""
 msgid "Show anyway"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:60
+#: src/screens/Settings/AccountSettings.tsx:55
 msgid "Show automation label"
 msgstr "Show automation label"
 
@@ -7662,7 +7683,7 @@ msgstr ""
 msgid "Show more replies"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:67
+#: src/screens/Settings/AccountSettings.tsx:62
 msgid "Show others that this account is automated."
 msgstr "Show others that this account is automated."
 
@@ -8524,6 +8545,10 @@ msgstr ""
 #: src/view/com/composer/drafts/DraftItem.tsx:131
 msgid "This draft will be permanently deleted."
 msgstr ""
+
+#: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:44
+msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
+msgstr "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:129
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9611,10 +9636,6 @@ msgstr "Who can join this group chat and how"
 msgid "Who can reply"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:107
-msgid "Who can subscribe to your posts and replies."
-msgstr "Who can subscribe to your posts and replies."
-
 #: src/screens/Home/NoFeedsPinned.tsx:77
 #: src/screens/Messages/ChatList.tsx:277
 #: src/screens/Messages/Inbox.tsx:149
@@ -10082,7 +10103,7 @@ msgstr ""
 msgid "Your contact {firstAuthorName} is on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:57
+#: src/screens/Settings/AccountSettings.tsx:52
 msgid "Your data"
 msgstr "Your data"
 

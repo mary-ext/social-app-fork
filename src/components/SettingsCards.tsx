@@ -78,18 +78,31 @@ export function Icon({ icon: IconCmp }: { icon: ComponentType<IconProps> }) {
 
 /**
  * The row's primary text, optionally over a muted second line. Renders the two lines as separate row-grid
- * items (not a nested column) so the subtitle can span the full row width beneath the trailing control.
+ * items (not a nested column) so the subtitle can span the full row width beneath the trailing control. Pass
+ * `loading` to show a skeleton bar in the subtitle's place while a drill-in row's value is fetched.
  */
-export function Label({ subtitleText, titleText }: { subtitleText?: ReactNode; titleText: ReactNode }) {
+export function Label({
+	loading,
+	subtitleText,
+	titleText,
+}: {
+	loading?: boolean;
+	subtitleText?: ReactNode;
+	titleText: ReactNode;
+}) {
 	return (
 		<>
 			<Text className={styles.title} size="md" weight="medium" color="text" leading="snug">
 				{titleText}
 			</Text>
-			{subtitleText != null && (
-				<Text className={styles.subtitle} size="sm" color="textContrastMedium" leading="snug">
-					{subtitleText}
-				</Text>
+			{loading ? (
+				<div className={styles.subtitleSkeleton} />
+			) : (
+				subtitleText != null && (
+					<Text className={styles.subtitle} size="sm" color="textContrastMedium" leading="snug">
+						{subtitleText}
+					</Text>
+				)
 			)}
 		</>
 	);
@@ -203,7 +216,7 @@ export function SelectRow<T extends string>({
 					<button
 						type="button"
 						aria-label={label}
-						className={clsx(styles.row, styles.rowInteractive, styles.rowSelect, className)}
+						className={clsx(styles.row, styles.rowInteractive, className)}
 					/>
 				}
 			>
