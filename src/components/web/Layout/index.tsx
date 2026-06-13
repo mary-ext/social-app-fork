@@ -28,7 +28,15 @@ export const Screen = memo(function Screen({
 	return (
 		<>
 			{gtMobile && <WebCenterBorders />}
-			<div className={clsx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
+			<div
+				className={clsx(
+					styles.screen,
+					noInsetTop && styles.screenNoInset,
+					!gtMobile && styles.screenBottomBarInset,
+					className,
+				)}
+				{...rest}
+			>
 				{children}
 			</div>
 		</>

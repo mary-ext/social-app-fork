@@ -21,6 +21,15 @@ export const screenNoInset = style({
 	paddingTop: 0,
 });
 
+/**
+ * Stopgap: reserve space for the fixed mobile bottom bar so trailing content (e.g. a section footnote) can
+ * scroll clear of it instead of hiding behind it. Hardcoded to the bar's current height; drop this once the
+ * shell layer moves onto the web layout and can publish its measured footer height.
+ */
+export const screenBottomBarInset = style({
+	paddingBottom: 58,
+});
+
 export const content = style({
 	width: '100%',
 });
