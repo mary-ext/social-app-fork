@@ -6,9 +6,3 @@ export const errorWrap = style({
 	paddingBottom: space.md,
 	paddingInline: space.lg,
 });
-
-export const list = style({
-	display: 'flex',
-	flexDirection: 'column',
-	gap: space.sm,
-});

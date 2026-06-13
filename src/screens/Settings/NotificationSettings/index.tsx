@@ -20,12 +20,11 @@ import {
 	RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
 } from '#/components/icons/Repost';
 import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes';
-import * as SettingsList from '#/components/SettingsList';
+import * as Settings from '#/components/SettingsCards';
 import { Admonition } from '#/components/web/Admonition';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
 
-import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle';
 import * as styles from './index.css';
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>;
@@ -56,139 +55,129 @@ export function NotificationSettingsScreen({}: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<SettingsList.Container>
-					{isError && (
-						<div className={styles.errorWrap}>
-							<Admonition type="error">
-								<Trans>Failed to load notification settings.</Trans>
-							</Admonition>
-						</div>
-					)}
-					<div className={styles.list}>
-						<SettingsList.PressableItem
-							align="start"
+				{isError && (
+					<div className={styles.errorWrap}>
+						<Admonition type="error">
+							<Trans>Failed to load notification settings.</Trans>
+						</Admonition>
+					</div>
+				)}
+				<Settings.List>
+					<Settings.Section>
+						<Settings.ButtonRow
 							label={l`Settings for like notifications`}
 							onPress={() => likeHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={HeartIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={HeartIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.like} />}
 								titleText={<Trans>Likes</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for new follower notifications`}
 							onPress={() => followHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={PersonPlusIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={PersonPlusIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.follow} />}
 								titleText={<Trans>New followers</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for reply notifications`}
 							onPress={() => replyHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={BubbleIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={BubbleIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.reply} />}
 								titleText={<Trans>Replies</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for mention notifications`}
 							onPress={() => mentionHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={AtIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={AtIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.mention} />}
 								titleText={<Trans>Mentions</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for quote notifications`}
 							onPress={() => quoteHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={CloseQuoteIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={CloseQuoteIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.quote} />}
 								titleText={<Trans>Quotes</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for repost notifications`}
 							onPress={() => repostHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={RepostIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={RepostIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.repost} />}
 								titleText={<Trans>Reposts</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for activity from others`}
 							onPress={() => activityHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={BellRingingIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={BellRingingIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
 								titleText={<Trans>Activity from others</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for notifications for likes of your reposts`}
 							onPress={() => likeRepostHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={LikeRepostIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={LikeRepostIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.likeViaRepost} />}
 								titleText={<Trans>Likes of your reposts</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for notifications for reposts of your reposts`}
 							onPress={() => repostRepostHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={RepostRepostIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={RepostRepostIcon} />
+							<Settings.Label
+								loading={!settings}
 								subtitleText={<SettingPreview preference={settings?.repostViaRepost} />}
 								titleText={<Trans>Reposts of your reposts</Trans>}
 							/>
-						</SettingsList.PressableItem>
-						<SettingsList.PressableItem
-							align="start"
+						</Settings.ButtonRow>
+						<Settings.ButtonRow
 							label={l`Settings for notifications for everything else`}
 							onPress={() => miscHandle.open(null)}
 						>
-							<SettingsList.ItemIcon icon={ShapesIcon} />
-							<ItemTextWithSubtitle
-								showSkeleton={!settings}
+							<Settings.Icon icon={ShapesIcon} />
+							<Settings.Label
+								loading={!settings}
 								// technically a bundle of several settings, but since they're set together
 								// and are most likely in sync we'll just show the state of one of them
 								subtitleText={<SettingPreview preference={settings?.starterpackJoined} />}
 								titleText={<Trans>Everything else</Trans>}
 							/>
-						</SettingsList.PressableItem>
-					</div>
-				</SettingsList.Container>
+						</Settings.ButtonRow>
+					</Settings.Section>
+				</Settings.List>
 			</Layout.Content>
 			<NotificationSettingsDialog
 				handle={likeHandle}

@@ -938,8 +938,8 @@ msgstr ""
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:149
-#: src/screens/Settings/NotificationSettings/index.tsx:234
+#: src/screens/Settings/NotificationSettings/index.tsx:141
+#: src/screens/Settings/NotificationSettings/index.tsx:223
 msgid "Activity from others"
 msgstr ""
 
@@ -3088,8 +3088,8 @@ msgctxt "allow messages from"
 msgid "Everyone"
 msgstr "Everyone"
 
-#: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/NotificationSettings/index.tsx:256
+#: src/screens/Settings/NotificationSettings/index.tsx:176
+#: src/screens/Settings/NotificationSettings/index.tsx:245
 msgid "Everything else"
 msgstr ""
 
@@ -3322,7 +3322,7 @@ msgid "Failed to load feeds preferences"
 msgstr ""
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
-#: src/screens/Settings/NotificationSettings/index.tsx:63
+#: src/screens/Settings/NotificationSettings/index.tsx:61
 msgid "Failed to load notification settings."
 msgstr ""
 
@@ -3774,43 +3774,43 @@ msgstr ""
 msgid "Germ DM reconnected"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:253
+#: src/screens/Settings/NotificationSettings/index.tsx:242
 msgid "Get notifications for starter pack joins, verification, and other activity."
 msgstr "Get notifications for starter pack joins, verification, and other activity."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:202
+#: src/screens/Settings/NotificationSettings/index.tsx:191
 msgid "Get notifications when people follow you."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:196
+#: src/screens/Settings/NotificationSettings/index.tsx:185
 msgid "Get notifications when people like your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:239
+#: src/screens/Settings/NotificationSettings/index.tsx:228
 msgid "Get notifications when people like your reposts."
 msgstr "Get notifications when people like your reposts."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:214
+#: src/screens/Settings/NotificationSettings/index.tsx:203
 msgid "Get notifications when people mention you."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:220
+#: src/screens/Settings/NotificationSettings/index.tsx:209
 msgid "Get notifications when people quote your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:208
+#: src/screens/Settings/NotificationSettings/index.tsx:197
 msgid "Get notifications when people reply to your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:226
+#: src/screens/Settings/NotificationSettings/index.tsx:215
 msgid "Get notifications when people repost your posts."
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:245
+#: src/screens/Settings/NotificationSettings/index.tsx:234
 msgid "Get notifications when people repost your reposts."
 msgstr "Get notifications when people repost your reposts."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:233
+#: src/screens/Settings/NotificationSettings/index.tsx:222
 msgid "Get notifications when there's activity on posts you're subscribed to."
 msgstr "Get notifications when there's activity on posts you're subscribed to."
 
@@ -4254,7 +4254,7 @@ msgstr ""
 msgid "Impersonation"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:293
+#: src/screens/Settings/NotificationSettings/index.tsx:282
 msgid "In-app"
 msgstr ""
 
@@ -4262,23 +4262,23 @@ msgstr ""
 msgid "In-app notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:276
+#: src/screens/Settings/NotificationSettings/index.tsx:265
 msgid "In-app, Everyone"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:284
+#: src/screens/Settings/NotificationSettings/index.tsx:273
 msgid "In-app, People you follow"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:291
+#: src/screens/Settings/NotificationSettings/index.tsx:280
 msgid "In-app, Push"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:274
+#: src/screens/Settings/NotificationSettings/index.tsx:263
 msgid "In-app, Push, Everyone"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:282
+#: src/screens/Settings/NotificationSettings/index.tsx:271
 msgid "In-app, Push, People you follow"
 msgstr ""
 
@@ -4606,14 +4606,14 @@ msgstr ""
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:77
-#: src/screens/Settings/NotificationSettings/index.tsx:197
+#: src/screens/Settings/NotificationSettings/index.tsx:75
+#: src/screens/Settings/NotificationSettings/index.tsx:186
 #: src/view/screens/Profile.tsx:234
 msgid "Likes"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:161
-#: src/screens/Settings/NotificationSettings/index.tsx:240
+#: src/screens/Settings/NotificationSettings/index.tsx:152
+#: src/screens/Settings/NotificationSettings/index.tsx:229
 msgid "Likes of your reposts"
 msgstr ""
 
@@ -4933,8 +4933,8 @@ msgstr "Members can still read chat history but can’t send new messages."
 msgid "mentioned users"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:113
-#: src/screens/Settings/NotificationSettings/index.tsx:215
+#: src/screens/Settings/NotificationSettings/index.tsx:108
+#: src/screens/Settings/NotificationSettings/index.tsx:204
 #: src/view/screens/Notifications.tsx:92
 msgid "Mentions"
 msgstr ""
@@ -5318,8 +5318,8 @@ msgstr "New chat with {0} and {1}"
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 msgstr "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
 
-#: src/screens/Settings/NotificationSettings/index.tsx:89
-#: src/screens/Settings/NotificationSettings/index.tsx:203
+#: src/screens/Settings/NotificationSettings/index.tsx:86
+#: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "New followers"
 msgstr ""
 
@@ -5617,7 +5617,7 @@ msgstr ""
 #: src/Navigation.tsx:448
 #: src/Navigation.tsx:740
 #: src/screens/Notifications/ActivityList.tsx:27
-#: src/screens/Settings/NotificationSettings/index.tsx:53
+#: src/screens/Settings/NotificationSettings/index.tsx:52
 #: src/screens/Settings/Settings.tsx:143
 #: src/screens/Settings/Settings.tsx:146
 #: src/view/screens/Notifications.tsx:113
@@ -5640,7 +5640,7 @@ msgid "Nudity"
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:10
-#: src/screens/Settings/NotificationSettings/index.tsx:300
+#: src/screens/Settings/NotificationSettings/index.tsx:289
 msgid "Off"
 msgstr ""
 
@@ -6424,7 +6424,7 @@ msgstr ""
 msgid "Publish reply"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:295
+#: src/screens/Settings/NotificationSettings/index.tsx:284
 msgid "Push"
 msgstr ""
 
@@ -6432,11 +6432,11 @@ msgstr ""
 msgid "Push notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:278
+#: src/screens/Settings/NotificationSettings/index.tsx:267
 msgid "Push, Everyone"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:286
+#: src/screens/Settings/NotificationSettings/index.tsx:275
 msgid "Push, People you follow"
 msgstr ""
 
@@ -6460,8 +6460,8 @@ msgid "Quote posts disabled"
 msgstr ""
 
 #: src/screens/Post/PostQuotes.tsx:35
-#: src/screens/Settings/NotificationSettings/index.tsx:125
-#: src/screens/Settings/NotificationSettings/index.tsx:221
+#: src/screens/Settings/NotificationSettings/index.tsx:119
+#: src/screens/Settings/NotificationSettings/index.tsx:210
 msgid "Quotes"
 msgstr ""
 
@@ -6766,8 +6766,8 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:214
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
-#: src/screens/Settings/NotificationSettings/index.tsx:101
-#: src/screens/Settings/NotificationSettings/index.tsx:209
+#: src/screens/Settings/NotificationSettings/index.tsx:97
+#: src/screens/Settings/NotificationSettings/index.tsx:198
 #: src/view/screens/Profile.tsx:231
 msgid "Replies"
 msgstr ""
@@ -6941,8 +6941,8 @@ msgstr ""
 msgid "Reposted by you"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:137
-#: src/screens/Settings/NotificationSettings/index.tsx:227
+#: src/screens/Settings/NotificationSettings/index.tsx:130
+#: src/screens/Settings/NotificationSettings/index.tsx:216
 msgid "Reposts"
 msgstr ""
 
@@ -6950,8 +6950,8 @@ msgstr ""
 msgid "Reposts of this post"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:173
-#: src/screens/Settings/NotificationSettings/index.tsx:246
+#: src/screens/Settings/NotificationSettings/index.tsx:163
+#: src/screens/Settings/NotificationSettings/index.tsx:235
 msgid "Reposts of your reposts"
 msgstr ""
 
@@ -7472,43 +7472,43 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:142
+#: src/screens/Settings/NotificationSettings/index.tsx:134
 msgid "Settings for activity from others"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:70
+#: src/screens/Settings/NotificationSettings/index.tsx:68
 msgid "Settings for like notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:106
+#: src/screens/Settings/NotificationSettings/index.tsx:101
 msgid "Settings for mention notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:82
+#: src/screens/Settings/NotificationSettings/index.tsx:79
 msgid "Settings for new follower notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:178
+#: src/screens/Settings/NotificationSettings/index.tsx:167
 msgid "Settings for notifications for everything else"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:154
+#: src/screens/Settings/NotificationSettings/index.tsx:145
 msgid "Settings for notifications for likes of your reposts"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:166
+#: src/screens/Settings/NotificationSettings/index.tsx:156
 msgid "Settings for notifications for reposts of your reposts"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:118
+#: src/screens/Settings/NotificationSettings/index.tsx:112
 msgid "Settings for quote notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:94
+#: src/screens/Settings/NotificationSettings/index.tsx:90
 msgid "Settings for reply notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:130
+#: src/screens/Settings/NotificationSettings/index.tsx:123
 msgid "Settings for repost notifications"
 msgstr ""
 
