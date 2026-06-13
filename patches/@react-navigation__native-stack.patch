@@ -1,0 +1,13 @@
+diff --git a/lib/module/views/NativeStackView.js b/lib/module/views/NativeStackView.js
+index 16253131c2a6712ac50ab20b30f8552306d2300a..d8ad276f0c1ddc86efa4da055143c20806529ee5 100644
+--- a/lib/module/views/NativeStackView.js
++++ b/lib/module/views/NativeStackView.js
+@@ -90,7 +90,7 @@ export function NativeStackView({
+           }) : headerLeft,
+           headerTransparent: headerTransparent
+         }),
+-        style: [StyleSheet.absoluteFill, {
++        style: [{
+           display: (isFocused || nextPresentation != null && TRANSPARENT_PRESENTATIONS.includes(nextPresentation)) && !isPreloaded ? 'flex' : 'none'
+         }, presentation != null && TRANSPARENT_PRESENTATIONS.includes(presentation) ? {
+           backgroundColor: 'transparent'
