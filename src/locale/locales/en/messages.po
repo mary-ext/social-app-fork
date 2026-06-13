@@ -8301,7 +8301,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:890
-#: src/view/com/posts/PostFeed.tsx:531
+#: src/view/com/posts/PostFeed.tsx:521
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -9469,10 +9469,6 @@ msgstr "We couldn’t load this conversation’s join requests"
 #: src/screens/Messages/ConversationSettings/index.tsx:104
 msgid "We couldn’t load this conversation’s settings"
 msgstr "We couldn’t load this conversation’s settings"
-
-#: src/view/com/posts/DiscoverFallbackHeader.tsx:33
-msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr ""
 
 #: src/screens/Settings/InterestsSettings.tsx:148
 msgid "We recommend selecting at least two interests."

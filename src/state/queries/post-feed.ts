@@ -26,7 +26,6 @@ import { AuthorFeedAPI } from '#/lib/api/feed/author';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { DemoFeedAPI } from '#/lib/api/feed/demo';
 import { FollowingFeedAPI } from '#/lib/api/feed/following';
-import { HomeFeedAPI } from '#/lib/api/feed/home';
 import { LikesFeedAPI } from '#/lib/api/feed/likes';
 import { ListFeedAPI } from '#/lib/api/feed/list';
 import { PostListFeedAPI } from '#/lib/api/feed/posts';
@@ -93,7 +92,6 @@ export interface FeedPostSlice {
 	_reactKey: string;
 	items: FeedPostSliceItem[];
 	isIncompleteThread: boolean;
-	isFallbackMarker: boolean;
 	feedContext: string | undefined;
 	reqId: string | undefined;
 	feedPostUri: string;
@@ -135,9 +133,6 @@ export function usePostFeedQuery(
 	 */
 	const enabled = opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences);
 	const userInterests = aggregateUserInterests(preferences);
-	const followingPinnedIndex =
-		preferences?.savedFeeds?.findIndex((f) => f.pinned && f.value === 'following') ?? -1;
-	const enableFollowingToDiscoverFallback = followingPinnedIndex === 0;
 	const { appview } = useClients();
 	const { hasSession } = useSession();
 	const lastRun = useRef<{
@@ -178,8 +173,6 @@ export function usePostFeedQuery(
 							appview,
 							// Not in the query key because they don't change:
 							userInterests,
-							// Not in the query key. Reacting to it switching isn't important:
-							enableFollowingToDiscoverFallback,
 						}),
 						cursor: undefined,
 					};
@@ -301,7 +294,6 @@ export function usePostFeedQuery(
 										_reactKey: slice._reactKey,
 										_isFeedPostSlice: true,
 										isIncompleteThread: slice.isIncompleteThread,
-										isFallbackMarker: slice.isFallbackMarker,
 										feedContext: slice.feedContext,
 										reqId: slice.reqId,
 										reason: slice.reason,
@@ -413,19 +405,13 @@ function createApi({
 	feedDesc,
 	userInterests,
 	appview,
-	enableFollowingToDiscoverFallback,
 }: {
 	feedDesc: FeedDescriptor;
 	userInterests?: string;
 	appview: Client;
-	enableFollowingToDiscoverFallback: boolean;
 }) {
 	if (feedDesc === 'following') {
-		if (enableFollowingToDiscoverFallback) {
-			return new HomeFeedAPI({ appview, userInterests });
-		} else {
-			return new FollowingFeedAPI({ appview });
-		}
+		return new FollowingFeedAPI({ appview });
 	} else if (feedDesc.startsWith('author')) {
 		const [__, actor, filter] = feedDesc.split('|') as [string, string, string];
 		return new AuthorFeedAPI({ appview, feedParams: { actor, filter } as AppBskyFeedGetAuthorFeed.$params });

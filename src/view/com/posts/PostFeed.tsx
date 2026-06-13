@@ -46,7 +46,6 @@ import { TrendingInterstitial } from '#/components/interstitials/Trending';
 import { isStatusStillActive, isStatusValidForViewers, useLiveNowConfig } from '#/features/liveNow';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
-import { DiscoverFallbackHeader } from './DiscoverFallbackHeader';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
 import { PostFeedErrorMessage } from './PostFeedErrorMessage';
 import { PostFeedItem } from './PostFeedItem';
@@ -72,10 +71,6 @@ export type FeedRow =
 	  }
 	| {
 			type: 'feedShutdownMsg';
-			key: string;
-	  }
-	| {
-			type: 'fallbackMarker';
 			key: string;
 	  }
 	| {
@@ -385,12 +380,7 @@ let PostFeed = ({
 							}
 						}
 
-						if (slice.isFallbackMarker) {
-							arr.push({
-								type: 'fallbackMarker',
-								key: 'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
-							});
-						} else if (slice.items.some((item) => blockedOrMutedAuthors.includes(item.post.author.did))) {
+						if (slice.items.some((item) => blockedOrMutedAuthors.includes(item.post.author.did))) {
 							// skip
 						} else if (slice.isIncompleteThread && slice.items.length >= 3) {
 							const beforeLast = slice.items.length - 2;
@@ -542,12 +532,6 @@ let PostFeed = ({
 				return <TrendingInterstitial />;
 			} else if (row.type === 'composerPrompt') {
 				return <ComposerPrompt />;
-			} else if (row.type === 'fallbackMarker') {
-				// HACK
-				// tell the user we fell back to discover
-				// see home.ts (feed api) for more info
-				// -prf
-				return <DiscoverFallbackHeader />;
 			} else if (row.type === 'sliceItem') {
 				const slice = row.slice;
 				const indexInSlice = row.indexInSlice;

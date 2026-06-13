@@ -185,8 +185,6 @@ export function useFeedPreviews(
 
 						let rowIndex = 0;
 						for (const item of tuner.tune(page.posts)) {
-							if (item.isFallbackMarker) continue;
-
 							const moderations = item.items.map((item) => moderatePost(item.post, moderationOpts!));
 
 							// apply moderation filters
@@ -199,7 +197,6 @@ export function useFeedPreviews(
 							const slice = {
 								_reactKey: page.feed.uri + item._reactKey,
 								_isFeedPostSlice: true,
-								isFallbackMarker: false,
 								isIncompleteThread: item.isIncompleteThread,
 								feedContext: item.feedContext,
 								reqId: item.reqId,

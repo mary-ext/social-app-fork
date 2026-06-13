@@ -1,7 +1,6 @@
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { isPostInLanguage } from '../../locale/helpers';
-import { FALLBACK_MARKER_POST } from './feed/home';
 import type { ReasonFeedSource } from './feed/types';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
@@ -32,7 +31,6 @@ export class FeedViewPostsSlice {
 	_feedPost: FeedViewPost;
 	items: FeedSliceItem[];
 	isIncompleteThread: boolean;
-	isFallbackMarker: boolean;
 	isOrphan: boolean;
 	isThreadMuted: boolean;
 	rootUri: string;
@@ -42,7 +40,6 @@ export class FeedViewPostsSlice {
 		const { post, reply, reason } = feedPost;
 		this.items = [];
 		this.isIncompleteThread = false;
-		this.isFallbackMarker = false;
 		this.isOrphan = false;
 		this.isThreadMuted = post.viewer?.threadMuted ?? false;
 		this.feedPostUri = post.uri;
@@ -55,10 +52,6 @@ export class FeedViewPostsSlice {
 		this._reactKey = `slice-${post.uri}-${
 			feedPost.reason && 'indexedAt' in feedPost.reason ? feedPost.reason.indexedAt : post.indexedAt
 		}`;
-		if (feedPost.post.uri === FALLBACK_MARKER_POST.post.uri) {
-			this.isFallbackMarker = true;
-			return;
-		}
 		const record = post.record as AppBskyFeedPost.Main;
 		const parent = reply?.parent;
 		const isParentBlocked = parent?.$type === 'app.bsky.feed.defs#blockedPost';
@@ -219,7 +212,7 @@ export class FeedTuner {
 	): FeedViewPostsSlice[] {
 		let slices: FeedViewPostsSlice[] = feed
 			.map((item) => new FeedViewPostsSlice(item))
-			.filter((s) => s.items.length > 0 || s.isFallbackMarker);
+			.filter((s) => s.items.length > 0);
 
 		// run the custom tuners
 		for (const tunerFn of this.tunerFns) {
