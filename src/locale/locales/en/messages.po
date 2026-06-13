@@ -838,7 +838,7 @@ msgstr "Accepted conversations"
 msgid "Access requested! The group owner will review your request."
 msgstr "Access requested! The group owner will review your request."
 
-#: src/screens/Settings/AccessibilitySettings.tsx:28
+#: src/screens/Settings/AccessibilitySettings.tsx:27
 #: src/screens/Settings/Settings.tsx:161
 #: src/screens/Settings/Settings.tsx:164
 msgid "Accessibility"
@@ -1253,7 +1253,7 @@ msgstr ""
 msgid "ALT"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:40
+#: src/screens/Settings/AccessibilitySettings.tsx:34
 #: src/view/com/composer/GifAltText.tsx:160
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:107
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:111
@@ -2734,8 +2734,8 @@ msgstr ""
 msgid "Dismiss this suggestion"
 msgstr ""
 
-#: src/screens/Settings/AccessibilitySettings.tsx:57
-#: src/screens/Settings/AccessibilitySettings.tsx:62
+#: src/screens/Settings/AccessibilitySettings.tsx:44
+#: src/screens/Settings/AccessibilitySettings.tsx:49
 msgid "Display larger alt text badges"
 msgstr ""
 
@@ -6992,8 +6992,8 @@ msgstr "Requests"
 msgid "Requests to join"
 msgstr "Requests to join"
 
-#: src/screens/Settings/AccessibilitySettings.tsx:46
-#: src/screens/Settings/AccessibilitySettings.tsx:51
+#: src/screens/Settings/AccessibilitySettings.tsx:36
+#: src/screens/Settings/AccessibilitySettings.tsx:41
 msgid "Require alt text before posting"
 msgstr ""
 

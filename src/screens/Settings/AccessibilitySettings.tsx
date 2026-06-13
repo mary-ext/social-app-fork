@@ -3,14 +3,13 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 
-import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
-import * as SettingsList from '#/components/SettingsList';
+import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
+import { TextSize_Stroke2_Corner0_Rounded as TextSizeIcon } from '#/components/icons/TextSize';
+import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
 
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
-
-import * as styles from './AccessibilitySettings.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccessibilitySettings'>;
 export function AccessibilitySettingsScreen({}: Props) {
@@ -31,42 +30,26 @@ export function AccessibilitySettingsScreen({}: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<SettingsList.Container>
-					<SettingsList.Group>
-						<div className={styles.groupBody}>
-							<div className={styles.headerRow}>
-								<SettingsList.ItemIcon icon={AccessibilityIcon} />
-								<SettingsList.ItemText>
-									<Trans>Alt text</Trans>
-								</SettingsList.ItemText>
-							</div>
-							<div className={styles.insetColumn}>
-								<SettingsList.CheckboxItem
-									flush
-									label={l`Require alt text before posting`}
-									value={requireAltTextEnabled ?? false}
-									onChange={setRequireAltTextEnabled}
-								>
-									<SettingsList.LabelText>
-										<Trans>Require alt text before posting</Trans>
-									</SettingsList.LabelText>
-									<SettingsList.CheckboxBox />
-								</SettingsList.CheckboxItem>
-								<SettingsList.CheckboxItem
-									flush
-									label={l`Display larger alt text badges`}
-									value={!!largeAltBadgeEnabled}
-									onChange={setLargeAltBadgeEnabled}
-								>
-									<SettingsList.LabelText>
-										<Trans>Display larger alt text badges</Trans>
-									</SettingsList.LabelText>
-									<SettingsList.CheckboxBox />
-								</SettingsList.CheckboxItem>
-							</div>
-						</div>
-					</SettingsList.Group>
-				</SettingsList.Container>
+				<Settings.List>
+					<Settings.Section titleText={<Trans>Alt text</Trans>}>
+						<Settings.SwitchRow
+							label={l`Require alt text before posting`}
+							onChange={setRequireAltTextEnabled}
+							value={requireAltTextEnabled}
+						>
+							<Settings.Icon icon={ImageIcon} />
+							<Settings.Label titleText={<Trans>Require alt text before posting</Trans>} />
+						</Settings.SwitchRow>
+						<Settings.SwitchRow
+							label={l`Display larger alt text badges`}
+							onChange={setLargeAltBadgeEnabled}
+							value={largeAltBadgeEnabled}
+						>
+							<Settings.Icon icon={TextSizeIcon} />
+							<Settings.Label titleText={<Trans>Display larger alt text badges</Trans>} />
+						</Settings.SwitchRow>
+					</Settings.Section>
+				</Settings.List>
 			</Layout.Content>
 		</Layout.Screen>
 	);
