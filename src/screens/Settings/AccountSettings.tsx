@@ -86,7 +86,7 @@ export function AccountSettingsScreen({}: Props) {
 						titleText={<Trans>Privacy</Trans>}
 					>
 						<Settings.ButtonRow
-							label={l`Allow others to be notified of your posts`}
+							label={l`Allow notifying others of my posts`}
 							onPress={() => activityHandle.open(null)}
 						>
 							<Settings.Icon icon={BellRingingIcon} />
@@ -95,13 +95,13 @@ export function AccountSettingsScreen({}: Props) {
 								subtitleText={
 									<AllowSubscriptionsValue isError={isError} value={declaration?.value?.allowSubscriptions} />
 								}
-								titleText={<Trans>Allow others to be notified of your posts</Trans>}
+								titleText={<Trans>Allow notifying others of my posts</Trans>}
 							/>
 						</Settings.ButtonRow>
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}
-							label={l`Request limited visibility of my account`}
+							label={l`Request limited account visibility`}
 							loading={pwi.loading}
 							onChange={pwi.toggle}
 							value={pwi.enabled}
@@ -110,11 +110,11 @@ export function AccountSettingsScreen({}: Props) {
 							<Settings.Label
 								subtitleText={
 									<Trans>
-										Notifies every app — including the Bluesky app — that you don't want your account shown to
+										Notifies every app, including the Bluesky app, that you don't want your account shown to
 										people who aren't signed in.
 									</Trans>
 								}
-								titleText={<Trans>Request limited visibility of my account</Trans>}
+								titleText={<Trans>Request limited account visibility</Trans>}
 							/>
 						</Settings.SwitchRow>
 					</Settings.Section>

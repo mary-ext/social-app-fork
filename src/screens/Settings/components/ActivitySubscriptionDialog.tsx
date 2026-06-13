@@ -17,7 +17,7 @@ export function ActivitySubscriptionDialog({ handle }: { handle: Dialog.DialogHa
 	const { t: l } = useLingui();
 	return (
 		<Dialog.Root handle={handle}>
-			<Dialog.Popup className={styles.popup} label={l`Allow others to be notified of your posts`}>
+			<Dialog.Popup className={styles.popup} label={l`Allow notifying others of my posts`}>
 				<Inner />
 				<Dialog.Close />
 			</Dialog.Popup>
@@ -38,7 +38,7 @@ function Inner() {
 		<>
 			<div className={styles.header}>
 				<Text size="lg" weight="semiBold">
-					<Trans>Allow others to be notified of your posts</Trans>
+					<Trans>Allow notifying others of my posts</Trans>
 				</Text>
 				<Text color="textContrastMedium" leading="snug" size="sm">
 					<Trans>

@@ -1215,8 +1215,8 @@ msgstr "Allow group chat invites from"
 #: src/screens/Settings/AccountSettings.tsx:98
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:20
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:41
-msgid "Allow others to be notified of your posts"
-msgstr "Allow others to be notified of your posts"
+msgid "Allow notifying others of my posts"
+msgstr "Allow notifying others of my posts"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:395
 msgid "Allow people you follow to reply"
@@ -5661,8 +5661,8 @@ msgid "Notifications"
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:112
-msgid "Notifies every app — including the Bluesky app — that you don't want your account shown to people who aren't signed in."
-msgstr "Notifies every app — including the Bluesky app — that you don't want your account shown to people who aren't signed in."
+msgid "Notifies every app, including the Bluesky app, that you don't want your account shown to people who aren't signed in."
+msgstr "Notifies every app, including the Bluesky app, that you don't want your account shown to people who aren't signed in."
 
 #: src/lib/hooks/useTimeAgo.ts:122
 msgid "now"
@@ -6999,8 +6999,8 @@ msgstr "Request ignored."
 
 #: src/screens/Settings/AccountSettings.tsx:104
 #: src/screens/Settings/AccountSettings.tsx:117
-msgid "Request limited visibility of my account"
-msgstr "Request limited visibility of my account"
+msgid "Request limited account visibility"
+msgstr "Request limited account visibility"
 
 #: src/components/dms/ChatInvite/Root.tsx:111
 #: src/components/intents/GroupChatJoinDialog.tsx:248

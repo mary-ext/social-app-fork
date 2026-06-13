@@ -77,7 +77,7 @@ export const row = style({
 	gridTemplateColumns: 'auto minmax(0, 1fr) auto',
 	paddingBlock: 14,
 	paddingInline: space.lg,
-	rowGap: 2,
+	rowGap: space.xs,
 	textAlign: 'left',
 	width: '100%',
 });
