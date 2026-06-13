@@ -50,7 +50,6 @@ import * as Prompt from '#/components/web/Prompt';
 import { IS_DEV } from '#/env';
 import { useActorStatus } from '#/features/liveNow';
 import { account, auth, device } from '#/storage';
-import { useActivitySubscriptionsNudged } from '#/storage/hooks/activity-subscriptions-nudged';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 import * as styles from './Settings.css';
@@ -266,17 +265,12 @@ function DevOptions() {
 	const navigation = useNavigation<NavigationProp>();
 	const { mutate: deleteChatDeclarationRecord } = useDeleteActorDeclaration();
 	const [debugFeedContextEnabled, setDebugFeedContextEnabled] = useDebugFeedContextEnabled();
-	const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged();
 
 	const clearAllStorage = () => {
 		account.removeAll();
 		auth.removeAll();
 		device.removeAll();
 		Toast.show(l`Storage cleared, you need to restart the app now.`);
-	};
-
-	const onPressActySubsUnNudge = () => {
-		setActyNotifNudged(false);
 	};
 
 	return (
@@ -317,16 +311,6 @@ function DevOptions() {
 					<Trans>Delete chat declaration record</Trans>
 				</SettingsList.ItemText>
 			</SettingsList.PressableItem>
-			{actyNotifNudged && (
-				<SettingsList.PressableItem
-					label={l`Reset activity subscription nudge`}
-					onPress={onPressActySubsUnNudge}
-				>
-					<SettingsList.ItemText>
-						<Trans>Reset activity subscription nudge</Trans>
-					</SettingsList.ItemText>
-				</SettingsList.PressableItem>
-			)}
 			<SettingsList.PressableItem label={l`Clear all storage data`} onPress={() => void clearAllStorage()}>
 				<SettingsList.ItemText>
 					<Trans>Clear all storage data (restart after this)</Trans>
