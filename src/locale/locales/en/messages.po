@@ -1211,8 +1211,8 @@ msgstr "Allow direct messages from"
 msgid "Allow group chat invites from"
 msgstr "Allow group chat invites from"
 
-#: src/screens/Settings/AccountSettings.tsx:90
-#: src/screens/Settings/AccountSettings.tsx:99
+#: src/screens/Settings/AccountSettings.tsx:89
+#: src/screens/Settings/AccountSettings.tsx:98
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:20
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:41
 msgid "Allow others to be notified of your posts"
@@ -1687,10 +1687,6 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:512
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
-
-#: src/screens/Settings/AccountSettings.tsx:75
-msgid "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
-msgstr "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
 
 #: src/components/dialogs/ServerInput.tsx:192
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
@@ -2720,10 +2716,6 @@ msgstr ""
 #: src/screens/Profile/components/GermButton.tsx:240
 msgid "Disconnect Germ DM"
 msgstr ""
-
-#: src/screens/Settings/AccountSettings.tsx:113
-msgid "Discourage apps from showing your profile and posts to people who aren't signed in."
-msgstr "Discourage apps from showing your profile and posts to people who aren't signed in."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:50
 #: src/view/com/posts/FollowingEndOfFeed.tsx:46
@@ -4123,11 +4115,6 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:105
-#: src/screens/Settings/AccountSettings.tsx:117
-msgid "Hide my account from logged-out users"
-msgstr "Hide my account from logged-out users"
-
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:492
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
 msgid "Hide post for me"
@@ -4212,6 +4199,10 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:270
 msgid "Home"
 msgstr ""
+
+#: src/screens/Settings/AccountSettings.tsx:75
+msgid "Honoring this request is voluntary: your profile and posts stay publicly available, and some apps may show your account anyway. <0>Learn more.</0>"
+msgstr "Honoring this request is voluntary: your profile and posts stay publicly available, and some apps may show your account anyway. <0>Learn more.</0>"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:140
 msgid "Hot"
@@ -4539,7 +4530,7 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:80
+#: src/screens/Settings/AccountSettings.tsx:79
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -5669,6 +5660,10 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
+#: src/screens/Settings/AccountSettings.tsx:112
+msgid "Notifies every app — including the Bluesky app — that you don't want your account shown to people who aren't signed in."
+msgstr "Notifies every app — including the Bluesky app — that you don't want your account shown to people who aren't signed in."
+
 #: src/lib/hooks/useTimeAgo.ts:122
 msgid "now"
 msgstr ""
@@ -6392,7 +6387,7 @@ msgstr ""
 msgid "Primary language"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:87
+#: src/screens/Settings/AccountSettings.tsx:86
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -7001,6 +6996,11 @@ msgstr "Request approved."
 #: src/screens/Messages/JoinRequests.tsx:185
 msgid "Request ignored."
 msgstr "Request ignored."
+
+#: src/screens/Settings/AccountSettings.tsx:104
+#: src/screens/Settings/AccountSettings.tsx:117
+msgid "Request limited visibility of my account"
+msgstr "Request limited visibility of my account"
 
 #: src/components/dms/ChatInvite/Root.tsx:111
 #: src/components/intents/GroupChatJoinDialog.tsx:248

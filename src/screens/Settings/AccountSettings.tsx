@@ -73,14 +73,13 @@ export function AccountSettingsScreen({}: Props) {
 					<Settings.Section
 						footnoteText={
 							<Trans>
-								Bluesky is an open and public network. Logged-out visibility only limits your content on the
-								Bluesky app and website; other apps may not respect it, and your content may still be shown to
-								logged-out users elsewhere.{' '}
+								Honoring this request is voluntary: your profile and posts stay publicly available, and some
+								apps may show your account anyway.{' '}
 								<InlineLinkText
 									label={l`Learn more about what is public on Bluesky.`}
 									to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
 								>
-									<Trans>Learn more about what is public on Bluesky.</Trans>
+									<Trans>Learn more.</Trans>
 								</InlineLinkText>
 							</Trans>
 						}
@@ -102,7 +101,7 @@ export function AccountSettingsScreen({}: Props) {
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}
-							label={l`Hide my account from logged-out users`}
+							label={l`Request limited visibility of my account`}
 							loading={pwi.loading}
 							onChange={pwi.toggle}
 							value={pwi.enabled}
@@ -111,10 +110,11 @@ export function AccountSettingsScreen({}: Props) {
 							<Settings.Label
 								subtitleText={
 									<Trans>
-										Discourage apps from showing your profile and posts to people who aren't signed in.
+										Notifies every app — including the Bluesky app — that you don't want your account shown to
+										people who aren't signed in.
 									</Trans>
 								}
-								titleText={<Trans>Hide my account from logged-out users</Trans>}
+								titleText={<Trans>Request limited visibility of my account</Trans>}
 							/>
 						</Settings.SwitchRow>
 					</Settings.Section>
