@@ -81,19 +81,9 @@ const AccountSettingsScreen = lazy(() =>
 		default: m.AccountSettingsScreen,
 	})),
 );
-const ActivityPrivacySettingsScreen = lazy(() =>
-	import('#/screens/Settings/ActivityPrivacySettings').then((m) => ({
-		default: m.ActivityPrivacySettingsScreen,
-	})),
-);
 const AppearanceSettingsScreen = lazy(() =>
 	import('#/screens/Settings/AppearanceSettings').then((m) => ({
 		default: m.AppearanceSettingsScreen,
-	})),
-);
-const AutomationLabelSettingsScreen = lazy(() =>
-	import('#/screens/Settings/AutomationLabelSettings').then((m) => ({
-		default: m.AutomationLabelSettingsScreen,
 	})),
 );
 const BookmarksScreen = lazy(() =>
@@ -236,11 +226,6 @@ const PostRepostedByScreen = lazy(() =>
 const PostThreadScreen = lazy(() =>
 	import('#/view/screens/PostThread').then((m) => ({
 		default: m.PostThreadScreen,
-	})),
-);
-const PrivacyAndSecuritySettingsScreen = lazy(() =>
-	import('#/screens/Settings/PrivacyAndSecuritySettings').then((m) => ({
-		default: m.PrivacyAndSecuritySettingsScreen,
 	})),
 );
 const ProfileFeedLikedByScreen = lazy(() =>
@@ -722,31 +707,7 @@ const FlatNavigator = ({ layout }: { layout: React.ComponentProps<typeof Flat.Na
 				name="AccountSettings"
 				getComponent={() => AccountSettingsScreen}
 				options={{
-					title: title(defineMessage`Account`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="AutomationLabelSettings"
-				getComponent={() => AutomationLabelSettingsScreen}
-				options={{
-					title: title(defineMessage`Automation Label`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="PrivacyAndSecuritySettings"
-				getComponent={() => PrivacyAndSecuritySettingsScreen}
-				options={{
-					title: title(defineMessage`Privacy and Security`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="ActivityPrivacySettings"
-				getComponent={() => ActivityPrivacySettingsScreen}
-				options={{
-					title: title(defineMessage`Privacy and Security`),
+					title: title(defineMessage`Account & privacy`),
 					requireAuth: true,
 				}}
 			/>

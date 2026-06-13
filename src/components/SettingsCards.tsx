@@ -2,7 +2,10 @@ import { Children, cloneElement, type ComponentType, Fragment, isValidElement, t
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
-import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron';
+import {
+	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
+} from '#/components/icons/Chevron';
 import type { Props as IconProps } from '#/components/icons/common';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
@@ -85,6 +88,38 @@ export function Label({ subtitleText, titleText }: { subtitleText?: ReactNode; t
 				</Text>
 			)}
 		</span>
+	);
+}
+
+/** A row that fires an action on press; the whole row is the button, with a trailing forward chevron. */
+export function ButtonRow({
+	children,
+	className,
+	disabled,
+	label,
+	onPress,
+}: {
+	children: ReactNode;
+	className?: string;
+	disabled?: boolean;
+	label: string;
+	onPress: () => void;
+}) {
+	return (
+		<button
+			type="button"
+			aria-label={label}
+			disabled={disabled}
+			onClick={onPress}
+			className={clsx(styles.row, styles.rowInteractive, className)}
+		>
+			{children}
+			<span className={styles.trailing}>
+				<span className={styles.chevron}>
+					<ChevronRightIcon size="sm" fill="currentColor" />
+				</span>
+			</span>
+		</button>
 	);
 }
 

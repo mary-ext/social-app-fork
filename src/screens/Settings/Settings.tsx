@@ -28,7 +28,6 @@ import { ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon } from '#/component
 import { CodeBrackets_Stroke2_Corner2_Rounded as CodeBracketsIcon } from '#/components/icons/CodeBrackets';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
 import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
-import { Lock_Stroke2_Corner2_Rounded as LockIcon } from '#/components/icons/Lock';
 import { PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon } from '#/components/icons/PaintRoller';
 import {
 	Person_Stroke2_Corner2_Rounded as PersonIcon,
@@ -130,16 +129,10 @@ export function SettingsScreen({}: Props) {
 						<AddAccountRow />
 					)}
 					<SettingsList.Divider />
-					<SettingsList.LinkItem label={l`Account`} to="/settings/account">
+					<SettingsList.LinkItem label={l`Account and privacy`} to="/settings/account">
 						<SettingsList.ItemIcon icon={PersonIcon} />
 						<SettingsList.ItemText>
-							<Trans>Account</Trans>
-						</SettingsList.ItemText>
-					</SettingsList.LinkItem>
-					<SettingsList.LinkItem label={l`Privacy and security`} to="/settings/privacy-and-security">
-						<SettingsList.ItemIcon icon={LockIcon} />
-						<SettingsList.ItemText>
-							<Trans>Privacy and security</Trans>
+							<Trans>Account & privacy</Trans>
 						</SettingsList.ItemText>
 					</SettingsList.LinkItem>
 					<SettingsList.LinkItem label={l`Moderation and content filters`} to="/moderation">

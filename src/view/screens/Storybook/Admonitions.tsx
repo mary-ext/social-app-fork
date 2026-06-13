@@ -72,11 +72,11 @@ export function Admonitions() {
 								If you want to restrict who can receive notifications for your account's activity, you can
 								change this in{' '}
 								<InlineLinkText
-									label={l`Privacy and Security settings`}
-									to={{ screen: 'ActivityPrivacySettings' }}
+									label={l`Account and privacy settings`}
+									to={{ screen: 'AccountSettings' }}
 									style={[a.font_bold]}
 								>
-									Settings &rarr; Privacy and Security
+									Settings &rarr; Account & privacy
 								</InlineLinkText>
 								.
 							</Trans>

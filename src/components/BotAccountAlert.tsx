@@ -48,7 +48,7 @@ export function BotAccountAlert({
 								label={l`Open settings`}
 								onClick={() => {
 									handle.close();
-									void navigate('AutomationLabelSettings');
+									void navigate('AccountSettings');
 								}}
 								size="large"
 							>
