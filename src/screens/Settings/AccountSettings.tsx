@@ -58,6 +58,7 @@ export function AccountSettingsScreen({}: Props) {
 						<Settings.SwitchRow
 							disabled={!automation.canToggle}
 							label={l`Show automation label`}
+							loading={automation.loading}
 							onChange={automation.toggle}
 							value={automation.enabled}
 						>
@@ -91,8 +92,9 @@ export function AccountSettingsScreen({}: Props) {
 						titleText={<Trans>Privacy</Trans>}
 					>
 						<Settings.SelectRow<AllowSubscriptions>
-							disabled={isPending || isError}
+							disabled={isError}
 							label={l`Allow others to be notified of your posts`}
+							loading={isPending}
 							onValueChange={onChangeAllowSubscriptions}
 							value={declaration?.value?.allowSubscriptions ?? 'followers'}
 							items={[
@@ -110,14 +112,19 @@ export function AccountSettingsScreen({}: Props) {
 
 						<Settings.SwitchRow
 							disabled={!pwi.canToggle}
-							label={l`Discourage apps from showing my account to logged-out users`}
+							label={l`Hide my account from logged-out users`}
+							loading={pwi.loading}
 							onChange={pwi.toggle}
 							value={pwi.enabled}
 						>
 							<Settings.Icon icon={EyeSlashIcon} />
 							<Settings.Label
-								subtitleText={<Trans>Discourage apps from showing my account to logged-out users.</Trans>}
-								titleText={<Trans>Logged-out visibility</Trans>}
+								subtitleText={
+									<Trans>
+										Discourage apps from showing your profile and posts to people who aren't signed in.
+									</Trans>
+								}
+								titleText={<Trans>Hide my account from logged-out users</Trans>}
 							/>
 						</Settings.SwitchRow>
 					</Settings.Section>
@@ -143,7 +150,8 @@ function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: bool
 	const updateProfile = useProfileUpdateMutation();
 
 	const enabled = profile?.labels?.some((l) => l.val === value && l.src === profile.did) ?? false;
-	const canToggle = !!profile && !updateProfile.isPending;
+	const loading = updateProfile.isPending;
+	const canToggle = !!profile && !loading;
 
 	const toggle = () => {
 		if (!profile) {
@@ -184,5 +192,5 @@ function useSelfLabelToggle({ invalidateFeeds, value }: { invalidateFeeds?: bool
 		);
 	};
 
-	return { canToggle, enabled, toggle };
+	return { canToggle, enabled, loading, toggle };
 }

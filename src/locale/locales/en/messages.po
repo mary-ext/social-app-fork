@@ -1211,8 +1211,8 @@ msgstr "Allow direct messages from"
 msgid "Allow group chat invites from"
 msgstr "Allow group chat invites from"
 
-#: src/screens/Settings/AccountSettings.tsx:95
-#: src/screens/Settings/AccountSettings.tsx:107
+#: src/screens/Settings/AccountSettings.tsx:96
+#: src/screens/Settings/AccountSettings.tsx:109
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
@@ -1394,7 +1394,7 @@ msgstr "Anyone can join instantly"
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
-#: src/screens/Settings/AccountSettings.tsx:99
+#: src/screens/Settings/AccountSettings.tsx:101
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -1515,7 +1515,7 @@ msgstr ""
 msgid "Automated account"
 msgstr "Automated account"
 
-#: src/screens/Settings/AccountSettings.tsx:67
+#: src/screens/Settings/AccountSettings.tsx:68
 msgid "Automation label"
 msgstr "Automation label"
 
@@ -1684,7 +1684,7 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:79
+#: src/screens/Settings/AccountSettings.tsx:80
 msgid "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
 msgstr "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
 
@@ -2717,13 +2717,9 @@ msgstr ""
 msgid "Disconnect Germ DM"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:113
-msgid "Discourage apps from showing my account to logged-out users"
-msgstr ""
-
-#: src/screens/Settings/AccountSettings.tsx:119
-msgid "Discourage apps from showing my account to logged-out users."
-msgstr "Discourage apps from showing my account to logged-out users."
+#: src/screens/Settings/AccountSettings.tsx:123
+msgid "Discourage apps from showing your profile and posts to people who aren't signed in."
+msgstr "Discourage apps from showing your profile and posts to people who aren't signed in."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:50
 #: src/view/com/posts/FollowingEndOfFeed.tsx:46
@@ -3200,8 +3196,8 @@ msgstr "Export chat data"
 msgid "Export my chat data"
 msgstr "Export my chat data"
 
-#: src/screens/Settings/AccountSettings.tsx:71
-#: src/screens/Settings/AccountSettings.tsx:73
+#: src/screens/Settings/AccountSettings.tsx:72
+#: src/screens/Settings/AccountSettings.tsx:74
 msgid "Export my data"
 msgstr ""
 
@@ -4111,6 +4107,11 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
+#: src/screens/Settings/AccountSettings.tsx:115
+#: src/screens/Settings/AccountSettings.tsx:127
+msgid "Hide my account from logged-out users"
+msgstr "Hide my account from logged-out users"
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:492
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
 msgid "Hide post for me"
@@ -4522,7 +4523,7 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:84
+#: src/screens/Settings/AccountSettings.tsx:85
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -4864,10 +4865,6 @@ msgstr "Locked"
 
 #: src/Navigation.tsx:656
 msgid "Log"
-msgstr ""
-
-#: src/screens/Settings/AccountSettings.tsx:120
-msgid "Logged-out visibility"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:106
@@ -5503,7 +5500,7 @@ msgctxt "allow messages from"
 msgid "No one"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:101
+#: src/screens/Settings/AccountSettings.tsx:103
 msgctxt "enable for"
 msgid "No one"
 msgstr ""
@@ -5753,7 +5750,7 @@ msgstr "Only admins can ignore join requests."
 msgid "Only followers can join this group chat."
 msgstr "Only followers can join this group chat."
 
-#: src/screens/Settings/AccountSettings.tsx:100
+#: src/screens/Settings/AccountSettings.tsx:102
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -6374,7 +6371,7 @@ msgstr ""
 msgid "Primary language"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:91
+#: src/screens/Settings/AccountSettings.tsx:92
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -7665,7 +7662,7 @@ msgstr ""
 msgid "Show more replies"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:66
+#: src/screens/Settings/AccountSettings.tsx:67
 msgid "Show others that this account is automated."
 msgstr "Show others that this account is automated."
 
@@ -9614,7 +9611,7 @@ msgstr "Who can join this group chat and how"
 msgid "Who can reply"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:106
+#: src/screens/Settings/AccountSettings.tsx:108
 msgid "Who can subscribe to notifications for your posts and replies."
 msgstr "Who can subscribe to notifications for your posts and replies."
 

@@ -59,18 +59,25 @@ export const divider = style({
 
 // #region row
 /**
- * A single row inside a {@link card}: icon + flexible label + trailing control/value/chevron. Content
- * top-aligns so a trailing control sits on the title line of a two-line row; symmetric block padding keeps a
- * single-line row visually centered.
+ * A single row inside a {@link card}, laid out as a two-row grid:
+ *
+ *     icon | title    | trailing
+ *          | subtitle (spans title + trailing)
+ *
+ * The title shares its line with the trailing control/value, while the subtitle flows full-width beneath both
+ * — so a long title or value can't squeeze the subtitle into a narrow column. Content top-aligns so the
+ * trailing control sits on the title line; symmetric block padding keeps a single-line row visually
+ * centered.
  */
 export const row = style({
-	alignItems: 'flex-start',
+	alignItems: 'start',
 	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'row',
-	gap: space.md,
+	columnGap: space.md,
+	display: 'grid',
+	gridTemplateColumns: 'auto minmax(0, 1fr) auto',
 	paddingBlock: 14,
 	paddingInline: space.lg,
+	rowGap: 2,
 	textAlign: 'left',
 	width: '100%',
 });
@@ -115,14 +122,21 @@ export const icon = style({
 	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
+	gridColumn: 1,
+	gridRow: 1,
 });
 
-/** The flexible two-line text column (title + optional subtitle) that fills the row. */
-export const label = style({
-	display: 'flex',
-	flexDirection: 'column',
-	flexGrow: 1,
-	gap: 2,
+/** The row's primary text, sharing its line with the trailing control. */
+export const title = style({
+	gridColumn: 2,
+	gridRow: 1,
+	minWidth: 0,
+});
+
+/** The row's muted second line; spans the title and trailing columns so it gets the full row width. */
+export const subtitle = style({
+	gridColumn: '2 / 4',
+	gridRow: 2,
 	minWidth: 0,
 });
 
@@ -132,12 +146,14 @@ export const trailing = style({
 	display: 'flex',
 	flexShrink: 0,
 	gap: space.xs,
+	gridColumn: 3,
+	gridRow: 1,
 	minHeight: titleLineHeight,
 });
 
-/** Clamps the trailing select value's width so a long label can't push the row's layout. */
+/** Clamps the trailing select value's width so a long label can't squeeze the title on narrow rows. */
 export const value = style({
-	maxWidth: 220,
+	maxWidth: 'min(220px, 45vw)',
 });
 
 export const chevron = style({

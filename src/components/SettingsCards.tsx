@@ -9,12 +9,13 @@ import {
 import type { Props as IconProps } from '#/components/icons/common';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
+import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 
 /**
  * The card-sectioned settings vocabulary: a {@link List} of titled {@link Section} cards, each holding
- * whole-row {@link SwitchRow}/{@link SelectRow} rows. Compose a row's leading {@link Icon} and {@link Label};
- * trailing controls are supplied by the row type.
+ * whole-row {@link ButtonRow}/{@link SwitchRow}/{@link SelectRow} rows. Compose a row's leading {@link Icon}
+ * and {@link Label}; trailing controls are supplied by the row type.
  */
 export function List({ children }: { children: ReactNode }) {
 	return <div className={styles.list}>{children}</div>;
@@ -75,19 +76,22 @@ export function Icon({ icon: IconCmp }: { icon: ComponentType<IconProps> }) {
 	);
 }
 
-/** The row's primary text, optionally over a muted second line. */
+/**
+ * The row's primary text, optionally over a muted second line. Renders the two lines as separate row-grid
+ * items (not a nested column) so the subtitle can span the full row width beneath the trailing control.
+ */
 export function Label({ subtitleText, titleText }: { subtitleText?: ReactNode; titleText: ReactNode }) {
 	return (
-		<span className={styles.label}>
-			<Text size="md" weight="medium" color="text" leading="snug">
+		<>
+			<Text className={styles.title} size="md" weight="medium" color="text" leading="snug">
 				{titleText}
 			</Text>
 			{subtitleText != null && (
-				<Text size="sm" color="textContrastMedium" leading="snug">
+				<Text className={styles.subtitle} size="sm" color="textContrastMedium" leading="snug">
 					{subtitleText}
 				</Text>
 			)}
-		</span>
+		</>
 	);
 }
 
@@ -123,12 +127,16 @@ export function ButtonRow({
 	);
 }
 
-/** A row that toggles a boolean on press; the whole row is the switch, with the switch skin at its end. */
+/**
+ * A row that toggles a boolean on press; the whole row is the switch, with the switch skin at its end. Pass
+ * `loading` while the change is being persisted to show a spinner and freeze the row.
+ */
 export function SwitchRow({
 	children,
 	className,
 	disabled,
 	label,
+	loading,
 	onChange,
 	value,
 }: {
@@ -136,6 +144,7 @@ export function SwitchRow({
 	className?: string;
 	disabled?: boolean;
 	label: string;
+	loading?: boolean;
 	onChange: (value: boolean) => void;
 	value: boolean;
 }) {
@@ -143,25 +152,32 @@ export function SwitchRow({
 		<Switch.Root
 			aria-label={label}
 			checked={value}
-			disabled={disabled}
+			disabled={disabled || loading}
 			onCheckedChange={onChange}
 			className={clsx(styles.row, styles.rowInteractive, className)}
 		>
 			{children}
-			<span className={styles.switchTrack}>
-				<span className={styles.switchThumb} />
+			<span className={styles.trailing}>
+				{loading && <Spinner color="currentColor" label={label} size="sm" />}
+				<span className={styles.switchTrack}>
+					<span className={styles.switchThumb} />
+				</span>
 			</span>
 		</Switch.Root>
 	);
 }
 
-/** A row that opens a dropdown on press; the whole row is the select trigger, showing the current value. */
+/**
+ * A row that opens a dropdown on press; the whole row is the select trigger, showing the current value. Pass
+ * `loading` while the value is still being fetched to show a spinner in its place.
+ */
 export function SelectRow<T extends string>({
 	children,
 	className,
 	disabled,
 	items,
 	label,
+	loading,
 	onValueChange,
 	value,
 }: {
@@ -170,6 +186,7 @@ export function SelectRow<T extends string>({
 	disabled?: boolean;
 	items: Select.SelectItem[];
 	label: string;
+	loading?: boolean;
 	onValueChange: (value: T) => void;
 	value: T;
 }) {
@@ -178,7 +195,7 @@ export function SelectRow<T extends string>({
 		<Select.Root
 			items={items}
 			value={value}
-			disabled={disabled}
+			disabled={disabled || loading}
 			onValueChange={(next) => onValueChange(next as T)}
 		>
 			<Select.Trigger
@@ -192,9 +209,19 @@ export function SelectRow<T extends string>({
 			>
 				{children}
 				<span className={styles.trailing}>
-					<Text className={styles.value} size="sm" color="textContrastMedium" align="right" numberOfLines={1}>
-						{selected?.label}
-					</Text>
+					{loading ? (
+						<Spinner color="currentColor" label={label} size="sm" />
+					) : (
+						<Text
+							className={styles.value}
+							size="sm"
+							color="textContrastMedium"
+							align="right"
+							numberOfLines={1}
+						>
+							{selected?.label}
+						</Text>
+					)}
 					<span className={styles.chevron}>
 						<ChevronDownIcon size="sm" fill="currentColor" />
 					</span>
