@@ -25,7 +25,6 @@ import { useFeedFeedbackContext } from '#/state/feed-feedback';
 import { STALE } from '#/state/queries';
 import {
 	type FeedDescriptor,
-	type FeedParams,
 	type FeedPostSlice,
 	type FeedPostSliceItem,
 	pollLatest,
@@ -130,7 +129,6 @@ const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 
 let PostFeed = ({
 	feed,
-	feedParams,
 	ignoreFilterFor,
 	style,
 	enabled,
@@ -151,7 +149,6 @@ let PostFeed = ({
 	initialNumToRender: initialNumToRenderOverride,
 }: {
 	feed: FeedDescriptor;
-	feedParams?: FeedParams;
 	ignoreFilterFor?: string;
 	style?: StyleProp<ViewStyle>;
 	enabled?: boolean;
@@ -202,7 +199,7 @@ let PostFeed = ({
 		hasNextPage,
 		isFetchingNextPage,
 		fetchNextPage,
-	} = usePostFeedQuery(feed, feedParams, opts);
+	} = usePostFeedQuery(feed, opts);
 	const lastFetchedAt = data?.pages[0]?.fetchedAt;
 	const isEmpty = useMemo(
 		() => !isFetching && !data?.pages?.some((page) => page.slices.length),
@@ -485,13 +482,13 @@ let PostFeed = ({
 
 		setIsPTRing(true);
 		try {
-			await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams));
+			await truncateAndInvalidate(queryClient, RQKEY(feed));
 			onHasNew?.(false);
 		} catch (err) {
 			logger.error('Failed to refresh posts feed', { message: err });
 		}
 		setIsPTRing(false);
-	}, [queryClient, setIsPTRing, onHasNew, feed, feedParams, feedType, enabled]);
+	}, [queryClient, setIsPTRing, onHasNew, feed, feedType, enabled]);
 
 	const onEndReached = useCallback(async () => {
 		if (isFetching || !hasNextPage || isError) return;

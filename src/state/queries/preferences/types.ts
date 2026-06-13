@@ -4,9 +4,7 @@ export type UsePreferencesQueryResponse = Omit<
 	BskyPreferences,
 	'contentLabels' | 'feedViewPrefs' | 'feeds'
 > & {
-	feedViewPrefs: BskyFeedViewPreference & {
-		lab_mergeFeedEnabled?: boolean;
-	};
+	feedViewPrefs: BskyFeedViewPreference;
 	/** User thread-view prefs, including newer fields that may not be typed yet. */
 	threadViewPrefs: ThreadViewPreferences;
 	userAge: number | undefined;

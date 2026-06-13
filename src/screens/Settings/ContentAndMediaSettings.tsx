@@ -11,7 +11,6 @@ import {
 } from '#/state/queries/preferences/useThreadPreferences';
 import { useTrendingConfig } from '#/state/service-config';
 
-import { Beaker_Stroke2_Corner2_Rounded as BeakerIcon } from '#/components/icons/Beaker';
 import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { Hashtag_Stroke2_Corner0_Rounded as HashtagIcon } from '#/components/icons/Hashtag';
@@ -43,9 +42,6 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 	const showReplies = !(variables?.hideReplies ?? preferences?.feedViewPrefs?.hideReplies);
 	const showReposts = !(variables?.hideReposts ?? preferences?.feedViewPrefs?.hideReposts);
 	const showQuotePosts = !(variables?.hideQuotePosts ?? preferences?.feedViewPrefs?.hideQuotePosts);
-	const mergeFeedEnabled = Boolean(
-		variables?.lab_mergeFeedEnabled ?? preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
-	);
 
 	return (
 		<Layout.Screen>
@@ -150,17 +146,6 @@ export function ContentAndMediaSettingsScreen({}: Props) {
 						>
 							<Settings.Icon icon={QuoteIcon} />
 							<Settings.Label titleText={<Trans>Show quote posts</Trans>} />
-						</Settings.SwitchRow>
-						<Settings.SwitchRow
-							label={l`Show samples of your saved feeds in your Following feed`}
-							onChange={(value) => setFeedViewPref({ lab_mergeFeedEnabled: value })}
-							value={mergeFeedEnabled}
-						>
-							<Settings.Icon icon={BeakerIcon} />
-							<Settings.Label
-								subtitleText={<Trans>Show samples of your saved feeds in your Following feed</Trans>}
-								titleText={<Trans>Merge saved feeds</Trans>}
-							/>
 						</Settings.SwitchRow>
 					</Settings.Section>
 				</Settings.List>

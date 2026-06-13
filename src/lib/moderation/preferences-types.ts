@@ -28,9 +28,7 @@ export interface ModerationPrefs {
 	mutedWords: AppBskyActorDefs.MutedWord[];
 }
 
-export type BskyFeedViewPreference = Omit<AppBskyActorDefs.FeedViewPref, '$type' | 'feed'> & {
-	lab_mergeFeedEnabled?: boolean;
-};
+export type BskyFeedViewPreference = Omit<AppBskyActorDefs.FeedViewPref, '$type' | 'feed'>;
 export type BskyThreadViewPreference = Omit<AppBskyActorDefs.ThreadViewPref, '$type'>;
 export type BskyInterestsPreference = Omit<AppBskyActorDefs.InterestsPref, '$type'>;
 

@@ -7,7 +7,6 @@ export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs
 	hideRepliesByLikeCount: 0, // Legacy, ignored
 	hideReposts: false,
 	hideQuotePosts: false,
-	lab_mergeFeedEnabled: false, // experimental
 };
 
 export const DEFAULT_THREAD_VIEW_PREFS: ThreadViewPreferences = {

@@ -21,7 +21,7 @@ import type { Client } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery } from '@tanstack/react-query';
 
-import { FeedTuner, type FeedTunerFn } from '#/lib/api/feed-manip';
+import { FeedTuner } from '#/lib/api/feed-manip';
 import { AuthorFeedAPI } from '#/lib/api/feed/author';
 import { CustomFeedAPI } from '#/lib/api/feed/custom';
 import { DemoFeedAPI } from '#/lib/api/feed/demo';
@@ -29,7 +29,6 @@ import { FollowingFeedAPI } from '#/lib/api/feed/following';
 import { HomeFeedAPI } from '#/lib/api/feed/home';
 import { LikesFeedAPI } from '#/lib/api/feed/likes';
 import { ListFeedAPI } from '#/lib/api/feed/list';
-import { MergeFeedAPI } from '#/lib/api/feed/merge';
 import { PostListFeedAPI } from '#/lib/api/feed/posts';
 import type { FeedAPI, ReasonFeedSource } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
@@ -70,16 +69,12 @@ export type FeedDescriptor =
 	| `list|${ListUri}`
 	| `posts|${PostsUriList}`
 	| 'demo';
-export interface FeedParams {
-	mergeFeedEnabled?: boolean;
-	mergeFeedSources?: string[];
-}
 
 type RQPageParam = { cursor: string | undefined; api: FeedAPI } | undefined;
 
 export const RQKEY_ROOT = 'post-feed';
-export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
-	return [RQKEY_ROOT, feedDesc, params || {}];
+export function RQKEY(feedDesc: FeedDescriptor) {
+	return [RQKEY_ROOT, feedDesc];
 }
 
 export interface FeedPostSliceItem {
@@ -128,7 +123,6 @@ const MIN_POSTS = 30;
 
 export function usePostFeedQuery(
 	feedDesc: FeedDescriptor,
-	params?: FeedParams,
 	opts?: { enabled?: boolean; ignoreFilterFor?: string },
 ) {
 	const feedTuners = useFeedTuners(feedDesc);
@@ -173,7 +167,7 @@ export function usePostFeedQuery(
 	const query = useInfiniteQuery<FeedPageUnselected, Error, InfiniteData<FeedPage>, QueryKey, RQPageParam>({
 		enabled,
 		staleTime: STALE.INFINITY,
-		queryKey: RQKEY(feedDesc, params),
+		queryKey: RQKEY(feedDesc),
 		async queryFn({ pageParam }: { pageParam: RQPageParam }) {
 			logger.debug('usePostFeedQuery', { feedDesc, cursor: pageParam?.cursor });
 			const { api, cursor } = pageParam
@@ -181,8 +175,6 @@ export function usePostFeedQuery(
 				: {
 						api: createApi({
 							feedDesc,
-							feedParams: params || {},
-							feedTuners,
 							appview,
 							// Not in the query key because they don't change:
 							userInterests,
@@ -419,33 +411,20 @@ export async function pollLatest(page: FeedPage | undefined) {
 
 function createApi({
 	feedDesc,
-	feedParams,
-	feedTuners,
 	userInterests,
 	appview,
 	enableFollowingToDiscoverFallback,
 }: {
 	feedDesc: FeedDescriptor;
-	feedParams: FeedParams;
-	feedTuners: FeedTunerFn[];
 	userInterests?: string;
 	appview: Client;
 	enableFollowingToDiscoverFallback: boolean;
 }) {
 	if (feedDesc === 'following') {
-		if (feedParams.mergeFeedEnabled) {
-			return new MergeFeedAPI({
-				appview,
-				feedParams,
-				feedTuners,
-				userInterests,
-			});
+		if (enableFollowingToDiscoverFallback) {
+			return new HomeFeedAPI({ appview, userInterests });
 		} else {
-			if (enableFollowingToDiscoverFallback) {
-				return new HomeFeedAPI({ appview, userInterests });
-			} else {
-				return new FollowingFeedAPI({ appview });
-			}
+			return new FollowingFeedAPI({ appview });
 		}
 	} else if (feedDesc.startsWith('author')) {
 		const [__, actor, filter] = feedDesc.split('|') as [string, string, string];

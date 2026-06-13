@@ -14,7 +14,7 @@ import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
 import { useSetHomeBadge } from '#/state/home-badge';
 import type { FeedSourceInfo } from '#/state/queries/feed';
-import { type FeedDescriptor, type FeedParams, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
+import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
@@ -34,7 +34,6 @@ export function FeedPage({
 	testID,
 	isPageFocused,
 	feed,
-	feedParams,
 	renderEmptyState,
 	renderEndOfFeed,
 	savedFeedConfig,
@@ -42,7 +41,6 @@ export function FeedPage({
 }: {
 	testID?: string;
 	feed: FeedDescriptor;
-	feedParams?: FeedParams;
 	isPageFocused: boolean;
 	isPageAdjacent: boolean;
 	renderEmptyState: () => JSX.Element;
@@ -117,7 +115,6 @@ export function FeedPage({
 					testID={testID ? `${testID}-feed` : undefined}
 					enabled={isPageFocused || shouldPrefetch}
 					feed={feed}
-					feedParams={feedParams}
 					pollInterval={POLL_FREQ}
 					disablePoll={hasNew || !isPageFocused}
 					scrollElRef={scrollElRef}

@@ -9,7 +9,7 @@ import type { HomeTabNavigatorParams, NativeStackScreenProps, NavigationProp } f
 
 import { emitSoftReset } from '#/state/events';
 import { type SavedFeedSourceInfo, usePinnedFeedsInfos } from '#/state/queries/feed';
-import type { FeedDescriptor, FeedParams } from '#/state/queries/post-feed';
+import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { usePreferencesQuery } from '#/state/queries/preferences';
 import type { UsePreferencesQueryResponse } from '#/state/queries/preferences/types';
 import { useSession } from '#/state/session';
@@ -152,15 +152,6 @@ function HomeScreenReady({
 		return <CustomFeedEmptyState />;
 	}, []);
 
-	const homeFeedParams = useMemo<FeedParams>(() => {
-		return {
-			mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
-			mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-				? preferences.savedFeeds.filter((f) => f.type === 'feed' || f.type === 'list').map((f) => f.value)
-				: [],
-		};
-	}, [preferences]);
-
 	if (demoMode) {
 		return (
 			<Pager
@@ -210,7 +201,6 @@ function HomeScreenReady({
 								isPageFocused={maybeSelectedFeed === feed}
 								isPageAdjacent={Math.abs(selectedIndex - index) === 1}
 								feed={feed}
-								feedParams={homeFeedParams}
 								renderEmptyState={renderFollowingEmptyState}
 								renderEndOfFeed={FollowingEndOfFeed}
 								feedInfo={feedInfo}

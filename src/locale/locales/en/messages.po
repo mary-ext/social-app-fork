@@ -1523,8 +1523,8 @@ msgstr "Automated account"
 msgid "Automation label"
 msgstr "Automation label"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:80
-#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:76
+#: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Autoplay videos and GIFs"
 msgstr ""
 
@@ -2155,7 +2155,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:56
+#: src/screens/Settings/ContentAndMediaSettings.tsx:52
 msgid "Content & Media"
 msgstr ""
 
@@ -3010,8 +3010,8 @@ msgstr ""
 msgid "Enable this source only"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:89
-#: src/screens/Settings/ContentAndMediaSettings.tsx:94
+#: src/screens/Settings/ContentAndMediaSettings.tsx:85
+#: src/screens/Settings/ContentAndMediaSettings.tsx:90
 msgid "Enable trending topics"
 msgstr ""
 
@@ -3190,8 +3190,8 @@ msgstr ""
 msgid "Export my profile data"
 msgstr "Export my profile data"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:68
-#: src/screens/Settings/ContentAndMediaSettings.tsx:70
+#: src/screens/Settings/ContentAndMediaSettings.tsx:71
+#: src/screens/Settings/ContentAndMediaSettings.tsx:73
 msgid "External media"
 msgstr ""
 
@@ -3697,7 +3697,7 @@ msgstr ""
 msgid "Following {displayName}"
 msgstr "Following {displayName}"
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:128
+#: src/screens/Settings/ContentAndMediaSettings.tsx:124
 msgid "Following feed"
 msgstr "Following feed"
 
@@ -4771,7 +4771,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:149
 #: src/screens/Profile/Sections/Feed.tsx:102
 #: src/screens/ProfileList/FeedSection.tsx:100
-#: src/view/com/feeds/FeedPage.tsx:133
+#: src/view/com/feeds/FeedPage.tsx:130
 msgid "Load new posts"
 msgstr ""
 
@@ -4879,8 +4879,8 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:64
-#: src/screens/Settings/ContentAndMediaSettings.tsx:66
+#: src/screens/Settings/ContentAndMediaSettings.tsx:60
+#: src/screens/Settings/ContentAndMediaSettings.tsx:62
 msgid "Manage saved feeds"
 msgstr ""
 
@@ -4906,7 +4906,7 @@ msgstr ""
 msgid "Marked all as read"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:78
+#: src/screens/Settings/ContentAndMediaSettings.tsx:70
 #: src/view/screens/Profile.tsx:232
 msgid "Media"
 msgstr ""
@@ -4947,10 +4947,6 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:76
 msgid "Menu"
 msgstr "Menu"
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:162
-msgid "Merge saved feeds"
-msgstr "Merge saved feeds"
 
 #: src/screens/Messages/components/MessageComposer.tsx:132
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:186
@@ -5362,7 +5358,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:141
+#: src/view/com/feeds/FeedPage.tsx:138
 #: src/view/shell/desktop/LeftNav.tsx:554
 msgctxt "action"
 msgid "New post"
@@ -5386,7 +5382,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:94
 #: src/screens/PostThread/components/HeaderDropdown.tsx:100
-#: src/screens/Settings/ContentAndMediaSettings.tsx:104
+#: src/screens/Settings/ContentAndMediaSettings.tsx:100
 msgid "Newest replies first"
 msgstr ""
 
@@ -5674,7 +5670,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:83
 #: src/screens/PostThread/components/HeaderDropdown.tsx:89
-#: src/screens/Settings/ContentAndMediaSettings.tsx:103
+#: src/screens/Settings/ContentAndMediaSettings.tsx:99
 msgid "Oldest replies first"
 msgstr ""
 
@@ -7657,17 +7653,17 @@ msgstr ""
 msgid "Show others that this account is automated."
 msgstr "Show others that this account is automated."
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:120
+#: src/screens/Settings/ContentAndMediaSettings.tsx:116
 msgid "Show post replies in a threaded tree view"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:147
-#: src/screens/Settings/ContentAndMediaSettings.tsx:152
+#: src/screens/Settings/ContentAndMediaSettings.tsx:143
+#: src/screens/Settings/ContentAndMediaSettings.tsx:148
 msgid "Show quote posts"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:131
-#: src/screens/Settings/ContentAndMediaSettings.tsx:136
+#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+#: src/screens/Settings/ContentAndMediaSettings.tsx:132
 msgid "Show replies"
 msgstr ""
 
@@ -7680,14 +7676,9 @@ msgstr ""
 msgid "Show reply for everyone"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:139
-#: src/screens/Settings/ContentAndMediaSettings.tsx:144
+#: src/screens/Settings/ContentAndMediaSettings.tsx:135
+#: src/screens/Settings/ContentAndMediaSettings.tsx:140
 msgid "Show reposts"
-msgstr ""
-
-#: src/screens/Settings/ContentAndMediaSettings.tsx:155
-#: src/screens/Settings/ContentAndMediaSettings.tsx:161
-msgid "Show samples of your saved feeds in your Following feed"
 msgstr ""
 
 #: src/components/moderation/PostHider.tsx:96
@@ -7894,8 +7885,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:106
-#: src/screens/Settings/ContentAndMediaSettings.tsx:111
+#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:107
 msgid "Sort replies"
 msgstr ""
 
@@ -8310,7 +8301,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:890
-#: src/view/com/posts/PostFeed.tsx:534
+#: src/view/com/posts/PostFeed.tsx:531
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -8379,7 +8370,7 @@ msgstr ""
 msgid "These are your default settings"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:127
+#: src/screens/Settings/ContentAndMediaSettings.tsx:123
 msgid "These settings only apply to the Following feed."
 msgstr ""
 
@@ -8725,7 +8716,7 @@ msgstr ""
 msgid "Thread options"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:99
+#: src/screens/Settings/ContentAndMediaSettings.tsx:95
 msgid "Thread preferences"
 msgstr ""
 
@@ -8759,7 +8750,7 @@ msgstr ""
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:72
 #: src/screens/PostThread/components/HeaderDropdown.tsx:78
-#: src/screens/Settings/ContentAndMediaSettings.tsx:102
+#: src/screens/Settings/ContentAndMediaSettings.tsx:98
 msgid "Top replies first"
 msgstr ""
 
@@ -8776,8 +8767,8 @@ msgstr ""
 msgid "Translate"
 msgstr ""
 
-#: src/screens/Settings/ContentAndMediaSettings.tsx:114
-#: src/screens/Settings/ContentAndMediaSettings.tsx:121
+#: src/screens/Settings/ContentAndMediaSettings.tsx:110
+#: src/screens/Settings/ContentAndMediaSettings.tsx:117
 msgid "Tree view"
 msgstr ""
 
@@ -10036,8 +10027,8 @@ msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr ""
 
 #: src/Navigation.tsx:675
-#: src/screens/Settings/ContentAndMediaSettings.tsx:72
-#: src/screens/Settings/ContentAndMediaSettings.tsx:74
+#: src/screens/Settings/ContentAndMediaSettings.tsx:64
+#: src/screens/Settings/ContentAndMediaSettings.tsx:66
 #: src/screens/Settings/InterestsSettings.tsx:42
 msgid "Your interests"
 msgstr ""
