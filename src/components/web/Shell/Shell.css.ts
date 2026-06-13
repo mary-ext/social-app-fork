@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
 
 import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 
@@ -7,6 +7,12 @@ import { zIndex } from '#/styles/tokens.css';
 
 /** Center column plus its 1px left/right borders. */
 const CENTER_COLUMN_FRAME = CENTER_COLUMN_WIDTH + 2;
+
+/**
+ * The bottom bar's measured height (or 0 when no bar), published by `WebShell` onto the shell root. Lets
+ * screens and fixed overlays clear the in-flow bar without a hardcoded inset; consume via `fallbackVar`.
+ */
+export const bottomBarHeightVar = createVar();
 
 /**
  * Full-height flex column the `<body>` scrolls. Holds the horizontal rail/center grid plus the in-flow bottom

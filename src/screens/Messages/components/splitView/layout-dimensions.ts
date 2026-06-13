@@ -19,12 +19,10 @@ export function getMessagesSplitViewLayoutDimensions({
 	const centerColumnWidth = CENTER_COLUMN_WIDTH - (centerColumnOffset ? halfLeftNavWidth + 30 : 0);
 
 	const containerWidth = leftColumnWidth + centerColumnWidth;
-	const offset = centerColumnOffset ? halfLeftNavWidth : halfLeftNavWidth / 2;
 
 	return {
 		centerColumnWidth,
 		containerWidth,
 		leftColumnWidth,
-		offset,
 	};
 }

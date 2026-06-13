@@ -5,8 +5,6 @@ import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
 import { atoms as baseAtoms } from '#/alf/base';
 
-import * as Layout from '#/components/Layout';
-
 const EXP_CURVE = 'cubic-bezier(0.16, 1, 0.3, 1)';
 
 type WebAtomStyle = CSSProperties & ImageStyle & TextStyle & ViewStyle;
@@ -123,13 +121,4 @@ export const atoms = {
 		whiteSpace: 'nowrap',
 		borderWidth: 0,
 	}),
-
-	/** {@link Layout.SCROLLBAR_OFFSET} */
-	scrollbar_offset: {
-		transform: [
-			{
-				translateX: Layout.SCROLLBAR_OFFSET,
-			},
-		],
-	} as { transform: Exclude<ViewStyle['transform'], string | undefined> },
 } as const;

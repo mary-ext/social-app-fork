@@ -482,11 +482,8 @@ export function PostThread({ uri }: { uri: string }) {
 }
 
 function MobileComposePrompt({ onPressReply }: { onPressReply: () => unknown }) {
-	// sit just above the in-flow bottom bar, whose measured height the shell publishes as a CSS var
 	return (
-		<div
-			style={{ bottom: 'var(--bottom-bar-height, 0px)', left: 0, position: 'fixed', right: 0, zIndex: 10 }}
-		>
+		<div className={css.mobileComposePrompt}>
 			<ThreadComposePrompt onPressCompose={onPressReply} />
 		</div>
 	);

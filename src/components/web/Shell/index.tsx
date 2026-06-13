@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
@@ -23,8 +24,8 @@ export type WebShellProps = {
  * plus an in-flow sticky bottom bar. The left rail and the bottom bar are mutually exclusive (narrow
  * viewports get the bar); both rails self-collapse when their content doesn't render.
  *
- * Publishes the bottom bar's measured height as the `--bottom-bar-height` CSS variable so screens and fixed
- * overlays (e.g. the thread compose prompt) can sit clear of the bar without a hardcoded inset.
+ * Publishes the bottom bar's measured height as the {@link styles.bottomBarHeightVar} CSS variable so screens
+ * and fixed overlays (e.g. the thread compose prompt) can sit clear of the bar without a hardcoded inset.
  */
 export function WebShell({ children, routeName }: WebShellProps) {
 	const { hasSession } = useSession();
@@ -39,27 +40,23 @@ export function WebShell({ children, routeName }: WebShellProps) {
 	const isSplitView = routeName.startsWith('Messages') && rightNavVisible;
 	const fixedViewport = isSplitView || (routeName === 'MessagesConversation' && !rightNavVisible);
 
-	const rootRef = useRef<HTMLDivElement>(null);
 	const barRef = useRef<HTMLDivElement>(null);
+	const [barHeight, setBarHeight] = useState(0);
 	useEffect(() => {
-		const root = rootRef.current;
 		const bar = barRef.current;
-		if (!root) {
-			return;
-		}
 		if (!showBottomBar || !bar) {
-			root.style.setProperty('--bottom-bar-height', '0px');
 			return;
 		}
-		const observer = new ResizeObserver(() => {
-			root.style.setProperty('--bottom-bar-height', `${bar.offsetHeight}px`);
-		});
+		const observer = new ResizeObserver(() => setBarHeight(bar.offsetHeight));
 		observer.observe(bar);
 		return () => observer.disconnect();
 	}, [showBottomBar]);
 
 	return (
-		<div ref={rootRef} className={clsx(styles.root, fixedViewport && styles.rootFixed)}>
+		<div
+			className={clsx(styles.root, fixedViewport && styles.rootFixed)}
+			style={assignInlineVars({ [styles.bottomBarHeightVar]: showBottomBar ? `${barHeight}px` : '0px' })}
+		>
 			<div className={clsx(styles.body, fixedViewport && styles.bodyFixed, isSplitView && styles.bodyWide)}>
 				<div className={`${styles.rail} ${styles.railLeft}`}>
 					{!showBottomBar && <DesktopLeftNav routeName={routeName} />}
