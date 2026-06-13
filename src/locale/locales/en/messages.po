@@ -1211,10 +1211,10 @@ msgstr "Allow direct messages from"
 msgid "Allow group chat invites from"
 msgstr "Allow group chat invites from"
 
-#: src/screens/Settings/AccountSettings.tsx:96
-#: src/screens/Settings/AccountSettings.tsx:109
+#: src/screens/Settings/AccountSettings.tsx:95
+#: src/screens/Settings/AccountSettings.tsx:108
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Allow others to be notified of your posts"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:395
 msgid "Allow people you follow to reply"
@@ -1394,7 +1394,7 @@ msgstr "Anyone can join instantly"
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
-#: src/screens/Settings/AccountSettings.tsx:101
+#: src/screens/Settings/AccountSettings.tsx:100
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -1684,10 +1684,6 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:80
-msgid "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
-msgstr "Bluesky is an open and public network. Logged-out visibility only limits your content on the Bluesky app and website; other apps may not respect it, and your content may still be shown to logged-out users elsewhere. <0>Learn more about what is public on Bluesky.</0>"
-
 #: src/components/dialogs/ServerInput.tsx:192
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
 msgstr ""
@@ -1695,6 +1691,10 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:143
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr ""
+
+#: src/screens/Settings/AccountSettings.tsx:80
+msgid "Bluesky is an open, public network. This only limits your content in the Bluesky app and website; other apps may not respect it. <0>Learn more about what is public on Bluesky.</0>"
+msgstr "Bluesky is an open, public network. This only limits your content in the Bluesky app and website; other apps may not respect it. <0>Learn more about what is public on Bluesky.</0>"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -2717,9 +2717,9 @@ msgstr ""
 msgid "Disconnect Germ DM"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:123
-msgid "Discourage apps from showing your profile and posts to people who aren't signed in."
-msgstr "Discourage apps from showing your profile and posts to people who aren't signed in."
+#: src/screens/Settings/AccountSettings.tsx:121
+msgid "Discourage apps from showing your account to signed-out users."
+msgstr "Discourage apps from showing your account to signed-out users."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:50
 #: src/view/com/posts/FollowingEndOfFeed.tsx:46
@@ -4107,8 +4107,8 @@ msgstr "Hide group chat updates"
 msgid "Hide lists"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:115
-#: src/screens/Settings/AccountSettings.tsx:127
+#: src/screens/Settings/AccountSettings.tsx:114
+#: src/screens/Settings/AccountSettings.tsx:122
 msgid "Hide my account from logged-out users"
 msgstr "Hide my account from logged-out users"
 
@@ -4523,7 +4523,7 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:85
+#: src/screens/Settings/AccountSettings.tsx:84
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -5500,7 +5500,7 @@ msgctxt "allow messages from"
 msgid "No one"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:103
+#: src/screens/Settings/AccountSettings.tsx:102
 msgctxt "enable for"
 msgid "No one"
 msgstr ""
@@ -5750,7 +5750,7 @@ msgstr "Only admins can ignore join requests."
 msgid "Only followers can join this group chat."
 msgstr "Only followers can join this group chat."
 
-#: src/screens/Settings/AccountSettings.tsx:102
+#: src/screens/Settings/AccountSettings.tsx:101
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -6371,7 +6371,7 @@ msgstr ""
 msgid "Primary language"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:92
+#: src/screens/Settings/AccountSettings.tsx:91
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -9611,9 +9611,9 @@ msgstr "Who can join this group chat and how"
 msgid "Who can reply"
 msgstr ""
 
-#: src/screens/Settings/AccountSettings.tsx:108
-msgid "Who can subscribe to notifications for your posts and replies."
-msgstr "Who can subscribe to notifications for your posts and replies."
+#: src/screens/Settings/AccountSettings.tsx:107
+msgid "Who can subscribe to your posts and replies."
+msgstr "Who can subscribe to your posts and replies."
 
 #: src/screens/Home/NoFeedsPinned.tsx:77
 #: src/screens/Messages/ChatList.tsx:277

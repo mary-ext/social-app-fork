@@ -203,7 +203,7 @@ export function SelectRow<T extends string>({
 					<button
 						type="button"
 						aria-label={label}
-						className={clsx(styles.row, styles.rowInteractive, className)}
+						className={clsx(styles.row, styles.rowInteractive, styles.rowSelect, className)}
 					/>
 				}
 			>
