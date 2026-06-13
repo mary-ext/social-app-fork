@@ -9,16 +9,12 @@ import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers';
 import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages';
 
 import { LanguageSelectDialog } from '#/components/dialogs/LanguageSelectDialog';
-import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
-import { Select } from '#/components/Select';
-import * as SettingsList from '#/components/SettingsList';
-import { Text } from '#/components/Text';
-import { Admonition } from '#/components/web/Admonition';
+import { Filter_Stroke2_Corner0_Rounded as FilterIcon } from '#/components/icons/Filter';
+import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe';
+import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
+import * as Settings from '#/components/SettingsCards';
 import { useDialogHandle } from '#/components/web/Dialog';
-import * as Toggle from '#/components/web/forms/Toggle';
 import * as Layout from '#/components/web/Layout';
-
-import * as styles from './LanguageSettings.css';
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(
 	(lang, i, arr) => lang.code2 && arr.findIndex((l) => l.code2 === lang.code2) === i,
@@ -71,14 +67,6 @@ export function LanguageSettingsScreen({}: Props) {
 		[langPrefs, setLangPrefs],
 	);
 
-	const [recentLanguages, setRecentLanguages] = useState<string[]>(langPrefs.contentLanguages);
-
-	const possibleLanguages = useMemo(() => {
-		return [...new Set([...recentLanguages, ...contentLanguages, ...langPrefs.primaryLanguage])]
-			.map((lang) => LANGUAGES.find((l) => l.code2 === lang))
-			.filter((x) => !!x);
-	}, [recentLanguages, contentLanguages, langPrefs.primaryLanguage]);
-
 	const primaryLanguageItems = useMemo(
 		() =>
 			DEDUPED_LANGUAGES.map((lang) => ({
@@ -87,6 +75,18 @@ export function LanguageSettingsScreen({}: Props) {
 			})).sort((a, b) => a.label.localeCompare(b.label, langPrefs.appLanguage)),
 		[langPrefs.appLanguage],
 	);
+
+	const contentLanguageSummary = useMemo(() => {
+		if (contentLanguages.length === 0) {
+			return null;
+		}
+		return contentLanguages
+			.map((code2) => {
+				const lang = LANGUAGES.find((l) => l.code2 === code2);
+				return lang ? languageName(lang, langPrefs.appLanguage) : code2;
+			})
+			.join(', ');
+	}, [contentLanguages, langPrefs.appLanguage]);
 
 	return (
 		<Layout.Screen>
@@ -100,108 +100,54 @@ export function LanguageSettingsScreen({}: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<SettingsList.Container>
-					<SettingsList.Group iconInset={false}>
-						<SettingsList.ItemText>
-							<Trans>App language</Trans>
-						</SettingsList.ItemText>
-						<div className={styles.section}>
-							<Text leading="snug">
-								<Trans>Select which language to use for the app's user interface.</Trans>
-							</Text>
-							<Select
-								label={l`Select app language`}
-								value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
-								onValueChange={onChangeAppLanguage}
-								items={APP_LANGUAGES.map((language) => ({
-									label: language.name,
-									value: language.code2,
-								}))}
+				<Settings.List>
+					<Settings.Section>
+						<Settings.SelectRow
+							items={APP_LANGUAGES.map((language) => ({ label: language.name, value: language.code2 }))}
+							label={l`Select app language`}
+							onValueChange={onChangeAppLanguage}
+							value={sanitizeAppLanguageSetting(langPrefs.appLanguage)}
+						>
+							<Settings.Icon icon={EarthIcon} />
+							<Settings.Label
+								subtitleText={<Trans>Used for the app's interface</Trans>}
+								titleText={<Trans>App language</Trans>}
 							/>
-						</div>
-					</SettingsList.Group>
-					<SettingsList.Divider />
-					<SettingsList.Group iconInset={false}>
-						<SettingsList.ItemText>
-							<Trans>Primary language</Trans>
-						</SettingsList.ItemText>
-						<div className={styles.section}>
-							<Text leading="snug">
-								<Trans>Select your preferred language for translations in your feed.</Trans>
-							</Text>
-							<Select
-								label={l`Select primary language`}
-								value={langPrefs.primaryLanguage}
-								onValueChange={onChangePrimaryLanguage}
-								items={primaryLanguageItems}
+						</Settings.SelectRow>
+						<Settings.SelectRow
+							items={primaryLanguageItems}
+							label={l`Select primary language`}
+							onValueChange={onChangePrimaryLanguage}
+							value={langPrefs.primaryLanguage}
+						>
+							<Settings.Icon icon={LanguageIcon} />
+							<Settings.Label
+								subtitleText={<Trans>Preferred language for translations in your feed</Trans>}
+								titleText={<Trans>Primary language</Trans>}
 							/>
-						</div>
-					</SettingsList.Group>
-					<SettingsList.Divider />
-					<SettingsList.Group iconInset={false}>
-						<SettingsList.ItemText>
-							<Trans>Content languages</Trans>
-						</SettingsList.ItemText>
-						<div className={styles.section}>
-							<Text leading="snug">
-								<Trans>
-									Select which languages you want your subscribed feeds to include. If none are selected, all
-									languages will be shown.
-								</Trans>
-							</Text>
-
-							{contentLanguages.length === 0 && (
-								<Admonition type="info">
-									<Trans>All languages will be shown in your feeds.</Trans>
-								</Admonition>
-							)}
-
-							<div className={styles.narrow}>
-								<Toggle.Group
-									label={l`Select content languages`}
-									values={contentLanguages}
-									onChange={setContentLanguages}
-								>
-									<Toggle.PanelGroup>
-										{possibleLanguages.map((language, index) => {
-											const name = languageName(language, langPrefs.appLanguage);
-											return (
-												<Toggle.Item key={language.code2} name={language.code2} label={name}>
-													<Toggle.Panel adjacent={index === 0 ? 'trailing' : 'both'}>
-														<Toggle.CheckboxIndicator />
-														<Toggle.PanelText>{name}</Toggle.PanelText>
-													</Toggle.Panel>
-												</Toggle.Item>
-											);
-										})}
-										<Toggle.Action
-											label={l`Add more languages…`}
-											onClick={() => contentLanguagePrefsControl.open(null)}
-										>
-											<Toggle.Panel adjacent="leading">
-												<Toggle.PanelIcon icon={PlusIcon} />
-												<Toggle.PanelText>
-													<Trans>Add more languages…</Trans>
-												</Toggle.PanelText>
-											</Toggle.Panel>
-										</Toggle.Action>
-									</Toggle.PanelGroup>
-								</Toggle.Group>
-							</div>
-
-							<LanguageSelectDialog
-								handle={contentLanguagePrefsControl}
-								titleText={<Trans>Select content languages</Trans>}
-								subtitleText={<Trans>If none are selected, all languages will be shown in your feeds.</Trans>}
-								currentLanguages={contentLanguages}
-								onSelectLanguages={(languages) => {
-									setContentLanguages(languages);
-									setRecentLanguages((recent) => [...new Set([...recent, ...languages])]);
-								}}
+						</Settings.SelectRow>
+						<Settings.ButtonRow
+							label={l`Select content languages`}
+							onPress={() => contentLanguagePrefsControl.open(null)}
+						>
+							<Settings.Icon icon={FilterIcon} />
+							<Settings.Label
+								subtitleText={
+									contentLanguageSummary ?? <Trans>All languages will be shown in your feeds</Trans>
+								}
+								titleText={<Trans>Content languages</Trans>}
 							/>
-						</div>
-					</SettingsList.Group>
-				</SettingsList.Container>
+						</Settings.ButtonRow>
+					</Settings.Section>
+				</Settings.List>
+
+				<LanguageSelectDialog
+					handle={contentLanguagePrefsControl}
+					titleText={<Trans>Select content languages</Trans>}
+					subtitleText={<Trans>If none are selected, all languages will be shown in your feeds.</Trans>}
+					currentLanguages={contentLanguages}
+					onSelectLanguages={setContentLanguages}
+				/>
 			</Layout.Content>
 		</Layout.Screen>
 	);
