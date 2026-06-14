@@ -4,7 +4,7 @@ import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
-import { fontSize, lineHeight, zIndex } from '#/styles/tokens.css';
+import { fontLeading, fontSize, zIndex } from '#/styles/tokens.css';
 
 export const backdrop = style(
 	layered(components, {
@@ -73,7 +73,7 @@ export const title = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize._2xl,
 	fontWeight: 600,
-	lineHeight: roundToPx(`calc(${fontSize._2xl} * ${lineHeight.snug})`),
+	lineHeight: roundToPx(`calc(${fontSize._2xl} * ${fontLeading._2xl})`),
 	margin: 0,
 	paddingBottom: 4,
 });
@@ -81,7 +81,7 @@ export const title = style({
 export const description = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: roundToPx(`calc(${fontSize.md} * ${lineHeight.snug})`),
+	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
 	margin: 0,
 	paddingBottom: 16,
 });
@@ -112,7 +112,7 @@ export const rowIcon = style({
 export const rowText = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: roundToPx(`calc(${fontSize.md} * ${lineHeight.snug})`),
+	lineHeight: roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`),
 	paddingBlock: 1,
 });
 

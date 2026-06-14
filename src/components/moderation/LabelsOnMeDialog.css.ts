@@ -1,6 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
+import { leadingOverrideVar } from '#/components/Text.css';
+
 import { vars } from '#/styles/contract.css';
+import { lineHeight } from '#/styles/tokens.css';
 
 // the `Text`/`Admonition`/input children are inline or self-contained, so the body restates the column
 // stacking the RN `ScrollableInner` View it stands in for would supply. the Popup keeps its own 24px padding.
@@ -10,8 +13,10 @@ export const main = style({
 	flexDirection: 'column',
 });
 
+// pins the `_2xl` heading's leading tight (the default paired ratio is body-tuned and runs loose here).
 export const title = style({
 	marginBottom: 4,
+	vars: { [leadingOverrideVar]: String(lineHeight.tight) },
 });
 
 // the label list: bordered cards stacked under the heading, separated by 12px.

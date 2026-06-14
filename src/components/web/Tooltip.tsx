@@ -24,7 +24,7 @@ export function Tooltip({ children, label, side = 'top' }: TooltipProps) {
 			<BaseTooltip.Portal>
 				<BaseTooltip.Positioner className={styles.positioner} side={side} sideOffset={6}>
 					<BaseTooltip.Popup className={styles.popup}>
-						<Text color="text" weight="medium" leading="tight" className={styles.text}>
+						<Text color="text" size="sm" weight="medium">
 							{label}
 						</Text>
 					</BaseTooltip.Popup>

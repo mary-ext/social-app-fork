@@ -42,7 +42,7 @@ export function MetaRow({
 			node: (
 				<span className={styles.metaItem}>
 					{DomainIcon && <DomainIcon size="xs" fill="currentColor" />}
-					<Text size="xs" leading="tight" color="textContrastMedium" numberOfLines={1}>
+					<Text size="xs" color="textContrastMedium" numberOfLines={1}>
 						{articleDomain}
 					</Text>
 				</span>
@@ -54,7 +54,7 @@ export function MetaRow({
 		items.push({
 			key: 'author',
 			node: (
-				<Text size="xs" leading="tight" color="textContrastMedium" numberOfLines={1}>
+				<Text size="xs" color="textContrastMedium" numberOfLines={1}>
 					<Trans>by @{authorProfile.handle}</Trans>
 				</Text>
 			),
@@ -68,7 +68,7 @@ export function MetaRow({
 			{items.map((item, i) => (
 				<Fragment key={item.key}>
 					{i > 0 && (
-						<Text size="xs" leading="tight" color="textContrastMedium">
+						<Text size="xs" color="textContrastMedium">
 							•
 						</Text>
 					)}

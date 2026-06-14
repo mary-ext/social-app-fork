@@ -2,14 +2,14 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
-import { fontSize, lineHeight, space } from '#/styles/tokens.css';
+import { fontLeading, fontSize, space } from '#/styles/tokens.css';
 
 /**
  * The rendered height of a {@link label} title line — `Text`'s own `roundToPx(size × leading)` formula for
- * size `md` × snug leading. Matches it exactly (pixel snap included) so trailing content centers on the title
- * line rather than a fraction off it.
+ * size `md` and its paired leading. Matches it exactly (pixel snap included) so trailing content centers on
+ * the title line rather than a fraction off it.
  */
-const titleLineHeight = roundToPx(`calc(${fontSize.md} * ${lineHeight.snug})`);
+const titleLineHeight = roundToPx(`calc(${fontSize.md} * ${fontLeading.md})`);
 
 // #region layout
 /** The scroll body: a stack of {@link section} cards with vertical rhythm between them. */

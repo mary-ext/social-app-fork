@@ -125,12 +125,12 @@ function CardBody({
 		<>
 			<div className={styles.titleBlock}>
 				{!hideTitle ? (
-					<Text size="md" weight="semiBold" leading="snug" numberOfLines={3}>
+					<Text size="md" weight="semiBold" numberOfLines={3}>
 						{link.title || link.uri}
 					</Text>
 				) : null}
 				{link.description ? (
-					<Text size="sm" leading="snug" numberOfLines={link.thumb ? 2 : 4}>
+					<Text size="sm" numberOfLines={link.thumb ? 2 : 4}>
 						{link.description}
 					</Text>
 				) : null}
@@ -141,7 +141,7 @@ function CardBody({
 					<span className={styles.globe}>
 						<Globe size="xs" fill="currentColor" />
 					</span>
-					<Text size="xs" leading="snug" numberOfLines={1} className={styles.domain}>
+					<Text size="xs" numberOfLines={1} className={styles.domain}>
 						{niceUrl}
 					</Text>
 				</div>

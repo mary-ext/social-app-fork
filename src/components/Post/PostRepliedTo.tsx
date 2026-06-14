@@ -60,7 +60,7 @@ export function PostRepliedTo({
 			<span className={css.icon}>
 				<ArrowCornerDownRightIcon fill="currentColor" size="xs" />
 			</span>
-			<Text className={css.label} color="textContrastMedium" leading="snug" numberOfLines={1} size="sm">
+			<Text className={css.label} color="textContrastMedium" numberOfLines={1} size="sm">
 				{label}
 			</Text>
 		</div>
@@ -77,7 +77,7 @@ function ParentAuthorName({ did }: { did: string }) {
 
 	if (isError) {
 		return (
-			<Text color="textContrastMedium" leading="snug" size="sm">
+			<Text color="textContrastMedium" size="sm">
 				user
 			</Text>
 		);
@@ -87,13 +87,7 @@ function ParentAuthorName({ did }: { did: string }) {
 		const name = sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle));
 		return (
 			<ProfileHoverCard did={did}>
-				<InlineLinkText
-					color="textContrastMedium"
-					label={name}
-					leading="snug"
-					size="sm"
-					to={makeProfileLink(profile)}
-				>
+				<InlineLinkText color="textContrastMedium" label={name} size="sm" to={makeProfileLink(profile)}>
 					{name}
 				</InlineLinkText>
 			</ProfileHoverCard>

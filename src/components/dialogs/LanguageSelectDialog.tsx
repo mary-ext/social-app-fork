@@ -239,13 +239,7 @@ function DialogInner({
 							label={name}
 							name={lang.code2}
 						>
-							<Text
-								className={styles.rowLabel}
-								color="textContrastHigh"
-								leading="tight"
-								size="sm"
-								weight="semiBold"
-							>
+							<Text className={styles.rowLabel} color="textContrastHigh" size="sm" weight="semiBold">
 								{name}
 							</Text>
 							<Toggle.CheckboxIndicator />

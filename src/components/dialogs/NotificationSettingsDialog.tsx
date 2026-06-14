@@ -62,7 +62,7 @@ function Inner({
 				<Text size="lg" weight="semiBold">
 					{titleText}
 				</Text>
-				<Text color="textContrastMedium" leading="snug" size="sm">
+				<Text color="textContrastMedium" size="sm">
 					{subtitleText}
 				</Text>
 			</div>

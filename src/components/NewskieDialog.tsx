@@ -106,7 +106,7 @@ function DialogInner({
 					{isMe ? <Trans>Welcome, friend!</Trans> : <Trans>Say hello!</Trans>}
 				</Text>
 			</div>
-			<Text size="md" align="center" leading="snug">
+			<Text size="md" align="center">
 				{getJoinMessage()}
 			</Text>
 			{profile.joinedViaStarterPack ? (

@@ -104,7 +104,7 @@ export function DraftItem({
 			<div className={styles.timestamp}>
 				<TimeElapsed timestamp={draft.updatedAt}>
 					{({ timeElapsed }) => (
-						<Text size="sm" color="textContrastMedium" leading="tight" numberOfLines={1}>
+						<Text size="sm" color="textContrastMedium" numberOfLines={1}>
 							{timeElapsed}
 						</Text>
 					)}
@@ -151,7 +151,7 @@ function DraftMetadataTag({
 			<span className={styles.tagIcon}>
 				<Icon width={16} height={16} fill="currentColor" />
 			</span>
-			<Text size="sm" leading="tight" className={styles.tagText}>
+			<Text size="sm" className={styles.tagText}>
 				{text}
 			</Text>
 		</div>

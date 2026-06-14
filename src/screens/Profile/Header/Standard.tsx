@@ -46,7 +46,7 @@ function StandardBody() {
 			<div className={clsx(css.nameBlock, live.isActive ? css.nameBlockLive : css.nameBlockDefault)}>
 				{/* plain block: the name renders as inline text so a trailing badge flows onto its last line */}
 				<div>
-					<ProfileHeaderDisplayName leading="tight" />
+					<ProfileHeaderDisplayName tight />
 					<ProfileBadges className={css.badges} interactive profile={profile} size="lg" />
 				</div>
 				<ProfileHeaderHandle profile={profile} />

@@ -40,7 +40,7 @@ function Inner() {
 				<Text size="lg" weight="semiBold">
 					<Trans>Allow notifying others of my posts</Trans>
 				</Text>
-				<Text color="textContrastMedium" leading="snug" size="sm">
+				<Text color="textContrastMedium" size="sm">
 					<Trans>
 						This feature allows users to receive notifications for your new posts and replies. Who do you want
 						to enable this for?

@@ -48,7 +48,7 @@ export function InterestsSettingsScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.body}>
-					<Text color="textContrastMedium" leading="snug" size="sm">
+					<Text color="textContrastMedium" size="sm">
 						<Trans>Your selected interests help us serve you content you care about.</Trans>
 					</Text>
 

@@ -114,7 +114,7 @@ function KnownFollowersInner({
 				))}
 			</div>
 
-			<Text className={css.text} color="textContrastMedium" leading="snug" numberOfLines={2} size="sm">
+			<Text className={css.text} color="textContrastMedium" numberOfLines={2} size="sm">
 				{slice.length >= 2 ? (
 					serverCount > 2 ? (
 						<Trans>

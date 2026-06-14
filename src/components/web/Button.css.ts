@@ -8,8 +8,8 @@ import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 const HOVER = '&:hover:not(:disabled)';
 
-// `size` variants publish only their font-size through this var; `base` derives the device-snapped line-height
-// from it so the snug pairing lives in one place (mirrors the `Text` recipe).
+// `size` variants publish only their font-size through this var; `base` derives the pixel-snapped line-height
+// from it at the snug (1.3) ratio, so the leading lives in one place.
 const fontSizeVar = createVar();
 const fontSizeScale = fallbackVar(fontSizeVar, fontSize.sm);
 

@@ -124,7 +124,6 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 						color="text"
 						disabled={disabled}
 						label={l`View profile`}
-						leading="tight"
 						numberOfLines={1}
 						onPress={onBeforePressAuthor}
 						size="md"
@@ -146,7 +145,6 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 						color="textContrastMedium"
 						disabled={disabled}
 						label={l`View profile`}
-						leading="tight"
 						numberOfLines={1}
 						onPress={onBeforePressAuthor}
 						size="md"
@@ -161,7 +159,7 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 				<TimeElapsed timestamp={opts.timestamp}>
 					{({ timeElapsed }) => (
 						<span className={css.timestamp}>
-							<Text aria-hidden color="textContrastMedium" leading="tight" size="md">
+							<Text aria-hidden color="textContrastMedium" size="md">
 								·{NON_BREAKING_SPACE}
 							</Text>
 							<Tooltip label={timestampLabel}>
@@ -170,7 +168,6 @@ let PostMeta = (opts: PostMetaOpts): ReactNode => {
 									color="textContrastMedium"
 									disabled={disabled}
 									label={timestampLabel}
-									leading="tight"
 									onPress={onBeforePressPost}
 									size="md"
 									to={opts.postHref}

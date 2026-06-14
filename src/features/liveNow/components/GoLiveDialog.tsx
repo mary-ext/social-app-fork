@@ -95,7 +95,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 				<Text size="_2xl" weight="semiBold">
 					<Trans>Go Live</Trans>
 				</Text>
-				<Text color="textContrastHigh" leading="snug" size="md">
+				<Text color="textContrastHigh" size="md">
 					<Trans>
 						Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see
 						information about your live event.

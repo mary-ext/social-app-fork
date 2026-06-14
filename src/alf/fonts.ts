@@ -4,7 +4,7 @@ import { type Device, device } from '#/storage';
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`;
 
-const factor = 0.0625; // 1 - (15/16)
+const factor = 0.0625; // one 1/16 step per font-size preference notch
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
 	'-2': 1 - factor * 1, // unused
 	'-1': 1 - factor * 1,

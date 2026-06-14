@@ -81,7 +81,7 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 					<Text className={styles.title} size="_2xl" weight="bold">
 						<Trans>Export my profile data</Trans>
 					</Text>
-					<Text className={styles.body} color="textContrastHigh" leading="snug" size="sm">
+					<Text className={styles.body} color="textContrastHigh" size="sm">
 						<Trans>
 							Your account repository, containing all public data records, can be downloaded as a "CAR" file.
 							This file does not include media embeds, such as images, or your private data, which must be
@@ -105,7 +105,7 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 					<Text className={styles.heading} size="_2xl" weight="bold">
 						<Trans>Export my chat data</Trans>
 					</Text>
-					<Text className={styles.body} color="textContrastHigh" leading="snug" size="sm">
+					<Text className={styles.body} color="textContrastHigh" size="sm">
 						<Trans>
 							You can also download your chat data as a "JSONL" file. This file only includes chat messages
 							that you have sent and does not include chat messages that you have received.
@@ -125,7 +125,7 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 						</ButtonText>
 					</Button>
 
-					<Text className={styles.footnote} color="textContrastMedium" leading="snug" size="sm">
+					<Text className={styles.footnote} color="textContrastMedium" size="sm">
 						<Trans>
 							This feature is in beta. You can read more about repository exports in{' '}
 							<InlineLinkText

@@ -35,9 +35,7 @@ export function Admonition({
 					<Icon fill="currentColor" size="md" />
 				</span>
 				<div className={styles.content}>
-					<Text size="sm" leading="snug">
-						{children}
-					</Text>
+					<Text size="sm">{children}</Text>
 				</div>
 			</div>
 		</div>

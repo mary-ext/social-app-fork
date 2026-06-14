@@ -136,13 +136,13 @@ function InlineNameAndHandle({
 	const handle = sanitizeHandle(profile.handle, '@');
 	return (
 		<div className={css.inlineRow}>
-			<Text className={css.inlineName} leading="tight" numberOfLines={1} weight="semiBold">
+			<Text className={css.inlineName} numberOfLines={1} weight="semiBold">
 				{forceLTR(name)}
 			</Text>
 			<div className={css.inlineBadges}>
 				<ProfileBadges profile={profile} size="md" />
 			</div>
-			<Text className={css.inlineHandle} color="textContrastMedium" leading="tight" numberOfLines={1}>
+			<Text className={css.inlineHandle} color="textContrastMedium" numberOfLines={1}>
 				{NON_BREAKING_SPACE + handle}
 			</Text>
 		</div>

@@ -256,7 +256,7 @@ export function ItemText({ children }: { children: ReactNode }) {
  */
 export function LabelText({ children, size = 'sm' }: { children: ReactNode; size?: 'md' | 'sm' }) {
 	return (
-		<Text size={size} weight="semiBold" color="textContrastHigh" leading="tight" className={styles.itemText}>
+		<Text size={size} weight="semiBold" color="textContrastHigh" className={styles.itemText}>
 			{children}
 		</Text>
 	);
@@ -265,7 +265,7 @@ export function LabelText({ children, size = 'sm' }: { children: ReactNode; size
 /** A muted, right-aligned trailing label (e.g. a current-value summary on a {@link LinkItem}). */
 export function BadgeText({ children }: { children: ReactNode }) {
 	return (
-		<Text size="md" color="textContrastLow" align="right" leading="snug" numberOfLines={1}>
+		<Text size="md" color="textContrastLow" align="right" numberOfLines={1}>
 			{children}
 		</Text>
 	);

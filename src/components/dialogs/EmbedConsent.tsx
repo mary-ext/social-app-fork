@@ -51,7 +51,7 @@ export function EmbedConsentDialog({
 				</Text>
 
 				<div className={styles.body}>
-					<Text size="md" leading="snug">
+					<Text size="md">
 						<Trans>
 							This content is hosted by {externalEmbedLabels[source]}. Do you want to enable external media?
 						</Trans>

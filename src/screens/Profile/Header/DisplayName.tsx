@@ -1,4 +1,5 @@
 import { DisplayContext, getDisplayRestrictions } from '@atcute/bluesky-moderation';
+import { clsx } from 'clsx';
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -10,8 +11,8 @@ import { Text } from '#/components/Text';
 import { useProfileHeader } from './Context';
 import * as css from './DisplayName.css';
 
-/** The large profile display name. `leading` defaults to `snug`; the standard header tightens it. */
-export function ProfileHeaderDisplayName({ leading = 'snug' }: { leading?: 'snug' | 'tight' }) {
+/** The large profile display name. The standard header tightens its leading via `tight`. */
+export function ProfileHeaderDisplayName({ tight = false }: { tight?: boolean }) {
 	const { gtMobile } = useBreakpoints();
 	const {
 		state: { moderation, profile },
@@ -19,9 +20,8 @@ export function ProfileHeaderDisplayName({ leading = 'snug' }: { leading?: 'snug
 
 	return (
 		<Text
-			className={css.displayName}
+			className={clsx(css.displayName, tight && css.displayNameTight)}
 			color="text"
-			leading={leading}
 			size={gtMobile ? '_4xl' : '_3xl'}
 			weight="bold"
 		>

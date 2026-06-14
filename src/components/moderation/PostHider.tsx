@@ -86,7 +86,7 @@ export function PostHider({
 					<desc.icon size="sm" fill="currentColor" />
 				</span>
 			</Dialog.Trigger>
-			<Text className={styles.name} color="textContrastMedium" leading="snug" numberOfLines={1}>
+			<Text className={styles.name} color="textContrastMedium" numberOfLines={1}>
 				{desc.name}
 			</Text>
 			{!modui.noOverride && (

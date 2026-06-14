@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css';
 
-import { fontSizeVar } from '#/components/Text.css';
+import { fontSizeVar, leadingOverrideVar } from '#/components/Text.css';
 import {
 	BUTTON_VISUAL_ALIGNMENT_OFFSET,
 	CENTER_COLUMN_WIDTH,
@@ -8,7 +8,7 @@ import {
 } from '#/components/web/Layout/const';
 
 import { vars } from '#/styles/contract.css';
-import { fontSize, zIndex } from '#/styles/tokens.css';
+import { fontSize, lineHeight, zIndex } from '#/styles/tokens.css';
 
 export const outer = style({
 	alignItems: 'center',
@@ -63,11 +63,13 @@ export const backButton = style({
 
 /**
  * Header title: bumps from `lg` to `xl` past the mobile breakpoint. Drives the `Text` recipe's `fontSizeVar`
- * (unlayered, so it beats the layered `size` variant) instead of overriding `font-size` directly — the recipe
- * then re-derives the device-snapped line-height from the title's `tight` leading, keeping the two paired.
+ * (unlayered, so it beats the layered `size` variant) instead of overriding `font-size` directly, and pins
+ * the leading ratio tight via `leadingOverrideVar` — the recipe re-derives the pixel-snapped line-height from
+ * both, so a heading stays compact (the default paired ratio is tuned for body text and runs loose here)
+ * while font-size and line-height stay paired across the breakpoint.
  */
 export const title = style({
-	vars: { [fontSizeVar]: fontSize.lg },
+	vars: { [fontSizeVar]: fontSize.lg, [leadingOverrideVar]: String(lineHeight.tight) },
 	'@media': {
 		'screen and (min-width: 800px)': { vars: { [fontSizeVar]: fontSize.xl } },
 	},

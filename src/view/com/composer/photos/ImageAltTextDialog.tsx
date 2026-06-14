@@ -116,7 +116,7 @@ const ImageAltTextInner = ({
 							<span className={styles.warningIcon}>
 								<CircleInfo fill="currentColor" size="sm" />
 							</span>
-							<Text className={styles.warningText} color="textContrastMedium" leading="snug" size="sm">
+							<Text className={styles.warningText} color="textContrastMedium" size="sm">
 								<Trans>
 									Alt text will be truncated.{' '}
 									<Plural value={MAX_ALT_TEXT} other={`Limit: ${i18n.number(MAX_ALT_TEXT)} characters.`} />

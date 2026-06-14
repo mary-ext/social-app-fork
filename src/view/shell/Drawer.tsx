@@ -254,12 +254,12 @@ function DrawerProfileCard({
 			/>
 			<div>
 				<div className={styles.profileNameRow}>
-					<Text leading="tight" numberOfLines={1} size="xl" weight="bold">
+					<Text numberOfLines={1} size="xl" weight="bold">
 						{profile?.displayName || account.handle}
 					</Text>
 					{profile && <ProfileBadges profile={profile} size="lg" />}
 				</div>
-				<Text color="textContrastMedium" leading="tight" numberOfLines={1} size="md">
+				<Text color="textContrastMedium" numberOfLines={1} size="md">
 					{sanitizeHandle(account.handle, '@')}
 				</Text>
 			</div>

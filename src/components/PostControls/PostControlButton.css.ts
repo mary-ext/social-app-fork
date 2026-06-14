@@ -31,9 +31,9 @@ export const button = style({
 });
 
 /**
- * Overrides for the count/label, which renders through the web {@link Text} primitive (for its device-snapped
- * snug line-height — a raw span's `line-height: normal` sits ~1px short of it). `inherit` lets the count pick
- * up the button's resting/active color via `currentColor`; the count never wraps.
+ * Overrides for the count/label, which renders through the web {@link Text} primitive (for its size-paired,
+ * pixel-snapped line-height — a raw span's `line-height: normal` sits ~1px short of it). `inherit` lets the
+ * count pick up the button's resting/active color via `currentColor`; the count never wraps.
  */
 export const text = style({
 	color: 'inherit',

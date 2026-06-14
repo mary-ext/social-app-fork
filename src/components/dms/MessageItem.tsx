@@ -387,7 +387,7 @@ let MessageItem = ({
 											color={isFromSelf ? 'white' : undefined}
 											emojiScale="large"
 											enableTags
-											leading={isOnlyEmoji(message.text) ? 'tight' : undefined}
+											leading={isOnlyEmoji(message.text) ? 'none' : undefined}
 											linkUnderline="always"
 											size="md"
 											value={rt}

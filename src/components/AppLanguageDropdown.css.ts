@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
-import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
+import { fontLeading, fontSize, fontWeight } from '#/styles/tokens.css';
 
 // subtle app-language switcher: tighten the rectangular/tiny web Button around the value
 // + chevron, and start-align the content (the Button base centers it). unlayered (like LanguageButton.css)
@@ -22,7 +22,7 @@ export const value = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize.sm,
 	fontWeight: fontWeight.normal,
-	lineHeight: roundToPx(`calc(${fontSize.sm} * ${lineHeight.snug})`),
+	lineHeight: roundToPx(`calc(${fontSize.sm} * ${fontLeading.sm})`),
 });
 
 // 20px chevron line box (the Select icon is a flex span, so size it explicitly) so the

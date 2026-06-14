@@ -127,14 +127,14 @@ export function LiveStatus({
 				)}
 			>
 				<div className={css.info}>
-					<Text leading="snug" numberOfLines={3} size="xl" weight="semiBold">
+					<Text numberOfLines={3} size="xl" weight="semiBold">
 						{embed.external.title || embed.external.uri}
 					</Text>
 					<div className={css.domain}>
 						<span className={css.mutedIcon}>
 							<GlobeIcon width={12} height={12} fill="currentColor" />
 						</span>
-						<Text color="textContrastMedium" leading="snug" numberOfLines={1} size="sm">
+						<Text color="textContrastMedium" numberOfLines={1} size="sm">
 							{toNiceDomain(embed.external.uri)}
 						</Text>
 					</div>

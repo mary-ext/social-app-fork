@@ -33,7 +33,7 @@ export function BotAccountAlert({
 					<span className={css.icon}>
 						<RobotIcon width={48} fill="currentColor" />
 					</span>
-					<Text align="center" className={css.text} color="textContrastHigh" leading="snug" size="md">
+					<Text align="center" className={css.text} color="textContrastHigh" size="md">
 						{description}
 					</Text>
 					<div className={css.actions}>

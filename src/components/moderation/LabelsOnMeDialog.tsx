@@ -73,10 +73,10 @@ function LabelsOnMeDialogInner({ control, labels, type }: LabelsOnMeDialogProps)
 				/>
 			) : (
 				<>
-					<Text className={styles.title} leading="tight" size="_2xl" weight="bold">
+					<Text className={styles.title} size="_2xl" weight="bold">
 						{isAccount ? <Trans>Labels on your account</Trans> : <Trans>Labels on your content</Trans>}
 					</Text>
-					<Text leading="snug" size="md">
+					<Text size="md">
 						{containsSelfLabel ? (
 							<Trans>You may appeal non-self labels if you feel they were placed in error.</Trans>
 						) : (
@@ -125,9 +125,7 @@ function Label({
 					<Text size="md" weight="semiBold">
 						{strings.name}
 					</Text>
-					<Text color="textContrastMedium" leading="snug">
-						{strings.description}
-					</Text>
+					<Text color="textContrastMedium">{strings.description}</Text>
 				</div>
 				{!isSelfLabel && (
 					<Button
@@ -151,7 +149,7 @@ function Label({
 					</Text>
 				) : (
 					<div className={styles.sourceRow}>
-						<Text className={styles.sourceText} color="textContrastMedium" leading="snug" numberOfLines={1}>
+						<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
 							<Trans>
 								Source:{' '}
 								<InlineLinkText
@@ -164,7 +162,7 @@ function Label({
 							</Trans>
 						</Text>
 						{label.exp && (
-							<Text className={styles.expires} color="textContrastMedium" leading="snug" size="sm">
+							<Text className={styles.expires} color="textContrastMedium" size="sm">
 								<Trans>Expires in {timeDiff(now, label.exp)}</Trans>
 							</Text>
 						)}
@@ -231,15 +229,14 @@ function AppealForm({
 	return (
 		<>
 			<div className={styles.appealHeader}>
-				<Text className={styles.title} leading="tight" size="_2xl" weight="semiBold">
+				<Text className={styles.title} size="_2xl" weight="semiBold">
 					<Trans>Appeal "{strings.name}" label</Trans>
 				</Text>
-				<Text leading="snug" size="md">
+				<Text size="md">
 					<Trans>
 						This appeal will be sent to{' '}
 						<InlineLinkText
 							label={sourceName}
-							leading="snug"
 							onPress={() => control.close()}
 							size="md"
 							to={makeProfileLink(labeler ? labeler.creator : { did: label.src })}

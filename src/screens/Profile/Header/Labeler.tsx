@@ -103,12 +103,7 @@ function SubscribeLabelerButton() {
 				onClick={onPressSubscribe}
 				variant="bare"
 			>
-				<Text
-					align="center"
-					color={isSubscribed ? 'contrast_700' : 'white'}
-					leading="tight"
-					weight="semiBold"
-				>
+				<Text align="center" color={isSubscribed ? 'contrast_700' : 'white'} weight="semiBold">
 					{isSubscribed ? <Trans>Unsubscribe</Trans> : <Trans>Subscribe to Labeler</Trans>}
 				</Text>
 			</Button>

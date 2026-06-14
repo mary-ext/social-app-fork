@@ -105,11 +105,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 		description = l`You have hidden this post.`;
 	} else if (modcause.type === ModerationCauseType.Label) {
 		name = desc.name;
-		description = (
-			<Text leading="snug" size="md">
-				{desc.description}
-			</Text>
-		);
+		description = <Text size="md">{desc.description}</Text>;
 	} else {
 		// should never happen
 		name = '';
@@ -124,9 +120,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 				<Text className={styles.title} size="_2xl" weight="bold">
 					{name}
 				</Text>
-				<Text leading="snug" size="sm">
-					{description}
-				</Text>
+				<Text size="sm">{description}</Text>
 
 				{desc.isSubjectAccount && (
 					<Admonition className={styles.admonition} type="info">
@@ -139,12 +133,12 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 			{modcause?.type === ModerationCauseType.Label && (
 				<div className={styles.labelBand}>
 					{modcause.source === null ? (
-						<Text leading="snug" size="md">
+						<Text size="md">
 							<Trans>This label was applied by the author.</Trans>
 						</Text>
 					) : (
 						<div className={styles.sourceRow}>
-							<Text className={styles.sourceText} color="textContrastMedium" leading="snug" numberOfLines={1}>
+							<Text className={styles.sourceText} color="textContrastMedium" numberOfLines={1}>
 								<Trans>
 									Source:{' '}
 									<InlineLinkText
@@ -157,7 +151,7 @@ function ModerationDetailsDialogInner({ control, modcause }: ModerationDetailsDi
 								</Trans>
 							</Text>
 							{modcause.label.exp && (
-								<Text className={styles.expires} color="textContrastMedium" leading="snug" size="sm">
+								<Text className={styles.expires} color="textContrastMedium" size="sm">
 									<Trans>Expires in {timeDiff(now, modcause.label.exp)}</Trans>
 								</Text>
 							)}

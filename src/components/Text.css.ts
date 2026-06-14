@@ -4,7 +4,7 @@ import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
 import { roundToPx } from '#/styles/round';
-import { fontFamily, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
+import { fontFamily, fontLeading, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 /** Turns a token scale into a variant group setting `property` to each token value. */
 const variantsFor = <Scale extends Record<string, number | string>, Property extends string>(
@@ -18,26 +18,28 @@ const variantsFor = <Scale extends Record<string, number | string>, Property ext
 	return out as { [Key in keyof Scale]: Record<Property, Scale[Key]> };
 };
 
-/** Turns a token scale into a variant group assigning each token value to `cssVar`. */
-const varVariantsFor = <Scale extends Record<string, number | string>>(
-	scale: Scale,
-	cssVar: string,
-): { [Key in keyof Scale]: { vars: Record<string, string> } } => {
-	const out: Record<string, { vars: Record<string, string> }> = {};
-	for (const [key, value] of Object.entries(scale)) {
-		out[key] = { vars: { [cssVar]: String(value) } };
-	}
-	return out as { [Key in keyof Scale]: { vars: Record<string, string> } };
-};
-
-// font-size and the line-height ratio are published as vars so the `size`/`leading` variants only assign
-// them and `base` derives the actual `font-size` and device-snapped `line-height` from both (they're
-// independent variants applied to the same element). `fontSizeVar` is exported so another recipe can resize
-// the text by overriding it alone, letting both derived properties follow.
+// font-size and the leading ratio are published as vars so the `size`/`leading` variants only assign them
+// and `base` derives the actual `font-size` and pixel-snapped `line-height` from both. `size` publishes its
+// font-size (`fontSizeVar`) and its Tailwind-paired leading ratio (`sizeLeadingVar`); `leading` publishes
+// the final ratio (`leadingOverrideVar`), defaulting (`snug`) to the size's paired ratio. all three are
+// exported so another recipe can retune one alone — override `fontSizeVar` and the paired line-height
+// follows; set `sizeLeadingVar` to re-pair a resized element; set `leadingOverrideVar` to force a ratio.
 export const fontSizeVar = createVar();
-export const leadingVar = createVar();
+export const sizeLeadingVar = createVar();
+export const leadingOverrideVar = createVar();
 
-const fontSizeScale = fallbackVar(fontSizeVar, fontSize.sm);
+const fontSizeScale = fallbackVar(fontSizeVar, fontSize.md);
+const pairedLeading = fallbackVar(sizeLeadingVar, String(fontLeading.md));
+const leading = fallbackVar(leadingOverrideVar, pairedLeading);
+
+/** `size` variant: each token publishes its font-size and its paired leading ratio. */
+const sizeVariants = (): { [K in keyof typeof fontLeading]: { vars: Record<string, string> } } => {
+	const out: Record<string, { vars: Record<string, string> }> = {};
+	for (const key of Object.keys(fontLeading) as (keyof typeof fontLeading)[]) {
+		out[key] = { vars: { [fontSizeVar]: fontSize[key], [sizeLeadingVar]: String(fontLeading[key]) } };
+	}
+	return out as { [K in keyof typeof fontLeading]: { vars: Record<string, string> } };
+};
 
 export const text = recipe(
 	{
@@ -46,16 +48,21 @@ export const text = recipe(
 			fontSize: fontSizeScale,
 			// snap the derived line-height to a whole CSS pixel — `round(fontSize * leading, 1px)` — so it
 			// lands on the pixel grid rather than a fractional CSS value
-			lineHeight: roundToPx(`calc(${fontSizeScale} * ${fallbackVar(leadingVar, '1.3')})`),
+			lineHeight: roundToPx(`calc(${fontSizeScale} * ${leading})`),
 			margin: 0,
 			padding: 0,
 		},
-		defaultVariants: { color: 'text', leading: 'snug', size: 'sm' },
+		defaultVariants: { color: 'text', leading: 'snug', size: 'md' },
 		variants: {
 			align: { center: { textAlign: 'center' }, left: { textAlign: 'left' }, right: { textAlign: 'right' } },
 			color: variantsFor(colors, 'color'),
-			leading: varVariantsFor(lineHeight, leadingVar),
-			size: varVariantsFor(fontSize, fontSizeVar),
+			// `snug` (default) follows the size's paired ratio; `none` removes leading. a tighter heading sets
+			// `leadingOverrideVar` from its own CSS rather than going through a variant.
+			leading: {
+				none: { vars: { [leadingOverrideVar]: String(lineHeight.none) } },
+				snug: { vars: { [leadingOverrideVar]: pairedLeading } },
+			},
+			size: sizeVariants(),
 			weight: variantsFor(fontWeight, 'fontWeight'),
 		},
 	},

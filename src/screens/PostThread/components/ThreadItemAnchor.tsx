@@ -273,7 +273,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										className={css.displayName}
 										color="text"
 										label={l`View profile`}
-										leading="snug"
 										numberOfLines={1}
 										onPress={onOpenAuthor}
 										size="lg"
@@ -295,7 +294,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 									className={css.handle}
 									color="textContrastMedium"
 									label={l`View profile`}
-									leading="snug"
 									numberOfLines={1}
 									onPress={onOpenAuthor}
 									size="md"
@@ -489,7 +487,7 @@ function BackdatedPostIndicator({ post }: { post: AppBskyFeedDefs.PostView }) {
 				{({ hovered, pressed }) => (
 					<div className={clsx(css.archivedPill, (hovered || pressed) && css.archivedPillActive)}>
 						<CalendarClockIcon fill={t.palette.yellow} size="sm" aria-hidden />
-						<Text size="xs" weight="semiBold" leading="tight" color="textContrastMedium">
+						<Text size="xs" weight="semiBold" color="textContrastMedium">
 							<Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
 						</Text>
 					</div>

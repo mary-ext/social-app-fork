@@ -48,10 +48,10 @@ export function VerificationsDialog({
 		<Dialog.Root handle={handle}>
 			<Dialog.Popup label={label} size="narrow">
 				<div className={css.header}>
-					<Text className={css.title} leading="tight" size="_2xl" weight="semiBold">
+					<Text className={css.title} size="_2xl" weight="semiBold">
 						{label}
 					</Text>
-					<Text leading="snug" size="md">
+					<Text size="md">
 						{state.profile.isVerified ? (
 							<Trans>This account has a checkmark because it's been verified by trusted sources.</Trans>
 						) : (
@@ -130,10 +130,10 @@ function VerifierCard({
 						<>
 							<ProfileCard.AvatarPlaceholder />
 							<div className={css.nameColumn}>
-								<Text leading="snug" numberOfLines={1} size="md" weight="semiBold">
+								<Text numberOfLines={1} size="md" weight="semiBold">
 									<Trans>Unknown verifier</Trans>
 								</Text>
-								<Text color="textContrastMedium" leading="snug" numberOfLines={1}>
+								<Text color="textContrastMedium" numberOfLines={1}>
 									{verification.issuer}
 								</Text>
 							</div>
@@ -150,7 +150,7 @@ function VerifierCard({
 								<ProfileCard.Avatar disabledPreview moderationOpts={moderationOpts} profile={profile} />
 								<div className={css.nameColumn}>
 									<ProfileCard.Name moderationOpts={moderationOpts} profile={profile} />
-									<Text color="textContrastMedium" leading="snug" numberOfLines={1}>
+									<Text color="textContrastMedium" numberOfLines={1}>
 										{i18n.date(new Date(verification.createdAt), {
 											dateStyle: 'long',
 										})}

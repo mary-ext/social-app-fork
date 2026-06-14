@@ -45,8 +45,8 @@ export const handle = style({
 });
 
 // a flex item by virtue of `.author`; without this it blockifies to a line box whose strut is sized by
-// the inherited 16px / `line-height: normal` (~20px) rather than the tight-leading dot + link inside it.
-// `flex` makes it hug its children (~17px), matching the name/handle wrapper beside it.
+// the inherited 14px / `line-height: normal` (~17px) rather than the tight-leading dot + link inside it.
+// `flex` makes it hug its children, matching the name/handle wrapper beside it.
 export const timestamp = style({
 	alignItems: 'flex-end',
 	display: 'flex',

@@ -111,7 +111,7 @@ function DialogInner({
 					<span className={styles.clockIcon}>
 						<ClockIcon fill="currentColor" size="sm" />
 					</span>
-					<Text color="textContrastHigh" leading="snug" size="md">
+					<Text color="textContrastHigh" size="md">
 						{typeof record?.durationMinutes === 'number' ? (
 							<Trans>
 								Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}

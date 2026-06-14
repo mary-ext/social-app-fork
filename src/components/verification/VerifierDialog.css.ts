@@ -1,7 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
+import { leadingOverrideVar } from '#/components/Text.css';
+
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
+import { borderRadius, lineHeight, space } from '#/styles/tokens.css';
 
 export const content = style({
 	display: 'flex',
@@ -29,8 +31,10 @@ export const textBlock = style({
 	gap: space.sm,
 });
 
+// pins the `_2xl` heading's leading tight (the default paired ratio is body-tuned and runs loose here).
 export const title = style({
 	paddingRight: space._4xl,
+	vars: { [leadingOverrideVar]: String(lineHeight.tight) },
 });
 
 export const inlineCheck = style({

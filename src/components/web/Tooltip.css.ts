@@ -1,7 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { fontSizeVar } from '#/components/Text.css';
-
 import { vars } from '#/styles/contract.css';
 import { zIndex } from '#/styles/tokens.css';
 
@@ -27,11 +25,5 @@ export const popup = style({
 			opacity: 0,
 			transform: 'scale(0.95)',
 		},
-	},
-});
-
-export const text = style({
-	vars: {
-		[fontSizeVar]: '12px',
 	},
 });

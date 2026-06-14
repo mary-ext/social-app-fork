@@ -44,10 +44,10 @@ export function VerifierDialog({
 					</div>
 
 					<div className={css.textBlock}>
-						<Text className={css.title} leading="tight" size="_2xl" weight="semiBold">
+						<Text className={css.title} size="_2xl" weight="semiBold">
 							{label}
 						</Text>
-						<Text leading="snug" size="md">
+						<Text size="md">
 							<Trans>
 								Accounts with a scalloped blue check mark{' '}
 								<span className={css.inlineCheck}>

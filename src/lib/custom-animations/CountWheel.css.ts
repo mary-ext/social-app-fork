@@ -9,7 +9,7 @@ export const root = style({
 });
 
 // the number cells are flex so they hug the count's line box; a block box would instead inherit the
-// button's 16px font and inflate the line-box strut, making the like button a couple px taller.
+// button's font and inflate the line-box strut, making the like button a couple px taller.
 const cell = style({ alignItems: 'center', display: 'flex' });
 export const current = cell;
 

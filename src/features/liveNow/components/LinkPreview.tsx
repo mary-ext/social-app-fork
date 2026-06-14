@@ -45,14 +45,14 @@ export function LinkPreview({ linkMeta, loading }: { linkMeta?: LinkMeta; loadin
 			<div className={styles.body}>
 				{linkMeta ? (
 					<>
-						<Text leading="snug" numberOfLines={2} size="md" weight="semiBold">
+						<Text numberOfLines={2} size="md" weight="semiBold">
 							{linkMeta.title || linkMeta.url}
 						</Text>
 						<div className={styles.domainRow}>
 							<span className={styles.globe}>
 								<GlobeIcon fill="currentColor" size="xs" />
 							</span>
-							<Text color="textContrastMedium" leading="snug" numberOfLines={1} size="xs">
+							<Text color="textContrastMedium" numberOfLines={1} size="xs">
 								{toNiceDomain(linkMeta.url)}
 							</Text>
 						</div>

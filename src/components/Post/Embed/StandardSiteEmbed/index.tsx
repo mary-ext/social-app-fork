@@ -81,17 +81,12 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 
 				<div className={clsx(styles.body, isStandard && styles.bodyStandard, hasMedia && styles.bodyMedia)}>
 					<div className={clsx(styles.textBlock, isStandard && styles.textBlockStandard)}>
-						<Text
-							leading="snug"
-							numberOfLines={3}
-							size={isStandard ? 'lg' : 'md'}
-							weight={isStandard ? 'bold' : 'semiBold'}
-						>
+						<Text numberOfLines={3} size={isStandard ? 'lg' : 'md'} weight={isStandard ? 'bold' : 'semiBold'}>
 							{view.title}
 						</Text>
 
 						{view.description ? (
-							<Text leading="snug" numberOfLines={view.thumb ? 2 : 4} size="sm">
+							<Text numberOfLines={view.thumb ? 2 : 4} size="sm">
 								{view.description}
 							</Text>
 						) : null}
@@ -99,14 +94,14 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 						{isStandard && (view.createdAt || view.readingTime) ? (
 							<div className={styles.metaInline}>
 								{view.createdAt ? (
-									<Text color="textContrastMedium" leading="snug" size="xs">
+									<Text color="textContrastMedium" size="xs">
 										{niceDate(i18n, view.createdAt, 'long', 'none')}
 									</Text>
 								) : null}
 								{view.readingTime ? (
 									<span className={styles.readingTime}>
 										<Clock size="xs" fill="currentColor" />
-										<Text color="textContrastMedium" leading="snug" size="xs">
+										<Text color="textContrastMedium" size="xs">
 											{l({
 												comment: `How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.`,
 												message: plural(view.readingTime, { one: '#m', other: '#m' }),
@@ -160,7 +155,7 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 				<div className={styles.pubIdentity}>
 					<PublicationIcon size="lg" themeColors={themeColors} view={view} />
 					<div className={styles.identityText}>
-						<Text color="text" leading="snug" numberOfLines={1} size="md" weight="semiBold">
+						<Text color="text" numberOfLines={1} size="md" weight="semiBold">
 							{view.source.title}
 						</Text>
 						<MetaRow type="publication" view={view} />
@@ -172,7 +167,7 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 
 			{view.description ? (
 				<div className={styles.pubDescription}>
-					<Text leading="snug" numberOfLines={3} size="sm">
+					<Text numberOfLines={3} size="sm">
 						{view.description}
 					</Text>
 				</div>
@@ -213,14 +208,7 @@ function PublicationFooter({
 			<div className={styles.footerIdentity}>
 				<PublicationIcon size="sm" themeColors={themeColors} view={view} />
 				<div className={styles.identityText}>
-					<Text
-						className={styles.footerTitle}
-						color="text"
-						leading="tight"
-						numberOfLines={1}
-						size="sm"
-						weight="medium"
-					>
+					<Text className={styles.footerTitle} color="text" numberOfLines={1} size="sm" weight="medium">
 						{view.source.title}
 					</Text>
 					<MetaRow type="publication" view={view} />
