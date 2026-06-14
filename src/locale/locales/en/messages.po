@@ -3359,7 +3359,7 @@ msgstr "Failed to save image"
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:125
+#: src/screens/Settings/InterestsSettings.tsx:123
 msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
@@ -4728,7 +4728,7 @@ msgstr ""
 #: src/screens/Moderation/VerificationSettings.tsx:55
 #: src/screens/ModerationInteractionSettings/index.tsx:51
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:56
-#: src/screens/Settings/InterestsSettings.tsx:61
+#: src/screens/Settings/InterestsSettings.tsx:59
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:36
 #: src/view/shell/Composer.tsx:44
 msgid "Loading"
@@ -7370,7 +7370,7 @@ msgstr ""
 msgid "Select what content this mute word should apply to."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:152
+#: src/screens/Settings/InterestsSettings.tsx:150
 msgid "Select your interests from the options below"
 msgstr ""
 
@@ -9392,7 +9392,7 @@ msgstr "We couldn’t load this conversation’s join requests"
 msgid "We couldn’t load this conversation’s settings"
 msgstr "We couldn’t load this conversation’s settings"
 
-#: src/screens/Settings/InterestsSettings.tsx:148
+#: src/screens/Settings/InterestsSettings.tsx:146
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
@@ -9951,7 +9951,7 @@ msgstr ""
 msgid "Your interests"
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:118
+#: src/screens/Settings/InterestsSettings.tsx:116
 msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""

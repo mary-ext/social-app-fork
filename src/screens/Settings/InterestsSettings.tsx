@@ -48,11 +48,9 @@ export function InterestsSettingsScreen({}: Props) {
 			</Layout.Header.Outer>
 			<Layout.Content>
 				<div className={styles.body}>
-					<Text color="textContrastMedium" size="sm">
+					<Text color="textContrastMedium" size="md_sub">
 						<Trans>Your selected interests help us serve you content you care about.</Trans>
 					</Text>
-
-					<div className={styles.divider} />
 
 					{preferences ? (
 						<Inner preferences={preferences} setIsSaving={setIsSaving} />
@@ -159,7 +157,7 @@ function Inner({
 					if (!name) return null;
 					return (
 						<Checkbox.Root aria-label={name} className={styles.chip} key={interest} name={interest}>
-							<Text className={styles.chipText} selectable={false} weight="semiBold">
+							<Text className={styles.chipText} selectable={false} size="md_sub" weight="semiBold">
 								{name}
 							</Text>
 						</Checkbox.Root>

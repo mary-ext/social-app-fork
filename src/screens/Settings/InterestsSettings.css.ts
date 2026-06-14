@@ -11,11 +11,6 @@ export const body = style({
 	paddingInline: space.lg,
 });
 
-export const divider = style({
-	borderTop: `1px solid ${vars.palette.contrast_100}`,
-	width: '100%',
-});
-
 export const loaderWrap = style({
 	alignItems: 'center',
 	display: 'flex',
@@ -36,7 +31,7 @@ export const chip = style({
 	border: 'none',
 	borderRadius: 999,
 	cursor: 'pointer',
-	paddingBlock: space.md,
+	paddingBlock: space.sm,
 	paddingInline: space.xl,
 	transitionDuration: '100ms',
 	transitionProperty: 'background-color',
