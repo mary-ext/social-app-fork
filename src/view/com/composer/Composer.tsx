@@ -10,7 +10,6 @@ import {
 	useState,
 } from 'react';
 import {
-	ActivityIndicator,
 	Keyboard,
 	type LayoutChangeEvent,
 	ScrollView,
@@ -103,16 +102,19 @@ import { VideoPreview } from '#/view/com/composer/videos/VideoPreview';
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
+import { Button, ButtonIcon } from '#/components/Button';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
+import { Loader } from '#/components/Loader';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
+import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
+import * as WebButton from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -1388,32 +1390,21 @@ function ComposerTopBar({
 	canSaveDraft: boolean;
 	textLength: number;
 }) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 
 	const renderLeft = () => (
-		<Button
-			label={l`Cancel`}
-			onPress={onCancel}
-			size="small"
-			color="primary"
-			variant="ghost"
-			style={[a.rounded_full]}
-			accessibilityHint={l`Closes post composer and discards post draft`}
-		>
-			<ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
+		<WebButton.Button label={l`Cancel`} onClick={onCancel} size="small" color="primary" variant="ghost">
+			<WebButton.ButtonText size="md">
 				<Trans>Cancel</Trans>
-			</ButtonText>
-		</Button>
+			</WebButton.ButtonText>
+		</WebButton.Button>
 	);
 
 	const renderRight = () =>
 		isPublishing ? (
-			<View style={[a.flex_row, a.align_center]}>
-				<Text style={[t.atoms.text_contrast_medium]}>{publishingStage}</Text>
-				<View style={styles.postBtn}>
-					<ActivityIndicator />
-				</View>
+			<View style={[a.flex_row, a.align_center, a.gap_sm]}>
+				<WebText color="textContrastMedium">{publishingStage}</WebText>
+				<Loader />
 			</View>
 		) : (
 			<View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -1429,8 +1420,7 @@ function ComposerTopBar({
 						textLength={textLength}
 					/>
 				)}
-				<Button
-					testID="composerPublishBtn"
+				<WebButton.Button
 					label={
 						isReply
 							? isThread
@@ -1454,10 +1444,10 @@ function ComposerTopBar({
 					}
 					color="primary"
 					size="small"
-					onPress={onPublish}
+					onClick={onPublish}
 					disabled={!canPost || isPublishQueued}
 				>
-					<ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
+					<WebButton.ButtonText size="md">
 						{isReply ? (
 							<Trans context="action">Reply</Trans>
 						) : isThread ? (
@@ -1465,8 +1455,8 @@ function ComposerTopBar({
 						) : (
 							<Trans context="action">Post</Trans>
 						)}
-					</ButtonText>
-				</Button>
+					</WebButton.ButtonText>
+				</WebButton.Button>
 			</View>
 		);
 
@@ -1952,12 +1942,6 @@ function isEmptyPost(post: PostDraft) {
 }
 
 const styles = StyleSheet.create({
-	postBtn: {
-		borderRadius: 20,
-		paddingHorizontal: 20,
-		paddingVertical: 6,
-		marginLeft: 12,
-	},
 	stickyFooterWeb: webViewStyle({
 		position: 'sticky',
 		bottom: 0,
