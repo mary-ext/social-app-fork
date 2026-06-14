@@ -58,6 +58,23 @@ export const divider = style({
 	borderTop: `1px solid ${vars.palette.contrast_100}`,
 	width: '100%',
 });
+
+// the revealed panel. Base UI tracks the measured content height in `--collapsible-panel-height` (kept current
+// via a ResizeObserver, so async-loaded rows still animate); we transition height between it and the collapsed
+// 0 the starting/ending data-attrs mark, clipping the content during the sweep.
+export const panel = style({
+	boxSizing: 'border-box',
+	height: 'var(--collapsible-panel-height)',
+	overflow: 'hidden',
+	transitionDuration: '300ms',
+	transitionProperty: 'height',
+	transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+	selectors: {
+		'&[data-starting-style], &[data-ending-style]': {
+			height: 0,
+		},
+	},
+});
 // #endregion
 
 // #region row
@@ -85,6 +102,22 @@ export const row = style({
 });
 
 /**
+ * A row's chrome without the {@link row} grid: same padding and size, but a plain centered flex line. For a
+ * row that lays out its own content (e.g. an avatar beside a name/handle column) rather than the icon/title
+ * grid.
+ */
+export const rowPlain = style({
+	alignItems: 'center',
+	boxSizing: 'border-box',
+	display: 'flex',
+	gap: space.md,
+	paddingBlock: 14,
+	paddingInline: space.lg,
+	textAlign: 'left',
+	width: '100%',
+});
+
+/**
  * Element reset + hover tint + focus ring for a row that is itself an `<a>`/`<button>`/switch/select trigger.
  * A disabled row (including one frozen mid-write via `loading`) greys out and drops its hover tint.
  */
@@ -96,9 +129,13 @@ export const rowInteractive = style({
 	cursor: 'pointer',
 	font: 'inherit',
 	textDecoration: 'none',
-	transitionDuration: '100ms',
-	transitionProperty: 'background-color, opacity',
-	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+	// border-radius only changes on a CollapsibleRow trigger as it opens/closes; transitioning it (in sync with
+	// the 300ms panel sweep) rounds/flattens the corner — and its focus ring, which tracks border-radius — rather
+	// than snapping. Other rows never change radius at runtime, so this is inert for them.
+	transitionDuration: '100ms, 100ms, 300ms',
+	transitionProperty: 'background-color, opacity, border-radius',
+	transitionTimingFunction:
+		'cubic-bezier(0.17, 0.73, 0.14, 1), cubic-bezier(0.17, 0.73, 0.14, 1), cubic-bezier(0.16, 1, 0.3, 1)',
 	selectors: {
 		'&:hover:not(:disabled):not([data-disabled])': { backgroundColor: vars.palette.contrast_50 },
 		'&:focus-visible': {

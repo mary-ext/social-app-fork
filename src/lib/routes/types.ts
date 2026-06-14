@@ -42,7 +42,6 @@ export type CommonNavigatorParams = {
 	ContentAndMediaSettings: undefined;
 	NotificationSettings: undefined;
 	InterestsSettings: undefined;
-	AboutSettings: undefined;
 	Search: { q?: string; tab?: 'user' | 'profile' | 'feed' };
 	Hashtag: { tag: string; author?: string };
 	Topic: { topic: string };

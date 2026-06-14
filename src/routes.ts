@@ -47,7 +47,6 @@ export const router = new Router<AllNavigatableRoutes>({
 	AccountSettings: '/settings/account',
 	ContentAndMediaSettings: '/settings/content-and-media',
 	InterestsSettings: '/settings/interests',
-	AboutSettings: '/settings/about',
 	NotificationSettings: '/settings/notifications',
 	// hashtags
 	Hashtag: '/hashtag/:tag',

@@ -1,11 +1,13 @@
 import { Children, cloneElement, type ComponentType, Fragment, isValidElement, type ReactNode } from 'react';
 import type { GestureResponderEvent } from 'react-native';
+import { Collapsible } from '@base-ui/react/collapsible';
 import { Switch } from '@base-ui/react/switch';
 import { clsx } from 'clsx';
 
 import {
 	ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
 	ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
+	ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron';
 import type { Props as IconProps } from '#/components/icons/common';
 import { type LinkProps, useLink } from '#/components/Link';
@@ -154,10 +156,11 @@ export function ButtonRow({
 }
 
 /**
- * A row that navigates on press, rendered as an `<a>`; the whole row is the link, with a trailing forward
- * chevron.
+ * A bare navigating row: an `<a>` with only the interactive chrome (hover/focus/reset) — the caller brings
+ * the row layout (a {@link row}/{@link rowPlain} class via `className`) and every slot. Use {@link LinkRow}
+ * for the common icon/label grid form with a trailing chevron.
  */
-export function LinkRow({
+export function LinkRowRaw({
 	children,
 	className,
 	label,
@@ -173,17 +176,118 @@ export function LinkRow({
 		<a
 			href={href}
 			aria-label={label}
-			className={clsx(styles.row, styles.rowInteractive, className)}
+			className={clsx(styles.rowInteractive, className)}
 			// useLink resolves navigation off a DOM-shaped MouseEvent; the RN type is nominal only here
 			onClick={(e) => onPress(e as unknown as GestureResponderEvent)}
 		>
+			{children}
+		</a>
+	);
+}
+
+/**
+ * A row that navigates on press, rendered as an `<a>`; the whole row is the link, with a trailing forward
+ * chevron.
+ */
+export function LinkRow({
+	children,
+	className,
+	label,
+	to,
+}: {
+	children: ReactNode;
+	className?: string;
+	label: string;
+	to: LinkProps['to'];
+}) {
+	return (
+		<LinkRowRaw className={clsx(styles.row, className)} label={label} to={to}>
 			{children}
 			<span className={styles.trailing}>
 				<span className={styles.chevron}>
 					<ChevronRightIcon size="sm" fill="currentColor" />
 				</span>
 			</span>
-		</a>
+		</LinkRowRaw>
+	);
+}
+
+/**
+ * A row that expands on press to reveal its `children` rows in a height-animated panel, with a chevron that
+ * flips on open. Renders as one Section child; its inner rows get automatic dividers like {@link Section}.
+ * Pass `trailing` for content shown beside the chevron while collapsed (e.g. an avatar-stack peek).
+ */
+export function CollapsibleRow({
+	children,
+	className,
+	icon,
+	label,
+	onOpenChange,
+	open,
+	titleText,
+	trailing,
+}: {
+	children: ReactNode;
+	className?: string;
+	icon?: ComponentType<IconProps>;
+	label: string;
+	onOpenChange: (open: boolean) => void;
+	open: boolean;
+	titleText: ReactNode;
+	trailing?: ReactNode;
+}) {
+	const rows = Children.toArray(children).filter(isValidElement<{ className?: string }>);
+	// Section rounds this disclosure's card corners by injecting rowFirst/rowLast into our className. We push
+	// that rounding onto the actual corner rows (trigger, last panel row) instead of clipping with
+	// `overflow: hidden`, so their focus rings follow the corner rather than being clipped square.
+	const roundTop = className?.includes(styles.rowFirst) ?? false;
+	const roundBottom = className?.includes(styles.rowLast) ?? false;
+	return (
+		<Collapsible.Root className={className} onOpenChange={onOpenChange} open={open}>
+			<Collapsible.Trigger
+				render={
+					<button
+						aria-label={label}
+						className={clsx(
+							styles.row,
+							styles.rowInteractive,
+							roundTop && styles.rowFirst,
+							!open && roundBottom && styles.rowLast,
+						)}
+						type="button"
+					/>
+				}
+			>
+				{icon != null && <Icon icon={icon} />}
+				<Text className={styles.title} color="text" leading="snug" size="md" weight="medium">
+					{titleText}
+				</Text>
+				<span className={styles.trailing}>
+					{!open && trailing}
+					<span className={styles.chevron}>
+						{open ? (
+							<ChevronUpIcon fill="currentColor" size="sm" />
+						) : (
+							<ChevronDownIcon fill="currentColor" size="sm" />
+						)}
+					</span>
+				</span>
+			</Collapsible.Trigger>
+			<Collapsible.Panel className={styles.panel}>
+				{rows.map((row, i) => {
+					const roundedRow =
+						i === rows.length - 1 && roundBottom
+							? cloneElement(row, { className: clsx(row.props.className, styles.rowLast) })
+							: row;
+					return (
+						<Fragment key={row.key ?? i}>
+							<div className={styles.divider} />
+							{roundedRow}
+						</Fragment>
+					);
+				})}
+			</Collapsible.Panel>
+		</Collapsible.Root>
 	);
 }
 

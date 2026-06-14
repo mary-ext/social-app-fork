@@ -63,11 +63,6 @@ import { router } from '#/routes';
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>();
 
-const AboutSettingsScreen = lazy(() =>
-	import('#/screens/Settings/AboutSettings').then((m) => ({
-		default: m.AboutSettingsScreen,
-	})),
-);
 const AccessibilitySettingsScreen = lazy(() =>
 	import('#/screens/Settings/AccessibilitySettings').then((m) => ({
 		default: m.AccessibilitySettingsScreen,
@@ -673,14 +668,6 @@ const FlatNavigator = () => {
 				getComponent={() => InterestsSettingsScreen}
 				options={{
 					title: title(defineMessage`Your interests`),
-					requireAuth: true,
-				}}
-			/>
-			<Flat.Screen
-				name="AboutSettings"
-				getComponent={() => AboutSettingsScreen}
-				options={{
-					title: title(defineMessage`About`),
 					requireAuth: true,
 				}}
 			/>

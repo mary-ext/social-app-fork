@@ -3,9 +3,6 @@ import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
-import { useProfilesQuery } from '#/state/queries/profile';
-
-import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -77,35 +74,5 @@ export function AvatarStack({
 				</View>
 			))}
 		</View>
-	);
-}
-
-export function AvatarStackWithFetch({
-	profiles,
-	size,
-	backgroundColor,
-}: {
-	profiles: string[];
-	size?: number;
-	backgroundColor?: string;
-}) {
-	const { data, error } = useProfilesQuery({ handles: profiles });
-
-	if (error) {
-		if (error.name !== 'AbortError') {
-			logger.error('Error fetching profiles for AvatarStack', {
-				safeMessage: error,
-			});
-		}
-		return null;
-	}
-
-	return (
-		<AvatarStack
-			numPending={profiles.length}
-			profiles={data?.profiles || []}
-			size={size}
-			backgroundColor={backgroundColor}
-		/>
 	);
 }
