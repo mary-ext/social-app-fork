@@ -9,7 +9,6 @@ import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-f
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
-import type { ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a } from '#/alf';
@@ -17,6 +16,7 @@ import { atoms as a } from '#/alf';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
+import type { ListRef } from '#/components/List/List';
 
 interface SectionRef {
 	scrollToTop: () => void;

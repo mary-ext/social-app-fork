@@ -2971,7 +2971,7 @@ msgstr ""
 msgid "Enable trending topics"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:114
+#: src/screens/Profile/Sections/Feed.tsx:106
 msgid "End of feed"
 msgstr ""
 
@@ -4017,7 +4017,6 @@ msgstr "Here's what happens if you do:"
 msgid "Hidden list"
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:86
 #: src/components/moderation/ContentHider.tsx:147
 #: src/components/moderation/LabelPreference.tsx:73
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
@@ -4063,11 +4062,6 @@ msgstr ""
 msgid "Hide this reply?"
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:68
-msgid "Hide trending topics"
-msgstr ""
-
-#: src/components/interstitials/Trending.tsx:84
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:104
 msgid "Hide trending topics?"
 msgstr ""
@@ -4716,7 +4710,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:149
-#: src/screens/Profile/Sections/Feed.tsx:102
+#: src/screens/Profile/Sections/Feed.tsx:94
 #: src/screens/ProfileList/FeedSection.tsx:100
 #: src/view/com/feeds/FeedPage.tsx:130
 msgid "Load new posts"
@@ -5448,7 +5442,7 @@ msgstr "No one can send messages"
 msgid "No posts here"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:76
+#: src/screens/Profile/Sections/Feed.tsx:70
 #: src/view/screens/Profile.tsx:417
 msgid "No posts yet"
 msgstr ""
@@ -8226,7 +8220,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:890
-#: src/view/com/posts/PostFeed.tsx:521
+#: src/view/com/posts/PostFeed.tsx:478
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -9674,7 +9668,6 @@ msgstr "You can read chat history but can't send new messages."
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 
-#: src/components/interstitials/Trending.tsx:85
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:105
 msgid "You can update this later from your settings."
 msgstr ""

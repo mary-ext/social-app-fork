@@ -3,19 +3,17 @@ import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import type { ListRef } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
+import type { ListRef } from '#/components/List/List';
 import { Text } from '#/components/Typography';
 
 import type { SectionRef } from './types';
@@ -49,10 +47,6 @@ export function ProfileFeedSection({
 	const queryClient = useQueryClient();
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
-	const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads');
-	const adjustedInitialNumToRender = useInitialNumToRender({
-		screenHeightOffset: headerHeight,
-	});
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
@@ -93,10 +87,8 @@ export function ProfileFeedSection({
 				onScrolledDownChange={setIsScrolledDown}
 				renderEmptyState={renderPostsEmpty}
 				headerOffset={headerHeight}
-				progressViewOffset={undefined}
 				renderEndOfFeed={ProfileEndOfFeed}
 				ignoreFilterFor={ignoreFilterFor}
-				initialNumToRender={shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined}
 			/>
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn onPress={onScrollToTop} label={l`Load new posts`} showIndicator={hasNew} />

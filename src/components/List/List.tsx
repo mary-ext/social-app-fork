@@ -1,9 +1,24 @@
-import { Fragment, type ReactNode, type Ref, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import {
+	Fragment,
+	memo,
+	type ReactNode,
+	type Ref,
+	startTransition,
+	useEffect,
+	useImperativeHandle,
+	useMemo,
+	useRef,
+	useState,
+} from 'react';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
 import * as css from '#/components/List/List.css';
+
+/** A post is "seen" once this much of it has been visible for {@link ON_ITEM_SEEN_WAIT_DURATION}. */
+const ON_ITEM_SEEN_INTERSECTION_OPTS = { rootMargin: '-200px 0px -200px 0px' };
+const ON_ITEM_SEEN_WAIT_DURATION = 0.5e3;
 
 export type ListRenderItemInfo<ItemT> = {
 	index: number;
@@ -18,6 +33,8 @@ export type ListMethods = {
 	scrollToTop: () => void;
 };
 
+export type ListRef = React.RefObject<ListMethods | null>;
+
 export type ListProps<ItemT> = {
 	data: readonly ItemT[] | null | undefined;
 	keyExtractor: (item: ItemT, index: number) => string;
@@ -27,11 +44,17 @@ export type ListProps<ItemT> = {
 	ListFooterComponent?: ReactNode;
 	/** Rendered before the rows. */
 	ListHeaderComponent?: ReactNode;
+	/** Top padding that keeps content clear of a sticky header; also sizes the scrolled-down detector. */
+	headerOffset?: number;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
 	onContentSizeChange?: (width: number, height: number) => void;
 	onEndReached?: () => void;
 	/** Lookahead before the end, in multiples of the viewport height. */
 	onEndReachedThreshold?: number;
+	/** Fires per row once it has been sufficiently visible long enough to count as seen. */
+	onItemSeen?: (item: ItemT) => void;
+	/** Fires when the list scrolls past (or back above) its {@link headerOffset}-tall top band. */
+	onScrolledDownChange?: (isScrolledDown: boolean) => void;
 	onStartReached?: () => void;
 	/** Lookahead before the start, in multiples of the viewport height. */
 	onStartReachedThreshold?: number;
@@ -50,9 +73,12 @@ export function List<ItemT>({
 	ListEmptyComponent,
 	ListFooterComponent,
 	ListHeaderComponent,
+	headerOffset,
 	onContentSizeChange,
 	onEndReached,
 	onEndReachedThreshold,
+	onItemSeen,
+	onScrolledDownChange,
 	onStartReached,
 	onStartReachedThreshold,
 	ref,
@@ -88,11 +114,24 @@ export function List<ItemT>({
 	const onEndVisibleChange = useNonReactiveCallback((isVisible: boolean) => {
 		if (isVisible) onEndReached?.();
 	});
+	const onAboveTheFoldChange = useNonReactiveCallback((isAboveTheFold: boolean) => {
+		// `startTransition` keeps the dependent UI (e.g. a "load new posts" button) off the scroll path.
+		startTransition(() => onScrolledDownChange?.(!isAboveTheFold));
+	});
+
+	const seen = useItemSeenObserver(onItemSeen);
 
 	const isEmpty = !data || data.length === 0;
 
 	return (
-		<div ref={containerRef} className={css.container}>
+		<div ref={containerRef} className={css.container} style={{ paddingTop: headerOffset }}>
+			{onScrolledDownChange && (
+				<Visibility
+					className={css.aboveTheFold}
+					onVisibleChange={onAboveTheFoldChange}
+					style={{ height: headerOffset }}
+				/>
+			)}
 			{onStartReached && !isEmpty && (
 				<EdgeVisibility
 					containerRef={containerRef}
@@ -103,9 +142,14 @@ export function List<ItemT>({
 			{ListHeaderComponent}
 			{isEmpty
 				? ListEmptyComponent
-				: data.map((item, index) => (
-						<Fragment key={keyExtractor(item, index)}>{renderItem({ index, item })}</Fragment>
-					))}
+				: data.map((item, index) => {
+						const key = keyExtractor(item, index);
+						return seen ? (
+							<SeenRow key={key} index={index} item={item} renderItem={renderItem} seen={seen} />
+						) : (
+							<Fragment key={key}>{renderItem({ index, item })}</Fragment>
+						);
+					})}
 			{onEndReached && !isEmpty && (
 				<EdgeVisibility
 					bottomMargin={thresholdMargin(onEndReachedThreshold)}
@@ -117,6 +161,105 @@ export function List<ItemT>({
 		</div>
 	);
 }
+
+/** Tracks per-row "seen" dwell against a single shared {@link IntersectionObserver}. */
+type SeenObserver<ItemT> = {
+	observe: (row: Element, item: ItemT) => void;
+	unobserve: (row: Element) => void;
+};
+
+/**
+ * Builds one {@link IntersectionObserver} for the whole list and routes each entry back to its row, so the
+ * observer count stays at one regardless of how many rows render. Returns `null` while disabled.
+ */
+function useItemSeenObserver<ItemT>(
+	onItemSeen: ((item: ItemT) => void) | undefined,
+): SeenObserver<ItemT> | null {
+	// Read the latest callback without rebuilding the observer when its identity changes.
+	const reportSeen = useNonReactiveCallback(onItemSeen ?? (() => {}));
+	const enabled = !!onItemSeen;
+
+	const observer = useMemo(() => {
+		if (!enabled) return null;
+		const rows = new Map<Element, { item: ItemT; timeout?: ReturnType<typeof setTimeout> }>();
+		const io = new IntersectionObserver((entries) => {
+			batchedUpdates(() => {
+				for (const entry of entries) {
+					const row = rows.get(entry.target);
+					if (!row) continue;
+					if (entry.isIntersecting) {
+						row.timeout ??= setTimeout(() => {
+							row.timeout = undefined;
+							reportSeen(row.item);
+						}, ON_ITEM_SEEN_WAIT_DURATION);
+					} else if (row.timeout != null) {
+						clearTimeout(row.timeout);
+						row.timeout = undefined;
+					}
+				}
+			});
+		}, ON_ITEM_SEEN_INTERSECTION_OPTS);
+		return {
+			rows,
+			io,
+			observe(row: Element, item: ItemT) {
+				rows.set(row, { item });
+				io.observe(row);
+			},
+			unobserve(row: Element) {
+				const rec = rows.get(row);
+				if (rec?.timeout != null) clearTimeout(rec.timeout);
+				rows.delete(row);
+				io.unobserve(row);
+			},
+		};
+		// `reportSeen` is stable; rebuild only when toggling the feature on/off.
+	}, [enabled, reportSeen]);
+
+	useEffect(() => {
+		return () => {
+			observer?.io.disconnect();
+			observer?.rows.forEach((rec) => {
+				if (rec.timeout != null) clearTimeout(rec.timeout);
+			});
+		};
+	}, [observer]);
+
+	return observer;
+}
+
+/** A row wrapper that registers itself with the list's shared seen-observer. */
+const SeenRow = memo(function SeenRow<ItemT>({
+	index,
+	item,
+	renderItem,
+	seen,
+}: {
+	index: number;
+	item: ItemT;
+	renderItem: ListRenderItem<ItemT>;
+	seen: SeenObserver<ItemT>;
+}) {
+	const rowRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const row = rowRef.current;
+		if (!row) return;
+		seen.observe(row, item);
+		return () => seen.unobserve(row);
+	}, [seen, item]);
+
+	return (
+		<div ref={rowRef} className={css.row}>
+			{renderItem({ index, item })}
+		</div>
+	);
+}) as <ItemT>(props: {
+	index: number;
+	item: ItemT;
+	renderItem: ListRenderItem<ItemT>;
+	seen: SeenObserver<ItemT>;
+}) => ReactNode;
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;
 
@@ -148,14 +291,18 @@ function EdgeVisibility({
 	);
 }
 
-/** A zero-size sentinel that reports when it enters/leaves the expanded viewport. */
+/** A sentinel that reports when it enters/leaves the expanded viewport. Zero-size unless styled. */
 function Visibility({
 	bottomMargin = '0px',
+	className = css.sentinel,
 	onVisibleChange,
+	style,
 	topMargin = '0px',
 }: {
 	bottomMargin?: string;
+	className?: string;
 	onVisibleChange: (isVisible: boolean) => void;
+	style?: React.CSSProperties;
 	topMargin?: string;
 }) {
 	const tailRef = useRef<HTMLDivElement>(null);
@@ -183,7 +330,7 @@ function Visibility({
 		};
 	}, [bottomMargin, handleIntersection, topMargin]);
 
-	return <div ref={tailRef} className={css.sentinel} />;
+	return <div ref={tailRef} className={className} style={style} />;
 }
 
 function useResizeObserver(

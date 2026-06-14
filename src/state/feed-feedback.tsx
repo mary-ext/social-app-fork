@@ -67,34 +67,6 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 		WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
 	>(new WeakSet());
 
-	const flushEvents = useCallback((stats: AggregatedStats | null, _feedDescriptor: string) => {
-		if (stats === null) {
-			return;
-		}
-
-		if (stats.clickthroughCount > 0) {
-			stats.clickthroughCount = 0;
-		}
-
-		if (stats.engagedCount > 0) {
-			stats.engagedCount = 0;
-		}
-
-		if (stats.seenCount > 0) {
-			stats.seenCount = 0;
-		}
-	}, []);
-
-	const aggregatedStats = useRef<AggregatedStats | null>(null);
-	const throttledFlushAggregatedStats = useMemo(
-		() =>
-			throttle(() => flushEvents(aggregatedStats.current, feed?.feedDescriptor ?? 'unknown'), 45e3, {
-				leading: true, // The outer call is already throttled somewhat.
-				trailing: true,
-			}),
-		[feed?.feedDescriptor, flushEvents],
-	);
-
 	const sendToFeedNoDelay = useCallback(() => {
 		const interactions = Array.from(queue.current).map(toInteraction);
 		queue.current.clear();
@@ -114,14 +86,7 @@ export function useFeedFeedback(feedSourceInfo: FeedSourceInfo | undefined, hasS
 				headers: { 'atproto-proxy': `${proxyDid}#bsky_fg` },
 			}),
 		).catch(() => {}); // ignore upstream errors
-
-		if (aggregatedStats.current === null) {
-			aggregatedStats.current = createAggregatedStats();
-		}
-		sendOrAggregateInteractionsForStats(aggregatedStats.current, interactionsToSend);
-		throttledFlushAggregatedStats();
-		logger.debug('flushed');
-	}, [appview, throttledFlushAggregatedStats, proxyDid, enabled, feed]);
+	}, [appview, proxyDid, enabled, feed]);
 
 	const sendToFeed = useMemo(
 		() =>
@@ -235,48 +200,4 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
 	const [item, event, feedContext, reqId] = str.split('|');
 	return { item, event, feedContext, reqId } as AppBskyFeedDefs.Interaction;
-}
-
-type AggregatedStats = {
-	clickthroughCount: number;
-	engagedCount: number;
-	seenCount: number;
-};
-
-function createAggregatedStats(): AggregatedStats {
-	return {
-		clickthroughCount: 0,
-		engagedCount: 0,
-		seenCount: 0,
-	};
-}
-
-function sendOrAggregateInteractionsForStats(
-	stats: AggregatedStats,
-	interactions: AppBskyFeedDefs.Interaction[],
-) {
-	for (let interaction of interactions) {
-		switch (interaction.event) {
-			// The events are aggregated and sent later in batches.
-			case 'app.bsky.feed.defs#clickthroughAuthor':
-			case 'app.bsky.feed.defs#clickthroughEmbed':
-			case 'app.bsky.feed.defs#clickthroughItem':
-			case 'app.bsky.feed.defs#clickthroughReposter': {
-				stats.clickthroughCount++;
-				break;
-			}
-			case 'app.bsky.feed.defs#interactionLike':
-			case 'app.bsky.feed.defs#interactionQuote':
-			case 'app.bsky.feed.defs#interactionReply':
-			case 'app.bsky.feed.defs#interactionRepost':
-			case 'app.bsky.feed.defs#interactionShare': {
-				stats.engagedCount++;
-				break;
-			}
-			case 'app.bsky.feed.defs#interactionSeen': {
-				stats.seenCount++;
-				break;
-			}
-		}
-	}
 }

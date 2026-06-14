@@ -32,7 +32,7 @@ import * as Layout from '#/components/Layout';
 
 export type ListMethods = {
 	scrollToTop: () => void;
-	scrollToOffset: (options: { animated: boolean; offset: number }) => void;
+	scrollToOffset: (options: { animated?: boolean; offset: number }) => void;
 	scrollToEnd: (options?: { animated?: boolean }) => void;
 };
 type WebViewStyle = ViewStyle & {
@@ -222,7 +222,7 @@ function ListImpl<ItemT>(
 				getScrollableNode()?.scrollTo({ top: 0 });
 			},
 
-			scrollToOffset({ animated, offset }: { animated: boolean; offset: number }) {
+			scrollToOffset({ animated, offset }: { animated?: boolean; offset: number }) {
 				getScrollableNode()?.scrollTo({
 					left: 0,
 					top: offset,

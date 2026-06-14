@@ -1,21 +1,10 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-	ActivityIndicator,
-	AppState,
-	Dimensions,
-	LayoutAnimation,
-	type ListRenderItemInfo,
-	type StyleProp,
-	StyleSheet,
-	View,
-	type ViewStyle,
-} from 'react-native';
+import { ActivityIndicator, AppState, LayoutAnimation, StyleSheet, View } from 'react-native';
 import type { AppBskyActorDefs, AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants';
-import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { isNetworkError } from '#/lib/strings/errors';
 
@@ -31,19 +20,15 @@ import {
 	RQKEY,
 	usePostFeedQuery,
 } from '#/state/queries/post-feed';
-import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { List, type ListRef } from '#/view/com/util/List';
 import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
 import { SuggestedFollows } from '#/components/FeedInterstitials';
-import { TrendingInterstitial } from '#/components/interstitials/Trending';
-
-import { isStatusStillActive, isStatusValidForViewers, useLiveNowConfig } from '#/features/liveNow';
+import { List, type ListRef, type ListRenderItemInfo } from '#/components/List/List';
 
 import { ComposerPrompt } from '../feeds/ComposerPrompt';
 import { FeedShutdownMsg } from './FeedShutdownMsg';
@@ -90,10 +75,6 @@ export type FeedRow =
 			key: string;
 	  }
 	| {
-			type: 'interstitialTrending';
-			key: string;
-	  }
-	| {
 			type: 'showLessFollowup';
 			key: string;
 	  }
@@ -108,11 +89,12 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 	reqId: string | undefined;
 }[] {
 	if (feedRow.type === 'sliceItem') {
-		return feedRow.slice.items.map((item) => ({
-			item,
-			feedContext: feedRow.slice.feedContext,
-			reqId: feedRow.slice.reqId,
-		}));
+		// Report only the post this row actually rendered, not its unshown slice siblings.
+		const item = feedRow.slice.items[feedRow.indexInSlice];
+		if (!item) {
+			return [];
+		}
+		return [{ feedContext: feedRow.slice.feedContext, item, reqId: feedRow.slice.reqId }];
 	} else {
 		return [];
 	}
@@ -125,7 +107,6 @@ const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 let PostFeed = ({
 	feed,
 	ignoreFilterFor,
-	style,
 	enabled,
 	pollInterval,
 	disablePoll,
@@ -136,16 +117,11 @@ let PostFeed = ({
 	renderEndOfFeed,
 	testID,
 	headerOffset = 0,
-	progressViewOffset,
-	desktopFixedHeightOffset,
 	ListHeaderComponent,
-	extraData,
 	savedFeedConfig,
-	initialNumToRender: initialNumToRenderOverride,
 }: {
 	feed: FeedDescriptor;
 	ignoreFilterFor?: string;
-	style?: StyleProp<ViewStyle>;
 	enabled?: boolean;
 	pollInterval?: number;
 	disablePoll?: boolean;
@@ -156,20 +132,13 @@ let PostFeed = ({
 	renderEndOfFeed?: () => React.ReactElement;
 	testID?: string;
 	headerOffset?: number;
-	progressViewOffset?: number;
-	desktopFixedHeightOffset?: number;
 	ListHeaderComponent?: () => React.ReactElement;
-	extraData?: unknown;
 	savedFeedConfig?: AppBskyActorDefs.SavedFeed;
-	initialNumToRender?: number;
-	lastFetchDate?: () => number;
 }): React.ReactNode => {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
 	const { currentAccount, hasSession } = useSession();
-	const initialNumToRender = useInitialNumToRender();
 	const feedFeedback = useFeedFeedbackContext();
-	const [isPTRing, setIsPTRing] = useState(false);
 	// eslint-disable-next-line react-hooks/purity
 	const lastFetchRef = useRef<number>(Date.now());
 	const [feedType, feedUriOrActorDid = '', feedTab] = feed.split('|');
@@ -467,19 +436,6 @@ let PostFeed = ({
 	// events
 	// =
 
-	const onRefresh = useCallback(async () => {
-		if (!enabled) return;
-
-		setIsPTRing(true);
-		try {
-			await truncateAndInvalidate(queryClient, RQKEY(feed));
-			onHasNew?.(false);
-		} catch (err) {
-			logger.error('Failed to refresh posts feed', { message: err });
-		}
-		setIsPTRing(false);
-	}, [queryClient, setIsPTRing, onHasNew, feed, feedType, enabled]);
-
 	const onEndReached = useCallback(async () => {
 		if (isFetching || !hasNextPage || isError) return;
 
@@ -488,7 +444,7 @@ let PostFeed = ({
 		} catch (err) {
 			logger.error('Failed to load more posts', { message: err });
 		}
-	}, [isFetching, hasNextPage, isError, fetchNextPage, feed, feedType, feedItems.length]);
+	}, [isFetching, hasNextPage, isError, fetchNextPage]);
 
 	const onPressTryAgain = useCallback(() => {
 		void refetch();
@@ -528,8 +484,6 @@ let PostFeed = ({
 				return <FeedShutdownMsg feedUri={feedUriOrActorDid} />;
 			} else if (row.type === 'interstitialFollows') {
 				return <SuggestedFollows feed={feed} />;
-			} else if (row.type === 'interstitialTrending') {
-				return <TrendingInterstitial />;
 			} else if (row.type === 'composerPrompt') {
 				return <ComposerPrompt />;
 			} else if (row.type === 'sliceItem') {
@@ -574,9 +528,7 @@ let PostFeed = ({
 			savedFeedConfig,
 			l,
 			onPressRetryLoadMore,
-			feedType,
 			feedUriOrActorDid,
-			feedTab,
 			onPressShowLess,
 		],
 	);
@@ -601,90 +553,26 @@ let PostFeed = ({
 		);
 	}, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset]);
 
-	const liveNowConfig = useLiveNowConfig();
-
-	const seenActorWithStatusRef = useRef<Set<string>>(new Set());
-	const seenPostUrisRef = useRef<Set<string>>(new Set());
-
-	// Helper to calculate position in feed (count only root posts, not interstitials or thread replies)
-	const getPostPosition = useNonReactiveCallback((_type: FeedRow['type'], key: string) => {
-		// Calculate position: find the row index in feedItems, then calculate position
-		const rowIndex = feedItems.findIndex((row) => row.type === 'sliceItem' && row.key === key);
-
-		if (rowIndex >= 0) {
-			let position = 0;
-			for (let i = 0; i < rowIndex && i < feedItems.length; i++) {
-				const row = feedItems[i]!;
-				if (row.type === 'sliceItem') {
-					// Only count root posts (indexInSlice === 0), not thread replies
-					if (row.indexInSlice === 0) {
-						position++;
-					}
-				}
-			}
-			return position;
-		}
-	});
-
 	const onItemSeen = useCallback(
 		(item: FeedRow) => {
 			feedFeedback.onItemSeen(item);
-
-			// Track post:view events
-			if (item.type === 'sliceItem') {
-				const slice = item.slice;
-				const indexInSlice = item.indexInSlice;
-				const postItem = slice.items[indexInSlice]!;
-				const post = postItem.post;
-
-				// Only track the root post of each slice (index 0) to avoid double-counting thread items
-				if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
-					seenPostUrisRef.current.add(post.uri);
-				}
-
-				// Live status tracking (existing code)
-				const actor = post.author;
-				if (
-					actor.status &&
-					isStatusValidForViewers(actor.status, liveNowConfig) &&
-					isStatusStillActive(actor.status.expiresAt)
-				) {
-					if (!seenActorWithStatusRef.current.has(actor.did)) {
-						seenActorWithStatusRef.current.add(actor.did);
-					}
-				}
-			}
 		},
-		[feedFeedback, feed, liveNowConfig, getPostPosition],
+		[feedFeedback],
 	);
 
 	return (
-		<View testID={testID} style={style}>
+		<View testID={testID}>
 			<List
-				testID={testID ? `${testID}-flatlist` : undefined}
 				ref={scrollElRef}
 				data={feedItems}
 				keyExtractor={(item: FeedRow) => item.key}
 				renderItem={renderItem}
-				ListFooterComponent={FeedFooter}
-				ListHeaderComponent={ListHeaderComponent}
-				refreshing={isPTRing}
-				onRefresh={() => void onRefresh()}
+				ListFooterComponent={<FeedFooter />}
+				ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}
 				headerOffset={headerOffset}
-				progressViewOffset={progressViewOffset}
-				contentContainerStyle={{
-					minHeight: Dimensions.get('window').height * 1.5,
-				}}
 				onScrolledDownChange={handleScrolledDownChange}
 				onEndReached={() => void onEndReached()}
-				onEndReachedThreshold={2} // number of posts left to trigger load more
-				removeClippedSubviews={true}
-				extraData={extraData}
-				desktopFixedHeight={desktopFixedHeightOffset ? desktopFixedHeightOffset : true}
-				initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-				windowSize={9}
-				maxToRenderPerBatch={1}
-				updateCellsBatchingPeriod={40}
+				onEndReachedThreshold={2}
 				onItemSeen={onItemSeen}
 			/>
 		</View>

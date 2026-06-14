@@ -20,13 +20,13 @@ import { useSession } from '#/state/session';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { FAB } from '#/view/com/util/fab/FAB';
-import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { useTheme } from '#/alf';
 
 import { useHeaderOffset } from '#/components/hooks/useHeaderOffset';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
+import type { ListMethods } from '#/components/List/List';
 
 const POLL_FREQ = 60e3; // 60sec
 
