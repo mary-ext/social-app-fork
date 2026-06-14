@@ -275,7 +275,7 @@ function LabelerRow({
 
 	return (
 		<Settings.LinkRowRaw
-			className={clsx(cardStyles.rowPlain, styles.labelerRow, className)}
+			className={clsx(styles.labelerRow, className)}
 			label={l`View the labeling service provided by @${creator.handle}`}
 			to={makeProfileLink({ did: creator.did })}
 		>
