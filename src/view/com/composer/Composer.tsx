@@ -108,8 +108,8 @@ import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/componen
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
-import { Loader } from '#/components/Loader';
 import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed';
+import { Spinner } from '#/components/Spinner';
 import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
@@ -120,7 +120,9 @@ import * as Prompt from '#/components/web/Prompt';
 
 import type { Gif } from '#/features/gifPicker/types';
 import { useRequireAltTextEnabled } from '#/storage/hooks/alt-text-required';
+import { vars } from '#/styles/contract.css';
 
+import * as topBarStyles from './Composer.css';
 import { ComposerToolbarButton } from './ComposerToolbarButton';
 import { draftToComposerPosts, extractLocalRefs, type RestoredVideo } from './drafts/state/api';
 import {
@@ -1392,78 +1394,77 @@ function ComposerTopBar({
 }) {
 	const { t: l } = useLingui();
 
-	const renderLeft = () => (
-		<WebButton.Button label={l`Cancel`} onClick={onCancel} size="small" color="primary" variant="ghost">
-			<WebButton.ButtonText size="md">
-				<Trans>Cancel</Trans>
-			</WebButton.ButtonText>
-		</WebButton.Button>
-	);
-
-	const renderRight = () =>
-		isPublishing ? (
-			<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-				<WebText color="textContrastMedium">{publishingStage}</WebText>
-				<Loader />
-			</View>
-		) : (
-			<View style={[a.flex_row, a.align_center, a.gap_xs]}>
-				{!isReply && (
-					<DraftsButton
-						onSelectDraft={onSelectDraft}
-						onSaveDraft={onSaveDraft}
-						onDiscard={onDiscard}
-						isEmpty={isEmpty}
-						isDirty={isDirty}
-						isEditingDraft={isEditingDraft}
-						canSaveDraft={canSaveDraft}
-						textLength={textLength}
-					/>
-				)}
-				<WebButton.Button
-					label={
-						isReply
-							? isThread
-								? l({
-										message: 'Publish replies',
-										comment: 'Accessibility label for button to publish multiple replies in a thread',
-									})
-								: l({
-										message: 'Publish reply',
-										comment: 'Accessibility label for button to publish a single reply',
-									})
-							: isThread
-								? l({
-										message: 'Publish posts',
-										comment: 'Accessibility label for button to publish multiple posts in a thread',
-									})
-								: l({
-										message: 'Publish post',
-										comment: 'Accessibility label for button to publish a single post',
-									})
-					}
-					color="primary"
-					size="small"
-					onClick={onPublish}
-					disabled={!canPost || isPublishQueued}
-				>
-					<WebButton.ButtonText size="md">
-						{isReply ? (
-							<Trans context="action">Reply</Trans>
-						) : isThread ? (
-							<Trans context="action">Post All</Trans>
-						) : (
-							<Trans context="action">Post</Trans>
-						)}
-					</WebButton.ButtonText>
-				</WebButton.Button>
-			</View>
-		);
-
 	return (
 		<Dialog.Header.Outer border={false}>
-			<Dialog.Header.Slot>{renderLeft()}</Dialog.Header.Slot>
-			<Dialog.Header.Slot>{renderRight()}</Dialog.Header.Slot>
+			<Dialog.Header.Slot>
+				<WebButton.Button label={l`Cancel`} onClick={onCancel} size="small" color="primary" variant="ghost">
+					<WebButton.ButtonText size="md">
+						<Trans>Cancel</Trans>
+					</WebButton.ButtonText>
+				</WebButton.Button>
+			</Dialog.Header.Slot>
+			<Dialog.Header.Slot>
+				{isPublishing ? (
+					<div className={topBarStyles.publishingRow}>
+						<WebText color="textContrastMedium" size="md_sub">
+							{publishingStage}
+						</WebText>
+						<Spinner color={vars.palette.contrast_700} label={l`Publishing`} size="md" />
+					</div>
+				) : (
+					<div className={topBarStyles.buttonRow}>
+						{!isReply && (
+							<DraftsButton
+								onSelectDraft={onSelectDraft}
+								onSaveDraft={onSaveDraft}
+								onDiscard={onDiscard}
+								isEmpty={isEmpty}
+								isDirty={isDirty}
+								isEditingDraft={isEditingDraft}
+								canSaveDraft={canSaveDraft}
+								textLength={textLength}
+							/>
+						)}
+						<WebButton.Button
+							label={
+								isReply
+									? isThread
+										? l({
+												message: 'Publish replies',
+												comment: 'Accessibility label for button to publish multiple replies in a thread',
+											})
+										: l({
+												message: 'Publish reply',
+												comment: 'Accessibility label for button to publish a single reply',
+											})
+									: isThread
+										? l({
+												message: 'Publish posts',
+												comment: 'Accessibility label for button to publish multiple posts in a thread',
+											})
+										: l({
+												message: 'Publish post',
+												comment: 'Accessibility label for button to publish a single post',
+											})
+							}
+							color="primary"
+							size="small"
+							onClick={onPublish}
+							disabled={!canPost || isPublishQueued}
+						>
+							<WebButton.ButtonText size="md">
+								{isReply ? (
+									<Trans context="action">Reply</Trans>
+								) : isThread ? (
+									<Trans context="action">Post All</Trans>
+								) : (
+									<Trans context="action">Post</Trans>
+								)}
+							</WebButton.ButtonText>
+						</WebButton.Button>
+					</div>
+				)}
+			</Dialog.Header.Slot>
 		</Dialog.Header.Outer>
 	);
 }
