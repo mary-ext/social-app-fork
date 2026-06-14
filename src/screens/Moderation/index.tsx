@@ -281,7 +281,7 @@ function LabelerRow({
 		>
 			<UserAvatar avatar={creator.avatar} size={40} type="labeler" />
 			<div className={styles.identity}>
-				<Text numberOfLines={1} size="md" weight="semiBold">
+				<Text numberOfLines={1} size="md" weight="medium">
 					{title}
 				</Text>
 				{creator.description ? (
