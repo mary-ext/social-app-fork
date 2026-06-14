@@ -1,5 +1,4 @@
 import { createVar, fallbackVar, style, styleVariants } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
@@ -45,9 +44,9 @@ export const text = recipe(
 		base: {
 			fontFamily,
 			fontSize: fontSizeScale,
-			// snap the derived line-height to the device-pixel grid — `round(fontSize * leading, 1px / dpr)` — so
-			// it lands on whole device pixels rather than a fractional CSS value
-			lineHeight: roundToPx(calc.multiply(fontSizeScale, fallbackVar(leadingVar, '1.3'))),
+			// snap the derived line-height to a whole CSS pixel — `round(fontSize * leading, 1px)` — so it
+			// lands on the pixel grid rather than a fractional CSS value
+			lineHeight: roundToPx(`calc(${fontSizeScale} * ${fallbackVar(leadingVar, '1.3')})`),
 			margin: 0,
 			padding: 0,
 		},

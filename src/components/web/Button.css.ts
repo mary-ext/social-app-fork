@@ -1,5 +1,4 @@
 import { createVar, fallbackVar, styleVariants } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
@@ -29,7 +28,7 @@ export const button = recipe(
 			fontSize: fontSizeScale,
 			fontWeight: fontWeight.medium,
 			justifyContent: 'center',
-			lineHeight: roundToPx(calc.multiply(fontSizeScale, lineHeight.snug)),
+			lineHeight: roundToPx(`calc(${fontSizeScale} * ${lineHeight.snug})`),
 			margin: 0,
 			textDecoration: 'none',
 			transitionDuration: '100ms',

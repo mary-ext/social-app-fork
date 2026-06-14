@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
@@ -74,7 +73,7 @@ export const title = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize._2xl,
 	fontWeight: 600,
-	lineHeight: roundToPx(calc.multiply(fontSize._2xl, lineHeight.snug)),
+	lineHeight: roundToPx(`calc(${fontSize._2xl} * ${lineHeight.snug})`),
 	margin: 0,
 	paddingBottom: 4,
 });
@@ -82,7 +81,7 @@ export const title = style({
 export const description = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: roundToPx(calc.multiply(fontSize.md, lineHeight.snug)),
+	lineHeight: roundToPx(`calc(${fontSize.md} * ${lineHeight.snug})`),
 	margin: 0,
 	paddingBottom: 16,
 });
@@ -113,7 +112,7 @@ export const rowIcon = style({
 export const rowText = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: roundToPx(calc.multiply(fontSize.md, lineHeight.snug)),
+	lineHeight: roundToPx(`calc(${fontSize.md} * ${lineHeight.snug})`),
 	paddingBlock: 1,
 });
 

@@ -1,5 +1,4 @@
 import { style, styleVariants } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
@@ -62,5 +61,5 @@ export const icon = style({
  */
 export const altSmall = style({
 	fontSize: 8,
-	lineHeight: roundToPx(calc.multiply('8px', '1.3')),
+	lineHeight: roundToPx('calc(8px * 1.3)'),
 });

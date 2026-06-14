@@ -1,5 +1,4 @@
 import { style, styleVariants } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
@@ -103,7 +102,7 @@ export const panelText = style(
 		color: vars.palette.contrast_700,
 		flex: 1,
 		fontSize: fontSize.md,
-		lineHeight: roundToPx(calc.multiply(fontSize.md, '1.3')),
+		lineHeight: roundToPx(`calc(${fontSize.md} * 1.3)`),
 		selectors: {
 			[`[data-checked] &, ${panelActive} &`]: {
 				color: vars.palette.contrast_1000,

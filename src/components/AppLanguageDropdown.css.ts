@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
@@ -23,7 +22,7 @@ export const value = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize.sm,
 	fontWeight: fontWeight.normal,
-	lineHeight: roundToPx(calc.multiply(fontSize.sm, lineHeight.snug)),
+	lineHeight: roundToPx(`calc(${fontSize.sm} * ${lineHeight.snug})`),
 });
 
 // 20px chevron line box (the Select icon is a flex span, so size it explicitly) so the

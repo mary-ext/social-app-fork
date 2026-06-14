@@ -1,5 +1,4 @@
 import { style } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
 import { roundToPx } from '#/styles/round';
@@ -10,7 +9,7 @@ import { fontSize, lineHeight, space } from '#/styles/tokens.css';
  * size `md` × snug leading. Matches it exactly (pixel snap included) so trailing content centers on the title
  * line rather than a fraction off it.
  */
-const titleLineHeight = roundToPx(calc.multiply(fontSize.md, lineHeight.snug));
+const titleLineHeight = roundToPx(`calc(${fontSize.md} * ${lineHeight.snug})`);
 
 // #region layout
 /** The scroll body: a stack of {@link section} cards with vertical rhythm between them. */

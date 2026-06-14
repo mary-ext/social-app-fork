@@ -1,5 +1,4 @@
 import { createVar, fallbackVar, style } from '@vanilla-extract/css';
-import { calc } from '@vanilla-extract/css-utils';
 
 import { fontSizeVar } from '#/components/Text.css';
 
@@ -36,7 +35,7 @@ const scaleVar = createVar();
 
 export const emoji = recipe(
 	{
-		base: { vars: { [fontSizeVar]: calc.multiply(fallbackVar(sizeVar, fontSize.sm), scaleVar) } },
+		base: { vars: { [fontSizeVar]: `calc(${fallbackVar(sizeVar, fontSize.sm)} * ${scaleVar})` } },
 		defaultVariants: { scale: 'normal' },
 		variants: {
 			scale: {
