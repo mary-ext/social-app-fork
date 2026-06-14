@@ -43,7 +43,6 @@ export const blurButton = style({
 	'@media': {
 		'(min-width: 800px)': {
 			gap: 8,
-			marginTop: 4,
 			paddingBlock: 16,
 			paddingInline: 20,
 		},

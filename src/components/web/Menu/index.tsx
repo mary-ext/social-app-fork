@@ -3,6 +3,7 @@ import { Menu as BaseMenu } from '@base-ui/react/menu';
 import { clsx } from 'clsx';
 
 import type { Props as IconProps } from '#/components/icons/common';
+import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Menu/Menu.css';
 
 // a dropdown menu built on Base UI's Menu. Root + Trigger associate the menu with its anchor; pass a
@@ -96,9 +97,11 @@ export function Item({
 }
 
 export function ItemText({ children }: { children: ReactNode }) {
-	// renders a web <span> that lays out beside the icon — the RN unwrapped-text rule doesn't model this
-	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
-	return <span className={styles.itemText}>{children}</span>;
+	return (
+		<Text size="md_sub" color="textContrastHigh" weight="medium" className={styles.itemText}>
+			{children}
+		</Text>
+	);
 }
 
 export function ItemIcon({

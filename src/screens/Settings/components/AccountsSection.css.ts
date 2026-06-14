@@ -14,7 +14,6 @@ export const identity = style({
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'column',
-	gap: space._2xs,
 	minWidth: 0,
 });
 

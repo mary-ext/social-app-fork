@@ -76,6 +76,7 @@ export function AccountSettingsScreen({}: Props) {
 								Honoring this request is voluntary: your profile and posts stay publicly available, and some
 								apps may show your account anyway.{' '}
 								<InlineLinkText
+									size="sm"
 									label={l`Learn more about what is public on Bluesky.`}
 									to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
 								>

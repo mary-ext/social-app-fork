@@ -115,12 +115,12 @@ function CurrentAccountRow({
 			/>
 			<div className={styles.identity}>
 				<span className={styles.nameLine}>
-					<Text className={styles.displayName} numberOfLines={1} size="md" weight="medium">
+					<Text className={styles.displayName} numberOfLines={1} size="lg_sub" weight="medium">
 						{displayName}
 					</Text>
 					<ProfileBadges profile={shadow} size="sm" />
 				</span>
-				<Text color="textContrastMedium" numberOfLines={1} size="sm">
+				<Text color="textContrastMedium" numberOfLines={1} size="md_sub">
 					{sanitizeHandle(profile.handle, '@')}
 				</Text>
 			</div>

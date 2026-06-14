@@ -22,7 +22,7 @@ import * as css from './PostFeedReason.css';
 // every reason line shares one look: low-contrast, medium-weight, clamped to a single line.
 const reasonText = {
 	color: 'textContrastMedium',
-	leading: 'snug',
+	size: 'md_sub',
 	numberOfLines: 1,
 	weight: 'medium',
 } as const;

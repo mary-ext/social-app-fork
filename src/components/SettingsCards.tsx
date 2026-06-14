@@ -52,7 +52,7 @@ export function Section({
 				</Text>
 			)}
 			{bodyText != null && (
-				<Text className={styles.sectionBody} size="sm" color="textContrastMedium" leading="snug">
+				<Text className={styles.sectionBody} size="sm" color="textContrastMedium">
 					{bodyText}
 				</Text>
 			)}
@@ -73,7 +73,7 @@ export function Section({
 				))}
 			</div>
 			{footnoteText != null && (
-				<Text className={styles.sectionFootnote} size="sm" color="textContrastMedium" leading="snug">
+				<Text className={styles.sectionFootnote} size="sm" color="textContrastMedium">
 					{footnoteText}
 				</Text>
 			)}
@@ -105,7 +105,7 @@ export function Label({
 }) {
 	return (
 		<>
-			<Text className={styles.title} size="md" weight="medium" color="text" leading="snug">
+			<Text className={styles.title} size="md" weight="medium" color="text">
 				{titleText}
 			</Text>
 			{loading ? (
@@ -114,7 +114,7 @@ export function Label({
 				</div>
 			) : (
 				subtitleText != null && (
-					<Text className={styles.subtitle} size="sm" color="textContrastMedium" leading="snug">
+					<Text className={styles.subtitle} size="md_sub" color="textContrastMedium">
 						{subtitleText}
 					</Text>
 				)
@@ -259,7 +259,7 @@ export function CollapsibleRow({
 				}
 			>
 				{icon != null && <Icon icon={icon} />}
-				<Text className={styles.title} color="text" leading="snug" size="md" weight="medium">
+				<Text className={styles.title} color="text" size="md" weight="medium">
 					{titleText}
 				</Text>
 				<span className={styles.trailing}>
