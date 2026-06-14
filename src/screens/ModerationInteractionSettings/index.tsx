@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from 'react';
-import { View } from 'react-native';
 import type { ResourceUri } from '@atcute/lexicons';
 import { Trans, useLingui } from '@lingui/react/macro';
 import deepEqual from 'fast-deep-equal';
@@ -14,19 +13,20 @@ import {
 
 import { logger } from '#/logger';
 
-import { atoms as a, useGutters } from '#/alf';
-
-import { Admonition } from '#/components/Admonition';
 import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog';
-import * as Layout from '#/components/Layout';
-import { Loader } from '#/components/Loader';
+import { Spinner } from '#/components/Spinner';
 import * as Toast from '#/components/Toast';
+import { Admonition } from '#/components/web/Admonition';
+import * as Layout from '#/components/web/Layout';
+
+import * as styles from './index.css';
 
 export function Screen() {
-	const gutters = useGutters(['base']);
+	const { t: l } = useLingui();
 	const { data: preferences } = usePreferencesQuery();
+
 	return (
-		<Layout.Screen testID="ModerationInteractionSettingsScreen">
+		<Layout.Screen>
 			<Layout.Header.Outer>
 				<Layout.Header.BackButton />
 				<Layout.Header.Content>
@@ -37,7 +37,7 @@ export function Screen() {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<View style={[gutters, a.gap_xl]}>
+				<div className={styles.content}>
 					<Admonition type="tip">
 						<Trans>
 							The following settings will be used as your defaults when creating new posts. You can edit these
@@ -47,11 +47,11 @@ export function Screen() {
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
-						<View style={[gutters, a.justify_center, a.align_center]}>
-							<Loader size="xl" />
-						</View>
+						<div className={styles.loaderWrap}>
+							<Spinner color="currentColor" label={l`Loading`} size="xl" />
+						</div>
 					)}
-				</View>
+				</div>
 			</Layout.Content>
 		</Layout.Screen>
 	);
@@ -59,21 +59,21 @@ export function Screen() {
 
 function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { t: l } = useLingui();
-	const { mutateAsync: setPostInteractionSettings, isPending } = usePostInteractionSettingsMutation();
+	const { isPending, mutateAsync: setPostInteractionSettings } = usePostInteractionSettingsMutation();
 	const [error, setError] = useState<string | undefined>(undefined);
 
 	const allowUI = useMemo(() => {
 		return threadgateRecordToAllowUISetting({
 			$type: 'app.bsky.feed.threadgate',
-			post: '' as ResourceUri,
-			createdAt: new Date().toISOString(),
 			allow: preferences.postInteractionSettings.threadgateAllowRules,
+			createdAt: new Date().toISOString(),
+			post: '' as ResourceUri,
 		});
 	}, [preferences.postInteractionSettings.threadgateAllowRules]);
 	const postgate = useMemo(() => {
 		return createPostgateRecord({
-			post: '' as ResourceUri,
 			embeddingRules: preferences.postInteractionSettings.postgateEmbeddingRules,
+			post: '' as ResourceUri,
 		});
 	}, [preferences.postInteractionSettings.postgateEmbeddingRules]);
 
@@ -92,14 +92,14 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 
 		try {
 			await setPostInteractionSettings({
-				threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
 				postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
+				threadgateAllowRules: threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
 			});
-			Toast.show(l({ message: 'Settings saved', context: 'toast' }));
+			Toast.show(l({ context: 'toast', message: 'Settings saved' }));
 		} catch (e) {
 			logger.error(`Failed to save post interaction settings`, {
-				source: 'ModerationInteractionSettingsScreen',
 				safeMessage: e instanceof Error ? e.message : String(e),
+				source: 'ModerationInteractionSettingsScreen',
 			});
 			setError(l`Failed to save settings. Please try again.`);
 		}
@@ -110,11 +110,11 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 			<PostInteractionSettingsForm
 				canSave={wasEdited}
 				isSaving={isPending}
+				onChangePostgate={setEditedPostgate}
+				onChangeThreadgateAllowUISettings={setAllowUI}
 				onSave={() => void onSave()}
 				postgate={maybeEditedPostgate}
-				onChangePostgate={setEditedPostgate}
 				threadgateAllowUISettings={maybeEditedAllowUI}
-				onChangeThreadgateAllowUISettings={setAllowUI}
 			/>
 
 			{error && <Admonition type="error">{error}</Admonition>}

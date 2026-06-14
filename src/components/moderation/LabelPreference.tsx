@@ -1,189 +1,64 @@
-import { View } from 'react-native';
 import {
 	type InterpretedLabelDefinition,
 	isCustomLabelValue,
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
 import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings';
-import { useLabelBehaviorDescription } from '#/lib/moderation/useLabelBehaviorDescription';
 import { getLabelStrings } from '#/lib/moderation/useLabelInfo';
 
 import { usePreferencesQuery, usePreferencesSetContentLabelMutation } from '#/state/queries/preferences';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
+import * as Settings from '#/components/SettingsCards';
+import * as cardStyles from '#/components/SettingsCards.css';
+import { Text } from '#/components/Text';
+import { InlineLinkText } from '#/components/web/Link';
 
-import * as ToggleButton from '#/components/forms/ToggleButton';
-import { InlineLinkText } from '#/components/Link';
-import { Text } from '#/components/Typography';
+import * as styles from './LabelPreference.css';
 
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '../icons/CircleInfo';
-
-export function Outer({ children }: React.PropsWithChildren<{}>) {
-	return (
-		<View style={[a.flex_row, a.gap_sm, a.px_lg, a.py_lg, a.justify_between, a.flex_wrap]}>{children}</View>
-	);
-}
-
-export function Content({
-	children,
-	name,
-	description,
-}: React.PropsWithChildren<{
-	name: string;
-	description: string;
-}>) {
-	const t = useTheme();
-	const { gtPhone } = useBreakpoints();
-
-	return (
-		<View style={[a.gap_xs, a.flex_1]}>
-			<Text emoji style={[a.font_semi_bold, gtPhone ? a.text_sm : a.text_md]}>
-				{name}
-			</Text>
-			<Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
-				{description}
-			</Text>
-
-			{children}
-		</View>
-	);
-}
-
-export function Buttons({
-	name,
-	values,
-	onChange,
-	ignoreLabel,
-	warnLabel,
-	hideLabel,
+/**
+ * A single labeler-published label rendered as a settings row. When the label is configurable here it is a
+ * {@link Settings.SelectRow} dropdown (Show / Warn / Hide); when it is a global label (set in moderation
+ * settings) or unavailable (adult content disabled) it falls back to a static value, and when the viewer is
+ * not subscribed it is a non-interactive preview.
+ */
+export function LabelerLabelRow({
+	className,
 	disabled,
-}: {
-	name: string;
-	values: ToggleButton.GroupProps['values'];
-	onChange: ToggleButton.GroupProps['onChange'];
-	ignoreLabel?: string;
-	warnLabel?: string;
-	hideLabel?: string;
-	disabled?: boolean;
-}) {
-	const { t: l } = useLingui();
-
-	return (
-		<View style={[{ minHeight: 35 }, a.w_full]}>
-			<ToggleButton.Group
-				disabled={disabled}
-				label={l`Configure content filtering setting for category: ${name}`}
-				values={values}
-				onChange={onChange}
-			>
-				{ignoreLabel && (
-					<ToggleButton.Button name="ignore" label={ignoreLabel}>
-						<ToggleButton.ButtonText>{ignoreLabel}</ToggleButton.ButtonText>
-					</ToggleButton.Button>
-				)}
-				{warnLabel && (
-					<ToggleButton.Button name="warn" label={warnLabel}>
-						<ToggleButton.ButtonText>{warnLabel}</ToggleButton.ButtonText>
-					</ToggleButton.Button>
-				)}
-				{hideLabel && (
-					<ToggleButton.Button name="hide" label={hideLabel}>
-						<ToggleButton.ButtonText>{hideLabel}</ToggleButton.ButtonText>
-					</ToggleButton.Button>
-				)}
-			</ToggleButton.Group>
-		</View>
-	);
-}
-
-/** For use on the global Moderation screen to set prefs for a "global" label, not scoped to a single labeler. */
-export function GlobalLabelPreference({
 	labelDefinition,
-	disabled,
-}: {
-	labelDefinition: InterpretedLabelDefinition;
-	disabled?: boolean;
-}) {
-	const { t: l } = useLingui();
-
-	const { identifier } = labelDefinition;
-	const { data: preferences } = usePreferencesQuery();
-	const { mutate, variables } = usePreferencesSetContentLabelMutation();
-	const savedPref = preferences?.moderationPrefs.labels[identifier];
-	const pref = variables?.visibility ?? savedPref ?? 'warn';
-
-	const allLabelStrings = useGlobalLabelStrings();
-	const labelStrings = allLabelStrings[labelDefinition.identifier] ?? {
-		name: labelDefinition.identifier,
-		description: `Labeled "${labelDefinition.identifier}"`,
-	};
-
-	const labelOptions = {
-		hide: l`Hide`,
-		warn: l`Warn`,
-		ignore: l`Show`,
-	};
-
-	return (
-		<Outer>
-			<Content name={labelStrings.name} description={labelStrings.description} />
-			<Buttons
-				name={labelStrings.name.toLowerCase()}
-				values={[pref]}
-				onChange={(values) => {
-					mutate({
-						label: identifier,
-						visibility: values[0] as LabelPreference,
-						labelerDid: undefined,
-					});
-				}}
-				ignoreLabel={labelOptions.ignore}
-				warnLabel={labelOptions.warn}
-				hideLabel={labelOptions.hide}
-				disabled={disabled}
-			/>
-		</Outer>
-	);
-}
-
-/** For use on individual labeler pages */
-export function LabelerLabelPreference({
-	labelDefinition,
-	disabled,
 	labelerDid,
 }: {
-	labelDefinition: InterpretedLabelDefinition;
+	className?: string;
 	disabled?: boolean;
+	labelDefinition: InterpretedLabelDefinition;
 	labelerDid?: string;
 }) {
-	const { t: l, i18n } = useLingui();
-	const t = useTheme();
-	const { gtPhone } = useBreakpoints();
-
-	const isGlobalLabel = !isCustomLabelValue(labelDefinition.identifier);
+	const { i18n, t: l } = useLingui();
 	const { identifier } = labelDefinition;
+	const isGlobalLabel = !isCustomLabelValue(identifier);
 	const { data: preferences } = usePreferencesQuery();
 	const { mutate, variables } = usePreferencesSetContentLabelMutation();
+	const globalLabelStrings = useGlobalLabelStrings();
+	const labelStrings = getLabelStrings(i18n.locale, globalLabelStrings, labelDefinition);
+
 	const savedPref =
 		labelerDid && !isGlobalLabel
-			? preferences?.moderationPrefs.labelers.find((l) => l.did === labelerDid)?.labels[identifier]
+			? preferences?.moderationPrefs.labelers.find((labeler) => labeler.did === labelerDid)?.labels[
+					identifier
+				]
 			: preferences?.moderationPrefs.labels[identifier];
 	const pref = variables?.visibility ?? savedPref ?? labelDefinition.defaultPref ?? 'warn';
 
 	// does the 'warn' setting make sense for this label?
 	const canWarn = !(labelDefinition.blur === 'none' && labelDefinition.severity === 'none');
-	// is this label adult only?
 	const adultOnly = Boolean(labelDefinition.flags & LabelFlags.AdultOnly);
-	// is this label disabled because it's adult only?
 	const adultDisabled = adultOnly && !preferences?.moderationPrefs.adultContentEnabled;
-	// are there any reasons we cant configure this label here?
 	const cantConfigure = isGlobalLabel || adultDisabled;
-	const showConfig = !disabled && (gtPhone || !cantConfigure);
 
-	// adjust the pref based on whether warn is available
 	let prefAdjusted = pref;
 	if (adultDisabled) {
 		prefAdjusted = 'hide';
@@ -191,73 +66,76 @@ export function LabelerLabelPreference({
 		prefAdjusted = 'ignore';
 	}
 
-	// grab localized descriptions of the label and its settings
-	const currentPrefLabel = useLabelBehaviorDescription(labelDefinition, prefAdjusted);
-	const hideLabel = useLabelBehaviorDescription(labelDefinition, 'hide');
-	const warnLabel = useLabelBehaviorDescription(labelDefinition, 'warn');
-	const ignoreLabel = useLabelBehaviorDescription(labelDefinition, 'ignore');
-	const globalLabelStrings = useGlobalLabelStrings();
-	const labelStrings = getLabelStrings(i18n.locale, globalLabelStrings, labelDefinition);
+	const labelOptions: Record<LabelPreference, string> = {
+		hide: l`Hide`,
+		ignore: l`Show`,
+		warn: l`Warn`,
+	};
+
+	// A label that is configured elsewhere (a global label, set in moderation settings) or unavailable (adult
+	// content disabled), or one the viewer isn't subscribed to, can't be changed here — render it as a static
+	// row: the description, an explanatory note for non-configurable labels, and the current value when known.
+	if (disabled || cantConfigure) {
+		return (
+			<div className={clsx(cardStyles.row, className)}>
+				<Text className={cardStyles.title} color="text" size="md" weight="medium">
+					{labelStrings.name}
+				</Text>
+				<div className={styles.details}>
+					<Text color="textContrastMedium" size="md_sub">
+						{labelStrings.description}
+					</Text>
+					{cantConfigure && (
+						<span className={styles.note}>
+							<CircleInfo fill="currentColor" size="sm" />
+							<Text color="textContrastMedium" size="sm" weight="medium">
+								{adultDisabled ? (
+									<Trans>Adult content is disabled.</Trans>
+								) : (
+									<Trans>
+										Configured in{' '}
+										<InlineLinkText label={l`moderation settings`} to="/moderation">
+											moderation settings
+										</InlineLinkText>
+										.
+									</Trans>
+								)}
+							</Text>
+						</span>
+					)}
+				</div>
+				{!disabled && cantConfigure && (
+					<span className={cardStyles.trailing}>
+						<Text
+							align="right"
+							className={cardStyles.value}
+							color="textContrastMedium"
+							numberOfLines={1}
+							size="sm"
+						>
+							{labelOptions[prefAdjusted]}
+						</Text>
+					</span>
+				)}
+			</div>
+		);
+	}
+
+	const items = [
+		{ label: labelOptions.ignore, value: 'ignore' },
+		...(canWarn ? [{ label: labelOptions.warn, value: 'warn' }] : []),
+		{ label: labelOptions.hide, value: 'hide' },
+	];
 
 	return (
-		<Outer>
-			<Content name={labelStrings.name} description={labelStrings.description}>
-				{cantConfigure && (
-					<View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_xs]}>
-						<CircleInfo size="sm" fill={t.atoms.text_contrast_high.color} />
-
-						<Text style={[t.atoms.text_contrast_medium, a.font_semi_bold, a.italic]}>
-							{adultDisabled ? (
-								<Trans>Adult content is disabled.</Trans>
-							) : isGlobalLabel ? (
-								<Trans>
-									Configured in{' '}
-									<InlineLinkText label={l`moderation settings`} to="/moderation" style={a.text_sm}>
-										moderation settings
-									</InlineLinkText>
-									.
-								</Trans>
-							) : null}
-						</Text>
-					</View>
-				)}
-			</Content>
-			{showConfig && (
-				<>
-					{cantConfigure ? (
-						<View
-							style={[
-								{ minHeight: 35 },
-								a.px_md,
-								a.py_md,
-								a.rounded_sm,
-								a.border,
-								t.atoms.border_contrast_low,
-								a.self_start,
-							]}
-						>
-							<Text emoji style={[a.font_semi_bold, t.atoms.text_contrast_low]}>
-								{currentPrefLabel}
-							</Text>
-						</View>
-					) : (
-						<Buttons
-							name={labelStrings.name.toLowerCase()}
-							values={[pref]}
-							onChange={(values) => {
-								mutate({
-									label: identifier,
-									visibility: values[0] as LabelPreference,
-									labelerDid,
-								});
-							}}
-							ignoreLabel={ignoreLabel}
-							warnLabel={canWarn ? warnLabel : undefined}
-							hideLabel={hideLabel}
-						/>
-					)}
-				</>
-			)}
-		</Outer>
+		<Settings.SelectRow<LabelPreference>
+			className={className}
+			items={items}
+			label={l`Filtering for ${labelStrings.name}`}
+			onValueChange={(visibility) => mutate({ label: identifier, labelerDid, visibility })}
+			value={prefAdjusted}
+		>
+			<Settings.Label subtitleText={labelStrings.description} titleText={labelStrings.name} />
+		</Settings.SelectRow>
 	);
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
-import { type ListRenderItemInfo, View } from 'react-native';
+import { View } from 'react-native';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
 	type InterpretedLabelDefinition,
@@ -13,13 +13,13 @@ import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderatio
 
 import { List, type ListRef } from '#/view/com/util/List';
 
-import { atoms as a, tokens, useTheme } from '#/alf';
+import { atoms as a, useTheme } from '#/alf';
 
-import { Divider } from '#/components/Divider';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { ListFooter } from '#/components/Lists';
 import { Loader } from '#/components/Loader';
-import { LabelerLabelPreference } from '#/components/moderation/LabelPreference';
+import { LabelerLabelRow } from '#/components/moderation/LabelPreference';
+import * as Settings from '#/components/SettingsCards';
 import { Text } from '#/components/Typography';
 
 import { ErrorState } from '../ErrorState';
@@ -48,8 +48,6 @@ export function ProfileLabelsSection({
 	isFocused,
 	setScrollViewTag,
 }: LabelsSectionProps) {
-	const t = useTheme();
-
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
@@ -74,61 +72,37 @@ export function ProfileLabelsSection({
 			.filter((def) => def && !(def.flags & LabelFlags.NoConfigurable)) as InterpretedLabelDefinition[];
 	}, [labelerInfo, labelerError, isLabelerLoading]);
 
-	const numItems = labelValues.length;
-
-	const renderItem = useCallback(
-		({ item, index }: ListRenderItemInfo<InterpretedLabelDefinition>) => {
-			if (!labelerInfo) return null;
-			return (
-				<View
-					style={[
-						t.atoms.bg_contrast_25,
-						index === 0 && [
-							a.overflow_hidden,
-							{
-								borderTopLeftRadius: tokens.borderRadius.md,
-								borderTopRightRadius: tokens.borderRadius.md,
-							},
-						],
-						index === numItems - 1 && [
-							a.overflow_hidden,
-							{
-								borderBottomLeftRadius: tokens.borderRadius.md,
-								borderBottomRightRadius: tokens.borderRadius.md,
-							},
-						],
-					]}
-				>
-					{index !== 0 && <Divider />}
-					<LabelerLabelPreference
-						disabled={isSubscribed ? undefined : true}
-						labelDefinition={item}
-						labelerDid={labelerInfo.creator.did}
-					/>
-				</View>
-			);
-		},
-		[labelerInfo, isSubscribed, numItems, t],
-	);
-
 	return (
 		<View>
 			<List
 				ref={scrollElRef}
-				data={labelValues}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
+				data={NO_ITEMS}
+				renderItem={renderNothing}
 				contentContainerStyle={a.px_xl}
 				headerOffset={headerHeight}
 				progressViewOffset={undefined}
 				ListHeaderComponent={
-					<LabelerListHeader
-						isLabelerLoading={isLabelerLoading}
-						labelerInfo={labelerInfo}
-						labelerError={labelerError}
-						hasValues={labelValues.length !== 0}
-						isSubscribed={isSubscribed}
-					/>
+					<>
+						<LabelerListHeader
+							isLabelerLoading={isLabelerLoading}
+							labelerInfo={labelerInfo}
+							labelerError={labelerError}
+							hasValues={labelValues.length !== 0}
+							isSubscribed={isSubscribed}
+						/>
+						{labelerInfo && !isLabelerLoading && !labelerError && labelValues.length > 0 && (
+							<Settings.Section>
+								{labelValues.map((labelDefinition) => (
+									<LabelerLabelRow
+										disabled={isSubscribed ? undefined : true}
+										key={labelDefinition.identifier}
+										labelDefinition={labelDefinition}
+										labelerDid={labelerInfo.creator.did}
+									/>
+								))}
+							</Settings.Section>
+						)}
+					</>
 				}
 				ListFooterComponent={<ListFooter height={headerHeight + 180} style={a.border_transparent} />}
 			/>
@@ -136,11 +110,11 @@ export function ProfileLabelsSection({
 	);
 }
 
-function keyExtractor(item: InterpretedLabelDefinition) {
-	return item.identifier;
-}
+// the label rows are rendered as a card in the list header; the list body itself carries no items.
+const NO_ITEMS: InterpretedLabelDefinition[] = [];
+const renderNothing = () => null;
 
-export function LabelerListHeader({
+function LabelerListHeader({
 	isLabelerLoading,
 	labelerError,
 	labelerInfo,

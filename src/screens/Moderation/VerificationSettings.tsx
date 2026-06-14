@@ -9,7 +9,7 @@ import {
 } from '#/state/queries/preferences';
 
 import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck';
-import * as SettingsList from '#/components/SettingsList';
+import * as Settings from '#/components/SettingsCards';
 import { Spinner } from '#/components/Spinner';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
@@ -33,23 +33,21 @@ export function Screen() {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<SettingsList.Container>
-					<SettingsList.Item>
-						<Admonition type="tip">
-							<Trans>
-								Verifications on Bluesky work differently than on other platforms.{' '}
-								<InlineLinkText
-									label={l({
-										context: `english-only-resource`,
-										message: `Learn more`,
-									})}
-									to={urls.website.blog.initialVerificationAnnouncement}
-								>
-									Learn more here.
-								</InlineLinkText>
-							</Trans>
-						</Admonition>
-					</SettingsList.Item>
+				<Settings.List>
+					<Admonition type="tip">
+						<Trans>
+							Verifications on Bluesky work differently than on other platforms.{' '}
+							<InlineLinkText
+								label={l({
+									context: `english-only-resource`,
+									message: `Learn more`,
+								})}
+								to={urls.website.blog.initialVerificationAnnouncement}
+							>
+								Learn more here.
+							</InlineLinkText>
+						</Trans>
+					</Admonition>
 					{preferences ? (
 						<Inner preferences={preferences} />
 					) : (
@@ -57,7 +55,7 @@ export function Screen() {
 							<Spinner color="currentColor" label={l`Loading`} size="xl" />
 						</div>
 					)}
-				</SettingsList.Container>
+				</Settings.List>
 			</Layout.Content>
 		</Layout.Screen>
 	);
@@ -69,19 +67,16 @@ function Inner({ preferences }: { preferences: UsePreferencesQueryResponse }) {
 	const { isPending, mutate: setVerificationPrefs } = useSetVerificationPrefsMutation();
 
 	return (
-		<SettingsList.CheckboxItem
-			disabled={isPending}
-			label={l`Hide verification badges`}
-			onChange={(value) => {
-				setVerificationPrefs({ hideBadges: value });
-			}}
-			value={hideBadges}
-		>
-			<SettingsList.ItemIcon icon={CircleCheck} />
-			<SettingsList.ItemText>
-				<Trans>Hide verification badges</Trans>
-			</SettingsList.ItemText>
-			<SettingsList.CheckboxBox />
-		</SettingsList.CheckboxItem>
+		<Settings.Section>
+			<Settings.SwitchRow
+				disabled={isPending}
+				label={l`Hide verification badges`}
+				onChange={(value) => setVerificationPrefs({ hideBadges: value })}
+				value={hideBadges}
+			>
+				<Settings.Icon icon={CircleCheck} />
+				<Settings.Label titleText={<Trans>Hide verification badges</Trans>} />
+			</Settings.SwitchRow>
+		</Settings.Section>
 	);
 }

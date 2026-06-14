@@ -1137,11 +1137,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:286
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
-
-#: src/components/moderation/LabelPreference.tsx:211
+#: src/components/moderation/LabelPreference.tsx:93
 msgid "Adult content is disabled."
 msgstr ""
 
@@ -1153,7 +1149,7 @@ msgstr ""
 msgid "Adult sexual abuse content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:320
+#: src/screens/Moderation/index.tsx:224
 msgid "Advanced"
 msgstr ""
 
@@ -1636,7 +1632,7 @@ msgstr "Block user and/or leave this conversation"
 msgid "Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:229
+#: src/screens/Moderation/index.tsx:169
 msgid "Blocked accounts"
 msgstr ""
 
@@ -1653,7 +1649,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:187
+#: src/screens/Profile/Sections/Labels.tsx:161
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -1688,14 +1684,6 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr ""
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:52
-msgid "Blur images"
-msgstr ""
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:50
-msgid "Blur images and filter from feeds"
 msgstr ""
 
 #: src/lib/interests.ts:53
@@ -1749,11 +1737,12 @@ msgstr ""
 msgid "Button to go back to the home timeline"
 msgstr ""
 
+#. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(handle, '@')
 #. placeholder {0}: sanitizeHandle(item.feed.creator.handle, '@')
-#. placeholder {0}: sanitizeHandle(labeler.creator.handle, '@')
 #: src/components/LabelingServiceCard/index.tsx:52
 #: src/components/moderation/ReportDialog/index.tsx:772
+#: src/screens/Moderation/index.tsx:293
 #: src/screens/Search/components/StarterPackCard.tsx:91
 #: src/screens/Search/Explore.tsx:847
 msgid "By {0}"
@@ -2127,11 +2116,7 @@ msgstr ""
 msgid "Compressing video..."
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:78
-msgid "Configure content filtering setting for category: {name}"
-msgstr ""
-
-#: src/components/moderation/LabelPreference.tsx:213
+#: src/components/moderation/LabelPreference.tsx:95
 msgid "Configured in <0>moderation settings</0>."
 msgstr ""
 
@@ -2158,7 +2143,7 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:251
+#: src/screens/Moderation/index.tsx:178
 msgid "Content filters"
 msgstr ""
 
@@ -2657,13 +2642,6 @@ msgstr ""
 msgid "Disable this invite link?"
 msgstr "Disable this invite link?"
 
-#: src/lib/moderation/useLabelBehaviorDescription.ts:31
-#: src/lib/moderation/useLabelBehaviorDescription.ts:41
-#: src/lib/moderation/useLabelBehaviorDescription.ts:67
-#: src/screens/Moderation/index.tsx:277
-msgid "Disabled"
-msgstr ""
-
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:71
 #: src/view/com/composer/Composer.tsx:1104
@@ -2963,7 +2941,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:266
+#: src/screens/Moderation/index.tsx:184
 msgid "Enable adult content"
 msgstr ""
 
@@ -2991,10 +2969,6 @@ msgstr ""
 #: src/screens/Settings/ContentAndMediaSettings.tsx:85
 #: src/screens/Settings/ContentAndMediaSettings.tsx:90
 msgid "Enable trending topics"
-msgstr ""
-
-#: src/screens/Moderation/index.tsx:277
-msgid "Enabled"
 msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:114
@@ -3505,10 +3479,6 @@ msgstr ""
 msgid "File saved successfully!"
 msgstr ""
 
-#: src/lib/moderation/useLabelBehaviorDescription.ts:65
-msgid "Filter from feeds"
-msgstr ""
-
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:81
 msgid "Filter search by language"
 msgstr ""
@@ -3524,6 +3494,12 @@ msgstr "Filter who can opt to receive notifications for your activity"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:135
 msgid "Filter who you receive notifications from"
 msgstr ""
+
+#. placeholder {0}: labelStrings.name
+#: src/components/moderation/LabelPreference.tsx:134
+#: src/screens/Moderation/index.tsx:256
+msgid "Filtering for {0}"
+msgstr "Filtering for {0}"
 
 #: src/lib/interests.ts:59
 msgid "Finance"
@@ -4043,12 +4019,9 @@ msgstr ""
 
 #: src/components/interstitials/Trending.tsx:86
 #: src/components/moderation/ContentHider.tsx:147
-#: src/components/moderation/LabelPreference.tsx:125
+#: src/components/moderation/LabelPreference.tsx:70
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
-#: src/lib/moderation/useLabelBehaviorDescription.ts:14
-#: src/lib/moderation/useLabelBehaviorDescription.ts:19
-#: src/lib/moderation/useLabelBehaviorDescription.ts:24
-#: src/lib/moderation/useLabelBehaviorDescription.ts:29
+#: src/screens/Moderation/index.tsx:254
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:106
 msgid "Hide"
 msgstr ""
@@ -4103,8 +4076,8 @@ msgstr ""
 msgid "Hide user list"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:74
-#: src/screens/Moderation/VerificationSettings.tsx:82
+#: src/screens/Moderation/VerificationSettings.tsx:73
+#: src/screens/Moderation/VerificationSettings.tsx:78
 msgid "Hide verification badges"
 msgstr ""
 
@@ -4126,10 +4099,6 @@ msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:101
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr ""
-
-#: src/screens/Moderation/index.tsx:49
-msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr ""
 
 #: src/screens/Profile/ErrorState.tsx:31
@@ -4278,7 +4247,7 @@ msgstr ""
 msgid "Interaction limited"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:181
+#: src/screens/Moderation/index.tsx:146
 msgid "Interaction settings"
 msgstr ""
 
@@ -4411,7 +4380,7 @@ msgstr ""
 msgid "Labels added"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:178
+#: src/screens/Profile/Sections/Labels.tsx:152
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -4445,7 +4414,7 @@ msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:99
 #: src/components/verification/VerifierDialog.tsx:72
-#: src/screens/Moderation/VerificationSettings.tsx:42
+#: src/screens/Moderation/VerificationSettings.tsx:41
 #: src/screens/Profile/Header/EditProfileDialog.tsx:268
 msgctxt "english-only-resource"
 msgid "Learn more"
@@ -4754,7 +4723,10 @@ msgid "Load new posts"
 msgstr ""
 
 #: src/components/web/ProfileHoverCard.tsx:128
-#: src/screens/Moderation/VerificationSettings.tsx:57
+#: src/screens/Moderation/index.tsx:78
+#: src/screens/Moderation/index.tsx:217
+#: src/screens/Moderation/VerificationSettings.tsx:55
+#: src/screens/ModerationInteractionSettings/index.tsx:51
 #: src/screens/Settings/components/ActivitySubscriptionDialog.tsx:56
 #: src/screens/Settings/InterestsSettings.tsx:61
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:36
@@ -4862,7 +4834,7 @@ msgstr ""
 msgid "Manage saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:237
+#: src/screens/Moderation/index.tsx:172
 msgid "Manage verification settings"
 msgstr ""
 
@@ -5002,7 +4974,7 @@ msgid "Missing media"
 msgstr ""
 
 #: src/Navigation.tsx:472
-#: src/screens/Moderation/index.tsx:78
+#: src/screens/Moderation/index.tsx:70
 msgid "Moderation"
 msgstr ""
 
@@ -5044,7 +5016,7 @@ msgid "Moderation list updated"
 msgstr ""
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:106
-#: src/screens/Moderation/index.tsx:205
+#: src/screens/Moderation/index.tsx:159
 msgid "Moderation lists"
 msgstr ""
 
@@ -5053,7 +5025,7 @@ msgstr ""
 msgid "Moderation Lists"
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:215
+#: src/components/moderation/LabelPreference.tsx:97
 msgid "moderation settings"
 msgstr ""
 
@@ -5061,7 +5033,7 @@ msgstr ""
 msgid "Moderation states"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:171
+#: src/screens/Moderation/index.tsx:140
 msgid "Moderation tools"
 msgstr ""
 
@@ -5198,7 +5170,7 @@ msgstr ""
 msgid "Muted"
 msgstr "Muted"
 
-#: src/screens/Moderation/index.tsx:215
+#: src/screens/Moderation/index.tsx:164
 msgid "Muted accounts"
 msgstr ""
 
@@ -5216,7 +5188,7 @@ msgstr ""
 msgid "Muted by \"{0}\""
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:195
+#: src/screens/Moderation/index.tsx:154
 msgid "Muted words & tags"
 msgstr ""
 
@@ -5622,7 +5594,6 @@ msgstr ""
 msgid "Nudity"
 msgstr ""
 
-#: src/lib/moderation/useLabelBehaviorDescription.ts:10
 #: src/screens/Settings/NotificationSettings/index.tsx:289
 msgid "Off"
 msgstr ""
@@ -5793,7 +5764,7 @@ msgstr ""
 msgid "Open moderation debug page"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:190
+#: src/screens/Moderation/index.tsx:150
 msgid "Open muted words and tags settings"
 msgstr ""
 
@@ -6540,7 +6511,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:89
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
 #: src/screens/Bookmarks/index.tsx:233
-#: src/screens/Moderation/index.tsx:338
+#: src/screens/Moderation/index.tsx:209
 #: src/screens/Settings/components/AccountsSection.tsx:272
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
@@ -6650,7 +6621,7 @@ msgstr ""
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:333
+#: src/screens/Moderation/index.tsx:202
 msgid "Remove unavailable moderation services"
 msgstr ""
 
@@ -6702,7 +6673,7 @@ msgstr ""
 msgid "Removed from your feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:134
+#: src/screens/Moderation/index.tsx:130
 msgid "Removed unavailable services"
 msgstr ""
 
@@ -6980,6 +6951,7 @@ msgid "Require alt text before posting"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:63
+#: src/screens/Moderation/index.tsx:300
 msgid "Required in your region"
 msgstr ""
 
@@ -7553,8 +7525,9 @@ msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:147
-#: src/components/moderation/LabelPreference.tsx:127
+#: src/components/moderation/LabelPreference.tsx:71
 #: src/components/moderation/PostHider.tsx:102
+#: src/screens/Moderation/index.tsx:252
 msgid "Show"
 msgstr ""
 
@@ -7574,15 +7547,6 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:55
 msgid "Show automation label"
 msgstr "Show automation label"
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:26
-#: src/lib/moderation/useLabelBehaviorDescription.ts:62
-msgid "Show badge"
-msgstr ""
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:60
-msgid "Show badge and filter from feeds"
-msgstr ""
 
 #: src/screens/Settings/Settings.tsx:202
 #: src/screens/Settings/Settings.tsx:206
@@ -7654,14 +7618,6 @@ msgstr ""
 #: src/components/moderation/PostHider.tsx:96
 msgid "Show the content"
 msgstr "Show the content"
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:57
-msgid "Show warning"
-msgstr ""
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:55
-msgid "Show warning and filter from feeds"
-msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:480
 msgid "Shows information about when this post was created"
@@ -7761,7 +7717,7 @@ msgstr ""
 msgid "Software Dev"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:328
+#: src/screens/Moderation/index.tsx:196
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
@@ -7830,8 +7786,8 @@ msgstr ""
 msgid "Something went wrong, please try again"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:87
-#: src/screens/Profile/Sections/Labels.tsx:170
+#: src/screens/Moderation/index.tsx:83
+#: src/screens/Profile/Sections/Labels.tsx:144
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -7980,7 +7936,7 @@ msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
-#: src/screens/Profile/Sections/Labels.tsx:197
+#: src/screens/Profile/Sections/Labels.tsx:171
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -8178,10 +8134,6 @@ msgstr ""
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:59
 #: src/lib/moderation/useModerationCauseDescription.ts:59
 msgid "The author of this thread has hidden this reply."
-msgstr ""
-
-#: src/screens/Moderation/index.tsx:289
-msgid "The Bluesky web application"
 msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:86
@@ -8529,7 +8481,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:193
+#: src/screens/Profile/Sections/Labels.tsx:167
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
@@ -8707,7 +8659,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:269
+#: src/screens/Moderation/index.tsx:180
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -9156,7 +9108,7 @@ msgstr ""
 msgid "Verification failed, please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:243
+#: src/screens/Moderation/index.tsx:174
 msgid "Verification settings"
 msgstr ""
 
@@ -9165,7 +9117,7 @@ msgstr ""
 msgid "Verification Settings"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:39
+#: src/screens/Moderation/VerificationSettings.tsx:38
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
@@ -9330,8 +9282,10 @@ msgstr ""
 msgid "View the invite link for this group chat"
 msgstr "View the invite link for this group chat"
 
+#. placeholder {0}: creator.handle
 #. placeholder {0}: labeler.creator.handle
 #: src/components/LabelingServiceCard/index.tsx:122
+#: src/screens/Moderation/index.tsx:279
 msgid "View the labeling service provided by @{0}"
 msgstr ""
 
@@ -9343,11 +9297,11 @@ msgstr ""
 msgid "View users who like this feed"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:223
+#: src/screens/Moderation/index.tsx:167
 msgid "View your blocked accounts"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:175
+#: src/screens/Moderation/index.tsx:142
 msgid "View your default post interaction settings"
 msgstr ""
 
@@ -9356,11 +9310,11 @@ msgstr ""
 msgid "View your feeds and explore more"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:202
+#: src/screens/Moderation/index.tsx:157
 msgid "View your moderation lists"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:212
+#: src/screens/Moderation/index.tsx:162
 msgid "View your muted accounts"
 msgstr ""
 
@@ -9398,18 +9352,9 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:126
-#: src/lib/moderation/useLabelBehaviorDescription.ts:16
-#: src/lib/moderation/useLabelBehaviorDescription.ts:21
+#: src/components/moderation/LabelPreference.tsx:72
+#: src/screens/Moderation/index.tsx:253
 msgid "Warn"
-msgstr ""
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:47
-msgid "Warn content"
-msgstr ""
-
-#: src/lib/moderation/useLabelBehaviorDescription.ts:45
-msgid "Warn content and filter from feeds"
 msgstr ""
 
 #: src/features/liveNow/components/LiveStatus.tsx:146
@@ -9459,7 +9404,7 @@ msgstr "We recommend the theme font for the best experience."
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:352
+#: src/screens/Moderation/index.tsx:221
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
