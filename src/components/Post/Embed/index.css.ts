@@ -81,7 +81,6 @@ export const quoteCardHover = style({
 // extra padding once the quote is revealed; the inner content drops its own padding while active.
 export const quoteActive = style({
 	padding: 12,
-	paddingTop: 8,
 });
 
 // the revealed quote body.
