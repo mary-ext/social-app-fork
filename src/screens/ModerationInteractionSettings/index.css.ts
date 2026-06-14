@@ -4,6 +4,7 @@ import { space } from '#/styles/tokens.css';
 
 // the form page's gutter: horizontal padding with vertical rhythm between the notice, form, and any error.
 export const content = style({
+	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 	gap: space.xl,
