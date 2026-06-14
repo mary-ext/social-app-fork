@@ -53,7 +53,7 @@ export function LabelText({ children, htmlFor }: { children: ReactNode; htmlFor?
 			className={styles.label}
 			color="textContrastMedium"
 			htmlFor={htmlFor ?? id}
-			size="sm"
+			size="md_sub"
 			weight="medium"
 		>
 			{children}
