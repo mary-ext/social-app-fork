@@ -1,6 +1,6 @@
 import {
+	BUILTIN_LABELS,
 	type InterpretedLabelDefinition,
-	isCustomLabelValue,
 	LabelFlags,
 	type LabelPreference,
 } from '@atcute/bluesky-moderation';
@@ -39,7 +39,10 @@ export function LabelerLabelRow({
 }) {
 	const { i18n, t: l } = useLingui();
 	const { identifier } = labelDefinition;
-	const isGlobalLabel = !isCustomLabelValue(identifier);
+	// a global label is one backed by a built-in definition (porn, sexual, …); those are configured once in
+	// moderation settings, not per labeler. (`isCustomLabelValue` is a format check — it's true for these
+	// identifiers too — so it can't distinguish global from custom.)
+	const isGlobalLabel = identifier in BUILTIN_LABELS;
 	const { data: preferences } = usePreferencesQuery();
 	const { mutate, variables } = usePreferencesSetContentLabelMutation();
 	const globalLabelStrings = useGlobalLabelStrings();
