@@ -11,7 +11,7 @@ const HOVER = '&:hover:not(:disabled)';
 // `size` variants publish only their font-size through this var; `base` derives the pixel-snapped line-height
 // from it at the snug (1.3) ratio, so the leading lives in one place.
 const fontSizeVar = createVar();
-const fontSizeScale = fallbackVar(fontSizeVar, fontSize.sm);
+const fontSizeScale = fallbackVar(fontSizeVar, fontSize.md_sub);
 
 export const button = recipe(
 	{
@@ -176,7 +176,7 @@ export const button = recipe(
 			shape: { default: {}, rectangular: {}, round: {} },
 			size: {
 				large: { gap: 6, paddingBlock: 12, paddingInline: 24, vars: { [fontSizeVar]: fontSize.md } },
-				small: { gap: 5, paddingBlock: 8, paddingInline: 14, vars: { [fontSizeVar]: fontSize.sm } },
+				small: { gap: 5, paddingBlock: 8, paddingInline: 14, vars: { [fontSizeVar]: fontSize.md_sub } },
 				tiny: { gap: 3, paddingBlock: 5, paddingInline: 10, vars: { [fontSizeVar]: fontSize.xs } },
 			},
 			// `bare` inherits its surroundings (e.g. a full-row pressable); solid/ghost colors come from the
