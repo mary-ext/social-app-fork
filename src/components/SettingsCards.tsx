@@ -29,10 +29,13 @@ export function List({ children }: { children: ReactNode }) {
  * (inserted automatically, so falsy children may be conditionally rendered).
  */
 export function Section({
+	bodyText,
 	children,
 	footnoteText,
 	titleText,
 }: {
+	/** Explanatory body copy rendered above the card, below the title if there is one. */
+	bodyText?: ReactNode;
 	children: ReactNode;
 	/** Muted helper text rendered under the card. */
 	footnoteText?: ReactNode;
@@ -44,6 +47,11 @@ export function Section({
 			{titleText != null && (
 				<Text className={styles.sectionHeader} size="md" weight="semiBold" color="textContrastHigh">
 					{titleText}
+				</Text>
+			)}
+			{bodyText != null && (
+				<Text className={styles.sectionBody} size="sm" color="textContrastMedium" leading="snug">
+					{bodyText}
 				</Text>
 			)}
 			<div className={styles.card}>

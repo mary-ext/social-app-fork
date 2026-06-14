@@ -33,6 +33,10 @@ export const sectionHeader = style({
 	paddingBottom: space.md,
 });
 
+export const sectionBody = style({
+	paddingBottom: space.md,
+});
+
 export const sectionFootnote = style({
 	paddingInline: space.xs,
 	paddingTop: space.sm,
@@ -71,7 +75,6 @@ export const divider = style({
 export const row = style({
 	alignItems: 'start',
 	boxSizing: 'border-box',
-	columnGap: space.md,
 	display: 'grid',
 	gridTemplateColumns: 'auto minmax(0, 1fr) auto',
 	paddingBlock: 14,
@@ -124,12 +127,15 @@ export const rowLast = style({
 	borderBottomRightRadius: cardRadius,
 });
 
+// the gap between the icon and the title lives on the icon (not the grid's `column-gap`) so an
+// iconless row leaves no leading gap — its title sits flush against the row's inline padding.
 export const icon = style({
 	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
 	gridColumn: 1,
 	gridRow: 1,
+	marginInlineEnd: space.md,
 });
 
 /** The row's primary text, sharing its line with the trailing control. */
@@ -154,6 +160,7 @@ export const trailing = style({
 	gap: space.xs,
 	gridColumn: 3,
 	gridRow: 1,
+	marginInlineStart: space.md,
 	minHeight: titleLineHeight,
 });
 

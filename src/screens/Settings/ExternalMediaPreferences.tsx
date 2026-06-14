@@ -9,14 +9,14 @@ import {
 
 import { useExternalEmbedsPrefs, useSetExternalEmbedPref } from '#/state/preferences';
 
-import * as SettingsList from '#/components/SettingsList';
-import { Admonition } from '#/components/web/Admonition';
+import * as Settings from '#/components/SettingsCards';
 import * as Layout from '#/components/web/Layout';
-
-import * as styles from './ExternalMediaPreferences.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesExternalEmbeds'>;
 export function ExternalMediaPreferencesScreen({}: Props) {
+	const sources = useExternalEmbedsPrefs();
+	const setExternalEmbedPref = useSetExternalEmbedPref();
+
 	return (
 		<Layout.Screen>
 			<Layout.Header.Outer>
@@ -29,44 +29,34 @@ export function ExternalMediaPreferencesScreen({}: Props) {
 				<Layout.Header.Slot />
 			</Layout.Header.Outer>
 			<Layout.Content>
-				<SettingsList.Container>
-					<SettingsList.Item>
-						<Admonition type="info">
+				<Settings.List>
+					<Settings.Section
+						bodyText={
 							<Trans>
 								External media may allow websites to collect information about you and your device. No
 								information is sent or requested until you press the "play" button.
 							</Trans>
-						</Admonition>
-					</SettingsList.Item>
-					<div className={styles.heading}>
-						<SettingsList.ItemText>
-							<Trans>Enable media players for</Trans>
-						</SettingsList.ItemText>
-					</div>
-					{Object.entries(externalEmbedLabels)
-						.filter(([key]) => !exemptExternalEmbedSources.has(key as EmbedPlayerSource))
-						.map(([key, label]) => (
-							<PrefSelector key={key} source={key as EmbedPlayerSource} label={label} />
-						))}
-				</SettingsList.Container>
+						}
+					>
+						{Object.entries(externalEmbedLabels)
+							.filter(([key]) => !exemptExternalEmbedSources.has(key as EmbedPlayerSource))
+							.map(([key, label]) => {
+								const source = key as EmbedPlayerSource;
+								const enabled = sources?.[source] === 'show';
+								return (
+									<Settings.SwitchRow
+										key={source}
+										label={label}
+										onChange={(next) => setExternalEmbedPref(source, next ? 'show' : 'hide')}
+										value={enabled}
+									>
+										<Settings.Label titleText={label} />
+									</Settings.SwitchRow>
+								);
+							})}
+					</Settings.Section>
+				</Settings.List>
 			</Layout.Content>
 		</Layout.Screen>
-	);
-}
-
-function PrefSelector({ source, label }: { source: EmbedPlayerSource; label: string }) {
-	const setExternalEmbedPref = useSetExternalEmbedPref();
-	const sources = useExternalEmbedsPrefs();
-	const enabled = sources?.[source] === 'show';
-
-	return (
-		<SettingsList.CheckboxItem
-			label={label}
-			value={enabled}
-			onChange={() => setExternalEmbedPref(source, enabled ? 'hide' : 'show')}
-		>
-			<SettingsList.CheckboxBox />
-			<SettingsList.LabelText size="md">{label}</SettingsList.LabelText>
-		</SettingsList.CheckboxItem>
 	);
 }
