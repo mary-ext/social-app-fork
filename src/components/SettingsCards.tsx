@@ -52,7 +52,7 @@ export function Section({
 				</Text>
 			)}
 			{bodyText != null && (
-				<Text className={styles.sectionBody} size="sm" color="textContrastMedium">
+				<Text className={styles.sectionBody} size="md_sub" color="textContrastMedium">
 					{bodyText}
 				</Text>
 			)}
@@ -378,7 +378,7 @@ export function SelectRow<T extends string>({
 					) : (
 						<Text
 							className={styles.value}
-							size="sm"
+							size="md_sub"
 							color="textContrastMedium"
 							align="right"
 							numberOfLines={1}
