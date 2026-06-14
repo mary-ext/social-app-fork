@@ -139,11 +139,11 @@ function ContentHiderActive({
 			<span className={styles.iconWrap}>
 				<desc.icon size="md" fill="currentColor" />
 			</span>
-			<Text weight="semiBold" color="textContrastMedium" numberOfLines={2} className={styles.labelText}>
+			<Text weight="medium" color="textContrastMedium" numberOfLines={2} className={styles.labelText}>
 				{labelName}
 			</Text>
 			{!modui.noOverride && (
-				<Text weight="semiBold" color="textContrastHigh" className={styles.toggleText}>
+				<Text size='md_sub' weight="medium" color="textContrastHigh" className={styles.toggleText}>
 					{override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
 				</Text>
 			)}

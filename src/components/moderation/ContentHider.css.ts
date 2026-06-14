@@ -33,7 +33,7 @@ export const blurButton = style({
 	cursor: 'pointer',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 4,
+	gap: 8,
 	justifyContent: 'flex-start',
 	margin: 0,
 	paddingBlock: 12,
@@ -42,7 +42,7 @@ export const blurButton = style({
 	width: '100%',
 	'@media': {
 		'(min-width: 800px)': {
-			gap: 8,
+			gap: 12,
 			paddingBlock: 16,
 			paddingInline: 20,
 		},
@@ -69,7 +69,6 @@ export const iconWrap = style({
 
 export const labelText = style({
 	flex: 1,
-	marginBottom: 1,
 });
 
 export const toggleText = style({
