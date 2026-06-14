@@ -1137,7 +1137,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:93
+#: src/components/moderation/LabelPreference.tsx:96
 msgid "Adult content is disabled."
 msgstr ""
 
@@ -2116,7 +2116,7 @@ msgstr ""
 msgid "Compressing video..."
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:95
+#: src/components/moderation/LabelPreference.tsx:98
 msgid "Configured in <0>moderation settings</0>."
 msgstr ""
 
@@ -3496,7 +3496,7 @@ msgid "Filter who you receive notifications from"
 msgstr ""
 
 #. placeholder {0}: labelStrings.name
-#: src/components/moderation/LabelPreference.tsx:134
+#: src/components/moderation/LabelPreference.tsx:137
 #: src/screens/Moderation/index.tsx:256
 msgid "Filtering for {0}"
 msgstr "Filtering for {0}"
@@ -4019,7 +4019,7 @@ msgstr ""
 
 #: src/components/interstitials/Trending.tsx:86
 #: src/components/moderation/ContentHider.tsx:147
-#: src/components/moderation/LabelPreference.tsx:70
+#: src/components/moderation/LabelPreference.tsx:73
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:601
 #: src/screens/Moderation/index.tsx:254
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:106
@@ -5025,7 +5025,7 @@ msgstr ""
 msgid "Moderation Lists"
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:97
+#: src/components/moderation/LabelPreference.tsx:100
 msgid "moderation settings"
 msgstr ""
 
@@ -7525,7 +7525,7 @@ msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:147
-#: src/components/moderation/LabelPreference.tsx:71
+#: src/components/moderation/LabelPreference.tsx:74
 #: src/components/moderation/PostHider.tsx:102
 #: src/screens/Moderation/index.tsx:252
 msgid "Show"
@@ -9352,7 +9352,7 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
-#: src/components/moderation/LabelPreference.tsx:72
+#: src/components/moderation/LabelPreference.tsx:75
 #: src/screens/Moderation/index.tsx:253
 msgid "Warn"
 msgstr ""
