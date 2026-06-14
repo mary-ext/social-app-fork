@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
-import { roundToDevicePx } from '#/styles/round';
+import { roundToPx } from '#/styles/round';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 // subtle app-language switcher: tighten the rectangular/tiny web Button around the value
@@ -23,7 +23,7 @@ export const value = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize.sm,
 	fontWeight: fontWeight.normal,
-	lineHeight: roundToDevicePx(calc.multiply(fontSize.sm, lineHeight.snug)),
+	lineHeight: roundToPx(calc.multiply(fontSize.sm, lineHeight.snug)),
 });
 
 // 20px chevron line box (the Select icon is a flex span, so size it explicitly) so the

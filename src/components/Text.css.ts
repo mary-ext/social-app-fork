@@ -4,7 +4,7 @@ import { calc } from '@vanilla-extract/css-utils';
 import { colors } from '#/styles/colors';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { roundToDevicePx } from '#/styles/round';
+import { roundToPx } from '#/styles/round';
 import { fontFamily, fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 /** Turns a token scale into a variant group setting `property` to each token value. */
@@ -47,7 +47,7 @@ export const text = recipe(
 			fontSize: fontSizeScale,
 			// snap the derived line-height to the device-pixel grid — `round(fontSize * leading, 1px / dpr)` — so
 			// it lands on whole device pixels rather than a fractional CSS value
-			lineHeight: roundToDevicePx(calc.multiply(fontSizeScale, fallbackVar(leadingVar, '1.3'))),
+			lineHeight: roundToPx(calc.multiply(fontSizeScale, fallbackVar(leadingVar, '1.3'))),
 			margin: 0,
 			padding: 0,
 		},

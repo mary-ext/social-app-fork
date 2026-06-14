@@ -2,7 +2,7 @@ import { style, styleVariants } from '@vanilla-extract/css';
 import { calc } from '@vanilla-extract/css-utils';
 
 import { vars } from '#/styles/contract.css';
-import { roundToDevicePx } from '#/styles/round';
+import { roundToPx } from '#/styles/round';
 import { borderRadius } from '#/styles/tokens.css';
 
 const clusterBase = style({
@@ -62,5 +62,5 @@ export const icon = style({
  */
 export const altSmall = style({
 	fontSize: 8,
-	lineHeight: roundToDevicePx(calc.multiply('8px', '1.3')),
+	lineHeight: roundToPx(calc.multiply('8px', '1.3')),
 });

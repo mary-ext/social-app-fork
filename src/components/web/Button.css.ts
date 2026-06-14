@@ -4,7 +4,7 @@ import { calc } from '@vanilla-extract/css-utils';
 import { vars } from '#/styles/contract.css';
 import { components } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { roundToDevicePx } from '#/styles/round';
+import { roundToPx } from '#/styles/round';
 import { fontSize, fontWeight, lineHeight } from '#/styles/tokens.css';
 
 const HOVER = '&:hover:not(:disabled)';
@@ -29,7 +29,7 @@ export const button = recipe(
 			fontSize: fontSizeScale,
 			fontWeight: fontWeight.medium,
 			justifyContent: 'center',
-			lineHeight: roundToDevicePx(calc.multiply(fontSizeScale, lineHeight.snug)),
+			lineHeight: roundToPx(calc.multiply(fontSizeScale, lineHeight.snug)),
 			margin: 0,
 			textDecoration: 'none',
 			transitionDuration: '100ms',

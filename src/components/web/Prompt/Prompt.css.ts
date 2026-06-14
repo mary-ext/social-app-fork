@@ -4,7 +4,7 @@ import { calc } from '@vanilla-extract/css-utils';
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
 import { recipe } from '#/styles/recipe';
-import { roundToDevicePx } from '#/styles/round';
+import { roundToPx } from '#/styles/round';
 import { fontSize, lineHeight, zIndex } from '#/styles/tokens.css';
 
 export const backdrop = style(
@@ -74,7 +74,7 @@ export const title = style({
 	color: vars.palette.contrast_1000,
 	fontSize: fontSize._2xl,
 	fontWeight: 600,
-	lineHeight: roundToDevicePx(calc.multiply(fontSize._2xl, lineHeight.snug)),
+	lineHeight: roundToPx(calc.multiply(fontSize._2xl, lineHeight.snug)),
 	margin: 0,
 	paddingBottom: 4,
 });
@@ -82,7 +82,7 @@ export const title = style({
 export const description = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug)),
+	lineHeight: roundToPx(calc.multiply(fontSize.md, lineHeight.snug)),
 	margin: 0,
 	paddingBottom: 16,
 });
@@ -113,7 +113,7 @@ export const rowIcon = style({
 export const rowText = style({
 	color: vars.palette.contrast_900,
 	fontSize: fontSize.md,
-	lineHeight: roundToDevicePx(calc.multiply(fontSize.md, lineHeight.snug)),
+	lineHeight: roundToPx(calc.multiply(fontSize.md, lineHeight.snug)),
 	paddingBlock: 1,
 });
 

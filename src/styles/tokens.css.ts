@@ -68,13 +68,6 @@ export const zIndex = {
 /** Runtime font-size multiplier; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`. */
 export const fontScale = createVar();
 
-/**
- * Runtime `window.devicePixelRatio`; the ALF `ThemeProvider` writes it onto `<html>`, falling back to `1`.
- * Used to snap computed lengths (e.g. line-height) to the device-pixel grid, avoiding fractional CSS pixels
- * whose edges land between device pixels and snap inconsistently (dropped hairlines, shifted alignment).
- */
-export const dprScale = createVar();
-
 const scaled = (px: number) => `calc(${px}px * ${fallbackVar(fontScale, '1')})`;
 
 /**
