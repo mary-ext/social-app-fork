@@ -357,7 +357,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										label={l`Reposts of this post`}
 										size="md"
 										to={repostsHref}
-										underline="none"
 									>
 										<Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
 											<Text color="text" size="md" weight="semiBold">
@@ -374,7 +373,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										label={l`Quotes of this post`}
 										size="md"
 										to={quotesHref}
-										underline="none"
 									>
 										<Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
 											<Text color="text" size="md" weight="semiBold">
@@ -391,7 +389,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 										label={l`Likes on this post`}
 										size="md"
 										to={likesHref}
-										underline="none"
 									>
 										<Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
 											<Text color="text" size="md" weight="semiBold">
@@ -451,7 +448,7 @@ function ExpandedPostDetails({
 		<div className={css.expandedDetails}>
 			<BackdatedPostIndicator post={post} />
 			<div className={css.expandedDetailsRow}>
-				<Text size="sm" color="textContrastMedium">
+				<Text size="md_sub" color="textContrastMedium">
 					{niceDate(i18n, post.indexedAt, 'dot separated')}
 				</Text>
 				{isRootPost && <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />}
