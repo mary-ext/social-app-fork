@@ -130,7 +130,7 @@ function CardBody({
 					</Text>
 				) : null}
 				{link.description ? (
-					<Text size="sm" numberOfLines={link.thumb ? 2 : 4}>
+					<Text size="md_sub" numberOfLines={link.thumb ? 2 : 4}>
 						{link.description}
 					</Text>
 				) : null}
@@ -141,7 +141,7 @@ function CardBody({
 					<span className={styles.globe}>
 						<Globe size="xs" fill="currentColor" />
 					</span>
-					<Text size="xs" numberOfLines={1} className={styles.domain}>
+					<Text size="sm" numberOfLines={1} className={styles.domain}>
 						{niceUrl}
 					</Text>
 				</div>
