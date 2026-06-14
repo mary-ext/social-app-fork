@@ -77,6 +77,7 @@ export function PostControlButtonText({ children }: { children: ReactNode }) {
 	return (
 		<Text
 			className={styles.text}
+			leading="none"
 			selectable={false}
 			size={big ? 'md' : 'md_sub'}
 			weight={active ? 'semiBold' : undefined}
