@@ -7,7 +7,7 @@ export const includeReason = style({
 	color: colors.textContrastMedium,
 	display: 'flex',
 	flexDirection: 'row',
-	gap: 3,
+	gap: 4,
 	marginBottom: 2,
-	marginLeft: -16,
+	marginLeft: (13 + 4) * -1,
 });
