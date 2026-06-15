@@ -47,12 +47,6 @@ type LinkBindings = {
 const isModifiedClick = (e: MouseEvent<HTMLElement>) =>
 	e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
 
-// new-tab attributes for an anchor whose href is genuinely external; an in-app (resolved) href gets neither.
-const externalAnchorAttrs = (isExternal: boolean) => ({
-	rel: isExternal ? 'noopener noreferrer' : undefined,
-	target: isExternal ? '_blank' : undefined,
-});
-
 const useNavigateToPath = () => {
 	const navigation = useNavigationDeduped();
 	return useCallback(
@@ -146,7 +140,13 @@ const useExternalLink = ({
 		},
 		[navigate, onPress],
 	);
-	return { href, onClick, ...externalAnchorAttrs(isExternal) };
+	return {
+		href,
+		onClick,
+		// external links open in a new tab; an `<a>` to a resolved in-app path needs neither.
+		rel: isExternal ? 'noopener noreferrer' : undefined,
+		target: isExternal ? '_blank' : undefined,
+	};
 };
 
 // like useExternalLink, but for links whose visible text is untrusted (post content): before navigating it
@@ -179,7 +179,13 @@ const useContentLink = ({
 		},
 		[displayText, href, isExternal, linkWarningDialogControl, navigate, onPress],
 	);
-	return { href, onClick, ...externalAnchorAttrs(isExternal) };
+	return {
+		href,
+		onClick,
+		// external links open in a new tab; an `<a>` to a resolved in-app path needs neither.
+		rel: isExternal ? 'noopener noreferrer' : undefined,
+		target: isExternal ? '_blank' : undefined,
+	};
 };
 
 // #endregion
