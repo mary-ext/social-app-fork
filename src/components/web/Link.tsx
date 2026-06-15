@@ -104,13 +104,11 @@ const useInternalLink = ({
 
 const useExternalLink = ({
 	action = 'push',
-	disableMismatchWarning,
 	displayText = '',
 	href: rawHref,
 	onPress,
 }: {
 	action?: LinkAction;
-	disableMismatchWarning?: boolean;
 	displayText?: string;
 	href: string;
 	onPress?: LinkOnPress;
@@ -127,7 +125,7 @@ const useExternalLink = ({
 				return;
 			}
 			// warn when the visible text claims a different destination than the link actually points to.
-			if (displayText && isExternal && !disableMismatchWarning && linkRequiresWarning(href, displayText)) {
+			if (displayText && isExternal && linkRequiresWarning(href, displayText)) {
 				e.preventDefault();
 				linkWarningDialogControl.open({ displayText, href });
 				return;
@@ -138,16 +136,7 @@ const useExternalLink = ({
 			e.preventDefault();
 			navigateToPath(href, action);
 		},
-		[
-			action,
-			disableMismatchWarning,
-			displayText,
-			href,
-			isExternal,
-			linkWarningDialogControl,
-			navigateToPath,
-			onPress,
-		],
+		[action, displayText, href, isExternal, linkWarningDialogControl, navigateToPath, onPress],
 	);
 	return {
 		href,
@@ -318,11 +307,7 @@ type ExternalNavProps = {
 };
 
 export type ExternalLinkProps = ExternalNavProps & BlockAnchorProps;
-export type ExternalInlineLinkTextProps = ExternalNavProps &
-	InlineAnchorProps & {
-		/** Skip the warning shown when external link text doesn't match its href. */
-		disableMismatchWarning?: boolean;
-	};
+export type ExternalInlineLinkTextProps = ExternalNavProps & InlineAnchorProps;
 export type ExternalLinkButtonProps = ExternalNavProps & ButtonAnchorProps;
 
 /**
@@ -336,18 +321,11 @@ export const ExternalLink = ({ action, href, onPress, ...rest }: ExternalLinkPro
 
 /**
  * A web-native inline text link to a raw URL. Like {@link ExternalLink}, but warns before navigating when the
- * visible text misrepresents where the link leads (unless `disableMismatchWarning`).
+ * visible text misrepresents where the link leads.
  */
-export const ExternalInlineLinkText = ({
-	action,
-	disableMismatchWarning,
-	href,
-	onPress,
-	...rest
-}: ExternalInlineLinkTextProps) => {
+export const ExternalInlineLinkText = ({ action, href, onPress, ...rest }: ExternalInlineLinkTextProps) => {
 	const bindings = useExternalLink({
 		action,
-		disableMismatchWarning,
 		displayText: typeof rest.children === 'string' ? rest.children : '',
 		href,
 		onPress,
