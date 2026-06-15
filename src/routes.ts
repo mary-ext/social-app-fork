@@ -5,7 +5,7 @@ import type { FlatNavigatorParams } from './lib/routes/types';
 type AllNavigatableRoutes = Omit<FlatNavigatorParams, 'NotFound'>;
 
 export const router = new Router<AllNavigatableRoutes>({
-	Home: ['/', '/download'],
+	Home: '/',
 	Search: '/search',
 	Feeds: '/feeds',
 	Notifications: '/notifications',

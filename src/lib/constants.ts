@@ -6,7 +6,6 @@ export const BSKY_SERVICE = 'https://bsky.social';
 export const BSKY_SERVICE_DID = 'did:web:bsky.social';
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app';
 export const DEFAULT_SERVICE = BSKY_SERVICE;
-export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download';
 export const STARTER_PACK_MAX_SIZE = 150;
 export const CARD_ASPECT_RATIO = 1200 / 630;
 

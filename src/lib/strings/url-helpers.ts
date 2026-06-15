@@ -179,13 +179,6 @@ export function isBskyChatInviteUrl(url: string): boolean {
 	return getChatInviteCodeFromUrl(url) !== undefined;
 }
 
-export function isBskyDownloadUrl(url: string): boolean {
-	if (isExternalUrl(url)) {
-		return false;
-	}
-	return url === '/download' || url.startsWith('/download?');
-}
-
 export function convertBskyAppUrlIfNeeded(url: string): string {
 	if (isBskyAppUrl(url)) {
 		try {

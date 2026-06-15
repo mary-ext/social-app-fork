@@ -9,17 +9,10 @@ import {
 import { sanitizeUrl } from '@braintree/sanitize-url';
 import { type LinkProps as RNLinkProps, StackActions } from '@react-navigation/native';
 
-import { BSKY_DOWNLOAD_URL } from '#/lib/constants';
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
-import { shareUrl } from '#/lib/sharing';
-import {
-	convertBskyAppUrlIfNeeded,
-	isBskyDownloadUrl,
-	isExternalUrl,
-	linkRequiresWarning,
-} from '#/lib/strings/url-helpers';
+import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#/lib/strings/url-helpers';
 
 import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
 
@@ -121,17 +114,8 @@ type BaseLinkProps = {
 	 */
 	onPress?: (e: GestureResponderEvent) => void | false;
 
-	/**
-	 * Callback for when the link is long pressed (on native). Prevent default and return `false` to exit early
-	 * and prevent default long press hander.
-	 */
-	onLongPress?: (e: GestureResponderEvent) => void | false;
-
 	/** Web-only attribute. Sets `download` attr on web. */
 	download?: string;
-
-	/** Native-only attribute. If true, will open the share sheet on long press. */
-	shareOnLongPress?: boolean;
 
 	/** Whether the link should be opened through the redirect proxy. */
 	shouldProxy?: boolean;
@@ -149,8 +133,6 @@ export function useLink({
 	action = 'push',
 	disableMismatchWarning,
 	onPress: outerOnPress,
-	onLongPress: outerOnLongPress,
-	shareOnLongPress,
 }: BaseLinkProps & {
 	displayText: string;
 }) {
@@ -198,9 +180,7 @@ export function useLink({
 				} else {
 					const shouldOpenInNewTab = shouldClickOpenNewTab(e);
 
-					if (isBskyDownloadUrl(href)) {
-						void shareUrl(BSKY_DOWNLOAD_URL);
-					} else if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
+					if (shouldOpenInNewTab || href.startsWith('http') || href.startsWith('mailto')) {
 						void openLink(href);
 					} else {
 						const [screen, params] = router.matchPath(href) as [
@@ -235,36 +215,10 @@ export function useLink({
 		],
 	);
 
-	const handleLongPress = useCallback(() => {
-		const requiresWarning = Boolean(
-			!disableMismatchWarning && displayText && isExternal && linkRequiresWarning(href, displayText),
-		);
-
-		if (requiresWarning) {
-			linkWarningDialogControl.open({
-				displayText,
-				href,
-				share: true,
-			});
-		} else {
-			void shareUrl(href);
-		}
-	}, [disableMismatchWarning, displayText, href, isExternal, linkWarningDialogControl]);
-
-	const onLongPress = useCallback(
-		(e: GestureResponderEvent) => {
-			const exitEarlyIfFalse = outerOnLongPress?.(e);
-			if (exitEarlyIfFalse === false) return;
-			return undefined;
-		},
-		[outerOnLongPress, handleLongPress, shareOnLongPress],
-	);
-
 	return {
 		isExternal,
 		href,
 		onPress,
-		onLongPress,
 	};
 }
 
@@ -282,19 +236,17 @@ export function Link({
 	to,
 	action = 'push',
 	onPress: outerOnPress,
-	onLongPress: outerOnLongPress,
 	download,
 	shouldProxy,
 	onMouseEnter,
 	onMouseLeave,
 	...rest
 }: LinkProps) {
-	const { href, isExternal, onPress, onLongPress } = useLink({
+	const { href, isExternal, onPress } = useLink({
 		to,
 		displayText: typeof children === 'string' ? children : '',
 		action,
 		onPress: outerOnPress,
-		onLongPress: outerOnLongPress,
 		shouldProxy,
 	});
 
@@ -305,7 +257,6 @@ export function Link({
 			role="link"
 			accessibilityRole="link"
 			onPress={download ? undefined : onPress}
-			onLongPress={onLongPress}
 			{...webLinkProps({ download, href, isExternal, onMouseEnter, onMouseLeave })}
 		>
 			{children}
@@ -329,24 +280,20 @@ export function InlineLinkText({
 	disableMismatchWarning,
 	style,
 	onPress: outerOnPress,
-	onLongPress: outerOnLongPress,
 	download,
 	selectable,
 	label,
-	shareOnLongPress,
 	disableUnderline,
 	...rest
 }: InlineLinkProps) {
 	const t = useTheme();
 	const stringChildren = typeof children === 'string';
-	const { href, isExternal, onPress, onLongPress } = useLink({
+	const { href, isExternal, onPress } = useLink({
 		to,
 		displayText: stringChildren ? children : '',
 		action,
 		disableMismatchWarning,
 		onPress: outerOnPress,
-		onLongPress: outerOnLongPress,
-		shareOnLongPress,
 	});
 	const { state: interacted, onIn: onInteract, onOut: onInteractOut } = useInteractionState();
 	const flattenedStyle = flatten(style) || {};
@@ -364,7 +311,6 @@ export function InlineLinkText({
 			]}
 			role="link"
 			onPress={download ? undefined : onPress}
-			onLongPress={onLongPress}
 			accessibilityRole="link"
 			{...webLinkProps({
 				download,
@@ -404,7 +350,7 @@ export function SimpleInlineLinkText({
 	disableUnderline,
 	onPress: outerOnPress,
 	...rest
-}: Omit<InlineLinkProps, 'to' | 'action' | 'disableMismatchWarning' | 'onLongPress' | 'shareOnLongPress'> & {
+}: Omit<InlineLinkProps, 'action' | 'disableMismatchWarning' | 'to'> & {
 	to: string;
 }) {
 	const t = useTheme();
@@ -461,12 +407,7 @@ export function SimpleInlineLinkText({
 	);
 }
 
-export function WebOnlyInlineLinkText({
-	children,
-	to,
-	onPress,
-	...props
-}: Omit<InlineLinkProps, 'onLongPress'>) {
+export function WebOnlyInlineLinkText({ children, to, onPress, ...props }: InlineLinkProps) {
 	return (
 		<InlineLinkText {...props} to={to} onPress={onPress}>
 			{children}
