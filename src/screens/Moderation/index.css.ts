@@ -1,23 +1,20 @@
 import { style } from '@vanilla-extract/css';
 
-import { rowPlain } from '#/components/SettingsCards.css';
-
 import { vars } from '#/styles/contract.css';
 import { space } from '#/styles/tokens.css';
 
-// pins the labeler row's avatar and trailing chevron to the top rather than centering them on the
-// multi-line title/description column. composes rowPlain (rather than sitting beside it in clsx) so
-// vanilla-extract guarantees this flex-start wins over rowPlain's center regardless of stylesheet
-// injection order — otherwise HMR re-injecting SettingsCards.css last flips the cascade to center.
-export const labelerRow = style([
-	rowPlain,
-	{
-		alignItems: 'flex-start',
-	},
-]);
+// the avatar and trailing chevron pin to the top of the row rather than centering on the multi-line
+// title/description column. align-self overrides the row's `align-items: center` for just that child,
+// which is order-independent — unlike a container-level override, which loses to the row's rowPlain
+// class being re-emitted (duplicated into every consuming chunk) from a later-loading screen chunk.
+export const labelerAvatar = style({
+	alignSelf: 'flex-start',
+});
 
-// center the trailing chevron against the 40px avatar instead of the row's flex-start top edge.
+// the trailing chevron pins to the top like the avatar, then nudges down to center against it (the
+// avatar is 40px, the chevron 16px).
 export const labelerChevron = style({
+	alignSelf: 'flex-start',
 	marginTop: (40 - 16) / 2,
 });
 

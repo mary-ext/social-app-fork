@@ -275,11 +275,11 @@ function LabelerRow({
 
 	return (
 		<Settings.LinkRowRaw
-			className={clsx(styles.labelerRow, className)}
+			className={clsx(cardStyles.rowPlain, className)}
 			label={l`View the labeling service provided by @${creator.handle}`}
 			to={makeProfileLink({ did: creator.did })}
 		>
-			<UserAvatar avatar={creator.avatar} size={40} type="labeler" />
+			<UserAvatar avatar={creator.avatar} className={styles.labelerAvatar} size={40} type="labeler" />
 			<div className={styles.identity}>
 				<Text numberOfLines={1} size="md" weight="medium">
 					{title}
