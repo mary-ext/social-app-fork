@@ -3052,7 +3052,7 @@ msgstr ""
 msgid "Expand or collapse the full post you are replying to"
 msgstr ""
 
-#: src/components/Post/ShowMoreTextButton.tsx:30
+#: src/components/ClampedPostText.tsx:36
 msgid "Expand post text"
 msgstr ""
 
@@ -7553,7 +7553,7 @@ msgstr ""
 msgid "Show lists of users to select from"
 msgstr ""
 
-#: src/components/Post/ShowMoreTextButton.tsx:51
+#: src/components/ClampedPostText.tsx:40
 msgid "Show More"
 msgstr ""
 
