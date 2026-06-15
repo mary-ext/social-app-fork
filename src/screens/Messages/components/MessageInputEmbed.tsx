@@ -235,38 +235,39 @@ function MessageInputPostEmbed({ uri, onRemove }: { uri: string; onRemove: () =>
 function MessageInputInviteEmbed({ code, onRemove }: { code: string; onRemove: () => void }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
+	const { status, preview } = ChatInvite.useChatInvite({ code });
 
 	return (
-		<ChatInvite.Root code={code} hasFixedHeight={false}>
-			<View
-				style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}
+		<View style={[a.flex_1, t.atoms.border_contrast_high, a.rounded_md, a.border, a.p_sm, a.mt_sm, a.mx_sm]}>
+			<MessageInputInviteEmbedBody status={status} preview={preview} />
+			<Button
+				label={l`Remove embed`}
+				onPress={onRemove}
+				style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
+				hitSlop={HITSLOP_20}
 			>
-				<MessageInputInviteEmbedBody />
-				<Button
-					label={l`Remove embed`}
-					onPress={onRemove}
-					style={[a.absolute, { top: 10, right: 8 }, a.px_2xs, { transform: [{ translateY: -2 }] }]}
-					hitSlop={HITSLOP_20}
-				>
-					<XIcon size="xs" style={t.atoms.text_contrast_high} />
-				</Button>
-			</View>
-		</ChatInvite.Root>
+				<XIcon size="xs" style={t.atoms.text_contrast_high} />
+			</Button>
+		</View>
 	);
 }
 
-function MessageInputInviteEmbedBody() {
-	const { status } = ChatInvite.useChatInvite();
-
+function MessageInputInviteEmbedBody({
+	status,
+	preview,
+}: {
+	status: ChatInvite.ChatInviteStatus;
+	preview: ChatInvite.ChatInvitePreview | undefined;
+}) {
 	if (status === 'loading') {
-		return <ChatInvite.Loading style={{ minHeight: 64 }} />;
+		return <ChatInvite.Loading className={css.inviteState} />;
 	}
 
 	if (status !== 'available') {
-		return <ChatInvite.Unavailable style={{ minHeight: 64 }} />;
+		return <ChatInvite.Unavailable className={css.inviteState} />;
 	}
 
-	return <ChatInvite.Card size="small" />;
+	return <ChatInvite.Card preview={preview} />;
 }
 
 function SimpleContainer({ children, onRemove }: { children: React.ReactNode; onRemove?: () => void }) {

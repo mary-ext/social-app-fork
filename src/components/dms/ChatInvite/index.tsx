@@ -1,11 +1,11 @@
 export { Card } from './Card';
-export {
-	type ChatInviteAction,
-	type ChatInviteContextValue,
-	type ChatInviteStatus,
-	useChatInvite,
-} from './Context';
 export { JoinButton } from './JoinButton';
 export { Loading } from './Loading';
-export { Root } from './Root';
 export { Unavailable } from './Unavailable';
+export {
+	type ChatInvite,
+	type ChatInviteAction,
+	type ChatInvitePreview,
+	type ChatInviteStatus,
+	useChatInvite,
+} from './use-chat-invite';

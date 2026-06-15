@@ -1,68 +1,39 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
-
-import type { JoinLinkPreview } from '#/state/queries/join-links';
-
-import { atoms as a, useTheme } from '#/alf';
+import { clsx } from 'clsx';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
 
-const JOIN_REQUEST_EMBED_HEIGHT = 140;
+import * as css from './JoinRequestEmbed.css';
 
 /**
- * The "join request" presentation of a chat invite, used as a post embed (in feeds and the post composer).
- * Composes the headless `ChatInvite` primitive: pass either a `code` to fetch by, or an already-resolved
- * `preview` as the initial data to avoid a loading flash.
- */
-export function JoinRequestEmbed({
-	code,
-	preview,
-	style,
-	onOpen,
-}: {
-	code?: string;
-	preview?: JoinLinkPreview;
-	style?: StyleProp<ViewStyle>;
-	onOpen?: () => void;
-}) {
-	const resolvedCode = code ?? preview?.code;
-	if (!resolvedCode) return null;
-
-	return (
-		<ChatInvite.Root code={resolvedCode} initialPreview={preview} hasFixedHeight>
-			<JoinRequestEmbedBody style={style} onOpen={onOpen} />
-		</ChatInvite.Root>
-	);
-}
-
-/**
- * The context-consuming presentation (loading / no-longer-available / card + join button). Exported so
- * surfaces that own their own `ChatInvite.Root` (e.g. to add an error fallback) can render it without nesting
- * another Root.
+ * The "join request" presentation of a chat invite, used as a post embed: the loading / no-longer-available /
+ * card + join button states. The caller owns resolving the invite (via {@link ChatInvite.useChatInvite}) and
+ * passes the derived state in, so it can fall back to a plain link on error.
  */
 export function JoinRequestEmbedBody({
-	style,
+	status,
+	preview,
+	action,
+	className,
 	onOpen,
 }: {
-	style?: StyleProp<ViewStyle>;
+	status: ChatInvite.ChatInviteStatus;
+	preview: ChatInvite.ChatInvitePreview | undefined;
+	action: ChatInvite.ChatInviteAction | undefined;
+	className?: string;
 	onOpen?: () => void;
 }) {
-	const t = useTheme();
-	const { status } = ChatInvite.useChatInvite();
-
-	const box = [a.border, a.rounded_lg, t.atoms.border_contrast_low, { height: JOIN_REQUEST_EMBED_HEIGHT }];
-
 	if (status === 'loading') {
-		return <ChatInvite.Loading style={[box, a.p_lg, style]} />;
+		return <ChatInvite.Loading className={clsx(css.box, className)} />;
 	}
 
 	if (status !== 'available') {
-		return <ChatInvite.Unavailable style={[box, a.p_lg, t.atoms.bg_contrast_25, style]} />;
+		return <ChatInvite.Unavailable className={clsx(css.box, className)} />;
 	}
 
 	return (
-		<View style={[a.justify_between, a.p_lg, a.gap_lg, box, style]}>
-			<ChatInvite.Card size="large" />
-			<ChatInvite.JoinButton onPress={onOpen} />
-		</View>
+		<div className={clsx(css.box, css.available, className)}>
+			<ChatInvite.Card preview={preview} />
+			<ChatInvite.JoinButton action={action} onPress={onOpen} />
+		</div>
 	);
 }

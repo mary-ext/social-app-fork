@@ -1,3 +1,4 @@
+import type { ChatBskyGroupDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
@@ -6,7 +7,6 @@ import type { NavigationProp } from '#/lib/routes/types';
 import { type JoinLinkPreview, useJoinLinkPreviewsQuery } from '#/state/queries/join-links';
 import { useSession } from '#/state/session';
 
-import type { ButtonColor } from '#/components/Button';
 import * as Dialog from '#/components/Dialog';
 import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow';
 import { ArrowBoxRight_Stroke2_Corner3_Rounded as JoinIcon } from '#/components/icons/ArrowBoxRight';
@@ -19,33 +19,59 @@ import * as Toast from '#/components/Toast';
 
 import * as Clipboard from '#/shims/clipboard';
 
-import { type ChatInviteAction, ChatInviteProvider, type ChatInviteStatus } from './Context';
+export type ChatInvitePreview = ChatBskyGroupDefs.JoinLinkPreviewView;
 
 /**
- * Headless data + state owner for a chat invite. Fetches the join link preview by code and derives the
- * join/open action, exposing both via context for the composable parts (`Card`, `JoinButton`) or any custom
- * UI to consume.
- *
- * Pass `initialPreview` when the preview is already known (e.g. a DM message embed already carries the
- * resolved view) to avoid a loading flash.
+ * The resolved state of a chat invite: - `loading`: the preview is still being fetched. - `error`: the fetch
+ * failed (e.g. network). Surfaces may want to fall back to a plain link rather than show a chat-specific
+ * error. - `unavailable`: the preview resolved but the link is disabled, invalid, or an unrecognized variant
+ * - there's nothing to join. - `available`: a usable `JoinLinkPreviewView` is present.
  */
-export function Root({
+export type ChatInviteStatus = 'available' | 'error' | 'loading' | 'unavailable';
+
+/**
+ * The derived state of the join/open action for a chat invite, consumed by `JoinButton` (or any custom action
+ * UI).
+ */
+export type ChatInviteAction = {
+	color: 'primary' | 'secondary';
+	/**
+	 * Whether the action can be performed. False when the link is disabled, the chat is full, or the viewer
+	 * doesn't meet the join rule.
+	 */
+	disabled: boolean;
+	icon: React.ComponentType<SVGIconProps>;
+	label: string;
+	onPress: () => void;
+	side: 'left' | 'right';
+};
+
+export type ChatInvite = {
+	action: ChatInviteAction | undefined;
+	/** The join-confirmation dialog; render it alongside the invite UI (it owns the control the action opens). */
+	joinDialog: React.ReactNode;
+	preview: ChatInvitePreview | undefined;
+	status: ChatInviteStatus;
+};
+
+/**
+ * Fetches a chat invite's join link preview by code and derives its status plus the join/open action.
+ *
+ * @param code the invite code to resolve
+ * @param initialPreview an already-resolved preview (e.g. a DM message embed carries it) to avoid a loading
+ *   flash
+ * @param currentConvoId the convo this invite is viewed within; when the invite links to that same chat, the
+ *   action becomes "Copy link" instead of open/join (you're already here)
+ */
+export function useChatInvite({
 	code,
 	initialPreview,
 	currentConvoId,
-	hasFixedHeight,
-	children,
 }: {
 	code: string;
 	initialPreview?: JoinLinkPreview;
-	/**
-	 * The convo this invite is being viewed within, if any. When the invite links to the same chat, the action
-	 * becomes "Copy link" instead of open/join (you're already here).
-	 */
 	currentConvoId?: string;
-	hasFixedHeight: boolean;
-	children: React.ReactNode;
-}) {
+}): ChatInvite {
 	const { hasSession } = useSession();
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
@@ -83,7 +109,6 @@ export function Root({
 			// You're already in the chat this invite links to - offer to copy the link rather than open/join.
 			action = {
 				label: l`Copy link`,
-				accessibilityHint: l`Tap to copy this invite link`,
 				icon: LinkIcon,
 				side: 'left',
 				color: 'primary',
@@ -96,7 +121,6 @@ export function Root({
 		} else if (convoId) {
 			action = {
 				label: l`Open chat`,
-				accessibilityHint: l`Tap to open this group chat`,
 				icon: ArrowRightIcon,
 				side: 'right',
 				color: 'primary',
@@ -109,7 +133,7 @@ export function Root({
 			let canJoin = true;
 			let icon: React.ComponentType<SVGIconProps> = JoinIcon;
 			let label = preview.requireApproval ? l`Request to join` : l`Join`;
-			let color: ButtonColor = 'primary';
+			let color: 'primary' | 'secondary' = 'primary';
 			if (preview.memberCount >= preview.memberLimit) {
 				canJoin = false;
 				icon = HandIcon;
@@ -129,9 +153,6 @@ export function Root({
 			action = {
 				label,
 				side: 'left',
-				accessibilityHint: preview.requireApproval
-					? l`Tap to request access to join this group chat`
-					: l`Tap to join this group chat immediately`,
 				icon,
 				color,
 				disabled: !canJoin,
@@ -142,10 +163,10 @@ export function Root({
 		}
 	}
 
-	return (
-		<ChatInviteProvider value={{ code, status, preview, action, hasFixedHeight }}>
-			{children}
-			<GroupChatJoinDialog control={joinDialogControl} code={code} />
-		</ChatInviteProvider>
-	);
+	return {
+		action,
+		joinDialog: <GroupChatJoinDialog control={joinDialogControl} code={code} />,
+		preview,
+		status,
+	};
 }

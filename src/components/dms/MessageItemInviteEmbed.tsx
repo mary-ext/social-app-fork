@@ -10,6 +10,7 @@ import { atoms as a, useTheme } from '#/alf';
 import * as ChatInvite from '#/components/dms/ChatInvite';
 
 import { MessageContextProvider } from './MessageContext';
+import * as css from './MessageItemInviteEmbed.css';
 
 const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
@@ -29,6 +30,11 @@ let MessageItemInviteEmbed = ({
 }): React.ReactNode => {
 	const t = useTheme();
 	const convo = useConvoActive();
+	const { status, preview, action, joinDialog } = ChatInvite.useChatInvite({
+		code: embed.joinLinkPreview.code,
+		initialPreview: embed.joinLinkPreview,
+		currentConvoId: convo.convo.view.id,
+	});
 
 	return (
 		<MessageContextProvider>
@@ -64,14 +70,8 @@ let MessageItemInviteEmbed = ({
 								},
 					]}
 				>
-					<ChatInvite.Root
-						code={embed.joinLinkPreview.code}
-						initialPreview={embed.joinLinkPreview}
-						currentConvoId={convo.convo.view.id}
-						hasFixedHeight={false}
-					>
-						<MessageItemInviteEmbedBody />
-					</ChatInvite.Root>
+					<MessageItemInviteEmbedBody status={status} preview={preview} action={action} />
+					{joinDialog}
 				</View>
 			</View>
 		</MessageContextProvider>
@@ -80,21 +80,27 @@ let MessageItemInviteEmbed = ({
 MessageItemInviteEmbed = memo(MessageItemInviteEmbed);
 export { MessageItemInviteEmbed };
 
-function MessageItemInviteEmbedBody() {
-	const { status } = ChatInvite.useChatInvite();
-
+function MessageItemInviteEmbedBody({
+	status,
+	preview,
+	action,
+}: {
+	status: ChatInvite.ChatInviteStatus;
+	preview: ChatInvite.ChatInvitePreview | undefined;
+	action: ChatInvite.ChatInviteAction | undefined;
+}) {
 	if (status === 'loading') {
-		return <ChatInvite.Loading style={a.py_lg} />;
+		return <ChatInvite.Loading className={css.loadingPad} />;
 	}
 
 	if (status !== 'available') {
-		return <ChatInvite.Unavailable style={a.py_sm} />;
+		return <ChatInvite.Unavailable className={css.errorPad} />;
 	}
 
 	return (
 		<>
-			<ChatInvite.Card size="small" />
-			<ChatInvite.JoinButton />
+			<ChatInvite.Card preview={preview} />
+			<ChatInvite.JoinButton action={action} />
 		</>
 	);
 }

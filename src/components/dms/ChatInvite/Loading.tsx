@@ -1,19 +1,20 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import { useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Spinner } from '#/components/Spinner';
 
-import { Loader } from '#/components/Loader';
+import * as css from './Loading.css';
 
 /**
  * Loading state for a chat invite: a centered spinner. The outer container (height, border, etc.) varies per
- * surface, so pass it via `style`.
+ * surface, so pass it via `className`.
  */
-export function Loading({ style }: { style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
+export function Loading({ className }: { className?: string }) {
+	const { t: l } = useLingui();
 
 	return (
-		<View style={[a.align_center, a.justify_center, style]}>
-			<Loader size="md" fill={t.atoms.text.color} />
-		</View>
+		<div className={clsx(css.loading, className)}>
+			<Spinner label={l`Loading`} color="currentColor" size="md" />
+		</div>
 	);
 }

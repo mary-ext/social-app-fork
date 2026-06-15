@@ -123,12 +123,7 @@ function MediaEmbed({
 						}
 						activeClassName={css.activeMargin}
 					>
-						<ChatInviteEmbed
-							code={chatInviteCode}
-							link={embed.view.external}
-							onOpen={rest.onOpen}
-							style={rest.style}
-						/>
+						<ChatInviteEmbed code={chatInviteCode} link={embed.view.external} onOpen={rest.onOpen} />
 					</ContentHider>
 				);
 			}

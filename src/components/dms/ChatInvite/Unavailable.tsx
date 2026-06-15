@@ -1,30 +1,22 @@
-import { type StyleProp, View, type ViewStyle } from 'react-native';
 import { Trans } from '@lingui/react/macro';
-
-import { atoms as a, useTheme } from '#/alf';
+import { clsx } from 'clsx';
 
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
 
-import { useChatInvite } from './Context';
+import * as css from './Unavailable.css';
 
 /**
  * "No longer available" state for a chat invite, shown when the link is disabled, invalid, or otherwise can't
- * be resolved. The outer container (height, border, etc.) varies per surface, so pass it via `style`.
+ * be resolved. The outer container (height, border, etc.) varies per surface, so pass it via `className`.
  */
-export function Unavailable({ style }: { style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
-	const { hasFixedHeight } = useChatInvite();
-
+export function Unavailable({ className }: { className?: string }) {
 	return (
-		<View style={[a.flex_row, a.align_center, a.justify_center, a.gap_xs, style]}>
-			<WarningIcon size="md" fill={t.atoms.text_contrast_medium.color} />
-			<Text
-				style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium]}
-				allowFontScaling={!hasFixedHeight}
-			>
+		<div className={clsx(css.unavailable, className)}>
+			<WarningIcon size="md" fill="currentColor" />
+			<Text size="md" weight="medium" color="textContrastMedium">
 				<Trans>Chat invite link no longer available</Trans>
 			</Text>
-		</View>
+		</div>
 	);
 }

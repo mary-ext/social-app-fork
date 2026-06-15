@@ -1,11 +1,11 @@
-import type { StyleProp, ViewStyle } from 'react-native';
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-
-import { atoms as a } from '#/alf';
+import { clsx } from 'clsx';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
 import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
+
+import * as css from './ChatInviteEmbed.css';
 
 /**
  * Renders a chat invite link found in an `app.bsky.embed.external` embed (e.g. a `bsky.app/chat/<code>` link
@@ -16,34 +16,29 @@ export function ChatInviteEmbed({
 	code,
 	link,
 	onOpen,
-	style,
+	className,
 }: {
 	code: string;
 	link: AppBskyEmbedExternal.ViewExternal;
 	onOpen?: () => void;
-	style?: StyleProp<ViewStyle>;
+	className?: string;
 }) {
-	return (
-		<ChatInvite.Root code={code} hasFixedHeight>
-			<ChatInviteEmbedBody link={link} onOpen={onOpen} style={style} />
-		</ChatInvite.Root>
-	);
-}
-
-function ChatInviteEmbedBody({
-	link,
-	onOpen,
-	style,
-}: {
-	link: AppBskyEmbedExternal.ViewExternal;
-	onOpen?: () => void;
-	style?: StyleProp<ViewStyle>;
-}) {
-	const { status } = ChatInvite.useChatInvite();
+	const { status, preview, action, joinDialog } = ChatInvite.useChatInvite({ code });
 
 	if (status === 'error') {
 		return <ExternalEmbed link={link} onOpen={onOpen} />;
 	}
 
-	return <JoinRequestEmbedBody style={[a.mt_sm, style]} onOpen={onOpen} />;
+	return (
+		<>
+			<JoinRequestEmbedBody
+				status={status}
+				preview={preview}
+				action={action}
+				onOpen={onOpen}
+				className={clsx(css.spacing, className)}
+			/>
+			{joinDialog}
+		</>
+	);
 }

@@ -286,7 +286,7 @@ msgstr ""
 #. placeholder {1}: preview.memberLimit
 #. placeholder {2}: joinLinkPreview.memberLimit
 #. placeholder {2}: preview.memberLimit
-#: src/components/dms/ChatInvite/Card.tsx:57
+#: src/components/dms/ChatInvite/Card.tsx:38
 #: src/components/intents/GroupChatJoinDialog.tsx:291
 msgid "{0}/{1} {2, plural, one {member} other {members}}"
 msgstr "{0}/{1} {2, plural, one {member} other {members}}"
@@ -1624,7 +1624,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:221
+#: src/components/Post/Embed/index.tsx:216
 msgid "Blocked"
 msgstr ""
 
@@ -1761,10 +1761,10 @@ msgstr "by @{0}"
 msgid "By <0>{0}</0>"
 msgstr ""
 
-#. The group chat creator, in the format 'By {displayName}'.
-#: src/components/dms/ChatInvite/Card.tsx:70
-msgid "By <0>{ownerDisplayName}</0>"
-msgstr "By <0>{ownerDisplayName}</0>"
+#. The group chat creator
+#: src/components/dms/ChatInvite/Card.tsx:47
+msgid "by <0>{ownerDisplayName}</0>"
+msgstr "by <0>{ownerDisplayName}</0>"
 
 #: src/screens/Search/components/StarterPackCard.tsx:90
 msgid "By you"
@@ -1865,7 +1865,7 @@ msgstr ""
 msgid "Chat ended"
 msgstr "Chat ended"
 
-#: src/components/dms/ChatInvite/Unavailable.tsx:26
+#: src/components/dms/ChatInvite/Unavailable.tsx:18
 #: src/components/intents/GroupChatJoinDialog.tsx:230
 msgid "Chat invite link no longer available"
 msgstr "Chat invite link no longer available"
@@ -2211,7 +2211,7 @@ msgstr "Conversation left"
 msgid "Conversation not found."
 msgstr "Conversation not found."
 
-#: src/components/dms/ChatInvite/Root.tsx:93
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:118
 #: src/components/dms/MessageContextMenu.tsx:48
 #: src/components/PostControls/DiscoverDebug.tsx:27
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:221
@@ -2239,7 +2239,7 @@ msgstr ""
 msgid "Copy DID"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:85
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:111
 #: src/components/StarterPack/ShareDialog.tsx:81
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Copy link"
@@ -2539,7 +2539,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:214
+#: src/components/Post/Embed/index.tsx:209
 msgid "Deleted"
 msgstr ""
 
@@ -3888,7 +3888,7 @@ msgstr ""
 msgid "Grooming or predatory behavior"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Card.tsx:50
+#: src/components/dms/ChatInvite/Card.tsx:35
 #: src/components/intents/GroupChatJoinDialog.tsx:285
 msgid "Group chat"
 msgstr "Group chat"
@@ -4301,7 +4301,7 @@ msgstr ""
 msgid "Jobs"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:111
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:135
 #: src/components/intents/GroupChatJoinDialog.tsx:255
 msgid "Join"
 msgstr "Join"
@@ -4695,6 +4695,7 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
+#: src/components/dms/ChatInvite/Loading.tsx:17
 #: src/components/web/ProfileHoverCard.tsx:128
 #: src/screens/Moderation/index.tsx:78
 #: src/screens/Moderation/index.tsx:217
@@ -5673,7 +5674,7 @@ msgstr "Only followers can join this group chat."
 msgid "Only followers who I follow"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:121
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:145
 #: src/components/intents/GroupChatJoinDialog.tsx:265
 msgid "Only people the chat owner follows can join"
 msgstr "Only people the chat owner follows can join"
@@ -5693,7 +5694,7 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:98
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:123
 #: src/components/intents/GroupChatJoinDialog.tsx:387
 msgid "Open chat"
 msgstr "Open chat"
@@ -6527,8 +6528,8 @@ msgid "Remove caption file"
 msgstr "Remove caption file"
 
 #: src/screens/Messages/components/MessageInputEmbed.tsx:204
-#: src/screens/Messages/components/MessageInputEmbed.tsx:246
-#: src/screens/Messages/components/MessageInputEmbed.tsx:292
+#: src/screens/Messages/components/MessageInputEmbed.tsx:244
+#: src/screens/Messages/components/MessageInputEmbed.tsx:293
 msgid "Remove embed"
 msgstr ""
 
@@ -6613,11 +6614,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:240
+#: src/components/Post/Embed/index.tsx:235
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:240
+#: src/components/Post/Embed/index.tsx:235
 msgid "Removed by you"
 msgstr ""
 
@@ -6907,12 +6908,12 @@ msgstr "Request ignored."
 msgid "Request limited account visibility"
 msgstr "Request limited account visibility"
 
-#: src/components/dms/ChatInvite/Root.tsx:111
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:135
 #: src/components/intents/GroupChatJoinDialog.tsx:255
 msgid "Request to join"
 msgstr "Request to join"
 
-#: src/components/dms/ChatInvite/Root.tsx:125
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:149
 msgid "Requested"
 msgstr "Requested"
 
@@ -8015,18 +8016,9 @@ msgstr "Tap for details"
 msgid "Tap for more information"
 msgstr ""
 
-#: src/components/dms/ChatInvite/Root.tsx:86
-msgid "Tap to copy this invite link"
-msgstr "Tap to copy this invite link"
-
-#: src/components/dms/ChatInvite/Root.tsx:134
 #: src/components/intents/GroupChatJoinDialog.tsx:399
 msgid "Tap to join this group chat immediately"
 msgstr "Tap to join this group chat immediately"
-
-#: src/components/dms/ChatInvite/Root.tsx:99
-msgid "Tap to open this group chat"
-msgstr "Tap to open this group chat"
 
 #: src/components/dms/ReactionsDialog.tsx:183
 msgid "Tap to remove"
@@ -8037,7 +8029,6 @@ msgstr "Tap to remove"
 msgid "Tap to remove your {0} reaction"
 msgstr "Tap to remove your {0} reaction"
 
-#: src/components/dms/ChatInvite/Root.tsx:133
 #: src/components/intents/GroupChatJoinDialog.tsx:398
 msgid "Tap to request access to join this group chat"
 msgstr "Tap to request access to join this group chat"
@@ -8350,7 +8341,7 @@ msgstr ""
 msgid "This chat has ended"
 msgstr "This chat has ended"
 
-#: src/components/dms/ChatInvite/Root.tsx:116
+#: src/components/dms/ChatInvite/use-chat-invite.tsx:140
 #: src/components/intents/GroupChatJoinDialog.tsx:260
 msgid "This chat is full"
 msgstr "This chat is full"
