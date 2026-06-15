@@ -1,9 +1,9 @@
 import { style } from '@vanilla-extract/css';
 
-import { borderRadius } from '#/styles/tokens.css';
-
+// no rounding here: the outer `VideoEmbed` box owns the border and rounded clip. re-rounding this inner
+// container — which sits 1px inside that border — would leave a stray sliver where the two non-concentric
+// corner curves disagree.
 export const root = style({
-	borderRadius: borderRadius.md,
 	display: 'flex',
 	flex: 1,
 	overflow: 'hidden',

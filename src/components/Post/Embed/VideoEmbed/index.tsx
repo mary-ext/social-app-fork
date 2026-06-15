@@ -68,20 +68,18 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 		}
 	}
 
-	let constrained: number | undefined;
-	if (aspectRatio !== undefined) {
-		const ratio = 1 / 2; // max of 1:2 ratio in feeds
-		constrained = Math.max(aspectRatio, ratio);
-	}
-
-	// computed as a % `paddingTop` driving the bounding-box height (1:1 max).
-	const pad = `${Math.min(1 / (constrained ?? 1), 1) * 100}%`;
+	// the box keeps the video's shape but is never taller than square (1:1) in feeds, so portrait
+	// videos don't dominate.
+	const boxAspectRatio = Math.max(aspectRatio ?? 1, 1);
 
 	const contents = (
 		<div
 			ref={ref}
 			className={styles.contents}
-			style={assignInlineVars({ [styles.thumbVar]: `url(${embed.thumbnail})` })}
+			style={assignInlineVars({
+				[styles.aspectVar]: String(boxAspectRatio),
+				[styles.thumbVar]: `url(${embed.thumbnail})`,
+			})}
 			{...noRowLink}
 		>
 			<ErrorBoundary renderError={renderError} key={key}>
@@ -104,13 +102,7 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 				sendPosition={isGif ? noop : sendPosition}
 				isAnyViewActive={currentActiveView !== null}
 			>
-				<div className={styles.sizer}>
-					<div className={styles.sizerInner} style={assignInlineVars({ [styles.padVar]: pad })}>
-						<div className={styles.abs}>
-							<div className={styles.box}>{contents}</div>
-						</div>
-					</div>
-				</div>
+				<div className={styles.box}>{contents}</div>
 			</ViewportObserver>
 		</div>
 	);

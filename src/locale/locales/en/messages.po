@@ -1280,7 +1280,7 @@ msgstr ""
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:204
+#: src/components/Post/Embed/VideoEmbed/index.tsx:196
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
@@ -3052,7 +3052,7 @@ msgstr ""
 msgid "Expand or collapse the full post you are replying to"
 msgstr ""
 
-#: src/components/ClampedPostText.tsx:36
+#: src/components/ClampedPostText.tsx:35
 msgid "Expand post text"
 msgstr ""
 
@@ -8578,7 +8578,7 @@ msgstr ""
 msgid "This user isn't following anyone."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:202
+#: src/components/Post/Embed/VideoEmbed/index.tsx:194
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 
@@ -9113,7 +9113,7 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:199
+#: src/components/Post/Embed/VideoEmbed/index.tsx:191
 msgid "Video not found."
 msgstr ""
 
