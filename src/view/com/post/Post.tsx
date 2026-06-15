@@ -138,6 +138,7 @@ function PostInner({
 								profile={post.author}
 								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
+								tabIndex={-1}
 							/>
 						</PostRow.AvatarColumn>
 						<PostRow.Content
