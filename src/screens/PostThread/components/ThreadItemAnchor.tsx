@@ -264,6 +264,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}
 								live={live}
 								onBeforePress={onOpenAuthor}
+								tabIndex={-1}
 							/>
 						</div>
 						<div className={css.header}>
