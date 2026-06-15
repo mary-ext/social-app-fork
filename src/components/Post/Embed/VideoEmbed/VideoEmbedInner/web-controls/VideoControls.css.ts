@@ -26,6 +26,9 @@ export const emptySpace = style({
 
 export const gradientBar = style({
 	background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
+	// RN Views are border-box; a content-box width:100% + padding overflows right and the controls'
+	// overflow:hidden clips the right inset away (the missing right margin).
+	boxSizing: 'border-box',
 	flexShrink: 0,
 	opacity: 0,
 	paddingInline: space.xs,
@@ -38,6 +41,7 @@ export const gradientBar = style({
 
 export const controlsRow = style({
 	alignItems: 'center',
+	boxSizing: 'border-box',
 	display: 'flex',
 	flex: 1,
 	flexDirection: 'row',

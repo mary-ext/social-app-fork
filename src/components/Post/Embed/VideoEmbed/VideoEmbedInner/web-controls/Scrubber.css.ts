@@ -8,6 +8,8 @@ export const progressVar = createVar();
 export const scaleVar = createVar();
 
 export const scrubber = style({
+	// border-box so the width:100% + padding doesn't overflow (RN Views default to border-box).
+	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 0,
