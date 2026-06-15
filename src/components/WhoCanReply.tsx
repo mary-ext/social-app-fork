@@ -1,19 +1,13 @@
 import { Fragment, useMemo, useRef } from 'react';
-import { Platform, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { AppBskyFeedDefs, AppBskyFeedPost, AppBskyGraphDefs } from '@atcute/bluesky';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { Trans, useLingui } from '@lingui/react/macro';
+import { clsx } from 'clsx';
 
-import { HITSLOP_10 } from '#/lib/constants';
 import { makeListLink, makeProfileLink } from '#/lib/routes/links';
 
 import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting } from '#/state/queries/threadgate';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
-import * as Dialog from '#/components/Dialog';
-import { useDialogControl } from '#/components/Dialog';
 import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
@@ -22,21 +16,21 @@ import { TinyChevronBottom_Stroke2_Corner0_Rounded as TinyChevronDownIcon } from
 import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSignIcon } from '#/components/icons/CircleBanSign';
 import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe';
 import { Group3_Stroke2_Corner0_Rounded as GroupIcon } from '#/components/icons/Group';
-import { InlineLinkText } from '#/components/Link';
-import { Text } from '#/components/Typography';
-import { useDialogHandle } from '#/components/web/Dialog';
+import { Text } from '#/components/Text';
+import * as Dialog from '#/components/web/Dialog';
+import { InlineLinkText } from '#/components/web/Link';
+
+import * as css from './WhoCanReply.css';
 
 interface WhoCanReplyProps {
 	post: AppBskyFeedDefs.PostView;
 	isThreadAuthor: boolean;
-	style?: StyleProp<ViewStyle>;
 }
 
-export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
-	const t = useTheme();
+export function WhoCanReply({ post, isThreadAuthor }: WhoCanReplyProps) {
 	const { t: l } = useLingui();
-	const infoDialogControl = useDialogControl();
-	const editDialogHandle = useDialogHandle();
+	const infoDialogHandle = Dialog.useDialogHandle();
+	const editDialogHandle = Dialog.useDialogHandle();
 
 	/*
 	 * `WhoCanReply` is only used for root posts atm, in case this changes
@@ -73,57 +67,30 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 				editDialogHandle.open(null);
 			});
 		} else {
-			infoDialogControl.open();
+			infoDialogHandle.open(null);
 		}
 	};
 
 	return (
 		<>
-			<Button
-				label={isThreadAuthor ? l`Edit who can reply` : l`Who can reply`}
-				onPress={onPressOpen}
-				{...(isThreadAuthor
-					? Platform.select({
-							web: {
-								onHoverIn: prefetch,
-							},
-							native: {
-								onPressIn: prefetch,
-							},
-						})
-					: {})}
-				hitSlop={HITSLOP_10}
+			<button
+				type="button"
+				aria-label={isThreadAuthor ? l`Edit who can reply` : l`Who can reply`}
+				className={clsx(css.trigger, isThreadAuthor && css.triggerAuthor)}
+				onClick={onPressOpen}
+				// prefetch the interaction settings so the edit dialog opens without a spinner
+				onMouseEnter={isThreadAuthor ? prefetch : undefined}
 			>
-				{({ hovered, focused, pressed }) => (
-					<View
-						style={[
-							a.flex_row,
-							a.align_center,
-							a.gap_xs,
-							(hovered || focused || pressed) && undefined,
-							style,
-						]}
-					>
-						<Icon
-							color={isThreadAuthor ? t.palette.primary_500 : t.palette.contrast_400}
-							width={16}
-							settings={settings}
-						/>
-						<Text
-							style={[
-								a.text_sm,
-								a.leading_tight,
-								isThreadAuthor ? { color: t.palette.primary_500 } : t.atoms.text_contrast_medium,
-								(hovered || focused || pressed) && a.underline,
-							]}
-						>
-							{description}
-						</Text>
-
-						{isThreadAuthor && <TinyChevronDownIcon width={8} fill={t.palette.primary_500} />}
-					</View>
-				)}
-			</Button>
+				<Icon width={16} settings={settings} />
+				<Text
+					className={css.label}
+					size="md_sub"
+					color={isThreadAuthor ? 'primary_500' : 'textContrastMedium'}
+				>
+					{description}
+				</Text>
+				{isThreadAuthor && <TinyChevronDownIcon width={8} fill="currentColor" />}
+			</button>
 			{isThreadAuthor ? (
 				<PostInteractionSettingsDialog
 					postUri={post.uri}
@@ -133,7 +100,7 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 				/>
 			) : (
 				<WhoCanReplyDialog
-					control={infoDialogControl}
+					handle={infoDialogHandle}
 					post={post}
 					settings={settings}
 					embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
@@ -143,28 +110,20 @@ export function WhoCanReply({ post, isThreadAuthor, style }: WhoCanReplyProps) {
 	);
 }
 
-function Icon({
-	color,
-	width,
-	settings,
-}: {
-	color: string;
-	width?: number;
-	settings: ThreadgateAllowUISetting[];
-}) {
+function Icon({ width, settings }: { width?: number; settings: ThreadgateAllowUISetting[] }) {
 	const isEverybody = settings.length === 0 || settings.every((setting) => setting.type === 'everybody');
 	const isNobody = !!settings.find((gate) => gate.type === 'nobody');
 	const IconComponent = isEverybody ? EarthIcon : isNobody ? CircleBanSignIcon : GroupIcon;
-	return <IconComponent fill={color} width={width} />;
+	return <IconComponent fill="currentColor" width={width} />;
 }
 
 function WhoCanReplyDialog({
-	control,
+	handle,
 	post,
 	settings,
 	embeddingDisabled,
 }: {
-	control: Dialog.DialogControlProps;
+	handle: Dialog.DialogHandle;
 	post: AppBskyFeedDefs.PostView;
 	settings: ThreadgateAllowUISetting[];
 	embeddingDisabled: boolean;
@@ -172,22 +131,17 @@ function WhoCanReplyDialog({
 	const { t: l } = useLingui();
 
 	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle />
-			<Dialog.ScrollableInner
-				label={l`Dialog: adjust who can interact with this post`}
-				style={{ maxWidth: 400 }}
-			>
-				<View style={[a.gap_sm]}>
-					<Text style={[a.font_semi_bold, a.text_xl, a.pb_sm]}>
+		<Dialog.Root handle={handle}>
+			<Dialog.Popup size="narrow" label={l`Dialog: adjust who can interact with this post`}>
+				<div className={css.dialogContent}>
+					<Text size="xl" weight="semiBold">
 						<Trans>Who can interact with this post?</Trans>
 					</Text>
 					<Rules post={post} settings={settings} embeddingDisabled={embeddingDisabled} />
-				</View>
-
+				</div>
 				<Dialog.Close />
-			</Dialog.ScrollableInner>
-		</Dialog.Outer>
+			</Dialog.Popup>
+		</Dialog.Root>
 	);
 }
 
@@ -200,11 +154,9 @@ function Rules({
 	settings: ThreadgateAllowUISetting[];
 	embeddingDisabled: boolean;
 }) {
-	const t = useTheme();
-
 	return (
 		<>
-			<Text style={[a.text_sm, a.leading_snug, a.flex_wrap, t.atoms.text_contrast_medium]}>
+			<Text size="md" color="textContrastMedium">
 				{settings.length === 0 ? (
 					<Trans>This post has an unknown type of threadgate on it. Your app may be out of date.</Trans>
 				) : settings[0]!.type === 'everybody' ? (
@@ -225,7 +177,7 @@ function Rules({
 				)}{' '}
 			</Text>
 			{embeddingDisabled && (
-				<Text style={[a.text_sm, a.leading_snug, a.flex_wrap, t.atoms.text_contrast_medium]}>
+				<Text size="md" color="textContrastMedium">
 					<Trans>No one but the author can quote this post.</Trans>
 				</Text>
 			)}
@@ -249,11 +201,7 @@ function Rule({
 		return (
 			<Trans>
 				users following{' '}
-				<InlineLinkText
-					label={`@${post.author.handle}`}
-					to={makeProfileLink(post.author)}
-					style={[a.text_sm, a.leading_snug]}
-				>
+				<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
 					@{post.author.handle}
 				</InlineLinkText>
 			</Trans>
@@ -263,11 +211,7 @@ function Rule({
 		return (
 			<Trans>
 				users followed by{' '}
-				<InlineLinkText
-					label={`@${post.author.handle}`}
-					to={makeProfileLink(post.author)}
-					style={[a.text_sm, a.leading_snug]}
-				>
+				<InlineLinkText label={`@${post.author.handle}`} size="md_sub" to={makeProfileLink(post.author)}>
 					@{post.author.handle}
 				</InlineLinkText>
 			</Trans>
@@ -279,11 +223,7 @@ function Rule({
 			const listUrip = parseCanonicalResourceUri(list.uri);
 			return (
 				<Trans>
-					<InlineLinkText
-						label={list.name}
-						to={makeListLink(listUrip.repo, listUrip.rkey)}
-						style={[a.text_sm, a.leading_snug]}
-					>
+					<InlineLinkText label={list.name} size="md_sub" to={makeListLink(listUrip.repo, listUrip.rkey)}>
 						{list.name}
 					</InlineLinkText>{' '}
 					members

@@ -9,12 +9,12 @@ import { useRequireAuth } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { atoms as a, useBreakpoints } from '#/alf';
+import { useBreakpoints } from '#/alf';
 
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check';
 import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus';
 import * as Toast from '#/components/Toast';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 
 export function ThreadItemAnchorFollowButton({ did, enabled = true }: { did: string; enabled?: boolean }) {
 	return <ThreadItemAnchorFollowButtonInner did={did} enabled={enabled} />;
@@ -115,15 +115,14 @@ function PostThreadFollowBtnLoaded({
 
 	return (
 		<Button
-			testID="followBtn"
+			data-testid="followBtn"
 			label={l`Follow ${profile.handle}`}
-			onPress={onPress}
+			onClick={onPress}
 			size="small"
 			color={isFollowing ? 'secondary' : 'secondary_inverted'}
-			style={[a.rounded_full]}
 		>
 			{gtMobile && <ButtonIcon icon={isFollowing ? CheckIcon : PlusIcon} size="sm" />}
-			<ButtonText maxFontSizeMultiplier={2}>
+			<ButtonText>
 				{!isFollowing ? (
 					isFollowedBy ? (
 						<Trans>Follow back</Trans>

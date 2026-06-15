@@ -730,7 +730,7 @@ msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
 #. placeholder {0}: list.name
-#: src/components/WhoCanReply.tsx:281
+#: src/components/WhoCanReply.tsx:225
 msgid "<0>{0}</0> members"
 msgstr ""
 
@@ -1340,7 +1340,7 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:303
+#: src/components/WhoCanReply.tsx:243
 msgid "and"
 msgstr ""
 
@@ -2608,7 +2608,7 @@ msgstr ""
 msgid "Developer options"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:178
+#: src/components/WhoCanReply.tsx:135
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
@@ -2912,7 +2912,7 @@ msgstr "Edit this group chat’s name"
 msgid "Edit user list"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:83
+#: src/components/WhoCanReply.tsx:78
 msgid "Edit who can reply"
 msgstr ""
 
@@ -3022,11 +3022,11 @@ msgstr ""
 msgid "Error: {error}"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:63
+#: src/components/WhoCanReply.tsx:57
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:211
+#: src/components/WhoCanReply.tsx:163
 msgid "Everybody can reply to this post."
 msgstr ""
 
@@ -3534,7 +3534,7 @@ msgstr "Focus the search field"
 #: src/components/web/ProfileHoverCard.tsx:187
 #: src/components/web/ProfileHoverCard.tsx:193
 #: src/screens/Messages/ConversationSettings/Member.tsx:135
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:131
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:130
 #: src/screens/Profile/Header/Actions.tsx:39
 #: src/view/com/notifications/NotificationFeedItem.tsx:757
 #: src/view/com/notifications/NotificationFeedItem.tsx:764
@@ -3563,7 +3563,7 @@ msgstr ""
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:495
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:129
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:128
 #: src/screens/Profile/Header/Actions.tsx:37
 #: src/view/com/notifications/NotificationFeedItem.tsx:757
 #: src/view/com/notifications/NotificationFeedItem.tsx:764
@@ -3625,7 +3625,7 @@ msgstr ""
 #: src/components/web/ProfileHoverCard.tsx:187
 #: src/components/web/ProfileHoverCard.tsx:193
 #: src/Navigation.tsx:540
-#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:134
+#: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:133
 #: src/screens/Profile/Header/Actions.tsx:35
 #: src/view/com/notifications/NotificationFeedItem.tsx:735
 #: src/view/com/notifications/NotificationFeedItem.tsx:752
@@ -4878,7 +4878,7 @@ msgstr "Members"
 msgid "Members can still read chat history but can’t send new messages."
 msgstr "Members can still read chat history but can’t send new messages."
 
-#: src/components/WhoCanReply.tsx:246
+#: src/components/WhoCanReply.tsx:198
 msgid "mentioned users"
 msgstr ""
 
@@ -5430,7 +5430,7 @@ msgctxt "enable for"
 msgid "No one"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:229
+#: src/components/WhoCanReply.tsx:181
 msgid "No one but the author can quote this post."
 msgstr ""
 
@@ -5654,7 +5654,7 @@ msgid "One or more videos is missing alt text."
 msgstr ""
 
 #. placeholder {0}: settings.map((rule, i) => ( <Fragment key={`rule-${i}`}> <Rule rule={rule} post={post} lists={post.threadgate!.lists} /> <Separator i={i} length={settings.length} /> </Fragment> ))
-#: src/components/WhoCanReply.tsx:215
+#: src/components/WhoCanReply.tsx:167
 msgid "Only {0} can reply."
 msgstr ""
 
@@ -6724,11 +6724,11 @@ msgstr ""
 msgid "Replies"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:65
+#: src/components/WhoCanReply.tsx:59
 msgid "Replies disabled"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:213
+#: src/components/WhoCanReply.tsx:165
 msgid "Replies to this post are disabled."
 msgstr ""
 
@@ -7723,7 +7723,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:66
+#: src/components/WhoCanReply.tsx:60
 msgid "Some people can reply"
 msgstr ""
 
@@ -8529,7 +8529,7 @@ msgstr "This person is blocking you"
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:209
+#: src/components/WhoCanReply.tsx:161
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
@@ -9093,12 +9093,12 @@ msgid "User lists"
 msgstr "User lists"
 
 #. placeholder {0}: post.author.handle
-#: src/components/WhoCanReply.tsx:264
+#: src/components/WhoCanReply.tsx:212
 msgid "users followed by <0>@{0}</0>"
 msgstr ""
 
 #. placeholder {0}: post.author.handle
-#: src/components/WhoCanReply.tsx:250
+#: src/components/WhoCanReply.tsx:202
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
@@ -9456,7 +9456,7 @@ msgstr ""
 msgid "What's up?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:183
+#: src/components/WhoCanReply.tsx:138
 msgid "Who can interact with this post?"
 msgstr ""
 
@@ -9465,7 +9465,7 @@ msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:342
-#: src/components/WhoCanReply.tsx:83
+#: src/components/WhoCanReply.tsx:78
 msgid "Who can reply"
 msgstr ""
 
