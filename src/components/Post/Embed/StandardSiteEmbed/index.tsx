@@ -76,12 +76,12 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 
 				<div className={clsx(styles.body, view.thumb && styles.bodyMedia)}>
 					<div className={styles.textBlock}>
-						<Text numberOfLines={3} size="lg" weight="bold">
+						<Text numberOfLines={3} size="md" weight="bold">
 							{view.title}
 						</Text>
 
 						{view.description ? (
-							<Text numberOfLines={view.thumb ? 2 : 4} size="sm">
+							<Text numberOfLines={view.thumb ? 2 : 4} size="md_sub">
 								{view.description}
 							</Text>
 						) : null}

@@ -64,7 +64,7 @@ export const bodyWithMedia = style({
 export const titleBlock = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 3,
+	gap: 4,
 	paddingBottom: space.xs,
 	paddingLeft: space.md,
 	paddingRight: space.md,

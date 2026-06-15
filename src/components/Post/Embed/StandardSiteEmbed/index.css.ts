@@ -77,7 +77,7 @@ export const bodyMedia = style({
 export const textBlock = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 5,
+	gap: 4,
 	paddingBottom: space.sm,
 	paddingLeft: space.md,
 	paddingRight: space.md,
@@ -138,7 +138,6 @@ export const identityText = style({
 	display: 'flex',
 	flexDirection: 'column',
 	flex: 1,
-	gap: space._2xs,
 	minWidth: 0,
 });
 
