@@ -4,7 +4,7 @@ import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { atoms as a } from '#/alf';
 
 import * as ChatInvite from '#/components/dms/ChatInvite';
-import { ExternalEmbed } from '#/components/Post/Embed/ExternalEmbed';
+import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { JoinRequestEmbedBody } from '#/components/Post/Embed/JoinRequestEmbed';
 
 /**
@@ -42,7 +42,7 @@ function ChatInviteEmbedBody({
 	const { status } = ChatInvite.useChatInvite();
 
 	if (status === 'error') {
-		return <ExternalEmbed link={link} onOpen={onOpen} style={style} />;
+		return <ExternalEmbed link={link} onOpen={onOpen} />;
 	}
 
 	return <JoinRequestEmbedBody style={[a.mt_sm, style]} onOpen={onOpen} />;

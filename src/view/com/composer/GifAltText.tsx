@@ -15,11 +15,11 @@ import { atoms as a, useTheme } from '#/alf';
 
 import { Admonition } from '#/components/Admonition';
 import { Button, ButtonText } from '#/components/Button';
+import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
 import * as TextField from '#/components/forms/TextField';
 import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo';
 import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus';
-import { GifEmbed } from '#/components/Post/Embed/ExternalEmbed/Gif';
 import { Text } from '#/components/Typography';
 import * as Dialog from '#/components/web/Dialog';
 

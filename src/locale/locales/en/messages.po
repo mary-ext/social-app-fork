@@ -105,7 +105,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:100
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:99
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -116,7 +116,7 @@ msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr ""
 
 #. placeholder {0}: draft.meta.replyCount
-#: src/view/com/composer/drafts/DraftItem.tsx:93
+#: src/view/com/composer/drafts/DraftItem.tsx:92
 msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
@@ -591,8 +591,8 @@ msgstr "{name} reacted {0} to {target}"
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
-#: src/components/UserAvatar.tsx:251
-#: src/components/UserAvatar.tsx:262
+#: src/components/UserAvatar.tsx:250
+#: src/components/UserAvatar.tsx:261
 msgid "{name}'s avatar"
 msgstr "{name}'s avatar"
 
@@ -1230,7 +1230,7 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:135
+#: src/components/ExternalEmbed/GifEmbed.tsx:133
 #: src/components/ImageEmbed/MediaBadges.tsx:71
 #: src/components/images/AutoSizedImage.tsx:174
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
@@ -1248,7 +1248,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:140
+#: src/components/ExternalEmbed/GifEmbed.tsx:138
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
 msgid "Alt Text"
 msgstr ""
@@ -1354,10 +1354,6 @@ msgstr ""
 
 #: src/lib/interests.ts:51
 msgid "Animals"
-msgstr ""
-
-#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:94
-msgid "Animated GIF"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:365
@@ -1821,7 +1817,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/ImageEmbed/Gallery.tsx:148
+#: src/components/ImageEmbed/Gallery.tsx:147
 msgid "carousel"
 msgstr "carousel"
 
@@ -2025,7 +2021,7 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:200
 #: src/components/dms/AfterReportDialog.tsx:202
 #: src/components/dms/InitiateChatFlow.tsx:493
-#: src/components/ExternalEmbed/GifEmbed.tsx:144
+#: src/components/ExternalEmbed/GifEmbed.tsx:142
 #: src/components/intents/GroupChatJoinDialog.tsx:214
 #: src/components/intents/GroupChatJoinDialog.tsx:243
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
@@ -2651,7 +2647,7 @@ msgstr "Disable this invite link?"
 #: src/view/com/composer/Composer.tsx:1106
 #: src/view/com/composer/Composer.tsx:1144
 #: src/view/com/composer/Composer.tsx:1344
-#: src/view/com/composer/drafts/DraftItem.tsx:133
+#: src/view/com/composer/drafts/DraftItem.tsx:132
 #: src/view/com/composer/drafts/DraftsButton.tsx:113
 msgid "Discard"
 msgstr ""
@@ -2662,7 +2658,7 @@ msgid "Discard changes?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1105
-#: src/view/com/composer/drafts/DraftItem.tsx:130
+#: src/view/com/composer/drafts/DraftItem.tsx:129
 #: src/view/com/composer/drafts/DraftsButton.tsx:85
 msgid "Discard draft?"
 msgstr ""
@@ -3794,10 +3790,10 @@ msgstr ""
 msgid "Get started"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:88
+#: src/components/ExternalEmbed/GifEmbed.tsx:86
 #: src/components/MediaPreview.tsx:130
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:59
-#: src/view/com/composer/drafts/DraftItem.tsx:222
+#: src/view/com/composer/drafts/DraftItem.tsx:221
 msgid "GIF"
 msgstr ""
 
@@ -4168,12 +4164,12 @@ msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/ImageEmbed/Gallery.tsx:223
+#: src/components/ImageEmbed/Gallery.tsx:221
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
 #. placeholder {0}: images.length
-#: src/components/ImageEmbed/Gallery.tsx:149
+#: src/components/ImageEmbed/Gallery.tsx:148
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -4744,7 +4740,7 @@ msgid "Loading drafts"
 msgstr "Loading drafts"
 
 #: src/components/ExternalEmbed/ExternalGif.tsx:67
-#: src/components/ExternalEmbed/GifEmbed.tsx:84
+#: src/components/ExternalEmbed/GifEmbed.tsx:82
 msgid "Loading GIF"
 msgstr "Loading GIF"
 
@@ -4862,11 +4858,11 @@ msgstr ""
 
 #. Example: "Media stored on John's iPhone"
 #. placeholder {0}: draft.draft.deviceName
-#: src/view/com/composer/drafts/DraftItem.tsx:79
+#: src/view/com/composer/drafts/DraftItem.tsx:78
 msgid "Media stored on {0}"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:78
+#: src/view/com/composer/drafts/DraftItem.tsx:77
 msgid "Media stored on another device"
 msgstr ""
 
@@ -4968,7 +4964,7 @@ msgstr ""
 msgid "Misleading"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:87
+#: src/view/com/composer/drafts/DraftItem.tsx:86
 msgid "Missing media"
 msgstr ""
 
@@ -5061,7 +5057,7 @@ msgid "More languages..."
 msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:126
-#: src/view/com/composer/drafts/DraftItem.tsx:120
+#: src/view/com/composer/drafts/DraftItem.tsx:119
 #: src/view/com/profile/ProfileMenu.tsx:232
 #: src/view/com/profile/ProfileMenu.tsx:238
 msgid "More options"
@@ -5722,7 +5718,7 @@ msgstr "Open chat"
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
-#: src/view/com/composer/drafts/DraftItem.tsx:63
+#: src/view/com/composer/drafts/DraftItem.tsx:62
 msgid "Open draft"
 msgstr ""
 
@@ -5758,8 +5754,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/ExternalEmbed/index.tsx:50
-#: src/components/Post/Embed/ExternalEmbed/index.tsx:76
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:71
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:70
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -5855,7 +5850,7 @@ msgstr "Opens the GIF picker dialog"
 msgid "Opens the post composer"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:64
+#: src/view/com/composer/drafts/DraftItem.tsx:63
 msgid "Opens this draft in the composer"
 msgstr ""
 
@@ -5940,7 +5935,7 @@ msgstr "Party GIFs"
 msgid "Pause"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:81
+#: src/components/ExternalEmbed/GifEmbed.tsx:79
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Pause GIF"
 msgstr ""
@@ -6065,11 +6060,10 @@ msgstr ""
 
 #. placeholder {0}: link.title
 #: src/components/ExternalEmbed/ExternalGif.tsx:60
-#: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:92
 msgid "Play {0}"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:81
+#: src/components/ExternalEmbed/GifEmbed.tsx:79
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Play GIF"
 msgstr ""
@@ -6079,20 +6073,11 @@ msgid "Play video"
 msgstr ""
 
 #: src/components/ExternalEmbed/ExternalPlayer.tsx:85
-#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:56
 msgid "Play Video"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
 msgid "Plays or pauses the GIF"
-msgstr ""
-
-#: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:91
-msgid "Plays the GIF"
-msgstr ""
-
-#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:57
-msgid "Plays the video"
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:88
@@ -6403,7 +6388,7 @@ msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:70
 #: src/components/PostControls/RepostButton.tsx:73
-#: src/view/com/composer/drafts/DraftItem.tsx:89
+#: src/view/com/composer/drafts/DraftItem.tsx:88
 msgid "Quote post"
 msgstr ""
 
@@ -7548,7 +7533,7 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: src/components/ExternalEmbed/GifEmbed.tsx:131
+#: src/components/ExternalEmbed/GifEmbed.tsx:129
 #: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:76
 msgid "Show alt text"
 msgstr ""
@@ -7718,7 +7703,7 @@ msgstr ""
 msgid "Skip empty posts?"
 msgstr "Skip empty posts?"
 
-#: src/components/ImageEmbed/Gallery.tsx:222
+#: src/components/ImageEmbed/Gallery.tsx:220
 msgid "slide"
 msgstr "slide"
 
@@ -7942,13 +7927,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:283
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:287
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:281
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:285
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:282
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:280
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -8434,7 +8419,7 @@ msgstr "This conversation is locked."
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
 msgstr ""
 
-#: src/view/com/composer/drafts/DraftItem.tsx:131
+#: src/view/com/composer/drafts/DraftItem.tsx:130
 msgid "This draft will be permanently deleted."
 msgstr ""
 
@@ -9194,8 +9179,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:142
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:196
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:195
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9224,7 +9209,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:285
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:283
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -9284,10 +9269,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:142
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:196
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:286
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:287
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:195
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:284
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:285
 msgid "View publication"
 msgstr "View publication"
 

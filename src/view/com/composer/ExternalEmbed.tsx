@@ -11,8 +11,8 @@ import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveB
 
 import { atoms as a, useTheme } from '#/alf';
 
+import { ExternalEmbed } from '#/components/ExternalEmbed';
 import { Loader } from '#/components/Loader';
-import { ExternalEmbed } from '#/components/Post/Embed/ExternalEmbed';
 import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed';
 import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed';
 import { StandardSiteEmbed } from '#/components/Post/Embed/StandardSiteEmbed';
