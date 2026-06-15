@@ -270,6 +270,7 @@ function BaseChatItem({
 
 	const queryClient = useQueryClient();
 	const hasUnread =
+		!selected &&
 		!isDeletedAccount &&
 		(convo.view.unreadCount > 0 ||
 			(convo.kind === 'group' && (convo.details.unreadJoinRequestCount ?? 0) > 0)) &&
