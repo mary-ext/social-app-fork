@@ -30,6 +30,7 @@ const pillBase = style({
 	minWidth: 0,
 	selectors: {
 		'&:active': { backgroundColor: vars.palette.contrast_50 },
+		'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: 2 },
 		'&:hover': { backgroundColor: vars.palette.contrast_50 },
 	},
 });
