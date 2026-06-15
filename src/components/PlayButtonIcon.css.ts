@@ -30,6 +30,10 @@ export const circle = style({
 export const icon = style({
 	display: 'inline-flex',
 	gridArea: '1 / 1',
+	// the circle's `opacity: 0.7` makes it a stacking context that would otherwise paint over this in-flow
+	// glyph and grey it out; a positive z-index keeps the glyph on top.
+	position: 'relative',
+	zIndex: 1,
 	selectors: {
 		'.theme--light &': { color: vars.palette.contrast_975 },
 		'.theme--dark &, .theme--dim &': { color: vars.palette.contrast_25 },
