@@ -12,7 +12,6 @@ import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import { useGalleryBleed } from '#/components/images/Gallery';
 import { PostEmbedViewContext } from '#/components/Post/Embed/types';
 import * as Dialog from '#/components/web/Dialog';
-import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
@@ -202,7 +201,6 @@ function GalleryImage({
 	onPressIn?: () => void;
 }) {
 	const { t: l } = useLingui();
-	const [focused, setFocused] = useState(false);
 	const [aspectRatio, setAspectRatio] = useState(() => getAspectRatio(image.aspectRatio));
 	const { isCropped, ...dims } = computeDims({ height: contentHeight, aspectRatio });
 	const hasAlt = !!image.alt;
@@ -222,8 +220,6 @@ function GalleryImage({
 			aria-roledescription={l`slide`}
 			aria-label={image.alt || l`Image ${index + 1} of ${imageCount}`}
 			onPointerDown={onPressIn}
-			onFocus={() => setFocused(true)}
-			onBlur={() => setFocused(false)}
 		>
 			<img
 				className={styles.image}
@@ -252,7 +248,6 @@ function GalleryImage({
 					index={index}
 				/>
 			)}
-			<MediaInsetBorder focused={focused} />
 		</Dialog.Trigger>
 	);
 }

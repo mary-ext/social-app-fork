@@ -2,6 +2,7 @@ import { createVar, style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
 import { components, layered } from '#/styles/layers.css';
+import { mediaBorder, mediaOverlay } from '#/styles/media-border.css';
 
 export const sizeVar = createVar();
 export const radiusVar = createVar();
@@ -63,8 +64,11 @@ export const fallback = style({
 	width: '100%',
 });
 
-/** Overrides the web `MediaInsetBorder`'s fixed `md` radius so the hairline tracks the avatar's shape. */
-export const border = style({ borderRadius: 'inherit' });
+/**
+ * Themed hairline tracking the avatar's shape. An overlay rather than a border on the image itself: the
+ * `filter: blur()` paints after the image's own corner clip, so a self-border would smear into the corners.
+ */
+export const border = style([mediaOverlay, mediaBorder, { borderRadius: 'inherit' }]);
 
 /** Red inset border shown for live avatars, replacing the hairline. */
 export const liveBorder = style({

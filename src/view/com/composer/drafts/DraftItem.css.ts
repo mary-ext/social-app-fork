@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css';
 
 import { vars } from '#/styles/contract.css';
+import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
 export const wrapper = style({
@@ -153,13 +154,16 @@ export const mediaTile = style({
 	padding: space._2xs,
 });
 
-export const square = style({
-	aspectRatio: '1',
-	backgroundColor: vars.palette.contrast_25,
-	borderRadius: borderRadius.xs,
-	overflow: 'hidden',
-	position: 'relative',
-});
+export const square = style([
+	mediaBorder,
+	{
+		aspectRatio: '1',
+		backgroundColor: vars.palette.contrast_25,
+		borderRadius: borderRadius.xs,
+		overflow: 'hidden',
+		position: 'relative',
+	},
+]);
 
 export const squareEmpty = style({
 	backgroundColor: 'black',
@@ -171,9 +175,6 @@ export const image = style({
 	objectFit: 'cover',
 	width: '100%',
 });
-
-// the shared inset border defaults to the 12px media radius; these small tiles round at 4px.
-export const insetRadius = style({ borderRadius: borderRadius.xs });
 
 export const overlay = style({
 	alignItems: 'center',

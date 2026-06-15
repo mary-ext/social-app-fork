@@ -3,7 +3,20 @@ import { createVar, style } from '@vanilla-extract/css';
 import { CARD_ASPECT_RATIO } from '#/lib/constants';
 
 import { colors } from '#/styles/colors';
+import { vars } from '#/styles/contract.css';
+import { mediaBorder, mediaBorderOpaque, mediaOverlay } from '#/styles/media-border.css';
 import { borderRadius, space } from '#/styles/tokens.css';
+
+// inset focus ring for the card's nested link regions: an outset ring would be clipped by the card's
+// `overflow: hidden`, while this rides inside the clip — which also rounds its corners to match the card.
+const insetFocusRing = style({
+	selectors: {
+		'&:focus-visible': {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: -2,
+		},
+	},
+});
 
 const gtPhone = 'screen and (min-width: 500px)';
 
@@ -25,6 +38,9 @@ export const bodyLink = style({
 	width: '100%',
 	selectors: {
 		'&:hover': { backgroundColor: colors.contrast_25 },
+		// the card paints the focus ring (via `:has`), boxing the whole card rather than just this top region;
+		// suppress this link's own default outline to avoid a doubled ring.
+		'&:focus-visible': { outline: 'none' },
 	},
 });
 
@@ -43,6 +59,15 @@ export const card = style({
 	width: '100%',
 	selectors: {
 		[`&:has(${bodyLink}:hover)`]: { borderColor: colors.borderContrastHigh },
+		// ring the whole card when the article link is focused. an *outset* outline: it sits outside the border
+		// (so the positioned body/footer can't paint over it), the card's own `overflow` can't clip it, and a
+		// positive offset rounds its corners cleanly — unlike an inset ring, which the rounded clip cuts at the
+		// corners. the post body leaves ~16px around the card, so the ancestor `GalleryBleed` clip never reaches
+		// it.
+		[`&:has(${bodyLink}:focus-visible)`]: {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: 2,
+		},
 	},
 });
 
@@ -148,41 +173,46 @@ export const accentForegroundVar = createVar();
 export const iconRoot = style({ position: 'relative' });
 
 /** Tiny standard-site badge that overlaps the publication icon's top-left corner. */
-export const standardBadge = style({
-	alignItems: 'center',
-	backgroundColor: colors.bg,
-	borderRadius: 999,
-	color: colors.textContrastMedium,
-	display: 'flex',
-	height: 16,
-	justifyContent: 'center',
-	left: -6,
-	position: 'absolute',
-	top: -6,
-	width: 16,
-	zIndex: 1,
-});
+export const standardBadge = style([
+	mediaBorder,
+	{
+		alignItems: 'center',
+		backgroundColor: colors.bg,
+		borderRadius: 999,
+		color: colors.textContrastMedium,
+		display: 'flex',
+		height: 16,
+		justifyContent: 'center',
+		left: -6,
+		position: 'absolute',
+		top: -6,
+		width: 16,
+		zIndex: 1,
+	},
+]);
 
 export const avatarWrap = style({ lineHeight: 0, position: 'relative' });
 
 // unlayered, so it outranks the avatar root's layered `border-radius`, which the inner layers inherit.
 export const publicationAvatar = style({ borderRadius: borderRadius.sm });
 
-/** Inset border rounded to match the square icon corners. */
-export const insetRoundedSm = style({ borderRadius: borderRadius.sm });
+/**
+ * Opaque hairline as an overlay: the publication avatar's own `filter` rules out a self-border, so the
+ * rounded hairline rides on top of it instead.
+ */
+export const avatarBorder = style([mediaOverlay, mediaBorderOpaque, { borderRadius: borderRadius.sm }]);
 
-/** Inset border for the circular standard-site badge. */
-export const insetRoundedFull = style({ borderRadius: 999 });
-
-export const letterBox = style({
-	alignItems: 'center',
-	backgroundColor: accentVar,
-	borderRadius: borderRadius.sm,
-	boxSizing: 'border-box',
-	display: 'flex',
-	justifyContent: 'center',
-	position: 'relative',
-});
+export const letterBox = style([
+	mediaBorderOpaque,
+	{
+		alignItems: 'center',
+		backgroundColor: accentVar,
+		borderRadius: borderRadius.sm,
+		display: 'flex',
+		justifyContent: 'center',
+		position: 'relative',
+	},
+]);
 
 export const letterBoxSm = style({ height: 32, width: 32 });
 export const letterBoxLg = style({ height: 40, width: 40 });
@@ -239,7 +269,11 @@ export const footer = style({
 	},
 });
 
-/** Absolute-fill link covering the footer; navigates to the publication and underlines its name on hover. */
+/**
+ * Absolute-fill link covering the footer; navigates to the publication and underlines its name on hover. A
+ * mouse-only affordance (`tabIndex -1`) — the always-present "View publication" button is the keyboard path
+ * to the same destination — so it carries no focus ring of its own.
+ */
 export const footerFill = style({
 	bottom: 0,
 	left: 0,
@@ -293,14 +327,17 @@ export const pubCard = style({
 	},
 });
 
-export const pubFill = style({
-	bottom: 0,
-	left: 0,
-	position: 'absolute',
-	right: 0,
-	top: 0,
-	zIndex: 0,
-});
+export const pubFill = style([
+	insetFocusRing,
+	{
+		bottom: 0,
+		left: 0,
+		position: 'absolute',
+		right: 0,
+		top: 0,
+		zIndex: 0,
+	},
+]);
 
 export const pubTopRow = style({
 	alignItems: 'center',

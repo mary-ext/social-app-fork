@@ -16,7 +16,6 @@ import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
 import { Link, LinkButton } from '#/components/web/Link';
-import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
@@ -195,6 +194,7 @@ function PublicationFooter({
 				className={styles.footerFill}
 				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
 				onPress={open}
+				tabIndex={-1}
 				to={view.source.uri}
 			>
 				{null}
@@ -231,7 +231,6 @@ function PublicationIcon({
 		<div className={styles.iconRoot}>
 			<div className={styles.standardBadge}>
 				<StandardSite size="xs" fill="currentColor" />
-				<MediaInsetBorder className={styles.insetRoundedFull} />
 			</div>
 
 			{view.source.icon ? (
@@ -243,7 +242,7 @@ function PublicationIcon({
 						size={px}
 						type="labeler"
 					/>
-					<MediaInsetBorder className={styles.insetRoundedSm} opaque />
+					<span aria-hidden className={styles.avatarBorder} />
 				</div>
 			) : (
 				<div
@@ -256,7 +255,6 @@ function PublicationIcon({
 					<Text className={styles.letterText} size="xl" weight="bold">
 						{[...view.source.title][0] ?? ''}
 					</Text>
-					<MediaInsetBorder className={styles.insetRoundedSm} opaque />
 				</div>
 			)}
 		</div>

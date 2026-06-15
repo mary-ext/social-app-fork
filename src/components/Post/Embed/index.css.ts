@@ -36,6 +36,11 @@ export const quoteBody = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
+	selectors: {
+		// `BlockLink` makes this the focusable row; the quote card paints the ring (via `:has`), so suppress
+		// this element's own default outline to avoid a doubled ring.
+		'&:focus-visible': { outline: 'none' },
+	},
 });
 
 export const quotePad = style({
@@ -65,6 +70,15 @@ export const revealedPadXs = style({
 export const quoteCard = style({
 	border: `1px solid ${vars.palette.contrast_100}`,
 	borderRadius: 12,
+	selectors: {
+		// `BlockLink` makes the card's direct child the focusable row; ring the card itself so the outline is
+		// concentric with its border. inset so the post body's `GalleryBleed` clip can't trim it. scoped to the
+		// direct child so a focused link inside the quoted post doesn't ring the outer card.
+		'&:has(> [role="link"]:focus-visible)': {
+			outline: `2px solid ${vars.palette.primary_500}`,
+			outlineOffset: -2,
+		},
+	},
 });
 
 // Hover tint for a clickable quote card; sits behind content (clipped to the radius) so the quoted text

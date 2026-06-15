@@ -7,7 +7,6 @@ import type { EmbedPlayerParams } from '#/lib/strings/embed-player';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
-import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 import * as Prompt from '#/components/web/Prompt';
 
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
@@ -73,7 +72,6 @@ export function GifEmbed({ params, thumb, altText, isPreferredAltText, hideAlt }
 				<div className={styles.abs}>
 					<div className={styles.box} style={assignInlineVars({ [styles.ratioVar]: String(constrained) })}>
 						<div className={styles.inset}>
-							<MediaInsetBorder />
 							{!isPlaying && <div aria-hidden className={styles.dimInner} />}
 							<button
 								type="button"

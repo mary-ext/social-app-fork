@@ -18,7 +18,6 @@ import { Text } from '#/components/Text';
 import * as styles from '#/components/UserAvatar.css';
 import * as Dialog from '#/components/web/Dialog';
 import { Link } from '#/components/web/Link';
-import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
 import { IS_WEB_TOUCH_DEVICE } from '#/env';
@@ -198,7 +197,7 @@ export const UserAvatar = memo(function UserAvatar({
 				(live ? (
 					<span aria-hidden className={styles.liveBorder} />
 				) : (
-					<MediaInsetBorder className={styles.border} />
+					<span aria-hidden className={styles.border} />
 				))}
 			{live && size > 16 && !hideLiveBadge && <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />}
 			{!!moderation?.alerts.length && (

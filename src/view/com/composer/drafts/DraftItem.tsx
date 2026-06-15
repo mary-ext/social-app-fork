@@ -14,7 +14,6 @@ import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/componen
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Text } from '#/components/Text';
-import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 import * as Prompt from '#/components/web/Prompt';
 
 import * as styles from './DraftItem.css';
@@ -249,7 +248,6 @@ function MediaTile({
 	return (
 		<div className={clsx(styles.square, !thumbnail && styles.squareEmpty)}>
 			{thumbnail && <img className={styles.image} src={thumbnail} alt={alt} />}
-			<MediaInsetBorder className={styles.insetRadius} />
 			{children}
 		</div>
 	);

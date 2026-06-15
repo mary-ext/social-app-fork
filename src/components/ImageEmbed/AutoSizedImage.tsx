@@ -6,7 +6,6 @@ import type { LightboxControl, LightboxPayload } from '#/components/dialogs/Cont
 import * as styles from '#/components/ImageEmbed/AutoSizedImage.css';
 import { MediaBadges } from '#/components/ImageEmbed/MediaBadges';
 import * as Dialog from '#/components/web/Dialog';
-import { MediaInsetBorder } from '#/components/web/MediaInsetBorder';
 
 import { useLargeAltBadgeEnabled } from '#/storage/hooks/large-alt-badge';
 
@@ -62,7 +61,6 @@ export function AutoSizedImage({
 				alt={image.alt}
 				loading="lazy"
 			/>
-			<MediaInsetBorder />
 			{!hideBadge && (
 				<MediaBadges variant="single" hasAlt={!!image.alt} cropped={isCropped} large={largeAlt} />
 			)}

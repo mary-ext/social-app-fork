@@ -3,6 +3,7 @@ import { style } from '@vanilla-extract/css';
 import { ITEM_GAP } from '#/components/ImageEmbed/carousel/const';
 
 import { vars } from '#/styles/contract.css';
+import { mediaBorder } from '#/styles/media-border.css';
 import { borderRadius } from '#/styles/tokens.css';
 
 /** Measurement host: its width/offset within the bleed ancestor drive the overflow inset. Height is inline. */
@@ -32,26 +33,30 @@ export const scroll = style({
 	},
 });
 
-export const item = style({
-	appearance: 'none',
-	background: vars.palette.contrast_25,
-	border: 0,
-	borderRadius: borderRadius.md,
-	// inherit the viewport's grab cursor instead of the button pointer
-	cursor: 'inherit',
-	display: 'block',
-	flex: '0 0 auto',
-	margin: 0,
-	outline: 0,
-	overflow: 'hidden',
-	padding: 0,
-	position: 'relative',
-	transitionDuration: '200ms',
-	transitionProperty: 'transform',
-	selectors: {
-		'&:active': { transform: 'scale(0.99)' },
+export const item = style([
+	mediaBorder,
+	{
+		appearance: 'none',
+		background: vars.palette.contrast_25,
+		borderRadius: borderRadius.md,
+		// inherit the viewport's grab cursor instead of the button pointer
+		cursor: 'inherit',
+		display: 'block',
+		flex: '0 0 auto',
+		margin: 0,
+		overflow: 'hidden',
+		padding: 0,
+		position: 'relative',
+		transitionDuration: '200ms',
+		transitionProperty: 'transform',
+		selectors: {
+			'&:active': { transform: 'scale(0.99)' },
+			// inset so the ring sits 1px in from the hairline border this element carries, concentric with the
+			// rounded corners and inside the carousel's overflow clip.
+			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
+		},
 	},
-});
+]);
 
 export const image = style({
 	display: 'block',
