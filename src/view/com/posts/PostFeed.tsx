@@ -104,6 +104,9 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY;
 
+// Measured posts span ~120px (text) to ~700px (media), median ~240px.
+const FEED_ITEM_HEIGHT_ESTIMATE = 300;
+
 let PostFeed = ({
 	feed,
 	ignoreFilterFor,
@@ -566,6 +569,7 @@ let PostFeed = ({
 				ref={scrollElRef}
 				data={feedItems}
 				keyExtractor={(item: FeedRow) => item.key}
+				estimateHeight={FEED_ITEM_HEIGHT_ESTIMATE}
 				renderItem={renderItem}
 				ListFooterComponent={<FeedFooter />}
 				ListHeaderComponent={ListHeaderComponent && <ListHeaderComponent />}

@@ -1,4 +1,7 @@
-import { style } from '@vanilla-extract/css';
+import { createVar, style } from '@vanilla-extract/css';
+
+/** Off-screen-row placeholder height; set on the container, read by each row's content-visibility hint. */
+export const estimateHeightVar = createVar();
 
 /**
  * Content container. `position: relative` anchors the absolute above-the-fold sentinel. Height is left to the
@@ -10,13 +13,26 @@ export const container = style({
 });
 
 /**
- * Row wrapper for the seen-tracked path: a flex column (default `align-items: stretch`) so the row's content
- * fills the list width. Without it a shrink-to-fit root — e.g. a `<button>`-rooted row like the composer
- * prompt — would only be as wide as its content, which the old RNW `View` row wrapper avoided.
+ * Container modifier: lets rows skip layout/paint while off screen (`content-visibility: auto`), sized by
+ * {@link estimateHeightVar} until first rendered, after which the browser remembers each row's real height.
+ */
+export const skipOffscreen = style({});
+
+/**
+ * Universal row wrapper: a flex column (default `align-items: stretch`) so the row's content fills the list
+ * width. Without it a shrink-to-fit root — e.g. a `<button>`-rooted row like the composer prompt — would only
+ * be as wide as its content, which the old RNW `View` row wrapper avoided.
  */
 export const row = style({
 	display: 'flex',
 	flexDirection: 'column',
+	selectors: {
+		// only the block axis is estimated; width stays at the flex-stretched container width.
+		[`${skipOffscreen} > &`]: {
+			containIntrinsicHeight: `auto ${estimateHeightVar}`,
+			contentVisibility: 'auto',
+		},
+	},
 });
 
 /**

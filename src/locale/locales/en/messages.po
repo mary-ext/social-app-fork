@@ -6119,7 +6119,7 @@ msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:444
+#: src/screens/PostThread/index.tsx:447
 msgctxt "description"
 msgid "Post"
 msgstr ""
@@ -8199,7 +8199,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:890
-#: src/view/com/posts/PostFeed.tsx:477
+#: src/view/com/posts/PostFeed.tsx:480
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 

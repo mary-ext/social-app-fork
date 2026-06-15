@@ -1,5 +1,4 @@
 import {
-	Fragment,
 	memo,
 	type ReactNode,
 	type Ref,
@@ -10,6 +9,8 @@ import {
 	useRef,
 	useState,
 } from 'react';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
@@ -44,6 +45,12 @@ export type ListProps<ItemT> = {
 	ListFooterComponent?: ReactNode;
 	/** Rendered before the rows. */
 	ListHeaderComponent?: ReactNode;
+	/**
+	 * Enables off-screen render-skipping (`content-visibility: auto`) on each row, seeding the placeholder
+	 * height with this estimate (in px). Once a row has rendered, the browser remembers its real size and
+	 * reuses it, so the estimate only governs rows that have never been on screen.
+	 */
+	estimateHeight?: number;
 	/** Top padding that keeps content clear of a sticky header; also sizes the scrolled-down detector. */
 	headerOffset?: number;
 	/** Fires when the rendered content's size changes (via `ResizeObserver`). */
@@ -73,6 +80,7 @@ export function List<ItemT>({
 	ListEmptyComponent,
 	ListFooterComponent,
 	ListHeaderComponent,
+	estimateHeight,
 	headerOffset,
 	onContentSizeChange,
 	onEndReached,
@@ -122,9 +130,17 @@ export function List<ItemT>({
 	const seen = useItemSeenObserver(onItemSeen);
 
 	const isEmpty = !data || data.length === 0;
+	const skipOffscreen = estimateHeight != null;
 
 	return (
-		<div ref={containerRef} className={css.container} style={{ paddingTop: headerOffset }}>
+		<div
+			ref={containerRef}
+			className={clsx(css.container, skipOffscreen && css.skipOffscreen)}
+			style={{
+				paddingTop: headerOffset,
+				...(skipOffscreen && assignInlineVars({ [css.estimateHeightVar]: `${estimateHeight}px` })),
+			}}
+		>
 			{onScrolledDownChange && (
 				<Visibility
 					className={css.aboveTheFold}
@@ -144,11 +160,7 @@ export function List<ItemT>({
 				? ListEmptyComponent
 				: data.map((item, index) => {
 						const key = keyExtractor(item, index);
-						return seen ? (
-							<SeenRow key={key} index={index} item={item} renderItem={renderItem} seen={seen} />
-						) : (
-							<Fragment key={key}>{renderItem({ index, item })}</Fragment>
-						);
+						return <Row key={key} index={index} item={item} renderItem={renderItem} seen={seen} />;
 					})}
 			{onEndReached && !isEmpty && (
 				<EdgeVisibility
@@ -228,8 +240,8 @@ function useItemSeenObserver<ItemT>(
 	return observer;
 }
 
-/** A row wrapper that registers itself with the list's shared seen-observer. */
-const SeenRow = memo(function SeenRow<ItemT>({
+/** The universal row wrapper: registers with the shared seen-observer when enabled. */
+const Row = memo(function Row<ItemT>({
 	index,
 	item,
 	renderItem,
@@ -238,11 +250,12 @@ const SeenRow = memo(function SeenRow<ItemT>({
 	index: number;
 	item: ItemT;
 	renderItem: ListRenderItem<ItemT>;
-	seen: SeenObserver<ItemT>;
+	seen: SeenObserver<ItemT> | null;
 }) {
 	const rowRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
+		if (!seen) return;
 		const row = rowRef.current;
 		if (!row) return;
 		seen.observe(row, item);
@@ -258,7 +271,7 @@ const SeenRow = memo(function SeenRow<ItemT>({
 	index: number;
 	item: ItemT;
 	renderItem: ListRenderItem<ItemT>;
-	seen: SeenObserver<ItemT>;
+	seen: SeenObserver<ItemT> | null;
 }) => ReactNode;
 
 const thresholdMargin = (threshold: number | undefined) => `${(threshold ?? 0) * 100}%`;

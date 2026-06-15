@@ -40,6 +40,9 @@ const CHILDREN_CHUNK_SIZE = 50;
 /** Height the trailing spacer falls back to when the thread has no parents. */
 const FALLBACK_FOOTER_HEIGHT = 180;
 
+// Measured threads skew toward short text replies (~110px), punctuated by a tall anchor and occasional media.
+const ITEM_HEIGHT_ESTIMATE = 200;
+
 export function PostThread({ uri }: { uri: string }) {
 	const { gtMobile } = useBreakpoints();
 	const { hasSession } = useSession();
@@ -462,6 +465,7 @@ export function PostThread({ uri }: { uri: string }) {
 						data={deferredSlices}
 						renderItem={renderItem}
 						keyExtractor={keyExtractor}
+						estimateHeight={ITEM_HEIGHT_ESTIMATE}
 						onContentSizeChange={onContentSizeChangeWebOnly}
 						onStartReached={onStartReached}
 						onStartReachedThreshold={1}
