@@ -238,7 +238,7 @@ function Inner({
 					{profile.description?.trim() &&
 					getDisplayRestrictions(moderation, DisplayContext.ProfileView).blurs.length === 0 ? (
 						<div className={css.description}>
-							<RichText numberOfLines={8} value={descriptionRT} />
+							<RichText disableHoverCards numberOfLines={8} value={descriptionRT} />
 						</div>
 					) : undefined}
 

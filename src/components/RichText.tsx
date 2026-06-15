@@ -22,6 +22,11 @@ export type RichTextProps = Pick<
 > & {
 	authorHandle?: string;
 	className?: string;
+	/**
+	 * Render mentions as plain links without their profile hover card — set when RichText is itself inside a
+	 * hover card, to stop cards cascading.
+	 */
+	disableHoverCards?: boolean;
 	disableLinks?: boolean;
 	/** Enlargement applied to emoji-only content: `normal` (1.85×) or `large` (3×). */
 	emojiScale?: 'large' | 'normal';
@@ -44,6 +49,7 @@ export function RichText({
 	authorHandle,
 	className,
 	color,
+	disableHoverCards,
 	disableLinks,
 	emojiScale = 'normal',
 	enableTags = false,
@@ -115,21 +121,27 @@ export function RichText({
 					}
 					case 'app.bsky.richtext.facet#mention': {
 						if (!disableLinks && feature.did.startsWith('did:')) {
-							el = (
-								<ProfileHoverCard key={key} did={feature.did}>
-									<InlineLinkText
-										className={atomicSegment}
-										color={color}
-										leading={leading}
-										onPress={onLinkPress}
-										selectable={selectable}
-										size={size}
-										to={`/profile/${feature.did}`}
-										underline={linkUnderline}
-										weight={weight}
-									>
-										{segment.text}
-									</InlineLinkText>
+							const link = (
+								<InlineLinkText
+									className={atomicSegment}
+									color={color}
+									key={key}
+									leading={leading}
+									onPress={onLinkPress}
+									selectable={selectable}
+									size={size}
+									to={`/profile/${feature.did}`}
+									underline={linkUnderline}
+									weight={weight}
+								>
+									{segment.text}
+								</InlineLinkText>
+							);
+							el = disableHoverCards ? (
+								link
+							) : (
+								<ProfileHoverCard did={feature.did} key={key}>
+									{link}
 								</ProfileHoverCard>
 							);
 						}
