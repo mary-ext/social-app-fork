@@ -12,7 +12,7 @@ import { atomicSegment, content, emoji } from '#/components/RichText.css';
 import { RichTextTag } from '#/components/RichTextTag';
 import { Text, type TextProps } from '#/components/Text';
 import {
-	ExternalInlineLinkText,
+	ContentLinkText,
 	InlineLinkText,
 	type InlineLinkTextProps,
 	type InlineLinkUnderline,
@@ -107,7 +107,7 @@ export function RichText({
 							el = toShortUrl(segment.text);
 						} else {
 							el = (
-								<ExternalInlineLinkText
+								<ContentLinkText
 									color={color}
 									href={feature.uri}
 									key={key}
@@ -119,7 +119,7 @@ export function RichText({
 									weight={weight}
 								>
 									{toShortUrl(segment.text)}
-								</ExternalInlineLinkText>
+								</ContentLinkText>
 							);
 						}
 						break features;

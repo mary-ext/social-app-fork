@@ -47,6 +47,12 @@ type LinkBindings = {
 const isModifiedClick = (e: MouseEvent<HTMLElement>) =>
 	e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
 
+// new-tab attributes for an anchor whose href is genuinely external; an in-app (resolved) href gets neither.
+const externalAnchorAttrs = (isExternal: boolean) => ({
+	rel: isExternal ? 'noopener noreferrer' : undefined,
+	target: isExternal ? '_blank' : undefined,
+});
+
 const useNavigateToPath = () => {
 	const navigation = useNavigationDeduped();
 	return useCallback(
@@ -102,48 +108,78 @@ const useInternalLink = ({
 	return { href: to, onClick };
 };
 
+// shared core for raw-URL links: resolves the anchor href (a bsky.app URL collapses to an in-app route) and
+// returns `navigate`, which performs a plain click's default action — in-app navigation for a resolved
+// internal href, and nothing for a genuinely external or modified click (the native anchor opens those).
+const useExternalNav = (rawHref: string, action: LinkAction) => {
+	const navigateToPath = useNavigateToPath();
+	const href = useMemo(() => convertBskyAppUrlIfNeeded(sanitizeUrl(rawHref)), [rawHref]);
+	const isExternal = isExternalUrl(href);
+	const navigate = useCallback(
+		(e: MouseEvent<HTMLElement>) => {
+			if (isExternal || isModifiedClick(e)) return;
+			e.preventDefault();
+			navigateToPath(href, action);
+		},
+		[action, href, isExternal, navigateToPath],
+	);
+	return { href, isExternal, navigate };
+};
+
 const useExternalLink = ({
 	action = 'push',
-	displayText = '',
 	href: rawHref,
 	onPress,
 }: {
 	action?: LinkAction;
-	displayText?: string;
 	href: string;
 	onPress?: LinkOnPress;
 }): LinkBindings => {
-	const navigateToPath = useNavigateToPath();
-	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
-	// bsky.app URLs collapse to an in-app route here, so an external link may resolve to internal navigation.
-	const href = useMemo(() => convertBskyAppUrlIfNeeded(sanitizeUrl(rawHref)), [rawHref]);
-	const isExternal = isExternalUrl(href);
+	const { href, isExternal, navigate } = useExternalNav(rawHref, action);
 	const onClick = useCallback(
 		(e: MouseEvent<HTMLElement>) => {
 			if (onPress?.(e) === false) {
 				e.preventDefault();
 				return;
 			}
-			// warn when the visible text claims a different destination than the link actually points to.
+			navigate(e);
+		},
+		[navigate, onPress],
+	);
+	return { href, onClick, ...externalAnchorAttrs(isExternal) };
+};
+
+// like useExternalLink, but for links whose visible text is untrusted (post content): before navigating it
+// verifies the text against the destination and, on a mismatch, opens the warning dialog instead.
+const useContentLink = ({
+	action = 'push',
+	displayText,
+	href: rawHref,
+	onPress,
+}: {
+	action?: LinkAction;
+	displayText: string;
+	href: string;
+	onPress?: LinkOnPress;
+}): LinkBindings => {
+	const { href, isExternal, navigate } = useExternalNav(rawHref, action);
+	const { linkWarningDialogControl } = useGlobalDialogsControlContext();
+	const onClick = useCallback(
+		(e: MouseEvent<HTMLElement>) => {
+			if (onPress?.(e) === false) {
+				e.preventDefault();
+				return;
+			}
 			if (displayText && isExternal && linkRequiresWarning(href, displayText)) {
 				e.preventDefault();
 				linkWarningDialogControl.open({ displayText, href });
 				return;
 			}
-			// genuinely external: let the native `target=_blank` anchor open the new tab.
-			if (isExternal) return;
-			if (isModifiedClick(e)) return;
-			e.preventDefault();
-			navigateToPath(href, action);
+			navigate(e);
 		},
-		[action, displayText, href, isExternal, linkWarningDialogControl, navigateToPath, onPress],
+		[displayText, href, isExternal, linkWarningDialogControl, navigate, onPress],
 	);
-	return {
-		href,
-		onClick,
-		rel: isExternal ? 'noopener noreferrer' : undefined,
-		target: isExternal ? '_blank' : undefined,
-	};
+	return { href, onClick, ...externalAnchorAttrs(isExternal) };
 };
 
 // #endregion
@@ -319,17 +355,9 @@ export const ExternalLink = ({ action, href, onPress, ...rest }: ExternalLinkPro
 	return <BlockAnchor bindings={bindings} {...rest} />;
 };
 
-/**
- * A web-native inline text link to a raw URL. Like {@link ExternalLink}, but warns before navigating when the
- * visible text misrepresents where the link leads.
- */
+/** A web-native inline text link to a raw URL, behaving like {@link ExternalLink}. */
 export const ExternalInlineLinkText = ({ action, href, onPress, ...rest }: ExternalInlineLinkTextProps) => {
-	const bindings = useExternalLink({
-		action,
-		displayText: typeof rest.children === 'string' ? rest.children : '',
-		href,
-		onPress,
-	});
+	const bindings = useExternalLink({ action, href, onPress });
 	return <InlineAnchor bindings={bindings} {...rest} />;
 };
 
@@ -337,6 +365,27 @@ export const ExternalInlineLinkText = ({ action, href, onPress, ...rest }: Exter
 export const ExternalLinkButton = ({ action, href, onPress, ...rest }: ExternalLinkButtonProps) => {
 	const bindings = useExternalLink({ action, href, onPress });
 	return <ButtonAnchor bindings={bindings} {...rest} />;
+};
+
+// #endregion
+
+// #region content links — `href` is a raw URL whose visible text is untrusted
+
+export type ContentLinkTextProps = ExternalNavProps & InlineAnchorProps;
+
+/**
+ * A web-native inline text link for untrusted content (e.g. a rich-text link facet): like
+ * {@link ExternalInlineLinkText}, but because its children are attacker-controlled, it verifies them against
+ * the destination and opens the link-warning dialog instead of navigating when they misrepresent it.
+ */
+export const ContentLinkText = ({ action, href, onPress, ...rest }: ContentLinkTextProps) => {
+	const bindings = useContentLink({
+		action,
+		displayText: typeof rest.children === 'string' ? rest.children : '',
+		href,
+		onPress,
+	});
+	return <InlineAnchor bindings={bindings} {...rest} />;
 };
 
 // #endregion
