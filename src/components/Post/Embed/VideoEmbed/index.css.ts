@@ -9,7 +9,7 @@ export const padVar = createVar();
 /** `url(...)` of the video thumbnail, painted as the box background while loading. */
 export const thumbVar = createVar();
 
-export const root = style({ paddingTop: space.xs });
+export const root = style({ marginTop: space.sm });
 
 export const viewport = style({
 	display: 'flex',
