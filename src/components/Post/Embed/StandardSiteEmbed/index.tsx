@@ -1,5 +1,4 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
-import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
@@ -63,10 +62,6 @@ export function StandardSiteEmbed(props: StandardSiteEmbedProps) {
 function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProps) {
 	const { i18n, t: l } = useLingui();
 	const niceUrl = toNiceDomain(view.uri);
-	const hasMedia = Boolean(view.thumb);
-	const isStandard = view.associatedRefs?.some((ref) =>
-		parseCanonicalResourceUri(ref.uri).collection.startsWith('site.standard.'),
-	);
 	const open = () => onOpen?.();
 
 	return (
@@ -79,9 +74,9 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 			>
 				{view.thumb ? <img alt="" className={styles.thumb} loading="lazy" src={view.thumb} /> : null}
 
-				<div className={clsx(styles.body, isStandard && styles.bodyStandard, hasMedia && styles.bodyMedia)}>
-					<div className={clsx(styles.textBlock, isStandard && styles.textBlockStandard)}>
-						<Text numberOfLines={3} size={isStandard ? 'lg' : 'md'} weight={isStandard ? 'bold' : 'semiBold'}>
+				<div className={clsx(styles.body, view.thumb && styles.bodyMedia)}>
+					<div className={styles.textBlock}>
+						<Text numberOfLines={3} size="lg" weight="bold">
 							{view.title}
 						</Text>
 
@@ -91,7 +86,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 							</Text>
 						) : null}
 
-						{isStandard && (view.createdAt || view.readingTime) ? (
+						{view.createdAt || view.readingTime ? (
 							<div className={styles.metaInline}>
 								{view.createdAt ? (
 									<Text color="textContrastMedium" size="xs">

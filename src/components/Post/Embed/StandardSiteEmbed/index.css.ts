@@ -61,11 +61,8 @@ export const body = style({
 	display: 'flex',
 	flexDirection: 'column',
 	gap: 3,
-	paddingTop: space.sm,
+	paddingTop: space.md,
 });
-
-/** Standard-site articles get a touch more breathing room above the larger title. */
-export const bodyStandard = style({ paddingTop: space.md });
 
 /** Hairline separating the body from the thumbnail; tracks the card's hover state. */
 export const bodyMedia = style({
@@ -80,13 +77,11 @@ export const bodyMedia = style({
 export const textBlock = style({
 	display: 'flex',
 	flexDirection: 'column',
-	gap: 3,
-	paddingBottom: space.xs,
+	gap: 5,
+	paddingBottom: space.sm,
 	paddingLeft: space.md,
 	paddingRight: space.md,
 });
-
-export const textBlockStandard = style({ gap: 5, paddingBottom: space.sm });
 
 /** Date + reading-time row beneath a standard-site article's description. */
 export const metaInline = style({
