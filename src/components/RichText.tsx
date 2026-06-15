@@ -11,7 +11,12 @@ import { isOnlyEmoji } from '#/alf/typography';
 import { atomicSegment, content, emoji } from '#/components/RichText.css';
 import { RichTextTag } from '#/components/RichTextTag';
 import { Text, type TextProps } from '#/components/Text';
-import { InlineLinkText, type InlineLinkTextProps, type InlineLinkUnderline } from '#/components/web/Link';
+import {
+	ExternalInlineLinkText,
+	InlineLinkText,
+	type InlineLinkTextProps,
+	type InlineLinkUnderline,
+} from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
 type Feature = AppBskyRichtextFacet.Main['features'][number];
@@ -102,19 +107,19 @@ export function RichText({
 							el = toShortUrl(segment.text);
 						} else {
 							el = (
-								<InlineLinkText
+								<ExternalInlineLinkText
 									color={color}
+									href={feature.uri}
 									key={key}
 									leading={leading}
 									onPress={onLinkPress}
 									selectable={selectable}
 									size={size}
-									to={feature.uri}
 									underline={linkUnderline}
 									weight={weight}
 								>
 									{toShortUrl(segment.text)}
-								</InlineLinkText>
+								</ExternalInlineLinkText>
 							);
 						}
 						break features;

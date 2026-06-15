@@ -13,7 +13,7 @@ import * as Settings from '#/components/SettingsCards';
 import { Spinner } from '#/components/Spinner';
 import { Admonition } from '#/components/web/Admonition';
 import * as Layout from '#/components/web/Layout';
-import { InlineLinkText } from '#/components/web/Link';
+import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import * as styles from './VerificationSettings.css';
 
@@ -37,15 +37,15 @@ export function Screen() {
 					<Admonition type="tip">
 						<Trans>
 							Verifications on Bluesky work differently than on other platforms.{' '}
-							<InlineLinkText
+							<ExternalInlineLinkText
 								label={l({
 									context: `english-only-resource`,
 									message: `Learn more`,
 								})}
-								to={urls.website.blog.initialVerificationAnnouncement}
+								href={urls.website.blog.initialVerificationAnnouncement}
 							>
 								Learn more here.
-							</InlineLinkText>
+							</ExternalInlineLinkText>
 						</Trans>
 					</Admonition>
 					{preferences ? (

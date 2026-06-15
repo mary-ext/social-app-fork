@@ -184,7 +184,7 @@ function LikeButton({ labeler }: { labeler: AppBskyLabelerDefs.LabelerViewDetail
 				color="textContrastMedium"
 				label={l`Liked by ${plural(likeCount, { one: '# user', other: '# users' })}`}
 				size="sm"
-				to={{ params: { name: labeler.creator.did }, screen: 'ProfileLabelerLikedBy' }}
+				to={`/profile/${labeler.creator.did}/labeler/liked-by`}
 				weight="semiBold"
 			>
 				<Trans>

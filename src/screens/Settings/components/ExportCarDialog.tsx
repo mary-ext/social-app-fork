@@ -15,7 +15,7 @@ import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { InlineLinkText } from '#/components/web/Link';
+import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import * as styles from './ExportCarDialog.css';
 
@@ -128,13 +128,13 @@ export function ExportCarDialog({ handle }: { handle: Dialog.DialogHandle }) {
 					<Text className={styles.footnote} color="textContrastMedium" size="sm">
 						<Trans>
 							This feature is in beta. You can read more about repository exports in{' '}
-							<InlineLinkText
+							<ExternalInlineLinkText
 								label={l`View blogpost for more details`}
 								size="sm"
-								to="https://docs.bsky.app/blog/repo-export"
+								href="https://docs.bsky.app/blog/repo-export"
 							>
 								this blogpost
-							</InlineLinkText>
+							</ExternalInlineLinkText>
 							.
 						</Trans>
 					</Text>

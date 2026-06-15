@@ -18,7 +18,7 @@ import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon } from '#/components/i
 import * as Settings from '#/components/SettingsCards';
 import * as Dialog from '#/components/web/Dialog';
 import * as Layout from '#/components/web/Layout';
-import { InlineLinkText } from '#/components/web/Link';
+import { ExternalInlineLinkText } from '#/components/web/Link';
 
 import { ActivitySubscriptionDialog } from './components/ActivitySubscriptionDialog';
 import { ExportCarDialog } from './components/ExportCarDialog';
@@ -75,13 +75,13 @@ export function AccountSettingsScreen({}: Props) {
 							<Trans>
 								Honoring this request is voluntary: your profile and posts stay publicly available, and some
 								apps may show your account anyway.{' '}
-								<InlineLinkText
+								<ExternalInlineLinkText
 									size="sm"
 									label={l`Learn more about what is public on Bluesky.`}
-									to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
+									href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
 								>
 									<Trans>Learn more.</Trans>
-								</InlineLinkText>
+								</ExternalInlineLinkText>
 							</Trans>
 						}
 						titleText={<Trans>Privacy</Trans>}

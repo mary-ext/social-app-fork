@@ -16,7 +16,7 @@ import * as css from '#/components/verification/VerificationsDialog.css';
 import { Admonition } from '#/components/web/Admonition';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { LinkButton } from '#/components/web/Link';
+import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -86,19 +86,19 @@ export function VerificationsDialog({
 							<Trans>Close</Trans>
 						</ButtonText>
 					</Button>
-					<LinkButton
+					<ExternalLinkButton
 						color="secondary"
 						label={l({
 							context: `english-only-resource`,
 							message: `Learn more about verification on Bluesky`,
 						})}
 						size="small"
-						to={urls.website.blog.initialVerificationAnnouncement}
+						href={urls.website.blog.initialVerificationAnnouncement}
 					>
 						<ButtonText>
 							<Trans context="english-only-resource">Learn more</Trans>
 						</ButtonText>
-					</LinkButton>
+					</ExternalLinkButton>
 				</div>
 				<Dialog.Close />
 			</Dialog.Popup>

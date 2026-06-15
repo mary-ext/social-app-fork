@@ -53,7 +53,6 @@ function AuthorLink({ disabled, label, onPress, ref, tabIndex, to, underline, ..
 	}
 	return (
 		<InlineLinkText
-			disableMismatchWarning
 			label={label}
 			onPress={onPress}
 			ref={ref as Ref<HTMLAnchorElement>}

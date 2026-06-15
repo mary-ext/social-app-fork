@@ -15,7 +15,7 @@ import { StandardSite } from '#/components/icons/community/StandardSite';
 import { Text } from '#/components/Text';
 import { UserAvatar } from '#/components/UserAvatar';
 import { ButtonIcon, ButtonText } from '#/components/web/Button';
-import { Link, LinkButton } from '#/components/web/Link';
+import { ExternalLink, ExternalLinkButton } from '#/components/web/Link';
 
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
@@ -65,11 +65,11 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 
 	return (
 		<div className={clsx(styles.card, preview && styles.previewLock, className)}>
-			<Link
+			<ExternalLink
 				className={styles.bodyLink}
+				href={view.uri}
 				label={view.title || l`Open link to ${niceUrl}`}
 				onPress={open}
-				to={view.uri}
 			>
 				{view.thumb ? <img alt="" className={styles.thumb} loading="lazy" src={view.thumb} /> : null}
 
@@ -116,7 +116,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 						</div>
 					) : null}
 				</div>
-			</Link>
+			</ExternalLink>
 
 			{view.source ? (
 				<>
@@ -136,14 +136,14 @@ function PublicationCard({ className, onOpen, preview, view }: StandardSiteEmbed
 
 	return (
 		<div className={clsx(styles.pubCard, preview && styles.previewLock, className)}>
-			<Link
+			<ExternalLink
 				className={styles.pubFill}
+				href={view.source.uri}
 				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
 				onPress={open}
-				to={view.source.uri}
 			>
 				{null}
-			</Link>
+			</ExternalLink>
 
 			<div className={styles.pubTopRow}>
 				<div className={styles.pubIdentity}>
@@ -190,15 +190,15 @@ function PublicationFooter({
 
 	return (
 		<div className={styles.footer}>
-			<Link
+			<ExternalLink
 				className={styles.footerFill}
+				href={view.source.uri}
 				label={view.source.title ? l`View ${view.source.title}` : l`View publication`}
 				onPress={open}
 				tabIndex={-1}
-				to={view.source.uri}
 			>
 				{null}
-			</Link>
+			</ExternalLink>
 
 			<div className={styles.footerIdentity}>
 				<PublicationIcon size="sm" themeColors={themeColors} view={view} />
@@ -307,14 +307,14 @@ function SubscribeButton({
 	}
 
 	return (
-		<LinkButton
+		<ExternalLinkButton
 			className={clsx(styles.subscribe, className)}
 			color="secondary_inverted"
+			href={view.source.uri}
 			label={label}
 			onPress={() => onOpen?.()}
 			size="small"
 			style={themeStyle}
-			to={view.source.uri}
 		>
 			{highlightedPublisher ? (
 				<>
@@ -327,6 +327,6 @@ function SubscribeButton({
 					<ButtonIcon icon={ArrowTopRightIcon} />
 				</>
 			)}
-		</LinkButton>
+		</ExternalLinkButton>
 	);
 }

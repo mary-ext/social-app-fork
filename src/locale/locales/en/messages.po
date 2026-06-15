@@ -5724,7 +5724,7 @@ msgstr ""
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/screens/Profile/components/GermButton.tsx:71
+#: src/screens/Profile/components/GermButton.tsx:72
 msgid "Open Germ DM"
 msgstr ""
 
@@ -5738,7 +5738,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/ExternalEmbed/index.tsx:50
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:70
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:71
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -9134,8 +9134,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:195
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:142
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:196
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9215,8 +9215,8 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:276
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:297
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
-#: src/view/com/util/PostMeta.tsx:126
-#: src/view/com/util/PostMeta.tsx:147
+#: src/view/com/util/PostMeta.tsx:125
+#: src/view/com/util/PostMeta.tsx:146
 msgid "View profile"
 msgstr ""
 
@@ -9224,8 +9224,8 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:141
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:195
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:142
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:196
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:284
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:285
 msgid "View publication"

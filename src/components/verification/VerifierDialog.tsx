@@ -12,7 +12,7 @@ import type { FullVerificationState } from '#/components/verification';
 import * as css from '#/components/verification/VerifierDialog.css';
 import { Button, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { LinkButton } from '#/components/web/Link';
+import { ExternalLinkButton } from '#/components/web/Link';
 
 import announcementImage from '../../../assets/images/initial_verification_announcement_1.png';
 
@@ -59,19 +59,19 @@ export function VerifierDialog({
 					</div>
 
 					<div className={css.actions}>
-						<LinkButton
+						<ExternalLinkButton
 							color="primary"
 							label={l({
 								context: `english-only-resource`,
 								message: `Learn more about verification on Bluesky`,
 							})}
 							size="small"
-							to={urls.website.blog.initialVerificationAnnouncement}
+							href={urls.website.blog.initialVerificationAnnouncement}
 						>
 							<ButtonText>
 								<Trans context="english-only-resource">Learn more</Trans>
 							</ButtonText>
-						</LinkButton>
+						</ExternalLinkButton>
 						<Button color="secondary" label={l`Close dialog`} onClick={() => handle.close()} size="small">
 							<ButtonText>
 								<Trans>Close</Trans>

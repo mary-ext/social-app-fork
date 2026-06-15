@@ -21,7 +21,7 @@ import { useGlobalReportDialogControl } from '#/components/moderation/ReportDial
 import { Text } from '#/components/Text';
 import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
 import * as Dialog from '#/components/web/Dialog';
-import { LinkButton } from '#/components/web/Link';
+import { ExternalLinkButton } from '#/components/web/Link';
 import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
@@ -140,19 +140,19 @@ export function LiveStatus({
 					</div>
 				</div>
 
-				<LinkButton
+				<ExternalLinkButton
 					className={css.watchButton}
 					color="primary"
 					label={l`Watch now`}
 					size="small"
-					to={embed.external.uri}
+					href={embed.external.uri}
 					variant="solid"
 				>
 					<ButtonText>
 						<Trans>Watch now</Trans>
 					</ButtonText>
 					<ButtonIcon icon={SquareArrowTopRightIcon} />
-				</LinkButton>
+				</ExternalLinkButton>
 
 				<div className={css.divider} />
 

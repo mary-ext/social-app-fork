@@ -24,7 +24,7 @@ import { Loader } from '#/components/Loader';
 import { Text as WebText } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
-import { Link } from '#/components/web/Link';
+import { ExternalLink } from '#/components/web/Link';
 
 import germLogoUrl from '../../../../assets/images/germ_logo.webp';
 import * as css from './GermButton.css';
@@ -66,17 +66,17 @@ function GermLink({ url }: { url: string }) {
 
 	return (
 		<>
-			<Link
+			<ExternalLink
 				className={css.pill}
+				href={url}
 				label={l`Open Germ DM`}
-				onPress={(evt) => {
+				onPress={() => {
+					// a custom domain can't be verified as a real Germ link, so route it through our own warning
 					if (isCustomGermDomain(url)) {
-						evt.preventDefault();
 						linkWarningControl.open();
 						return false;
 					}
 				}}
-				to={url}
 			>
 				<GermLogo size="small" />
 				<WebText className={css.label} size="sm" weight="medium">
@@ -85,7 +85,7 @@ function GermLink({ url }: { url: string }) {
 				<span className={css.arrow}>
 					<ArrowTopRightIcon width={14} height={14} fill="currentColor" />
 				</span>
-			</Link>
+			</ExternalLink>
 			<CustomLinkWarningDialog
 				control={linkWarningControl}
 				link={{
