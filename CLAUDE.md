@@ -111,5 +111,7 @@ we use conventional commits with these rules:
   clarification when exploration leaves the question unresolved
 - when debugging, isolate the root cause before attempting fixes: add logging, reproduce the issue,
   narrow down the scope, and confirm the exact source of the problem
-- subagent/subtask exploration results may be inaccurate; verify findings as needed
-- locate and read files directly rather than using subagents/subtasks as file I/O proxies
+- find and read code yourself with Grep/Glob/Read — they locate things directly and return the real
+  source. a subagent hands back only its paraphrase of what it saw, so you'd have to verify it
+  against the source anyway, and the round-trip rarely pays off: even 'where does X live?' is
+  usually one search away. reserve subagents for genuinely large parallel sweeps
