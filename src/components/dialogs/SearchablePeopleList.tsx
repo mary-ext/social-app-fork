@@ -472,7 +472,7 @@ function ExistingChatCard({
 								<>
 									{enabled ? (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_medium]} numberOfLines={2}>
-											<Plural value={convo.members.length} one="# member" other="# members" />
+											<Plural value={convo.details.memberCount} one="# member" other="# members" />
 										</Text>
 									) : (
 										<Text style={[a.leading_snug, t.atoms.text_contrast_high]} numberOfLines={2}>
