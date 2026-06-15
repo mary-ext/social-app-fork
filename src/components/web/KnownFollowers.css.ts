@@ -1,12 +1,7 @@
-import { createVar, style } from '@vanilla-extract/css';
+import { style } from '@vanilla-extract/css';
 
 import { colors } from '#/styles/colors';
-import { borderRadius, space } from '#/styles/tokens.css';
-
-const AVI_SIZE = 30;
-
-/** Per-avatar stacking order; higher paints on top. Set inline so earlier avatars sit above later ones. */
-export const stackOrder = createVar();
+import { space } from '#/styles/tokens.css';
 
 export const link = style({
 	alignItems: 'center',
@@ -14,34 +9,10 @@ export const link = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: space.md,
-	marginLeft: -1,
 	maxWidth: '100%',
 	textDecoration: 'none',
 	selectors: {
 		'&:active': { opacity: 0.5 },
-	},
-});
-
-export const avatars = style({
-	display: 'flex',
-	flexDirection: 'row',
-	height: AVI_SIZE,
-});
-
-// the avatars overlap leftward; {@link stackOrder} keeps earlier ones painted on top (positive, so
-// none falls behind the opaque header background the way a negative index would).
-export const avatarWrap = style({
-	borderColor: colors.bg,
-	borderRadius: borderRadius.full,
-	borderStyle: 'solid',
-	borderWidth: 1,
-	boxSizing: 'border-box',
-	flexShrink: 0,
-	height: AVI_SIZE + 2,
-	width: AVI_SIZE + 2,
-	zIndex: stackOrder,
-	selectors: {
-		'&:not(:first-child)': { marginLeft: -8 },
 	},
 });
 

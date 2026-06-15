@@ -894,8 +894,8 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:256
-#: src/screens/Settings/components/AccountsSection.tsx:259
+#: src/screens/Settings/components/AccountsSection.tsx:257
+#: src/screens/Settings/components/AccountsSection.tsx:260
 msgid "Account options"
 msgstr ""
 
@@ -903,7 +903,7 @@ msgstr ""
 msgid "Account provider"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:277
+#: src/screens/Settings/components/AccountsSection.tsx:278
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -992,8 +992,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:297
-#: src/screens/Settings/components/AccountsSection.tsx:304
+#: src/screens/Settings/components/AccountsSection.tsx:298
+#: src/screens/Settings/components/AccountsSection.tsx:305
 #: src/view/shell/desktop/LeftNav.tsx:258
 #: src/view/shell/desktop/LeftNav.tsx:261
 msgid "Add another account"
@@ -3572,21 +3572,21 @@ msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
 #: src/components/KnownFollowers.tsx:228
-#: src/components/web/KnownFollowers.tsx:152
+#: src/components/web/KnownFollowers.tsx:139
 msgid "Followed by <0>{0}</0>"
 msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
 #. placeholder {1}: serverCount - 1
 #: src/components/KnownFollowers.tsx:219
-#: src/components/web/KnownFollowers.tsx:144
+#: src/components/web/KnownFollowers.tsx:131
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
 msgstr ""
 
 #. placeholder {0}: slice[0]!.profile.displayName
 #. placeholder {1}: slice[1]!.profile.displayName
 #: src/components/KnownFollowers.tsx:206
-#: src/components/web/KnownFollowers.tsx:132
+#: src/components/web/KnownFollowers.tsx:119
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
 msgstr ""
 
@@ -3594,7 +3594,7 @@ msgstr ""
 #. placeholder {1}: slice[1]!.profile.displayName
 #. placeholder {2}: serverCount - 2
 #: src/components/KnownFollowers.tsx:194
-#: src/components/web/KnownFollowers.tsx:120
+#: src/components/web/KnownFollowers.tsx:107
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
@@ -6293,7 +6293,7 @@ msgid "Press to retry"
 msgstr ""
 
 #: src/components/KnownFollowers.tsx:126
-#: src/components/web/KnownFollowers.tsx:96
+#: src/components/web/KnownFollowers.tsx:95
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
@@ -6510,7 +6510,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:97
 #: src/screens/Bookmarks/index.tsx:233
 #: src/screens/Moderation/index.tsx:209
-#: src/screens/Settings/components/AccountsSection.tsx:272
+#: src/screens/Settings/components/AccountsSection.tsx:273
 #: src/view/com/posts/PostFeedErrorMessage.tsx:188
 msgid "Remove"
 msgstr ""
@@ -6531,8 +6531,8 @@ msgstr "Remove {displayName} from this group chat"
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:260
-#: src/screens/Settings/components/AccountsSection.tsx:262
+#: src/screens/Settings/components/AccountsSection.tsx:261
+#: src/screens/Settings/components/AccountsSection.tsx:263
 msgid "Remove account"
 msgstr ""
 
@@ -6580,7 +6580,7 @@ msgstr "Remove from chat"
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/components/AccountsSection.tsx:279
+#: src/screens/Settings/components/AccountsSection.tsx:280
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -8006,11 +8006,11 @@ msgid "Switch to {0}"
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/components/AccountsSection.tsx:221
+#: src/screens/Settings/components/AccountsSection.tsx:222
 msgid "Switch to @{0}"
 msgstr "Switch to @{0}"
 
-#: src/screens/Settings/components/AccountsSection.tsx:251
+#: src/screens/Settings/components/AccountsSection.tsx:252
 msgid "Switching account"
 msgstr "Switching account"
 
@@ -8220,7 +8220,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:890
-#: src/view/com/posts/PostFeed.tsx:478
+#: src/view/com/posts/PostFeed.tsx:477
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -8622,7 +8622,7 @@ msgid "This will delete \"{0}\" from your muted words. You can always add it bac
 msgstr ""
 
 #. placeholder {0}: account.handle
-#: src/screens/Settings/components/AccountsSection.tsx:273
+#: src/screens/Settings/components/AccountsSection.tsx:274
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 

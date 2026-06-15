@@ -20,7 +20,6 @@ import { useProfileQuery, useProfilesQuery } from '#/state/queries/profile';
 import { type SessionAccount, useSession, useSessionApi } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import { AvatarStack } from '#/components/AvatarStack';
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron';
 import { DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid';
@@ -37,6 +36,7 @@ import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
 import { UserAvatar } from '#/components/UserAvatar';
+import { AvatarStack } from '#/components/web/AvatarStack';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
@@ -175,6 +175,7 @@ function SwitchAccountDisclosure({
 			trailing={
 				<span className={styles.avatarStack}>
 					<AvatarStack
+						moderationOpts={moderationOpts}
 						numPending={Math.min(others.length, MAX_AVATAR_STACK)}
 						profiles={(otherProfiles ?? []).slice(0, MAX_AVATAR_STACK)}
 						size={24}

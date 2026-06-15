@@ -7,13 +7,12 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { Plural, Trans, useLingui } from '@lingui/react/macro';
-import { assignInlineVars } from '@vanilla-extract/dynamic';
 
 import { makeProfileLink } from '#/lib/routes/links';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
 import { Text } from '#/components/Text';
-import { UserAvatar } from '#/components/UserAvatar';
+import { AvatarStack } from '#/components/web/AvatarStack';
 import * as css from '#/components/web/KnownFollowers.css';
 import { Link } from '#/components/web/Link';
 
@@ -96,23 +95,11 @@ function KnownFollowersInner({
 			label={l`Press to view followers of this account that you also follow`}
 			to={makeProfileLink(profile, 'known-followers')}
 		>
-			<div className={css.avatars}>
-				{slice.map(({ moderation, profile: prof }, i) => (
-					<div
-						key={prof.did}
-						className={css.avatarWrap}
-						style={assignInlineVars({ [css.stackOrder]: String(slice.length - i) })}
-					>
-						<UserAvatar
-							avatar={prof.avatar}
-							moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
-							noBorder
-							size={AVI_SIZE}
-							type={prof.associated?.labeler ? 'labeler' : 'user'}
-						/>
-					</div>
-				))}
-			</div>
+			<AvatarStack
+				moderationOpts={moderationOpts}
+				profiles={slice.map(({ profile: prof }) => prof)}
+				size={AVI_SIZE}
+			/>
 
 			<Text className={css.text} color="textContrastMedium" numberOfLines={2} size="sm">
 				{slice.length >= 2 ? (
