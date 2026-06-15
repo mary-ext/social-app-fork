@@ -105,8 +105,7 @@ export const learnMoreLink = style({
 	borderRadius: 2,
 	selectors: {
 		[`${learnMoreButton}:focus-visible &`]: {
-			outline: `2px solid ${vars.palette.primary_500}`,
-			outlineOffset: 2,
+			textDecoration: 'underline',
 		},
 		[`${learnMoreButton}:hover &`]: {
 			textDecoration: 'underline',

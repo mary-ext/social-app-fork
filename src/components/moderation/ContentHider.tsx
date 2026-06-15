@@ -139,11 +139,17 @@ function ContentHiderActive({
 			<span className={styles.iconWrap}>
 				<desc.icon size="md" fill="currentColor" />
 			</span>
-			<Text weight="medium" color="textContrastMedium" numberOfLines={2} className={styles.labelText}>
+			<Text
+				size="md_sub"
+				weight="medium"
+				color="textContrastMedium"
+				numberOfLines={2}
+				className={styles.labelText}
+			>
 				{labelName}
 			</Text>
 			{!modui.noOverride && (
-				<Text size='md_sub' weight="medium" color="textContrastHigh" className={styles.toggleText}>
+				<Text size="md_sub" weight="medium" color="textContrastHigh" className={styles.toggleText}>
 					{override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
 				</Text>
 			)}
@@ -173,13 +179,13 @@ function ContentHiderActive({
 					className={styles.learnMoreButton}
 					aria-label={l`Learn more about the moderation applied to this content`}
 				>
-					<Text color="textContrastMedium">
+					<Text size="md_sub" color="textContrastMedium">
 						{desc.sourceType === 'user' ? (
 							<Trans>Labeled by the author.</Trans>
 						) : (
 							<Trans>Labeled by {sanitizeDisplayName(desc.source)}.</Trans>
 						)}{' '}
-						<Text color="primary_500" className={styles.learnMoreLink}>
+						<Text size="md_sub" color="primary_500" className={styles.learnMoreLink}>
 							<Trans>Learn more.</Trans>
 						</Text>
 					</Text>
