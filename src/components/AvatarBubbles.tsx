@@ -1,24 +1,17 @@
 import { useEffect, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
-
 import { Person_Filled_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { UserAvatar } from '#/components/UserAvatar';
 
-type WebViewStyle = ViewStyle & {
-	transition?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
+import * as css from './AvatarBubbles.css';
 
 type Layout = {
 	size: number;
@@ -62,8 +55,7 @@ export function AvatarBubbles({
 	const scale = size / 120;
 	const marginOffset = size < 120 ? -2 : 0;
 
-	// Drive the entrance scale from React state so the CSS transition (below) actually re-renders; the web
-	// compat shim snaps shared values, so they can't drive the transition.
+	// Drive the entrance scale from React state so the CSS transition actually re-renders into its end state.
 	const [animatedIn, setAnimatedIn] = useState(false);
 	useEffect(() => {
 		if (animate) {
@@ -74,14 +66,13 @@ export function AvatarBubbles({
 	const layouts = getLayouts(bubbleCount);
 
 	return (
-		<View style={[a.p_2xs, { height: size, width: size }]}>
-			<View
-				style={{
-					marginTop: marginOffset,
-					marginLeft: marginOffset,
-					transform: [{ scale }],
-					transformOrigin: 'top left',
-				}}
+		<div className={css.outer} style={assignInlineVars({ [css.containerSizeVar]: `${size}px` })}>
+			<div
+				className={css.inner}
+				style={assignInlineVars({
+					[css.innerOffsetVar]: `${marginOffset}px`,
+					[css.innerScaleVar]: String(scale),
+				})}
 			>
 				{layouts.map((layout, i) => (
 					<AvatarBubble
@@ -96,8 +87,8 @@ export function AvatarBubbles({
 						includeProfileBorder={layout.border}
 					/>
 				))}
-			</View>
-		</View>
+			</div>
+		</div>
 	);
 }
 
@@ -120,31 +111,23 @@ function AvatarBubble({
 	zIndex?: number;
 	includeProfileBorder?: boolean;
 }) {
-	const t = useTheme();
 	const profile = useMaybeProfileShadow(profileUnshadowed);
 	const moderationOpts = useModerationOpts();
 
-	const transformStyle: WebViewStyle = {
-		transform: [{ translateX: x }, { translateY: y }, { scale }],
-	};
-	if (transitionDelay != null) {
-		// ease-out-back scale-in: the curve overshoots past the final scale, then settles back to it
-		transformStyle.transition = `transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1) ${transitionDelay}ms`;
-	}
-
 	return (
-		<View
-			style={[
-				a.absolute,
-				a.rounded_full,
-				a.flex_grow_0,
-				includeProfileBorder && {
-					borderColor: t.atoms.text_inverted.color,
-					borderWidth: 2,
-				},
-				zIndex != null && { zIndex },
-				webViewStyle(transformStyle),
-			]}
+		<div
+			className={clsx(
+				css.bubble,
+				includeProfileBorder && css.bubbleBorder,
+				transitionDelay != null && css.bubbleAnimated,
+			)}
+			style={assignInlineVars({
+				[css.bubbleDelayVar]: transitionDelay != null ? `${transitionDelay}ms` : '0ms',
+				[css.bubbleScaleVar]: String(scale),
+				[css.bubbleXVar]: `${x}px`,
+				[css.bubbleYVar]: `${y}px`,
+				[css.bubbleZIndexVar]: zIndex != null ? String(zIndex) : 'auto',
+			})}
 		>
 			{profile && moderationOpts ? (
 				<UserAvatar
@@ -161,25 +144,15 @@ function AvatarBubble({
 			) : (
 				<AvatarPlaceholder size={size} />
 			)}
-		</View>
+		</div>
 	);
 }
 
 function AvatarPlaceholder({ size }: { size: number }) {
-	const t = useTheme();
-
 	return (
-		<View
-			style={[
-				a.align_center,
-				a.justify_center,
-				a.rounded_full,
-				t.atoms.bg_contrast_200,
-				{ width: size, height: size },
-			]}
-		>
-			<PersonIcon width={size * 0.5} height={size * 0.5} fill={t.atoms.text_inverted.color} />
-		</View>
+		<div className={css.placeholder} style={assignInlineVars({ [css.placeholderSizeVar]: `${size}px` })}>
+			<PersonIcon width={size * 0.5} fill="currentColor" />
+		</div>
 	);
 }
 
