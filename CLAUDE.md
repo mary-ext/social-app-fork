@@ -112,4 +112,4 @@ we use conventional commits with these rules:
 - when debugging, isolate the root cause before attempting fixes: add logging, reproduce the issue,
   narrow down the scope, and confirm the exact source of the problem
 - subagent/subtask exploration results may be inaccurate; verify findings as needed
-- read files directly rather than using subagents/subtasks as file I/O proxies
+- locate and read files directly rather than using subagents/subtasks as file I/O proxies
