@@ -45,6 +45,7 @@ export const RepostButton = ({
 				render={
 					<PostControlButton
 						label={l`Repost or quote post`}
+						tooltip={l`Repost`}
 						active={isReposted}
 						activeColor={t.palette.positive_500}
 						big={big}
@@ -80,6 +81,7 @@ export const RepostButton = ({
 			active={isReposted}
 			activeColor={t.palette.positive_500}
 			label={l`Repost or quote post`}
+			tooltip={l`Repost`}
 			big={big}
 		>
 			<PostControlButtonIcon icon={Repost} />

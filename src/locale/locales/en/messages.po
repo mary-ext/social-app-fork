@@ -1686,6 +1686,10 @@ msgstr ""
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
+#: src/components/PostControls/BookmarkButton.tsx:118
+msgid "Bookmark"
+msgstr "Bookmark"
+
 #: src/lib/interests.ts:53
 msgid "Books"
 msgstr ""
@@ -4509,13 +4513,14 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
+#: src/components/PostControls/index.tsx:226
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:445
 msgid "Like"
 msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:236
+#: src/components/PostControls/index.tsx:238
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -5036,6 +5041,10 @@ msgstr ""
 #: src/lib/moderation/useModerationCauseDescription.ts:49
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
+
+#: src/components/PostControls/PostMenu/index.tsx:50
+msgid "More"
+msgstr "More"
 
 #: src/components/dms/EmojiReactionPicker.tsx:100
 msgid "More emojis"
@@ -6392,8 +6401,8 @@ msgstr ""
 msgid "Push, People you follow"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:69
-#: src/components/PostControls/RepostButton.tsx:72
+#: src/components/PostControls/RepostButton.tsx:70
+#: src/components/PostControls/RepostButton.tsx:73
 #: src/view/com/composer/drafts/DraftItem.tsx:89
 msgid "Quote post"
 msgstr ""
@@ -6406,8 +6415,8 @@ msgstr ""
 msgid "Quote post was successfully detached"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:69
-#: src/components/PostControls/RepostButton.tsx:72
+#: src/components/PostControls/RepostButton.tsx:70
+#: src/components/PostControls/RepostButton.tsx:73
 msgid "Quote posts disabled"
 msgstr ""
 
@@ -6732,6 +6741,10 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
+#: src/components/PostControls/index.tsx:202
+msgid "Reply"
+msgstr "Reply"
+
 #: src/view/com/composer/Composer.tsx:1457
 msgctxt "action"
 msgid "Reply"
@@ -6866,15 +6879,20 @@ msgstr ""
 msgid "Report this user"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:59
-#: src/components/PostControls/RepostButton.tsx:63
+#: src/components/PostControls/RepostButton.tsx:48
+#: src/components/PostControls/RepostButton.tsx:84
+msgid "Repost"
+msgstr "Repost"
+
+#: src/components/PostControls/RepostButton.tsx:60
+#: src/components/PostControls/RepostButton.tsx:64
 msgctxt "action"
 msgid "Repost"
 msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:47
-#: src/components/PostControls/RepostButton.tsx:57
-#: src/components/PostControls/RepostButton.tsx:82
+#: src/components/PostControls/RepostButton.tsx:58
+#: src/components/PostControls/RepostButton.tsx:83
 #: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Repost or quote post"
 msgstr ""
@@ -7478,6 +7496,7 @@ msgstr ""
 msgid "Sexually Suggestive"
 msgstr ""
 
+#: src/components/PostControls/ShareMenu/index.tsx:36
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:81
 #: src/screens/Hashtag.tsx:112
 #: src/screens/Messages/components/InviteLinkDialog.tsx:354
@@ -8811,8 +8830,8 @@ msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:59
-#: src/components/PostControls/RepostButton.tsx:63
+#: src/components/PostControls/RepostButton.tsx:60
+#: src/components/PostControls/RepostButton.tsx:64
 msgid "Undo repost"
 msgstr ""
 
@@ -8856,7 +8875,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:228
+#: src/components/PostControls/index.tsx:230
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 

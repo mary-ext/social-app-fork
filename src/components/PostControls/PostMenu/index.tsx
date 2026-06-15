@@ -47,7 +47,7 @@ let PostMenuButton = ({
 		>
 			<Menu.Trigger
 				render={
-					<PostControlButton label={l`Open post options menu`} big={big}>
+					<PostControlButton label={l`Open post options menu`} tooltip={l`More`} big={big}>
 						<PostControlButtonIcon icon={DotsHorizontal} />
 					</PostControlButton>
 				}

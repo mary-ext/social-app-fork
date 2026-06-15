@@ -199,6 +199,7 @@ let PostControls = ({
 							comment:
 								'Accessibility label for the reply button, verb form followed by number of replies and noun form',
 						})}
+						tooltip={l`Reply`}
 						big={big}
 					>
 						<PostControlButtonIcon icon={Bubble} />
@@ -222,6 +223,7 @@ let PostControls = ({
 						big={big}
 						active={Boolean(post.viewer?.like)}
 						activeColor={t.palette.pink}
+						tooltip={l`Like`}
 						onClick={() => requireAuth(() => onPressToggleLike())}
 						label={
 							post.viewer?.like

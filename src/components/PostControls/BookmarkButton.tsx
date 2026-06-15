@@ -115,6 +115,7 @@ export const BookmarkButton = memo(function BookmarkButton({
 			active={isBookmarked}
 			activeColor={t.palette.primary_500}
 			label={isBookmarked ? l`Remove from saved posts` : l`Add to saved posts`}
+			tooltip={l`Bookmark`}
 			onClick={onHandlePress}
 		>
 			<PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />

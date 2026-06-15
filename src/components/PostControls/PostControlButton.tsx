@@ -14,6 +14,7 @@ import { atoms as a } from '#/alf';
 import type { Props as IconProps } from '#/components/icons/common';
 import * as styles from '#/components/PostControls/PostControlButton.css';
 import { Text } from '#/components/Text';
+import { Tooltip } from '#/components/web/Tooltip';
 
 const PostControlContext = createContext<{ active?: boolean; big?: boolean }>({});
 PostControlContext.displayName = 'PostControlContext';
@@ -21,6 +22,8 @@ PostControlContext.displayName = 'PostControlContext';
 export type PostControlButtonProps = {
 	/** Accessible name; becomes the `aria-label`. */
 	label: string;
+	/** Visible hover/focus hint; defaults to {@link label}. Pass `null` to suppress the tooltip. */
+	tooltip?: string | null;
 	children: ReactNode;
 	active?: boolean;
 	/** Color applied when `active`; icon + count inherit it via `currentColor`. */
@@ -46,11 +49,13 @@ export function PostControlButton({
 	label,
 	onClick,
 	style,
+	tooltip,
 	...rest
 }: PostControlButtonProps) {
-	return (
-		// Base UI's `Menu.Trigger render={...}` clones this with its own props (aria/data/handlers/id/ref)
-		// merged in, so spread them all onto the button — forwarding only the ref wouldn't open the menu.
+	const button = (
+		// Base UI's `Menu.Trigger render={...}` and `Tooltip` both clone this with their own props
+		// (aria/data/handlers/id/ref) merged in, so spread them all onto the button — forwarding only the
+		// ref wouldn't open the menu.
 		<button
 			type="button"
 			aria-label={label}
@@ -62,6 +67,11 @@ export function PostControlButton({
 			<PostControlContext.Provider value={{ active, big }}>{children}</PostControlContext.Provider>
 		</button>
 	);
+
+	if (tooltip === null) {
+		return button;
+	}
+	return <Tooltip label={tooltip ?? label}>{button}</Tooltip>;
 }
 
 /** An icon sized to the button's density, inheriting the button color via `currentColor`. */

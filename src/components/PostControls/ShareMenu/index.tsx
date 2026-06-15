@@ -33,7 +33,7 @@ let ShareMenuButton = ({
 		>
 			<Menu.Trigger
 				render={
-					<PostControlButton label={l`Open share menu`} big={big}>
+					<PostControlButton label={l`Open share menu`} tooltip={l`Share`} big={big}>
 						<PostControlButtonIcon icon={ArrowShareRightIcon} />
 					</PostControlButton>
 				}
