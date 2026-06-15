@@ -89,7 +89,7 @@ export function Root({
 				color: 'primary',
 				disabled: false,
 				onPress: () => {
-					void Clipboard.setStringAsync(`https://bsky.app/c/${preview.code}`);
+					void Clipboard.setStringAsync(`https://bsky.app/chat/${preview.code}`);
 					Toast.show(l`Copied to clipboard`, { type: 'success' });
 				},
 			};
