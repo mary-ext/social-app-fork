@@ -13,8 +13,6 @@ import { createPersistedQueryStorage } from '#/lib/persisted-query-storage';
 import { listenNetworkConfirmed, listenNetworkLost } from '#/state/events';
 import { isQueryPersisted } from '#/state/queries/util';
 
-import * as env from '#/env';
-
 declare global {
 	interface Window {
 		__TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient;
@@ -173,7 +171,7 @@ function QueryProviderInner({
 		return {
 			persister: asyncPersister,
 			dehydrateOptions,
-			buster: env.APP_VERSION,
+			buster: import.meta.env.PUBLIC_GIT_COMMIT_HASH || 'dev',
 		} satisfies Omit<PersistQueryClientOptions, 'queryClient'>;
 	});
 	useEffect(() => {}, [queryClient]);

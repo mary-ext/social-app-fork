@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { clsx } from 'clsx';
 
-import { getDeviceId } from '#/lib/device-id';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
 import { useSessionApi } from '#/state/session';
@@ -18,16 +17,12 @@ import { PaintRoller_Stroke2_Corner2_Rounded as PaintRollerIcon } from '#/compon
 import { Person_Stroke2_Corner2_Rounded as PersonIcon } from '#/components/icons/Person';
 import { RaisingHand4Finger_Stroke2_Corner2_Rounded as HandIcon } from '#/components/icons/RaisingHand';
 import { Window_Stroke2_Corner2_Rounded as WindowIcon } from '#/components/icons/Window';
-import { Wrench_Stroke2_Corner2_Rounded as WrenchIcon } from '#/components/icons/Wrench';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
 import { Text } from '#/components/Text';
-import * as Toast from '#/components/Toast';
 import * as Layout from '#/components/web/Layout';
 import * as Prompt from '#/components/web/Prompt';
 
-import * as env from '#/env';
-import { setStringAsync } from '#/shims/clipboard';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
@@ -99,7 +94,6 @@ export function SettingsScreen({}: Props) {
 					</Settings.Section>
 
 					<Settings.Section>
-						<VersionRow />
 						<Settings.LinkRow label={l`System log`} to="/sys/log">
 							<Settings.Icon icon={CodeLinesIcon} />
 							<Settings.Label titleText={<Trans>System log</Trans>} />
@@ -119,29 +113,6 @@ export function SettingsScreen({}: Props) {
 				title={l`Sign out?`}
 			/>
 		</Layout.Screen>
-	);
-}
-
-function VersionRow({ className }: { className?: string }) {
-	const { t: l } = useLingui();
-
-	const onCopy = () => {
-		void setStringAsync(
-			`Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: web; User agent: ${navigator.userAgent}; Device ID: ${getDeviceId()}`,
-		);
-		Toast.show(l`Copied build version to clipboard`);
-	};
-
-	return (
-		<button
-			aria-label={l`Version ${env.APP_VERSION}`}
-			className={clsx(cardStyles.row, cardStyles.rowInteractive, className)}
-			onClick={onCopy}
-			type="button"
-		>
-			<Settings.Icon icon={WrenchIcon} />
-			<Settings.Label subtitleText={env.APP_METADATA} titleText={<Trans>Version {env.APP_VERSION}</Trans>} />
-		</button>
 	);
 }
 

@@ -1,33 +1,11 @@
 import type { Did } from '@atcute/lexicons';
 import type { AtprotoAudience } from '@atcute/lexicons/syntax';
 
-import packageJson from '#/../package.json';
-
-/**
- * The semver version of the app, as defined in `package.json.`
- *
- * N.B. The fallback is needed for Render.com deployments
- */
-export const RELEASE_VERSION: string = import.meta.env.PUBLIC_RELEASE_VERSION || packageJson.version;
-
 /** The env the app is running in e.g. development, production */
 export const ENV: string = import.meta.env.PUBLIC_ENV as 'production' | 'development' | (string & {});
 
 /** Indicates whether the app is running in development mode. */
 export const IS_DEV = import.meta.env.DEV;
-
-/**
- * The commit hash that the current bundle was made from. The user can see the commit hash in the app's
- * settings along with the other version info. Useful for debugging/reporting.
- */
-export const BUNDLE_IDENTIFIER: string = import.meta.env.PUBLIC_BUNDLE_IDENTIFIER || 'dev';
-
-/**
- * This will always be in the format of YYMMDDHH, so that it always increases for each build. This should only
- * be used for analytics reporting and shouldn't be used to identify a specific bundle.
- */
-export const BUNDLE_DATE: number =
-	import.meta.env.PUBLIC_BUNDLE_DATE === undefined ? 0 : Number(import.meta.env.PUBLIC_BUNDLE_DATE);
 
 /** The log level for the app. */
 export const LOG_LEVEL = (import.meta.env.PUBLIC_LOG_LEVEL || 'info') as 'debug' | 'info' | 'warn' | 'error';
