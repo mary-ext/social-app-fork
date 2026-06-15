@@ -552,7 +552,7 @@ msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
-#: src/components/StarterPack/StarterPackCard.tsx:78
+#: src/components/StarterPack/StarterPackCard.tsx:105
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr ""
 
@@ -5201,8 +5201,8 @@ msgstr ""
 
 #. placeholder {0}: (view.record as AppBskyGraphStarterpack.Main).name
 #. placeholder {0}: record.name
-#: src/components/StarterPack/StarterPackCard.tsx:101
-#: src/components/StarterPack/StarterPackCard.tsx:125
+#: src/components/StarterPack/StarterPackCard.tsx:126
+#: src/components/StarterPack/StarterPackCard.tsx:153
 msgid "Navigate to {0}"
 msgstr ""
 
@@ -7844,7 +7844,7 @@ msgid "Starter Pack"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/StarterPack/StarterPackCard.tsx:67
+#: src/components/StarterPack/StarterPackCard.tsx:84
 msgid "Starter pack by {0}"
 msgstr ""
 
@@ -7852,7 +7852,7 @@ msgstr ""
 msgid "Starter pack by <0/>"
 msgstr ""
 
-#: src/components/StarterPack/StarterPackCard.tsx:66
+#: src/components/StarterPack/StarterPackCard.tsx:83
 #: src/view/com/profile/ProfileSubpageHeader.tsx:147
 msgid "Starter pack by you"
 msgstr ""
