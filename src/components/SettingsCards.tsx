@@ -13,9 +13,9 @@ import type { Props as IconProps } from '#/components/icons/common';
 import { type LinkProps, useLink } from '#/components/Link';
 import * as Select from '#/components/Select';
 import * as styles from '#/components/SettingsCards.css';
-import * as Skele from '#/components/Skeleton';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
+import * as Skele from '#/components/web/Skeleton';
 
 /**
  * The card-sectioned settings vocabulary: a {@link List} of titled {@link Section} cards, each holding
@@ -110,7 +110,7 @@ export function Label({
 			</Text>
 			{loading ? (
 				<div className={styles.subtitle}>
-					<Skele.Text style={{ width: 140 }} />
+					<Skele.Text size="md_sub" width={140} />
 				</div>
 			) : (
 				subtitleText != null && (

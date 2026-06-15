@@ -31,7 +31,6 @@ import {
 import { ProfileBadges } from '#/components/ProfileBadges';
 import * as Settings from '#/components/SettingsCards';
 import * as cardStyles from '#/components/SettingsCards.css';
-import * as Skele from '#/components/Skeleton';
 import { Spinner } from '#/components/Spinner';
 import { Text } from '#/components/Text';
 import * as Toast from '#/components/Toast';
@@ -39,6 +38,7 @@ import { UserAvatar } from '#/components/UserAvatar';
 import { AvatarStack } from '#/components/web/AvatarStack';
 import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
+import * as Skele from '#/components/web/Skeleton';
 
 import { useActorStatus } from '#/features/liveNow';
 
@@ -136,8 +136,8 @@ function CurrentAccountRowSkeleton({ className }: { className?: string }) {
 		<div className={clsx(cardStyles.rowPlain, className)}>
 			<Skele.Circle size={44} />
 			<div className={styles.identity}>
-				<Skele.Text style={{ width: 140 }} />
-				<Skele.Text style={{ width: 90 }} />
+				<Skele.Text size="lg_sub" width={140} />
+				<Skele.Text size="md_sub" width={90} />
 			</div>
 		</div>
 	);
