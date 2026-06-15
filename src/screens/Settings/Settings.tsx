@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -7,7 +7,6 @@ import { clsx } from 'clsx';
 import { getDeviceId } from '#/lib/device-id';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
-import { useDeleteActorDeclaration } from '#/state/queries/messages/actor-declaration';
 import { useSessionApi } from '#/state/session';
 
 import { Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon } from '#/components/icons/Accessibility';
@@ -29,7 +28,6 @@ import * as Prompt from '#/components/web/Prompt';
 
 import * as env from '#/env';
 import { setStringAsync } from '#/shims/clipboard';
-import { account, auth, device } from '#/storage';
 import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
@@ -106,9 +104,8 @@ export function SettingsScreen({}: Props) {
 							<Settings.Icon icon={CodeLinesIcon} />
 							<Settings.Label titleText={<Trans>System log</Trans>} />
 						</Settings.LinkRow>
+						<DevOptionsRow />
 					</Settings.Section>
-
-					{env.IS_DEV && <DevOptionsSection />}
 				</Settings.List>
 			</Layout.Content>
 
@@ -127,24 +124,6 @@ export function SettingsScreen({}: Props) {
 
 function VersionRow({ className }: { className?: string }) {
 	const { t: l } = useLingui();
-	const [devModeEnabled, setDevModeEnabled] = useDevMode();
-	const firedLongPress = useRef(false);
-	const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-	const startLongPress = () => {
-		firedLongPress.current = false;
-		timer.current = setTimeout(() => {
-			firedLongPress.current = true;
-			const newDevModeEnabled = !devModeEnabled;
-			setDevModeEnabled(newDevModeEnabled);
-			Toast.show(
-				newDevModeEnabled
-					? l({ context: 'toast', message: 'Developer mode enabled' })
-					: l({ context: 'toast', message: 'Developer mode disabled' }),
-			);
-		}, 500);
-	};
-	const cancelLongPress = () => clearTimeout(timer.current);
 
 	const onCopy = () => {
 		void setStringAsync(
@@ -157,16 +136,7 @@ function VersionRow({ className }: { className?: string }) {
 		<button
 			aria-label={l`Version ${env.APP_VERSION}`}
 			className={clsx(cardStyles.row, cardStyles.rowInteractive, className)}
-			onClick={() => {
-				if (firedLongPress.current) {
-					firedLongPress.current = false;
-					return;
-				}
-				onCopy();
-			}}
-			onPointerDown={startLongPress}
-			onPointerLeave={cancelLongPress}
-			onPointerUp={cancelLongPress}
+			onClick={onCopy}
 			type="button"
 		>
 			<Settings.Icon icon={WrenchIcon} />
@@ -175,55 +145,41 @@ function VersionRow({ className }: { className?: string }) {
 	);
 }
 
-function DevOptionsSection() {
+function DevOptionsRow({ className }: { className?: string }) {
 	const { t: l } = useLingui();
 	const navigation = useNavigation<NavigationProp>();
-	const { mutate: deleteChatDeclarationRecord } = useDeleteActorDeclaration();
 	const [debugFeedContextEnabled, setDebugFeedContextEnabled] = useDebugFeedContextEnabled();
+	const [devModeEnabled, setDevModeEnabled] = useDevMode();
 	const [open, setOpen] = useState(false);
 
-	const clearAllStorage = () => {
-		account.removeAll();
-		auth.removeAll();
-		device.removeAll();
-		Toast.show(l`Storage cleared, you need to restart the app now.`);
-	};
-
 	return (
-		<Settings.Section>
-			<Settings.CollapsibleRow
-				icon={CodeBracketsIcon}
-				label={l`Developer options`}
-				onOpenChange={setOpen}
-				open={open}
-				titleText={<Trans>Developer options</Trans>}
+		<Settings.CollapsibleRow
+			className={className}
+			icon={CodeBracketsIcon}
+			label={l`Developer options`}
+			onOpenChange={setOpen}
+			open={open}
+			titleText={<Trans>Developer options</Trans>}
+		>
+			<Settings.SwitchRow label={l`Developer mode`} onChange={setDevModeEnabled} value={devModeEnabled}>
+				<Settings.Label titleText={<Trans>Developer mode</Trans>} />
+			</Settings.SwitchRow>
+			<Settings.SwitchRow
+				label={l`Show feed context debug`}
+				onChange={setDebugFeedContextEnabled}
+				value={debugFeedContextEnabled}
 			>
-				<Settings.SwitchRow
-					label={l`Show feed context debug`}
-					onChange={setDebugFeedContextEnabled}
-					value={debugFeedContextEnabled}
-				>
-					<Settings.Label titleText={<Trans>Show feed context debug</Trans>} />
-				</Settings.SwitchRow>
-				<Settings.ButtonRow label={l`Open storybook page`} onPress={() => navigation.navigate('Debug')}>
-					<Settings.Label titleText={<Trans>Storybook</Trans>} />
-				</Settings.ButtonRow>
-				<Settings.ButtonRow
-					label={l`Open moderation debug page`}
-					onPress={() => navigation.navigate('DebugMod')}
-				>
-					<Settings.Label titleText={<Trans>Debug Moderation</Trans>} />
-				</Settings.ButtonRow>
-				<Settings.ButtonRow
-					label={l`Delete chat declaration record`}
-					onPress={() => deleteChatDeclarationRecord()}
-				>
-					<Settings.Label titleText={<Trans>Delete chat declaration record</Trans>} />
-				</Settings.ButtonRow>
-				<Settings.ButtonRow label={l`Clear all storage data`} onPress={() => void clearAllStorage()}>
-					<Settings.Label titleText={<Trans>Clear all storage data (restart after this)</Trans>} />
-				</Settings.ButtonRow>
-			</Settings.CollapsibleRow>
-		</Settings.Section>
+				<Settings.Label titleText={<Trans>Show feed context debug</Trans>} />
+			</Settings.SwitchRow>
+			<Settings.ButtonRow label={l`Open component storybook`} onPress={() => navigation.navigate('Debug')}>
+				<Settings.Label titleText={<Trans>Component storybook</Trans>} />
+			</Settings.ButtonRow>
+			<Settings.ButtonRow
+				label={l`Open moderation playground`}
+				onPress={() => navigation.navigate('DebugMod')}
+			>
+				<Settings.Label titleText={<Trans>Moderation playground</Trans>} />
+			</Settings.ButtonRow>
+		</Settings.CollapsibleRow>
 	);
 }

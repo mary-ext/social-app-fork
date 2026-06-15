@@ -2,7 +2,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { Did } from '@atcute/lexicons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { deleteRecord, putRecord } from '#/lib/api/records';
+import { putRecord } from '#/lib/api/records';
 
 import { useClients, useSession } from '#/state/session';
 
@@ -84,23 +84,6 @@ export function useUpdateActorDeclaration({
 				});
 			}
 			onError?.(error);
-		},
-	});
-}
-
-// for use in the settings screen for testing
-export function useDeleteActorDeclaration() {
-	const { currentAccount } = useSession();
-	const { pds } = useClients();
-
-	return useMutation({
-		mutationFn: async () => {
-			if (!currentAccount || !pds) throw new Error('Not signed in');
-			await deleteRecord(pds, {
-				repo: currentAccount.did as Did,
-				collection: 'chat.bsky.actor.declaration',
-				rkey: 'self',
-			});
 		},
 	});
 }
