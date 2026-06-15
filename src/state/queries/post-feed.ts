@@ -29,7 +29,7 @@ import { FollowingFeedAPI } from '#/lib/api/feed/following';
 import { LikesFeedAPI } from '#/lib/api/feed/likes';
 import { ListFeedAPI } from '#/lib/api/feed/list';
 import { PostListFeedAPI } from '#/lib/api/feed/posts';
-import type { FeedAPI, ReasonFeedSource } from '#/lib/api/feed/types';
+import type { FeedAPI } from '#/lib/api/feed/types';
 import { aggregateUserInterests } from '#/lib/api/feed/utils';
 import { DISCOVER_FEED_URI } from '#/lib/constants';
 import type { BskyPreferences } from '#/lib/moderation/preferences-types';
@@ -95,7 +95,7 @@ export interface FeedPostSlice {
 	feedContext: string | undefined;
 	reqId: string | undefined;
 	feedPostUri: string;
-	reason?: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | ReasonFeedSource;
+	reason?: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
 }
 
 export interface FeedPageUnselected {

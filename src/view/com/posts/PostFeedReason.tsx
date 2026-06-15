@@ -2,12 +2,9 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, type ModerationDecision } from '@atcute/bluesky-moderation';
 import { useLingui, Trans } from '@lingui/react/macro';
 
-import { isReasonFeedSource, type ReasonFeedSource } from '#/lib/api/feed/types';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { makeProfileLink } from '#/lib/routes/links';
-import { sanitizeDisplayName } from '#/lib/strings/display-names';
 
-import { useFeedSourceInfoQuery } from '#/state/queries/feed';
 import { useSession } from '#/state/session';
 
 import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin';
@@ -16,7 +13,6 @@ import { Text } from '#/components/Text';
 import { InlineLinkText } from '#/components/web/Link';
 import { ProfileHoverCard } from '#/components/web/ProfileHoverCard';
 
-import { LoadingPlaceholder } from '../util/LoadingPlaceholder';
 import * as css from './PostFeedReason.css';
 
 // every reason line shares one look: low-contrast, medium-weight, clamped to a single line.
@@ -32,25 +28,13 @@ export function PostFeedReason({
 	moderation,
 	onOpenReposter,
 }: {
-	reason: ReasonFeedSource | AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
+	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin;
 	moderation?: ModerationDecision;
 	onOpenReposter?: () => void;
 }) {
 	const { t: l } = useLingui();
 
 	const { currentAccount } = useSession();
-
-	if (isReasonFeedSource(reason)) {
-		// the feed-name link carries the navigation; the surrounding "From" sentence stays inert so a
-		// nested `<a>` (invalid markup) is never produced.
-		return (
-			<Text {...reasonText}>
-				<Trans context="from-feed">
-					From <FeedName uri={reason.uri} href={reason.href} />
-				</Trans>
-			</Text>
-		);
-	}
 
 	if (reason.$type === 'app.bsky.feed.defs#reasonRepost') {
 		const by = reason.by;
@@ -87,20 +71,4 @@ export function PostFeedReason({
 			</div>
 		);
 	}
-}
-
-/** Resolves a feed's display name and renders it as an inline link, with a placeholder while loading. */
-function FeedName({ href, uri }: { href: string; uri: string }) {
-	const { data, isError } = useFeedSourceInfoQuery({ uri });
-
-	if (data || isError) {
-		const displayName = data?.displayName || uri.split('/').pop() || '';
-		return (
-			<InlineLinkText {...reasonText} to={href} label={displayName}>
-				{sanitizeDisplayName(displayName)}
-			</InlineLinkText>
-		);
-	}
-
-	return <LoadingPlaceholder width={80} height={8} style={{ marginLeft: 2, top: -1 }} />;
 }

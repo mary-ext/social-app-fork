@@ -1,7 +1,6 @@
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedPost } from '@atcute/bluesky';
 
 import { isPostInLanguage } from '../../locale/helpers';
-import type { ReasonFeedSource } from './feed/types';
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost;
 
@@ -145,9 +144,7 @@ export class FeedViewPostsSlice {
 	}
 
 	get reason() {
-		return '__source' in this._feedPost
-			? (this._feedPost.__source as ReasonFeedSource)
-			: this._feedPost.reason;
+		return this._feedPost.reason;
 	}
 
 	get feedContext() {

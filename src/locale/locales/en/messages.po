@@ -3670,11 +3670,6 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:48
-msgctxt "from-feed"
-msgid "From <0/>"
-msgstr ""
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:292
 msgid "Generate a starter pack"
 msgstr ""
@@ -6021,7 +6016,7 @@ msgstr ""
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:85
+#: src/view/com/posts/PostFeedReason.tsx:69
 msgid "Pinned"
 msgstr ""
 
@@ -6867,13 +6862,13 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:71
-#: src/view/com/posts/PostFeedReason.tsx:73
+#: src/view/com/posts/PostFeedReason.tsx:55
+#: src/view/com/posts/PostFeedReason.tsx:57
 msgid "Reposted by {reposter}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedReason.tsx:71
-#: src/view/com/posts/PostFeedReason.tsx:73
+#: src/view/com/posts/PostFeedReason.tsx:55
+#: src/view/com/posts/PostFeedReason.tsx:57
 msgid "Reposted by you"
 msgstr ""
 

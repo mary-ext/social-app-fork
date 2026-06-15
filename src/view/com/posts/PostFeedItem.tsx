@@ -10,7 +10,6 @@ import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
 import { useQueryClient } from '@tanstack/react-query';
 import { clsx } from 'clsx';
 
-import type { ReasonFeedSource } from '#/lib/api/feed/types';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
@@ -43,7 +42,7 @@ import { PostFeedReason } from './PostFeedReason';
 
 interface FeedItemProps {
 	record: AppBskyFeedPost.Main;
-	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | ReasonFeedSource | undefined;
+	reason: AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | undefined;
 	moderation: ModerationDecision;
 	parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined;
 	showReplyTo: boolean;
