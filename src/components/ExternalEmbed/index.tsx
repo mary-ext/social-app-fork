@@ -141,7 +141,7 @@ function CardBody({
 					<span className={styles.globe}>
 						<Globe size="xs" fill="currentColor" />
 					</span>
-					<Text size="sm" numberOfLines={1} className={styles.domain}>
+					<Text size="xs" numberOfLines={1} className={styles.domain}>
 						{niceUrl}
 					</Text>
 				</div>

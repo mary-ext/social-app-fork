@@ -6,17 +6,9 @@ import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
 
-// shared timing for the card's border/color hover swaps.
-const transition = {
-	transitionDuration: '100ms',
-	transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
-} as const;
-
 export const wrapper = style({ marginTop: space.sm });
 
 export const card = style({
-	...transition,
-	// opaque post background so the row's hover tint doesn't bleed through the card
 	backgroundColor: colors.bg,
 	borderColor: vars.palette.contrast_100,
 	borderRadius: borderRadius.md,
@@ -60,7 +52,6 @@ export const bodyLink = style({
 
 /** Top border separating the body from the thumbnail; tracks the card's hover state. */
 export const bodyWithMedia = style({
-	...transition,
 	borderTopColor: vars.palette.contrast_100,
 	borderTopStyle: 'solid',
 	borderTopWidth: 1,
@@ -95,14 +86,13 @@ export const domainRow = style({
 	alignItems: 'center',
 	display: 'flex',
 	flexDirection: 'row',
-	gap: space._2xs,
+	gap: space.xs,
 	paddingBottom: space.sm,
 	// off the divider; a hair more than the symmetric `pb_sm` below it.
 	paddingTop: 6,
 });
 
 export const globe = style({
-	...transition,
 	color: vars.palette.contrast_400,
 	display: 'inline-flex',
 	transitionProperty: 'color',
@@ -112,7 +102,6 @@ export const globe = style({
 });
 
 export const domain = style({
-	...transition,
 	color: vars.palette.contrast_700,
 	transitionProperty: 'color',
 	selectors: {
