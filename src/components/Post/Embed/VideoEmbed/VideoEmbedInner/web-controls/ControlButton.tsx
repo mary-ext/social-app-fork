@@ -1,17 +1,6 @@
-import type { ViewStyle } from 'react-native';
-import type { SvgProps } from 'react-native-svg';
+import type { Props as IconProps } from '#/components/icons/common';
 
-import { PressableWithHover } from '#/view/com/util/PressableWithHover';
-
-import { atoms as a, useTheme } from '#/alf';
-
-type WebViewStyle = ViewStyle & {
-	transition?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
+import * as styles from './ControlButton.css';
 
 export function ControlButton({
 	active,
@@ -24,25 +13,19 @@ export function ControlButton({
 	active: boolean;
 	activeLabel: string;
 	inactiveLabel: string;
-	activeIcon: React.ComponentType<Pick<SvgProps, 'fill' | 'width'>>;
-	inactiveIcon: React.ComponentType<Pick<SvgProps, 'fill' | 'width'>>;
+	activeIcon: React.ComponentType<IconProps>;
+	inactiveIcon: React.ComponentType<IconProps>;
 	onPress: () => void;
 }) {
-	const t = useTheme();
+	const Icon = active ? ActiveIcon : InactiveIcon;
 	return (
-		<PressableWithHover
-			accessibilityRole="button"
-			accessibilityLabel={active ? activeLabel : inactiveLabel}
-			accessibilityHint=""
-			onPress={onPress}
-			style={[a.p_xs, a.rounded_full, webViewStyle({ transition: 'background-color 0.1s' })]}
-			hoverStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+		<button
+			type="button"
+			className={styles.button}
+			aria-label={active ? activeLabel : inactiveLabel}
+			onClick={onPress}
 		>
-			{active ? (
-				<ActiveIcon fill={t.palette.white} width={20} aria-hidden />
-			) : (
-				<InactiveIcon fill={t.palette.white} width={20} aria-hidden />
-			)}
-		</PressableWithHover>
+			<Icon fill="#fff" width={20} height={20} aria-hidden />
+		</button>
 	);
 }

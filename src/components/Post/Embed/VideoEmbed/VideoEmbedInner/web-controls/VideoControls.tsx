@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, View, type ViewStyle } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import type Hls from 'hls.js';
 
 import { clamp } from '#/lib/numbers';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
@@ -20,8 +17,8 @@ import {
 } from '#/components/icons/CC';
 import { Pause_Filled_Corner0_Rounded as PauseIcon } from '#/components/icons/Pause';
 import { Play_Filled_Corner0_Rounded as PlayIcon } from '#/components/icons/Play';
-import { Loader } from '#/components/Loader';
-import { Text } from '#/components/Typography';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
 
 import { IS_WEB_MOBILE_IOS, IS_WEB_TOUCH_DEVICE } from '#/env';
 import { useAutoplayDisabled } from '#/storage/hooks/autoplay';
@@ -32,17 +29,8 @@ import { TimeIndicator } from '../TimeIndicator';
 import { ControlButton } from './ControlButton';
 import { Scrubber } from './Scrubber';
 import { formatTime, useVideoElement } from './utils';
+import * as styles from './VideoControls.css';
 import { VolumeControl } from './VolumeControl';
-
-type WebViewStyle = Omit<ViewStyle, 'cursor'> & {
-	background?: string;
-	cursor?: 'none' | 'pointer';
-	transition?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style as unknown as ViewStyle;
-};
 
 export function Controls({
 	videoRef,
@@ -86,7 +74,6 @@ export function Controls({
 		error,
 		canPlay,
 	} = useVideoElement(videoRef);
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const [subtitlesEnabled, setSubtitlesEnabled] = useSubtitlesEnabled();
 	const { state: hovered, onIn: onHover, onOut: onEndHover } = useInteractionState();
@@ -314,13 +301,7 @@ export function Controls({
 
 	return (
 		<div
-			style={{
-				position: 'absolute',
-				inset: 0,
-				overflow: 'hidden',
-				display: 'flex',
-				flexDirection: 'column',
-			}}
+			className={styles.controls}
 			onClick={(evt) => {
 				evt.stopPropagation();
 				setInteractingViaKeypress(false);
@@ -333,31 +314,20 @@ export function Controls({
 			onBlur={onBlur}
 			onKeyDown={onKeyDown}
 		>
-			<Pressable
-				accessibilityRole="button"
+			<button
+				type="button"
+				className={styles.emptySpace}
+				data-cursor={showCursor || !playing ? 'pointer' : 'none'}
+				aria-label={!focused ? l`Unmute video` : playing ? l`Pause video` : l`Play video`}
 				onPointerEnter={onPointerMoveEmptySpace}
 				onPointerMove={onPointerMoveEmptySpace}
 				onPointerLeave={onPointerLeaveEmptySpace}
-				accessibilityLabel={!focused ? l`Unmute video` : playing ? l`Pause video` : l`Play video`}
-				accessibilityHint=""
-				style={[a.flex_1, webViewStyle({ cursor: showCursor || !playing ? 'pointer' : 'none' })]}
-				onPress={onPressEmptySpace}
+				onClick={onPressEmptySpace}
 			/>
 			{!showControls && !focused && duration > 0 && (
 				<TimeIndicator time={Math.floor(duration - currentTime)} />
 			)}
-			<View
-				style={[
-					a.flex_shrink_0,
-					a.w_full,
-					a.px_xs,
-					webViewStyle({
-						background: 'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
-					}),
-					{ opacity: showControls ? 1 : 0 },
-					webViewStyle({ transition: 'opacity 0.2s ease-in-out' }),
-				]}
-			>
+			<div className={styles.gradientBar} data-visible={showControls}>
 				{(!volumeHovered || IS_WEB_TOUCH_DEVICE) && (
 					<Scrubber
 						duration={duration}
@@ -371,7 +341,7 @@ export function Controls({
 						drawFocus={drawFocus}
 					/>
 				)}
-				<View style={[a.flex_1, a.px_xs, a.pb_sm, a.gap_sm, a.flex_row, a.align_center]}>
+				<div className={styles.controlsRow}>
 					<ControlButton
 						active={playing}
 						activeLabel={l`Pause`}
@@ -380,9 +350,9 @@ export function Controls({
 						inactiveIcon={PlayIcon}
 						onPress={onPressPlayPause}
 					/>
-					<View style={a.flex_1} />
+					<div className={styles.spacer} />
 					{Math.round(duration) > 0 && (
-						<Text style={[a.px_xs, { color: t.palette.white, fontVariant: ['tabular-nums'] }]}>
+						<Text className={styles.timeText}>
 							{formatTime(currentTime)} / {formatTime(duration)}
 						</Text>
 					)}
@@ -414,17 +384,17 @@ export function Controls({
 							onPress={onPressFullscreen}
 						/>
 					)}
-				</View>
-			</View>
+				</div>
+			</div>
 			{(showSpinner || error) && (
-				<View pointerEvents="none" style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-					{showSpinner && <Loader fill={t.palette.white} size="lg" />}
+				<div className={styles.overlay}>
+					{showSpinner && <Spinner label={l`Loading video`} color="#fff" size="lg" />}
 					{error && (
-						<Text style={{ color: t.palette.white }}>
+						<Text className={styles.errorText}>
 							<Trans>An error occurred</Trans>
 						</Text>
 					)}
-				</View>
+				</div>
 			)}
 		</div>
 	);

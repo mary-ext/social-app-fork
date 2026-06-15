@@ -1,5 +1,14 @@
-import { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState } from 'react';
-import { useWindowDimensions } from 'react-native';
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useId,
+	useMemo,
+	useRef,
+	useState,
+	useSyncExternalStore,
+} from 'react';
 
 const Context = createContext<{
 	activeViewId: string | null;
@@ -8,10 +17,19 @@ const Context = createContext<{
 } | null>(null);
 Context.displayName = 'ActiveVideoWebContext';
 
+function subscribeWindowResize(onChange: () => void) {
+	window.addEventListener('resize', onChange);
+	return () => window.removeEventListener('resize', onChange);
+}
+
+function useWindowHeight() {
+	return useSyncExternalStore(subscribeWindowResize, () => window.innerHeight);
+}
+
 export function Provider({ children }: { children: React.ReactNode }) {
 	const [activeViewId, setActiveViewId] = useState<string | null>(null);
 	const activeViewLocationRef = useRef(Infinity);
-	const { height: windowHeight } = useWindowDimensions();
+	const windowHeight = useWindowHeight();
 
 	// minimising re-renders by using refs
 	const manuallySetRef = useRef(false);

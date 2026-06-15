@@ -223,7 +223,7 @@ msgstr "{0} left the group"
 
 #. placeholder {0}: formatTime(currentTime)
 #. placeholder {1}: formatTime(duration)
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:202
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:179
 msgid "{0} of {1}"
 msgstr ""
 
@@ -1233,7 +1233,7 @@ msgstr ""
 #: src/components/ExternalEmbed/GifEmbed.tsx:133
 #: src/components/ImageEmbed/MediaBadges.tsx:71
 #: src/components/images/AutoSizedImage.tsx:174
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:83
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:57
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
@@ -1249,7 +1249,7 @@ msgid "Alt text"
 msgstr ""
 
 #: src/components/ExternalEmbed/GifEmbed.tsx:138
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:89
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:62
 msgid "Alt Text"
 msgstr ""
 
@@ -1264,7 +1264,7 @@ msgstr ""
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:424
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:394
 msgid "An error occurred"
 msgstr ""
 
@@ -1280,7 +1280,7 @@ msgstr ""
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:222
+#: src/components/Post/Embed/VideoEmbed/index.tsx:204
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
@@ -2024,7 +2024,7 @@ msgstr ""
 #: src/components/ExternalEmbed/GifEmbed.tsx:142
 #: src/components/intents/GroupChatJoinDialog.tsx:214
 #: src/components/intents/GroupChatJoinDialog.tsx:243
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:94
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:66
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:101
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:108
 #: src/components/suggested-follows-dialog.tsx:356
@@ -2621,7 +2621,7 @@ msgstr ""
 msgid "Disable"
 msgstr "Disable"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:392
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:362
 msgid "Disable captions"
 msgstr "Disable captions"
 
@@ -2932,7 +2932,7 @@ msgstr ""
 msgid "Embedded player"
 msgstr "Embedded player"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:58
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:54
 msgid "Embedded video player"
 msgstr ""
 
@@ -2945,7 +2945,7 @@ msgstr ""
 msgid "Enable adult content"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:393
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:363
 msgid "Enable captions"
 msgstr "Enable captions"
 
@@ -2984,7 +2984,7 @@ msgstr "Ensure you have selected a language for each caption file."
 msgid "Enter a word or tag"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:411
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -3058,7 +3058,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:410
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:380
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -3792,7 +3792,7 @@ msgstr ""
 
 #: src/components/ExternalEmbed/GifEmbed.tsx:86
 #: src/components/MediaPreview.tsx:130
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:59
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:36
 #: src/view/com/composer/drafts/DraftItem.tsx:221
 msgid "GIF"
 msgstr ""
@@ -4741,6 +4741,7 @@ msgstr "Loading drafts"
 
 #: src/components/ExternalEmbed/ExternalGif.tsx:67
 #: src/components/ExternalEmbed/GifEmbed.tsx:82
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
 msgid "Loading GIF"
 msgstr "Loading GIF"
 
@@ -4763,6 +4764,7 @@ msgid "Loading post interaction settings..."
 msgstr ""
 
 #: src/components/ExternalEmbed/ExternalPlayer.tsx:86
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:391
 msgid "Loading video"
 msgstr "Loading video"
 
@@ -5084,7 +5086,7 @@ msgstr ""
 msgid "Mute"
 msgstr "Mute"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:91
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:77
 msgctxt "video"
 msgid "Mute"
 msgstr ""
@@ -5931,16 +5933,16 @@ msgstr ""
 msgid "Party GIFs"
 msgstr "Party GIFs"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:377
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:347
 msgid "Pause"
 msgstr ""
 
 #: src/components/ExternalEmbed/GifEmbed.tsx:79
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
 msgid "Pause GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Pause video"
 msgstr ""
 
@@ -6054,7 +6056,7 @@ msgstr ""
 msgid "Pinned to your feeds"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:378
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:348
 msgid "Play"
 msgstr ""
 
@@ -6064,20 +6066,16 @@ msgid "Play {0}"
 msgstr ""
 
 #: src/components/ExternalEmbed/GifEmbed.tsx:79
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:31
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:28
 msgid "Play GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr ""
 
 #: src/components/ExternalEmbed/ExternalPlayer.tsx:85
 msgid "Play Video"
-msgstr ""
-
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:32
-msgid "Plays or pauses the GIF"
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:88
@@ -6968,8 +6966,8 @@ msgstr ""
 #: src/components/Error.tsx:63
 #: src/components/Lists.tsx:88
 #: src/components/moderation/ReportDialog/index.tsx:262
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:47
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:50
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:25
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:28
 #: src/components/StarterPack/ProfileStarterPacks.tsx:321
 #: src/features/gifPicker/components/GifPickerGrid.tsx:88
 #: src/features/gifPicker/components/GifPickerGrid.tsx:89
@@ -7272,7 +7270,7 @@ msgstr ""
 msgid "See this guide"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:197
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:174
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
 msgstr ""
 
@@ -7534,7 +7532,7 @@ msgid "Show"
 msgstr ""
 
 #: src/components/ExternalEmbed/GifEmbed.tsx:129
-#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:76
+#: src/components/Post/Embed/VideoEmbed/GifPresentationControls.tsx:53
 msgid "Show alt text"
 msgstr ""
 
@@ -8612,7 +8610,7 @@ msgstr ""
 msgid "This user isn't following anyone."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:220
+#: src/components/Post/Embed/VideoEmbed/index.tsx:202
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 msgstr "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
 
@@ -8653,7 +8651,7 @@ msgid "Threats or incitement"
 msgstr ""
 
 #. placeholder {0}: Number(time) || 0
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:24
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:21
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
@@ -8878,7 +8876,7 @@ msgstr "Unlock this group chat"
 msgid "Unmute"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:90
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:76
 msgctxt "video"
 msgid "Unmute"
 msgstr ""
@@ -8917,7 +8915,7 @@ msgstr "Unmute this group chat"
 msgid "Unmute thread"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:341
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Unmute video"
 msgstr ""
 
@@ -9153,7 +9151,7 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:217
+#: src/components/Post/Embed/VideoEmbed/index.tsx:199
 msgid "Video not found."
 msgstr ""
 
@@ -9350,7 +9348,7 @@ msgstr ""
 msgid "Visit your notification settings"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:76
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:65
 msgid "Volume"
 msgstr ""
 

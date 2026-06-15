@@ -1,15 +1,11 @@
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import { HITSLOP_20 } from '#/lib/constants';
+import { PlayButtonIcon } from '#/components/PlayButtonIcon';
+import { Spinner } from '#/components/Spinner';
+import { Text } from '#/components/Text';
+import * as Prompt from '#/components/web/Prompt';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button } from '#/components/Button';
-import { Fill } from '#/components/Fill';
-import * as Prompt from '#/components/Prompt';
-import { Text } from '#/components/Typography';
-import { PlayButtonIcon } from '#/components/video/PlayButtonIcon';
+import * as styles from './GifPresentationControls.css';
 
 export function GifPresentationControls({
 	onPress,
@@ -23,100 +19,53 @@ export function GifPresentationControls({
 	altText?: string;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 
 	return (
 		<>
-			<Button
-				label={isPlaying ? l`Pause GIF` : l`Play GIF`}
-				accessibilityHint={l`Plays or pauses the GIF`}
-				style={[a.absolute, a.align_center, a.justify_center, a.inset_0, { zIndex: 2 }]}
-				onPress={onPress}
+			<button
+				type="button"
+				className={styles.playButton}
+				aria-label={isPlaying ? l`Pause GIF` : l`Play GIF`}
+				onClick={onPress}
 			>
-				{isLoading ? (
-					<View style={[a.align_center, a.justify_center]}>
-						<ActivityIndicator size="large" color="white" />
-					</View>
-				) : !isPlaying ? (
-					<PlayButtonIcon />
-				) : (
-					<></>
-				)}
-			</Button>
-			{!isPlaying && (
-				<Fill
-					style={[
-						t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
-						{
-							opacity: 0.2,
-							zIndex: 1,
-						},
-					]}
-				/>
-			)}
-			<View style={styles.gifBadgeContainer}>
-				<Text style={[{ color: 'white' }, a.font_bold, a.text_xs]}>
+				{isLoading ? <Spinner label={l`Loading GIF`} /> : !isPlaying ? <PlayButtonIcon /> : null}
+			</button>
+			{!isPlaying && <div aria-hidden className={styles.dim} />}
+			<div className={styles.gifBadge}>
+				<Text size="xs" weight="bold" className={styles.badgeText}>
 					<Trans>GIF</Trans>
 				</Text>
-			</View>
+			</div>
 			{altText && <AltBadge text={altText} />}
 		</>
 	);
 }
 
 function AltBadge({ text }: { text: string }) {
-	const control = Prompt.usePromptControl();
 	const { t: l } = useLingui();
+	const handle = Prompt.usePromptHandle();
 
 	return (
 		<>
-			<TouchableOpacity
-				testID="altTextButton"
-				accessibilityRole="button"
-				accessibilityLabel={l`Show alt text`}
-				accessibilityHint=""
-				hitSlop={HITSLOP_20}
-				onPress={control.open}
-				style={styles.altBadgeContainer}
+			<button
+				type="button"
+				className={styles.altBadge}
+				aria-label={l`Show alt text`}
+				onClick={() => handle.open(null)}
 			>
-				<Text style={[{ color: 'white' }, a.font_bold, a.text_xs]} accessible={false}>
+				<Text size="xs" weight="bold" className={styles.badgeText}>
 					<Trans>ALT</Trans>
 				</Text>
-			</TouchableOpacity>
-			<Prompt.Outer control={control}>
-				<Prompt.Content>
-					<Prompt.TitleText>
-						<Trans>Alt Text</Trans>
-					</Prompt.TitleText>
-					<Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
-				</Prompt.Content>
+			</button>
+			<Prompt.Outer handle={handle}>
+				<Prompt.TitleText>
+					<Trans>Alt Text</Trans>
+				</Prompt.TitleText>
+				<Prompt.DescriptionText>{text}</Prompt.DescriptionText>
 				<Prompt.Actions>
-					<Prompt.Action onPress={() => control.close()} cta={l`Close`} color="secondary" />
+					<Prompt.Action onPress={() => {}} cta={l`Close`} color="secondary" />
 				</Prompt.Actions>
 			</Prompt.Outer>
 		</>
 	);
 }
-
-const styles = StyleSheet.create({
-	gifBadgeContainer: {
-		backgroundColor: 'rgba(0, 0, 0, 0.75)',
-		borderRadius: 6,
-		paddingHorizontal: 4,
-		paddingVertical: 3,
-		position: 'absolute',
-		left: 6,
-		bottom: 6,
-		zIndex: 2,
-	},
-	altBadgeContainer: {
-		backgroundColor: 'rgba(0, 0, 0, 0.75)',
-		borderRadius: 6,
-		paddingHorizontal: 4,
-		paddingVertical: 3,
-		position: 'absolute',
-		right: 6,
-		bottom: 6,
-		zIndex: 2,
-	},
-});

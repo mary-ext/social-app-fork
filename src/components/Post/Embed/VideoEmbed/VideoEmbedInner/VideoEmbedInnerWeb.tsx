@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import type * as HlsTypes from 'hls.js';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
-import { atoms as a } from '#/alf';
-
 import * as BandwidthEstimate from './bandwidth-estimate';
+import * as styles from './VideoEmbedInnerWeb.css';
 import { Controls } from './web-controls/VideoControls';
 
 export function VideoEmbedInnerWeb({
@@ -53,11 +51,7 @@ export function VideoEmbedInnerWeb({
 	}, [lastKnownTime]);
 
 	return (
-		<View
-			style={[a.flex_1, a.rounded_md, a.overflow_hidden]}
-			accessibilityLabel={l`Embedded video player`}
-			accessibilityHint=""
-		>
+		<div className={styles.root} aria-label={l`Embedded video player`}>
 			<div ref={containerRef} style={{ height: '100%', width: '100%' }}>
 				<figure style={{ margin: 0, position: 'absolute', inset: 0 }}>
 					<video
@@ -74,7 +68,7 @@ export function VideoEmbedInnerWeb({
 						loop={loop}
 					/>
 					{embed.alt && (
-						<figcaption id={figId} style={a.sr_only}>
+						<figcaption id={figId} className={styles.srOnly}>
 							{embed.alt}
 						</figcaption>
 					)}
@@ -95,7 +89,7 @@ export function VideoEmbedInnerWeb({
 					updateCuePositions={updateCuePositions}
 				/>
 			</div>
-		</View>
+		</div>
 	);
 }
 

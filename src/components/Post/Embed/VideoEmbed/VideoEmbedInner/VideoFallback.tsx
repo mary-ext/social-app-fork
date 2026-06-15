@@ -1,42 +1,20 @@
-import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon } from '#/components/icons/ArrowRotate';
-import { MediaInsetBorder } from '#/components/MediaInsetBorder';
-import { Text as TypoText } from '#/components/Typography';
+import { Text as TextPrimitive } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+
+import * as styles from './VideoFallback.css';
 
 export function Container({ children }: { children: React.ReactNode }) {
-	const t = useTheme();
-	return (
-		<View
-			style={[
-				a.flex_1,
-				t.atoms.bg_contrast_25,
-				a.justify_center,
-				a.align_center,
-				a.px_lg,
-				a.rounded_md,
-				a.overflow_hidden,
-				a.gap_lg,
-			]}
-		>
-			{children}
-			<MediaInsetBorder />
-		</View>
-	);
+	return <div className={styles.container}>{children}</div>;
 }
 
 export function Text({ children }: { children: React.ReactNode }) {
-	const t = useTheme();
 	return (
-		<TypoText
-			style={[a.text_center, t.atoms.text_contrast_high, a.text_md, a.leading_snug, { maxWidth: 300 }]}
-		>
+		<TextPrimitive size="md" align="center" className={styles.text}>
 			{children}
-		</TypoText>
+		</TextPrimitive>
 	);
 }
 
@@ -44,7 +22,7 @@ export function RetryButton({ onPress }: { onPress: () => void }) {
 	const { t: l } = useLingui();
 
 	return (
-		<Button onPress={onPress} size="small" color="secondary_inverted" label={l`Retry`}>
+		<Button onClick={onPress} size="small" color="secondary_inverted" variant="solid" label={l`Retry`}>
 			<ButtonIcon icon={ArrowRotateIcon} />
 			<ButtonText>
 				<Trans>Retry</Trans>

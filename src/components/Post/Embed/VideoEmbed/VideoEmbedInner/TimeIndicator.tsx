@@ -1,14 +1,12 @@
-import { type StyleProp, type ViewStyle, View } from 'react-native';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
-import { atoms as a, useTheme } from '#/alf';
+import { Text } from '#/components/Text';
 
-import { Text } from '#/components/Typography';
+import * as styles from './TimeIndicator.css';
 
-/** Absolutely positioned time indicator showing how many seconds are remaining Time is in seconds */
-export function TimeIndicator({ time, style }: { time: number; style?: StyleProp<ViewStyle> }) {
-	const t = useTheme();
+/** Absolutely positioned time indicator showing how many seconds are remaining. Time is in seconds. */
+export function TimeIndicator({ time }: { time: number }) {
 	const { t: l } = useLingui();
 
 	if (isNaN(time)) {
@@ -19,37 +17,16 @@ export function TimeIndicator({ time, style }: { time: number; style?: StyleProp
 	const seconds = String(time % 60).padStart(2, '0');
 
 	return (
-		<View
-			pointerEvents="none"
-			accessibilityLabel={l`Time remaining: ${plural(Number(time) || 0, {
+		<div
+			aria-label={l`Time remaining: ${plural(Number(time) || 0, {
 				one: '# second',
 				other: '# seconds',
 			})}`}
-			accessibilityHint=""
-			style={[
-				{
-					backgroundColor: 'rgba(0, 0, 0, 0.5)',
-					borderRadius: 6,
-					paddingHorizontal: 6,
-					paddingVertical: 3,
-					left: 6,
-					bottom: 6,
-					minHeight: 21,
-				},
-				a.absolute,
-				a.justify_center,
-				style,
-			]}
+			className={styles.indicator}
 		>
-			<Text
-				style={[
-					{ color: t.palette.white, fontSize: 12, fontVariant: ['tabular-nums'] },
-					a.font_semi_bold,
-					{ lineHeight: 1.25 },
-				]}
-			>
+			<Text size="sm" weight="semiBold" className={styles.text}>
 				{`${minutes}:${seconds}`}
 			</Text>
-		</View>
+		</div>
 	);
 }

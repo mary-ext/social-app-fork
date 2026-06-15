@@ -1,24 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { View, type ViewStyle } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { clamp } from '#/lib/numbers';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 
 import { IS_WEB_FIREFOX, IS_WEB_TOUCH_DEVICE } from '#/env';
 
+import * as styles from './Scrubber.css';
 import { formatTime } from './utils';
-
-type WebViewStyle = ViewStyle & {
-	transition?: string;
-};
-
-const webViewStyle = (style: WebViewStyle): ViewStyle => {
-	return style;
-};
 
 export function Scrubber({
 	duration,
@@ -42,7 +34,6 @@ export function Scrubber({
 	drawFocus: () => void;
 }) {
 	const { t: l } = useLingui();
-	const t = useTheme();
 	const [scrubberActive, setScrubberActive] = useState(false);
 	const { state: hovered, onIn: onStartHover, onOut: onEndHover } = useInteractionState();
 	const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState();
@@ -151,47 +142,33 @@ export function Scrubber({
 
 	const progress = scrubberActive ? seekPosition : currentTime;
 	const progressPercent = (progress / duration) * 100;
+	const circleScale = hovered || scrubberActive || focused ? (scrubberActive ? 1 : 0.6) : 0;
 
 	if (duration < 3) return null;
 
 	return (
-		<View
-			testID="scrubber"
-			style={[{ height: IS_WEB_TOUCH_DEVICE ? 32 : 18, width: '100%' }, a.flex_shrink_0, a.px_xs]}
+		<div
+			className={clsx(styles.scrubber, IS_WEB_TOUCH_DEVICE && styles.scrubberTouch)}
 			onPointerEnter={onStartHover}
 			onPointerLeave={onEndHover}
 		>
 			<div
 				ref={barRef}
-				style={{
-					flex: 1,
-					display: 'flex',
-					alignItems: 'center',
-					position: 'relative',
-					cursor: scrubberActive ? 'grabbing' : 'grab',
-					padding: '4px 0',
-				}}
+				className={styles.bar}
+				data-active={scrubberActive}
+				data-expanded={hovered || scrubberActive}
+				style={assignInlineVars({
+					[styles.progressVar]: `${progressPercent}%`,
+					[styles.scaleVar]: String(circleScale),
+				})}
 				onPointerDown={onPointerDown}
 				onPointerMove={onPointerMove}
 				onPointerUp={onPointerUp}
 				onPointerCancel={onPointerUp}
 			>
-				<View
-					style={[
-						a.w_full,
-						a.rounded_full,
-						a.overflow_hidden,
-						{ backgroundColor: 'rgba(255, 255, 255, 0.4)' },
-						{ height: hovered || scrubberActive ? 6 : 3 },
-						webViewStyle({ transition: 'height 0.1s ease' }),
-					]}
-				>
-					{duration > 0 && (
-						<View
-							style={[a.h_full, { backgroundColor: t.palette.white }, { width: `${progressPercent}%` }]}
-						/>
-					)}
-				</View>
+				<div className={styles.track}>
+					<div className={styles.fill} />
+				</div>
 				<div
 					ref={circleRef}
 					aria-label={l`Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause`}
@@ -203,32 +180,11 @@ export function Scrubber({
 					tabIndex={0}
 					onFocus={onFocus}
 					onBlur={onBlur}
-					style={{
-						position: 'absolute',
-						height: 16,
-						width: 16,
-						left: `calc(${progressPercent}% - 8px)`,
-						borderRadius: 8,
-						pointerEvents: 'none',
-					}}
+					className={styles.circle}
 				>
-					<View
-						style={[
-							a.w_full,
-							a.h_full,
-							a.rounded_full,
-							{ backgroundColor: t.palette.white },
-							{
-								transform: [
-									{
-										scale: hovered || scrubberActive || focused ? (scrubberActive ? 1 : 0.6) : 0,
-									},
-								],
-							},
-						]}
-					/>
+					<div className={styles.circleInner} />
 				</div>
 			</div>
-		</View>
+		</div>
 	);
 }

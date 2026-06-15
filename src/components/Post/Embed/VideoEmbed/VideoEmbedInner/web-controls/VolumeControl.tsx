@@ -1,8 +1,6 @@
 import { useCallback } from 'react';
-import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
-
-import { atoms as a } from '#/alf';
+import { clsx } from 'clsx';
 
 import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute';
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker';
@@ -11,6 +9,7 @@ import { useVideoVolumeState } from '#/components/Post/Embed/VideoEmbed/VideoVol
 import { IS_WEB_SAFARI, IS_WEB_TOUCH_DEVICE } from '#/env';
 
 import { ControlButton } from './ControlButton';
+import * as styles from './VolumeControl.css';
 
 export function VolumeControl({
 	muted,
@@ -54,36 +53,23 @@ export function VolumeControl({
 	}, [drawFocus, setVolume, isZeroVolume, changeMuted]);
 
 	return (
-		<View onPointerEnter={onHover} onPointerLeave={onEndHover} style={[a.relative]}>
+		<div className={styles.root} onPointerEnter={onHover} onPointerLeave={onEndHover}>
 			{hovered && !IS_WEB_TOUCH_DEVICE && (
-				<View style={[a.absolute, a.w_full, { height: 100, bottom: '100%' }]}>
-					<View
-						style={[
-							a.flex_1,
-							a.mb_xs,
-							a.px_2xs,
-							a.py_xs,
-							{ backgroundColor: 'rgba(0, 0, 0, 0.6)' },
-							a.rounded_xs,
-							a.align_center,
-						]}
-					>
+				<div className={styles.popup}>
+					<div className={styles.popupInner}>
 						<input
 							type="range"
 							min={0}
 							max={100}
 							value={sliderVolume}
 							aria-label={l`Volume`}
-							style={
-								// Ridiculous safari hack for old version of safari. Fixed in sonoma beta -h
-								IS_WEB_SAFARI ? { height: 92, minHeight: '100%' } : { height: '100%' }
-							}
+							className={clsx(styles.slider, IS_WEB_SAFARI && styles.sliderSafari)}
 							onChange={onVolumeChange}
 							// @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn
 							orient="vertical"
 						/>
-					</View>
-				</View>
+					</div>
+				</div>
 			)}
 			<ControlButton
 				active={muted || volume === 0}
@@ -93,7 +79,7 @@ export function VolumeControl({
 				inactiveIcon={UnmuteIcon}
 				onPress={onPressMute}
 			/>
-		</View>
+		</div>
 	);
 }
 

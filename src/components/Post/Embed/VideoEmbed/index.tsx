@@ -1,17 +1,14 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { View } from 'react-native';
 import type { AppBskyEmbedVideo } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
+import { assignInlineVars } from '@vanilla-extract/dynamic';
+import { clsx } from 'clsx';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
-
-import { atoms as a, useTheme } from '#/alf';
 
 import { noRowLink } from '#/components/BlockLink';
 import { useIsWithinMessage } from '#/components/dms/MessageContext';
 import { useFullscreen } from '#/components/hooks/useFullscreen';
-import { ConstrainedImage } from '#/components/images/AutoSizedImage';
-import { MediaInsetBorder } from '#/components/MediaInsetBorder';
 import {
 	HLSUnsupportedError,
 	VideoEmbedInnerWeb,
@@ -21,12 +18,12 @@ import {
 import { IS_WEB_FIREFOX } from '#/env';
 
 import { useActiveVideoWeb } from './ActiveVideoWebContext';
+import * as styles from './index.css';
 import * as VideoFallback from './VideoEmbedInner/VideoFallback';
 
 const noop = () => {};
 
 export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
-	const t = useTheme();
 	const ref = useRef<HTMLDivElement>(null);
 	const { active: activeFromContext, setActive, sendPosition, currentActiveView } = useActiveVideoWeb();
 	const [onScreen, setOnScreen] = useState(false);
@@ -77,19 +74,14 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 		constrained = Math.max(aspectRatio, ratio);
 	}
 
+	// computed as a % `paddingTop` driving the bounding-box height (1:1 max).
+	const pad = `${Math.min(1 / (constrained ?? 1), 1) * 100}%`;
+
 	const contents = (
 		<div
 			ref={ref}
-			style={{
-				display: 'flex',
-				flex: 1,
-				cursor: 'default',
-				backgroundColor: t.palette.black,
-				backgroundImage: `url(${embed.thumbnail})`,
-				backgroundSize: 'contain',
-				backgroundPosition: 'center',
-				backgroundRepeat: 'no-repeat',
-			}}
+			className={styles.contents}
+			style={assignInlineVars({ [styles.thumbVar]: `url(${embed.thumbnail})` })}
 			{...noRowLink}
 		>
 			<ErrorBoundary renderError={renderError} key={key}>
@@ -107,23 +99,20 @@ export function VideoEmbed({ embed }: { embed: AppBskyEmbedVideo.View }) {
 	);
 
 	return (
-		<View style={[a.pt_xs]}>
+		<div className={styles.root}>
 			<ViewportObserver
 				sendPosition={isGif ? noop : sendPosition}
 				isAnyViewActive={currentActiveView !== null}
 			>
-				<ConstrainedImage
-					fullBleed
-					aspectRatio={constrained || 1}
-					// slightly smaller max height than images
-					// images use 16 / 9, for reference
-					minMobileAspectRatio={14 / 9}
-				>
-					{contents}
-					<MediaInsetBorder />
-				</ConstrainedImage>
+				<div className={styles.sizer}>
+					<div className={styles.sizerInner} style={assignInlineVars({ [styles.padVar]: pad })}>
+						<div className={styles.abs}>
+							<div className={styles.box}>{contents}</div>
+						</div>
+					</div>
+				</div>
 			</ViewportObserver>
-		</View>
+		</div>
 	);
 }
 
@@ -179,20 +168,13 @@ function ViewportObserver({
 	}, [isAnyViewActive, sendPosition]);
 
 	return (
-		<View style={[a.flex_1, a.flex_row]}>
+		<div className={styles.viewport}>
 			<NearScreenContext.Provider value={nearScreen}>{children}</NearScreenContext.Provider>
 			<div
 				ref={ref}
-				style={{
-					// Don't escape bounds when in a message
-					...(isWithinMessage ? { top: 0, height: '100%' } : { top: 'calc(50% - 50vh)', height: '100vh' }),
-					position: 'absolute',
-					left: '50%',
-					width: 1,
-					pointerEvents: 'none',
-				}}
+				className={clsx(styles.observer, isWithinMessage ? styles.observerInMessage : styles.observerDefault)}
 			/>
-		</View>
+		</div>
 	);
 }
 
