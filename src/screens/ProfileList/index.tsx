@@ -225,12 +225,9 @@ function ProfileListScreenLoaded({
 							)}
 						</PagerWithHeader>
 						<FAB
-							testID="composeFAB"
-							onPress={() => openComposer({ logContext: 'Fab' })}
 							icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-							accessibilityRole="button"
-							accessibilityLabel={l`New post`}
-							accessibilityHint=""
+							label={l`New post`}
+							onClick={() => openComposer({ logContext: 'Fab' })}
 						/>
 					</View>
 					<ListAddRemoveUsersDialog control={addUserDialogControl} list={list} onChange={onChangeMembers} />
@@ -263,12 +260,9 @@ function ProfileListScreenLoaded({
 						/>
 					)}
 					<FAB
-						testID="composeFAB"
-						onPress={() => openComposer({ logContext: 'Fab' })}
 						icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-						accessibilityRole="button"
-						accessibilityLabel={l`New post`}
-						accessibilityHint=""
+						label={l`New post`}
+						onClick={() => openComposer({ logContext: 'Fab' })}
 					/>
 				</View>
 				<ListAddRemoveUsersDialog control={addUserDialogControl} list={list} onChange={onChangeMembers} />

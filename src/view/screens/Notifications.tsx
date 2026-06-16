@@ -145,12 +145,9 @@ export function NotificationsScreen({}: Props) {
 				))}
 			</Pager>
 			<FAB
-				testID="composeFAB"
-				onPress={() => openComposer({ logContext: 'Fab' })}
 				icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-				accessibilityRole="button"
-				accessibilityLabel={l`New post`}
-				accessibilityHint=""
+				label={l`New post`}
+				onClick={() => openComposer({ logContext: 'Fab' })}
 			/>
 		</Layout.Screen>
 	);

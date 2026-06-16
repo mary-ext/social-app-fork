@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import {
 	DisplayContext,
@@ -18,7 +16,6 @@ import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } fr
 import { combinedDisplayName } from '#/lib/strings/display-names';
 import { cleanError } from '#/lib/strings/errors';
 import { isInvalidHandle } from '#/lib/strings/handles';
-import { colors } from '#/lib/styles';
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { listenSoftReset } from '#/state/events';
@@ -53,6 +50,8 @@ import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPack
 import * as Tabs from '#/components/web/Tabs';
 
 import { navigate } from '#/Navigation';
+
+import * as css from './Profile.css';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>;
 export function ProfileScreen(props: Props) {
@@ -120,15 +119,12 @@ function ProfileScreenInner({ route }: Props) {
 	}
 	if (resolveError || profileError) {
 		return (
-			<SafeAreaView style={[a.flex_1]}>
-				<ErrorScreen
-					testID="profileErrorScreen"
-					title={profileError ? l`Not Found` : l`Oops!`}
-					message={cleanError(resolveError || profileError)}
-					onPressTryAgain={onPressTryAgain}
-					showHeader
-				/>
-			</SafeAreaView>
+			<ErrorScreen
+				title={profileError ? l`Not Found` : l`Oops!`}
+				message={cleanError(resolveError || profileError)}
+				onPressTryAgain={onPressTryAgain}
+				showHeader
+			/>
 		);
 	}
 	if (profile && moderationOpts) {
@@ -143,15 +139,12 @@ function ProfileScreenInner({ route }: Props) {
 	}
 	// should never happen
 	return (
-		<SafeAreaView style={[a.flex_1]}>
-			<ErrorScreen
-				testID="profileErrorScreen"
-				title="Oops!"
-				message="Something went wrong and we're not sure what."
-				onPressTryAgain={onPressTryAgain}
-				showHeader
-			/>
-		</SafeAreaView>
+		<ErrorScreen
+			title="Oops!"
+			message="Something went wrong and we're not sure what."
+			onPressTryAgain={onPressTryAgain}
+			showHeader
+		/>
 	);
 }
 
@@ -394,8 +387,7 @@ function ProfileScreenLoaded({
 
 	return (
 		<ScreenHider
-			testID="profileView"
-			style={styles.container}
+			className={css.container}
 			screenDescription={l`user`}
 			modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 		>
@@ -433,12 +425,9 @@ function ProfileScreenLoaded({
 			</Tabs.Root>
 			{hasSession && (
 				<FAB
-					testID="composeFAB"
-					onPress={onPressCompose}
 					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-					accessibilityRole="button"
-					accessibilityLabel={l`New post`}
-					accessibilityHint=""
+					label={l`New post`}
+					onClick={onPressCompose}
 				/>
 			)}
 		</ScreenHider>
@@ -452,28 +441,3 @@ interface ProfileSection {
 	render: (isFocused: boolean) => React.ReactNode;
 	title: string;
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flexDirection: 'column',
-		height: '100%',
-		// @ts-ignore Web-only.
-		overflowAnchor: 'none', // Fixes jumps when switching tabs while scrolled down.
-	},
-	loading: {
-		paddingVertical: 10,
-		paddingHorizontal: 14,
-	},
-	emptyState: {
-		paddingVertical: 40,
-	},
-	loadingMoreFooter: {
-		paddingVertical: 20,
-	},
-	endItem: {
-		paddingTop: 20,
-		paddingBottom: 30,
-		color: colors.gray5,
-		textAlign: 'center',
-	},
-});

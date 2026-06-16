@@ -1,15 +1,20 @@
-import { View } from 'react-native';
+import type { ReactNode } from 'react';
 
-import { useBreakpoints } from '#/alf';
+import * as css from './FAB.css';
 
-import { FABInner, type FABProps } from './FABInner';
+export interface FABProps {
+	/** Glyph rendered centered in the button. */
+	icon: ReactNode;
+	/** Accessible name; becomes the `aria-label`. */
+	label: string;
+	onClick: () => void;
+}
 
-export const FAB = (props: FABProps) => {
-	const { gtMobile } = useBreakpoints();
-
-	if (!gtMobile) {
-		return <FABInner {...props} />;
-	}
-
-	return <View />;
-};
+/** Floating compose button, fixed to the bottom-right on narrow viewports and hidden on wider ones. */
+export function FAB({ icon, label, onClick }: FABProps) {
+	return (
+		<button aria-label={label} className={css.fab} onClick={onClick} type="button">
+			{icon}
+		</button>
+	);
+}

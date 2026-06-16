@@ -1,53 +1,40 @@
 import { useState } from 'react';
-import { type StyleProp, TouchableWithoutFeedback, View, type ViewStyle } from 'react-native';
 import { type DisplayRestrictions, ModerationCauseType } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
-import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription';
 import type { NavigationProp } from '#/lib/routes/types';
 
-import { CenteredView } from '#/view/com/util/Views';
-
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonText } from '#/components/Button';
+import { Text } from '#/components/Text';
+import { Button, ButtonText } from '#/components/web/Button';
+import * as Dialog from '#/components/web/Dialog';
 import {
 	ModerationDetailsDialog,
 	useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog';
-import { Text } from '#/components/Typography';
+} from '#/components/web/moderation/ModerationDetailsDialog';
+
+import * as css from './ScreenHider.css';
 
 export function ScreenHider({
-	testID,
 	screenDescription,
 	modui,
-	style,
-	containerStyle,
+	className,
 	children,
 }: React.PropsWithChildren<{
-	testID?: string;
 	screenDescription: string;
 	modui: DisplayRestrictions;
-	style?: StyleProp<ViewStyle>;
-	containerStyle?: StyleProp<ViewStyle>;
+	className?: string;
 }>) {
-	const t = useTheme();
 	const { t: l } = useLingui();
 	const [override, setOverride] = useState(false);
 	const navigation = useNavigation<NavigationProp>();
-	const { isMobile } = useWebMediaQueries();
 	const control = useModerationDetailsDialogControl();
 	const blur = modui.blurs[0];
 	const desc = useModerationCauseDescription(blur);
 
 	if (!blur || override) {
-		return (
-			<View testID={testID} style={style}>
-				{children}
-			</View>
-		);
+		return <div className={className}>{children}</div>;
 	}
 
 	const isNoPwi = !!modui.blurs.find(
@@ -55,90 +42,52 @@ export function ScreenHider({
 			cause.type === ModerationCauseType.Label && cause.labelDef.identifier === '!no-unauthenticated',
 	);
 	return (
-		<CenteredView
-			style={[
-				a.flex_1,
-				{
-					paddingTop: 100,
-					paddingBottom: 150,
-				},
-				t.atoms.bg,
-				containerStyle,
-			]}
-			sideBorders
-		>
-			<View style={[a.align_center, a.mb_md]}>
-				<View
-					style={[
-						t.atoms.bg_contrast_975,
-						a.align_center,
-						a.justify_center,
-						{
-							borderRadius: 25,
-							width: 50,
-							height: 50,
-						},
-					]}
-				>
-					<desc.icon width={24} fill={t.atoms.bg.backgroundColor} />
-				</View>
-			</View>
-			<Text style={[a.text_4xl, a.font_semi_bold, a.text_center, a.mb_md, t.atoms.text]}>
+		<div className={css.container}>
+			<div className={css.badgeWrap}>
+				<div className={css.badge}>
+					<desc.icon fill="currentColor" width={24} />
+				</div>
+			</div>
+			<Text className={css.title} size="_4xl" weight="semiBold">
 				{isNoPwi ? <Trans>Sign-in Required</Trans> : <Trans>Content Warning</Trans>}
 			</Text>
-			<Text
-				style={[a.text_lg, a.mb_md, a.px_lg, a.text_center, a.leading_snug, t.atoms.text_contrast_medium]}
-			>
-				{isNoPwi ? (
+			{isNoPwi ? (
+				<Text className={css.body} color="textContrastMedium" size="lg">
 					<Trans>This account has requested that users sign in to view their profile.</Trans>
-				) : (
-					<>
-						<Trans>This {screenDescription} has been flagged:</Trans>{' '}
-						<Text style={[a.text_lg, a.font_semi_bold, a.leading_snug, t.atoms.text, a.ml_xs]}>
-							{desc.name}.{' '}
+				</Text>
+			) : (
+				<Text className={css.body} color="textContrastMedium" size="lg">
+					<Trans>This {screenDescription} has been flagged:</Trans>{' '}
+					<Text color="text" size="lg" weight="semiBold">
+						{desc.name}.{' '}
+					</Text>
+					<Dialog.Trigger
+						aria-label={l`Learn more about this warning`}
+						className={css.learnMore}
+						handle={control}
+					>
+						<Text color="primary_500" size="lg">
+							<Trans>Learn More</Trans>
 						</Text>
-						<TouchableWithoutFeedback
-							onPress={() => {
-								control.open();
-							}}
-							accessibilityRole="button"
-							accessibilityLabel={l`Learn more about this warning`}
-							accessibilityHint=""
-						>
-							<Text
-								style={[
-									a.text_lg,
-									a.leading_snug,
-									{
-										color: t.palette.primary_500,
-									},
-									{
-										cursor: 'pointer',
-									},
-								]}
-							>
-								<Trans>Learn More</Trans>
-							</Text>
-						</TouchableWithoutFeedback>
-						<ModerationDetailsDialog control={control} modcause={blur} />
-					</>
-				)}{' '}
-			</Text>
-			{isMobile && <View style={a.flex_1} />}
-			<View style={[a.flex_row, a.justify_center, a.my_md, a.gap_md]}>
+					</Dialog.Trigger>
+				</Text>
+			)}
+			{!isNoPwi && <ModerationDetailsDialog control={control} modcause={blur} />}
+			<div className={css.spacer} />
+			<div className={css.buttonRow}>
 				<Button
-					variant="solid"
+					className={css.pill}
 					color="primary"
-					size="large"
-					style={[a.rounded_full]}
 					label={l`Go back`}
-					onPress={() => {
+					onClick={() => {
 						if (navigation.canGoBack()) {
 							navigation.goBack();
 						} else {
 							navigation.navigate('Home');
 						}
 					}}
+					size="large"
+					variant="solid"
 				>
 					<ButtonText>
 						<Trans>Go back</Trans>
@@ -146,19 +95,19 @@ export function ScreenHider({
 				</Button>
 				{!modui.noOverride && (
 					<Button
-						variant="solid"
+						className={css.pill}
 						color="secondary"
-						size="large"
-						style={[a.rounded_full]}
 						label={l`Show anyway`}
-						onPress={() => setOverride((v) => !v)}
+						onClick={() => setOverride((v) => !v)}
+						size="large"
+						variant="solid"
 					>
 						<ButtonText>
 							<Trans>Show anyway</Trans>
 						</ButtonText>
 					</Button>
 				)}
-			</View>
-		</CenteredView>
+			</div>
+		</div>
 	);
 }

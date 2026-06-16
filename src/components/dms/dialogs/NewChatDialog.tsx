@@ -141,12 +141,9 @@ export function NewChat({
 		<>
 			{!chatDisabled && (
 				<FAB
-					testID="newChatFAB"
-					onPress={wrappedOnPress}
 					icon={<NewChatIcon size="lg" fill={t.palette.white} />}
-					accessibilityRole="button"
-					accessibilityLabel={l`New chat`}
-					accessibilityHint=""
+					label={l`New chat`}
+					onClick={wrappedOnPress}
 				/>
 			)}
 			<Dialog.Outer control={control} testID="newChatDialog" nativeOptions={{ fullHeight: true }}>

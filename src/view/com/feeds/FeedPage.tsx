@@ -131,12 +131,9 @@ export function FeedPage({
 			)}
 			{hasSession && (
 				<FAB
-					testID="composeFAB"
-					onPress={onPressCompose}
 					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-					accessibilityRole="button"
-					accessibilityLabel={l({ message: `New post`, context: 'action' })}
-					accessibilityHint=""
+					label={l({ message: `New post`, context: 'action' })}
+					onClick={onPressCompose}
 				/>
 			)}
 		</View>

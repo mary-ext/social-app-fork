@@ -1,37 +1,30 @@
-import { View } from 'react-native';
-import { useLingui, Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 
-import { usePalette } from '#/lib/hooks/usePalette';
-
-import { atoms as a, useTheme } from '#/alf';
-
-import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon } from '#/components/icons/ArrowRotate';
 import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning';
 import * as Layout from '#/components/Layout';
-import { Text } from '#/components/Typography';
+import { Text } from '#/components/Text';
+import { Button, ButtonIcon, ButtonText } from '#/components/web/Button';
+
+import * as css from './ErrorScreen.css';
 
 export function ErrorScreen({
 	title,
 	message,
 	details,
 	onPressTryAgain,
-	testID,
 	showHeader,
 }: {
 	title: string;
 	message: string;
 	details?: string;
 	onPressTryAgain?: () => void;
-	testID?: string;
 	showHeader?: boolean;
 }) {
-	const t = useTheme();
-	const pal = usePalette('default');
 	const { t: l } = useLingui();
 
 	return (
-		<Layout.Center testID={testID}>
+		<>
 			{showHeader && (
 				<Layout.Header.Outer>
 					<Layout.Header.BackButton />
@@ -43,60 +36,38 @@ export function ErrorScreen({
 					<Layout.Header.Slot />
 				</Layout.Header.Outer>
 			)}
-			<View style={[a.px_xl, a.py_2xl]}>
-				<View style={[a.mb_md, a.align_center]}>
-					<View
-						style={[
-							a.rounded_full,
-							{ width: 50, height: 50 },
-							a.align_center,
-							a.justify_center,
-							{ backgroundColor: t.palette.contrast_950 },
-						]}
-					>
-						<WarningIcon width={24} style={pal.textInverted} />
-					</View>
-				</View>
-				<Text style={[a.text_center, a.font_bold, a.text_2xl, a.mb_md]}>{title}</Text>
-				<Text style={[a.text_center, a.text_md, a.mb_xl]}>{message}</Text>
+			<div className={css.outer}>
+				<div className={css.badge}>
+					<WarningIcon width={24} fill="currentColor" />
+				</div>
+				<Text className={css.title} size="_2xl" weight="bold">
+					{title}
+				</Text>
+				<Text className={css.message} size="md">
+					{message}
+				</Text>
 				{details && (
-					<View
-						style={[
-							a.w_full,
-							a.border,
-							t.atoms.border_contrast_medium,
-							t.atoms.bg_contrast_25,
-							a.mb_xl,
-							a.py_sm,
-							a.px_lg,
-							a.rounded_xs,
-							a.overflow_hidden,
-						]}
-					>
-						<Text testID={`${testID}-details`} style={[a.text_center, a.text_md, t.atoms.text_contrast_high]}>
+					<div className={css.details}>
+						<Text color="textContrastHigh" size="md">
 							{details}
 						</Text>
-					</View>
+					</div>
 				)}
 				{onPressTryAgain && (
-					<View style={[a.align_center]}>
-						<Button
-							testID="errorScreenTryAgainButton"
-							onPress={onPressTryAgain}
-							variant="solid"
-							color="secondary_inverted"
-							size="small"
-							label={l`Retry`}
-							accessibilityHint={l`Retries the last action, which errored out`}
-						>
-							<ButtonIcon icon={ArrowRotateCounterClockwiseIcon} />
-							<ButtonText>
-								<Trans context="action">Try again</Trans>
-							</ButtonText>
-						</Button>
-					</View>
+					<Button
+						color="secondary_inverted"
+						label={l`Retry`}
+						onClick={onPressTryAgain}
+						size="small"
+						variant="solid"
+					>
+						<ButtonIcon icon={ArrowRotateCounterClockwiseIcon} />
+						<ButtonText>
+							<Trans context="action">Try again</Trans>
+						</ButtonText>
+					</Button>
 				)}
-			</View>
-		</Layout.Center>
+			</div>
+		</>
 	);
 }

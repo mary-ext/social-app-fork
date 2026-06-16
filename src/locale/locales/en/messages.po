@@ -1179,7 +1179,7 @@ msgstr ""
 msgid "All languages will be shown in your feeds"
 msgstr "All languages will be shown in your feeds"
 
-#: src/view/screens/Feeds.tsx:625
+#: src/view/screens/Feeds.tsx:622
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
@@ -1966,7 +1966,7 @@ msgstr "Choose who can join this group chat and how."
 msgid "Choose your account provider"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:643
+#: src/view/screens/Feeds.tsx:640
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
@@ -2156,7 +2156,7 @@ msgid "Content promoting or depicting self-harm"
 msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:52
-#: src/components/moderation/ScreenHider.tsx:87
+#: src/components/moderation/ScreenHider.tsx:52
 #: src/components/web/moderation/ModerationDetailsDialog.tsx:54
 #: src/lib/moderation/useGlobalLabelStrings.ts:21
 #: src/lib/moderation/useModerationCauseDescription.ts:48
@@ -2365,8 +2365,8 @@ msgstr ""
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:368
-#: src/view/screens/Profile.tsx:369
+#: src/view/screens/Profile.tsx:361
+#: src/view/screens/Profile.tsx:362
 msgid "Create a Starter Pack"
 msgstr ""
 
@@ -2660,7 +2660,7 @@ msgstr ""
 msgid "Discover new feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:640
+#: src/view/screens/Feeds.tsx:637
 msgid "Discover New Feeds"
 msgstr ""
 
@@ -2975,7 +2975,7 @@ msgid "Entertainment"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:2119
-#: src/view/com/util/error/ErrorScreen.tsx:40
+#: src/view/com/util/error/ErrorScreen.tsx:33
 msgid "Error"
 msgstr ""
 
@@ -3431,7 +3431,7 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:70
 #: src/screens/StarterPack/StarterPackScreen.tsx:164
 #: src/view/screens/Feeds.tsx:478
-#: src/view/screens/Profile.tsx:349
+#: src/view/screens/Profile.tsx:342
 #: src/view/shell/desktop/LeftNav.tsx:649
 #: src/view/shell/Drawer.tsx:172
 #: src/view/shell/Drawer.tsx:217
@@ -3611,7 +3611,7 @@ msgid "Following"
 msgstr ""
 
 #: src/screens/SavedFeeds.tsx:400
-#: src/view/screens/Feeds.tsx:559
+#: src/view/screens/Feeds.tsx:556
 msgctxt "feed-name"
 msgid "Following"
 msgstr ""
@@ -3781,8 +3781,8 @@ msgstr ""
 #: src/components/dialogs/LinkWarning.tsx:93
 #: src/components/dialogs/LinkWarning.tsx:95
 #: src/components/Layout/Header/index.tsx:108
-#: src/components/moderation/ScreenHider.tsx:134
-#: src/components/moderation/ScreenHider.tsx:144
+#: src/components/moderation/ScreenHider.tsx:81
+#: src/components/moderation/ScreenHider.tsx:93
 #: src/components/web/Layout/Header.tsx:65
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:79
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:80
@@ -4339,7 +4339,7 @@ msgid "Labeled by the author."
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:46
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:227
 msgid "Labels"
 msgstr ""
 
@@ -4387,7 +4387,7 @@ msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
 
-#: src/components/moderation/ScreenHider.tsx:120
+#: src/components/moderation/ScreenHider.tsx:70
 msgid "Learn More"
 msgstr ""
 
@@ -4404,7 +4404,7 @@ msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
 #: src/components/moderation/PostHider.tsx:80
-#: src/components/moderation/ScreenHider.tsx:105
+#: src/components/moderation/ScreenHider.tsx:65
 msgid "Learn more about this warning"
 msgstr ""
 
@@ -4528,7 +4528,7 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:75
 #: src/screens/Settings/NotificationSettings/index.tsx:186
-#: src/view/screens/Profile.tsx:336
+#: src/view/screens/Profile.tsx:329
 msgid "Likes"
 msgstr ""
 
@@ -4638,8 +4638,8 @@ msgstr ""
 
 #: src/Navigation.tsx:467
 #: src/view/screens/Lists.tsx:47
-#: src/view/screens/Profile.tsx:247
-#: src/view/screens/Profile.tsx:383
+#: src/view/screens/Profile.tsx:240
+#: src/view/screens/Profile.tsx:376
 #: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:179
 msgid "Lists"
@@ -4679,7 +4679,7 @@ msgstr ""
 msgid "Load more suggested feeds"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:242
+#: src/view/screens/Notifications.tsx:239
 msgid "Load new notifications"
 msgstr ""
 
@@ -4824,7 +4824,7 @@ msgid "Marked all as read"
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/view/screens/Profile.tsx:288
+#: src/view/screens/Profile.tsx:281
 msgid "Media"
 msgstr ""
 
@@ -5175,7 +5175,7 @@ msgstr ""
 msgid "My favorite feeds and people - join me!"
 msgstr "My favorite feeds and people - join me!"
 
-#: src/view/screens/Feeds.tsx:622
+#: src/view/screens/Feeds.tsx:619
 msgid "My Feeds"
 msgstr ""
 
@@ -5221,8 +5221,8 @@ msgstr ""
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
-#: src/components/dms/dialogs/NewChatDialog.tsx:148
-#: src/components/dms/dialogs/NewChatDialog.tsx:155
+#: src/components/dms/dialogs/NewChatDialog.tsx:145
+#: src/components/dms/dialogs/NewChatDialog.tsx:152
 #: src/screens/Messages/ChatList.tsx:133
 #: src/screens/Messages/ChatList.tsx:134
 #: src/screens/Messages/ChatList.tsx:325
@@ -5274,16 +5274,16 @@ msgstr "New group chat with:"
 msgid "New list"
 msgstr ""
 
-#: src/screens/Profile/ProfileFeed/index.tsx:157
-#: src/screens/ProfileList/index.tsx:232
-#: src/screens/ProfileList/index.tsx:270
-#: src/view/screens/Feeds.tsx:519
-#: src/view/screens/Notifications.tsx:152
-#: src/view/screens/Profile.tsx:440
+#: src/screens/Profile/ProfileFeed/index.tsx:154
+#: src/screens/ProfileList/index.tsx:229
+#: src/screens/ProfileList/index.tsx:264
+#: src/view/screens/Feeds.tsx:516
+#: src/view/screens/Notifications.tsx:149
+#: src/view/screens/Profile.tsx:429
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:138
+#: src/view/com/feeds/FeedPage.tsx:135
 #: src/view/shell/desktop/LeftNav.tsx:554
 msgctxt "action"
 msgid "New post"
@@ -5365,7 +5365,7 @@ msgstr ""
 
 #: src/components/LikedByList.tsx:77
 #: src/view/com/post-thread/PostLikedBy.tsx:77
-#: src/view/screens/Profile.tsx:342
+#: src/view/screens/Profile.tsx:335
 msgid "No likes yet"
 msgstr ""
 
@@ -5382,7 +5382,7 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:294
+#: src/view/screens/Profile.tsx:287
 msgid "No media yet"
 msgstr ""
 
@@ -5424,7 +5424,7 @@ msgid "No posts here"
 msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:57
-#: src/view/screens/Profile.tsx:258
+#: src/view/screens/Profile.tsx:251
 msgid "No posts yet"
 msgstr ""
 
@@ -5437,7 +5437,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
-#: src/view/screens/Profile.tsx:281
+#: src/view/screens/Profile.tsx:274
 msgid "No replies yet"
 msgstr ""
 
@@ -5474,7 +5474,7 @@ msgstr "No results found for “<0>{query}</0>”."
 msgid "No results."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:363
+#: src/view/screens/Profile.tsx:356
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -5483,7 +5483,7 @@ msgstr ""
 msgid "No thanks"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:318
+#: src/view/screens/Profile.tsx:311
 msgid "No video posts yet"
 msgstr ""
 
@@ -5521,7 +5521,7 @@ msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
 #: src/Navigation.tsx:462
-#: src/view/screens/Profile.tsx:126
+#: src/view/screens/Profile.tsx:123
 msgid "Not Found"
 msgstr ""
 
@@ -5681,7 +5681,7 @@ msgstr ""
 #: src/components/Lists.tsx:158
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
-#: src/view/screens/Profile.tsx:126
+#: src/view/screens/Profile.tsx:123
 msgid "Oops!"
 msgstr ""
 
@@ -6116,13 +6116,13 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:298
-#: src/view/screens/Profile.tsx:299
+#: src/view/screens/Profile.tsx:291
+#: src/view/screens/Profile.tsx:292
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:322
-#: src/view/screens/Profile.tsx:323
+#: src/view/screens/Profile.tsx:315
+#: src/view/screens/Profile.tsx:316
 msgid "Post a video"
 msgstr ""
 
@@ -6219,7 +6219,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:209
 #: src/screens/ProfileList/index.tsx:158
 #: src/screens/StarterPack/StarterPackScreen.tsx:165
-#: src/view/screens/Profile.tsx:252
+#: src/view/screens/Profile.tsx:245
 msgid "Posts"
 msgstr ""
 
@@ -6283,7 +6283,7 @@ msgstr ""
 msgid "Processing..."
 msgstr ""
 
-#: src/view/screens/DebugMod.tsx:800
+#: src/view/screens/DebugMod.tsx:799
 msgid "profile"
 msgstr ""
 
@@ -6678,7 +6678,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 #: src/screens/Settings/NotificationSettings/index.tsx:97
 #: src/screens/Settings/NotificationSettings/index.tsx:198
-#: src/view/screens/Profile.tsx:275
+#: src/view/screens/Profile.tsx:268
 msgid "Replies"
 msgstr ""
 
@@ -6925,7 +6925,6 @@ msgid "Rescind request"
 msgstr "Rescind request"
 
 #: src/view/com/util/error/ErrorMessage.tsx:43
-#: src/view/com/util/error/ErrorScreen.tsx:90
 msgid "Retries the last action, which errored out"
 msgstr ""
 
@@ -6944,7 +6943,7 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadError.tsx:43
 #: src/screens/PostThread/components/ThreadError.tsx:45
 #: src/view/com/util/error/ErrorMessage.tsx:42
-#: src/view/com/util/error/ErrorScreen.tsx:89
+#: src/view/com/util/error/ErrorScreen.tsx:59
 #: src/view/screens/Storybook/Admonitions.tsx:53
 msgid "Retry"
 msgstr ""
@@ -7502,8 +7501,8 @@ msgstr ""
 msgid "Show alt text"
 msgstr ""
 
-#: src/components/moderation/ScreenHider.tsx:153
-#: src/components/moderation/ScreenHider.tsx:157
+#: src/components/moderation/ScreenHider.tsx:100
+#: src/components/moderation/ScreenHider.tsx:106
 #: src/features/liveNow/components/LiveStatusDialog.tsx:259
 #: src/features/liveNow/components/LiveStatusDialog.tsx:264
 #: src/screens/List/ListHiddenScreen.tsx:162
@@ -7650,7 +7649,7 @@ msgstr ""
 msgid "Sign out?"
 msgstr ""
 
-#: src/components/moderation/ScreenHider.tsx:87
+#: src/components/moderation/ScreenHider.tsx:52
 #: src/lib/moderation/useGlobalLabelStrings.ts:25
 msgid "Sign-in Required"
 msgstr ""
@@ -7846,7 +7845,7 @@ msgid "Starter pack is invalid"
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:612
-#: src/view/screens/Profile.tsx:354
+#: src/view/screens/Profile.tsx:347
 msgid "Starter Packs"
 msgstr ""
 
@@ -7858,7 +7857,7 @@ msgstr ""
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:362
+#: src/view/screens/Profile.tsx:355
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -8270,7 +8269,7 @@ msgstr "They can't see your posts and you won't see theirs or any replies to the
 msgid "They won't know they've been muted"
 msgstr "They won't know they've been muted"
 
-#: src/components/moderation/ScreenHider.tsx:96
+#: src/components/moderation/ScreenHider.tsx:60
 msgid "This {screenDescription} has been flagged:"
 msgstr ""
 
@@ -8286,7 +8285,7 @@ msgstr "This account has been marked as automated by its owner."
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr ""
 
-#: src/components/moderation/ScreenHider.tsx:93
+#: src/components/moderation/ScreenHider.tsx:56
 msgid "This account has requested that users sign in to view their profile."
 msgstr ""
 
@@ -8671,7 +8670,7 @@ msgstr "Try a different search term, or <0>read about how to use search filters<
 msgid "Try again"
 msgstr "Try again"
 
-#: src/view/com/util/error/ErrorScreen.tsx:94
+#: src/view/com/util/error/ErrorScreen.tsx:66
 msgctxt "action"
 msgid "Try again"
 msgstr ""
@@ -8983,7 +8982,7 @@ msgstr "Use theme font"
 msgid "Used for the app's interface"
 msgstr "Used for the app's interface"
 
-#: src/view/screens/Profile.tsx:399
+#: src/view/screens/Profile.tsx:391
 msgid "user"
 msgstr "user"
 
@@ -9108,7 +9107,7 @@ msgstr ""
 msgid "Video uploaded"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:312
+#: src/view/screens/Profile.tsx:305
 msgid "Videos"
 msgstr ""
 
@@ -9289,7 +9288,7 @@ msgstr ""
 msgid "Visit site"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:264
+#: src/view/screens/Notifications.tsx:261
 msgid "Visit your notification settings"
 msgstr ""
 
@@ -9471,8 +9470,8 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:262
-#: src/view/screens/Profile.tsx:263
+#: src/view/screens/Profile.tsx:255
+#: src/view/screens/Profile.tsx:256
 msgid "Write a post"
 msgstr ""
 
@@ -9655,7 +9654,7 @@ msgstr "You have been previously removed from this group and can’t join it usi
 msgid "You have blocked this user. You cannot view their content."
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:260
+#: src/view/screens/Notifications.tsx:257
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 

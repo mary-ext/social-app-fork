@@ -796,7 +796,6 @@ function MockAccountScreen({
 	return (
 		<View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
 			<ScreenHider
-				style={{}}
 				screenDescription={l`profile`}
 				modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 			>

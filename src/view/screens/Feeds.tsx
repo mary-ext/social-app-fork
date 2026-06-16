@@ -512,12 +512,9 @@ export function FeedsScreen(_props: Props) {
 			</Layout.Center>
 			{hasSession && (
 				<FAB
-					testID="composeFAB"
-					onPress={onPressCompose}
 					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-					accessibilityRole="button"
-					accessibilityLabel={l`New post`}
-					accessibilityHint=""
+					label={l`New post`}
+					onClick={onPressCompose}
 				/>
 			)}
 		</Layout.Screen>
