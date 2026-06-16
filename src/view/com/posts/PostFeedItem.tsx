@@ -282,7 +282,7 @@ let FeedItemInner = ({
 					<PostRow.Row className={css.layoutRow}>
 						<PostRow.AvatarColumn>
 							<PreviewableUserAvatar
-								size={42}
+								size={36}
 								profile={post.author}
 								moderation={getDisplayRestrictions(moderation, DisplayContext.ProfileMedia)}
 								type={post.author.associated?.labeler ? 'labeler' : 'user'}

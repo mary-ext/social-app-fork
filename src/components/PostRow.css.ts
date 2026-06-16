@@ -18,7 +18,6 @@ export const avatarColumn = style({
 	boxSizing: 'border-box',
 	display: 'flex',
 	flexDirection: 'column',
-	paddingLeft: 8,
 });
 
 /**

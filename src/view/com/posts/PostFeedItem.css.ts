@@ -19,8 +19,7 @@ export const outer = recipe({
 		cursor: 'pointer',
 		display: 'flex',
 		flexDirection: 'column',
-		paddingLeft: 10,
-		paddingRight: 15,
+		paddingInline: 16,
 		selectors: {
 			'&:hover': {
 				backgroundColor: colorMix(colors.contrast_50, vars.opacity.hover),
@@ -29,7 +28,7 @@ export const outer = recipe({
 	},
 	variants: {
 		// trailing space below a thread's last child, and below standalone posts
-		bottomSpace: { true: { paddingBottom: 8 } },
+		bottomSpace: { true: { paddingBottom: 6 } },
 		// the feed's first post hides its top border (the sticky header already separates it), so reclaim the
 		// removed hairline as padding to keep content from shifting up 1px
 		reclaimBorder: { true: { paddingTop: 1 } },
@@ -42,7 +41,6 @@ export const reasonRow = style({
 	display: 'flex',
 	flexDirection: 'row',
 	gap: 10,
-	paddingLeft: 8,
 });
 
 /** Fixed-width slot above the avatar that carries the thread reply-spine up to the parent. */
@@ -50,7 +48,7 @@ export const spineSlot = style({
 	display: 'flex',
 	flexDirection: 'column',
 	flexShrink: 0,
-	width: 42,
+	width: 36,
 });
 
 /** The reason content beside the spine slot. */
