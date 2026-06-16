@@ -25,6 +25,10 @@ export const primaryGroup = style({
 	maxWidth: 320,
 });
 
+/** Pulls the primary cluster's leading ghost padding back flush to the row edge. */
+export const primaryOffset = style({ marginLeft: -6 });
+export const primaryOffsetBig = style({ marginLeft: -2 });
+
 /** One of the three equal-width primary slots, its button pinned to the leading edge. */
 export const primaryItem = style({
 	alignItems: 'flex-start',
@@ -32,10 +36,6 @@ export const primaryItem = style({
 	flex: 1,
 	flexDirection: 'column',
 });
-
-/** Pulls the reply button's ghost padding back flush to the row edge. */
-export const replyOffset = style({ marginLeft: -6 });
-export const replyOffsetBig = style({ marginLeft: -2 });
 
 /** Dims the reply slot when the viewer can't reply. */
 export const replyDisabled = style({ opacity: 0.6 });
@@ -46,3 +46,7 @@ export const secondaryGroup = style({
 	flexDirection: 'row',
 	justifyContent: 'flex-end',
 });
+
+/** Pulls the secondary cluster's trailing ghost padding back flush to the row edge. */
+export const secondaryOffset = style({ marginRight: -6 });
+export const secondaryOffsetBig = style({ marginRight: -2 });

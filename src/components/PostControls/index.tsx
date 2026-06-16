@@ -174,14 +174,8 @@ let PostControls = ({
 
 	return (
 		<div className={clsx(css.outer, !big && css.outerPad)}>
-			<div className={css.primaryGroup}>
-				<div
-					className={clsx(
-						css.primaryItem,
-						big ? css.replyOffsetBig : css.replyOffset,
-						replyDisabled && css.replyDisabled,
-					)}
-				>
+			<div className={clsx(css.primaryGroup, big ? css.primaryOffsetBig : css.primaryOffset)}>
+				<div className={clsx(css.primaryItem, replyDisabled && css.replyDisabled)}>
 					<PostControlButton
 						onClick={
 							!replyDisabled
@@ -261,7 +255,10 @@ let PostControls = ({
 					</PostControlButton>
 				</div>
 			</div>
-			<div className={css.secondaryGroup} style={secondaryControlSpacingStyles}>
+			<div
+				className={clsx(css.secondaryGroup, big ? css.secondaryOffsetBig : css.secondaryOffset)}
+				style={secondaryControlSpacingStyles}
+			>
 				<BookmarkButton post={post} big={big} logContext={logContext} />
 				<ShareMenuButton post={post} big={big} onShare={onShare} />
 				<PostMenuButton
