@@ -3778,8 +3778,8 @@ msgstr ""
 msgid "Glorification of violence"
 msgstr ""
 
-#: src/components/dialogs/LinkWarning.tsx:107
-#: src/components/dialogs/LinkWarning.tsx:109
+#: src/components/dialogs/LinkWarning.tsx:93
+#: src/components/dialogs/LinkWarning.tsx:95
 #: src/components/Layout/Header/index.tsx:108
 #: src/components/moderation/ScreenHider.tsx:134
 #: src/components/moderation/ScreenHider.tsx:144
@@ -4469,8 +4469,8 @@ msgstr "Leave group chat"
 msgid "Leave this group chat"
 msgstr "Leave this group chat"
 
+#: src/components/dialogs/LinkWarning.tsx:71
 #: src/components/dialogs/LinkWarning.tsx:75
-#: src/components/dialogs/LinkWarning.tsx:83
 msgid "Leaving Bluesky"
 msgstr ""
 
@@ -4794,10 +4794,6 @@ msgstr "Love GIFs"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:266
 msgid "Make one for me"
-msgstr ""
-
-#: src/components/dialogs/LinkWarning.tsx:92
-msgid "Make sure this is where you intend to go!"
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:60
@@ -5813,7 +5809,7 @@ msgid "Opens image picker"
 msgstr ""
 
 #. placeholder {0}: link?.href ?? ''
-#: src/components/dialogs/LinkWarning.tsx:99
+#: src/components/dialogs/LinkWarning.tsx:85
 msgid "Opens link {0}"
 msgstr ""
 
@@ -6233,14 +6229,6 @@ msgstr ""
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:73
 msgid "Posts hidden"
-msgstr ""
-
-#: src/components/dialogs/LinkWarning.tsx:81
-msgid "Potentially misleading link"
-msgstr ""
-
-#: src/components/dialogs/LinkWarning.tsx:75
-msgid "Potentially misleading link warning"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:52
@@ -7476,8 +7464,8 @@ msgstr ""
 msgid "Share image"
 msgstr "Share image"
 
-#: src/components/dialogs/LinkWarning.tsx:98
-#: src/components/dialogs/LinkWarning.tsx:105
+#: src/components/dialogs/LinkWarning.tsx:84
+#: src/components/dialogs/LinkWarning.tsx:91
 msgid "Share link"
 msgstr ""
 
@@ -8448,7 +8436,7 @@ msgstr ""
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
-#: src/components/dialogs/LinkWarning.tsx:87
+#: src/components/dialogs/LinkWarning.tsx:78
 msgid "This link is taking you to the following website:"
 msgstr ""
 
@@ -9296,8 +9284,8 @@ msgstr ""
 msgid "Violent or threatening content"
 msgstr ""
 
-#: src/components/dialogs/LinkWarning.tsx:98
-#: src/components/dialogs/LinkWarning.tsx:105
+#: src/components/dialogs/LinkWarning.tsx:84
+#: src/components/dialogs/LinkWarning.tsx:91
 msgid "Visit site"
 msgstr ""
 

@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
-import { looksLikeUrl, splitApexDomain } from '#/lib/strings/url-helpers';
+import { splitApexDomain } from '#/lib/strings/url-helpers';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
@@ -52,8 +52,6 @@ function LinkWarningDialogInner({ link }: { link?: { href: string; displayText: 
 	const openLink = useOpenLink();
 	const { gtMobile } = useBreakpoints();
 
-	const potentiallyMisleading = useMemo(() => link && looksLikeUrl(link.displayText), [link]);
-
 	const onPressVisit = useCallback(() => {
 		control.close(() => {
 			if (!link) return;
@@ -70,28 +68,16 @@ function LinkWarningDialogInner({ link }: { link?: { href: string; displayText: 
 	}, [control]);
 
 	return (
-		<Dialog.ScrollableInner
-			style={{ maxWidth: 450 }}
-			label={potentiallyMisleading ? l`Potentially misleading link warning` : l`Leaving Bluesky`}
-		>
+		<Dialog.ScrollableInner style={{ maxWidth: 450 }} label={l`Leaving Bluesky`}>
 			<View style={[a.gap_2xl]}>
 				<View style={[a.gap_sm]}>
 					<Text style={[a.font_bold, a.text_2xl]}>
-						{potentiallyMisleading ? (
-							<Trans>Potentially misleading link</Trans>
-						) : (
-							<Trans>Leaving Bluesky</Trans>
-						)}
+						<Trans>Leaving Bluesky</Trans>
 					</Text>
 					<Text style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>
 						<Trans>This link is taking you to the following website:</Trans>
 					</Text>
 					{link && <LinkBox href={link.href} />}
-					{potentiallyMisleading && (
-						<Text style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>
-							<Trans>Make sure this is where you intend to go!</Trans>
-						</Text>
-					)}
 				</View>
 				<View style={[a.flex_1, a.gap_sm, gtMobile && [a.flex_row_reverse, a.justify_start]]}>
 					<Button
@@ -100,7 +86,7 @@ function LinkWarningDialogInner({ link }: { link?: { href: string; displayText: 
 						onPress={onPressVisit}
 						size="large"
 						variant="solid"
-						color={potentiallyMisleading ? 'secondary_inverted' : 'primary'}
+						color="primary"
 					>
 						<ButtonText>{link?.share ? <Trans>Share link</Trans> : <Trans>Visit site</Trans>}</ButtonText>
 					</Button>

@@ -247,8 +247,8 @@ const linkTextMatchesHost = (uri: string, displayText: string): boolean => {
 
 /**
  * Whether a content link should warn before navigating, i.e. its visible text misrepresents the destination.
- * Trusted targets — including relative paths and in-app anchors — warn only when the text poses as some other
- * address; every other target warns on any mismatch.
+ * Trusted targets — including relative paths and in-app anchors — never warn; every other target warns unless
+ * the visible text faithfully names the destination host.
  *
  * @param uri the link target
  * @param displayText the link's visible text
@@ -258,17 +258,8 @@ export const isMisleadingLink = (uri: string, displayText: string): boolean => {
 	if (linkTextMatchesHost(uri, displayText)) {
 		return false;
 	}
-	return isTrustedUrl(uri) ? looksLikeUrl(displayText) : true;
+	return !isTrustedUrl(uri);
 };
-
-/**
- * Whether a string poses as a web address, i.e. it parses as an `http(s)` URL with a dotted host. Used to
- * tell a label masquerading as a URL apart from plain text.
- *
- * @param text the string to test
- * @returns whether the string resembles a URL
- */
-export const looksLikeUrl = (text: string): boolean => parseLooseUrl(text) !== null;
 
 /**
  * Splits a hostname into its subdomain prefix and registrable apex domain, e.g. `a.b.example.co.uk` →
