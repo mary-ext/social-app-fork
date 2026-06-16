@@ -26,6 +26,8 @@ export const list = style(
 		position: 'sticky',
 		top: 0,
 		zIndex: 10,
+		// dragging the row to scroll it shouldn't select the tab labels
+		userSelect: 'none',
 		// hide the horizontal scrollbar — tabs scroll into view programmatically
 		scrollbarWidth: 'none',
 		selectors: {
@@ -49,10 +51,9 @@ export const tab = style(
 		fontSize: fontSize.md,
 		fontWeight: 600,
 		justifyContent: 'center',
-		lineHeight: '20px',
 		margin: 0,
-		paddingBlock: '14px 13px',
-		paddingInline: 14,
+		paddingBlock: 12,
+		paddingInline: 16,
 		position: 'relative',
 		whiteSpace: 'nowrap',
 		// the active underline, matching the previous per-item indicator (centered, min 45px wide)

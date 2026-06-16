@@ -1,7 +1,8 @@
-import { type ComponentPropsWithoutRef, createContext, type ReactNode, use, useEffect, useRef } from 'react';
+import { type ComponentPropsWithoutRef, createContext, type RefObject, use, useEffect, useRef } from 'react';
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { clsx } from 'clsx';
 
+import { Text } from '#/components/Text';
 import * as styles from '#/components/web/Tabs.css';
 
 /**
@@ -25,6 +26,60 @@ import * as styles from '#/components/web/Tabs.css';
  * ```
  */
 const TabsContext = createContext<{ value: string } | null>(null);
+
+/**
+ * Lets the user click and drag horizontally to scroll an overflowing row, since the scrollbar is hidden and a
+ * trackpad/shift-wheel isn't always available. A few pixels of slop keep a plain click selecting a tab; once
+ * it crosses into a drag, the trailing click is swallowed so it doesn't activate a tab.
+ */
+const useDragScroll = (ref: RefObject<HTMLElement | null>) => {
+	useEffect(() => {
+		const row = ref.current;
+		if (!row) {
+			return;
+		}
+		let isPressed = false;
+		let isDragging = false;
+		let startX = 0;
+		let startScrollLeft = 0;
+
+		const onMouseDown = (e: MouseEvent) => {
+			isPressed = true;
+			startX = e.pageX;
+			startScrollLeft = row.scrollLeft;
+		};
+		const onMouseMove = (e: MouseEvent) => {
+			if (!isPressed) {
+				return;
+			}
+			const walk = e.pageX - startX;
+			if (!isDragging && Math.abs(walk) < 3) {
+				return;
+			}
+			isDragging = true;
+			e.preventDefault();
+			row.scrollLeft = startScrollLeft - walk;
+		};
+		const onMouseUp = () => {
+			if (isDragging) {
+				// the bar sits below React's root click delegation, so stopping the trailing click here keeps
+				// the drag from selecting the tab it lands on
+				row.addEventListener('click', (e) => e.stopPropagation(), { once: true });
+			}
+			isPressed = false;
+			isDragging = false;
+		};
+
+		row.addEventListener('mousedown', onMouseDown);
+		window.addEventListener('mousemove', onMouseMove);
+		window.addEventListener('mouseup', onMouseUp);
+		return () => {
+			row.removeEventListener('mousedown', onMouseDown);
+			window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('mouseup', onMouseUp);
+		};
+	}, [ref]);
+};
 
 export type RootProps = Omit<ComponentPropsWithoutRef<'div'>, 'onChange'> & {
 	value: string;
@@ -69,6 +124,8 @@ export const List = ({ className, children, ...rest }: ListProps) => {
 		}
 	}, [value]);
 
+	useDragScroll(listRef);
+
 	return (
 		<BaseTabs.List ref={listRef} className={clsx(styles.list, className)} {...rest}>
 			{children}
@@ -76,16 +133,23 @@ export const List = ({ className, children, ...rest }: ListProps) => {
 	);
 };
 
-export type TabProps = Omit<ComponentPropsWithoutRef<'button'>, 'value'> & {
+export type TabProps = Omit<ComponentPropsWithoutRef<'button'>, 'value' | 'children'> & {
 	value: string;
-	children: ReactNode;
+	label: string;
 };
 
-export const Tab = ({ value, className, children, ...rest }: TabProps) => {
+export const Tab = ({ value, className, label, ...rest }: TabProps) => {
 	return (
-		<BaseTabs.Tab value={value} className={clsx(styles.tab, className)} {...rest}>
-			{children}
-		</BaseTabs.Tab>
+		<BaseTabs.Tab
+			value={value}
+			className={clsx(styles.tab, className)}
+			render={(props, state) => (
+				<button {...props}>
+					<Text color={state.active ? 'text' : 'textContrastMedium'}>{label}</Text>
+				</button>
+			)}
+			{...rest}
+		/>
 	);
 };
 

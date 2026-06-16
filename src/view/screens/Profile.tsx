@@ -414,15 +414,14 @@ function ProfileScreenLoaded({
 						{sections.map((section) => (
 							<Tabs.Tab
 								key={section.id}
+								label={section.title}
 								value={section.id}
 								onClick={() => {
 									if (activeTab === section.id) {
 										window.scrollTo(0, 0);
 									}
 								}}
-							>
-								{section.title}
-							</Tabs.Tab>
+							/>
 						))}
 					</Tabs.List>
 				)}

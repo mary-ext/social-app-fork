@@ -1276,7 +1276,7 @@ msgstr ""
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:311
+#: src/components/StarterPack/ProfileStarterPacks.tsx:299
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
@@ -1645,7 +1645,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:151
+#: src/screens/Profile/Sections/Labels.tsx:135
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -1678,7 +1678,7 @@ msgstr ""
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:287
+#: src/components/StarterPack/ProfileStarterPacks.tsx:275
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
@@ -1694,8 +1694,8 @@ msgstr ""
 msgid "Breaking site rules"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:167
-#: src/view/com/feeds/ProfileFeedgens.tsx:168
+#: src/view/com/feeds/ProfileFeedgens.tsx:146
+#: src/view/com/feeds/ProfileFeedgens.tsx:147
 msgid "Browse custom feeds"
 msgstr ""
 
@@ -1941,7 +1941,7 @@ msgstr "Choose an account to sign in with."
 msgid "Choose Feeds"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:291
+#: src/components/StarterPack/ProfileStarterPacks.tsx:279
 msgid "Choose for me"
 msgstr ""
 
@@ -2342,12 +2342,12 @@ msgstr "Couldn’t load GIFs"
 #: src/components/dialogs/StarterPackDialog.tsx:94
 #: src/components/dialogs/StarterPackDialog.tsx:180
 #: src/components/dms/InitiateChatFlow.tsx:452
-#: src/components/StarterPack/ProfileStarterPacks.tsx:277
+#: src/components/StarterPack/ProfileStarterPacks.tsx:265
 msgid "Create"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:166
-#: src/view/com/lists/ProfileLists.tsx:167
+#: src/view/com/lists/ProfileLists.tsx:145
+#: src/view/com/lists/ProfileLists.tsx:146
 msgid "Create a list"
 msgstr ""
 
@@ -2359,22 +2359,22 @@ msgstr ""
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:167
-#: src/components/StarterPack/ProfileStarterPacks.tsx:263
+#: src/components/StarterPack/ProfileStarterPacks.tsx:155
+#: src/components/StarterPack/ProfileStarterPacks.tsx:251
 #: src/Navigation.tsx:758
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:405
-#: src/view/screens/Profile.tsx:406
+#: src/view/screens/Profile.tsx:368
+#: src/view/screens/Profile.tsx:369
 msgid "Create a Starter Pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:249
+#: src/components/StarterPack/ProfileStarterPacks.tsx:237
 msgid "Create a starter pack for me"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:175
+#: src/components/StarterPack/ProfileStarterPacks.tsx:163
 msgid "Create another"
 msgstr ""
 
@@ -2949,7 +2949,7 @@ msgstr ""
 msgid "Enable trending topics"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:98
+#: src/screens/Profile/Sections/Feed.tsx:90
 msgid "End of feed"
 msgstr ""
 
@@ -3431,7 +3431,7 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:70
 #: src/screens/StarterPack/StarterPackScreen.tsx:164
 #: src/view/screens/Feeds.tsx:478
-#: src/view/screens/Profile.tsx:381
+#: src/view/screens/Profile.tsx:349
 #: src/view/shell/desktop/LeftNav.tsx:649
 #: src/view/shell/Drawer.tsx:172
 #: src/view/shell/Drawer.tsx:217
@@ -3670,7 +3670,7 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:284
+#: src/components/StarterPack/ProfileStarterPacks.tsx:272
 msgid "Generate a starter pack"
 msgstr ""
 
@@ -4339,7 +4339,7 @@ msgid "Labeled by the author."
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:46
-#: src/view/screens/Profile.tsx:251
+#: src/view/screens/Profile.tsx:234
 msgid "Labels"
 msgstr ""
 
@@ -4347,7 +4347,7 @@ msgstr ""
 msgid "Labels added"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:142
+#: src/screens/Profile/Sections/Labels.tsx:126
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -4474,7 +4474,7 @@ msgstr "Leave this group chat"
 msgid "Leaving Bluesky"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:294
+#: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Let me choose"
 msgstr ""
 
@@ -4482,14 +4482,14 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:226
+#: src/components/PostControls/index.tsx:220
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:445
 msgid "Like"
 msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:238
+#: src/components/PostControls/index.tsx:232
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -4528,7 +4528,7 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:75
 #: src/screens/Settings/NotificationSettings/index.tsx:186
-#: src/view/screens/Profile.tsx:366
+#: src/view/screens/Profile.tsx:336
 msgid "Likes"
 msgstr ""
 
@@ -4638,8 +4638,8 @@ msgstr ""
 
 #: src/Navigation.tsx:467
 #: src/view/screens/Lists.tsx:47
-#: src/view/screens/Profile.tsx:266
-#: src/view/screens/Profile.tsx:420
+#: src/view/screens/Profile.tsx:247
+#: src/view/screens/Profile.tsx:383
 #: src/view/shell/desktop/LeftNav.tsx:658
 #: src/view/shell/Drawer.tsx:179
 msgid "Lists"
@@ -4684,7 +4684,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:149
-#: src/screens/Profile/Sections/Feed.tsx:86
+#: src/screens/Profile/Sections/Feed.tsx:78
 #: src/screens/ProfileList/FeedSection.tsx:100
 #: src/view/com/feeds/FeedPage.tsx:130
 msgid "Load new posts"
@@ -4792,7 +4792,7 @@ msgstr ""
 msgid "Love GIFs"
 msgstr "Love GIFs"
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:258
+#: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Make one for me"
 msgstr ""
 
@@ -4824,7 +4824,7 @@ msgid "Marked all as read"
 msgstr ""
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:70
-#: src/view/screens/Profile.tsx:314
+#: src/view/screens/Profile.tsx:288
 msgid "Media"
 msgstr ""
 
@@ -5279,7 +5279,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:270
 #: src/view/screens/Feeds.tsx:519
 #: src/view/screens/Notifications.tsx:152
-#: src/view/screens/Profile.tsx:483
+#: src/view/screens/Profile.tsx:440
 msgid "New post"
 msgstr ""
 
@@ -5329,7 +5329,7 @@ msgstr ""
 msgid "Next image"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:162
+#: src/view/com/feeds/ProfileFeedgens.tsx:141
 msgid "No custom feeds yet"
 msgstr ""
 
@@ -5365,11 +5365,11 @@ msgstr ""
 
 #: src/components/LikedByList.tsx:77
 #: src/view/com/post-thread/PostLikedBy.tsx:77
-#: src/view/screens/Profile.tsx:374
+#: src/view/screens/Profile.tsx:342
 msgid "No likes yet"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:161
+#: src/view/com/lists/ProfileLists.tsx:140
 msgid "No lists"
 msgstr ""
 
@@ -5382,7 +5382,7 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:322
+#: src/view/screens/Profile.tsx:294
 msgid "No media yet"
 msgstr ""
 
@@ -5423,8 +5423,8 @@ msgstr "No one can send messages"
 msgid "No posts here"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:65
-#: src/view/screens/Profile.tsx:282
+#: src/screens/Profile/Sections/Feed.tsx:57
+#: src/view/screens/Profile.tsx:258
 msgid "No posts yet"
 msgstr ""
 
@@ -5437,7 +5437,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
 
-#: src/view/screens/Profile.tsx:307
+#: src/view/screens/Profile.tsx:281
 msgid "No replies yet"
 msgstr ""
 
@@ -5474,7 +5474,7 @@ msgstr "No results found for “<0>{query}</0>”."
 msgid "No results."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:400
+#: src/view/screens/Profile.tsx:363
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -5483,7 +5483,7 @@ msgstr ""
 msgid "No thanks"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:348
+#: src/view/screens/Profile.tsx:318
 msgid "No video posts yet"
 msgstr ""
 
@@ -5521,7 +5521,7 @@ msgid "Not followed by anyone you’re following"
 msgstr "Not followed by anyone you’re following"
 
 #: src/Navigation.tsx:462
-#: src/view/screens/Profile.tsx:131
+#: src/view/screens/Profile.tsx:126
 msgid "Not Found"
 msgstr ""
 
@@ -5679,9 +5679,9 @@ msgid "Oops, something went wrong!"
 msgstr ""
 
 #: src/components/Lists.tsx:158
-#: src/components/StarterPack/ProfileStarterPacks.tsx:303
-#: src/components/StarterPack/ProfileStarterPacks.tsx:310
-#: src/view/screens/Profile.tsx:131
+#: src/components/StarterPack/ProfileStarterPacks.tsx:291
+#: src/components/StarterPack/ProfileStarterPacks.tsx:298
+#: src/view/screens/Profile.tsx:126
 msgid "Oops!"
 msgstr ""
 
@@ -6116,13 +6116,13 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:326
-#: src/view/screens/Profile.tsx:327
+#: src/view/screens/Profile.tsx:298
+#: src/view/screens/Profile.tsx:299
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:352
-#: src/view/screens/Profile.tsx:353
+#: src/view/screens/Profile.tsx:322
+#: src/view/screens/Profile.tsx:323
 msgid "Post a video"
 msgstr ""
 
@@ -6219,7 +6219,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:209
 #: src/screens/ProfileList/index.tsx:158
 #: src/screens/StarterPack/StarterPackScreen.tsx:165
-#: src/view/screens/Profile.tsx:274
+#: src/view/screens/Profile.tsx:252
 msgid "Posts"
 msgstr ""
 
@@ -6678,7 +6678,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 #: src/screens/Settings/NotificationSettings/index.tsx:97
 #: src/screens/Settings/NotificationSettings/index.tsx:198
-#: src/view/screens/Profile.tsx:299
+#: src/view/screens/Profile.tsx:275
 msgid "Replies"
 msgstr ""
 
@@ -6690,7 +6690,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/components/PostControls/index.tsx:202
+#: src/components/PostControls/index.tsx:196
 msgid "Reply"
 msgstr "Reply"
 
@@ -6701,7 +6701,7 @@ msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
-#: src/components/PostControls/index.tsx:194
+#: src/components/PostControls/index.tsx:188
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -6934,7 +6934,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:262
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:25
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:28
-#: src/components/StarterPack/ProfileStarterPacks.tsx:313
+#: src/components/StarterPack/ProfileStarterPacks.tsx:301
 #: src/features/gifPicker/components/GifPickerGrid.tsx:88
 #: src/features/gifPicker/components/GifPickerGrid.tsx:89
 #: src/screens/Messages/ChatList.tsx:299
@@ -7753,7 +7753,7 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:83
-#: src/screens/Profile/Sections/Labels.tsx:134
+#: src/screens/Profile/Sections/Labels.tsx:118
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -7846,19 +7846,19 @@ msgid "Starter pack is invalid"
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:612
-#: src/view/screens/Profile.tsx:389
+#: src/view/screens/Profile.tsx:354
 msgid "Starter Packs"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:244
+#: src/components/StarterPack/ProfileStarterPacks.tsx:232
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:90
+#: src/components/StarterPack/ProfileStarterPacks.tsx:83
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:399
+#: src/view/screens/Profile.tsx:362
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -7897,7 +7897,7 @@ msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
 #. placeholder {0}: labelerInfo.creator.handle
-#: src/screens/Profile/Sections/Labels.tsx:161
+#: src/screens/Profile/Sections/Labels.tsx:145
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -8181,8 +8181,8 @@ msgstr ""
 msgid "There was an issue fetching the list. Tap here to try again."
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:150
-#: src/view/com/lists/ProfileLists.tsx:150
+#: src/view/com/feeds/ProfileFeedgens.tsx:129
+#: src/view/com/lists/ProfileLists.tsx:129
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
@@ -8432,7 +8432,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:157
+#: src/screens/Profile/Sections/Labels.tsx:141
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
@@ -8809,7 +8809,7 @@ msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
 #. placeholder {0}: post.likeCount || 0
-#: src/components/PostControls/index.tsx:230
+#: src/components/PostControls/index.tsx:224
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -8983,7 +8983,7 @@ msgstr "Use theme font"
 msgid "Used for the app's interface"
 msgstr "Used for the app's interface"
 
-#: src/view/screens/Profile.tsx:441
+#: src/view/screens/Profile.tsx:399
 msgid "user"
 msgstr "user"
 
@@ -9108,7 +9108,7 @@ msgstr ""
 msgid "Video uploaded"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:340
+#: src/view/screens/Profile.tsx:312
 msgid "Videos"
 msgstr ""
 
@@ -9169,8 +9169,8 @@ msgstr ""
 msgid "View debug entry"
 msgstr ""
 
-#: src/view/com/posts/ViewFullThread.tsx:36
-#: src/view/com/posts/ViewFullThread.tsx:66
+#: src/view/com/posts/ViewFullThread.tsx:23
+#: src/view/com/posts/ViewFullThread.tsx:31
 msgid "View full thread"
 msgstr ""
 
@@ -9471,8 +9471,8 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:286
-#: src/view/screens/Profile.tsx:287
+#: src/view/screens/Profile.tsx:262
+#: src/view/screens/Profile.tsx:263
 msgid "Write a post"
 msgstr ""
 
@@ -9718,15 +9718,15 @@ msgstr ""
 msgid "You have unsaved changes. Would you like to save them before viewing your drafts?"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:241
+#: src/components/StarterPack/ProfileStarterPacks.tsx:229
 msgid "You haven't created a starter pack yet!"
 msgstr ""
 
-#: src/view/com/lists/ProfileLists.tsx:161
+#: src/view/com/lists/ProfileLists.tsx:140
 msgid "You haven't created any lists yet."
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:162
+#: src/view/com/feeds/ProfileFeedgens.tsx:141
 msgid "You haven't made any custom feeds yet."
 msgstr ""
 
@@ -9764,7 +9764,7 @@ msgstr ""
 msgid "You may only add up to 3 feeds"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:304
+#: src/components/StarterPack/ProfileStarterPacks.tsx:292
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
