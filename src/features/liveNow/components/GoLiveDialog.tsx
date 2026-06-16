@@ -4,7 +4,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
 import { cleanError } from '#/lib/strings/errors';
-import { definitelyUrl } from '#/lib/strings/url-helpers';
+import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { useTickEveryMinute } from '#/state/shell';
@@ -69,7 +69,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 		setDuration(Number(newDuration));
 	}, []);
 
-	const liveLinkUrl = definitelyUrl(liveLink);
+	const liveLinkUrl = parseLooseUrl(liveLink);
 	const debouncedUrl = useDebouncedValue(liveLinkUrl, 500);
 
 	const {
@@ -124,7 +124,7 @@ function DialogInner({ handle, profile }: { handle: Dialog.DialogHandle; profile
 						label={l`Live link`}
 						onBlur={() => {
 							// don't nag about an empty field — only flag a non-empty, non-URL value
-							if (liveLink.trim() && !definitelyUrl(liveLink)) {
+							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
 								setLiveLinkError('Invalid URL');
 							}
 						}}

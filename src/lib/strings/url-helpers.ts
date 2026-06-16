@@ -1,12 +1,9 @@
 import { parseResourceUri } from '@atcute/lexicons/syntax';
-import TLDs from 'tlds';
 
 import { BSKY_SERVICE } from '#/lib/constants';
 import { startUriToStarterPackUri } from '#/lib/strings/starter-pack';
 
-import { logger } from '#/logger';
-
-export const BSKY_APP_HOST = 'https://bsky.app';
+const BSKY_APP_HOST = 'https://bsky.app';
 const BSKY_TRUSTED_HOSTS = [
 	'bsky\\.app',
 	'bsky\\.social',
@@ -22,16 +19,6 @@ const BSKY_TRUSTED_HOSTS = [
 const TRUSTED_REGEX = new RegExp(
 	`^(http(s)?://(([\\w-]+\\.)?${BSKY_TRUSTED_HOSTS.join('|([\\w-]+\\.)?')})|/|#)`,
 );
-
-export function isValidDomain(str: string): boolean {
-	return !!TLDs.find((tld) => {
-		let i = str.lastIndexOf(tld);
-		if (i === -1) {
-			return false;
-		}
-		return str.charAt(i - 1) === '.' && i === str.length - tld.length;
-	});
-}
 
 export function makeRecordUri(didOrName: string, collection: string, rkey: string) {
 	return `at://${didOrName}/${collection}/${rkey}`;
@@ -86,17 +73,12 @@ export function isRelativeUrl(url: string): boolean {
 	return /^\/[^/]/.test(url);
 }
 
-export function isBskyRSSUrl(url: string): boolean {
-	return (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) && /\/rss\/?$/.test(url);
-}
-
 export function isExternalUrl(url: string): boolean {
 	const external = !isBskyAppUrl(url) && url.startsWith('http');
-	const rss = isBskyRSSUrl(url);
-	return external || rss;
+	return external;
 }
 
-export function isTrustedUrl(url: string): boolean {
+function isTrustedUrl(url: string): boolean {
 	return TRUSTED_REGEX.test(url);
 }
 
@@ -157,7 +139,7 @@ export function isBskyStarterPackUrl(url: string): boolean {
 }
 
 // Invite codes are 7 alphanumeric characters long, supporting up to 10 here to future-proof.
-export const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/;
+const CHAT_INVITE_CODE_REGEX = /^\/chat\/([a-zA-Z0-9]{7,10})$/;
 
 export function getChatInviteCodeFromUrl(url: string): string | undefined {
 	let pathname: string;
@@ -192,9 +174,6 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
 		} catch (e) {
 			console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e);
 		}
-	} else if (isShortLink(url)) {
-		// We only want to do this on native, web handles the 301 for us
-		return shortLinkToHref(url);
 	}
 	return url;
 }
@@ -226,73 +205,70 @@ export function postUriToRelativePath(uri: string): string | undefined {
 	}
 }
 
-/**
- * Checks if the label in the post text matches the host of the link facet.
- *
- * Hosts are case-insensitive, so should be lowercase for comparison.
- *
- * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
- */
-export function linkRequiresWarning(uri: string, label: string) {
-	const labelDomain = labelToDomain(label);
+const TRIM_HOST_RE = /^www\./;
+const TRIM_URLTEXT_RE = /^\s*(?:https?:\/\/)?(?:www\.)?/i;
 
-	// We should trust any relative URL or a # since we know it links to internal content
-	if (isRelativeUrl(uri) || uri === '#') {
+/**
+ * Builds the host string a faithful display text must begin with: the hostname (sans `www.`) plus an explicit
+ * port. A URL carrying embedded credentials is prefixed with a sentinel that cannot occur in trimmed text, so
+ * any `user@host` authority always fails the match.
+ *
+ * @param url the parsed link target
+ * @returns the expected host string
+ */
+const buildExpectedHost = (url: URL): string => {
+	const hostname = url.hostname.replace(TRIM_HOST_RE, '').toLowerCase();
+	const host = url.port ? `${hostname}:${url.port}` : hostname;
+	return url.username ? `\0@@\0${host}` : host;
+};
+
+/**
+ * Whether a link's visible text honestly names where it leads. Once its scheme and `www.` prefix are
+ * stripped, the text must begin with the destination host and break on a path, query, or fragment boundary,
+ * so `example.com` matched against `example.com.evil.tld` correctly fails.
+ *
+ * @param uri the link target
+ * @param displayText the link's visible text
+ * @returns whether the text faithfully represents the target host
+ */
+const linkTextMatchesHost = (uri: string, displayText: string): boolean => {
+	const url = safeUrlParse(uri);
+	if (url === null) {
 		return false;
 	}
-
-	let urip;
-	try {
-		urip = new URL(uri);
-	} catch {
-		return true;
-	}
-
-	const host = urip.hostname.toLowerCase();
-	if (isTrustedUrl(uri)) {
-		// if this is a link to internal content, warn if it represents itself as a URL to another app
-		return !!labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain);
-	} else {
-		// if this is a link to external content, warn if the label doesnt match the target
-		if (!labelDomain) {
-			return true;
-		}
-		return labelDomain !== host;
-	}
-}
+	const expectedHost = buildExpectedHost(url);
+	const normalized = displayText.replace(TRIM_URLTEXT_RE, '').toLowerCase();
+	const boundary = normalized[expectedHost.length];
+	return (
+		(boundary === undefined || boundary === '/' || boundary === '?' || boundary === '#') &&
+		normalized.startsWith(expectedHost)
+	);
+};
 
 /**
- * Returns a lowercase domain hostname if the label is a valid URL.
+ * Whether a content link should warn before navigating, i.e. its visible text misrepresents the destination.
+ * Trusted targets — including relative paths and in-app anchors — warn only when the text poses as some other
+ * address; every other target warns on any mismatch.
  *
- * Hosts are case-insensitive, so should be lowercase for comparison.
- *
- * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
+ * @param uri the link target
+ * @param displayText the link's visible text
+ * @returns whether to show the leaving-the-app warning
  */
-export function labelToDomain(label: string): string | undefined {
-	// any spaces just immediately consider the label a non-url
-	if (/\s/.test(label)) {
-		return undefined;
+export const isMisleadingLink = (uri: string, displayText: string): boolean => {
+	if (linkTextMatchesHost(uri, displayText)) {
+		return false;
 	}
-	try {
-		return new URL(label).hostname.toLowerCase();
-	} catch {}
-	try {
-		return new URL('https://' + label).hostname.toLowerCase();
-	} catch {}
-	return undefined;
-}
+	return isTrustedUrl(uri) ? looksLikeUrl(displayText) : true;
+};
 
-export function isPossiblyAUrl(str: string): boolean {
-	str = str.trim();
-	if (str.startsWith('http://')) {
-		return true;
-	}
-	if (str.startsWith('https://')) {
-		return true;
-	}
-	const [firstWord] = str.split(/[\s\/]/);
-	return isValidDomain(firstWord!);
-}
+/**
+ * Whether a string poses as a web address, i.e. it parses as an `http(s)` URL with a dotted host. Used to
+ * tell a label masquerading as a URL apart from plain text.
+ *
+ * @param text the string to test
+ * @returns whether the string resembles a URL
+ */
+export const looksLikeUrl = (text: string): boolean => parseLooseUrl(text) !== null;
 
 /**
  * Splits a hostname into its subdomain prefix and registrable apex domain, e.g. `a.b.example.co.uk` →
@@ -314,32 +290,11 @@ export async function splitApexDomain(hostname: string): Promise<[string, string
 	return [parsed.subdomain ? `${parsed.subdomain}.` : '', parsed.domain];
 }
 
-export function createBskyAppAbsoluteUrl(path: string): string {
-	const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '');
-	return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`;
-}
-
 export function isShortLink(url: string): boolean {
 	return url.startsWith('https://go.bsky.app/');
 }
 
-export function shortLinkToHref(url: string): string {
-	try {
-		const urlp = new URL(url);
-
-		// For now we only support starter packs, but in the future we should add additional paths to this check
-		const parts = urlp.pathname.split('/').filter(Boolean);
-		if (parts.length === 1) {
-			return `/starter-pack-short/${parts[0]}`;
-		}
-		return url;
-	} catch (e) {
-		logger.error('Failed to parse possible short link', { safeMessage: e });
-		return url;
-	}
-}
-
-export function getHostnameFromUrl(url: string | URL): string | null {
+function getHostnameFromUrl(url: string | URL): string | null {
 	let urlp;
 	try {
 		urlp = new URL(url);
@@ -357,35 +312,23 @@ export function getServiceAuthAudFromUrl(url: string | URL): string | null {
 	return `did:web:${hostname}`;
 }
 
-// passes URL.parse, and has a TLD etc
-export function definitelyUrl(maybeUrl: string) {
-	try {
-		if (maybeUrl.endsWith('.')) return null;
-
-		// Prepend 'https://' if the input doesn't start with a protocol
-		if (!maybeUrl.startsWith('https://') && !maybeUrl.startsWith('http://')) {
-			maybeUrl = 'https://' + maybeUrl;
-		}
-
-		const url = new URL(maybeUrl);
-
-		// Extract the hostname and split it into labels
-		const hostname = url.hostname;
-		const labels = hostname.split('.');
-
-		// Ensure there are at least two labels (e.g., 'example' and 'com')
-		if (labels.length < 2) return null;
-
-		const tld = labels[labels.length - 1]!;
-
-		// Check that the TLD is at least two characters long and contains only letters
-		if (!/^[a-z]{2,}$/i.test(tld)) return null;
-
-		return url.toString();
-	} catch {
+/**
+ * Parses a user-entered URL, assuming `https` when no scheme is given. Returns the normalized URL string, or
+ * null when the input is not an `http(s)` URL with a dotted host. There is no TLD list — a literal dot in the
+ * authority is enough, leaving reachability to whoever fetches the URL.
+ *
+ * @param text the user-entered URL
+ * @returns the normalized URL string, or null when the input is not a usable URL
+ */
+export const parseLooseUrl = (text: string): string | null => {
+	const trimmed = text.trim();
+	const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+	const url = safeUrlParse(candidate);
+	if (url === null || !url.hostname.includes('.') || url.hostname.endsWith('.')) {
 		return null;
 	}
-}
+	return url.href;
+};
 
 /**
  * Parses a string into a URL, accepting only the `http(s)` schemes that are safe to place in an anchor href.

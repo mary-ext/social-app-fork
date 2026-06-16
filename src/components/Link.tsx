@@ -12,7 +12,7 @@ import { type LinkProps as RNLinkProps, StackActions } from '@react-navigation/n
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
-import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#/lib/strings/url-helpers';
+import { convertBskyAppUrlIfNeeded, isExternalUrl, isMisleadingLink } from '#/lib/strings/url-helpers';
 
 import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf';
 
@@ -164,7 +164,7 @@ export function useLink({
 			if (exitEarlyIfFalse === false) return;
 
 			const requiresWarning = Boolean(
-				!disableMismatchWarning && displayText && isExternal && linkRequiresWarning(href, displayText),
+				!disableMismatchWarning && displayText && isExternal && isMisleadingLink(href, displayText),
 			);
 
 			e.preventDefault();

@@ -5,7 +5,7 @@ import { differenceInMinutes } from 'date-fns';
 
 import { useDebouncedValue } from '#/lib/hooks/useDebouncedValue';
 import { cleanError } from '#/lib/strings/errors';
-import { definitelyUrl } from '#/lib/strings/url-helpers';
+import { parseLooseUrl } from '#/lib/strings/url-helpers';
 
 import { useTickEveryMinute } from '#/state/shell';
 
@@ -62,7 +62,7 @@ function DialogInner({
 	const [liveLinkError, setLiveLinkError] = useState('');
 	const tick = useTickEveryMinute();
 
-	const liveLinkUrl = definitelyUrl(liveLink);
+	const liveLinkUrl = parseLooseUrl(liveLink);
 	const debouncedUrl = useDebouncedValue(liveLinkUrl, 500);
 
 	const isDirty = liveLinkUrl !== embed.external.uri;
@@ -138,7 +138,7 @@ function DialogInner({
 						label={l`Live link`}
 						onBlur={() => {
 							// don't nag about an empty field — only flag a non-empty, non-URL value
-							if (liveLink.trim() && !definitelyUrl(liveLink)) {
+							if (liveLink.trim() && !parseLooseUrl(liveLink)) {
 								setLiveLinkError('Invalid URL');
 							}
 						}}

@@ -222,9 +222,6 @@ importers:
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      tlds:
-        specifier: ^1.261.0
-        version: 1.261.0
       tldts:
         specifier: ^6.1.86
         version: 6.1.86
@@ -5266,10 +5263,6 @@ packages:
   tinypool@2.1.0:
     resolution: {integrity: sha512-Pugqs6M0m7Lv1I7FtxN4aoyToKg1C4tu+/381vH35y8oENM/Ai7f7C4StcoK4/+BSw9ebcS8jRiVrORFKCALLw==}
     engines: {node: ^20.0.0 || >=22.0.0}
-
-  tlds@1.261.0:
-    resolution: {integrity: sha512-QXqwfEl9ddlGBaRFXIvNKK6OhipSiLXuRuLJX5DErz0o0Q0rYxulWLdFryTkV5PkdZct5iMInwYEGe/eR++1AA==}
-    hasBin: true
 
   tldts-core@6.1.86:
     resolution: {integrity: sha512-Je6p7pkk+KMzMv2XXKmAE3McmolOQFdxkKw0R8EYNr7sELW46JqnNeTX8ybPiQgvg1ymCoF8LXs5fzFaZvJPTA==}
@@ -11089,8 +11082,6 @@ snapshots:
       picomatch: 4.0.4
 
   tinypool@2.1.0: {}
-
-  tlds@1.261.0: {}
 
   tldts-core@6.1.86: {}
 

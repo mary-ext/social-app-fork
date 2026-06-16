@@ -4,7 +4,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { shareUrl } from '#/lib/sharing';
-import { isPossiblyAUrl, splitApexDomain } from '#/lib/strings/url-helpers';
+import { looksLikeUrl, splitApexDomain } from '#/lib/strings/url-helpers';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
 
@@ -52,7 +52,7 @@ function LinkWarningDialogInner({ link }: { link?: { href: string; displayText: 
 	const openLink = useOpenLink();
 	const { gtMobile } = useBreakpoints();
 
-	const potentiallyMisleading = useMemo(() => link && isPossiblyAUrl(link.displayText), [link]);
+	const potentiallyMisleading = useMemo(() => link && looksLikeUrl(link.displayText), [link]);
 
 	const onPressVisit = useCallback(() => {
 		control.close(() => {

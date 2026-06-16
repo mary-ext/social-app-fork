@@ -86,7 +86,6 @@
 		"react-responsive": "^10.0.1",
 		"react-textarea-autosize": "^8.5.9",
 		"sonner": "^2.0.7",
-		"tlds": "^1.261.0",
 		"tldts": "^6.1.86",
 		"unicode-segmenter": "0.14.5"
 	},

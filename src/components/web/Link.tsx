@@ -12,12 +12,7 @@ import { clsx } from 'clsx';
 
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
-import {
-	convertBskyAppUrlIfNeeded,
-	isExternalUrl,
-	linkRequiresWarning,
-	safeUrlParse,
-} from '#/lib/strings/url-helpers';
+import { convertBskyAppUrlIfNeeded, isMisleadingLink, safeUrlParse } from '#/lib/strings/url-helpers';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import type { TextProps } from '#/components/Text';
@@ -38,9 +33,8 @@ type LinkAction = 'navigate' | 'push' | 'replace';
  */
 type LinkOnPress = (e: MouseEvent<HTMLElement>) => false | void;
 
-// the resolved anchor wiring a presentational shell needs, regardless of which family produced it.
 type LinkBindings = {
-	href: string;
+	href: string | undefined;
 	onClick: (e: MouseEvent<HTMLElement>) => void;
 	rel?: string;
 	target?: string;
@@ -48,8 +42,9 @@ type LinkBindings = {
 
 // a modified click (middle/aux button or a held modifier) means the user wants the browser's default — open a
 // new tab — so the link lets the native `<a href>` handle it instead of intercepting for client-side nav.
-const isModifiedClick = (e: MouseEvent<HTMLElement>) =>
-	e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
+const isModifiedClick = (e: MouseEvent<HTMLElement>) => {
+	return e.altKey || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
+};
 
 const useNavigateToPath = () => {
 	const navigation = useNavigationDeduped();
@@ -111,20 +106,25 @@ const useInternalLink = ({
 // internal href, and nothing for a genuinely external or modified click (the native anchor opens those).
 const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
-	// reject dangerous schemes (javascript:, data:, …) up front: an unsafe URL resolves to an empty href.
+
 	const href = useMemo(() => {
 		const parsed = safeUrlParse(rawHref);
-		return parsed ? convertBskyAppUrlIfNeeded(parsed.href) : '';
+		return parsed ? convertBskyAppUrlIfNeeded(parsed.href) : undefined;
 	}, [rawHref]);
-	const isExternal = isExternalUrl(href);
+
+	const isExternal = !href?.startsWith('/');
 	const navigate = useCallback(
 		(e: MouseEvent<HTMLElement>) => {
-			if (isExternal || isModifiedClick(e)) return;
+			if (!href || isExternal || isModifiedClick(e)) {
+				return;
+			}
+
 			e.preventDefault();
 			navigateToPath(href, action);
 		},
 		[action, href, isExternal, navigateToPath],
 	);
+
 	return { href, isExternal, navigate };
 };
 
@@ -178,11 +178,17 @@ const useContentLink = ({
 				e.preventDefault();
 				return;
 			}
-			if (displayText && isExternal && linkRequiresWarning(href, displayText)) {
+
+			if (!href) {
+				return;
+			}
+
+			if (displayText && isExternal && isMisleadingLink(href, displayText)) {
 				e.preventDefault();
 				linkWarningDialogControl.open({ displayText, href });
 				return;
 			}
+
 			navigate(e);
 		},
 		[displayText, href, isExternal, linkWarningDialogControl, navigate, onPress],

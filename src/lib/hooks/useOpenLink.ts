@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
 import { Linking } from 'react-native';
 
-import { createBskyAppAbsoluteUrl, isBskyRSSUrl, isRelativeUrl } from '#/lib/strings/url-helpers';
+import { isRelativeUrl, toBskyAppUrl } from '#/lib/strings/url-helpers';
 
 export function useOpenLink() {
 	const openLink = useCallback(async (url: string) => {
-		if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
-			url = createBskyAppAbsoluteUrl(url);
+		if (isRelativeUrl(url)) {
+			url = toBskyAppUrl(url);
 		}
 
 		void Linking.openURL(url);

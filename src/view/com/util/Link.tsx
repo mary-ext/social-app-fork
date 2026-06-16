@@ -15,7 +15,7 @@ import { StackActions } from '@react-navigation/native';
 import { type DebouncedNavigationProp, useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getTabState, TabState } from '#/lib/routes/helpers';
-import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#/lib/strings/url-helpers';
+import { convertBskyAppUrlIfNeeded, isExternalUrl, isMisleadingLink } from '#/lib/strings/url-helpers';
 import type { TypographyVariant } from '#/lib/ThemeContext';
 
 import { emitSoftReset } from '#/state/events';
@@ -202,7 +202,7 @@ export const TextLink = memo(function TextLink({
 	const onPress = useCallback(
 		(e?: Event) => {
 			const requiresWarning =
-				!disableMismatchWarning && linkRequiresWarning(href, typeof text === 'string' ? text : '');
+				!disableMismatchWarning && isMisleadingLink(href, typeof text === 'string' ? text : '');
 			if (requiresWarning) {
 				e?.preventDefault?.();
 				linkWarningDialogControl.open({

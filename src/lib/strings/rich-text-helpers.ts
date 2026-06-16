@@ -2,7 +2,7 @@ import type { AppBskyRichtextFacet } from '@atcute/bluesky';
 import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 
 import type { Richtext } from './rich-text-facets';
-import { linkRequiresWarning } from './url-helpers';
+import { isMisleadingLink } from './url-helpers';
 
 type Feature = AppBskyRichtextFacet.Main['features'][number];
 
@@ -23,7 +23,7 @@ export function richTextToString(rt: Richtext, loose: boolean): string {
 			switch (feature.$type) {
 				case 'app.bsky.richtext.facet#link': {
 					const href = feature.uri;
-					const requiresWarning = linkRequiresWarning(href, segment.text);
+					const requiresWarning = isMisleadingLink(href, segment.text);
 					str = !requiresWarning ? href : loose ? `[${segment.text}](${href})` : segment.text;
 					break features;
 				}
