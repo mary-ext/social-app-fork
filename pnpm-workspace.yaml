@@ -21,4 +21,5 @@ minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'
 patchedDependencies:
+  '@base-ui/react': patches/@base-ui__react.patch
   '@react-navigation/native-stack': patches/@react-navigation__native-stack.patch

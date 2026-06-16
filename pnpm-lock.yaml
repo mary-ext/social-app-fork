@@ -15,6 +15,7 @@ overrides:
   unicode-segmenter: 0.14.5
 
 patchedDependencies:
+  '@base-ui/react': c67c9caac857cb5fd8980ad8f4957846dd31db8e239fda311262226c298f3319
   '@react-navigation/native-stack': a4cdb79a0fb2df5d81643aa346e5aff8e334c20cd7062e63f426f3232bb0a571
 
 importers:
@@ -71,7 +72,7 @@ importers:
         version: 1.1.2
       '@base-ui/react':
         specifier: ^1.5.0
-        version: 1.5.0(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 1.5.0(patch_hash=c67c9caac857cb5fd8980ad8f4957846dd31db8e239fda311262226c298f3319)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@braintree/sanitize-url':
         specifier: ^6.0.4
         version: 6.0.4
@@ -101,7 +102,7 @@ importers:
         version: 0.2.1
       '@oomfware/lightbox':
         specifier: ^0.1.6
-        version: 0.1.6(@base-ui/react@1.5.0(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 0.1.6(@base-ui/react@1.5.0(patch_hash=c67c9caac857cb5fd8980ad8f4957846dd31db8e239fda311262226c298f3319)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@react-navigation/bottom-tabs':
         specifier: ^7.17.2
         version: 7.17.2(@react-navigation/native@7.3.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native-safe-area-context@5.6.2(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native-screens@4.25.0(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7))(react-native@0.81.5(@babel/core@7.29.7)(@types/react@19.2.17)(react@19.2.7))(react@19.2.7)
@@ -6063,7 +6064,7 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@base-ui/react@1.5.0(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@base-ui/react@1.5.0(patch_hash=c67c9caac857cb5fd8980ad8f4957846dd31db8e239fda311262226c298f3319)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.29.7
       '@base-ui/utils': 0.2.9(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -6551,13 +6552,13 @@ snapshots:
 
   '@oomfware/lang-detect@0.2.1': {}
 
-  '@oomfware/lightbox@0.1.6(@base-ui/react@1.5.0(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@oomfware/lightbox@0.1.6(@base-ui/react@1.5.0(patch_hash=c67c9caac857cb5fd8980ad8f4957846dd31db8e239fda311262226c298f3319)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@mary-ext/simple-event-emitter': 1.0.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
     optionalDependencies:
-      '@base-ui/react': 1.5.0(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@base-ui/react': 1.5.0(patch_hash=c67c9caac857cb5fd8980ad8f4957846dd31db8e239fda311262226c298f3319)(@types/react@19.2.17)(date-fns@4.4.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
 
   '@oxfmt/binding-android-arm-eabi@0.50.0':
     optional: true

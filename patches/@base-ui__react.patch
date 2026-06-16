@@ -1,0 +1,15 @@
+diff --git a/esm/utils/InternalBackdrop.js b/esm/utils/InternalBackdrop.js
+index 574e6e41f32a3f599dfb13f285e4107a6748e739..0994b9ed4bc198f7b019477fe3eedeb1558641ce 100644
+--- a/esm/utils/InternalBackdrop.js
++++ b/esm/utils/InternalBackdrop.js
+@@ -10,10 +10,6 @@ export const InternalBackdrop = /*#__PURE__*/React.forwardRef(function InternalB
+     ...otherProps
+   } = props;
+   let clipPath;
+-  if (cutout) {
+-    const rect = cutout.getBoundingClientRect();
+-    clipPath = `polygon(0% 0%,100% 0%,100% 100%,0% 100%,0% 0%,${rect.left}px ${rect.top}px,${rect.left}px ${rect.bottom}px,${rect.right}px ${rect.bottom}px,${rect.right}px ${rect.top}px,${rect.left}px ${rect.top}px)`;
+-  }
+   return /*#__PURE__*/_jsx("div", {
+     ref: ref,
+     role: "presentation"
