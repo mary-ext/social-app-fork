@@ -15,6 +15,7 @@ import { listenSoftReset } from '#/state/events';
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';
 import { useChatActorStatusQuery } from '#/state/queries/messages/get-status';
+import { useUnreadCountsQuery } from '#/state/queries/messages/get-unread-counts';
 import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
 
 import { logger } from '#/logger';
@@ -399,17 +400,8 @@ export function Header({
 	// on repeated clicks, so navigate instead to dedupe by route + params.
 	const action = isWithinSplitView ? 'navigate' : 'push';
 
-	const { data: unreadInboxData, hasNextPage: hasMoreRequests } = useListConvosQuery({
-		status: 'request',
-		readState: 'unread',
-	});
-
-	const inboxAllConvos =
-		unreadInboxData?.pages
-			.flatMap((page) => page.convos)
-			.filter(
-				(convo) => !convo.muted && convo.members.every((member) => member.handle !== 'missing.invalid'),
-			) ?? [];
+	const { data: unreadCounts } = useUnreadCountsQuery();
+	const requestCount = unreadCounts?.unreadRequestConvos ?? 0;
 
 	const openChatControl = useCallback(() => {
 		newChatControl.open();
@@ -427,12 +419,7 @@ export function Header({
 					</Layout.Header.Content>
 
 					<View style={[a.flex_row, a.align_center, a.gap_sm]}>
-						<InboxRequests
-							count={inboxAllConvos.length}
-							more={hasMoreRequests}
-							variant="solid"
-							action={action}
-						/>
+						<InboxRequests count={requestCount} variant="solid" action={action} />
 						<Link
 							to="/messages/settings"
 							action={action}
@@ -465,7 +452,7 @@ export function Header({
 							<Trans>Chats</Trans>
 						</Layout.Header.TitleText>
 					</Layout.Header.Content>
-					<InboxRequests count={inboxAllConvos.length} more={hasMoreRequests} variant="ghost" />
+					<InboxRequests count={requestCount} variant="ghost" />
 					<Layout.Header.Slot>
 						<Link
 							to="/messages/settings"

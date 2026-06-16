@@ -1,6 +1,5 @@
-import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import type { ChatBskyActorDefs, ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
-import { moderateProfile, ModerationCauseType, type ModerationOptions } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import {
 	type InfiniteData,
@@ -14,17 +13,14 @@ import throttle from 'lodash.throttle';
 
 import { useCurrentConvoId } from '#/state/messages/current-convo-id';
 import { useMessagesEventBus } from '#/state/messages/events';
-import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { invalidateJoinLinkPreviewsForConvo } from '#/state/queries/join-links';
 import { useClients, useSession } from '#/state/session';
 
-import { parseConvoView } from '#/components/dms/util';
-
 import { RQKEY as CONVO_KEY } from './conversation';
+import { RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL, useUnreadCountsQuery } from './get-unread-counts';
 import { listConvoMembersQueryKey } from './list-convo-members';
 
 const DEFAULT_LIMIT = 10;
-export const UNREAD_LIMIT = 20;
 
 export const RQKEY_ROOT = 'convo-list';
 export const RQKEY = (
@@ -123,37 +119,17 @@ export function useListConvosQuery({
 	});
 }
 
-const ListConvosContext = createContext<{
-	accepted: ChatBskyConvoDefs.ConvoView[];
-	request: ChatBskyConvoDefs.ConvoView[];
-} | null>(null);
-ListConvosContext.displayName = 'ListConvosContext';
-
-export function useListConvos() {
-	const ctx = useContext(ListConvosContext);
-	if (!ctx) {
-		throw new Error('useListConvos must be used within a ListConvosProvider');
-	}
-	return ctx;
-}
-
-const empty = { accepted: [], request: [] };
 export function ListConvosProvider({ children }: { children: React.ReactNode }) {
 	const { hasSession } = useSession();
 
 	if (!hasSession) {
-		return <ListConvosContext.Provider value={empty}>{children}</ListConvosContext.Provider>;
+		return <>{children}</>;
 	}
 
 	return <ListConvosProviderInner>{children}</ListConvosProviderInner>;
 }
 
 export function ListConvosProviderInner({ children }: { children: React.ReactNode }) {
-	const { refetch, data } = useListConvosQuery({
-		readState: 'unread',
-		limit: UNREAD_LIMIT,
-		lockStatus: 'unlocked',
-	});
 	const messagesBus = useMessagesEventBus();
 	const queryClient = useQueryClient();
 	const { currentConvoId } = useCurrentConvoId();
@@ -161,19 +137,34 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 
 	const debouncedRefetch = useMemo(() => {
 		const refetchAndInvalidate = () => {
-			void refetch();
 			void queryClient.invalidateQueries({ queryKey: [RQKEY_ROOT] });
 		};
 		return throttle(refetchAndInvalidate, 500, {
 			leading: true,
 			trailing: true,
 		});
-	}, [refetch, queryClient]);
+	}, [queryClient]);
+
+	// The unread badge count is derived from chat.bsky.convo.getUnreadCounts.
+	// Any chat log can change it, so refresh it (throttled) on every batch.
+	const debouncedInvalidateUnreadCounts = useMemo(() => {
+		return throttle(
+			() => {
+				void queryClient.invalidateQueries({ queryKey: UNREAD_COUNTS_RQKEY_PARTIAL });
+			},
+			500,
+			{ leading: true, trailing: true },
+		);
+	}, [queryClient]);
 
 	useEffect(() => {
 		const unsub = messagesBus.on(
 			(events) => {
 				if (events.type !== 'logs') return;
+
+				// Any log batch may change unread state (new message, read, accept,
+				// join request, etc.), so refresh the badge count for all of them.
+				debouncedInvalidateUnreadCounts();
 
 				function mutateMembers(
 					convoId: string,
@@ -684,83 +675,48 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 		);
 
 		return () => unsub();
-	}, [messagesBus, currentConvoId, queryClient, currentAccount?.did, debouncedRefetch]);
+	}, [
+		messagesBus,
+		currentConvoId,
+		queryClient,
+		currentAccount?.did,
+		debouncedRefetch,
+		debouncedInvalidateUnreadCounts,
+	]);
 
-	const ctx = useMemo(() => {
-		const convos = data?.pages.flatMap((page) => page.convos) ?? [];
+	return <>{children}</>;
+}
+
+export function useUnreadMessageCount(): {
+	count: number;
+	numUnread?: string;
+	hasNew: boolean;
+} {
+	const { data } = useUnreadCountsQuery();
+	const accepted = data?.unreadAcceptedConvos ?? 0;
+	const request = data?.unreadRequestConvos ?? 0;
+
+	if (accepted > 0) {
+		const total = accepted + Math.min(request, 1);
 		return {
-			accepted: convos.filter((conv) => conv.status === 'accepted'),
-			request: convos.filter((conv) => conv.status === 'request'),
+			count: total,
+			numUnread: total > 10 ? '10+' : String(total),
+			// only needed when numUnread is undefined
+			hasNew: false,
 		};
-	}, [data]);
-
-	return <ListConvosContext.Provider value={ctx}>{children}</ListConvosContext.Provider>;
-}
-
-export function useUnreadMessageCount() {
-	const { currentConvoId } = useCurrentConvoId();
-	const { currentAccount } = useSession();
-	const { accepted, request } = useListConvos();
-	const moderationOpts = useModerationOpts();
-
-	return useMemo<{
-		count: number;
-		numUnread?: string;
-		hasNew: boolean;
-	}>(() => {
-		const acceptedCount = calculateCount(accepted, currentAccount?.did, currentConvoId, moderationOpts);
-		const requestCount = calculateCount(request, currentAccount?.did, currentConvoId, moderationOpts);
-		if (acceptedCount > 0) {
-			const total = acceptedCount + Math.min(requestCount, 1);
-			return {
-				count: total,
-				numUnread: total > 10 ? '10+' : String(total),
-				// only needed when numUnread is undefined
-				hasNew: false,
-			};
-		} else if (requestCount > 0) {
-			return {
-				count: 1,
-				numUnread: undefined,
-				hasNew: true,
-			};
-		} else {
-			return {
-				count: 0,
-				numUnread: undefined,
-				hasNew: false,
-			};
-		}
-	}, [accepted, request, currentAccount?.did, currentConvoId, moderationOpts]);
-}
-
-function calculateCount(
-	convos: ChatBskyConvoDefs.ConvoView[],
-	currentAccountDid: string | undefined,
-	currentConvoId: string | undefined,
-	moderationOpts: ModerationOptions | undefined,
-) {
-	return (
-		convos
-			.filter((convo) => convo.id !== currentConvoId)
-			.reduce((acc, convoView) => {
-				const convo = parseConvoView(convoView, currentAccountDid);
-
-				if (!convo || !moderationOpts) return acc;
-
-				const shouldIgnore =
-					convo.view.muted ||
-					!convo.primaryMember ||
-					moderateProfile(convo.primaryMember, moderationOpts).causes.some(
-						(c) => c.type === ModerationCauseType.Blocking || c.type === ModerationCauseType.BlockedBy,
-					) ||
-					convo.primaryMember.handle === 'missing.invalid' ||
-					(convo.kind === 'group' && convo.details.lockStatus !== 'unlocked');
-				const unreadCount = !shouldIgnore && convo.view.unreadCount > 0 ? 1 : 0;
-
-				return acc + unreadCount;
-			}, 0) ?? 0
-	);
+	} else if (request > 0) {
+		return {
+			count: 1,
+			numUnread: undefined,
+			hasNew: true,
+		};
+	} else {
+		return {
+			count: 0,
+			numUnread: undefined,
+			hasNew: false,
+		};
+	}
 }
 
 export type ConvoListQueryData = {
