@@ -386,3 +386,16 @@ export function definitelyUrl(maybeUrl: string) {
 		return null;
 	}
 }
+
+/**
+ * Parses a string into a URL, accepting only the `http(s)` schemes that are safe to place in an anchor href.
+ * Unparseable, relative, or dangerous-scheme input (`javascript:`, `data:`, …) yields null. Use this to
+ * neutralize untrusted URLs before navigating to or rendering them.
+ *
+ * @param text the URL string to parse
+ * @returns the parsed URL when it is a valid http(s) URL, otherwise null
+ */
+export const safeUrlParse = (text: string): URL | null => {
+	const url = URL.parse(text);
+	return url !== null && (url.protocol === 'http:' || url.protocol === 'https:') ? url : null;
+};

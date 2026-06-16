@@ -6,14 +6,18 @@ import {
 	useCallback,
 	useMemo,
 } from 'react';
-import { sanitizeUrl } from '@braintree/sanitize-url';
 import { StackActions } from '@react-navigation/native';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped';
 import type { AllNavigatorParams, RouteParams } from '#/lib/routes/types';
-import { convertBskyAppUrlIfNeeded, isExternalUrl, linkRequiresWarning } from '#/lib/strings/url-helpers';
+import {
+	convertBskyAppUrlIfNeeded,
+	isExternalUrl,
+	linkRequiresWarning,
+	safeUrlParse,
+} from '#/lib/strings/url-helpers';
 
 import { useGlobalDialogsControlContext } from '#/components/dialogs/Context';
 import type { TextProps } from '#/components/Text';
@@ -107,7 +111,11 @@ const useInternalLink = ({
 // internal href, and nothing for a genuinely external or modified click (the native anchor opens those).
 const useExternalNav = (rawHref: string, action: LinkAction) => {
 	const navigateToPath = useNavigateToPath();
-	const href = useMemo(() => convertBskyAppUrlIfNeeded(sanitizeUrl(rawHref)), [rawHref]);
+	// reject dangerous schemes (javascript:, data:, …) up front: an unsafe URL resolves to an empty href.
+	const href = useMemo(() => {
+		const parsed = safeUrlParse(rawHref);
+		return parsed ? convertBskyAppUrlIfNeeded(parsed.href) : '';
+	}, [rawHref]);
 	const isExternal = isExternalUrl(href);
 	const navigate = useCallback(
 		(e: MouseEvent<HTMLElement>) => {
