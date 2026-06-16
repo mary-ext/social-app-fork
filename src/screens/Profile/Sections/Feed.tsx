@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -13,52 +13,39 @@ import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 import { atoms as a, useTheme } from '#/alf';
 
 import { EditBig_Stroke1_Corner0_Rounded as EditIcon } from '#/components/icons/EditBig';
-import type { ListRef } from '#/components/List/List';
+import type { ListMethods } from '#/components/List/List';
 import { Text } from '#/components/Typography';
 
-import type { SectionRef } from './types';
-
 interface FeedSectionProps {
-	ref?: React.Ref<SectionRef>;
 	feed: FeedDescriptor;
-	headerHeight: number;
 	isFocused: boolean;
-	scrollElRef: ListRef;
 	ignoreFilterFor?: string;
-	setScrollViewTag: (tag: number | null) => void;
 	emptyStateMessage?: string;
 	emptyStateButton?: EmptyStateButtonProps;
 	emptyStateIcon?: EmptyStateIcon | React.ReactElement;
 }
 
 export function ProfileFeedSection({
-	ref,
 	feed,
-	headerHeight,
 	isFocused,
-	scrollElRef,
 	ignoreFilterFor,
-	setScrollViewTag,
 	emptyStateMessage,
 	emptyStateButton,
 	emptyStateIcon,
 }: FeedSectionProps) {
 	const { t: l } = useLingui();
 	const queryClient = useQueryClient();
+	const scrollElRef = useRef<ListMethods | null>(null);
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
-			offset: -headerHeight,
+			offset: 0,
 		});
 		void truncateAndInvalidate(queryClient, FEED_RQKEY(feed));
 		setHasNew(false);
-	}, [scrollElRef, headerHeight, queryClient, feed, setHasNew]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
+	}, [queryClient, feed, setHasNew]);
 
 	const renderPostsEmpty = useCallback(() => {
 		return (
@@ -74,8 +61,6 @@ export function ProfileFeedSection({
 		);
 	}, [l, emptyStateButton, emptyStateIcon, emptyStateMessage]);
 
-	useEffect(() => {}, [isFocused, scrollElRef, setScrollViewTag]);
-
 	return (
 		<View>
 			<PostFeed
@@ -86,7 +71,6 @@ export function ProfileFeedSection({
 				onHasNew={setHasNew}
 				onScrolledDownChange={setIsScrolledDown}
 				renderEmptyState={renderPostsEmpty}
-				headerOffset={headerHeight}
 				renderEndOfFeed={ProfileEndOfFeed}
 				ignoreFilterFor={ignoreFilterFor}
 			/>

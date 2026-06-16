@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
 	type ListRenderItemInfo,
 	type StyleProp,
@@ -9,19 +9,18 @@ import {
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/strings/errors';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { RQKEY, useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
+import { useProfileFeedgensQuery } from '#/state/queries/profile-feedgens';
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { List, type ListRef } from '#/view/com/util/List';
+import { List } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
@@ -48,31 +47,14 @@ const isFeedgenSentinel = (item: FeedgenItem): item is FeedgenSentinel => {
 	return '_reactKey' in item;
 };
 
-interface SectionRef {
-	scrollToTop: () => void;
-}
-
 interface ProfileFeedgensProps {
-	ref?: React.Ref<SectionRef>;
 	did: string;
-	scrollElRef: ListRef;
-	headerOffset: number;
 	enabled?: boolean;
 	style?: StyleProp<ViewStyle>;
 	testID?: string;
-	setScrollViewTag: (tag: number | null) => void;
 }
 
-export function ProfileFeedgens({
-	ref,
-	did,
-	scrollElRef,
-	headerOffset,
-	enabled,
-	style,
-	testID,
-	setScrollViewTag,
-}: ProfileFeedgensProps) {
+export function ProfileFeedgens({ did, enabled, style, testID }: ProfileFeedgensProps) {
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const [isPTRing, setIsPTRing] = useState(false);
@@ -107,20 +89,6 @@ export function ProfileFeedgens({
 
 	// events
 	// =
-
-	const queryClient = useQueryClient();
-
-	const onScrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: -headerOffset,
-		});
-		void queryClient.invalidateQueries({ queryKey: RQKEY(did) });
-	}, [scrollElRef, queryClient, headerOffset, did]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
 
 	const onRefresh = useCallback(async () => {
 		setIsPTRing(true);
@@ -198,8 +166,6 @@ export function ProfileFeedgens({
 		[l, t, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
 	);
 
-	useEffect(() => {}, [enabled, scrollElRef, setScrollViewTag]);
-
 	const ProfileFeedgensFooter = useCallback(() => {
 		if (isEmpty) return null;
 		return (
@@ -208,28 +174,26 @@ export function ProfileFeedgens({
 				isFetchingNextPage={isFetchingNextPage}
 				onRetry={fetchNextPage}
 				error={cleanError(error)}
-				height={180 + headerOffset}
+				height={180}
 			/>
 		);
-	}, [hasNextPage, error, isFetchingNextPage, headerOffset, fetchNextPage, isEmpty]);
+	}, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty]);
 
 	return (
 		<View testID={testID} style={style}>
 			<List
 				testID={testID ? `${testID}-flatlist` : undefined}
-				ref={scrollElRef}
 				data={items}
 				keyExtractor={keyExtractor}
 				renderItem={renderItem}
 				ListFooterComponent={ProfileFeedgensFooter}
 				refreshing={isPTRing}
 				onRefresh={() => void onRefresh()}
-				headerOffset={headerOffset}
 				progressViewOffset={undefined}
 				removeClippedSubviews={true}
 				desktopFixedHeight
 				onEndReached={() => void onEndReached()}
-				contentContainerStyle={{ minHeight: height + headerOffset }}
+				contentContainerStyle={{ minHeight: height }}
 			/>
 		</View>
 	);

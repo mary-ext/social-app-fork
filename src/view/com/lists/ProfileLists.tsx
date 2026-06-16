@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
 	type ListRenderItemInfo,
 	type StyleProp,
@@ -9,19 +9,18 @@ import {
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
-import { useQueryClient } from '@tanstack/react-query';
 
 import { cleanError } from '#/lib/strings/errors';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
-import { RQKEY, useProfileListsQuery } from '#/state/queries/profile-lists';
+import { useProfileListsQuery } from '#/state/queries/profile-lists';
 import { useSession } from '#/state/session';
 
 import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage';
-import { List, type ListRef } from '#/view/com/util/List';
+import { List } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn';
 
@@ -48,31 +47,14 @@ const isProfileListSentinel = (item: ProfileListItem): item is ProfileListSentin
 	return '_reactKey' in item;
 };
 
-interface SectionRef {
-	scrollToTop: () => void;
-}
-
 interface ProfileListsProps {
-	ref?: React.Ref<SectionRef>;
 	did: string;
-	scrollElRef: ListRef;
-	headerOffset: number;
 	enabled?: boolean;
 	style?: StyleProp<ViewStyle>;
 	testID?: string;
-	setScrollViewTag: (tag: number | null) => void;
 }
 
-export function ProfileLists({
-	ref,
-	did,
-	scrollElRef,
-	headerOffset,
-	enabled,
-	style,
-	testID,
-	setScrollViewTag,
-}: ProfileListsProps) {
+export function ProfileLists({ did, enabled, style, testID }: ProfileListsProps) {
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const [isPTRing, setIsPTRing] = useState(false);
@@ -107,20 +89,6 @@ export function ProfileLists({
 
 	// events
 	// =
-
-	const queryClient = useQueryClient();
-
-	const onScrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: -headerOffset,
-		});
-		void queryClient.invalidateQueries({ queryKey: RQKEY(did) });
-	}, [scrollElRef, queryClient, headerOffset, did]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
 
 	const onRefresh = useCallback(async () => {
 		setIsPTRing(true);
@@ -197,8 +165,6 @@ export function ProfileLists({
 		[l, t, error, refetch, onPressRetryLoadMore, preferences, navigation, isSelf],
 	);
 
-	useEffect(() => {}, [enabled, scrollElRef, setScrollViewTag]);
-
 	const ProfileListsFooter = useCallback(() => {
 		if (isEmpty) return null;
 		return (
@@ -207,28 +173,26 @@ export function ProfileLists({
 				isFetchingNextPage={isFetchingNextPage}
 				onRetry={fetchNextPage}
 				error={cleanError(error)}
-				height={180 + headerOffset}
+				height={180}
 			/>
 		);
-	}, [hasNextPage, error, isFetchingNextPage, headerOffset, fetchNextPage, isEmpty]);
+	}, [hasNextPage, error, isFetchingNextPage, fetchNextPage, isEmpty]);
 
 	return (
 		<View testID={testID} style={style}>
 			<List
 				testID={testID ? `${testID}-flatlist` : undefined}
-				ref={scrollElRef}
 				data={items}
 				keyExtractor={keyExtractor}
 				renderItem={renderItem}
 				ListFooterComponent={ProfileListsFooter}
 				refreshing={isPTRing}
 				onRefresh={() => void onRefresh()}
-				headerOffset={headerOffset}
 				progressViewOffset={undefined}
 				removeClippedSubviews={true}
 				desktopFixedHeight
 				onEndReached={() => void onEndReached()}
-				contentContainerStyle={{ minHeight: height + headerOffset }}
+				contentContainerStyle={{ minHeight: height }}
 			/>
 		</View>
 	);

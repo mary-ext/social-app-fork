@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { AppBskyLabelerDefs } from '@atcute/bluesky';
 import {
@@ -11,7 +11,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation';
 
-import { List, type ListRef } from '#/view/com/util/List';
+import { List } from '#/view/com/util/List';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -23,44 +23,20 @@ import * as Settings from '#/components/SettingsCards';
 import { Text } from '#/components/Typography';
 
 import { ErrorState } from '../ErrorState';
-import type { SectionRef } from './types';
 
 interface LabelsSectionProps {
-	ref: React.Ref<SectionRef>;
 	isLabelerLoading: boolean;
 	labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined;
 	labelerError: Error | null;
 	moderationOpts: ModerationOptions;
-	scrollElRef: ListRef;
-	headerHeight: number;
-	isFocused: boolean;
-	setScrollViewTag: (tag: number | null) => void;
 }
 
 export function ProfileLabelsSection({
-	ref,
 	isLabelerLoading,
 	labelerInfo,
 	labelerError,
 	moderationOpts,
-	scrollElRef,
-	headerHeight,
-	isFocused,
-	setScrollViewTag,
 }: LabelsSectionProps) {
-	const onScrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: -headerHeight,
-		});
-	}, [scrollElRef, headerHeight]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
-
-	useEffect(() => {}, [isFocused, scrollElRef, setScrollViewTag]);
-
 	const isSubscribed = labelerInfo ? !!isLabelerSubscribed(labelerInfo, moderationOpts) : false;
 
 	const labelValues = useMemo(() => {
@@ -75,11 +51,9 @@ export function ProfileLabelsSection({
 	return (
 		<View>
 			<List
-				ref={scrollElRef}
 				data={NO_ITEMS}
 				renderItem={renderNothing}
 				contentContainerStyle={a.px_xl}
-				headerOffset={headerHeight}
 				progressViewOffset={undefined}
 				ListHeaderComponent={
 					<>
@@ -104,7 +78,7 @@ export function ProfileLabelsSection({
 						)}
 					</>
 				}
-				ListFooterComponent={<ListFooter height={headerHeight + 180} style={a.border_transparent} />}
+				ListFooterComponent={<ListFooter height={180} style={a.border_transparent} />}
 			/>
 		</View>
 	);

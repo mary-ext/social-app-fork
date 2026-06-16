@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
 	type ListRenderItemInfo,
 	type StyleProp,
@@ -21,7 +21,7 @@ import { useActorStarterPacksQuery } from '#/state/queries/actor-starter-packs';
 import { logger } from '#/logger';
 
 import { EmptyState, type EmptyStateButtonProps, type EmptyStateIcon } from '#/view/com/util/EmptyState';
-import { List, type ListRef } from '#/view/com/util/List';
+import { List } from '#/view/com/util/List';
 import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { atoms as a, useTheme } from '#/alf';
@@ -35,19 +35,11 @@ import * as Prompt from '#/components/Prompt';
 import { Default as StarterPackCard } from '#/components/StarterPack/StarterPackCard';
 import { Text } from '#/components/Typography';
 
-interface SectionRef {
-	scrollToTop: () => void;
-}
-
 interface ProfileFeedgensProps {
-	ref?: React.Ref<SectionRef>;
-	scrollElRef: ListRef;
 	did: string;
-	headerOffset: number;
 	enabled?: boolean;
 	style?: StyleProp<ViewStyle>;
 	testID?: string;
-	setScrollViewTag: (tag: number | null) => void;
 	isMe: boolean;
 	emptyStateMessage?: string;
 	emptyStateButton?: EmptyStateButtonProps;
@@ -59,14 +51,10 @@ function keyExtractor(item: AnyStarterPackView) {
 }
 
 export function ProfileStarterPacks({
-	ref,
-	scrollElRef,
 	did,
-	headerOffset,
 	enabled,
 	style,
 	testID,
-	setScrollViewTag,
 	isMe,
 	emptyStateMessage,
 	emptyStateButton,
@@ -102,10 +90,6 @@ export function ProfileStarterPacks({
 		return <Empty />;
 	}, [l, emptyStateMessage, emptyStateButton, emptyStateIcon]);
 
-	useImperativeHandle(ref, () => ({
-		scrollToTop: () => {},
-	}));
-
 	const onRefresh = useCallback(async () => {
 		setIsPTRing(true);
 		try {
@@ -125,8 +109,6 @@ export function ProfileStarterPacks({
 		}
 	}, [isFetchingNextPage, hasNextPage, isError, fetchNextPage]);
 
-	useEffect(() => {}, [enabled, scrollElRef, setScrollViewTag]);
-
 	const renderItem = useCallback(
 		({ item, index }: ListRenderItemInfo<AnyStarterPackView>) => {
 			return (
@@ -142,15 +124,13 @@ export function ProfileStarterPacks({
 		<View testID={testID} style={style}>
 			<List
 				testID={testID ? `${testID}-flatlist` : undefined}
-				ref={scrollElRef}
 				data={items}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
 				refreshing={isPTRing}
-				headerOffset={headerOffset}
 				progressViewOffset={undefined}
 				contentContainerStyle={{
-					minHeight: height + headerOffset,
+					minHeight: height,
 					paddingBottom: bottomBarOffset,
 				}}
 				removeClippedSubviews={true}
