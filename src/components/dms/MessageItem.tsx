@@ -373,6 +373,7 @@ let MessageItem = ({
 													a.rounded_xl,
 													a.py_sm,
 													a.px_md,
+													a.max_w_full,
 													{
 														marginTop: hasEmbedAndText ? CLUSTERED_MESSAGE_GAP : 0,
 														backgroundColor: isFromSelf
