@@ -940,6 +940,8 @@ function ExpandedAuthorProfileCard({
 	moderationOpts: ModerationOptions;
 	isLast: boolean;
 }) {
+	const profile = useProfileShadow(author.profile);
+	const isFollowing = !!profile.viewer?.following;
 	return (
 		<ProfileCard.Link profile={author.profile} style={isLast ? undefined : a.pb_md}>
 			<ProfileCard.Outer>
@@ -950,6 +952,10 @@ function ExpandedAuthorProfileCard({
 						profile={author.profile}
 						moderationOpts={moderationOpts}
 						logContext="ProfileCard"
+						size="tiny"
+						variant={isFollowing ? 'ghost' : 'solid'}
+						color={isFollowing ? 'secondary' : 'primary_subtle'}
+						withIcon={isFollowing}
 					/>
 				</ProfileCard.Header>
 			</ProfileCard.Outer>
