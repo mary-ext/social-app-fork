@@ -8954,7 +8954,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:258
 msgid "Update invite link"
-msgstr "Update invite link<<<<<<< Updated upstream======="
+msgstr "Update invite link"
 
 #: src/screens/Settings/components/ServiceWorkerSection.tsx:81
 msgid "Update is available"
