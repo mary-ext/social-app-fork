@@ -11,13 +11,11 @@ import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 
 import { useGoogleTranslate } from '#/lib/hooks/useGoogleTranslate';
-import { useOpenLink } from '#/lib/hooks/useOpenLink';
 import { getCurrentRoute } from '#/lib/routes/helpers';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 import type { Richtext } from '#/lib/strings/rich-text-facets';
 import { richTextToString } from '#/lib/strings/rich-text-helpers';
-import { toShareUrl } from '#/lib/strings/url-helpers';
 
 import type { Shadow } from '#/state/cache/post-shadow';
 import { useProfileShadow } from '#/state/cache/profile-shadow';
@@ -44,7 +42,6 @@ import {
 	PostInteractionSettingsDialog,
 	usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog';
-import { Atom_Stroke2_Corner0_Rounded as AtomIcon } from '#/components/icons/Atom';
 import { BubbleQuestion_Stroke2_Corner0_Rounded as Translate } from '#/components/icons/Bubble';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import {
@@ -77,7 +74,6 @@ import * as Menu from '#/components/web/Menu';
 import * as Prompt from '#/components/web/Prompt';
 
 import * as Clipboard from '#/shims/clipboard';
-import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 
 let PostMenuItems = ({
 	post,
@@ -100,7 +96,6 @@ let PostMenuItems = ({
 }): React.ReactNode => {
 	const { hasSession, currentAccount } = useSession();
 	const { t: l } = useLingui();
-	const [debugFeedContextEnabled] = useDebugFeedContextEnabled();
 	const langPrefs = useLanguagePrefs();
 	const { mutateAsync: deletePostMutate } = usePostDeleteMutation();
 	const { mutateAsync: pinPostMutate, isPending: isPinPending } = usePinnedPostMutation();
@@ -108,7 +103,6 @@ let PostMenuItems = ({
 	const hiddenPosts = useHiddenPosts();
 	const { hidePost } = useHiddenPostsApi();
 	const feedFeedback = useFeedFeedbackContext();
-	const openLink = useOpenLink();
 	const translate = useGoogleTranslate();
 	const navigation = useNavigation<NavigationProp>();
 	const { mutedWordsDialogControl } = useGlobalDialogsControlContext();
@@ -385,16 +379,7 @@ let PostMenuItems = ({
 		}
 	};
 
-	const onReportMisclassification = () => {
-		const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
-			href,
-		)}`;
-		void openLink(url);
-	};
-
 	const onSignIn = () => requireSignIn(() => {});
-
-	const isDiscoverDebugUser = debugFeedContextEnabled;
 
 	return (
 		<>
@@ -450,16 +435,6 @@ let PostMenuItems = ({
 								<Menu.ItemIcon icon={EmojiSad} position="right" />
 							</Menu.Item>
 						</Menu.Group>
-					</>
-				)}
-
-				{isDiscoverDebugUser && (
-					<>
-						<Menu.Separator />
-						<Menu.Item label={l`Assign topic for algo`} onClick={onReportMisclassification}>
-							<Menu.ItemText>{l`Assign topic for algo`}</Menu.ItemText>
-							<Menu.ItemIcon icon={AtomIcon} position="right" />
-						</Menu.Item>
 					</>
 				)}
 
