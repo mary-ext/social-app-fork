@@ -22,7 +22,7 @@ export const activeOuter = style({
 export const panel = style(viewBase);
 
 // the blur toggle row (Collapsible.Trigger). a bare <button> reset plus the contrast fill that lifts on
-// hover/press; widens its padding past the 800px breakpoint.
+// hover/press.
 export const blurButton = style({
 	alignItems: 'center',
 	appearance: 'none',
@@ -36,17 +36,10 @@ export const blurButton = style({
 	gap: 8,
 	justifyContent: 'flex-start',
 	margin: 0,
-	paddingBlock: 12,
-	paddingInline: 16,
+	padding: 12,
+	paddingInline: 13,
 	textAlign: 'left',
 	width: '100%',
-	'@media': {
-		'(min-width: 800px)': {
-			gap: 12,
-			paddingBlock: 16,
-			paddingInline: 20,
-		},
-	},
 	selectors: {
 		// inset so the ring isn't clipped by the `overflow: hidden` active wrapper; it follows the 8px radius.
 		'&:focus-visible': {
@@ -64,7 +57,6 @@ export const iconWrap = style({
 	color: vars.palette.contrast_700,
 	display: 'inline-flex',
 	flexShrink: 0,
-	marginLeft: -2,
 });
 
 export const labelText = style({

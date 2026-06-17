@@ -140,7 +140,7 @@ function ContentHiderActive({
 				<desc.icon size="md" fill="currentColor" />
 			</span>
 			<Text
-				size="md_sub"
+				size="md"
 				weight="medium"
 				color="textContrastMedium"
 				numberOfLines={2}
