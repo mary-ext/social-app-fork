@@ -36,6 +36,10 @@ export const list = style(
 	}),
 );
 
+// the underline lives on the label span, so it's sized to the text; this offset pins it back down to
+// the tab's bottom edge across the vertical padding
+const tabPaddingBlock = 12;
+
 export const tab = style(
 	layered(components, {
 		alignItems: 'center',
@@ -52,30 +56,36 @@ export const tab = style(
 		fontWeight: 600,
 		justifyContent: 'center',
 		margin: 0,
-		paddingBlock: 12,
+		paddingBlock: tabPaddingBlock,
 		paddingInline: 16,
-		position: 'relative',
 		whiteSpace: 'nowrap',
-		// the active underline, matching the previous per-item indicator (centered, min 45px wide)
-		'::after': {
-			backgroundColor: 'transparent',
-			bottom: 0,
-			content: '""',
-			height: 3,
-			left: '50%',
-			minWidth: 45,
-			position: 'absolute',
-			transform: 'translateX(-50%)',
-			width: 'calc(100% - 28px)',
-		},
 		selectors: {
 			'&:hover': { backgroundColor: vars.palette.contrast_25 },
 			'&[data-active]': { color: vars.palette.contrast_1000 },
-			'&[data-active]::after': { backgroundColor: vars.palette.primary_500 },
 			'&:focus-visible': { outline: `2px solid ${vars.palette.primary_500}`, outlineOffset: -2 },
 		},
 	}),
 );
+
+/**
+ * The label text, carrying the active-tab underline so it tracks the text width (with a 4px overhang each
+ * side).
+ */
+export const tabLabel = style({
+	position: 'relative',
+	'::after': {
+		backgroundColor: 'transparent',
+		bottom: -tabPaddingBlock,
+		content: '""',
+		height: 3,
+		left: -4,
+		position: 'absolute',
+		right: -4,
+	},
+	selectors: {
+		'[data-active] &::after': { backgroundColor: vars.palette.primary_500 },
+	},
+});
 
 export const panel = style(
 	layered(components, {

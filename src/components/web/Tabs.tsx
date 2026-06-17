@@ -145,7 +145,9 @@ export const Tab = ({ value, className, label, ...rest }: TabProps) => {
 			className={clsx(styles.tab, className)}
 			render={(props, state) => (
 				<button {...props}>
-					<Text color={state.active ? 'text' : 'textContrastMedium'}>{label}</Text>
+					<Text className={styles.tabLabel} color={state.active ? 'text' : 'textContrastMedium'}>
+						{label}
+					</Text>
 				</button>
 			)}
 			{...rest}
