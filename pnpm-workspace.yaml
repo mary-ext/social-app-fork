@@ -16,7 +16,9 @@ allowBuilds:
   'core-js-pure': true
   'dtrace-provider': true
   'esbuild': true
+  'sharp': false
   'unrs-resolver': true
+  'workerd': true
 minimumReleaseAgeExclude:
   - '@atcute/*'
   - '@oomfware/*'

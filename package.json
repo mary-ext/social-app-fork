@@ -5,6 +5,8 @@
 	"scripts": {
 		"postinstall": "pnpm intl:compile-if-needed",
 		"dev": "rsbuild dev",
+		"dev:worker": "wrangler dev",
+		"deploy": "wrangler deploy",
 		"build": "pnpm typecheck && rsbuild build",
 		"preview": "rsbuild preview",
 		"lint": "eslint --cache src",
@@ -35,6 +37,7 @@
 		"@atcute/oauth-browser-client": "^4.0.0",
 		"@atcute/ozone": "4.0.1",
 		"@atcute/tid": "^1.1.2",
+		"@atcute/xrpc-server": "^2.0.0",
 		"@base-ui/react": "^1.5.0",
 		"@braintree/sanitize-url": "^6.0.4",
 		"@emoji-mart/data": "^1.2.1",
@@ -94,6 +97,7 @@
 		"@babel/plugin-syntax-jsx": "^7.29.7",
 		"@babel/plugin-transform-typescript": "^7.29.7",
 		"@babel/runtime": "^7.29.7",
+		"@cloudflare/workers-types": "^4.20260530.1",
 		"@eslint/js": "^9.39.4",
 		"@lingui/babel-plugin-lingui-macro": "^5.9.5",
 		"@lingui/cli": "^5.9.5",
@@ -131,7 +135,8 @@
 		"svgo": "^3.3.3",
 		"ts-plugin-sort-import-suggestions": "^1.0.4",
 		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.61.0"
+		"typescript-eslint": "^8.61.0",
+		"wrangler": "^4.0.0"
 	},
 	"browserslist": {
 		"production": [

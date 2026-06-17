@@ -20,3 +20,5 @@ yarn-*.log
 
 tsconfig.tsbuildinfo
 .eslintcache
+
+.wrangler/

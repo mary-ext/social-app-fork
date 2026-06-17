@@ -125,6 +125,11 @@ export default defineConfig(({ envMode }) => {
 			host: serverHost,
 			historyApiFallback: true,
 			port: serverPort,
+			// forward link-resolution xrpc calls to the locally-running worker (`pnpm dev:worker`), keeping
+			// them same-origin from the browser's perspective.
+			proxy: {
+				'/xrpc': 'http://127.0.0.1:8787',
+			},
 		},
 		output: {
 			cleanDistPath: true,

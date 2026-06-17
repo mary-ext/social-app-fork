@@ -32,8 +32,8 @@ type ResolvedExternalLink = {
 	description: string;
 	thumb: ComposerImage | undefined;
 	/**
-	 * The AT-URI of the Atmosphere record representing this external content, if it exists. Example: a
-	 * site.standard.document record.
+	 * Strong refs (uri+cid) of the Atmosphere records backing this external content, resolved by the appview
+	 * from the standard.site `<link rel>` tags the page advertises. Example: a site.standard.document record.
 	 */
 	associatedRefs?: LinkMeta['associatedRefs'];
 	view?: AppBskyEmbedExternal.View;
@@ -242,10 +242,8 @@ async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
 		title: result.title ?? '',
 		description: result.description ?? '',
 		thumb: result.image ? await imageToThumb(result.image) : undefined,
-		/*
-		 * New fields from Standard Site integration. Other fields are derived from
-		 * opengraph/oembed as before.
-		 */
+		// standard.site fields the worker hydrates via the appview; the rest come from the page's opengraph/twitter
+		// meta tags.
 		associatedRefs: result.associatedRefs,
 		view: result.view,
 	};

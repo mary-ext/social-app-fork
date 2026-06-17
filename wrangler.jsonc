@@ -1,9 +1,14 @@
 {
 	"$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
 	"name": "social-app-fork",
+	"main": "worker/index.ts",
 	"compatibility_date": "2026-05-19",
+	"compatibility_flags": ["global_fetch_strictly_public"],
 	"assets": {
 		"directory": "./web-build",
 		"not_found_handling": "single-page-application",
+		// only `/xrpc/*` invokes the worker (and is billed); every other request — assets and the SPA
+		// fallback — is served by the free asset layer without invoking the worker.
+		"run_worker_first": ["/xrpc/*"],
 	},
 }

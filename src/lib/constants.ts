@@ -48,8 +48,6 @@ export const POST_IMG_MAX = {
 	size: 1000000,
 };
 
-export const LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url=';
-
 // Hitslop constants
 export const createHitslop = (size: number): Insets => ({
 	top: size,
