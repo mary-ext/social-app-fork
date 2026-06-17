@@ -7,6 +7,7 @@ import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
 import { VanillaExtractPlugin } from '@vanilla-extract/webpack-plugin';
 
 import oauthMetadata from './public/oauth-client-metadata.json' with { type: 'json' };
+import { ServiceWorkerPrecachePlugin } from './scripts/sw-precache-plugin';
 
 const root = process.cwd();
 const serverHost = '127.0.0.1';
@@ -139,6 +140,12 @@ export default defineConfig(({ envMode }) => {
 			rspack(config) {
 				config.plugins ??= [];
 				config.plugins.push(new VanillaExtractPlugin());
+
+				// precaching only makes sense against a hashed production build; in dev it would fight
+				// the dev server and HMR, so the service worker is emitted for production builds only.
+				if (envMode === 'production') {
+					config.plugins.push(new ServiceWorkerPrecachePlugin(path.resolve(root, 'src/lib/sw-template.js')));
+				}
 
 				// opt-in bundle analysis: `RSDOCTOR=true pnpm build`
 				if (process.env.RSDOCTOR) {

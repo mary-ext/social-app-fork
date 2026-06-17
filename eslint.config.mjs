@@ -25,6 +25,9 @@ export default defineConfig(
 			'*.lock',
 			'patches/**',
 			'*.html',
+			// raw template stitched into the emitted service worker by the precache plugin; the
+			// injected CACHE/PRECACHE bindings aren't resolvable standalone
+			'src/lib/sw-template.js',
 			'src/locale/locales/_build/**',
 			'src/locale/locales/**/*.js',
 			'eslint.config.mjs',

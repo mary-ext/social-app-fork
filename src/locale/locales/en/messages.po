@@ -784,6 +784,10 @@ msgstr ""
 msgid "A network error occurred. Please check your internet connection."
 msgstr "A network error occurred. Please check your internet connection."
 
+#: src/screens/Settings/components/service-worker-section.tsx:87
+msgid "A new version is being prepared"
+msgstr "A new version is being prepared"
+
 #: src/components/dms/dialogs/NewChatDialog.tsx:100
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
@@ -830,8 +834,8 @@ msgid "Access requested! The group owner will review your request."
 msgstr "Access requested! The group owner will review your request."
 
 #: src/screens/Settings/AccessibilitySettings.tsx:27
-#: src/screens/Settings/Settings.tsx:73
-#: src/screens/Settings/Settings.tsx:75
+#: src/screens/Settings/Settings.tsx:74
+#: src/screens/Settings/Settings.tsx:76
 msgid "Accessibility"
 msgstr ""
 
@@ -841,11 +845,11 @@ msgstr ""
 
 #: src/Navigation.tsx:646
 #: src/screens/Settings/AccountSettings.tsx:45
-#: src/screens/Settings/Settings.tsx:55
+#: src/screens/Settings/Settings.tsx:56
 msgid "Account & privacy"
 msgstr "Account & privacy"
 
-#: src/screens/Settings/Settings.tsx:53
+#: src/screens/Settings/Settings.tsx:54
 msgid "Account and privacy"
 msgstr "Account and privacy"
 
@@ -1388,6 +1392,10 @@ msgstr ""
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
+#: src/screens/Settings/components/service-worker-section.tsx:57
+msgid "App installed"
+msgstr "App installed"
+
 #: src/screens/Settings/LanguageSettings.tsx:114
 msgid "App language"
 msgstr "App language"
@@ -1422,8 +1430,8 @@ msgstr ""
 
 #: src/Navigation.tsx:638
 #: src/screens/Settings/AppearanceSettings.tsx:52
-#: src/screens/Settings/Settings.tsx:69
-#: src/screens/Settings/Settings.tsx:71
+#: src/screens/Settings/Settings.tsx:70
+#: src/screens/Settings/Settings.tsx:72
 msgid "Appearance"
 msgstr ""
 
@@ -1504,6 +1512,10 @@ msgstr "Automation label"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Autoplay videos and GIFs"
 msgstr ""
+
+#: src/screens/Settings/components/service-worker-section.tsx:58
+msgid "Available offline"
+msgstr "Available offline"
 
 #: src/components/dms/AddMembersFlow.tsx:430
 #: src/components/dms/AddMembersFlow.tsx:433
@@ -1781,7 +1793,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:192
 #: src/screens/Profile/Header/EditProfileDialog.tsx:194
 #: src/screens/Search/Shell.tsx:354
-#: src/screens/Settings/Settings.tsx:107
+#: src/screens/Settings/Settings.tsx:111
 #: src/view/com/composer/Composer.tsx:1400
 #: src/view/com/composer/Composer.tsx:1402
 #: src/view/com/composer/photos/EditImageDialog.tsx:59
@@ -2080,7 +2092,7 @@ msgstr ""
 msgid "Comics"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:146
+#: src/screens/Settings/Settings.tsx:150
 msgid "Component storybook"
 msgstr "Component storybook"
 
@@ -2121,8 +2133,8 @@ msgstr ""
 msgid "Content & Media"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:65
-#: src/screens/Settings/Settings.tsx:67
+#: src/screens/Settings/Settings.tsx:66
+#: src/screens/Settings/Settings.tsx:68
 msgid "Content and media"
 msgstr ""
 
@@ -2571,13 +2583,13 @@ msgstr ""
 msgid "Detach quote post?"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:135
-#: src/screens/Settings/Settings.tsx:136
+#: src/screens/Settings/Settings.tsx:139
+#: src/screens/Settings/Settings.tsx:140
 msgid "Developer mode"
 msgstr "Developer mode"
 
-#: src/screens/Settings/Settings.tsx:130
-#: src/screens/Settings/Settings.tsx:133
+#: src/screens/Settings/Settings.tsx:134
+#: src/screens/Settings/Settings.tsx:137
 msgid "Developer options"
 msgstr ""
 
@@ -2723,6 +2735,18 @@ msgstr "Download profile data"
 msgctxt "button"
 msgid "Download profile data"
 msgstr "Download profile data"
+
+#: src/screens/Settings/components/service-worker-section.tsx:67
+msgid "Downloading the app for offline use"
+msgstr "Downloading the app for offline use"
+
+#: src/screens/Settings/components/service-worker-section.tsx:88
+msgid "Downloading update"
+msgstr "Downloading update"
+
+#: src/screens/Settings/components/service-worker-section.tsx:86
+msgid "Downloading update…"
+msgstr "Downloading update…"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:114
 msgid "Doxxing"
@@ -4205,6 +4229,19 @@ msgstr "Inbox empty"
 msgid "Inbox zero!"
 msgstr ""
 
+#: src/screens/Settings/components/service-worker-section.tsx:74
+#: src/screens/Settings/components/service-worker-section.tsx:77
+msgid "Install app"
+msgstr "Install app"
+
+#: src/screens/Settings/components/service-worker-section.tsx:68
+msgid "Installing"
+msgstr "Installing"
+
+#: src/screens/Settings/components/service-worker-section.tsx:66
+msgid "Installing…"
+msgstr "Installing…"
+
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:82
 msgid "Interaction limited"
 msgstr ""
@@ -4324,6 +4361,10 @@ msgstr ""
 msgid "Keep me posted"
 msgstr ""
 
+#: src/screens/Settings/components/service-worker-section.tsx:123
+msgid "Keeps a copy of the app so it loads and works without a connection."
+msgstr "Keeps a copy of the app so it loads and works without a connection."
+
 #. placeholder {0}: sanitizeDisplayName(desc.source)
 #: src/components/moderation/ContentHider.tsx:186
 msgid "Labeled by {0}."
@@ -4359,8 +4400,8 @@ msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:97
-#: src/screens/Settings/Settings.tsx:77
-#: src/screens/Settings/Settings.tsx:79
+#: src/screens/Settings/Settings.tsx:78
+#: src/screens/Settings/Settings.tsx:80
 msgid "Languages"
 msgstr ""
 
@@ -4940,8 +4981,8 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:57
-#: src/screens/Settings/Settings.tsx:59
+#: src/screens/Settings/Settings.tsx:58
+#: src/screens/Settings/Settings.tsx:60
 msgid "Moderation and content filters"
 msgstr "Moderation and content filters"
 
@@ -4987,7 +5028,7 @@ msgstr ""
 msgid "Moderation Lists"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:152
+#: src/screens/Settings/Settings.tsx:156
 msgid "Moderation playground"
 msgstr "Moderation playground"
 
@@ -5543,8 +5584,8 @@ msgstr ""
 #: src/Navigation.tsx:727
 #: src/screens/Notifications/ActivityList.tsx:27
 #: src/screens/Settings/NotificationSettings/index.tsx:52
-#: src/screens/Settings/Settings.tsx:61
-#: src/screens/Settings/Settings.tsx:63
+#: src/screens/Settings/Settings.tsx:62
+#: src/screens/Settings/Settings.tsx:64
 #: src/view/screens/Notifications.tsx:113
 #: src/view/shell/desktop/LeftNav.tsx:629
 #: src/view/shell/Drawer.tsx:165
@@ -5567,6 +5608,10 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/index.tsx:289
 msgid "Off"
 msgstr ""
+
+#: src/screens/Settings/components/service-worker-section.tsx:122
+msgid "Offline"
+msgstr "Offline"
 
 #. Title of the error screen shown when the GIF picker crashes unexpectedly.
 #: src/components/dialogs/LanguageSelectDialog.tsx:273
@@ -5689,7 +5734,7 @@ msgstr "Open chat"
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
-#: src/screens/Settings/Settings.tsx:145
+#: src/screens/Settings/Settings.tsx:149
 msgid "Open component storybook"
 msgstr "Open component storybook"
 
@@ -5733,7 +5778,7 @@ msgstr "Open group chat settings"
 msgid "Open link to {niceUrl}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:149
+#: src/screens/Settings/Settings.tsx:153
 msgid "Open moderation playground"
 msgstr "Open moderation playground"
 
@@ -6226,7 +6271,7 @@ msgstr ""
 msgid "Posts hidden"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:52
+#: src/screens/Settings/Settings.tsx:53
 msgid "Preferences"
 msgstr "Preferences"
 
@@ -6452,6 +6497,14 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:165
 msgid "Reload conversations"
 msgstr ""
+
+#: src/screens/Settings/components/service-worker-section.tsx:107
+msgid "Reload to get the latest version"
+msgstr "Reload to get the latest version"
+
+#: src/screens/Settings/components/service-worker-section.tsx:96
+msgid "Reload to update"
+msgstr "Reload to update"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:145
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:282
@@ -7380,7 +7433,7 @@ msgid "Set who can reply to your post"
 msgstr ""
 
 #: src/Navigation.tsx:517
-#: src/screens/Settings/Settings.tsx:43
+#: src/screens/Settings/Settings.tsx:44
 #: src/view/shell/desktop/LeftNav.tsx:688
 #: src/view/shell/Drawer.tsx:200
 msgid "Settings"
@@ -7508,8 +7561,8 @@ msgstr ""
 msgid "Show automation label"
 msgstr "Show automation label"
 
-#: src/screens/Settings/Settings.tsx:139
 #: src/screens/Settings/Settings.tsx:143
+#: src/screens/Settings/Settings.tsx:147
 msgid "Show feed context debug"
 msgstr "Show feed context debug"
 
@@ -7630,16 +7683,16 @@ msgstr ""
 msgid "Sign in with your Bluesky account."
 msgstr "Sign in with your Bluesky account."
 
-#: src/screens/Settings/Settings.tsx:85
-#: src/screens/Settings/Settings.tsx:91
-#: src/screens/Settings/Settings.tsx:109
+#: src/screens/Settings/Settings.tsx:89
+#: src/screens/Settings/Settings.tsx:95
+#: src/screens/Settings/Settings.tsx:113
 #: src/view/shell/desktop/LeftNav.tsx:213
 #: src/view/shell/desktop/LeftNav.tsx:264
 #: src/view/shell/desktop/LeftNav.tsx:267
 msgid "Sign out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:113
+#: src/screens/Settings/Settings.tsx:117
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "Sign out?"
 msgstr ""
@@ -7976,8 +8029,8 @@ msgid "System"
 msgstr ""
 
 #: src/screens/Log.tsx:45
-#: src/screens/Settings/Settings.tsx:97
-#: src/screens/Settings/Settings.tsx:99
+#: src/screens/Settings/Settings.tsx:101
+#: src/screens/Settings/Settings.tsx:103
 msgid "System log"
 msgstr ""
 
@@ -8929,7 +8982,11 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:258
 msgid "Update invite link"
-msgstr "Update invite link"
+msgstr "Update invite link<<<<<<< Updated upstream======="
+
+#: src/screens/Settings/components/service-worker-section.tsx:104
+msgid "Update ready"
+msgstr "Update ready>>>>>>> Stashed changes"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
 msgctxt "toast"
@@ -8963,6 +9020,10 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:2108
 msgid "Uploading video..."
 msgstr ""
+
+#: src/screens/Settings/components/service-worker-section.tsx:78
+msgid "Use it offline once downloaded"
+msgstr "Use it offline once downloaded"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 msgid "Use recommended"
@@ -9776,7 +9837,7 @@ msgstr ""
 msgid "You reacted {0} to {target}"
 msgstr "You reacted {0} to {target}"
 
-#: src/screens/Settings/Settings.tsx:110
+#: src/screens/Settings/Settings.tsx:114
 #: src/view/shell/desktop/LeftNav.tsx:211
 msgid "You will be signed out of all your accounts."
 msgstr ""

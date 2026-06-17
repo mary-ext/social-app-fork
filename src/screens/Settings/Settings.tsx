@@ -27,6 +27,7 @@ import { useDebugFeedContextEnabled } from '#/storage/hooks/debug';
 import { useDevMode } from '#/storage/hooks/dev-mode';
 
 import { AccountsSection } from './components/AccountsSection';
+import { ServiceWorkerSection } from './components/service-worker-section';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>;
 export function SettingsScreen({}: Props) {
@@ -79,6 +80,9 @@ export function SettingsScreen({}: Props) {
 							<Settings.Label titleText={<Trans>Languages</Trans>} />
 						</Settings.LinkRow>
 					</Settings.Section>
+
+					{/* the service worker is only emitted by production builds (see ServiceWorkerPrecachePlugin) */}
+					{import.meta.env.PROD && <ServiceWorkerSection />}
 
 					<Settings.Section>
 						<button
