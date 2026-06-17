@@ -28,7 +28,7 @@ export function ViewFullThread({ uri }: { uri: string }) {
 				<div className={css.dash} />
 				<div className={css.segment} />
 			</div>
-			<Text color="primary_500">{l`View full thread`}</Text>
+			<Text color="primary_500" weight="medium">{l`View full thread`}</Text>
 		</Link>
 	);
 }

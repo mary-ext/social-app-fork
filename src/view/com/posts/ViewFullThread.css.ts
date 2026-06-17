@@ -36,7 +36,7 @@ export const spine = style({
 /** A solid spine segment; matches the reply-line, which lightens a step in dark/dim. */
 export const segment = style({
 	backgroundColor: vars.palette.contrast_100,
-	height: 7,
+	height: 9,
 	width: 2,
 	selectors: {
 		'.theme--dark &, .theme--dim &': {
