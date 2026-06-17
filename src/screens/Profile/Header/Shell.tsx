@@ -73,7 +73,7 @@ let ProfileHeaderShell = ({ children }: { children: React.ReactNode }): React.Re
 	return (
 		<div className={css.frame}>
 			<div className={css.bannerRegion}>
-				{/* first in source order so it tabs first; absolute positioning keeps it painted over the banner */}
+				{/* first in source order so it tabs first; its z-index (see css) keeps it painted over the banner */}
 				{!hideBackButton && (
 					<button type="button" className={css.backButton} aria-label={l`Back`} onClick={onPressBack}>
 						<span className={css.backButtonInner}>

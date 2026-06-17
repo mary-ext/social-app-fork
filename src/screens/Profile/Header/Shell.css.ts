@@ -33,6 +33,9 @@ export const backButton = style({
 	padding: 0,
 	position: 'absolute',
 	top: 10,
+	// a blurred banner's `filter` makes its img a stacking context that paints in the same group as this
+	// auto-z button; without an explicit z-index, tree order wins and the (earlier) button paints under it.
+	zIndex: 1,
 });
 
 export const backButtonInner = style({

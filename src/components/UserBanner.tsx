@@ -15,12 +15,14 @@ export function UserBanner({
 }) {
 	if (banner) {
 		return (
-			<img
-				alt=""
-				className={clsx(styles.banner, (moderation?.blurs.length ?? 0) > 0 && styles.blurred)}
-				src={banner}
-			/>
+			<div className={styles.banner}>
+				<img
+					alt=""
+					className={clsx(styles.image, (moderation?.blurs.length ?? 0) > 0 && styles.blurred)}
+					src={banner}
+				/>
+			</div>
 		);
 	}
-	return <div className={clsx(styles.fallback, type === 'labeler' && styles.labelerFallback)} />;
+	return <div className={clsx(styles.banner, type === 'labeler' && styles.labelerFallback)} />;
 }
