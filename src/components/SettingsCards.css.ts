@@ -150,6 +150,22 @@ export const rowInteractive = style({
 });
 
 /**
+ * The `primary_subtle` {@link ButtonRow} color: a primary-tinted fill that deepens on hover. Defined after
+ * {@link rowInteractive} so it wins the equal-specificity background/hover cascade; companion `&` parent
+ * selectors on {@link title}, {@link icon}, and {@link chevron} recolor the row's foreground to primary. The
+ * subtitle keeps its neutral muted color — primary at the subtitle's size reads too low-contrast on the
+ * tint.
+ */
+export const rowPrimarySubtle = style({
+	backgroundColor: vars.palette.primary_50,
+	selectors: {
+		'&:hover:not(:disabled):not([data-disabled])': {
+			backgroundColor: vars.palette.primary_100,
+		},
+	},
+});
+
+/**
  * Rounds a row's top corners to the card's radius. Applied to the first row so its hover tint and focus ring
  * follow the card corner instead of being clipped square by the card's `overflow: hidden`.
  */
@@ -173,6 +189,9 @@ export const icon = style({
 	gridColumn: 1,
 	gridRow: 1,
 	marginInlineEnd: space.md,
+	selectors: {
+		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
+	},
 });
 
 /** The row's primary text, sharing its line with the trailing control. */
@@ -180,6 +199,9 @@ export const title = style({
 	gridColumn: 2,
 	gridRow: 1,
 	minWidth: 0,
+	selectors: {
+		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
+	},
 });
 
 /** The row's muted second line; spans the title and trailing columns so it gets the full row width. */
@@ -210,6 +232,9 @@ export const chevron = style({
 	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
+	selectors: {
+		[`.${rowPrimarySubtle} &`]: { color: vars.palette.primary_600 },
+	},
 });
 // #endregion
 

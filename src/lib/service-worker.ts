@@ -106,7 +106,8 @@ export const initServiceWorker = () => {
  * from an explicit user action. No-op if one is already registered.
  */
 export const registerServiceWorker = () => {
-	if (registration || !('serviceWorker' in navigator)) {
+	// dev builds emit no `/sw.js`, so registering would 404. keep the settings row visible but inert.
+	if (import.meta.env.DEV || registration || !('serviceWorker' in navigator)) {
 		return;
 	}
 	navigator.serviceWorker.register('/sw.js').then(attach, (err) => {

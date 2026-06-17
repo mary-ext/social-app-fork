@@ -123,16 +123,22 @@ export function Label({
 	);
 }
 
-/** A row that fires an action on press; the whole row is the button, with a trailing forward chevron. */
+/**
+ * A row that fires an action on press; the whole row is the button, with a trailing forward chevron. `color`
+ * defaults to `secondary` (the neutral row chrome); pass `primary_subtle` for a primary-tinted call-to-action
+ * variant (the title, icon, and chevron recolor to primary to match).
+ */
 export function ButtonRow({
 	children,
 	className,
+	color = 'secondary',
 	disabled,
 	label,
 	onPress,
 }: {
 	children: ReactNode;
 	className?: string;
+	color?: 'primary_subtle' | 'secondary';
 	disabled?: boolean;
 	label: string;
 	onPress: () => void;
@@ -143,7 +149,12 @@ export function ButtonRow({
 			aria-label={label}
 			disabled={disabled}
 			onClick={onPress}
-			className={clsx(styles.row, styles.rowInteractive, className)}
+			className={clsx(
+				styles.row,
+				styles.rowInteractive,
+				color === 'primary_subtle' && styles.rowPrimarySubtle,
+				className,
+			)}
 		>
 			{children}
 			<span className={styles.trailing}>

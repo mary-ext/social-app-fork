@@ -784,10 +784,6 @@ msgstr ""
 msgid "A network error occurred. Please check your internet connection."
 msgstr "A network error occurred. Please check your internet connection."
 
-#: src/screens/Settings/components/service-worker-section.tsx:87
-msgid "A new version is being prepared"
-msgstr "A new version is being prepared"
-
 #: src/components/dms/dialogs/NewChatDialog.tsx:100
 msgid "A selected recipient is not followed by the sender."
 msgstr "A selected recipient is not followed by the sender."
@@ -1392,10 +1388,6 @@ msgstr ""
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
-#: src/screens/Settings/components/service-worker-section.tsx:57
-msgid "App installed"
-msgstr "App installed"
-
 #: src/screens/Settings/LanguageSettings.tsx:114
 msgid "App language"
 msgstr "App language"
@@ -1512,10 +1504,6 @@ msgstr "Automation label"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Autoplay videos and GIFs"
 msgstr ""
-
-#: src/screens/Settings/components/service-worker-section.tsx:58
-msgid "Available offline"
-msgstr "Available offline"
 
 #: src/components/dms/AddMembersFlow.tsx:430
 #: src/components/dms/AddMembersFlow.tsx:433
@@ -2735,18 +2723,6 @@ msgstr "Download profile data"
 msgctxt "button"
 msgid "Download profile data"
 msgstr "Download profile data"
-
-#: src/screens/Settings/components/service-worker-section.tsx:67
-msgid "Downloading the app for offline use"
-msgstr "Downloading the app for offline use"
-
-#: src/screens/Settings/components/service-worker-section.tsx:88
-msgid "Downloading update"
-msgstr "Downloading update"
-
-#: src/screens/Settings/components/service-worker-section.tsx:86
-msgid "Downloading update…"
-msgstr "Downloading update…"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:114
 msgid "Doxxing"
@@ -4229,18 +4205,26 @@ msgstr "Inbox empty"
 msgid "Inbox zero!"
 msgstr ""
 
-#: src/screens/Settings/components/service-worker-section.tsx:74
-#: src/screens/Settings/components/service-worker-section.tsx:77
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:60
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:62
 msgid "Install app"
 msgstr "Install app"
 
-#: src/screens/Settings/components/service-worker-section.tsx:68
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:54
 msgid "Installing"
 msgstr "Installing"
 
-#: src/screens/Settings/components/service-worker-section.tsx:66
-msgid "Installing…"
-msgstr "Installing…"
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:54
+msgid "Installing app…"
+msgstr "Installing app…"
+
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:69
+msgid "Installing update"
+msgstr "Installing update"
+
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:69
+msgid "Installing update…"
+msgstr "Installing update…"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:82
 msgid "Interaction limited"
@@ -4360,10 +4344,6 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:187
 msgid "Keep me posted"
 msgstr ""
-
-#: src/screens/Settings/components/service-worker-section.tsx:123
-msgid "Keeps a copy of the app so it loads and works without a connection."
-msgstr "Keeps a copy of the app so it loads and works without a connection."
 
 #. placeholder {0}: sanitizeDisplayName(desc.source)
 #: src/components/moderation/ContentHider.tsx:186
@@ -5609,10 +5589,6 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: src/screens/Settings/components/service-worker-section.tsx:122
-msgid "Offline"
-msgstr "Offline"
-
 #. Title of the error screen shown when the GIF picker crashes unexpectedly.
 #: src/components/dialogs/LanguageSelectDialog.tsx:273
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:21
@@ -6498,11 +6474,7 @@ msgstr ""
 msgid "Reload conversations"
 msgstr ""
 
-#: src/screens/Settings/components/service-worker-section.tsx:107
-msgid "Reload to get the latest version"
-msgstr "Reload to get the latest version"
-
-#: src/screens/Settings/components/service-worker-section.tsx:96
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:76
 msgid "Reload to update"
 msgstr "Reload to update"
 
@@ -8984,9 +8956,9 @@ msgstr ""
 msgid "Update invite link"
 msgstr "Update invite link<<<<<<< Updated upstream======="
 
-#: src/screens/Settings/components/service-worker-section.tsx:104
-msgid "Update ready"
-msgstr "Update ready>>>>>>> Stashed changes"
+#: src/screens/Settings/components/ServiceWorkerSection.tsx:81
+msgid "Update is available"
+msgstr "Update is available"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:272
 msgctxt "toast"
@@ -9020,10 +8992,6 @@ msgstr ""
 #: src/view/com/composer/Composer.tsx:2108
 msgid "Uploading video..."
 msgstr ""
-
-#: src/screens/Settings/components/service-worker-section.tsx:78
-msgid "Use it offline once downloaded"
-msgstr "Use it offline once downloaded"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 msgid "Use recommended"
