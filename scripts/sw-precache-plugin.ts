@@ -34,7 +34,7 @@ export class ServiceWorkerPrecachePlugin {
 					stage: Compilation.PROCESS_ASSETS_STAGE_SUMMARIZE,
 				},
 				() => {
-					const files = new Set(['index.html']);
+					const files = new Set<string>();
 					for (const asset of compilation.getAssets()) {
 						// only assets under static/ carry a content hash; root files (favicon, oauth
 						// metadata) are mutable and stay network-driven
@@ -42,8 +42,18 @@ export class ServiceWorkerPrecachePlugin {
 							files.add(asset.name);
 						}
 					}
-					const manifest = [...files].sort().map((file) => `/${file}`);
-					const version = createHash('sha256').update(manifest.join('\n')).digest('hex').slice(0, 16);
+					// precache the SPA shell under the canonical `/`, not `/index.html`: a host may
+					// 307-redirect `/index.html` to `/`, and a redirected response can't satisfy a navigation
+					const manifest = ['/', ...[...files].sort().map((file) => `/${file}`)];
+					// the shell is cached under the mutable `/` (not a content-hashed name), so fold the emitted
+					// index.html bytes into the version: a shell-only change must still bump CACHE and the worker
+					const indexHtml = compilation.getAsset('index.html')?.source.source() ?? '';
+					const version = createHash('sha256')
+						.update(manifest.join('\n'))
+						.update('\0')
+						.update(indexHtml)
+						.digest('hex')
+						.slice(0, 16);
 					const template = readFileSync(this.#templatePath, 'utf8');
 					const source =
 						`const CACHE = ${JSON.stringify(`app-${version}`)};\n` +

@@ -3,6 +3,10 @@
 // cache name, keyed by a build hash) and `PRECACHE` (the app-shell asset list) to this source and
 // emits it as `sw.js` at the build root. edit this template, not the emitted file.
 
+// the SPA shell's canonical URL. it's precached and served under `/`, not `/index.html`: a host can
+// 307-redirect `/index.html` to `/`, and a redirected response can't satisfy a navigation.
+const SHELL = '/';
+
 self.addEventListener('install', (event) => {
 	event.waitUntil(self.caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)));
 });
@@ -66,8 +70,11 @@ self.addEventListener('fetch', (event) => {
 
 	// SPA navigations resolve to the cached app shell first, falling back to network — keeps the app
 	// bootable offline and instant on repeat visits. the shell refreshes whenever a new worker
-	// activates with a new precache.
+	// activates with a new precache. a redirected response can't satisfy a navigation, so never serve
+	// one from cache: fall back to the network instead of wedging every navigation.
 	if (request.mode === 'navigate') {
-		event.respondWith(self.caches.match('/index.html').then((cached) => cached || fetch(request)));
+		event.respondWith(
+			self.caches.match(SHELL).then((cached) => (cached && !cached.redirected ? cached : fetch(request))),
+		);
 	}
 });
