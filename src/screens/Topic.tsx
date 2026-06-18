@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { type ListRenderItemInfo, View } from 'react-native';
+import type { ListRenderItemInfo } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -14,17 +14,14 @@ import { enforceLen } from '#/lib/strings/helpers';
 
 import { useSearchPostsQuery } from '#/state/queries/search-posts';
 
-import { Pager } from '#/view/com/pager/Pager';
-import { TabBar } from '#/view/com/pager/TabBar';
 import { Post } from '#/view/com/post/Post';
 import { List } from '#/view/com/util/List';
-
-import { atoms as a } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
 import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share } from '#/components/icons/ArrowOutOfBox';
 import * as Layout from '#/components/Layout';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
+import * as Tabs from '#/components/web/Tabs';
 
 const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
 	return <Post post={item} />;
@@ -48,60 +45,58 @@ export default function TopicScreen({ route }: NativeStackScreenProps<CommonNavi
 		void shareUrl(url.toString());
 	}, [topic]);
 
-	const [activeTab, setActiveTab] = useState(0);
-
-	const onPageSelected = (index: number) => {
-		setActiveTab(index);
-	};
+	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');
 
 	const sections = useMemo(() => {
 		return [
-			{
-				title: l`Top`,
-				component: <TopicScreenTab topic={topic} sort="top" active={activeTab === 0} />,
-			},
-			{
-				title: l`Latest`,
-				component: <TopicScreenTab topic={topic} sort="latest" active={activeTab === 1} />,
-			},
+			{ id: 'top' as const, sort: 'top' as const, title: l`Top` },
+			{ id: 'latest' as const, sort: 'latest' as const, title: l`Latest` },
 		];
-	}, [l, topic, activeTab]);
+	}, [l]);
 
 	return (
 		<Layout.Screen>
-			<Pager
-				onPageSelected={onPageSelected}
-				renderTabBar={(props) => (
-					<Layout.Center style={[a.z_10, a.sticky, { top: 0 }]}>
-						<Layout.Header.Outer noBottomBorder>
-							<Layout.Header.BackButton />
-							<Layout.Header.Content>
-								<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
-							</Layout.Header.Content>
-							<Layout.Header.Slot>
-								<Button
-									label={l`Share`}
-									size="small"
-									variant="ghost"
-									color="primary"
-									shape="round"
-									onPress={onShare}
-									hitSlop={HITSLOP_10}
-									style={[{ right: -3 }]}
-								>
-									<ButtonIcon icon={Share} size="md" />
-								</Button>
-							</Layout.Header.Slot>
-						</Layout.Header.Outer>
-						<TabBar items={sections.map((section) => section.title)} {...props} />
-					</Layout.Center>
-				)}
-				initialPage={0}
-			>
-				{sections.map((section, i) => (
-					<View key={i}>{section.component}</View>
+			<Tabs.Root value={activeTab} onValueChange={(value) => setActiveTab(value as 'latest' | 'top')}>
+				<Layout.Header.Outer noBottomBorder sticky={false}>
+					<Layout.Header.BackButton />
+					<Layout.Header.Content>
+						<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
+					</Layout.Header.Content>
+					<Layout.Header.Slot>
+						<Button
+							label={l`Share`}
+							size="small"
+							variant="ghost"
+							color="primary"
+							shape="round"
+							onPress={onShare}
+							hitSlop={HITSLOP_10}
+							style={[{ right: -3 }]}
+						>
+							<ButtonIcon icon={Share} size="md" />
+						</Button>
+					</Layout.Header.Slot>
+				</Layout.Header.Outer>
+				<Tabs.List>
+					{sections.map((section) => (
+						<Tabs.Tab
+							key={section.id}
+							label={section.title}
+							value={section.id}
+							onClick={() => {
+								if (activeTab === section.id) {
+									window.scrollTo(0, 0);
+								}
+							}}
+						/>
+					))}
+				</Tabs.List>
+				{sections.map((section) => (
+					<Tabs.Panel key={section.id} value={section.id}>
+						<TopicScreenTab topic={topic} sort={section.sort} active={activeTab === section.id} />
+					</Tabs.Panel>
 				))}
-			</Pager>
+			</Tabs.Root>
 		</Layout.Screen>
 	);
 }
