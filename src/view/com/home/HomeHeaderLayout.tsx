@@ -1,4 +1,3 @@
-import type { JSX } from 'react';
 import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
@@ -18,59 +17,49 @@ import { Link } from '#/components/Link';
 
 import { useKawaiiMode } from '#/storage/hooks/kawaii';
 
-export function HomeHeaderLayout(props: {
-	children: React.ReactNode;
-	tabBarAnchor: JSX.Element | null | undefined;
-}) {
+/**
+ * The home screen's chrome above the feed tabs — the logo and a feeds-discovery link. Rendered as the
+ * scroll-away header of the feed tabs; the tab bar below it stays sticky.
+ */
+export function HomeHeaderLayout() {
 	const { gtMobile } = useBreakpoints();
 	if (!gtMobile) {
-		return <HomeHeaderLayoutMobile {...props} />;
-	} else {
-		return <HomeHeaderLayoutDesktopAndTablet {...props} />;
+		return <HomeHeaderLayoutMobile />;
 	}
+	return <HomeHeaderLayoutDesktopAndTablet />;
 }
 
-function HomeHeaderLayoutDesktopAndTablet({
-	children,
-	tabBarAnchor,
-}: {
-	children: React.ReactNode;
-	tabBarAnchor: JSX.Element | null | undefined;
-}) {
+function HomeHeaderLayoutDesktopAndTablet() {
 	const t = useTheme();
 	const { hasSession } = useSession();
 	const { t: l } = useLingui();
 	const kawaii = useKawaiiMode();
 	const gutters = useGutters([0, 'base']);
 
+	if (!hasSession) {
+		return null;
+	}
+
 	return (
-		<>
-			{hasSession && (
-				<Layout.Center>
-					<View style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
-						<View style={{ width: 34 }} />
-						<View style={[a.flex_1, a.align_center, a.justify_center]}>
-							<Logo width={kawaii ? 60 : 28} />
-						</View>
-						<Link
-							to="/feeds"
-							hitSlop={HITSLOP_10}
-							label={l`View your feeds and explore more`}
-							size="small"
-							variant="ghost"
-							color="secondary"
-							shape="square"
-							style={[a.justify_center]}
-						>
-							<ButtonIcon icon={FeedsIcon} size="lg" />
-						</Link>
-					</View>
-				</Layout.Center>
-			)}
-			{tabBarAnchor}
-			<Layout.Center style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, { top: 0 }]}>
-				{children}
-			</Layout.Center>
-		</>
+		<Layout.Center>
+			<View style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
+				<View style={{ width: 34 }} />
+				<View style={[a.flex_1, a.align_center, a.justify_center]}>
+					<Logo width={kawaii ? 60 : 28} />
+				</View>
+				<Link
+					to="/feeds"
+					hitSlop={HITSLOP_10}
+					label={l`View your feeds and explore more`}
+					size="small"
+					variant="ghost"
+					color="secondary"
+					shape="square"
+					style={[a.justify_center]}
+				>
+					<ButtonIcon icon={FeedsIcon} size="lg" />
+				</Link>
+			</View>
+		</Layout.Center>
 	);
 }
