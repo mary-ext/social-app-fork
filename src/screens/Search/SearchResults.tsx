@@ -345,7 +345,8 @@ function SearchPost({
 }) {
 	const onBeforePress = useCallback(() => {}, [from, position, post]);
 
-	return <Post post={post} onBeforePress={onBeforePress} />;
+	// the sticky tab bar already draws the divider above the first row
+	return <Post post={post} hideTopBorder={position === 0} onBeforePress={onBeforePress} />;
 }
 
 let SearchScreenUserResults = ({ query, active }: { query: string; active: boolean }): React.ReactNode => {
@@ -423,15 +424,10 @@ let SearchScreenUserResults = ({ query, active }: { query: string; active: boole
 };
 SearchScreenUserResults = memo(SearchScreenUserResults);
 
-function SearchScreenProfileButton({
-	position: _position,
-	profile,
-}: {
-	position: number;
-	profile: AnyProfileView;
-}) {
+function SearchScreenProfileButton({ position, profile }: { position: number; profile: AnyProfileView }) {
 	const handlePress = () => {};
-	return <ProfileCardWithFollowBtn profile={profile} onPress={handlePress} />;
+	// the sticky tab bar already draws the divider above the first row
+	return <ProfileCardWithFollowBtn profile={profile} noBorder={position === 0} onPress={handlePress} />;
 }
 
 let SearchScreenFeedsResults = ({ query, active }: { query: string; active: boolean }): React.ReactNode => {
@@ -453,7 +449,8 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 				<List
 					data={results}
 					renderItem={({ item, index }: { item: AtcAppBskyFeedDefs.GeneratorView; index: number }) => (
-						<View style={[a.border_t, t.atoms.border_contrast_low, a.px_lg, a.py_lg]}>
+						// the sticky tab bar already draws the divider above the first row
+						<View style={[index !== 0 && [a.border_t, t.atoms.border_contrast_low], a.px_lg, a.py_lg]}>
 							<SearchFeedCard position={index} view={item} />
 						</View>
 					)}
