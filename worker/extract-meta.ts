@@ -1,3 +1,5 @@
+import { decodeHtmlEntities } from './html-entities';
+
 export interface LinkMetaResult {
 	/** at-uris of the standard.site atmosphere records the page advertises via `<link rel>` discovery tags. */
 	associatedUris?: string[];
@@ -67,7 +69,7 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 				}
 				const content = element.getAttribute('content');
 				if (content) {
-					meta[key] = content;
+					meta[key] = decodeHtmlEntities(content);
 				}
 			},
 		});
@@ -89,6 +91,6 @@ export const parseHtmlMeta = async (html: Uint8Array): Promise<LinkMetaResult> =
 		associatedUris: associatedUris.length ? associatedUris : undefined,
 		description: pick('og:description', 'twitter:description', 'description'),
 		image: pick('og:image', 'og:image:url', 'og:image:secure_url', 'twitter:image', 'twitter:image:src'),
-		title: pick('og:title', 'twitter:title') ?? (titleText.trim() || undefined),
+		title: pick('og:title', 'twitter:title') ?? (decodeHtmlEntities(titleText).trim() || undefined),
 	};
 };
