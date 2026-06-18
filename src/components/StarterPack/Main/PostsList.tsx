@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useImperativeHandle } from 'react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 import { useLingui } from '@lingui/react/macro';
 
@@ -6,35 +6,16 @@ import type { FeedDescriptor } from '#/state/queries/post-feed';
 
 import { PostFeed } from '#/view/com/posts/PostFeed';
 import { EmptyState } from '#/view/com/util/EmptyState';
-import type { ListRef } from '#/view/com/util/List';
-
-import type { SectionRef } from '#/screens/Profile/Sections/types';
 
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 
-interface ProfilesListProps {
+interface PostsListProps {
 	listUri: string;
-	headerHeight: number;
-	scrollElRef: ListRef;
 }
 
-export const PostsList = forwardRef<SectionRef, ProfilesListProps>(function PostsListImpl(
-	{ listUri, headerHeight, scrollElRef },
-	ref,
-) {
+export function PostsList({ listUri }: PostsListProps) {
 	const feed: FeedDescriptor = `list|${listUri}`;
 	const { t: l } = useLingui();
-
-	const onScrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: -headerHeight,
-		});
-	}, [scrollElRef, headerHeight]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
 
 	const renderPostsEmpty = useCallback(() => {
 		return <EmptyState icon={HashtagWideIcon} iconSize="2xl" message={l`This feed is empty.`} />;
@@ -42,14 +23,7 @@ export const PostsList = forwardRef<SectionRef, ProfilesListProps>(function Post
 
 	return (
 		<View>
-			<PostFeed
-				enabled
-				feed={feed}
-				pollInterval={60e3}
-				scrollElRef={scrollElRef}
-				renderEmptyState={renderPostsEmpty}
-				headerOffset={headerHeight}
-			/>
+			<PostFeed enabled feed={feed} pollInterval={60e3} renderEmptyState={renderPostsEmpty} />
 		</View>
 	);
-});
+}

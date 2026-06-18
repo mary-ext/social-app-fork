@@ -1,9 +1,8 @@
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import { useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
-import type { AppBskyActorDefs, AppBskyGraphGetList } from '@atcute/bluesky';
+import type { AppBskyActorDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { parseCanonicalResourceUri } from '@atcute/lexicons/syntax';
-import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
@@ -12,9 +11,7 @@ import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { useAllListMembersQuery } from '#/state/queries/list-members';
 import { useSession } from '#/state/session';
 
-import { List, type ListRef } from '#/view/com/util/List';
-
-import type { SectionRef } from '#/screens/Profile/Sections/types';
+import { List } from '#/view/com/util/List';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -27,18 +24,12 @@ function keyExtractor(item: { did: string }, index: number) {
 
 interface ProfilesListProps {
 	listUri: string;
-	listMembersQuery: UseInfiniteQueryResult<InfiniteData<AppBskyGraphGetList.$output>>;
 	moderationOpts: ModerationOptions;
-	headerHeight: number;
-	scrollElRef: ListRef;
 }
 
-export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function ProfilesListImpl(
-	{ listUri, moderationOpts, headerHeight, scrollElRef },
-	ref,
-) {
+export function ProfilesList({ listUri, moderationOpts }: ProfilesListProps) {
 	const t = useTheme();
-	const bottomBarOffset = useBottomBarOffset(headerHeight);
+	const bottomBarOffset = useBottomBarOffset();
 	const initialNumToRender = useInitialNumToRender();
 	const { currentAccount } = useSession();
 	const { data, refetch, isError } = useAllListMembersQuery(listUri);
@@ -66,22 +57,12 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 			? [myProfile, ...profiles.slice(0, myIndex), ...profiles.slice(myIndex + 1)]
 			: profiles;
 	};
-	const onScrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: -headerHeight,
-		});
-	}, [scrollElRef, headerHeight]);
 
 	const onRefresh = async () => {
 		setIsPTRing(true);
 		await refetch();
 		setIsPTRing(false);
 	};
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
 
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
 		return (
@@ -93,26 +74,23 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(function P
 
 	if (!data) {
 		return (
-			<View style={[a.h_full_vh, { marginTop: headerHeight, marginBottom: bottomBarOffset }]}>
+			<View style={[a.h_full_vh, { marginBottom: bottomBarOffset }]}>
 				<ListMaybePlaceholder isLoading={true} isError={isError} onRetry={refetch} />
 			</View>
 		);
 	}
 
-	if (data)
-		return (
-			<List
-				data={getSortedProfiles()}
-				renderItem={renderItem}
-				keyExtractor={keyExtractor}
-				ref={scrollElRef}
-				headerOffset={headerHeight}
-				ListFooterComponent={<ListFooter style={{ paddingBottom: bottomBarOffset, borderTopWidth: 0 }} />}
-				showsVerticalScrollIndicator={false}
-				desktopFixedHeight
-				initialNumToRender={initialNumToRender}
-				refreshing={isPTRing}
-				onRefresh={() => void onRefresh()}
-			/>
-		);
-});
+	return (
+		<List
+			data={getSortedProfiles()}
+			renderItem={renderItem}
+			keyExtractor={keyExtractor}
+			ListFooterComponent={<ListFooter style={{ paddingBottom: bottomBarOffset, borderTopWidth: 0 }} />}
+			showsVerticalScrollIndicator={false}
+			desktopFixedHeight
+			initialNumToRender={initialNumToRender}
+			refreshing={isPTRing}
+			onRefresh={() => void onRefresh()}
+		/>
+	);
+}

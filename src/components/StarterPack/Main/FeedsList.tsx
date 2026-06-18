@@ -1,12 +1,9 @@
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { type ListRenderItemInfo, View } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 
 import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset';
 
-import { List, type ListRef } from '#/view/com/util/List';
-
-import type { SectionRef } from '#/screens/Profile/Sections/types';
+import { List } from '#/view/com/util/List';
 
 import { atoms as a, useTheme } from '#/alf';
 
@@ -16,30 +13,13 @@ function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
 }
 
-interface ProfilesListProps {
+interface FeedsListProps {
 	feeds: AppBskyFeedDefs.GeneratorView[];
-	headerHeight: number;
-	scrollElRef: ListRef;
 }
 
-export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(function FeedsListImpl(
-	{ feeds, headerHeight, scrollElRef },
-	ref,
-) {
-	const [initialHeaderHeight] = useState(headerHeight);
+export function FeedsList({ feeds }: FeedsListProps) {
 	const bottomBarOffset = useBottomBarOffset(20);
 	const t = useTheme();
-
-	const onScrollToTop = useCallback(() => {
-		scrollElRef.current?.scrollToOffset({
-			animated: false,
-			offset: -headerHeight,
-		});
-	}, [scrollElRef, headerHeight]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
 
 	const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
 		return (
@@ -54,11 +34,9 @@ export const FeedsList = forwardRef<SectionRef, ProfilesListProps>(function Feed
 			data={feeds}
 			renderItem={renderItem}
 			keyExtractor={keyExtractor}
-			ref={scrollElRef}
-			headerOffset={headerHeight}
-			ListFooterComponent={<View style={[{ height: initialHeaderHeight + bottomBarOffset }]} />}
+			ListFooterComponent={<View style={[{ height: bottomBarOffset }]} />}
 			showsVerticalScrollIndicator={false}
 			desktopFixedHeight={true}
 		/>
 	);
-});
+}

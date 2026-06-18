@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { batchedUpdates } from '#/lib/batchedUpdates';
 import { bulkWriteFollows } from '#/lib/bulk-write-follows';
 import { HITSLOP_20 } from '#/lib/constants';
+import { definite } from '#/lib/functions';
 import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted';
 import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
@@ -30,7 +31,6 @@ import { useSetActiveStarterPack } from '#/state/shell/starter-pack';
 
 import { logger } from '#/logger';
 
-import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
@@ -60,6 +60,7 @@ import { QrCodeDialog } from '#/components/StarterPack/QrCodeDialog';
 import { ShareDialog } from '#/components/StarterPack/ShareDialog';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
+import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { Image } from '#/shims/image';
 type StarterPackScreeProps = NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>;
@@ -159,11 +160,24 @@ function StarterPackScreenLoaded({
 	const showPostsTab = Boolean(starterPack.list);
 	const { t: l } = useLingui();
 
-	const tabs = [
-		...(showPeopleTab ? [l`People`] : []),
-		...(showFeedsTab ? [l`Feeds`] : []),
-		...(showPostsTab ? [l`Posts`] : []),
-	];
+	const sections = definite<Section<'feeds' | 'people' | 'posts'>>([
+		showPeopleTab && {
+			id: 'people',
+			label: l`People`,
+			render: () => <ProfilesList listUri={starterPack.list!.uri} moderationOpts={moderationOpts} />,
+		},
+		showFeedsTab && {
+			id: 'feeds',
+			label: l`Feeds`,
+			render: () => <FeedsList feeds={starterPack.feeds ?? []} />,
+		},
+		showPostsTab && {
+			id: 'posts',
+			label: l`Posts`,
+			render: () => <PostsList listUri={starterPack.list!.uri} />,
+		},
+	]);
+	const [activeTab, setActiveTab] = useState<'feeds' | 'people' | 'posts'>('people');
 
 	const qrCodeDialogControl = useDialogControl();
 	const shareDialogControl = useDialogControl();
@@ -197,49 +211,14 @@ function StarterPackScreenLoaded({
 
 	return (
 		<>
-			<PagerWithHeader
-				items={tabs}
-				isHeaderReady={true}
-				renderHeader={() => (
+			<Tabs
+				sections={sections}
+				value={activeTab}
+				onValueChange={setActiveTab}
+				header={
 					<Header starterPack={starterPack} routeParams={routeParams} onOpenShareDialog={onOpenShareDialog} />
-				)}
-			>
-				{showPeopleTab
-					? ({ headerHeight, scrollElRef }) => (
-							<ProfilesList
-								// Validated above
-								listUri={starterPack.list!.uri}
-								headerHeight={headerHeight}
-								// @ts-expect-error
-								scrollElRef={scrollElRef}
-								moderationOpts={moderationOpts}
-							/>
-						)
-					: null}
-				{showFeedsTab
-					? ({ headerHeight, scrollElRef }) => (
-							<FeedsList
-								// @ts-expect-error ?
-								feeds={starterPack?.feeds}
-								headerHeight={headerHeight}
-								// @ts-expect-error
-								scrollElRef={scrollElRef}
-							/>
-						)
-					: null}
-				{showPostsTab
-					? ({ headerHeight, scrollElRef }) => (
-							<PostsList
-								// Validated above
-								listUri={starterPack.list!.uri}
-								headerHeight={headerHeight}
-								// @ts-expect-error
-								scrollElRef={scrollElRef}
-								moderationOpts={moderationOpts}
-							/>
-						)
-					: null}
-			</PagerWithHeader>
+				}
+			/>
 
 			<QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} link={link} />
 			<ShareDialog
