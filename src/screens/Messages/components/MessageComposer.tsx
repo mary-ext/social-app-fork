@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { ChatBskyConvoDefs } from '@atcute/bluesky';
+import type { $type } from '@atcute/lexicons';
 import { useLingui } from '@lingui/react/macro';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
 
@@ -12,6 +14,7 @@ import { useMessageDraft, useSaveMessageDraft } from '#/state/messages/message-d
 import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
 import { Composer, useComposerInternalApiRef } from '#/components/Composer';
+import { useMessageReplies } from '#/components/dms/MessageReplies';
 import * as EmojiPicker from '#/components/EmojiPicker';
 import { GlassView } from '#/components/GlassView';
 import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon } from '#/components/icons/Emoji';
@@ -36,7 +39,7 @@ export function MessageComposer({
 	loading = false,
 }: {
 	textInputId?: string;
-	onSendMessage: (message: string) => void;
+	onSendMessage: (message: string, replyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>) => void;
 	hasEmbed: boolean;
 	setEmbed: (embedUrl: string | undefined) => void;
 	children?: React.ReactNode;
@@ -47,9 +50,15 @@ export function MessageComposer({
 	const { getDraft, clearDraft } = useMessageDraft();
 	const composerInternalApiRef = useComposerInternalApiRef();
 	const emojiPickerHandle = EmojiPicker.useEmojiPickerHandle();
+	const { replyTo, clearReply } = useMessageReplies();
 
 	const [text, setText] = useState(getDraft);
 	useSaveMessageDraft(text);
+
+	useEffect(() => {
+		if (!replyTo) return;
+		composerInternalApiRef.current?.input?.focus();
+	}, [replyTo, composerInternalApiRef]);
 
 	useKeyboardHandler({
 		onEnd: () => {
@@ -59,7 +68,7 @@ export function MessageComposer({
 
 	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
-	const onSubmit = (message: string) => {
+	const onSubmit = (message: string, replyTo: ChatBskyConvoDefs.MessageView | null) => {
 		if (loading) return;
 		if (!hasEmbed && message.trim() === '') return;
 		const graphemeCount = countGraphemes(message);
@@ -70,17 +79,18 @@ export function MessageComposer({
 
 		clearDraft();
 		setEmbed(undefined);
+		clearReply();
 		composerInternalApiRef.current?.clear();
 
 		composerInternalApiRef.current?.input?.focus();
 
 		requestAnimationFrame(() => {
-			onSendMessage(message);
+			onSendMessage(message, replyTo ? { ...replyTo, $type: 'chat.bsky.convo.defs#messageView' } : undefined);
 		});
 	};
 
 	const handleSubmit = () => {
-		onSubmit(text);
+		onSubmit(text, replyTo);
 	};
 
 	const handleChange = (nextText: string) => {

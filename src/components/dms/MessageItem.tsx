@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import {
 	type GestureResponderEvent,
 	Pressable,
@@ -32,12 +32,14 @@ import { useProfileBlockMutationQueue } from '#/state/queries/profile';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useTheme } from '#/alf';
+import { atoms as a, useTheme, utils } from '#/alf';
 import { isOnlyEmoji } from '#/alf/typography';
 
 import { Button } from '#/components/Button';
 import { ActionsWrapper } from '#/components/dms/ActionsWrapper';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
+import { useMessageReplies } from '#/components/dms/MessageReplies';
+import { ArrowCornerDownRight_Stroke2_Corner3_Rounded as ArrowCornerDownRightIcon } from '#/components/icons/ArrowCornerDownRight';
 import { InlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
 import * as Prompt from '#/components/Prompt';
@@ -53,25 +55,42 @@ import { CLUSTERED_MESSAGE_THRESHOLD_MS, filterBlockedReactions, MESSAGE_GAP_THR
 
 const AVATAR_SIZE = 28;
 const CLUSTERED_MESSAGE_GAP = 2;
-const BORDER_RADIUS = 18;
+const BORDER_RADIUS = 20;
 const SQUARED_BORDER_RADIUS = 4;
 const DISPLAY_NAME_INSET = 22;
 
+function messageIsReply(
+	message: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null,
+): boolean {
+	return (
+		message?.$type === 'chat.bsky.convo.defs#messageView' &&
+		(message.replyTo?.$type === 'chat.bsky.convo.defs#messageView' ||
+			message.replyTo?.$type === 'chat.bsky.convo.defs#deletedMessageView')
+	);
+}
+
 function isWithinClusterBoundary({
 	isPending,
+	message,
 	adjacentMessage,
 	isFromSameSender,
-	currentSentAt,
 	direction,
 }: {
 	isPending: boolean;
+	message: ChatBskyConvoDefs.MessageView;
 	adjacentMessage: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView | null;
 	isFromSameSender: boolean;
-	currentSentAt: string;
 	direction: 'prev' | 'next';
 }): boolean {
+	// A reply always starts its own cluster, breaking grouping with the message
+	// above it. Looking back, that's a boundary if this message is a reply;
+	// looking forward, it's a boundary if the next message is a reply.
+	if (messageIsReply(direction === 'prev' ? message : adjacentMessage)) {
+		return true;
+	}
 	if (!isFromSameSender) return true;
 	if (adjacentMessage?.$type === 'chat.bsky.convo.defs#messageView') {
+		const currentSentAt = message.sentAt;
 		const thisDate = new Date(currentSentAt);
 		const adjDate = new Date(adjacentMessage.sentAt);
 		const diff =
@@ -106,6 +125,16 @@ let MessageItem = ({
 	const profile = useMaybeProfileShadow(relatedProfiles.get(message.sender.did));
 
 	const { openReactions } = useMessageDialogs();
+	const { scrollToMessage, highlightedMessage } = useMessageReplies();
+
+	// `replyTo` comes back hydrated as the referenced message (or a deleted-
+	// message tombstone). Narrow away the open-union fallback so we only render
+	// shapes we understand.
+	const replyTo =
+		message.replyTo?.$type === 'chat.bsky.convo.defs#messageView' ||
+		message.replyTo?.$type === 'chat.bsky.convo.defs#deletedMessageView'
+			? message.replyTo
+			: undefined;
 
 	const isPending = item.type === 'pending-message';
 
@@ -123,17 +152,17 @@ let MessageItem = ({
 
 	const isFirstInCluster = isWithinClusterBoundary({
 		isPending,
+		message,
 		adjacentMessage: prevMessage,
 		isFromSameSender: isPrevFromSameSender,
-		currentSentAt: message.sentAt,
 		direction: 'prev',
 	});
 
 	const isLastInCluster = isWithinClusterBoundary({
 		isPending,
+		message,
 		adjacentMessage: nextMessage,
 		isFromSameSender: isNextFromSameSender,
-		currentSentAt: message.sentAt,
 		direction: 'next',
 	});
 
@@ -176,6 +205,24 @@ let MessageItem = ({
 
 	const showDisplayName = isGroupChat && !isFromSelf && isFirstInCluster && !isOnlyEmoji(message.text);
 	const showAvatar = isGroupChat && !isFromSelf && isLastInCluster;
+
+	// Flash the message background when it's been scrolled to (e.g. by tapping a
+	// reply that quotes it), so it's easy to spot. Keyed on the highlight `key`
+	// so re-tapping the same message re-triggers the flash.
+	const isHighlighted = highlightedMessage?.id === message.id;
+	const highlightKey = isHighlighted ? highlightedMessage.key : null;
+	const flashRef = useRef<View | null>(null);
+	useEffect(() => {
+		if (highlightKey === null) return;
+		// The fork's reanimated shim can't drive imperative shared-value animations,
+		// so flash the always-mounted overlay via the Web Animations API instead.
+		const node = flashRef.current as unknown as HTMLElement | null;
+		const animation = node?.animate(
+			[{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.4 }, { opacity: 0 }],
+			{ duration: 1000, easing: 'ease' },
+		);
+		return () => animation?.cancel();
+	}, [highlightKey]);
 
 	useEffect(() => {
 		bottomRadiusSV.set(withTiming(targetBottomRadius, { duration: 300 }));
@@ -308,6 +355,9 @@ let MessageItem = ({
 	);
 
 	const messageInset = a.mx_lg;
+	// Negative of `messageInset` so the flash bleeds past the row's horizontal
+	// margin to the screen edges.
+	const flashBleed = -a.mx_lg.marginLeft;
 
 	return (
 		<>
@@ -319,10 +369,34 @@ let MessageItem = ({
 					hasReactions && { paddingBottom: 26 },
 				]}
 			>
+				<View
+					ref={flashRef}
+					pointerEvents="none"
+					style={[
+						a.absolute,
+						{
+							top: -CLUSTERED_MESSAGE_GAP,
+							bottom: -CLUSTERED_MESSAGE_GAP,
+							left: flashBleed,
+							right: flashBleed,
+							backgroundColor: t.palette.primary_100,
+							opacity: 0,
+						},
+					]}
+				/>
 				<View style={[a.relative]}>
 					{showAvatar ? <View style={[a.absolute, a.bottom_0, a.z_50]}>{avatar}</View> : null}
 					<View style={[a.relative, a.flex_grow, !isFromSelf && isGroupChat && { paddingLeft: AVATAR_SIZE }]}>
-						{displayName && showDisplayName ? (
+						{replyTo ? (
+							<ReplyCaption
+								replyTo={replyTo}
+								isFromSelf={isFromSelf}
+								isGroupChat={isGroupChat}
+								replierDisplayName={displayName}
+								relatedProfiles={relatedProfiles}
+								onPress={() => scrollToMessage(replyTo.id)}
+							/>
+						) : displayName && showDisplayName ? (
 							<Text
 								style={[
 									a.text_xs,
@@ -387,6 +461,14 @@ let MessageItem = ({
 												],
 											]}
 										>
+											{replyTo && !isOnlyEmoji(message.text) ? (
+												<ReplyQuote
+													replyTo={replyTo}
+													isFromSelf={isFromSelf}
+													relatedProfiles={relatedProfiles}
+													onPress={() => scrollToMessage(replyTo.id)}
+												/>
+											) : null}
 											<RichText
 												// emoji-only content is enlarged and gets tight leading to avoid clipping the glyph;
 												// non-self bubbles also pull the bottom up to bottom-align the glyph with the avatar
@@ -541,5 +623,165 @@ function BlockedPlaceholder({
 				</Prompt.Content>
 			</Prompt.Outer>
 		</>
+	);
+}
+
+/**
+ * The "↪ X replied to Y" caption rendered above a reply message, in place of the display name. `X` is the
+ * person sending the reply (self -> "you"), `Y` is the original sender. Tapping it scrolls to the original
+ * (if loaded).
+ *
+ * Aligns with the sender's display name for others (left), or with the message bubble for self (right).
+ */
+function ReplyCaption({
+	replyTo,
+	isFromSelf,
+	isGroupChat,
+	replierDisplayName,
+	relatedProfiles,
+	onPress,
+}: {
+	replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView;
+	isFromSelf: boolean;
+	isGroupChat: boolean;
+	replierDisplayName: string | null;
+	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
+	onPress: () => void;
+}) {
+	const t = useTheme();
+	const { t: l } = useLingui();
+	const { currentAccount } = useSession();
+
+	const originalSenderIsSelf = replyTo.sender.did === currentAccount?.did;
+	const originalProfile = relatedProfiles.get(replyTo.sender.did);
+	const originalName = originalSenderIsSelf
+		? null
+		: originalProfile
+			? createSanitizedDisplayName(originalProfile)
+			: null;
+
+	return (
+		<Button
+			label={l`Scroll to the message this is replying to`}
+			onPress={onPress}
+			style={[
+				a.w_full,
+				a.flex_row,
+				a.align_center,
+				a.gap_2xs,
+				a.pb_2xs,
+				a.pt_xs,
+				isFromSelf
+					? [a.justify_end, a.pr_md]
+					: [a.justify_start, isGroupChat ? { paddingLeft: DISPLAY_NAME_INSET } : a.pl_md],
+			]}
+		>
+			<ArrowCornerDownRightIcon size="xs" style={t.atoms.text_contrast_medium} />
+			<Text style={[a.text_xs, a.flex_shrink, t.atoms.text_contrast_medium]} numberOfLines={1} emoji>
+				{isFromSelf ? (
+					originalSenderIsSelf ? (
+						<Trans>You replied to yourself</Trans>
+					) : originalName ? (
+						<Trans>You replied to {originalName}</Trans>
+					) : (
+						<Trans>You replied</Trans>
+					)
+				) : originalSenderIsSelf ? (
+					<Trans>{replierDisplayName} replied to you</Trans>
+				) : originalName ? (
+					<Trans>
+						{replierDisplayName} replied to {originalName}
+					</Trans>
+				) : (
+					<Trans>{replierDisplayName} replied</Trans>
+				)}
+			</Text>
+		</Button>
+	);
+}
+
+/**
+ * The nested quote of the original message, rendered at the top of a reply bubble. Tapping it scrolls to the
+ * original (if loaded).
+ */
+function ReplyQuote({
+	replyTo,
+	isFromSelf,
+	relatedProfiles,
+	onPress,
+}: {
+	replyTo: ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView;
+	isFromSelf: boolean;
+	relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>;
+	onPress: () => void;
+}) {
+	const t = useTheme();
+	const { t: l } = useLingui();
+
+	const senderProfile = useMaybeProfileShadow(relatedProfiles.get(replyTo.sender.did));
+	// Hide the quoted content if we block, or are blocked by, the original
+	// sender - mirroring how the message bubble itself is hidden.
+	const isBlocked = senderProfile ? isBlockedOrBlocking(senderProfile) : false;
+	const senderName = senderProfile && !isBlocked ? createSanitizedDisplayName(senderProfile) : null;
+
+	const tintColor = isFromSelf ? t.palette.white : t.atoms.text.color;
+	const subtleColor = isFromSelf ? t.palette.white : t.atoms.text_contrast_high.color;
+	const borderColor = isFromSelf
+		? utils.alpha(t.palette.white, 0.5)
+		: t.atoms.border_contrast_high.borderColor;
+
+	let text: string;
+	let subtle = false;
+	if (isBlocked) {
+		text = l`Blocked message hidden`;
+		subtle = true;
+	} else if (replyTo.$type === 'chat.bsky.convo.defs#messageView') {
+		text = replyTo.text;
+		if (!text.trim()) {
+			subtle = true;
+			if (replyTo.embed?.$type === 'chat.bsky.embed.joinLink#view') {
+				text = l`(chat invite link)`;
+			} else if (replyTo.embed?.$type === 'app.bsky.embed.record#view') {
+				text = l`(contains embedded content)`;
+			} else {
+				text = l`No text`;
+			}
+		}
+	} else {
+		text = l`Deleted message`;
+		subtle = true;
+	}
+
+	return (
+		<Button
+			label={
+				senderName
+					? l`Replied-to message from ${senderName}, tap to scroll to it`
+					: l`Replied-to message, tap to scroll to it`
+			}
+			onPress={onPress}
+			style={[
+				a.mb_xs,
+				a.rounded_md,
+				a.p_sm,
+				a.flex_col,
+				a.align_start,
+				a.border,
+				{ borderColor, marginHorizontal: -4 },
+			]}
+		>
+			{senderName ? (
+				<Text style={[a.text_xs, { color: subtleColor }]} emoji numberOfLines={1}>
+					{senderName}
+				</Text>
+			) : null}
+			<Text
+				style={[a.text_sm, { color: subtle ? subtleColor : tintColor }, subtle && a.italic]}
+				emoji
+				numberOfLines={2}
+			>
+				{text}
+			</Text>
+		</Button>
 	);
 }

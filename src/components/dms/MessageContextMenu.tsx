@@ -14,6 +14,8 @@ import { atoms as a } from '#/alf';
 import * as ContextMenu from '#/components/ContextMenu';
 import type { TriggerChildProps } from '#/components/ContextMenu/types';
 import { useMessageDialogs } from '#/components/dms/MessageOverlays';
+import { useMessageReplies } from '#/components/dms/MessageReplies';
+import { ArrowCornerDownRight_Stroke2_Corner2_Rounded as ReplyIcon } from '#/components/icons/ArrowCornerDownRight';
 import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard';
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag';
 import { Language_Stroke2_Corner2_Rounded as LanguageIcon } from '#/components/icons/Language';
@@ -36,6 +38,7 @@ export let MessageContextMenu = ({
 	const { t: l, i18n } = useLingui();
 	const { currentAccount } = useSession();
 	const { openDeleteMessage, openReportMessage } = useMessageDialogs();
+	const { setReply } = useMessageReplies();
 	const langPrefs = useLanguagePrefs();
 	const translate = useGoogleTranslate();
 
@@ -73,6 +76,10 @@ export let MessageContextMenu = ({
 				})}`}
 				style={[isFromSelf ? null : a.ml_sm]}
 			>
+				<ContextMenu.Item testID="messageDropdownReplyBtn" label={l`Reply`} onPress={() => setReply(message)}>
+					<ContextMenu.ItemIcon icon={ReplyIcon} position="left" />
+					<ContextMenu.ItemText>{l`Reply`}</ContextMenu.ItemText>
+				</ContextMenu.Item>
 				{message.text.length > 0 && (
 					<>
 						<ContextMenu.Item
@@ -94,7 +101,6 @@ export let MessageContextMenu = ({
 					</>
 				)}
 				<ContextMenu.Item
-					destructive
 					testID="messageDropdownDeleteBtn"
 					label={l`Delete message for me`}
 					onPress={() => openDeleteMessage(message)}
@@ -104,7 +110,6 @@ export let MessageContextMenu = ({
 				</ContextMenu.Item>
 				{!isFromSelf && (
 					<ContextMenu.Item
-						destructive
 						testID="messageDropdownReportBtn"
 						label={l`Report message`}
 						onPress={() => openReportMessage(message, senderProfile)}

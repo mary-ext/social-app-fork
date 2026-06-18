@@ -75,6 +75,22 @@ function toSystemMessageView(
 	}
 }
 
+/**
+ * Derive a deleted-message tombstone from a (now-deleted) message, preserving the fields the deleted view
+ * carries so a reply can render it as deleted.
+ */
+function toDeletedMessageView(
+	m: ChatBskyConvoDefs.MessageView,
+): $type.enforce<ChatBskyConvoDefs.DeletedMessageView> {
+	return {
+		$type: 'chat.bsky.convo.defs#deletedMessageView',
+		id: m.id,
+		rev: m.rev,
+		sender: m.sender,
+		sentAt: m.sentAt,
+	};
+}
+
 export class Convo {
 	private id: string;
 
@@ -104,6 +120,7 @@ export class Convo {
 			optimisticEmbedView?:
 				| $type.enforce<AppBskyEmbedRecord.View>
 				| $type.enforce<ChatBskyEmbedJoinLink.View>;
+			optimisticReplyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>;
 		}
 	> = new Map();
 	private deletedMessages: Set<string> = new Set();
@@ -771,6 +788,12 @@ export class Convo {
 			});
 			const { cursor, messages, relatedProfiles } = data;
 
+			// Trust the cursor for pagination. We can't infer "no more pages" from a
+			// short page: the server pages by raw rows but strips deleted messages
+			// from the response, so a full page containing a deleted message (e.g.
+			// from a deleted account) comes back short *with* a valid cursor. Using a
+			// count heuristic here would stop history fetching early and hide
+			// messages. The tradeoff is one extra empty fetch at the true top.
 			this.oldestRev = cursor ?? null;
 
 			if (relatedProfiles) {
@@ -778,14 +801,6 @@ export class Convo {
 					this.relatedProfiles.set(profile.did, profile);
 				}
 				this.applyProfileShadows();
-			}
-
-			/*
-			 * If the response contained fewer messages than the limit, we know
-			 * there are no more pages, regardless of whether a cursor was returned.
-			 */
-			if (messages.length < 60) {
-				this.oldestRev = null;
 			}
 
 			for (const message of messages) {
@@ -932,14 +947,17 @@ export class Convo {
 						ev.message.$type === 'chat.bsky.convo.defs#deletedMessageView'
 					) {
 						/*
-						 * Update if we have this in state. If we don't, don't worry about it.
+						 * Remove the message itself, and keep its id in `deletedMessages`
+						 * so any message that quotes it keeps rendering a deleted-message
+						 * tombstone (see `tombstoneDeletedReplyTo`) rather than reverting
+						 * to the original hydrated text. We add here rather than relying on
+						 * the optimistic entry so deletes from elsewhere (e.g. another
+						 * device) are covered too.
 						 */
-						if (this.pastMessages.has(ev.message.id) || this.newMessages.has(ev.message.id)) {
-							this.pastMessages.delete(ev.message.id);
-							this.newMessages.delete(ev.message.id);
-							this.deletedMessages.delete(ev.message.id);
-							needsCommit = true;
-						}
+						this.pastMessages.delete(ev.message.id);
+						this.newMessages.delete(ev.message.id);
+						this.deletedMessages.add(ev.message.id);
+						needsCommit = true;
 					} else if (
 						(ev.$type === 'chat.bsky.convo.defs#logAddReaction' ||
 							ev.$type === 'chat.bsky.convo.defs#logRemoveReaction') &&
@@ -982,6 +1000,7 @@ export class Convo {
 	sendMessage(
 		message: ChatBskyConvoSendMessage.$input['message'],
 		optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View> | $type.enforce<ChatBskyEmbedJoinLink.View>,
+		optimisticReplyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>,
 	) {
 		// Ignore empty messages for now since they have no other purpose atm
 		if (!message.text.trim() && !message.embed) return;
@@ -995,6 +1014,7 @@ export class Convo {
 			id: tempId,
 			message,
 			optimisticEmbedView,
+			optimisticReplyTo,
 		});
 		if (this.convo?.view.status === 'request') {
 			this.updateConvo({
@@ -1266,6 +1286,20 @@ export class Convo {
 		};
 	}
 
+	/**
+	 * When a message is deleted locally, it's removed from the list, but other messages that reply to it still
+	 * carry a hydrated `replyTo` with the original text until the server re-sends them. Swap that `replyTo` for
+	 * a deleted-message tombstone so the quote reflects the deletion immediately, matching what the server
+	 * returns on refresh.
+	 */
+	private tombstoneDeletedReplyTo(m: ChatBskyConvoDefs.MessageView): ChatBskyConvoDefs.MessageView {
+		const { replyTo } = m;
+		if (replyTo?.$type !== 'chat.bsky.convo.defs#messageView' || !this.deletedMessages.has(replyTo.id)) {
+			return m;
+		}
+		return { ...m, replyTo: toDeletedMessageView(replyTo) };
+	}
+
 	/*
 	 * Items in reverse order, since FlatList inverts
 	 */
@@ -1275,7 +1309,7 @@ export class Convo {
 		this.pastMessages.forEach((m) => {
 			switch (m.$type) {
 				case 'chat.bsky.convo.defs#messageView':
-					items.unshift({ type: 'message', key: m.id, message: m });
+					items.unshift({ type: 'message', key: m.id, message: this.tombstoneDeletedReplyTo(m) });
 					break;
 				case 'chat.bsky.convo.defs#deletedMessageView':
 					items.unshift({ type: 'deleted-message', key: m.id, message: m });
@@ -1300,7 +1334,7 @@ export class Convo {
 		this.newMessages.forEach((m) => {
 			switch (m.$type) {
 				case 'chat.bsky.convo.defs#messageView':
-					items.push({ type: 'message', key: m.id, message: m });
+					items.push({ type: 'message', key: m.id, message: this.tombstoneDeletedReplyTo(m) });
 					break;
 				case 'chat.bsky.convo.defs#deletedMessageView':
 					items.push({ type: 'deleted-message', key: m.id, message: m });
@@ -1312,15 +1346,17 @@ export class Convo {
 		});
 
 		this.pendingMessages.forEach((m) => {
+			const optimisticReplyTo =
+				m.optimisticReplyTo && this.deletedMessages.has(m.optimisticReplyTo.id)
+					? toDeletedMessageView(m.optimisticReplyTo)
+					: m.optimisticReplyTo;
 			items.push({
 				type: 'pending-message',
 				key: m.id,
 				message: {
 					...m.message,
 					embed: m.optimisticEmbedView,
-					// `MessageInput.replyTo` is a bare ref; the view wants the full embedded
-					// message, which the fork doesn't send yet (see the replies feature).
-					replyTo: undefined,
+					replyTo: optimisticReplyTo,
 					$type: 'chat.bsky.convo.defs#messageView',
 					id: nanoid(),
 					rev: '__fake__',

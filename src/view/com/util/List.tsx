@@ -34,6 +34,15 @@ export type ListMethods = {
 	scrollToTop: () => void;
 	scrollToOffset: (options: { animated?: boolean; offset: number }) => void;
 	scrollToEnd: (options?: { animated?: boolean }) => void;
+	// Signature kept compatible with FlatList's scrollToIndex so callers stay
+	// platform-agnostic. viewOffset/viewPosition are accepted for parity but not
+	// used by this implementation.
+	scrollToIndex: (params: {
+		animated?: boolean | null;
+		index: number;
+		viewOffset?: number;
+		viewPosition?: number;
+	}) => void;
 };
 type WebViewStyle = ViewStyle & {
 	overflowY?: 'auto' | 'scroll';
@@ -215,6 +224,19 @@ function ListImpl<ItemT>(
 	}, [disableFullWindowScroll]);
 
 	const nativeRef = useRef<HTMLDivElement>(null);
+
+	// Registry of item index -> row DOM node. The list renders header/footer and
+	// visibility-detector siblings too, so we can't index into the container's
+	// children directly; each Row registers its own node here keyed by index.
+	const rowNodesRef = useRef<Map<number, HTMLElement>>(new Map());
+	const registerRowNode = useCallback((index: number, node: HTMLElement | null) => {
+		if (node) {
+			rowNodesRef.current.set(index, node);
+		} else {
+			rowNodesRef.current.delete(index);
+		}
+	}, []);
+
 	useImperativeHandle(
 		ref,
 		() => ({
@@ -235,6 +257,17 @@ function ListImpl<ItemT>(
 				element?.scrollTo({
 					left: 0,
 					top: element.scrollHeight,
+					behavior: animated ? 'smooth' : 'instant',
+				});
+			},
+
+			scrollToIndex({ animated = true, index }) {
+				const node = rowNodesRef.current.get(index);
+				// `block: 'center'` roughly matches the caller's viewPosition of 0.3 -
+				// not exact, but close enough, and it respects whichever element is the
+				// scroll container (window or nativeRef).
+				node?.scrollIntoView({
+					block: 'center',
 					behavior: animated ? 'smooth' : 'instant',
 				});
 			},
@@ -379,6 +412,7 @@ function ListImpl<ItemT>(
 										renderItem={renderItem}
 										extraData={extraData}
 										onItemSeen={onItemSeen}
+										registerRowNode={registerRowNode}
 									/>
 								);
 							})}
@@ -457,12 +491,14 @@ let Row = function RowImpl<ItemT>({
 	renderItem,
 	extraData: _unused,
 	onItemSeen,
+	registerRowNode,
 }: {
 	item: ItemT;
 	index: number;
 	renderItem: null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode);
 	extraData: unknown;
 	onItemSeen: ((item: ItemT) => void) | undefined;
+	registerRowNode: (index: number, node: HTMLElement | null) => void;
 }): React.ReactNode {
 	const rowRef = useRef(null);
 	const intersectionTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -506,6 +542,15 @@ let Row = function RowImpl<ItemT>({
 		};
 	}, [handleIntersection, onItemSeen]);
 
+	// Register this row's DOM node so the list can scroll to it by index.
+	useEffect(() => {
+		const node: HTMLElement | null = rowRef.current;
+		registerRowNode(index, node);
+		return () => {
+			registerRowNode(index, null);
+		};
+	}, [index, registerRowNode]);
+
 	if (!renderItem) {
 		return null;
 	}
@@ -526,6 +571,7 @@ Row = memo(Row) as <ItemT>(props: {
 	renderItem: null | undefined | ((info: ListRenderItemInfo<ItemT>) => React.ReactNode);
 	extraData: unknown;
 	onItemSeen: ((item: ItemT) => void) | undefined;
+	registerRowNode: (index: number, node: HTMLElement | null) => void;
 }) => React.ReactNode;
 
 let Visibility = ({

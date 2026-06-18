@@ -104,6 +104,7 @@ type DeleteMessage = (messageId: string) => Promise<void>;
 type SendMessage = (
 	message: ChatBskyConvoSendMessage.$input['message'],
 	optimisticEmbedView?: $type.enforce<AppBskyEmbedRecord.View> | $type.enforce<ChatBskyEmbedJoinLink.View>,
+	optimisticReplyTo?: $type.enforce<ChatBskyConvoDefs.MessageView>,
 ) => void;
 type FetchMessageHistory = () => Promise<void>;
 type MarkConvoAccepted = () => void;
