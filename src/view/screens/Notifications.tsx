@@ -17,8 +17,6 @@ import { truncateAndInvalidate } from '#/state/queries/util';
 import { logger } from '#/logger';
 
 import { NotificationFeed } from '#/view/com/notifications/NotificationFeed';
-import { Pager } from '#/view/com/pager/Pager';
-import { TabBar } from '#/view/com/pager/TabBar';
 import { FAB } from '#/view/com/util/fab/FAB';
 import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
@@ -32,11 +30,12 @@ import { SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon } from '#/compone
 import * as Layout from '#/components/Layout';
 import { InlineLinkText, Link } from '#/components/Link';
 import { Loader } from '#/components/Loader';
+import { type Section, Tabs } from '#/components/web/Tabs';
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
 // But let's at least persist it during the sesssion.
-let lastActiveTab = 0;
+let lastActiveTab: 'all' | 'mentions' = 'all';
 
 type Props = NativeStackScreenProps<NotificationsTabNavigatorParams, 'Notifications'>;
 export function NotificationsScreen({}: Props) {
@@ -48,17 +47,13 @@ export function NotificationsScreen({}: Props) {
 	const { checkUnread: checkUnreadAll } = useUnreadNotificationsApi();
 	const [isLoadingAll, setIsLoadingAll] = useState(false);
 	const [isLoadingMentions, setIsLoadingMentions] = useState(false);
-	const initialActiveTab = lastActiveTab;
-	const [activeTab, setActiveTab] = useState(initialActiveTab);
-	const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions;
+	const [activeTab, setActiveTab] = useState(lastActiveTab);
+	const isLoading = activeTab === 'all' ? isLoadingAll : isLoadingMentions;
 
-	const onPageSelected = useCallback(
-		(index: number) => {
-			setActiveTab(index);
-			lastActiveTab = index;
-		},
-		[setActiveTab],
-	);
+	const onTabChange = useCallback((tab: 'all' | 'mentions') => {
+		setActiveTab(tab);
+		lastActiveTab = tab;
+	}, []);
 
 	const queryClient = useQueryClient();
 	const checkUnreadMentions = useCallback(
@@ -73,14 +68,15 @@ export function NotificationsScreen({}: Props) {
 		[queryClient],
 	);
 
-	const sections = useMemo(() => {
+	const sections = useMemo<Section<'all' | 'mentions'>[]>(() => {
 		return [
 			{
-				title: l`All`,
-				component: (
+				id: 'all',
+				label: l`All`,
+				render: (focused) => (
 					<NotificationsTab
 						filter="all"
-						isActive={activeTab === 0}
+						isActive={focused}
 						isLoading={isLoadingAll}
 						hasNew={hasNew}
 						setIsLoadingLatest={setIsLoadingAll}
@@ -89,11 +85,12 @@ export function NotificationsScreen({}: Props) {
 				),
 			},
 			{
-				title: l`Mentions`,
-				component: (
+				id: 'mentions',
+				label: l`Mentions`,
+				render: (focused) => (
 					<NotificationsTab
 						filter="mentions"
-						isActive={activeTab === 1}
+						isActive={focused}
 						isLoading={isLoadingMentions}
 						hasNew={false /* We don't know for sure */}
 						setIsLoadingLatest={setIsLoadingMentions}
@@ -102,48 +99,39 @@ export function NotificationsScreen({}: Props) {
 				),
 			},
 		];
-	}, [l, hasNew, checkUnreadAll, checkUnreadMentions, activeTab, isLoadingAll, isLoadingMentions]);
+	}, [l, hasNew, checkUnreadAll, checkUnreadMentions, isLoadingAll, isLoadingMentions]);
 
 	return (
 		<Layout.Screen testID="notificationsScreen">
-			<Layout.Header.Outer noBottomBorder sticky={false}>
-				<Layout.Header.MenuButton />
-				<Layout.Header.Content>
-					<Layout.Header.TitleText>
-						<Trans>Notifications</Trans>
-					</Layout.Header.TitleText>
-				</Layout.Header.Content>
-				<Layout.Header.Slot>
-					<Link
-						to={{ screen: 'NotificationSettings' }}
-						label={l`Notification settings`}
-						size="small"
-						variant="ghost"
-						color="secondary"
-						shape="round"
-						style={[a.justify_center]}
-					>
-						<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
-					</Link>
-				</Layout.Header.Slot>
-			</Layout.Header.Outer>
-			<Pager
-				onPageSelected={onPageSelected}
-				renderTabBar={(props) => (
-					<Layout.Center style={[a.z_10, a.sticky, { top: 0 }]}>
-						<TabBar
-							{...props}
-							items={sections.map((section) => section.title)}
-							onPressSelected={() => emitSoftReset()}
-						/>
-					</Layout.Center>
-				)}
-				initialPage={initialActiveTab}
-			>
-				{sections.map((section, i) => (
-					<View key={i}>{section.component}</View>
-				))}
-			</Pager>
+			<Tabs
+				sections={sections}
+				value={activeTab}
+				onValueChange={onTabChange}
+				onTabReselect={() => emitSoftReset()}
+				header={
+					<Layout.Header.Outer noBottomBorder sticky={false}>
+						<Layout.Header.MenuButton />
+						<Layout.Header.Content>
+							<Layout.Header.TitleText>
+								<Trans>Notifications</Trans>
+							</Layout.Header.TitleText>
+						</Layout.Header.Content>
+						<Layout.Header.Slot>
+							<Link
+								to={{ screen: 'NotificationSettings' }}
+								label={l`Notification settings`}
+								size="small"
+								variant="ghost"
+								color="secondary"
+								shape="round"
+								style={[a.justify_center]}
+							>
+								<ButtonIcon icon={isLoading ? Loader : SettingsIcon} size="lg" />
+							</Link>
+						</Layout.Header.Slot>
+					</Layout.Header.Outer>
+				}
+			/>
 			<FAB
 				icon={<EditBigIcon size="lg" fill={t.palette.white} />}
 				label={l`New post`}
