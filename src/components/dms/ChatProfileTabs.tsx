@@ -11,11 +11,10 @@ import { sanitizeHandle } from '#/lib/strings/handles';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 
-import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button } from '#/components/Button';
+import { DraggableScrollView } from '#/components/DraggableScrollView';
 import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times';
 import * as ProfileCard from '#/components/ProfileCard';
 import { Text } from '#/components/Typography';

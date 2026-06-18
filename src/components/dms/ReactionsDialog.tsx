@@ -11,12 +11,11 @@ import { type ActiveConvoStates, useConvoActive } from '#/state/messages/convo';
 import { useSession } from '#/state/session';
 import type { SessionAccount } from '#/state/session/types';
 
-import { DraggableScrollView } from '#/view/com/pager/DraggableScrollView';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import * as Dialog from '#/components/Dialog';
 import { filterBlockedReactions } from '#/components/dms/util';
+import { DraggableScrollView } from '#/components/DraggableScrollView';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
