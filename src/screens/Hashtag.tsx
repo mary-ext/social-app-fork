@@ -30,7 +30,7 @@ import { InlineLinkText } from '#/components/Link';
 import { ListFooter, ListMaybePlaceholder } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
 import { Text } from '#/components/Typography';
-import * as Tabs from '#/components/web/Tabs';
+import { type Section, Tabs } from '#/components/web/Tabs';
 
 const renderItem = ({ item }: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
 	return <Post post={item} />;
@@ -73,62 +73,57 @@ export default function HashtagScreen({ route }: NativeStackScreenProps<CommonNa
 
 	const [activeTab, setActiveTab] = useState<'latest' | 'top'>('top');
 
-	const sections = useMemo(() => {
+	const sections = useMemo<Section<'latest' | 'top'>[]>(() => {
 		return [
-			{ id: 'top' as const, sort: 'top' as const, title: l`Top` },
-			{ id: 'latest' as const, sort: 'latest' as const, title: l`Latest` },
+			{
+				id: 'top',
+				label: l`Top`,
+				render: (focused) => (
+					<HashtagScreenTab fullTag={fullTag} author={author} sort="top" active={focused} />
+				),
+			},
+			{
+				id: 'latest',
+				label: l`Latest`,
+				render: (focused) => (
+					<HashtagScreenTab fullTag={fullTag} author={author} sort="latest" active={focused} />
+				),
+			},
 		];
-	}, [l]);
+	}, [l, fullTag, author]);
 
 	return (
 		<Layout.Screen>
-			<Tabs.Root value={activeTab} onValueChange={(value) => setActiveTab(value as 'latest' | 'top')}>
-				<Layout.Header.Outer noBottomBorder sticky={false}>
-					<Layout.Header.BackButton />
-					<Layout.Header.Content>
-						<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
-						{author && <Layout.Header.SubtitleText>{l`From @${sanitizedAuthor}`}</Layout.Header.SubtitleText>}
-					</Layout.Header.Content>
-					<Layout.Header.Slot>
-						<Button
-							label={l`Share`}
-							size="small"
-							variant="ghost"
-							color="primary"
-							shape="round"
-							onPress={onShare}
-							hitSlop={HITSLOP_10}
-							style={[{ right: -3 }]}
-						>
-							<ButtonIcon icon={Share} size="md" />
-						</Button>
-					</Layout.Header.Slot>
-				</Layout.Header.Outer>
-				<Tabs.List>
-					{sections.map((section) => (
-						<Tabs.Tab
-							key={section.id}
-							label={section.title}
-							value={section.id}
-							onClick={() => {
-								if (activeTab === section.id) {
-									window.scrollTo(0, 0);
-								}
-							}}
-						/>
-					))}
-				</Tabs.List>
-				{sections.map((section) => (
-					<Tabs.Panel key={section.id} value={section.id}>
-						<HashtagScreenTab
-							fullTag={fullTag}
-							author={author}
-							sort={section.sort}
-							active={activeTab === section.id}
-						/>
-					</Tabs.Panel>
-				))}
-			</Tabs.Root>
+			<Tabs
+				sections={sections}
+				value={activeTab}
+				onValueChange={setActiveTab}
+				header={
+					<Layout.Header.Outer noBottomBorder sticky={false}>
+						<Layout.Header.BackButton />
+						<Layout.Header.Content>
+							<Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
+							{author && (
+								<Layout.Header.SubtitleText>{l`From @${sanitizedAuthor}`}</Layout.Header.SubtitleText>
+							)}
+						</Layout.Header.Content>
+						<Layout.Header.Slot>
+							<Button
+								label={l`Share`}
+								size="small"
+								variant="ghost"
+								color="primary"
+								shape="round"
+								onPress={onShare}
+								hitSlop={HITSLOP_10}
+								style={[{ right: -3 }]}
+							>
+								<ButtonIcon icon={Share} size="md" />
+							</Button>
+						</Layout.Header.Slot>
+					</Layout.Header.Outer>
+				}
+			/>
 		</Layout.Screen>
 	);
 }
