@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import {
@@ -11,7 +11,6 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
@@ -25,9 +24,7 @@ import { useResolveUriQuery } from '#/state/queries/resolve-uri';
 import { truncateAndInvalidate } from '#/state/queries/util';
 import { useSession } from '#/state/session';
 
-import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader';
 import { FAB } from '#/view/com/util/fab/FAB';
-import type { ListRef } from '#/view/com/util/List';
 
 import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen';
 
@@ -39,15 +36,12 @@ import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/ico
 import * as Layout from '#/components/Layout';
 import { Loader } from '#/components/Loader';
 import * as Hider from '#/components/moderation/Hider';
+import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { AboutSection } from './AboutSection';
 import { ErrorScreen } from './components/ErrorScreen';
 import { Header } from './components/Header';
 import { FeedSection } from './FeedSection';
-
-interface SectionRef {
-	scrollToTop: () => void;
-}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>;
 export function ProfileListScreen(props: Props) {
@@ -147,17 +141,12 @@ function ProfileListScreenLoaded({
 	const { openComposer } = useOpenComposer();
 	const { currentAccount } = useSession();
 	const { rkey } = route.params;
-	const feedSectionRef = useRef<SectionRef>(null);
-	const aboutSectionRef = useRef<SectionRef>(null);
 	const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist';
 	const isScreenFocused = useIsFocused();
 	const isHidden = list.labels?.findIndex((l) => l.val === '!hide') !== -1;
 	const isOwner = currentAccount?.did === list.creator.did;
-	const scrollElRef = useAnimatedRef();
 	const addUserDialogControl = useDialogControl();
-	const sectionTitlesCurate = [l`Posts`, l`People`];
-	// modlist only
-	const [headerHeight, setHeaderHeight] = useState<number | null>(null);
+	const [activeTab, setActiveTab] = useState<'people' | 'posts'>('posts');
 
 	const moderation = useMemo(() => {
 		return moderateList(list, moderationOpts);
@@ -171,22 +160,30 @@ function ProfileListScreenLoaded({
 		}
 	};
 
-	const onCurrentPageSelected = useCallback(
-		(index: number) => {
-			if (index === 0) {
-				feedSectionRef.current?.scrollToTop();
-			} else if (index === 1) {
-				aboutSectionRef.current?.scrollToTop();
-			}
-		},
-		[feedSectionRef],
-	);
-
 	const renderHeader = useCallback(() => {
 		return <Header rkey={rkey} list={list} preferences={preferences} />;
 	}, [rkey, list, preferences]);
 
 	if (isCurateList) {
+		const sections: Section<'people' | 'posts'>[] = [
+			{
+				id: 'posts',
+				label: l`Posts`,
+				render: (focused) => (
+					<FeedSection
+						feed={`list|${uri}`}
+						isFocused={isScreenFocused && focused}
+						isOwner={isOwner}
+						onPressAddUser={addUserDialogControl.open}
+					/>
+				),
+			},
+			{
+				id: 'people',
+				label: l`People`,
+				render: () => <AboutSection list={list} onPressAddUser={addUserDialogControl.open} />,
+			},
+		];
 		return (
 			<Hider.Outer
 				modui={getDisplayRestrictions(moderation, DisplayContext.ContentView)}
@@ -197,33 +194,12 @@ function ProfileListScreenLoaded({
 				</Hider.Mask>
 				<Hider.Content>
 					<View style={[a.util_screen_outer]}>
-						<PagerWithHeader
-							items={sectionTitlesCurate}
-							isHeaderReady={true}
-							renderHeader={renderHeader}
-							onCurrentPageSelected={onCurrentPageSelected}
-						>
-							{({ headerHeight, scrollElRef, isFocused }) => (
-								<FeedSection
-									ref={feedSectionRef}
-									feed={`list|${uri}`}
-									scrollElRef={scrollElRef as ListRef}
-									headerHeight={headerHeight}
-									isFocused={isScreenFocused && isFocused}
-									isOwner={isOwner}
-									onPressAddUser={addUserDialogControl.open}
-								/>
-							)}
-							{({ headerHeight, scrollElRef }) => (
-								<AboutSection
-									ref={aboutSectionRef}
-									scrollElRef={scrollElRef as ListRef}
-									list={list}
-									onPressAddUser={addUserDialogControl.open}
-									headerHeight={headerHeight}
-								/>
-							)}
-						</PagerWithHeader>
+						<Tabs
+							sections={sections}
+							value={activeTab}
+							onValueChange={setActiveTab}
+							header={renderHeader()}
+						/>
 						<FAB
 							icon={<EditBigIcon size="lg" fill={t.palette.white} />}
 							label={l`New post`}
@@ -245,20 +221,8 @@ function ProfileListScreenLoaded({
 			</Hider.Mask>
 			<Hider.Content>
 				<View style={[a.util_screen_outer]}>
-					<Layout.Center
-						onLayout={(evt) => setHeaderHeight(evt.nativeEvent.layout.height)}
-						style={[a.border_b, t.atoms.border_contrast_low]}
-					>
-						{renderHeader()}
-					</Layout.Center>
-					{headerHeight !== null && (
-						<AboutSection
-							list={list}
-							scrollElRef={scrollElRef as ListRef}
-							onPressAddUser={addUserDialogControl.open}
-							headerHeight={0}
-						/>
-					)}
+					<Layout.Center style={[a.border_b, t.atoms.border_contrast_low]}>{renderHeader()}</Layout.Center>
+					<AboutSection list={list} onPressAddUser={addUserDialogControl.open} />
 					<FAB
 						icon={<EditBigIcon size="lg" fill={t.palette.white} />}
 						label={l`New post`}

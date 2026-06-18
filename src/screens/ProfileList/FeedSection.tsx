@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useImperativeHandle, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
@@ -16,32 +16,18 @@ import { atoms as a } from '#/alf';
 import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
-import type { ListRef } from '#/components/List/List';
-
-interface SectionRef {
-	scrollToTop: () => void;
-}
+import type { ListMethods } from '#/components/List/List';
 
 interface FeedSectionProps {
-	ref?: React.Ref<SectionRef>;
 	feed: FeedDescriptor;
-	headerHeight: number;
-	scrollElRef: ListRef;
 	isFocused: boolean;
 	isOwner: boolean;
 	onPressAddUser: () => void;
 }
 
-export function FeedSection({
-	ref,
-	feed,
-	scrollElRef,
-	headerHeight,
-	isFocused,
-	isOwner,
-	onPressAddUser,
-}: FeedSectionProps) {
+export function FeedSection({ feed, isFocused, isOwner, onPressAddUser }: FeedSectionProps) {
 	const queryClient = useQueryClient();
+	const scrollElRef = useRef<ListMethods | null>(null);
 	const [hasNew, setHasNew] = useState(false);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isScreenFocused = useIsFocused();
@@ -50,14 +36,11 @@ export function FeedSection({
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
-			offset: -headerHeight,
+			offset: 0,
 		});
 		void queryClient.resetQueries({ queryKey: FEED_RQKEY(feed) });
 		setHasNew(false);
-	}, [scrollElRef, headerHeight, queryClient, feed, setHasNew]);
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
+	}, [queryClient, feed, setHasNew]);
 
 	useEffect(() => {
 		if (!isScreenFocused) {
@@ -94,7 +77,6 @@ export function FeedSection({
 				onHasNew={setHasNew}
 				onScrolledDownChange={setIsScrolledDown}
 				renderEmptyState={renderPostsEmpty}
-				headerOffset={headerHeight}
 			/>
 			{(isScrolledDown || hasNew) && (
 				<LoadLatestBtn onPress={onScrollToTop} label={l`Load new posts`} showIndicator={hasNew} />

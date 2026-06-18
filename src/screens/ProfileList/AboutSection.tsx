@@ -1,4 +1,4 @@
-import { useCallback, useImperativeHandle, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
@@ -7,7 +7,7 @@ import { useSession } from '#/state/session';
 
 import { ListMembers } from '#/view/com/lists/ListMembers';
 import { EmptyState } from '#/view/com/util/EmptyState';
-import type { ListRef } from '#/view/com/util/List';
+import type { ListMethods } from '#/view/com/util/List';
 import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn';
 
 import { atoms as a, useBreakpoints } from '#/alf';
@@ -16,35 +16,25 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button';
 import { BulletList_Stroke1_Corner0_Rounded as ListIcon } from '#/components/icons/BulletList';
 import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person';
 
-interface SectionRef {
-	scrollToTop: () => void;
-}
-
 interface AboutSectionProps {
-	ref?: React.Ref<SectionRef>;
 	list: AppBskyGraphDefs.ListView;
 	onPressAddUser: () => void;
-	headerHeight: number;
-	scrollElRef: ListRef;
 }
 
-export function AboutSection({ ref, list, onPressAddUser, headerHeight, scrollElRef }: AboutSectionProps) {
+export function AboutSection({ list, onPressAddUser }: AboutSectionProps) {
 	const { t: l } = useLingui();
 	const { currentAccount } = useSession();
 	const { gtMobile } = useBreakpoints();
+	const scrollElRef = useRef<ListMethods | null>(null);
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const isOwner = list.creator.did === currentAccount?.did;
 
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({
 			animated: false,
-			offset: -headerHeight,
+			offset: 0,
 		});
-	}, [scrollElRef, headerHeight]);
-
-	useImperativeHandle(ref, () => ({
-		scrollToTop: onScrollToTop,
-	}));
+	}, []);
 
 	const renderHeader = useCallback(() => {
 		if (!isOwner) {
@@ -120,7 +110,6 @@ export function AboutSection({ ref, list, onPressAddUser, headerHeight, scrollEl
 				scrollElRef={scrollElRef}
 				renderHeader={renderHeader}
 				renderEmptyState={renderEmptyState}
-				headerOffset={headerHeight}
 				onScrolledDownChange={setIsScrolledDown}
 			/>
 			{isScrolledDown && (
