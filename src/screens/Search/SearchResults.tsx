@@ -4,6 +4,7 @@ import type { AnyProfileView, AppBskyFeedDefs as AtcAppBskyFeedDefs } from '@atc
 import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
+import { definite } from '#/lib/functions';
 import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import { useCallOnce } from '#/lib/once';
 import { cleanError } from '#/lib/strings/errors';
@@ -15,8 +16,6 @@ import { useSearchPostsQuery } from '#/state/queries/search-posts';
 import { useSession } from '#/state/session';
 import { useCloseAllActiveElements } from '#/state/util';
 
-import { Pager } from '#/view/com/pager/Pager';
-import { TabBar } from '#/view/com/pager/TabBar';
 import { Post } from '#/view/com/post/Post';
 import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard';
 import { List } from '#/view/com/util/List';
@@ -30,69 +29,58 @@ import { InlineLinkText } from '#/components/Link';
 import { ListFooter } from '#/components/Lists';
 import { SearchError } from '#/components/SearchError';
 import { Text } from '#/components/Typography';
+import { type Section, Tabs } from '#/components/web/Tabs';
 
-type SearchResultPressTab = 'top' | 'latest' | 'people' | 'feeds' | undefined;
+export type SearchTabId = 'feeds' | 'latest' | 'people' | 'top';
+
+type SearchResultPressTab = SearchTabId | undefined;
 
 let SearchResults = ({
 	query,
 	queryWithParams,
 	activeTab,
-	onPageSelected,
+	onTabChange,
 	headerHeight,
-	initialPage = 0,
 }: {
 	query: string;
 	queryWithParams: string;
-	activeTab: number;
-	onPageSelected: (page: number) => void;
+	activeTab: SearchTabId;
+	onTabChange: (tab: SearchTabId) => void;
 	headerHeight: number;
-	initialPage?: number;
 }): React.ReactNode => {
 	const { t: l } = useLingui();
 
 	const sections = useMemo(() => {
 		if (!queryWithParams) return [];
 		const noParams = queryWithParams === query;
-		return [
+		return definite<Section<SearchTabId>>([
 			{
-				title: l`Top`,
-				component: <SearchScreenPostResults query={queryWithParams} sort="top" active={activeTab === 0} />,
+				id: 'top',
+				label: l`Top`,
+				render: (focused) => <SearchScreenPostResults query={queryWithParams} sort="top" active={focused} />,
 			},
 			{
-				title: l`Latest`,
-				component: <SearchScreenPostResults query={queryWithParams} sort="latest" active={activeTab === 1} />,
+				id: 'latest',
+				label: l`Latest`,
+				render: (focused) => (
+					<SearchScreenPostResults query={queryWithParams} sort="latest" active={focused} />
+				),
 			},
 			noParams && {
-				title: l`People`,
-				component: <SearchScreenUserResults query={query} active={activeTab === 2} />,
+				id: 'people',
+				label: l`People`,
+				render: (focused) => <SearchScreenUserResults query={query} active={focused} />,
 			},
 			noParams && {
-				title: l`Feeds`,
-				component: <SearchScreenFeedsResults query={query} active={activeTab === 3} />,
+				id: 'feeds',
+				label: l`Feeds`,
+				render: (focused) => <SearchScreenFeedsResults query={query} active={focused} />,
 			},
-		].filter(Boolean) as {
-			title: string;
-			component: React.ReactNode;
-		}[];
-	}, [l, query, queryWithParams, activeTab]);
-
-	// There may be fewer tabs after changing the search options.
-	const selectedPage = initialPage > sections.length - 1 ? 0 : initialPage;
+		]);
+	}, [l, query, queryWithParams]);
 
 	return (
-		<Pager
-			onPageSelected={onPageSelected}
-			renderTabBar={(props) => (
-				<Layout.Center style={[a.z_10, a.sticky, { top: headerHeight }]}>
-					<TabBar items={sections.map((section) => section.title)} {...props} />
-				</Layout.Center>
-			)}
-			initialPage={selectedPage}
-		>
-			{sections.map((section, i) => (
-				<View key={i}>{section.component}</View>
-			))}
-		</Pager>
+		<Tabs sections={sections} value={activeTab} onValueChange={onTabChange} headerOffset={headerHeight} />
 	);
 };
 SearchResults = memo(SearchResults);

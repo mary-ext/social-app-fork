@@ -1,4 +1,12 @@
-import { type ComponentPropsWithoutRef, createContext, type RefObject, use, useEffect, useRef } from 'react';
+import {
+	type ComponentPropsWithoutRef,
+	createContext,
+	type ReactNode,
+	type RefObject,
+	use,
+	useEffect,
+	useRef,
+} from 'react';
 import { Tabs as BaseTabs } from '@base-ui/react/tabs';
 import { clsx } from 'clsx';
 
@@ -164,5 +172,80 @@ export const Panel = ({ value, className, children, ...rest }: PanelProps) => {
 		<BaseTabs.Panel value={value} keepMounted className={clsx(styles.panel, className)} {...rest}>
 			{children}
 		</BaseTabs.Panel>
+	);
+};
+
+export type Section<Id extends string> = {
+	id: Id;
+	label: string;
+	/**
+	 * @param isFocused whether this is the active tab; gate the section's feed query on it so only the visible
+	 *   tab fetches while the rest sit mounted-but-idle.
+	 */
+	render: (isFocused: boolean) => ReactNode;
+};
+
+export type TabsProps<Id extends string> = {
+	/** Rendered above the tab bar, in flow — it scrolls away while the bar stays sticky. */
+	header?: ReactNode;
+	/** Sticky offset in px for the tab bar, e.g. the height of a persistent header above it. */
+	headerOffset?: number;
+	/**
+	 * Called when the already-active tab is re-tapped. Defaults to scrolling the page to the top; the feed
+	 * screens that own a soft-reset pass that instead.
+	 */
+	onTabReselect?: (id: Id) => void;
+	onValueChange: (value: Id) => void;
+	sections: Section<Id>[];
+	value: Id;
+};
+
+/**
+ * The config-driven entry point to the web Tabs primitive: pass a `sections` array plus the controlled
+ * `value`/`onValueChange`, and it renders the sticky bar and the keep-mounted panels with the shared chrome
+ * (drag-scroll, active-tab centering, scroll-to-top on re-tap, first-tab fallback) built in. For bespoke
+ * layouts, compose the lower-level `Root`/`List`/`Tab`/`Panel` parts directly instead.
+ */
+export const Tabs = <Id extends string>({
+	header,
+	headerOffset = 0,
+	onTabReselect,
+	onValueChange,
+	sections,
+	value,
+}: TabsProps<Id>) => {
+	// a value that no longer matches any section (dynamic tab sets shrink as filters apply) falls back to
+	// the first tab, so the bar and panels stay in sync with what's actually selectable
+	const active = sections.some((section) => section.id === value) ? value : sections[0]?.id;
+
+	return (
+		<Root value={active ?? ''} onValueChange={(next) => onValueChange(next as Id)}>
+			{header}
+			<List style={headerOffset ? { top: headerOffset } : undefined}>
+				{sections.map((section) => (
+					<Tab
+						key={section.id}
+						label={section.label}
+						value={section.id}
+						onClick={() => {
+							// Base UI's onValueChange doesn't fire when the active tab is re-tapped
+							if (active !== section.id) {
+								return;
+							}
+							if (onTabReselect) {
+								onTabReselect(section.id);
+							} else {
+								window.scrollTo(0, 0);
+							}
+						}}
+					/>
+				))}
+			</List>
+			{sections.map((section) => (
+				<Panel key={section.id} value={section.id}>
+					{section.render(active === section.id)}
+				</Panel>
+			))}
+		</Root>
 	);
 };

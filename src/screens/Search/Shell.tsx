@@ -30,7 +30,7 @@ import { AutocompleteResults } from './components/AutocompleteResults';
 import { SearchHistory } from './components/SearchHistory';
 import { SearchLanguageDropdown } from './components/SearchLanguageDropdown';
 import { Explore } from './Explore';
-import { SearchResults } from './SearchResults';
+import { SearchResults, type SearchTabId } from './SearchResults';
 
 type WebViewStyle = Omit<ViewStyle, 'position'> & {
 	position?: 'sticky';
@@ -42,18 +42,18 @@ const webViewStyle = (style: WebViewStyle): ViewStyle => {
 
 type TabParam = 'user' | 'profile' | 'feed' | 'latest';
 
-// Map tab parameter to tab index
-function getTabIndex(tabParam?: TabParam) {
+// Map tab parameter to tab id
+function getTabId(tabParam?: TabParam): SearchTabId {
 	switch (tabParam) {
 		case 'feed':
-			return 3; // Feeds tab
-		case 'user':
-		case 'profile':
-			return 2; // People tab
+			return 'feeds';
 		case 'latest':
-			return 1; // Latest tab
+			return 'latest';
+		case 'profile':
+		case 'user':
+			return 'people';
 		default:
-			return 0; // Top tab
+			return 'top';
 	}
 }
 
@@ -83,7 +83,7 @@ export function SearchScreenShell({
 
 	// Get tab parameter from route params
 	const tabParam = (route.params as { q?: string; tab?: TabParam })?.tab;
-	const [activeTab, setActiveTab] = useState(() => getTabIndex(tabParam));
+	const [activeTab, setActiveTab] = useState(() => getTabId(tabParam));
 
 	// Query terms
 	const [searchText, setSearchText] = useState<string>(queryParam);
@@ -422,8 +422,8 @@ let SearchScreenInner = ({
 	headerHeight,
 	focusSearchInput,
 }: {
-	activeTab: number;
-	setActiveTab: React.Dispatch<React.SetStateAction<number>>;
+	activeTab: SearchTabId;
+	setActiveTab: React.Dispatch<React.SetStateAction<SearchTabId>>;
 	query: string;
 	queryWithParams: string;
 	headerHeight: number;
@@ -433,18 +433,13 @@ let SearchScreenInner = ({
 	const { hasSession } = useSession();
 	const { gtTablet } = useBreakpoints();
 
-	const onPageSelected = (index: number) => {
-		setActiveTab(index);
-	};
-
 	return queryWithParams ? (
 		<SearchResults
 			query={query}
 			queryWithParams={queryWithParams}
 			activeTab={activeTab}
 			headerHeight={headerHeight}
-			onPageSelected={onPageSelected}
-			initialPage={activeTab}
+			onTabChange={setActiveTab}
 		/>
 	) : hasSession ? (
 		<Explore focusSearchInput={focusSearchInput} headerHeight={headerHeight} />
