@@ -1318,6 +1318,9 @@ export class Convo {
 				message: {
 					...m.message,
 					embed: m.optimisticEmbedView,
+					// `MessageInput.replyTo` is a bare ref; the view wants the full embedded
+					// message, which the fork doesn't send yet (see the replies feature).
+					replyTo: undefined,
 					$type: 'chat.bsky.convo.defs#messageView',
 					id: nanoid(),
 					rev: '__fake__',
