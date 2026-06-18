@@ -205,6 +205,9 @@ export type TabsProps<Id extends string> = {
  * `value`/`onValueChange`, and it renders the sticky bar and the keep-mounted panels with the shared chrome
  * (drag-scroll, active-tab centering, scroll-to-top on re-tap, first-tab fallback) built in. For bespoke
  * layouts, compose the lower-level `Root`/`List`/`Tab`/`Panel` parts directly instead.
+ *
+ * Passing an empty `sections` renders just the `header` with no bar — e.g. while a profile header is still
+ * loading and its tab set isn't known yet.
  */
 export const Tabs = <Id extends string>({
 	header,
@@ -221,26 +224,28 @@ export const Tabs = <Id extends string>({
 	return (
 		<Root value={active ?? ''} onValueChange={(next) => onValueChange(next as Id)}>
 			{header}
-			<List style={headerOffset ? { top: headerOffset } : undefined}>
-				{sections.map((section) => (
-					<Tab
-						key={section.id}
-						label={section.label}
-						value={section.id}
-						onClick={() => {
-							// Base UI's onValueChange doesn't fire when the active tab is re-tapped
-							if (active !== section.id) {
-								return;
-							}
-							if (onTabReselect) {
-								onTabReselect(section.id);
-							} else {
-								window.scrollTo(0, 0);
-							}
-						}}
-					/>
-				))}
-			</List>
+			{sections.length > 0 && (
+				<List style={headerOffset ? { top: headerOffset } : undefined}>
+					{sections.map((section) => (
+						<Tab
+							key={section.id}
+							label={section.label}
+							value={section.id}
+							onClick={() => {
+								// Base UI's onValueChange doesn't fire when the active tab is re-tapped
+								if (active !== section.id) {
+									return;
+								}
+								if (onTabReselect) {
+									onTabReselect(section.id);
+								} else {
+									window.scrollTo(0, 0);
+								}
+							}}
+						/>
+					))}
+				</List>
+			)}
 			{sections.map((section) => (
 				<Panel key={section.id} value={section.id}>
 					{section.render(active === section.id)}

@@ -10,6 +10,7 @@ import { useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
+import { definite } from '#/lib/functions';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams, NativeStackScreenProps, NavigationProp } from '#/lib/routes/types';
@@ -47,7 +48,7 @@ import { VideoClip_Stroke1_Corner0_Rounded as VideoIcon } from '#/components/ico
 import * as Layout from '#/components/Layout';
 import { ScreenHider } from '#/components/moderation/ScreenHider';
 import { ProfileStarterPacks } from '#/components/StarterPack/ProfileStarterPacks';
-import * as Tabs from '#/components/web/Tabs';
+import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { navigate } from '#/Navigation';
 
@@ -221,10 +222,10 @@ function ProfileScreenLoaded({
 	// the tab sections in display order, keyed by a stable `id` — a single source of truth driving the
 	// tab bar and the panels. keying by id (not index) keeps the selection and React reconciliation
 	// pinned to the right section when the tab set changes (e.g. login toggles Replies/Likes/Lists).
-	const sections = [
+	const sections = definite<Section<string>>([
 		showFiltersTab && {
 			id: 'labels',
-			title: l`Labels`,
+			label: l`Labels`,
 			render: () => (
 				<ProfileLabelsSection
 					labelerInfo={labelerInfo}
@@ -237,12 +238,12 @@ function ProfileScreenLoaded({
 		showListsTab &&
 			hasLabeler && {
 				id: 'lists',
-				title: l`Lists`,
+				label: l`Lists`,
 				render: (isFocused: boolean) => <ProfileLists did={profile.did} enabled={isFocused} />,
 			},
 		showPostsTab && {
 			id: 'posts',
-			title: l`Posts`,
+			label: l`Posts`,
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_and_author_threads`}
@@ -265,7 +266,7 @@ function ProfileScreenLoaded({
 		},
 		showRepliesTab && {
 			id: 'replies',
-			title: l`Replies`,
+			label: l`Replies`,
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_replies`}
@@ -278,7 +279,7 @@ function ProfileScreenLoaded({
 		},
 		showMediaTab && {
 			id: 'media',
-			title: l`Media`,
+			label: l`Media`,
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_media`}
@@ -302,7 +303,7 @@ function ProfileScreenLoaded({
 		},
 		showVideosTab && {
 			id: 'videos',
-			title: l`Videos`,
+			label: l`Videos`,
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`author|${profile.did}|posts_with_video`}
@@ -326,7 +327,7 @@ function ProfileScreenLoaded({
 		},
 		showLikesTab && {
 			id: 'likes',
-			title: l`Likes`,
+			label: l`Likes`,
 			render: (isFocused: boolean) => (
 				<ProfileFeedSection
 					feed={`likes|${profile.did}`}
@@ -339,12 +340,12 @@ function ProfileScreenLoaded({
 		},
 		showFeedsTab && {
 			id: 'feeds',
-			title: l`Feeds`,
+			label: l`Feeds`,
 			render: (isFocused: boolean) => <ProfileFeedgens did={profile.did} enabled={isFocused} />,
 		},
 		showStarterPacksTab && {
 			id: 'starterPacks',
-			title: l`Starter Packs`,
+			label: l`Starter Packs`,
 			render: (isFocused: boolean) => (
 				<ProfileStarterPacks
 					did={profile.did}
@@ -373,15 +374,13 @@ function ProfileScreenLoaded({
 		showListsTab &&
 			!hasLabeler && {
 				id: 'lists',
-				title: l`Lists`,
+				label: l`Lists`,
 				render: (isFocused: boolean) => <ProfileLists did={profile.did} enabled={isFocused} />,
 			},
-	].filter(Boolean) as ProfileSection[];
+	]);
 
 	// the selected tab, falling back to the first section until the user picks one (`showPostsTab` is
 	// always true, so the list is never empty)
-	const activeTab = selectedTab ?? sections[0]?.id ?? '';
-
 	// the profile is window-scrolled, so soft-reset just returns the page to the top
 	useFocusEffect(useCallback(() => listenSoftReset(() => window.scrollTo(0, 0)), []));
 
@@ -391,38 +390,23 @@ function ProfileScreenLoaded({
 			screenDescription={l`user`}
 			modui={getDisplayRestrictions(moderation, DisplayContext.ProfileView)}
 		>
-			<Tabs.Root value={activeTab} onValueChange={setSelectedTab}>
-				<ProfileHeader
-					profile={profile}
-					labeler={labelerInfo}
-					descriptionRT={hasDescription ? descriptionRT : null}
-					moderationOpts={moderationOpts}
-					hideBackButton={hideBackButton}
-					isPlaceholderProfile={showPlaceholder}
-					setMinimumHeight={noop}
-				/>
-				{isHeaderReady && (
-					<Tabs.List>
-						{sections.map((section) => (
-							<Tabs.Tab
-								key={section.id}
-								label={section.title}
-								value={section.id}
-								onClick={() => {
-									if (activeTab === section.id) {
-										window.scrollTo(0, 0);
-									}
-								}}
-							/>
-						))}
-					</Tabs.List>
-				)}
-				{sections.map((section) => (
-					<Tabs.Panel key={section.id} value={section.id}>
-						{isHeaderReady && section.render(activeTab === section.id)}
-					</Tabs.Panel>
-				))}
-			</Tabs.Root>
+			<Tabs
+				// the tab set isn't known until the real profile loads, so hold the bar back until then
+				sections={isHeaderReady ? sections : []}
+				value={selectedTab ?? ''}
+				onValueChange={setSelectedTab}
+				header={
+					<ProfileHeader
+						profile={profile}
+						labeler={labelerInfo}
+						descriptionRT={hasDescription ? descriptionRT : null}
+						moderationOpts={moderationOpts}
+						hideBackButton={hideBackButton}
+						isPlaceholderProfile={showPlaceholder}
+						setMinimumHeight={noop}
+					/>
+				}
+			/>
 			{hasSession && (
 				<FAB
 					icon={<EditBigIcon size="lg" fill={t.palette.white} />}
@@ -435,9 +419,3 @@ function ProfileScreenLoaded({
 }
 
 const noop = () => {};
-
-interface ProfileSection {
-	id: string;
-	render: (isFocused: boolean) => React.ReactNode;
-	title: string;
-}
