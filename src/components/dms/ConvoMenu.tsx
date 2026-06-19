@@ -111,6 +111,7 @@ let ConvoMenu = ({
 						blockInfo={blockInfo}
 						convo={convo.view}
 						leaveConvoControl={leaveConvoControl}
+						canReport={!!reportSubject}
 						reportControl={reportControl}
 						blockedByListControl={blockedByListControl}
 					/>
@@ -173,6 +174,7 @@ function MenuContent({
 	showMarkAsRead,
 	blockInfo,
 	leaveConvoControl,
+	canReport,
 	reportControl,
 	blockedByListControl,
 }: {
@@ -184,6 +186,7 @@ function MenuContent({
 		userBlock?: BlockingModerationCause;
 	};
 	leaveConvoControl: Prompt.PromptControlProps;
+	canReport: boolean;
 	reportControl: Prompt.PromptControlProps;
 	blockedByListControl: Prompt.PromptControlProps;
 }) {
@@ -278,12 +281,14 @@ function MenuContent({
 						<Menu.ItemText>{isBlocking ? l`Unblock account` : l`Block account`}</Menu.ItemText>
 					</Menu.Item>
 				)}
-				<Menu.Item destructive label={l`Report conversation`} onPress={reportControl.open}>
-					<Menu.ItemIcon icon={Flag} />
-					<Menu.ItemText>
-						<Trans>Report conversation</Trans>
-					</Menu.ItemText>
-				</Menu.Item>
+				{canReport && (
+					<Menu.Item destructive label={l`Report conversation`} onPress={reportControl.open}>
+						<Menu.ItemIcon icon={Flag} />
+						<Menu.ItemText>
+							<Trans>Report conversation</Trans>
+						</Menu.ItemText>
+					</Menu.Item>
+				)}
 			</Menu.Group>
 			<Menu.Divider />
 			<Menu.Group>
