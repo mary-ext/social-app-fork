@@ -1132,7 +1132,7 @@ msgid "Additional details (limit 300 characters)"
 msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:88
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:142
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:139
 msgid "Admin"
 msgstr "Admin"
 
@@ -1555,12 +1555,12 @@ msgstr ""
 
 #: src/components/moderation/block-account-prompt.tsx:62
 #: src/screens/Messages/components/ChatStatusInfo.tsx:64
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:196
 #: src/screens/Messages/ConversationSettings/prompts.tsx:141
 msgid "Block"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:195
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:192
 msgid "Block {displayName}"
 msgstr "Block {displayName}"
 
@@ -3839,7 +3839,7 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:255
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:70
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:180
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:177
 #: src/view/shell/desktop/LeftNav.tsx:317
 #: src/view/shell/desktop/LeftNav.tsx:324
 msgid "Go to profile"
@@ -4281,7 +4281,7 @@ msgstr ""
 msgid "Invite your friends to follow your favorite feeds and people"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:142
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:139
 msgid "Invited"
 msgstr "Invited"
 
@@ -4872,7 +4872,7 @@ msgid "Menu"
 msgstr "Menu"
 
 #: src/screens/Messages/components/MessageComposer.tsx:127
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:186
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:183
 msgctxt "action"
 msgid "Message"
 msgstr "Message"
@@ -4882,7 +4882,7 @@ msgstr "Message"
 msgid "Message {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:183
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:180
 msgid "Message {displayName}"
 msgstr "Message {displayName}"
 
@@ -5697,7 +5697,7 @@ msgstr ""
 msgid "Open chat"
 msgstr "Open chat"
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:130
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:127
 msgid "Open chat member options for {displayName}"
 msgstr "Open chat member options for {displayName}"
 
@@ -6492,7 +6492,7 @@ msgstr "Remove {displayName} from group chat"
 msgid "Remove {displayName} from starter pack"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:205
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:202
 msgid "Remove {displayName} from this group chat"
 msgstr "Remove {displayName} from this group chat"
 
@@ -6537,7 +6537,7 @@ msgstr ""
 msgid "Remove feed?"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:210
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:207
 msgid "Remove from chat"
 msgstr "Remove from chat"
 
@@ -8744,7 +8744,7 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:94
 #: src/components/dms/MessagesListBlockedFooter.tsx:102
 #: src/components/moderation/block-account-prompt.tsx:32
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:199
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:196
 #: src/screens/Profile/Header/Actions.tsx:83
 #: src/screens/Profile/Header/Actions.tsx:93
 #: src/screens/ProfileList/components/Header.tsx:144
@@ -8757,7 +8757,7 @@ msgctxt "action"
 msgid "Unblock"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:195
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:192
 msgid "Unblock {displayName}"
 msgstr "Unblock {displayName}"
 
@@ -8809,14 +8809,6 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:448
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
-
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:223
-msgid "Uninvite"
-msgstr "Uninvite"
-
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:217
-msgid "Uninvite {displayName} from this group chat"
-msgstr "Uninvite {displayName} from this group chat"
 
 #: src/components/verification/VerificationsDialog.tsx:134
 msgid "Unknown verifier"
@@ -9179,7 +9171,7 @@ msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
 
 #: src/components/dms/MessagesListHeader.tsx:122
-#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:173
+#: src/screens/Messages/ConversationSettings/MemberMenu.tsx:170
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 

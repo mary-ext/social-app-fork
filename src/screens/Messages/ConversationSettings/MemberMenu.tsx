@@ -41,7 +41,7 @@ export function MemberMenu({
 }: {
 	convo: ConvoWithDetails;
 	profile: Shadow<AnyProfileView>;
-	type: 'owner' | 'standard' | 'invited';
+	type: 'owner' | 'standard';
 	displayName: string;
 	isOwner: boolean;
 }) {
@@ -119,10 +119,7 @@ export function MemberMenu({
 	};
 
 	const canBlockMember = type === 'owner' || type === 'standard';
-	const canRemoveMember = isOwner && type !== 'invited';
-	// TODO Need to integrate this. -dsb
-	const canUninviteMember = false;
-	// const canUninviteMember = isOwner && type === 'invited'
+	const canRemoveMember = isOwner;
 
 	return (
 		<>
@@ -137,7 +134,7 @@ export function MemberMenu({
 								props.onPress();
 							},
 						};
-						return type === 'owner' || type === 'invited' ? (
+						return type === 'owner' ? (
 							<StatusBadge
 								label={type === 'owner' ? l`Admin` : l`Invited`}
 								pressableProps={triggerProps}
@@ -208,19 +205,6 @@ export function MemberMenu({
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 								<Menu.ItemText>
 									<Trans>Remove from chat</Trans>
-								</Menu.ItemText>
-							</Menu.Item>
-						) : null}
-						{canUninviteMember ? (
-							<Menu.Item
-								destructive
-								label={l`Uninvite ${displayName} from this group chat`}
-								// TODO Need to wire up the uninvite flow. -dsb
-								onPress={() => {}}
-							>
-								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
-								<Menu.ItemText>
-									<Trans>Uninvite</Trans>
 								</Menu.ItemText>
 							</Menu.Item>
 						) : null}
