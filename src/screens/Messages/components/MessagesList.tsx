@@ -1,21 +1,13 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { type LayoutChangeEvent, type ScrollViewProps, View, type ViewStyle } from 'react-native';
+import { type LayoutChangeEvent, ScrollView, type ScrollViewProps, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
 import type { $type, Handle } from '@atcute/lexicons';
 
-import {
-	runOnJS,
-	type ScrollEvent,
-	type SharedValue,
-	useAnimatedRef,
-	useDerivedValue,
-	useSharedValue,
-} from '#/lib/animations/reanimatedCompat';
+import { runOnJS, type ScrollEvent, useAnimatedRef, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
-import { mergeRefs } from '#/lib/merge-refs';
 import { ScrollProvider } from '#/lib/ScrollContext';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
 import { shortenLinks } from '#/lib/strings/rich-text-manip';
@@ -50,13 +42,6 @@ import { SystemMessageGroup } from '#/components/dms/SystemMessageGroup';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
 import { Loader } from '#/components/Loader';
 import { Text } from '#/components/Typography';
-
-import { useScrollEdgeEffectRef } from '#/shims/bsky-scroll-edge-effect';
-import {
-	KeyboardChatScrollView,
-	type KeyboardChatScrollViewProps,
-	KeyboardGestureArea,
-} from '#/shims/native-keyboard-controller';
 
 import { ChatStatusInfo } from './ChatStatusInfo';
 import { groupSystemMessages, type RenderItem } from './groupSystemMessages';
@@ -166,17 +151,11 @@ export function MessagesList({
 		startContentOffset: 0,
 	});
 
-	const inputHeightUI = useSharedValue(0);
 	const [inputHeightJS, setInputHeightJS] = useState(0);
 
-	const onInputLayout = useCallback(
-		(event: LayoutChangeEvent) => {
-			const inputHeight = event.nativeEvent.layout.height;
-			inputHeightUI.set(inputHeight);
-			setInputHeightJS(inputHeight);
-		},
-		[inputHeightUI],
-	);
+	const onInputLayout = useCallback((event: LayoutChangeEvent) => {
+		setInputHeightJS(event.nativeEvent.layout.height);
+	}, []);
 
 	// We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
 	// are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -519,22 +498,15 @@ export function MessagesList({
 	}, [hasScrolled, setHasScrolled, convoState.isFetchingHistory]);
 
 	const renderScrollComponent = useCallback(
-		(props: ScrollViewProps) => <ChatScrollComponent {...props} inputHeight={inputHeightUI} />,
-		[inputHeightUI],
+		(props: ScrollViewProps) => <ChatScrollComponent {...props} />,
+		[],
 	);
 
 	return (
 		<InviteLinkDialogProvider convo={convoState.convo}>
 			<MessageRepliesProvider scrollToMessage={scrollToMessage}>
 				<MessageOverlays>
-					<KeyboardGestureArea
-						interpolator="ios"
-						// HACKFIX: upstream keyboard controller issue #1419
-						offset={Math.round(inputHeightJS)}
-						// slightly too buggy unfortunately, enable when possible
-						// textInputNativeID={textInputId}
-						style={[a.flex_1]}
-					>
+					<View style={[a.flex_1]}>
 						{/* Custom scroll provider so that we can use the `onScroll` event in our custom List implementation */}
 						<View
 							style={[
@@ -621,7 +593,7 @@ export function MessagesList({
 								</ConversationFooter>
 							)}
 						</KeyboardStickyView>
-					</KeyboardGestureArea>
+					</View>
 					{newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
 				</MessageOverlays>
 			</MessageRepliesProvider>
@@ -629,32 +601,19 @@ export function MessagesList({
 	);
 }
 
-/** Note: native only */
 function ChatScrollComponent({
 	ref,
-	inputHeight,
 	...props
 }: ScrollViewProps & {
-	ref?: React.RefObject<KeyboardChatScrollViewProps>;
-	inputHeight: SharedValue<number>;
+	ref?: React.RefObject<ScrollView>;
 }) {
-	const scrollEdgeRef = useScrollEdgeEffectRef();
 	useSafeAreaInsets();
 
-	const offset = 0;
-
-	const inputOffset = 0;
-
-	const extraContentPadding = useDerivedValue(() => inputHeight.get() + inputOffset);
-
 	return (
-		<KeyboardChatScrollView
-			ref={mergeRefs([scrollEdgeRef, ref])}
+		<ScrollView
+			ref={ref}
 			automaticallyAdjustContentInsets={false}
 			keyboardDismissMode="interactive"
-			keyboardLiftBehavior="always"
-			extraContentPadding={extraContentPadding}
-			offset={offset}
 			{...props}
 		/>
 	);

@@ -34,8 +34,6 @@ import { type ConvoWithDetails, parseConvoView } from '#/components/dms/util';
 import { Error } from '#/components/Error';
 import * as Layout from '#/components/Layout';
 
-import { ScrollEdgeEffectProvider } from '#/shims/bsky-scroll-edge-effect';
-
 import { ChatDisabled } from './components/ChatDisabled';
 import { ChatEnded } from './components/ChatEnded';
 import { ChatLocked } from './components/ChatLocked';
@@ -62,11 +60,9 @@ export function MessagesConversationScreenInner({ route }: Props) {
 
 	return (
 		<Layout.Screen minimalShell testID="convoScreen" noInsetTop={false} style={[{ minHeight: 0 }, a.flex_1]}>
-			<ScrollEdgeEffectProvider>
-				<ConvoProvider key={convoId} convoId={convoId}>
-					<Inner convoId={convoId} />
-				</ConvoProvider>
-			</ScrollEdgeEffectProvider>
+			<ConvoProvider key={convoId} convoId={convoId}>
+				<Inner convoId={convoId} />
+			</ConvoProvider>
 		</Layout.Screen>
 	);
 }

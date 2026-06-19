@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Keyboard, View } from 'react-native';
+import { Keyboard, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
@@ -46,7 +46,6 @@ import { Text } from '#/components/Typography';
 import { UserAvatar } from '#/components/UserAvatar';
 
 import { Image } from '#/shims/image';
-import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
 
 import { Provider } from './State';
 
@@ -329,7 +328,7 @@ function Container({ children }: { children: React.ReactNode }) {
 	}
 
 	return (
-		<KeyboardAwareScrollView style={[a.flex_1]} keyboardShouldPersistTaps="handled">
+		<ScrollView style={[a.flex_1]} keyboardShouldPersistTaps="handled">
 			{children}
 			{state.currentStep === 'Details' && (
 				<>
@@ -347,7 +346,7 @@ function Container({ children }: { children: React.ReactNode }) {
 					</Button>
 				</>
 			)}
-		</KeyboardAwareScrollView>
+		</ScrollView>
 	);
 }
 

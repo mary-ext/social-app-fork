@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type ListRenderItemInfo, View } from 'react-native';
+import { type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
@@ -20,8 +20,6 @@ import { Loader } from '#/components/Loader';
 import { ScreenTransition } from '#/components/ScreenTransition';
 import { WizardFeedCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Typography';
-
-import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
 	return item.uri;
@@ -88,7 +86,7 @@ export function StepFeeds({ moderationOpts }: { moderationOpts: ModerationOption
 				onEndReached={!query ? () => void fetchNextPage() : undefined}
 				onEndReachedThreshold={2}
 				keyboardDismissMode="on-drag"
-				renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
+				renderScrollComponent={(props) => <ScrollView {...props} />}
 				keyboardShouldPersistTaps="handled"
 				disableFullWindowScroll={true}
 				sideBorders={false}

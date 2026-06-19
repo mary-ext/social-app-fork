@@ -1,6 +1,9 @@
-import { View } from 'react-native';
+import { type ViewProps, View } from 'react-native';
 
-import type { KeyboardStickyViewProps } from '#/shims/native-keyboard-controller';
+type KeyboardStickyViewProps = ViewProps & {
+	enabled?: boolean;
+	offset?: { opened?: number; closed?: number };
+};
 
 // Vendored keyboard sticky view, converted to local animation helpers for
 // `minimumOffset` clamping.

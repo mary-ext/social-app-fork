@@ -22,7 +22,6 @@ import { Loader } from '#/components/Loader';
 import * as Toast from '#/components/Toast';
 
 import { LinearGradient } from '#/shims/linear-gradient';
-import { useKeyboardHandler, useReanimatedKeyboardAnimation } from '#/shims/native-keyboard-controller';
 
 import * as styles from './MessageComposer.css';
 
@@ -57,12 +56,6 @@ export function MessageComposer({
 		if (!replyTo) return;
 		composerInternalApiRef.current?.input?.focus();
 	}, [replyTo, composerInternalApiRef]);
-
-	useKeyboardHandler({
-		onEnd: () => {
-			'worklet';
-		},
-	});
 
 	const submitDisabled = loading || (!hasEmbed && text.trim().length === 0);
 
@@ -209,7 +202,6 @@ function SubmitButton({
 // TODO: remove export when MessageInput is deleted
 export function ComposerContainer({ children }: { children: React.ReactNode }) {
 	useSafeAreaInsets();
-	useReanimatedKeyboardAnimation();
 	const t = useTheme();
 
 	return (

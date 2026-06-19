@@ -351,7 +351,7 @@ msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
 #: src/lib/generate-starterpack.ts:104
-#: src/screens/StarterPack/Wizard/index.tsx:163
+#: src/screens/StarterPack/Wizard/index.tsx:162
 msgid "{displayName}'s Starter Pack"
 msgstr ""
 
@@ -671,7 +671,7 @@ msgstr ""
 #. placeholder {0}: getName(items[0]!)
 #. placeholder {1}: getName(items[1]!)
 #. placeholder {2}: items.length - 2
-#: src/screens/StarterPack/Wizard/index.tsx:495
+#: src/screens/StarterPack/Wizard/index.tsx:494
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
@@ -679,7 +679,7 @@ msgstr ""
 #. placeholder {0}: getName(items[1]! /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2]!)
 #. placeholder {2}: items.length - 2
-#: src/screens/StarterPack/Wizard/index.tsx:449
+#: src/screens/StarterPack/Wizard/index.tsx:448
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
@@ -727,13 +727,13 @@ msgstr ""
 #. placeholder {0}: getName(items[0]!)
 #. placeholder {1}: getName(items[1]! /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[1]!)
-#: src/screens/StarterPack/Wizard/index.tsx:439
-#: src/screens/StarterPack/Wizard/index.tsx:483
+#: src/screens/StarterPack/Wizard/index.tsx:438
+#: src/screens/StarterPack/Wizard/index.tsx:482
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr ""
 
 #. placeholder {0}: getName(items[0]!)
-#: src/screens/StarterPack/Wizard/index.tsx:476
+#: src/screens/StarterPack/Wizard/index.tsx:475
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
@@ -753,7 +753,7 @@ msgid "<0>Sign in</0><1> </1><2>to search for news, sports, politics, and everyt
 msgstr "<0>Sign in</0><1> </1><2>to search for news, sports, politics, and everything else happening on Bluesky.</2>"
 
 #. placeholder {0}: getName(items[1]! /* [0] is self, skip it */)
-#: src/screens/StarterPack/Wizard/index.tsx:430
+#: src/screens/StarterPack/Wizard/index.tsx:429
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr ""
 
@@ -961,7 +961,7 @@ msgid "Add"
 msgstr ""
 
 #. placeholder {0}: 8 - items.length
-#: src/screens/StarterPack/Wizard/index.tsx:514
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "Add {0} more to continue"
 msgstr ""
 
@@ -1072,7 +1072,7 @@ msgstr ""
 msgid "Add recommended feeds"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:466
+#: src/screens/StarterPack/Wizard/index.tsx:465
 msgid "Add some feeds to your starter pack!"
 msgstr ""
 
@@ -1530,7 +1530,7 @@ msgstr ""
 #: src/screens/Messages/components/InviteLinkDialog.tsx:258
 #: src/screens/Messages/Inbox.tsx:192
 #: src/screens/Profile/Header/Shell.tsx:78
-#: src/screens/StarterPack/Wizard/index.tsx:280
+#: src/screens/StarterPack/Wizard/index.tsx:279
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:81
 msgid "Back"
@@ -1939,7 +1939,7 @@ msgstr ""
 msgid "Choose an account to sign in with."
 msgstr "Choose an account to sign in with."
 
-#: src/screens/StarterPack/Wizard/index.tsx:176
+#: src/screens/StarterPack/Wizard/index.tsx:175
 msgid "Choose Feeds"
 msgstr ""
 
@@ -1952,7 +1952,7 @@ msgstr ""
 msgid "Choose languages"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:172
+#: src/screens/StarterPack/Wizard/index.tsx:171
 msgid "Choose People"
 msgstr ""
 
@@ -2777,8 +2777,8 @@ msgstr ""
 
 #: src/screens/Messages/components/EditTextButton.tsx:46
 #: src/screens/StarterPack/StarterPackScreen.tsx:515
-#: src/screens/StarterPack/Wizard/index.tsx:293
-#: src/screens/StarterPack/Wizard/index.tsx:295
+#: src/screens/StarterPack/Wizard/index.tsx:292
+#: src/screens/StarterPack/Wizard/index.tsx:294
 msgid "Edit"
 msgstr ""
 
@@ -3174,8 +3174,8 @@ msgstr ""
 msgid "Failed to create invite link"
 msgstr "Failed to create invite link"
 
-#: src/screens/StarterPack/Wizard/index.tsx:215
-#: src/screens/StarterPack/Wizard/index.tsx:225
+#: src/screens/StarterPack/Wizard/index.tsx:214
+#: src/screens/StarterPack/Wizard/index.tsx:224
 msgid "Failed to create starter pack"
 msgstr ""
 
@@ -3492,7 +3492,7 @@ msgstr ""
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:177
+#: src/screens/StarterPack/Wizard/index.tsx:176
 msgid "Finish"
 msgstr ""
 
@@ -4290,11 +4290,11 @@ msgid "Invites, but personal"
 msgstr ""
 
 #. placeholder {0}: getName(items[0]!)
-#: src/screens/StarterPack/Wizard/index.tsx:420
+#: src/screens/StarterPack/Wizard/index.tsx:419
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:416
+#: src/screens/StarterPack/Wizard/index.tsx:415
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
@@ -4709,7 +4709,7 @@ msgstr ""
 msgid "Loading"
 msgstr "Loading"
 
-#: src/screens/Messages/components/MessageComposer.tsx:133
+#: src/screens/Messages/components/MessageComposer.tsx:126
 msgctxt "placeholder"
 msgid "Loading chat..."
 msgstr "Loading chat..."
@@ -4871,7 +4871,7 @@ msgstr ""
 msgid "Menu"
 msgstr "Menu"
 
-#: src/screens/Messages/components/MessageComposer.tsx:134
+#: src/screens/Messages/components/MessageComposer.tsx:127
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:186
 msgctxt "action"
 msgid "Message"
@@ -4910,11 +4910,11 @@ msgstr ""
 msgid "Message from server: {0}"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:130
+#: src/screens/Messages/components/MessageComposer.tsx:123
 msgid "Message input field"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:74
+#: src/screens/Messages/components/MessageComposer.tsx:67
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
@@ -5324,10 +5324,10 @@ msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:288
 #: src/components/dms/InitiateChatFlow.tsx:445
-#: src/screens/StarterPack/Wizard/index.tsx:169
-#: src/screens/StarterPack/Wizard/index.tsx:173
-#: src/screens/StarterPack/Wizard/index.tsx:337
-#: src/screens/StarterPack/Wizard/index.tsx:345
+#: src/screens/StarterPack/Wizard/index.tsx:168
+#: src/screens/StarterPack/Wizard/index.tsx:172
+#: src/screens/StarterPack/Wizard/index.tsx:336
+#: src/screens/StarterPack/Wizard/index.tsx:344
 msgid "Next"
 msgstr ""
 
@@ -5347,7 +5347,7 @@ msgstr ""
 msgid "No expiry set"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepFeeds.tsx:102
+#: src/screens/StarterPack/Wizard/StepFeeds.tsx:100
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
@@ -5511,7 +5511,7 @@ msgstr ""
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/StepProfiles.tsx:88
+#: src/screens/StarterPack/Wizard/StepProfiles.tsx:86
 msgid "Nobody was found. Try searching for someone else."
 msgstr ""
 
@@ -5713,7 +5713,7 @@ msgstr ""
 msgid "Open drawer menu"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:112
+#: src/screens/Messages/components/MessageComposer.tsx:105
 #: src/view/com/composer/Composer.tsx:1793
 msgid "Open emoji picker"
 msgstr ""
@@ -6988,7 +6988,7 @@ msgstr ""
 msgid "Returns to previous page"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:281
+#: src/screens/StarterPack/Wizard/index.tsx:280
 msgid "Returns to the previous step"
 msgstr ""
 
@@ -7148,7 +7148,7 @@ msgstr ""
 msgid "Search for \"{searchText}\""
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:469
+#: src/screens/StarterPack/Wizard/index.tsx:468
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
@@ -7374,7 +7374,7 @@ msgstr ""
 msgid "Self-harm or dangerous behaviors"
 msgstr ""
 
-#: src/screens/Messages/components/MessageComposer.tsx:192
+#: src/screens/Messages/components/MessageComposer.tsx:185
 msgid "Send message"
 msgstr ""
 
@@ -7678,7 +7678,7 @@ msgstr ""
 msgid "Signing in..."
 msgstr "Signing in..."
 
-#: src/screens/StarterPack/Wizard/index.tsx:177
+#: src/screens/StarterPack/Wizard/index.tsx:176
 msgid "Skip"
 msgstr ""
 
@@ -7760,7 +7760,7 @@ msgstr "Someone was removed from the group"
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:104
+#: src/screens/Messages/Conversation.tsx:100
 #: src/screens/Messages/ConversationSettings/index.tsx:103
 #: src/screens/Messages/JoinRequests.tsx:68
 msgid "Something went wrong"
@@ -7842,7 +7842,7 @@ msgstr ""
 
 #: src/Navigation.tsx:745
 #: src/Navigation.tsx:750
-#: src/screens/StarterPack/Wizard/index.tsx:168
+#: src/screens/StarterPack/Wizard/index.tsx:167
 msgid "Starter Pack"
 msgstr ""
 
@@ -8086,8 +8086,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:94
 #: src/screens/StarterPack/StarterPackScreen.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:131
-#: src/screens/StarterPack/Wizard/index.tsx:97
-#: src/screens/StarterPack/Wizard/index.tsx:107
+#: src/screens/StarterPack/Wizard/index.tsx:96
+#: src/screens/StarterPack/Wizard/index.tsx:106
 msgid "That starter pack could not be found."
 msgstr ""
 
@@ -9341,7 +9341,7 @@ msgstr ""
 msgid "We couldn't find any results for that topic."
 msgstr ""
 
-#: src/screens/Messages/Conversation.tsx:105
+#: src/screens/Messages/Conversation.tsx:101
 msgid "We couldn't load this conversation"
 msgstr ""
 

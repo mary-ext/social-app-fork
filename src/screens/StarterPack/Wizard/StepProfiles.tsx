@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { type ListRenderItemInfo, View } from 'react-native';
+import { type ListRenderItemInfo, ScrollView, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans } from '@lingui/react/macro';
@@ -18,8 +18,6 @@ import { Loader } from '#/components/Loader';
 import { ScreenTransition } from '#/components/ScreenTransition';
 import { WizardProfileCard } from '#/components/StarterPack/Wizard/WizardListCard';
 import { Text } from '#/components/Typography';
-
-import { KeyboardAwareScrollView } from '#/shims/native-keyboard-controller';
 
 function keyExtractor(item: AnyProfileView) {
 	return item?.did ?? '';
@@ -71,7 +69,7 @@ export function StepProfiles({ moderationOpts }: { moderationOpts: ModerationOpt
 				data={query ? results : topFollowers}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
-				renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
+				renderScrollComponent={(props) => <ScrollView {...props} />}
 				keyboardShouldPersistTaps="handled"
 				disableFullWindowScroll={true}
 				sideBorders={false}
