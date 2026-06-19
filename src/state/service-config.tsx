@@ -63,11 +63,3 @@ export function Provider({ children }: { children: React.ReactNode }) {
 export function useTrendingConfig() {
 	return useContext(TrendingContext);
 }
-
-export function useCheckEmailConfirmed() {
-	const ctx = useContext(CheckEmailConfirmedContext);
-	if (ctx === null) {
-		throw new Error('useCheckEmailConfirmed must be used within a ServiceConfigManager');
-	}
-	return ctx;
-}

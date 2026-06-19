@@ -214,7 +214,3 @@ function countUnread(page: FeedPage) {
 	}
 	return num;
 }
-
-export function invalidateCachedUnreadPage() {
-	emitter.emit('invalidate');
-}

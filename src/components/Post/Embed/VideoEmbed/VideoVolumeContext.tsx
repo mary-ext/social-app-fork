@@ -33,11 +33,3 @@ export function useVideoVolumeState() {
 	}
 	return [context.volume, context.setVolume] as const;
 }
-
-export function useVideoMuteState() {
-	const context = useContext(Context);
-	if (!context) {
-		throw new Error('useVideoMuteState must be used within a VideoVolumeProvider');
-	}
-	return [context.muted, context.setMuted] as const;
-}

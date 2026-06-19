@@ -29,9 +29,6 @@ export function ToastOutlet() {
 	);
 }
 
-/** Access the full Sonner API */
-export const api = sonner;
-
 /** Our base toast API, using the `Toast` export of this file. */
 export function show(content: React.ReactNode, { type = 'default', ...options }: BaseToastOptions = {}) {
 	const id = nanoid();

@@ -407,14 +407,6 @@ export function SimpleInlineLinkText({
 	);
 }
 
-export function WebOnlyInlineLinkText({ children, to, onPress, ...props }: InlineLinkProps) {
-	return (
-		<InlineLinkText {...props} to={to} onPress={onPress}>
-			{children}
-		</InlineLinkText>
-	);
-}
-
 /**
  * Utility to create a static `onPress` handler for a `Link` that would otherwise link to a URI
  *
@@ -430,29 +422,6 @@ export function createStaticClick(onPressHandler: Exclude<BaseLinkProps['onPress
 			e.preventDefault();
 			onPressHandler(e);
 			return false;
-		},
-	};
-}
-
-/**
- * Utility to create a static `onPress` handler for a `Link`, but only if the click was not modified in some
- * way e.g. `Cmd` or a middle click.
- *
- * On native, this behaves the same as `createStaticClick` because there are no options to "modify" the click
- * in this sense.
- *
- * Example: `<Link {...createStaticClick(e => {...})} />`
- */
-export function createStaticClickIfUnmodified(onPressHandler: Exclude<BaseLinkProps['onPress'], undefined>): {
-	onPress: Exclude<BaseLinkProps['onPress'], undefined>;
-} {
-	return {
-		onPress(e: GestureResponderEvent) {
-			if (!isModifiedClickEvent(e)) {
-				e.preventDefault();
-				onPressHandler(e);
-				return false;
-			}
 		},
 	};
 }

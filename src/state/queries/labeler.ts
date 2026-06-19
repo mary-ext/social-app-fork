@@ -36,22 +36,6 @@ export function useLabelerInfoQuery({ did, enabled }: { did?: string; enabled?: 
 	});
 }
 
-export function useLabelersInfoQuery({ dids }: { dids: string[] }) {
-	const { appview } = useClients();
-	return useQuery({
-		enabled: !!dids.length,
-		queryKey: labelersInfoQueryKey(dids),
-		queryFn: async () => {
-			const data = await ok(
-				appview.get('app.bsky.labeler.getServices', {
-					params: { dids: dids as Did[] },
-				}),
-			);
-			return data.views as AppBskyLabelerDefs.LabelerView[];
-		},
-	});
-}
-
 export function useLabelersDetailedInfoQuery({ dids }: { dids: string[] }) {
 	const { appview } = useClients();
 	return useQuery({

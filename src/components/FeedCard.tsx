@@ -155,17 +155,6 @@ export function Description({ description }: { description?: string }) {
 	return <RichText disableLinks value={description} />;
 }
 
-export function DescriptionPlaceholder() {
-	const t = useTheme();
-	return (
-		<View style={[a.gap_xs]}>
-			<View style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, { height: 12 }]} />
-			<View style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, { height: 12 }]} />
-			<View style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, { height: 12, width: 100 }]} />
-		</View>
-	);
-}
-
 export function Likes({ count }: { count: number }) {
 	const t = useTheme();
 	return (

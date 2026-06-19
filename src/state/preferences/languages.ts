@@ -63,11 +63,3 @@ export function toPostLanguages(postLanguage: string): string[] {
 	// filter out empty strings if exist
 	return postLanguage.split(',').filter(Boolean);
 }
-
-export function fromPostLanguages(languages: string[]): string {
-	return languages.filter(Boolean).join(',');
-}
-
-export function hasPostLanguage(postLanguage: string, code2: string): boolean {
-	return toPostLanguages(postLanguage).includes(code2);
-}

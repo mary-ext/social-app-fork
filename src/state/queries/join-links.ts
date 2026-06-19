@@ -99,19 +99,6 @@ export function useJoinLinkPreviewsQuery({
 	});
 }
 
-export function usePrefetchJoinLinkPreviews() {
-	const { chat } = useClients();
-	const queryClient = useQueryClient();
-
-	return ({ codes, hasSession }: { codes: string[]; hasSession: boolean }) => {
-		return queryClient.prefetchQuery({
-			queryKey: createJoinLinkPreviewQueryKey({ codes, hasSession }),
-			queryFn: () => fetchJoinLinkPreviews({ chat, codes }),
-			staleTime: STALE.SECONDS.FIFTEEN,
-		});
-	};
-}
-
 /**
  * Imperatively fetch (or read from cache) a single join link preview by code. Used when sending a DM invite
  * embed so we can build an optimistic view. Returns undefined if the preview can't be resolved.

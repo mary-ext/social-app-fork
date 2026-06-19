@@ -65,14 +65,6 @@ export type CommonNavigatorParams = {
 	Bookmarks: undefined;
 };
 
-export type BottomTabNavigatorParams = CommonNavigatorParams & {
-	HomeTab: undefined;
-	SearchTab: undefined;
-	NotificationsTab: undefined;
-	MyProfileTab: undefined;
-	MessagesTab: undefined;
-};
-
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
 	Home: undefined;
 };
@@ -83,10 +75,6 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
 	Notifications: undefined;
-};
-
-export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
-	MyProfile: { name: 'me'; hideBackButton: true };
 };
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {

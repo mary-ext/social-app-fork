@@ -198,5 +198,3 @@ export const DEMO_FEED = {
 		},
 	],
 } satisfies AppBskyFeedGetFeed.$output;
-
-export const BOTTOM_BAR_AVI = 'https://bsky.social/about/adi/user_avi.jpg';

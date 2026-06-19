@@ -26,26 +26,6 @@ export function Container({ children }: { children: ReactNode }) {
 }
 
 /**
- * A titled settings section. children render in order (no teleporting of icons/title into a header row), so
- * write the `ItemText` heading first.
- */
-export function Group({
-	children,
-	destructive = false,
-}: {
-	children: ReactNode;
-	destructive?: boolean;
-	/** Accepted for API compatibility; a no-op here since this slice renders no item icons. */
-	iconInset?: boolean;
-}) {
-	return (
-		<div className={styles.group}>
-			<ItemContext.Provider value={{ destructive }}>{children}</ItemContext.Provider>
-		</div>
-	);
-}
-
-/**
  * A single non-interactive settings row. Wrap interactive content (e.g. a toggle) so the row aligns with
  * sibling {@link LinkItem}/{@link PressableItem} rows.
  */
@@ -76,10 +56,7 @@ export function Item({
 
 /**
  * A settings row that toggles a checkbox on press, rendered as a Base UI checkbox root. Compose with
- * {@link ItemIcon}/{@link ItemText}/{@link LabelText} children and a {@link CheckboxBox} placed where the box
- * should sit.
- *
- * Pass `flush` when nesting inside a {@link Group} (which already supplies the horizontal padding).
+ * {@link ItemIcon}/{@link ItemText} children and a {@link CheckboxBox} placed where the box should sit.
  */
 export function CheckboxItem({
 	label,
@@ -245,18 +222,6 @@ export function ItemText({ children }: { children: ReactNode }) {
 	const { destructive } = useContext(ItemContext);
 	return (
 		<Text size="md" color={destructive ? 'negative_500' : 'text'} className={styles.itemText}>
-			{children}
-		</Text>
-	);
-}
-
-/**
- * The semibold label for an interactive control (checkbox/radio row). Defaults to the small text size; pass
- * `size="md"` for rows that read as primary settings items.
- */
-export function LabelText({ children, size = 'sm' }: { children: ReactNode; size?: 'md' | 'sm' }) {
-	return (
-		<Text size={size} weight="semiBold" color="textContrastHigh" className={styles.itemText}>
 			{children}
 		</Text>
 	);

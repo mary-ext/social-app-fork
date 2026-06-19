@@ -3,9 +3,7 @@ import type { AppBskyActorDefs } from '@atcute/bluesky';
 
 export const LOCAL_DEV_SERVICE = 'http://localhost:2583';
 export const BSKY_SERVICE = 'https://bsky.social';
-export const BSKY_SERVICE_DID = 'did:web:bsky.social';
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app';
-export const DEFAULT_SERVICE = BSKY_SERVICE;
 export const STARTER_PACK_MAX_SIZE = 150;
 export const CARD_ASPECT_RATIO = 1200 / 630;
 
@@ -24,8 +22,6 @@ export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50;
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 2000;
 
-export const MAX_REPORT_REASON_GRAPHEME_LENGTH = 2000;
-
 export const PROD_DEFAULT_FEED = (rkey: string) =>
 	`at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`;
 
@@ -42,12 +38,6 @@ export const STAGING_FEEDS = [
 	`feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ];
 
-export const POST_IMG_MAX = {
-	width: 2000,
-	height: 2000,
-	size: 1000000,
-};
-
 // Hitslop constants
 export const createHitslop = (size: number): Insets => ({
 	top: size,
@@ -58,8 +48,6 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10);
 export const HITSLOP_20 = createHitslop(20);
 export const HITSLOP_30 = createHitslop(30);
-export const LANG_DROPDOWN_HITSLOP = { top: 10, bottom: 10, left: 4, right: 4 };
-export const BACK_HITSLOP = HITSLOP_30;
 export const MAX_POST_LINES = 25;
 
 const BSKY_APP_ACCOUNT_DID = 'did:plc:z72i7hdynmk6r22z27h6tvur';

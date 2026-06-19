@@ -44,11 +44,6 @@ export function useDialogStateControlContext() {
 	return useContext(DialogControlContext);
 }
 
-/** The number of dialogs that are fully expanded */
-export function useDialogFullyExpandedCountContext() {
-	return useContext(DialogFullyExpandedCountContext);
-}
-
 export function Provider({ children }: React.PropsWithChildren<{}>) {
 	const [fullyExpandedCount, setFullyExpandedCount] = useState(0);
 	const { disableScope, enableScope } = useHotkeysContext();

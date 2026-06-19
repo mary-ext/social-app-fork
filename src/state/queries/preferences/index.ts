@@ -9,7 +9,6 @@ import type { AppBskyActorDefs, BskyFeedViewPreference } from '#/lib/moderation/
 import { GCTIME, STALE } from '#/state/queries';
 import {
 	addSavedFeeds,
-	clearPreferences,
 	getPreferences,
 	overwriteSavedFeeds,
 	removeMutedWord,
@@ -85,21 +84,6 @@ export function usePreferencesQuery() {
 	return query;
 }
 
-export function useClearPreferencesMutation() {
-	const queryClient = useQueryClient();
-	const { pds } = useClients();
-
-	return useMutation({
-		mutationFn: async () => {
-			await clearPreferences(pds!);
-			// triggers a refetch
-			await queryClient.invalidateQueries({
-				queryKey: preferencesQueryKey,
-			});
-		},
-	});
-}
-
 export function usePreferencesSetContentLabelMutation() {
 	const { pds } = useClients();
 	const queryClient = useQueryClient();
@@ -110,29 +94,6 @@ export function usePreferencesSetContentLabelMutation() {
 		{ label: string; visibility: LabelPreference; labelerDid: string | undefined }
 	>({
 		mutationFn: async ({ label, visibility, labelerDid }) => {
-			await setContentLabelPref(pds!, label, visibility, labelerDid);
-			// triggers a refetch
-			await queryClient.invalidateQueries({
-				queryKey: preferencesQueryKey,
-			});
-		},
-	});
-}
-
-export function useSetContentLabelMutation() {
-	const queryClient = useQueryClient();
-	const { pds } = useClients();
-
-	return useMutation({
-		mutationFn: async ({
-			label,
-			visibility,
-			labelerDid,
-		}: {
-			label: string;
-			visibility: LabelPreference;
-			labelerDid?: string;
-		}) => {
 			await setContentLabelPref(pds!, label, visibility, labelerDid);
 			// triggers a refetch
 			await queryClient.invalidateQueries({

@@ -203,24 +203,3 @@ export type SelectProps = {
 	placeholder?: string;
 	disabled?: boolean;
 };
-
-/** A terse convenience wrapper over the compound parts for the common `{ label, value }[]` dropdown. */
-export function Select({ disabled, items, label, onValueChange, placeholder, value }: SelectProps) {
-	return (
-		<Root items={items} value={value} disabled={disabled} onValueChange={onValueChange}>
-			<Trigger label={label}>
-				<Value placeholder={placeholder} />
-				<Icon />
-			</Trigger>
-			<Content
-				items={items}
-				renderItem={({ label, value }) => (
-					<Item value={value} label={label}>
-						<ItemIndicator />
-						<ItemText>{label}</ItemText>
-					</Item>
-				)}
-			/>
-		</Root>
-	);
-}

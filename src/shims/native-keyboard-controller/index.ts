@@ -1,14 +1,8 @@
 // adapter: web has no native soft-keyboard controller; this is the permanent zero-value / no-op
 // surface that lets shared keyboard-aware components compile and behave on web.
 
-import { createElement, forwardRef, Fragment, type ReactNode, useMemo } from 'react';
-import {
-	type KeyboardAvoidingViewProps,
-	ScrollView,
-	type ScrollViewProps,
-	View,
-	type ViewProps,
-} from 'react-native';
+import { createElement, forwardRef, useMemo } from 'react';
+import { ScrollView, type ScrollViewProps, View, type ViewProps } from 'react-native';
 
 /*
  * Long-lived web adapter for native keyboard controller APIs.
@@ -112,17 +106,6 @@ function createZeroSharedValue(): KeyboardSharedValue {
 	};
 }
 
-export function KeyboardProvider({ children, preload }: { children?: ReactNode; preload?: boolean }) {
-	void preload;
-	return createElement(Fragment, null, children);
-}
-
-export const KeyboardAvoidingView = forwardRef<View, KeyboardAvoidingViewProps>(
-	function KeyboardAvoidingView(props, ref) {
-		return createElement(View, { ...props, ref });
-	},
-);
-
 export const KeyboardAwareScrollView = forwardRef<ScrollView, KeyboardAwareScrollViewProps>(
 	function KeyboardAwareScrollView(props, ref) {
 		return createElement(ScrollView, { ...omitKeyboardScrollProps(props), ref });
@@ -145,21 +128,7 @@ export const KeyboardGestureArea = forwardRef<View, KeyboardGestureAreaProps>(fu
 	return createElement(View, { ...props, ref });
 });
 
-export const KeyboardStickyView = forwardRef<View, KeyboardStickyViewProps>(function KeyboardStickyView(
-	{ enabled, offset, ...props },
-	ref,
-) {
-	void enabled;
-	void offset;
-	return createElement(View, { ...props, ref });
-});
-
 export function useKeyboardHandler(handlers: KeyboardHandlers, dependencies: readonly unknown[] = []) {
-	void handlers;
-	void dependencies;
-}
-
-export function useFocusedInputHandler(handlers: KeyboardHandlers, dependencies: readonly unknown[] = []) {
 	void handlers;
 	void dependencies;
 }
@@ -173,33 +142,3 @@ export function useReanimatedKeyboardAnimation() {
 		[],
 	);
 }
-
-export function useKeyboardContext() {
-	return useMemo(
-		() => ({
-			enabled: false,
-			setEnabled: (_enabled: boolean) => {},
-		}),
-		[],
-	);
-}
-
-export function useKeyboardState() {
-	return useMemo(
-		() => ({
-			height: 0,
-			isVisible: false,
-			progress: 0,
-		}),
-		[],
-	);
-}
-
-export const KeyboardEvents = {
-	addListener(_event: string, _listener: KeyboardHandler) {
-		return {
-			remove: () => {},
-		};
-	},
-	removeAllListeners(_event?: string) {},
-};

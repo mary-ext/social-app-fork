@@ -27,5 +27,3 @@ type MediaObject = {
 type BaseContentFormats = 'preview' | 'gif' | 'tinygif';
 
 type VideoContentFormats = 'mp4' | 'webm';
-
-export type ContentFormats = BaseContentFormats | VideoContentFormats;

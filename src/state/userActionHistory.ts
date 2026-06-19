@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 const LIKE_WINDOW = 100;
 const FOLLOW_WINDOW = 100;
 const FOLLOW_SUGGESTION_WINDOW = 100;
@@ -36,10 +34,6 @@ const userActionHistory: UserActionHistory = {
 
 export function getActionHistory() {
 	return userActionHistory;
-}
-
-export function useActionHistorySnapshot() {
-	return useState(() => getActionHistory())[0];
 }
 
 export function like(postUris: string[]) {

@@ -1,53 +1,18 @@
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
-import type { AnyProfileView, AppBskyActorSearchActors } from '@atcute/bluesky';
+import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
-import type { InfiniteData } from '@tanstack/react-query';
 
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
 import { usePreferencesQuery } from '#/state/queries/preferences';
-
-import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { boostInterests, InterestTabs } from '#/components/InterestTabs';
 import * as ProfileCard from '#/components/ProfileCard';
 import { SubtleHover } from '#/components/SubtleHover';
-
-export function useLoadEnoughProfiles({
-	interest,
-	data,
-	isLoading,
-	isFetchingNextPage,
-	hasNextPage,
-	fetchNextPage,
-}: {
-	interest: string | null;
-	data?: InfiniteData<AppBskyActorSearchActors.$output>;
-	isLoading: boolean;
-	isFetchingNextPage: boolean;
-	hasNextPage: boolean;
-	fetchNextPage: () => Promise<unknown>;
-}) {
-	const profileCount =
-		data?.pages.flatMap((page) => page.actors.filter((actor) => !actor.viewer?.following)).length || 0;
-	const isAnyLoading = isLoading || isFetchingNextPage;
-	const isEnoughProfiles = profileCount > 3;
-	const shouldFetchMore = !isEnoughProfiles && hasNextPage && !!interest;
-	useEffect(() => {
-		if (shouldFetchMore && !isAnyLoading) {
-			logger.info('Not enough suggested accounts - fetching more');
-			void fetchNextPage();
-		}
-	}, [shouldFetchMore, fetchNextPage, isAnyLoading, interest]);
-
-	return {
-		isReady: !shouldFetchMore,
-	};
-}
 
 export function SuggestedAccountsTabBar({
 	selectedInterest,

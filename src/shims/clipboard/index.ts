@@ -17,5 +17,3 @@ export async function setStringAsync(value: string): Promise<boolean> {
 	document.body.removeChild(textarea);
 	return ok;
 }
-
-export const setUrlAsync = setStringAsync;

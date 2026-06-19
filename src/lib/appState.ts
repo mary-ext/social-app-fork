@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
-export const getCurrentState = () => AppState.currentState;
-
 export function onAppStateChange(cb: (state: AppStateStatus) => void) {
 	let prev = AppState.currentState;
 	return AppState.addEventListener('change', (next) => {

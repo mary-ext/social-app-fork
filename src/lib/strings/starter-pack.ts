@@ -1,28 +1,6 @@
 import type { AnyStarterPackView } from '@atcute/bluesky';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
 
-export function createStarterPackLinkFromAndroidReferrer(referrerQueryString: string): string | null {
-	try {
-		// The referrer string is just some URL parameters, so lets add them to a fake URL
-		const url = new URL('http://throwaway.com/?' + referrerQueryString);
-		const utmContent = url.searchParams.get('utm_content');
-		const utmSource = url.searchParams.get('utm_source');
-
-		if (!utmContent) return null;
-		if (utmSource !== 'bluesky') return null;
-
-		// This should be a string like `starterpack_haileyok.com_rkey`
-		const contentParts = utmContent.split('_');
-
-		if (contentParts[0] !== 'starterpack') return null;
-		if (contentParts.length !== 3) return null;
-
-		return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`;
-	} catch (e) {
-		return null;
-	}
-}
-
 export function parseStarterPackUri(uri?: string): {
 	name: string;
 	rkey: string;
@@ -56,11 +34,6 @@ export function parseStarterPackUri(uri?: string): {
 	} catch (e) {
 		return null;
 	}
-}
-
-export function createStarterPackGooglePlayUri(name: string, rkey: string): string | null {
-	if (!name || !rkey) return null;
-	return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`;
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {

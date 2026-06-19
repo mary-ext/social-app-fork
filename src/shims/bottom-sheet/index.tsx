@@ -77,15 +77,3 @@ export const BottomSheet = forwardRef<BottomSheetNativeComponent, BottomSheetVie
 BottomSheet.dismissAll = () => {};
 
 export const BottomSheetNativeComponent = BottomSheet;
-
-export function BottomSheetOutlet() {
-	return null;
-}
-
-export function BottomSheetPortalProvider({ children }: { children: ReactNode }) {
-	return <>{children}</>;
-}
-
-export function BottomSheetProvider({ children }: { children: ReactNode }) {
-	return <>{children}</>;
-}

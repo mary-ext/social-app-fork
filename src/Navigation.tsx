@@ -13,14 +13,12 @@ import { View } from 'react-native';
 import { i18n, type MessageDescriptor } from '@lingui/core';
 import { defineMessage } from '@lingui/core/macro';
 import {
-	CommonActions,
 	createNavigationContainerRef,
 	DarkTheme,
 	DefaultTheme,
 	type LinkingOptions,
 	NavigationContainer,
 	type ScreenLayoutArgs,
-	StackActions,
 	type StackNavigationState,
 } from '@react-navigation/native';
 import {
@@ -880,37 +878,4 @@ function navigate<K extends keyof AllNavigatorParams>(name: K, params?: AllNavig
 	return Promise.resolve();
 }
 
-function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'MessagesTab' | 'NotificationsTab') {
-	if (navigationRef.isReady()) {
-		void navigate(tabName);
-		if (navigationRef.canGoBack()) {
-			navigationRef.dispatch(StackActions.popToTop()); //we need to check .canGoBack() before calling it
-		}
-	}
-}
-
-// returns a promise that resolves after the state reset is complete
-function reset(): Promise<void> {
-	if (navigationRef.isReady()) {
-		navigationRef.dispatch(
-			CommonActions.reset({
-				index: 0,
-				routes: [{ name: 'Home' }],
-			}),
-		);
-		return Promise.race([
-			timeout(1e3),
-			new Promise<void>((resolve) => {
-				const handler = () => {
-					resolve();
-					navigationRef.removeListener('state', handler);
-				};
-				navigationRef.addListener('state', handler);
-			}),
-		]);
-	} else {
-		return Promise.resolve();
-	}
-}
-
-export { FlatNavigator, navigate, reset, resetToTab, RoutesContainer };
+export { FlatNavigator, navigate, RoutesContainer };

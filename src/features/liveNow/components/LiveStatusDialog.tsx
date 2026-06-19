@@ -1,14 +1,11 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { View } from 'react-native';
 import type { AnyProfileView, AppBskyActorDefs, AppBskyEmbedExternal } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateStatus } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { useOpenLink } from '#/lib/hooks/useOpenLink';
-import type { NavigationProp } from '#/lib/routes/types';
-import { sanitizeHandle } from '#/lib/strings/handles';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -30,60 +27,6 @@ import * as ProfileCard from '#/components/web/ProfileCard';
 
 import { LiveIndicator } from '#/features/liveNow/components/LiveIndicator';
 import { Image } from '#/shims/image';
-
-export function LiveStatusDialog({
-	control,
-	profile,
-	embed,
-	status,
-}: {
-	control: Dialog.DialogControlProps;
-	profile: AnyProfileView;
-	status: AppBskyActorDefs.StatusView;
-	embed: AppBskyEmbedExternal.View;
-}) {
-	const navigation = useNavigation<NavigationProp>();
-	return (
-		<Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
-			<Dialog.Handle difference={!!embed.external.thumb} />
-			<DialogInner status={status} profile={profile} embed={embed} navigation={navigation} />
-		</Dialog.Outer>
-	);
-}
-
-function DialogInner({
-	profile,
-	embed,
-	navigation,
-	status,
-}: {
-	profile: AnyProfileView;
-	embed: AppBskyEmbedExternal.View;
-	navigation: NavigationProp;
-	status: AppBskyActorDefs.StatusView;
-}) {
-	const { t: l } = useLingui();
-	const control = Dialog.useDialogContext();
-
-	const onPressOpenProfile = useCallback(() => {
-		control.close(() => {
-			navigation.push('Profile', {
-				name: profile.did,
-			});
-		});
-	}, [navigation, profile.did, control]);
-
-	return (
-		<Dialog.ScrollableInner
-			label={l`${sanitizeHandle(profile.handle)} is live`}
-			contentContainerStyle={[a.pt_0, a.px_0]}
-			style={[{ maxWidth: 420 }, a.overflow_hidden]}
-		>
-			<LiveStatus status={status} profile={profile} embed={embed} onPressOpenProfile={onPressOpenProfile} />
-			<Dialog.Close />
-		</Dialog.ScrollableInner>
-	);
-}
 
 export function LiveStatus({
 	status,

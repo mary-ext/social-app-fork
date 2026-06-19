@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyFeedSearchPosts } from '@atcute/bluesky';
+import type { AppBskyFeedDefs, AppBskyFeedSearchPosts } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
 import { parseResourceUri } from '@atcute/lexicons/syntax';
@@ -148,31 +148,6 @@ export function* findAllPostsInQueryData(
 				const quotedPost = getEmbeddedPost(post.embed);
 				if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
 					yield embedViewRecordToPostView(quotedPost);
-				}
-			}
-		}
-	}
-}
-
-export function* findAllProfilesInQueryData(
-	queryClient: QueryClient,
-	did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
-	const queryDatas = queryClient.getQueriesData<InfiniteData<AppBskyFeedSearchPosts.$output>>({
-		queryKey: [searchPostsQueryKeyRoot],
-	});
-	for (const [_queryKey, queryData] of queryDatas) {
-		if (!queryData?.pages) {
-			continue;
-		}
-		for (const page of queryData?.pages) {
-			for (const post of page.posts) {
-				if (post.author.did === did) {
-					yield post.author;
-				}
-				const quotedPost = getEmbeddedPost(post.embed);
-				if (quotedPost?.author.did === did) {
-					yield quotedPost.author;
 				}
 			}
 		}

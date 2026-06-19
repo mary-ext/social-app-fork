@@ -3,7 +3,7 @@ import type { AppBskyFeedDefs } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
 import type { Did, Handle, ResourceUri } from '@atcute/lexicons';
 import { parseCanonicalResourceUri, parseResourceUri } from '@atcute/lexicons/syntax';
-import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { createRecord, deleteRecord } from '#/lib/api/records';
 import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue';
@@ -52,10 +52,6 @@ export function usePostQuery(uri: string | undefined) {
 		},
 		enabled: !!uri,
 	});
-}
-
-export function precachePost(queryClient: QueryClient, uri: string, post: AppBskyFeedDefs.PostView) {
-	queryClient.setQueryData(RQKEY(uri), post);
 }
 
 export function useGetPost() {

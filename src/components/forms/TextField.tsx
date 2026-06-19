@@ -12,7 +12,7 @@ import {
 import { HITSLOP_20 } from '#/lib/constants';
 import { mergeRefs } from '#/lib/merge-refs';
 
-import { applyFonts, atoms as a, type TextStyleProp, tokens, useAlf, useTheme } from '#/alf';
+import { applyFonts, atoms as a, type TextStyleProp, useAlf, useTheme } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import type { Props as SVGIconProps } from '#/components/icons/common';
@@ -342,44 +342,5 @@ export function SuffixText({
 		>
 			{children}
 		</Text>
-	);
-}
-
-export function GhostText({ children, value }: { children: string; value: string }) {
-	const t = useTheme();
-	// eslint-disable-next-line bsky-internal/avoid-unwrapped-text
-	return (
-		<View
-			style={[
-				a.pointer_events_none,
-				a.absolute,
-				a.z_10,
-				{
-					// icon
-					paddingLeft:
-						tokens.space.xl +
-						// icon padding
-						tokens.space.xs +
-						// text input padding
-						tokens.space.xs,
-				},
-				a.pr_md,
-				a.overflow_hidden,
-				a.max_w_full,
-			]}
-			aria-hidden={true}
-			accessibilityElementsHidden
-			importantForAccessibility="no-hide-descendants"
-		>
-			<Text
-				style={[{ color: 'transparent' }, a.text_md, { lineHeight: a.text_md.fontSize * 1.1875 }, a.w_full]}
-				numberOfLines={1}
-			>
-				{children}
-				<Text style={[t.atoms.text_contrast_low, a.text_md, { lineHeight: a.text_md.fontSize * 1.1875 }]}>
-					{value}
-				</Text>
-			</Text>
-		</View>
 	);
 }

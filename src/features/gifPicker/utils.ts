@@ -21,19 +21,3 @@ export function gifPreviewUrl(gifUrl: string) {
 		return '';
 	}
 }
-
-/**
- * Rewrites a KLIPY static CDN URL through the bsky proxy (k.gifs.bsky.app) so downstream consumers can route
- * requests through Bluesky-owned infrastructure.
- */
-export function klipyUrlToBskyGifUrl(klipyUrl: string) {
-	let url;
-	try {
-		url = new URL(klipyUrl);
-	} catch (e) {
-		logger.debug('invalid url passed to klipyUrlToBskyGifUrl()');
-		return '';
-	}
-	url.hostname = 'k.gifs.bsky.app';
-	return url.href;
-}

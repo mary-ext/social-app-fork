@@ -17,10 +17,6 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 	);
 }
 
-export function useHomeBadge() {
-	return useContext(stateContext);
-}
-
 export function useSetHomeBadge() {
 	return useContext(apiContext);
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { LayoutAnimation, View } from 'react-native';
 import type { AppBskyFeedPost } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderatePost } from '@atcute/bluesky-moderation';
@@ -9,7 +9,6 @@ import { type RouteProp, useNavigation, useRoute } from '@react-navigation/nativ
 import { HITSLOP_20 } from '#/lib/constants';
 import { makeProfileLink } from '#/lib/routes/links';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
-import { detectFacetsWithoutResolution } from '#/lib/strings/rich-text-facets';
 import {
 	convertBskyAppUrlIfNeeded,
 	getChatInviteCodeFromUrl,
@@ -88,30 +87,6 @@ export function useMessageEmbed() {
 			[embedFromParams, navigation],
 		),
 	};
-}
-
-export function useExtractEmbedFromFacets(message: string, setEmbed: (embedUrl: string | undefined) => void) {
-	const rt = detectFacetsWithoutResolution(message);
-
-	let uriFromFacet: string | undefined;
-
-	for (const facet of rt.facets ?? []) {
-		for (const feature of facet.features) {
-			if (
-				feature.$type === 'app.bsky.richtext.facet#link' &&
-				(isBskyPostUrl(feature.uri) || isBskyChatInviteUrl(feature.uri))
-			) {
-				uriFromFacet = feature.uri;
-				break;
-			}
-		}
-	}
-
-	useEffect(() => {
-		if (uriFromFacet) {
-			setEmbed(uriFromFacet);
-		}
-	}, [uriFromFacet, setEmbed]);
 }
 
 export function MessageInputEmbed({

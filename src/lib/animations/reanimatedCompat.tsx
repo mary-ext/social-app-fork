@@ -1,7 +1,6 @@
 import { createElement, type ElementType, forwardRef, type PropsWithoutRef, useRef } from 'react';
 import {
 	FlatList,
-	type FlatListProps,
 	Image,
 	type LayoutRectangle,
 	type NativeScrollEvent,
@@ -41,23 +40,18 @@ export type SharedValue<Value = unknown> = {
 };
 
 export type AnimatedRef<Value = unknown> = React.MutableRefObject<Value | null>;
-export type AnimatedStyle<Value> = Value;
 export type AnimatedScrollView = React.ComponentRef<typeof ScrollView>;
 export type AnimatedView = React.ComponentRef<typeof View>;
-export type FlatListPropsWithLayout<ItemT> = FlatListProps<ItemT>;
 export type ReanimatedScrollEvent = NativeScrollEvent & {
 	eventName?: string;
 	zoomScale?: number;
 };
 type ScrollHandlerEvent = ReanimatedScrollEvent | NativeSyntheticEvent<NativeScrollEvent>;
-type ReanimatedEvent = Record<string, unknown> & { eventName: string };
 export type ScrollEvent = ReanimatedScrollEvent;
-export type AnimatableValue = number | string | number[];
 export type MeasuredDimensions = LayoutRectangle & {
 	pageX: number;
 	pageY: number;
 };
-export type WithSpringConfig = Record<string, unknown>;
 export type AnimatedScrollViewProps = ScrollViewProps;
 export type ScrollHandlers<Context extends Record<string, unknown> = Record<string, unknown>> = {
 	onScroll?: (event: ReanimatedScrollEvent, context: Context) => void;
@@ -66,23 +60,10 @@ export type ScrollHandlers<Context extends Record<string, unknown> = Record<stri
 	onMomentumBegin?: (event: ReanimatedScrollEvent, context: Context) => void;
 	onMomentumEnd?: (event: ReanimatedScrollEvent, context: Context) => void;
 };
-export type AnimateProps<Props extends object> = Props & AnimatedCompatProps;
 
 type AnimatedComponent<Props extends object> = React.ForwardRefExoticComponent<
 	PropsWithoutRef<Props & AnimatedCompatProps> & React.RefAttributes<unknown>
 >;
-
-export const Extrapolation = {
-	CLAMP: 'clamp',
-	EXTEND: 'extend',
-	IDENTITY: 'identity',
-} as const;
-
-export const ReduceMotion = {
-	System: 'system',
-	Always: 'always',
-	Never: 'never',
-} as const;
 
 export type AnimationBuilder = AnimationConfig & {
 	delay: (...args: unknown[]) => AnimationBuilder;
@@ -186,32 +167,8 @@ export const Easing = {
 
 export const FadeIn = createAnimation({ name: 'fade-in' });
 export const FadeOut = createAnimation({ name: 'fade-out' });
-export const FadeInDown = createAnimation({ name: 'fade-in-down' });
-export const FadeOutDown = createAnimation({ name: 'fade-out-down' });
-export const FadeInLeft = createAnimation({ name: 'fade-in-left' });
-export const FadeOutLeft = createAnimation({ name: 'fade-out-left' });
-export const FadeInRight = createAnimation({ name: 'fade-in-right' });
-export const FadeOutRight = createAnimation({ name: 'fade-out-right' });
-export const FadeInUp = createAnimation({ name: 'fade-in-up' });
 export const FadeOutUp = createAnimation({ name: 'fade-out-up' });
-export const SlideInLeft = createAnimation({ name: 'slide-in-left' });
-export const SlideInRight = createAnimation({ name: 'slide-in-right' });
-export const SlideInUp = createAnimation({ name: 'slide-in-up' });
-export const SlideInDown = createAnimation({ name: 'slide-in-down' });
-export const SlideOutLeft = createAnimation({ name: 'slide-out-left' });
-export const SlideOutRight = createAnimation({ name: 'slide-out-right' });
-export const SlideOutUp = createAnimation({ name: 'slide-out-up' });
-export const SlideOutDown = createAnimation({ name: 'slide-out-down' });
 export const ZoomIn = createAnimation({ name: 'zoom-in' });
-export const ZoomOut = createAnimation({ name: 'zoom-out' });
-export const ZoomInDown = createAnimation({ name: 'zoom-in-down' });
-export const ZoomOutDown = createAnimation({ name: 'zoom-out-down' });
-export const ZoomInLeft = createAnimation({ name: 'zoom-in-left' });
-export const ZoomOutLeft = createAnimation({ name: 'zoom-out-left' });
-export const ZoomInRight = createAnimation({ name: 'zoom-in-right' });
-export const ZoomOutRight = createAnimation({ name: 'zoom-out-right' });
-export const ZoomInUp = createAnimation({ name: 'zoom-in-up' });
-export const ZoomOutUp = createAnimation({ name: 'zoom-out-up' });
 export const LinearTransition = createAnimation({ name: 'linear-transition' });
 
 export function LayoutAnimationConfig({
@@ -236,10 +193,6 @@ export function useSharedValue<Value>(initial: Value): SharedValue<Value> {
 	return useRef(createSharedValue(initial)).current;
 }
 
-export function makeMutable<Value>(initial: Value): SharedValue<Value> {
-	return createSharedValue(initial);
-}
-
 export function useDerivedValue<Value>(derive: () => Value, _dependencies?: unknown[]): SharedValue<Value> {
 	const value = useSharedValue(derive());
 	value.set(derive());
@@ -251,24 +204,6 @@ export function useAnimatedStyle<Style extends StyleProp<ViewStyle>>(
 	_dependencies?: unknown[],
 ): Style {
 	return updater();
-}
-
-export function useAnimatedProps<Props extends object>(
-	updater: () => Props,
-	_dependencies?: unknown[],
-): Props {
-	return updater();
-}
-
-export function useAnimatedReaction<Prepared>(
-	prepare: () => Prepared,
-	react: (current: Prepared, previous: Prepared | null) => void,
-	_dependencies?: unknown[],
-) {
-	const previous = useRef<Prepared | null>(null);
-	const current = prepare();
-	react(current, previous.current);
-	previous.current = current;
 }
 
 export function useAnimatedRef<Value = AnimatedView>(_initial?: Value): AnimatedRef<Value> {
@@ -293,32 +228,6 @@ export function useAnimatedScrollHandler<Context extends Record<string, unknown>
 	};
 }
 
-export function useFrameCallback(_callback?: unknown, _autoRefresh?: boolean) {
-	return {
-		setActive: (_active: boolean) => {},
-	};
-}
-
-export function useEvent(
-	handler: (event: ReanimatedEvent) => void,
-	_eventNames?: string[],
-	_rebuild?: boolean,
-) {
-	return handler as (event: unknown) => void;
-}
-
-export function useHandler<
-	Handlers extends object,
-	Context extends Record<string, unknown> = Record<string, unknown>,
->(handlers: Handlers, _dependencies?: unknown[]) {
-	return {
-		context: {} as Context,
-		doDependenciesDiffer: false,
-		useWeb: true,
-		handlers,
-	};
-}
-
 export function withTiming<Value>(
 	value: Value,
 	_config?: object,
@@ -335,19 +244,6 @@ export function withSpring<Value>(
 ): Value {
 	callback?.(true);
 	return value;
-}
-
-export function withDecay<Value>(_config: object, callback?: (finished?: boolean) => void): Value {
-	callback?.(true);
-	return 0 as Value;
-}
-
-export function withDelay<Value>(_delayMs: number, value: Value): Value {
-	return value;
-}
-
-export function withSequence<Value>(...values: Value[]): Value {
-	return values[values.length - 1]!;
 }
 
 export function withRepeat<Value>(value: Value, ..._args: unknown[]): Value {
@@ -369,10 +265,6 @@ export function scrollTo(ref: AnimatedRef<unknown>, x: number, y: number, animat
 		scrollTo?: (options: unknown) => void;
 	} | null;
 	scrollable?.scrollTo?.({ x, y, animated });
-}
-
-export function measure(_ref?: unknown): MeasuredDimensions | null {
-	return null;
 }
 
 export function interpolate(
@@ -401,10 +293,6 @@ export function interpolateColor(
 	outputRange: readonly string[],
 ) {
 	return value <= inputRange[0]! ? outputRange[0]! : outputRange.at(-1)!;
-}
-
-export function clamp(value: number, lowerBound: number, upperBound: number) {
-	return Math.min(Math.max(value, lowerBound), upperBound);
 }
 
 export class Keyframe {

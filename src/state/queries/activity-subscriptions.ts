@@ -3,13 +3,11 @@ import type {
 	AppBskyNotificationDeclaration,
 	AppBskyNotificationListActivitySubscriptions,
 } from '@atcute/bluesky';
-import { ok } from '@atcute/client';
 import type { Did } from '@atcute/lexicons';
 import { t } from '@lingui/core/macro';
 import {
 	type InfiniteData,
 	type QueryClient,
-	useInfiniteQuery,
 	useMutation,
 	useQuery,
 	useQueryClient,
@@ -23,22 +21,6 @@ import * as Toast from '#/components/Toast';
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions'];
 export const RQKEY_getNotificationDeclaration = ['notification-declaration'];
-
-export function useActivitySubscriptionsQuery() {
-	const { appview } = useClients();
-
-	return useInfiniteQuery({
-		queryKey: RQKEY_getActivitySubscriptions,
-		queryFn: ({ pageParam }) =>
-			ok(
-				appview.get('app.bsky.notification.listActivitySubscriptions', {
-					params: { cursor: pageParam },
-				}),
-			),
-		initialPageParam: undefined as string | undefined,
-		getNextPageParam: (prev) => prev.cursor,
-	});
-}
 
 export function useNotificationDeclarationQuery() {
 	const { pds } = useClients();

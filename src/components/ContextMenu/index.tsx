@@ -5,8 +5,6 @@ import { atoms as a, useTheme } from '#/alf';
 import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Typography';
 
-import type { AuxiliaryViewProps } from './types';
-
 export {
 	ContainerItem,
 	type MenuControlProps as ContextMenuControlProps,
@@ -25,10 +23,6 @@ export {
 
 export function Provider({ children }: { children: React.ReactNode }) {
 	return children;
-}
-
-export function AuxiliaryView({}: AuxiliaryViewProps) {
-	return null;
 }
 
 export function Outer({

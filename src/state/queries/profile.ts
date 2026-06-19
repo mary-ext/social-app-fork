@@ -648,10 +648,3 @@ export function* findAllProfilesInQueryData(
 		}
 	}
 }
-
-export function findProfileQueryData(
-	queryClient: QueryClient,
-	did: string,
-): AppBskyActorDefs.ProfileViewDetailed | undefined {
-	return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(RQKEY(did));
-}

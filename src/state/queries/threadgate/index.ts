@@ -29,30 +29,6 @@ export const MAX_HIDDEN_REPLIES = 300;
 export const threadgateRecordQueryKeyRoot = 'threadgate-record';
 export const createThreadgateRecordQueryKey = (uri: string) => [threadgateRecordQueryKeyRoot, uri];
 
-export function useThreadgateRecordQuery({
-	postUri,
-	initialData,
-}: {
-	postUri?: string;
-	initialData?: AppBskyFeedThreadgate.Main;
-} = {}) {
-	const { appview, pds } = useClients();
-
-	return useQuery({
-		enabled: !!postUri,
-		queryKey: createThreadgateRecordQueryKey(postUri || ''),
-		placeholderData: initialData,
-		staleTime: STALE.MINUTES.ONE,
-		async queryFn() {
-			return getThreadgateRecord({
-				appview,
-				pds: pds!,
-				postUri: postUri!,
-			});
-		},
-	});
-}
-
 export const threadgateViewQueryKeyRoot = 'threadgate-view';
 export const createThreadgateViewQueryKey = (uri: string) => [threadgateViewQueryKeyRoot, uri];
 export function useThreadgateViewQuery({

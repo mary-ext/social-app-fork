@@ -39,7 +39,7 @@ export type RootProps = {
 export const Trigger = Popover.Trigger;
 
 /** Creates a detached handle to associate a {@link Trigger} with a {@link Root} / open-close imperatively. */
-export const createHandle = Popover.createHandle;
+const createHandle = Popover.createHandle;
 
 /** A detached handle for the emoji picker popover. */
 export type EmojiPickerHandle = Popover.Handle<void>;

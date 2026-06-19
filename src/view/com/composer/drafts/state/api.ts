@@ -574,35 +574,6 @@ export async function draftToComposerPosts(
 	return { posts, restoredVideos };
 }
 
-/** Convert server threadgate rules back to UI settings. */
-export function threadgateToUISettings(
-	threadgateAllow?: AppBskyDraftDefs.Draft['threadgateAllow'],
-): Array<{ type: string; list?: string }> {
-	if (!threadgateAllow) {
-		return [];
-	}
-
-	return threadgateAllow
-		.map((rule) => {
-			if ('$type' in rule) {
-				if (rule.$type === 'app.bsky.feed.threadgate#mentionRule') {
-					return { type: 'mention' };
-				}
-				if (rule.$type === 'app.bsky.feed.threadgate#followingRule') {
-					return { type: 'following' };
-				}
-				if (rule.$type === 'app.bsky.feed.threadgate#followerRule') {
-					return { type: 'followers' };
-				}
-				if (rule.$type === 'app.bsky.feed.threadgate#listRule' && 'list' in rule) {
-					return { type: 'list', list: (rule as { list: string }).list };
-				}
-			}
-			return null;
-		})
-		.filter((s): s is { type: string; list?: string } => s !== null);
-}
-
 /** Extract all localRef paths from a draft. Used to identify which media files belong to a draft for cleanup. */
 export function extractLocalRefs(draft: AppBskyDraftDefs.Draft): Set<string> {
 	const refs = new Set<string>();

@@ -32,22 +32,6 @@ export function useBookmarksQuery() {
 	});
 }
 
-export async function truncateAndInvalidate(qc: QueryClient) {
-	qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$output>>(
-		{ queryKey: [bookmarksQueryKeyRoot] },
-		(data) => {
-			if (data) {
-				return {
-					pageParams: data.pageParams.slice(0, 1),
-					pages: data.pages.slice(0, 1),
-				};
-			}
-			return data;
-		},
-	);
-	return qc.invalidateQueries({ queryKey: [bookmarksQueryKeyRoot] });
-}
-
 export async function optimisticallySaveBookmark(qc: QueryClient, post: AppBskyFeedDefs.PostView) {
 	qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.$output>>(
 		{

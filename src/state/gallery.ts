@@ -108,14 +108,6 @@ async function cropImage(blob: Blob, crop: ImageCrop): Promise<ImageMeta> {
 	};
 }
 
-export function resetImageManipulation(img: ComposerImage): ComposerImageWithoutTransformation {
-	if (img.transformed !== undefined) {
-		return { alt: img.alt, localRefPath: img.localRefPath, source: img.source };
-	}
-
-	return img;
-}
-
 /** Compress an image for use as a post embed, fitting the Bluesky CDN's size budget. */
 export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
 	const source = img.transformed || img.source;

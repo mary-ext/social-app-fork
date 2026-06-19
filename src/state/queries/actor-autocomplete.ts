@@ -64,7 +64,6 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 	});
 }
 
-export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>;
 export function useActorAutocompleteFn() {
 	const queryClient = useQueryClient();
 	const moderationOpts = useModerationOpts();

@@ -572,7 +572,3 @@ export function resetProfilePostsQueries(queryClient: QueryClient, did: string, 
 		});
 	}, timeout);
 }
-
-export function isFeedPostSlice(v: unknown): v is FeedPostSlice {
-	return typeof v === 'object' && v !== null && '_isFeedPostSlice' in v && v._isFeedPostSlice === true;
-}

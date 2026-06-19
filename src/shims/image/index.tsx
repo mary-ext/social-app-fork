@@ -1,16 +1,9 @@
-// adapter: sized <Image> + contentFit→resizeMode mapping, prefetch/cache no-ops, ImageBackground,
-// expo-image-shape onLoad event. final state for the fork.
+// adapter: sized <Image> + contentFit→resizeMode mapping, prefetch/cache no-ops, expo-image-shape
+// onLoad event. final state for the fork.
 
 import { type ComponentRef, forwardRef, type ForwardRefExoticComponent, type RefAttributes } from 'react';
-import {
-	Image as RNImage,
-	ImageBackground as RNImageBackground,
-	type ImageBackgroundProps as RNImageBackgroundProps,
-	type ImageProps as RNImageProps,
-	type ImageStyle,
-} from 'react-native';
+import { Image as RNImage, type ImageProps as RNImageProps } from 'react-native';
 
-export type { ImageStyle };
 export type Image = ComponentRef<typeof RNImage> & {
 	startAnimating: () => void;
 	stopAnimating: () => void;
@@ -139,34 +132,3 @@ Image.prefetch = async (url) => {
 };
 Image.clearDiskCache = async () => true;
 Image.clearMemoryCache = async () => true;
-
-type ImageBackgroundProps = Omit<RNImageBackgroundProps, 'source'> & ExtraImageProps;
-
-export function ImageBackground({
-	cachePolicy,
-	contentFit,
-	placeholder,
-	placeholderContentFit,
-	priority,
-	recyclingKey,
-	source,
-	style,
-	transition,
-	...props
-}: ImageBackgroundProps) {
-	void cachePolicy;
-	void placeholder;
-	void placeholderContentFit;
-	void priority;
-	void recyclingKey;
-	void transition;
-
-	return (
-		<RNImageBackground
-			{...props}
-			source={normalizeSource(source)}
-			resizeMode={resizeModeForContentFit(contentFit) ?? props.resizeMode}
-			style={imageStyle(style as RNImageProps['style'], contentFit)}
-		/>
-	);
-}

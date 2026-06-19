@@ -166,10 +166,6 @@ export function getFeedTypeFromUri(uri: string) {
 	return collection === feedSourceNSIDs.feed ? 'feed' : 'list';
 }
 
-export function getAvatarTypeFromUri(uri: string) {
-	return getFeedTypeFromUri(uri) === 'feed' ? 'algo' : 'list';
-}
-
 export function useFeedSourceInfoQuery({ uri }: { uri: string }) {
 	const type = getFeedTypeFromUri(uri);
 	const { appview } = useClients();
@@ -620,31 +616,6 @@ export function useSavedFeeds() {
 				count: result.length,
 				feeds: result,
 			};
-		},
-	});
-}
-
-const feedInfoQueryKeyRoot = 'feedInfo';
-
-export function useFeedInfo(feedUri: string | undefined) {
-	const { appview } = useClients();
-
-	return useQuery({
-		staleTime: STALE.INFINITY,
-		queryKey: [feedInfoQueryKeyRoot, feedUri],
-		queryFn: async () => {
-			if (!feedUri) {
-				return null;
-			}
-
-			const data = await ok(
-				appview.get('app.bsky.feed.getFeedGenerator', {
-					params: { feed: feedUri as ResourceUri },
-				}),
-			);
-
-			const feedSourceInfo = hydrateFeedGenerator(data.view);
-			return feedSourceInfo;
 		},
 	});
 }
