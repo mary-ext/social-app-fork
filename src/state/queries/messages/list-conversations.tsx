@@ -291,9 +291,12 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 							}
 
 							if (!foundConvo) {
-								// Convo not found, trigger refetch
+								// Convo not found, trigger refetch. Use continue (not return) so
+								// the remaining logs in this batch still apply - the bus advances
+								// its cursor past this batch, so a dropped log is never
+								// redelivered.
 								debouncedRefetch();
-								return;
+								continue;
 							}
 
 							// Drop stale out-of-order events whose rev isn't newer than what we already have.
@@ -423,12 +426,19 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 								if (foundConvo) break;
 							}
 							if (!foundConvo) {
+								// Convo not found, trigger refetch. Use continue (not return) so
+								// the remaining logs in this batch still apply - the bus advances
+								// its cursor past this batch, so a dropped log is never
+								// redelivered.
 								debouncedRefetch();
-								return;
+								continue;
 							}
+							// Drop stale out-of-order accepts whose rev isn't newer than what we already have.
+							if (logRef.rev <= foundConvo.rev) continue;
 							const acceptedConvo: ConvoListItem = {
 								...foundConvo,
 								status: 'accepted',
+								rev: logRef.rev,
 							};
 							queryClient.setQueriesData({ queryKey: RQKEY_PARTIAL('request') }, (old?: ConvoListQueryData) =>
 								optimisticDelete(logRef.convoId, old),
