@@ -18,12 +18,13 @@ msgstr ""
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
+#: src/components/dms/getMessageInfo.ts:107
 #: src/components/dms/MessageItem.tsx:714
 #: src/screens/Messages/components/MessageInputReply.tsx:38
 msgid "(chat invite link)"
 msgstr "(chat invite link)"
 
-#: src/components/dms/getMessageInfo.ts:84
+#: src/components/dms/getMessageInfo.ts:92
 #: src/components/dms/MessageItem.tsx:716
 #: src/screens/Messages/components/MessageInputReply.tsx:40
 msgid "(contains embedded content)"
@@ -583,7 +584,7 @@ msgid "{name} reacted {0} to {target}"
 msgstr "{name} reacted {0} to {target}"
 
 #. When the last message in a group chat came from someone other than you.
-#: src/components/dms/getMessageInfo.ts:70
+#: src/components/dms/getMessageInfo.ts:78
 msgid "{name}: {message}"
 msgstr "{name}: {message}"
 
@@ -3241,7 +3242,7 @@ msgstr "Failed to disable invite link"
 msgid "Failed to disconnect Germ DM. Error: {0}"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:303
+#: src/screens/Messages/ConversationSettings/index.tsx:304
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
@@ -3263,7 +3264,7 @@ msgstr "Failed to join the group chat. Please try again."
 
 #: src/screens/Messages/components/ChatEnded.tsx:42
 #: src/screens/Messages/components/ChatLocked.tsx:60
-#: src/screens/Messages/ConversationSettings/index.tsx:327
+#: src/screens/Messages/ConversationSettings/index.tsx:328
 msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
@@ -3314,7 +3315,7 @@ msgstr ""
 msgid "Failed to load suggested follows"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:348
+#: src/screens/Messages/ConversationSettings/index.tsx:349
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
@@ -3322,7 +3323,7 @@ msgstr "Failed to lock group chat"
 msgid "Failed to mark all requests as read"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:317
+#: src/screens/Messages/ConversationSettings/index.tsx:318
 msgid "Failed to mute group chat"
 msgstr "Failed to mute group chat"
 
@@ -3384,7 +3385,7 @@ msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
 #: src/screens/Messages/components/ChatLocked.tsx:50
-#: src/screens/Messages/ConversationSettings/index.tsx:353
+#: src/screens/Messages/ConversationSettings/index.tsx:354
 msgid "Failed to unlock group chat"
 msgstr "Failed to unlock group chat"
 
@@ -3923,33 +3924,33 @@ msgstr "Group chat"
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:340
+#: src/screens/Messages/ConversationSettings/index.tsx:341
 msgctxt "toast"
 msgid "Group chat locked"
 msgstr "Group chat locked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:310
+#: src/screens/Messages/ConversationSettings/index.tsx:311
 msgctxt "toast"
 msgid "Group chat muted"
 msgstr "Group chat muted"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:298
+#: src/screens/Messages/ConversationSettings/index.tsx:299
 msgctxt "toast"
 msgid "Group chat name updated"
 msgstr "Group chat name updated"
 
 #: src/Navigation.tsx:692
-#: src/screens/Messages/ConversationSettings/index.tsx:82
+#: src/screens/Messages/ConversationSettings/index.tsx:84
 msgid "Group chat settings"
 msgstr "Group chat settings"
 
 #: src/screens/Messages/components/ChatLocked.tsx:42
-#: src/screens/Messages/ConversationSettings/index.tsx:342
+#: src/screens/Messages/ConversationSettings/index.tsx:343
 msgctxt "toast"
 msgid "Group chat unlocked"
 msgstr "Group chat unlocked"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:312
+#: src/screens/Messages/ConversationSettings/index.tsx:313
 msgctxt "toast"
 msgid "Group chat unmuted"
 msgstr "Group chat unmuted"
@@ -7836,7 +7837,7 @@ msgid "Something wasn't quite right with the data you're trying to report. Pleas
 msgstr ""
 
 #: src/screens/Messages/Conversation.tsx:100
-#: src/screens/Messages/ConversationSettings/index.tsx:104
+#: src/screens/Messages/ConversationSettings/index.tsx:106
 #: src/screens/Messages/JoinRequests.tsx:68
 msgid "Something went wrong"
 msgstr ""
@@ -8432,13 +8433,13 @@ msgstr "This chat has ended"
 msgid "This chat is full"
 msgstr "This chat is full"
 
-#: src/screens/Messages/components/ChatListItem.tsx:361
+#: src/screens/Messages/components/ChatListItem.tsx:362
 #: src/screens/Messages/components/ChatLocked.tsx:68
 msgid "This chat is locked"
 msgstr "This chat is locked"
 
 #: src/screens/Messages/components/ChatLocked.tsx:46
-#: src/screens/Messages/ConversationSettings/index.tsx:350
+#: src/screens/Messages/ConversationSettings/index.tsx:351
 msgid "This chat is locked by a moderation action"
 msgstr "This chat is locked by a moderation action"
 
@@ -8556,6 +8557,10 @@ msgstr ""
 msgid "This list is empty."
 msgstr ""
 
+#: src/screens/Messages/components/ChatListItem.tsx:323
+msgid "This message is hidden"
+msgstr "This message is hidden"
+
 #: src/components/dms/MessageItem.tsx:544
 #: src/components/dms/MessageItem.tsx:567
 msgid "This message is hidden because this user is blocking you."
@@ -8609,7 +8614,7 @@ msgstr ""
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:124
+#: src/screens/Messages/ConversationSettings/index.tsx:126
 #: src/screens/Messages/JoinRequests.tsx:92
 msgid "This screen is only available for group conversations."
 msgstr "This screen is only available for group conversations."
@@ -9430,7 +9435,7 @@ msgstr ""
 msgid "We couldn’t load this conversation’s join requests"
 msgstr "We couldn’t load this conversation’s join requests"
 
-#: src/screens/Messages/ConversationSettings/index.tsx:105
+#: src/screens/Messages/ConversationSettings/index.tsx:107
 msgid "We couldn’t load this conversation’s settings"
 msgstr "We couldn’t load this conversation’s settings"
 
@@ -9587,7 +9592,7 @@ msgstr ""
 msgid "Writers"
 msgstr ""
 
-#: src/screens/Messages/ConversationSettings/index.tsx:123
+#: src/screens/Messages/ConversationSettings/index.tsx:125
 #: src/screens/Messages/JoinRequests.tsx:91
 msgid "Wrong kind of conversation"
 msgstr "Wrong kind of conversation"
@@ -9917,7 +9922,7 @@ msgid "You won’t be able to rejoin unless you’re invited."
 msgstr "You won’t be able to rejoin unless you’re invited."
 
 #. When the last message in a chat was made by you.
-#: src/components/dms/getMessageInfo.ts:63
+#: src/components/dms/getMessageInfo.ts:71
 msgid "You: {message}"
 msgstr "You: {message}"
 

@@ -316,10 +316,11 @@ function BaseChatItem({
 			const info = getMessageInfo({
 				convo: convo.view,
 				currentAccountDid: currentAccount?.did,
+				primaryProfile,
 				i18n,
 			});
 			if (info) {
-				lastMessage = info.message ?? lastMessage;
+				lastMessage = info.isBlockedMessage ? l`This message is hidden` : (info.message ?? lastMessage);
 				lastMessageSentAt = info.sentAt;
 				latestReportableMessage = info.reportableMessage;
 			}

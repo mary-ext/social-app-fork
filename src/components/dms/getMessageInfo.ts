@@ -10,6 +10,7 @@ export type UserMessageInfo = {
 	message: string | null;
 	sentAt: string;
 	reportableMessage?: ChatBskyConvoDefs.MessageView;
+	isBlockedMessage: boolean;
 };
 
 /**
@@ -38,10 +39,12 @@ export function isDidBlockedInConvo({
 export function getMessageInfo({
 	convo,
 	currentAccountDid,
+	primaryProfile,
 	i18n,
 }: {
 	convo: ChatBskyConvoDefs.ConvoView;
 	currentAccountDid: string | undefined;
+	primaryProfile?: AnyProfileView;
 	i18n: I18n;
 }): UserMessageInfo | null {
 	if (convo.lastMessage?.$type !== 'chat.bsky.convo.defs#messageView') {
@@ -56,6 +59,11 @@ export function getMessageInfo({
 	const isGroup = convo.kind?.$type === 'chat.bsky.convo.defs#groupConvo';
 
 	const reportableMessage = isFromMe ? undefined : lastMessage;
+	const isBlockedMessage = isDidBlockedInConvo({
+		did: senderDid,
+		members: convo.members,
+		primaryProfile,
+	});
 
 	const prefix = (message: string) => {
 		if (isFromMe) {
@@ -95,6 +103,8 @@ export function getMessageInfo({
 			} else {
 				message = prefix(defaultEmbeddedContentMessage);
 			}
+		} else if (lastMessage.embed.$type === 'chat.bsky.embed.joinLink#view') {
+			message = prefix(i18n._(defineMessage`(chat invite link)`));
 		} else {
 			message = prefix(defaultEmbeddedContentMessage);
 		}
@@ -104,5 +114,6 @@ export function getMessageInfo({
 		message,
 		sentAt: lastMessage.sentAt,
 		reportableMessage,
+		isBlockedMessage,
 	};
 }
