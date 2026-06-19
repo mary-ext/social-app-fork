@@ -5,7 +5,6 @@ import { PROD_DEFAULT_FEED } from '#/lib/constants';
 import { replaceEqualDeep } from '#/lib/functions';
 import { getAppLabelers } from '#/lib/moderation/app-labelers';
 import type { AppBskyActorDefs, BskyFeedViewPreference } from '#/lib/moderation/preferences-types';
-import { getAge } from '#/lib/strings/time';
 
 import { GCTIME, STALE } from '#/state/queries';
 import {
@@ -77,18 +76,11 @@ export function usePreferencesQuery() {
 						...DEFAULT_THREAD_VIEW_PREFS,
 						...(res.threadViewPrefs ?? {}),
 					},
-					userAge: res.birthDate ? getAge(res.birthDate) : undefined,
 				};
 				return preferences;
 			}
 		},
 	});
-
-	if (query.data?.birthDate) {
-		/** The persisted query cache stores dates as strings, but our code expects a `Date`. */
-		// eslint-disable-next-line react-compiler/react-compiler, react-hooks/immutability -- deliberate in-place rehydration of the cached value
-		query.data.birthDate = new Date(query.data.birthDate);
-	}
 
 	return query;
 }

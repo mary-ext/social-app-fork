@@ -15,7 +15,6 @@ export const DEFAULT_THREAD_VIEW_PREFS: ThreadViewPreferences = {
 };
 
 export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
-	birthDate: new Date('2022-11-17'), // TODO(pwi)
 	moderationPrefs: {
 		adultContentEnabled: false,
 		labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
@@ -25,23 +24,13 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
 	},
 	feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
 	threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
-	userAge: 13, // TODO(pwi)
 	interests: { tags: [] },
 	savedFeeds: [],
-	bskyAppState: {
-		queuedNudges: [],
-		activeProgressGuide: undefined,
-		nuxs: [],
-	},
 	postInteractionSettings: {
 		threadgateAllowRules: undefined,
 		postgateEmbeddingRules: [],
 	},
 	verificationPrefs: {
 		hideBadges: false,
-	},
-	liveEventPreferences: {
-		hideAllFeeds: false,
-		hiddenFeedIds: [],
 	},
 };

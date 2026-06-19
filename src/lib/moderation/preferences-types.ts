@@ -34,17 +34,9 @@ export type BskyInterestsPreference = Omit<AppBskyActorDefs.InterestsPref, '$typ
 
 /** The derived preferences aggregate produced by the preferences cache. */
 export interface BskyPreferences {
-	bskyAppState: {
-		activeProgressGuide: AppBskyActorDefs.BskyAppProgressGuide | undefined;
-		nuxs: AppBskyActorDefs.Nux[];
-		queuedNudges: string[];
-	};
-	birthDate: Date | undefined;
-	declaredAge?: Omit<AppBskyActorDefs.DeclaredAgePref, '$type'>;
 	feedViewPrefs: { [feed: string]: BskyFeedViewPreference };
 	feeds: { pinned: string[] | undefined; saved: string[] | undefined };
 	interests: BskyInterestsPreference;
-	liveEventPreferences: { hiddenFeedIds: string[]; hideAllFeeds: boolean };
 	moderationPrefs: ModerationPrefs;
 	postInteractionSettings: {
 		postgateEmbeddingRules: AppBskyActorDefs.PostInteractionSettingsPref['postgateEmbeddingRules'];

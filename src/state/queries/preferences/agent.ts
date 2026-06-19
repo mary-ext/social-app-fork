@@ -39,16 +39,12 @@ const prefGuard =
 		pref.$type === type;
 
 const isAdultContentPref = prefGuard('app.bsky.actor.defs#adultContentPref');
-const isBskyAppStatePref = prefGuard('app.bsky.actor.defs#bskyAppStatePref');
 const isContentLabelPref = prefGuard('app.bsky.actor.defs#contentLabelPref');
-const isDeclaredAgePref = prefGuard('app.bsky.actor.defs#declaredAgePref');
 const isFeedViewPref = prefGuard('app.bsky.actor.defs#feedViewPref');
 const isHiddenPostsPref = prefGuard('app.bsky.actor.defs#hiddenPostsPref');
 const isInterestsPref = prefGuard('app.bsky.actor.defs#interestsPref');
 const isLabelersPref = prefGuard('app.bsky.actor.defs#labelersPref');
-const isLiveEventPreferences = prefGuard('app.bsky.actor.defs#liveEventPreferences');
 const isMutedWordsPref = prefGuard('app.bsky.actor.defs#mutedWordsPref');
-const isPersonalDetailsPref = prefGuard('app.bsky.actor.defs#personalDetailsPref');
 const isPostInteractionSettingsPref = prefGuard('app.bsky.actor.defs#postInteractionSettingsPref');
 const isSavedFeedsPrefV2 = prefGuard('app.bsky.actor.defs#savedFeedsPrefV2');
 const isThreadViewPref = prefGuard('app.bsky.actor.defs#threadViewPref');
@@ -226,12 +222,6 @@ async function updatePreferences(
  */
 export async function getPreferences(pds: Client, appLabelers: readonly string[]): Promise<BskyPreferences> {
 	const prefs: BskyPreferences = {
-		bskyAppState: {
-			activeProgressGuide: undefined,
-			nuxs: [],
-			queuedNudges: [],
-		},
-		birthDate: undefined,
 		feedViewPrefs: {
 			home: { ...FEED_VIEW_PREF_DEFAULTS },
 		},
@@ -241,10 +231,6 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 		},
 		interests: {
 			tags: [],
-		},
-		liveEventPreferences: {
-			hiddenFeedIds: [],
-			hideAllFeeds: false,
 		},
 		moderationPrefs: {
 			adultContentEnabled: false,
@@ -278,13 +264,6 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 				.concat(pref.labelers.map((labeler) => ({ did: labeler.did, labels: {} })));
 		} else if (isSavedFeedsPrefV2(pref)) {
 			prefs.savedFeeds = pref.items;
-		} else if (isPersonalDetailsPref(pref)) {
-			if (pref.birthDate) {
-				prefs.birthDate = new Date(pref.birthDate);
-			}
-		} else if (isDeclaredAgePref(pref)) {
-			const { $type: _, ...declaredAgePref } = pref;
-			prefs.declaredAge = declaredAgePref;
 		} else if (isFeedViewPref(pref)) {
 			const { $type: _, feed, ...v } = pref;
 			prefs.feedViewPrefs[feed] = { ...FEED_VIEW_PREF_DEFAULTS, ...v };
@@ -301,20 +280,11 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 			}));
 		} else if (isHiddenPostsPref(pref)) {
 			prefs.moderationPrefs.hiddenPosts = [...pref.items];
-		} else if (isBskyAppStatePref(pref)) {
-			prefs.bskyAppState.queuedNudges = pref.queuedNudges || [];
-			prefs.bskyAppState.activeProgressGuide = pref.activeProgressGuide;
-			prefs.bskyAppState.nuxs = pref.nuxs ?? [];
 		} else if (isPostInteractionSettingsPref(pref)) {
 			prefs.postInteractionSettings.threadgateAllowRules = pref.threadgateAllowRules;
 			prefs.postInteractionSettings.postgateEmbeddingRules = pref.postgateEmbeddingRules;
 		} else if (isVerificationPrefs(pref)) {
 			prefs.verificationPrefs = { hideBadges: pref.hideBadges ?? false };
-		} else if (isLiveEventPreferences(pref)) {
-			prefs.liveEventPreferences = {
-				hiddenFeedIds: pref.hiddenFeedIds || [],
-				hideAllFeeds: pref.hideAllFeeds ?? false,
-			};
 		}
 	}
 
@@ -739,27 +709,6 @@ export async function setInterestsPref(pds: Client, pref: Partial<BskyInterestsP
 			tags: pref.tags ?? existing?.tags ?? [],
 		};
 		return upsertPref(prefs, isInterestsPref, next);
-	});
-}
-
-/**
- * Sets the account owner's personal details (currently just the birth date).
- *
- * @param pds the PDS client.
- * @param details the personal details to apply.
- */
-export async function setPersonalDetails(
-	pds: Client,
-	{ birthDate }: { birthDate: Date | string | undefined },
-): Promise<void> {
-	await updatePreferences(pds, (prefs) => {
-		const existing = prefs.findLast(isPersonalDetailsPref);
-		const next: PrefOf<'app.bsky.actor.defs#personalDetailsPref'> = {
-			...existing,
-			$type: 'app.bsky.actor.defs#personalDetailsPref',
-			birthDate: birthDate instanceof Date ? birthDate.toISOString() : birthDate,
-		};
-		return upsertPref(prefs, isPersonalDetailsPref, next);
 	});
 }
 

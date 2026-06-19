@@ -7,7 +7,6 @@ export type UsePreferencesQueryResponse = Omit<
 	feedViewPrefs: BskyFeedViewPreference;
 	/** User thread-view prefs, including newer fields that may not be typed yet. */
 	threadViewPrefs: ThreadViewPreferences;
-	userAge: number | undefined;
 };
 
 export type ThreadViewPreferences = {

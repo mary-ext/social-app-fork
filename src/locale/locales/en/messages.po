@@ -885,11 +885,11 @@ msgctxt "toast"
 msgid "Account followed"
 msgstr ""
 
-#: src/lib/strings/errors.ts:30
+#: src/lib/strings/errors.ts:23
 msgid "Account has been suspended"
 msgstr ""
 
-#: src/lib/strings/errors.ts:33
+#: src/lib/strings/errors.ts:26
 msgid "Account is deactivated"
 msgstr ""
 
@@ -6346,7 +6346,7 @@ msgstr ""
 msgid "Profile banner placeholder"
 msgstr "Profile banner placeholder"
 
-#: src/lib/strings/errors.ts:36
+#: src/lib/strings/errors.ts:29
 msgid "Profile not found"
 msgstr ""
 
@@ -8445,11 +8445,11 @@ msgstr "This feature allows users to receive notifications for your new posts an
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr ""
 
-#: src/lib/hooks/useCleanError.ts:55
+#: src/lib/hooks/useCleanError.ts:44
 msgid "This feature is not available while using an app password. Please sign in with your main password."
 msgstr ""
 
-#: src/lib/strings/errors.ts:27
+#: src/lib/strings/errors.ts:20
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
@@ -8766,7 +8766,7 @@ msgstr "Unable to find a selected recipient."
 msgid "Unable to find the selected recipient."
 msgstr "Unable to find the selected recipient."
 
-#: src/lib/strings/errors.ts:39
+#: src/lib/strings/errors.ts:32
 msgid "Unable to resolve handle"
 msgstr ""
 
@@ -9692,11 +9692,6 @@ msgstr ""
 msgid "You cannot create a group chat yet."
 msgstr "You cannot create a group chat yet."
 
-#: src/lib/hooks/useCleanError.ts:48
-#: src/lib/strings/errors.ts:24
-msgid "You cannot update your birthdate while using an app password. Please sign in with your main password to update your birthdate."
-msgstr ""
-
 #: src/screens/Profile/KnownFollowers.tsx:93
 msgid "You don't follow any users who follow @{name}."
 msgstr ""
@@ -9917,7 +9912,7 @@ msgstr ""
 msgid "You've reached the maximum number of drafts"
 msgstr ""
 
-#: src/lib/hooks/useCleanError.ts:62
+#: src/lib/hooks/useCleanError.ts:51
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr ""
 
