@@ -1,0 +1,38 @@
+diff --git a/dist/vanilla-extract-css.cjs.prod.js b/dist/vanilla-extract-css.cjs.prod.js
+index 339da27ee2f5984cdecb50805e0f03fe35fab399..65b487b5ad543993f225430460c326ec1afdb160 100644
+--- a/dist/vanilla-extract-css.cjs.prod.js
++++ b/dist/vanilla-extract-css.cjs.prod.js
+@@ -134,7 +134,16 @@ function getDevPrefix(_ref) {
+   return parts.join('_');
+ }
+ function normalizeIdentifier(identifier) {
+-  return identifier.match(/^[0-9]/) ? "_".concat(identifier) : identifier;
++  return identifier.match(/^[A-Za-z_]/) ? identifier : "_".concat(identifier);
++}
++function toBase64(value) {
++  var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
++  var result = "";
++  do {
++    result = alphabet[value % 64] + result;
++    value = Math.floor(value / 64);
++  } while (value > 0);
++  return result;
+ }
+ function generateIdentifier(arg) {
+   var identOption = adapter_dist_vanillaExtractCssAdapter.getIdentOption();
+@@ -145,13 +154,12 @@ function generateIdentifier(arg) {
+     debugId: arg
+   } : null), typeof arg === 'object' ? arg : null);
+ 
+-  // Convert ref count to base 36 for optimal hash lengths
+-  var refCount = fileScope_dist_vanillaExtractCssFileScope.getAndIncrementRefCounter().toString(36);
++  var refCount = toBase64(fileScope_dist_vanillaExtractCssFileScope.getAndIncrementRefCounter());
+   var {
+     filePath,
+     packageName
+   } = fileScope_dist_vanillaExtractCssFileScope.getFileScope();
+-  var fileScopeHash = hash__default["default"](packageName ? "".concat(packageName).concat(filePath) : filePath);
++  var fileScopeHash = toBase64(parseInt(hash__default["default"](packageName ? "".concat(packageName).concat(filePath) : filePath), 36));
+   var identifier = "".concat(fileScopeHash).concat(refCount);
+   if (identOption === 'debug') {
+     var devPrefix = getDevPrefix({

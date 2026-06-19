@@ -17,6 +17,7 @@ overrides:
 patchedDependencies:
   '@base-ui/react': 867dd75a17d34ef00265de5b75ae7133266ed640bcf994e4c7c49d730fcc3225
   '@react-navigation/native-stack': a4cdb79a0fb2df5d81643aa346e5aff8e334c20cd7062e63f426f3232bb0a571
+  '@vanilla-extract/css': 7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5
 
 importers:
 
@@ -132,7 +133,7 @@ importers:
         version: 5.101.0(@tanstack/react-query@5.101.0(react@19.2.7))(react@19.2.7)
       '@vanilla-extract/css':
         specifier: ^1.20.1
-        version: 1.20.1
+        version: 1.20.1(patch_hash=7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5)
       '@vanilla-extract/dynamic':
         specifier: ^2.1.5
         version: 2.1.5
@@ -8802,7 +8803,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vanilla-extract/css@1.20.1':
+  '@vanilla-extract/css@1.20.1(patch_hash=7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5)':
     dependencies:
       '@emotion/hash': 0.9.2
       '@vanilla-extract/private': 1.0.9
@@ -8827,7 +8828,7 @@ snapshots:
       '@babel/core': 7.29.7
       '@babel/plugin-syntax-typescript': 7.29.7(@babel/core@7.29.7)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
-      '@vanilla-extract/css': 1.20.1
+      '@vanilla-extract/css': 1.20.1(patch_hash=7879825473edcd40270679a127c740fc1eb705c6d13f31bf607d9272b0be02e5)
       dedent: 1.7.2
       esbuild: 0.28.0
       eval: 0.1.8
