@@ -52,6 +52,23 @@ export function optimisticDelete(convoId: string, old: ConvoRequestListQueryData
 }
 
 /**
+ * Optimistically zeroes the unread count on every incoming conversation request in the request-list cache, so
+ * "mark all as read" clears the inbox before the query refetches.
+ */
+export function markAllRead(old: ConvoRequestListQueryData | undefined) {
+	if (!old) return old;
+	return {
+		...old,
+		pages: old.pages.map((page) => ({
+			...page,
+			requests: page.requests.map((item) =>
+				item.$type === 'chat.bsky.convo.defs#convoView' ? { ...item, unreadCount: 0 } : item,
+			),
+		})),
+	};
+}
+
+/**
  * Optimistically drops an outgoing group join-request from the request-list cache, so rescinding it removes
  * the row before the query refetches.
  */

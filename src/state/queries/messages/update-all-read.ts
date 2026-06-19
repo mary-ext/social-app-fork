@@ -5,7 +5,11 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
-import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
+import {
+	type ConvoRequestListQueryData,
+	markAllRead as markAllRequestsRead,
+	RQKEY_ROOT as CONVO_REQUEST_LIST_KEY,
+} from './list-conversation-requests';
 import {
 	type ConvoListQueryData,
 	RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
@@ -44,6 +48,15 @@ export function useUpdateAllRead(
 			const prevConvoListQueries = queryClient.getQueriesData<ConvoListQueryData>({
 				queryKey: [CONVO_LIST_ROOT_KEY],
 			});
+			// the request inbox is a separate cache; clear its unread rows too
+			const prevRequestsQueries = queryClient.getQueriesData<ConvoRequestListQueryData>({
+				queryKey: [CONVO_REQUEST_LIST_KEY],
+			});
+			if (status === 'request') {
+				queryClient.setQueriesData<ConvoRequestListQueryData>({ queryKey: [CONVO_REQUEST_LIST_KEY] }, (old) =>
+					markAllRequestsRead(old),
+				);
+			}
 			queryClient.setQueriesData({ queryKey: CONVO_LIST_PARTIAL_KEY(status) }, (old?: ConvoListQueryData) => {
 				if (!old) return old;
 				return {
@@ -72,7 +85,7 @@ export function useUpdateAllRead(
 				},
 			);
 			onMutate?.();
-			return { prevConvoListQueries };
+			return { prevConvoListQueries, prevRequestsQueries };
 		},
 		onSuccess: () => {
 			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY(status) });
@@ -88,6 +101,12 @@ export function useUpdateAllRead(
 				for (const [queryKey, prevData] of context.prevConvoListQueries) {
 					queryClient.setQueryData(queryKey, prevData);
 				}
+			}
+			if (status === 'request' && context?.prevRequestsQueries) {
+				for (const [queryKey, prevData] of context.prevRequestsQueries) {
+					queryClient.setQueryData(queryKey, prevData);
+				}
+				void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
 			}
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
 			onError?.(error);
