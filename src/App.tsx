@@ -13,7 +13,6 @@ import { ThemeProvider } from '#/lib/ThemeContext';
 
 import { Provider as MutedThreadsProvider } from '#/state/cache/thread-mutes';
 import { Provider as DialogStateProvider } from '#/state/dialogs';
-import { Provider as HomeBadgeProvider } from '#/state/home-badge';
 import { MessagesProvider } from '#/state/messages';
 import { Provider as PrefsStateProvider } from '#/state/preferences';
 import { Provider as LabelDefsProvider } from '#/state/preferences/label-defs';
@@ -76,24 +75,22 @@ function InnerApp() {
 												<ModerationOptsProvider>
 													<SelectedFeedProvider>
 														<HiddenRepliesProvider>
-															<HomeBadgeProvider>
-																<UnreadNotifsProvider>
-																	<MutedThreadsProvider>
-																		<SafeAreaProvider>
-																			<ServiceConfigProvider>
-																				<HideBottomBarBorderProvider>
-																					<IntentDialogProvider>
-																						<HotkeysProvider>
-																							<Shell />
-																							<ToastOutlet />
-																						</HotkeysProvider>
-																					</IntentDialogProvider>
-																				</HideBottomBarBorderProvider>
-																			</ServiceConfigProvider>
-																		</SafeAreaProvider>
-																	</MutedThreadsProvider>
-																</UnreadNotifsProvider>
-															</HomeBadgeProvider>
+															<UnreadNotifsProvider>
+																<MutedThreadsProvider>
+																	<SafeAreaProvider>
+																		<ServiceConfigProvider>
+																			<HideBottomBarBorderProvider>
+																				<IntentDialogProvider>
+																					<HotkeysProvider>
+																						<Shell />
+																						<ToastOutlet />
+																					</HotkeysProvider>
+																				</IntentDialogProvider>
+																			</HideBottomBarBorderProvider>
+																		</ServiceConfigProvider>
+																	</SafeAreaProvider>
+																</MutedThreadsProvider>
+															</UnreadNotifsProvider>
 														</HiddenRepliesProvider>
 													</SelectedFeedProvider>
 												</ModerationOptsProvider>

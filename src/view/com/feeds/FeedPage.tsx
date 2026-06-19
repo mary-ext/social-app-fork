@@ -12,7 +12,6 @@ import type { AllNavigatorParams } from '#/lib/routes/types';
 
 import { listenSoftReset } from '#/state/events';
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback';
-import { useSetHomeBadge } from '#/state/home-badge';
 import type { FeedSourceInfo } from '#/state/queries/feed';
 import { type FeedDescriptor, RQKEY as FEED_RQKEY } from '#/state/queries/post-feed';
 import { truncateAndInvalidate } from '#/state/queries/util';
@@ -56,14 +55,7 @@ export function FeedPage({
 	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
 	const scrollElRef = useRef<ListMethods>(null);
 	const [hasNew, setHasNew] = useState(false);
-	const setHomeBadge = useSetHomeBadge();
 	const t = useTheme();
-
-	useEffect(() => {
-		if (isPageFocused) {
-			setHomeBadge(hasNew);
-		}
-	}, [isPageFocused, hasNew, setHomeBadge]);
 
 	const scrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({

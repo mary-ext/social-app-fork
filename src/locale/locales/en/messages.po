@@ -4692,7 +4692,7 @@ msgstr ""
 #: src/screens/Profile/ProfileFeed/index.tsx:149
 #: src/screens/Profile/Sections/Feed.tsx:78
 #: src/screens/ProfileList/FeedSection.tsx:82
-#: src/view/com/feeds/FeedPage.tsx:127
+#: src/view/com/feeds/FeedPage.tsx:119
 msgid "Load new posts"
 msgstr ""
 
@@ -5289,7 +5289,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:132
+#: src/view/com/feeds/FeedPage.tsx:124
 #: src/view/shell/desktop/LeftNav.tsx:554
 msgctxt "action"
 msgid "New post"
@@ -9952,7 +9952,7 @@ msgstr ""
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
-#: src/App.tsx:57
+#: src/App.tsx:56
 msgid "Your session expired. Please sign in again."
 msgstr "Your session expired. Please sign in again."
 
