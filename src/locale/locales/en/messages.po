@@ -112,7 +112,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:177
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:178
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -203,7 +203,7 @@ msgid "{0} is blocking you"
 msgstr "{0} is blocking you"
 
 #. placeholder {0}: sanitizeHandle(profile.handle)
-#: src/features/liveNow/components/LiveStatus.tsx:55
+#: src/features/liveNow/components/LiveStatus.tsx:56
 #: src/features/liveNow/components/LiveStatusDialog.tsx:78
 msgid "{0} is live"
 msgstr ""
@@ -549,7 +549,7 @@ msgid "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 msgstr "{JOIN_REQUESTS_THRESHOLD}+ new join requests"
 
 #. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
-#: src/components/StarterPack/StarterPackCard.tsx:105
+#: src/components/StarterPack/StarterPackCard.tsx:106
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr ""
 
@@ -2932,7 +2932,7 @@ msgstr ""
 msgid "Either the creator of this list has blocked you or you have blocked the creator."
 msgstr ""
 
-#: src/components/ExternalEmbed/ExternalPlayer.tsx:103
+#: src/components/ExternalEmbed/ExternalPlayer.tsx:104
 msgid "Embedded player"
 msgstr "Embedded player"
 
@@ -4705,7 +4705,7 @@ msgstr ""
 msgid "LIVE"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:191
+#: src/features/liveNow/components/LiveStatus.tsx:192
 #: src/features/liveNow/components/LiveStatusDialog.tsx:198
 msgid "Live feature is in beta"
 msgstr ""
@@ -4784,7 +4784,7 @@ msgstr ""
 msgid "Loading post interaction settings..."
 msgstr ""
 
-#: src/components/ExternalEmbed/ExternalPlayer.tsx:86
+#: src/components/ExternalEmbed/ExternalPlayer.tsx:87
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:391
 msgid "Loading video"
 msgstr "Loading video"
@@ -5240,8 +5240,8 @@ msgstr ""
 
 #. placeholder {0}: (view.record as AppBskyGraphStarterpack.Main).name
 #. placeholder {0}: record.name
-#: src/components/StarterPack/StarterPackCard.tsx:126
-#: src/components/StarterPack/StarterPackCard.tsx:153
+#: src/components/StarterPack/StarterPackCard.tsx:127
+#: src/components/StarterPack/StarterPackCard.tsx:154
 msgid "Navigate to {0}"
 msgstr ""
 
@@ -5405,10 +5405,6 @@ msgstr "No GIFs found for \"{query}\"."
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:67
 msgid "No GIFs to show right now. Try again in a moment."
 msgstr "No GIFs to show right now. Try again in a moment."
-
-#: src/features/liveNow/components/LinkPreview.tsx:40
-msgid "No image"
-msgstr ""
 
 #: src/components/LikedByList.tsx:77
 #: src/view/com/post-thread/PostLikedBy.tsx:77
@@ -5785,8 +5781,8 @@ msgstr "Open group chat"
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
-#: src/components/ExternalEmbed/index.tsx:50
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:149
+#: src/components/ExternalEmbed/index.tsx:51
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:150
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -5806,8 +5802,8 @@ msgstr ""
 msgid "Open post options menu"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:170
-#: src/features/liveNow/components/LiveStatus.tsx:179
+#: src/features/liveNow/components/LiveStatus.tsx:171
+#: src/features/liveNow/components/LiveStatus.tsx:180
 #: src/features/liveNow/components/LiveStatusDialog.tsx:179
 #: src/features/liveNow/components/LiveStatusDialog.tsx:189
 msgid "Open profile"
@@ -6100,7 +6096,7 @@ msgstr ""
 msgid "Play video"
 msgstr ""
 
-#: src/components/ExternalEmbed/ExternalPlayer.tsx:85
+#: src/components/ExternalEmbed/ExternalPlayer.tsx:86
 msgid "Play Video"
 msgstr ""
 
@@ -6801,8 +6797,8 @@ msgid "Reply was successfully hidden"
 msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:118
-#: src/features/liveNow/components/LiveStatus.tsx:194
-#: src/features/liveNow/components/LiveStatus.tsx:196
+#: src/features/liveNow/components/LiveStatus.tsx:195
+#: src/features/liveNow/components/LiveStatus.tsx:197
 #: src/features/liveNow/components/LiveStatusDialog.tsx:221
 #: src/screens/Messages/ConversationSettings/index.tsx:444
 msgid "Report"
@@ -7897,7 +7893,7 @@ msgid "Starter Pack"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
-#: src/components/StarterPack/StarterPackCard.tsx:84
+#: src/components/StarterPack/StarterPackCard.tsx:85
 msgid "Starter pack by {0}"
 msgstr ""
 
@@ -7905,7 +7901,7 @@ msgstr ""
 msgid "Starter pack by <0/>"
 msgstr ""
 
-#: src/components/StarterPack/StarterPackCard.tsx:83
+#: src/components/StarterPack/StarterPackCard.tsx:84
 #: src/view/com/profile/ProfileSubpageHeader.tsx:147
 msgid "Starter pack by you"
 msgstr ""
@@ -7955,13 +7951,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:359
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:363
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:360
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:364
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:358
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:359
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -9195,8 +9191,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:220
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:274
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:221
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:275
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9225,7 +9221,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:361
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:362
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -9285,10 +9281,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:220
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:274
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:362
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:221
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:275
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:363
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:364
 msgid "View publication"
 msgstr "View publication"
 
@@ -9375,8 +9371,8 @@ msgstr ""
 msgid "Warn"
 msgstr ""
 
-#: src/features/liveNow/components/LiveStatus.tsx:146
-#: src/features/liveNow/components/LiveStatus.tsx:152
+#: src/features/liveNow/components/LiveStatus.tsx:147
+#: src/features/liveNow/components/LiveStatus.tsx:153
 #: src/features/liveNow/components/LiveStatusDialog.tsx:157
 #: src/features/liveNow/components/LiveStatusDialog.tsx:166
 msgid "Watch now"

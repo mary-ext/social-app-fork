@@ -9,6 +9,7 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 
 import { useExternalEmbedsPrefs } from '#/state/preferences';
 
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { ExternalGif } from '#/components/ExternalEmbed/ExternalGif';
 import { ExternalPlayer } from '#/components/ExternalEmbed/ExternalPlayer';
 import { GifEmbed } from '#/components/ExternalEmbed/GifEmbed';
@@ -103,7 +104,7 @@ export function ExternalEmbed({ link, onOpen, hideAlt }: ExternalEmbedProps) {
 				aria-label={ariaLabel}
 				onClick={onClick}
 			>
-				{imageUri ? <img className={styles.thumb} src={imageUri} alt="" loading="lazy" /> : null}
+				{imageUri ? <EmbedThumb src={imageUri} /> : null}
 				<div className={clsx(styles.body, imageUri && styles.bodyWithMedia)}>
 					<CardBody link={link} niceUrl={niceUrl} />
 				</div>

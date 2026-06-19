@@ -9,15 +9,8 @@ export const container = style({
 });
 
 export const thumb = style({
-	bottom: 0,
-	display: 'block',
-	height: '100%',
-	left: 0,
-	objectFit: 'cover',
+	inset: 0,
 	position: 'absolute',
-	right: 0,
-	top: 0,
-	width: '100%',
 });
 
 // darkens the thumbnail/placeholder behind the play affordance at 0.3 opacity.

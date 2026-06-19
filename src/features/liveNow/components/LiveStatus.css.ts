@@ -32,12 +32,9 @@ export const media = style({
 	width: '100%',
 });
 
-export const mediaImage = style({
-	height: '100%',
+export const mediaFrame = style({
 	inset: 0,
-	objectFit: 'cover',
 	position: 'absolute',
-	width: '100%',
 });
 
 // pin the LIVE pill to the media's top-left instead of its default bottom-center

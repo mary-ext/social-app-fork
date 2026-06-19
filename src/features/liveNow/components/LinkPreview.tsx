@@ -1,47 +1,24 @@
-import { useState } from 'react';
-import { Trans } from '@lingui/react/macro';
-
 import type { LinkMeta } from '#/lib/link-meta/link-meta';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
-import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image';
 import { Text } from '#/components/Text';
 
 import * as styles from './LinkPreview.css';
 
 export function LinkPreview({ linkMeta, loading }: { linkMeta?: LinkMeta; loading: boolean }) {
-	// tracks the src that failed to load; a different src re-attempts (no effect needed to reset)
-	const [erroredSrc, setErroredSrc] = useState<string>();
-
 	if (!linkMeta && !loading) {
 		return null;
 	}
 
-	const showImage = !!linkMeta?.image && erroredSrc !== linkMeta.image;
-
 	return (
 		<div className={styles.card}>
-			<div className={styles.thumb}>
-				{showImage && (
-					<img
-						alt=""
-						className={styles.thumbImage}
-						onError={() => setErroredSrc(linkMeta?.image)}
-						src={linkMeta?.image}
-					/>
-				)}
-				{linkMeta && !showImage && (
-					<>
-						<span className={styles.placeholderIcon}>
-							<ImageIcon fill="currentColor" size="md" />
-						</span>
-						<Text align="center" color="textContrastLow" size="xs">
-							<Trans>No image</Trans>
-						</Text>
-					</>
-				)}
-			</div>
+			{linkMeta ? (
+				<EmbedThumb frameClassName={styles.thumb} src={linkMeta.image} />
+			) : (
+				<div className={styles.thumb} />
+			)}
 			<div className={styles.body}>
 				{linkMeta ? (
 					<>

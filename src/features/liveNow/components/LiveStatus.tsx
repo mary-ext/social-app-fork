@@ -13,6 +13,7 @@ import { toNiceDomain } from '#/lib/strings/url-helpers';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache';
 
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon } from '#/components/icons/CircleInfo';
 import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe';
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon } from '#/components/icons/SquareArrowTopRight';
@@ -115,7 +116,7 @@ export function LiveStatus({
 					className={css.media}
 					modui={statusModeration && getDisplayRestrictions(statusModeration, DisplayContext.ContentMedia)}
 				>
-					<img alt="" className={css.mediaImage} src={thumb} />
+					<EmbedThumb frameClassName={css.mediaFrame} src={thumb} />
 					<LiveIndicator className={css.liveBadge} size="large" />
 				</ContentHider>
 			)}

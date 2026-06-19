@@ -17,6 +17,7 @@ import { clsx } from 'clsx';
 import { niceDate } from '#/lib/strings/time';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
 
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
 import { StandardSite } from '#/components/icons/community/StandardSite';
@@ -149,7 +150,7 @@ function ArticleCard({ className, onOpen, preview, view }: StandardSiteEmbedProp
 				label={view.title || l`Open link to ${niceUrl}`}
 				onPress={open}
 			>
-				{view.thumb ? <img alt="" className={styles.thumb} loading="lazy" src={view.thumb} /> : null}
+				{view.thumb ? <EmbedThumb src={view.thumb} /> : null}
 
 				<div className={clsx(styles.body, view.thumb && styles.bodyMedia)}>
 					<div className={styles.textBlock}>

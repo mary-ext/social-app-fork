@@ -1,7 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { CARD_ASPECT_RATIO } from '#/lib/constants';
-
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 
@@ -56,13 +54,6 @@ export const embedCard = style({
 		},
 		'&:hover': { borderColor: vars.palette.contrast_300 },
 	},
-});
-
-export const embedImage = style({
-	aspectRatio: String(CARD_ASPECT_RATIO),
-	display: 'block',
-	objectFit: 'cover',
-	width: '100%',
 });
 
 export const embedBody = style({

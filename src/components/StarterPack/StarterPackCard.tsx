@@ -12,6 +12,7 @@ import { precacheResolvedUri } from '#/state/queries/resolve-uri';
 import { precacheStarterPack } from '#/state/queries/starter-packs';
 import { useSession } from '#/state/session';
 
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack';
 import { Text } from '#/components/Text';
 import { Link as WebLink } from '#/components/web/Link';
@@ -168,7 +169,7 @@ export function Embed({ starterPack }: { starterPack: AnyStarterPackView }) {
 
 	return (
 		<Link starterPack={starterPack} className={css.embedCard}>
-			<img className={css.embedImage} src={imageUri} alt="" loading="lazy" />
+			<EmbedThumb src={imageUri} />
 			<div className={css.embedBody}>
 				<Card starterPack={starterPack} />
 			</div>

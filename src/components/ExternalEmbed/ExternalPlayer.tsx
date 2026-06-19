@@ -8,6 +8,7 @@ import { useExternalEmbedsPrefs } from '#/state/preferences';
 
 import { noRowLink } from '#/components/BlockLink';
 import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent';
+import { EmbedThumb } from '#/components/EmbedThumb';
 import { PlayButtonIcon } from '#/components/PlayButtonIcon';
 import { Spinner } from '#/components/Spinner';
 import { useDialogHandle } from '#/components/web/Dialog';
@@ -79,7 +80,7 @@ export function ExternalPlayer({ link, params }: ExternalPlayerProps) {
 					aspect.aspectRatio ? { aspectRatio: String(aspect.aspectRatio) } : { height: `${aspect.height}px` }
 				}
 			>
-				{showThumb ? <img className={styles.thumb} src={link.thumb} alt="" loading="lazy" /> : null}
+				{showThumb ? <EmbedThumb frameClassName={styles.thumb} src={link.thumb} /> : null}
 				{!isActive || isLoading ? <div aria-hidden className={styles.dim} /> : null}
 				{!isActive || isLoading ? (
 					<button type="button" className={styles.overlay} aria-label={l`Play Video`} onClick={onPlayPress}>

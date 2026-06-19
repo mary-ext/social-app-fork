@@ -1,7 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { CARD_ASPECT_RATIO } from '#/lib/constants';
-
 import { colors } from '#/styles/colors';
 import { vars } from '#/styles/contract.css';
 import { borderRadius, space } from '#/styles/tokens.css';
@@ -33,13 +31,6 @@ export const card = style({
 			outlineOffset: -2,
 		},
 	},
-});
-
-export const thumb = style({
-	aspectRatio: String(CARD_ASPECT_RATIO),
-	display: 'block',
-	objectFit: 'cover',
-	width: '100%',
 });
 
 export const body = style({

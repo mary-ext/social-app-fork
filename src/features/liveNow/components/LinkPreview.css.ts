@@ -18,30 +18,9 @@ export const card = style({
 });
 
 export const thumb = style({
-	alignItems: 'center',
 	backgroundColor: vars.palette.contrast_25,
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 4,
-	justifyContent: 'center',
 	minHeight: 64,
-	position: 'relative',
 	width: 114,
-});
-
-export const thumbImage = style({
-	height: '100%',
-	inset: 0,
-	objectFit: 'cover',
-	position: 'absolute',
-	width: '100%',
-});
-
-// the "No image" icon; an SVG `fill` reads this wrapper's `color`.
-export const placeholderIcon = style({
-	alignItems: 'center',
-	color: vars.palette.contrast_400,
-	display: 'flex',
 });
 
 export const body = style({
