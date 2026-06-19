@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import type { ChatBskyConvoDefs, ChatBskyConvoListConvos } from '@atcute/bluesky';
+import type { ChatBskyConvoDefs, ChatBskyConvoListConvoRequests, ChatBskyGroupDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
@@ -12,7 +12,7 @@ import { cleanError } from '#/lib/strings/errors';
 
 import { MESSAGE_SCREEN_POLL_INTERVAL } from '#/state/messages/convo/const';
 import { useMessagesEventBus } from '#/state/messages/events';
-import { useListConvosQuery } from '#/state/queries/messages/list-conversations';
+import { useListConvoRequests } from '#/state/queries/messages/list-conversation-requests';
 import { useUpdateAllRead } from '#/state/queries/messages/update-all-read';
 
 import { logger } from '#/logger';
@@ -35,6 +35,7 @@ import { ListFooter } from '#/components/Lists';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
+import { OutgoingRequestListItem } from './components/OutgoingRequestListItem';
 import { RequestListItem } from './components/RequestListItem';
 import { useIsWithinSplitView } from './components/splitView/context';
 
@@ -44,24 +45,35 @@ export function MessagesInboxScreen(props: Props) {
 	return <MessagesInboxScreenInner {...props} />;
 }
 
+type RequestItem =
+	| { type: 'incoming'; view: ChatBskyConvoDefs.ConvoView }
+	| { type: 'outgoing'; view: ChatBskyGroupDefs.JoinRequestConvoView };
+
 export function MessagesInboxScreenInner({}: Props) {
-	const listConvosQuery = useListConvosQuery({ status: 'request' });
+	const listConvosQuery = useListConvoRequests();
 	const { data } = listConvosQuery;
 
-	const conversations = useMemo(() => {
-		if (data?.pages) {
-			const convos = data.pages.flatMap((page) => page.convos);
-
-			return convos;
+	const conversations = useMemo<RequestItem[]>(() => {
+		if (!data?.pages) return [];
+		const items: RequestItem[] = [];
+		for (const page of data.pages) {
+			for (const item of page.requests) {
+				if (item.$type === 'chat.bsky.convo.defs#convoView') {
+					items.push({ type: 'incoming', view: item });
+				} else if (item.$type === 'chat.bsky.group.defs#joinRequestConvoView') {
+					items.push({ type: 'outgoing', view: item });
+				}
+			}
 		}
-		return [];
+		return items;
 	}, [data]);
 
 	const hasUnreadConvos = useMemo(() => {
 		return conversations.some(
-			(conversation) =>
-				conversation.members.every((member) => member.handle !== 'missing.invalid') &&
-				conversation.unreadCount > 0,
+			(item) =>
+				item.type === 'incoming' &&
+				item.view.members.every((member) => member.handle !== 'missing.invalid') &&
+				item.view.unreadCount > 0,
 		);
 	}, [conversations]);
 
@@ -85,8 +97,8 @@ function RequestList({
 	listConvosQuery,
 	conversations,
 }: {
-	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvos.$output>, Error>;
-	conversations: ChatBskyConvoDefs.ConvoView[];
+	listConvosQuery: UseInfiniteQueryResult<InfiniteData<ChatBskyConvoListConvoRequests.$output>, Error>;
+	conversations: RequestItem[];
 }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
@@ -239,12 +251,15 @@ function RequestList({
 	);
 }
 
-function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
-	return item.id;
+function keyExtractor(item: RequestItem) {
+	return item.type === 'incoming' ? item.view.id : item.view.convoId;
 }
 
-function renderItem({ item }: { item: ChatBskyConvoDefs.ConvoView }) {
-	return <RequestListItem convo={item} />;
+function renderItem({ item }: { item: RequestItem }) {
+	if (item.type === 'incoming') {
+		return <RequestListItem convo={item.view} />;
+	}
+	return <OutgoingRequestListItem convo={item.view} />;
 }
 
 function MarkAsReadHeaderButton() {

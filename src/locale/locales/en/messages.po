@@ -129,15 +129,15 @@ msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
-#: src/components/ProfileHoverCard/index.tsx:426
-#: src/components/web/ProfileHoverCard.tsx:153
+#: src/components/ProfileHoverCard/index.tsx:425
+#: src/components/web/ProfileHoverCard.tsx:152
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/components/ProfileHoverCard/index.tsx:430
-#: src/components/web/ProfileHoverCard.tsx:154
+#: src/components/ProfileHoverCard/index.tsx:429
+#: src/components/web/ProfileHoverCard.tsx:153
 #: src/screens/Profile/Header/Metrics.tsx:24
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -512,8 +512,8 @@ msgstr ""
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:516
-#: src/components/web/ProfileHoverCard.tsx:226
+#: src/components/ProfileHoverCard/index.tsx:515
+#: src/components/web/ProfileHoverCard.tsx:225
 msgid "{following} following"
 msgstr ""
 
@@ -1341,10 +1341,10 @@ msgstr "An issue occurred starting the chat, please try again."
 msgid "An issue occurred while trying to open the chat"
 msgstr ""
 
-#: src/components/hooks/useFollowMethods.ts:35
-#: src/components/hooks/useFollowMethods.ts:52
-#: src/components/ProfileCard.tsx:461
-#: src/components/ProfileCard.tsx:483
+#: src/components/hooks/useFollowMethods.ts:25
+#: src/components/hooks/useFollowMethods.ts:42
+#: src/components/ProfileCard.tsx:422
+#: src/components/ProfileCard.tsx:444
 #: src/view/com/notifications/NotificationFeedItem.tsx:698
 #: src/view/com/notifications/NotificationFeedItem.tsx:714
 msgid "An issue occurred, please try again."
@@ -1488,6 +1488,11 @@ msgstr "Are you sure you want to leave this conversation? Your messages will be 
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
+#. placeholder {0}: convoView.name
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:95
+msgid "Are you sure you want to rescind your request to join {0}?"
+msgstr "Are you sure you want to rescind your request to join {0}?"
+
 #: src/view/com/composer/Composer.tsx:1306
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
@@ -1532,7 +1537,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:158
 #: src/screens/Messages/components/InviteLinkDialog.tsx:233
 #: src/screens/Messages/components/InviteLinkDialog.tsx:258
-#: src/screens/Messages/Inbox.tsx:192
+#: src/screens/Messages/Inbox.tsx:204
 #: src/screens/Profile/Header/Shell.tsx:78
 #: src/screens/StarterPack/Wizard/index.tsx:279
 #: src/view/com/composer/drafts/DraftsListDialog.tsx:74
@@ -1540,7 +1545,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:191
+#: src/screens/Messages/Inbox.tsx:203
 msgid "Back to Chats"
 msgstr ""
 
@@ -1709,7 +1714,7 @@ msgstr ""
 msgid "Browse custom feeds"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:350
+#: src/components/FeedInterstitials.tsx:349
 msgid "Browse more accounts"
 msgstr ""
 
@@ -1912,7 +1917,7 @@ msgstr "Chat recipient is not followed by the sender."
 msgid "Chat request inbox"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:74
+#: src/screens/Messages/Inbox.tsx:86
 msgid "Chat requests"
 msgstr ""
 
@@ -3270,7 +3275,7 @@ msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
 
 #: src/screens/Messages/ChatList.tsx:290
-#: src/screens/Messages/Inbox.tsx:161
+#: src/screens/Messages/Inbox.tsx:173
 msgid "Failed to load conversations"
 msgstr ""
 
@@ -3319,7 +3324,7 @@ msgstr ""
 msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
-#: src/screens/Messages/Inbox.tsx:259
+#: src/screens/Messages/Inbox.tsx:274
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -3354,6 +3359,7 @@ msgid "Failed to remove verification"
 msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:167
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:35
 msgid "Failed to rescind your request. Please try again."
 msgstr "Failed to rescind your request. Please try again."
 
@@ -3538,11 +3544,11 @@ msgid "Focus the search field"
 msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:499
-#: src/components/ProfileHoverCard/index.tsx:469
-#: src/components/ProfileHoverCard/index.tsx:474
-#: src/components/web/ProfileHoverCard.tsx:187
-#: src/components/web/ProfileHoverCard.tsx:193
+#: src/components/ProfileCard.tsx:460
+#: src/components/ProfileHoverCard/index.tsx:468
+#: src/components/ProfileHoverCard/index.tsx:473
+#: src/components/web/ProfileHoverCard.tsx:186
+#: src/components/web/ProfileHoverCard.tsx:192
 #: src/screens/Messages/ConversationSettings/Member.tsx:161
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:130
 #: src/screens/Profile/Header/Actions.tsx:39
@@ -3572,7 +3578,7 @@ msgid "Follow all"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:495
+#: src/components/ProfileCard.tsx:456
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:128
 #: src/screens/Profile/Header/Actions.tsx:37
 #: src/view/com/notifications/NotificationFeedItem.tsx:757
@@ -3629,11 +3635,11 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:490
-#: src/components/ProfileHoverCard/index.tsx:469
-#: src/components/ProfileHoverCard/index.tsx:474
-#: src/components/web/ProfileHoverCard.tsx:187
-#: src/components/web/ProfileHoverCard.tsx:193
+#: src/components/ProfileCard.tsx:451
+#: src/components/ProfileHoverCard/index.tsx:468
+#: src/components/ProfileHoverCard/index.tsx:473
+#: src/components/web/ProfileHoverCard.tsx:186
+#: src/components/web/ProfileHoverCard.tsx:192
 #: src/Navigation.tsx:538
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:133
 #: src/screens/Profile/Header/Actions.tsx:35
@@ -3651,7 +3657,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:451
+#: src/components/ProfileCard.tsx:412
 #: src/screens/Profile/Header/Context.tsx:128
 #: src/view/com/notifications/NotificationFeedItem.tsx:695
 msgid "Following {0}"
@@ -3821,8 +3827,8 @@ msgstr ""
 #: src/screens/ProfileList/components/ErrorScreen.tsx:32
 #: src/screens/ProfileList/components/ErrorScreen.tsx:39
 #: src/view/com/auth/LoggedOut.tsx:66
-#: src/view/com/profile/ProfileFollowers.tsx:111
-#: src/view/com/profile/ProfileFollowers.tsx:112
+#: src/view/com/profile/ProfileFollowers.tsx:89
+#: src/view/com/profile/ProfileFollowers.tsx:90
 #: src/view/screens/NotFound.tsx:51
 #: src/view/screens/NotFound.tsx:52
 #: src/view/screens/NotFound.tsx:56
@@ -4234,7 +4240,7 @@ msgid "Inbox empty"
 msgstr "Inbox empty"
 
 #. Title message shown in chat requests inbox when it's empty
-#: src/screens/Messages/Inbox.tsx:179
+#: src/screens/Messages/Inbox.tsx:191
 msgid "Inbox zero!"
 msgstr ""
 
@@ -4281,6 +4287,7 @@ msgid "Invalid report subject"
 msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:171
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:39
 msgid "Invalid rescind request."
 msgstr "Invalid rescind request."
 
@@ -4356,6 +4363,7 @@ msgid "Join group chat"
 msgstr "Join group chat"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:163
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:32
 msgid "Join request rescinded."
 msgstr "Join request rescinded."
 
@@ -4868,8 +4876,8 @@ msgstr ""
 msgid "Manage your muted words and tags"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:266
-#: src/screens/Messages/Inbox.tsx:269
+#: src/screens/Messages/Inbox.tsx:281
+#: src/screens/Messages/Inbox.tsx:284
 msgid "Mark all as read"
 msgstr ""
 
@@ -4878,7 +4886,7 @@ msgstr ""
 msgid "Mark as read"
 msgstr ""
 
-#: src/screens/Messages/Inbox.tsx:254
+#: src/screens/Messages/Inbox.tsx:269
 msgid "Marked all as read"
 msgstr ""
 
@@ -5412,7 +5420,7 @@ msgstr ""
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
-#: src/view/com/profile/ProfileFollowers.tsx:104
+#: src/view/com/profile/ProfileFollowers.tsx:82
 msgid "No followers yet"
 msgstr ""
 
@@ -5439,7 +5447,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, getDisplayRestrictions(moderation, DisplayContext.ProfileBio), )
 #. placeholder {0}: sanitizeDisplayName(profile.displayName || profile.handle)
-#: src/components/ProfileCard.tsx:474
+#: src/components/ProfileCard.tsx:435
 #: src/screens/Profile/Header/Context.tsx:149
 #: src/view/com/notifications/NotificationFeedItem.tsx:711
 msgid "No longer following {0}"
@@ -6522,7 +6530,7 @@ msgid "Reject chat request"
 msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:294
-#: src/screens/Messages/Inbox.tsx:165
+#: src/screens/Messages/Inbox.tsx:177
 msgid "Reload conversations"
 msgstr ""
 
@@ -7009,8 +7017,14 @@ msgid "Required in your region"
 msgstr ""
 
 #: src/components/intents/GroupChatJoinDialog.tsx:269
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:94
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:96
 msgid "Rescind request"
 msgstr "Rescind request"
+
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:48
+msgid "Rescind request to join group chat"
+msgstr "Rescind request to join group chat"
 
 #: src/view/com/util/error/ErrorMessage.tsx:43
 msgid "Retries the last action, which errored out"
@@ -7026,7 +7040,7 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerGrid.tsx:89
 #: src/screens/Messages/ChatList.tsx:300
 #: src/screens/Messages/components/MessageListError.tsx:26
-#: src/screens/Messages/Inbox.tsx:171
+#: src/screens/Messages/Inbox.tsx:183
 #: src/screens/Messages/JoinRequests.tsx:306
 #: src/screens/PostThread/components/ThreadError.tsx:43
 #: src/screens/PostThread/components/ThreadError.tsx:45
@@ -7202,7 +7216,7 @@ msgstr ""
 msgid "Search @{0}'s posts"
 msgstr ""
 
-#: src/components/suggested-follows-dialog.tsx:491
+#: src/components/suggested-follows-dialog.tsx:490
 msgid "Search by name or interest"
 msgstr ""
 
@@ -7275,7 +7289,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:564
 #: src/components/dms/components/UserSearchInput.tsx:60
-#: src/components/suggested-follows-dialog.tsx:510
+#: src/components/suggested-follows-dialog.tsx:509
 msgid "Search profiles"
 msgstr ""
 
@@ -7285,7 +7299,7 @@ msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:565
 #: src/components/dms/components/UserSearchInput.tsx:61
-#: src/components/suggested-follows-dialog.tsx:511
+#: src/components/suggested-follows-dialog.tsx:510
 msgid "Searches for profiles"
 msgstr ""
 
@@ -7317,17 +7331,17 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:314
-#: src/components/FeedInterstitials.tsx:364
+#: src/components/FeedInterstitials.tsx:313
+#: src/components/FeedInterstitials.tsx:363
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:298
+#: src/components/FeedInterstitials.tsx:297
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/view/com/profile/ProfileFollows.tsx:116
-#: src/view/com/profile/ProfileFollows.tsx:117
+#: src/view/com/profile/ProfileFollows.tsx:94
+#: src/view/com/profile/ProfileFollows.tsx:95
 msgid "See suggested accounts"
 msgstr ""
 
@@ -8029,7 +8043,7 @@ msgstr "Suggested"
 msgid "Suggested accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:295
+#: src/components/FeedInterstitials.tsx:294
 msgid "Suggested for you"
 msgstr ""
 
@@ -8249,6 +8263,7 @@ msgstr "There was a problem loading GIFs. Check your connection and try again."
 
 #: src/components/intents/GroupChatJoinDialog.tsx:130
 #: src/components/intents/GroupChatJoinDialog.tsx:169
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:37
 msgid "There was a problem with your internet connection, please try again"
 msgstr "There was a problem with your internet connection, please try again"
 
@@ -8627,7 +8642,7 @@ msgstr ""
 msgid "This user does not have a display name, and therefore cannot be verified."
 msgstr ""
 
-#: src/view/com/profile/ProfileFollowers.tsx:104
+#: src/view/com/profile/ProfileFollowers.tsx:82
 msgid "This user doesn't have any followers."
 msgstr ""
 
@@ -8665,7 +8680,7 @@ msgstr ""
 msgid "This user is new here. Press for more info about when they joined."
 msgstr ""
 
-#: src/view/com/profile/ProfileFollows.tsx:109
+#: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
 msgstr ""
 
@@ -9251,7 +9266,7 @@ msgid "View {0}'s profile"
 msgstr ""
 
 #. placeholder {0}: profile.displayName || sanitizeHandle(profile.handle)
-#: src/components/ProfileCard.tsx:134
+#: src/components/ProfileCard.tsx:106
 #: src/components/web/ProfileCard.tsx:52
 msgid "View {0}’s profile"
 msgstr "View {0}’s profile"
@@ -9265,8 +9280,8 @@ msgstr "View {displayName}’s profile"
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
-#: src/components/ProfileHoverCard/index.tsx:455
-#: src/components/web/ProfileHoverCard.tsx:177
+#: src/components/ProfileHoverCard/index.tsx:454
+#: src/components/web/ProfileHoverCard.tsx:176
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -9303,12 +9318,12 @@ msgstr ""
 msgid "View post"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.tsx:441
-#: src/components/ProfileHoverCard/index.tsx:462
-#: src/components/ProfileHoverCard/index.tsx:478
-#: src/components/web/ProfileHoverCard.tsx:163
-#: src/components/web/ProfileHoverCard.tsx:182
-#: src/components/web/ProfileHoverCard.tsx:198
+#: src/components/ProfileHoverCard/index.tsx:440
+#: src/components/ProfileHoverCard/index.tsx:461
+#: src/components/ProfileHoverCard/index.tsx:477
+#: src/components/web/ProfileHoverCard.tsx:162
+#: src/components/web/ProfileHoverCard.tsx:181
+#: src/components/web/ProfileHoverCard.tsx:197
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:276
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:297
 #: src/view/com/posts/PostFeedErrorMessage.tsx:152
@@ -9520,7 +9535,7 @@ msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:65
 #: src/screens/Messages/ChatList.tsx:278
-#: src/screens/Messages/Inbox.tsx:149
+#: src/screens/Messages/Inbox.tsx:161
 msgid "Whoops!"
 msgstr ""
 
@@ -9657,7 +9672,7 @@ msgstr ""
 msgid "You are not allowed to upload videos."
 msgstr ""
 
-#: src/view/com/profile/ProfileFollows.tsx:109
+#: src/view/com/profile/ProfileFollows.tsx:87
 msgid "You are not following anyone yet"
 msgstr ""
 
@@ -9898,6 +9913,11 @@ msgstr "You replied to {originalName}"
 #: src/components/dms/MessageItem.tsx:654
 msgid "You replied to yourself"
 msgstr "You replied to yourself"
+
+#. Displayed when the user has requested to join a group chat.
+#: src/screens/Messages/components/OutgoingRequestListItem.tsx:84
+msgid "You requested to join"
+msgstr "You requested to join"
 
 #: src/screens/Settings/Settings.tsx:114
 #: src/view/shell/desktop/LeftNav.tsx:211

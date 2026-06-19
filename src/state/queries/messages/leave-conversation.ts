@@ -7,6 +7,7 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
 import { type ConvoListQueryData, RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations';
 
 const RQKEY_ROOT = 'leave-convo';
@@ -62,6 +63,7 @@ export function useLeaveConvo(
 		},
 		onSuccess: (data) => {
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] });
+			void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
 			if (convoId) {
 				void invalidateJoinLinkPreviewsForConvo(queryClient, convoId);
 			}

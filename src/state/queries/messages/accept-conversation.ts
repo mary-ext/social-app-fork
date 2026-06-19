@@ -6,6 +6,7 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
 import {
 	type ConvoListItem,
 	type ConvoListQueryData,
@@ -86,6 +87,7 @@ export function useAcceptConversation(
 		},
 		onSuccess: (data) => {
 			void queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] });
+			void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
 			onSuccess?.(data);
 		},
 		onError: (error, _, context) => {

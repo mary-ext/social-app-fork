@@ -5,6 +5,7 @@ import { useClients } from '#/state/session';
 
 import { logger } from '#/logger';
 
+import { RQKEY_ROOT as CONVO_REQUEST_LIST_KEY } from './list-conversation-requests';
 import {
 	type ConvoListQueryData,
 	RQKEY_PARTIAL as CONVO_LIST_PARTIAL_KEY,
@@ -76,6 +77,9 @@ export function useUpdateAllRead(
 		onSuccess: () => {
 			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY(status) });
 			void queryClient.invalidateQueries({ queryKey: CONVO_LIST_PARTIAL_KEY('all', 'unread') });
+			if (status === 'request') {
+				void queryClient.invalidateQueries({ queryKey: [CONVO_REQUEST_LIST_KEY] });
+			}
 			onSuccess?.();
 		},
 		onError: (error, _, context) => {
