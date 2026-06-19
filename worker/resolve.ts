@@ -22,15 +22,22 @@ const ALLOWED_IMAGE_TYPES = new Set(['image/avif', 'image/gif', 'image/jpeg', 'i
 const TITLE_MAX = 1000;
 const DESCRIPTION_MAX = 2000;
 
-/** collapses whitespace, strips control characters, and truncates by code point. */
+/**
+ * collapses horizontal whitespace, strips control characters, and truncates by code point. line breaks
+ * survive (normalized to `\n`, blank-line runs collapsed to one) so multi-line descriptions stay faithful.
+ */
 const clean = (value: string | undefined, max: number): string | undefined => {
 	if (!value) {
 		return undefined;
 	}
 	const normalized = value
+		.replace(/\r\n?/g, '\n')
+		// strip control characters, but keep `\n` as a line separator.
 		// oxlint-disable-next-line no-control-regex
-		.replace(/[\u0000-\u001f\u007f]+/g, ' ')
-		.replace(/\s+/g, ' ')
+		.replace(/[\u0000-\u0009\u000b-\u001f\u007f]+/g, ' ')
+		// collapse horizontal whitespace, then blank-line runs (with surrounding spaces) to a single `\n`.
+		.replace(/[^\S\n]+/g, ' ')
+		.replace(/ ?\n[\n ]*/g, '\n')
 		.trim();
 	if (!normalized) {
 		return undefined;
