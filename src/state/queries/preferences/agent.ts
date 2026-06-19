@@ -304,15 +304,6 @@ export async function getPreferences(pds: Client, appLabelers: readonly string[]
 	return prefs;
 }
 
-/**
- * Clears all preferences by writing an empty array. Used to reset an account's preference state.
- *
- * @param pds the PDS client.
- */
-export async function clearPreferences(pds: Client): Promise<void> {
-	await ok(pds.post('app.bsky.actor.putPreferences', { as: null, input: { preferences: [] } }));
-}
-
 // #endregion
 
 // #region saved feeds

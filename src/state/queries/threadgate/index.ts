@@ -27,7 +27,6 @@ export * from '#/state/queries/threadgate/util';
 export const MAX_HIDDEN_REPLIES = 300;
 
 export const threadgateRecordQueryKeyRoot = 'threadgate-record';
-export const createThreadgateRecordQueryKey = (uri: string) => [threadgateRecordQueryKeyRoot, uri];
 
 export const threadgateViewQueryKeyRoot = 'threadgate-view';
 export const createThreadgateViewQueryKey = (uri: string) => [threadgateViewQueryKeyRoot, uri];

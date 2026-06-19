@@ -1,22 +1,9 @@
-import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native';
+import type { AccessibilityRole } from 'react-native';
 
 import type * as Dialog from '#/components/Dialog';
 import type { RadixPassThroughTriggerProps } from '#/components/Menu/types';
 
 export type { GroupProps, ItemIconProps, ItemTextProps } from '#/components/Menu/types';
-
-export type AuxiliaryViewProps = {
-	children?: React.ReactNode;
-	align?: 'left' | 'right';
-	style?: StyleProp<ViewStyle>;
-};
-
-export type Measurement = {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-};
 
 export type TriggerChildProps = {
 	control: Dialog.DialogOuterProps['control'];

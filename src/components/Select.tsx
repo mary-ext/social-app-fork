@@ -193,13 +193,3 @@ export function ItemIndicator({ icon: Icon = CheckIcon }: { icon?: ComponentType
 export function ItemText({ children }: { children: ReactNode }) {
 	return <BaseSelect.ItemText>{children}</BaseSelect.ItemText>;
 }
-
-export type SelectProps = {
-	/** Accessible name for the trigger. */
-	label: string;
-	items: SelectItem[];
-	value: string;
-	onValueChange: (value: string) => void;
-	placeholder?: string;
-	disabled?: boolean;
-};

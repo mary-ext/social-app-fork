@@ -6,7 +6,6 @@ import * as Menu from '#/components/Menu';
 import { Text } from '#/components/Typography';
 
 export {
-	ContainerItem,
 	type MenuControlProps as ContextMenuControlProps,
 	Divider,
 	Group,

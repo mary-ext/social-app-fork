@@ -7,15 +7,13 @@ import {
 	type ModerationOptions,
 } from '@atcute/bluesky-moderation';
 import { ok } from '@atcute/client';
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isJustAMute, moduiContainsHideableOffense } from '#/lib/moderation';
 import { toModerationPreferences } from '#/lib/moderation/prefs';
 
 import { STALE } from '#/state/queries';
 import { useClients } from '#/state/session';
-
-import { logger } from '#/logger';
 
 import { useModerationOpts } from '../preferences/moderation-opts';
 import { DEFAULT_LOGGED_OUT_PREFERENCES } from './preferences';
@@ -62,44 +60,6 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 		),
 		placeholderData: maintainData ? keepPreviousData : undefined,
 	});
-}
-
-export function useActorAutocompleteFn() {
-	const queryClient = useQueryClient();
-	const moderationOpts = useModerationOpts();
-	const { appview } = useClients();
-
-	return useCallback(
-		async ({ query, limit = 8 }: { query: string; limit?: number }) => {
-			query = query.toLowerCase();
-			let res;
-			if (query) {
-				try {
-					res = await queryClient.fetchQuery({
-						staleTime: STALE.MINUTES.ONE,
-						queryKey: RQKEY(query || ''),
-						queryFn: () =>
-							ok(
-								appview.get('app.bsky.actor.searchActorsTypeahead', {
-									params: { limit, q: query },
-								}),
-							),
-					});
-				} catch (e) {
-					logger.error('useActorSearch: searchActorsTypeahead failed', {
-						message: e,
-					});
-				}
-			}
-
-			return computeSuggestions({
-				q: query,
-				searched: res?.actors,
-				moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
-			});
-		},
-		[queryClient, moderationOpts, appview],
-	);
 }
 
 function computeSuggestions({

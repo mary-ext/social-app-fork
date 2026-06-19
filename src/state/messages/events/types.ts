@@ -23,7 +23,6 @@ export enum MessagesEventBusDispatchEvent {
 }
 
 export enum MessagesEventBusErrorCode {
-	Unknown = 'unknown',
 	InitFailed = 'initFailed',
 	PollFailed = 'pollFailed',
 }

@@ -14,9 +14,6 @@ import { useClients } from '#/state/session';
 const labelerInfoQueryKeyRoot = 'labeler-info';
 export const labelerInfoQueryKey = (did: string) => [labelerInfoQueryKeyRoot, did];
 
-const labelersInfoQueryKeyRoot = 'labelers-info';
-export const labelersInfoQueryKey = (dids: string[]) => [labelersInfoQueryKeyRoot, dids.slice().sort()];
-
 const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
 	createQueryKey('labelers-detailed-info', { dids }, { persistedVersion: 1 });
 

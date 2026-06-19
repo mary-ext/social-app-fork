@@ -443,16 +443,6 @@ export function isClickTargetExternal(e: GestureResponderEvent) {
 }
 
 /**
- * Determines if a click event has been modified in some way from its default behavior, e.g. `Cmd` or a middle
- * click. {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
- */
-export function isModifiedClickEvent(e: GestureResponderEvent): boolean {
-	const event = e as unknown as MouseEvent;
-	const isPrimaryButton = event.button === 0;
-	return isClickEventWithMetaKey(e) || isClickTargetExternal(e) || !isPrimaryButton;
-}
-
-/**
  * Determines if a click event has been modified in a way that should indiciate that the user intends to open
  * a new tab. {@link https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button}
  */

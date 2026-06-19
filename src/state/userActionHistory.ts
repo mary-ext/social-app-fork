@@ -32,10 +32,6 @@ const userActionHistory: UserActionHistory = {
 	seen: [],
 };
 
-export function getActionHistory() {
-	return userActionHistory;
-}
-
 export function like(postUris: string[]) {
 	userActionHistory.likes = userActionHistory.likes.concat(postUris).slice(-LIKE_WINDOW);
 }

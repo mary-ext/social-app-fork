@@ -32,7 +32,7 @@ export const itemAlignStart = style({
 });
 
 /**
- * Strips a row's own padding and min-height, for a compact control row nested in a {@link group} (which
+ * Strips a row's own padding and min-height, for a compact control row nested in a group element (which
  * supplies the horizontal padding and surrounding rhythm).
  */
 export const itemFlush = style({
@@ -77,16 +77,6 @@ export const chevron = style({
 	color: vars.palette.contrast_500,
 	display: 'flex',
 	flexShrink: 0,
-});
-
-export const group = style({
-	boxSizing: 'border-box',
-	display: 'flex',
-	flexDirection: 'column',
-	gap: 4,
-	paddingBlock: 8,
-	paddingInline: 20,
-	width: '100%',
 });
 
 export const itemIcon = style({
