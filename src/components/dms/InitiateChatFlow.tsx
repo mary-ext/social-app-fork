@@ -298,6 +298,9 @@ export function InitiateChatFlow({
 			if (follows) {
 				for (const page of follows.pages) {
 					for (const profile of page.follows) {
+						// omit follows that can't be messaged / added, matching upstream (rather than
+						// listing them as disabled rows)
+						if (!checker(profile)) continue;
 						_items.push({
 							type: 'profile',
 							key: profile.did,
@@ -305,10 +308,6 @@ export function InitiateChatFlow({
 						});
 					}
 				}
-
-				_items = _items.sort((item) => {
-					return item.type === 'profile' && checker(item.profile) ? -1 : 1;
-				});
 			} else {
 				_items.push(...placeholders);
 			}
@@ -601,6 +600,8 @@ export function InitiateChatFlow({
 			groupChatDids: newDids,
 			groupChatProfiles: [...kept, ...addedProfiles],
 		});
+		// clear any active search so the list returns to the suggested members, matching upstream
+		setSearchText('');
 	};
 
 	return (

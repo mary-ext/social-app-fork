@@ -192,6 +192,9 @@ export function AddMembersFlow({
 			if (follows) {
 				for (const page of follows.pages) {
 					for (const profile of page.follows) {
+						// omit follows that can't be added, matching upstream (rather than listing
+						// them as disabled rows)
+						if (!canBeAddedToGroup(profile)) continue;
 						_items.push({
 							type: 'profile',
 							key: profile.did,
@@ -199,10 +202,6 @@ export function AddMembersFlow({
 						});
 					}
 				}
-
-				_items.sort((item) => {
-					return item.type === 'profile' && canBeAddedToGroup(item.profile) ? -1 : 1;
-				});
 			} else {
 				for (let i = 0; i < 10; i++) {
 					_items.push({ type: 'placeholder', key: i + '' });
@@ -389,6 +388,8 @@ export function AddMembersFlow({
 			groupChatDids: newDids,
 			groupChatProfiles: [...kept, ...addedProfiles],
 		});
+		// clear any active search so the list returns to the suggested members, matching upstream
+		setSearchText('');
 	};
 
 	return (
