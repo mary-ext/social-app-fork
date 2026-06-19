@@ -1283,7 +1283,7 @@ msgstr ""
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:394
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:395
 msgid "An error occurred"
 msgstr ""
 
@@ -1915,8 +1915,8 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:80
 #: src/Navigation.tsx:710
-#: src/screens/Messages/ChatList.tsx:426
-#: src/screens/Messages/ChatList.tsx:459
+#: src/screens/Messages/ChatList.tsx:427
+#: src/screens/Messages/ChatList.tsx:460
 msgid "Chat settings"
 msgstr ""
 
@@ -1942,8 +1942,8 @@ msgctxt "toast"
 msgid "Chat unmuted"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:417
-#: src/screens/Messages/ChatList.tsx:452
+#: src/screens/Messages/ChatList.tsx:418
+#: src/screens/Messages/ChatList.tsx:453
 msgid "Chats"
 msgstr ""
 
@@ -2625,7 +2625,7 @@ msgstr ""
 msgid "Disable"
 msgstr "Disable"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:362
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:363
 msgid "Disable captions"
 msgstr "Disable captions"
 
@@ -2949,7 +2949,7 @@ msgstr ""
 msgid "Enable adult content"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:363
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:364
 msgid "Enable captions"
 msgstr "Enable captions"
 
@@ -2988,7 +2988,7 @@ msgstr "Ensure you have selected a language for each caption file."
 msgid "Enter a word or tag"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -3062,7 +3062,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:380
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:381
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -3264,7 +3264,7 @@ msgctxt "toast"
 msgid "Failed to leave group chat"
 msgstr "Failed to leave group chat"
 
-#: src/screens/Messages/ChatList.tsx:290
+#: src/screens/Messages/ChatList.tsx:291
 #: src/screens/Messages/Inbox.tsx:161
 msgid "Failed to load conversations"
 msgstr ""
@@ -4227,7 +4227,7 @@ msgstr ""
 msgid "In-app, Push, People you follow"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:308
+#: src/screens/Messages/ChatList.tsx:309
 msgid "Inbox empty"
 msgstr "Inbox empty"
 
@@ -4785,7 +4785,7 @@ msgid "Loading post interaction settings..."
 msgstr ""
 
 #: src/components/ExternalEmbed/ExternalPlayer.tsx:87
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:391
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:392
 msgid "Loading video"
 msgstr "Loading video"
 
@@ -5272,9 +5272,9 @@ msgstr ""
 #: src/components/dms/dialogs/NewChatDialog.tsx:152
 #: src/screens/Messages/ChatList.tsx:134
 #: src/screens/Messages/ChatList.tsx:135
-#: src/screens/Messages/ChatList.tsx:326
 #: src/screens/Messages/ChatList.tsx:327
-#: src/screens/Messages/ChatList.tsx:436
+#: src/screens/Messages/ChatList.tsx:328
+#: src/screens/Messages/ChatList.tsx:437
 msgid "New chat"
 msgstr ""
 
@@ -5955,7 +5955,7 @@ msgstr ""
 msgid "Party GIFs"
 msgstr "Party GIFs"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:347
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:348
 msgid "Pause"
 msgstr ""
 
@@ -5964,7 +5964,7 @@ msgstr ""
 msgid "Pause GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:322
 msgid "Pause video"
 msgstr ""
 
@@ -6078,7 +6078,7 @@ msgstr ""
 msgid "Pinned to your feeds"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:348
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:349
 msgid "Play"
 msgstr ""
 
@@ -6092,7 +6092,7 @@ msgstr ""
 msgid "Play GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:322
 msgid "Play video"
 msgstr ""
 
@@ -6501,7 +6501,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:294
+#: src/screens/Messages/ChatList.tsx:295
 #: src/screens/Messages/Inbox.tsx:165
 msgid "Reload conversations"
 msgstr ""
@@ -6998,7 +6998,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:301
 #: src/features/gifPicker/components/GifPickerGrid.tsx:88
 #: src/features/gifPicker/components/GifPickerGrid.tsx:89
-#: src/screens/Messages/ChatList.tsx:300
+#: src/screens/Messages/ChatList.tsx:301
 #: src/screens/Messages/components/MessageListError.tsx:26
 #: src/screens/Messages/Inbox.tsx:171
 #: src/screens/Messages/JoinRequests.tsx:306
@@ -7125,7 +7125,7 @@ msgid "Say hello!"
 msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:125
-#: src/screens/Messages/ChatList.tsx:317
+#: src/screens/Messages/ChatList.tsx:318
 msgid "Say hi to someone"
 msgstr "Say hi to someone"
 
@@ -8931,7 +8931,7 @@ msgstr "Unmute this group chat"
 msgid "Unmute thread"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:322
 msgid "Unmute video"
 msgstr ""
 
@@ -9486,7 +9486,7 @@ msgid "Who can reply"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:65
-#: src/screens/Messages/ChatList.tsx:278
+#: src/screens/Messages/ChatList.tsx:279
 #: src/screens/Messages/Inbox.tsx:149
 msgid "Whoops!"
 msgstr ""

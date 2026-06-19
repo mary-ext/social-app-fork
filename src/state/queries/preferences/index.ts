@@ -86,6 +86,7 @@ export function usePreferencesQuery() {
 
 	if (query.data?.birthDate) {
 		/** The persisted query cache stores dates as strings, but our code expects a `Date`. */
+		// eslint-disable-next-line react-compiler/react-compiler, react-hooks/immutability -- deliberate in-place rehydration of the cached value
 		query.data.birthDate = new Date(query.data.birthDate);
 	}
 

@@ -133,6 +133,7 @@ export function Controls({
 		if (!hlsRef.current) return;
 		if (focused) {
 			// allow 30s of buffering
+			// eslint-disable-next-line react-compiler/react-compiler -- `hlsRef` is a ref prop; mutating the hls.js instance config is intended
 			hlsRef.current.config.maxMaxBufferLength = 30;
 		} else {
 			// back to what we initially set

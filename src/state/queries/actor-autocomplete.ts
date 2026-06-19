@@ -32,20 +32,20 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 	const moderationOpts = useModerationOpts();
 	const { appview } = useClients();
 
-	prefix = prefix.toLowerCase().trim();
-	if (prefix.endsWith('.')) {
+	let normalizedPrefix = prefix.toLowerCase().trim();
+	if (normalizedPrefix.endsWith('.')) {
 		// Going from "foo" to "foo." should not clear matches.
-		prefix = prefix.slice(0, -1);
+		normalizedPrefix = normalizedPrefix.slice(0, -1);
 	}
 
 	return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
 		staleTime: STALE.MINUTES.ONE,
-		queryKey: RQKEY(prefix || ''),
+		queryKey: RQKEY(normalizedPrefix || ''),
 		async queryFn() {
-			if (!prefix) return [];
+			if (!normalizedPrefix) return [];
 			const data = await ok(
 				appview.get('app.bsky.actor.searchActorsTypeahead', {
-					params: { limit: limit || 8, q: prefix },
+					params: { limit: limit || 8, q: normalizedPrefix },
 				}),
 			);
 			return data.actors;
@@ -53,12 +53,12 @@ export function useActorAutocompleteQuery(prefix: string, maintainData?: boolean
 		select: useCallback(
 			(data: AppBskyActorDefs.ProfileViewBasic[]) => {
 				return computeSuggestions({
-					q: prefix,
+					q: normalizedPrefix,
 					searched: data,
 					moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
 				});
 			},
-			[prefix, moderationOpts],
+			[normalizedPrefix, moderationOpts],
 		),
 		placeholderData: maintainData ? keepPreviousData : undefined,
 	});

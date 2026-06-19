@@ -20,6 +20,9 @@ type UnsafeActionNavigation = {
 };
 
 export function useWebScrollRestoration() {
+	// A stable, mutable container for per-screen scroll positions and the
+	// currently focused screen. Mutated in place because changes must not
+	// trigger re-renders.
 	const [state] = useState(createInitialScrollState);
 	const navigation = useNavigation();
 
@@ -53,6 +56,7 @@ export function useWebScrollRestoration() {
 				requestAnimationFrame(() => {
 					window.scrollTo(0, scrollY);
 				});
+				// eslint-disable-next-line react-compiler/react-compiler, react-hooks/immutability -- `state` is a stable mutable container held in useState by design
 				state.focusedKey = e.target ?? null;
 			},
 		}),

@@ -31,10 +31,10 @@ export function useDialogControl(): DialogOuterProps['control'] {
 	const { activeDialogs } = useDialogStateContext();
 
 	useEffect(() => {
-		activeDialogs.current.set(id, control);
+		const dialogs = activeDialogs.current;
+		dialogs.set(id, control);
 		return () => {
-			// eslint-disable-next-line react-hooks/exhaustive-deps
-			activeDialogs.current.delete(id);
+			dialogs.delete(id);
 		};
 	}, [id, activeDialogs]);
 

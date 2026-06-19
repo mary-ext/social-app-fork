@@ -152,7 +152,7 @@ export function Composer({
 			input: tapper.input,
 			clear: () => {
 				tapper.inputProps.onChangeText('');
-				inputScrollSharedValue.value = 0;
+				inputScrollSharedValue.set(0);
 			},
 			insert: tapper.insert,
 			setAutocompleteAnchor: sift.refs.setAnchor,
@@ -348,7 +348,7 @@ export function Composer({
 					}}
 					onKeyPress={onKeyPressWeb}
 					onScroll={(e) => {
-						inputScrollSharedValue.value = (e.target as unknown as { scrollTop: number }).scrollTop;
+						inputScrollSharedValue.set((e.target as unknown as { scrollTop: number }).scrollTop);
 					}}
 					// @ts-ignore web only
 					onCompositionStart={() => {
