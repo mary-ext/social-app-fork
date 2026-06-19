@@ -13,12 +13,17 @@
 	"sortImports": {
 		"groups": [
 			["side_effect", "side_effect_style"],
+
 			"builtin",
+			{ "newlinesBetween": false },
+			"cloudflare",
+
 			"react",
 			{ "newlinesBetween": false },
 			"expo",
 			{ "newlinesBetween": false },
 			"external",
+
 			"lib",
 			"state",
 			"logger",
@@ -33,6 +38,10 @@
 			"unknown"
 		],
 		"customGroups": [
+			{
+				"groupName": "cloudflare",
+				"elementNamePattern": ["cloudflare:**"]
+			},
 			{
 				"groupName": "react",
 				"elementNamePattern": [

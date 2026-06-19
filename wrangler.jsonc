@@ -4,11 +4,12 @@
 	"main": "worker/index.ts",
 	"compatibility_date": "2026-05-19",
 	"compatibility_flags": ["global_fetch_strictly_public"],
+	"secrets": {
+		"required": ["OAUTH_PRIVATE_KEY"],
+	},
 	"assets": {
 		"directory": "./web-build",
 		"not_found_handling": "single-page-application",
-		// only `/xrpc/*` invokes the worker (and is billed); every other request — assets and the SPA
-		// fallback — is served by the free asset layer without invoking the worker.
-		"run_worker_first": ["/xrpc/*"],
+		"run_worker_first": ["/oauth-client-metadata.json", "/xrpc/*"],
 	},
 }

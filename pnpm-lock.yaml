@@ -64,6 +64,9 @@ importers:
       '@atcute/oauth-browser-client':
         specifier: ^4.0.0
         version: 4.0.0(@atcute/identity-resolver@2.0.0(@atcute/identity@2.0.0(@atcute/lexicons@2.0.0)(typescript@6.0.3))(@atcute/lexicons@2.0.0)(typescript@6.0.3))(@atcute/lexicons@2.0.0)(typescript@6.0.3)
+      '@atcute/oauth-cab':
+        specifier: ^0.1.0
+        version: 0.1.0(typescript@6.0.3)
       '@atcute/ozone':
         specifier: 4.0.1
         version: 4.0.1(@atcute/lexicons@2.0.0)
@@ -245,9 +248,6 @@ importers:
       '@babel/runtime':
         specifier: ^7.29.7
         version: 7.29.7
-      '@cloudflare/workers-types':
-        specifier: ^4.20260530.1
-        version: 4.20260615.1
       '@eslint/js':
         specifier: ^9.39.4
         version: 9.39.4
@@ -444,6 +444,9 @@ packages:
     peerDependencies:
       '@atcute/identity-resolver': ^2.0.0
       '@atcute/lexicons': ^2.0.0
+
+  '@atcute/oauth-cab@0.1.0':
+    resolution: {integrity: sha512-EbrQ0gRRViScKZgOCVrbZYn9YP7AJ39t+emeD8QejZiCXA93XrrsiW6IJXQJaNMCeE0oaQBLA8pJS3XeQ2+8ag==}
 
   '@atcute/oauth-crypto@1.0.0':
     resolution: {integrity: sha512-2UC1msk4PyUArk/5Pl8zgtz1T8O+LZdFfB8ENLHjQVYitpqzGj2ZpDJaWZvCF3Y8lly4KoeUHLpFPDzbP+3u+g==}
@@ -6188,6 +6191,16 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@atcute/oauth-cab@0.1.0(typescript@6.0.3)':
+    dependencies:
+      '@atcute/oauth-crypto': 1.0.0(typescript@6.0.3)
+      '@atcute/oauth-keyset': 0.1.1(typescript@6.0.3)
+      '@atcute/oauth-types': 1.0.0(typescript@6.0.3)
+      nanoid: 5.1.11
+      valibot: 1.4.1(typescript@6.0.3)
+    transitivePeerDependencies:
+      - typescript
+
   '@atcute/oauth-crypto@1.0.0(typescript@6.0.3)':
     dependencies:
       '@atcute/multibase': 1.2.0
@@ -6599,7 +6612,8 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20260611.1':
     optional: true
 
-  '@cloudflare/workers-types@4.20260615.1': {}
+  '@cloudflare/workers-types@4.20260615.1':
+    optional: true
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:

@@ -30,6 +30,31 @@ export const extractLinkMeta = v.query('internal.app.extractLinkMeta', {
 });
 
 /**
+ * Mints a short-lived, DPoP-bound client assertion (RFC 7523) for our confidential OAuth client, signed with
+ * the client's private key held by the worker. The browser presents a DPoP proof in the `DPoP` header and the
+ * worker returns an assertion bound to that proof's key, letting the SPA be a confidential client without a
+ * token-mediating proxy (Bluesky OAuth proposal 0010).
+ *
+ * Production only: local dev runs as a public client and never calls this. The worker guards it with a
+ * same-origin (`Sec-Fetch-Site`) check, so only our own SPA can reach it.
+ */
+export const getClientAssertion = v.procedure('internal.app.getClientAssertion', {
+	params: null,
+	input: {
+		type: 'lex',
+		schema: v.object({
+			aud: v.string(),
+		}),
+	},
+	output: {
+		type: 'lex',
+		schema: v.object({
+			client_assertion: v.string(),
+		}),
+	},
+});
+
+/**
  * Serves a link thumbnail previously fetched and cached by {@link extractLinkMeta}. The `k` parameter
  * identifies a cache entry; this endpoint never fetches from the network.
  */
@@ -44,6 +69,10 @@ export const getLinkImage = v.query('internal.app.getLinkImage', {
 });
 
 declare module '@atcute/lexicons/ambient' {
+	interface XRPCProcedures {
+		'internal.app.getClientAssertion': typeof getClientAssertion;
+	}
+
 	interface XRPCQueries {
 		'internal.app.extractLinkMeta': typeof extractLinkMeta;
 		'internal.app.getLinkImage': typeof getLinkImage;
