@@ -7,7 +7,6 @@ import { type NavigationProp, useFocusEffect, useNavigation } from '@react-navig
 
 import { useCleanError } from '#/lib/hooks/useCleanError';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import type { CommonNavigatorParams, NativeStackScreenProps } from '#/lib/routes/types';
 
 import { useBookmarkMutation } from '#/state/queries/bookmarks/useBookmarkMutation';
@@ -78,7 +77,6 @@ function BookmarksInner() {
 	const initialNumToRender = useInitialNumToRender();
 	const cleanError = useCleanError();
 	const [isPTRing, setIsPTRing] = useState(false);
-	const trackPostView = usePostViewTracking('Bookmarks');
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error, refetch } =
 		useBookmarksQuery();
 	const cleanedError = useMemo(() => {
@@ -154,11 +152,6 @@ function BookmarksInner() {
 			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
-			onItemSeen={(item) => {
-				if (item.type === 'bookmark') {
-					trackPostView(item.bookmark.item);
-				}
-			}}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}

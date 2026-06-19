@@ -3,7 +3,6 @@ import { ActivityIndicator, type ListRenderItemInfo, StyleSheet, View } from 're
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import { cleanError } from '#/lib/strings/errors';
 import { s } from '#/lib/styles';
 
@@ -58,7 +57,6 @@ export function NotificationFeed({
 	const [isPTRing, setIsPTRing] = useState(false);
 	const { t: l } = useLingui();
 	const moderationOpts = useModerationOpts();
-	const trackPostView = usePostViewTracking('Notifications');
 	const { data, isFetching, isFetched, isError, error, hasNextPage, isFetchingNextPage, fetchNextPage } =
 		useNotificationFeedQuery({
 			enabled: enabled && !!moderationOpts,
@@ -179,14 +177,6 @@ export function NotificationFeed({
 				onEndReached={() => void onEndReached()}
 				onEndReachedThreshold={2}
 				onScrolledDownChange={onScrolledDownChange}
-				onItemSeen={(item) => {
-					if (isNotificationSentinel(item)) {
-						return;
-					}
-					if ((item.type === 'reply' || item.type === 'mention' || item.type === 'quote') && item.subject) {
-						trackPostView(item.subject);
-					}
-				}}
 				contentContainerStyle={s.contentContainer}
 				desktopFixedHeight
 				initialNumToRender={initialNumToRender}

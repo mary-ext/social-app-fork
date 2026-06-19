@@ -5,8 +5,6 @@ import { Trans, useLingui } from '@lingui/react/macro';
 
 import { urls } from '#/lib/constants';
 import { definite } from '#/lib/functions';
-import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
-import { useCallOnce } from '#/lib/once';
 import { cleanError } from '#/lib/strings/errors';
 import { augmentSearchQuery } from '#/lib/strings/helpers';
 
@@ -32,8 +30,6 @@ import { Text } from '#/components/Typography';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 export type SearchTabId = 'feeds' | 'latest' | 'people' | 'top';
-
-type SearchResultPressTab = SearchTabId | undefined;
 
 let SearchResults = ({
 	query,
@@ -196,7 +192,6 @@ let SearchScreenPostResults = ({
 	const { t: l } = useLingui();
 	const { currentAccount, hasSession } = useSession();
 	const [isPTR, setIsPTR] = useState(false);
-	const trackPostView = usePostViewTracking('SearchResults');
 
 	const augmentedQuery = useMemo(() => {
 		return augmentSearchQuery(query || '', { did: currentAccount?.did });
@@ -256,14 +251,6 @@ let SearchScreenPostResults = ({
 	const closeAllActiveElements = useCloseAllActiveElements();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
-	const fireTracking = useCallOnce(() => {
-		if (sort) {
-		}
-	});
-	if (isFetched && sort) {
-		fireTracking();
-	}
-
 	const showSignIn = () => {
 		closeAllActiveElements();
 		signinDialogControl.open({});
@@ -301,7 +288,7 @@ let SearchScreenPostResults = ({
 							data={items}
 							renderItem={({ item, index }: { item: SearchResultSlice; index: number }) => {
 								if (item.type === 'post') {
-									return <SearchPost from={sort} position={index} post={item.post} />;
+									return <SearchPost position={index} post={item.post} />;
 								} else {
 									return null;
 								}
@@ -312,11 +299,6 @@ let SearchScreenPostResults = ({
 								void onPullToRefresh();
 							}}
 							onEndReached={onEndReached}
-							onItemSeen={(item: SearchResultSlice) => {
-								if (item.type === 'post') {
-									trackPostView(item.post);
-								}
-							}}
 							desktopFixedHeight
 							ListFooterComponent={
 								<ListFooter isFetchingNextPage={isFetchingNextPage} hasNextPage={hasNextPage} />
@@ -334,19 +316,9 @@ let SearchScreenPostResults = ({
 };
 SearchScreenPostResults = memo(SearchScreenPostResults);
 
-function SearchPost({
-	from,
-	position,
-	post,
-}: {
-	from: SearchResultPressTab;
-	position: number;
-	post: AtcAppBskyFeedDefs.PostView;
-}) {
-	const onBeforePress = useCallback(() => {}, [from, position, post]);
-
+function SearchPost({ position, post }: { position: number; post: AtcAppBskyFeedDefs.PostView }) {
 	// the sticky tab bar already draws the divider above the first row
-	return <Post post={post} hideTopBorder={position === 0} onBeforePress={onBeforePress} />;
+	return <Post post={post} hideTopBorder={position === 0} />;
 }
 
 let SearchScreenUserResults = ({ query, active }: { query: string; active: boolean }): React.ReactNode => {
@@ -382,11 +354,6 @@ let SearchScreenUserResults = ({ query, active }: { query: string; active: boole
 	const profiles = useMemo(() => {
 		return results?.pages.flatMap((page) => page.actors) || [];
 	}, [results]);
-
-	const fireTracking = useCallOnce(() => {});
-	if (isFetched) {
-		fireTracking();
-	}
 
 	if (error) {
 		return (
@@ -425,9 +392,8 @@ let SearchScreenUserResults = ({ query, active }: { query: string; active: boole
 SearchScreenUserResults = memo(SearchScreenUserResults);
 
 function SearchScreenProfileButton({ position, profile }: { position: number; profile: AnyProfileView }) {
-	const handlePress = () => {};
 	// the sticky tab bar already draws the divider above the first row
-	return <ProfileCardWithFollowBtn profile={profile} noBorder={position === 0} onPress={handlePress} />;
+	return <ProfileCardWithFollowBtn profile={profile} noBorder={position === 0} />;
 }
 
 let SearchScreenFeedsResults = ({ query, active }: { query: string; active: boolean }): React.ReactNode => {
@@ -438,11 +404,6 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 		enabled: active,
 	});
 
-	const fireTracking = useCallOnce(() => {});
-	if (isFetched) {
-		fireTracking();
-	}
-
 	return isFetched && results ? (
 		<>
 			{results.length ? (
@@ -451,7 +412,7 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 					renderItem={({ item, index }: { item: AtcAppBskyFeedDefs.GeneratorView; index: number }) => (
 						// the sticky tab bar already draws the divider above the first row
 						<View style={[index !== 0 && [a.border_t, t.atoms.border_contrast_low], a.px_lg, a.py_lg]}>
-							<SearchFeedCard position={index} view={item} />
+							<SearchFeedCard view={item} />
 						</View>
 					)}
 					keyExtractor={(item: AtcAppBskyFeedDefs.GeneratorView) => item.uri}
@@ -468,14 +429,6 @@ let SearchScreenFeedsResults = ({ query, active }: { query: string; active: bool
 };
 SearchScreenFeedsResults = memo(SearchScreenFeedsResults);
 
-function SearchFeedCard({
-	position: _position,
-	view,
-}: {
-	position: number;
-	view: AtcAppBskyFeedDefs.GeneratorView;
-}) {
-	const handleOnPress = () => {};
-
-	return <FeedCard.Default view={view} onPress={handleOnPress} />;
+function SearchFeedCard({ view }: { view: AtcAppBskyFeedDefs.GeneratorView }) {
+	return <FeedCard.Default view={view} />;
 }

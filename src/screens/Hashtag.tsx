@@ -6,7 +6,6 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
@@ -144,7 +143,6 @@ function HashtagScreenTab({
 	const [isPTR, setIsPTR] = useState(false);
 	const t = useTheme();
 	const { hasSession } = useSession();
-	const trackPostView = usePostViewTracking('Hashtag');
 
 	const isCashtag = fullTag.startsWith('$');
 
@@ -227,7 +225,6 @@ function HashtagScreenTab({
 					onRefresh={() => void onRefresh()}
 					onEndReached={onEndReached}
 					onEndReachedThreshold={4}
-					onItemSeen={trackPostView}
 					// @ts-ignore web only -prf
 					desktopFixedHeight
 					ListFooterComponent={

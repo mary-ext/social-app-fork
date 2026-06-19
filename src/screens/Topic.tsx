@@ -6,7 +6,6 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import { HITSLOP_10 } from '#/lib/constants';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
 import { shareUrl } from '#/lib/sharing';
 import { cleanError } from '#/lib/strings/errors';
@@ -99,7 +98,6 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTR, setIsPTR] = useState(false);
-	const trackPostView = usePostViewTracking('Topic');
 
 	const {
 		data,
@@ -151,7 +149,6 @@ function TopicScreenTab({ topic, sort, active }: { topic: string; sort: 'top' | 
 					onRefresh={() => void onRefresh()}
 					onEndReached={onEndReached}
 					onEndReachedThreshold={4}
-					onItemSeen={trackPostView}
 					// @ts-ignore web only -prf
 					desktopFixedHeight
 					ListFooterComponent={

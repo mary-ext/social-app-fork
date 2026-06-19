@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
-import { View, type ViewabilityConfig } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { View } from 'react-native';
 import type { AppBskyActorDefs, AppBskyFeedDefs, AppBskyGraphDefs } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
@@ -910,36 +910,6 @@ export function Explore({
 		],
 	);
 
-	// track headers and report module viewability
-	const alreadyReportedRef = useRef<Map<string, string>>(new Map());
-	const seenProfilesRef = useRef<Set<string>>(new Set());
-	const onItemSeen = useCallback(
-		(item: ExploreScreenItems) => {
-			let module: string;
-			if (item.type === 'trendingTopics') {
-				module = item.type;
-			} else if (item.type === 'profile') {
-				module = 'suggestedAccounts';
-				// Track individual profile seen events
-				if (!seenProfilesRef.current.has(item.profile.did)) {
-					seenProfilesRef.current.add(item.profile.did);
-				}
-			} else if (item.type === 'feed') {
-				module = 'suggestedFeeds';
-			} else if (item.type === 'starterPack') {
-				module = 'suggestedStarterPacks';
-			} else if (item.type === 'preview:sliceItem') {
-				module = `feed:feedgen|${item.feed.uri}`;
-			} else {
-				return;
-			}
-			if (!alreadyReportedRef.current.has(module)) {
-				alreadyReportedRef.current.set(module, module);
-			}
-		},
-		[suggestedFollowsModule],
-	);
-
 	const handleOnEndReached = () => {
 		void onLoadMoreFeedPreviews();
 	};
@@ -958,8 +928,6 @@ export function Explore({
 			keyboardShouldPersistTaps="handled"
 			keyboardDismissMode="on-drag"
 			stickyHeaderIndices={undefined}
-			viewabilityConfig={viewabilityConfig}
-			onItemSeen={onItemSeen}
 			onEndReached={handleOnEndReached}
 			/** Default: 2 */
 			onEndReachedThreshold={4}
@@ -998,7 +966,3 @@ export function Explore({
 function keyExtractor(item: ExploreScreenItems) {
 	return item.key;
 }
-
-const viewabilityConfig: ViewabilityConfig = {
-	itemVisiblePercentThreshold: 100,
-};

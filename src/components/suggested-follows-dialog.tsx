@@ -1,10 +1,9 @@
 import { type ComponentProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { TextInput, View, type ViewToken } from 'react-native';
+import { TextInput, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import type { ModerationOptions } from '@atcute/bluesky-moderation';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { popularInterests, useInterestsDisplayNames } from '#/lib/interests';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -185,8 +184,6 @@ function DialogInner() {
 		isSearchResultsError,
 	]);
 
-	const recIdForLogging = hasSearchText ? undefined : suggestions?.recId;
-
 	const renderItems = useCallback(
 		({ item, index }: { item: Item; index: number }) => {
 			switch (item.type) {
@@ -196,9 +193,6 @@ function DialogInner() {
 							profile={item.profile}
 							moderationOpts={moderationOpts!}
 							noBorder={index === 0}
-							position={index}
-							recSource={hasSearchText ? 'Search' : undefined}
-							recId={recIdForLogging}
 						/>
 					);
 				}
@@ -212,33 +206,7 @@ function DialogInner() {
 					return null;
 			}
 		},
-		[moderationOpts, hasSearchText, recIdForLogging],
-	);
-
-	// Track seen profiles
-	const seenProfilesRef = useRef<Set<string>>(new Set());
-	const itemsRef = useRef(items);
-	itemsRef.current = items;
-	const selectedInterestRef = useRef(selectedInterest);
-	selectedInterestRef.current = selectedInterest;
-
-	const onViewableItemsChanged = useNonReactiveCallback(
-		({ viewableItems }: { viewableItems: ViewToken[] }) => {
-			for (const viewableItem of viewableItems) {
-				const item = viewableItem.item as Item;
-				if (item.type === 'profile') {
-					if (!seenProfilesRef.current.has(item.profile.did)) {
-						seenProfilesRef.current.add(item.profile.did);
-					}
-				}
-			}
-		},
-	);
-	const viewabilityConfig = useMemo(
-		() => ({
-			itemVisiblePercentThreshold: 50,
-		}),
-		[],
+		[moderationOpts],
 	);
 
 	const onSelectTab = useCallback(
@@ -283,8 +251,6 @@ function DialogInner() {
 			scrollIndicatorInsets={{ top: headerHeight }}
 			initialNumToRender={8}
 			maxToRenderPerBatch={8}
-			onViewableItemsChanged={onViewableItemsChanged}
-			viewabilityConfig={viewabilityConfig}
 		/>
 	);
 }
@@ -434,27 +400,12 @@ let FollowProfileCard = ({
 	profile,
 	moderationOpts,
 	noBorder,
-	position,
-	recSource,
-	recId,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	noBorder?: boolean;
-	position: number;
-	recSource?: 'Search';
-	recId?: string;
 }): React.ReactNode => {
-	return (
-		<FollowProfileCardInner
-			profile={profile}
-			moderationOpts={moderationOpts}
-			noBorder={noBorder}
-			position={position}
-			recSource={recSource}
-			recId={recId}
-		/>
-	);
+	return <FollowProfileCardInner profile={profile} moderationOpts={moderationOpts} noBorder={noBorder} />;
 };
 FollowProfileCard = memo(FollowProfileCard);
 
@@ -463,17 +414,11 @@ function FollowProfileCardInner({
 	moderationOpts,
 	onFollow,
 	noBorder,
-	position: _position,
-	recSource: _recSource,
-	recId: _recId,
 }: {
 	profile: AnyProfileView;
 	moderationOpts: ModerationOptions;
 	onFollow?: () => void;
 	noBorder?: boolean;
-	position: number;
-	recSource?: 'Search';
-	recId?: string;
 }) {
 	const control = Dialog.useDialogContext();
 	const t = useTheme();

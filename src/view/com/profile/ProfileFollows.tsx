@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { AppBskyActorDefs as ActorDefs } from '@atcute/bluesky';
 import { useLingui } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
@@ -75,23 +75,6 @@ export function ProfileFollows({ name }: { name: string }) {
 		return [];
 	}, [data]);
 
-	// Track pagination events - fire for page 3+ (pages 1-2 may auto-load)
-	const paginationTrackingRef = useRef<{
-		did: string | undefined;
-		page: number;
-	}>({ did: undefined, page: 0 });
-	useEffect(() => {
-		const currentPageCount = data?.pages?.length || 0;
-		// Reset tracking when profile changes
-		if (paginationTrackingRef.current.did !== resolvedDid) {
-			paginationTrackingRef.current = { did: resolvedDid, page: currentPageCount };
-			return;
-		}
-		if (resolvedDid && currentPageCount >= 3 && currentPageCount > paginationTrackingRef.current.page) {
-		}
-		paginationTrackingRef.current.page = currentPageCount;
-	}, [data?.pages?.length, resolvedDid, follows.length]);
-
 	const onRefresh = useCallback(async () => {
 		setIsPTRing(true);
 		try {
@@ -115,31 +98,6 @@ export function ProfileFollows({ name }: { name: string }) {
 		({ item, index }: { item: ActorDefs.ProfileView; index: number }) =>
 			renderItem({ item, index, contextProfileDid: resolvedDid }),
 		[resolvedDid],
-	);
-
-	// track pageview
-	useEffect(() => {
-		if (resolvedDid) {
-		}
-	}, [resolvedDid, isMe]);
-
-	// track seen items
-	const seenItemsRef = useRef<Set<string>>(new Set());
-	useEffect(() => {
-		seenItemsRef.current.clear();
-	}, [resolvedDid]);
-	const onItemSeen = useCallback(
-		(item: ActorDefs.ProfileView) => {
-			if (seenItemsRef.current.has(item.did)) {
-				return;
-			}
-			seenItemsRef.current.add(item.did);
-			const position = follows.findIndex((p) => p.did === item.did) + 1;
-			if (position === 0) {
-				return;
-			}
-		},
-		[follows, resolvedDid],
 	);
 
 	if (follows.length < 1) {
@@ -174,7 +132,6 @@ export function ProfileFollows({ name }: { name: string }) {
 			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
-			onItemSeen={onItemSeen}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}

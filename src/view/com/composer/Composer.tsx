@@ -51,7 +51,6 @@ import {
 } from '#/lib/hooks/useOpenComposer';
 import { getImageDimensions, getVideoMetadata } from '#/lib/media/metadata';
 import type { VideoAsset } from '#/lib/media/video/types';
-import { useCallOnce } from '#/lib/once';
 import type { NavigationProp } from '#/lib/routes/types';
 import { cleanError } from '#/lib/strings/errors';
 import { colors } from '#/lib/styles';
@@ -242,12 +241,6 @@ export const ComposePost = ({
 	const [error, setError] = useState('');
 
 	/**
-	 * Track when a draft was created so we can measure draft age in metrics. Set when a draft is loaded via
-	 * handleSelectDraft.
-	 */
-	const [loadedDraftCreatedAt, setLoadedDraftCreatedAt] = useState<string | null>(null);
-
-	/**
 	 * A temporary local reference to a language suggestion that the user has accepted. This overrides the
 	 * global post language preference, but is not stored permanently.
 	 */
@@ -364,9 +357,6 @@ export const ComposePost = ({
 	useEffect(() => {
 		onInitVideo();
 	}, [onInitVideo]);
-
-	// Fire composer:open metric on mount
-	useCallOnce(() => {})();
 
 	const clearVideo = useCallback(
 		(postId: string) => {
@@ -510,9 +500,6 @@ export const ComposePost = ({
 				loadedMedia,
 				originalLocalRefs,
 			});
-
-			// Track when the draft was created for metrics
-			setLoadedDraftCreatedAt(draftSummary.createdAt);
 
 			// Initiate video processing for any restored videos
 			// This is async but we don't await - videos process in the background
@@ -904,7 +891,6 @@ export const ComposePost = ({
 		composerState.originalLocalRefs,
 		composerState.isDirty,
 		cleanupPublishedDraft,
-		loadedDraftCreatedAt,
 		emptyPostsPromptControl,
 	]);
 

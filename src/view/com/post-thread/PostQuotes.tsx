@@ -4,7 +4,6 @@ import { moderatePost } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
-import { usePostViewTracking } from '#/lib/hooks/usePostViewTracking';
 import { cleanError } from '#/lib/strings/errors';
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
@@ -31,7 +30,6 @@ export function PostQuotes({ uri }: { uri: string }) {
 	const { t: l } = useLingui();
 	const initialNumToRender = useInitialNumToRender();
 	const [isPTRing, setIsPTRing] = useState(false);
-	const trackPostView = usePostViewTracking('PostQuotes');
 
 	const { data: resolvedUri, error: resolveError, isLoading: isLoadingUri } = useResolveUriQuery(uri);
 	const {
@@ -105,7 +103,6 @@ export function PostQuotes({ uri }: { uri: string }) {
 			onRefresh={() => void onRefresh()}
 			onEndReached={() => void onEndReached()}
 			onEndReachedThreshold={4}
-			onItemSeen={(item) => trackPostView(item.post)}
 			ListFooterComponent={
 				<ListFooter
 					isFetchingNextPage={isFetchingNextPage}
