@@ -314,11 +314,24 @@ export function getServiceAuthAudFromUrl(url: string | URL): string | null {
 export const parseLooseUrl = (text: string): string | null => {
 	const trimmed = text.trim();
 	const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
-	const url = safeUrlParse(candidate);
+	return parseLinkableUrl(candidate)?.href ?? null;
+};
+
+/**
+ * Parses a string into a URL, accepting only `http(s)` URLs whose authority carries a genuine dotted host
+ * (rejecting degenerate hosts such as a bare run of dots, or a host with a trailing dot). Use this before
+ * rendering an untrusted facet URI as a clickable link: a host with no real domain reveals nothing about the
+ * destination, so such a link is better shown as plain text.
+ *
+ * @param text the URL string to parse
+ * @returns the parsed URL when it is a valid http(s) URL with a real host, otherwise null
+ */
+export const parseLinkableUrl = (text: string): URL | null => {
+	const url = safeUrlParse(text);
 	if (url === null || !url.hostname.includes('.') || url.hostname.endsWith('.')) {
 		return null;
 	}
-	return url.href;
+	return url;
 };
 
 /**

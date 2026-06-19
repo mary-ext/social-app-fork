@@ -4,7 +4,7 @@ import { segmentize } from '@atcute/bluesky-richtext-segmenter';
 import { clsx } from 'clsx';
 
 import { detectFacetsWithoutResolution, type Richtext } from '#/lib/strings/rich-text-facets';
-import { safeUrlParse, toShortUrl } from '#/lib/strings/url-helpers';
+import { parseLinkableUrl, toShortUrl } from '#/lib/strings/url-helpers';
 
 import { isOnlyEmoji } from '#/alf/typography';
 
@@ -102,7 +102,7 @@ export function RichText({
 						// require a genuine http(s) URL with a real host — a loose match would render
 						// degenerate facet URIs (`https://` + a run of dots, `at://…`, other schemes) as
 						// clickable links whose visible text reveals nothing about where they lead
-						const isValidLink = safeUrlParse(feature.uri) != null;
+						const isValidLink = parseLinkableUrl(feature.uri) != null;
 						if (!isValidLink || disableLinks) {
 							el = toShortUrl(segment.text);
 						} else {
