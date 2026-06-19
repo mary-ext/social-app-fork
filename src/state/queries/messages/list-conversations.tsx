@@ -18,6 +18,11 @@ import { useClients, useSession } from '#/state/session';
 
 import { RQKEY as CONVO_KEY } from './conversation';
 import { RQKEY_PARTIAL as UNREAD_COUNTS_RQKEY_PARTIAL, useUnreadCountsQuery } from './get-unread-counts';
+import {
+	type ConvoRequestListQueryData,
+	optimisticDeleteJoinRequest,
+	RQKEY_ROOT as REQUESTS_RQKEY_ROOT,
+} from './list-conversation-requests';
 import { listConvoMembersQueryKey } from './list-convo-members';
 
 const DEFAULT_LIMIT = 10;
@@ -592,6 +597,15 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						}
 						case 'chat.bsky.convo.defs#logOutgoingJoinRequest': {
 							// viewer isn't in the chat yet, no need to do anything
+							break;
+						}
+						case 'chat.bsky.convo.defs#logWithdrawOutgoingJoinRequest': {
+							// the viewer rescinded their own outgoing join request (possibly on another
+							// device); drop it from the requests inbox cache
+							queryClient.setQueriesData<ConvoRequestListQueryData>(
+								{ queryKey: [REQUESTS_RQKEY_ROOT] },
+								(old) => optimisticDeleteJoinRequest(log.convoId, old),
+							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logAddReaction': {
