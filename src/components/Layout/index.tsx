@@ -9,8 +9,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useEnableMinimalShellModeForScreen } from '#/state/shell';
-
 import { useIsWithinSplitView } from '#/screens/Messages/components/splitView/context';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
@@ -23,7 +21,6 @@ export * as Header from '#/components/Layout/Header';
 export type ScreenProps = React.ComponentProps<typeof View> & {
 	style?: StyleProp<ViewStyle>;
 	noInsetTop?: boolean;
-	minimalShell?: boolean;
 };
 
 type WebScrollStyle = ViewStyle & {
@@ -37,16 +34,9 @@ const webScrollStyle = (style: WebScrollStyle): ViewStyle => {
 };
 
 /** Outermost component of every screen */
-export const Screen = memo(function Screen({
-	style,
-	noInsetTop,
-	minimalShell = false,
-	...props
-}: ScreenProps) {
+export const Screen = memo(function Screen({ style, noInsetTop, ...props }: ScreenProps) {
 	const { top } = useSafeAreaInsets();
 	const { isWithinSplitView } = useIsWithinSplitView();
-
-	useEnableMinimalShellModeForScreen({ enabled: minimalShell });
 
 	return (
 		<View

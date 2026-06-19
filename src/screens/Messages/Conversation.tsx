@@ -59,7 +59,7 @@ export function MessagesConversationScreenInner({ route }: Props) {
 	);
 
 	return (
-		<Layout.Screen minimalShell testID="convoScreen" noInsetTop={false} style={[{ minHeight: 0 }, a.flex_1]}>
+		<Layout.Screen testID="convoScreen" noInsetTop={false} style={[{ minHeight: 0 }, a.flex_1]}>
 			<ConvoProvider key={convoId} convoId={convoId}>
 				<Inner convoId={convoId} />
 			</ConvoProvider>

@@ -9,7 +9,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { STALE } from '#/state/queries';
 import { profilesQueryKey } from '#/state/queries/profile';
 import { useClients, useSession } from '#/state/session';
-import { useEnableMinimalShellMode } from '#/state/shell/minimal-mode';
 
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary';
 
@@ -25,7 +24,6 @@ export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
 	const { t: l } = useLingui();
 	const t = useTheme();
 	const insets = useSafeAreaInsets();
-	useEnableMinimalShellMode();
 	const { signinDialogControl } = useGlobalDialogsControlContext();
 
 	const queryClient = useQueryClient();

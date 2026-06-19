@@ -110,7 +110,7 @@ export function Wizard({
 	}
 
 	return (
-		<Layout.Screen minimalShell testID="starterPackWizardScreen" style={[{ minHeight: 0 }, a.flex_1]}>
+		<Layout.Screen testID="starterPackWizardScreen" style={[{ minHeight: 0 }, a.flex_1]}>
 			<Provider starterPack={starterPack} listItems={listItems} targetProfile={profile}>
 				<WizardInner
 					currentStarterPack={starterPack}

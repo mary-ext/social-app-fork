@@ -1,26 +1,16 @@
 import { type ComponentPropsWithoutRef, memo } from 'react';
 import { clsx } from 'clsx';
 
-import { useEnableMinimalShellModeForScreen } from '#/state/shell';
-
 import * as styles from '#/components/web/Layout/Layout.css';
 
 export * as Header from '#/components/web/Layout/Header';
 
 export type ScreenProps = ComponentPropsWithoutRef<'div'> & {
 	noInsetTop?: boolean;
-	minimalShell?: boolean;
 };
 
 /** Outermost component of every screen. */
-export const Screen = memo(function Screen({
-	noInsetTop,
-	minimalShell = false,
-	className,
-	children,
-	...rest
-}: ScreenProps) {
-	useEnableMinimalShellModeForScreen({ enabled: minimalShell });
+export const Screen = memo(function Screen({ noInsetTop, className, children, ...rest }: ScreenProps) {
 	return (
 		<div className={clsx(styles.screen, noInsetTop && styles.screenNoInset, className)} {...rest}>
 			{children}

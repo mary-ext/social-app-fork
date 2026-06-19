@@ -7,7 +7,6 @@ import { useCallOnce } from '#/lib/once';
 
 import { useSessionApi } from '#/state/session';
 import { InactiveAccountError } from '#/state/session/agent';
-import { useEnableMinimalShellMode } from '#/state/shell/minimal-mode';
 
 import { logger } from '#/logger';
 
@@ -26,8 +25,6 @@ export function OAuthCallback() {
 	const { completeOAuthCallback } = useSessionApi();
 	const [error, setError] = useState('');
 	const runOnce = useCallOnce();
-
-	useEnableMinimalShellMode();
 
 	useEffect(() => {
 		runOnce(() => {
