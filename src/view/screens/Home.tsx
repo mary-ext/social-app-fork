@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants';
@@ -22,7 +22,7 @@ import { FollowingEndOfFeed } from '#/view/com/posts/FollowingEndOfFeed';
 
 import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned';
 
-import * as Layout from '#/components/Layout';
+import * as Layout from '#/components/web/Layout';
 import { type Section, Tabs } from '#/components/web/Tabs';
 
 import { useDemoMode } from '#/storage/hooks/demo-mode';
@@ -50,16 +50,16 @@ export function HomeScreen(props: Props) {
 
 	if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
 		return (
-			<Layout.Screen testID="HomeScreen" noInsetTop={false}>
+			<Layout.Screen noInsetTop={false}>
 				<HomeScreenReady {...props} preferences={preferences} pinnedFeedInfos={pinnedFeedInfos} />
 			</Layout.Screen>
 		);
 	} else {
 		return (
 			<Layout.Screen>
-				<Layout.Center style={styles.loading}>
+				<View style={styles.loading}>
 					<ActivityIndicator size="large" />
-				</Layout.Center>
+				</View>
 			</Layout.Screen>
 		);
 	}
@@ -218,8 +218,8 @@ function HomeScreenReady({
 
 const styles = StyleSheet.create({
 	loading: {
-		height: '100%',
-		alignContent: 'center',
+		alignItems: 'center',
+		flex: 1,
 		justifyContent: 'center',
 		paddingBottom: 100,
 	},

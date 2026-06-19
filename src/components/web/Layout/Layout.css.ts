@@ -4,6 +4,10 @@ import { CENTER_COLUMN_WIDTH } from '#/components/web/Layout/const';
 import { bottomBarHeightVar } from '#/components/web/Shell/Shell.css';
 
 export const screen = style({
+	// a flex column so a `flex: 1` child (e.g. a Tabs pager) fills the screen height instead of collapsing to
+	// its content — short feeds/empty states then cover the viewport rather than leaving dead space below.
+	display: 'flex',
+	flexDirection: 'column',
 	// don't let the surrounding viewport-height flex shell shrink the screen below its content: it must
 	// grow to its full content height so a sticky header stays stuck the whole way down a long page.
 	flexShrink: 0,
