@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Did as AtcuteDid } from '@atcute/lexicons';
-import { deleteStoredSession, TokenRefreshError } from '@atcute/oauth-browser-client';
+import { deleteStoredSession, OAuthResponseError, TokenRefreshError } from '@atcute/oauth-browser-client';
 
 import { clearPersistedQueryStorage } from '#/lib/persisted-query-storage';
 
@@ -27,9 +27,10 @@ import { IS_OAUTH_CALLBACK, startOAuthSignIn } from './oauth';
 export type { SessionAccount } from '#/state/session/types';
 
 /**
- * The session is immutable for a page's lifetime: it's resolved once at boot, and every account change
- * (switch, sign-out, cross-tab change) reloads the page. Removing a non-current account is the sole live
- * mutation.
+ * The session is resolved once at boot and is otherwise immutable for a page's lifetime: account changes
+ * (switch, sign-out, cross-tab change) reload the page. Two in-place mutations are the exceptions, and avoid
+ * a reload: removing a non-current account, and dropping the current session to logged-out when its token can
+ * no longer be refreshed.
  */
 
 // `auth` storage notifies in-process listeners on every write. A write made by
@@ -61,9 +62,41 @@ function signOut({ accounts, clearDids = [] }: { accounts: SessionAccount[]; cle
 	window.location.reload();
 }
 
+/**
+ * Drops the session to logged-out in place — no reload, unlike {@link signOut}. Persists a logged-out session
+ * (so a reload or another tab won't resume it), swaps in guest clients, clears the current account, and marks
+ * the boot `failed` to surface the "session expired" toast. Shared by a failed boot resume and a live
+ * token-refresh failure.
+ */
+function dropToGuestSession(
+	accounts: SessionAccount[],
+	setClients: (clients: Clients) => void,
+	setCurrentDid: (did: string | undefined) => void,
+	setStatus: (status: SessionBootStatus) => void,
+) {
+	writeSession({ accounts, currentAccountDid: undefined });
+	setClients(createGuestClients());
+	setCurrentDid(undefined);
+	setStatus('failed');
+}
+
 /** Extracts a loggable message from an unknown thrown value. */
 function errorMessage(e: unknown): string {
 	return e instanceof Error ? e.message : String(e);
+}
+
+/**
+ * Whether a resume/validation error means the stored session is permanently unusable — the token was refused
+ * or can no longer be refreshed — as opposed to a transient failure (offline, server hiccup, rate limit)
+ * where the optimistic session should be kept. A 400/401 from the token endpoint covers the OAuth client
+ * errors (`invalid_grant`, `unauthorized_client`, …) a refresh can be rejected with.
+ */
+function isFatalSessionError(e: unknown): boolean {
+	return (
+		e instanceof InactiveAccountError ||
+		e instanceof TokenRefreshError ||
+		(e instanceof OAuthResponseError && (e.status === 400 || e.status === 401))
+	);
 }
 
 /**
@@ -122,18 +155,14 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		// and a rejected validation can't both act on the same boot.
 		let settled = false;
 
-		// The stored session is unusable: persist a logged-out session so the next
-		// boot doesn't retry it, and drop back to a guest agent in place — no
-		// reload, unlike `signOut`.
+		// The stored session is unusable: drop back to a logged-out guest session so
+		// the next boot doesn't retry it.
 		const failResume = () => {
 			if (settled) {
 				return;
 			}
 			settled = true;
-			writeSession({ accounts: boot.accounts, currentAccountDid: undefined });
-			setClients(createGuestClients());
-			setCurrentDid(undefined);
-			setStatus('failed');
+			dropToGuestSession(boot.accounts, setClients, setCurrentDid, setStatus);
 		};
 
 		const resume = async () => {
@@ -172,7 +201,7 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 				if (cancelled) {
 					return;
 				}
-				if (e instanceof TokenRefreshError || e instanceof InactiveAccountError) {
+				if (isFatalSessionError(e)) {
 					failResume();
 				} else {
 					// A transient failure (e.g. network) — keep the optimistic session;
@@ -213,15 +242,22 @@ export function Provider({ children }: React.PropsWithChildren<{}>) {
 		return () => sub.remove();
 	}, [currentDid]);
 
-	// A live session dropped mid-use. Reload so the boot resume re-resolves it
-	// (and surfaces the failure as a logged-out state). Held off while the boot
-	// resume is still settling, where it handles dropped sessions itself.
+	// A live session dropped mid-use: the stored token can no longer be refreshed.
+	// Drop to a logged-out guest session in place — no reload. Persisting the
+	// logged-out session keeps a reload or another tab from resuming it, and
+	// clearing the current account remounts the tree as logged out (via the
+	// `key={currentAccount?.did}` reset in InnerApp), so in-flight requests fail
+	// like any other and the UI surfaces them; `status` 'failed' raises the
+	// "session expired" toast. Held off while the boot resume is still settling,
+	// where it drops the session itself.
 	useEffect(() => {
-		if (status === 'resuming' || status === 'validating') {
+		if (currentDid === undefined || status === 'resuming' || status === 'validating') {
 			return;
 		}
-		return listenSessionDropped(() => window.location.reload());
-	}, [status]);
+		return listenSessionDropped(() => {
+			dropToGuestSession(accounts, setClients, setCurrentDid, setStatus);
+		});
+	}, [accounts, currentDid, status]);
 
 	const login = useCallback<SessionApiContext['login']>(async ({ identifier }) => {
 		await startOAuthSignIn({ identifier });
