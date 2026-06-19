@@ -2,7 +2,6 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'r
 import { StyleSheet, View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
-import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
 import { isUriImage } from '#/lib/media/util';
 
 import {
@@ -226,11 +225,7 @@ export function TextInput({
 
 			{isDropping && (
 				<Portal>
-					<Animated.View
-						style={dropStyles.dropContainer}
-						entering={FadeIn.duration(80)}
-						exiting={FadeOut.duration(80)}
-					>
+					<View style={dropStyles.dropContainer}>
 						<View style={[t.atoms.bg, t.atoms.border_contrast_low, dropStyles.dropModal]}>
 							<Text
 								style={[
@@ -244,7 +239,7 @@ export function TextInput({
 								<Trans>Drop to add images</Trans>
 							</Text>
 						</View>
-					</Animated.View>
+					</View>
 				</Portal>
 			)}
 		</>

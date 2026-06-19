@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 
-import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
 import * as styles from '#/lib/custom-animations/LikeIcon.css';
 
 import {
@@ -45,7 +44,7 @@ export function AnimatedLikeIcon({
 	hasBeenToggled: boolean;
 }) {
 	const size = big ? 22 : 18;
-	const shouldAnimate = !useReducedMotion() && hasBeenToggled;
+	const shouldAnimate = hasBeenToggled;
 	const prevIsLiked = useRef(isLiked);
 
 	const heartRef = useRef<HTMLDivElement>(null);

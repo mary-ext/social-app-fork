@@ -1,16 +1,11 @@
-import { useState } from 'react';
-import { View } from 'react-native';
+import { useRef, useState } from 'react';
+import { type ScrollView, View } from 'react-native';
 import type { AppBskyActorDefs } from '@atcute/bluesky';
 import * as TID from '@atcute/tid';
 import { useLingui, Trans } from '@lingui/react/macro';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import {
-	type AnimatedScrollView,
-	useAnimatedRef,
-	useScrollViewOffset,
-} from '#/lib/animations/reanimatedCompat';
 import { RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED } from '#/lib/constants';
 import type { CommonNavigatorParams, NavigationProp } from '#/lib/routes/types';
 
@@ -59,8 +54,7 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 	const { mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending } =
 		useOverwriteSavedFeedsMutation();
 	const navigation = useNavigation<NavigationProp>();
-	const scrollRef = useAnimatedRef<AnimatedScrollView>();
-	const scrollOffset = useScrollViewOffset(scrollRef);
+	const scrollRef = useRef<ScrollView | null>(null);
 
 	/*
 	 * Use optimistic data if exists and no error, otherwise fallback to remote
@@ -144,8 +138,6 @@ function SavedFeedsInner({ preferences }: { preferences: UsePreferencesQueryResp
 							data={pinnedFeeds}
 							keyExtractor={(f) => f.id}
 							itemHeight={68}
-							scrollRef={scrollRef}
-							scrollOffset={scrollOffset}
 							onDragStart={() => setIsDragging(true)}
 							onDragEnd={() => setIsDragging(false)}
 							onReorder={(reordered) => {

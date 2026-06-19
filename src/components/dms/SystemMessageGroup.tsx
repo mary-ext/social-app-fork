@@ -3,14 +3,6 @@ import type { ChatBskyActorDefs } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
-import Animated, {
-	FadeIn,
-	FadeOut,
-	LinearTransition,
-	useAnimatedStyle,
-	useDerivedValue,
-	withTiming,
-} from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 
 import type { SystemMessageGroupItem } from '#/screens/Messages/components/groupSystemMessages';
@@ -20,8 +12,6 @@ import { atoms as a, useTheme } from '#/alf';
 import { SystemMessageItem } from '#/components/dms/SystemMessageItem';
 import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown } from '#/components/icons/Chevron';
 import { Text } from '#/components/Typography';
-
-const ANIMATION_DURATION_MS = 200;
 
 export function SystemMessageGroup({
 	item,
@@ -43,12 +33,9 @@ export function SystemMessageGroup({
 		other: '# chat updates',
 	});
 
-	const rotation = useDerivedValue(() =>
-		withTiming(expanded ? -180 : 0, { duration: ANIMATION_DURATION_MS }),
-	);
-	const chevronStyle = useAnimatedStyle(() => ({
-		transform: [{ rotate: `${rotation.get()}deg` }],
-	}));
+	const chevronStyle = {
+		transform: [{ rotate: `${expanded ? -180 : 0}deg` }],
+	};
 
 	return (
 		<View>
@@ -72,23 +59,19 @@ export function SystemMessageGroup({
 				>
 					{label}
 				</Text>
-				<Animated.View style={[a.ml_2xs, chevronStyle]}>
+				<View style={[a.ml_2xs, chevronStyle]}>
 					<ChevronDown size="xs" style={t.atoms.text_contrast_medium} />
-				</Animated.View>
+				</View>
 			</Pressable>
-			<Animated.View layout={LinearTransition.duration(ANIMATION_DURATION_MS)}>
+			<View>
 				{expanded
 					? item.items.map((child) => (
-							<Animated.View
-								key={child.key}
-								entering={FadeIn.duration(ANIMATION_DURATION_MS)}
-								exiting={FadeOut.duration(ANIMATION_DURATION_MS)}
-							>
+							<View key={child.key}>
 								<SystemMessageItem item={child} relatedProfiles={relatedProfiles} />
-							</Animated.View>
+							</View>
 						))
 					: null}
-			</Animated.View>
+			</View>
 		</View>
 	);
 }

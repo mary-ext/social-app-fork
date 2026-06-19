@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { type GestureResponderEvent, View } from 'react-native';
 import { Trans } from '@lingui/react/macro';
 
-import Animated, { FadeOutUp, useReducedMotion, ZoomIn } from '#/lib/animations/reanimatedCompat';
-
 import { atoms as a, useTheme } from '#/alf';
 
 import { Button, ButtonIcon, type ButtonProps } from '#/components/Button';
@@ -24,14 +22,12 @@ export function CopyTextButton({
 
 	const [hasBeenCopied, setHasBeenCopied] = useState(false);
 
-	const isReducedMotionEnabled = useReducedMotion();
-
 	useEffect(() => {
 		if (hasBeenCopied) {
-			const timeout = setTimeout(() => setHasBeenCopied(false), isReducedMotionEnabled ? 2000 : 100);
+			const timeout = setTimeout(() => setHasBeenCopied(false), 100);
 			return () => clearTimeout(timeout);
 		}
-	}, [hasBeenCopied, isReducedMotionEnabled]);
+	}, [hasBeenCopied]);
 
 	const onPress = useCallback(
 		(evt: GestureResponderEvent) => {
@@ -45,16 +41,14 @@ export function CopyTextButton({
 	return (
 		<View style={[a.relative]}>
 			{hasBeenCopied && (
-				<Animated.View
-					entering={ZoomIn.duration(100)}
-					exiting={FadeOutUp.duration(2000)}
+				<View
 					style={[a.absolute, { bottom: '100%', right: 0 }, a.justify_center, a.gap_sm, a.z_10, a.pb_sm]}
 					pointerEvents="none"
 				>
 					<Text style={[a.font_medium, a.text_right, a.text_sm, t.atoms.text_contrast_high]}>
 						<Trans>Copied!</Trans>
 					</Text>
-				</Animated.View>
+				</View>
 			)}
 			<Button
 				color="secondary"

@@ -10,9 +10,14 @@
  */
 
 import { forwardRef } from 'react';
-import { type ScrollViewProps, StyleSheet, View, type ViewProps } from 'react-native';
+import {
+	ScrollView as RNScrollView,
+	type ScrollViewProps,
+	StyleSheet,
+	View,
+	type ViewProps,
+} from 'react-native';
 
-import Animated, { type AnimatedScrollView } from '#/lib/animations/reanimatedCompat';
 import { usePalette } from '#/lib/hooks/usePalette';
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries';
 import { addStyle } from '#/lib/styles';
@@ -45,14 +50,14 @@ export const CenteredView = forwardRef(function CenteredView(
 /** @deprecated use `Layout` components */
 export const ScrollView = forwardRef(function ScrollViewImpl(
 	{ contentContainerStyle, ...props }: React.PropsWithChildren<ScrollViewProps>,
-	ref: React.Ref<AnimatedScrollView>,
+	ref: React.Ref<RNScrollView>,
 ) {
 	const { isMobile } = useWebMediaQueries();
 	if (!isMobile) {
 		contentContainerStyle = addStyle(contentContainerStyle, styles.containerScroll);
 	}
 	return (
-		<Animated.ScrollView
+		<RNScrollView
 			contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
 			ref={ref}
 			{...props}

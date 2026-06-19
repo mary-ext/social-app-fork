@@ -12,6 +12,8 @@ import {
 import {
 	Keyboard,
 	type LayoutChangeEvent,
+	type NativeScrollEvent,
+	type NativeSyntheticEvent,
 	ScrollView,
 	type StyleProp,
 	StyleSheet,
@@ -30,24 +32,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { countGraphemes } from 'unicode-segmenter/grapheme';
 
-import Animated, {
-	type AnimatedRef,
-	type AnimatedScrollView,
-	Easing,
-	FadeIn,
-	FadeOut,
-	interpolateColor,
-	LayoutAnimationConfig,
-	runOnUI,
-	scrollTo,
-	useAnimatedRef,
-	useAnimatedScrollHandler,
-	useAnimatedStyle,
-	useDerivedValue,
-	useSharedValue,
-	withRepeat,
-	withTiming,
-} from '#/lib/animations/reanimatedCompat';
 import * as apilib from '#/lib/api/index';
 import { EmbeddingDisabledError } from '#/lib/api/resolve';
 import { retry } from '#/lib/async/retry';
@@ -972,7 +956,7 @@ export const ComposePost = ({
 		}
 	}
 
-	const scrollViewRef = useAnimatedRef<AnimatedScrollView>();
+	const scrollViewRef = useRef<ScrollView | null>(null);
 	useEffect(() => {
 		if (composerState.mutableNeedsFocusActive) {
 			composerState.mutableNeedsFocusActive = false;
@@ -1044,7 +1028,7 @@ export const ComposePost = ({
 				canSaveDraft={allPostsWithinLimit}
 				textLength={thread.posts[0]!.text.length}
 			/>
-			{/* The composer owns its own scrolling (the `Animated.ScrollView` below); this body fills the
+			{/* The composer owns its own scrolling (the `ScrollView` below); this body fills the
 			    height-bounded dialog card while `minHeight: 0` lets the inner scroll view clip. */}
 			<View style={[a.flex_1, { minHeight: 0 }]}>
 				{missingAltError && <AltTextReminder error={missingAltError} />}
@@ -1054,10 +1038,9 @@ export const ComposePost = ({
 					clearError={() => setError('')}
 					clearVideo={erroredVideoPostId ? () => clearVideo(erroredVideoPostId) : () => {}}
 				/>
-				<Animated.ScrollView
+				<ScrollView
 					testID="composePostView"
 					ref={scrollViewRef}
-					layout={undefined}
 					onScroll={scrollHandler}
 					contentContainerStyle={a.flex_grow}
 					style={[
@@ -1095,7 +1078,7 @@ export const ComposePost = ({
 							)}
 						</Fragment>
 					))}
-				</Animated.ScrollView>
+				</ScrollView>
 				{!IS_WEBFooterSticky && footer}
 			</View>
 
@@ -1517,45 +1500,43 @@ function ComposerEmbeds({
 					/>
 				</View>
 			)}
-			<LayoutAnimationConfig skipExiting>
-				{video && (
-					<Animated.View style={[a.w_full, a.mt_lg]} entering={undefined} exiting={undefined}>
-						{video.asset &&
-							(video.status !== 'compressing' && video.video ? (
-								<VideoPreview
-									asset={video.asset}
-									video={video.video}
-									isActivePost={isActivePost}
-									clear={clearVideo}
-								/>
-							) : null)}
-						<SubtitleDialogBtn
-							defaultAltText={video.altText}
-							saveAltText={(altText) =>
-								dispatch({
-									type: 'embed_update_video',
-									videoAction: {
-										type: 'update_alt_text',
-										altText,
-										signal: video.abortController.signal,
-									},
-								})
-							}
-							captions={video.captions}
-							setCaptions={(updater) => {
-								dispatch({
-									type: 'embed_update_video',
-									videoAction: {
-										type: 'update_captions',
-										updater,
-										signal: video.abortController.signal,
-									},
-								});
-							}}
-						/>
-					</Animated.View>
-				)}
-			</LayoutAnimationConfig>
+			{video && (
+				<View style={[a.w_full, a.mt_lg]}>
+					{video.asset &&
+						(video.status !== 'compressing' && video.video ? (
+							<VideoPreview
+								asset={video.asset}
+								video={video.video}
+								isActivePost={isActivePost}
+								clear={clearVideo}
+							/>
+						) : null)}
+					<SubtitleDialogBtn
+						defaultAltText={video.altText}
+						saveAltText={(altText) =>
+							dispatch({
+								type: 'embed_update_video',
+								videoAction: {
+									type: 'update_alt_text',
+									altText,
+									signal: video.abortController.signal,
+								},
+							})
+						}
+						captions={video.captions}
+						setCaptions={(updater) => {
+							dispatch({
+								type: 'embed_update_video',
+								videoAction: {
+									type: 'update_captions',
+									updater,
+									signal: video.abortController.signal,
+								},
+							});
+						}}
+					/>
+				</View>
+			)}
 			{embed.quote?.uri ? (
 				<View style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], a.pb_md]}>
 					<View style={[a.relative]}>
@@ -1598,7 +1579,7 @@ function ComposerPills({
 	}
 
 	return (
-		<Animated.View style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
+		<View style={[a.flex_row, a.p_sm, t.atoms.bg, bottomBarAnimatedStyle]}>
 			<ScrollView
 				contentContainerStyle={[a.gap_sm]}
 				horizontal={true}
@@ -1637,7 +1618,7 @@ function ComposerPills({
 					/>
 				) : null}
 			</ScrollView>
-		</Animated.View>
+		</View>
 	);
 }
 
@@ -1773,33 +1754,31 @@ function ComposerFooter({
 			]}
 		>
 			<View style={[a.flex_row, a.align_center]}>
-				<LayoutAnimationConfig skipEntering skipExiting>
-					{video && video.status !== 'done' ? (
-						<VideoUploadToolbar state={video} />
-					) : (
-						<ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-							<SelectMediaButton
-								disabled={isMediaSelectionDisabled}
-								allowedAssetTypes={selectedAssetsType}
-								selectedAssetsCount={selectedAssetsCount}
-								onSelectAssets={onSelectAssets}
-								autoOpen={openGallery}
-							/>
-							<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-							{gtPhone ? (
-								<>
-									<EmojiPicker.Trigger
-										handle={emojiPickerHandle}
-										render={<ComposerToolbarButton label={l`Open emoji picker`} icon={EmojiSmileIcon} />}
-									/>
-									<EmojiPicker.Root handle={emojiPickerHandle} nextFocusRef={textInputRef}>
-										<EmojiPicker.Picker />
-									</EmojiPicker.Root>
-								</>
-							) : null}
-						</ToolbarWrapper>
-					)}
-				</LayoutAnimationConfig>
+				{video && video.status !== 'done' ? (
+					<VideoUploadToolbar state={video} />
+				) : (
+					<ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+						<SelectMediaButton
+							disabled={isMediaSelectionDisabled}
+							allowedAssetTypes={selectedAssetsType}
+							selectedAssetsCount={selectedAssetsCount}
+							onSelectAssets={onSelectAssets}
+							autoOpen={openGallery}
+						/>
+						<SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+						{gtPhone ? (
+							<>
+								<EmojiPicker.Trigger
+									handle={emojiPickerHandle}
+									render={<ComposerToolbarButton label={l`Open emoji picker`} icon={EmojiSmileIcon} />}
+								/>
+								<EmojiPicker.Root handle={emojiPickerHandle} nextFocusRef={textInputRef}>
+									<EmojiPicker.Picker />
+								</EmojiPicker.Root>
+							</>
+						) : null}
+					</ToolbarWrapper>
+				)}
 			</View>
 			<View style={[a.flex_row, a.align_center, a.justify_between]}>
 				{showAddButton && (
@@ -1820,92 +1799,48 @@ function useScrollTracker({
 	scrollViewRef,
 	stickyBottom,
 }: {
-	scrollViewRef: AnimatedRef<AnimatedScrollView>;
+	scrollViewRef: React.RefObject<ScrollView | null>;
 	stickyBottom: boolean;
 }) {
-	const t = useTheme();
-	const contentOffset = useSharedValue(0);
-	const scrollViewHeight = useSharedValue(Infinity);
-	const contentHeight = useSharedValue(0);
+	const contentOffset = useRef(0);
+	const scrollViewHeight = useRef(Infinity);
+	const contentHeight = useRef(0);
 
-	const hasScrolledToBottom = useDerivedValue(() =>
-		withTiming(contentHeight.get() - contentOffset.get() - 5 <= scrollViewHeight.get() ? 1 : 0),
-	);
+	const scrollHandler = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+		const ev = event.nativeEvent;
+		contentOffset.current = Math.floor(ev.contentOffset.y);
+		contentHeight.current = Math.floor(ev.contentSize.height);
+		scrollViewHeight.current = Math.floor(ev.layoutMeasurement.height);
+	}, []);
 
-	const showHideBottomBorder = useCallback(
-		({
-			newContentHeight,
-			newContentOffset,
-			newScrollViewHeight,
-		}: {
-			newContentHeight?: number;
-			newContentOffset?: number;
-			newScrollViewHeight?: number;
-		}) => {
-			'worklet';
-			if (typeof newContentHeight === 'number') contentHeight.set(Math.floor(newContentHeight));
-			if (typeof newContentOffset === 'number') contentOffset.set(Math.floor(newContentOffset));
-			if (typeof newScrollViewHeight === 'number') scrollViewHeight.set(Math.floor(newScrollViewHeight));
-		},
-		[contentHeight, contentOffset, scrollViewHeight],
-	);
-
-	const scrollHandler = useAnimatedScrollHandler({
-		onScroll: (event) => {
-			'worklet';
-			showHideBottomBorder({
-				newContentOffset: event.contentOffset.y,
-				newContentHeight: event.contentSize.height,
-				newScrollViewHeight: event.layoutMeasurement.height,
-			});
-		},
-	});
-
-	const onScrollViewContentSizeChangeUIThread = useCallback(
-		(newContentHeight: number) => {
-			'worklet';
-			const oldContentHeight = contentHeight.get();
+	const onScrollViewContentSizeChange = useCallback(
+		(_width: number, height: number) => {
+			const newContentHeight = Math.floor(height);
+			const oldContentHeight = contentHeight.current;
 			let shouldScrollToBottom = false;
 			if (stickyBottom && newContentHeight > oldContentHeight) {
-				const isFairlyCloseToBottom = oldContentHeight - contentOffset.get() - 100 <= scrollViewHeight.get();
+				const isFairlyCloseToBottom =
+					oldContentHeight - contentOffset.current - 100 <= scrollViewHeight.current;
 				if (isFairlyCloseToBottom) {
 					shouldScrollToBottom = true;
 				}
 			}
-			showHideBottomBorder({ newContentHeight });
+			contentHeight.current = newContentHeight;
 			if (shouldScrollToBottom) {
-				scrollTo(scrollViewRef, 0, newContentHeight, true);
+				scrollViewRef.current?.scrollTo({ x: 0, y: newContentHeight, animated: true });
 			}
 		},
-		[showHideBottomBorder, scrollViewRef, contentHeight, stickyBottom, contentOffset, scrollViewHeight],
+		[scrollViewRef, stickyBottom],
 	);
 
-	const onScrollViewContentSizeChange = useCallback(
-		(_width: number, height: number) => {
-			runOnUI(onScrollViewContentSizeChangeUIThread)(height);
-		},
-		[onScrollViewContentSizeChangeUIThread],
-	);
+	const onScrollViewLayout = useCallback((evt: LayoutChangeEvent) => {
+		scrollViewHeight.current = Math.floor(evt.nativeEvent.layout.height);
+	}, []);
 
-	const onScrollViewLayout = useCallback(
-		(evt: LayoutChangeEvent) => {
-			showHideBottomBorder({
-				newScrollViewHeight: evt.nativeEvent.layout.height,
-			});
-		},
-		[showHideBottomBorder],
-	);
-
-	const bottomBarAnimatedStyle = useAnimatedStyle(() => {
-		return {
-			borderTopWidth: StyleSheet.hairlineWidth,
-			borderColor: interpolateColor(
-				hasScrolledToBottom.get(),
-				[0, 1],
-				[t.atoms.border_contrast_medium.borderColor, 'transparent'],
-			),
-		};
-	});
+	const bottomBarAnimatedStyle: ViewStyle = {
+		borderTopWidth: StyleSheet.hairlineWidth,
+		borderColor: 'transparent',
+	};
 
 	return {
 		scrollHandler,
@@ -2018,7 +1953,7 @@ function ErrorBanner({
 	if (!error) return null;
 
 	return (
-		<Animated.View style={[a.px_lg, a.pb_sm]} entering={FadeIn} exiting={FadeOut}>
+		<View style={[a.px_lg, a.pb_sm]}>
 			<View style={[a.px_md, a.py_sm, a.gap_xs, a.rounded_sm, t.atoms.bg_contrast_25]}>
 				<View style={[a.relative, a.flex_row, a.gap_sm, { paddingRight: 48 }]}>
 					<CircleInfoIcon fill={t.palette.negative_400} />
@@ -2049,7 +1984,7 @@ function ErrorBanner({
 					</Text>
 				)}
 			</View>
-		</Animated.View>
+		</View>
 	);
 }
 
@@ -2069,25 +2004,6 @@ function VideoUploadToolbar({ state }: { state: VideoState }) {
 	const progress = state.progress;
 	const shouldRotate = state.status === 'processing' && (progress === 0 || progress === 1);
 	let wheelProgress = shouldRotate ? 0.33 : progress;
-
-	const rotate = useDerivedValue(() => {
-		if (shouldRotate) {
-			return withRepeat(
-				withTiming(360, {
-					duration: 2500,
-					easing: Easing.out(Easing.cubic),
-				}),
-				-1,
-			);
-		}
-		return 0;
-	});
-
-	const animatedStyle = useAnimatedStyle(() => {
-		return {
-			transform: [{ rotateZ: `${rotate.get()}deg` }],
-		};
-	});
 
 	let text = '';
 
@@ -2130,15 +2046,13 @@ function VideoUploadToolbar({ state }: { state: VideoState }) {
 
 	return (
 		<ToolbarWrapper style={[a.flex_row, a.align_center, { paddingVertical: 5 }]}>
-			<Animated.View style={[animatedStyle]}>
-				<ProgressCircle
-					size={30}
-					borderWidth={1}
-					borderColor={t.atoms.border_contrast_low.borderColor}
-					color={state.status === 'error' ? t.palette.negative_500 : t.palette.primary_500}
-					progress={wheelProgress}
-				/>
-			</Animated.View>
+			<ProgressCircle
+				size={30}
+				borderWidth={1}
+				borderColor={t.atoms.border_contrast_low.borderColor}
+				color={state.status === 'error' ? t.palette.negative_500 : t.palette.primary_500}
+				progress={wheelProgress}
+			/>
 			<Text style={[a.font_semi_bold, a.ml_sm]}>{text}</Text>
 		</ToolbarWrapper>
 	);

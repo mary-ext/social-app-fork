@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 
-import { useReducedMotion } from '#/lib/animations/reanimatedCompat';
 import * as styles from '#/lib/custom-animations/CountWheel.css';
 import { decideShouldRoll } from '#/lib/custom-animations/util';
 
@@ -16,7 +15,7 @@ export function CountWheel({
 	hasBeenToggled: boolean;
 	renderCount: (props: { count: number }) => React.ReactNode;
 }) {
-	const shouldAnimate = !useReducedMotion() && hasBeenToggled;
+	const shouldAnimate = hasBeenToggled;
 
 	const prevIsToggled = useRef(isToggled);
 	// the outgoing number + its direction during a roll; null at rest. `key` retriggers the CSS animation.

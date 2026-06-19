@@ -3,8 +3,6 @@ import { ScrollView, View, type ViewStyle } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { Trans, useLingui } from '@lingui/react/macro';
 
-import Animated, { FadeIn, FadeOut, LayoutAnimationConfig } from '#/lib/animations/reanimatedCompat';
-
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
 import type { FeedDescriptor } from '#/state/queries/post-feed';
 import { useSuggestedFollowsByActorWithDismiss } from '#/state/queries/suggested-follows';
@@ -22,8 +20,6 @@ import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Time
 import * as ProfileCard from '#/components/ProfileCard';
 import { SuggestedFollowsDialog } from '#/components/suggested-follows-dialog';
 import { Text } from '#/components/Typography';
-
-const DISMISS_ANIMATION_DURATION = 200;
 
 const MOBILE_CARD_WIDTH = 165;
 const FINAL_CARD_WIDTH = 120;
@@ -202,12 +198,8 @@ export function ProfileGrid({
 		: error || !profiles.length
 			? null
 			: profiles.slice(0, maxLength).map((profile, _index) => (
-					<Animated.View
+					<View
 						key={profile.actor.did}
-						layout={undefined}
-						exiting={FadeOut.duration(DISMISS_ANIMATION_DURATION)}
-						// for web, as the cards are static, not in a list
-						entering={FadeIn.delay(DISMISS_ANIMATION_DURATION * 2)}
 						style={[
 							a.flex_1,
 							gtMobile && [
@@ -273,7 +265,7 @@ export function ProfileGrid({
 								</CardOuter>
 							)}
 						</ProfileCard.Link>
-					</Animated.View>
+					</View>
 				));
 
 	// Use totalProfileCount (before dismissals) for minLength check on initial render.
@@ -325,29 +317,27 @@ export function ProfileGrid({
 				</Button>
 			</View>
 			<SuggestedFollowsDialog control={followDialogControl} />
-			<LayoutAnimationConfig skipExiting skipEntering>
-				{gtMobile ? (
-					<View style={[a.p_lg, a.pt_md]}>
-						<View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>{content}</View>
-					</View>
-				) : (
-					<ScrollView
-						horizontal
-						showsHorizontalScrollIndicator={false}
-						contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
-						snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-						decelerationRate="fast"
-					>
-						{content}
+			{gtMobile ? (
+				<View style={[a.p_lg, a.pt_md]}>
+					<View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>{content}</View>
+				</View>
+			) : (
+				<ScrollView
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
+					snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+					decelerationRate="fast"
+				>
+					{content}
 
-						<SeeMoreSuggestedProfilesCard
-							onPress={() => {
-								followDialogControl.open();
-							}}
-						/>
-					</ScrollView>
-				)}
-			</LayoutAnimationConfig>
+					<SeeMoreSuggestedProfilesCard
+						onPress={() => {
+							followDialogControl.open();
+						}}
+					/>
+				</ScrollView>
+			)}
 		</View>
 	);
 }

@@ -1,9 +1,8 @@
 import { useCallback } from 'react';
-import { View } from 'react-native';
+import { type NativeScrollEvent, View } from 'react-native';
 import { type ScreenLayoutArgs, useIsFocused } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import type { ReanimatedScrollEvent } from '#/lib/animations/reanimatedCompat';
 import type { FlatNavigatorParams, NativeStackNavigationOptionsWithAuth } from '#/lib/routes/types';
 import { ScrollProvider } from '#/lib/ScrollContext';
 
@@ -55,8 +54,7 @@ function MessagesSplitViewLayoutInner({ children, navigation, route }: LayoutPro
 	const isFocused = useIsFocused();
 	const { data: chatStatus } = useChatActorStatusQuery();
 
-	const onLeftColumnScroll = useCallback((e: ReanimatedScrollEvent) => {
-		'worklet';
+	const onLeftColumnScroll = useCallback((e: NativeScrollEvent) => {
 		splitViewLeftScroll.current = e.contentOffset.y;
 	}, []);
 

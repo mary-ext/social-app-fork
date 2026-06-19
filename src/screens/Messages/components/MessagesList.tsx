@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import { type LayoutChangeEvent, ScrollView, type ScrollViewProps, View, type ViewStyle } from 'react-native';
+import {
+	type LayoutChangeEvent,
+	type NativeScrollEvent,
+	ScrollView,
+	type ScrollViewProps,
+	View,
+	type ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { AppBskyEmbedRecord, ChatBskyConvoDefs, ChatBskyEmbedJoinLink } from '@atcute/bluesky';
 import { tokenize } from '@atcute/bluesky-richtext-parser';
 import { ok } from '@atcute/client';
 import type { $type, Handle } from '@atcute/lexicons';
 
-import { runOnJS, type ScrollEvent, useAnimatedRef, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 import { ScrollProvider } from '#/lib/ScrollContext';
 import { cleanNewlines, detectFacets } from '#/lib/strings/rich-text-facets';
@@ -129,7 +135,7 @@ export function MessagesList({
 	const t = useTheme();
 
 	const textInputId = 'chat-input-' + useId();
-	const flatListRef = useAnimatedRef<ListMethods>();
+	const flatListRef = useRef<ListMethods | null>(null);
 
 	const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => new Set());
 	const onToggleGroup = (key: string) => {
@@ -160,10 +166,10 @@ export function MessagesList({
 	// We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
 	// are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
 	// the bottom.
-	const isAtBottom = useSharedValue(true);
+	const isAtBottom = useRef(true);
 
 	// This will be used on web to assist in determining if we need to maintain the content offset
-	const isAtTop = useSharedValue(true);
+	const isAtTop = useRef(true);
 
 	// Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
 	// onStartReached to fire.
@@ -183,7 +189,7 @@ export function MessagesList({
 	}, [hasScrolled]);
 
 	// -- Keep track of background state and positioning for new pill
-	const layoutHeight = useSharedValue(0);
+	const layoutHeight = useRef(0);
 	const didBackground = useRef(false);
 	useEffect(() => {
 		if (convoState.status === ConvoStatus.Backgrounded) {
@@ -207,7 +213,7 @@ export function MessagesList({
 		(_: number, height: number) => {
 			// Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
 			// previous off whenever we add new content to the previous offset whenever we add new content to the list.
-			if (isAtTop.get() && hasScrolled) {
+			if (isAtTop.current && hasScrolled) {
 				flatListRef.current?.scrollToOffset({
 					offset: height - prevContentHeight.current,
 					animated: false,
@@ -233,7 +239,7 @@ export function MessagesList({
 			}
 
 			// Subsequent: auto-scroll only if user is at the bottom
-			if (isAtBottom.get()) {
+			if (isAtBottom.current) {
 				// If the size of the content is changing by more than the height of the screen, then we don't
 				// want to scroll further than the start of all the new content. Since we are storing the previous offset,
 				// we can just scroll the user to that offset and add a little bit of padding. We'll also show the pill
@@ -241,7 +247,7 @@ export function MessagesList({
 				if (
 					didBackground.current &&
 					hasScrolled &&
-					height - prevContentHeight.current > layoutHeight.get() - 50 &&
+					height - prevContentHeight.current > layoutHeight.current - 50 &&
 					renderItems.length - prevItemCount.current > 1
 				) {
 					flatListRef.current?.scrollToOffset({
@@ -286,21 +292,20 @@ export function MessagesList({
 	}, [convoState]);
 
 	const onScroll = useCallback(
-		(e: ScrollEvent) => {
-			'worklet';
-			layoutHeight.set(e.layoutMeasurement.height);
+		(e: NativeScrollEvent) => {
+			layoutHeight.current = e.layoutMeasurement.height;
 			const bottomOffset = e.contentOffset.y + e.layoutMeasurement.height;
 
 			// Most apps have a little bit of space the user can scroll past while still automatically scrolling ot the bottom
 			// when a new message is added, hence the 100 pixel offset
-			isAtBottom.set(e.contentSize.height - 100 < bottomOffset);
-			isAtTop.set(e.contentOffset.y <= 1);
+			isAtBottom.current = e.contentSize.height - 100 < bottomOffset;
+			isAtTop.current = e.contentOffset.y <= 1;
 
 			if (
 				newMessagesPill.show &&
-				(e.contentOffset.y > newMessagesPill.startContentOffset + 200 || isAtBottom.get())
+				(e.contentOffset.y > newMessagesPill.startContentOffset + 200 || isAtBottom.current)
 			) {
-				runOnJS(setNewMessagesPill)({
+				setNewMessagesPill({
 					show: false,
 					startContentOffset: 0,
 				});

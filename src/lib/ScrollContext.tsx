@@ -1,6 +1,17 @@
 import { createContext, useContext, useMemo } from 'react';
+import type { NativeScrollEvent } from 'react-native';
 
-import type { ScrollHandlers } from '#/lib/animations/reanimatedCompat';
+export type ScrollEvent = NativeScrollEvent & {
+	eventName?: string;
+	zoomScale?: number;
+};
+
+export type ScrollHandlers<Context extends Record<string, unknown> = Record<string, unknown>> = {
+	onBeginDrag?: (event: ScrollEvent, context: Context) => void;
+	onEndDrag?: (event: ScrollEvent, context: Context) => void;
+	onMomentumEnd?: (event: ScrollEvent, context: Context) => void;
+	onScroll?: (event: ScrollEvent, context: Context) => void;
+};
 
 const ScrollContext = createContext<ScrollHandlers>({
 	onBeginDrag: undefined,

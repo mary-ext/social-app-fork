@@ -1,37 +1,20 @@
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import Animated, { useAnimatedStyle, useSharedValue } from '#/lib/animations/reanimatedCompat';
-import { ScaleAndFadeIn, ScaleAndFadeOut } from '#/lib/custom-animations/ScaleAndFade';
+import { useLingui } from '@lingui/react/macro';
 
 import { atoms as a, useTheme } from '#/alf';
 
 import { ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon } from '#/components/icons/Arrow';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
 export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void }) {
 	const t = useTheme();
+	const { t: l } = useLingui();
 	const { bottom: bottomInset } = useSafeAreaInsets();
-
-	const scale = useSharedValue(1);
-
-	const onPressIn = useCallback(() => {
-		return;
-	}, [scale]);
-
-	const onPressOut = useCallback(() => {
-		return;
-	}, [scale]);
 
 	const onPress = useCallback(() => {
 		onPressInner?.();
 	}, [onPressInner]);
-
-	const animatedStyle = useAnimatedStyle(() => ({
-		transform: [{ scale: scale.get() }],
-	}));
 
 	return (
 		<View
@@ -47,7 +30,7 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 				},
 			]}
 		>
-			<AnimatedPressable
+			<Pressable
 				style={[
 					a.align_center,
 					a.justify_center,
@@ -62,16 +45,14 @@ export function NewMessagesPill({ onPress: onPressInner }: { onPress: () => void
 						alignItems: 'center',
 						pointerEvents: 'box-only',
 					},
-					animatedStyle,
 				]}
-				entering={ScaleAndFadeIn}
-				exiting={ScaleAndFadeOut}
+				accessibilityRole="button"
+				accessibilityLabel={l`Scroll to latest messages`}
+				accessibilityHint={l`Scrolls the conversation to the most recent message`}
 				onPress={onPress}
-				onPressIn={onPressIn}
-				onPressOut={onPressOut}
 			>
 				<ArrowDownIcon size="md" style={[t.atoms.text]} />
-			</AnimatedPressable>
+			</Pressable>
 		</View>
 	);
 }

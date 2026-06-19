@@ -12,14 +12,6 @@ import { plural } from '@lingui/core/macro';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 
-import Animated, {
-	FadeIn,
-	FadeOut,
-	LayoutAnimationConfig,
-	useAnimatedStyle,
-	useSharedValue,
-	withTiming,
-} from '#/lib/animations/reanimatedCompat';
 import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted';
 import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -200,9 +192,6 @@ let MessageItem = ({
 	const targetBottomRadius = squaredBottomCorner ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
 	const targetTopRadius = squaredTopCorner || hasEmbedAndText ? SQUARED_BORDER_RADIUS : BORDER_RADIUS;
 
-	const bottomRadiusSV = useSharedValue(targetBottomRadius);
-	const topRadiusSV = useSharedValue(targetTopRadius);
-
 	const showDisplayName = isGroupChat && !isFromSelf && isFirstInCluster && !isOnlyEmoji(message.text);
 	const showAvatar = isGroupChat && !isFromSelf && isLastInCluster;
 
@@ -224,25 +213,15 @@ let MessageItem = ({
 		return () => animation?.cancel();
 	}, [highlightKey]);
 
-	useEffect(() => {
-		bottomRadiusSV.set(withTiming(targetBottomRadius, { duration: 300 }));
-	}, [targetBottomRadius, bottomRadiusSV]);
-
-	useEffect(() => {
-		topRadiusSV.set(withTiming(targetTopRadius, { duration: 300 }));
-	}, [targetTopRadius, topRadiusSV]);
-
-	const borderRadiusStyle = useAnimatedStyle(() =>
-		isFromSelf
-			? {
-					borderBottomRightRadius: bottomRadiusSV.get(),
-					borderTopRightRadius: topRadiusSV.get(),
-				}
-			: {
-					borderBottomLeftRadius: bottomRadiusSV.get(),
-					borderTopLeftRadius: topRadiusSV.get(),
-				},
-	);
+	const borderRadiusStyle = isFromSelf
+		? {
+				borderBottomRightRadius: targetBottomRadius,
+				borderTopRightRadius: targetTopRadius,
+			}
+		: {
+				borderBottomLeftRadius: targetBottomRadius,
+				borderTopLeftRadius: targetTopRadius,
+			};
 
 	const avatar =
 		profile && moderationOpts ? (
@@ -285,11 +264,9 @@ let MessageItem = ({
 	}, [reactions, groupedReactions, currentAccount?.did, relatedProfiles, l]);
 
 	const appliedReactions = (
-		<LayoutAnimationConfig skipEntering skipExiting>
+		<>
 			{hasReactions ? (
-				<Animated.View
-					entering={FadeIn}
-					exiting={FadeOut}
+				<View
 					style={[
 						a.absolute,
 						{ top: '100%' },
@@ -321,17 +298,11 @@ let MessageItem = ({
 						onPress={isGroupChat ? () => openReactions(message) : undefined}
 					>
 						{groupedReactions.slice(0, 10).map((group) => (
-							<Animated.View
-								entering={undefined}
-								exiting={groupedReactions.length > 1 ? undefined : undefined}
-								layout={undefined}
-								key={group.value}
-								style={[a.py_2xs]}
-							>
+							<View key={group.value} style={[a.py_2xs]}>
 								<Text emoji style={[a.text_md, { textAlignVertical: 'center', includeFontPadding: false }]}>
 									{group.value}
 								</Text>
-							</Animated.View>
+							</View>
 						))}
 						{(groupedReactions.length !== reactions.length || groupedReactions.length > 10) &&
 						reactions.length > 1 ? (
@@ -349,9 +320,9 @@ let MessageItem = ({
 							</View>
 						) : null}
 					</Pressable>
-				</Animated.View>
+				</View>
 			) : null}
-		</LayoutAnimationConfig>
+		</>
 	);
 
 	const messageInset = a.mx_lg;
@@ -439,7 +410,7 @@ let MessageItem = ({
 										/>
 									)}
 									{rt.text.length > 0 && (
-										<Animated.View
+										<View
 											accessibilityHint={l`Double tap or long press the message to add a reaction`}
 											style={[
 												!isFromSelf && isGroupChat && a.ml_sm,
@@ -483,7 +454,7 @@ let MessageItem = ({
 												size="md"
 												value={rt}
 											/>
-										</Animated.View>
+										</View>
 									)}
 								</ActionsWrapper>
 								{appliedReactions}
@@ -575,7 +546,7 @@ function BlockedPlaceholder({
 				accessibilityHint={l`Tap for details`}
 				onPress={() => control.open()}
 			>
-				<Animated.View
+				<View
 					style={[
 						a.ml_sm,
 						a.rounded_xl,
@@ -596,7 +567,7 @@ function BlockedPlaceholder({
 							<Trans>This message is hidden because this user is blocking you.</Trans>
 						)}
 					</Text>
-				</Animated.View>
+				</View>
 			</Button>
 			<Prompt.Outer control={control}>
 				<Prompt.Content>

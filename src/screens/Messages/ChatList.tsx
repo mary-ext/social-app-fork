@@ -5,7 +5,6 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useAppState } from '#/lib/appState';
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender';
 import type { MessagesTabNavigatorParams, NavigationProp } from '#/lib/routes/types';
@@ -21,7 +20,7 @@ import { useListConvosQuery } from '#/state/queries/messages/list-conversations'
 import { logger } from '#/logger';
 
 import { EmptyState } from '#/view/com/util/EmptyState';
-import { List, type ListRef } from '#/view/com/util/List';
+import { List, type ListMethods } from '#/view/com/util/List';
 import { ChatListLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder';
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf';
@@ -166,7 +165,7 @@ export function ChatList({
 }) {
 	const t = useTheme();
 	const { t: l } = useLingui();
-	const scrollElRef: ListRef = useAnimatedRef();
+	const scrollElRef = useRef<ListMethods | null>(null);
 	const { isWithinSplitView } = useIsWithinSplitView();
 
 	const openChatControl = useCallback(() => {

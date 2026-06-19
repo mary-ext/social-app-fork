@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLingui } from '@lingui/react/macro';
 import { useIsFocused } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { useAnimatedRef } from '#/lib/animations/reanimatedCompat';
 import { useOpenComposer } from '#/lib/hooks/useOpenComposer';
 import { useSetTitle } from '#/lib/hooks/useSetTitle';
 import type { CommonNavigatorParams } from '#/lib/routes/types';
@@ -34,7 +33,7 @@ import { useTheme } from '#/alf';
 import { EditBig_Stroke2_Corner2_Rounded as EditBigIcon } from '#/components/icons/EditBig';
 import { HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon } from '#/components/icons/Hashtag';
 import * as Layout from '#/components/Layout';
-import type { ListRef } from '#/components/List/List';
+import type { ListMethods } from '#/components/List/List';
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>;
 export function ProfileFeedScreen(props: Props) {
@@ -108,7 +107,7 @@ export function ProfileFeedScreenInner({
 	const [isScrolledDown, setIsScrolledDown] = useState(false);
 	const queryClient = useQueryClient();
 	const feedFeedback = useFeedFeedback(feedInfo, hasSession);
-	const scrollElRef = useAnimatedRef() as ListRef;
+	const scrollElRef = useRef<ListMethods | null>(null);
 
 	const onScrollToTop = useCallback(() => {
 		scrollElRef.current?.scrollToOffset({

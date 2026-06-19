@@ -32,8 +32,6 @@ interface SortableListProps<T> {
 	onReorder: (data: T[]) => void;
 	onDragStart?: () => void;
 	onDragEnd?: () => void;
-	scrollRef?: unknown;
-	scrollOffset?: unknown;
 	/** Fixed row height used for position math. */
 	itemHeight: number;
 }

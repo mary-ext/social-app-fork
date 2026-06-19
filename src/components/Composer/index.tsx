@@ -1,7 +1,6 @@
 import { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { type TextInput, type TextInputSubmitEditingEvent, type TextStyle, View } from 'react-native';
 
-import Animated, { useAnimatedStyle, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { mergeRefs } from '#/lib/merge-refs';
 import { useSift, type UseSiftReturn } from '#/lib/sift';
 import { type TapperActiveFacet, type TapperFacet, useTapper } from '#/lib/tapper';
@@ -139,11 +138,6 @@ export function Composer({
 	const [activeFacet, setActiveFacet] = useState<TapperActiveFacet | null>(null);
 
 	/*
-	 * Reanimated shared value for syncing scroll.
-	 */
-	const inputScrollSharedValue = useSharedValue(0);
-
-	/*
 	 * Expose imperative internal API
 	 */
 	useImperativeHandle(
@@ -152,12 +146,11 @@ export function Composer({
 			input: tapper.input,
 			clear: () => {
 				tapper.inputProps.onChangeText('');
-				inputScrollSharedValue.set(0);
 			},
 			insert: tapper.insert,
 			setAutocompleteAnchor: sift.refs.setAnchor,
 		}),
-		[tapper.input, tapper.insert, inputScrollSharedValue, sift.refs.setAnchor],
+		[tapper.input, tapper.insert, sift.refs.setAnchor],
 	);
 
 	/*
@@ -225,9 +218,6 @@ export function Composer({
 	/*
 	 * Styles
 	 */
-	const previewScrollStyle = useAnimatedStyle(() => ({
-		transform: [{ translateY: -inputScrollSharedValue.value }],
-	}));
 	const textStyle = useMemo(() => {
 		const ts = normalizeTextStyles([a.leading_snug, t.atoms.text, contentTextStyle], {
 			fontScale: fonts.scaleMultiplier,
@@ -311,11 +301,9 @@ export function Composer({
 							}
 						}}
 					>
-						<Animated.View
-							style={[contentPaddingStyle, { position: 'absolute', left: 0, right: 0 }, previewScrollStyle]}
-						>
+						<View style={[contentPaddingStyle, { position: 'absolute', left: 0, right: 0 }]}>
 							{textContent}
-						</Animated.View>
+						</View>
 					</View>
 				}
 				<AutosizedTextarea
@@ -347,9 +335,6 @@ export function Composer({
 						setActiveFacet(null);
 					}}
 					onKeyPress={onKeyPressWeb}
-					onScroll={(e) => {
-						inputScrollSharedValue.set((e.target as unknown as { scrollTop: number }).scrollTop);
-					}}
 					// @ts-ignore web only
 					onCompositionStart={() => {
 						isComposing.current = true;

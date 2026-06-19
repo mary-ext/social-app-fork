@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useMemo } from 'react';
 import { Pressable, type PressableProps, type StyleProp, View, type ViewStyle } from 'react-native';
 
-import Animated, { Easing, LinearTransition } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 
 import { atoms as a, type TextStyleProp, useTheme, type ViewStyleProp } from '#/alf';
@@ -458,8 +457,7 @@ export function Switch() {
 				hovered ? baseHoverStyles : {},
 			]}
 		>
-			<Animated.View
-				layout={LinearTransition.duration(100).easing(Easing.inOut(Easing.cubic))}
+			<View
 				style={[
 					a.rounded_full,
 					{

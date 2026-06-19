@@ -2,7 +2,6 @@ import { Pressable, View } from 'react-native';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
 
-import Animated, { FadeIn, FadeOut } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 
 import { JOIN_REQUESTS_THRESHOLD } from '#/state/queries/messages/list-join-requests';
@@ -28,9 +27,7 @@ export function RequestStatus({
 	const { t: l } = useLingui();
 
 	return (
-		<Animated.View
-			entering={FadeIn.duration(200).delay(200)}
-			exiting={FadeOut.duration(200)}
+		<View
 			style={[
 				a.absolute,
 				a.z_50,
@@ -86,6 +83,6 @@ export function RequestStatus({
 					<CloseIcon size="md" fill={t.palette.primary_500} />
 				</Pressable>
 			</View>
-		</Animated.View>
+		</View>
 	);
 }

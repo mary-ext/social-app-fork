@@ -1,10 +1,9 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { type ScrollView, View } from 'react-native';
 import type { AnyProfileView } from '@atcute/bluesky';
 import { DisplayContext, getDisplayRestrictions, moderateProfile } from '@atcute/bluesky-moderation';
 import { useLingui } from '@lingui/react/macro';
 
-import Animated, { useAnimatedRef, useSharedValue } from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_10 } from '#/lib/constants';
 import { sanitizeDisplayName } from '#/lib/strings/display-names';
 import { sanitizeHandle } from '#/lib/strings/handles';
@@ -27,9 +26,7 @@ type Props = {
 
 export function ChatProfileTabs({ testID, profiles, onRemove }: Props) {
 	const t = useTheme();
-	const scrollElRef = useAnimatedRef<ScrollView>();
-	const contentSize = useSharedValue(0);
-	const scrollX = useSharedValue(0);
+	const scrollElRef = useRef<ScrollView | null>(null);
 
 	useEffect(() => {
 		requestAnimationFrame(() => {
@@ -45,16 +42,8 @@ export function ChatProfileTabs({ testID, profiles, onRemove }: Props) {
 				testID={`${testID}-selector`}
 				horizontal={true}
 				showsHorizontalScrollIndicator={false}
-				onScroll={(e) => {
-					scrollX.set(Math.round(e.nativeEvent.contentOffset.x));
-				}}
 			>
-				<Animated.View
-					style={[a.flex_row, a.flex_grow, a.gap_sm, a.align_center, a.justify_start]}
-					onLayout={(e) => {
-						contentSize.set(e.nativeEvent.layout.width);
-					}}
-				>
+				<View style={[a.flex_row, a.flex_grow, a.gap_sm, a.align_center, a.justify_start]}>
 					{profiles.map((profile, index) => (
 						<Tab
 							key={profile.did}
@@ -65,7 +54,7 @@ export function ChatProfileTabs({ testID, profiles, onRemove }: Props) {
 							onRemove={onRemove}
 						/>
 					))}
-				</Animated.View>
+				</View>
 			</DraggableScrollView>
 		</View>
 	);

@@ -1,11 +1,13 @@
 import { forwardRef, memo } from 'react';
-import { type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native';
+import {
+	ScrollView,
+	type ScrollViewProps,
+	type StyleProp,
+	View,
+	type ViewProps,
+	type ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import Animated, {
-	type AnimatedScrollView,
-	type AnimatedScrollViewProps,
-} from '#/lib/animations/reanimatedCompat';
 
 import { useEnableMinimalShellModeForScreen } from '#/state/shell';
 
@@ -59,14 +61,14 @@ export const Screen = memo(function Screen({
 	);
 });
 
-export type ContentProps = AnimatedScrollViewProps & {
+export type ContentProps = ScrollViewProps & {
 	style?: StyleProp<ViewStyle>;
 	contentContainerStyle?: StyleProp<ViewStyle>;
 };
 
 /** Default scroll view for simple pages */
 export const Content = memo(
-	forwardRef<AnimatedScrollView, ContentProps>(function Content(
+	forwardRef<ScrollView, ContentProps>(function Content(
 		{ children, style, contentContainerStyle, ...props },
 		ref,
 	) {
@@ -74,7 +76,7 @@ export const Content = memo(
 		const { isWithinSplitView } = useIsWithinSplitView();
 
 		return (
-			<Animated.ScrollView
+			<ScrollView
 				ref={ref}
 				id="content"
 				automaticallyAdjustsScrollIndicatorInsets={false}
@@ -94,7 +96,7 @@ export const Content = memo(
 				{...props}
 			>
 				<Center>{children}</Center>
-			</Animated.ScrollView>
+			</ScrollView>
 		);
 	}),
 );

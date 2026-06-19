@@ -1,8 +1,7 @@
-import { StyleSheet, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMediaQuery } from 'react-responsive';
 
-import Animated from '#/lib/animations/reanimatedCompat';
 import { HITSLOP_20 } from '#/lib/constants';
 import { PressableScale } from '#/lib/custom-animations/PressableScale';
 import { useMinimalShellFabTransform } from '#/lib/hooks/useMinimalShellTransform';
@@ -51,7 +50,7 @@ export function LoadLatestBtn({
 	const bottomPosition = isTablet ? { bottom: 50 } : { bottom: clamp(insets.bottom, 15, 60) + 15 };
 
 	return (
-		<Animated.View
+		<View
 			testID="loadLatestBtn"
 			style={[
 				a.fixed,
@@ -90,7 +89,7 @@ export function LoadLatestBtn({
 					style={[a.z_10, showIndicator ? { color: t.palette.primary_500 } : t.atoms.text_contrast_medium]}
 				/>
 			</PressableScale>
-		</Animated.View>
+		</View>
 	);
 }
 
