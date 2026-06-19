@@ -10,7 +10,6 @@ import {
 	setFontScale as persistFontScale,
 } from '#/alf/fonts';
 import { themes } from '#/alf/themes';
-import { contrastRatio, darken, lighten, rgbToHex } from '#/alf/util/colorGeneration';
 
 import type { Device } from '#/storage';
 import { fontScale as fontScaleVar } from '#/styles/tokens.css';
@@ -23,13 +22,7 @@ export * as tokens from '#/alf/tokens';
 export * from '#/alf/util/flatten';
 export * from '#/alf/util/themeSelector';
 export * from '#/alf/util/useGutters';
-export const utils = {
-	...baseUtils,
-	contrastRatio,
-	darken,
-	lighten,
-	rgbToHex,
-};
+export const utils = { ...baseUtils };
 
 export type Alf = {
 	themeName: ThemeName;

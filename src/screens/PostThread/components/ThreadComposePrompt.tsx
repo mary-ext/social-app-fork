@@ -7,8 +7,7 @@ import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBor
 import { useProfileQuery } from '#/state/queries/profile';
 import { useSession } from '#/state/session';
 
-import { atoms as a, useBreakpoints, useTheme } from '#/alf';
-import { transparentifyColor } from '#/alf/util/colorGeneration';
+import { atoms as a, useBreakpoints, useTheme, utils } from '#/alf';
 
 import { useInteractionState } from '#/components/hooks/useInteractionState';
 import { Text } from '#/components/Text';
@@ -35,7 +34,7 @@ export function ThreadComposePrompt({ onPressCompose }: { onPressCompose: () => 
 					key={t.name} // android does not update when you change the colors. sigh.
 					start={[0.5, 0]}
 					end={[0.5, 1]}
-					colors={[transparentifyColor(t.atoms.bg.backgroundColor, 0), t.atoms.bg.backgroundColor]}
+					colors={[utils.alpha(t.atoms.bg.backgroundColor, 0), t.atoms.bg.backgroundColor]}
 					locations={[0.15, 0.4]}
 					style={[a.absolute, a.inset_0]}
 				/>

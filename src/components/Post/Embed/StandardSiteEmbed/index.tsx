@@ -1,13 +1,21 @@
 import type { AppBskyEmbedExternal } from '@atcute/bluesky';
 import { plural } from '@lingui/core/macro';
 import { useLingui } from '@lingui/react/macro';
+import {
+	type ColorValue,
+	darken,
+	fromHsla,
+	fromRgba,
+	getAPCAContrastRatio,
+	getAPCATextColor,
+	toHsla,
+	toRgbHex,
+} from '@mary/color-fns';
 import { assignInlineVars } from '@vanilla-extract/dynamic';
 import { clsx } from 'clsx';
 
 import { niceDate } from '#/lib/strings/time';
 import { toNiceDomain } from '#/lib/strings/url-helpers';
-
-import { contrastRatio, darken, rgbToHex } from '#/alf/util/colorGeneration';
 
 import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon } from '#/components/icons/Arrow';
 import { Clock_Stroke2_Corner0_Rounded as Clock } from '#/components/icons/Clock';
@@ -33,18 +41,88 @@ type StandardSiteEmbedProps = {
 	view: AppBskyEmbedExternal.ViewExternal;
 };
 
-type ThemeColors = { accent: string; accentForeground: string };
+type ThemeColors = {
+	accent: string;
+	accentForeground: string;
+	/** Darkened accent for the CTA button's hover state. */
+	accentHover: string;
+	/** Whether the accent/foreground pair clears APCA; the CTA button only tints itself when it does. */
+	legible: boolean;
+};
 
-/** Resolves a site's custom accent pair, falling back to the themed text colors. */
+/**
+ * Absolute APCA lightness contrast (Lc) we hold the card's accent text to. Lc 90 is APCA's preferred level
+ * for body text; the Lc 75 minimum technically passes but leaves saturated accents (e.g. white-on-red)
+ * straining to read.
+ */
+const ACCENT_MIN_LC = 90;
+
+/**
+ * Most HSL-lightness points we'll shift a publisher's accent to reach {@link ACCENT_MIN_LC}. Past this the
+ * color has darkened too far to still read as the brand, so the card falls back to its default colors.
+ */
+const MAX_ACCENT_DRIFT = 35;
+
+const toHex = (color: ColorValue) => `#${toRgbHex(color)}`;
+
+const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+
+/** Shifts a color's HSL lightness by `delta` points (clamped to 0–100), preserving hue and saturation. */
+const shiftLightness = (color: ColorValue, delta: number): ColorValue => {
+	const [h, s, l] = toHsla(color);
+	return fromHsla(h, s, clamp(l + delta, 0, 100));
+};
+
+/**
+ * Resolves a legible accent pair from a site's custom theme. The publisher's own pair is honored when it
+ * already clears APCA; otherwise the higher-contrast text color is taken and the accent is darkened or
+ * lightened away from it until the pair clears the bar. Falls back to the card's default colors when the site
+ * ships no accent, or when no reasonable adjustment reaches the bar.
+ */
 function themeColorsFor(view: AppBskyEmbedExternal.ViewExternal): ThemeColors {
+	const fallback: ThemeColors = {
+		accent: colors.text,
+		accentForeground: colors.textInverted,
+		accentHover: colors.text,
+		legible: false,
+	};
+
 	const { accentForegroundRGB, accentRGB } = view.source?.theme || {};
-	if (accentRGB && accentForegroundRGB) {
-		return {
-			accent: rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b),
-			accentForeground: rgbToHex(accentForegroundRGB.r, accentForegroundRGB.g, accentForegroundRGB.b),
-		};
+	if (!accentRGB) {
+		return fallback;
 	}
-	return { accent: colors.text, accentForeground: colors.textInverted };
+
+	const accent = fromRgba(accentRGB.r, accentRGB.g, accentRGB.b);
+	const themed = (background: ColorValue, foreground: ColorValue): ThemeColors => ({
+		accent: toHex(background),
+		accentForeground: toHex(foreground),
+		accentHover: toHex(darken(background, 0.1)),
+		legible: true,
+	});
+
+	// Honor the publisher's own foreground when their pairing already reads.
+	const publisherForeground = accentForegroundRGB
+		? fromRgba(accentForegroundRGB.r, accentForegroundRGB.g, accentForegroundRGB.b)
+		: null;
+	if (
+		publisherForeground !== null &&
+		Math.abs(getAPCAContrastRatio(accent, publisherForeground)) >= ACCENT_MIN_LC
+	) {
+		return themed(accent, publisherForeground);
+	}
+
+	// Otherwise pick the higher-contrast text color and push the accent's lightness away from it — darker
+	// under white text, lighter under black — until the pair clears the bar or drifts too far from the brand.
+	const foreground = getAPCATextColor(accent);
+	const direction = toRgbHex(foreground) === 'ffffff' ? -1 : 1;
+	for (let drift = 0; drift <= MAX_ACCENT_DRIFT; drift++) {
+		const background = shiftLightness(accent, drift * direction);
+		if (Math.abs(getAPCAContrastRatio(background, foreground)) >= ACCENT_MIN_LC) {
+			return themed(background, foreground);
+		}
+	}
+
+	return fallback;
 }
 
 /**
@@ -286,24 +364,18 @@ function SubscribeButton({
 
 	/*
 	 * The custom site theme paints the button background with `accent` and the text with `accentForeground`.
-	 * Only honor it when that pairing clears WCAG AAA (4.5:1) for large text, which the button's bold label
-	 * qualifies as. Otherwise fall through to the default `secondary_inverted` styling, which is guaranteed to
-	 * be legible.
+	 * Only honor it when the resolved pairing clears APCA (see `themeColorsFor`); otherwise fall through to the
+	 * default `secondary_inverted` styling, which is guaranteed to be legible.
 	 */
-	const { accentForegroundRGB, accentRGB } = view.source.theme || {};
+	const themeColors = themeColorsFor(view);
 	let themeStyle: ReturnType<typeof assignInlineVars> | undefined;
-	if (accentRGB && accentForegroundRGB) {
-		const accent = rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b);
-		const accentForeground = rgbToHex(accentForegroundRGB.r, accentForegroundRGB.g, accentForegroundRGB.b);
-		const ratio = contrastRatio(accent, accentForeground);
-		if (ratio !== null && ratio >= 4.5) {
-			themeStyle = assignInlineVars({
-				// override the three palette vars the `secondary_inverted` button reads: idle bg, hover bg, text.
-				[vars.palette.contrast_0]: accentForeground,
-				[vars.palette.contrast_900]: accent,
-				[vars.palette.contrast_975]: darken(accent, 5),
-			});
-		}
+	if (themeColors.legible) {
+		themeStyle = assignInlineVars({
+			// override the three palette vars the `secondary_inverted` button reads: idle bg, hover bg, text.
+			[vars.palette.contrast_0]: themeColors.accentForeground,
+			[vars.palette.contrast_900]: themeColors.accent,
+			[vars.palette.contrast_975]: themeColors.accentHover,
+		});
 	}
 
 	return (

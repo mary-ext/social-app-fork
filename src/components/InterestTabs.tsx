@@ -4,8 +4,7 @@ import { useLingui } from '@lingui/react/macro';
 
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback';
 
-import { atoms as a, tokens, useTheme } from '#/alf';
-import { transparentifyColor } from '#/alf/util/colorGeneration';
+import { atoms as a, tokens, useTheme, utils } from '#/alf';
 
 import { Button, ButtonIcon } from '#/components/Button';
 import { DraggableScrollView } from '#/components/DraggableScrollView';
@@ -247,7 +246,7 @@ export function InterestTabs({
 						a.pr_md,
 						a.z_10,
 						webViewStyle({
-							background: `linear-gradient(to right,  ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
+							background: `linear-gradient(to right,  ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${utils.alpha(t.atoms.bg.backgroundColor, 0)} 100%)`,
 						}),
 					]}
 				>
@@ -283,7 +282,7 @@ export function InterestTabs({
 						a.pl_md,
 						a.z_10,
 						webViewStyle({
-							background: `linear-gradient(to left, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
+							background: `linear-gradient(to left, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${utils.alpha(t.atoms.bg.backgroundColor, 0)} 100%)`,
 						}),
 					]}
 				>

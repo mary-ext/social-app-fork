@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
-#: src/components/InterestTabs.tsx:332
+#: src/components/InterestTabs.tsx:331
 msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:99
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:177
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -2122,7 +2122,7 @@ msgstr ""
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadComposePrompt.tsx:45
+#: src/screens/PostThread/components/ThreadComposePrompt.tsx:44
 msgid "Compose reply"
 msgstr ""
 
@@ -5786,7 +5786,7 @@ msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
 #: src/components/ExternalEmbed/index.tsx:50
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:71
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:149
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -5843,7 +5843,7 @@ msgstr ""
 msgid "Opens captions and alt text dialog"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadComposePrompt.tsx:46
+#: src/screens/PostThread/components/ThreadComposePrompt.tsx:45
 msgid "Opens composer"
 msgstr ""
 
@@ -7141,11 +7141,11 @@ msgstr ""
 msgid "Science"
 msgstr ""
 
-#: src/components/InterestTabs.tsx:255
+#: src/components/InterestTabs.tsx:254
 msgid "Scroll left"
 msgstr ""
 
-#: src/components/InterestTabs.tsx:291
+#: src/components/InterestTabs.tsx:290
 msgid "Scroll right"
 msgstr ""
 
@@ -7310,7 +7310,7 @@ msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space
 msgstr ""
 
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.
-#: src/components/InterestTabs.tsx:337
+#: src/components/InterestTabs.tsx:336
 msgid "Select \"{interestsDisplayName}\" category"
 msgstr ""
 
@@ -7955,13 +7955,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:281
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:285
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:359
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:363
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:280
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:358
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -9195,8 +9195,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:142
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:196
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:220
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:274
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -9225,7 +9225,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:283
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:361
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -9285,10 +9285,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:142
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:196
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:284
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:285
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:220
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:274
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:362
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:363
 msgid "View publication"
 msgstr "View publication"
 
@@ -9554,7 +9554,7 @@ msgstr ""
 msgid "Write post"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadComposePrompt.tsx:69
+#: src/screens/PostThread/components/ThreadComposePrompt.tsx:68
 #: src/view/com/composer/Composer.tsx:1202
 msgid "Write your reply"
 msgstr ""
