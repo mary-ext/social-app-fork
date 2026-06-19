@@ -30,6 +30,7 @@ import { BlockDialog } from '#/components/moderation/BlockDialog';
 import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 
+import { RemoveMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
 
 export function MemberMenu({
@@ -50,6 +51,7 @@ export function MemberMenu({
 	const { t: l } = useLingui();
 
 	const blockMemberPrompt = Prompt.usePromptControl();
+	const removeMemberPrompt = Prompt.usePromptControl();
 
 	const [menuDidOpen, setMenuDidOpen] = useState(false);
 	const { data: convoAvailability } = useGetConvoAvailabilityQuery(profile.did, {
@@ -203,7 +205,7 @@ export function MemberMenu({
 							<Menu.Item
 								destructive
 								label={l`Remove ${displayName} from this group chat`}
-								onPress={() => removeMembers({ members: [profile.did] })}
+								onPress={removeMemberPrompt.open}
 							>
 								<Menu.ItemIcon icon={ArrowBoxLeftIcon} />
 								<Menu.ItemText>
@@ -219,6 +221,11 @@ export function MemberMenu({
 				profile={profile}
 				onBlock={handleBlockMember}
 				currentConvoId={convoId}
+			/>
+			<RemoveMemberPrompt
+				control={removeMemberPrompt}
+				displayName={displayName}
+				onConfirm={() => removeMembers({ members: [profile.did] })}
 			/>
 		</>
 	);

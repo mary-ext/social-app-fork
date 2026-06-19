@@ -7,6 +7,7 @@ import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-di
 
 import { useProfileShadow } from '#/state/cache/profile-shadow';
 import { useModerationOpts } from '#/state/preferences/moderation-opts';
+import { useRemoveFromGroupChat } from '#/state/queries/messages/remove-from-group';
 import { useProfileFollowMutationQueue } from '#/state/queries/profile';
 import { useRequireAuth, useSession } from '#/state/session';
 
@@ -14,13 +15,16 @@ import { logger } from '#/logger';
 
 import { atoms as a, useTheme } from '#/alf';
 
+import { Button, ButtonText } from '#/components/Button';
 import type { ConvoWithDetails, GroupConvoMember } from '#/components/dms/util';
 import { createStaticClick, SimpleInlineLinkText } from '#/components/Link';
 import * as ProfileCard from '#/components/ProfileCard';
+import * as Prompt from '#/components/Prompt';
 import * as Toast from '#/components/Toast';
 import { Text } from '#/components/Typography';
 
 import { MemberMenu } from './MemberMenu';
+import { RemoveMemberPrompt } from './prompts';
 import { StatusBadge } from './StatusBadge';
 import { SubtleHoverWrapper } from './SubtleHoverWrapper';
 
@@ -46,6 +50,14 @@ export function Member({
 
 	const [queueFollow] = useProfileFollowMutationQueue(profile, 'GroupChat');
 	const requireAuth = useRequireAuth();
+
+	const removeMemberPrompt = Prompt.usePromptControl();
+	const { mutate: removeMembers } = useRemoveFromGroupChat(convo.view.id, {
+		onError: (e) => {
+			logger.error('Failed to remove group chat member', { message: e });
+			Toast.show(l`Failed to remove group chat member`, { type: 'error' });
+		},
+	});
 
 	const isFollowing = !!profile.viewer?.following;
 
@@ -104,6 +116,9 @@ export function Member({
 			)}`
 		: l`Added by invite link`;
 
+	// surface a prominent remove button to the owner for blocked members
+	const showRemoveButton = isOwner && !isSelf && !!isBlockedOrBlocking(profile);
+
 	return (
 		<SubtleHoverWrapper>
 			<View style={outerStyles}>
@@ -126,7 +141,18 @@ export function Member({
 						</ProfileCard.Header>
 					</ProfileCard.Outer>
 				</ProfileCard.Link>
-				{isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
+				{showRemoveButton ? (
+					<Button
+						label={l`Remove ${displayName} from this group chat`}
+						size="tiny"
+						color="negative_subtle"
+						onPress={() => removeMemberPrompt.open()}
+					>
+						<ButtonText>
+							<Trans>Remove</Trans>
+						</ButtonText>
+					</Button>
+				) : isSelf || isFollowing || isBlockedOrBlocking(profile) ? null : (
 					<SimpleInlineLinkText
 						label={l`Follow ${displayName}`}
 						{...createStaticClick(handleFollow)}
@@ -137,6 +163,13 @@ export function Member({
 				)}
 				{statusBadge}
 			</View>
+			{/* mounted outside the showRemoveButton branch: confirming optimistically drops this row, so
+			    gating the prompt on the button would unmount it mid-close and race the dismiss animation */}
+			<RemoveMemberPrompt
+				control={removeMemberPrompt}
+				displayName={displayName}
+				onConfirm={() => removeMembers({ members: [profile.did] })}
+			/>
 		</SubtleHoverWrapper>
 	);
 }
