@@ -1,6 +1,6 @@
 import type { ChatBskyConvoListConvoRequests } from '@atcute/bluesky';
 import { ok } from '@atcute/client';
-import { type InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
+import { type InfiniteData, type QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 
 import { useClients } from '#/state/session';
 
@@ -83,4 +83,32 @@ export function optimisticDeleteJoinRequest(convoId: string, old: ConvoRequestLi
 			),
 		})),
 	};
+}
+
+/**
+ * Yields every cached profile in the request-list — the members of incoming conversation requests and the
+ * owner of each outgoing group join-request — so profile-shadow updates reach the inbox rows.
+ */
+export function* findAllProfilesInQueryData(queryClient: QueryClient, did: string) {
+	const queryDatas = queryClient.getQueriesData<ConvoRequestListQueryData>({
+		queryKey: [RQKEY_ROOT],
+	});
+	for (const [, queryData] of queryDatas) {
+		if (!queryData?.pages) continue;
+		for (const page of queryData.pages) {
+			for (const item of page.requests) {
+				if (item.$type === 'chat.bsky.convo.defs#convoView') {
+					for (const member of item.members) {
+						if (member.did === did) {
+							yield member;
+						}
+					}
+				} else if (item.$type === 'chat.bsky.group.defs#joinRequestConvoView') {
+					if (item.owner.did === did) {
+						yield item.owner;
+					}
+				}
+			}
+		}
+	}
 }
