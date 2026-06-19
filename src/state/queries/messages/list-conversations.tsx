@@ -568,20 +568,25 @@ export function ListConvosProviderInner({ children }: { children: React.ReactNod
 						case 'chat.bsky.convo.defs#logApproveJoinRequest':
 						case 'chat.bsky.convo.defs#logRejectJoinRequest':
 						case 'chat.bsky.convo.defs#logWithdrawIncomingJoinRequest': {
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								updateGroupConvoJoinRequestCount(log, old, -1),
+							// Route through mutateConvoView (not just the list caches) so the single-convo
+							// cache updates too, keeping the in-convo join-requests banner in sync.
+							mutateConvoView(
+								log.convoId,
+								withRevGuard(log.rev, (convo) => applyJoinRequestCountDelta(convo, -1, log.rev)),
 							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logIncomingJoinRequest': {
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								updateGroupConvoJoinRequestCount(log, old, 1),
+							mutateConvoView(
+								log.convoId,
+								withRevGuard(log.rev, (convo) => applyJoinRequestCountDelta(convo, 1, log.rev)),
 							);
 							break;
 						}
 						case 'chat.bsky.convo.defs#logReadJoinRequests': {
-							queryClient.setQueriesData({ queryKey: [RQKEY_ROOT] }, (old?: ConvoListQueryData) =>
-								zeroGroupConvoUnreadJoinRequestCount(log, old),
+							mutateConvoView(
+								log.convoId,
+								withRevGuard(log.rev, (convo) => zeroUnreadJoinRequestCount(convo, log.rev)),
 							);
 							break;
 						}
@@ -791,55 +796,48 @@ function optimisticUpdate(
 	};
 }
 
-function updateGroupConvoJoinRequestCount(
-	log: { convoId: string; rev: string },
-	old: ConvoListQueryData | undefined,
+function applyJoinRequestCountDelta(
+	convo: ChatBskyConvoDefs.ConvoView,
 	delta: 1 | -1,
-) {
-	return optimisticUpdate(
-		log.convoId,
-		old,
-		withRevGuard(log.rev, (convo) => {
-			// join requests are only meaningful for group convos
-			if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
-				return { ...convo, rev: log.rev };
-			}
-			const current = convo.kind.joinRequestCount ?? 0;
-			const next = Math.max(0, current + delta);
-			return {
-				...convo,
-				kind: {
-					...convo.kind,
-					joinRequestCount: next === 0 ? undefined : next,
-				},
-				rev: log.rev,
-			};
-		}),
-	);
+	rev: string,
+): ChatBskyConvoDefs.ConvoView {
+	// join requests are only meaningful for group convos
+	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+		return { ...convo, rev };
+	}
+	// an incoming request is unread, and resolving one (approve/reject/withdraw) clears an
+	// unread, so the total and unread counts move together.
+	const bump = (n: number | undefined) => {
+		const next = Math.max(0, (n ?? 0) + delta);
+		return next === 0 ? undefined : next;
+	};
+	return {
+		...convo,
+		kind: {
+			...convo.kind,
+			joinRequestCount: bump(convo.kind.joinRequestCount),
+			unreadJoinRequestCount: bump(convo.kind.unreadJoinRequestCount),
+		},
+		rev,
+	};
 }
 
-function zeroGroupConvoUnreadJoinRequestCount(
-	log: { convoId: string; rev: string },
-	old: ConvoListQueryData | undefined,
-) {
-	return optimisticUpdate(
-		log.convoId,
-		old,
-		withRevGuard(log.rev, (convo) => {
-			// unread join-request count is only meaningful for group convos
-			if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
-				return { ...convo, rev: log.rev };
-			}
-			return {
-				...convo,
-				kind: {
-					...convo.kind,
-					unreadJoinRequestCount: 0,
-				},
-				rev: log.rev,
-			};
-		}),
-	);
+function zeroUnreadJoinRequestCount(
+	convo: ChatBskyConvoDefs.ConvoView,
+	rev: string,
+): ChatBskyConvoDefs.ConvoView {
+	// unread join-request count is only meaningful for group convos
+	if (convo.kind?.$type !== 'chat.bsky.convo.defs#groupConvo') {
+		return { ...convo, rev };
+	}
+	return {
+		...convo,
+		kind: {
+			...convo.kind,
+			unreadJoinRequestCount: 0,
+		},
+		rev,
+	};
 }
 
 function removeMemberFromConvoView(
